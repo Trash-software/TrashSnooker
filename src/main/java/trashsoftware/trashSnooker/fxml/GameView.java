@@ -4,8 +4,11 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -19,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import trashsoftware.trashSnooker.core.*;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -144,8 +148,8 @@ public class GameView implements Initializable {
     private void showEndMessage() {
         Platform.runLater(() ->
                 AlertShower.showInfo(stage,
-                String.format("%s%d胜利。", "玩家", game.getWiningPlayer().getNumber()),
-                "游戏结束"));
+                String.format("玩家1  %d : %d  玩家2", game.getPlayer1().getScore(), game.getPlayer2().getScore()),
+                String.format("%s%d胜利。", "玩家", game.getWiningPlayer().getNumber())));
     }
 
     private void askReposition() {
@@ -154,6 +158,8 @@ public class GameView implements Initializable {
                 game.reposition();
                 drawScoreBoard(game.getNextCuePlayer());
                 drawTargetBoard();
+            } else {
+                if (game.getWhiteBall().isPotted()) game.setBallInHand();
             }
         });
     }
@@ -322,9 +328,45 @@ public class GameView implements Initializable {
 
     @FXML
     void newGameAction() {
-        startGame();
-        drawTargetBoard();
-        drawScoreBoard(game.getNextCuePlayer());
+        Platform.runLater(() -> {
+            if (AlertShower.askConfirmation(stage, "真的要开始新游戏吗？", "请确认")) {
+                startGame();
+                drawTargetBoard();
+                drawScoreBoard(game.getNextCuePlayer());
+            }
+        });
+    }
+
+    @FXML
+    void settingsAction() throws IOException {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("settingsView.fxml")
+        );
+        Parent root = loader.load();
+
+        Stage newStage = new Stage();
+        newStage.initOwner(stage);
+
+        Scene scene = new Scene(root);
+        newStage.setScene(scene);
+
+        SettingsView view = loader.getController();
+        view.setup(newStage, this);
+
+        newStage.show();
+    }
+
+    void setDifficulty(SettingsView.Difficulty difficulty) {
+        if (difficulty == SettingsView.Difficulty.EASY) {
+            minRealPredictLength = 800.0;
+            maxRealPredictLength = 2400.0;
+        } else if (difficulty == SettingsView.Difficulty.MEDIUM) {
+            minRealPredictLength = 400.0;
+            maxRealPredictLength = 1200.0;
+        } else if (difficulty == SettingsView.Difficulty.HARD) {
+            minRealPredictLength = 200.0;
+            maxRealPredictLength = 600.0;
+        }
     }
 
     private void setButtonsCueStart() {
@@ -390,7 +432,7 @@ public class GameView implements Initializable {
     }
 
     private void drawPottedWhiteBall() {
-        if (!game.isMoving() && game.getWhiteBall().isPotted()) {
+        if (!game.isMoving() && game.isBallInHand()) {
             double x = realX(mouseX);
             if (x < Values.LEFT_X + Values.BALL_RADIUS) x = Values.LEFT_X + Values.BALL_RADIUS;
             else if (x >= Values.RIGHT_X - Values.BALL_RADIUS) x = Values.RIGHT_X - Values.BALL_RADIUS;

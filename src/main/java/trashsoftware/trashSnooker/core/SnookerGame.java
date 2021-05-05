@@ -40,6 +40,7 @@ public class SnookerGame {
     private boolean ended;
     private boolean lastCueFoul = false;
     private boolean doingFreeBall = false;  // 正在击打自由球
+    private boolean ballInHand = true;
 
     private Timer physicsTimer;
     private PhysicsCalculator physicsCalculator;
@@ -141,6 +142,7 @@ public class SnookerGame {
                 whiteBall.setX(realX);
                 whiteBall.setY(realY);
                 whiteBall.pickup();
+                ballInHand = false;
             }
         }
     }
@@ -206,6 +208,14 @@ public class SnookerGame {
                 x < Values.RIGHT_X - Values.BALL_RADIUS &&
                 y >= Values.TOP_Y + Values.BALL_RADIUS &&
                 y < Values.BOT_Y - Values.BALL_RADIUS;
+    }
+
+    public boolean isBallInHand() {
+        return ballInHand;
+    }
+
+    public void setBallInHand() {
+        ballInHand = true;
     }
 
     public void collisionTest() {
@@ -307,7 +317,7 @@ public class SnookerGame {
             // 当从白球处无法看到任何一颗目标球的最薄边时
             List<Ball> currentTarBalls = currentTargetBalls();
             // 使用预测击球线的方法：如瞄准最薄边时，预测线显示打到的就是这颗球（不会碰到其他球），则没有自由球。
-            double simulateBallDiameter = Values.BALL_DIAMETER - Values.PREDICTION_INTERVAL / 2;
+            double simulateBallDiameter = Values.BALL_DIAMETER - Values.PREDICTION_INTERVAL;
             for (Ball ball : currentTarBalls) {
                 // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
                 double xDiff = ball.x - whiteBall.x;
@@ -326,8 +336,9 @@ public class SnookerGame {
 
                 PredictedPos leftPP = getPredictedHitBall(leftUnitVec[0], leftUnitVec[1]);
                 PredictedPos rightPP = getPredictedHitBall(rightUnitVec[0], rightUnitVec[1]);
-                if ((leftPP.getTargetBall().getValue() == ball.getValue()) &&
-                        (rightPP.getTargetBall().getValue() == ball.getValue()))
+
+                if ((leftPP == null || leftPP.getTargetBall().getValue() == ball.getValue()) &&
+                        (rightPP == null || rightPP.getTargetBall().getValue() == ball.getValue()))
                     // 对于红球而言，能看到任意一颗红球的左侧与任意（可为另一颗）的右侧，则没有自由球
                     return false;  // 两侧都看得到或者看得穿，没有自由球
             }
@@ -623,6 +634,7 @@ public class SnookerGame {
         int score = 0;
         int foul = 0;
         if (whiteFirstCollide == null) foul = getDefaultFoulValue();  // 没打到球
+        else if (whiteBall.isPotted()) foul = getDefaultFoulValue();
         else if (isFreeBall) {
             int[] scoreFoul = scoreFoulOfFreeBall(pottedBalls);
             score = scoreFoul[0];
@@ -664,7 +676,7 @@ public class SnookerGame {
             updateTargetPotFailed();
             switchPlayer();
             lastCueFoul = true;
-            if (hasFreeBall()) {
+            if (!whiteBall.isPotted() && hasFreeBall()) {
                 doingFreeBall = true;
                 System.out.println("Free ball!");
             }

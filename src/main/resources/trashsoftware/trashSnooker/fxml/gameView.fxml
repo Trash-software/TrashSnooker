@@ -27,6 +27,8 @@
 
     <MenuBar GridPane.columnSpan="2">
         <Menu text="游戏">
+            <MenuItem text="设置" onAction="#settingsAction"/>
+            <SeparatorMenuItem/>
             <MenuItem text="新游戏" onAction="#newGameAction"/>
             <MenuItem text="认输" onAction="#withdrawAction" fx:id="withdrawMenu"/>
         </Menu>

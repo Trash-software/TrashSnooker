@@ -448,9 +448,11 @@ public class Ball implements Comparable<Ball> {
                 double ballVerV = Algebra.projectionLengthOn(normVec, ballV);
                 double ballHorV = Algebra.projectionLengthOn(tangentVec, ballV);
 //            System.out.printf("(%f, %f), (%f, %f)\n", thisHorV, thisVerV, ballHorV, ballVerV);
+                System.out.print("Ball 1 " + this + " ");
 
                 // 碰撞后，两球平行于切线的速率不变，垂直于切线的速率互换
                 double[] thisOut = Algebra.antiProjection(tangentVec, new double[]{thisHorV, ballVerV});
+                System.out.print("Ball 2 " + ball + " ");
                 double[] ballOut = Algebra.antiProjection(tangentVec, new double[]{ballHorV, thisVerV});
 
                 this.vx = thisOut[0] * Values.BALL_BOUNCE_RATIO;
