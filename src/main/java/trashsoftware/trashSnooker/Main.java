@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.IOException;
 
@@ -16,18 +17,19 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("fxml/gameView.fxml")
-        );
-        Parent root = loader.load();
+    public void start(Stage primaryStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("fxml/mainView.fxml")
+            );
+            Parent root = loader.load();
 
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
 
-        GameView gameView = loader.getController();
-        gameView.setStage(primaryStage);
-
-        primaryStage.show();
+            primaryStage.show();
+        } catch (Exception e) {
+            EventLogger.log(e);
+        }
     }
 }

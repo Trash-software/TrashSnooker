@@ -4,16 +4,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class Player {
+public abstract class Player {
 
-    private final int number;
-    private final TreeMap<Ball, Integer> singlePole = new TreeMap<>();
-    private int score;
+    protected final int number;
+    protected final TreeMap<Ball, Integer> singlePole = new TreeMap<>();
+    protected int score;
     private boolean withdrawn = false;
-    private SnookerGame game;
 
-    public Player(int number, SnookerGame game) {
-        this.game = game;
+    public Player(int number) {
         this.number = number;
     }
 
@@ -33,16 +31,6 @@ public class Player {
             } else {
                 singlePole.put(ball, 1);
             }
-        }
-    }
-
-    public void potFreeBall(int freeBallScore) {
-        score += freeBallScore;
-        Ball freeBall = game.getBallOfValue(freeBallScore);
-        if (singlePole.containsKey(freeBall)) {
-            singlePole.put(freeBall, singlePole.get(freeBall) + 1);
-        } else {
-            singlePole.put(freeBall, 1);
         }
     }
 

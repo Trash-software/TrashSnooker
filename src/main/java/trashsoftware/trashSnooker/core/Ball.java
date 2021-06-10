@@ -2,12 +2,10 @@ package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
 
-import java.util.Objects;
-
-public class Ball implements Comparable<Ball> {
+public abstract class Ball implements Comparable<Ball> {
     private final int value;
     private final Color color;
-    private final SnookerGame game;
+    private final GameValues values;
     double x, y;
     double nextX, nextY;
     double vx, vy;  // unit: mm/(sec/frameRate)
@@ -18,25 +16,27 @@ public class Ball implements Comparable<Ball> {
     private long msSinceCue;
     private Ball justHit;
 
-    Ball(int value, boolean initPotted, SnookerGame game) {
+    Ball(int value, boolean initPotted, GameValues values) {
         this.value = value;
         this.potted = initPotted;
+        this.values = values;
         this.color = generateColor(value);
-        this.game = game;
     }
 
-    Ball(int value, double[] xy, SnookerGame game) {
-        this(value, false, game);
+    Ball(int value, double[] xy, GameValues values) {
+        this(value, false, values);
 
         setX(xy[0]);
         setY(xy[1]);
     }
 
-    Ball(int value, SnookerGame game) {
-        this(value, true, game);
+    Ball(int value, GameValues values) {
+        this(value, true, values);
     }
 
-    public static Color generateColor(int value) {
+    protected abstract Color generateColor(int value);
+
+    public static Color snookerColor(int value) {
         switch (value) {
             case 0:
                 return Values.WHITE;
@@ -53,6 +53,40 @@ public class Ball implements Comparable<Ball> {
             case 6:
                 return Values.PINK;
             case 7:
+                return Values.BLACK;
+            default:
+                throw new RuntimeException("Unexpected ball.");
+        }
+    }
+
+    public static Color poolBallBaseColor(int number) {
+        switch (number) {
+            case 0:
+                return Values.WHITE;
+            case 1:
+            case 9:
+            case 16:
+            case 17:
+                return Values.YELLOW;
+            case 2:
+            case 10:
+                return Values.BLUE;
+            case 3:
+            case 11:
+                return Values.RED;
+            case 4:
+            case 12:
+                return Values.PURPLE;
+            case 5:
+            case 13:
+                return Values.ORANGE;
+            case 6:
+            case 14:
+                return Values.GREEN;
+            case 7:
+            case 15:
+                return Values.DARK_RED;
+            case 8:
                 return Values.BLACK;
             default:
                 throw new RuntimeException("Unexpected ball.");
@@ -118,7 +152,7 @@ public class Ball implements Comparable<Ball> {
     }
 
     public boolean isLikelyStopped() {
-        if (getSpeed() < SnookerGame.speedReducer && getSpinTargetSpeed() < SnookerGame.spinReducer) {
+        if (getSpeed() < Game.speedReducer && getSpinTargetSpeed() < Game.spinReducer) {
             vx = 0.0;
             vy = 0.0;
             sideSpin = 0.0;
@@ -137,64 +171,22 @@ public class Ball implements Comparable<Ball> {
         return Math.hypot(xSpin, ySpin);
     }
 
-//    /**
-//     * @return this ball is still moving
-//     */
-//    boolean move() {
-//        if (isPotted()) return false;
-//        if (!isLikelyStopped()) {
-//            if (willPot()) {
-//                pot();
-//                return true;
-//            }
-//            if (tryHitHoleArea()) {
-//                // 袋口区域
-//                tryHitOtherBalls();
-//                return true;
-//            }
-//            if (tryHitWall()) {
-//                // 库边
-//                return true;
-//            }
-//
-//            boolean noHit = !tryHitOtherBalls();
-//            if (noHit) normalMove();
-////            normalMove();
-//
-//            return true;
-//        }
-//        return false;
-//    }
-
-//    private boolean tryHitOtherBalls() {
-//        boolean result = false;
-//        for (Ball ball : game.getAllBalls()) {
-//            if (ball != this && !ball.potted) {
-//                if (tryHitBall(ball)) {
-//                    ball.move();
-//                    result = true;
-//                }
-//            }
-//        }
-//        return result;
-//    }
-
     void normalMove() {
         x = nextX;
         y = nextY;
         msSinceCue++;
 //        if (isWhite()) System.out.printf("%f %f %f %f\n", vx, vy, xSpin, ySpin);
-        if (sideSpin >= SnookerGame.sideSpinReducer) {
-            sideSpin -= SnookerGame.sideSpinReducer;
-        } else if (sideSpin <= -SnookerGame.sideSpinReducer) {
-            sideSpin += SnookerGame.sideSpinReducer;
+        if (sideSpin >= Game.sideSpinReducer) {
+            sideSpin -= Game.sideSpinReducer;
+        } else if (sideSpin <= -Game.sideSpinReducer) {
+            sideSpin += Game.sideSpinReducer;
         }
 //        else {
 //            if (isWhite()) System.out.println("Side spin end in " + msSince);
 //        }
 
         double speed = getSpeed();
-        double reducedSpeed = speed - SnookerGame.speedReducer;
+        double reducedSpeed = speed - Game.speedReducer;
         double ratio = reducedSpeed / speed;
         vx *= ratio;
         vy *= ratio;
@@ -203,8 +195,8 @@ public class Ball implements Comparable<Ball> {
         double ySpinDiff = ySpin - vy;
 
         double spinDiffTotal = Math.hypot(xSpinDiff, ySpinDiff);
-        double spinRatio = SnookerGame.spinReducer / spinDiffTotal;
-        double xSpinReducer = Math.abs(xSpinDiff * spinRatio);
+        double spinRatio = Game.spinReducer / spinDiffTotal;
+        double xSpinReducer = Math.abs(xSpinDiff * spinRatio);  // todo
         double ySpinReducer = Math.abs(ySpinDiff * spinRatio);
 
 //        if (isWhite()) System.out.printf("vx: %f, vy: %f, xr: %f, yr: %f, spin: %f\n", vx, vy, xSpinReducer, ySpinReducer, SnookerGame.spinReducer);
@@ -212,10 +204,10 @@ public class Ball implements Comparable<Ball> {
 //        double spinEffect = 3000.0;  // 越小影响越大
 
         if (xSpinDiff < -xSpinReducer) {
-            vx += xSpinDiff / SnookerGame.spinEffect;
+            vx += xSpinDiff / Game.spinEffect;
             xSpin += xSpinReducer;
         } else if (xSpinDiff >= xSpinReducer) {
-            vx += xSpinDiff / SnookerGame.spinEffect;
+            vx += xSpinDiff / Game.spinEffect;
             xSpin -= xSpinReducer;
         } else {
             xSpin = vx;
@@ -227,10 +219,10 @@ public class Ball implements Comparable<Ball> {
         }
 
         if (ySpinDiff < -ySpinReducer) {
-            vy += ySpinDiff / SnookerGame.spinEffect;
+            vy += ySpinDiff / Game.spinEffect;
             ySpin += ySpinReducer;
         } else if (ySpinDiff >= ySpinReducer) {
-            vy += ySpinDiff / SnookerGame.spinEffect;
+            vy += ySpinDiff / Game.spinEffect;
             ySpin -= ySpinReducer;
         } else {
             ySpin = vy;
@@ -252,91 +244,93 @@ public class Ball implements Comparable<Ball> {
     /**
      * 众所周知，中袋大力容易打不进
      *
-     * @return (0.5, 1.0)之间的一个值
+     * @return (0.6, 1.2)之间的一个值
      */
     private double midHolePowerFactor() {
-        return 1.0 - (getSpeed() * SnookerGame.calculationsPerSec / Values.MAX_POWER_SPEED) * 0.5;
+        return 1.2 - (getSpeed() * Game.calculationsPerSec / Values.MAX_POWER_SPEED) * 0.6;
     }
 
     boolean willPot() {
         double midHoleFactor = midHolePowerFactor();
-        return predictedDtToPoint(Values.TOP_LEFT_HOLE_XY) < Values.CORNER_HOLE_RADIUS ||
-                predictedDtToPoint(Values.BOT_LEFT_HOLE_XY) < Values.CORNER_HOLE_RADIUS ||
-                predictedDtToPoint(Values.TOP_RIGHT_HOLE_XY) < Values.CORNER_HOLE_RADIUS ||
-                predictedDtToPoint(Values.BOT_RIGHT_HOLE_XY) < Values.CORNER_HOLE_RADIUS ||
-                predictedDtToPoint(Values.TOP_MID_HOLE_XY) < Values.MID_HOLE_RADIUS * midHoleFactor ||
-                predictedDtToPoint(Values.BOT_MID_HOLE_XY) < Values.MID_HOLE_RADIUS * midHoleFactor;
+        return predictedDtToPoint(values.topLeftHoleXY) < values.cornerHoleRadius ||
+                predictedDtToPoint(values.botLeftHoleXY) < values.cornerHoleRadius ||
+                predictedDtToPoint(values.topRightHoleXY) < values.cornerHoleRadius ||
+                predictedDtToPoint(values.botRightHoleXY) < values.cornerHoleRadius ||
+                predictedDtToPoint(values.topMidHoleXY) < values.midHoleRadius * midHoleFactor ||
+                predictedDtToPoint(values.botMidHoleXY) < values.midHoleRadius * midHoleFactor;
     }
 
     /**
-     * 检测是否撞击袋角或进入袋角区域。如果撞击袋角，返回{@code true}且处理撞击。如果进入袋角区域但未发生撞击，同样返回{@code true}
+     * 检测是否撞击袋角或进入袋角区域。如果撞击袋角，返回{@code 2}且处理撞击。如果进入袋角区域但未发生撞击，返回{@code 1}。如未进入，返回{@code 0}
      */
-    boolean tryHitHoleArea() {
+    int tryHitHoleArea() {
         boolean enteredCorner = false;
-        if (nextY < Values.BALL_RADIUS + Values.TOP_Y) {
-            if (nextX < Values.MID_HOLE_AREA_RIGHT_X && nextX >= Values.MID_HOLE_AREA_LEFT_X) {
+        if (nextY < values.ballRadius + values.topY) {
+            if (nextX < values.midHoleAreaRightX && nextX >= values.midHoleAreaLeftX) {
                 // 上方中袋在袋角范围内
-                if (predictedDtToPoint(Values.TOP_MID_HOLE_LEFT_ARC_XY) < Values.MID_ARC_RADIUS + Values.BALL_RADIUS &&
-                        currentDtToPoint(Values.TOP_MID_HOLE_LEFT_ARC_XY) >= Values.MID_ARC_RADIUS + Values.BALL_RADIUS) {
+                if (predictedDtToPoint(values.topMidHoleLeftArcXy) < values.midArcRadius + values.ballRadius &&
+                        currentDtToPoint(values.topMidHoleLeftArcXy) >= values.midArcRadius + values.ballRadius) {
                     // 击中上方中袋左侧
-                    hitHoleArcArea(Values.TOP_MID_HOLE_LEFT_ARC_XY);
-                } else if (predictedDtToPoint(Values.TOP_MID_HOLE_RIGHT_ARC_XY) < Values.MID_ARC_RADIUS + Values.BALL_RADIUS &&
-                        currentDtToPoint(Values.TOP_MID_HOLE_RIGHT_ARC_XY) >= Values.MID_ARC_RADIUS + Values.BALL_RADIUS) {
+                    hitHoleArcArea(values.topMidHoleLeftArcXy);
+                } else if (predictedDtToPoint(values.topMidHoleRightArcXy) < values.midArcRadius + values.ballRadius &&
+                        currentDtToPoint(values.topMidHoleRightArcXy) >= values.midArcRadius + values.ballRadius) {
                     // 击中上方中袋右侧
-                    hitHoleArcArea(Values.TOP_MID_HOLE_RIGHT_ARC_XY);
+                    hitHoleArcArea(values.topMidHoleRightArcXy);
                 } else {
                     normalMove();
                     prepareMove();
+                    return 1;
                 }
-                return true;
+                return 2;
             }
-        } else if (nextY >= Values.BOT_Y - Values.BALL_RADIUS) {
-            if (nextX < Values.MID_HOLE_AREA_RIGHT_X && nextX >= Values.MID_HOLE_AREA_LEFT_X) {
+        } else if (nextY >= values.botY - values.ballRadius) {
+            if (nextX < values.midHoleAreaRightX && nextX >= values.midHoleAreaLeftX) {
                 // 下方中袋袋角范围内
-                if (predictedDtToPoint(Values.BOT_MID_HOLE_LEFT_ARC_XY) < Values.MID_ARC_RADIUS + Values.BALL_RADIUS &&
-                        currentDtToPoint(Values.BOT_MID_HOLE_LEFT_ARC_XY) >= Values.MID_ARC_RADIUS + Values.BALL_RADIUS) {
+                if (predictedDtToPoint(values.botMidHoleLeftArcXy) < values.midArcRadius + values.ballRadius &&
+                        currentDtToPoint(values.botMidHoleLeftArcXy) >= values.midArcRadius + values.ballRadius) {
                     // 击中下方中袋左侧
-                    hitHoleArcArea(Values.BOT_MID_HOLE_LEFT_ARC_XY);
-                } else if (predictedDtToPoint(Values.BOT_MID_HOLE_RIGHT_ARC_XY) < Values.MID_ARC_RADIUS + Values.BALL_RADIUS &&
-                        currentDtToPoint(Values.BOT_MID_HOLE_RIGHT_ARC_XY) >= Values.MID_ARC_RADIUS + Values.BALL_RADIUS) {
+                    hitHoleArcArea(values.botMidHoleLeftArcXy);
+                } else if (predictedDtToPoint(values.botMidHoleRightArcXy) < values.midArcRadius + values.ballRadius &&
+                        currentDtToPoint(values.botMidHoleRightArcXy) >= values.midArcRadius + values.ballRadius) {
                     // 击中下方中袋右侧
-                    hitHoleArcArea(Values.BOT_MID_HOLE_RIGHT_ARC_XY);
+                    hitHoleArcArea(values.botMidHoleRightArcXy);
                 } else {
                     normalMove();
                     prepareMove();
+                    return 1;
                 }
-                return true;
+                return 2;
             }
         }
-        if (nextY < Values.TOP_CORNER_HOLE_AREA_DOWN_Y) {
-            if (nextX < Values.LEFT_CORNER_HOLE_AREA_RIGHT_X) enteredCorner = true;  // 左上底袋
-            else if (nextX >= Values.RIGHT_CORNER_HOLE_AREA_LEFT_X) enteredCorner = true;  // 右上底袋
-        } else if (nextY >= Values.BOT_CORNER_HOLE_AREA_UP_Y) {
-            if (nextX < Values.LEFT_CORNER_HOLE_AREA_RIGHT_X) enteredCorner = true;  // 左下底袋
-            else if (nextX >= Values.RIGHT_CORNER_HOLE_AREA_LEFT_X) enteredCorner = true;  // 右下底袋
+        if (nextY < values.topCornerHoleAreaDownY) {
+            if (nextX < values.leftCornerHoleAreaRightX) enteredCorner = true;  // 左上底袋
+            else if (nextX >= values.rightCornerHoleAreaLeftX) enteredCorner = true;  // 右上底袋
+        } else if (nextY >= values.botCornerHoleAreaUpY) {
+            if (nextX < values.leftCornerHoleAreaRightX) enteredCorner = true;  // 左下底袋
+            else if (nextX >= values.rightCornerHoleAreaLeftX) enteredCorner = true;  // 右下底袋
         }
 
         if (enteredCorner) {
-            for (int i = 0; i < Values.ALL_CORNER_LINES.length; ++i) {
-                double[][] line = Values.ALL_CORNER_LINES[i];
+            for (int i = 0; i < values.allCornerLines.length; ++i) {
+                double[][] line = values.allCornerLines[i];
                 double[] normVec = i < 4 ? Values.NORMAL_315 : Values.NORMAL_45;
-                if (predictedDtToLine(line) < Values.BALL_RADIUS && currentDtToLine(line) >= Values.BALL_RADIUS) {
+                if (predictedDtToLine(line) < values.ballRadius && currentDtToLine(line) >= values.ballRadius) {
                     hitCornerHoleLineArea(normVec);
-                    return true;
+                    return 2;
                 }
             }
-            for (double[] cornerArc : Values.ALL_CORNER_ARCS) {
-                if (predictedDtToPoint(cornerArc) < Values.CORNER_ARC_RADIUS + Values.BALL_RADIUS &&
-                        currentDtToPoint(cornerArc) >= Values.CORNER_ARC_RADIUS + Values.BALL_RADIUS) {
+            for (double[] cornerArc : values.allCornerArcs) {
+                if (predictedDtToPoint(cornerArc) < values.cornerArcRadius + values.ballRadius &&
+                        currentDtToPoint(cornerArc) >= values.cornerArcRadius + values.ballRadius) {
                     hitHoleArcArea(cornerArc);
-                    return true;
+                    return 2;
                 }
             }
             normalMove();
             prepareMove();
-            return true;
+            return 1;
         }
-        return false;
+        return 0;
     }
 
     private void hitHoleArcArea(double[] arcXY) {
@@ -345,8 +339,8 @@ public class Ball implements Comparable<Ball> {
         double[] reflect = Algebra.symmetricVector(vx, vy, axisX, axisY);
         vx = -reflect[0] * Values.WALL_BOUNCE_RATIO;
         vy = -reflect[1] * Values.WALL_BOUNCE_RATIO;
-        xSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
-        ySpin *= Values.WALL_SPIN_PRESERVE_RATIO;
+        xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
+        ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
         sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
     }
 
@@ -354,8 +348,8 @@ public class Ball implements Comparable<Ball> {
         double[] reflect = Algebra.symmetricVector(vx, vy, lineNormalVec[0], lineNormalVec[1]);
         vx = -reflect[0] * Values.WALL_BOUNCE_RATIO;
         vy = -reflect[1] * Values.WALL_BOUNCE_RATIO;
-        xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.75);
-        ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.75);
+        xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
+        ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
         sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
     }
 
@@ -363,33 +357,33 @@ public class Ball implements Comparable<Ball> {
      * 该方法不检测袋口
      */
     boolean tryHitWall() {
-        if (nextX < Values.BALL_RADIUS + Values.LEFT_X ||
-                nextX >= Values.RIGHT_X - Values.BALL_RADIUS) {
+        if (nextX < values.ballRadius + values.leftX ||
+                nextX >= values.rightX - values.ballRadius) {
             // 顶库
             vx = -vx * Values.WALL_BOUNCE_RATIO;
             vy *= Values.WALL_BOUNCE_RATIO;
-            if (nextX < Values.BALL_RADIUS + Values.LEFT_X) {
+            if (nextX < values.ballRadius + values.leftX) {
                 vy -= sideSpin;
             } else {
                 vy += sideSpin;
             }
-            xSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
-            ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.5);
+            xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.7);
+            ySpin *= Values.WALL_SPIN_PRESERVE_RATIO;
             sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
             return true;
         }
-        if (nextY < Values.BALL_RADIUS + Values.TOP_Y ||
-                nextY >= Values.BOT_Y - Values.BALL_RADIUS) {
+        if (nextY < values.ballRadius + values.topY ||
+                nextY >= values.botY - values.ballRadius) {
             // 边库
             vx *= Values.WALL_BOUNCE_RATIO;
             vy = -vy * Values.WALL_BOUNCE_RATIO;
-            if (nextY < Values.BALL_RADIUS + Values.TOP_Y) {
+            if (nextY < values.ballRadius + values.topY) {
                 vx += sideSpin;
             } else {
                 vx -= sideSpin;
             }
-            xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.5);
-            ySpin *= Values.WALL_SPIN_PRESERVE_RATIO;
+            xSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
+            ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.7);
             sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
 //            System.out.println("Hit wall!======================");
             return true;
@@ -399,7 +393,7 @@ public class Ball implements Comparable<Ball> {
 
     boolean tryHitBall(Ball ball) {
         double dt = predictedDtTo(ball);
-        if (dt < Values.BALL_DIAMETER
+        if (dt < values.ballDiameter
                 && currentDtTo(ball) > dt
                 && justHit != ball && ball.justHit != this) {
 
@@ -418,7 +412,7 @@ public class Ball implements Comparable<Ball> {
                 double dy = vy / Values.DETAILED_PHYSICAL;
 
                 for (int i = 0; i < Values.DETAILED_PHYSICAL; ++i) {
-                    if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball.x, ball.y) < Values.BALL_DIAMETER) {
+                    if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball.x, ball.y) < values.ballDiameter) {
                         break;
                     }
                     xPos += dx;
