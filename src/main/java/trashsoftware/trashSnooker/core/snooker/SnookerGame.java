@@ -1,5 +1,7 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.snooker;
 
+import trashsoftware.trashSnooker.core.GameSettings;
+import trashsoftware.trashSnooker.core.GameValues;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public class SnookerGame extends AbstractSnookerGame {

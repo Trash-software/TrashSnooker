@@ -34,6 +34,8 @@ public class GameValues {
 
 	public double midArcRadius;
 
+	public double ballWeightRatio;
+
 	public double cornerHoleDt, cornerHoleTan, cornerArcHeight, cornerArcWidth, cornerArcRadius, cornerArcDiameter,
 			cornerLineWh;  // 底袋角直线的占地长宽
 
@@ -196,6 +198,7 @@ public class GameValues {
 		public Builder ballSize(double diameter) {
 			values.ballDiameter = diameter;
 			values.ballRadius = diameter / 2;
+			values.ballWeightRatio = Math.pow(diameter, 3) / Math.pow(52.5, 3);
 			return this;
 		}
 		

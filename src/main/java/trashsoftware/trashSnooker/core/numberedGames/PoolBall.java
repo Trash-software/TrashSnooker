@@ -1,10 +1,12 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.numberedGames;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.GameValues;
 
 public class PoolBall extends Ball {
 
-    PoolBall(int number, boolean initPotted, GameValues values) {
+    public PoolBall(int number, boolean initPotted, GameValues values) {
         super(number, initPotted, values);
     }
 

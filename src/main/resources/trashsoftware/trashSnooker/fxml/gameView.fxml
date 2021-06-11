@@ -58,7 +58,7 @@
                 <ColumnConstraints halignment="RIGHT" percentWidth="30.0"/>
             </columnConstraints>
             <HBox alignment="CENTER_LEFT" spacing="20.0">
-                <Label text="Player 1"/>
+                <Label fx:id="player1Label" text="Player 1"/>
                 <Label fx:id="player1ScoreLabel" text="0"/>
                 <Canvas fx:id="player1TarCanvas"/>
             </HBox>
@@ -69,7 +69,7 @@
             <HBox alignment="CENTER_RIGHT" spacing="20.0" GridPane.columnIndex="2">
                 <Canvas fx:id="player2TarCanvas"/>
                 <Label fx:id="player2ScoreLabel" text="0"/>
-                <Label text="Player 2"/>
+                <Label fx:id="player2Label" text="Player 2"/>
             </HBox>
         </GridPane>
     </VBox>

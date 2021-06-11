@@ -1,12 +1,13 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.numberedGames;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public abstract class NumberedBallGame extends Game {
 
-    NumberedBallGame(GameView parent, GameSettings gameSettings, GameValues gameValues) {
+    protected NumberedBallGame(GameView parent, GameSettings gameSettings, GameValues gameValues) {
         super(parent, gameSettings, gameValues);
     }
 

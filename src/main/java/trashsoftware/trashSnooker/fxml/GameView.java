@@ -22,6 +22,12 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
+import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
+import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 
 import java.io.IOException;
 import java.net.URL;
@@ -55,7 +61,7 @@ public class GameView implements Initializable {
     @FXML
     Canvas singlePoleCanvas;
     @FXML
-    Label player1ScoreLabel, player2ScoreLabel;
+    Label player1Label, player2Label, player1ScoreLabel, player2ScoreLabel;
     @FXML
     Canvas player1TarCanvas, player2TarCanvas;
     @FXML
@@ -76,6 +82,8 @@ public class GameView implements Initializable {
     private GraphicsContext ballCanvasGc;
     private Stage stage;
 
+    private PlayerPerson player1;
+    private PlayerPerson player2;
     private Game game;
     private GameType gameType;
 
@@ -139,11 +147,18 @@ public class GameView implements Initializable {
         drawTargetBoard();
     }
 
-    public void setup(Stage stage, GameType gameType) {
+    public void setup(Stage stage, GameType gameType, PlayerPerson player1, PlayerPerson player2) {
         this.stage = stage;
         this.gameType = gameType;
+        this.player1 = player1;
+        this.player2 = player2;
+
+        player1Label.setText(player1.getName());
+        player2Label.setText(player2.getName());
 
         startGame();
+
+        setupPowerSlider();
 
         generateScales();
 
@@ -157,6 +172,7 @@ public class GameView implements Initializable {
         drawScoreBoard(cuePlayer);
         drawTargetBoard();
         restoreCuePoint();
+        Platform.runLater(() -> powerSlider.setValue(40.0));
         setButtonsCueEnd();
 
         if (game.isEnded()) {
@@ -169,15 +185,19 @@ public class GameView implements Initializable {
     private void showEndMessage() {
         Platform.runLater(() ->
                 AlertShower.showInfo(stage,
-                        String.format("玩家1  %d : %d  玩家2", game.getPlayer1().getScore(), game.getPlayer2().getScore()),
-                        String.format("%s%d胜利。", "玩家", game.getWiningPlayer().getNumber())));
+                        String.format("%s  %d : %d  %s",
+                                game.getPlayer1().getPlayerPerson().getName(),
+                                game.getPlayer1().getScore(),
+                                game.getPlayer2().getScore(),
+                                game.getPlayer2().getPlayerPerson().getName()),
+                        String.format("%s 胜利。",  game.getWiningPlayer().getPlayerPerson().getName())));
     }
 
     private void askReposition() {
         Platform.runLater(() -> {
             if (AlertShower.askConfirmation(stage, "是否复位？", "对方犯规")) {
                 ((AbstractSnookerGame) game).reposition();
-                drawScoreBoard(game.getNextCuePlayer());
+                drawScoreBoard(game.getCuingPlayer());
                 drawTargetBoard();
             } else {
                 if (game.getWhiteBall().isPotted()) game.setBallInHand();
@@ -290,6 +310,7 @@ public class GameView implements Initializable {
     private void startGame() {
         GameSettings gameSettings = new GameSettings.Builder()
                 .player1Breaks(true)
+                .players(player1, player2)
                 .build();
 
         game = Game.createGame(this, gameSettings, gameType);
@@ -309,7 +330,7 @@ public class GameView implements Initializable {
     void tieTestAction() {
         game.tieTest();
         drawTargetBoard();
-        drawScoreBoard(game.getNextCuePlayer());
+        drawScoreBoard(game.getCuingPlayer());
     }
 
     @FXML
@@ -321,7 +342,7 @@ public class GameView implements Initializable {
     @FXML
     void withdrawAction() {
         if (game instanceof AbstractSnookerGame) {
-            Player curPlayer = game.getNextCuePlayer();
+            Player curPlayer = game.getCuingPlayer();
             int diff = ((AbstractSnookerGame) game).getScoreDiff(curPlayer);
             String behindText = diff <= 0 ? "落后" : "领先";
             if (AlertShower.askConfirmation(
@@ -342,11 +363,12 @@ public class GameView implements Initializable {
 
         setButtonsCueStart();
 
-        double power = Math.max(powerSlider.getValue(), 0.01);
+        double power = Math.max(powerSlider.getValue(), 0.01) / game.getGameValues().ballWeightRatio;
+        System.out.println("Ball weight " + game.getGameValues().ballWeightRatio);
         double vx = cursorDirectionUnitX * power * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
         double vy = cursorDirectionUnitY * power * Values.MAX_POWER_SPEED / 100.0;
 
-        double[] spins = calculateSpins(vx, vy);
+        double[] spins = calculateSpins(vx, vy, game.getCuingPlayer().getPlayerPerson());
 
         game.cue(vx, vy, spins[0], spins[1], spins[2]);
 
@@ -360,7 +382,7 @@ public class GameView implements Initializable {
             if (AlertShower.askConfirmation(stage, "真的要开始新游戏吗？", "请确认")) {
                 startGame();
                 drawTargetBoard();
-                drawScoreBoard(game.getNextCuePlayer());
+                drawScoreBoard(game.getCuingPlayer());
             }
         });
     }
@@ -405,7 +427,7 @@ public class GameView implements Initializable {
         withdrawMenu.setDisable(false);
     }
 
-    private double[] calculateSpins(double vx, double vy) {
+    private double[] calculateSpins(double vx, double vy, PlayerPerson playerPerson) {
         double speed = Math.hypot(vx, vy);
 
         double frontBackSpin = cueCanvasWH / 2 - cuePointY;  // 高杆正，低杆负
@@ -415,7 +437,8 @@ public class GameView implements Initializable {
 
         double side = spinRatio * (leftRightSpin / cueAreaRadius) * Values.MAX_SIDE_SPIN_SPEED;
         // 旋转产生的总目标速度
-        double spinSpeed = spinRatio * (frontBackSpin / cueAreaRadius) * Values.MAX_SPIN_SPEED;
+        double spinSpeed = spinRatio * (frontBackSpin / cueAreaRadius) * Values.MAX_SPIN_SPEED *
+                playerPerson.getMaxSpinPercentage() / 100;
         double spinX = vx * (spinSpeed / speed);
         double spinY = vy * (spinSpeed / speed);
 //        System.out.printf("x %f, y %f, total %f, side %f\n", spinX, spinY, spinSpeed, side);
@@ -446,12 +469,20 @@ public class GameView implements Initializable {
         gameCanvas.setHeight(canvasHeight);
     }
 
+    private void setupPowerSlider() {
+        powerSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            double playerMaxPower = game.getCuingPlayer().getPlayerPerson().getMaxPowerPercentage();
+            if (newValue.doubleValue() > playerMaxPower) {
+                powerSlider.setValue(playerMaxPower);
+                return;
+            }
+            powerLabel.setText(String.valueOf(Math.round(newValue.doubleValue())));
+        }));
+
+        powerSlider.setValue(40.0);
+    }
+
     private void addListeners() {
-        powerSlider.valueProperty().addListener(((observable, oldValue, newValue) ->
-                powerLabel.setText(String.valueOf(Math.round(newValue.doubleValue())))));
-
-        powerSlider.setValue(50.0);
-
         gameCanvas.setOnMouseClicked(this::onCanvasClicked);
         gameCanvas.setOnDragDetected(this::onDragStarted);
         gameCanvas.setOnMouseDragged(this::onDragging);
@@ -624,7 +655,7 @@ public class GameView implements Initializable {
     }
 
     private void drawSnookerTargetBoard(SnookerGame game1) {
-        if (game1.getNextCuePlayer().getNumber() == 1) {
+        if (game1.getCuingPlayer().getNumber() == 1) {
             drawSnookerTargetBall(player1TarCanvas, game1.getCurrentTarget(), game1.isDoingFreeBall());
             wipeCanvas(player2TarCanvas);
         } else {
@@ -634,7 +665,7 @@ public class GameView implements Initializable {
     }
 
     private void drawPoolTargetBoard(ChineseEightBallGame game1) {
-        if (game1.getNextCuePlayer().getNumber() == 1) {
+        if (game1.getCuingPlayer().getNumber() == 1) {
             drawPoolTargetBall(player1TarCanvas, game1.getCurrentTarget());
             wipeCanvas(player2TarCanvas);
         } else {
@@ -709,7 +740,7 @@ public class GameView implements Initializable {
         }
     }
 
-    private double getPredictionLineTotalLength(double potDt) {
+    private double getPredictionLineTotalLength(double potDt, PlayerPerson playerPerson) {
         double predictLineTotalLen;
         if (potDt >= minPredictLengthPotDt) predictLineTotalLen = minRealPredictLength;
         else if (potDt < maxPredictLengthPotDt) predictLineTotalLen = maxRealPredictLength;
@@ -720,7 +751,7 @@ public class GameView implements Initializable {
             predictLineTotalLen = maxRealPredictLength - potDtInRange * lineLengthRange;
         }
         double side = Math.abs(cuePointX - cueCanvasWH / 2) / cueCanvasWH;  // 0和0.5之间
-        return predictLineTotalLen * (1 - side);  // 加塞影响瞄准
+        return predictLineTotalLen * (1 - side) * playerPerson.getPrecisionPercentage() / 100;  // 加塞影响瞄准
     }
 
     private void drawCursor() {
@@ -754,7 +785,7 @@ public class GameView implements Initializable {
 
             double potDt = Algebra.distanceToPoint(targetPos[0], targetPos[1], whiteBall.getX(), whiteBall.getY());
             // 白球行进距离越长，预测线越短
-            double predictLineTotalLen = getPredictionLineTotalLength(potDt);
+            double predictLineTotalLen = getPredictionLineTotalLength(potDt, game.getCuingPlayer().getPlayerPerson());
 
             double whiteUnitX = (targetPos[0] - whiteBall.getX()) / potDt;
             double whiteUnitY = (targetPos[1] - whiteBall.getY()) / potDt;

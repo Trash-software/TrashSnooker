@@ -6,31 +6,31 @@ public abstract class Ball implements Comparable<Ball> {
     private final int value;
     private final Color color;
     private final GameValues values;
-    double x, y;
-    double nextX, nextY;
-    double vx, vy;  // unit: mm/(sec/frameRate)
-    double xSpin, ySpin;
-    double sideSpin;
+    protected double x, y;
+    protected double nextX, nextY;
+    protected double vx, vy;  // unit: mm/(sec/frameRate)
+    protected double xSpin, ySpin;
+    protected double sideSpin;
     private boolean potted;
     private boolean fmx, fmy;
     private long msSinceCue;
     private Ball justHit;
 
-    Ball(int value, boolean initPotted, GameValues values) {
+    protected Ball(int value, boolean initPotted, GameValues values) {
         this.value = value;
         this.potted = initPotted;
         this.values = values;
         this.color = generateColor(value);
     }
 
-    Ball(int value, double[] xy, GameValues values) {
+    protected Ball(int value, double[] xy, GameValues values) {
         this(value, false, values);
 
         setX(xy[0]);
         setY(xy[1]);
     }
 
-    Ball(int value, GameValues values) {
+    protected Ball(int value, GameValues values) {
         this(value, true, values);
     }
 
@@ -234,7 +234,7 @@ public abstract class Ball implements Comparable<Ball> {
         }
     }
 
-    void pot() {
+    public void pot() {
         potted = true;
         x = 0.0;
         y = 0.0;

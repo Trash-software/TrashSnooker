@@ -3,6 +3,9 @@ package trashsoftware.trashSnooker.core;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
+import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
+import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.*;
@@ -41,11 +44,13 @@ public abstract class Game {
     private Timer physicsTimer;
     private PhysicsCalculator physicsCalculator;
 
+    protected final GameSettings gameSettings;
     protected GameValues gameValues;
 
-    Game(GameView parent, GameSettings gameSettings, GameValues gameValues) {
+    protected Game(GameView parent, GameSettings gameSettings, GameValues gameValues) {
         this.parent = parent;
         this.gameValues = gameValues;
+        this.gameSettings = gameSettings;
 
         initPlayers();
         currentPlayer = gameSettings.isPlayer1Breaks() ? player1 : player2;
@@ -301,7 +306,7 @@ public abstract class Game {
 
     public abstract Player getWiningPlayer();
 
-    public Player getNextCuePlayer() {
+    public Player getCuingPlayer() {
         return currentPlayer;
     }
 

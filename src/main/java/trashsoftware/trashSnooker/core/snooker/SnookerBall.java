@@ -1,6 +1,8 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.snooker;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.GameValues;
 
 public class SnookerBall extends Ball {
     SnookerBall(int value, GameValues values) {

@@ -1,10 +1,12 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.snooker;
 
+import trashsoftware.trashSnooker.core.GameSettings;
+import trashsoftware.trashSnooker.core.GameValues;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public class MiniSnookerGame extends AbstractSnookerGame {
 
-    MiniSnookerGame(GameView parent, GameSettings gameSettings) {
+    public MiniSnookerGame(GameView parent, GameSettings gameSettings) {
         super(parent, gameSettings, GameValues.MINI_SNOOKER_VALUES);
     }
 

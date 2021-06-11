@@ -1,8 +1,8 @@
 java.lang.NullPointerException
 	at TrashSnooker/trashsoftware.trashSnooker.core.Ball.<init>(Ball.java:29)
-	at TrashSnooker/trashsoftware.trashSnooker.core.SnookerBall.<init>(SnookerBall.java:9)
-	at TrashSnooker/trashsoftware.trashSnooker.core.AbstractSnookerGame.<init>(AbstractSnookerGame.java:11)
-	at TrashSnooker/trashsoftware.trashSnooker.core.SnookerGame.<init>(SnookerGame.java:8)
+	at TrashSnooker/trashsoftware.trashSnooker.core.snooker.SnookerBall.<init>(SnookerBall.java:9)
+	at TrashSnooker/trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame.<init>(AbstractSnookerGame.java:11)
+	at TrashSnooker/trashsoftware.trashSnooker.core.snooker.SnookerGame.<init>(SnookerGame.java:8)
 	at TrashSnooker/trashsoftware.trashSnooker.core.Game.createGame(Game.java:61)
 	at TrashSnooker/trashsoftware.trashSnooker.fxml.GameView.startGame(GameView.java:294)
 	at TrashSnooker/trashsoftware.trashSnooker.fxml.GameView.setup(GameView.java:149)

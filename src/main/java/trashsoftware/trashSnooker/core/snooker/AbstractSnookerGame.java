@@ -1,8 +1,8 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.snooker;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.*;
@@ -99,8 +99,8 @@ public abstract class AbstractSnookerGame extends Game {
 
     @Override
     protected void initPlayers() {
-        player1 = new SnookerPlayer(1, this);
-        player2 = new SnookerPlayer(2, this);
+        player1 = new SnookerPlayer(1, gameSettings.getPlayer1(), this);
+        player2 = new SnookerPlayer(2, gameSettings.getPlayer2(), this);
     }
 
     @Override
@@ -161,8 +161,8 @@ public abstract class AbstractSnookerGame extends Game {
             double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
             for (Ball ball : currentTarBalls) {
                 // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
-                double xDiff = ball.x - whiteBall.x;
-                double yDiff = ball.y - whiteBall.y;
+                double xDiff = ball.getX() - whiteBall.getX();
+                double yDiff = ball.getY() - whiteBall.getY();
                 double[] vec = new double[]{xDiff, yDiff};
                 double[] unitVec = Algebra.unitVector(vec);
                 double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
@@ -476,8 +476,8 @@ public abstract class AbstractSnookerGame extends Game {
                             double scale) {
         if (ball.isPotted()) return;
         drawBallBase(
-                parent.canvasX(ball.x),
-                parent.canvasY(ball.y),
+                parent.canvasX(ball.getX()),
+                parent.canvasY(ball.getY()),
                 gameValues.ballDiameter * scale,
                 ball.getColor(),
                 graphicsContext);

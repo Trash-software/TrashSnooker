@@ -5,12 +5,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import trashsoftware.configLoader.ConfigLoader;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.Recorder;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Main extends Application {
+
+    private static final String CONFIG = "user" + File.separator + "config.cfg";
 
     public static void main(String[] args) {
         launch(args);
@@ -19,6 +24,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
+            ConfigLoader.startLoader(CONFIG);
+            Recorder.loadAll();
+
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("fxml/mainView.fxml")
             );
@@ -26,6 +34,10 @@ public class Main extends Application {
 
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
+
+            primaryStage.setOnHidden(e -> {
+                ConfigLoader.stopLoader();
+            });
 
             primaryStage.show();
         } catch (Exception e) {

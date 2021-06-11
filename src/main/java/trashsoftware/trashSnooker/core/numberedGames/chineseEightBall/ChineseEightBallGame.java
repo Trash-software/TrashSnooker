@@ -1,9 +1,11 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.numberedGames.chineseEightBall;
 
+import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
+import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.Util;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class ChineseEightBallGame extends NumberedBallGame {
@@ -18,7 +20,7 @@ public class ChineseEightBallGame extends NumberedBallGame {
     private boolean isBreaking = true;
     private String foulReason;
 
-    ChineseEightBallGame(GameView parent, GameSettings gameSettings) {
+    public ChineseEightBallGame(GameView parent, GameSettings gameSettings) {
         super(parent, gameSettings, GameValues.CHINESE_EIGHT_VALUES);
 
         eightBall = new PoolBall(8, false, gameValues);
@@ -83,8 +85,8 @@ public class ChineseEightBallGame extends NumberedBallGame {
 
     @Override
     protected void initPlayers() {
-        player1 = new ChineseEightPlayer(1);
-        player2 = new ChineseEightPlayer(2);
+        player1 = new ChineseEightPlayer(1, gameSettings.getPlayer1());
+        player2 = new ChineseEightPlayer(2, gameSettings.getPlayer2());
     }
 
     @Override
