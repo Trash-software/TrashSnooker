@@ -7,31 +7,41 @@ import trashsoftware.configLoader.ConfigLoader;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Recorder {
 
     private static final String PLAYER_LIST_FILE = "user" + File.separator + "players.json";
 
-    private static final List<PlayerPerson> playerPeople = new ArrayList<>();
+    private static final Map<String, PlayerPerson> playerPeople = new HashMap<>();
+    private static final Map<String, RecordItem> playerRecords = new HashMap<>();
+    private static final RecordItem globalRecord = new RecordItem();
+    private static PlayerPerson highestBreakPerson;
 
     public static void loadAll() {
         playerPeople.clear();
         JSONObject root = loadFromDisk(PLAYER_LIST_FILE);
         if (root.has("players")) {
-            JSONArray array = root.getJSONArray("players");
-            for (Object obj : array) {
+            JSONObject array = root.getJSONObject("players");
+            for (String key : array.keySet()) {
+                Object obj = array.get(key);
                 if (obj instanceof JSONObject) {
                     JSONObject personObj = (JSONObject) obj;
                     try {
+                        String name = personObj.getString("name");
                         PlayerPerson playerPerson = new PlayerPerson(
-                                personObj.getString("name"),
+                                name,
                                 personObj.getDouble("power"),
                                 personObj.getDouble("spin"),
                                 personObj.getDouble("precision")
                         );
-                        playerPeople.add(playerPerson);
+                        playerPeople.put(name, playerPerson);
+                        JSONObject recordObj = personObj.getJSONObject("records");
+                        RecordItem recordItem = RecordItem.fromJson(recordObj);
+                        playerRecords.put(name, recordItem);
+                        if (globalRecord.updateHighestBreak(recordItem.getHighestBreak())) {
+                            highestBreakPerson = playerPerson;
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -41,23 +51,41 @@ public class Recorder {
     }
 
     public static void addPlayerPerson(PlayerPerson playerPerson) {
-        playerPeople.add(playerPerson);
+        playerPeople.put(playerPerson.getName(), playerPerson);
         saveToDisk(makeJsonObject(), PLAYER_LIST_FILE);
     }
 
-    public static List<PlayerPerson> getPlayerPeople() {
-        return playerPeople;
+    public static void updatePlayerBreak(String playerName, int currentBreak) {
+        RecordItem recordItem = playerRecords.get(playerName);
+        if (recordItem == null) {
+            recordItem = new RecordItem();
+            playerRecords.put(playerName, recordItem);
+        }
+        recordItem.updateHighestBreak(currentBreak);
+        globalRecord.updateHighestBreak(currentBreak);
+    }
+
+    public static void save() {
+        saveToDisk(makeJsonObject(), PLAYER_LIST_FILE);
+    }
+
+    public static Collection<PlayerPerson> getPlayerPeople() {
+        return playerPeople.values();
     }
 
     private static JSONObject makeJsonObject() {
-        JSONArray array = new JSONArray();
-        for (PlayerPerson playerPerson : playerPeople) {
+        JSONObject array = new JSONObject();
+        for (PlayerPerson playerPerson : playerPeople.values()) {
             JSONObject personObject = new JSONObject();
             personObject.put("name", playerPerson.getName());
             personObject.put("power", playerPerson.getMaxPowerPercentage());
             personObject.put("spin", playerPerson.getMaxSpinPercentage());
             personObject.put("precision", playerPerson.getPrecisionPercentage());
-            array.put(personObject);
+
+            RecordItem recordItem = playerRecords.get(playerPerson.getName());
+            JSONObject recordObj = recordItem != null ? recordItem.toJson() : new JSONObject();
+            personObject.put("records", recordObj);
+            array.put(playerPerson.getName(), personObject);
         }
         JSONObject root = new JSONObject();
         root.put("players", array);

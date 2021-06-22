@@ -44,7 +44,7 @@ public class Values {
     // 击球最大速度，mm/s
     public static final double MAX_POWER_SPEED = 5000.0;
     // 由旋转产生的理论最大瞬时速度（该速度不可能达到），mm/s
-    public static final double MAX_SPIN_SPEED = 6500.0;
+    public static final double MAX_SPIN_SPEED = 7000.0;
     // 由侧旋产生的最大瞬时速度，mm/s
     public static final double MAX_SIDE_SPIN_SPEED = 1400.0;
     public static final int DETAILED_PHYSICAL = 10;

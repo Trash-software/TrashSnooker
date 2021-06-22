@@ -1,26 +1,37 @@
-{"players": [
-  {
-    "spin": 75,
-    "precision": 75,
-    "name": "Mou moumou",
-    "power": 75
-  },
-  {
-    "spin": 89.71321124982953,
-    "precision": 100,
-    "name": "Kid",
-    "power": 47.65586034912719
-  },
-  {
+{"players": {
+  "Master": {
+    "records": {"highestBreak": 68},
     "spin": 100,
     "precision": 100,
     "name": "Master",
     "power": 100
   },
-  {
+  "莽子": {
+    "records": {"highestBreak": 4},
     "spin": 75,
     "precision": 31.109724734489465,
     "name": "莽子",
     "power": 100
+  },
+  "Kid": {
+    "records": {"highestBreak": 8},
+    "spin": 89.71321124982953,
+    "precision": 100,
+    "name": "Kid",
+    "power": 47.65586034912719
+  },
+  "Mou moumou": {
+    "records": {"highestBreak": 0},
+    "spin": 75,
+    "precision": 75,
+    "name": "Mou moumou",
+    "power": 75
+  },
+  "Ding": {
+    "records": {"highestBreak": 27},
+    "spin": 90.21197102610905,
+    "precision": 94.45137442496055,
+    "name": "Ding",
+    "power": 92.20698159234482
   }
-]}
+}}

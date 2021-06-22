@@ -28,6 +28,7 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
+import trashsoftware.trashSnooker.util.Recorder;
 
 import java.io.IOException;
 import java.net.URL;
@@ -169,6 +170,7 @@ public class GameView implements Initializable {
     }
 
     public void finishCue(Player cuePlayer) {
+        updateCuePlayerSinglePole(cuePlayer);
         drawScoreBoard(cuePlayer);
         drawTargetBoard();
         restoreCuePoint();
@@ -177,9 +179,14 @@ public class GameView implements Initializable {
 
         if (game.isEnded()) {
             showEndMessage();
+            Recorder.save();
         } else if ((game instanceof AbstractSnookerGame) && ((AbstractSnookerGame) game).canReposition()) {
             askReposition();
         }
+    }
+
+    private void updateCuePlayerSinglePole(Player cuePlayer) {
+        Recorder.updatePlayerBreak(cuePlayer.getPlayerPerson().getName(), cuePlayer.getSinglePoleScore());
     }
 
     private void showEndMessage() {
@@ -349,9 +356,10 @@ public class GameView implements Initializable {
                     stage,
                     String.format("%s%d分，台面剩余%d分，真的要认输吗？", behindText, Math.abs(diff),
                             ((AbstractSnookerGame) game).getRemainingScore()),
-                    String.format("%s%d, 确认要认输吗？", "玩家", curPlayer.getNumber()))) {
+                    String.format("%s, 确认要认输吗？", curPlayer.getPlayerPerson().getName()))) {
                 game.withdraw(curPlayer);
                 showEndMessage();
+                Recorder.save();
             }
         }
     }

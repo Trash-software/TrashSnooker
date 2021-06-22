@@ -14,6 +14,7 @@ import trashsoftware.trashSnooker.util.Recorder;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -32,7 +33,7 @@ public class MainView implements Initializable {
     }
 
     private void loadPlayerList() {
-        List<PlayerPerson> playerPeople = Recorder.getPlayerPeople();
+        Collection<PlayerPerson> playerPeople = Recorder.getPlayerPeople();
         player1Box.getItems().clear();
         player2Box.getItems().clear();
         player1Box.getItems().addAll(playerPeople);
