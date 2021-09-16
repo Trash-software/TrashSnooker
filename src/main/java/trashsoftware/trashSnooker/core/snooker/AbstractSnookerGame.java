@@ -200,6 +200,7 @@ public abstract class AbstractSnookerGame extends Game {
             else {
                 // 延分，争黑球
                 whiteBall.pot();
+                ballInHand = true;
                 if (Math.random() < 0.5) {
                     currentPlayer = player1;
                 } else {
@@ -262,9 +263,11 @@ public abstract class AbstractSnookerGame extends Game {
     protected void updateScore(Set<Ball> pottedBalls, boolean isFreeBall) {
         int score = 0;
         int foul = 0;
-        if (whiteFirstCollide == null) foul = getDefaultFoulValue();  // 没打到球,也不可能有球进
-        else if (whiteBall.isPotted()) foul = Math.max(getDefaultFoulValue(), getMaxFoul(pottedBalls));
-        else if (isFreeBall) {
+        if (whiteFirstCollide == null) foul = getDefaultFoulValue();  // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
+        else if (whiteBall.isPotted()) {
+            foul = Math.max(getDefaultFoulValue(), getMaxFoul(pottedBalls));
+            ballInHand = true;
+        } else if (isFreeBall) {
             int[] scoreFoul = scoreFoulOfFreeBall(pottedBalls);
             score = scoreFoul[0];
             foul = scoreFoul[1];
@@ -355,6 +358,7 @@ public abstract class AbstractSnookerGame extends Game {
     public void reposition() {
         System.out.println("Reposition!");
         lastCueFoul = false;
+        ballInHand = false;
         doingFreeBall = false;
         for (Map.Entry<Ball, double[]> entry : recordedPositions.entrySet()) {
             Ball ball = entry.getKey();
@@ -422,7 +426,7 @@ public abstract class AbstractSnookerGame extends Game {
                 }
             }
             if (!placed) {
-                double x = placePoint[0] + MIN_PLACE_DISTANCE;
+                double x = placePoint[0] + MIN_GAP_DISTANCE;
                 while (x < gameValues.rightX - gameValues.ballRadius) {
                     if (!isOccupied(x, placePoint[1])) {
                         ball.setX(x);
@@ -430,7 +434,7 @@ public abstract class AbstractSnookerGame extends Game {
                         placed = true;
                         break;
                     }
-                    x += MIN_PLACE_DISTANCE;
+                    x += MIN_GAP_DISTANCE;
                 }
                 if (!placed) {
                     System.out.println("Failed to place!" + ball);
@@ -465,8 +469,8 @@ public abstract class AbstractSnookerGame extends Game {
     }
 
     protected boolean canPlaceWhite(double x, double y) {
-        return x < breakLineX() &&
-                Algebra.distanceToPoint(x, y, brownBallPos()[0], brownBallPos()[1]) < breakArcRadius() &&
+        return x <= breakLineX() &&
+                Algebra.distanceToPoint(x, y, brownBallPos()[0], brownBallPos()[1]) <= breakArcRadius() &&
                 !isOccupied(x, y);
     }
 
@@ -484,19 +488,19 @@ public abstract class AbstractSnookerGame extends Game {
     }
 
     private void initRedBalls() {
-        double curX = pinkBallPos()[0] + gameValues.ballDiameter + MIN_PLACE_DISTANCE;  // 粉球与红球堆空隙
+        double curX = pinkBallPos()[0] + gameValues.ballDiameter + Game.MIN_GAP_DISTANCE;  // 粉球与红球堆空隙
         double rowStartY = gameValues.midY;
-        double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0)) + 3.0;
+        double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0)) + Game.MIN_PLACE_DISTANCE * 0.8;
         int ballCountInRow = 1;
         int index = 0;
         for (int row = 0; row < 5; ++row) {
             double y = rowStartY;
             for (int col = 0; col < ballCountInRow; ++col) {
                 redBalls[index++] = new SnookerBall(1, new double[]{curX, y}, gameValues);
-                y += gameValues.ballDiameter + 4.0;
+                y += gameValues.ballDiameter + Game.MIN_PLACE_DISTANCE;
             }
             ballCountInRow++;
-            rowStartY -= gameValues.ballRadius + 2.0;
+            rowStartY -= gameValues.ballRadius + Game.MIN_PLACE_DISTANCE * 0.6;
             curX += rowOccupyX;
         }
     }

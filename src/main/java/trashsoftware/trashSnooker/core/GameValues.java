@@ -82,6 +82,7 @@ public class GameValues {
 	public double[][] botRightHoleEndLine;
 
 	public double[][] allCornerArcs;
+//	public double[] cornerLine
 
 	public double[][][] allCornerLines;
 

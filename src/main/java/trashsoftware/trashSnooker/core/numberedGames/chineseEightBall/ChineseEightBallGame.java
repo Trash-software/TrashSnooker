@@ -6,7 +6,10 @@ import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.Util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class ChineseEightBallGame extends NumberedBallGame {
 
@@ -51,7 +54,8 @@ public class ChineseEightBallGame extends NumberedBallGame {
 
         double curX = breakPointX();
         double rowStartY = gameValues.midY;
-        double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0)) + 3.0;
+        double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0))
+                + Game.MIN_PLACE_DISTANCE * 0.6;
         int ballCountInRow = 1;
         int index = 0;
         for (int row = 0; row < 5; ++row) {
@@ -154,6 +158,22 @@ public class ChineseEightBallGame extends NumberedBallGame {
         return true;
     }
 
+    private int fullBallsCount(Set<Ball> balls) {
+        int count = 0;
+        for (Ball ball : balls) {
+            if (isFullBall(ball)) count++;
+        }
+        return count;
+    }
+
+    private int halfBallsCount(Set<Ball> balls) {
+        int count = 0;
+        for (Ball ball : balls) {
+            if (isHalfBall(ball)) count++;
+        }
+        return count;
+    }
+
     private boolean hasFullBalls(Set<Ball> balls) {
         for (Ball ball : balls) {
             if (isFullBall(ball)) return true;
@@ -252,22 +272,26 @@ public class ChineseEightBallGame extends NumberedBallGame {
                     ((ChineseEightPlayer) getAnotherPlayer()).setBallRange(17);
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     potSuccess = true;
+                    currentPlayer.addScore(fullBallsCount(pottedBalls));
                 }
                 if (allHalfBalls(pottedBalls)) {
                     ((ChineseEightPlayer) currentPlayer).setBallRange(17);
                     ((ChineseEightPlayer) getAnotherPlayer()).setBallRange(16);
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     potSuccess = true;
+                    currentPlayer.addScore(halfBallsCount(pottedBalls));
                 }
             } else {
                 if (currentTarget == 16) {
                     if (hasFullBalls(pottedBalls)) {
                         potSuccess = true;
                     }
+                    currentPlayer.addScore(fullBallsCount(pottedBalls));
                 } else if (currentTarget == 17) {
                     if (hasHalfBalls(pottedBalls)) {
                         potSuccess = true;
                     }
+                    currentPlayer.addScore(halfBallsCount(pottedBalls));
                 }
             }
         }

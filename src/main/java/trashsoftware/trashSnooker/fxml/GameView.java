@@ -206,8 +206,6 @@ public class GameView implements Initializable {
                 ((AbstractSnookerGame) game).reposition();
                 drawScoreBoard(game.getCuingPlayer());
                 drawTargetBoard();
-            } else {
-                if (game.getWhiteBall().isPotted()) game.setBallInHand();
             }
         });
     }
@@ -657,12 +655,12 @@ public class GameView implements Initializable {
 
     private void drawTargetBoard() {
         Platform.runLater(() -> {
-            if (game instanceof AbstractSnookerGame) drawSnookerTargetBoard((SnookerGame) game);
+            if (game instanceof AbstractSnookerGame) drawSnookerTargetBoard((AbstractSnookerGame) game);
             else if (game instanceof ChineseEightBallGame) drawPoolTargetBoard((ChineseEightBallGame) game);
         });
     }
 
-    private void drawSnookerTargetBoard(SnookerGame game1) {
+    private void drawSnookerTargetBoard(AbstractSnookerGame game1) {
         if (game1.getCuingPlayer().getNumber() == 1) {
             drawSnookerTargetBall(player1TarCanvas, game1.getCurrentTarget(), game1.isDoingFreeBall());
             wipeCanvas(player2TarCanvas);

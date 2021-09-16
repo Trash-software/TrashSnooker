@@ -194,10 +194,11 @@ public abstract class Ball implements Comparable<Ball> {
         double xSpinDiff = xSpin - vx;
         double ySpinDiff = ySpin - vy;
 
+        // A linear reduce
         double spinDiffTotal = Math.hypot(xSpinDiff, ySpinDiff);
-        double spinRatio = Game.spinReducer / spinDiffTotal;
-        double xSpinReducer = Math.abs(xSpinDiff * spinRatio);  // todo
-        double ySpinReducer = Math.abs(ySpinDiff * spinRatio);
+        double spinReduceRatio = Game.spinReducer / spinDiffTotal;
+        double xSpinReducer = Math.abs(xSpinDiff * spinReduceRatio);
+        double ySpinReducer = Math.abs(ySpinDiff * spinReduceRatio);
 
 //        if (isWhite()) System.out.printf("vx: %f, vy: %f, xr: %f, yr: %f, spin: %f\n", vx, vy, xSpinReducer, ySpinReducer, SnookerGame.spinReducer);
 
@@ -239,6 +240,10 @@ public abstract class Ball implements Comparable<Ball> {
         x = 0.0;
         y = 0.0;
         clearMovement();
+    }
+
+    private boolean isNotMoving() {
+        return vx == 0.0 && vy == 0.0;
     }
 
     /**
@@ -391,21 +396,91 @@ public abstract class Ball implements Comparable<Ball> {
         return false;
     }
 
+    boolean tryHitTwoBalls(Ball ball1, Ball ball2) {
+        if (this.isNotMoving()) {
+            if (ball1.isNotMoving()) {
+                if (ball2.isNotMoving()) {
+                    return false;  // 三颗球都没动
+                } else {
+                    return ball2.tryHitTwoBalls(this, ball1);
+                }
+            } else {
+                if (ball2.isNotMoving()) {
+                    return ball1.tryHitTwoBalls(this, ball2);
+                } else {
+                    return false;  // ball1、ball2 都在动，无法处理
+                }
+            }
+        } else {
+            if (ball1.isNotMoving() && ball2.isNotMoving()) {
+                // this 去撞另外两颗
+                double dt1, dt2, dt12;
+                if (((dt1 = predictedDtTo(ball1)) < values.ballDiameter && currentDtTo(ball1) > dt1 &&
+                        justHit != ball1 && ball1.justHit != this) &&
+                        ((dt2 = predictedDtTo(ball2)) < values.ballDiameter && currentDtTo(ball2) > dt2 &&
+                                justHit != ball2 && ball2.justHit != this)) {
+                    System.out.println("Hit two static balls!=====================");
+                    double xPos = x;
+                    double yPos = y;
+                    double dx = vx / Values.DETAILED_PHYSICAL;
+                    double dy = vy / Values.DETAILED_PHYSICAL;
+
+                    boolean ball1First = true;
+
+                    for (int i = 0; i < Values.DETAILED_PHYSICAL; ++i) {
+                        if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball1.x, ball1.y) < values.ballDiameter) {
+                            break;
+                        }
+                        if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball2.x, ball2.y) < values.ballDiameter) {
+                            ball1First = false;
+                            break;
+                        }
+                        xPos += dx;
+                        yPos += dy;
+                    }
+
+                    if (ball1First) {
+                        tryHitBall(ball1, false);
+                        tryHitBall(ball2, false);
+                    } else {
+                        tryHitBall(ball2, false);
+                        tryHitBall(ball1, false);
+                    }
+
+                    return true;
+                } else {
+                    return false;  // 这三颗球没有贴在一起
+                }
+            } else {
+                return false;  // this 和 ball1、ball2 中的至少一颗都在动，无法处理
+            }
+        }
+    }
+
     boolean tryHitBall(Ball ball) {
+        return tryHitBall(ball, true);
+    }
+
+    boolean tryHitBall(Ball ball, boolean checkMovingBall) {
         double dt = predictedDtTo(ball);
         if (dt < values.ballDiameter
                 && currentDtTo(ball) > dt
                 && justHit != ball && ball.justHit != this) {
 
-            if (this.vx == 0.0 && this.vy == 0.0) {
-                if (ball.vx == 0.0 && ball.vy == 0.0) {
-                    throw new RuntimeException("他妈的两颗静止的球拿头撞？");
+            if (this.isNotMoving()) {
+                if (ball.isNotMoving()) {
+                    if (checkMovingBall) {
+                        throw new RuntimeException("他妈的两颗静止的球拿头撞？");
+                    } else {
+                        System.err.println("复杂情况，不管了，有bug就有bug吧");
+                        return false;
+                    }
                 } else {
                     return ball.tryHitBall(this);
                 }
             }
-            if (ball.vx == 0.0 && ball.vy == 0.0) {
-                System.out.println("Hit static ball!=====================");
+            if (ball.isNotMoving()) {
+                if (checkMovingBall) System.out.println("Hit static ball!=====================");
                 double xPos = x;
                 double yPos = y;
                 double dx = vx / Values.DETAILED_PHYSICAL;
@@ -429,6 +504,7 @@ public abstract class Ball implements Comparable<Ball> {
                 this.vx = (this.vx - ballVX) * Values.BALL_BOUNCE_RATIO;
                 this.vy = (this.vy - ballVY) * Values.BALL_BOUNCE_RATIO;
             } else {
+                if (!checkMovingBall) return false;
                 System.out.println("Hit moving ball!=====================");
 
                 double[] thisV = new double[]{vx, vy};

@@ -33,9 +33,9 @@ public class AddPlayerView implements Initializable {
         precisionSlider.valueProperty().addListener(((observable, oldValue, newValue) ->
                 precisionLabel.setText(String.valueOf(Math.round(newValue.doubleValue())))));
 
-        powerSlider.setValue(75.0);
-        spinSlider.setValue(75.0);
-        precisionSlider.setValue(75.0);
+        powerSlider.setValue(80.0);
+        spinSlider.setValue(80.0);
+        precisionSlider.setValue(80.0);
     }
 
     public void setStage(Stage stage, MainView parent) {

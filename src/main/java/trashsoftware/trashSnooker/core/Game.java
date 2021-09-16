@@ -15,11 +15,12 @@ public abstract class Game {
     public static final double calculationsPerSec = 1000.0 / calculateMs;
     public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
     public static final double speedReducer = 120.0 / calculationsPerSecSqr;
-    public static final double spinReducer = 2500.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
-    public static final double spinEffect = 2000.0 / calculateMs;  // 数值越小影响越大
+    public static final double spinReducer = 3500.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
+    public static final double spinEffect = 1900.0 / calculateMs;  // 数值越小影响越大
     public static final double sideSpinReducer = 120.0 / calculationsPerSecSqr;
 
-    protected static final double MIN_PLACE_DISTANCE = 5.0;  // 防止物理运算卡bug
+    protected static final double MIN_PLACE_DISTANCE = 0.0;  // 5.0 防止物理运算卡bug
+    protected static final double MIN_GAP_DISTANCE = 3.0;
 
     protected final Set<Ball> newPotted = new HashSet<>();
     protected final GameView parent;
@@ -337,6 +338,7 @@ public abstract class Game {
     private void whiteCollide(Ball ball) {
         if (whiteFirstCollide == null) {
             whiteFirstCollide = ball;
+            collidesWall = false;  // 必须白球在接触首个目标球后，再有球碰库
         }
     }
 
@@ -353,7 +355,7 @@ public abstract class Game {
         for (Ball ball : getAllBalls()) {
             if (!ball.isPotted()) {
                 double dt = Algebra.distanceToPoint(x, y, ball.x, ball.y);
-                if (dt < gameValues.ballDiameter + MIN_PLACE_DISTANCE) return true;
+                if (dt < gameValues.ballDiameter + MIN_GAP_DISTANCE) return true;
             }
         }
         return false;
@@ -481,7 +483,8 @@ public abstract class Game {
                         continue;
                     }
 
-                    boolean noHit = tryHitBall(ball);
+                    boolean noHit = tryHitThreeBalls(ball);
+                    if (noHit) tryHitBall(ball);
                     if (noHit) ball.normalMove();
                 }
             }
@@ -489,6 +492,28 @@ public abstract class Game {
                 endMove();
             }
 //            System.out.print((System.nanoTime() - st) + " ");
+        }
+
+        private boolean tryHitThreeBalls(Ball ball) {
+            if (ball.isWhite()) {
+                return true;  // 略过白球同时碰到两颗球的情况：无法处理
+            }
+
+            boolean noHit = true;
+            for (Ball secondBall : getAllBalls()) {
+                if (ball != secondBall) {
+                    for (Ball thirdBall : getAllBalls()) {
+                        if (ball != thirdBall && secondBall != thirdBall) {
+                            if (ball.tryHitTwoBalls(secondBall, thirdBall)) {
+                                // 同时撞到两颗球
+                                noHit = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return noHit;
         }
 
         private boolean tryHitBall(Ball ball) {
