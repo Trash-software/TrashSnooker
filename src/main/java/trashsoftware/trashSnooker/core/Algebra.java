@@ -98,6 +98,15 @@ public class Algebra {
         return new double[]{x / norm, y / norm};
     }
 
+    public static double[] rotateVector(double x, double y, double angleRad) {
+        double cosA = Math.cos(angleRad);
+        double sinA = Math.sin(angleRad);
+        return new double[]{
+                x * cosA - y * sinA,
+                x * sinA + y * cosA
+        };
+    }
+
     public static double distanceToLine(double x, double y, double[] lineStartXY, double[] lineEndXY) {
         double x1 = lineStartXY[0];
         double x2 = lineEndXY[0];

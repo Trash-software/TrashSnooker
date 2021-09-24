@@ -36,12 +36,12 @@ import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 public class GameView implements Initializable {
-//    public static final Paint BACKGROUND = Color.GREEN;
-    public static final Paint HOLE_PAINT = Color.BLACK.brighter();
-    public static final Paint TABLE_WOOD_PAINT = Color.SADDLEBROWN;
-    public static final Paint WHITE = Color.WHITE;
-    public static final Paint BLACK = Color.BLACK;
-    public static final Paint CUE_POINT = Color.RED;
+    public static final Color HOLE_PAINT = Color.BLACK.brighter().brighter().brighter();
+    public static final Color TABLE_WOOD_PAINT = Color.SADDLEBROWN;
+    public static final Color WHITE = Color.WHITE;
+    public static final Color BLACK = Color.BLACK;
+    public static final Color CUE_POINT = Color.RED;
+    public static final Color CUE_TIP_COLOR = Color.LIGHTSEAGREEN;
 
     public static final Font POOL_NUMBER_FONT = new Font(8.0);
 
@@ -368,10 +368,11 @@ public class GameView implements Initializable {
 
         setButtonsCueStart();
 
-        double power = Math.max(powerSlider.getValue(), 0.01) / game.getGameValues().ballWeightRatio;
+        double power = getPowerPercentage();
+        double[] unitXYWithSpin = getUnitXYWithSpins(getUnitSideSpin(), power);
         System.out.println("Ball weight " + game.getGameValues().ballWeightRatio);
-        double vx = cursorDirectionUnitX * power * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
-        double vy = cursorDirectionUnitY * power * Values.MAX_POWER_SPEED / 100.0;
+        double vx = unitXYWithSpin[0] * power * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
+        double vy = unitXYWithSpin[1] * power * Values.MAX_POWER_SPEED / 100.0;
 
         double[] spins = calculateSpins(vx, vy, game.getCuingPlayer().getPlayerPerson());
 
@@ -432,11 +433,27 @@ public class GameView implements Initializable {
         withdrawMenu.setDisable(false);
     }
 
+    private double getUnitSideSpin() {
+        return (cuePointX - cueCanvasWH / 2) / cueAreaRadius;
+    }
+
+    /**
+     * 返回受到侧塞影响的白球单位向量
+     */
+    private double[] getUnitXYWithSpins(double unitSideSpin, double powerPercentage) {
+        double offsetAngleRad = -unitSideSpin * powerPercentage / 1800;
+        return Algebra.rotateVector(cursorDirectionUnitX, cursorDirectionUnitY, offsetAngleRad);
+    }
+
+    private double getPowerPercentage() {
+        return Math.max(powerSlider.getValue(), 0.01) / game.getGameValues().ballWeightRatio;
+    }
+
     private double[] calculateSpins(double vx, double vy, PlayerPerson playerPerson) {
         double speed = Math.hypot(vx, vy);
 
-        double frontBackSpin = cueCanvasWH / 2 - cuePointY;  // 高杆正，低杆负
-        double leftRightSpin = cuePointX - cueCanvasWH / 2;  // 右塞正（逆时针），左塞负
+        double frontBackSpin = (cueCanvasWH / 2 - cuePointY) / cueAreaRadius;  // 高杆正，低杆负
+        double leftRightSpin = getUnitSideSpin();  // 右塞正（逆时针），左塞负
         if (frontBackSpin > 0) {
             // 高杆补偿
             frontBackSpin *= 1.25;
@@ -444,9 +461,9 @@ public class GameView implements Initializable {
 
         double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.5);
 
-        double side = spinRatio * (leftRightSpin / cueAreaRadius) * Values.MAX_SIDE_SPIN_SPEED;
+        double side = spinRatio * leftRightSpin * Values.MAX_SIDE_SPIN_SPEED;
         // 旋转产生的总目标速度
-        double spinSpeed = spinRatio * (frontBackSpin / cueAreaRadius) * Values.MAX_SPIN_SPEED *
+        double spinSpeed = spinRatio * frontBackSpin * Values.MAX_SPIN_SPEED *
                 playerPerson.getMaxSpinPercentage() / 100;
         double spinX = vx * (spinSpeed / speed);
         double spinY = vy * (spinSpeed / speed);
@@ -786,15 +803,18 @@ public class GameView implements Initializable {
 
         if (whiteBall.isPotted()) return;
 
-        double backDistanceToWall = game.cueBackDistanceToObstacle(cursorDirectionUnitX, cursorDirectionUnitY);
+//        double backDistanceToWall = game.cueBackDistanceToObstacle(cursorDirectionUnitX, cursorDirectionUnitY);
 //        System.out.println(backDistanceToWall);
 
-        PredictedPos predictedPos = game.getPredictedHitBall(cursorDirectionUnitX, cursorDirectionUnitY);
+        double[] unitXYWithSpin = getUnitXYWithSpins(getUnitSideSpin(), getPowerPercentage());
+        double unitX = unitXYWithSpin[0];
+        double unitY = unitXYWithSpin[1];
+        PredictedPos predictedPos = game.getPredictedHitBall(unitX, unitY);
 
         graphicsContext.setStroke(WHITE);
         if (predictedPos == null) {
             graphicsContext.strokeLine(whiteX, whiteY,
-                    whiteX + cursorDirectionUnitX * 1000.0, whiteY + cursorDirectionUnitY * 1000.0);
+                    whiteX + unitX * 1000.0, whiteY + unitY * 1000.0);
         } else {
             double[] targetPos = predictedPos.getPredictedWhitePos();
             double[] ballPos = new double[]{predictedPos.getTargetBall().getX(), predictedPos.getTargetBall().getY()};
@@ -846,7 +866,147 @@ public class GameView implements Initializable {
         if (game.isMoving()) return;
         if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
 
+        Ball cueBall = game.getWhiteBall();
+        if (cueBall.isPotted()) return;
 
+        drawCueWithDt(cueBall.getX(), cueBall.getY(), 60.0);
+    }
+
+    private double[] getCueHitPoint(double cueBallRealX, double cueBallRealY) {
+        double originalTouchX = canvasX(cueBallRealX);
+        double originalTouchY = canvasY(cueBallRealY);
+        double sideRatio = getUnitSideSpin() * 0.7;
+        double sideXOffset = -cursorDirectionUnitY *
+                sideRatio * game.getGameValues().ballRadius * scale;
+        double sideYOffset = cursorDirectionUnitX *
+                sideRatio * game.getGameValues().ballRadius * scale;
+        return new double[]{
+                originalTouchX + sideXOffset,
+                originalTouchY + sideYOffset
+        };
+    }
+
+    private void drawCueWithDt(double cueBallRealX, double cueBallRealY, double distance) {
+        double[] touchXY = getCueHitPoint(cueBallRealX, cueBallRealY);
+
+        double correctedTipX = touchXY[0] - cursorDirectionUnitX * distance * scale;
+        double correctedTipY = touchXY[1] - cursorDirectionUnitY * distance * scale;
+        double correctedEndX = correctedTipX - cursorDirectionUnitX *
+                game.getCuingPlayer().getInGamePlayer().getPlayCue().getTotalLength() * scale;
+        double correctedEndY = correctedTipY - cursorDirectionUnitY *
+                game.getCuingPlayer().getInGamePlayer().getPlayCue().getTotalLength() * scale;
+
+        drawCueSelf(correctedTipX, correctedTipY, correctedEndX, correctedEndY);
+    }
+
+    private void drawCueSelf(double cueTipX, double cueTipY, double cueEndX, double cueEndY) {
+        Cue cue = game.getCuingPlayer().getInGamePlayer().getPlayCue();
+
+        // 杆头，不包含皮头
+        double cueFrontX = cueTipX - cue.cueTipThickness * cursorDirectionUnitX * scale;
+        double cueFrontY = cueTipY - cue.cueTipThickness * cursorDirectionUnitY * scale;
+
+        // 杆前段的尾部
+        double cueFrontLastX = cueFrontX - cue.frontLength * cursorDirectionUnitX * scale;
+        double cueFrontLastY = cueFrontY - cue.frontLength * cursorDirectionUnitY * scale;
+
+        // 杆中段的尾部
+        double cueMidLastX = cueFrontLastX - cue.midLength * cursorDirectionUnitX * scale;
+        double cueMidLastY = cueFrontLastY - cue.midLength * cursorDirectionUnitY * scale;
+
+        double[] cueEndLeft = new double[]{
+                cueEndX - cue.getEndWidth() * -cursorDirectionUnitY * scale / 2,
+                cueEndY - cue.getEndWidth() * cursorDirectionUnitX * scale / 2
+        };
+        double[] cueEndRight = new double[]{
+                cueEndX + cue.getEndWidth() * -cursorDirectionUnitY * scale / 2,
+                cueEndY + cue.getEndWidth() * cursorDirectionUnitX * scale / 2
+        };
+        double[] cueMidLastLeft = new double[]{
+                cueMidLastX - cue.getMidMaxWidth() * -cursorDirectionUnitY * scale / 2,
+                cueMidLastY - cue.getMidMaxWidth() * cursorDirectionUnitX * scale / 2
+        };
+        double[] cueMidLastRight = new double[]{
+                cueMidLastX + cue.getMidMaxWidth() * -cursorDirectionUnitY * scale / 2,
+                cueMidLastY + cue.getMidMaxWidth() * cursorDirectionUnitX * scale / 2
+        };
+        double[] cueFrontLastLeft = new double[]{
+                cueFrontLastX - cue.getFrontMaxWidth() * -cursorDirectionUnitY * scale / 2,
+                cueFrontLastY - cue.getFrontMaxWidth() * cursorDirectionUnitX * scale / 2
+        };
+        double[] cueFrontLastRight = new double[]{
+                cueFrontLastX + cue.getFrontMaxWidth() * -cursorDirectionUnitY * scale / 2,
+                cueFrontLastY + cue.getFrontMaxWidth() * cursorDirectionUnitX * scale / 2
+        };
+        double[] cueHeadLeft = new double[]{
+                cueFrontX - cue.getCueTipWidth() * -cursorDirectionUnitY * scale / 2,
+                cueFrontY - cue.getCueTipWidth() * cursorDirectionUnitX * scale / 2
+        };
+        double[] cueHeadRight = new double[]{
+                cueFrontX + cue.getCueTipWidth() * -cursorDirectionUnitY * scale / 2,
+                cueFrontY + cue.getCueTipWidth() * cursorDirectionUnitX * scale / 2
+        };
+        double[] cueTipLeft = new double[]{
+                cueTipX - cue.getCueTipWidth() * -cursorDirectionUnitY * scale / 2,
+                cueTipY - cue.getCueTipWidth() * cursorDirectionUnitX * scale / 2
+        };
+        double[] cueTipRight = new double[]{
+                cueTipX + cue.getCueTipWidth() * -cursorDirectionUnitY * scale / 2,
+                cueTipY + cue.getCueTipWidth() * cursorDirectionUnitX * scale / 2
+        };
+
+        // 末段
+        double[] endXs = {
+                cueEndLeft[0], cueEndRight[0], cueMidLastRight[0], cueMidLastLeft[0]
+        };
+        double[] endYs = {
+                cueEndLeft[1], cueEndRight[1], cueMidLastRight[1], cueMidLastLeft[1]
+        };
+
+        // 中段
+        double[] midXs = {
+                cueMidLastLeft[0], cueMidLastRight[0], cueFrontLastRight[0], cueFrontLastLeft[0]
+        };
+        double[] midYs = {
+                cueMidLastLeft[1], cueMidLastRight[1], cueFrontLastRight[1], cueFrontLastLeft[1]
+        };
+
+        // 前段
+        double[] frontXs = {
+                cueFrontLastLeft[0], cueFrontLastRight[0], cueHeadRight[0], cueHeadLeft[0]
+        };
+        double[] frontYs = {
+                cueFrontLastLeft[1], cueFrontLastRight[1], cueHeadRight[1], cueHeadLeft[1]
+        };
+
+        // 皮头
+        double[] tipXs = {
+                cueHeadLeft[0], cueHeadRight[0], cueTipRight[0], cueTipLeft[0]
+        };
+        double[] tipYs = {
+                cueHeadLeft[1], cueHeadRight[1], cueTipRight[1], cueTipLeft[1]
+        };
+
+        // 总轮廓线
+        double[] xs = {
+                cueEndLeft[0], cueEndRight[0], cueTipRight[0], cueTipLeft[0]
+        };
+        double[] ys = {
+                cueEndLeft[1], cueEndRight[1], cueTipRight[1], cueTipLeft[1]
+        };
+
+        graphicsContext.setFill(CUE_TIP_COLOR);
+        graphicsContext.fillPolygon(tipXs, tipYs, 4);
+        graphicsContext.setFill(cue.frontColor);
+        graphicsContext.fillPolygon(frontXs, frontYs, 4);
+        graphicsContext.setFill(cue.midColor);
+        graphicsContext.fillPolygon(midXs, midYs, 4);
+        graphicsContext.setFill(cue.backColor);
+        graphicsContext.fillPolygon(endXs, endYs, 4);
+
+        graphicsContext.setLineWidth(1.0);
+        graphicsContext.setStroke(Color.BLACK);
+        graphicsContext.strokePolygon(xs, ys, 4);
     }
 
     private void drawCueBall() {

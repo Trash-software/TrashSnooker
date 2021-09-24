@@ -40,6 +40,8 @@ public class MainView implements Initializable {
     private void loadCueList() {
         player1CueBox.getItems().add(new CueItem(Cue.STD_ASH, "斯诺克杆"));
         player2CueBox.getItems().add(new CueItem(Cue.STD_ASH, "斯诺克杆"));
+        player1CueBox.getItems().add(new CueItem(Cue.STD_BIG, "九球杆"));
+        player2CueBox.getItems().add(new CueItem(Cue.STD_BIG, "九球杆"));
 
         player1CueBox.getSelectionModel().select(0);
         player2CueBox.getSelectionModel().select(0);

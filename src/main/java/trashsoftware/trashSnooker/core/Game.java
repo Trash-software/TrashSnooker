@@ -18,7 +18,7 @@ public abstract class Game {
     public static final double speedReducer = 120.0 / calculationsPerSecSqr;
     public static final double spinReducer = 3800.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
     public static final double spinEffect = 1800.0 / calculateMs;  // 数值越小影响越大
-    public static final double sideSpinReducer = 120.0 / calculationsPerSecSqr;
+    public static final double sideSpinReducer = 100.0 / calculationsPerSecSqr;
 
     protected static final double MIN_PLACE_DISTANCE = 0.0;  // 5.0 防止物理运算卡bug
     protected static final double MIN_GAP_DISTANCE = 3.0;
