@@ -7,7 +7,10 @@ public class PlayerPerson {
     private final double maxSpinPercentage;
     private final double precisionPercentage;
 
-    public PlayerPerson(String name, double maxPowerPercentage, double maxSpinPercentage, double precisionPercentage) {
+    public PlayerPerson(String name,
+                        double maxPowerPercentage,
+                        double maxSpinPercentage,
+                        double precisionPercentage) {
         this.name = name;
         this.maxPowerPercentage = maxPowerPercentage;
         this.maxSpinPercentage = maxSpinPercentage;

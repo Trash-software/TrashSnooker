@@ -109,6 +109,11 @@ public abstract class Ball implements Comparable<Ball> {
         this.y = y;
     }
 
+    public void setXY(double x, double y) {
+        setX(x);
+        setY(y);
+    }
+
     public boolean isPotted() {
         return potted;
     }
@@ -281,6 +286,26 @@ public abstract class Ball implements Comparable<Ball> {
                         currentDtToPoint(values.topMidHoleRightArcXy) >= values.midArcRadius + values.ballRadius) {
                     // 击中上方中袋右侧
                     hitHoleArcArea(values.topMidHoleRightArcXy);
+                } else if (values.isStraightHole() &&
+                        nextX >= values.midHoleLineLeftX && nextX < values.midHoleLineRightX) {
+                    // 疑似上方中袋直线
+                    double[][] line = values.topMidHoleLeftLine;
+                    if (predictedDtToLine(line) < values.ballRadius &&
+                            currentDtToLine(line) >= values.ballRadius) {
+                        hitHoleLineArea(
+                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
+                        return 2;
+                    }
+                    line = values.topMidHoleRightLine;
+                    if (predictedDtToLine(line) < values.ballRadius &&
+                            currentDtToLine(line) >= values.ballRadius) {
+                        hitHoleLineArea(
+                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
+                        return 2;
+                    }
+                    normalMove();
+                    prepareMove();
+                    return 1;
                 } else {
                     normalMove();
                     prepareMove();
@@ -299,6 +324,26 @@ public abstract class Ball implements Comparable<Ball> {
                         currentDtToPoint(values.botMidHoleRightArcXy) >= values.midArcRadius + values.ballRadius) {
                     // 击中下方中袋右侧
                     hitHoleArcArea(values.botMidHoleRightArcXy);
+                } else if (values.isStraightHole() &&
+                        nextX >= values.midHoleLineLeftX && nextX < values.midHoleLineRightX) {
+                    // 疑似下方中袋直线
+                    double[][] line = values.botMidHoleLeftLine;
+                    if (predictedDtToLine(line) < values.ballRadius &&
+                            currentDtToLine(line) >= values.ballRadius) {
+                        hitHoleLineArea(
+                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
+                        return 2;
+                    }
+                    line = values.botMidHoleRightLine;
+                    if (predictedDtToLine(line) < values.ballRadius &&
+                            currentDtToLine(line) >= values.ballRadius) {
+                        hitHoleLineArea(
+                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
+                        return 2;
+                    }
+                    normalMove();
+                    prepareMove();
+                    return 1;
                 } else {
                     normalMove();
                     prepareMove();
@@ -316,19 +361,27 @@ public abstract class Ball implements Comparable<Ball> {
         }
 
         if (enteredCorner) {
+//            System.out.println("Entered corner!");
             for (int i = 0; i < values.allCornerLines.length; ++i) {
                 double[][] line = values.allCornerLines[i];
-                double[] normVec = i < 4 ? Values.NORMAL_315 : Values.NORMAL_45;
+
+//                System.out.println(Arrays.deepToString(line));
+//                double[] normVec = i < 4 ? Values.NORMAL_315 : Values.NORMAL_45;
                 if (predictedDtToLine(line) < values.ballRadius && currentDtToLine(line) >= values.ballRadius) {
-                    hitCornerHoleLineArea(normVec);
+//                    System.out.println("Hit line!");
+//                    System.out.println(Arrays.toString(normVec) + Arrays.deepToString(line));
+                    hitHoleLineArea(
+                            Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
                     return 2;
                 }
             }
-            for (double[] cornerArc : values.allCornerArcs) {
-                if (predictedDtToPoint(cornerArc) < values.cornerArcRadius + values.ballRadius &&
-                        currentDtToPoint(cornerArc) >= values.cornerArcRadius + values.ballRadius) {
-                    hitHoleArcArea(cornerArc);
-                    return 2;
+            if (!values.isStraightHole()) {
+                for (double[] cornerArc : values.allCornerArcs) {
+                    if (predictedDtToPoint(cornerArc) < values.cornerArcRadius + values.ballRadius &&
+                            currentDtToPoint(cornerArc) >= values.cornerArcRadius + values.ballRadius) {
+                        hitHoleArcArea(cornerArc);
+                        return 2;
+                    }
                 }
             }
             normalMove();
@@ -349,7 +402,7 @@ public abstract class Ball implements Comparable<Ball> {
         sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
     }
 
-    private void hitCornerHoleLineArea(double[] lineNormalVec) {
+    private void hitHoleLineArea(double[] lineNormalVec) {
         double[] reflect = Algebra.symmetricVector(vx, vy, lineNormalVec[0], lineNormalVec[1]);
         vx = -reflect[0] * Values.WALL_BOUNCE_RATIO;
         vy = -reflect[1] * Values.WALL_BOUNCE_RATIO;

@@ -13,13 +13,13 @@ public class Values {
     public static final double WALL_SPIN_PRESERVE_RATIO = 0.75;
 
     // 袋角直线的法向量
-    public static final double[] NORMAL_45 = {1, 1};  // 左下至右上
-    public static final double[] NORMAL_315 = {1, -1};  // 左上至右下
+//    public static final double[] NORMAL_45 = {1, 1};  // 左下至右上
+//    public static final double[] NORMAL_315 = {1, -1};  // 左上至右下
 
     // 击球最大速度，mm/s
     public static final double MAX_POWER_SPEED = 6000.0;
     // 由旋转产生的理论最大瞬时速度（该速度不可能达到），mm/s
-    public static final double MAX_SPIN_SPEED = 7100.0;
+    public static final double MAX_SPIN_SPEED = 7400.0;
     // 由侧旋产生的最大瞬时速度，mm/s
     public static final double MAX_SIDE_SPIN_SPEED = 1400.0;
     public static final int DETAILED_PHYSICAL = 12;
@@ -31,7 +31,7 @@ public class Values {
     public static final Color YELLOW = Color.GOLD;
     public static final Color GREEN = Color.DARKGREEN;
     public static final Color BROWN = Color.CHOCOLATE;
-    public static final Color BLUE = Color.STEELBLUE;
+    public static final Color BLUE = Color.CORNFLOWERBLUE;
     public static final Color PINK = Color.PALEVIOLETRED;
     public static final Color BLACK = Color.BLACK;
     public static final Color COLORED = Color.GRAY;

@@ -7,7 +7,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
+import trashsoftware.trashSnooker.core.Cue;
 import trashsoftware.trashSnooker.core.GameType;
+import trashsoftware.trashSnooker.core.InGamePlayer;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Recorder;
@@ -15,7 +17,6 @@ import trashsoftware.trashSnooker.util.Recorder;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainView implements Initializable {
@@ -23,13 +24,25 @@ public class MainView implements Initializable {
     @FXML
     ComboBox<PlayerPerson> player1Box, player2Box;
 
+    @FXML
+    ComboBox<CueItem> player1CueBox, player2CueBox;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadPlayerList();
+        loadCueList();
     }
 
     public void reloadPlayerList() {
         loadPlayerList();
+    }
+
+    private void loadCueList() {
+        player1CueBox.getItems().add(new CueItem(Cue.STD_ASH, "斯诺克杆"));
+        player2CueBox.getItems().add(new CueItem(Cue.STD_ASH, "斯诺克杆"));
+
+        player1CueBox.getSelectionModel().select(0);
+        player2CueBox.getSelectionModel().select(0);
     }
 
     private void loadPlayerList() {
@@ -77,12 +90,27 @@ public class MainView implements Initializable {
         showGame(GameType.CHINESE_EIGHT);
     }
 
+    @FXML
+    void sidePocketAction() {
+        showGame(GameType.SIDE_POCKET);
+    }
+
     private void showGame(GameType gameType) {
         PlayerPerson p1 = player1Box.getValue();
         PlayerPerson p2 = player2Box.getValue();
         if (p1 == null || p2 == null) {
             System.out.println("没有足够的球员");
             return;
+        }
+
+        InGamePlayer igp1;
+        InGamePlayer igp2;
+        if (gameType == GameType.SNOOKER || gameType == GameType.MINI_SNOOKER) {
+            igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue);
+            igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue);
+        } else {
+            igp1 = new InGamePlayer(p1, Cue.STD_BREAK_CUE, player1CueBox.getValue().cue);
+            igp2 = new InGamePlayer(p2, Cue.STD_BREAK_CUE, player2CueBox.getValue().cue);
         }
 
         try {
@@ -97,11 +125,26 @@ public class MainView implements Initializable {
             stage.setScene(scene);
 
             GameView gameView = loader.getController();
-            gameView.setup(stage, gameType, p1, p2);
+            gameView.setup(stage, gameType, igp1, igp2);
 
             stage.show();
         } catch (Exception e) {
             EventLogger.log(e);
+        }
+    }
+
+    public static class CueItem {
+        private final Cue cue;
+        private final String string;
+
+        CueItem(Cue cue, String string) {
+            this.cue = cue;
+            this.string = string;
+        }
+
+        @Override
+        public String toString() {
+            return string;
         }
     }
 }

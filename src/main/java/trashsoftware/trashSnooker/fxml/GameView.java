@@ -27,7 +27,6 @@ import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
-import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.util.Recorder;
 
 import java.io.IOException;
@@ -37,9 +36,9 @@ import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 public class GameView implements Initializable {
-    public static final Paint BACKGROUND = Color.GREEN;
-    public static final Paint HOLE_PAINT = Color.BLACK;
-    public static final Paint TABLE_PAINT = Color.SADDLEBROWN;
+//    public static final Paint BACKGROUND = Color.GREEN;
+    public static final Paint HOLE_PAINT = Color.BLACK.brighter();
+    public static final Paint TABLE_WOOD_PAINT = Color.SADDLEBROWN;
     public static final Paint WHITE = Color.WHITE;
     public static final Paint BLACK = Color.BLACK;
     public static final Paint CUE_POINT = Color.RED;
@@ -83,8 +82,8 @@ public class GameView implements Initializable {
     private GraphicsContext ballCanvasGc;
     private Stage stage;
 
-    private PlayerPerson player1;
-    private PlayerPerson player2;
+    private InGamePlayer player1;
+    private InGamePlayer player2;
     private Game game;
     private GameType gameType;
 
@@ -148,14 +147,14 @@ public class GameView implements Initializable {
         drawTargetBoard();
     }
 
-    public void setup(Stage stage, GameType gameType, PlayerPerson player1, PlayerPerson player2) {
+    public void setup(Stage stage, GameType gameType, InGamePlayer player1, InGamePlayer player2) {
         this.stage = stage;
         this.gameType = gameType;
         this.player1 = player1;
         this.player2 = player2;
 
-        player1Label.setText(player1.getName());
-        player2Label.setText(player2.getName());
+        player1Label.setText(player1.getPlayerPerson().getName());
+        player2Label.setText(player2.getPlayerPerson().getName());
 
         startGame();
 
@@ -438,6 +437,10 @@ public class GameView implements Initializable {
 
         double frontBackSpin = cueCanvasWH / 2 - cuePointY;  // 高杆正，低杆负
         double leftRightSpin = cuePointX - cueCanvasWH / 2;  // 右塞正（逆时针），左塞负
+        if (frontBackSpin > 0) {
+            // 高杆补偿
+            frontBackSpin *= 1.25;
+        }
 
         double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.5);
 
@@ -468,6 +471,7 @@ public class GameView implements Initializable {
     private void oneFrame() {
         draw();
         drawCueBall();
+        drawCue();
     }
 
     private void setupCanvas() {
@@ -522,15 +526,18 @@ public class GameView implements Initializable {
     private void drawTable() {
         GameValues values = game.getGameValues();
 
-        graphicsContext.setFill(TABLE_PAINT);
+        graphicsContext.setFill(TABLE_WOOD_PAINT);
         graphicsContext.fillRoundRect(0, 0, canvasWidth, canvasHeight, 20.0, 20.0);
-        graphicsContext.setFill(BACKGROUND);
+        graphicsContext.setFill(values.tableColor);  // 台泥/台布
         graphicsContext.fillRect(
                 canvasX(values.leftX - values.cornerHoleTan),
                 canvasY(values.topY - values.cornerHoleTan),
                 (values.innerWidth + values.cornerHoleTan * 2) * scale,
                 (values.innerHeight + values.cornerHoleTan * 2) * scale);
         graphicsContext.setStroke(BLACK);
+        graphicsContext.setLineWidth(2.0);
+
+//        Color cushion = values.tableColor.darker();
 
         // 库边
         graphicsContext.strokeLine(
@@ -564,11 +571,9 @@ public class GameView implements Initializable {
                 canvasX(values.rightX),
                 canvasY(values.botCornerHoleAreaUpY));
 
-        game.drawTableMarks(graphicsContext, scale);
-
         // 袋口
         graphicsContext.setStroke(BLACK);
-        drawMidHoleArcs(values);
+        drawMidHoleLinesArcs(values);
         drawCornerHoleLinesArcs(values);
 
         graphicsContext.setFill(HOLE_PAINT);
@@ -578,6 +583,9 @@ public class GameView implements Initializable {
         drawHole(values.botRightHoleXY, values.cornerHoleRadius);
         drawHole(values.topMidHoleXY, values.midHoleRadius);
         drawHole(values.botMidHoleXY, values.midHoleRadius);
+
+        graphicsContext.setLineWidth(1.0);
+        game.drawTableMarks(graphicsContext, scale);
     }
 
     private void drawHole(double[] realXY, double holeRadius) {
@@ -604,11 +612,11 @@ public class GameView implements Initializable {
 
         // 袋内直线
         for (double[][] line : values.allCornerLines) {
-            drawCornerHoleLine(line);
+            drawHoleLine(line);
         }
     }
 
-    private void drawCornerHoleLine(double[][] lineRealXYs) {
+    private void drawHoleLine(double[][] lineRealXYs) {
         graphicsContext.strokeLine(
                 canvasX(lineRealXYs[0][0]),
                 canvasY(lineRealXYs[0][1]),
@@ -628,7 +636,7 @@ public class GameView implements Initializable {
                 ArcType.OPEN);
     }
 
-    private void drawMidHoleArcs(GameValues values) {
+    private void drawMidHoleLinesArcs(GameValues values) {
         double arcDiameter = values.midArcRadius * 2 * scale;
         double x1 = canvasX(values.topMidHoleXY[0] - values.midArcRadius * 2 - values.midHoleRadius);
         double x2 = canvasX(values.botMidHoleXY[0] + values.midArcRadius);
@@ -638,6 +646,13 @@ public class GameView implements Initializable {
         graphicsContext.strokeArc(x2, y1, arcDiameter, arcDiameter, 180, 90, ArcType.OPEN);
         graphicsContext.strokeArc(x1, y2, arcDiameter, arcDiameter, 0, 90, ArcType.OPEN);
         graphicsContext.strokeArc(x2, y2, arcDiameter, arcDiameter, 90, 90, ArcType.OPEN);
+
+        // 袋内直线
+        if (values.isStraightHole()) {
+            for (double[][] line : values.allMidHoleLines) {
+                drawHoleLine(line);
+            }
+        }
     }
 
     private void drawBalls() {
@@ -824,6 +839,14 @@ public class GameView implements Initializable {
         drawBalls();
         drawCursor();
         drawPottedWhiteBall();
+    }
+
+    private void drawCue() {
+        if (game.isEnded()) return;
+        if (game.isMoving()) return;
+        if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
+
+
     }
 
     private void drawCueBall() {

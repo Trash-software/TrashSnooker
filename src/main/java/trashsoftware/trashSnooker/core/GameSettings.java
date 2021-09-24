@@ -3,17 +3,20 @@ package trashsoftware.trashSnooker.core;
 public class GameSettings {
 
     private boolean player1Breaks;
-    private PlayerPerson player1, player2;
+    private InGamePlayer player1, player2;
+
+    public GameSettings() {
+    }
 
     public boolean isPlayer1Breaks() {
         return player1Breaks;
     }
 
-    public PlayerPerson getPlayer1() {
+    public InGamePlayer getPlayer1() {
         return player1;
     }
 
-    public PlayerPerson getPlayer2() {
+    public InGamePlayer getPlayer2() {
         return player2;
     }
 
@@ -26,7 +29,7 @@ public class GameSettings {
             return this;
         }
 
-        public Builder players(PlayerPerson p1, PlayerPerson p2) {
+        public Builder players(InGamePlayer p1, InGamePlayer p2) {
             gameSettings.player1 = p1;
             gameSettings.player2 = p2;
             return this;

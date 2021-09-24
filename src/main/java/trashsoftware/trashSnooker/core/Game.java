@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
@@ -15,8 +16,8 @@ public abstract class Game {
     public static final double calculationsPerSec = 1000.0 / calculateMs;
     public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
     public static final double speedReducer = 120.0 / calculationsPerSecSqr;
-    public static final double spinReducer = 3500.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
-    public static final double spinEffect = 1900.0 / calculateMs;  // 数值越小影响越大
+    public static final double spinReducer = 3800.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
+    public static final double spinEffect = 1800.0 / calculateMs;  // 数值越小影响越大
     public static final double sideSpinReducer = 120.0 / calculationsPerSecSqr;
 
     protected static final double MIN_PLACE_DISTANCE = 0.0;  // 5.0 防止物理运算卡bug
@@ -69,6 +70,8 @@ public abstract class Game {
             return new MiniSnookerGame(gameView, gameSettings);
         } else if (gameType == GameType.CHINESE_EIGHT) {
             return new ChineseEightBallGame(gameView, gameSettings);
+        } else if (gameType == GameType.SIDE_POCKET) {
+            return new SidePocketGame(gameView, gameSettings);
         }
 
         throw new RuntimeException("Unexpected game type " + gameType);

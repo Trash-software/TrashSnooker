@@ -7,17 +7,21 @@ import java.util.TreeMap;
 public abstract class Player {
 
     protected final int number;
-    protected final PlayerPerson playerPerson;
+    protected final InGamePlayer playerPerson;
     protected final TreeMap<Ball, Integer> singlePole = new TreeMap<>();
     protected int score;
     private boolean withdrawn = false;
 
-    public Player(int number, PlayerPerson playerPerson) {
+    public Player(int number, InGamePlayer playerPerson) {
         this.number = number;
         this.playerPerson = playerPerson;
     }
 
     public PlayerPerson getPlayerPerson() {
+        return playerPerson.getPlayerPerson();
+    }
+
+    public InGamePlayer getInGamePlayer() {
         return playerPerson;
     }
 
