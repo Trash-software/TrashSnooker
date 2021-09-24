@@ -16,6 +16,15 @@ public class InGamePlayer {
         this(playerPerson, cue, cue);
     }
 
+    public Cue getCurrentCue(Game game) {
+        if (game instanceof NeedBigBreak) {
+            if (((NeedBigBreak) game).isBreaking()) {
+                return breakCue;
+            }
+        }
+        return playCue;
+    }
+
     public Cue getBreakCue() {
         return breakCue;
     }

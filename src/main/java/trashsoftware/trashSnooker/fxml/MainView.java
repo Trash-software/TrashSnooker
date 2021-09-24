@@ -38,13 +38,15 @@ public class MainView implements Initializable {
     }
 
     private void loadCueList() {
-        player1CueBox.getItems().add(new CueItem(Cue.STD_ASH, "斯诺克杆"));
-        player2CueBox.getItems().add(new CueItem(Cue.STD_ASH, "斯诺克杆"));
-        player1CueBox.getItems().add(new CueItem(Cue.STD_BIG, "九球杆"));
-        player2CueBox.getItems().add(new CueItem(Cue.STD_BIG, "九球杆"));
+        refreshCueList(player1CueBox);
+        refreshCueList(player2CueBox);
+    }
 
-        player1CueBox.getSelectionModel().select(0);
-        player2CueBox.getSelectionModel().select(0);
+    private void refreshCueList(ComboBox<CueItem> box) {
+        box.getItems().clear();
+        box.getItems().add(new CueItem(Cue.STD_ASH, "斯诺克杆"));
+        box.getItems().add(new CueItem(Cue.STD_BIG, "九球杆"));
+        box.getSelectionModel().select(0);
     }
 
     private void loadPlayerList() {
@@ -53,6 +55,21 @@ public class MainView implements Initializable {
         player2Box.getItems().clear();
         player1Box.getItems().addAll(playerPeople);
         player2Box.getItems().addAll(playerPeople);
+
+        player1Box.getSelectionModel().selectedItemProperty()
+                .addListener(((observable, oldValue, newValue) -> {
+                    refreshCueList(player1CueBox);
+                    for (Cue cue : newValue.getPrivateCues()) {
+                        player1CueBox.getItems().add(new CueItem(cue, cue.getName()));
+                    }
+                }));
+        player2Box.getSelectionModel().selectedItemProperty()
+                .addListener(((observable, oldValue, newValue) -> {
+                    refreshCueList(player2CueBox);
+                    for (Cue cue : newValue.getPrivateCues()) {
+                        player2CueBox.getItems().add(new CueItem(cue, cue.getName()));
+                    }
+                }));
     }
 
     @FXML

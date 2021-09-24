@@ -3,11 +3,13 @@ package trashsoftware.trashSnooker.util;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.configLoader.ConfigLoader;
+import trashsoftware.trashSnooker.core.Cue;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 
 import java.io.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Recorder {
 
@@ -35,6 +37,20 @@ public class Recorder {
                                 personObj.getDouble("spin"),
                                 personObj.getDouble("precision")
                         );
+                        if (personObj.has("privateCues")) {
+                            JSONArray pCues = personObj.getJSONArray("privateCues");
+                            for (Object cueObj : pCues) {
+                                if (cueObj instanceof String) {
+                                    String pCue = (String) cueObj;
+                                    for (Cue cue : Cue.ALL_CUES) {
+                                        if (cue.getName().equals(pCue)) {
+                                            playerPerson.addPrivateCue(cue);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         playerPeople.put(name, playerPerson);
                         JSONObject recordObj = personObj.getJSONObject("records");
                         RecordItem recordItem = RecordItem.fromJson(recordObj);
@@ -86,6 +102,12 @@ public class Recorder {
             JSONObject recordObj = recordItem != null ? recordItem.toJson() : new JSONObject();
             personObject.put("records", recordObj);
             array.put(playerPerson.getName(), personObject);
+
+            JSONArray cuesArray = new JSONArray();
+            for (Cue cue : playerPerson.getPrivateCues()) {
+                cuesArray.put(cue.getName());
+            }
+            personObject.put("privateCues", cuesArray);
         }
         JSONObject root = new JSONObject();
         root.put("players", array);

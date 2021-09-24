@@ -3,14 +3,14 @@ package trashsoftware.trashSnooker.core.numberedGames.sidePocket;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
-import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightPlayer;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SidePocketGame extends NumberedBallGame {
+public class SidePocketGame extends NumberedBallGame
+implements NeedBigBreak{
 
     private final PoolBall[] allBalls = new PoolBall[10];
     private boolean isBreaking = true;
@@ -57,6 +57,11 @@ public class SidePocketGame extends NumberedBallGame {
 
             curX += rowOccupyX;
         }
+    }
+
+    @Override
+    public boolean isBreaking() {
+        return isBreaking;
     }
 
     @Override

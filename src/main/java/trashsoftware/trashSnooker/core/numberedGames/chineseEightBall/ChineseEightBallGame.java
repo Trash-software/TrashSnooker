@@ -11,7 +11,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class ChineseEightBallGame extends NumberedBallGame {
+public class ChineseEightBallGame extends NumberedBallGame
+        implements NeedBigBreak {
 
     private static final int[] FULL_BALL_SLOTS = {0, 2, 3, 7, 9, 10, 12};
     private static final int[] HALF_BALL_SLOTS = {1, 5, 6, 7, 11, 13, 14};
@@ -80,6 +81,11 @@ public class ChineseEightBallGame extends NumberedBallGame {
             rowStartY -= gameValues.ballRadius + Game.MIN_PLACE_DISTANCE;
             curX += rowOccupyX;
         }
+    }
+
+    @Override
+    public boolean isBreaking() {
+        return isBreaking;
     }
 
     @Override
