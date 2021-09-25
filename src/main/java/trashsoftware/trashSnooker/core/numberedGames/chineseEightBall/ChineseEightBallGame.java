@@ -41,7 +41,7 @@ public class ChineseEightBallGame extends NumberedBallGame
             halfBalls.add(new PoolBall(i + 9, false, gameValues));
         }
 
-        allBalls[0] = (PoolBall) whiteBall;
+        allBalls[0] = (PoolBall) cueBall;
         for (int i = 0; i < 7; ++i) {
             allBalls[i + 1] = fullBalls.get(i);
         }
@@ -215,7 +215,7 @@ public class ChineseEightBallGame extends NumberedBallGame
             foulReason = "没有任何球接触库边或落袋";
         }
 
-        if (whiteBall.isPotted()) {
+        if (cueBall.isPotted()) {
             if (eightBall.isPotted()) {  // 白球黑八一起进
                 ended = true;
                 winingPlayer = (ChineseEightPlayer) getAnotherPlayer();
@@ -249,15 +249,13 @@ public class ChineseEightBallGame extends NumberedBallGame
 
         if (foul) {
             lastCueFoul = true;
-            whiteBall.pot();
+            cueBall.pot();
             ballInHand = true;
             switchPlayer();
             currentTarget = getTargetOfPlayer(currentPlayer);  // 在switchPlayer之后
             System.out.println(foulReason);
             return;
         }
-
-        boolean potSuccess = false;
 
         if (!pottedBalls.isEmpty()) {
             if (pottedBalls.contains(eightBall)) {
@@ -277,31 +275,33 @@ public class ChineseEightBallGame extends NumberedBallGame
                     ((ChineseEightPlayer) currentPlayer).setBallRange(16);
                     ((ChineseEightPlayer) getAnotherPlayer()).setBallRange(17);
                     currentTarget = getTargetOfPlayer(currentPlayer);
-                    potSuccess = true;
+                    lastPotSuccess = true;
                     currentPlayer.addScore(fullBallsCount(pottedBalls));
                 }
                 if (allHalfBalls(pottedBalls)) {
                     ((ChineseEightPlayer) currentPlayer).setBallRange(17);
                     ((ChineseEightPlayer) getAnotherPlayer()).setBallRange(16);
                     currentTarget = getTargetOfPlayer(currentPlayer);
-                    potSuccess = true;
+                    lastPotSuccess = true;
                     currentPlayer.addScore(halfBallsCount(pottedBalls));
                 }
             } else {
                 if (currentTarget == 16) {
                     if (hasFullBalls(pottedBalls)) {
-                        potSuccess = true;
+                        lastPotSuccess = true;
                     }
                     currentPlayer.addScore(fullBallsCount(pottedBalls));
                 } else if (currentTarget == 17) {
                     if (hasHalfBalls(pottedBalls)) {
-                        potSuccess = true;
+                        lastPotSuccess = true;
                     }
                     currentPlayer.addScore(halfBallsCount(pottedBalls));
                 }
             }
         }
-        if (!potSuccess) {
+        if (lastPotSuccess) {
+            potSuccess();
+        } else {
             switchPlayer();
         }
         currentTarget = getTargetOfPlayer(currentPlayer);  // 在switchPlayer之后

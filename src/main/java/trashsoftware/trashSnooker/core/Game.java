@@ -20,6 +20,10 @@ public abstract class Game {
     public static final double spinEffect = 1800.0 / calculateMs;  // 数值越小影响越大
     public static final double sideSpinReducer = 100.0 / calculationsPerSecSqr;
 
+    // 进攻球判定角
+    // 如实际角度与可通过的袋口连线的夹角小于该值，判定为进攻球
+    public static final double MAX_ATTACK_DECISION_ANGLE = Math.toRadians(7.5);
+
     protected static final double MIN_PLACE_DISTANCE = 0.0;  // 5.0 防止物理运算卡bug
     protected static final double MIN_GAP_DISTANCE = 3.0;
 
@@ -40,8 +44,9 @@ public abstract class Game {
     protected boolean ended;
     protected boolean ballInHand = true;
     protected boolean lastCueFoul = false;
+    protected boolean lastPotSuccess;
 
-    protected final Ball whiteBall;
+    protected final Ball cueBall;
 
     private Timer physicsTimer;
     private PhysicsCalculator physicsCalculator;
@@ -56,7 +61,7 @@ public abstract class Game {
 
         initPlayers();
         currentPlayer = gameSettings.isPlayer1Breaks() ? player1 : player2;
-        whiteBall = createWhiteBall();
+        cueBall = createWhiteBall();
     }
 
     protected abstract void initPlayers();
@@ -91,15 +96,16 @@ public abstract class Game {
     public void cue(double vx, double vy, double xSpin, double ySpin, double sideSpin) {
         whiteFirstCollide = null;
         collidesWall = false;
+        lastPotSuccess = false;
         newPotted.clear();
         recordPositions();
         recordedTarget = currentTarget;
 
-        whiteBall.setVx(vx / calculationsPerSec);
-        whiteBall.setVy(vy / calculationsPerSec);
+        cueBall.setVx(vx / calculationsPerSec);
+        cueBall.setVy(vy / calculationsPerSec);
         xSpin = xSpin == 0.0d ? vx / 1000.0 : xSpin;  // 避免完全无旋转造成的NaN
         ySpin = ySpin == 0.0d ? vy / 1000.0 : ySpin;
-        whiteBall.setSpin(
+        cueBall.setSpin(
                 xSpin / calculationsPerSec,
                 ySpin / calculationsPerSec,
                 sideSpin / calculationsPerSec);
@@ -116,8 +122,8 @@ public abstract class Game {
         return physicsCalculator != null;
     }
 
-    public Ball getWhiteBall() {
-        return whiteBall;
+    public Ball getCueBall() {
+        return cueBall;
     }
 
     public void forcedDrawWhiteBall(double realX,
@@ -154,9 +160,9 @@ public abstract class Game {
 
     public void placeWhiteBall(double realX, double realY) {
         if (canPlaceWhite(realX, realY)) {
-            whiteBall.setX(realX);
-            whiteBall.setY(realY);
-            whiteBall.pickup();
+            cueBall.setX(realX);
+            cueBall.setY(realY);
+            cueBall.pickup();
             ballInHand = false;
         }
     }
@@ -169,8 +175,8 @@ public abstract class Game {
         double oneDiameterX = gameValues.ballDiameter * xUnitDirection;
         double oneDiameterY = gameValues.ballDiameter * yUnitDirection;
 
-        double x = whiteBall.x + oneDiameterX;
-        double y = whiteBall.y + oneDiameterY;
+        double x = cueBall.x + oneDiameterX;
+        double y = cueBall.y + oneDiameterY;
 
         // 1球直径级别
         List<PredictedPos> ballsNearPath = new ArrayList<>();
@@ -225,8 +231,39 @@ public abstract class Game {
     public double cueBackDistanceToObstacle(double xUnitDirection, double yUnitDirection) {
 
         // todo: 检测袋角区域
-        return getDistanceFromWall(whiteBall.getX(), whiteBall.getY(), -xUnitDirection, -yUnitDirection,
+        return getDistanceFromWall(cueBall.getX(), cueBall.getY(), -xUnitDirection, -yUnitDirection,
                 0, Values.MAX_LENGTH);
+    }
+
+    /**
+     * 返回{连接目标球与从目标球处能直接看到的洞口的连线的单位向量, 洞口坐标}。
+     */
+    public List<double[][]> directionsToAccessibleHoles(Ball targetBall) {
+        List<double[][]> list = new ArrayList<>();
+        BIG_LOOP:
+        for (double[] hole : gameValues.allHoles) {
+            double directionX = hole[0] - targetBall.x;
+            double directionY = hole[1] - targetBall.y;
+            int distance = (int) Math.hypot(directionX, directionY) + 1;
+            double[] unitXY = Algebra.unitVector(directionX, directionY);
+            double unitX = unitXY[0];
+            double unitY = unitXY[1];
+            double x = targetBall.x;
+            double y = targetBall.y;
+            for (int i = 0; i < distance; ++i) {
+                for (Ball ball : getAllBalls()) {
+                    if (ball != targetBall) {
+                        if (Algebra.distanceToPoint(x, y, ball.x, ball.y) < gameValues.ballRadius) {
+                            continue BIG_LOOP;
+                        }
+                    }
+                }
+                x += unitX;
+                y += unitY;
+            }
+            list.add(new double[][]{unitXY, hole});
+        }
+        return list;
     }
 
     private double getDistanceFromWall(double whiteX, double whiteY, double xUnitRev, double yUnitRev,
@@ -436,7 +473,16 @@ public abstract class Game {
 
         Player player = currentPlayer;
         endMoveAndUpdate();
-        parent.finishCue(player);
+        parent.finishCue(player, lastPotSuccess);
+    }
+
+    protected void potSuccess(boolean isSnookerFreeBall) {
+        lastPotSuccess = true;
+        updateTargetPotSuccess(isSnookerFreeBall);
+    }
+
+    protected void potSuccess() {
+        potSuccess(false);
     }
 
     protected abstract void endMoveAndUpdate();

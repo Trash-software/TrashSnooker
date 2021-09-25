@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core;
 public class InGamePlayer {
 
     private final PlayerPerson playerPerson;
+    private final PersonRecord personRecord;
     private final Cue breakCue;
     private final Cue playCue;
 
@@ -10,6 +11,7 @@ public class InGamePlayer {
         this.playerPerson = playerPerson;
         this.breakCue = breakCue;
         this.playCue = playCue;
+        this.personRecord = PersonRecord.loadRecord(playerPerson.getName());
     }
 
     public InGamePlayer(PlayerPerson playerPerson, Cue cue) {
@@ -31,6 +33,10 @@ public class InGamePlayer {
 
     public Cue getPlayCue() {
         return playCue;
+    }
+
+    public PersonRecord getPersonRecord() {
+        return personRecord;
     }
 
     public PlayerPerson getPlayerPerson() {

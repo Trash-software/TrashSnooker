@@ -23,7 +23,7 @@ implements NeedBigBreak{
     }
 
     private void initBalls() {
-        allBalls[0] = (PoolBall) whiteBall;
+        allBalls[0] = (PoolBall) cueBall;
         for (int i = 1; i < 10; ++i) {
             allBalls[i] = new PoolBall(i, false, gameValues);
         }

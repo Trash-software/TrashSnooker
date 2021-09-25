@@ -16,12 +16,13 @@ public class Recorder {
 
     private static final String PLAYER_LIST_FILE = "user" + File.separator + "players.json";
     private static final String CUE_LIST_FILE = "user" + File.separator + "cues.json";
+    public static final String RECORDS_DIRECTORY = "user" + File.separator + "records";
 
     private static final Map<String, PlayerPerson> playerPeople = new HashMap<>();
-    private static final Map<String, RecordItem> playerRecords = new HashMap<>();
+//    private static final Map<String, RecordItem> playerRecords = new HashMap<>();
     private static final Map<String, Cue> cues = new HashMap<>();
-    private static final RecordItem globalRecord = new RecordItem();
-    private static PlayerPerson highestBreakPerson;
+//    private static final RecordItem globalRecord = new RecordItem();
+//    private static PlayerPerson highestBreakPerson;
 
     public static void loadAll() {
         cues.clear();
@@ -107,12 +108,12 @@ public class Recorder {
                         }
 
                         playerPeople.put(name, playerPerson);
-                        JSONObject recordObj = personObj.getJSONObject("records");
-                        RecordItem recordItem = RecordItem.fromJson(recordObj);
-                        playerRecords.put(name, recordItem);
-                        if (globalRecord.updateHighestBreak(recordItem.getHighestBreak())) {
-                            highestBreakPerson = playerPerson;
-                        }
+//                        JSONObject recordObj = personObj.getJSONObject("records");
+//                        RecordItem recordItem = RecordItem.fromJson(recordObj);
+//                        playerRecords.put(name, recordItem);
+//                        if (globalRecord.updateHighestBreak(recordItem.getHighestBreak())) {
+//                            highestBreakPerson = playerPerson;
+//                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -126,19 +127,19 @@ public class Recorder {
         saveToDisk(makeJsonObject(), PLAYER_LIST_FILE);
     }
 
-    public static void updatePlayerBreak(String playerName, int currentBreak) {
-        RecordItem recordItem = playerRecords.get(playerName);
-        if (recordItem == null) {
-            recordItem = new RecordItem();
-            playerRecords.put(playerName, recordItem);
-        }
-        recordItem.updateHighestBreak(currentBreak);
-        globalRecord.updateHighestBreak(currentBreak);
-    }
+//    public static void updatePlayerBreak(String playerName, int currentBreak) {
+//        RecordItem recordItem = playerRecords.get(playerName);
+//        if (recordItem == null) {
+//            recordItem = new RecordItem();
+//            playerRecords.put(playerName, recordItem);
+//        }
+//        recordItem.updateHighestBreak(currentBreak);
+//        globalRecord.updateHighestBreak(currentBreak);
+//    }
 
-    public static void save() {
-        saveToDisk(makeJsonObject(), PLAYER_LIST_FILE);
-    }
+//    public static void save() {
+//        saveToDisk(makeJsonObject(), PLAYER_LIST_FILE);
+//    }
 
     public static Collection<PlayerPerson> getPlayerPeople() {
         return playerPeople.values();
@@ -161,9 +162,9 @@ public class Recorder {
             personObject.put("spin", playerPerson.getMaxSpinPercentage());
             personObject.put("precision", playerPerson.getPrecisionPercentage());
 
-            RecordItem recordItem = playerRecords.get(playerPerson.getName());
-            JSONObject recordObj = recordItem != null ? recordItem.toJson() : new JSONObject();
-            personObject.put("records", recordObj);
+//            RecordItem recordItem = playerRecords.get(playerPerson.getName());
+//            JSONObject recordObj = recordItem != null ? recordItem.toJson() : new JSONObject();
+//            personObject.put("records", recordObj);
             array.put(playerPerson.getName(), personObject);
 
             JSONArray cuesArray = new JSONArray();
@@ -209,6 +210,12 @@ public class Recorder {
         if (!userDir.exists()) {
             if (!userDir.mkdirs()) {
                 System.out.println("Cannot create user directory.");
+            }
+        }
+        File recordsDir = new File(RECORDS_DIRECTORY);
+        if (!recordsDir.exists()) {
+            if (!recordsDir.mkdirs()) {
+                System.out.println("Cannot create record directory.");
             }
         }
     }

@@ -52,7 +52,7 @@ public abstract class AbstractSnookerGame extends Game {
         allBalls[18] = blueBall;
         allBalls[19] = pinkBall;
         allBalls[20] = blackBall;
-        allBalls[21] = (SnookerBall) whiteBall;
+        allBalls[21] = (SnookerBall) cueBall;
     }
 
     protected abstract double breakLineX();
@@ -161,8 +161,8 @@ public abstract class AbstractSnookerGame extends Game {
             double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
             for (Ball ball : currentTarBalls) {
                 // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
-                double xDiff = ball.getX() - whiteBall.getX();
-                double yDiff = ball.getY() - whiteBall.getY();
+                double xDiff = ball.getX() - cueBall.getX();
+                double yDiff = ball.getY() - cueBall.getY();
                 double[] vec = new double[]{xDiff, yDiff};
                 double[] unitVec = Algebra.unitVector(vec);
                 double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
@@ -199,7 +199,7 @@ public abstract class AbstractSnookerGame extends Game {
             if (player1.getScore() != player2.getScore()) ended = true;
             else {
                 // 延分，争黑球
-                whiteBall.pot();
+                cueBall.pot();
                 ballInHand = true;
                 if (Math.random() < 0.5) {
                     currentPlayer = player1;
@@ -264,7 +264,7 @@ public abstract class AbstractSnookerGame extends Game {
         int score = 0;
         int foul = 0;
         if (whiteFirstCollide == null) foul = getDefaultFoulValue();  // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
-        else if (whiteBall.isPotted()) {
+        else if (cueBall.isPotted()) {
             foul = Math.max(getDefaultFoulValue(), getMaxFoul(pottedBalls));
             ballInHand = true;
         } else if (isFreeBall) {
@@ -315,7 +315,7 @@ public abstract class AbstractSnookerGame extends Game {
             updateTargetPotFailed();
             switchPlayer();
             lastCueFoul = true;
-            if (!whiteBall.isPotted() && hasFreeBall()) {
+            if (!cueBall.isPotted() && hasFreeBall()) {
                 doingFreeBall = true;
                 System.out.println("Free ball!");
             }
@@ -324,7 +324,7 @@ public abstract class AbstractSnookerGame extends Game {
                 if (pottedBalls.size() != 1) throw new RuntimeException("为什么进了这么多自由球？？？");
                 ((SnookerPlayer) currentPlayer).potFreeBall(score);
             } else currentPlayer.correctPotBalls(pottedBalls);
-            updateTargetPotSuccess(isFreeBall);
+            potSuccess(isFreeBall);
             lastCueFoul = false;
         } else {
             updateTargetPotFailed();

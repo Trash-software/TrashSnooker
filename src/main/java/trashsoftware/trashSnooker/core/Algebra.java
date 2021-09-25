@@ -41,15 +41,17 @@ public class Algebra {
         return new double[]{outUnitX * vecNorm, outUnitY * vecNorm};
     }
 
-    public static double thetaOf(double[] vec) {
-        double atan = Math.atan(vec[1] / vec[0]);
-        if (vec[0] < 0.0) {
+    public static double thetaOf(double x, double y) {
+        double atan = Math.atan(y / x);
+        if (x < 0.0) {
             return Math.PI + atan;
         } else {
-//            double twoPi = Math.PI * 2;
             return realMod(atan, Math.PI * 2);
-//            return atan % (Math.PI * 2);
         }
+    }
+
+    public static double thetaOf(double[] vec) {
+        return thetaOf(vec[0], vec[1]);
     }
 
     /**

@@ -63,6 +63,8 @@ public class GameValues {
     public double[] topMidHoleXY;
     public double[] botMidHoleXY;
 
+    public double[][] allHoles;
+
     public double leftCornerHoleAreaRightX;  // 左顶袋右袋角
     public double midHoleAreaLeftX;  // 中袋左袋角
     public double midHoleAreaRightX;  // 中袋右袋角
@@ -130,6 +132,15 @@ public class GameValues {
                 {midX, topY - midHoleRadius};
         botMidHoleXY = new double[]
                 {midX, botY + midHoleRadius};
+
+        allHoles = new double[][]{
+                topLeftHoleXY,
+                botLeftHoleXY,
+                topRightHoleXY,
+                botRightHoleXY,
+                topMidHoleXY,
+                botMidHoleXY
+        };
 
         if (straightHole) {
             leftCornerHoleAreaRightX = leftX + cornerLineLonger;
@@ -239,6 +250,10 @@ public class GameValues {
                 botMidHoleLeftLine,
                 botMidHoleRightLine
         };
+    }
+
+    public double diagonalLength() {
+        return Math.hypot(innerWidth, innerHeight);
     }
 
     public static class Builder {
