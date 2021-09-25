@@ -5,28 +5,28 @@ import javafx.scene.paint.Color;
 public class GameValues {
 
     public static final GameValues SNOOKER_VALUES = new Builder()
-            .tableColor(Color.GREEN)
+            .tableColor(Color.GREEN, Color.SADDLEBROWN)
             .tableDimension(3820.0, 3569.0, 2035.0, 1788.0)
             .ballSize(52.5)
             .holeSizeCurved(85.0, 100.0)
             .build();
 
     public static final GameValues MINI_SNOOKER_VALUES = new Builder()
-            .tableColor(Color.GREEN)
+            .tableColor(Color.GREEN, Color.SADDLEBROWN)
             .tableDimension(2830.0, 2540.0, 1550.0, 1270.0)
             .ballSize(52.5)
             .holeSizeCurved(85.0, 100.0)
             .build();
 
     public static final GameValues CHINESE_EIGHT_VALUES = new Builder()
-            .tableColor(Color.GREEN)
+            .tableColor(Color.GREEN, Color.SADDLEBROWN)
             .tableDimension(2830.0, 2540.0, 1550.0, 1270.0)
             .ballSize(57.15)
             .holeSizeCurved(85.0, 100.0)
             .build();
 
     public static final GameValues SIDE_POCKET = new Builder()
-            .tableColor(Color.STEELBLUE)
+            .tableColor(Color.STEELBLUE, Color.BLACK)
             .tableDimension(2905.0, 2540.0, 1635.0, 1270.0)
             .ballSize(57.15)
             .holeSizeStraight(105.0, 105.0,
@@ -34,6 +34,7 @@ public class GameValues {
             .build();
 
     public Color tableColor;
+    public Color tableBorderColor;
 
     public double outerWidth;
     public double outerHeight;
@@ -243,8 +244,9 @@ public class GameValues {
     public static class Builder {
         private final GameValues values = new GameValues();
 
-        public Builder tableColor(Color color) {
+        public Builder tableColor(Color color, Color borderColor) {
             values.tableColor = color;
+            values.tableBorderColor = borderColor;
             return this;
         }
 

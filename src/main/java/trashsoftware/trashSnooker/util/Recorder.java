@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.util;
 
+import javafx.scene.paint.Color;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,15 +15,71 @@ import java.util.Map;
 public class Recorder {
 
     private static final String PLAYER_LIST_FILE = "user" + File.separator + "players.json";
+    private static final String CUE_LIST_FILE = "user" + File.separator + "cues.json";
 
     private static final Map<String, PlayerPerson> playerPeople = new HashMap<>();
     private static final Map<String, RecordItem> playerRecords = new HashMap<>();
+    private static final Map<String, Cue> cues = new HashMap<>();
     private static final RecordItem globalRecord = new RecordItem();
     private static PlayerPerson highestBreakPerson;
 
     public static void loadAll() {
+        cues.clear();
+        JSONObject cuesRoot = loadFromDisk(CUE_LIST_FILE);
+        loadCues(cuesRoot);
+
         playerPeople.clear();
-        JSONObject root = loadFromDisk(PLAYER_LIST_FILE);
+        JSONObject playersRoot = loadFromDisk(PLAYER_LIST_FILE);
+        loadPlayers(playersRoot);
+    }
+
+    private static void loadCues(JSONObject root) {
+        if (root.has("cues")) {
+            JSONObject object = root.getJSONObject("cues");
+            for (String key : object.keySet()) {
+                try {
+                    JSONObject cueObject = object.getJSONObject(key);
+                    Cue cue = new Cue(
+                            cueObject.getString("name"),
+                            cueObject.getDouble("frontLength"),
+                            cueObject.getDouble("midLength"),
+                            cueObject.getDouble("backLength"),
+                            cueObject.getDouble("tipThickness"),
+                            cueObject.getDouble("endDiameter"),
+                            cueObject.getDouble("tipDiameter"),
+                            parseColor(cueObject.getString("frontColor")),
+                            parseColor(cueObject.getString("midColor")),
+                            parseColor(cueObject.getString("backColor")),
+                            cueObject.getDouble("power"),
+                            cueObject.getDouble("spin"),
+                            cueObject.getDouble("accuracy"),
+                            cueObject.getBoolean("privacy")
+                    );
+                    cues.put(key, cue);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static Color parseColor(String colorStr) {
+        StringBuilder builder = new StringBuilder();
+        int brighterCount = 0;
+        int darkerCount = 0;
+        for (char c : colorStr.toCharArray()) {
+            if (Character.isAlphabetic(c)) {
+                builder.append(c);
+            } else if (c == '+') brighterCount++;
+            else if (c == '-') darkerCount++;
+        }
+        Color color = Color.valueOf(builder.toString());
+        for (int i = 0; i < brighterCount; ++i) color = color.brighter();
+        for (int i = 0; i < darkerCount; ++i) color = color.darker();
+        return color;
+    }
+
+    private static void loadPlayers(JSONObject root) {
         if (root.has("players")) {
             JSONObject array = root.getJSONObject("players");
             for (String key : array.keySet()) {
@@ -42,10 +99,8 @@ public class Recorder {
                             for (Object cueObj : pCues) {
                                 if (cueObj instanceof String) {
                                     String pCue = (String) cueObj;
-                                    for (Cue cue : Cue.ALL_CUES) {
-                                        if (cue.getName().equals(pCue)) {
-                                            playerPerson.addPrivateCue(cue);
-                                        }
+                                    if (cues.containsKey(pCue)) {
+                                        playerPerson.addPrivateCue(cues.get(pCue));
                                     }
                                 }
                             }
@@ -87,6 +142,14 @@ public class Recorder {
 
     public static Collection<PlayerPerson> getPlayerPeople() {
         return playerPeople.values();
+    }
+
+    public static Map<String, Cue> getCues() {
+        return cues;
+    }
+
+    public static Cue getStdBreakCue() {
+        return cues.get("stdBreakCue");
     }
 
     private static JSONObject makeJsonObject() {

@@ -9,7 +9,7 @@ public class PlayerPerson {
     private final double maxPowerPercentage;
     private final double maxSpinPercentage;
     private final double precisionPercentage;
-    private List<Cue> privateCues = new ArrayList<>();
+    private final List<Cue> privateCues = new ArrayList<>();
 
     public PlayerPerson(String name,
                         double maxPowerPercentage,

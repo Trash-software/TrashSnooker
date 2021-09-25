@@ -44,8 +44,11 @@ public class MainView implements Initializable {
 
     private void refreshCueList(ComboBox<CueItem> box) {
         box.getItems().clear();
-        box.getItems().add(new CueItem(Cue.STD_ASH, "斯诺克杆"));
-        box.getItems().add(new CueItem(Cue.STD_BIG, "九球杆"));
+        for (Cue cue : Recorder.getCues().values()) {
+            if (!cue.privacy) {
+                box.getItems().add(new CueItem(cue, cue.getName()));
+            }
+        }
         box.getSelectionModel().select(0);
     }
 
@@ -124,12 +127,15 @@ public class MainView implements Initializable {
 
         InGamePlayer igp1;
         InGamePlayer igp2;
-        if (gameType == GameType.SNOOKER || gameType == GameType.MINI_SNOOKER) {
+        Cue stdBreakCue = Recorder.getStdBreakCue();
+        if (stdBreakCue == null ||
+                gameType == GameType.SNOOKER ||
+                gameType == GameType.MINI_SNOOKER) {
             igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue);
             igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue);
         } else {
-            igp1 = new InGamePlayer(p1, Cue.STD_BREAK_CUE, player1CueBox.getValue().cue);
-            igp2 = new InGamePlayer(p2, Cue.STD_BREAK_CUE, player2CueBox.getValue().cue);
+            igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue);
+            igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue);
         }
 
         try {

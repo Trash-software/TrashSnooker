@@ -11,19 +11,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import trashsoftware.trashSnooker.core.*;
-import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 public class GameView implements Initializable {
-    public static final Color HOLE_PAINT = Color.BLACK.brighter().brighter().brighter();
+    public static final Color HOLE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color TABLE_WOOD_PAINT = Color.SADDLEBROWN;
     public static final Color WHITE = Color.WHITE;
     public static final Color BLACK = Color.BLACK;
@@ -196,7 +196,7 @@ public class GameView implements Initializable {
                                 game.getPlayer1().getScore(),
                                 game.getPlayer2().getScore(),
                                 game.getPlayer2().getPlayerPerson().getName()),
-                        String.format("%s 胜利。",  game.getWiningPlayer().getPlayerPerson().getName())));
+                        String.format("%s 胜利。", game.getWiningPlayer().getPlayerPerson().getName())));
     }
 
     private void askReposition() {
@@ -552,7 +552,7 @@ public class GameView implements Initializable {
     private void drawTable() {
         GameValues values = game.getGameValues();
 
-        graphicsContext.setFill(TABLE_WOOD_PAINT);
+        graphicsContext.setFill(values.tableBorderColor);
         graphicsContext.fillRoundRect(0, 0, canvasWidth, canvasHeight, 20.0, 20.0);
         graphicsContext.setFill(values.tableColor);  // 台泥/台布
         graphicsContext.fillRect(
@@ -610,6 +610,13 @@ public class GameView implements Initializable {
         drawHole(values.topMidHoleXY, values.midHoleRadius);
         drawHole(values.botMidHoleXY, values.midHoleRadius);
 
+        drawHoleOutLine(values.topLeftHoleXY, values.cornerHoleRadius, 45.0);
+        drawHoleOutLine(values.botLeftHoleXY, values.cornerHoleRadius, 135.0);
+        drawHoleOutLine(values.topRightHoleXY, values.cornerHoleRadius, -45.0);
+        drawHoleOutLine(values.botRightHoleXY, values.cornerHoleRadius, -135.0);
+        drawHoleOutLine(values.topMidHoleXY, values.midHoleRadius, 0.0);
+        drawHoleOutLine(values.botMidHoleXY, values.midHoleRadius, 180.0);
+
         graphicsContext.setLineWidth(1.0);
         game.drawTableMarks(graphicsContext, scale);
     }
@@ -617,6 +624,20 @@ public class GameView implements Initializable {
     private void drawHole(double[] realXY, double holeRadius) {
         graphicsContext.fillOval(canvasX(realXY[0] - holeRadius), canvasY(realXY[1] - holeRadius),
                 holeRadius * 2 * scale, holeRadius * 2 * scale);
+    }
+
+    private void drawHoleOutLine(double[] realXY, double holeRadius, double startAngle) {
+        double x = canvasX(realXY[0] - holeRadius);
+        double y = canvasY(realXY[1] - holeRadius);
+        graphicsContext.strokeArc(
+                x,
+                y,
+                holeRadius * 2 * scale,
+                holeRadius * 2 * scale,
+                startAngle,
+                180,
+                ArcType.OPEN
+        );
     }
 
     private void drawCornerHoleLinesArcs(GameValues values) {
@@ -696,8 +717,10 @@ public class GameView implements Initializable {
 
     private void drawTargetBoard() {
         Platform.runLater(() -> {
-            if (game instanceof AbstractSnookerGame) drawSnookerTargetBoard((AbstractSnookerGame) game);
-            else if (game instanceof ChineseEightBallGame) drawPoolTargetBoard((ChineseEightBallGame) game);
+            if (game instanceof AbstractSnookerGame)
+                drawSnookerTargetBoard((AbstractSnookerGame) game);
+            else if (game instanceof ChineseEightBallGame)
+                drawPoolTargetBoard((ChineseEightBallGame) game);
         });
     }
 
@@ -926,6 +949,20 @@ public class GameView implements Initializable {
         double cueMidLastX = cueFrontLastX - cue.midLength * cursorDirectionUnitX * scale;
         double cueMidLastY = cueFrontLastY - cue.midLength * cursorDirectionUnitY * scale;
 
+        // 杆尾弧线
+        double tailLength = cue.getEndWidth() * 0.2;
+        double tailWidth = tailLength * 1.5;
+        double tailX = cueEndX - tailLength * cursorDirectionUnitX * scale;
+        double tailY = cueEndY - tailLength * cursorDirectionUnitY * scale;
+        double[] tailLeft = new double[]{
+                tailX - tailWidth * -cursorDirectionUnitY * scale / 2,
+                tailY - tailWidth * cursorDirectionUnitX * scale / 2
+        };
+        double[] tailRight = new double[]{
+                tailX + tailWidth * -cursorDirectionUnitY * scale / 2,
+                tailY + tailWidth * cursorDirectionUnitX * scale / 2
+        };
+
         double[] cueEndLeft = new double[]{
                 cueEndX - cue.getEndWidth() * -cursorDirectionUnitY * scale / 2,
                 cueEndY - cue.getEndWidth() * cursorDirectionUnitX * scale / 2
@@ -967,6 +1004,14 @@ public class GameView implements Initializable {
                 cueTipY + cue.getCueTipWidth() * cursorDirectionUnitX * scale / 2
         };
 
+        // 杆尾弧线
+        double[] tailXs = {
+                tailLeft[0], tailRight[0], cueEndRight[0], cueEndLeft[0]
+        };
+        double[] tailYs = {
+                tailLeft[1], tailRight[1], cueEndRight[1], cueEndLeft[1]
+        };
+
         // 末段
         double[] endXs = {
                 cueEndLeft[0], cueEndRight[0], cueMidLastRight[0], cueMidLastLeft[0]
@@ -999,13 +1044,13 @@ public class GameView implements Initializable {
                 cueHeadLeft[1], cueHeadRight[1], cueTipRight[1], cueTipLeft[1]
         };
 
-        // 总轮廓线
-        double[] xs = {
-                cueTipLeft[0], cueTipRight[0], cueEndRight[0], cueEndLeft[0]
-        };
-        double[] ys = {
-                cueTipLeft[1], cueTipRight[1], cueEndRight[1], cueEndLeft[1]
-        };
+//        // 总轮廓线
+//        double[] xs = {
+//                cueTipLeft[0], cueTipRight[0], cueEndRight[0], cueEndLeft[0]
+//        };
+//        double[] ys = {
+//                cueTipLeft[1], cueTipRight[1], cueEndRight[1], cueEndLeft[1]
+//        };
 
         graphicsContext.setFill(CUE_TIP_COLOR);
         graphicsContext.fillPolygon(tipXs, tipYs, 4);
@@ -1015,10 +1060,12 @@ public class GameView implements Initializable {
         graphicsContext.fillPolygon(midXs, midYs, 4);
         graphicsContext.setFill(cue.backColor);
         graphicsContext.fillPolygon(endXs, endYs, 4);
+        graphicsContext.setFill(Color.BLACK.brighter());
+        graphicsContext.fillPolygon(tailXs, tailYs, 4);
 
-        graphicsContext.setLineWidth(1.0);
-        graphicsContext.setStroke(Color.BLACK);
-        graphicsContext.strokePolygon(xs, ys, 4);
+//        graphicsContext.setLineWidth(1.0);
+//        graphicsContext.setStroke(Color.BLACK);
+//        graphicsContext.strokePolygon(xs, ys, 4);
 
         // 杆尾圆弧
     }
