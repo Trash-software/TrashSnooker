@@ -1,6 +1,9 @@
 package trashsoftware.trashSnooker.core;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
+import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.Recorder;
 
 import java.io.File;
@@ -75,26 +78,35 @@ public class PersonRecord {
     }
 
     public void updateBreakScore(GameType gameType, int breakScore) {
-        Map<String, Integer> typeMap = intRecords.get(gameType);
-        if (typeMap == null) {
-            typeMap = createTypeMap(gameType);
-            intRecords.put(gameType, typeMap);
-        }
-        if (gameType.scoredGame) {
+        Map<String, Integer> typeMap = getIntRecordOfType(gameType);
+        if (gameType.snookerLike) {
             if (breakScore > typeMap.get("highestBreak")) {
                 typeMap.put("highestBreak", breakScore);
             }
 
+            if (breakScore == 147) {
+                incrementMap(typeMap, "147");
+            }
             if (breakScore >= 100) {
-                typeMap.put("100+breaks", typeMap.get("100+breaks") + 1);
+                incrementMap(typeMap, "100+breaks");
             }
             if (breakScore >= 50) {
-                typeMap.put("50+breaks", typeMap.get("50+breaks") + 1);
+                incrementMap(typeMap, "50+breaks");
             }
         }
     }
 
-    public void wonAgainstOpponent(GameType gameType, String opponentName) {
+    public void generalEndGame(GameType gameType, Player player) {
+        if (player instanceof SnookerPlayer) {
+            SnookerPlayer snookerPlayer = (SnookerPlayer) player;
+            snookerPlayer.flushSinglePoles();
+            for (Integer singlePole : snookerPlayer.getSinglePolesInThisGame()) {
+                updateBreakScore(gameType, singlePole);
+            }
+        }
+    }
+
+    public void wonAgainstOpponent(GameType gameType, Player player, String opponentName) {
         Map<String, int[]> oppo = opponentsRecords.computeIfAbsent(gameType, k -> new HashMap<>());
         int[] winLoss = oppo.get(opponentName);
         if (winLoss == null) {
@@ -102,6 +114,19 @@ public class PersonRecord {
             oppo.put(opponentName, winLoss);
         } else {
             winLoss[0]++;
+        }
+
+        if (player instanceof NumberedBallPlayer) {
+            int playTimes = ((NumberedBallPlayer) player).getPlayTimes();
+            boolean breaks = ((NumberedBallPlayer) player).isBreakingPlayer();
+            Map<String, Integer> intMap = getIntRecordOfType(gameType);
+            if (playTimes == 1) {
+                if (breaks) {  // 炸清
+                    incrementMap(intMap, "break-clear");
+                } else {  // 接清
+                    incrementMap(intMap, "continue-clear");
+                }
+            }
         }
     }
 
@@ -138,6 +163,21 @@ public class PersonRecord {
                 Recorder.RECORDS_DIRECTORY + File.separator + playerName + ".json");
     }
 
+    @NotNull
+    private Map<String, Integer> getIntRecordOfType(GameType gameType) {
+        Map<String, Integer> intMap = intRecords.get(gameType);
+        if (intMap == null) {
+            intMap = createTypeMap(gameType);
+            intRecords.put(gameType, intMap);
+        }
+        return intMap;
+    }
+
+    private static void incrementMap(Map<String, Integer> map, String key) {
+        Integer val = map.get(key);
+        map.put(key, val == null ? 1 : val + 1);
+    }
+
     private Map<String, Integer> createTypeMap(GameType gameType) {
         Map<String, Integer> map = new HashMap<>();
         map.put("potAttempts", 0);
@@ -145,11 +185,14 @@ public class PersonRecord {
         map.put("longPotAttempts", 0);
         map.put("longPotSuccesses", 0);
 
-        if (gameType.scoredGame) {
+        if (gameType.snookerLike) {
             map.put("highestBreak", 0);
             map.put("50+breaks", 0);
             map.put("100+breaks", 0);
             map.put("147", 0);
+        } else if (gameType == GameType.CHINESE_EIGHT || gameType == GameType.SIDE_POCKET) {
+            map.put("break-clear", 0);
+            map.put("continue-clear", 0);
         }
         return map;
     }

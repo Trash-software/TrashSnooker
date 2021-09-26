@@ -5,6 +5,7 @@ module TrashSnooker {
     requires javafx.graphics;
     requires ConfigLoader;
     requires org.json;
+    requires org.jetbrains.annotations;
 
     exports trashsoftware.trashSnooker;
     exports trashsoftware.trashSnooker.fxml;

@@ -16,7 +16,7 @@ public abstract class Game {
     public static final double calculationsPerSec = 1000.0 / calculateMs;
     public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
     public static final double speedReducer = 120.0 / calculationsPerSecSqr;
-    public static final double spinReducer = 3800.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
+    public static final double spinReducer = 3600.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
     public static final double spinEffect = 1800.0 / calculateMs;  // 数值越小影响越大
     public static final double sideSpinReducer = 100.0 / calculationsPerSecSqr;
 
@@ -33,6 +33,8 @@ public abstract class Game {
     protected Player player2;
     protected final Map<Ball, double[]> recordedPositions = new HashMap<>();  // 记录上一杆时球的位置，复位用
     protected int recordedTarget;  // 记录上一杆时的目标球，复位用
+    protected int finishedCuesCount = 0;  // 击球的计数器
+    protected double lastCueVx;
     protected Player currentPlayer;
 
     /**
@@ -101,6 +103,7 @@ public abstract class Game {
         recordPositions();
         recordedTarget = currentTarget;
 
+        lastCueVx = vx;
         cueBall.setVx(vx / calculationsPerSec);
         cueBall.setVy(vy / calculationsPerSec);
         xSpin = xSpin == 0.0d ? vx / 1000.0 : xSpin;  // 避免完全无旋转造成的NaN
@@ -172,8 +175,36 @@ public abstract class Game {
     public abstract Ball[] getAllBalls();
 
     public PredictedPos getPredictedHitBall(double xUnitDirection, double yUnitDirection) {
+        double dx = Values.PREDICTION_INTERVAL * xUnitDirection;
+        double dy = Values.PREDICTION_INTERVAL * yUnitDirection;
+
+        double x = cueBall.x + dx;
+        double y = cueBall.y + dy;
+        while (x >= gameValues.leftX &&
+                x < gameValues.rightX &&
+                y >= gameValues.topY &&
+                y < gameValues.botY) {
+            for (Ball ball : getAllBalls()) {
+                if (!ball.isPotted() && !ball.isWhite()) {
+                    if (Algebra.distanceToPoint(
+                            x, y, ball.x, ball.y
+                    ) < gameValues.ballDiameter) {
+                        return new PredictedPos(ball, new double[]{x, y});
+                    }
+                }
+            }
+            x += dx;
+            y += dy;
+        }
+
+        return null;
+    }
+
+    public PredictedPos getPredictedHitBallOptimized(double xUnitDirection, double yUnitDirection) {
         double oneDiameterX = gameValues.ballDiameter * xUnitDirection;
         double oneDiameterY = gameValues.ballDiameter * yUnitDirection;
+//        double oneDiameterX = Values.PREDICTION_INTERVAL * xUnitDirection;
+//        double oneDiameterY = Values.PREDICTION_INTERVAL * yUnitDirection;
 
         double x = cueBall.x + oneDiameterX;
         double y = cueBall.y + oneDiameterY;
@@ -210,7 +241,6 @@ public abstract class Game {
             double exitPosX = whitePos[0] + oneDiameterX;
             double exitPosY = whitePos[1] + oneDiameterY;
             while (
-//                    ballInTable(curPos[0] - dx, curPos[1] - dx) &&
                     Algebra.distanceToPoint(curPos[0], curPos[1], exitPosX, exitPosY) >= Values.PREDICTION_INTERVAL) {
                 if (pos.getTargetBall().currentDtToPoint(curPos) < gameValues.ballDiameter) {
                     return new PredictedPos(pos.getTargetBall(), new double[]{curPos[0] - dx, curPos[1] - dy});
@@ -473,6 +503,7 @@ public abstract class Game {
 
         Player player = currentPlayer;
         endMoveAndUpdate();
+        finishedCuesCount++;
         parent.finishCue(player, lastPotSuccess);
     }
 
@@ -492,6 +523,7 @@ public abstract class Game {
     protected abstract void updateTargetPotFailed();
 
     protected void switchPlayer() {
+//        parent.notifyPlayerWillSwitch(currentPlayer);
         currentPlayer.clearSinglePole();
         currentPlayer = getAnotherPlayer();
     }

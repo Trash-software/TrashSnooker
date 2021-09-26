@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import trashsoftware.configLoader.ConfigLoader;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.fxml.MainView;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Recorder;
 
@@ -31,6 +32,9 @@ public class Main extends Application {
                     getClass().getResource("fxml/mainView.fxml")
             );
             Parent root = loader.load();
+
+            MainView mainView = loader.getController();
+            mainView.setStage(primaryStage);
 
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);

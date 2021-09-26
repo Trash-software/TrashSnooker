@@ -18,6 +18,12 @@ public abstract class NumberedBallGame extends Game {
     }
 
     @Override
+    public void switchPlayer() {
+        super.switchPlayer();
+        ((NumberedBallPlayer) currentPlayer).incrementPlayTimes();
+    }
+
+    @Override
     protected Ball createWhiteBall() {
         return new PoolBall(0, true, gameValues);
     }

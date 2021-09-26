@@ -173,7 +173,7 @@ public class GameView implements Initializable {
     }
 
     public void finishCue(Player cuePlayer, boolean potSuccess) {
-        updateCuePlayerSinglePole(cuePlayer);
+//        updateCuePlayerSinglePole(cuePlayer);
         drawScoreBoard(cuePlayer);
         drawTargetBoard();
         restoreCuePoint();
@@ -187,23 +187,33 @@ public class GameView implements Initializable {
         if (game.isEnded()) {
             endGame();
 //            Recorder.save();
-        } else if ((game instanceof AbstractSnookerGame) && ((AbstractSnookerGame) game).canReposition()) {
+        } else if ((game instanceof AbstractSnookerGame) &&
+                ((AbstractSnookerGame) game).canReposition()) {
             askReposition();
         }
     }
 
-    private void updateCuePlayerSinglePole(Player cuePlayer) {
-        cuePlayer.getInGamePlayer().getPersonRecord()
-                .updateBreakScore(gameType, cuePlayer.getSinglePoleScore());
-//        Recorder.updatePlayerBreak(cuePlayer.getPlayerPerson().getName(), cuePlayer.getSinglePoleScore());
-    }
+//    public void notifyPlayerWillSwitch(Player lastPlayer) {
+//        updateCuePlayerSinglePole(lastPlayer);
+//    }
+
+//    private void updateCuePlayerSinglePole(Player cuePlayer) {
+//        cuePlayer.getInGamePlayer().getPersonRecord()
+//                .updateBreakScore(gameType, cuePlayer.getSinglePoleScore());
+////        Recorder.updatePlayerBreak(cuePlayer.getPlayerPerson().getName(), cuePlayer.getSinglePoleScore());
+//    }
 
     private void endGame() {
         Player wonPlayer = game.getWiningPlayer();
         Player lostPlayer = wonPlayer == game.getPlayer1() ? game.getPlayer2() : game.getPlayer1();
 
+        game.getPlayer1().getInGamePlayer().getPersonRecord()
+                .generalEndGame(gameType, game.getPlayer1());
+        game.getPlayer2().getInGamePlayer().getPersonRecord()
+                .generalEndGame(gameType, game.getPlayer2());
+
         wonPlayer.getInGamePlayer().getPersonRecord()
-                .wonAgainstOpponent(gameType, lostPlayer.getPlayerPerson().getName());
+                .wonAgainstOpponent(gameType, wonPlayer, lostPlayer.getPlayerPerson().getName());
         lostPlayer.getInGamePlayer().getPersonRecord()
                 .lostAgainstOpponent(gameType, wonPlayer.getPlayerPerson().getName());
 

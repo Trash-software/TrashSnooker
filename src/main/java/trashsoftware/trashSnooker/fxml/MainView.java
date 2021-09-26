@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.Cue;
 import trashsoftware.trashSnooker.core.GameType;
@@ -27,10 +28,16 @@ public class MainView implements Initializable {
     @FXML
     ComboBox<CueItem> player1CueBox, player2CueBox;
 
+    private Stage stage;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadPlayerList();
         loadCueList();
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public void reloadPlayerList() {
@@ -59,18 +66,22 @@ public class MainView implements Initializable {
         player1Box.getItems().addAll(playerPeople);
         player2Box.getItems().addAll(playerPeople);
 
-        player1Box.getSelectionModel().selectedItemProperty()
+        addPlayerBoxProperty(player1Box, player1CueBox);
+        addPlayerBoxProperty(player2Box, player2CueBox);
+    }
+
+    private void addPlayerBoxProperty(ComboBox<PlayerPerson> playerBox, ComboBox<CueItem> cueBox) {
+        playerBox.getSelectionModel().selectedItemProperty()
                 .addListener(((observable, oldValue, newValue) -> {
-                    refreshCueList(player1CueBox);
+                    refreshCueList(cueBox);
+                    boolean sel = false;
                     for (Cue cue : newValue.getPrivateCues()) {
-                        player1CueBox.getItems().add(new CueItem(cue, cue.getName()));
-                    }
-                }));
-        player2Box.getSelectionModel().selectedItemProperty()
-                .addListener(((observable, oldValue, newValue) -> {
-                    refreshCueList(player2CueBox);
-                    for (Cue cue : newValue.getPrivateCues()) {
-                        player2CueBox.getItems().add(new CueItem(cue, cue.getName()));
+                        cueBox.getItems().add(new CueItem(cue, cue.getName()));
+                        if (!sel) {
+                            // 有私杆的人默认选择第一根私杆
+                            cueBox.getSelectionModel().select(cueBox.getItems().size() - 1);
+                            sel = true;
+                        }
                     }
                 }));
     }
@@ -84,6 +95,8 @@ public class MainView implements Initializable {
             Parent root = loader.load();
 
             Stage stage = new Stage();
+            stage.initOwner(this.stage);
+            stage.initModality(Modality.WINDOW_MODAL);
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -145,6 +158,8 @@ public class MainView implements Initializable {
             Parent root = loader.load();
 
             Stage stage = new Stage();
+            stage.initOwner(this.stage);
+            stage.initModality(Modality.WINDOW_MODAL);
 
             Scene scene = new Scene(root);
             stage.setScene(scene);

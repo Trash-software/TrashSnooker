@@ -2,7 +2,9 @@ package trashsoftware.trashSnooker.core.numberedGames.sidePocket;
 
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
+import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.ArrayList;
@@ -66,8 +68,8 @@ implements NeedBigBreak{
 
     @Override
     protected void initPlayers() {
-        player1 = new SidePocketPlayer(1, gameSettings.getPlayer1());
-        player2 = new SidePocketPlayer(2, gameSettings.getPlayer2());
+        player1 = new SidePocketBallPlayer(1, gameSettings.getPlayer1(), true);
+        player2 = new SidePocketBallPlayer(2, gameSettings.getPlayer2());
     }
 
     @Override

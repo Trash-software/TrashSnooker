@@ -6,11 +6,11 @@ public enum GameType {
     CHINESE_EIGHT(false, GameValues.CHINESE_EIGHT_VALUES),
     SIDE_POCKET(false, GameValues.SIDE_POCKET);
 
-    public final boolean scoredGame;
+    public final boolean snookerLike;
     public final GameValues gameValues;
 
-    GameType(boolean scoredGame, GameValues gameValues) {
-        this.scoredGame = scoredGame;
+    GameType(boolean snookerLike, GameValues gameValues) {
+        this.snookerLike = snookerLike;
         this.gameValues = gameValues;
     }
 }
