@@ -1,14 +1,17 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.util;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.GameType;
+import trashsoftware.trashSnooker.core.Player;
+import trashsoftware.trashSnooker.core.PotAttempt;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
-import trashsoftware.trashSnooker.util.Recorder;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class PersonRecord {
 
@@ -55,6 +58,12 @@ public class PersonRecord {
             e.printStackTrace();
         }
         return record;
+    }
+
+    public static File[] listRecordFiles() {
+        File root = new File(Recorder.RECORDS_DIRECTORY);
+        File[] recFiles = root.listFiles();
+        return Objects.requireNonNullElse(recFiles, new File[0]);
     }
 
     public String getPlayerName() {
@@ -161,6 +170,14 @@ public class PersonRecord {
         }
         Recorder.saveToDisk(root,
                 Recorder.RECORDS_DIRECTORY + File.separator + playerName + ".json");
+    }
+
+    public Map<GameType, Map<String, Integer>> getIntRecords() {
+        return intRecords;
+    }
+
+    public Map<GameType, Map<String, int[]>> getOpponentsRecords() {
+        return opponentsRecords;
     }
 
     @NotNull

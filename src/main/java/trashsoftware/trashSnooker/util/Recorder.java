@@ -19,10 +19,7 @@ public class Recorder {
     public static final String RECORDS_DIRECTORY = "user" + File.separator + "records";
 
     private static final Map<String, PlayerPerson> playerPeople = new HashMap<>();
-//    private static final Map<String, RecordItem> playerRecords = new HashMap<>();
     private static final Map<String, Cue> cues = new HashMap<>();
-//    private static final RecordItem globalRecord = new RecordItem();
-//    private static PlayerPerson highestBreakPerson;
 
     public static void loadAll() {
         cues.clear();
@@ -102,18 +99,14 @@ public class Recorder {
                                     String pCue = (String) cueObj;
                                     if (cues.containsKey(pCue)) {
                                         playerPerson.addPrivateCue(cues.get(pCue));
+                                    } else {
+                                        System.out.printf("%s没有%s\n", name, pCue);
                                     }
                                 }
                             }
                         }
 
                         playerPeople.put(name, playerPerson);
-//                        JSONObject recordObj = personObj.getJSONObject("records");
-//                        RecordItem recordItem = RecordItem.fromJson(recordObj);
-//                        playerRecords.put(name, recordItem);
-//                        if (globalRecord.updateHighestBreak(recordItem.getHighestBreak())) {
-//                            highestBreakPerson = playerPerson;
-//                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -126,20 +119,6 @@ public class Recorder {
         playerPeople.put(playerPerson.getName(), playerPerson);
         saveToDisk(makeJsonObject(), PLAYER_LIST_FILE);
     }
-
-//    public static void updatePlayerBreak(String playerName, int currentBreak) {
-//        RecordItem recordItem = playerRecords.get(playerName);
-//        if (recordItem == null) {
-//            recordItem = new RecordItem();
-//            playerRecords.put(playerName, recordItem);
-//        }
-//        recordItem.updateHighestBreak(currentBreak);
-//        globalRecord.updateHighestBreak(currentBreak);
-//    }
-
-//    public static void save() {
-//        saveToDisk(makeJsonObject(), PLAYER_LIST_FILE);
-//    }
 
     public static Collection<PlayerPerson> getPlayerPeople() {
         return playerPeople.values();
@@ -161,10 +140,6 @@ public class Recorder {
             personObject.put("power", playerPerson.getMaxPowerPercentage());
             personObject.put("spin", playerPerson.getMaxSpinPercentage());
             personObject.put("precision", playerPerson.getPrecisionPercentage());
-
-//            RecordItem recordItem = playerRecords.get(playerPerson.getName());
-//            JSONObject recordObj = recordItem != null ? recordItem.toJson() : new JSONObject();
-//            personObject.put("records", recordObj);
             array.put(playerPerson.getName(), personObject);
 
             JSONArray cuesArray = new JSONArray();

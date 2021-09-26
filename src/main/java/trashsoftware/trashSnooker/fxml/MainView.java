@@ -111,6 +111,27 @@ public class MainView implements Initializable {
     }
 
     @FXML
+    void recordsAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("statsView.fxml")
+            );
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.initOwner(this.stage);
+            stage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+
+            stage.show();
+        } catch (IOException e) {
+            EventLogger.log(e);
+        }
+    }
+
+    @FXML
     void snookerAction() {
         showGame(GameType.SNOOKER);
     }

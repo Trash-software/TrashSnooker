@@ -9,7 +9,13 @@
 <VBox xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="trashsoftware.trashSnooker.fxml.MainView"
-            prefHeight="400.0" prefWidth="400.0" spacing="20.0" alignment="CENTER">
+            prefHeight="400.0" prefWidth="400.0" spacing="20.0" alignment="TOP_CENTER">
+
+    <MenuBar>
+        <Menu text="文件">
+            <MenuItem text="纪录" onAction="#recordsAction"/>
+        </Menu>
+    </MenuBar>
 
     <GridPane vgap="5.0" hgap="10.0" alignment="CENTER">
         <columnConstraints>

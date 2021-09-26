@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.util.PersonRecord;
+
 public class InGamePlayer {
 
     private final PlayerPerson playerPerson;
