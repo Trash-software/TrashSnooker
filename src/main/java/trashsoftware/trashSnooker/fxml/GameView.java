@@ -982,19 +982,23 @@ public class GameView implements Initializable {
         double correctedEndY = correctedTipY - cursorDirectionUnitY *
                 game.getCuingPlayer().getInGamePlayer().getPlayCue().getTotalLength() * scale;
 
-        drawCueSelf(correctedTipX, correctedTipY, correctedEndX, correctedEndY);
+        drawCueEssential(correctedTipX, correctedTipY, correctedEndX, correctedEndY);
     }
 
-    private void drawCueSelf(double cueTipX, double cueTipY, double cueEndX, double cueEndY) {
+    private void drawCueEssential(double cueTipX, double cueTipY, double cueEndX, double cueEndY) {
         Cue cue = game.getCuingPlayer().getInGamePlayer().getCurrentCue(game);
 
         // 杆头，不包含皮头
         double cueFrontX = cueTipX - cue.cueTipThickness * cursorDirectionUnitX * scale;
         double cueFrontY = cueTipY - cue.cueTipThickness * cursorDirectionUnitY * scale;
 
+        // 皮头环
+        double ringFrontX = cueFrontX - cue.tipRingThickness * cursorDirectionUnitX * scale;
+        double ringFrontY = cueFrontY - cue.tipRingThickness * cursorDirectionUnitY * scale;
+
         // 杆前段的尾部
-        double cueFrontLastX = cueFrontX - cue.frontLength * cursorDirectionUnitX * scale;
-        double cueFrontLastY = cueFrontY - cue.frontLength * cursorDirectionUnitY * scale;
+        double cueFrontLastX = ringFrontX - cue.frontLength * cursorDirectionUnitX * scale;
+        double cueFrontLastY = ringFrontY - cue.frontLength * cursorDirectionUnitY * scale;
 
         // 杆中段的尾部
         double cueMidLastX = cueFrontLastX - cue.midLength * cursorDirectionUnitX * scale;
@@ -1037,6 +1041,14 @@ public class GameView implements Initializable {
         double[] cueFrontLastRight = new double[]{
                 cueFrontLastX + cue.getFrontMaxWidth() * -cursorDirectionUnitY * scale / 2,
                 cueFrontLastY + cue.getFrontMaxWidth() * cursorDirectionUnitX * scale / 2
+        };
+        double[] cueRingLastLeft = new double[]{
+                ringFrontX - cue.getRingMaxWidth() * -cursorDirectionUnitY * scale / 2,
+                ringFrontY - cue.getRingMaxWidth() * cursorDirectionUnitX * scale / 2
+        };
+        double[] cueRingLastRight = new double[]{
+                ringFrontX + cue.getRingMaxWidth() * -cursorDirectionUnitY * scale / 2,
+                ringFrontY + cue.getRingMaxWidth() * cursorDirectionUnitX * scale / 2
         };
         double[] cueHeadLeft = new double[]{
                 cueFrontX - cue.getCueTipWidth() * -cursorDirectionUnitY * scale / 2,
@@ -1081,10 +1093,18 @@ public class GameView implements Initializable {
 
         // 前段
         double[] frontXs = {
-                cueFrontLastLeft[0], cueFrontLastRight[0], cueHeadRight[0], cueHeadLeft[0]
+                cueFrontLastLeft[0], cueFrontLastRight[0], cueRingLastRight[0], cueRingLastLeft[0]
         };
         double[] frontYs = {
-                cueFrontLastLeft[1], cueFrontLastRight[1], cueHeadRight[1], cueHeadLeft[1]
+                cueFrontLastLeft[1], cueFrontLastRight[1], cueRingLastRight[1], cueRingLastLeft[1]
+        };
+
+        // 皮头环
+        double[] ringXs = {
+                cueRingLastLeft[0], cueRingLastRight[0], cueHeadRight[0], cueHeadLeft[0]
+        };
+        double[] ringYs = {
+                cueRingLastLeft[1], cueRingLastRight[1], cueHeadRight[1], cueHeadLeft[1]
         };
 
         // 皮头
@@ -1105,6 +1125,8 @@ public class GameView implements Initializable {
 
         graphicsContext.setFill(CUE_TIP_COLOR);
         graphicsContext.fillPolygon(tipXs, tipYs, 4);
+        graphicsContext.setFill(cue.tipRingColor);
+        graphicsContext.fillPolygon(ringXs, ringYs, 4);
         graphicsContext.setFill(cue.frontColor);
         graphicsContext.fillPolygon(frontXs, frontYs, 4);
         graphicsContext.setFill(cue.midColor);

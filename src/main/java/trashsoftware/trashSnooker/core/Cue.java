@@ -9,6 +9,7 @@ public class Cue {
     public final double midLength;
     public final double backLength;
     public final double cueTipThickness;
+    public final double tipRingThickness;
     private final double endWidth;
     private final double cueTipWidth;
 
@@ -16,6 +17,7 @@ public class Cue {
     public final double spinMultiplier;
     public final double accuracyMultiplier;
 
+    public final Color tipRingColor;
     public final Color frontColor;
     public final Color midColor;
     public final Color backColor;
@@ -26,9 +28,11 @@ public class Cue {
                double frontLength,
                double midLength,
                double backLength,
+               double tipRingThickness,
                double cueTipThickness,
                double endWidth,
                double cueTipWidth,
+               Color tipRingColor,
                Color frontColor,
                Color midColor,
                Color backColor,
@@ -40,9 +44,11 @@ public class Cue {
         this.frontLength = frontLength;
         this.midLength = midLength;
         this.backLength = backLength;
+        this.tipRingThickness = tipRingThickness;
         this.cueTipThickness = cueTipThickness;
         this.endWidth = endWidth;
         this.cueTipWidth = cueTipWidth;
+        this.tipRingColor = tipRingColor;
         this.frontColor = frontColor;
         this.midColor = midColor;
         this.backColor = backColor;
@@ -57,12 +63,18 @@ public class Cue {
     }
 
     public double getFrontMaxWidth() {
-        return cueTipWidth + (endWidth - cueTipWidth) * (frontLength / getWoodPartLength());
+        return cueTipWidth + (endWidth - cueTipWidth) *
+                ((tipRingThickness + frontLength) / getWoodPartLength());
     }
 
     public double getMidMaxWidth() {
         return cueTipWidth + (endWidth - cueTipWidth) *
-                ((frontLength + midLength) / getWoodPartLength());
+                ((tipRingThickness + frontLength + midLength) / getWoodPartLength());
+    }
+
+    public double getRingMaxWidth() {
+        return cueTipWidth + (endWidth - cueTipWidth) *
+                (tipRingThickness / getWoodPartLength());
     }
 
     public double getTotalLength() {
@@ -70,7 +82,7 @@ public class Cue {
     }
 
     public double getWoodPartLength() {
-        return frontLength + midLength + backLength;
+        return tipRingThickness + frontLength + midLength + backLength;
     }
 
     public double getEndWidth() {
