@@ -1,48 +1,60 @@
 {
   "SNOOKER": {
-    "longPotSuccesses": 10,
+    "longPotSuccesses": 23,
     "50+breaks": 2,
     "147": 0,
     "highestBreak": 106,
     "100+breaks": 1,
-    "potAttempts": 114,
+    "potAttempts": 192,
     "opponents": {
       "Master": {
-        "wins": 2,
+        "wins": 3,
         "losses": 0
       },
       "莽子": {
         "wins": 2,
         "losses": 0
       },
+      "老油条": {
+        "wins": 1,
+        "losses": 0
+      },
+      "莽大力": {
+        "wins": 1,
+        "losses": 0
+      },
       "Mou moumou": {
         "wins": 1,
         "losses": 0
       }
     },
-    "longPotAttempts": 13,
-    "potSuccesses": 105
+    "longPotAttempts": 30,
+    "potSuccesses": 169
   },
   "CHINESE_EIGHT": {
     "break-clear": 0,
     "longPotSuccesses": 5,
-    "potAttempts": 24,
+    "potAttempts": 39,
     "continue-clear": 1,
     "opponents": {
       "Master": {
         "wins": 1,
-        "losses": 0
+        "losses": 1
       },
       "老油条": {
         "wins": 1,
         "losses": 1
+      },
+      "莽大力": {
+        "wins": 1,
+        "losses": 0
       },
       "Mou moumou": {
         "wins": 0,
         "losses": 1
       }
     },
-    "longPotAttempts": 5,
-    "potSuccesses": 20
+    "longPotAttempts": 9,
+    "potSuccesses": 31
   }
 }

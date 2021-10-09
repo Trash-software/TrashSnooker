@@ -96,6 +96,8 @@ public class GameView implements Initializable {
 
     private double mouseX, mouseY;
     private double cuePointX, cuePointY;  // 杆法的击球点
+    private CueAnimationPlayer cueAnimationPlayer;
+
     private boolean isDragging;
     private double lastDragAngle;
     private Timeline timeline;
@@ -394,7 +396,7 @@ public class GameView implements Initializable {
 
     @FXML
     void cueAction() {
-        if (game.isEnded()) return;
+        if (game.isEnded() || cueAnimationPlayer != null) return;
         if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
 
         setButtonsCueStart();
@@ -410,28 +412,31 @@ public class GameView implements Initializable {
         double[] spins = calculateSpins(vx, vy, game.getCuingPlayer().getPlayerPerson());
 
         currentAttempt = null;
-        List<double[][]> holeDirectionsAndHoles = game.directionsToAccessibleHoles(predictedTargetBall);
-        for (double[][] directionHole : holeDirectionsAndHoles) {
-            double pottingDirection = Algebra.thetaOf(directionHole[0]);
-            double aimingDirection = Algebra.thetaOf(targetPredictionUnitX, targetPredictionUnitY);
-            if (Math.abs(pottingDirection - aimingDirection) <= Game.MAX_ATTACK_DECISION_ANGLE) {
-                currentAttempt = new PotAttempt(
-                        gameType,
-                        game.getCuingPlayer().getPlayerPerson(),
-                        new double[]{game.getCueBall().getX(), game.getCueBall().getY()},
-                        new double[]{predictedTargetBall.getX(), predictedTargetBall.getY()},
-                        directionHole[1]
-                );
-                System.out.printf("Angle is %f, attacking!\n",
-                        Math.toDegrees(Math.abs(pottingDirection - aimingDirection)));
-                break;
+        if (predictedTargetBall != null) {
+            List<double[][]> holeDirectionsAndHoles = game.directionsToAccessibleHoles(predictedTargetBall);
+            for (double[][] directionHole : holeDirectionsAndHoles) {
+                double pottingDirection = Algebra.thetaOf(directionHole[0]);
+                double aimingDirection = Algebra.thetaOf(targetPredictionUnitX, targetPredictionUnitY);
+                if (Math.abs(pottingDirection - aimingDirection) <= Game.MAX_ATTACK_DECISION_ANGLE) {
+                    currentAttempt = new PotAttempt(
+                            gameType,
+                            game.getCuingPlayer().getPlayerPerson(),
+                            new double[]{game.getCueBall().getX(), game.getCueBall().getY()},
+                            new double[]{predictedTargetBall.getX(), predictedTargetBall.getY()},
+                            directionHole[1]
+                    );
+                    System.out.printf("Angle is %f, attacking!\n",
+                            Math.toDegrees(Math.abs(pottingDirection - aimingDirection)));
+                    break;
+                }
             }
         }
 
-        game.cue(vx, vy, spins[0], spins[1], spins[2]);
+        beginCueAnimation(vx, vy, spins[0], spins[1], spins[2]);
+//        game.cue(vx, vy, spins[0], spins[1], spins[2]);
 
-        cursorDirectionUnitX = 0.0;
-        cursorDirectionUnitY = 0.0;
+//        cursorDirectionUnitX = 0.0;
+//        cursorDirectionUnitY = 0.0;
     }
 
     @FXML
@@ -947,15 +952,52 @@ public class GameView implements Initializable {
         drawPottedWhiteBall();
     }
 
+    private void beginCueAnimation(double vx, double vy,
+                                   double xSpin, double ySpin, double sideSpin) {
+        double powerPercentage = getPowerPercentage();
+        double maxCueDtToWhite = powerPercentage * 1.5 + 50.0;  // 最大200毫米, 最小50毫米
+        Ball cueBall = game.getCueBall();
+        if (cueBall.isPotted()) {
+            System.out.println("Error");
+            return;
+        }
+
+        // 出杆速度与白球球速算法相同
+        cueAnimationPlayer = new CueAnimationPlayer(60.0,
+                maxCueDtToWhite,
+                powerPercentage * Values.MAX_POWER_SPEED / 200_000.0,
+                cueBall.getX(),
+                cueBall.getY(),
+                vx, vy, xSpin, ySpin, sideSpin,
+                game.getCuingPlayer().getInGamePlayer().getCurrentCue(game));
+    }
+
+    private void endCueAnimation() {
+//        System.out.println("End!");
+        cursorDirectionUnitX = 0.0;
+        cursorDirectionUnitY = 0.0;
+        cueAnimationPlayer = null;
+    }
+
     private void drawCue() {
         if (game.isEnded()) return;
-        if (game.isMoving()) return;
-        if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
+        if (cueAnimationPlayer == null) {
+            if (game.isMoving()) return;
+            if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
 
-        Ball cueBall = game.getCueBall();
-        if (cueBall.isPotted()) return;
+            Ball cueBall = game.getCueBall();
+            if (cueBall.isPotted()) return;
 
-        drawCueWithDt(cueBall.getX(), cueBall.getY(), 60.0);
+            drawCueWithDt(cueBall.getX(), cueBall.getY(), 60.0,
+                    game.getCuingPlayer().getInGamePlayer().getCurrentCue(game));
+        } else {
+//            System.out.println("Drawing!");
+            drawCueWithDt(cueAnimationPlayer.cueBallX,
+                    cueAnimationPlayer.cueBallY,
+                    cueAnimationPlayer.cueDtToWhite + game.getGameValues().ballRadius,
+                    cueAnimationPlayer.cue);
+            cueAnimationPlayer.nextFrame();
+        }
     }
 
     private double[] getCueHitPoint(double cueBallRealX, double cueBallRealY) {
@@ -972,21 +1014,27 @@ public class GameView implements Initializable {
         };
     }
 
-    private void drawCueWithDt(double cueBallRealX, double cueBallRealY, double distance) {
+    private void drawCueWithDt(double cueBallRealX,
+                               double cueBallRealY,
+                               double realDistance,
+                               Cue cue) {
+//        System.out.println(distance);
         double[] touchXY = getCueHitPoint(cueBallRealX, cueBallRealY);
 
-        double correctedTipX = touchXY[0] - cursorDirectionUnitX * distance * scale;
-        double correctedTipY = touchXY[1] - cursorDirectionUnitY * distance * scale;
+        double correctedTipX = touchXY[0] - cursorDirectionUnitX * realDistance * scale;
+        double correctedTipY = touchXY[1] - cursorDirectionUnitY * realDistance * scale;
         double correctedEndX = correctedTipX - cursorDirectionUnitX *
-                game.getCuingPlayer().getInGamePlayer().getPlayCue().getTotalLength() * scale;
+                cue.getTotalLength() * scale;
         double correctedEndY = correctedTipY - cursorDirectionUnitY *
-                game.getCuingPlayer().getInGamePlayer().getPlayCue().getTotalLength() * scale;
+                cue.getTotalLength() * scale;
 
-        drawCueEssential(correctedTipX, correctedTipY, correctedEndX, correctedEndY);
+        drawCueEssential(correctedTipX, correctedTipY, correctedEndX, correctedEndY, cue);
     }
 
-    private void drawCueEssential(double cueTipX, double cueTipY, double cueEndX, double cueEndY) {
-        Cue cue = game.getCuingPlayer().getInGamePlayer().getCurrentCue(game);
+    private void drawCueEssential(double cueTipX, double cueTipY,
+                                  double cueEndX, double cueEndY,
+                                  Cue cue) {
+//        Cue cue = game.getCuingPlayer().getInGamePlayer().getCurrentCue(game);
 
         // 杆头，不包含皮头
         double cueFrontX = cueTipX - cue.cueTipThickness * cursorDirectionUnitX * scale;
@@ -1136,6 +1184,9 @@ public class GameView implements Initializable {
         graphicsContext.setFill(Color.BLACK.brighter());
         graphicsContext.fillPolygon(tailXs, tailYs, 4);
 
+//        System.out.printf("Successfully drawn at (%f, %f), (%f, %f)\n",
+//                cueTipX, cueTipY, cueEndX, cueEndY);
+
 //        graphicsContext.setLineWidth(1.0);
 //        graphicsContext.setStroke(Color.BLACK);
 //        graphicsContext.strokePolygon(xs, ys, 4);
@@ -1169,5 +1220,79 @@ public class GameView implements Initializable {
 
     public double realY(double canvasY) {
         return canvasY / scale;
+    }
+
+    class CueAnimationPlayer {
+        private final long holdMs = 800;  // 拉至满弓的停顿时间
+        private final long endHoldMs = 500;  // 出杆完成后的停顿时间
+        private long heldMs = 0;
+        private long endHeldMs = 0;
+
+//        private final double
+
+        private final double initDistance, maxPullDistance;
+        private double cueDtToWhite;  // 杆的动画离白球的真实距离，未接触前为正
+        private double cueMoveSpeed;  // 杆每毫秒运动的距离，毫米
+        private final double maxExtension;  // 杆的最大延伸距离，始终为负
+        private boolean touched;  // 是否已经接触白球
+        private boolean reachedMaxPull;
+
+        private final double cueBallX, cueBallY;
+        private final double cueVx, cueVy, xSpin, ySpin, sideSpin;
+
+        private final Cue cue;
+
+        CueAnimationPlayer(double initDistance,
+                           double maxPullDistance, double cueMoveSpeedPerMs,
+                           double cueBallInitX, double cueBallInitY,
+                           double cueVx, double cueVy,
+                           double xSpin, double ySpin, double sideSpin,
+                           Cue cue) {
+            this.initDistance = Math.min(initDistance, maxPullDistance);
+            this.maxPullDistance = maxPullDistance;
+            this.cueDtToWhite = this.initDistance;
+            this.maxExtension = -maxPullDistance * 0.75;
+            this.cueMoveSpeed = cueMoveSpeedPerMs;
+            this.cueBallX = cueBallInitX;
+            this.cueBallY = cueBallInitY;
+
+//            System.out.println(cueDtToWhite + ", " + cueMoveSpeedPerMs + ", " + maxExtension);
+
+            this.cueVx = cueVx;
+            this.cueVy = cueVy;
+            this.xSpin = xSpin;
+            this.ySpin = ySpin;
+            this.sideSpin = sideSpin;
+
+            this.cue = cue;
+        }
+
+        void nextFrame() {
+            if (reachedMaxPull && heldMs < holdMs) {
+                heldMs += frameTimeMs;
+            } else if (endHeldMs > 0) {
+                endHeldMs += frameTimeMs;
+                if (endHeldMs >= endHoldMs) {
+                    endCueAnimation();
+                }
+            } else if (reachedMaxPull) {
+                cueDtToWhite -= cueMoveSpeed * frameTimeMs;
+
+                if (cueDtToWhite <= maxExtension) {  // 出杆结束了
+                    endHeldMs += frameTimeMs;
+                } else if (Math.abs(cueDtToWhite) < cueMoveSpeed * frameTimeMs) {
+                    if (!touched) {
+                        touched = true;
+//                        System.out.println("+++++++++++++++ Touched! +++++++++++++++");
+                        game.cue(cueVx, cueVy, xSpin, ySpin, sideSpin);
+                    }
+                }
+            } else {
+                cueDtToWhite += (cueMoveSpeed / 2) * frameTimeMs;  // 往后拉
+                if (cueDtToWhite >= maxPullDistance) {
+                    reachedMaxPull = true;
+                }
+            }
+        }
     }
 }

@@ -266,12 +266,12 @@ public abstract class Game {
     }
 
     /**
-     * 返回{连接目标球与从目标球处能直接看到的洞口的连线的单位向量, 洞口坐标}。
+     * 返回{连接目标球与从目标球处能直接看到的洞口的连线的单位向量, 洞口坐标(注意不是洞底坐标)}。
      */
     public List<double[][]> directionsToAccessibleHoles(Ball targetBall) {
         List<double[][]> list = new ArrayList<>();
         BIG_LOOP:
-        for (double[] hole : gameValues.allHoles) {
+        for (double[] hole : gameValues.allHoleOpenCenters) {
             double directionX = hole[0] - targetBall.x;
             double directionY = hole[1] - targetBall.y;
             int distance = (int) Math.hypot(directionX, directionY) + 1;

@@ -63,7 +63,16 @@ public class GameValues {
     public double[] topMidHoleXY;
     public double[] botMidHoleXY;
 
+    // 袋的正中央，最易进球的位置
+    public double[] topLeftHoleOpenCenter;
+    public double[] botLeftHoleOpenCenter;
+    public double[] topRightHoleOpenCenter;
+    public double[] botRightHoleOpenCenter;
+    public double[] topMidHoleOpenCenter;
+    public double[] botMidHoleOpenCenter;
+
     public double[][] allHoles;
+    public double[][] allHoleOpenCenters;
 
     public double leftCornerHoleAreaRightX;  // 左顶袋右袋角
     public double midHoleAreaLeftX;  // 中袋左袋角
@@ -140,6 +149,22 @@ public class GameValues {
                 botRightHoleXY,
                 topMidHoleXY,
                 botMidHoleXY
+        };
+
+        topLeftHoleOpenCenter = new double[]{leftX + ballRadius, topY + ballRadius};
+        botLeftHoleOpenCenter = new double[]{leftX + ballRadius, botY - ballRadius};
+        topRightHoleOpenCenter = new double[]{rightX - ballRadius, topY + ballRadius};
+        botRightHoleOpenCenter = new double[]{rightX - ballRadius, botY - ballRadius};
+        topMidHoleOpenCenter = new double[]{midX, topY - ballRadius};  // 特殊：中心点其实在台外
+        botMidHoleOpenCenter = new double[]{midX, botY + ballRadius};
+
+        allHoleOpenCenters = new double[][]{
+                topLeftHoleOpenCenter,
+                botLeftHoleOpenCenter,
+                topRightHoleOpenCenter,
+                botRightHoleOpenCenter,
+                topMidHoleOpenCenter,
+                botMidHoleOpenCenter
         };
 
         if (straightHole) {
