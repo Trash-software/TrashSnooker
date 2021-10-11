@@ -73,7 +73,7 @@ implements NeedBigBreak{
     }
 
     @Override
-    protected boolean canPlaceWhite(double x, double y) {
+    protected boolean canPlaceWhiteInTable(double x, double y) {
         if (isBreaking) {
             return x < breakLineX() && !isOccupied(x, y);
         } else {

@@ -31,7 +31,8 @@
             <SeparatorMenuItem/>
             <MenuItem text="新游戏" onAction="#newGameAction"/>
             <MenuItem text="认输" onAction="#withdrawAction" fx:id="withdrawMenu"/>
-            <MenuItem text="重新放置手中球"/>
+            <MenuItem text="重新放置手中球" fx:id="replaceBallInHandMenu" disable="true"/>
+            <MenuItem text="让杆" fx:id="letOtherPlayMenu" disable="true"/>
         </Menu>
         <Menu text="Debug">
             <MenuItem text="terminate" onAction="#terminateAction"/>

@@ -32,6 +32,7 @@ public class SnookerPlayer extends Player {
 
     @Override
     public void clearSinglePole() {
+        singlePoles.add(getSinglePoleScore());
         super.clearSinglePole();
     }
 

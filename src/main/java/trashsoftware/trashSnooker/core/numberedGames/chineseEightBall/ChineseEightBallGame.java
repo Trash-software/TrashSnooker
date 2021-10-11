@@ -101,7 +101,7 @@ public class ChineseEightBallGame extends NumberedBallGame
     }
 
     @Override
-    protected boolean canPlaceWhite(double x, double y) {
+    protected boolean canPlaceWhiteInTable(double x, double y) {
         if (isJustAfterBreak()) {
             return x < breakLineX() && !isOccupied(x, y);
         } else {

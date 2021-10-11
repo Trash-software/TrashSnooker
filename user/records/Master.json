@@ -1,23 +1,27 @@
 {
   "SNOOKER": {
-    "longPotSuccesses": 7,
-    "50+breaks": 0,
+    "longPotSuccesses": 8,
+    "50+breaks": 1,
     "147": 0,
-    "highestBreak": 23,
+    "highestBreak": 67,
     "100+breaks": 0,
-    "potAttempts": 78,
+    "potAttempts": 108,
     "opponents": {
       "Lolita": {
         "wins": 0,
         "losses": 3
+      },
+      "莽大力": {
+        "wins": 1,
+        "losses": 0
       },
       "Ding": {
         "wins": 2,
         "losses": 0
       }
     },
-    "longPotAttempts": 14,
-    "potSuccesses": 62
+    "longPotAttempts": 17,
+    "potSuccesses": 89
   },
   "MINI_SNOOKER": {
     "longPotSuccesses": 5,
@@ -35,20 +39,24 @@
   },
   "CHINESE_EIGHT": {
     "break-clear": 0,
-    "longPotSuccesses": 3,
-    "potAttempts": 20,
+    "longPotSuccesses": 5,
+    "potAttempts": 40,
     "continue-clear": 0,
     "opponents": {
       "Lolita": {
         "wins": 1,
         "losses": 1
       },
+      "莽子": {
+        "wins": 2,
+        "losses": 0
+      },
       "老油条": {
         "wins": 1,
         "losses": 0
       }
     },
-    "longPotAttempts": 3,
-    "potSuccesses": 15
+    "longPotAttempts": 8,
+    "potSuccesses": 29
   }
 }

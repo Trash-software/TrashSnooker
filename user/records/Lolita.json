@@ -1,11 +1,11 @@
 {
   "SNOOKER": {
-    "longPotSuccesses": 23,
+    "longPotSuccesses": 24,
     "50+breaks": 2,
     "147": 0,
     "highestBreak": 106,
     "100+breaks": 1,
-    "potAttempts": 192,
+    "potAttempts": 220,
     "opponents": {
       "Master": {
         "wins": 3,
@@ -26,10 +26,28 @@
       "Mou moumou": {
         "wins": 1,
         "losses": 0
+      },
+      "流氓": {
+        "wins": 1,
+        "losses": 0
       }
     },
-    "longPotAttempts": 30,
-    "potSuccesses": 169
+    "longPotAttempts": 31,
+    "potSuccesses": 196
+  },
+  "MINI_SNOOKER": {
+    "longPotSuccesses": 6,
+    "50+breaks": 1,
+    "147": 0,
+    "highestBreak": 84,
+    "100+breaks": 0,
+    "potAttempts": 33,
+    "opponents": {"Mou moumou": {
+      "wins": 1,
+      "losses": 0
+    }},
+    "longPotAttempts": 6,
+    "potSuccesses": 32
   },
   "CHINESE_EIGHT": {
     "break-clear": 0,

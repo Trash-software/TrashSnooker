@@ -5,6 +5,9 @@
     "precision": 100,
     "name": "Master",
     "power": 100,
+    "pullDt": [50.0, 200.0],
+    "cuePlayType": "p1,h800,e500;s",
+    "cuePrecision": 100,
     "privateCues": ["Master的杆"]
   },
   "Lolita": {
@@ -21,6 +24,9 @@
     "precision": 41.10972473448947,
     "name": "莽子",
     "power": 100,
+    "pullDt": [100.0, 250.0],
+    "cuePlayType": "p2.5,h100,e500;l,l,r,r,r,l,l,l",
+    "cuePrecision": 50,
     "privateCues": []
   },
   "Kid": {
@@ -45,6 +51,9 @@
     "precision": 80,
     "name": "Mou moumou",
     "power": 80,
+    "pullDt": [40.0, 180.0],
+    "cuePlayType": "p1.2,h600,e500;l,l,l,r,r,r,r",
+    "cuePrecision": 80,
     "privateCues": []
   },
   "Ding": {
@@ -56,11 +65,11 @@
     "privateCues": []
   },
   "流氓": {
-    "spin": 49.12468590106156,
+    "spin": 50,
     "precision": 100,
     "name": "流氓",
     "power": 100,
-    "privateCues": []
+    "privateCues": ["准神杆"]
   },
   "莽大力": {
     "spin": 100,
@@ -68,5 +77,12 @@
     "name": "莽大力",
     "power": 100,
     "privateCues": ["Mang's cue"]
+  },
+  "Noob": {
+    "spin": 30,
+    "precision": 30,
+    "name": "Noob",
+    "power": 60,
+    "privateCues": []
   }
 }}

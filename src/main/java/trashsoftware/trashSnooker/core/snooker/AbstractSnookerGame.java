@@ -468,9 +468,10 @@ public abstract class AbstractSnookerGame extends Game {
         else throw new RuntimeException("延分时不会结束");
     }
 
-    protected boolean canPlaceWhite(double x, double y) {
+    protected boolean canPlaceWhiteInTable(double x, double y) {
         return x <= breakLineX() &&
-                Algebra.distanceToPoint(x, y, brownBallPos()[0], brownBallPos()[1]) <= breakArcRadius() &&
+                Algebra.distanceToPoint(x, y, brownBallPos()[0], brownBallPos()[1]) <=
+                        breakArcRadius() &&
                 !isOccupied(x, y);
     }
 

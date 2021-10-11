@@ -37,13 +37,14 @@ import java.util.TreeMap;
 
 public class GameView implements Initializable {
     public static final Color HOLE_PAINT = Color.DIMGRAY.darker().darker().darker();
-    public static final Color TABLE_WOOD_PAINT = Color.SADDLEBROWN;
     public static final Color WHITE = Color.WHITE;
     public static final Color BLACK = Color.BLACK;
     public static final Color CUE_POINT = Color.RED;
     public static final Color CUE_TIP_COLOR = Color.LIGHTSEAGREEN;
 
     public static final Font POOL_NUMBER_FONT = new Font(8.0);
+
+    public static final double HAND_DT_TO_MAX_PULL = 30.0;
 
     public double scale = 0.32;
     @FXML
@@ -65,7 +66,7 @@ public class GameView implements Initializable {
     @FXML
     Canvas player1TarCanvas, player2TarCanvas;
     @FXML
-    MenuItem withdrawMenu;
+    MenuItem withdrawMenu, replaceBallInHandMenu, letOtherPlayMenu;
     private double canvasWidth;
     private double innerWidth;
     private double canvasHeight;
@@ -520,7 +521,7 @@ public class GameView implements Initializable {
         double leftRightSpin = getUnitSideSpin();  // 右塞正（逆时针），左塞负
         if (frontBackSpin > 0) {
             // 高杆补偿
-            frontBackSpin *= 1.25;
+            frontBackSpin *= 1.2;
         }
 
         double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.5);
@@ -962,14 +963,27 @@ public class GameView implements Initializable {
             return;
         }
 
+        PlayerPerson playerPerson = game.getCuingPlayer().getPlayerPerson();
+        double maxPullDt =
+                (playerPerson.getMaxPullDt() - playerPerson.getMinPullDt()) *
+                        powerPercentage / 100 + playerPerson.getMinPullDt();
+        double handDt = maxPullDt + HAND_DT_TO_MAX_PULL;
+        double handX = cueBall.getX() - handDt * cursorDirectionUnitX;
+        double handY = cueBall.getY() - handDt * cursorDirectionUnitY;
+
         // 出杆速度与白球球速算法相同
-        cueAnimationPlayer = new CueAnimationPlayer(60.0,
-                maxCueDtToWhite,
-                powerPercentage * Values.MAX_POWER_SPEED / 200_000.0,
-                cueBall.getX(),
-                cueBall.getY(),
+        cueAnimationPlayer = new CueAnimationPlayer(
+                60.0,
+                maxPullDt,
+                powerPercentage,
+                handX,
+                handY,
+                cursorDirectionUnitX,
+                cursorDirectionUnitY,
                 vx, vy, xSpin, ySpin, sideSpin,
-                game.getCuingPlayer().getInGamePlayer().getCurrentCue(game));
+                game.getCuingPlayer().getInGamePlayer().getCurrentCue(game),
+                game.getCuingPlayer().getPlayerPerson()
+        );
     }
 
     private void endCueAnimation() {
@@ -988,25 +1002,34 @@ public class GameView implements Initializable {
             Ball cueBall = game.getCueBall();
             if (cueBall.isPotted()) return;
 
-            drawCueWithDt(cueBall.getX(), cueBall.getY(), 60.0,
+            drawCueWithDtToHand(cueBall.getX(), cueBall.getY(),
+                    cursorDirectionUnitX,
+                    cursorDirectionUnitY,
+                    60.0 + HAND_DT_TO_MAX_PULL,
                     game.getCuingPlayer().getInGamePlayer().getCurrentCue(game));
         } else {
 //            System.out.println("Drawing!");
-            drawCueWithDt(cueAnimationPlayer.cueBallX,
-                    cueAnimationPlayer.cueBallY,
-                    cueAnimationPlayer.cueDtToWhite + game.getGameValues().ballRadius,
+            drawCueWithDtToHand(
+                    cueAnimationPlayer.handX,
+                    cueAnimationPlayer.handY,
+                    cueAnimationPlayer.pointingUnitX,
+                    cueAnimationPlayer.pointingUnitY,
+                    cueAnimationPlayer.cueDtToWhite -
+                            cueAnimationPlayer.maxPullDistance - HAND_DT_TO_MAX_PULL +
+                            game.getGameValues().ballRadius,
                     cueAnimationPlayer.cue);
             cueAnimationPlayer.nextFrame();
         }
     }
 
-    private double[] getCueHitPoint(double cueBallRealX, double cueBallRealY) {
+    private double[] getCueHitPoint(double cueBallRealX, double cueBallRealY,
+                                    double pointingUnitX, double pointingUnitY) {
         double originalTouchX = canvasX(cueBallRealX);
         double originalTouchY = canvasY(cueBallRealY);
         double sideRatio = getUnitSideSpin() * 0.7;
-        double sideXOffset = -cursorDirectionUnitY *
+        double sideXOffset = -pointingUnitY *
                 sideRatio * game.getGameValues().ballRadius * scale;
-        double sideYOffset = cursorDirectionUnitX *
+        double sideYOffset = pointingUnitX *
                 sideRatio * game.getGameValues().ballRadius * scale;
         return new double[]{
                 originalTouchX + sideXOffset,
@@ -1014,105 +1037,109 @@ public class GameView implements Initializable {
         };
     }
 
-    private void drawCueWithDt(double cueBallRealX,
-                               double cueBallRealY,
-                               double realDistance,
-                               Cue cue) {
+    private void drawCueWithDtToHand(double handX,
+                                     double handY,
+                                     double pointingUnitX,
+                                     double pointingUnitY,
+                                     double realDistance,
+                                     Cue cue) {
 //        System.out.println(distance);
-        double[] touchXY = getCueHitPoint(cueBallRealX, cueBallRealY);
+        double[] touchXY = getCueHitPoint(handX, handY, pointingUnitX, pointingUnitY);
 
-        double correctedTipX = touchXY[0] - cursorDirectionUnitX * realDistance * scale;
-        double correctedTipY = touchXY[1] - cursorDirectionUnitY * realDistance * scale;
-        double correctedEndX = correctedTipX - cursorDirectionUnitX *
+        double correctedTipX = touchXY[0] - pointingUnitX * realDistance * scale;
+        double correctedTipY = touchXY[1] - pointingUnitY * realDistance * scale;
+        double correctedEndX = correctedTipX - pointingUnitX *
                 cue.getTotalLength() * scale;
-        double correctedEndY = correctedTipY - cursorDirectionUnitY *
+        double correctedEndY = correctedTipY - pointingUnitY *
                 cue.getTotalLength() * scale;
 
-        drawCueEssential(correctedTipX, correctedTipY, correctedEndX, correctedEndY, cue);
+        drawCueEssential(correctedTipX, correctedTipY, correctedEndX, correctedEndY,
+                pointingUnitX, pointingUnitY, cue);
     }
 
     private void drawCueEssential(double cueTipX, double cueTipY,
                                   double cueEndX, double cueEndY,
+                                  double pointingUnitX, double pointingUnitY,
                                   Cue cue) {
 //        Cue cue = game.getCuingPlayer().getInGamePlayer().getCurrentCue(game);
 
         // 杆头，不包含皮头
-        double cueFrontX = cueTipX - cue.cueTipThickness * cursorDirectionUnitX * scale;
-        double cueFrontY = cueTipY - cue.cueTipThickness * cursorDirectionUnitY * scale;
+        double cueFrontX = cueTipX - cue.cueTipThickness * pointingUnitX * scale;
+        double cueFrontY = cueTipY - cue.cueTipThickness * pointingUnitY * scale;
 
         // 皮头环
-        double ringFrontX = cueFrontX - cue.tipRingThickness * cursorDirectionUnitX * scale;
-        double ringFrontY = cueFrontY - cue.tipRingThickness * cursorDirectionUnitY * scale;
+        double ringFrontX = cueFrontX - cue.tipRingThickness * pointingUnitX * scale;
+        double ringFrontY = cueFrontY - cue.tipRingThickness * pointingUnitY * scale;
 
         // 杆前段的尾部
-        double cueFrontLastX = ringFrontX - cue.frontLength * cursorDirectionUnitX * scale;
-        double cueFrontLastY = ringFrontY - cue.frontLength * cursorDirectionUnitY * scale;
+        double cueFrontLastX = ringFrontX - cue.frontLength * pointingUnitX * scale;
+        double cueFrontLastY = ringFrontY - cue.frontLength * pointingUnitY * scale;
 
         // 杆中段的尾部
-        double cueMidLastX = cueFrontLastX - cue.midLength * cursorDirectionUnitX * scale;
-        double cueMidLastY = cueFrontLastY - cue.midLength * cursorDirectionUnitY * scale;
+        double cueMidLastX = cueFrontLastX - cue.midLength * pointingUnitX * scale;
+        double cueMidLastY = cueFrontLastY - cue.midLength * pointingUnitY * scale;
 
         // 杆尾弧线
         double tailLength = cue.getEndWidth() * 0.2;
         double tailWidth = tailLength * 1.5;
-        double tailX = cueEndX - tailLength * cursorDirectionUnitX * scale;
-        double tailY = cueEndY - tailLength * cursorDirectionUnitY * scale;
+        double tailX = cueEndX - tailLength * pointingUnitX * scale;
+        double tailY = cueEndY - tailLength * pointingUnitY * scale;
         double[] tailLeft = new double[]{
-                tailX - tailWidth * -cursorDirectionUnitY * scale / 2,
-                tailY - tailWidth * cursorDirectionUnitX * scale / 2
+                tailX - tailWidth * -pointingUnitY * scale / 2,
+                tailY - tailWidth * pointingUnitX * scale / 2
         };
         double[] tailRight = new double[]{
-                tailX + tailWidth * -cursorDirectionUnitY * scale / 2,
-                tailY + tailWidth * cursorDirectionUnitX * scale / 2
+                tailX + tailWidth * -pointingUnitY * scale / 2,
+                tailY + tailWidth * pointingUnitX * scale / 2
         };
 
         double[] cueEndLeft = new double[]{
-                cueEndX - cue.getEndWidth() * -cursorDirectionUnitY * scale / 2,
-                cueEndY - cue.getEndWidth() * cursorDirectionUnitX * scale / 2
+                cueEndX - cue.getEndWidth() * -pointingUnitY * scale / 2,
+                cueEndY - cue.getEndWidth() * pointingUnitX * scale / 2
         };
         double[] cueEndRight = new double[]{
-                cueEndX + cue.getEndWidth() * -cursorDirectionUnitY * scale / 2,
-                cueEndY + cue.getEndWidth() * cursorDirectionUnitX * scale / 2
+                cueEndX + cue.getEndWidth() * -pointingUnitY * scale / 2,
+                cueEndY + cue.getEndWidth() * pointingUnitX * scale / 2
         };
         double[] cueMidLastLeft = new double[]{
-                cueMidLastX - cue.getMidMaxWidth() * -cursorDirectionUnitY * scale / 2,
-                cueMidLastY - cue.getMidMaxWidth() * cursorDirectionUnitX * scale / 2
+                cueMidLastX - cue.getMidMaxWidth() * -pointingUnitY * scale / 2,
+                cueMidLastY - cue.getMidMaxWidth() * pointingUnitX * scale / 2
         };
         double[] cueMidLastRight = new double[]{
-                cueMidLastX + cue.getMidMaxWidth() * -cursorDirectionUnitY * scale / 2,
-                cueMidLastY + cue.getMidMaxWidth() * cursorDirectionUnitX * scale / 2
+                cueMidLastX + cue.getMidMaxWidth() * -pointingUnitY * scale / 2,
+                cueMidLastY + cue.getMidMaxWidth() * pointingUnitX * scale / 2
         };
         double[] cueFrontLastLeft = new double[]{
-                cueFrontLastX - cue.getFrontMaxWidth() * -cursorDirectionUnitY * scale / 2,
-                cueFrontLastY - cue.getFrontMaxWidth() * cursorDirectionUnitX * scale / 2
+                cueFrontLastX - cue.getFrontMaxWidth() * -pointingUnitY * scale / 2,
+                cueFrontLastY - cue.getFrontMaxWidth() * pointingUnitX * scale / 2
         };
         double[] cueFrontLastRight = new double[]{
-                cueFrontLastX + cue.getFrontMaxWidth() * -cursorDirectionUnitY * scale / 2,
-                cueFrontLastY + cue.getFrontMaxWidth() * cursorDirectionUnitX * scale / 2
+                cueFrontLastX + cue.getFrontMaxWidth() * -pointingUnitY * scale / 2,
+                cueFrontLastY + cue.getFrontMaxWidth() * pointingUnitX * scale / 2
         };
         double[] cueRingLastLeft = new double[]{
-                ringFrontX - cue.getRingMaxWidth() * -cursorDirectionUnitY * scale / 2,
-                ringFrontY - cue.getRingMaxWidth() * cursorDirectionUnitX * scale / 2
+                ringFrontX - cue.getRingMaxWidth() * -pointingUnitY * scale / 2,
+                ringFrontY - cue.getRingMaxWidth() * pointingUnitX * scale / 2
         };
         double[] cueRingLastRight = new double[]{
-                ringFrontX + cue.getRingMaxWidth() * -cursorDirectionUnitY * scale / 2,
-                ringFrontY + cue.getRingMaxWidth() * cursorDirectionUnitX * scale / 2
+                ringFrontX + cue.getRingMaxWidth() * -pointingUnitY * scale / 2,
+                ringFrontY + cue.getRingMaxWidth() * pointingUnitX * scale / 2
         };
         double[] cueHeadLeft = new double[]{
-                cueFrontX - cue.getCueTipWidth() * -cursorDirectionUnitY * scale / 2,
-                cueFrontY - cue.getCueTipWidth() * cursorDirectionUnitX * scale / 2
+                cueFrontX - cue.getCueTipWidth() * -pointingUnitY * scale / 2,
+                cueFrontY - cue.getCueTipWidth() * pointingUnitX * scale / 2
         };
         double[] cueHeadRight = new double[]{
-                cueFrontX + cue.getCueTipWidth() * -cursorDirectionUnitY * scale / 2,
-                cueFrontY + cue.getCueTipWidth() * cursorDirectionUnitX * scale / 2
+                cueFrontX + cue.getCueTipWidth() * -pointingUnitY * scale / 2,
+                cueFrontY + cue.getCueTipWidth() * pointingUnitX * scale / 2
         };
         double[] cueTipLeft = new double[]{
-                cueTipX - cue.getCueTipWidth() * -cursorDirectionUnitY * scale / 2,
-                cueTipY - cue.getCueTipWidth() * cursorDirectionUnitX * scale / 2
+                cueTipX - cue.getCueTipWidth() * -pointingUnitY * scale / 2,
+                cueTipY - cue.getCueTipWidth() * pointingUnitX * scale / 2
         };
         double[] cueTipRight = new double[]{
-                cueTipX + cue.getCueTipWidth() * -cursorDirectionUnitY * scale / 2,
-                cueTipY + cue.getCueTipWidth() * cursorDirectionUnitX * scale / 2
+                cueTipX + cue.getCueTipWidth() * -pointingUnitY * scale / 2,
+                cueTipY + cue.getCueTipWidth() * pointingUnitX * scale / 2
         };
 
         // 杆尾弧线
@@ -1223,8 +1250,8 @@ public class GameView implements Initializable {
     }
 
     class CueAnimationPlayer {
-        private final long holdMs = 800;  // 拉至满弓的停顿时间
-        private final long endHoldMs = 500;  // 出杆完成后的停顿时间
+        private long holdMs;  // 拉至满弓的停顿时间
+        private long endHoldMs;  // 出杆完成后的停顿时间
         private long heldMs = 0;
         private long endHeldMs = 0;
 
@@ -1237,26 +1264,42 @@ public class GameView implements Initializable {
         private boolean touched;  // 是否已经接触白球
         private boolean reachedMaxPull;
 
-        private final double cueBallX, cueBallY;
+        //        private final double cueBallX, cueBallY;
+        private final double handX, handY;  // 手架的位置，作为杆的摇摆中心点
         private final double cueVx, cueVy, xSpin, ySpin, sideSpin;
+        private double pointingUnitX, pointingUnitY;
+        private final double powerPercentage;
 
         private final Cue cue;
+        private final PlayerPerson playerPerson;
 
         CueAnimationPlayer(double initDistance,
-                           double maxPullDistance, double cueMoveSpeedPerMs,
-                           double cueBallInitX, double cueBallInitY,
+                           double maxPullDt,
+                           double powerPercentage,
+                           double handX, double handY,
+                           double pointingUnitX, double pointingUnitY,
                            double cueVx, double cueVy,
                            double xSpin, double ySpin, double sideSpin,
-                           Cue cue) {
-            this.initDistance = Math.min(initDistance, maxPullDistance);
-            this.maxPullDistance = maxPullDistance;
-            this.cueDtToWhite = this.initDistance;
-            this.maxExtension = -maxPullDistance * 0.75;
-            this.cueMoveSpeed = cueMoveSpeedPerMs;
-            this.cueBallX = cueBallInitX;
-            this.cueBallY = cueBallInitY;
+                           Cue cue,
+                           PlayerPerson playerPerson) {
 
-//            System.out.println(cueDtToWhite + ", " + cueMoveSpeedPerMs + ", " + maxExtension);
+            this.initDistance = Math.min(initDistance, maxPullDt);
+            this.maxPullDistance = maxPullDt;
+            this.cueDtToWhite = this.initDistance;
+            this.maxExtension = -maxPullDistance *
+                    (playerPerson.getMaxSpinPercentage() * 0.75 / 100);  // 杆法好的人延伸长
+            this.cueMoveSpeed = powerPercentage * Values.MAX_POWER_SPEED / 100_000.0;
+//            this.cueBallX = cueBallInitX;
+//            this.cueBallY = cueBallInitY;
+            this.powerPercentage = powerPercentage;
+
+            this.pointingUnitX = pointingUnitX;
+            this.pointingUnitY = pointingUnitY;
+
+            this.handX = handX;
+            this.handY = handY;
+
+            System.out.println(cueDtToWhite + ", " + this.cueMoveSpeed + ", " + maxExtension);
 
             this.cueVx = cueVx;
             this.cueVy = cueVy;
@@ -1265,6 +1308,10 @@ public class GameView implements Initializable {
             this.sideSpin = sideSpin;
 
             this.cue = cue;
+            this.playerPerson = playerPerson;
+
+            this.holdMs = playerPerson.getCuePlayType().getPullHoldMs();
+            this.endHoldMs = playerPerson.getCuePlayType().getEndHoldMs();
         }
 
         void nextFrame() {
@@ -1276,7 +1323,35 @@ public class GameView implements Initializable {
                     endCueAnimation();
                 }
             } else if (reachedMaxPull) {
-                cueDtToWhite -= cueMoveSpeed * frameTimeMs;
+
+                // 正常出杆
+                if (cueDtToWhite > maxPullDistance / 2) {
+                    cueDtToWhite -= cueMoveSpeed * frameTimeMs / 2;
+                } else {
+                    cueDtToWhite -= cueMoveSpeed * frameTimeMs;
+                }
+                double wholeDtPercentage = 1 - (cueDtToWhite - maxExtension) /
+                        (maxPullDistance - maxExtension);  // 出杆完成的百分比
+                wholeDtPercentage = Math.min(wholeDtPercentage, 0.9999);
+//                System.out.println(wholeDtPercentage);
+
+                List<Double> stages = playerPerson.getCuePlayType().getSequence();
+                double stage = stages.get((int) (wholeDtPercentage * stages.size()));
+                if (stage < 0) {  // 向左扭
+                    double angle = Algebra.thetaOf(pointingUnitX, pointingUnitY);
+                    double newAngle = angle + (100 - playerPerson.getCuePrecision()) *
+                            powerPercentage / 200_000;
+                    double[] newUnit = Algebra.angleToUnitVector(newAngle);
+                    pointingUnitX = newUnit[0];
+                    pointingUnitY = newUnit[1];
+                } else if (stage > 0) {  // 向右扭
+                    double angle = Algebra.thetaOf(pointingUnitX, pointingUnitY);
+                    double newAngle = angle - (100 - playerPerson.getCuePrecision()) *
+                            powerPercentage / 200_000;
+                    double[] newUnit = Algebra.angleToUnitVector(newAngle);
+                    pointingUnitX = newUnit[0];
+                    pointingUnitY = newUnit[1];
+                }
 
                 if (cueDtToWhite <= maxExtension) {  // 出杆结束了
                     endHeldMs += frameTimeMs;
@@ -1288,7 +1363,8 @@ public class GameView implements Initializable {
                     }
                 }
             } else {
-                cueDtToWhite += (cueMoveSpeed / 2) * frameTimeMs;  // 往后拉
+                cueDtToWhite += (cueMoveSpeed / 5) * frameTimeMs *
+                        playerPerson.getCuePlayType().getPullSpeedMul();  // 往后拉
                 if (cueDtToWhite >= maxPullDistance) {
                     reachedMaxPull = true;
                 }

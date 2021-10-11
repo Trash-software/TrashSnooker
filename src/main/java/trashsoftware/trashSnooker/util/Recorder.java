@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Cue;
+import trashsoftware.trashSnooker.core.CuePlayType;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 
 import java.io.*;
@@ -88,12 +89,32 @@ public class Recorder {
                     JSONObject personObj = (JSONObject) obj;
                     try {
                         String name = personObj.getString("name");
-                        PlayerPerson playerPerson = new PlayerPerson(
-                                name,
-                                personObj.getDouble("power"),
-                                personObj.getDouble("spin"),
-                                personObj.getDouble("precision")
-                        );
+                        PlayerPerson playerPerson;
+                        if (personObj.has("pullDt")) {
+                            JSONArray pullDt = personObj.getJSONArray("pullDt");
+                            double minPullDt = pullDt.getDouble(0);
+                            double maxPullDt = pullDt.getDouble(1);
+                            double cuePrecision = personObj.getDouble("cuePrecision");
+                            String cuePlayTypeStr = personObj.getString("cuePlayType");
+                            CuePlayType cuePlayType = parseCuePlayType(cuePlayTypeStr);
+                            playerPerson = new PlayerPerson(
+                                    name,
+                                    personObj.getDouble("power"),
+                                    personObj.getDouble("spin"),
+                                    personObj.getDouble("precision"),
+                                    minPullDt,
+                                    maxPullDt,
+                                    cuePrecision,
+                                    cuePlayType
+                            );
+                        } else {
+                            playerPerson = new PlayerPerson(
+                                    name,
+                                    personObj.getDouble("power"),
+                                    personObj.getDouble("spin"),
+                                    personObj.getDouble("precision")
+                            );
+                        }
                         if (personObj.has("privateCues")) {
                             JSONArray pCues = personObj.getJSONArray("privateCues");
                             for (Object cueObj : pCues) {
@@ -132,6 +153,10 @@ public class Recorder {
 
     public static Cue getStdBreakCue() {
         return cues.get("stdBreakCue");
+    }
+
+    private static CuePlayType parseCuePlayType(String s) {
+        return new CuePlayType(s);
     }
 
     private static JSONObject makeJsonObject() {

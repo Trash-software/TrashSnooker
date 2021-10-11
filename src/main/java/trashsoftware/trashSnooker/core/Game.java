@@ -3,8 +3,8 @@ package trashsoftware.trashSnooker.core;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
+import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.fxml.GameView;
@@ -170,7 +170,15 @@ public abstract class Game {
         }
     }
 
-    protected abstract boolean canPlaceWhite(double x, double y);
+    public final boolean canPlaceWhite(double x, double y) {
+        return x >= gameValues.leftX + gameValues.ballRadius &&
+                x < gameValues.rightX - gameValues.ballRadius &&
+                y >= gameValues.topY + gameValues.ballRadius &&
+                y < gameValues.botY - gameValues.ballRadius &&
+                canPlaceWhiteInTable(x, y);
+    }
+
+    protected abstract boolean canPlaceWhiteInTable(double x, double y);
 
     public abstract Ball[] getAllBalls();
 
