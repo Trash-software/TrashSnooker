@@ -30,16 +30,14 @@ import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.TreeMap;
+import java.util.*;
 
 public class GameView implements Initializable {
     public static final Color HOLE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color WHITE = Color.WHITE;
     public static final Color BLACK = Color.BLACK;
     public static final Color CUE_POINT = Color.RED;
+    public static final Color INTENT_CUE_POINT = Color.NAVY;
     public static final Color CUE_TIP_COLOR = Color.LIGHTSEAGREEN;
 
     public static final Font POOL_NUMBER_FONT = new Font(8.0);
@@ -68,11 +66,9 @@ public class GameView implements Initializable {
     @FXML
     MenuItem withdrawMenu, replaceBallInHandMenu, letOtherPlayMenu;
     private double canvasWidth;
-    private double innerWidth;
     private double canvasHeight;
     private double innerHeight;
     private double topLeftY;
-    private double halfY;
     private double ballDiameter;
     private double ballRadius;
     private double cornerArcDiameter;
@@ -97,6 +93,7 @@ public class GameView implements Initializable {
 
     private double mouseX, mouseY;
     private double cuePointX, cuePointY;  // 杆法的击球点
+    private double intentCuePointX = -1, intentCuePointY = -1;  // 计划的杆法击球点
     private CueAnimationPlayer cueAnimationPlayer;
 
     private boolean isDragging;
@@ -122,12 +119,10 @@ public class GameView implements Initializable {
     private void generateScales() {
         GameValues values = game.getGameValues();
         canvasWidth = values.outerWidth * scale;
-        innerWidth = values.innerWidth * scale;
         canvasHeight = values.outerHeight * scale;
         innerHeight = values.innerHeight * scale;
 
         topLeftY = (canvasHeight - innerHeight) / 2;
-        halfY = topLeftY + innerHeight / 2;
         ballDiameter = values.ballDiameter * scale;
         ballRadius = ballDiameter / 2;
         cornerArcDiameter = values.cornerArcDiameter * scale;
@@ -195,16 +190,6 @@ public class GameView implements Initializable {
             askReposition();
         }
     }
-
-//    public void notifyPlayerWillSwitch(Player lastPlayer) {
-//        updateCuePlayerSinglePole(lastPlayer);
-//    }
-
-//    private void updateCuePlayerSinglePole(Player cuePlayer) {
-//        cuePlayer.getInGamePlayer().getPersonRecord()
-//                .updateBreakScore(gameType, cuePlayer.getSinglePoleScore());
-////        Recorder.updatePlayerBreak(cuePlayer.getPlayerPerson().getName(), cuePlayer.getSinglePoleScore());
-//    }
 
     private void endGame() {
         Player wonPlayer = game.getWiningPlayer();
@@ -402,16 +387,9 @@ public class GameView implements Initializable {
 
         setButtonsCueStart();
 
-        double unitSideSpin = getUnitSideSpin();
+        PlayerPerson playerPerson = game.getCuingPlayer().getPlayerPerson();
 
-        double power = getPowerPercentage();
-        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
-//        System.out.println("Ball weight " + game.getGameValues().ballWeightRatio);
-        double vx = unitXYWithSpin[0] * power * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
-        double vy = unitXYWithSpin[1] * power * Values.MAX_POWER_SPEED / 100.0;
-
-        double[] spins = calculateSpins(vx, vy, game.getCuingPlayer().getPlayerPerson());
-
+        // 判断是否为进攻杆
         currentAttempt = null;
         if (predictedTargetBall != null) {
             List<double[][]> holeDirectionsAndHoles = game.directionsToAccessibleHoles(predictedTargetBall);
@@ -433,11 +411,43 @@ public class GameView implements Initializable {
             }
         }
 
-        beginCueAnimation(vx, vy, spins[0], spins[1], spins[2]);
-//        game.cue(vx, vy, spins[0], spins[1], spins[2]);
+        double power = getPowerPercentage();
+        double personPower = power / playerPerson.getMaxPowerPercentage();  // 球手的用力程度
 
-//        cursorDirectionUnitX = 0.0;
-//        cursorDirectionUnitY = 0.0;
+        intentCuePointX = cuePointX;
+        intentCuePointY = cuePointY;
+        // 因为出杆质量而导致的打点偏移
+        Random random = new Random();
+        double xError = random.nextGaussian();
+        double yError = random.nextGaussian();
+        double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
+        xError = xError * muSigXy[1] + muSigXy[0];
+        yError = yError * muSigXy[3] + muSigXy[2];
+        xError = xError * personPower * cueAreaRadius / 150;
+        yError = yError * personPower * cueAreaRadius / 150;
+        cuePointX += xError;
+        cuePointY += yError;
+        System.out.println("intent: " + intentCuePointX + ", " + intentCuePointY);
+        System.out.println("actual: " + cuePointX + ", " + cuePointY);
+
+        double unitSideSpin = getUnitSideSpin();
+
+        if (Algebra.distanceToPoint(cuePointX, cuePointY, cueCanvasWH / 2, cueCanvasWH / 2)
+                > cueAreaRadius - cueRadius) {
+            power /= 5;
+            unitSideSpin *= 10;
+
+            System.out.println("滑杆了！");
+        }
+
+        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
+//        System.out.println("Ball weight " + game.getGameValues().ballWeightRatio);
+        double vx = unitXYWithSpin[0] * power * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
+        double vy = unitXYWithSpin[1] * power * Values.MAX_POWER_SPEED / 100.0;
+
+        double[] spins = calculateSpins(vx, vy, playerPerson);
+
+        beginCueAnimation(vx, vy, spins[0], spins[1], spins[2]);
     }
 
     @FXML
@@ -540,6 +550,8 @@ public class GameView implements Initializable {
     private void restoreCuePoint() {
         cuePointX = cueCanvasWH / 2;
         cuePointY = cueCanvasWH / 2;
+        intentCuePointX = -1;
+        intentCuePointY = -1;
     }
 
     private void startAnimation() {
@@ -552,7 +564,7 @@ public class GameView implements Initializable {
 
     private void oneFrame() {
         draw();
-        drawCueBall();
+        drawCueBallCanvas();
         drawCue();
     }
 
@@ -956,7 +968,7 @@ public class GameView implements Initializable {
     private void beginCueAnimation(double vx, double vy,
                                    double xSpin, double ySpin, double sideSpin) {
         double powerPercentage = getPowerPercentage();
-        double maxCueDtToWhite = powerPercentage * 1.5 + 50.0;  // 最大200毫米, 最小50毫米
+//        double maxCueDtToWhite = powerPercentage * 1.5 + 50.0;  // 最大200毫米, 最小50毫米
         Ball cueBall = game.getCueBall();
         if (cueBall.isPotted()) {
             System.out.println("Error");
@@ -1221,13 +1233,19 @@ public class GameView implements Initializable {
         // 杆尾圆弧
     }
 
-    private void drawCueBall() {
+    private void drawCueBallCanvas() {
         double cueAreaDia = cueAreaRadius * 2;
         double padding = (cueCanvasWH - cueAreaDia) / 2;
         ballCanvasGc.setStroke(BLACK);
         ballCanvasGc.setFill(Values.WHITE);
         ballCanvasGc.fillOval(padding, padding, cueAreaDia, cueAreaDia);
         ballCanvasGc.strokeOval(padding, padding, cueAreaDia, cueAreaDia);
+
+        if (intentCuePointX >= 0 && intentCuePointY >= 0) {
+            ballCanvasGc.setFill(INTENT_CUE_POINT);
+            ballCanvasGc.fillOval(intentCuePointX - cueRadius, intentCuePointY - cueRadius,
+                    cueRadius * 2, cueRadius * 2);
+        }
 
         ballCanvasGc.setFill(CUE_POINT);
         ballCanvasGc.fillOval(cuePointX - cueRadius, cuePointY - cueRadius, cueRadius * 2, cueRadius * 2);
@@ -1339,14 +1357,14 @@ public class GameView implements Initializable {
                 double stage = stages.get((int) (wholeDtPercentage * stages.size()));
                 if (stage < 0) {  // 向左扭
                     double angle = Algebra.thetaOf(pointingUnitX, pointingUnitY);
-                    double newAngle = angle + (100 - playerPerson.getCuePrecision()) *
+                    double newAngle = angle + playerPerson.getCueSwingMag() *
                             powerPercentage / 200_000;
                     double[] newUnit = Algebra.angleToUnitVector(newAngle);
                     pointingUnitX = newUnit[0];
                     pointingUnitY = newUnit[1];
                 } else if (stage > 0) {  // 向右扭
                     double angle = Algebra.thetaOf(pointingUnitX, pointingUnitY);
-                    double newAngle = angle - (100 - playerPerson.getCuePrecision()) *
+                    double newAngle = angle - playerPerson.getCueSwingMag() *
                             powerPercentage / 200_000;
                     double[] newUnit = Algebra.angleToUnitVector(newAngle);
                     pointingUnitX = newUnit[0];

@@ -10,9 +10,10 @@ public class PlayerPerson {
     private final double maxSpinPercentage;
     private final double precisionPercentage;
     private final List<Cue> privateCues = new ArrayList<>();
-    private double minPullDt;
-    private double maxPullDt;
-    private final double cuePrecision;
+    private final double minPullDt;
+    private final double maxPullDt;
+    private double[] cuePointMuSigmaXY;  // 横向的mu，横向的sigma，纵向的mu，纵向的sigma
+    private final double cueSwingMag;
     private final CuePlayType cuePlayType;
 
     public PlayerPerson(String name,
@@ -21,7 +22,8 @@ public class PlayerPerson {
                         double precisionPercentage,
                         double minPullDt,
                         double maxPullDt,
-                        double cuePrecision,
+                        double cueSwingMag,
+                        double[] cuePointMuSigmaXY,
                         CuePlayType cuePlayType) {
         this.name = name;
         this.maxPowerPercentage = maxPowerPercentage;
@@ -29,7 +31,8 @@ public class PlayerPerson {
         this.precisionPercentage = precisionPercentage;
         this.minPullDt = minPullDt;
         this.maxPullDt = maxPullDt;
-        this.cuePrecision = cuePrecision;
+        this.cueSwingMag = cueSwingMag;
+        this.cuePointMuSigmaXY = cuePointMuSigmaXY;
         this.cuePlayType = cuePlayType;
     }
 
@@ -45,16 +48,21 @@ public class PlayerPerson {
                 50.0,
                 200.0,
                 100.0,
+                new double[]{0, 0, 0, 0},
                 CuePlayType.DEFAULT_PERFECT
         );
+    }
+
+    public double[] getCuePointMuSigmaXY() {
+        return cuePointMuSigmaXY;
     }
 
     public CuePlayType getCuePlayType() {
         return cuePlayType;
     }
 
-    public double getCuePrecision() {
-        return cuePrecision;
+    public double getCueSwingMag() {
+        return cueSwingMag;
     }
 
     public double getMaxPullDt() {

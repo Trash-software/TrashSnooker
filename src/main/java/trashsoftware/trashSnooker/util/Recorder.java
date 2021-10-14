@@ -94,9 +94,14 @@ public class Recorder {
                             JSONArray pullDt = personObj.getJSONArray("pullDt");
                             double minPullDt = pullDt.getDouble(0);
                             double maxPullDt = pullDt.getDouble(1);
-                            double cuePrecision = personObj.getDouble("cuePrecision");
+                            double cueSwingMag = personObj.getDouble("cueSwingMag");
                             String cuePlayTypeStr = personObj.getString("cuePlayType");
                             CuePlayType cuePlayType = parseCuePlayType(cuePlayTypeStr);
+                            JSONArray muSigmaArray = personObj.getJSONArray("cuePointMuSigma");
+                            double[] muSigma = new double[4];
+                            for (int i = 0; i < 4; ++i) {
+                                muSigma[i] = muSigmaArray.getDouble(i);
+                            }
                             playerPerson = new PlayerPerson(
                                     name,
                                     personObj.getDouble("power"),
@@ -104,7 +109,8 @@ public class Recorder {
                                     personObj.getDouble("precision"),
                                     minPullDt,
                                     maxPullDt,
-                                    cuePrecision,
+                                    cueSwingMag,
+                                    muSigma,
                                     cuePlayType
                             );
                         } else {

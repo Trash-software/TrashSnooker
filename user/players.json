@@ -7,26 +7,20 @@
     "power": 100,
     "pullDt": [50.0, 200.0],
     "cuePlayType": "p1,h800,e500;s",
-    "cuePrecision": 100,
+    "cueSwingMag": 0,
+    "cuePointMuSigma": [0, 0, 0, 0],
     "privateCues": ["Master的杆"]
-  },
-  "Lolita": {
-    "records": {"highestBreak": 129},
-    "spin": 100,
-    "precision": 100,
-    "name": "Lolita",
-    "power": 76,
-    "privateCues": ["Lolita's cue", "Lolita's pool cue"]
   },
   "莽子": {
     "records": {"highestBreak": 61},
     "spin": 75,
-    "precision": 41.10972473448947,
+    "precision": 60,
     "name": "莽子",
     "power": 100,
     "pullDt": [100.0, 250.0],
     "cuePlayType": "p2.5,h100,e500;l,l,r,r,r,l,l,l",
-    "cuePrecision": 50,
+    "cueSwingMag": 50,
+    "cuePointMuSigma": [15, 50, 0, 30],
     "privateCues": []
   },
   "Kid": {
@@ -53,7 +47,8 @@
     "power": 80,
     "pullDt": [40.0, 180.0],
     "cuePlayType": "p1.2,h600,e500;l,l,l,r,r,r,r",
-    "cuePrecision": 80,
+    "cueSwingMag": 20,
+    "cuePointMuSigma": [0, 15, 0, 10],
     "privateCues": []
   },
   "Ding": {
@@ -62,6 +57,10 @@
     "precision": 94.45137442496055,
     "name": "Ding",
     "power": 92.20698159234482,
+    "pullDt": [40.0, 180.0],
+    "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,l",
+    "cueSwingMag": 10,
+    "cuePointMuSigma": [0, 2, 0, 5],
     "privateCues": []
   },
   "流氓": {
@@ -69,6 +68,10 @@
     "precision": 100,
     "name": "流氓",
     "power": 100,
+    "pullDt": [50.0, 200.0],
+    "cuePlayType": "p1,h800,e500;s",
+    "cueSwingMag": 0,
+    "cuePointMuSigma": [0, 0, 0, 0],
     "privateCues": ["准神杆"]
   },
   "莽大力": {
@@ -76,13 +79,33 @@
     "precision": 40,
     "name": "莽大力",
     "power": 100,
+    "pullDt": [80.0, 250.0],
+    "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,l",
+    "cueSwingMag": 25,
+    "cuePointMuSigma": [0, 15, 0, 0],
     "privateCues": ["Mang's cue"]
+  },
+  "Lolita": {
+    "records": {"highestBreak": 129},
+    "spin": 100,
+    "precision": 100,
+    "name": "Lolita",
+    "power": 76,
+    "pullDt": [40.0, 200.0],
+    "cuePlayType": "p1,h800,e500;s,s,s,s,l,l,r,r",
+    "cueSwingMag": 10,
+    "cuePointMuSigma": [0, 1, 0, 10],
+    "privateCues": ["Lolita's cue", "Lolita's pool cue"]
   },
   "Noob": {
     "spin": 30,
     "precision": 30,
     "name": "Noob",
     "power": 60,
+    "pullDt": [30.0, 150.0],
+    "cuePlayType": "p1.5,h200,e400;r,r,l,l,l,l,l,l",
+    "cueSwingMag": 80,
+    "cuePointMuSigma": [-30, 70, 10, 50],
     "privateCues": []
   }
 }}
