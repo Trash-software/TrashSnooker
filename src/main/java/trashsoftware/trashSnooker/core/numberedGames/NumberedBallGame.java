@@ -41,11 +41,14 @@ public abstract class NumberedBallGame extends Game {
     }
 
     @Override
-    protected void drawBall(Ball ball, GraphicsContext graphicsContext, double scale) {
-        if (ball.isPotted()) return;
+    public void forceDrawBall(Ball ball,
+                              double absoluteX,
+                              double absoluteY,
+                              GraphicsContext graphicsContext,
+                              double scale) {
         drawPoolBallEssential(
-                parent.canvasX(ball.getX()),
-                parent.canvasY(ball.getY()),
+                parent.canvasX(absoluteX),
+                parent.canvasY(absoluteY),
                 gameValues.ballDiameter * scale,
                 ball.getColor(),
                 ball.getValue(),

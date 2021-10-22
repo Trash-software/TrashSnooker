@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import trashsoftware.trashSnooker.core.movement.Movement;
+import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
@@ -12,7 +14,7 @@ import trashsoftware.trashSnooker.fxml.GameView;
 import java.util.*;
 
 public abstract class Game {
-    public static final long calculateMs = 1;
+    public static final double calculateMs = 1;
     public static final double calculationsPerSec = 1000.0 / calculateMs;
     public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
     public static final double speedReducer = 120.0 / calculationsPerSecSqr;
@@ -50,7 +52,6 @@ public abstract class Game {
 
     protected final Ball cueBall;
 
-    private Timer physicsTimer;
     private PhysicsCalculator physicsCalculator;
 
     protected final GameSettings gameSettings;
@@ -95,7 +96,7 @@ public abstract class Game {
      * @param ySpin    由旋转产生的纵向最大速度，mm/s
      * @param sideSpin 由侧旋产生的最大速度，mm/s
      */
-    public void cue(double vx, double vy, double xSpin, double ySpin, double sideSpin) {
+    public Movement cue(double vx, double vy, double xSpin, double ySpin, double sideSpin) {
         whiteFirstCollide = null;
         collidesWall = false;
         lastPotSuccess = false;
@@ -112,17 +113,40 @@ public abstract class Game {
                 xSpin / calculationsPerSec,
                 ySpin / calculationsPerSec,
                 sideSpin / calculationsPerSec);
-        startMoving();
+        return physicalCalculate();
+    }
+
+    public void finishMove() {
+        System.out.println("Move end");
+        physicsCalculator = null;
+
+        Player player = currentPlayer;
+        endMoveAndUpdate();
+        finishedCuesCount++;
+        parent.finishCue(player, lastPotSuccess);
+    }
+
+//    private void endMove() {
+//        System.out.println("Move end");
+//        physicsTimer.cancel();
+//        physicsCalculator = null;
+//        physicsTimer = null;
+//
+//        Player player = currentPlayer;
+//        endMoveAndUpdate();
+//        finishedCuesCount++;
+//        parent.finishCue(player, lastPotSuccess);
+//    }
+
+    public boolean isCalculating() {
+        return physicsCalculator != null && physicsCalculator.notTerminated;
     }
 
     public void forcedTerminate() {
-        if (isMoving()) {
+        if (physicsCalculator != null) {
+            physicsCalculator.notTerminated = false;
             for (Ball ball : getAllBalls()) ball.clearMovement();
         }
-    }
-
-    public boolean isMoving() {
-        return physicsCalculator != null;
     }
 
     public Ball getCueBall() {
@@ -141,10 +165,10 @@ public abstract class Game {
                 graphicsContext);
     }
 
-    public void drawBalls(GraphicsContext graphicsContext, double scale) {
+    public void drawStoppedBalls(GraphicsContext graphicsContext, double scale) {
         for (Ball ball : getAllBalls()) {
             if (!ball.isPotted()) {
-                drawBall(ball, graphicsContext, scale);
+                forceDrawBall(ball, ball.getX(), ball.getY(), graphicsContext, scale);
             }
         }
     }
@@ -158,7 +182,6 @@ public abstract class Game {
     public abstract void drawTableMarks(GraphicsContext graphicsContext, double scale);
 
     public void quitGame() {
-        if (physicsTimer != null) physicsTimer.cancel();
     }
 
     public void placeWhiteBall(double realX, double realY) {
@@ -357,7 +380,7 @@ public abstract class Game {
         ball2.setVx(-1);
         ball2.setVy(-0.3);
 
-        startMoving();
+        physicalCalculate();
     }
 
     public void tieTest() {
@@ -439,7 +462,14 @@ public abstract class Game {
         return false;
     }
 
-    protected abstract void drawBall(Ball ball, GraphicsContext graphicsContext, double scale);
+    /**
+     * 在指定的位置强行绘制一颗球，无论球是否已经落袋
+     */
+    public abstract void forceDrawBall(Ball ball,
+                                       double absoluteX,
+                                       double absoluteY,
+                                       GraphicsContext graphicsContext,
+                                       double scale);
 
     protected static void drawBallBase(double canvasX,
                                        double canvasY,
@@ -497,22 +527,16 @@ public abstract class Game {
         }
     }
 
-    private void startMoving() {
-        physicsTimer = new Timer();
+    private Movement physicalCalculate() {
+//        physicsTimer = new Timer();
+        long st = System.currentTimeMillis();
         physicsCalculator = new PhysicsCalculator();
-        physicsTimer.scheduleAtFixedRate(physicsCalculator, calculateMs, calculateMs);
-    }
+        Movement movement = physicsCalculator.calculate();
+        System.out.println("Physical calculation ends in " + (System.currentTimeMillis() - st) + " ms");
 
-    private void endMove() {
-        System.out.println("Move end");
-        physicsTimer.cancel();
-        physicsCalculator = null;
-        physicsTimer = null;
+        return movement;
 
-        Player player = currentPlayer;
-        endMoveAndUpdate();
-        finishedCuesCount++;
-        parent.finishCue(player, lastPotSuccess);
+//        physicsTimer.scheduleAtFixedRate(physicsCalculator, calculateMs, calculateMs);
     }
 
     protected void potSuccess(boolean isSnookerFreeBall) {
@@ -540,10 +564,25 @@ public abstract class Game {
         return currentPlayer == player1 ? player2 : player1;
     }
 
-    public class PhysicsCalculator extends TimerTask {
+    public class PhysicsCalculator {
 
-        @Override
-        public void run() {
+        private Movement movement;
+        private double cumulatedPhysicalTime = 0.0;
+        private double lastPhysicalTime = 0.0;
+        private boolean notTerminated = true;
+
+        Movement calculate() {
+            movement = new Movement(getAllBalls());
+            while (!oneRun() && notTerminated) {
+                // do nothing
+            }
+//            endMove();
+            notTerminated = false;
+
+            return movement;
+        }
+
+        private boolean oneRun() {
             boolean noBallMoving = true;
 //            long st = System.nanoTime();
             for (Ball ball : getAllBalls()) {
@@ -577,9 +616,19 @@ public abstract class Game {
                     if (noHit) ball.normalMove();
                 }
             }
-            if (noBallMoving) {
-                endMove();
+            lastPhysicalTime = cumulatedPhysicalTime;
+            cumulatedPhysicalTime += calculateMs;
+
+            if (Math.floor(cumulatedPhysicalTime / parent.frameTimeMs) !=
+                    Math.floor(lastPhysicalTime / parent.frameTimeMs)) {
+                for (Ball ball : getAllBalls()) {
+                    movement.getMovementMap().get(ball).addLast(new MovementFrame(ball.x, ball.y, ball.isPotted()));
+                }
             }
+            return noBallMoving;
+//            if (noBallMoving) {
+//                endMove();
+//            }
 //            System.out.print((System.nanoTime() - st) + " ");
         }
 

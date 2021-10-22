@@ -17,4 +17,5 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.core.numberedGames.chineseEightBall;
     exports trashsoftware.trashSnooker.core.numberedGames.sidePocket;
     exports trashsoftware.trashSnooker.util;
+    exports trashsoftware.trashSnooker.core.movement;
 }

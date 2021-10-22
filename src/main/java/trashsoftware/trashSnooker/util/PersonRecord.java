@@ -15,6 +15,8 @@ import java.util.Objects;
 
 public class PersonRecord {
 
+    public static boolean RECORD = true;
+
     private final String playerName;
     private final Map<GameType, Map<String, Integer>> intRecords = new HashMap<>();
 
@@ -151,6 +153,7 @@ public class PersonRecord {
     }
 
     public void writeToFile() {
+        if (!RECORD) return;
         JSONObject root = new JSONObject();
         for (Map.Entry<GameType, Map<String, Integer>> entry : intRecords.entrySet()) {
             JSONObject object = new JSONObject();

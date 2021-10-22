@@ -9,6 +9,7 @@ import java.util.*;
 
 public abstract class AbstractSnookerGame extends Game {
 
+    protected final double[][] pointsRankHighToLow = new double[6][];
     private final SnookerBall yellowBall;
     private final SnookerBall greenBall;
     private final SnookerBall brownBall;
@@ -18,9 +19,6 @@ public abstract class AbstractSnookerGame extends Game {
     private final SnookerBall[] coloredBalls;
     private final SnookerBall[] redBalls = new SnookerBall[15];
     private final SnookerBall[] allBalls = new SnookerBall[22];
-
-    protected final double[][] pointsRankHighToLow = new double[6][];
-
     private boolean doingFreeBall = false;  // 正在击打自由球
 
     AbstractSnookerGame(GameView parent, GameSettings gameSettings, GameValues gameValues) {
@@ -263,8 +261,10 @@ public abstract class AbstractSnookerGame extends Game {
     protected void updateScore(Set<Ball> pottedBalls, boolean isFreeBall) {
         int score = 0;
         int foul = 0;
-        if (whiteFirstCollide == null) foul = getDefaultFoulValue();  // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
-        else if (cueBall.isPotted()) {
+        if (whiteFirstCollide == null) {
+            foul = getDefaultFoulValue();  // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
+            if (cueBall.isPotted()) ballInHand = true;
+        } else if (cueBall.isPotted()) {
             foul = Math.max(getDefaultFoulValue(), getMaxFoul(pottedBalls));
             ballInHand = true;
         } else if (isFreeBall) {
@@ -401,7 +401,8 @@ public abstract class AbstractSnookerGame extends Game {
         List<Ball> balls = new ArrayList<>(pottedBalls);
         Collections.sort(balls);
         Collections.reverse(balls);  // 如有多颗彩球落袋，优先放置分值高的
-        System.out.println(balls);
+//        System.out.print("Pick up");
+//        System.out.println(balls);
         if (currentTarget == 0 || currentTarget == 1) {
             for (Ball ball : balls) {
                 if (ball.isColored()) pickupColorBall(ball);
@@ -476,13 +477,14 @@ public abstract class AbstractSnookerGame extends Game {
     }
 
     @Override
-    protected void drawBall(Ball ball,
-                            GraphicsContext graphicsContext,
-                            double scale) {
-        if (ball.isPotted()) return;
+    public void forceDrawBall(Ball ball,
+                              double absoluteX,
+                              double absoluteY,
+                              GraphicsContext graphicsContext,
+                              double scale) {
         drawBallBase(
-                parent.canvasX(ball.getX()),
-                parent.canvasY(ball.getY()),
+                parent.canvasX(absoluteX),
+                parent.canvasY(absoluteY),
                 gameValues.ballDiameter * scale,
                 ball.getColor(),
                 graphicsContext);
