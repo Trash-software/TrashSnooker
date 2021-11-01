@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.util;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.GameType;
 import trashsoftware.trashSnooker.core.Player;
 import trashsoftware.trashSnooker.core.PotAttempt;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 public class PersonRecord {
 
@@ -21,7 +23,7 @@ public class PersonRecord {
     private final Map<GameType, Map<String, Integer>> intRecords = new HashMap<>();
 
     // (wins, ties, losses) for each opponent
-    private final Map<GameType, Map<String, int[]>> opponentsRecords = new HashMap<>();
+    private final Map<GameType, Map<String, Map<String, Object>>> opponentsRecords = new HashMap<>();
 
     PersonRecord(String playerName) {
         this.playerName = playerName;
@@ -35,18 +37,36 @@ public class PersonRecord {
             for (String gameTypeStr : root.keySet()) {
                 GameType gameType = GameType.valueOf(gameTypeStr);
                 Map<String, Integer> typeRecords = new HashMap<>();
-                Map<String, int[]> oppoRecords = new HashMap<>();
+                Map<String, Map<String, Object>> oppoRecords = new HashMap<>();
                 JSONObject object = root.getJSONObject(gameTypeStr);
                 for (String key : object.keySet()) {
                     if ("opponents".equals(key)) {
                         JSONObject value = object.getJSONObject(key);
                         for (String oppo : value.keySet()) {
                             JSONObject matchRec = value.getJSONObject(oppo);
-                            int[] mr = new int[]{
-                                    matchRec.getInt("wins"),
-                                    matchRec.getInt("losses")
-                            };
-                            oppoRecords.put(oppo, mr);
+                            Map<String, Object> thisOppoRec = new TreeMap<>();
+                            for (String keyOfThisOppo : matchRec.keySet()) {
+                                switch (keyOfThisOppo) {
+                                    case "wins":
+                                        thisOppoRec.put("wins", matchRec.getInt("wins"));
+                                        break;
+                                    case "losses":
+                                        thisOppoRec.put("losses", matchRec.getInt("losses"));
+                                        break;
+                                    default:
+                                        JSONObject framesRec = matchRec.getJSONObject(keyOfThisOppo);
+                                        // 如 "frames 9": {"wins": 2, "losses": 1}
+                                        // 代表9局5胜制的胜率
+                                        Map<String, Integer> winLoseOfFrames
+                                                = new TreeMap<>();
+                                        winLoseOfFrames.put("wins", framesRec.getInt("wins"));
+                                        winLoseOfFrames.put("losses", framesRec.getInt("losses"));
+                                        thisOppoRec.put(keyOfThisOppo, winLoseOfFrames);
+                                        break;
+                                }
+                            }
+
+                            oppoRecords.put(oppo, thisOppoRec);
                         }
                     } else {
                         int value = object.getInt(key);
@@ -66,6 +86,11 @@ public class PersonRecord {
         File root = new File(Recorder.RECORDS_DIRECTORY);
         File[] recFiles = root.listFiles();
         return Objects.requireNonNullElse(recFiles, new File[0]);
+    }
+
+    private static void incrementMap(Map<String, Integer> map, String key) {
+        Integer val = map.get(key);
+        map.put(key, val == null ? 1 : val + 1);
     }
 
     public String getPlayerName() {
@@ -117,14 +142,17 @@ public class PersonRecord {
         }
     }
 
-    public void wonAgainstOpponent(GameType gameType, Player player, String opponentName) {
-        Map<String, int[]> oppo = opponentsRecords.computeIfAbsent(gameType, k -> new HashMap<>());
-        int[] winLoss = oppo.get(opponentName);
+    public void wonFrameAgainstOpponent(GameType gameType, Player player, String opponentName) {
+        Map<String, Map<String, Object>> oppo =
+                opponentsRecords.computeIfAbsent(gameType, k -> new HashMap<>());
+        Map<String, Object> winLoss = oppo.get(opponentName);
         if (winLoss == null) {
-            winLoss = new int[]{1, 0};
+            winLoss = new TreeMap<>();
+            winLoss.put("wins", 1);
+            winLoss.put("losses", 0);
             oppo.put(opponentName, winLoss);
         } else {
-            winLoss[0]++;
+            winLoss.put("wins", (int) winLoss.get("wins") + 1);
         }
 
         if (player instanceof NumberedBallPlayer) {
@@ -141,14 +169,59 @@ public class PersonRecord {
         }
     }
 
-    public void lostAgainstOpponent(GameType gameType, String opponentName) {
-        Map<String, int[]> oppo = opponentsRecords.computeIfAbsent(gameType, k -> new HashMap<>());
-        int[] winLoss = oppo.get(opponentName);
+    public void lostFrameAgainstOpponent(GameType gameType, String opponentName) {
+        Map<String, Map<String, Object>> oppo =
+                opponentsRecords.computeIfAbsent(gameType, k -> new HashMap<>());
+        Map<String, Object> winLoss = oppo.get(opponentName);
         if (winLoss == null) {
-            winLoss = new int[]{0, 1};
+            winLoss = new TreeMap<>();
+            winLoss.put("wins", 0);
+            winLoss.put("losses", 1);
             oppo.put(opponentName, winLoss);
         } else {
-            winLoss[1]++;
+            winLoss.put("losses", (int) winLoss.get("losses") + 1);
+        }
+    }
+
+    public void wonEntireGameAgainstOpponent(EntireGame entireGame,
+                                             String opponentName) {
+        Map<String, Map<String, Object>> oppo =
+                opponentsRecords.computeIfAbsent(entireGame.gameType, k -> new HashMap<>());
+        Map<String, Object> winLoss = oppo.get(opponentName);
+        if (winLoss == null) {
+            throw new RuntimeException("一局没输，一局没赢，你咋就赢一场比赛了？");
+        } else {
+            String framesKey = "frame " + entireGame.totalFrames;
+            if (winLoss.containsKey(framesKey)) {
+                Map<String, Integer> frameOfThisLen = (Map<String, Integer>) winLoss.get(framesKey);
+                frameOfThisLen.put("wins", frameOfThisLen.get("wins") + 1);
+            } else {
+                Map<String, Integer> frameOfThisLen = new TreeMap<>();
+                frameOfThisLen.put("wins", 1);
+                frameOfThisLen.put("losses", 0);
+                winLoss.put(framesKey, frameOfThisLen);
+            }
+        }
+    }
+
+    public void lostEntireGameAgainstOpponent(EntireGame entireGame,
+                                              String opponentName) {
+        Map<String, Map<String, Object>> oppo =
+                opponentsRecords.computeIfAbsent(entireGame.gameType, k -> new HashMap<>());
+        Map<String, Object> winLoss = oppo.get(opponentName);
+        if (winLoss == null) {
+            throw new RuntimeException("一局没输，一局没赢，你咋就赢一场比赛了？");
+        } else {
+            String framesKey = "frame " + entireGame.totalFrames;
+            if (winLoss.containsKey(framesKey)) {
+                Map<String, Integer> frameOfThisLen = (Map<String, Integer>) winLoss.get(framesKey);
+                frameOfThisLen.put("losses", frameOfThisLen.get("losses") + 1);
+            } else {
+                Map<String, Integer> frameOfThisLen = new TreeMap<>();
+                frameOfThisLen.put("wins", 0);
+                frameOfThisLen.put("losses", 1);
+                winLoss.put(framesKey, frameOfThisLen);
+            }
         }
     }
 
@@ -160,12 +233,29 @@ public class PersonRecord {
             for (Map.Entry<String, Integer> item : entry.getValue().entrySet()) {
                 object.put(item.getKey(), item.getValue());
             }
-            Map<String, int[]> oppoRecords = opponentsRecords.get(entry.getKey());
+            Map<String, Map<String, Object>> oppoRecords = opponentsRecords.get(entry.getKey());
             JSONObject opponents = new JSONObject();
-            for (Map.Entry<String, int[]> oppoEntry : oppoRecords.entrySet()) {
+            for (Map.Entry<String, Map<String, Object>> oppoEntry : oppoRecords.entrySet()) {
                 JSONObject oppo = new JSONObject();
-                oppo.put("wins", oppoEntry.getValue()[0]);
-                oppo.put("losses", oppoEntry.getValue()[1]);
+                for (String key : oppoEntry.getValue().keySet()) {
+                    switch (key) {
+                        case "wins":
+                            oppo.put("wins", oppoEntry.getValue().get(key));
+                            break;
+                        case "losses":
+                            oppo.put("losses", oppoEntry.getValue().get(key));
+                            break;
+                        default:
+                            JSONObject framesObj = new JSONObject();
+                            Map<String, Integer> framesMap
+                                    = (Map<String, Integer>) oppoEntry.getValue().get(key);
+                            framesObj.put("wins", framesMap.get("wins"));
+                            framesObj.put("losses", framesMap.get("losses"));
+                            oppo.put(key, framesObj);
+                            break;
+                    }
+                }
+
                 opponents.put(oppoEntry.getKey(), oppo);
             }
             object.put("opponents", opponents);
@@ -179,10 +269,6 @@ public class PersonRecord {
         return intRecords;
     }
 
-    public Map<GameType, Map<String, int[]>> getOpponentsRecords() {
-        return opponentsRecords;
-    }
-
     @NotNull
     private Map<String, Integer> getIntRecordOfType(GameType gameType) {
         Map<String, Integer> intMap = intRecords.get(gameType);
@@ -191,11 +277,6 @@ public class PersonRecord {
             intRecords.put(gameType, intMap);
         }
         return intMap;
-    }
-
-    private static void incrementMap(Map<String, Integer> map, String key) {
-        Integer val = map.get(key);
-        map.put(key, val == null ? 1 : val + 1);
     }
 
     private Map<String, Integer> createTypeMap(GameType gameType) {

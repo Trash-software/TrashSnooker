@@ -21,6 +21,9 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 
 public class MainView implements Initializable {
+    
+    @FXML
+    ComboBox<Integer> totalFramesBox;
 
     @FXML
     ComboBox<PlayerPerson> player1Box, player2Box;
@@ -32,6 +35,7 @@ public class MainView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initTotalFramesBox();
         loadPlayerList();
         loadCueList();
     }
@@ -42,6 +46,14 @@ public class MainView implements Initializable {
 
     public void reloadPlayerList() {
         loadPlayerList();
+    }
+    
+    private void initTotalFramesBox() {
+        totalFramesBox.getItems().addAll(
+                1, 3, 5, 7, 9, 11, 13, 15, 17, 19,
+                21, 23, 25, 27, 29, 31, 33, 35
+        );
+        totalFramesBox.getSelectionModel().select(0);
     }
 
     private void loadCueList() {
@@ -186,7 +198,8 @@ public class MainView implements Initializable {
             stage.setScene(scene);
 
             GameView gameView = loader.getController();
-            gameView.setup(stage, gameType, igp1, igp2);
+            gameView.setup(stage, gameType, totalFramesBox.getSelectionModel().getSelectedItem(), 
+                    igp1, igp2);
 
             stage.show();
         } catch (Exception e) {

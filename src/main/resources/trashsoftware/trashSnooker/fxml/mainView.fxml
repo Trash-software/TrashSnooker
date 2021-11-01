@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <VBox xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="trashsoftware.trashSnooker.fxml.MainView"
-            prefHeight="400.0" prefWidth="400.0" spacing="20.0" alignment="TOP_CENTER">
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.MainView"
+      prefHeight="400.0" prefWidth="400.0" spacing="20.0" alignment="TOP_CENTER">
 
     <MenuBar>
         <Menu text="文件">
@@ -33,6 +29,12 @@
     </GridPane>
 
     <Separator/>
+
+    <HBox spacing="10.0" alignment="CENTER">
+        <Label text="总局数"/>
+        <ComboBox fx:id="totalFramesBox">
+        </ComboBox>
+    </HBox>
 
     <Button text="斯诺克" onAction="#snookerAction"/>
     <Button text="斯诺克（小台）" onAction="#miniSnookerAction"/>

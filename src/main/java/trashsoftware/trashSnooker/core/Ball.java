@@ -34,8 +34,6 @@ public abstract class Ball implements Comparable<Ball> {
         this(value, true, values);
     }
 
-    protected abstract Color generateColor(int value);
-
     public static Color snookerColor(int value) {
         switch (value) {
             case 0:
@@ -92,6 +90,8 @@ public abstract class Ball implements Comparable<Ball> {
                 throw new RuntimeException("Unexpected ball.");
         }
     }
+
+    protected abstract Color generateColor(int value);
 
     public double getX() {
         return x;
@@ -217,11 +217,6 @@ public abstract class Ball implements Comparable<Ball> {
             xSpin -= xSpinReducer;
         } else {
             xSpin = vx;
-//            if (!fmx) {
-//                fmx = true;
-//                if (isWhite()) System.out.println("X matched in " + msSince);
-//            }
-//            if (isWhite()) System.out.println("X Matched!");
         }
 
         if (ySpinDiff < -ySpinReducer) {
@@ -232,11 +227,6 @@ public abstract class Ball implements Comparable<Ball> {
             ySpin -= ySpinReducer;
         } else {
             ySpin = vy;
-//            if (isWhite()) System.out.println("Y Matched!");
-//            if (!fmy) {
-//                fmy = true;
-//                if (isWhite()) System.out.println("Y matched in " + msSince);
-//            }
         }
     }
 
@@ -514,6 +504,32 @@ public abstract class Ball implements Comparable<Ball> {
         return tryHitBall(ball, true);
     }
 
+    void hitStaticBallCore(Ball ball) {
+        double xPos = x;
+        double yPos = y;
+        double dx = vx / Values.DETAILED_PHYSICAL;
+        double dy = vy / Values.DETAILED_PHYSICAL;
+
+        for (int i = 0; i < Values.DETAILED_PHYSICAL; ++i) {
+            if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball.x, ball.y) < values.ballDiameter) {
+                break;
+            }
+            xPos += dx;
+            yPos += dy;
+        }
+
+        double ang = (xPos - ball.x) / (yPos - ball.y);
+
+        double ballVY = (ang * this.vx + this.vy) / (ang * ang + 1);
+        double ballVX = ang * ballVY;
+
+        ball.vy = ballVY * Values.BALL_BOUNCE_RATIO;
+        ball.vx = ballVX * Values.BALL_BOUNCE_RATIO;
+
+        this.vx = (this.vx - ballVX) * Values.BALL_BOUNCE_RATIO;
+        this.vy = (this.vy - ballVY) * Values.BALL_BOUNCE_RATIO;
+    }
+
     boolean tryHitBall(Ball ball, boolean checkMovingBall) {
         double dt = predictedDtTo(ball);
         if (dt < values.ballDiameter
@@ -534,28 +550,7 @@ public abstract class Ball implements Comparable<Ball> {
             }
             if (ball.isNotMoving()) {
                 if (checkMovingBall) System.out.println("Hit static ball!=====================");
-                double xPos = x;
-                double yPos = y;
-                double dx = vx / Values.DETAILED_PHYSICAL;
-                double dy = vy / Values.DETAILED_PHYSICAL;
-
-                for (int i = 0; i < Values.DETAILED_PHYSICAL; ++i) {
-                    if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball.x, ball.y) < values.ballDiameter) {
-                        break;
-                    }
-                    xPos += dx;
-                    yPos += dy;
-                }
-
-                double ang = (xPos - ball.x) / (yPos - ball.y);
-
-                double ballVY = (ang * this.vx + this.vy) / (ang * ang + 1);
-                double ballVX = ang * ballVY;
-                ball.vy = ballVY * Values.BALL_BOUNCE_RATIO;
-                ball.vx = ballVX * Values.BALL_BOUNCE_RATIO;
-
-                this.vx = (this.vx - ballVX) * Values.BALL_BOUNCE_RATIO;
-                this.vy = (this.vy - ballVY) * Values.BALL_BOUNCE_RATIO;
+                hitStaticBallCore(ball);
             } else {
                 if (!checkMovingBall) return false;
                 System.out.println("Hit moving ball!=====================");
@@ -626,8 +621,12 @@ public abstract class Ball implements Comparable<Ball> {
         return Algebra.distanceToPoint(x, y, point[0], point[1]);
     }
 
-    private double predictedDtToPoint(double[] point) {
-        return Algebra.distanceToPoint(nextX, nextY, point[0], point[1]);
+    double predictedDtToPoint(double[] point) {
+        return predictedDtToPoint(point[0], point[1]);
+    }
+
+    double predictedDtToPoint(double px, double py) {
+        return Algebra.distanceToPoint(nextX, nextY, px, py);
     }
 
     public Color getColor() {
