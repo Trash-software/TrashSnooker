@@ -4,15 +4,18 @@ public class PotAttempt {
 
     private final GameType gameType;
     private final PlayerPerson playerPerson;
+    private final Ball targetBall;
     private final double[] cueBallOrigPos;
     private final double[] targetBallOrigPos;
     private final double[] targetedHole;
 
     public PotAttempt(GameType gameType, PlayerPerson playerPerson,
+                      Ball targetBall,
                       double[] cueBallOrigPos, double[] targetBallOrigPos,
                       double[] targetedHole) {
         this.gameType = gameType;
         this.playerPerson = playerPerson;
+        this.targetBall = targetBall;
         this.cueBallOrigPos = cueBallOrigPos;
         this.targetBallOrigPos = targetBallOrigPos;
         this.targetedHole = targetedHole;
@@ -24,6 +27,10 @@ public class PotAttempt {
 
     public PlayerPerson getPlayerPerson() {
         return playerPerson;
+    }
+
+    public Ball getTargetBall() {
+        return targetBall;
     }
 
     public double[] getCueBallOrigPos() {

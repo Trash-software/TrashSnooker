@@ -202,7 +202,7 @@ public abstract class Game {
         Player player = currentPlayer;
         endMoveAndUpdate();
         finishedCuesCount++;
-        parent.finishCue(player, lastPotSuccess);
+        parent.finishCue(player);
     }
 
     public boolean isCalculating() {

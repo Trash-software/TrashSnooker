@@ -1,11 +1,11 @@
 {
   "SNOOKER": {
     "longPotSuccesses": 25,
-    "50+breaks": 3,
+    "50+breaks": 4,
     "147": 0,
-    "highestBreak": 106,
-    "100+breaks": 1,
-    "potAttempts": 240,
+    "highestBreak": 113,
+    "100+breaks": 2,
+    "potAttempts": 271,
     "opponents": {
       "Master": {
         "wins": 3,
@@ -34,14 +34,22 @@
           "wins": 1,
           "losses": 1
         }
-      }, 
+      },
       "流氓": {
+        "wins": 1,
+        "losses": 0
+      },
+      "Trump": {
+        "frame 1": {
+          "wins": 1,
+          "losses": 0
+        },
         "wins": 1,
         "losses": 0
       }
     },
-    "longPotAttempts": 33,
-    "potSuccesses": 214
+    "longPotAttempts": 34,
+    "potSuccesses": 244
   },
   "MINI_SNOOKER": {
     "longPotSuccesses": 6,

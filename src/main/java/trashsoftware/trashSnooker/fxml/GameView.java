@@ -93,7 +93,7 @@ public class GameView implements Initializable {
     private double cursorDirectionUnitX, cursorDirectionUnitY;
     private double targetPredictionUnitX, targetPredictionUnitY;
     private Ball predictedTargetBall;
-    private PotAttempt currentAttempt;
+//    private PotAttempt currentAttempt;
     private Movement movement;
     private boolean playingMovement = false;
 
@@ -182,7 +182,7 @@ public class GameView implements Initializable {
         });
     }
 
-    public void finishCue(Player cuePlayer, boolean potSuccess) {
+    public void finishCue(Player cuePlayer) {
 //        updateCuePlayerSinglePole(cuePlayer);
         drawScoreBoard(cuePlayer);
         drawTargetBoard();
@@ -190,9 +190,9 @@ public class GameView implements Initializable {
         Platform.runLater(() -> powerSlider.setValue(40.0));
         setButtonsCueEnd();
 
-        if (currentAttempt != null) {
-            cuePlayer.getInGamePlayer().getPersonRecord().potAttempt(currentAttempt, potSuccess);
-        }
+//        if (currentAttempt != null) {
+//            cuePlayer.getInGamePlayer().getPersonRecord().potAttempt(currentAttempt, potSuccess);
+//        }
 
         if (game.getGame().isEnded()) {
             endFrame();
@@ -354,12 +354,6 @@ public class GameView implements Initializable {
         cursorDirectionUnitY = newUnitVector[1];
 
         lastDragAngle = currentAngle;
-
-//        System.out.printf("changed:%f, cur:%f, xDiff:%f, yDiff:%f\n",
-//                Math.toDegrees(changedAngle),
-//                Math.toDegrees(currentAngle),
-//                xDiffToWhite,
-//                yDiffToWhite);
     }
 
     private void onDragEnd(MouseEvent mouseEvent) {
@@ -433,10 +427,11 @@ public class GameView implements Initializable {
 
         setButtonsCueStart();
 
-        PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
+        Player player = game.getGame().getCuingPlayer();
+        PlayerPerson playerPerson = player.getPlayerPerson();
 
         // 判断是否为进攻杆
-        currentAttempt = null;
+        PotAttempt currentAttempt = null;
         if (predictedTargetBall != null) {
             List<double[][]> holeDirectionsAndHoles = game.getGame().directionsToAccessibleHoles(predictedTargetBall);
             for (double[][] directionHole : holeDirectionsAndHoles) {
@@ -446,6 +441,7 @@ public class GameView implements Initializable {
                     currentAttempt = new PotAttempt(
                             gameType,
                             game.getGame().getCuingPlayer().getPlayerPerson(),
+                            predictedTargetBall,
                             new double[]{game.getGame().getCueBall().getX(), game.getGame().getCueBall().getY()},
                             new double[]{predictedTargetBall.getX(), predictedTargetBall.getY()},
                             directionHole[1]
@@ -515,6 +511,15 @@ public class GameView implements Initializable {
         }
 
         movement = game.getGame().cue(params);
+        if (currentAttempt != null) {
+            player.getInGamePlayer().getPersonRecord().potAttempt(currentAttempt, 
+                    currentAttempt.getTargetBall().isPotted());
+            if (currentAttempt.getTargetBall().isPotted()) {
+                System.out.println("Pot success!");
+            } else {
+                System.out.println("Pot failed!");
+            }
+        }
 
         beginCueAnimation(whiteStartingX, whiteStartingY);
     }
@@ -1045,6 +1050,7 @@ public class GameView implements Initializable {
 
             // 弹库的球就不给预测线了
             if (!predict.isHitWallBeforeHitBall()) {
+                predictedTargetBall = predict.getFirstCollide();
                 double potDt = Algebra.distanceToPoint(
                         predict.getWhiteCollisionX(), predict.getWhiteCollisionY(),
                         predict.whiteX, predict.whiteY);
