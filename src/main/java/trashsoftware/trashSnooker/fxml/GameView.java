@@ -99,7 +99,7 @@ public class GameView implements Initializable {
 
     // 用于播放运杆动画时持续显示预测线（含出杆随机偏移）
     private SavedPrediction predictionOfCue;
-    private WhitePrediction prediction;
+//    private WhitePrediction prediction;
 
     private double mouseX, mouseY;
     private double cuePointX, cuePointY;  // 杆法的击球点
@@ -458,12 +458,20 @@ public class GameView implements Initializable {
         }
 
         double power = getPowerPercentage();
+        final double wantPower = power;
+        // 因为力量控制导致的力量偏差
+        Random random = new Random();
+        double powerError = random.nextGaussian();
+        powerError = powerError * (100.0 - playerPerson.getPowerControl()) / 100.0;
+        power += power * powerError;
+        System.out.println("Want power: " + wantPower + ", actual power: " + power);
+        
         double personPower = power / playerPerson.getMaxPowerPercentage();  // 球手的用力程度
 
         intentCuePointX = cuePointX;
         intentCuePointY = cuePointY;
         // 因为出杆质量而导致的打点偏移
-        Random random = new Random();
+        
         double xError = random.nextGaussian();
         double yError = random.nextGaussian();
         double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
@@ -487,13 +495,8 @@ public class GameView implements Initializable {
         }
 
         double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
-//        System.out.println("Ball weight " + game.getGameValues().ballWeightRatio);
-//        double vx = unitXYWithSpin[0] * power * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
-//        double vy = unitXYWithSpin[1] * power * Values.MAX_POWER_SPEED / 100.0;
 
-//        double[] spins = calculateSpins(vx, vy, playerPerson);
-
-        CuePlayParams params = generateCueParams();
+        CuePlayParams params = generateCueParams(power);
 
         double whiteStartingX = game.getGame().getCueBall().getX();
         double whiteStartingY = game.getGame().getCueBall().getY();
@@ -545,11 +548,13 @@ public class GameView implements Initializable {
 
         newStage.show();
     }
-
+    
     private CuePlayParams generateCueParams() {
+        return generateCueParams(getPowerPercentage());
+    }
+
+    private CuePlayParams generateCueParams(double power) {
         PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
-        double power = getPowerPercentage();
-        double personPower = power / playerPerson.getMaxPowerPercentage();  // 球手的用力程度
 
         double unitSideSpin = getUnitSideSpin();
         double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
@@ -1034,42 +1039,49 @@ public class GameView implements Initializable {
             lastY = canvasY;
         }
         if (predict.getFirstCollide() != null) {
-            double potDt = Algebra.distanceToPoint(
-                    predict.getWhiteCollisionX(), predict.getWhiteCollisionY(), 
-                    predict.whiteX, predict.whiteY);
-            // 白球行进距离越长，预测线越短
-            double predictLineTotalLen = getPredictionLineTotalLength(potDt, 
-                    game.getGame().getCuingPlayer().getPlayerPerson());
-
-            double whiteUnitX = (predict.getWhiteCollisionX() - predict.whiteX) / potDt;
-            double whiteUnitY = (predict.getWhiteCollisionY() - predict.whiteY) / potDt;
-            double ang = (predict.getWhiteCollisionX() - predict.getFirstCollide().getX()) / 
-                    (predict.getWhiteCollisionY() - predict.getFirstCollide().getY());
-            targetPredictionUnitY = (ang * whiteUnitX + whiteUnitY) / (ang * ang + 1);
-            targetPredictionUnitX = ang * targetPredictionUnitY;
-
-            double predictWhiteLineX = whiteUnitX - targetPredictionUnitX;
-            double predictWhiteLineY = whiteUnitY - targetPredictionUnitY;
-
-            double predictTarMag = Math.hypot(targetPredictionUnitX, targetPredictionUnitY);
-            double predictWhiteMag = Math.hypot(predictWhiteLineX, predictWhiteLineY);
-            double totalMag = predictTarMag + predictWhiteMag;
-            double multiplier = predictLineTotalLen / totalMag;
-
-            double lineX = targetPredictionUnitX * multiplier * scale;
-            double lineY = targetPredictionUnitY * multiplier * scale;
-//            double whiteLineX = predictWhiteLineX * multiplier * scale;
-//            double whiteLineY = predictWhiteLineY * multiplier * scale;
-            
-            double tarCanvasX = canvasX(predict.getFirstCollide().getX());
-            double tarCanvasY = canvasY(predict.getFirstCollide().getY());
-
             graphicsContext.strokeOval(canvasX(predict.getWhiteCollisionX()) - ballRadius,
                     canvasY(predict.getWhiteCollisionY()) - ballRadius,
                     ballDiameter, ballDiameter);  // 绘制预测撞击点的白球
 
-            graphicsContext.setStroke(predict.getFirstCollide().getColor().brighter().brighter());
-            graphicsContext.strokeLine(tarCanvasX, tarCanvasY, tarCanvasX + lineX, tarCanvasY + lineY);
+            // 弹库的球就不给预测线了
+            if (!predict.isHitWallBeforeHitBall()) {
+                double potDt = Algebra.distanceToPoint(
+                        predict.getWhiteCollisionX(), predict.getWhiteCollisionY(),
+                        predict.whiteX, predict.whiteY);
+                // 白球行进距离越长，预测线越短
+                double predictLineTotalLen = getPredictionLineTotalLength(potDt,
+                        game.getGame().getCuingPlayer().getPlayerPerson());
+
+                targetPredictionUnitY = predict.getBallDirectionY();
+                targetPredictionUnitX = predict.getBallDirectionX();
+                double whiteUnitXBefore = predict.getWhiteDirectionXBeforeCollision();
+                double whiteUnitYBefore = predict.getWhiteDirectionYBeforeCollision();
+
+                double targetPredictionAbsAngle =
+                        Algebra.thetaOf(targetPredictionUnitX, targetPredictionUnitY);
+                double cueAbsAngle =
+                        Algebra.thetaOf(whiteUnitXBefore, whiteUnitYBefore);
+
+                double theta = Math.abs(targetPredictionAbsAngle - cueAbsAngle);
+                if (theta > Math.PI) {
+                    theta = Math.PI * 2 - theta;
+                }
+//                System.out.println(Math.toDegrees(theta) + " " + predictLineTotalLen);
+                
+                // 角度越大，目标球预测线越短
+                double multiplier = predictLineTotalLen * 
+                        ((Math.PI / 2 - theta) / Math.PI * 2);
+
+                double lineX = targetPredictionUnitX * multiplier * scale;
+                double lineY = targetPredictionUnitY * multiplier * scale;
+
+                double tarCanvasX = canvasX(predict.getFirstCollide().getX());
+                double tarCanvasY = canvasY(predict.getFirstCollide().getY());
+
+                graphicsContext.setStroke(predict.getFirstCollide().getColor().brighter().brighter());
+                graphicsContext.strokeLine(tarCanvasX, tarCanvasY,
+                        tarCanvasX + lineX, tarCanvasY + lineY);
+            }
         }
     }
 

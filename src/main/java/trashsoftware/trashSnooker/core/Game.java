@@ -580,6 +580,7 @@ public abstract class Game {
         private double cumulatedPhysicalTime = 0.0;
         private double lastPhysicalTime = 0.0;
         private boolean notTerminated = true;
+        private boolean hitWall;
 
         WhitePrediction predict() {
             prediction = new WhitePrediction(cueBall);
@@ -617,10 +618,12 @@ public abstract class Game {
                 if (prediction.getFirstCollide() == null) {
                     tryHitBall();
                 }
+                if (holeAreaResult == 2) hitWall = true;
                 return false;
             }
             if (cueBall.tryHitWall()) {
                 // 库边
+                hitWall = true;
                 return false;
             }
             if (prediction.getFirstCollide() == null) {
@@ -638,11 +641,16 @@ public abstract class Game {
                 if (!ball.isWhite() && !ball.isPotted()) {
                     if (cueBall.predictedDtToPoint(ball.x, ball.y) <
                             gameValues.ballDiameter) {
+                        double whiteVx = cueBall.vx;
+                        double whiteVy = cueBall.vy;
                         cueBall.hitStaticBallCore(ball);
-                        double[] ballUnitVec = Algebra.unitVector(ball.vx, ball.vy);
+                        double[] ballDirectionUnitVec = Algebra.unitVector(ball.vx, ball.vy);
+                        double[] whiteDirectionUnitVec = Algebra.unitVector(whiteVx, whiteVy);
                         ball.vx = 0;
                         ball.vy = 0;
-                        prediction.setFirstCollide(ball, ballUnitVec[0], ballUnitVec[1],
+                        prediction.setFirstCollide(ball, hitWall,
+                                ballDirectionUnitVec[0], ballDirectionUnitVec[1],
+                                whiteDirectionUnitVec[0], whiteDirectionUnitVec[1],
                                 cueBall.x, cueBall.y);
                         return false;
                     }

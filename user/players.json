@@ -9,6 +9,7 @@
     "cuePlayType": "p1,h800,e500;s",
     "cueSwingMag": 0,
     "cuePointMuSigma": [0, 0, 0, 0],
+    "powerControl": 100,
     "privateCues": ["Master的杆"]
   },
   "莽子": {
@@ -21,6 +22,7 @@
     "cuePlayType": "p2.5,h100,e500;l,l,r,r,r,l,l,l",
     "cueSwingMag": 50,
     "cuePointMuSigma": [15, 50, 0, 30],
+    "powerControl": 80.0,
     "privateCues": []
   },
   "Kid": {
@@ -49,6 +51,7 @@
     "cuePlayType": "p1.2,h600,e500;l,l,l,r,r,r,r",
     "cueSwingMag": 20,
     "cuePointMuSigma": [0, 15, 0, 10],
+    "powerControl": 96.0,
     "privateCues": []
   },
   "Ding": {
@@ -60,7 +63,20 @@
     "pullDt": [40.0, 180.0],
     "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,l",
     "cueSwingMag": 10,
-    "cuePointMuSigma": [0, 2, 0, 5],
+    "cuePointMuSigma": [0, 2, 0, 4],
+    "powerControl": 99.5,
+    "privateCues": []
+  },
+  "Trump": {
+    "spin": 98,
+    "precision": 98,
+    "name": "Trump",
+    "power": 99,
+    "pullDt": [50.0, 220.0],
+    "cuePlayType": "p1,h800,e500;r,r,l,l,l,r,r,r",
+    "cueSwingMag": 12,
+    "cuePointMuSigma": [0, 1, 0, 6],
+    "powerControl": 97.5,
     "privateCues": []
   },
   "流氓": {
@@ -72,6 +88,7 @@
     "cuePlayType": "p1,h800,e500;s",
     "cueSwingMag": 0,
     "cuePointMuSigma": [0, 0, 0, 0],
+    "powerControl": 85.0,
     "privateCues": ["准神杆"]
   },
   "莽大力": {
@@ -83,6 +100,7 @@
     "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,l",
     "cueSwingMag": 25,
     "cuePointMuSigma": [0, 15, 0, 0],
+    "powerControl": 96,
     "privateCues": ["Mang's cue"]
   },
   "Lolita": {
@@ -95,6 +113,7 @@
     "cuePlayType": "p1,h800,e500;s,s,s,s,l,l,r,r",
     "cueSwingMag": 10,
     "cuePointMuSigma": [0, 1, 0, 10],
+    "powerControl": 99.0,
     "privateCues": ["Lolita's cue", "Lolita's pool cue"]
   },
   "Noob": {
@@ -106,6 +125,7 @@
     "cuePlayType": "p1.5,h200,e400;r,r,l,l,l,l,l,l",
     "cueSwingMag": 80,
     "cuePointMuSigma": [-30, 70, 10, 50],
+    "powerControl": 70.0,
     "privateCues": []
   }
 }}

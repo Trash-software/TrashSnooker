@@ -9,10 +9,15 @@ public class WhitePrediction {
     public final double whiteX;
     public final double whiteY;
     private Ball firstCollide;
-    private double ballUnitX;
-    private double ballUnitY;
+    // 目标球碰撞后的单位行进方向
+    private double ballDirectionX;
+    private double ballDirectionY;
+    // 白球碰到目标球后的单位行进方向
+    private double whiteDirectionXBeforeCollision;
+    private double whiteDirectionYBeforeCollision;
     private double whiteCollisionX;
     private double whiteCollisionY;
+    private boolean hitWallBeforeHitBall;
     private final List<double[]> whitePath = new ArrayList<>();
     
     public WhitePrediction(Ball whiteBall) {
@@ -24,12 +29,17 @@ public class WhitePrediction {
         return whitePath;
     }
 
-    public void setFirstCollide(Ball firstCollide, 
-                                double unitX, double unitY,
+    public void setFirstCollide(Ball firstCollide, boolean hitWallBeforeHitBall,
+                                double ballDirectionX, double ballDirectionY,
+                                double whiteDirectionXBeforeCollision, 
+                                double whiteDirectionYBeforeCollision,
                                 double whiteCollisionX, double whiteCollisionY) {
         this.firstCollide = firstCollide;
-        this.ballUnitX = unitX;
-        this.ballUnitY = unitY;
+        this.hitWallBeforeHitBall = hitWallBeforeHitBall;
+        this.ballDirectionX = ballDirectionX;
+        this.ballDirectionY = ballDirectionY;
+        this.whiteDirectionXBeforeCollision = whiteDirectionXBeforeCollision;
+        this.whiteDirectionYBeforeCollision = whiteDirectionYBeforeCollision;
         this.whiteCollisionX = whiteCollisionX;
         this.whiteCollisionY = whiteCollisionY;
     }
@@ -38,12 +48,24 @@ public class WhitePrediction {
         return firstCollide;
     }
 
-    public double getBallUnitX() {
-        return ballUnitX;
+    public boolean isHitWallBeforeHitBall() {
+        return hitWallBeforeHitBall;
     }
 
-    public double getBallUnitY() {
-        return ballUnitY;
+    public double getBallDirectionX() {
+        return ballDirectionX;
+    }
+
+    public double getBallDirectionY() {
+        return ballDirectionY;
+    }
+
+    public double getWhiteDirectionXBeforeCollision() {
+        return whiteDirectionXBeforeCollision;
+    }
+
+    public double getWhiteDirectionYBeforeCollision() {
+        return whiteDirectionYBeforeCollision;
     }
 
     public double getWhiteCollisionX() {

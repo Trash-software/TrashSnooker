@@ -41,6 +41,13 @@ public class Algebra {
         return new double[]{outUnitX * vecNorm, outUnitY * vecNorm};
     }
 
+    /**
+     * 返回向量与X轴正半轴的夹角，范围
+     * 
+     * @param x 向量的x
+     * @param y 向量的y
+     * @return 夹角
+     */
     public static double thetaOf(double x, double y) {
         double atan = Math.atan(y / x);
         if (x < 0.0) {

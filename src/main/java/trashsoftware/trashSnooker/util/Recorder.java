@@ -111,6 +111,7 @@ public class Recorder {
                                     maxPullDt,
                                     cueSwingMag,
                                     muSigma,
+                                    personObj.getDouble("powerControl"),
                                     cuePlayType
                             );
                         } else {
