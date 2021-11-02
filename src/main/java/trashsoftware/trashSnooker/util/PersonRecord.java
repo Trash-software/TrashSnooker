@@ -159,6 +159,7 @@ public class PersonRecord {
             int playTimes = ((NumberedBallPlayer) player).getPlayTimes();
             boolean breaks = ((NumberedBallPlayer) player).isBreakingPlayer();
             Map<String, Integer> intMap = getIntRecordOfType(gameType);
+            System.out.println("Play times: " + playTimes);
             if (playTimes == 1) {
                 if (breaks) {  // 炸清
                     incrementMap(intMap, "break-clear");

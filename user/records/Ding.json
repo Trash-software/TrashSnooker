@@ -40,9 +40,9 @@
     "potSuccesses": 74
   },
   "CHINESE_EIGHT": {
-    "break-clear": 1,
-    "longPotSuccesses": 1,
-    "potAttempts": 24,
+    "break-clear": 2,
+    "longPotSuccesses": 3,
+    "potAttempts": 44,
     "continue-clear": 0,
     "opponents": {
       "老油条": {
@@ -50,11 +50,15 @@
         "losses": 0
       },
       "Trump": {
-        "wins": 2,
-        "losses": 2
+        "wins": 4,
+        "losses": 3,
+        "frame 3": {
+          "wins": 1,
+          "losses": 0
+        }
       }
     },
-    "longPotAttempts": 1,
-    "potSuccesses": 22
+    "longPotAttempts": 3,
+    "potSuccesses": 42
   }
 }

@@ -29,14 +29,18 @@
   },
   "CHINESE_EIGHT": {
     "break-clear": 0,
-    "longPotSuccesses": 2,
-    "potAttempts": 19,
-    "continue-clear": 1,
+    "longPotSuccesses": 3,
+    "potAttempts": 31,
+    "continue-clear": 2,
     "opponents": {"Ding": {
-      "wins": 2,
-      "losses": 2
+      "wins": 3,
+      "losses": 4,
+      "frame 3": {
+        "wins": 0,
+        "losses": 1
+      }
     }},
-    "longPotAttempts": 2,
-    "potSuccesses": 18
+    "longPotAttempts": 4,
+    "potSuccesses": 29
   }
 }

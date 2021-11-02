@@ -670,7 +670,11 @@ public abstract class Game {
         Movement calculate() {
             movement = new Movement(getAllBalls());
             while (!oneRun() && notTerminated) {
-                // do nothing
+                if (cumulatedPhysicalTime > 30000) {
+                    // Must be something wrong
+                    System.err.println("Physical calculation congestion");
+                    break;
+                }
             }
 //            endMove();
             notTerminated = false;

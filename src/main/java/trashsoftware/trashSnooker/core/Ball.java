@@ -549,11 +549,11 @@ public abstract class Ball implements Comparable<Ball> {
                 }
             }
             if (ball.isNotMoving()) {
-                if (checkMovingBall) System.out.println("Hit static ball!=====================");
+//                if (checkMovingBall) System.out.println("Hit static ball!=====================");
                 hitStaticBallCore(ball);
             } else {
                 if (!checkMovingBall) return false;
-                System.out.println("Hit moving ball!=====================");
+//                System.out.println("Hit moving ball!=====================");
 
                 double[] thisV = new double[]{vx, vy};
                 double[] ballV = new double[]{ball.vx, ball.vy};
