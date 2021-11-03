@@ -1,11 +1,11 @@
 {
   "SNOOKER": {
-    "longPotSuccesses": 1,
-    "50+breaks": 1,
+    "longPotSuccesses": 5,
+    "50+breaks": 3,
     "147": 0,
     "highestBreak": 68,
     "100+breaks": 0,
-    "potAttempts": 7,
+    "potAttempts": 66,
     "opponents": {
       "Lolita": {
         "frame 1": {
@@ -14,6 +14,14 @@
         },
         "wins": 0,
         "losses": 1
+      },
+      "Murphy": {
+        "wins": 1,
+        "frame 5": {
+          "wins": 0,
+          "losses": 1
+        },
+        "losses": 3
       },
       "Ding": {
         "wins": 1,
@@ -24,8 +32,8 @@
         "losses": 3
       }
     },
-    "longPotAttempts": 2,
-    "potSuccesses": 5
+    "longPotAttempts": 9,
+    "potSuccesses": 56
   },
   "CHINESE_EIGHT": {
     "break-clear": 0,

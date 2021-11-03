@@ -42,7 +42,6 @@
     "privateCues": []
   },
   "Mou moumou": {
-    "records": {"highestBreak": 45},
     "spin": 80,
     "precision": 80,
     "name": "Mou moumou",
@@ -55,9 +54,8 @@
     "privateCues": []
   },
   "Ding": {
-    "records": {"highestBreak": 74},
-    "spin": 90.21197102610905,
-    "precision": 94.45137442496055,
+    "spin": 90.0,
+    "precision": 90.0,
     "name": "Ding",
     "power": 92.20698159234482,
     "pullDt": [40.0, 180.0],
@@ -74,9 +72,21 @@
     "power": 99,
     "pullDt": [50.0, 220.0],
     "cuePlayType": "p1,h800,e500;r,r,l,l,l,r,r,r",
-    "cueSwingMag": 12,
+    "cueSwingMag": 8,
     "cuePointMuSigma": [0, 1, 0, 6],
     "powerControl": 97.5,
+    "privateCues": ["Trump's cue"]
+  },
+  "Murphy": {
+    "spin": 95,
+    "precision": 82,
+    "name": "Murphy",
+    "power": 95,
+    "pullDt": [50.0, 200.0],
+    "cuePlayType": "p1,h800,e500;s,s,s,s,s,s,s,s",
+    "cueSwingMag": 1,
+    "cuePointMuSigma": [0, 1, 0, 4],
+    "powerControl": 98.5,
     "privateCues": []
   },
   "流氓": {

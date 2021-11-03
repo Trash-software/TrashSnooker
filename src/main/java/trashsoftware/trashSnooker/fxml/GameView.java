@@ -622,10 +622,11 @@ public class GameView implements Initializable {
         double leftRightSpin = getUnitSideSpin();  // 右塞正（逆时针），左塞负
         if (frontBackSpin > 0) {
             // 高杆补偿
-            frontBackSpin *= 1.2;
+            frontBackSpin *= 1.25;
         }
 
-        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.5);
+        // 小力杆法补偿
+        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.45);
 
         double side = spinRatio * leftRightSpin * Values.MAX_SIDE_SPIN_SPEED;
         // 旋转产生的总目标速度
