@@ -18,8 +18,8 @@ implements NeedBigBreak{
     private boolean isBreaking = true;
     private String foulReason;
 
-    public SidePocketGame(GameView parent, GameSettings gameSettings) {
-        super(parent, gameSettings, GameValues.SIDE_POCKET);
+    public SidePocketGame(GameView parent, GameSettings gameSettings, int frameIndex) {
+        super(parent, gameSettings, GameValues.SIDE_POCKET, frameIndex);
 
         initBalls();
     }

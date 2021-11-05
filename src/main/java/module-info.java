@@ -6,6 +6,8 @@ module TrashSnooker {
     requires ConfigLoader;
     requires org.json;
     requires org.jetbrains.annotations;
+    requires java.sql;
+    requires org.xerial.sqlitejdbc;
 
     exports trashsoftware.trashSnooker;
     exports trashsoftware.trashSnooker.fxml;
@@ -18,4 +20,5 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.core.numberedGames.sidePocket;
     exports trashsoftware.trashSnooker.util;
     exports trashsoftware.trashSnooker.core.movement;
+    exports trashsoftware.trashSnooker.util.db;
 }

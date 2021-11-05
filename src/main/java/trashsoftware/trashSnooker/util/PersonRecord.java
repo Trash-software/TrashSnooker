@@ -8,6 +8,7 @@ import trashsoftware.trashSnooker.core.Player;
 import trashsoftware.trashSnooker.core.PotAttempt;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
+import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.File;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ public class PersonRecord {
 
     PersonRecord(String playerName) {
         this.playerName = playerName;
+        DBAccess db = DBAccess.getInstance();
+        db.insertPlayerIfNotExists(playerName);
     }
 
     public static PersonRecord loadRecord(String playerName) {
@@ -98,38 +101,44 @@ public class PersonRecord {
     }
 
     public void potAttempt(PotAttempt attempt, boolean success) {
-        boolean longPot = attempt.isLongPot();
-        Map<String, Integer> typeMap = intRecords.get(attempt.getGameType());
-        if (typeMap == null) {
-            typeMap = createTypeMap(attempt.getGameType());
-            intRecords.put(attempt.getGameType(), typeMap);
-        }
-        typeMap.put("potAttempts", typeMap.get("potAttempts") + 1);
-        if (success) typeMap.put("potSuccesses", typeMap.get("potSuccesses") + 1);
-
-        if (longPot) {
-            typeMap.put("longPotAttempts", typeMap.get("longPotAttempts") + 1);
-            if (success) typeMap.put("longPotSuccesses", typeMap.get("longPotSuccesses") + 1);
-        }
+//        boolean longPot = attempt.isLongPot();
+//        Map<String, Integer> typeMap = intRecords.get(attempt.getGameType());
+//        DBAccess db = DBAccess.getInstance();
+//        db.attackOneBall(attempt.getGameType(), attempt.getPlayerPerson().getName(), 
+//                success, attempt.isLongPot());
+        
+//        if (typeMap == null) {
+//            typeMap = createTypeMap(attempt.getGameType());
+//            intRecords.put(attempt.getGameType(), typeMap);
+//        }
+//        typeMap.put("potAttempts", typeMap.get("potAttempts") + 1);
+//        if (success) typeMap.put("potSuccesses", typeMap.get("potSuccesses") + 1);
+//
+//        if (longPot) {
+//            typeMap.put("longPotAttempts", typeMap.get("longPotAttempts") + 1);
+//            if (success) typeMap.put("longPotSuccesses", typeMap.get("longPotSuccesses") + 1);
+//        }
     }
 
     public void updateBreakScore(GameType gameType, int breakScore) {
-        Map<String, Integer> typeMap = getIntRecordOfType(gameType);
-        if (gameType.snookerLike) {
-            if (breakScore > typeMap.get("highestBreak")) {
-                typeMap.put("highestBreak", breakScore);
-            }
-
-            if (breakScore == 147) {
-                incrementMap(typeMap, "147");
-            }
-            if (breakScore >= 100) {
-                incrementMap(typeMap, "100+breaks");
-            }
-            if (breakScore >= 50) {
-                incrementMap(typeMap, "50+breaks");
-            }
-        }
+//        Map<String, Integer> typeMap = getIntRecordOfType(gameType);
+//        DBAccess db = DBAccess.getInstance();
+//        if (gameType.snookerLike) {
+//            db.recordSnookerBreak(gameType, playerName, breakScore);
+//            if (breakScore > typeMap.get("highestBreak")) {
+//                typeMap.put("highestBreak", breakScore);
+//            }
+//
+//            if (breakScore == 147) {
+//                incrementMap(typeMap, "147");
+//            }
+//            if (breakScore >= 100) {
+//                incrementMap(typeMap, "100+breaks");
+//            }
+//            if (breakScore >= 50) {
+//                incrementMap(typeMap, "50+breaks");
+//            }
+//        }
     }
 
     public void generalEndGame(GameType gameType, Player player) {
@@ -139,6 +148,8 @@ public class PersonRecord {
             for (Integer singlePole : snookerPlayer.getSinglePolesInThisGame()) {
                 updateBreakScore(gameType, singlePole);
             }
+        } else if (player instanceof NumberedBallPlayer) {
+            
         }
     }
 

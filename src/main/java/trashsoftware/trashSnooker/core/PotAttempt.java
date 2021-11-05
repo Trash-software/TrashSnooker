@@ -8,6 +8,7 @@ public class PotAttempt {
     private final double[] cueBallOrigPos;
     private final double[] targetBallOrigPos;
     private final double[] targetedHole;
+    private boolean success;
 
     public PotAttempt(GameType gameType, PlayerPerson playerPerson,
                       Ball targetBall,
@@ -19,6 +20,14 @@ public class PotAttempt {
         this.cueBallOrigPos = cueBallOrigPos;
         this.targetBallOrigPos = targetBallOrigPos;
         this.targetedHole = targetedHole;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public boolean isSuccess() {
+        return success;
     }
 
     public GameType getGameType() {

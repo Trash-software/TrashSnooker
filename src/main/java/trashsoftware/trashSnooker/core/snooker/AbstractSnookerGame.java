@@ -21,8 +21,9 @@ public abstract class AbstractSnookerGame extends Game {
     private final SnookerBall[] allBalls = new SnookerBall[22];
     private boolean doingFreeBall = false;  // 正在击打自由球
 
-    AbstractSnookerGame(GameView parent, GameSettings gameSettings, GameValues gameValues) {
-        super(parent, gameSettings, gameValues);
+    AbstractSnookerGame(GameView parent, GameSettings gameSettings, GameValues gameValues, 
+                        int frameIndex) {
+        super(parent, gameSettings, gameValues, frameIndex);
 
         currentTarget = 1;
 

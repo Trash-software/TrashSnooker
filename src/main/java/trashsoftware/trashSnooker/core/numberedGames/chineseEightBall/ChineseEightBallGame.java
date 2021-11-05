@@ -25,8 +25,8 @@ public class ChineseEightBallGame extends NumberedBallGame
     private boolean isBreaking = true;
     private String foulReason;
 
-    public ChineseEightBallGame(GameView parent, GameSettings gameSettings) {
-        super(parent, gameSettings, GameValues.CHINESE_EIGHT_VALUES);
+    public ChineseEightBallGame(GameView parent, GameSettings gameSettings, int frameIndex) {
+        super(parent, gameSettings, GameValues.CHINESE_EIGHT_VALUES, frameIndex);
 
         eightBall = new PoolBall(8, false, gameValues);
         initBalls();

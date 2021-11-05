@@ -10,6 +10,7 @@ import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.fxml.MainView;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Recorder;
+import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class Main extends Application {
             primaryStage.setOnHidden(e -> {
 //                Recorder.save();
                 ConfigLoader.stopLoader();
+                DBAccess.closeDB();
             });
 
             primaryStage.show();

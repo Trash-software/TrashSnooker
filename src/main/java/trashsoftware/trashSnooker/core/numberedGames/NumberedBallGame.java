@@ -7,8 +7,9 @@ import trashsoftware.trashSnooker.fxml.GameView;
 
 public abstract class NumberedBallGame extends Game {
 
-    protected NumberedBallGame(GameView parent, GameSettings gameSettings, GameValues gameValues) {
-        super(parent, gameSettings, gameValues);
+    protected NumberedBallGame(GameView parent, GameSettings gameSettings, 
+                               GameValues gameValues, int frameIndex) {
+        super(parent, gameSettings, gameValues, frameIndex);
     }
 
     protected abstract double breakPointX();

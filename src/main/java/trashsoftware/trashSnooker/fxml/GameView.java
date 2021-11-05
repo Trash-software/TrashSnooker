@@ -93,7 +93,7 @@ public class GameView implements Initializable {
     private double cursorDirectionUnitX, cursorDirectionUnitY;
     private double targetPredictionUnitX, targetPredictionUnitY;
     private Ball predictedTargetBall;
-//    private PotAttempt currentAttempt;
+    //    private PotAttempt currentAttempt;
     private Movement movement;
     private boolean playingMovement = false;
 
@@ -114,6 +114,8 @@ public class GameView implements Initializable {
     private double maxRealPredictLength = 1200.0;
     private double minPredictLengthPotDt = 2000.0;
     private double maxPredictLengthPotDt = 500.0;
+
+    private boolean forcedClose = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -175,6 +177,20 @@ public class GameView implements Initializable {
         setupPowerSlider();
 
         generateScales();
+        
+        stage.setOnCloseRequest(e -> {
+            if (!game.isFinished()) {
+                e.consume();
+                if (AlertShower.askConfirmation(stage,
+                        "游戏未结束，是否退出？",
+                        "请确认")) {
+                    game.quitGame();
+                    timeline.stop();
+                    forcedClose = true;
+                    Platform.runLater(stage::close);
+                }
+            }
+        });
 
         this.stage.setOnHidden(e -> {
             game.quitGame();
@@ -461,13 +477,13 @@ public class GameView implements Initializable {
         powerError = powerError * (100.0 - playerPerson.getPowerControl()) / 100.0;
         power += power * powerError;
         System.out.println("Want power: " + wantPower + ", actual power: " + power);
-        
+
         double personPower = power / playerPerson.getMaxPowerPercentage();  // 球手的用力程度
 
         intentCuePointX = cuePointX;
         intentCuePointY = cuePointY;
         // 因为出杆质量而导致的打点偏移
-        
+
         double xError = random.nextGaussian();
         double yError = random.nextGaussian();
         double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
@@ -512,8 +528,11 @@ public class GameView implements Initializable {
 
         movement = game.getGame().cue(params);
         if (currentAttempt != null) {
-            player.getInGamePlayer().getPersonRecord().potAttempt(currentAttempt, 
-                    currentAttempt.getTargetBall().isPotted());
+            currentAttempt.setSuccess(currentAttempt.getTargetBall().isPotted());
+            player.addAttempt(currentAttempt);
+//            game.potAttempt(currentAttempt, currentAttempt.getTargetBall().isPotted());
+//            player.getInGamePlayer().getPersonRecord().potAttempt(currentAttempt, 
+//                    currentAttempt.getTargetBall().isPotted());
             if (currentAttempt.getTargetBall().isPotted()) {
                 System.out.println("Pot success!");
             } else {
@@ -553,7 +572,7 @@ public class GameView implements Initializable {
 
         newStage.show();
     }
-    
+
     private CuePlayParams generateCueParams() {
         return generateCueParams(getPowerPercentage());
     }
@@ -1030,6 +1049,7 @@ public class GameView implements Initializable {
 //        } else {
         CuePlayParams params = generateCueParams();
         WhitePrediction predict = game.getGame().predictWhite(params);
+        if (predict == null) return;
 //        }
 
 //        System.out.println(predict.getWhitePath().size());
@@ -1074,9 +1094,9 @@ public class GameView implements Initializable {
                     theta = Math.PI * 2 - theta;
                 }
 //                System.out.println(Math.toDegrees(theta) + " " + predictLineTotalLen);
-                
+
                 // 角度越大，目标球预测线越短
-                double multiplier = predictLineTotalLen * 
+                double multiplier = predictLineTotalLen *
                         ((Math.PI / 2 - theta) / Math.PI * 2);
 
                 double lineX = targetPredictionUnitX * multiplier * scale;

@@ -4,15 +4,21 @@
   "147": 0,
   "highestBreak": 105,
   "100+breaks": 1,
-  "potAttempts": 87,
-  "opponents": {"Trump": {
-    "wins": 3,
-    "frame 5": {
+  "potAttempts": 100,
+  "opponents": {
+    "Ding": {
       "wins": 1,
-      "losses": 0
+      "losses": 2
     },
-    "losses": 1
-  }},
+    "Trump": {
+      "wins": 3,
+      "frame 5": {
+        "wins": 1,
+        "losses": 0
+      },
+      "losses": 1
+    }
+  },
   "longPotAttempts": 4,
-  "potSuccesses": 82
+  "potSuccesses": 94
 }}

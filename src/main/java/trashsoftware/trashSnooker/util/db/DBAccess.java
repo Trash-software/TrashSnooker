@@ -1,0 +1,526 @@
+package trashsoftware.trashSnooker.util.db;
+
+import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.*;
+import java.util.*;
+
+public class DBAccess {
+
+    public static final String NAME_TYPE = "VARCHAR(32)";
+
+    private static DBAccess database;
+
+    private Connection connection;
+
+    private DBAccess() {
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:user/records.db");
+            connection.setAutoCommit(true);
+            createTablesIfNotExists();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static DBAccess getInstance() {
+        if (database == null) {
+            database = new DBAccess();
+        }
+        return database;
+    }
+
+    public static void closeDB() {
+        if (database != null) {
+            database.close();
+            database = null;
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new Timestamp(System.currentTimeMillis()));
+        DBAccess db = getInstance();
+        db.printQuery("SELECT * FROM GeneralRecord;");
+//        db.insertPlayerIfNotExists("Ding");
+//        System.out.println(db.playerExists("Ding"));
+//        db.getPlayerSnookerScores("Ding");
+
+
+        closeDB();
+    }
+
+    public void printAllPlayers() {
+        String cmd = "SELECT * FROM Player;";
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(cmd);
+
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getTypeKey(GameType gameType, String playerName) {
+        return String.format("'%s_%s'", playerName, gameType.toSqlKey());
+    }
+    
+    private void storeAttemptsForOnePlayer(EntireGame entireGame, Game frame, Player player) {
+        int[] data = new int[4];  // attempts, successes, long attempts, long successes
+        for (PotAttempt attempt : player.getAttempts()) {
+            data[0]++;
+            if (attempt.isSuccess()) data[1]++;
+            if (attempt.isLongPot()) {
+                data[2]++;
+                if (attempt.isSuccess()) data[3]++;
+            }
+        }
+        
+        String queryWhere = getFrameQueryWhere(entireGame, frame, 
+                player.getPlayerPerson().getName(), true);
+        String query = 
+                "UPDATE GeneralRecord SET " +
+                        "Attempts = Attempts + " + data[0] + ", " +
+                        "Successes = Successes + " + data[1] + ", " +
+                        "LongAttempts = LongAttempts + " + data[2] + ", " +
+                        "LongSuccesses = LongSuccesses + " + data[3] +
+                        queryWhere;
+        try {
+            executeStatement(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void storeAttempts(EntireGame entireGame, Game frame) {
+        storeAttemptsForOnePlayer(entireGame, frame, 
+                frame.getPlayer1());
+        storeAttemptsForOnePlayer(entireGame, frame,
+                frame.getPlayer2());
+    }
+    
+    public List<EntireGameTitle> getAllMatches(GameType gameType, String playerName) {
+        String typeStr = "'" + gameType.toSqlKey() + "'";
+        String playerStr = "'" + playerName + "'";
+        String query = "SELECT * FROM EntireGame " +
+                "WHERE GameType = " + typeStr + " AND " +
+                "(Player1Name = " + playerStr + " OR Player2Name = " + playerStr + ")" +
+                "ORDER BY EntireBeginTime;";
+        List<EntireGameTitle> rtn = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            
+            while (resultSet.next()) {
+                EntireGameTitle egr = new EntireGameTitle(
+                        resultSet.getTimestamp("EntireBeginTime"),
+                        gameType,
+                        resultSet.getString("Player1Name"),
+                        resultSet.getString("Player2Name"),
+                        resultSet.getInt("TotalFrames")
+                );
+                rtn.add(egr);
+            }
+            
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rtn;
+    }
+
+    /**
+     * 返回{totalScore, highest, 50+，100+，147}
+     */
+    public int[] getSnookerBreaksTotal(GameType gameType, String playerName) {
+        int[] rtn = new int[5];
+        String pns = "'" + playerName + "'";
+        String typeKey = "'" + gameType.toSqlKey() + "'";
+        String highestQuery =
+                "SELECT * FROM SnookerRecord " +
+                        "WHERE (PlayerName = " + pns + " AND EntireBeginTime IN " +
+                        "(SELECT EntireBeginTime FROM EntireGame " +
+                        "WHERE GameType = " + typeKey + "));";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(highestQuery);
+            while (resultSet.next()) {
+                int highInResult = resultSet.getInt("Highest");
+                rtn[0] += resultSet.getInt("TotalScore");
+                if (highInResult > rtn[1]) {
+                    rtn[1] = highInResult;
+                }
+                rtn[2] += resultSet.getInt("Breaks50");
+                if (highInResult >= 100) {
+                    rtn[3]++;
+                }
+                if (highInResult >= 147) {
+                    rtn[4]++;
+                }
+            }
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rtn;
+    }
+
+    /**
+     * 返回{进攻次数，进攻成功次数，长台进攻次数，长台成功次数}
+     */
+    public int[] getBasicPotStatusAll(GameType gameType, String playerName) {
+        int[] array = new int[4];
+        String pns = "'" + playerName + "'";
+        String typeKey = "'" + gameType.toSqlKey() + "'";
+        String cmd =
+                "SELECT * FROM GeneralRecord " +
+                        "WHERE (PlayerName = " + pns + " AND EntireBeginTime IN " +
+                        "(SELECT EntireBeginTime FROM EntireGame " +
+                        "WHERE GameType = " + typeKey + "));";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(cmd);
+            while (result.next()) {
+                array[0] += result.getInt("Attempts");
+                array[1] += result.getInt("Successes");
+                array[2] += result.getInt("LongAttempts");
+                array[3] += result.getInt("LongSuccesses");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return array;
+    }
+    
+    public EntireGameRecord getMatchDetail(EntireGameTitle title) {
+        Map<Integer, int[]> framesPotMap = new HashMap<>();
+        Map<Integer, String> framesWinnerMap = new HashMap<>();
+        String query = "SELECT * FROM Game NATURAL JOIN GeneralRecord " +
+                "WHERE EntireBeginTime = '" + title.startTime + "'" +
+                ";";
+        try {
+            Statement general = connection.createStatement();
+            ResultSet result = general.executeQuery(query);
+            
+            while (result.next()) {
+                int index = result.getInt("FrameIndex");
+                int[] array = new int[4];
+                array[0] = result.getInt("Attempts");
+                array[1] = result.getInt("Successes");
+                array[2] = result.getInt("LongAttempts");
+                array[3] = result.getInt("LongSuccesses");
+                String frameWinner = result.getString("WinnerName");
+                if (frameWinner == null) {
+                    System.err.println("Shit!");
+                    continue;
+                }
+                framesPotMap.put(index, array);
+                framesWinnerMap.put(index, frameWinner);
+            }
+            general.close();
+            
+            if (title.gameType.snookerLike) {
+                String snookerQuery = "SELECT * FROM SnookerRecord " +
+                        "WHERE EntireBeginTime = '" + title.startTime + "'" +
+                        ";";
+                Statement sn = connection.createStatement();
+                ResultSet snRes = sn.executeQuery(snookerQuery);
+                List<FrameRecord.Snooker> frames = new ArrayList<>();
+                while (snRes.next()) {
+                    int index = snRes.getInt("FrameIndex");
+                    int[] scores = new int[5];  // total score, highest, breaks50, breaks100, 147
+                    scores[0] = snRes.getInt("TotalScore");
+                    scores[1] = snRes.getInt("Highest");
+                    scores[2] += snRes.getInt("Breaks50");
+                    if (scores[1] >= 100) {
+                        scores[3]++;
+                    }
+                    if (scores[1] >= 147) {
+                        scores[4]++;
+                    }
+                    FrameRecord.Snooker snooker = new FrameRecord.Snooker(
+                            index, framesPotMap.get(index), framesWinnerMap.get(index), scores
+                    );
+                    frames.add(snooker);
+                }
+                
+                sn.close();
+                
+                return new EntireGameRecord.Snooker(title, frames);
+            }
+            
+            // todo: 黑八和九球
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+
+    private String getEntireGameQueryWhere(EntireGame entireGame, String playerName,
+                                           boolean endLine) {
+        return " WHERE (EntireBeginTime = " + entireGame.getStartTimeSqlString() + " AND " +
+                "PlayerName = '" + playerName + "')" + (endLine ? ";" : "");
+    }
+
+    private String getFrameQueryWhere(EntireGame entireGame, Game game, String playerName,
+                                           boolean endLine) {
+        return " WHERE (EntireBeginTime = " + entireGame.getStartTimeSqlString() + " AND " +
+                "FrameIndex = " + game.frameIndex + " AND " +
+                "PlayerName = '" + playerName + "')" + 
+                (endLine ? ";" : "");
+    }
+    
+    public void recordChineseEightResult() {
+        // todo
+    }
+
+    public void recordSnookerBreaks(EntireGame entireGame, Game frame,
+                                    SnookerPlayer player, List<Integer> breakScores) {
+        int highBreak = 0;
+        int breaks50 = 0;  // 一局最多两个50+，最多一个100+
+        for (Integer b : breakScores) {
+            if (b >= 50) breaks50++;
+            if (b > highBreak) highBreak = b;
+        }
+        String query = "INSERT INTO SnookerRecord VALUES (" +
+                entireGame.getStartTimeSqlString() + ", " +
+                frame.frameIndex + ", " +
+                "'" + player.getPlayerPerson().getName() + "', " +
+                player.getScore() + ", " +
+                breaks50 + ", " +
+                highBreak + ");";
+        
+        try {
+            executeStatement(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> listAllPlayerNames() {
+        List<String> list = new ArrayList<>();
+        String cmd = "SELECT Name FROM Player;";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(cmd);
+            while (result.next()) {
+                list.add(result.getString("Name"));
+            }
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    private void executeStatement(String cmd) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(cmd);
+        statement.close();
+    }
+
+    private boolean playerExists(String playerName) {
+        String cmd = "SELECT Name FROM Player WHERE Player.Name = '" + playerName + "';";
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(cmd);
+            boolean hasItem = resultSet.next();
+
+            stmt.close();
+
+            return hasItem;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void insertPlayerIfNotExists(String playerName) {
+        if (playerExists(playerName)) return;
+        String[] commands =
+                new String[]{
+                        "INSERT INTO Player VALUES ('" + playerName + "')"
+                };
+        try {
+            for (String cmd : commands) {
+                Statement stmt = connection.createStatement();
+                stmt.execute(cmd);
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createRecordForFrame(EntireGame entireGame, Game game, String playerName) 
+            throws SQLException {
+        String command1 = "INSERT INTO GeneralRecord VALUES (" +
+                entireGame.getStartTimeSqlString() + ", " +
+                game.frameIndex + ", " +
+                "'" + playerName + "', " +
+                "0, 0, 0, 0" +
+                ");";
+        executeStatement(command1);
+        
+//        String tableName = entireGame.gameType.toSqlKey() + "Record";
+//        if (tableName.startsWith("Mini")) tableName = tableName.substring(4);
+//        String command2;
+//        switch (tableName) {
+//            case "SnookerRecord":
+//                command2 = "INSERT INTO " + tableName + " VALUES (" +
+//                        entireGame.getStartTimeSqlString() + ", " +
+//                        game.frameIndex + ", " +
+//                        "'" + playerName + "', " +
+//                        "0, 0, 0, 0, 0" +
+//                        ")";
+//                break;
+//            case "ChineseEightRecord":
+//            case "SidePocketRecord":
+//                command2 = "INSERT INTO " + tableName + " VALUES (" +
+//                        entireGame.getStartTimeSqlString() + ", " +
+//                        game.frameIndex + ", " +
+//                        "'" + playerName + "', " +
+//                        "0, 0" +
+//                        ")";
+//                break;
+//            default:
+//                throw new RuntimeException("No such record table");
+//        }
+//        executeStatement(command2);
+    }
+
+    public void recordAnEntireGameStarts(EntireGame entireGame) {
+        String typeStr = "'" + entireGame.gameType.toSqlKey() + "'";
+        String command =
+                "INSERT INTO EntireGame VALUES (" +
+                        entireGame.getStartTimeSqlString() + ", " +
+                        typeStr + ", " +
+                        "'" + entireGame.getPlayer1().getPlayerPerson().getName() + "', " +
+                        "'" + entireGame.getPlayer2().getPlayerPerson().getName() + "', " +
+                        entireGame.getTotalFrames() + ");";
+        try {
+            executeStatement(command);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void recordAFrameStarts(EntireGame entireGame, Game game) {
+        String generalCmd = "INSERT INTO Game VALUES (" +
+                entireGame.getStartTimeSqlString() + ", " +
+                game.frameIndex + ", 0, NULL);";
+        try {
+            executeStatement(generalCmd);
+            createRecordForFrame(entireGame, game, 
+                    entireGame.getPlayer1().getPlayerPerson().getName());
+            createRecordForFrame(entireGame, game, 
+                    entireGame.getPlayer2().getPlayerPerson().getName());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void recordAFrameEnds(EntireGame entireGame, Game game, PlayerPerson winner) {
+        long duration = (System.currentTimeMillis() - game.frameStartTime) / 1000 + 1;
+        String generalCmd = "UPDATE Game SET DurationSeconds = " + duration + ", " +
+                "WinnerName = '" + winner.getName() + "' " +
+                "WHERE (EntireBeginTime = " + entireGame.getStartTimeSqlString() + " AND " +
+                "FrameIndex = " + game.frameIndex + ");";
+        try {
+            executeStatement(generalCmd);
+            storeAttempts(entireGame, game);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void abortEntireGame(EntireGame entireGame) {
+        String cmd = "DELETE FROM EntireGame " +
+                "WHERE EntireBeginTime = " + entireGame.getStartTimeSqlString() + ";";
+        try {
+            executeStatement(cmd);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void close() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void printQuery(String query) {
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            
+            ResultSetMetaData meta = rs.getMetaData();
+            int colCount = meta.getColumnCount();
+            for (int c = 1; c <= colCount; c++) {
+                System.out.print(meta.getColumnName(c) + ", ");
+            }
+            System.out.println();
+            while (rs.next()) {
+                for (int c = 1; c <= colCount; c++) {
+                    System.out.print(rs.getString(c) + ", ");
+                }
+                System.out.println();
+            }
+            
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createTablesIfNotExists() throws SQLException, IOException {
+        InputStream is = getClass().getResourceAsStream("DbCreator.sql");
+        if (is == null) {
+            System.err.println(getClass().getPackageName());
+            throw new IOException(getClass().toString());
+        }
+        BufferedReader reader =
+                new BufferedReader(
+                        new InputStreamReader(is));
+        StringBuilder command = new StringBuilder();
+        String line;
+        int lineNum = 0;
+        while ((line = reader.readLine()) != null) {
+            lineNum++;
+            line = line.trim();
+            if (!line.isEmpty()) {
+                int commentIndex = line.indexOf("--");
+                if (commentIndex != -1) {
+                    line = line.substring(0, commentIndex);
+                }
+                if (line.endsWith(";")) {
+                    command.append(line);
+//                    System.out.println(command);
+                    try {
+                        Statement stmt = connection.createStatement();
+                        stmt.execute(command.toString());
+                        stmt.close();
+                    } catch (SQLException e) {
+                        System.err.println("Error at line " + lineNum);
+                        throw e;
+                    }
+                    command.setLength(0);
+                } else if (!line.startsWith("--")) {
+                    command.append(line);
+                }
+            }
+        }
+        reader.close();
+    }
+}

@@ -1,14 +1,13 @@
 package trashsoftware.trashSnooker.core;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 public abstract class Player {
 
     protected final int number;
     protected final InGamePlayer playerPerson;
     protected final TreeMap<Ball, Integer> singlePole = new TreeMap<>();
+    protected final List<PotAttempt> attempts = new ArrayList<>();
     protected int score;
     private boolean withdrawn = false;
 
@@ -23,6 +22,14 @@ public abstract class Player {
 
     public InGamePlayer getInGamePlayer() {
         return playerPerson;
+    }
+    
+    public void addAttempt(PotAttempt potAttempt) {
+        attempts.add(potAttempt);
+    }
+
+    public List<PotAttempt> getAttempts() {
+        return attempts;
     }
 
     public int getNumber() {

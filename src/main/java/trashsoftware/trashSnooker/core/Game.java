@@ -25,6 +25,9 @@ public abstract class Game {
     // 进攻球判定角
     // 如实际角度与可通过的袋口连线的夹角小于该值，判定为进攻球
     public static final double MAX_ATTACK_DECISION_ANGLE = Math.toRadians(7.5);
+    
+    public final long frameStartTime = System.currentTimeMillis();
+    public final int frameIndex;
 
     protected static final double MIN_PLACE_DISTANCE = 0.0;  // 5.0 防止物理运算卡bug
     protected static final double MIN_GAP_DISTANCE = 3.0;
@@ -53,25 +56,28 @@ public abstract class Game {
     protected GameValues gameValues;
     private PhysicsCalculator physicsCalculator;
 
-    protected Game(GameView parent, GameSettings gameSettings, GameValues gameValues) {
+    protected Game(GameView parent, GameSettings gameSettings, GameValues gameValues, 
+                   int frameIndex) {
         this.parent = parent;
         this.gameValues = gameValues;
         this.gameSettings = gameSettings;
+        this.frameIndex = frameIndex;
 
         initPlayers();
         currentPlayer = gameSettings.isPlayer1Breaks() ? player1 : player2;
         cueBall = createWhiteBall();
     }
 
-    public static Game createGame(GameView gameView, GameSettings gameSettings, GameType gameType) {
+    public static Game createGame(GameView gameView, GameSettings gameSettings, 
+                                  GameType gameType, int frameIndex) {
         if (gameType == GameType.SNOOKER) {
-            return new SnookerGame(gameView, gameSettings);
+            return new SnookerGame(gameView, gameSettings, frameIndex);
         } else if (gameType == GameType.MINI_SNOOKER) {
-            return new MiniSnookerGame(gameView, gameSettings);
+            return new MiniSnookerGame(gameView, gameSettings, frameIndex);
         } else if (gameType == GameType.CHINESE_EIGHT) {
-            return new ChineseEightBallGame(gameView, gameSettings);
+            return new ChineseEightBallGame(gameView, gameSettings, frameIndex);
         } else if (gameType == GameType.SIDE_POCKET) {
-            return new SidePocketGame(gameView, gameSettings);
+            return new SidePocketGame(gameView, gameSettings, frameIndex);
         }
 
         throw new RuntimeException("Unexpected game type " + gameType);
@@ -161,7 +167,8 @@ public abstract class Game {
         return physicalCalculate();
     }
 
-//    private void endMove() {
+
+    //    private void endMove() {
 //        System.out.println("Move end");
 //        physicsTimer.cancel();
 //        physicsCalculator = null;

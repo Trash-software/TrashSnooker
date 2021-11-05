@@ -6,17 +6,22 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.geometry.Insets?>
 <HBox xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="trashsoftware.trashSnooker.fxml.StatsView"
-            prefHeight="400.0" prefWidth="600.0">
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.StatsView"
+      prefHeight="640.0" prefWidth="960.0">
 
-    <TreeView fx:id="treeView">
+    <TreeView fx:id="treeView" prefWidth="400.0">
 
     </TreeView>
-
-    <GridPane fx:id="resultPane" alignment="TOP_CENTER" vgap="10.0" hgap="20.0">
-
-    </GridPane>
+    
+    <ScrollPane HBox.hgrow="ALWAYS">
+        <VBox fx:id="rightPane" alignment="TOP_CENTER">
+            <padding>
+                <Insets topRightBottomLeft="10.0"/>
+            </padding>
+        </VBox>
+    </ScrollPane>
 
 </HBox>
