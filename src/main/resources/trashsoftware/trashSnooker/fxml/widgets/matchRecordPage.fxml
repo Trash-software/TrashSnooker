@@ -2,11 +2,15 @@
 
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import trashsoftware.trashSnooker.fxml.widgets.MatchRecordPage?>
+<?import javafx.scene.control.Separator?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          type="trashsoftware.trashSnooker.fxml.widgets.MatchRecordPage"
          alignment="TOP_CENTER" vgap="10.0" hgap="20.0">
     <columnConstraints>
+        <ColumnConstraints/>
+        <ColumnConstraints/>
+        <ColumnConstraints/>
         <ColumnConstraints/>
         <ColumnConstraints/>
         <ColumnConstraints/>

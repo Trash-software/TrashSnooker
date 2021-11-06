@@ -8,6 +8,7 @@ public class PlayerPerson {
 
     private final String name;
     private final double maxPowerPercentage;
+    private final double controllablePowerPercentage;
     private final double maxSpinPercentage;
     private final double precisionPercentage;
     private final List<Cue> privateCues = new ArrayList<>();
@@ -20,6 +21,7 @@ public class PlayerPerson {
 
     public PlayerPerson(String name,
                         double maxPowerPercentage,
+                        double controllablePowerPercentage,
                         double maxSpinPercentage,
                         double precisionPercentage,
                         double minPullDt,
@@ -30,6 +32,7 @@ public class PlayerPerson {
                         CuePlayType cuePlayType) {
         this.name = name;
         this.maxPowerPercentage = maxPowerPercentage;
+        this.controllablePowerPercentage = controllablePowerPercentage;
         this.maxSpinPercentage = maxSpinPercentage;
         this.precisionPercentage = precisionPercentage;
         this.minPullDt = minPullDt;
@@ -42,11 +45,13 @@ public class PlayerPerson {
 
     public PlayerPerson(String name,
                         double maxPowerPercentage,
+                        double controllablePowerPercentage,
                         double maxSpinPercentage,
                         double precisionPercentage) {
         this(
                 name,
                 maxPowerPercentage,
+                controllablePowerPercentage,
                 maxSpinPercentage,
                 precisionPercentage,
                 50.0,
@@ -110,6 +115,10 @@ public class PlayerPerson {
 
     public double getMaxPowerPercentage() {
         return maxPowerPercentage;
+    }
+
+    public double getControllablePowerPercentage() {
+        return controllablePowerPercentage;
     }
 
     public double getMaxSpinPercentage() {

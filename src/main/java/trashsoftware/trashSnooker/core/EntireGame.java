@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.GameSaver;
+import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.sql.Timestamp;
@@ -89,7 +90,7 @@ public class EntireGame {
 //    }
 
     public boolean isFinished() {
-        return p1Wins + p2Wins == totalFrames;
+        return p1Wins > totalFrames / 2 || p2Wins > totalFrames / 2;
     }
 
     private boolean p1WinsAFrame() {
@@ -130,7 +131,7 @@ public class EntireGame {
     }
 
     public String getStartTimeSqlString() {
-        return "'" + startTime + "'";
+        return Util.timeStampFmt(startTime);
     }
 
     private void createNextFrame() {

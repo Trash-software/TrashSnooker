@@ -115,8 +115,6 @@ public class GameView implements Initializable {
     private double minPredictLengthPotDt = 2000.0;
     private double maxPredictLengthPotDt = 500.0;
 
-    private boolean forcedClose = false;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         graphicsContext = gameCanvas.getGraphicsContext2D();
@@ -126,6 +124,8 @@ public class GameView implements Initializable {
 
         addListeners();
         restoreCuePoint();
+
+        powerSlider.setShowTickLabels(true);
     }
 
     private void generateScales() {
@@ -177,7 +177,7 @@ public class GameView implements Initializable {
         setupPowerSlider();
 
         generateScales();
-        
+
         stage.setOnCloseRequest(e -> {
             if (!game.isFinished()) {
                 e.consume();
@@ -186,7 +186,6 @@ public class GameView implements Initializable {
                         "请确认")) {
                     game.quitGame();
                     timeline.stop();
-                    forcedClose = true;
                     Platform.runLater(stage::close);
                 }
             }
@@ -198,16 +197,20 @@ public class GameView implements Initializable {
         });
     }
 
-    public void finishCue(Player cuePlayer) {
-//        updateCuePlayerSinglePole(cuePlayer);
-        drawScoreBoard(cuePlayer);
+    public void finishCue(Player justCuedPlayer, Player nextCuePlayer) {
+//        updateCuePlayerSinglePole(justCuedPlayer);
+        drawScoreBoard(justCuedPlayer);
         drawTargetBoard();
         restoreCuePoint();
-        Platform.runLater(() -> powerSlider.setValue(40.0));
+        Platform.runLater(() -> {
+            powerSlider.setValue(40.0);
+            powerSlider.setMajorTickUnit(
+                    nextCuePlayer.getPlayerPerson().getControllablePowerPercentage());
+        });
         setButtonsCueEnd();
 
 //        if (currentAttempt != null) {
-//            cuePlayer.getInGamePlayer().getPersonRecord().potAttempt(currentAttempt, potSuccess);
+//            justCuedPlayer.getInGamePlayer().getPersonRecord().potAttempt(currentAttempt, potSuccess);
 //        }
 
         if (game.getGame().isEnded()) {
@@ -224,23 +227,23 @@ public class GameView implements Initializable {
         Player lostPlayer = wonPlayer == game.getGame().getPlayer1() ?
                 game.getGame().getPlayer2() : game.getGame().getPlayer1();
 
-        game.getPlayer1().getPersonRecord()
-                .generalEndGame(gameType, game.getGame().getPlayer1());
-        game.getPlayer2().getPersonRecord()
-                .generalEndGame(gameType, game.getGame().getPlayer2());
+//        game.getPlayer1().getPersonRecord()
+//                .generalEndGame(gameType, game.getGame().getPlayer1());
+//        game.getPlayer2().getPersonRecord()
+//                .generalEndGame(gameType, game.getGame().getPlayer2());
 
-        wonPlayer.getInGamePlayer().getPersonRecord()
-                .wonFrameAgainstOpponent(gameType, wonPlayer, lostPlayer.getPlayerPerson().getName());
-        lostPlayer.getInGamePlayer().getPersonRecord()
-                .lostFrameAgainstOpponent(gameType, wonPlayer.getPlayerPerson().getName());
+//        wonPlayer.getInGamePlayer().getPersonRecord()
+//                .wonFrameAgainstOpponent(gameType, wonPlayer, lostPlayer.getPlayerPerson().getName());
+//        lostPlayer.getInGamePlayer().getPersonRecord()
+//                .lostFrameAgainstOpponent(gameType, wonPlayer.getPlayerPerson().getName());
 
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
-        if (entireGameEnd) {
-            wonPlayer.getInGamePlayer().getPersonRecord()
-                    .wonEntireGameAgainstOpponent(game, lostPlayer.getPlayerPerson().getName());
-            lostPlayer.getInGamePlayer().getPersonRecord()
-                    .lostEntireGameAgainstOpponent(game, wonPlayer.getPlayerPerson().getName());
-        }
+//        if (entireGameEnd) {
+//            wonPlayer.getInGamePlayer().getPersonRecord()
+//                    .wonEntireGameAgainstOpponent(game, lostPlayer.getPlayerPerson().getName());
+//            lostPlayer.getInGamePlayer().getPersonRecord()
+//                    .lostEntireGameAgainstOpponent(game, wonPlayer.getPlayerPerson().getName());
+//        }
 
         game.getPlayer1().getPersonRecord().writeToFile();
         game.getPlayer2().getPersonRecord().writeToFile();
@@ -380,6 +383,8 @@ public class GameView implements Initializable {
 
     private void startGame(int totalFrames) {
         game = new EntireGame(this, player1, player2, gameType, totalFrames);
+        powerSlider.setMajorTickUnit(
+                game.getGame().getCuingPlayer().getPlayerPerson().getControllablePowerPercentage());
 //        GameSettings gameSettings = new GameSettings.Builder()
 //                .player1Breaks(true)
 //                .players(player1, player2)
@@ -470,6 +475,7 @@ public class GameView implements Initializable {
         }
 
         double power = getPowerPercentage();
+        double selectedPower = getSelectedPower();
         final double wantPower = power;
         // 因为力量控制导致的力量偏差
         Random random = new Random();
@@ -478,7 +484,8 @@ public class GameView implements Initializable {
         power += power * powerError;
         System.out.println("Want power: " + wantPower + ", actual power: " + power);
 
-        double personPower = power / playerPerson.getMaxPowerPercentage();  // 球手的用力程度
+        double personPower = selectedPower / playerPerson.getMaxPowerPercentage();  // 球手的用力程度
+        double ctrlAblePwr = playerPerson.getControllablePowerPercentage();
 
         intentCuePointX = cuePointX;
         intentCuePointY = cuePointY;
@@ -487,10 +494,23 @@ public class GameView implements Initializable {
         double xError = random.nextGaussian();
         double yError = random.nextGaussian();
         double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
-        xError = xError * muSigXy[1] + muSigXy[0];
-        yError = yError * muSigXy[3] + muSigXy[2];
-        xError = xError * personPower * cueAreaRadius / 150;
-        yError = yError * personPower * cueAreaRadius / 150;
+        double xSig = muSigXy[1];
+        double ySig = muSigXy[3];
+
+        double mulWithPower = getErrorMultiplierOfPower(playerPerson);
+//        if (selectedPower > ctrlAblePwr) {
+//            // 超过正常发力范围，打点准确度大幅下降
+//            // 一般来说，球手的最大力量大于可控力量15%左右
+//            // 打点准确度最大应下降5倍
+//            double mul = 1 + (selectedPower - ctrlAblePwr) / 3;
+//            System.out.println("Too powerful, " + mul);
+//            xSig *= mul;
+//        }
+
+        xError = xError * xSig + muSigXy[0];
+        yError = yError * ySig + muSigXy[2];
+        xError = xError * mulWithPower * cueAreaRadius / 200;
+        yError = yError * mulWithPower * cueAreaRadius / 200;
         cuePointX += xError;
         cuePointY += yError;
         System.out.println("intent: " + intentCuePointX + ", " + intentCuePointY);
@@ -629,9 +649,17 @@ public class GameView implements Initializable {
         return Algebra.rotateVector(cursorDirectionUnitX, cursorDirectionUnitY, offsetAngleRad);
     }
 
+    /**
+     * @return 力量槽选的力量
+     */
+    private double getSelectedPower() {
+        return Math.max(powerSlider.getValue(), 0.01);
+    }
+
     private double getPowerPercentage() {
-        return Math.max(powerSlider.getValue(), 0.01) / game.getGame().getGameValues().ballWeightRatio *
-                game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame()).powerMultiplier;
+        return getSelectedPower() / game.getGame().getGameValues().ballWeightRatio *
+                game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(
+                        game.getGame()).powerMultiplier;
     }
 
     private double[] calculateSpins(double vx, double vy, PlayerPerson playerPerson) {
@@ -1220,13 +1248,27 @@ public class GameView implements Initializable {
         playingMovement = true;
     }
 
-    private void beginCueAnimation(double whiteStartingX, double whiteStartingY) {
-        double powerPercentage = getPowerPercentage();
+    private double getErrorMultiplierOfPower(PlayerPerson playerPerson) {
+        double ctrlAblePwr = playerPerson.getControllablePowerPercentage();
+        double selectedPower = getSelectedPower();
+        double mul = 1;
+        if (selectedPower > ctrlAblePwr) {
+            // 超过正常发力范围，打点准确度大幅下降
+            // 一般来说，球手的最大力量大于可控力量15%左右
+            // 打点准确度最大应下降5倍
+            mul += (selectedPower - ctrlAblePwr) / 3;
+        }
+        return mul * selectedPower / ctrlAblePwr;
+    }
 
+    private void beginCueAnimation(double whiteStartingX, double whiteStartingY) {
         PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
+        double selectedPower = getSelectedPower();
+        double personPower = selectedPower / playerPerson.getMaxPowerPercentage();  // 球手的用力程度
+        double errMulWithPower = getErrorMultiplierOfPower(playerPerson);
         double maxPullDt =
                 (playerPerson.getMaxPullDt() - playerPerson.getMinPullDt()) *
-                        powerPercentage / 100 + playerPerson.getMinPullDt();
+                        personPower + playerPerson.getMinPullDt();
         double handDt = maxPullDt + HAND_DT_TO_MAX_PULL;
         double handX = whiteStartingX - handDt * cursorDirectionUnitX;
         double handY = whiteStartingY - handDt * cursorDirectionUnitY;
@@ -1235,7 +1277,8 @@ public class GameView implements Initializable {
         cueAnimationPlayer = new CueAnimationPlayer(
                 60.0,
                 maxPullDt,
-                powerPercentage,
+                selectedPower,
+                errMulWithPower,
                 handX,
                 handY,
                 cursorDirectionUnitX,
@@ -1537,7 +1580,7 @@ public class GameView implements Initializable {
         private final double maxExtension;  // 杆的最大延伸距离，始终为负
         //        private final double cueBallX, cueBallY;
         private final double handX, handY;  // 手架的位置，作为杆的摇摆中心点
-        private final double powerPercentage;
+        private final double errMulWithPower;
         private final Cue cue;
         private final PlayerPerson playerPerson;
         private long heldMs = 0;
@@ -1549,7 +1592,8 @@ public class GameView implements Initializable {
 
         CueAnimationPlayer(double initDistance,
                            double maxPullDt,
-                           double powerPercentage,
+                           double selectedPower,
+                           double errMulWithPower,
                            double handX, double handY,
                            double pointingUnitX, double pointingUnitY,
                            Cue cue,
@@ -1560,10 +1604,10 @@ public class GameView implements Initializable {
             this.cueDtToWhite = this.initDistance;
             this.maxExtension = -maxPullDistance *
                     (playerPerson.getMaxSpinPercentage() * 0.75 / 100);  // 杆法好的人延伸长
-            this.cueMoveSpeed = powerPercentage * Values.MAX_POWER_SPEED / 100_000.0;
+            this.cueMoveSpeed = selectedPower * Values.MAX_POWER_SPEED / 100_000.0;
 //            this.cueBallX = cueBallInitX;
 //            this.cueBallY = cueBallInitY;
-            this.powerPercentage = powerPercentage;
+            this.errMulWithPower = errMulWithPower;
 
             this.pointingUnitX = pointingUnitX;
             this.pointingUnitY = pointingUnitY;
@@ -1606,14 +1650,14 @@ public class GameView implements Initializable {
                 if (stage < 0) {  // 向左扭
                     double angle = Algebra.thetaOf(pointingUnitX, pointingUnitY);
                     double newAngle = angle + playerPerson.getCueSwingMag() *
-                            powerPercentage / 200_000;
+                            errMulWithPower / 2000;
                     double[] newUnit = Algebra.angleToUnitVector(newAngle);
                     pointingUnitX = newUnit[0];
                     pointingUnitY = newUnit[1];
                 } else if (stage > 0) {  // 向右扭
                     double angle = Algebra.thetaOf(pointingUnitX, pointingUnitY);
                     double newAngle = angle - playerPerson.getCueSwingMag() *
-                            powerPercentage / 200_000;
+                            errMulWithPower / 2000;
                     double[] newUnit = Algebra.angleToUnitVector(newAngle);
                     pointingUnitX = newUnit[0];
                     pointingUnitY = newUnit[1];

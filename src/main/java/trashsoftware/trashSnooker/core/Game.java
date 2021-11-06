@@ -209,7 +209,7 @@ public abstract class Game {
         Player player = currentPlayer;
         endMoveAndUpdate();
         finishedCuesCount++;
-        parent.finishCue(player);
+        parent.finishCue(player, currentPlayer);
     }
 
     public boolean isCalculating() {

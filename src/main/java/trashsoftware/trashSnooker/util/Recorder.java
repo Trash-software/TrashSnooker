@@ -104,7 +104,8 @@ public class Recorder {
                             }
                             playerPerson = new PlayerPerson(
                                     name,
-                                    personObj.getDouble("power"),
+                                    personObj.getDouble("maxPower"),
+                                    personObj.getDouble("controllablePower"),
                                     personObj.getDouble("spin"),
                                     personObj.getDouble("precision"),
                                     minPullDt,
@@ -117,7 +118,8 @@ public class Recorder {
                         } else {
                             playerPerson = new PlayerPerson(
                                     name,
-                                    personObj.getDouble("power"),
+                                    personObj.getDouble("maxPower"),
+                                    personObj.getDouble("controllablePower"),
                                     personObj.getDouble("spin"),
                                     personObj.getDouble("precision")
                             );

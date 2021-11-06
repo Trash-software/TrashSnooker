@@ -5,21 +5,22 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import trashsoftware.trashSnooker.core.GameType;
 import trashsoftware.trashSnooker.fxml.widgets.MatchRecordPage;
+import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 import trashsoftware.trashSnooker.util.db.EntireGameRecord;
 import trashsoftware.trashSnooker.util.db.EntireGameTitle;
+import trashsoftware.trashSnooker.util.db.PlayerFrameRecord;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class StatsView implements Initializable {
@@ -52,6 +53,7 @@ public class StatsView implements Initializable {
                         value.setRightPane(rightPane);
                     }
                 }));
+        root.setExpanded(true);
     }
 
     public static class PersonTreeItem extends TreeItem<RecordTree> {
@@ -253,12 +255,138 @@ public class StatsView implements Initializable {
             EntireGameRecord matchRec = DBAccess.getInstance().getMatchDetail(egt);
             MatchRecordPage page = new MatchRecordPage();
             
+            int rowIndex = 0;
+            String[] winLost;
             int[] p1p2Wins = matchRec.getP1P2WinsCount();
-            page.add(new Label(egt.player1Name), 0, 0);
+            if (p1p2Wins[0] > p1p2Wins[1]) {
+                winLost = new String[]{"WIN", "LOST"};
+            } else {
+                winLost = new String[]{"LOST", "WIN"};
+            }
+            page.add(new Label(winLost[0]), 1, rowIndex);
+            page.add(new Label(winLost[1]), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label(egt.player1Name), 1, rowIndex);
+            page.add(new Label(String.valueOf(p1p2Wins[0])), 2, rowIndex);
+            page.add(new Label(String.format("(%d)", egt.totalFrames)), 3, rowIndex);
+            page.add(new Label(String.valueOf(p1p2Wins[1])), 4, rowIndex);
+            page.add(new Label(egt.player2Name), 5, rowIndex);
+            rowIndex++;
+            
+            int[][] playersTotalBasics = matchRec.totalBasicStats();
+//            System.out.println(Arrays.deepToString(playersTotalBasics));
+            page.add(new Label("进攻次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][0])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][0])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("进攻成功次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][1])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][1])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("进攻成功率"), 0, rowIndex);
             page.add(new Label(
-                    String.format("%d (%d) %d", p1p2Wins[0], egt.totalFrames, p1p2Wins[1])),
-                    1, 0);
-            page.add(new Label(egt.player2Name), 2, 0);
+                            playersTotalBasics[0][1] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[0][1] * 100.0 / 
+                                                    playersTotalBasics[0][0])),
+                    1, rowIndex);
+            page.add(new Label(
+                            playersTotalBasics[1][1] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[1][1] * 100.0 / 
+                                                    playersTotalBasics[1][0])),
+                    5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("长台进攻次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][2])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][2])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("长台进攻成功次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][3])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][3])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("长台进攻成功率"), 0, rowIndex);
+            page.add(new Label(
+                    playersTotalBasics[0][3] == 0 ? "0%" :
+                            String.format("%.1f%%",
+                                    playersTotalBasics[0][3] * 100.0 / 
+                                            playersTotalBasics[0][2])), 
+                    1, rowIndex);
+            page.add(new Label(
+                            playersTotalBasics[1][3] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[1][3] * 100.0 / 
+                                                    playersTotalBasics[1][2])),
+                    5, rowIndex);
+            rowIndex++;
+            
+            if (egt.gameType.snookerLike) {
+                int[][] totalSnookerScores = ((EntireGameRecord.Snooker) matchRec).totalScores();
+                page.add(new Label("总得分"), 0, rowIndex);
+                page.add(new Label(String.valueOf(totalSnookerScores[0][0])), 1, rowIndex);
+                page.add(new Label(String.valueOf(totalSnookerScores[1][0])), 5, rowIndex);
+                rowIndex++;
+
+                page.add(new Label("最高单杆"), 0, rowIndex);
+                page.add(new Label(String.valueOf(totalSnookerScores[0][1])), 1, rowIndex);
+                page.add(new Label(String.valueOf(totalSnookerScores[1][1])), 5, rowIndex);
+                rowIndex++;
+
+                page.add(new Label("50+"), 0, rowIndex);
+                page.add(new Label(String.valueOf(totalSnookerScores[0][2])), 1, rowIndex);
+                page.add(new Label(String.valueOf(totalSnookerScores[1][2])), 5, rowIndex);
+                rowIndex++;
+
+                page.add(new Label("100+"), 0, rowIndex);
+                page.add(new Label(String.valueOf(totalSnookerScores[0][3])), 1, rowIndex);
+                page.add(new Label(String.valueOf(totalSnookerScores[1][3])), 5, rowIndex);
+                rowIndex++;
+
+                page.add(new Label("147"), 0, rowIndex);
+                page.add(new Label(String.valueOf(totalSnookerScores[0][4])), 1, rowIndex);
+                page.add(new Label(String.valueOf(totalSnookerScores[1][4])), 5, rowIndex);
+                rowIndex++;
+            }
+            
+            page.add(new Separator(), 0, rowIndex, 6, 1);
+            rowIndex++;
+            
+            // 分局显示
+            for (Map.Entry<Integer, PlayerFrameRecord[]> entry : 
+                    matchRec.getFrameRecords().entrySet()) {
+                PlayerFrameRecord p1r = entry.getValue()[0];
+                PlayerFrameRecord p2r = entry.getValue()[1];
+                page.add(new Label(
+                        Util.secondsToString(matchRec.getFrameDurations().get(entry.getKey()))),
+                        3, rowIndex);
+                
+                Label p1ScoreLabel = new Label();
+                Label p2ScoreLabel = new Label();
+                if (egt.gameType.snookerLike) {
+                    PlayerFrameRecord.Snooker p1sr = (PlayerFrameRecord.Snooker) p1r;
+                    PlayerFrameRecord.Snooker p2sr = (PlayerFrameRecord.Snooker) p2r;
+                    p1ScoreLabel.setText(String.valueOf(p1sr.snookerScores[0]));
+                    p2ScoreLabel.setText(String.valueOf(p2sr.snookerScores[0]));
+                }
+                
+                if (p1r.winnerName.equals(egt.player1Name)) {
+                    p2ScoreLabel.setDisable(true);
+                    page.add(new Label("⚫"), 2, rowIndex);
+                } else {
+                    p1ScoreLabel.setDisable(true);
+                    page.add(new Label("⚫"), 4, rowIndex);
+                }
+                page.add(p1ScoreLabel, 1, rowIndex);
+                page.add(p2ScoreLabel, 5, rowIndex);
+                
+                rowIndex++;
+            }
             
             rightPane.getChildren().add(page);
         }

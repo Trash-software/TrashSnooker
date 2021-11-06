@@ -11,6 +11,11 @@ public class SnookerGame extends AbstractSnookerGame {
     }
 
     @Override
+    protected int numRedBalls() {
+        return 15;
+    }
+
+    @Override
     protected double breakLineX() {
         return gameValues.leftX + 737.0;
     }

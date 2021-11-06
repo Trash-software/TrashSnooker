@@ -54,6 +54,7 @@ public class AddPlayerView implements Initializable {
         PlayerPerson playerPerson = new PlayerPerson(
                 name,
                 powerSlider.getValue(),
+                powerSlider.getValue() * 0.85,
                 spinSlider.getValue(),
                 precisionSlider.getValue()
         );

@@ -18,7 +18,7 @@ import java.util.TreeMap;
 
 public class PersonRecord {
 
-    public static boolean RECORD = true;
+    public static boolean RECORD = false;
 
     private final String playerName;
     private final Map<GameType, Map<String, Integer>> intRecords = new HashMap<>();
@@ -100,27 +100,7 @@ public class PersonRecord {
         return playerName;
     }
 
-    public void potAttempt(PotAttempt attempt, boolean success) {
-//        boolean longPot = attempt.isLongPot();
-//        Map<String, Integer> typeMap = intRecords.get(attempt.getGameType());
-//        DBAccess db = DBAccess.getInstance();
-//        db.attackOneBall(attempt.getGameType(), attempt.getPlayerPerson().getName(), 
-//                success, attempt.isLongPot());
-        
-//        if (typeMap == null) {
-//            typeMap = createTypeMap(attempt.getGameType());
-//            intRecords.put(attempt.getGameType(), typeMap);
-//        }
-//        typeMap.put("potAttempts", typeMap.get("potAttempts") + 1);
-//        if (success) typeMap.put("potSuccesses", typeMap.get("potSuccesses") + 1);
-//
-//        if (longPot) {
-//            typeMap.put("longPotAttempts", typeMap.get("longPotAttempts") + 1);
-//            if (success) typeMap.put("longPotSuccesses", typeMap.get("longPotSuccesses") + 1);
-//        }
-    }
-
-    public void updateBreakScore(GameType gameType, int breakScore) {
+//    public void updateBreakScore(GameType gameType, int breakScore) {
 //        Map<String, Integer> typeMap = getIntRecordOfType(gameType);
 //        DBAccess db = DBAccess.getInstance();
 //        if (gameType.snookerLike) {
@@ -139,19 +119,19 @@ public class PersonRecord {
 //                incrementMap(typeMap, "50+breaks");
 //            }
 //        }
-    }
+//    }
 
-    public void generalEndGame(GameType gameType, Player player) {
-        if (player instanceof SnookerPlayer) {
-            SnookerPlayer snookerPlayer = (SnookerPlayer) player;
-            snookerPlayer.flushSinglePoles();
-            for (Integer singlePole : snookerPlayer.getSinglePolesInThisGame()) {
-                updateBreakScore(gameType, singlePole);
-            }
-        } else if (player instanceof NumberedBallPlayer) {
-            
-        }
-    }
+//    public void generalEndGame(GameType gameType, Player player) {
+//        if (player instanceof SnookerPlayer) {
+//            SnookerPlayer snookerPlayer = (SnookerPlayer) player;
+//            snookerPlayer.flushSinglePoles();
+//            for (Integer singlePole : snookerPlayer.getSinglePolesInThisGame()) {
+//                updateBreakScore(gameType, singlePole);
+//            }
+//        } else if (player instanceof NumberedBallPlayer) {
+//            
+//        }
+//    }
 
     public void wonFrameAgainstOpponent(GameType gameType, Player player, String opponentName) {
         Map<String, Map<String, Object>> oppo =

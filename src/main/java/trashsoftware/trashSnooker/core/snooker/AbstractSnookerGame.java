@@ -17,8 +17,8 @@ public abstract class AbstractSnookerGame extends Game {
     private final SnookerBall pinkBall;
     private final SnookerBall blackBall;
     private final SnookerBall[] coloredBalls;
-    private final SnookerBall[] redBalls = new SnookerBall[15];
-    private final SnookerBall[] allBalls = new SnookerBall[22];
+    private final SnookerBall[] redBalls = new SnookerBall[numRedBalls()];
+    private final SnookerBall[] allBalls;
     private boolean doingFreeBall = false;  // 正在击打自由球
 
     AbstractSnookerGame(GameView parent, GameSettings gameSettings, GameValues gameValues, 
@@ -33,7 +33,8 @@ public abstract class AbstractSnookerGame extends Game {
         blueBall = new SnookerBall(5, blueBallPos(), gameValues);
         pinkBall = new SnookerBall(6, pinkBallPos(), gameValues);
         blackBall = new SnookerBall(7, blackBallPos(), gameValues);
-        coloredBalls = new SnookerBall[]{yellowBall, greenBall, brownBall, blueBall, pinkBall, blackBall};
+        coloredBalls = 
+                new SnookerBall[]{yellowBall, greenBall, brownBall, blueBall, pinkBall, blackBall};
 
         pointsRankHighToLow[0] = blackBallPos();
         pointsRankHighToLow[1] = pinkBallPos();
@@ -44,19 +45,22 @@ public abstract class AbstractSnookerGame extends Game {
 
         initRedBalls();
 
-        System.arraycopy(redBalls, 0, allBalls, 0, 15);
-        allBalls[15] = yellowBall;
-        allBalls[16] = greenBall;
-        allBalls[17] = brownBall;
-        allBalls[18] = blueBall;
-        allBalls[19] = pinkBall;
-        allBalls[20] = blackBall;
-        allBalls[21] = (SnookerBall) cueBall;
+        allBalls = new SnookerBall[redBalls.length + 7];
+        System.arraycopy(redBalls, 0, allBalls, 0, redBalls.length);
+        allBalls[redBalls.length] = yellowBall;
+        allBalls[redBalls.length + 1] = greenBall;
+        allBalls[redBalls.length + 2] = brownBall;
+        allBalls[redBalls.length + 3] = blueBall;
+        allBalls[redBalls.length + 4] = pinkBall;
+        allBalls[redBalls.length + 5] = blackBall;
+        allBalls[redBalls.length + 6] = (SnookerBall) cueBall;
     }
 
     protected abstract double breakLineX();
 
     protected abstract double breakArcRadius();
+    
+    protected abstract int numRedBalls();
 
     @Override
     public void drawTableMarks(GraphicsContext graphicsContext, double scale) {
@@ -506,6 +510,7 @@ public abstract class AbstractSnookerGame extends Game {
             ballCountInRow++;
             rowStartY -= gameValues.ballRadius + Game.MIN_PLACE_DISTANCE * 0.6;
             curX += rowOccupyX;
+            if (index >= numRedBalls()) break;
         }
     }
 

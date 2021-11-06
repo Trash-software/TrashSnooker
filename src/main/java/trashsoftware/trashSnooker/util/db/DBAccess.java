@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,16 +12,18 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-
-    public static final String NAME_TYPE = "VARCHAR(32)";
-
+    private static final boolean SAVE = true;
     private static DBAccess database;
 
     private Connection connection;
 
     private DBAccess() {
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:user/records.db");
+            if (SAVE) {
+                connection = DriverManager.getConnection("jdbc:sqlite:user/records.db");
+            } else {
+                connection = DriverManager.getConnection("jdbc:sqlite:user/empty.db");
+            }
             connection.setAutoCommit(true);
             createTablesIfNotExists();
         } catch (SQLException | IOException e) {
@@ -45,7 +48,14 @@ public class DBAccess {
     public static void main(String[] args) {
         System.out.println(new Timestamp(System.currentTimeMillis()));
         DBAccess db = getInstance();
-        db.printQuery("SELECT * FROM GeneralRecord;");
+//        db.printQuery("SELECT * FROM SnookerRecord;");
+//        System.out.println("========");
+//        db.printQuery("SELECT * FROM GeneralRecord WHERE PlayerName = 'Kid';");
+//        System.out.println("========");
+        db.printQuery("SELECT * FROM EntireGame NATURAL JOIN Game;");
+        
+        db.printQuery("SELECT * FROM Game INNER JOIN GeneralRecord USING (EntireBeginTime, FrameIndex)" +
+                " WHERE EntireBeginTime = '2021-11-06 17:20:25.53';");
 //        db.insertPlayerIfNotExists("Ding");
 //        System.out.println(db.playerExists("Ding"));
 //        db.getPlayerSnookerScores("Ding");
@@ -199,14 +209,18 @@ public class DBAccess {
     }
     
     public EntireGameRecord getMatchDetail(EntireGameTitle title) {
-        Map<Integer, int[]> framesPotMap = new HashMap<>();
+        Map<Integer, int[][]> framesPotMap = new HashMap<>();
         Map<Integer, String> framesWinnerMap = new HashMap<>();
-        String query = "SELECT * FROM Game NATURAL JOIN GeneralRecord " +
-                "WHERE EntireBeginTime = '" + title.startTime + "'" +
+        String query = "SELECT * FROM Game " +
+                "INNER JOIN GeneralRecord USING (EntireBeginTime, FrameIndex) " +
+                "WHERE EntireBeginTime = " + Util.timeStampFmt(title.startTime) +
                 ";";
+        SortedMap<Integer, PlayerFrameRecord[]> records = new TreeMap<>();  // Sortable treemap
+        SortedMap<Integer, Integer> durations = new TreeMap<>();
         try {
             Statement general = connection.createStatement();
             ResultSet result = general.executeQuery(query);
+//            ResultSetMetaData metaData = result.getMetaData();
             
             while (result.next()) {
                 int index = result.getInt("FrameIndex");
@@ -215,25 +229,30 @@ public class DBAccess {
                 array[1] = result.getInt("Successes");
                 array[2] = result.getInt("LongAttempts");
                 array[3] = result.getInt("LongSuccesses");
+                durations.put(index, result.getInt("DurationSeconds"));
                 String frameWinner = result.getString("WinnerName");
                 if (frameWinner == null) {
                     System.err.println("Shit!");
                     continue;
                 }
-                framesPotMap.put(index, array);
+                int playerIndex = result.getString("PlayerName")
+                        .equals(title.player1Name) ? 0 : 1;
+                int[][] playerArray = framesPotMap.computeIfAbsent(index, k -> new int[2][]);
+                playerArray[playerIndex] = array;
                 framesWinnerMap.put(index, frameWinner);
             }
             general.close();
             
             if (title.gameType.snookerLike) {
                 String snookerQuery = "SELECT * FROM SnookerRecord " +
-                        "WHERE EntireBeginTime = '" + title.startTime + "'" +
+                        "WHERE EntireBeginTime = " + Util.timeStampFmt(title.startTime) +
                         ";";
                 Statement sn = connection.createStatement();
                 ResultSet snRes = sn.executeQuery(snookerQuery);
-                List<FrameRecord.Snooker> frames = new ArrayList<>();
                 while (snRes.next()) {
                     int index = snRes.getInt("FrameIndex");
+                    int playerIndex = snRes.getString("PlayerName")
+                            .equals(title.player1Name) ? 0 : 1;
                     int[] scores = new int[5];  // total score, highest, breaks50, breaks100, 147
                     scores[0] = snRes.getInt("TotalScore");
                     scores[1] = snRes.getInt("Highest");
@@ -244,15 +263,18 @@ public class DBAccess {
                     if (scores[1] >= 147) {
                         scores[4]++;
                     }
-                    FrameRecord.Snooker snooker = new FrameRecord.Snooker(
-                            index, framesPotMap.get(index), framesWinnerMap.get(index), scores
+                    PlayerFrameRecord.Snooker snooker = new PlayerFrameRecord.Snooker(
+                            index, framesPotMap.get(index)[playerIndex], 
+                            framesWinnerMap.get(index), scores
                     );
-                    frames.add(snooker);
+                    PlayerFrameRecord[] thisFrame = 
+                            records.computeIfAbsent(index, k -> new PlayerFrameRecord[2]);
+                    thisFrame[playerIndex] = snooker;
                 }
                 
                 sn.close();
                 
-                return new EntireGameRecord.Snooker(title, frames);
+                return new EntireGameRecord.Snooker(title, records, durations);
             }
             
             // todo: 黑八和九球
@@ -284,6 +306,7 @@ public class DBAccess {
 
     public void recordSnookerBreaks(EntireGame entireGame, Game frame,
                                     SnookerPlayer player, List<Integer> breakScores) {
+        System.out.println("Snooker breaks: " + breakScores);
         int highBreak = 0;
         int breaks50 = 0;  // 一局最多两个50+，最多一个100+
         for (Integer b : breakScores) {
