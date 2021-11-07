@@ -11,8 +11,16 @@ public class Algebra {
         return new double[]{mulX - vx, mulY - vy};
     }
 
+    public static double[] normalVector(double x, double y) {
+        return new double[]{y, -x};
+    }
+
     public static double[] normalVector(double[] vec) {
-        return new double[]{vec[1], -vec[0]};
+        return normalVector(vec[0], vec[1]);
+    }
+    
+    public static double[] vectorSubtract(double[] a, double[] b) {
+        return new double[]{a[0] - b[0], a[1] - b[1]};
     }
 
     public static double vectorDot(double ax, double ay, double bx, double by) {
@@ -22,7 +30,17 @@ public class Algebra {
     public static double[] reverseVec(double[] vec) {
         return new double[]{-vec[0], -vec[1]};
     }
+    
+    public static boolean pointAtLeftOfVec(double[] vecStart, double[] vecEnd, double[] point) {
+        double temp = (vecStart[1] - vecEnd[1]) * point[0] +
+                (vecEnd[0] - vecStart[0]) * point[1] + 
+                vecStart[0] * vecEnd[1] - vecEnd[0] * vecStart[1];
+        return temp < 0;
+    }
 
+    /**
+     * 返回vec在base上的投影的长度
+     */
     public static double projectionLengthOn(double[] base, double[] vec) {
         double[] unitBase = unitVector(base);
         return vectorDot(vec[0], vec[1], unitBase[0], unitBase[1]);
@@ -41,15 +59,24 @@ public class Algebra {
         return new double[]{outUnitX * vecNorm, outUnitY * vecNorm};
     }
 
-    public static double thetaOf(double[] vec) {
-        double atan = Math.atan(vec[1] / vec[0]);
-        if (vec[0] < 0.0) {
+    /**
+     * 返回向量与X轴正半轴的夹角，范围
+     * 
+     * @param x 向量的x
+     * @param y 向量的y
+     * @return 夹角
+     */
+    public static double thetaOf(double x, double y) {
+        double atan = Math.atan(y / x);
+        if (x < 0.0) {
             return Math.PI + atan;
         } else {
-//            double twoPi = Math.PI * 2;
             return realMod(atan, Math.PI * 2);
-//            return atan % (Math.PI * 2);
         }
+    }
+
+    public static double thetaOf(double[] vec) {
+        return thetaOf(vec[0], vec[1]);
     }
 
     /**
@@ -96,6 +123,15 @@ public class Algebra {
     public static double[] unitVector(double x, double y) {
         double norm = Math.hypot(x, y);
         return new double[]{x / norm, y / norm};
+    }
+
+    public static double[] rotateVector(double x, double y, double angleRad) {
+        double cosA = Math.cos(angleRad);
+        double sinA = Math.sin(angleRad);
+        return new double[]{
+                x * cosA - y * sinA,
+                x * sinA + y * cosA
+        };
     }
 
     public static double distanceToLine(double x, double y, double[] lineStartXY, double[] lineEndXY) {

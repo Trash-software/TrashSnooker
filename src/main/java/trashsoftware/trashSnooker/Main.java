@@ -7,8 +7,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import trashsoftware.configLoader.ConfigLoader;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.fxml.MainView;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Recorder;
+import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,12 +34,16 @@ public class Main extends Application {
             );
             Parent root = loader.load();
 
+            MainView mainView = loader.getController();
+            mainView.setStage(primaryStage);
+
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
 
             primaryStage.setOnHidden(e -> {
-                Recorder.save();
+//                Recorder.save();
                 ConfigLoader.stopLoader();
+                DBAccess.closeDB();
             });
 
             primaryStage.show();

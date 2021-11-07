@@ -1,24 +1,44 @@
 package trashsoftware.trashSnooker.core;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 public abstract class Player {
 
     protected final int number;
-    protected final PlayerPerson playerPerson;
+    protected final InGamePlayer playerPerson;
     protected final TreeMap<Ball, Integer> singlePole = new TreeMap<>();
+    protected final List<PotAttempt> attempts = new ArrayList<>();
+    protected final List<DefenseAttempt> defenseAttempts = new ArrayList<>();
     protected int score;
     private boolean withdrawn = false;
 
-    public Player(int number, PlayerPerson playerPerson) {
+    public Player(int number, InGamePlayer playerPerson) {
         this.number = number;
         this.playerPerson = playerPerson;
     }
 
     public PlayerPerson getPlayerPerson() {
+        return playerPerson.getPlayerPerson();
+    }
+
+    public InGamePlayer getInGamePlayer() {
         return playerPerson;
+    }
+    
+    public void addAttempt(PotAttempt potAttempt) {
+        attempts.add(potAttempt);
+    }
+
+    public List<PotAttempt> getAttempts() {
+        return attempts;
+    }
+    
+    public void addDefenseAttempt(DefenseAttempt defenseAttempt) {
+        defenseAttempts.add(defenseAttempt);
+    }
+
+    public List<DefenseAttempt> getDefenseAttempts() {
+        return defenseAttempts;
     }
 
     public int getNumber() {

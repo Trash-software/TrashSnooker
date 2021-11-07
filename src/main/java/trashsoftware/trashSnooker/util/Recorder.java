@@ -1,26 +1,86 @@
 package trashsoftware.trashSnooker.util;
 
+import javafx.scene.paint.Color;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.configLoader.ConfigLoader;
+import trashsoftware.trashSnooker.core.Cue;
+import trashsoftware.trashSnooker.core.CuePlayType;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 
 import java.io.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Recorder {
 
     private static final String PLAYER_LIST_FILE = "user" + File.separator + "players.json";
+    private static final String CUE_LIST_FILE = "user" + File.separator + "cues.json";
+    public static final String RECORDS_DIRECTORY = "user" + File.separator + "records";
 
     private static final Map<String, PlayerPerson> playerPeople = new HashMap<>();
-    private static final Map<String, RecordItem> playerRecords = new HashMap<>();
-    private static final RecordItem globalRecord = new RecordItem();
-    private static PlayerPerson highestBreakPerson;
+    private static final Map<String, Cue> cues = new HashMap<>();
 
     public static void loadAll() {
+        cues.clear();
+        JSONObject cuesRoot = loadFromDisk(CUE_LIST_FILE);
+        loadCues(cuesRoot);
+
         playerPeople.clear();
-        JSONObject root = loadFromDisk(PLAYER_LIST_FILE);
+        JSONObject playersRoot = loadFromDisk(PLAYER_LIST_FILE);
+        loadPlayers(playersRoot);
+    }
+
+    private static void loadCues(JSONObject root) {
+        if (root.has("cues")) {
+            JSONObject object = root.getJSONObject("cues");
+            for (String key : object.keySet()) {
+                try {
+                    JSONObject cueObject = object.getJSONObject(key);
+                    Cue cue = new Cue(
+                            cueObject.getString("name"),
+                            cueObject.getDouble("frontLength"),
+                            cueObject.getDouble("midLength"),
+                            cueObject.getDouble("backLength"),
+                            cueObject.getDouble("ringThickness"),
+                            cueObject.getDouble("tipThickness"),
+                            cueObject.getDouble("endDiameter"),
+                            cueObject.getDouble("tipDiameter"),
+                            parseColor(cueObject.getString("ringColor")),
+                            parseColor(cueObject.getString("frontColor")),
+                            parseColor(cueObject.getString("midColor")),
+                            parseColor(cueObject.getString("backColor")),
+                            cueObject.getDouble("power"),
+                            cueObject.getDouble("spin"),
+                            cueObject.getDouble("accuracy"),
+                            cueObject.getBoolean("privacy")
+                    );
+                    cues.put(key, cue);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static Color parseColor(String colorStr) {
+        StringBuilder builder = new StringBuilder();
+        int brighterCount = 0;
+        int darkerCount = 0;
+        for (char c : colorStr.toCharArray()) {
+            if (Character.isAlphabetic(c)) {
+                builder.append(c);
+            } else if (c == '+') brighterCount++;
+            else if (c == '-') darkerCount++;
+        }
+        Color color = Color.valueOf(builder.toString());
+        for (int i = 0; i < brighterCount; ++i) color = color.brighter();
+        for (int i = 0; i < darkerCount; ++i) color = color.darker();
+        return color;
+    }
+
+    private static void loadPlayers(JSONObject root) {
         if (root.has("players")) {
             JSONObject array = root.getJSONObject("players");
             for (String key : array.keySet()) {
@@ -29,19 +89,56 @@ public class Recorder {
                     JSONObject personObj = (JSONObject) obj;
                     try {
                         String name = personObj.getString("name");
-                        PlayerPerson playerPerson = new PlayerPerson(
-                                name,
-                                personObj.getDouble("power"),
-                                personObj.getDouble("spin"),
-                                personObj.getDouble("precision")
-                        );
-                        playerPeople.put(name, playerPerson);
-                        JSONObject recordObj = personObj.getJSONObject("records");
-                        RecordItem recordItem = RecordItem.fromJson(recordObj);
-                        playerRecords.put(name, recordItem);
-                        if (globalRecord.updateHighestBreak(recordItem.getHighestBreak())) {
-                            highestBreakPerson = playerPerson;
+                        PlayerPerson playerPerson;
+                        if (personObj.has("pullDt")) {
+                            JSONArray pullDt = personObj.getJSONArray("pullDt");
+                            double minPullDt = pullDt.getDouble(0);
+                            double maxPullDt = pullDt.getDouble(1);
+                            double cueSwingMag = personObj.getDouble("cueSwingMag");
+                            String cuePlayTypeStr = personObj.getString("cuePlayType");
+                            CuePlayType cuePlayType = parseCuePlayType(cuePlayTypeStr);
+                            JSONArray muSigmaArray = personObj.getJSONArray("cuePointMuSigma");
+                            double[] muSigma = new double[4];
+                            for (int i = 0; i < 4; ++i) {
+                                muSigma[i] = muSigmaArray.getDouble(i);
+                            }
+                            playerPerson = new PlayerPerson(
+                                    name,
+                                    personObj.getDouble("maxPower"),
+                                    personObj.getDouble("controllablePower"),
+                                    personObj.getDouble("spin"),
+                                    personObj.getDouble("precision"),
+                                    minPullDt,
+                                    maxPullDt,
+                                    cueSwingMag,
+                                    muSigma,
+                                    personObj.getDouble("powerControl"),
+                                    cuePlayType
+                            );
+                        } else {
+                            playerPerson = new PlayerPerson(
+                                    name,
+                                    personObj.getDouble("maxPower"),
+                                    personObj.getDouble("controllablePower"),
+                                    personObj.getDouble("spin"),
+                                    personObj.getDouble("precision")
+                            );
                         }
+                        if (personObj.has("privateCues")) {
+                            JSONArray pCues = personObj.getJSONArray("privateCues");
+                            for (Object cueObj : pCues) {
+                                if (cueObj instanceof String) {
+                                    String pCue = (String) cueObj;
+                                    if (cues.containsKey(pCue)) {
+                                        playerPerson.addPrivateCue(cues.get(pCue));
+                                    } else {
+                                        System.out.printf("%s没有%s\n", name, pCue);
+                                    }
+                                }
+                            }
+                        }
+
+                        playerPeople.put(name, playerPerson);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -55,22 +152,20 @@ public class Recorder {
         saveToDisk(makeJsonObject(), PLAYER_LIST_FILE);
     }
 
-    public static void updatePlayerBreak(String playerName, int currentBreak) {
-        RecordItem recordItem = playerRecords.get(playerName);
-        if (recordItem == null) {
-            recordItem = new RecordItem();
-            playerRecords.put(playerName, recordItem);
-        }
-        recordItem.updateHighestBreak(currentBreak);
-        globalRecord.updateHighestBreak(currentBreak);
-    }
-
-    public static void save() {
-        saveToDisk(makeJsonObject(), PLAYER_LIST_FILE);
-    }
-
     public static Collection<PlayerPerson> getPlayerPeople() {
         return playerPeople.values();
+    }
+
+    public static Map<String, Cue> getCues() {
+        return cues;
+    }
+
+    public static Cue getStdBreakCue() {
+        return cues.get("stdBreakCue");
+    }
+
+    private static CuePlayType parseCuePlayType(String s) {
+        return new CuePlayType(s);
     }
 
     private static JSONObject makeJsonObject() {
@@ -81,11 +176,13 @@ public class Recorder {
             personObject.put("power", playerPerson.getMaxPowerPercentage());
             personObject.put("spin", playerPerson.getMaxSpinPercentage());
             personObject.put("precision", playerPerson.getPrecisionPercentage());
-
-            RecordItem recordItem = playerRecords.get(playerPerson.getName());
-            JSONObject recordObj = recordItem != null ? recordItem.toJson() : new JSONObject();
-            personObject.put("records", recordObj);
             array.put(playerPerson.getName(), personObject);
+
+            JSONArray cuesArray = new JSONArray();
+            for (Cue cue : playerPerson.getPrivateCues()) {
+                cuesArray.put(cue.getName());
+            }
+            personObject.put("privateCues", cuesArray);
         }
         JSONObject root = new JSONObject();
         root.put("players", array);
@@ -124,6 +221,12 @@ public class Recorder {
         if (!userDir.exists()) {
             if (!userDir.mkdirs()) {
                 System.out.println("Cannot create user directory.");
+            }
+        }
+        File recordsDir = new File(RECORDS_DIRECTORY);
+        if (!recordsDir.exists()) {
+            if (!recordsDir.mkdirs()) {
+                System.out.println("Cannot create record directory.");
             }
         }
     }

@@ -25,6 +25,6 @@ public class AlertShower {
         alert.initOwner(owner);
         alert.setHeaderText(header);
 
-        alert.show();
+        alert.showAndWait();
     }
 }

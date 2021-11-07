@@ -9,6 +9,7 @@ import java.util.*;
 
 public abstract class AbstractSnookerGame extends Game {
 
+    protected final double[][] pointsRankHighToLow = new double[6][];
     private final SnookerBall yellowBall;
     private final SnookerBall greenBall;
     private final SnookerBall brownBall;
@@ -16,15 +17,13 @@ public abstract class AbstractSnookerGame extends Game {
     private final SnookerBall pinkBall;
     private final SnookerBall blackBall;
     private final SnookerBall[] coloredBalls;
-    private final SnookerBall[] redBalls = new SnookerBall[15];
-    private final SnookerBall[] allBalls = new SnookerBall[22];
-
-    protected final double[][] pointsRankHighToLow = new double[6][];
-
+    private final SnookerBall[] redBalls = new SnookerBall[numRedBalls()];
+    private final SnookerBall[] allBalls;
     private boolean doingFreeBall = false;  // 正在击打自由球
 
-    AbstractSnookerGame(GameView parent, GameSettings gameSettings, GameValues gameValues) {
-        super(parent, gameSettings, gameValues);
+    AbstractSnookerGame(GameView parent, GameSettings gameSettings, GameValues gameValues, 
+                        int frameIndex) {
+        super(parent, gameSettings, gameValues, frameIndex);
 
         currentTarget = 1;
 
@@ -34,7 +33,8 @@ public abstract class AbstractSnookerGame extends Game {
         blueBall = new SnookerBall(5, blueBallPos(), gameValues);
         pinkBall = new SnookerBall(6, pinkBallPos(), gameValues);
         blackBall = new SnookerBall(7, blackBallPos(), gameValues);
-        coloredBalls = new SnookerBall[]{yellowBall, greenBall, brownBall, blueBall, pinkBall, blackBall};
+        coloredBalls = 
+                new SnookerBall[]{yellowBall, greenBall, brownBall, blueBall, pinkBall, blackBall};
 
         pointsRankHighToLow[0] = blackBallPos();
         pointsRankHighToLow[1] = pinkBallPos();
@@ -45,19 +45,22 @@ public abstract class AbstractSnookerGame extends Game {
 
         initRedBalls();
 
-        System.arraycopy(redBalls, 0, allBalls, 0, 15);
-        allBalls[15] = yellowBall;
-        allBalls[16] = greenBall;
-        allBalls[17] = brownBall;
-        allBalls[18] = blueBall;
-        allBalls[19] = pinkBall;
-        allBalls[20] = blackBall;
-        allBalls[21] = (SnookerBall) whiteBall;
+        allBalls = new SnookerBall[redBalls.length + 7];
+        System.arraycopy(redBalls, 0, allBalls, 0, redBalls.length);
+        allBalls[redBalls.length] = yellowBall;
+        allBalls[redBalls.length + 1] = greenBall;
+        allBalls[redBalls.length + 2] = brownBall;
+        allBalls[redBalls.length + 3] = blueBall;
+        allBalls[redBalls.length + 4] = pinkBall;
+        allBalls[redBalls.length + 5] = blackBall;
+        allBalls[redBalls.length + 6] = (SnookerBall) cueBall;
     }
 
     protected abstract double breakLineX();
 
     protected abstract double breakArcRadius();
+    
+    protected abstract int numRedBalls();
 
     @Override
     public void drawTableMarks(GraphicsContext graphicsContext, double scale) {
@@ -161,8 +164,8 @@ public abstract class AbstractSnookerGame extends Game {
             double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
             for (Ball ball : currentTarBalls) {
                 // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
-                double xDiff = ball.getX() - whiteBall.getX();
-                double yDiff = ball.getY() - whiteBall.getY();
+                double xDiff = ball.getX() - cueBall.getX();
+                double yDiff = ball.getY() - cueBall.getY();
                 double[] vec = new double[]{xDiff, yDiff};
                 double[] unitVec = Algebra.unitVector(vec);
                 double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
@@ -199,7 +202,7 @@ public abstract class AbstractSnookerGame extends Game {
             if (player1.getScore() != player2.getScore()) ended = true;
             else {
                 // 延分，争黑球
-                whiteBall.pot();
+                cueBall.pot();
                 ballInHand = true;
                 if (Math.random() < 0.5) {
                     currentPlayer = player1;
@@ -263,8 +266,10 @@ public abstract class AbstractSnookerGame extends Game {
     protected void updateScore(Set<Ball> pottedBalls, boolean isFreeBall) {
         int score = 0;
         int foul = 0;
-        if (whiteFirstCollide == null) foul = getDefaultFoulValue();  // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
-        else if (whiteBall.isPotted()) {
+        if (whiteFirstCollide == null) {
+            foul = getDefaultFoulValue();  // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
+            if (cueBall.isPotted()) ballInHand = true;
+        } else if (cueBall.isPotted()) {
             foul = Math.max(getDefaultFoulValue(), getMaxFoul(pottedBalls));
             ballInHand = true;
         } else if (isFreeBall) {
@@ -315,7 +320,7 @@ public abstract class AbstractSnookerGame extends Game {
             updateTargetPotFailed();
             switchPlayer();
             lastCueFoul = true;
-            if (!whiteBall.isPotted() && hasFreeBall()) {
+            if (!cueBall.isPotted() && hasFreeBall()) {
                 doingFreeBall = true;
                 System.out.println("Free ball!");
             }
@@ -324,7 +329,7 @@ public abstract class AbstractSnookerGame extends Game {
                 if (pottedBalls.size() != 1) throw new RuntimeException("为什么进了这么多自由球？？？");
                 ((SnookerPlayer) currentPlayer).potFreeBall(score);
             } else currentPlayer.correctPotBalls(pottedBalls);
-            updateTargetPotSuccess(isFreeBall);
+            potSuccess(isFreeBall);
             lastCueFoul = false;
         } else {
             updateTargetPotFailed();
@@ -401,7 +406,8 @@ public abstract class AbstractSnookerGame extends Game {
         List<Ball> balls = new ArrayList<>(pottedBalls);
         Collections.sort(balls);
         Collections.reverse(balls);  // 如有多颗彩球落袋，优先放置分值高的
-        System.out.println(balls);
+//        System.out.print("Pick up");
+//        System.out.println(balls);
         if (currentTarget == 0 || currentTarget == 1) {
             for (Ball ball : balls) {
                 if (ball.isColored()) pickupColorBall(ball);
@@ -468,20 +474,22 @@ public abstract class AbstractSnookerGame extends Game {
         else throw new RuntimeException("延分时不会结束");
     }
 
-    protected boolean canPlaceWhite(double x, double y) {
+    protected boolean canPlaceWhiteInTable(double x, double y) {
         return x <= breakLineX() &&
-                Algebra.distanceToPoint(x, y, brownBallPos()[0], brownBallPos()[1]) <= breakArcRadius() &&
+                Algebra.distanceToPoint(x, y, brownBallPos()[0], brownBallPos()[1]) <=
+                        breakArcRadius() &&
                 !isOccupied(x, y);
     }
 
     @Override
-    protected void drawBall(Ball ball,
-                            GraphicsContext graphicsContext,
-                            double scale) {
-        if (ball.isPotted()) return;
+    public void forceDrawBall(Ball ball,
+                              double absoluteX,
+                              double absoluteY,
+                              GraphicsContext graphicsContext,
+                              double scale) {
         drawBallBase(
-                parent.canvasX(ball.getX()),
-                parent.canvasY(ball.getY()),
+                parent.canvasX(absoluteX),
+                parent.canvasY(absoluteY),
                 gameValues.ballDiameter * scale,
                 ball.getColor(),
                 graphicsContext);
@@ -502,6 +510,7 @@ public abstract class AbstractSnookerGame extends Game {
             ballCountInRow++;
             rowStartY -= gameValues.ballRadius + Game.MIN_PLACE_DISTANCE * 0.6;
             curX += rowOccupyX;
+            if (index >= numRedBalls()) break;
         }
     }
 

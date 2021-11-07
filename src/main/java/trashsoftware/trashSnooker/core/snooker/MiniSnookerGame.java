@@ -6,8 +6,13 @@ import trashsoftware.trashSnooker.fxml.GameView;
 
 public class MiniSnookerGame extends AbstractSnookerGame {
 
-    public MiniSnookerGame(GameView parent, GameSettings gameSettings) {
-        super(parent, gameSettings, GameValues.MINI_SNOOKER_VALUES);
+    public MiniSnookerGame(GameView parent, GameSettings gameSettings, int frameIndex) {
+        super(parent, gameSettings, GameValues.MINI_SNOOKER_VALUES, frameIndex);
+    }
+
+    @Override
+    protected int numRedBalls() {
+        return 6;
     }
 
     @Override

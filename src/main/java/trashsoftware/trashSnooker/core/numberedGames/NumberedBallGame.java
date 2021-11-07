@@ -7,14 +7,21 @@ import trashsoftware.trashSnooker.fxml.GameView;
 
 public abstract class NumberedBallGame extends Game {
 
-    protected NumberedBallGame(GameView parent, GameSettings gameSettings, GameValues gameValues) {
-        super(parent, gameSettings, gameValues);
+    protected NumberedBallGame(GameView parent, GameSettings gameSettings, 
+                               GameValues gameValues, int frameIndex) {
+        super(parent, gameSettings, gameValues, frameIndex);
     }
 
     protected abstract double breakPointX();
 
     protected double breakLineX() {
         return gameValues.leftX + 635.0;
+    }
+
+    @Override
+    public void switchPlayer() {
+        super.switchPlayer();
+        ((NumberedBallPlayer) currentPlayer).incrementPlayTimes();
     }
 
     @Override
@@ -35,11 +42,14 @@ public abstract class NumberedBallGame extends Game {
     }
 
     @Override
-    protected void drawBall(Ball ball, GraphicsContext graphicsContext, double scale) {
-        if (ball.isPotted()) return;
+    public void forceDrawBall(Ball ball,
+                              double absoluteX,
+                              double absoluteY,
+                              GraphicsContext graphicsContext,
+                              double scale) {
         drawPoolBallEssential(
-                parent.canvasX(ball.getX()),
-                parent.canvasY(ball.getY()),
+                parent.canvasX(absoluteX),
+                parent.canvasY(absoluteY),
                 gameValues.ballDiameter * scale,
                 ball.getColor(),
                 ball.getValue(),
