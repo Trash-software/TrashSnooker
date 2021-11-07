@@ -2,24 +2,20 @@ package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
 
-public abstract class Ball implements Comparable<Ball> {
+public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     private final int value;
     private final Color color;
-    private final GameValues values;
-    protected double x, y;
-    protected double nextX, nextY;
-    protected double vx, vy;  // unit: mm/(sec/frameRate)
     protected double xSpin, ySpin;
     protected double sideSpin;
     private boolean potted;
-    private boolean fmx, fmy;
     private long msSinceCue;
     private Ball justHit;
 
     protected Ball(int value, boolean initPotted, GameValues values) {
-        this.value = value;
+        super(values, values.ballRadius);
+        
         this.potted = initPotted;
-        this.values = values;
+        this.value = value;
         this.color = generateColor(value);
     }
 
@@ -93,27 +89,6 @@ public abstract class Ball implements Comparable<Ball> {
 
     protected abstract Color generateColor(int value);
 
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public void setXY(double x, double y) {
-        setX(x);
-        setY(y);
-    }
-
     public boolean isPotted() {
         return potted;
     }
@@ -139,18 +114,8 @@ public abstract class Ball implements Comparable<Ball> {
         return value == 0;
     }
 
-    public void setVx(double vx) {
-        this.vx = vx;
-    }
-
-    public void setVy(double vy) {
-        this.vy = vy;
-    }
-
     public void setSpin(double xSpin, double ySpin, double sideSpin) {
         msSinceCue = 0;
-        fmy = false;
-        fmx = false;
         this.xSpin = xSpin;
         this.ySpin = ySpin;
         this.sideSpin = sideSpin;
@@ -168,27 +133,19 @@ public abstract class Ball implements Comparable<Ball> {
         return false;
     }
 
-    private double getSpeed() {
-        return Math.hypot(vx, vy);
-    }
-
     private double getSpinTargetSpeed() {
         return Math.hypot(xSpin, ySpin);
     }
 
-    void normalMove() {
+    protected void normalMove() {
         x = nextX;
         y = nextY;
         msSinceCue++;
-//        if (isWhite()) System.out.printf("%f %f %f %f\n", vx, vy, xSpin, ySpin);
         if (sideSpin >= Game.sideSpinReducer) {
             sideSpin -= Game.sideSpinReducer;
         } else if (sideSpin <= -Game.sideSpinReducer) {
             sideSpin += Game.sideSpinReducer;
         }
-//        else {
-//            if (isWhite()) System.out.println("Side spin end in " + msSince);
-//        }
 
         double speed = getSpeed();
         double reducedSpeed = speed - Game.speedReducer;
@@ -260,142 +217,19 @@ public abstract class Ball implements Comparable<Ball> {
                 predictedDtToPoint(values.botMidHoleXY) < values.midHoleRadius * midHoleFactor;
     }
 
-    /**
-     * 检测是否撞击袋角或进入袋角区域。如果撞击袋角，返回{@code 2}且处理撞击。如果进入袋角区域但未发生撞击，返回{@code 1}。如未进入，返回{@code 0}
-     */
-    int tryHitHoleArea() {
-        boolean enteredCorner = false;
-        if (nextY < values.ballRadius + values.topY) {
-            if (nextX < values.midHoleAreaRightX && nextX >= values.midHoleAreaLeftX) {
-                // 上方中袋在袋角范围内
-                if (predictedDtToPoint(values.topMidHoleLeftArcXy) < values.midArcRadius + values.ballRadius &&
-                        currentDtToPoint(values.topMidHoleLeftArcXy) >= values.midArcRadius + values.ballRadius) {
-                    // 击中上方中袋左侧
-                    hitHoleArcArea(values.topMidHoleLeftArcXy);
-                } else if (predictedDtToPoint(values.topMidHoleRightArcXy) < values.midArcRadius + values.ballRadius &&
-                        currentDtToPoint(values.topMidHoleRightArcXy) >= values.midArcRadius + values.ballRadius) {
-                    // 击中上方中袋右侧
-                    hitHoleArcArea(values.topMidHoleRightArcXy);
-                } else if (values.isStraightHole() &&
-                        nextX >= values.midHoleLineLeftX && nextX < values.midHoleLineRightX) {
-                    // 疑似上方中袋直线
-                    double[][] line = values.topMidHoleLeftLine;
-                    if (predictedDtToLine(line) < values.ballRadius &&
-                            currentDtToLine(line) >= values.ballRadius) {
-                        hitHoleLineArea(
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
-                        return 2;
-                    }
-                    line = values.topMidHoleRightLine;
-                    if (predictedDtToLine(line) < values.ballRadius &&
-                            currentDtToLine(line) >= values.ballRadius) {
-                        hitHoleLineArea(
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
-                        return 2;
-                    }
-                    normalMove();
-                    prepareMove();
-                    return 1;
-                } else {
-                    normalMove();
-                    prepareMove();
-                    return 1;
-                }
-                return 2;
-            }
-        } else if (nextY >= values.botY - values.ballRadius) {
-            if (nextX < values.midHoleAreaRightX && nextX >= values.midHoleAreaLeftX) {
-                // 下方中袋袋角范围内
-                if (predictedDtToPoint(values.botMidHoleLeftArcXy) < values.midArcRadius + values.ballRadius &&
-                        currentDtToPoint(values.botMidHoleLeftArcXy) >= values.midArcRadius + values.ballRadius) {
-                    // 击中下方中袋左侧
-                    hitHoleArcArea(values.botMidHoleLeftArcXy);
-                } else if (predictedDtToPoint(values.botMidHoleRightArcXy) < values.midArcRadius + values.ballRadius &&
-                        currentDtToPoint(values.botMidHoleRightArcXy) >= values.midArcRadius + values.ballRadius) {
-                    // 击中下方中袋右侧
-                    hitHoleArcArea(values.botMidHoleRightArcXy);
-                } else if (values.isStraightHole() &&
-                        nextX >= values.midHoleLineLeftX && nextX < values.midHoleLineRightX) {
-                    // 疑似下方中袋直线
-                    double[][] line = values.botMidHoleLeftLine;
-                    if (predictedDtToLine(line) < values.ballRadius &&
-                            currentDtToLine(line) >= values.ballRadius) {
-                        hitHoleLineArea(
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
-                        return 2;
-                    }
-                    line = values.botMidHoleRightLine;
-                    if (predictedDtToLine(line) < values.ballRadius &&
-                            currentDtToLine(line) >= values.ballRadius) {
-                        hitHoleLineArea(
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
-                        return 2;
-                    }
-                    normalMove();
-                    prepareMove();
-                    return 1;
-                } else {
-                    normalMove();
-                    prepareMove();
-                    return 1;
-                }
-                return 2;
-            }
-        }
-        if (nextY < values.topCornerHoleAreaDownY) {
-            if (nextX < values.leftCornerHoleAreaRightX) enteredCorner = true;  // 左上底袋
-            else if (nextX >= values.rightCornerHoleAreaLeftX) enteredCorner = true;  // 右上底袋
-        } else if (nextY >= values.botCornerHoleAreaUpY) {
-            if (nextX < values.leftCornerHoleAreaRightX) enteredCorner = true;  // 左下底袋
-            else if (nextX >= values.rightCornerHoleAreaLeftX) enteredCorner = true;  // 右下底袋
-        }
-
-        if (enteredCorner) {
-//            System.out.println("Entered corner!");
-            for (int i = 0; i < values.allCornerLines.length; ++i) {
-                double[][] line = values.allCornerLines[i];
-
-//                System.out.println(Arrays.deepToString(line));
-//                double[] normVec = i < 4 ? Values.NORMAL_315 : Values.NORMAL_45;
-                if (predictedDtToLine(line) < values.ballRadius && currentDtToLine(line) >= values.ballRadius) {
-//                    System.out.println("Hit line!");
-//                    System.out.println(Arrays.toString(normVec) + Arrays.deepToString(line));
-                    hitHoleLineArea(
-                            Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
-                    return 2;
-                }
-            }
-            if (!values.isStraightHole()) {
-                for (double[] cornerArc : values.allCornerArcs) {
-                    if (predictedDtToPoint(cornerArc) < values.cornerArcRadius + values.ballRadius &&
-                            currentDtToPoint(cornerArc) >= values.cornerArcRadius + values.ballRadius) {
-                        hitHoleArcArea(cornerArc);
-                        return 2;
-                    }
-                }
-            }
-            normalMove();
-            prepareMove();
-            return 1;
-        }
-        return 0;
-    }
-
-    private void hitHoleArcArea(double[] arcXY) {
-        double axisX = arcXY[0] - x;  // 切线的法向量
-        double axisY = arcXY[1] - y;
-        double[] reflect = Algebra.symmetricVector(vx, vy, axisX, axisY);
-        vx = -reflect[0] * Values.WALL_BOUNCE_RATIO;
-        vy = -reflect[1] * Values.WALL_BOUNCE_RATIO;
+    protected void hitHoleArcArea(double[] arcXY) {
+        super.hitHoleArcArea(arcXY);
+        vx *= Values.WALL_BOUNCE_RATIO;
+        vy *= Values.WALL_BOUNCE_RATIO;
         xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
         ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
         sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
     }
 
-    private void hitHoleLineArea(double[] lineNormalVec) {
-        double[] reflect = Algebra.symmetricVector(vx, vy, lineNormalVec[0], lineNormalVec[1]);
-        vx = -reflect[0] * Values.WALL_BOUNCE_RATIO;
-        vy = -reflect[1] * Values.WALL_BOUNCE_RATIO;
+    protected void hitHoleLineArea(double[] lineNormalVec) {
+        super.hitHoleLineArea(lineNormalVec);
+        vx *= Values.WALL_BOUNCE_RATIO;
+        vy *= Values.WALL_BOUNCE_RATIO;
         xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
         ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
         sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
@@ -404,7 +238,7 @@ public abstract class Ball implements Comparable<Ball> {
     /**
      * 该方法不检测袋口
      */
-    boolean tryHitWall() {
+    protected boolean tryHitWall() {
         if (nextX < values.ballRadius + values.leftX ||
                 nextX >= values.rightX - values.ballRadius) {
             // 顶库
@@ -595,38 +429,9 @@ public abstract class Ball implements Comparable<Ball> {
         justHit = null;
     }
 
-    void prepareMove() {
-        nextX = x + vx;
-        nextY = y + vy;
+    protected void prepareMove() {
+        super.prepareMove();
         justHit = null;
-    }
-
-    private double currentDtTo(Ball ball) {
-        return Algebra.distanceToPoint(x, y, ball.x, ball.y);
-    }
-
-    private double predictedDtTo(Ball ball) {
-        return Algebra.distanceToPoint(nextX, nextY, ball.nextX, ball.nextY);
-    }
-
-    private double currentDtToLine(double[][] line) {
-        return Algebra.distanceToLine(x, y, line[0], line[1]);
-    }
-
-    private double predictedDtToLine(double[][] line) {
-        return Algebra.distanceToLine(nextX, nextY, line[0], line[1]);
-    }
-
-    double currentDtToPoint(double[] point) {
-        return Algebra.distanceToPoint(x, y, point[0], point[1]);
-    }
-
-    double predictedDtToPoint(double[] point) {
-        return predictedDtToPoint(point[0], point[1]);
-    }
-
-    double predictedDtToPoint(double px, double py) {
-        return Algebra.distanceToPoint(nextX, nextY, px, py);
     }
 
     public Color getColor() {

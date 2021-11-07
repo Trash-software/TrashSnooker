@@ -8,7 +8,7 @@ public class GameValues {
             .tableColor(Color.GREEN, Color.SADDLEBROWN)
             .tableDimension(3820.0, 3569.0, 
                     2035.0, 1788.0,
-                    28.0)
+                    33.34)
             .ballSize(52.5)
             .holeSizeCurved(85.0, 100.0)
             .build();
@@ -50,6 +50,7 @@ public class GameValues {
     public double innerHeight;
     public double leftX, rightX, topY, botY, midX, midY;
     public double maxLength;  // 对角线长度
+    public double cushionHeight;
 
     public double ballDiameter;
     public double ballRadius;
@@ -305,6 +306,7 @@ public class GameValues {
             values.innerWidth = innerWidth;
             values.outerHeight = outerHeight;
             values.innerHeight = innerHeight;
+            values.cushionHeight = cushionHeight;
             values.leftX = (outerWidth - innerWidth) / 2;
             values.rightX = innerWidth + values.leftX;
             values.topY = (outerHeight - innerHeight) / 2;

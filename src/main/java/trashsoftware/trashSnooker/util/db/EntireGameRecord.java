@@ -20,16 +20,21 @@ public abstract class EntireGameRecord {
     }
     
     public int[][] totalBasicStats() {
-        int[][] res = new int[2][4];
+        int[][] res = new int[2][6];
         for (PlayerFrameRecord[] oneFrame : frameRecords.values()) {
             res[0][0] += oneFrame[0].basicPots[0];
             res[0][1] += oneFrame[0].basicPots[1];
             res[0][2] += oneFrame[0].basicPots[2];
             res[0][3] += oneFrame[0].basicPots[3];
+            res[0][4] += oneFrame[0].basicPots[4];
+            res[0][5] += oneFrame[0].basicPots[5];
+            
             res[1][0] += oneFrame[1].basicPots[0];
             res[1][1] += oneFrame[1].basicPots[1];
             res[1][2] += oneFrame[1].basicPots[2];
             res[1][3] += oneFrame[1].basicPots[3];
+            res[1][4] += oneFrame[1].basicPots[4];
+            res[1][5] += oneFrame[1].basicPots[5];
         }
         return res;
     }

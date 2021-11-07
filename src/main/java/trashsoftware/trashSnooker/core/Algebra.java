@@ -18,6 +18,10 @@ public class Algebra {
     public static double[] normalVector(double[] vec) {
         return normalVector(vec[0], vec[1]);
     }
+    
+    public static double[] vectorSubtract(double[] a, double[] b) {
+        return new double[]{a[0] - b[0], a[1] - b[1]};
+    }
 
     public static double vectorDot(double ax, double ay, double bx, double by) {
         return ax * bx + ay * by;
@@ -26,7 +30,17 @@ public class Algebra {
     public static double[] reverseVec(double[] vec) {
         return new double[]{-vec[0], -vec[1]};
     }
+    
+    public static boolean pointAtLeftOfVec(double[] vecStart, double[] vecEnd, double[] point) {
+        double temp = (vecStart[1] - vecEnd[1]) * point[0] +
+                (vecEnd[0] - vecStart[0]) * point[1] + 
+                vecStart[0] * vecEnd[1] - vecEnd[0] * vecStart[1];
+        return temp < 0;
+    }
 
+    /**
+     * 返回vec在base上的投影的长度
+     */
     public static double projectionLengthOn(double[] base, double[] vec) {
         double[] unitBase = unitVector(base);
         return vectorDot(vec[0], vec[1], unitBase[0], unitBase[1]);

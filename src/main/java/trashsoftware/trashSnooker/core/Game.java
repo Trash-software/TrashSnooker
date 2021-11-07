@@ -25,13 +25,10 @@ public abstract class Game {
     // 进攻球判定角
     // 如实际角度与可通过的袋口连线的夹角小于该值，判定为进攻球
     public static final double MAX_ATTACK_DECISION_ANGLE = Math.toRadians(7.5);
-    
-    public final long frameStartTime = System.currentTimeMillis();
-    public final int frameIndex;
-
     protected static final double MIN_PLACE_DISTANCE = 0.0;  // 5.0 防止物理运算卡bug
     protected static final double MIN_GAP_DISTANCE = 3.0;
-
+    public final long frameStartTime = System.currentTimeMillis();
+    public final int frameIndex;
     protected final Set<Ball> newPotted = new HashSet<>();
     protected final GameView parent;
     protected final Map<Ball, double[]> recordedPositions = new HashMap<>();  // 记录上一杆时球的位置，复位用
@@ -56,7 +53,7 @@ public abstract class Game {
     protected GameValues gameValues;
     private PhysicsCalculator physicsCalculator;
 
-    protected Game(GameView parent, GameSettings gameSettings, GameValues gameValues, 
+    protected Game(GameView parent, GameSettings gameSettings, GameValues gameValues,
                    int frameIndex) {
         this.parent = parent;
         this.gameValues = gameValues;
@@ -68,7 +65,7 @@ public abstract class Game {
         cueBall = createWhiteBall();
     }
 
-    public static Game createGame(GameView gameView, GameSettings gameSettings, 
+    public static Game createGame(GameView gameView, GameSettings gameSettings,
                                   GameType gameType, int frameIndex) {
         if (gameType == GameType.SNOOKER) {
             return new SnookerGame(gameView, gameSettings, frameIndex);
@@ -269,8 +266,17 @@ public abstract class Game {
     /**
      * 返回白球后方障碍物的距离与高度
      */
-    public double[] getObstacleDtHeight(double cursorPointingX, double cursorPointingY) {
-        return new double[2];
+    public CueBackPredictor.Result getObstacleDtHeight(double cursorPointingX,
+                                                       double cursorPointingY,
+                                                       double cueWidth) {
+//        long st = System.currentTimeMillis();
+        CueBackPredictor cueBackPredictor =
+                new CueBackPredictor(this, cursorPointingX, cursorPointingY, cueWidth,
+                        getCuingPlayer().getInGamePlayer()
+                                .getCurrentCue(this).getTotalLength() + 300.0,
+                        cueBall.x, cueBall.y);
+        // System.out.println("Cue back prediction time: " + (System.currentTimeMillis() - st));
+        return cueBackPredictor.predict();
     }
 
     public PredictedPos getPredictedHitBall(double xUnitDirection, double yUnitDirection) {
@@ -512,10 +518,10 @@ public abstract class Game {
 
 //            if (Math.floor(cumulatedPhysicalTime / parent.frameTimeMs) !=
 //                    Math.floor(lastPhysicalTime / parent.frameTimeMs)) {
-                prediction.getWhitePath().add(new double[]{cueBall.x, cueBall.y});
+            prediction.getWhitePath().add(new double[]{cueBall.x, cueBall.y});
 //                System.out.println(cueBall.x + ", " + cueBall.y);
 //            }
-            
+
             cueBall.prepareMove();
 
             if (cueBall.isLikelyStopped()) return true;

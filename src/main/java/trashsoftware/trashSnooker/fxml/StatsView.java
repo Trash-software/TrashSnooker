@@ -339,6 +339,31 @@ public class StatsView implements Initializable {
                                                     playersTotalBasics[1][2])),
                     5, rowIndex);
             rowIndex++;
+
+            page.add(new Label("防守次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][4])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][4])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("防守成功次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][5])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][5])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("防守成功率"), 0, rowIndex);
+            page.add(new Label(
+                            playersTotalBasics[0][5] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[0][5] * 100.0 /
+                                                    playersTotalBasics[0][4])),
+                    1, rowIndex);
+            page.add(new Label(
+                            playersTotalBasics[1][5] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[1][5] * 100.0 /
+                                                    playersTotalBasics[1][4])),
+                    5, rowIndex);
+            rowIndex++;
             
             if (egt.gameType.snookerLike) {
                 int[][] totalSnookerScores = ((EntireGameRecord.Snooker) matchRec).totalScores();
