@@ -12,7 +12,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    private static final boolean SAVE = false;
+    private static final boolean SAVE = true;
     private static DBAccess database;
 
     private Connection connection;
@@ -52,7 +52,7 @@ public class DBAccess {
 //        System.out.println("========");
 //        db.printQuery("SELECT * FROM GeneralRecord WHERE PlayerName = 'Kid';");
 //        System.out.println("========");
-        db.printQuery("SELECT * FROM EntireGame NATURAL JOIN Game;");
+        db.printQuery("SELECT * FROM GeneralRecord;");
         
         db.printQuery("SELECT * FROM Game INNER JOIN GeneralRecord USING (EntireBeginTime, FrameIndex)" +
                 " WHERE EntireBeginTime = '2021-11-06 17:20:25.53';");
@@ -107,8 +107,8 @@ public class DBAccess {
                         "Successes = Successes + " + data[1] + ", " +
                         "LongAttempts = LongAttempts + " + data[2] + ", " +
                         "LongSuccesses = LongSuccesses + " + data[3] + ", " +
-                        "LongSuccesses = LongSuccesses + " + data[4] + ", " +
-                        "LongSuccesses = LongSuccesses + " + data[5] +
+                        "Defenses = Defenses + " + data[4] + ", " +
+                        "DefenseSuccesses = DefenseSuccesses + " + data[5] +
                         queryWhere;
         try {
             executeStatement(query);
@@ -406,32 +406,6 @@ public class DBAccess {
                 "0, 0, 0, 0, 0, 0" +
                 ");";
         executeStatement(command1);
-        
-//        String tableName = entireGame.gameType.toSqlKey() + "Record";
-//        if (tableName.startsWith("Mini")) tableName = tableName.substring(4);
-//        String command2;
-//        switch (tableName) {
-//            case "SnookerRecord":
-//                command2 = "INSERT INTO " + tableName + " VALUES (" +
-//                        entireGame.getStartTimeSqlString() + ", " +
-//                        game.frameIndex + ", " +
-//                        "'" + playerName + "', " +
-//                        "0, 0, 0, 0, 0" +
-//                        ")";
-//                break;
-//            case "ChineseEightRecord":
-//            case "SidePocketRecord":
-//                command2 = "INSERT INTO " + tableName + " VALUES (" +
-//                        entireGame.getStartTimeSqlString() + ", " +
-//                        game.frameIndex + ", " +
-//                        "'" + playerName + "', " +
-//                        "0, 0" +
-//                        ")";
-//                break;
-//            default:
-//                throw new RuntimeException("No such record table");
-//        }
-//        executeStatement(command2);
     }
 
     public void recordAnEntireGameStarts(EntireGame entireGame) {

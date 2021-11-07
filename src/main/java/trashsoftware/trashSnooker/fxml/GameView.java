@@ -124,8 +124,8 @@ public class GameView implements Initializable {
     private double lastDragAngle;
     private Timeline timeline;
 
-    private double minRealPredictLength = 400.0;
-    private double maxRealPredictLength = 1200.0;
+    private double minRealPredictLength = 300.0;
+    private double maxRealPredictLength = 1000.0;
     private double minPredictLengthPotDt = 2000.0;
     private double maxPredictLengthPotDt = 500.0;
 
@@ -613,7 +613,8 @@ public class GameView implements Initializable {
                 // 如进攻成功，则上一杆防守失败了
                 curDefAttempt.setSuccess(!success);
                 if (success) {
-                    System.out.println("Defense failed!");
+                    System.out.println(curDefAttempt.defensePlayer.getPlayerPerson().getName() + 
+                            " defense failed!");
                 }
             }
             currentAttempt.setSuccess(success);
@@ -628,6 +629,7 @@ public class GameView implements Initializable {
             // 防守
             curDefAttempt = new DefenseAttempt(player);
             player.addDefenseAttempt(curDefAttempt);
+            System.out.println("Defense!");
         }
 
         beginCueAnimation(whiteStartingX, whiteStartingY);
@@ -747,10 +749,11 @@ public class GameView implements Initializable {
             frontBackSpin *= 1.25;
         }
 
-        // 小力杆法补偿
+        // 小力高低杆补偿
         double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.45);
+        double sideSpinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.75);
 
-        double side = spinRatio * leftRightSpin * Values.MAX_SIDE_SPIN_SPEED;
+        double side = sideSpinRatio * leftRightSpin * Values.MAX_SIDE_SPIN_SPEED;
         // 旋转产生的总目标速度
         double spinSpeed = spinRatio * frontBackSpin * Values.MAX_SPIN_SPEED *
                 playerPerson.getMaxSpinPercentage() / 100;
