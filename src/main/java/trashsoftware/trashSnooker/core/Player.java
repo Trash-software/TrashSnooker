@@ -8,6 +8,7 @@ public abstract class Player {
     protected final InGamePlayer playerPerson;
     protected final TreeMap<Ball, Integer> singlePole = new TreeMap<>();
     protected final List<PotAttempt> attempts = new ArrayList<>();
+    protected final List<DefenseAttempt> defenseAttempts = new ArrayList<>();
     protected int score;
     private boolean withdrawn = false;
 
@@ -30,6 +31,14 @@ public abstract class Player {
 
     public List<PotAttempt> getAttempts() {
         return attempts;
+    }
+    
+    public void addDefenseAttempt(DefenseAttempt defenseAttempt) {
+        defenseAttempts.add(defenseAttempt);
+    }
+
+    public List<DefenseAttempt> getDefenseAttempts() {
+        return defenseAttempts;
     }
 
     public int getNumber() {

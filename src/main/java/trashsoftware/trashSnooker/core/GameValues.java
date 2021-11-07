@@ -6,28 +6,36 @@ public class GameValues {
 
     public static final GameValues SNOOKER_VALUES = new Builder()
             .tableColor(Color.GREEN, Color.SADDLEBROWN)
-            .tableDimension(3820.0, 3569.0, 2035.0, 1788.0)
+            .tableDimension(3820.0, 3569.0, 
+                    2035.0, 1788.0,
+                    28.0)
             .ballSize(52.5)
             .holeSizeCurved(85.0, 100.0)
             .build();
 
     public static final GameValues MINI_SNOOKER_VALUES = new Builder()
             .tableColor(Color.GREEN, Color.SADDLEBROWN)
-            .tableDimension(2830.0, 2540.0, 1550.0, 1270.0)
+            .tableDimension(2830.0, 2540.0, 
+                    1550.0, 1270.0, 
+                    42.0)
             .ballSize(52.5)
             .holeSizeCurved(85.0, 100.0)
             .build();
 
     public static final GameValues CHINESE_EIGHT_VALUES = new Builder()
             .tableColor(Color.GREEN, Color.SADDLEBROWN)
-            .tableDimension(2830.0, 2540.0, 1550.0, 1270.0)
+            .tableDimension(2830.0, 2540.0, 
+                    1550.0, 1270.0, 
+                    42.0)
             .ballSize(57.15)
             .holeSizeCurved(85.0, 100.0)
             .build();
 
     public static final GameValues SIDE_POCKET = new Builder()
             .tableColor(Color.STEELBLUE, Color.BLACK)
-            .tableDimension(2905.0, 2540.0, 1635.0, 1270.0)
+            .tableDimension(2905.0, 2540.0, 
+                    1635.0, 1270.0,
+                    42.0)
             .ballSize(57.15)
             .holeSizeStraight(105.0, 105.0,
                     5.0, 20.0)
@@ -290,7 +298,9 @@ public class GameValues {
             return this;
         }
 
-        public Builder tableDimension(double outerWidth, double innerWidth, double outerHeight, double innerHeight) {
+        public Builder tableDimension(double outerWidth, double innerWidth, 
+                                      double outerHeight, double innerHeight,
+                                      double cushionHeight) {
             values.outerWidth = outerWidth;
             values.innerWidth = innerWidth;
             values.outerHeight = outerHeight;

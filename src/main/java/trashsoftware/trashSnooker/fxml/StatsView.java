@@ -131,42 +131,56 @@ public class StatsView implements Initializable {
 
             DBAccess db = DBAccess.getInstance();
             int[] potRecords = db.getBasicPotStatusAll(gameType, name);
+            
+            int rowIndex = 0;
 
             int potAttempts = potRecords[0];
             int potSuccesses = potRecords[1];
-            resultPane.add(new Label("进攻次数"), 0, 0);
-            resultPane.add(new Label(String.valueOf(potAttempts)), 1, 0);
-            resultPane.add(new Label("进攻成功次数"), 0, 1);
-            resultPane.add(new Label(String.valueOf(potSuccesses)), 1, 1);
-            resultPane.add(new Label("进攻成功率"), 0, 2);
+            resultPane.add(new Label("进攻次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(potAttempts)), 1, rowIndex++);
+            resultPane.add(new Label("进攻成功次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(potSuccesses)), 1, rowIndex++);
+            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
             resultPane.add(new Label(
                     potAttempts == 0 ? "0%" :
-                            String.format("%.1f%%", potSuccesses * 100.0 / potAttempts)), 1, 2);
+                            String.format("%.1f%%", potSuccesses * 100.0 / potAttempts)), 1, rowIndex++);
 
             int longPotAttempts = potRecords[2];
             int longPotSuccesses = potRecords[3];
-            resultPane.add(new Label("长台进攻次数"), 0, 3);
-            resultPane.add(new Label(String.valueOf(longPotAttempts)), 1, 3);
-            resultPane.add(new Label("长台进攻成功次数"), 0, 4);
-            resultPane.add(new Label(String.valueOf(longPotSuccesses)), 1, 4);
-            resultPane.add(new Label("长台进攻成功率"), 0, 5);
+            resultPane.add(new Label("长台进攻次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(longPotAttempts)), 1, rowIndex++);
+            resultPane.add(new Label("长台进攻成功次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(longPotSuccesses)), 1, rowIndex++);
+            resultPane.add(new Label("长台进攻成功率"), 0, rowIndex);
             resultPane.add(new Label(
                     longPotAttempts == 0 ? "0%" :
                             String.format("%.1f%%",
-                                    longPotSuccesses * 100.0 / longPotAttempts)), 1, 5);
+                                    longPotSuccesses * 100.0 / longPotAttempts)), 1, rowIndex++);
+
+            int defAttempts = potRecords[4];
+            int defSuccesses = potRecords[5];
+            resultPane.add(new Label("防守次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(defAttempts)), 1, rowIndex++);
+            resultPane.add(new Label("防守成功次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(defSuccesses)), 1, rowIndex++);
+            resultPane.add(new Label("防守成功率"), 0, rowIndex);
+            resultPane.add(new Label(
+                    defAttempts == 0 ? "0%" :
+                            String.format("%.1f%%",
+                                    defSuccesses * 100.0 / defAttempts)), 1, rowIndex++);
 
             if (gameType.snookerLike) {
                 int[] breaksScores = db.getSnookerBreaksTotal(gameType, name);
-                resultPane.add(new Label("总得分"), 0, 6);
-                resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, 6);
-                resultPane.add(new Label("最高单杆"), 0, 7);
-                resultPane.add(new Label(String.valueOf(breaksScores[1])), 1, 7);
-                resultPane.add(new Label("单杆50+"), 0, 8);
-                resultPane.add(new Label(String.valueOf(breaksScores[2])), 1, 8);
-                resultPane.add(new Label("单杆100+"), 0, 9);
-                resultPane.add(new Label(String.valueOf(breaksScores[3])), 1, 9);
-                resultPane.add(new Label("单杆147"), 0, 10);
-                resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, 10);
+                resultPane.add(new Label("总得分"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
+                resultPane.add(new Label("最高单杆"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(breaksScores[1])), 1, rowIndex++);
+                resultPane.add(new Label("单杆50+"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(breaksScores[2])), 1, rowIndex++);
+                resultPane.add(new Label("单杆100+"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(breaksScores[3])), 1, rowIndex++);
+                resultPane.add(new Label("单杆147"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
             }
             rightPane.getChildren().add(resultPane);
         }

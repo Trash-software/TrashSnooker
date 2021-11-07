@@ -167,19 +167,6 @@ public abstract class Game {
         return physicalCalculate();
     }
 
-
-    //    private void endMove() {
-//        System.out.println("Move end");
-//        physicsTimer.cancel();
-//        physicsCalculator = null;
-//        physicsTimer = null;
-//
-//        Player player = currentPlayer;
-//        endMoveAndUpdate();
-//        finishedCuesCount++;
-//        parent.finishCue(player, lastPotSuccess);
-//    }
-
     public WhitePrediction predictWhite(CuePlayParams params) {
         double whiteX = cueBall.x;
         double whiteY = cueBall.y;
@@ -279,6 +266,13 @@ public abstract class Game {
 
     public abstract Ball[] getAllBalls();
 
+    /**
+     * 返回白球后方障碍物的距离与高度
+     */
+    public double[] getObstacleDtHeight(double cursorPointingX, double cursorPointingY) {
+        return new double[2];
+    }
+
     public PredictedPos getPredictedHitBall(double xUnitDirection, double yUnitDirection) {
         double dx = Values.PREDICTION_INTERVAL * xUnitDirection;
         double dy = Values.PREDICTION_INTERVAL * yUnitDirection;
@@ -303,71 +297,6 @@ public abstract class Game {
         }
 
         return null;
-    }
-
-    public PredictedPos getPredictedHitBallOptimized(double xUnitDirection, double yUnitDirection) {
-        double oneDiameterX = gameValues.ballDiameter * xUnitDirection;
-        double oneDiameterY = gameValues.ballDiameter * yUnitDirection;
-//        double oneDiameterX = Values.PREDICTION_INTERVAL * xUnitDirection;
-//        double oneDiameterY = Values.PREDICTION_INTERVAL * yUnitDirection;
-
-        double x = cueBall.x + oneDiameterX;
-        double y = cueBall.y + oneDiameterY;
-
-        // 1球直径级别
-        List<PredictedPos> ballsNearPath = new ArrayList<>();
-        double near = gameValues.ballRadius + gameValues.ballDiameter;
-        Ball lastAdded = null;
-        while (x >= gameValues.leftX &&
-                x < gameValues.rightX &&
-                y >= gameValues.topY &&
-                y < gameValues.botY) {
-
-            double[] whitePos = new double[]{x, y};
-            for (Ball ball : getAllBalls()) {
-                if (!ball.isWhite()) {
-                    if (ball != lastAdded && ball.currentDtToPoint(whitePos) < near) {
-                        lastAdded = ball;
-                        ballsNearPath.add(new PredictedPos(ball, whitePos));
-                    }
-                }
-            }
-
-            x += oneDiameterX;
-            y += oneDiameterY;
-        }
-
-        double dx = Values.PREDICTION_INTERVAL * xUnitDirection;
-        double dy = Values.PREDICTION_INTERVAL * yUnitDirection;
-
-        for (PredictedPos pos : ballsNearPath) {
-            double[] whitePos = pos.getPredictedWhitePos();
-            double[] curPos = new double[]{whitePos[0] - oneDiameterX, whitePos[1] - oneDiameterY};
-            double exitPosX = whitePos[0] + oneDiameterX;
-            double exitPosY = whitePos[1] + oneDiameterY;
-            while (
-                    Algebra.distanceToPoint(curPos[0], curPos[1], exitPosX, exitPosY) >= Values.PREDICTION_INTERVAL) {
-                if (pos.getTargetBall().currentDtToPoint(curPos) < gameValues.ballDiameter) {
-                    return new PredictedPos(pos.getTargetBall(), new double[]{curPos[0] - dx, curPos[1] - dy});
-                }
-                curPos[0] += dx;
-                curPos[1] += dy;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param xUnitDirection 击球正方向的x单位长度
-     * @param yUnitDirection 击球正方向的y单位长度
-     * @return 球杆延瞄球线离最近的障碍物的距离
-     */
-    public double cueBackDistanceToObstacle(double xUnitDirection, double yUnitDirection) {
-
-        // todo: 检测袋角区域
-        return getDistanceFromWall(cueBall.getX(), cueBall.getY(), -xUnitDirection, -yUnitDirection,
-                0, Values.MAX_LENGTH);
     }
 
     /**
@@ -399,32 +328,6 @@ public abstract class Game {
             list.add(new double[][]{unitXY, hole});
         }
         return list;
-    }
-
-    private double getDistanceFromWall(double whiteX, double whiteY, double xUnitRev, double yUnitRev,
-                                       double distanceLow, double distanceHigh) {
-        double outDistance = (distanceLow + distanceHigh) / 2;
-        double inDistance = outDistance - Values.PREDICTION_INTERVAL;
-        double outX = whiteX + outDistance * xUnitRev;
-        double outY = whiteY + outDistance * yUnitRev;
-        double inX = whiteX + inDistance * xUnitRev;
-        double inY = whiteY + inDistance * yUnitRev;
-
-//        System.out.println(x + " " + y);
-        if (pointInTable(outX, outY, 0)) {  // 外点都在台内，说明距离太小
-            return getDistanceFromWall(whiteX, whiteY, xUnitRev, yUnitRev, outDistance, distanceHigh);
-        } else if (pointInTable(inX, inY, 0)) {  // 外点在台外，内点在台内，OK
-            return inDistance;
-        } else {
-            return getDistanceFromWall(whiteX, whiteY, xUnitRev, yUnitRev, distanceLow, inDistance);
-        }
-    }
-
-    private boolean pointInTable(double x, double y, double radius) {
-        return x >= gameValues.leftX + radius &&
-                x < gameValues.rightX - radius &&
-                y >= gameValues.topY + radius &&
-                y < gameValues.botY - radius;
     }
 
     public boolean isBallInHand() {

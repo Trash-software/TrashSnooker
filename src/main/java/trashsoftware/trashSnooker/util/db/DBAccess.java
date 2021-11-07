@@ -81,13 +81,21 @@ public class DBAccess {
     }
     
     private void storeAttemptsForOnePlayer(EntireGame entireGame, Game frame, Player player) {
-        int[] data = new int[4];  // attempts, successes, long attempts, long successes
+        // attempts, successes, long attempts, long successes, 
+        // defenses, defense successes
+        int[] data = new int[6];
         for (PotAttempt attempt : player.getAttempts()) {
             data[0]++;
             if (attempt.isSuccess()) data[1]++;
             if (attempt.isLongPot()) {
                 data[2]++;
                 if (attempt.isSuccess()) data[3]++;
+            }
+        }
+        for (DefenseAttempt defenseAttempt : player.getDefenseAttempts()) {
+            data[4]++;
+            if (defenseAttempt.isSuccess()) {
+                data[5]++;
             }
         }
         
@@ -98,7 +106,9 @@ public class DBAccess {
                         "Attempts = Attempts + " + data[0] + ", " +
                         "Successes = Successes + " + data[1] + ", " +
                         "LongAttempts = LongAttempts + " + data[2] + ", " +
-                        "LongSuccesses = LongSuccesses + " + data[3] +
+                        "LongSuccesses = LongSuccesses + " + data[3] + ", " +
+                        "LongSuccesses = LongSuccesses + " + data[4] + ", " +
+                        "LongSuccesses = LongSuccesses + " + data[5] +
                         queryWhere;
         try {
             executeStatement(query);
@@ -181,10 +191,10 @@ public class DBAccess {
     }
 
     /**
-     * 返回{进攻次数，进攻成功次数，长台进攻次数，长台成功次数}
+     * 返回{进攻次数，进攻成功次数，长台进攻次数，长台成功次数，防守次数，防守成功次数}
      */
     public int[] getBasicPotStatusAll(GameType gameType, String playerName) {
-        int[] array = new int[4];
+        int[] array = new int[6];
         String pns = "'" + playerName + "'";
         String typeKey = "'" + gameType.toSqlKey() + "'";
         String cmd =
@@ -200,6 +210,8 @@ public class DBAccess {
                 array[1] += result.getInt("Successes");
                 array[2] += result.getInt("LongAttempts");
                 array[3] += result.getInt("LongSuccesses");
+                array[4] += result.getInt("Defenses");
+                array[5] += result.getInt("DefenseSuccesses");
             }
             statement.close();
         } catch (SQLException e) {
@@ -224,11 +236,13 @@ public class DBAccess {
             
             while (result.next()) {
                 int index = result.getInt("FrameIndex");
-                int[] array = new int[4];
+                int[] array = new int[6];
                 array[0] = result.getInt("Attempts");
                 array[1] = result.getInt("Successes");
                 array[2] = result.getInt("LongAttempts");
                 array[3] = result.getInt("LongSuccesses");
+                array[4] += result.getInt("Defenses");
+                array[5] += result.getInt("DefenseSuccesses");
                 durations.put(index, result.getInt("DurationSeconds"));
                 String frameWinner = result.getString("WinnerName");
                 if (frameWinner == null) {
@@ -389,7 +403,7 @@ public class DBAccess {
                 entireGame.getStartTimeSqlString() + ", " +
                 game.frameIndex + ", " +
                 "'" + playerName + "', " +
-                "0, 0, 0, 0" +
+                "0, 0, 0, 0, 0, 0" +
                 ");";
         executeStatement(command1);
         

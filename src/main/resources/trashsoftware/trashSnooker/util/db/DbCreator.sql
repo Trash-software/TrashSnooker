@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS GeneralRecord (
     Successes INTEGER DEFAULT 0,
     LongAttempts INTEGER DEFAULT 0,
     LongSuccesses INTEGER DEFAULT 0,
+    Defenses INTEGER DEFAULT 0,
+    DefenseSuccesses INTEGER DEFAULT 0,
     PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName)
 );
 

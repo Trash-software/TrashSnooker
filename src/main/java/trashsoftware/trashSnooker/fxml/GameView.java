@@ -46,11 +46,17 @@ public class GameView implements Initializable {
     public static final Font POOL_NUMBER_FONT = new Font(8.0);
 
     public static final double HAND_DT_TO_MAX_PULL = 30.0;
+    
+    public static final double MAX_CUE_ANGLE = 60;
 
     public double scale = 0.32;
     public double frameTimeMs = 20.0;
     @FXML
     Canvas gameCanvas;
+    @FXML
+    Canvas cueAngleCanvas;
+    @FXML
+    Label cueAngleLabel;
     @FXML
     Canvas ballCanvas;
     @FXML
@@ -83,6 +89,7 @@ public class GameView implements Initializable {
     private double cueRadius = 4.0;
     private GraphicsContext graphicsContext;
     private GraphicsContext ballCanvasGc;
+    private GraphicsContext cueAngleCanvasGc;
     private Stage stage;
     private InGamePlayer player1;
     private InGamePlayer player2;
@@ -96,6 +103,7 @@ public class GameView implements Initializable {
     //    private PotAttempt currentAttempt;
     private Movement movement;
     private boolean playingMovement = false;
+    private DefenseAttempt curDefAttempt;
 
     // 用于播放运杆动画时持续显示预测线（含出杆随机偏移）
     private SavedPrediction predictionOfCue;
@@ -104,6 +112,9 @@ public class GameView implements Initializable {
     private double mouseX, mouseY;
     private double cuePointX, cuePointY;  // 杆法的击球点
     private double intentCuePointX = -1, intentCuePointY = -1;  // 计划的杆法击球点
+    private double cueAngleDeg = 5.0;
+    private double cueAngleBaseVer = 10.0;
+    private double cueAngleBaseHor = 10.0;
     private CueAnimationPlayer cueAnimationPlayer;
 
     private boolean isDragging;
@@ -119,11 +130,13 @@ public class GameView implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         graphicsContext = gameCanvas.getGraphicsContext2D();
         ballCanvasGc = ballCanvas.getGraphicsContext2D();
+        cueAngleCanvasGc = cueAngleCanvas.getGraphicsContext2D();
 
         graphicsContext.setTextAlign(TextAlignment.CENTER);
 
         addListeners();
         restoreCuePoint();
+        restoreCueAngle();
 
         powerSlider.setShowTickLabels(true);
     }
@@ -202,6 +215,7 @@ public class GameView implements Initializable {
         drawScoreBoard(justCuedPlayer);
         drawTargetBoard();
         restoreCuePoint();
+        restoreCueAngle();
         Platform.runLater(() -> {
             powerSlider.setValue(40.0);
             powerSlider.setMajorTickUnit(
@@ -301,6 +315,24 @@ public class GameView implements Initializable {
             cuePointY = y;
         }
     }
+    
+    private void setCueAnglePoint(double x, double y) {
+        double relX = x - cueAngleBaseHor;
+        double relY = cueAngleCanvas.getHeight() - cueAngleBaseVer - y;
+        double rad = Math.atan2(relY, relX);
+        double deg = Math.toDegrees(rad);
+        cueAngleDeg = Math.min(MAX_CUE_ANGLE, Math.max(0, deg));
+        setCueAngleLabel();
+    }
+    
+    private void restoreCueAngle() {
+        cueAngleDeg = 5.0;
+        setCueAngleLabel();
+    }
+    
+    private void setCueAngleLabel() {
+        cueAngleLabel.setText(String.format("%.1f°", cueAngleDeg));
+    }
 
     private void onCueBallCanvasClicked(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
@@ -312,6 +344,18 @@ public class GameView implements Initializable {
 
     private void onCueBallCanvasDragged(MouseEvent mouseEvent) {
         setCuePoint(mouseEvent.getX(), mouseEvent.getY());
+    }
+    
+    private void onCueAngleCanvasClicked(MouseEvent mouseEvent) {
+        if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+            setCueAnglePoint(mouseEvent.getX(), mouseEvent.getY());
+        } else if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+            restoreCueAngle();
+        }
+    }
+
+    private void onCueAngleCanvasDragged(MouseEvent mouseEvent) {
+        setCueAnglePoint(mouseEvent.getX(), mouseEvent.getY());
     }
 
     private void onSingleClick(MouseEvent mouseEvent) {
@@ -475,7 +519,6 @@ public class GameView implements Initializable {
         }
 
         double power = getPowerPercentage();
-        double selectedPower = getSelectedPower();
         final double wantPower = power;
         // 因为力量控制导致的力量偏差
         Random random = new Random();
@@ -483,9 +526,6 @@ public class GameView implements Initializable {
         powerError = powerError * (100.0 - playerPerson.getPowerControl()) / 100.0;
         power += power * powerError;
         System.out.println("Want power: " + wantPower + ", actual power: " + power);
-
-        double personPower = selectedPower / playerPerson.getMaxPowerPercentage();  // 球手的用力程度
-        double ctrlAblePwr = playerPerson.getControllablePowerPercentage();
 
         intentCuePointX = cuePointX;
         intentCuePointY = cuePointY;
@@ -498,14 +538,6 @@ public class GameView implements Initializable {
         double ySig = muSigXy[3];
 
         double mulWithPower = getErrorMultiplierOfPower(playerPerson);
-//        if (selectedPower > ctrlAblePwr) {
-//            // 超过正常发力范围，打点准确度大幅下降
-//            // 一般来说，球手的最大力量大于可控力量15%左右
-//            // 打点准确度最大应下降5倍
-//            double mul = 1 + (selectedPower - ctrlAblePwr) / 3;
-//            System.out.println("Too powerful, " + mul);
-//            xSig *= mul;
-//        }
 
         xError = xError * xSig + muSigXy[0];
         yError = yError * ySig + muSigXy[2];
@@ -548,16 +580,26 @@ public class GameView implements Initializable {
 
         movement = game.getGame().cue(params);
         if (currentAttempt != null) {
-            currentAttempt.setSuccess(currentAttempt.getTargetBall().isPotted());
+            boolean success = currentAttempt.getTargetBall().isPotted();
+            if (curDefAttempt != null && curDefAttempt.defensePlayer != player) {
+                // 如进攻成功，则上一杆防守失败了
+                curDefAttempt.setSuccess(!success);
+                if (success) {
+                    System.out.println("Defense failed!");
+                }
+            }
+            currentAttempt.setSuccess(success);
             player.addAttempt(currentAttempt);
-//            game.potAttempt(currentAttempt, currentAttempt.getTargetBall().isPotted());
-//            player.getInGamePlayer().getPersonRecord().potAttempt(currentAttempt, 
-//                    currentAttempt.getTargetBall().isPotted());
             if (currentAttempt.getTargetBall().isPotted()) {
                 System.out.println("Pot success!");
             } else {
                 System.out.println("Pot failed!");
             }
+            curDefAttempt = null;
+        } else {
+            // 防守
+            curDefAttempt = new DefenseAttempt(player);
+            player.addDefenseAttempt(curDefAttempt);
         }
 
         beginCueAnimation(whiteStartingX, whiteStartingY);
@@ -607,6 +649,11 @@ public class GameView implements Initializable {
         double vy = unitXYWithSpin[1] * power * Values.MAX_POWER_SPEED / 100.0;
 
         double[] spins = calculateSpins(vx, vy, playerPerson);
+        if (cueAngleDeg > 5) {
+            // 出杆越陡，球速越慢
+            vx *= (95 - cueAngleDeg) / 90.0;
+            vy *= (95 - cueAngleDeg) / 90.0;
+        }
         return new CuePlayParams(vx, vy, spins[0], spins[1], spins[2]);
     }
 
@@ -679,11 +726,29 @@ public class GameView implements Initializable {
         // 旋转产生的总目标速度
         double spinSpeed = spinRatio * frontBackSpin * Values.MAX_SPIN_SPEED *
                 playerPerson.getMaxSpinPercentage() / 100;
+        
+        // (spinX, spinY)是一个向量，指向球因为旋转想去的方向
         double spinX = vx * (spinSpeed / speed);
         double spinY = vy * (spinSpeed / speed);
 //        System.out.printf("x %f, y %f, total %f, side %f\n", spinX, spinY, spinSpeed, side);
+        
+        double mbummeMag = cueAngleDeg / 90.0 / 1000;  // 扎杆强度
+        double[] norm = Algebra.normalVector(vx, vy);  // 法线，扎杆就在这个方向
+        double mbummeX = side * -norm[0] * mbummeMag;
+        double mbummeY = side * -norm[1] * mbummeMag;
+        
+        if (cueAngleDeg > 5) {
+            // 扎杆在一定程度上减弱其他杆法
+            double mul = (95 - cueAngleDeg) / 90.0;
+            side *= mul;
+            spinX *= mul;
+            spinY *= mul;
+        }
 
-        return new double[]{spinX, spinY, side};
+//        System.out.printf("spin x: %f, spin y: %f, mx: %f, my: %f\n",
+//                spinX, spinY, mbummeX, mbummeY);
+
+        return new double[]{spinX + mbummeX, spinY + mbummeY, side};
     }
 
     private void restoreCuePoint() {
@@ -704,6 +769,7 @@ public class GameView implements Initializable {
     private void oneFrame() {
         draw();
         drawCueBallCanvas();
+        drawCueAngleCanvas();
         drawCue();
     }
 
@@ -733,6 +799,9 @@ public class GameView implements Initializable {
 
         ballCanvas.setOnMouseClicked(this::onCueBallCanvasClicked);
         ballCanvas.setOnMouseDragged(this::onCueBallCanvasDragged);
+        
+        cueAngleCanvas.setOnMouseClicked(this::onCueAngleCanvasClicked);
+        cueAngleCanvas.setOnMouseDragged(this::onCueAngleCanvasDragged);
     }
 
     private void drawPottedWhiteBall() {
@@ -1062,7 +1131,13 @@ public class GameView implements Initializable {
             predictLineTotalLen = maxLen - potDtInRange * lineLengthRange;
         }
         double side = Math.abs(cuePointX - cueCanvasWH / 2) / cueCanvasWH;  // 0和0.5之间
-        return predictLineTotalLen * (1 - side) * playerPerson.getPrecisionPercentage() / 100;  // 加塞影响瞄准
+        double afterSide = 
+                predictLineTotalLen * (1 - side) * playerPerson.getPrecisionPercentage() / 100;  // 加塞影响瞄准
+        double mul = 1; // 抬高杆尾影响瞄准
+        if (cueAngleDeg > 5) {
+            mul *= 1 - ((cueAngleDeg - 5) / 75);
+        }
+        return afterSide * mul;
     }
 
     private void drawCursor() {
@@ -1521,6 +1596,34 @@ public class GameView implements Initializable {
 //        graphicsContext.strokePolygon(xs, ys, 4);
 
         // 杆尾圆弧
+    }
+    
+    private void drawCueAngleCanvas() {
+        double angleCanvasWh = cueAngleCanvas.getWidth();
+        double arcRadius = 60.0;
+        cueAngleCanvasGc.setFill(WHITE);
+        cueAngleCanvasGc.fillRect(0, 0, 
+                angleCanvasWh, angleCanvasWh);
+        cueAngleCanvasGc.setStroke(Color.GRAY);
+        cueAngleCanvasGc.setLineWidth(1.0);
+        cueAngleCanvasGc.strokeArc(
+                -arcRadius + cueAngleBaseHor,
+                cueAngleBaseVer,
+                arcRadius * 2,
+                arcRadius * 2,
+                0,
+                90,
+                ArcType.OPEN
+        );
+        
+        cueAngleCanvasGc.setStroke(BLACK);
+        cueAngleCanvasGc.setLineWidth(3.0);
+        double lineWidth = angleCanvasWh - cueAngleBaseHor;
+        
+        cueAngleCanvasGc.strokeLine(cueAngleBaseHor, angleCanvasWh - cueAngleBaseVer, 
+                angleCanvasWh, angleCanvasWh - cueAngleBaseVer - 
+                        Math.tan(Math.toRadians(cueAngleDeg)) * lineWidth);
+        
     }
 
     private void drawCueBallCanvas() {

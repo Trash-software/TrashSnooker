@@ -42,14 +42,17 @@
             <MenuItem text="clear red balls" onAction="#clearRedBallsAction"/>
         </Menu>
     </MenuBar>
+    
+    <Canvas fx:id="cueAngleCanvas" GridPane.rowIndex="1" width="80.0" height="80.0"/>
+    <Label fx:id="cueAngleLabel" GridPane.rowIndex="2" text="5°"/>
 
-    <Canvas fx:id="ballCanvas" GridPane.rowIndex="1" width="60.0" height="60.0"/>
-
-    <VBox alignment="TOP_CENTER" GridPane.rowIndex="2" spacing="10.0">
+    <Canvas fx:id="ballCanvas" GridPane.rowIndex="3" width="80.0" height="80.0"/>
+    
+    <VBox alignment="TOP_CENTER" GridPane.rowIndex="4" spacing="10.0">
         <Slider fx:id="powerSlider" prefHeight="320.0" orientation="VERTICAL"/>
         <Label fx:id="powerLabel"/>
+        <Button fx:id="cueButton" text="击球" onAction="#cueAction"/>
     </VBox>
-    <Button fx:id="cueButton" text="击球" onAction="#cueAction" GridPane.rowIndex="3"/>
 
     <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="4">
         <Canvas fx:id="gameCanvas" />

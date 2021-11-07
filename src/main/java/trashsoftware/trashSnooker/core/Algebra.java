@@ -11,8 +11,12 @@ public class Algebra {
         return new double[]{mulX - vx, mulY - vy};
     }
 
+    public static double[] normalVector(double x, double y) {
+        return new double[]{y, -x};
+    }
+
     public static double[] normalVector(double[] vec) {
-        return new double[]{vec[1], -vec[0]};
+        return normalVector(vec[0], vec[1]);
     }
 
     public static double vectorDot(double ax, double ay, double bx, double by) {

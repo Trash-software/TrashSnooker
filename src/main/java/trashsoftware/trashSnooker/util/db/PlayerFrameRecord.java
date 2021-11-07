@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class PlayerFrameRecord implements Comparable<PlayerFrameRecord> {
     
     public final int frameIndex;
-    public final int[] basicPots;  // attempts, success, long, longSuccess
+    public final int[] basicPots;  // attempts, success, long, longSuccess, defenses, defenseSuccesses
     public final String winnerName;
     
     PlayerFrameRecord(int frameIndex, int[] basicPots, String winnerName) {
