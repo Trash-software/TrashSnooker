@@ -9,9 +9,14 @@ public class GameSaver {
     
     public static final String SAVE_PATH = "user" + File.separator + "saved.json";
     
+    public static boolean hasSavedGame() {
+        return new File(SAVE_PATH).exists();
+    }
+    
     public static void save(EntireGame game) {
 
         JSONObject object = new JSONObject(game);
+        object.put("startTime", game.getStartTimeSqlString());
         object.put("totalFrames", game.totalFrames);
     }
     

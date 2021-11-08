@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -13,6 +14,7 @@ import trashsoftware.trashSnooker.core.GameType;
 import trashsoftware.trashSnooker.core.InGamePlayer;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.GameSaver;
 import trashsoftware.trashSnooker.util.Recorder;
 
 import java.io.IOException;
@@ -21,6 +23,9 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 
 public class MainView implements Initializable {
+    
+    @FXML
+    Button resumeButton;
     
     @FXML
     ComboBox<Integer> totalFramesBox;
@@ -38,6 +43,8 @@ public class MainView implements Initializable {
         initTotalFramesBox();
         loadPlayerList();
         loadCueList();
+        
+        resumeButton.setDisable(!GameSaver.hasSavedGame());
     }
 
     public void setStage(Stage stage) {
@@ -141,6 +148,11 @@ public class MainView implements Initializable {
         } catch (IOException e) {
             EventLogger.log(e);
         }
+    }
+    
+    @FXML
+    void resumeAction() {
+        
     }
 
     @FXML

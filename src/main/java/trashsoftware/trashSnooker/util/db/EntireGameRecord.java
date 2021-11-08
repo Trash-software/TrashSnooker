@@ -1,8 +1,5 @@
 package trashsoftware.trashSnooker.util.db;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.SortedMap;
 
 public abstract class EntireGameRecord {
@@ -18,7 +15,7 @@ public abstract class EntireGameRecord {
         this.frameRecords = frameRecords;
         this.frameDurations = frameDurations;
     }
-    
+
     public int[][] totalBasicStats() {
         int[][] res = new int[2][6];
         for (PlayerFrameRecord[] oneFrame : frameRecords.values()) {
@@ -28,7 +25,7 @@ public abstract class EntireGameRecord {
             res[0][3] += oneFrame[0].basicPots[3];
             res[0][4] += oneFrame[0].basicPots[4];
             res[0][5] += oneFrame[0].basicPots[5];
-            
+
             res[1][0] += oneFrame[1].basicPots[0];
             res[1][1] += oneFrame[1].basicPots[1];
             res[1][2] += oneFrame[1].basicPots[2];
@@ -38,7 +35,7 @@ public abstract class EntireGameRecord {
         }
         return res;
     }
-    
+
     public int[] getP1P2WinsCount() {
         int[] res = new int[2];
         for (PlayerFrameRecord[] twoFrames : frameRecords.values()) {
@@ -66,7 +63,7 @@ public abstract class EntireGameRecord {
     public static class Snooker extends EntireGameRecord {
 
         Snooker(EntireGameTitle title,
-                SortedMap<Integer, PlayerFrameRecord[]> frameRecords, 
+                SortedMap<Integer, PlayerFrameRecord[]> frameRecords,
                 SortedMap<Integer, Integer> frameDurations) {
             super(title, frameRecords, frameDurations);
         }
@@ -79,9 +76,9 @@ public abstract class EntireGameRecord {
             for (PlayerFrameRecord[] records : getFrameRecords().values()) {
                 PlayerFrameRecord.Snooker p1r = (PlayerFrameRecord.Snooker) records[0];
                 PlayerFrameRecord.Snooker p2r = (PlayerFrameRecord.Snooker) records[1];
-                
+
                 res[0][0] += p1r.snookerScores[0];
-                if (res[0][1] > p1r.snookerScores[1]) {
+                if (res[0][1] < p1r.snookerScores[1]) {
                     res[0][1] = p1r.snookerScores[1];
                 }
                 res[0][2] += p1r.snookerScores[2];
@@ -89,7 +86,7 @@ public abstract class EntireGameRecord {
                 res[0][4] += p1r.snookerScores[4];
 
                 res[1][0] += p2r.snookerScores[0];
-                if (res[1][1] > p2r.snookerScores[1]) {
+                if (res[1][1] < p2r.snookerScores[1]) {
                     res[1][1] = p2r.snookerScores[1];
                 }
                 res[1][2] += p2r.snookerScores[2];

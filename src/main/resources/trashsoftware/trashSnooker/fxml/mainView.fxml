@@ -41,4 +41,8 @@
     <Button text="中式八球" onAction="#chineseEightAction"/>
     <Button text="花式九球" onAction="#sidePocketAction"/>
 
+    <Separator/>
+
+    <Button fx:id="resumeButton" text="恢复上次游戏" onAction="#resumeAction"/>
+
 </VBox>

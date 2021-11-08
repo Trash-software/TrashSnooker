@@ -8,11 +8,16 @@ import javafx.stage.Window;
 import java.util.Optional;
 
 public class AlertShower {
-
+    
     public static boolean askConfirmation(Window owner, String content, String header) {
+        return askConfirmation(owner, content, header, "是", "否");
+    }
+
+    public static boolean askConfirmation(Window owner, String content, String header,
+                                          String positiveText, String negativeText) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, content,
-                new ButtonType("否", ButtonBar.ButtonData.NO),
-                new ButtonType("是", ButtonBar.ButtonData.YES));
+                new ButtonType(negativeText, ButtonBar.ButtonData.NO),
+                new ButtonType(positiveText, ButtonBar.ButtonData.YES));
         alert.initOwner(owner);
         alert.setHeaderText(header);
 

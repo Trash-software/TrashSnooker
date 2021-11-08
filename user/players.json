@@ -118,6 +118,19 @@
     "powerControl": 85.0,
     "privateCues": ["准神杆"]
   },
+  "Smart": {
+    "spin": 97,
+    "precision": 100,
+    "name": "Smart",
+    "maxPower": 100,
+    "controllablePower": 88,
+    "pullDt": [50.0, 250.0],
+    "cuePlayType": "p1,h1000,e500;l,l,r,r,l,l,r,r",
+    "cueSwingMag": 4,
+    "cuePointMuSigma": [0, 1, 0, 10],
+    "powerControl": 90.0,
+    "privateCues": []
+  },
   "莽大力": {
     "spin": 100,
     "precision": 40,

@@ -3,7 +3,6 @@ package trashsoftware.trashSnooker.core;
 public class CueBackPredictObject extends ObjectOnTable {
     
     final double eachMove;
-    double distance;
     
     public CueBackPredictObject(GameValues gameValues, double radius, double eachMove) {
         super(gameValues, radius);

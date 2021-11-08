@@ -82,13 +82,6 @@ public class EntireGame {
         return totalFrames;
     }
 
-//    public void potAttempt(PotAttempt attempt) {
-//        game.addAttempt(attempt);
-//        DBAccess db = DBAccess.getInstance();
-//        db.attackOneBall(this, attempt.getPlayerPerson().getName(),
-//                success, attempt.isLongPot());
-//    }
-
     public boolean isFinished() {
         return p1Wins > totalFrames / 2 || p2Wins > totalFrames / 2;
     }

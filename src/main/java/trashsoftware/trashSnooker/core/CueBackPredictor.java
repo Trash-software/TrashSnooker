@@ -41,6 +41,11 @@ public class CueBackPredictor {
             Result res = checkBalls(predictor);
             if (res != null) return res;
             
+            if (predictor.willPot()) {
+                return new Result(predictor.distance + game.gameValues.midHoleDiameter,
+                        game.gameValues.cushionHeight);
+            }
+            
             // 检测袋口区域
             int holeAreaResult = predictor.tryHitHoleArea();
             if (holeAreaResult != 0) {
@@ -54,9 +59,9 @@ public class CueBackPredictor {
             // 检测裤边
             if (predictor.hitWall()) {
                 return new Result(predictor.distance, game.gameValues.cushionHeight);
-            } else {
-                predictor.normalMove();
             }
+            
+            predictor.normalMove();
         }
         return null;
     }

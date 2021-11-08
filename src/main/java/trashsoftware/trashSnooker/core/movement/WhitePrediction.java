@@ -8,6 +8,7 @@ import java.util.List;
 public class WhitePrediction {
     public final double whiteX;
     public final double whiteY;
+    private final List<double[]> whitePath = new ArrayList<>();
     private Ball firstCollide;
     // 目标球碰撞后的单位行进方向
     private double ballDirectionX;
@@ -18,8 +19,7 @@ public class WhitePrediction {
     private double whiteCollisionX;
     private double whiteCollisionY;
     private boolean hitWallBeforeHitBall;
-    private final List<double[]> whitePath = new ArrayList<>();
-    
+
     public WhitePrediction(Ball whiteBall) {
         whiteX = whiteBall.getX();
         whiteY = whiteBall.getY();
@@ -31,7 +31,7 @@ public class WhitePrediction {
 
     public void setFirstCollide(Ball firstCollide, boolean hitWallBeforeHitBall,
                                 double ballDirectionX, double ballDirectionY,
-                                double whiteDirectionXBeforeCollision, 
+                                double whiteDirectionXBeforeCollision,
                                 double whiteDirectionYBeforeCollision,
                                 double whiteCollisionX, double whiteCollisionY) {
         this.firstCollide = firstCollide;

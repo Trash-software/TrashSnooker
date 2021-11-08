@@ -52,7 +52,7 @@ public class DBAccess {
 //        System.out.println("========");
 //        db.printQuery("SELECT * FROM GeneralRecord WHERE PlayerName = 'Kid';");
 //        System.out.println("========");
-        db.printQuery("SELECT * FROM GeneralRecord;");
+        db.printQuery("SELECT * FROM SnookerRecord;");
         
         db.printQuery("SELECT * FROM Game INNER JOIN GeneralRecord USING (EntireBeginTime, FrameIndex)" +
                 " WHERE EntireBeginTime = '2021-11-06 17:20:25.53';");

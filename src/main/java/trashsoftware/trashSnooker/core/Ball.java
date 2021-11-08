@@ -100,6 +100,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         sideSpin = 0.0;
         xSpin = 0.0;
         ySpin = 0.0;
+        distance = 0.0;
     }
 
     public boolean isRed() {
@@ -138,6 +139,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     }
 
     protected void normalMove() {
+        distance += Math.hypot(vx, vy);
         x = nextX;
         y = nextY;
         msSinceCue++;
@@ -203,18 +205,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
      *
      * @return (0.6, 1.2)之间的一个值
      */
-    private double midHolePowerFactor() {
+    protected double midHolePowerFactor() {
         return 1.2 - (getSpeed() * Game.calculationsPerSec / Values.MAX_POWER_SPEED) * 0.6;
-    }
-
-    boolean willPot() {
-        double midHoleFactor = midHolePowerFactor();
-        return predictedDtToPoint(values.topLeftHoleXY) < values.cornerHoleRadius ||
-                predictedDtToPoint(values.botLeftHoleXY) < values.cornerHoleRadius ||
-                predictedDtToPoint(values.topRightHoleXY) < values.cornerHoleRadius ||
-                predictedDtToPoint(values.botRightHoleXY) < values.cornerHoleRadius ||
-                predictedDtToPoint(values.topMidHoleXY) < values.midHoleRadius * midHoleFactor ||
-                predictedDtToPoint(values.botMidHoleXY) < values.midHoleRadius * midHoleFactor;
     }
 
     protected void hitHoleArcArea(double[] arcXY) {
@@ -426,6 +418,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         xSpin = 0.0;
         ySpin = 0.0;
         sideSpin = 0.0;
+        distance = 0.0;
         justHit = null;
     }
 

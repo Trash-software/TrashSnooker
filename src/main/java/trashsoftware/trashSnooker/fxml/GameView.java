@@ -128,6 +128,7 @@ public class GameView implements Initializable {
     private double maxRealPredictLength = 1000.0;
     private double minPredictLengthPotDt = 2000.0;
     private double maxPredictLengthPotDt = 500.0;
+    private double whitePredictLenAfterWall = 1000.0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -226,13 +227,8 @@ public class GameView implements Initializable {
         });
         setButtonsCueEnd();
 
-//        if (currentAttempt != null) {
-//            justCuedPlayer.getInGamePlayer().getPersonRecord().potAttempt(currentAttempt, potSuccess);
-//        }
-
         if (game.getGame().isEnded()) {
             endFrame();
-//            Recorder.save();
         } else if ((game.getGame() instanceof AbstractSnookerGame) &&
                 ((AbstractSnookerGame) game.getGame()).canReposition()) {
             askReposition();
@@ -259,6 +255,7 @@ public class GameView implements Initializable {
                             game.getGame().getPlayer2().getScore(),
                             game.getPlayer2().getPlayerPerson().getName()),
                     String.format("%s 赢得一局。", wonPlayer.getPlayerPerson().getName()));
+            
             if (entireGameEnd) {
                 AlertShower.showInfo(stage,
                         String.format("%s (%d) : (%d) %s",
@@ -268,9 +265,23 @@ public class GameView implements Initializable {
                                 game.getPlayer2().getPlayerPerson().getName()),
                         String.format("%s 胜利。", wonPlayer.getPlayerPerson().getName()));
             } else {
-                game.startNextFrame();
-                drawScoreBoard(game.getGame().getCuingPlayer());
-                drawTargetBoard();
+                boolean startNextFrame = AlertShower.askConfirmation(
+                        stage,
+                        "是否开始下一局？",
+                        "开始下一局？",
+                        "是",
+                        "保存并退出"
+                );
+                if (startNextFrame) {
+                    Platform.runLater(() -> {
+                        game.startNextFrame();
+                        drawScoreBoard(game.getGame().getCuingPlayer());
+                        drawTargetBoard();
+                    });
+                } else {
+                    game.save();
+                    stage.hide();
+                }
             }
         });
     }
@@ -458,6 +469,7 @@ public class GameView implements Initializable {
         game.getGame().forcedTerminate();
         movement = null;
         playingMovement = false;
+        setButtonsCueEnd();
     }
 
     @FXML
@@ -689,23 +701,25 @@ public class GameView implements Initializable {
 
     void setDifficulty(SettingsView.Difficulty difficulty) {
         if (difficulty == SettingsView.Difficulty.EASY) {
-            minRealPredictLength = 800.0;
-            maxRealPredictLength = 2400.0;
+            minRealPredictLength = 600.0;
+            maxRealPredictLength = 2000.0;
         } else if (difficulty == SettingsView.Difficulty.MEDIUM) {
-            minRealPredictLength = 400.0;
-            maxRealPredictLength = 1200.0;
+            minRealPredictLength = 300.0;
+            maxRealPredictLength = 1000.0;
         } else if (difficulty == SettingsView.Difficulty.HARD) {
-            minRealPredictLength = 200.0;
-            maxRealPredictLength = 600.0;
+            minRealPredictLength = 150.0;
+            maxRealPredictLength = 500.0;
         }
     }
 
     private void setButtonsCueStart() {
         withdrawMenu.setDisable(true);
+        cueButton.setDisable(true);
     }
 
     private void setButtonsCueEnd() {
         withdrawMenu.setDisable(false);
+        cueButton.setDisable(false);
     }
 
     private double getUnitFrontBackSpin() {
@@ -1164,10 +1178,10 @@ public class GameView implements Initializable {
         double side = Math.abs(cuePointX - cueCanvasWH / 2) / cueCanvasWH;  // 0和0.5之间
         double afterSide =
                 predictLineTotalLen * (1 - side) * playerPerson.getPrecisionPercentage() / 100;  // 加塞影响瞄准
-        double mul = 1; // 抬高杆尾影响瞄准
-        if (cueAngleDeg > 5) {
-            mul *= 1 - ((cueAngleDeg - 5) / 75);
-        }
+        double mul = 1 - Math.sin(Math.toRadians(cueAngleDeg)); // 抬高杆尾影响瞄准
+//        if (cueAngleDeg > 5) {
+//            mul *= 1 - ((cueAngleDeg - 5) / (MAX_CUE_ANGLE + 5));
+//        }
         return afterSide * mul;
     }
 
@@ -1182,7 +1196,7 @@ public class GameView implements Initializable {
 //            predict = prediction;
 //        } else {
         CuePlayParams params = generateCueParams();
-        WhitePrediction predict = game.getGame().predictWhite(params);
+        WhitePrediction predict = game.getGame().predictWhite(params, whitePredictLenAfterWall);
         if (predict == null) return;
 //        }
 

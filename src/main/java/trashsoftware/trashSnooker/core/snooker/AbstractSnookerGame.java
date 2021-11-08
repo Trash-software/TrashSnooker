@@ -498,17 +498,21 @@ public abstract class AbstractSnookerGame extends Game {
     private void initRedBalls() {
         double curX = pinkBallPos()[0] + gameValues.ballDiameter + Game.MIN_GAP_DISTANCE;  // 粉球与红球堆空隙
         double rowStartY = gameValues.midY;
-        double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0)) + Game.MIN_PLACE_DISTANCE * 0.8;
+        double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0)) + 
+                Game.MIN_PLACE_DISTANCE * 0.8;
+        
+        double gapDt = Game.MIN_PLACE_DISTANCE;
+        
         int ballCountInRow = 1;
         int index = 0;
         for (int row = 0; row < 5; ++row) {
             double y = rowStartY;
             for (int col = 0; col < ballCountInRow; ++col) {
                 redBalls[index++] = new SnookerBall(1, new double[]{curX, y}, gameValues);
-                y += gameValues.ballDiameter + Game.MIN_PLACE_DISTANCE;
+                y += gameValues.ballDiameter + gapDt;
             }
             ballCountInRow++;
-            rowStartY -= gameValues.ballRadius + Game.MIN_PLACE_DISTANCE * 0.6;
+            rowStartY -= gameValues.ballRadius + gapDt * 0.6;
             curX += rowOccupyX;
             if (index >= numRedBalls()) break;
         }

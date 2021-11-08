@@ -18,10 +18,7 @@ import trashsoftware.trashSnooker.util.db.EntireGameTitle;
 import trashsoftware.trashSnooker.util.db.PlayerFrameRecord;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class StatsView implements Initializable {
     @FXML
@@ -131,7 +128,7 @@ public class StatsView implements Initializable {
 
             DBAccess db = DBAccess.getInstance();
             int[] potRecords = db.getBasicPotStatusAll(gameType, name);
-            
+
             int rowIndex = 0;
 
             int potAttempts = potRecords[0];
@@ -220,11 +217,26 @@ public class StatsView implements Initializable {
         private static ObservableList<TreeItem<RecordTree>> buildChildren(
                 GameType gameType, String playerName, String type) {
             ObservableList<TreeItem<RecordTree>> children = FXCollections.observableArrayList();
+            DBAccess dbAccess = DBAccess.getInstance();
+            List<EntireGameTitle> gameRecords = dbAccess.getAllMatches(gameType, playerName);
             if ("time".equals(type)) {
-                DBAccess dbAccess = DBAccess.getInstance();
-                List<EntireGameTitle> gameRecords = dbAccess.getAllMatches(gameType, playerName);
-                for (EntireGameTitle egr : gameRecords) {
-                    children.add(new TreeItem<>(new MatchRecord(egr)));
+                for (EntireGameTitle egt : gameRecords) {
+                    children.add(new TreeItem<>(new MatchRecord(egt)));
+                }
+            } else {
+                Map<String, List<EntireGameTitle>> opponentMap = new HashMap<>();
+                for (EntireGameTitle egt : gameRecords) {
+                    String oppoName = egt.player1Name.equals(playerName) ?
+                            egt.player2Name : egt.player1Name;
+                    List<EntireGameTitle> list =
+                            opponentMap.get(oppoName);
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        opponentMap.put(oppoName, list);
+                        children.add(new TreeItem<>(
+                                new OpponentRecord(playerName, oppoName, list)));
+                    }
+                    list.add(egt);
                 }
             }
             return children;
@@ -254,8 +266,102 @@ public class StatsView implements Initializable {
 
     }
 
+    public static class OpponentRecord extends RecordTree {
+        final String thisPlayer;
+        final List<EntireGameTitle> egtList;
+
+        OpponentRecord(String thisPlayer, String opponent, List<EntireGameTitle> egtList) {
+            super(opponent);
+            this.thisPlayer = thisPlayer;
+            this.egtList = egtList;
+        }
+
+        @Override
+        void setRightPane(Pane rightPane) {
+            rightPane.getChildren().clear();
+
+            String oppoName = shown;
+
+            List<EntireGameRecord> entireRecords = new ArrayList<>();
+            for (EntireGameTitle egt : egtList) {
+                entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));
+            }
+
+            GridPane gridPane = new GridPane();
+            gridPane.setVgap(10.0);
+            gridPane.setHgap(20.0);
+            gridPane.setAlignment(Pos.CENTER);
+
+            SortedMap<Integer, int[]> playerOppoWinsByTotalFrames = new TreeMap<>();
+            int thisWinFrames = 0;
+            int oppoWinFrames = 0;
+            int thisWinMatches = 0;
+            for (EntireGameRecord egr : entireRecords) {
+                boolean thisIsP1 = egr.getTitle().player1Name.equals(thisPlayer);
+                int[] p1p2wins = egr.getP1P2WinsCount();
+                int[] playerOppoWinsInThisMatchSize =
+                        playerOppoWinsByTotalFrames.computeIfAbsent(
+                                egr.getTitle().totalFrames, k -> new int[2]);
+                if (thisIsP1) {
+                    if (p1p2wins[0] > p1p2wins[1]) {
+                        thisWinMatches++;
+                        playerOppoWinsInThisMatchSize[0]++;
+                    } else {
+                        playerOppoWinsInThisMatchSize[1]++;
+                    }
+                    thisWinFrames += p1p2wins[0];
+                    oppoWinFrames += p1p2wins[1];
+                } else {
+                    if (p1p2wins[1] > p1p2wins[0]) {
+                        thisWinMatches++;
+                        playerOppoWinsInThisMatchSize[0]++;
+                    } else {
+                        playerOppoWinsInThisMatchSize[1]++;
+                    }
+                    thisWinFrames += p1p2wins[1];
+                    oppoWinFrames += p1p2wins[0];
+                }
+            }
+
+            int rowIndex = 0;
+            gridPane.add(new Label(thisPlayer), 0, rowIndex);
+            gridPane.add(new Label(oppoName), 2, rowIndex);
+            rowIndex++;
+
+            gridPane.add(new Label("交手次数"), 1, rowIndex);
+            gridPane.add(new Label(String.valueOf(egtList.size())), 0, rowIndex);
+            gridPane.add(new Label(String.valueOf(egtList.size())), 2, rowIndex);
+            rowIndex++;
+
+            gridPane.add(new Label("胜利"), 1, rowIndex);
+            gridPane.add(new Label(String.valueOf(thisWinMatches)), 0, rowIndex);
+            gridPane.add(new Label(String.valueOf(egtList.size() - thisWinMatches)),
+                    2, rowIndex);
+            rowIndex++;
+
+            gridPane.add(new Label("总胜局数"), 1, rowIndex);
+            gridPane.add(new Label(String.valueOf(thisWinFrames)), 0, rowIndex);
+            gridPane.add(new Label(String.valueOf(oppoWinFrames)),
+                    2, rowIndex);
+            rowIndex++;
+
+            gridPane.add(new Separator(), 0, rowIndex++, 3, 1);
+            for (Map.Entry<Integer, int[]> entry : playerOppoWinsByTotalFrames.entrySet()) {
+                gridPane.add(
+                        new Label(String.format("%d局%d胜制", 
+                                entry.getKey(), entry.getKey() / 2 + 1)),
+                        1, rowIndex);
+                gridPane.add(new Label(String.valueOf(entry.getValue()[0])), 0, rowIndex);
+                gridPane.add(new Label(String.valueOf(entry.getValue()[1])), 2, rowIndex);
+                rowIndex++;
+            }
+
+            rightPane.getChildren().add(gridPane);
+        }
+    }
+
     public static class MatchRecord extends RecordTree {
-        public final EntireGameTitle egt;
+        final EntireGameTitle egt;
 
         MatchRecord(EntireGameTitle egt) {
             super(egt.toString());
@@ -268,7 +374,7 @@ public class StatsView implements Initializable {
 
             EntireGameRecord matchRec = DBAccess.getInstance().getMatchDetail(egt);
             MatchRecordPage page = new MatchRecordPage();
-            
+
             int rowIndex = 0;
             String[] winLost;
             int[] p1p2Wins = matchRec.getP1P2WinsCount();
@@ -287,7 +393,7 @@ public class StatsView implements Initializable {
             page.add(new Label(String.valueOf(p1p2Wins[1])), 4, rowIndex);
             page.add(new Label(egt.player2Name), 5, rowIndex);
             rowIndex++;
-            
+
             int[][] playersTotalBasics = matchRec.totalBasicStats();
 //            System.out.println(Arrays.deepToString(playersTotalBasics));
             page.add(new Label("进攻次数"), 0, rowIndex);
@@ -304,13 +410,13 @@ public class StatsView implements Initializable {
             page.add(new Label(
                             playersTotalBasics[0][1] == 0 ? "0%" :
                                     String.format("%.1f%%",
-                                            playersTotalBasics[0][1] * 100.0 / 
+                                            playersTotalBasics[0][1] * 100.0 /
                                                     playersTotalBasics[0][0])),
                     1, rowIndex);
             page.add(new Label(
                             playersTotalBasics[1][1] == 0 ? "0%" :
                                     String.format("%.1f%%",
-                                            playersTotalBasics[1][1] * 100.0 / 
+                                            playersTotalBasics[1][1] * 100.0 /
                                                     playersTotalBasics[1][0])),
                     5, rowIndex);
             rowIndex++;
@@ -327,15 +433,15 @@ public class StatsView implements Initializable {
 
             page.add(new Label("长台进攻成功率"), 0, rowIndex);
             page.add(new Label(
-                    playersTotalBasics[0][3] == 0 ? "0%" :
-                            String.format("%.1f%%",
-                                    playersTotalBasics[0][3] * 100.0 / 
-                                            playersTotalBasics[0][2])), 
+                            playersTotalBasics[0][3] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[0][3] * 100.0 /
+                                                    playersTotalBasics[0][2])),
                     1, rowIndex);
             page.add(new Label(
                             playersTotalBasics[1][3] == 0 ? "0%" :
                                     String.format("%.1f%%",
-                                            playersTotalBasics[1][3] * 100.0 / 
+                                            playersTotalBasics[1][3] * 100.0 /
                                                     playersTotalBasics[1][2])),
                     5, rowIndex);
             rowIndex++;
@@ -364,7 +470,7 @@ public class StatsView implements Initializable {
                                                     playersTotalBasics[1][4])),
                     5, rowIndex);
             rowIndex++;
-            
+
             if (egt.gameType.snookerLike) {
                 int[][] totalSnookerScores = ((EntireGameRecord.Snooker) matchRec).totalScores();
                 page.add(new Label("总得分"), 0, rowIndex);
@@ -392,19 +498,19 @@ public class StatsView implements Initializable {
                 page.add(new Label(String.valueOf(totalSnookerScores[1][4])), 5, rowIndex);
                 rowIndex++;
             }
-            
+
             page.add(new Separator(), 0, rowIndex, 6, 1);
             rowIndex++;
-            
+
             // 分局显示
-            for (Map.Entry<Integer, PlayerFrameRecord[]> entry : 
+            for (Map.Entry<Integer, PlayerFrameRecord[]> entry :
                     matchRec.getFrameRecords().entrySet()) {
                 PlayerFrameRecord p1r = entry.getValue()[0];
                 PlayerFrameRecord p2r = entry.getValue()[1];
                 page.add(new Label(
-                        Util.secondsToString(matchRec.getFrameDurations().get(entry.getKey()))),
+                                Util.secondsToString(matchRec.getFrameDurations().get(entry.getKey()))),
                         3, rowIndex);
-                
+
                 Label p1ScoreLabel = new Label();
                 Label p2ScoreLabel = new Label();
                 if (egt.gameType.snookerLike) {
@@ -413,7 +519,7 @@ public class StatsView implements Initializable {
                     p1ScoreLabel.setText(String.valueOf(p1sr.snookerScores[0]));
                     p2ScoreLabel.setText(String.valueOf(p2sr.snookerScores[0]));
                 }
-                
+
                 if (p1r.winnerName.equals(egt.player1Name)) {
                     p2ScoreLabel.setDisable(true);
                     page.add(new Label("⚫"), 2, rowIndex);
@@ -423,10 +529,10 @@ public class StatsView implements Initializable {
                 }
                 page.add(p1ScoreLabel, 1, rowIndex);
                 page.add(p2ScoreLabel, 5, rowIndex);
-                
+
                 rowIndex++;
             }
-            
+
             rightPane.getChildren().add(page);
         }
     }

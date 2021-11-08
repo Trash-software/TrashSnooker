@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core;
 public abstract class ObjectOnTable {
     protected final GameValues values;
     protected final double radius;
+    protected double distance;
     protected double x, y;
     protected double nextX, nextY;
     protected double vx, vy;  // unit: mm/(sec/frameRate)
@@ -48,7 +49,11 @@ public abstract class ObjectOnTable {
     protected double getSpeed() {
         return Math.hypot(vx, vy);
     }
-    
+
+    protected double getDistanceMoved() {
+        return distance;
+    }
+
     protected void prepareMove() {
         nextX = x + vx;
         nextY = y + vy;
@@ -82,6 +87,20 @@ public abstract class ObjectOnTable {
 
     protected double predictedDtToPoint(double px, double py) {
         return Algebra.distanceToPoint(nextX, nextY, px, py);
+    }
+    
+    protected double midHolePowerFactor() {
+        return 1;
+    }
+    
+    protected boolean willPot() {
+        double midHoleFactor = midHolePowerFactor();
+        return predictedDtToPoint(values.topLeftHoleXY) < values.cornerHoleRadius ||
+                predictedDtToPoint(values.botLeftHoleXY) < values.cornerHoleRadius ||
+                predictedDtToPoint(values.topRightHoleXY) < values.cornerHoleRadius ||
+                predictedDtToPoint(values.botRightHoleXY) < values.cornerHoleRadius ||
+                predictedDtToPoint(values.topMidHoleXY) < values.midHoleRadius * midHoleFactor ||
+                predictedDtToPoint(values.botMidHoleXY) < values.midHoleRadius * midHoleFactor;
     }
 
     protected void hitHoleArcArea(double[] arcXY) {

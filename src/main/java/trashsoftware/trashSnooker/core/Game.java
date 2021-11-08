@@ -25,7 +25,7 @@ public abstract class Game {
     // 进攻球判定角
     // 如实际角度与可通过的袋口连线的夹角小于该值，判定为进攻球
     public static final double MAX_ATTACK_DECISION_ANGLE = Math.toRadians(7.5);
-    protected static final double MIN_PLACE_DISTANCE = 0.0;  // 5.0 防止物理运算卡bug
+    protected static final double MIN_PLACE_DISTANCE = 0.0;  // 防止物理运算卡bug
     protected static final double MIN_GAP_DISTANCE = 3.0;
     public final long frameStartTime = System.currentTimeMillis();
     public final int frameIndex;
@@ -164,7 +164,11 @@ public abstract class Game {
         return physicalCalculate();
     }
 
-    public WhitePrediction predictWhite(CuePlayParams params) {
+    /**
+     * @param params 击球参数
+     * @param lengthAfterWall 直接碰库后白球预测线的长度
+     */
+    public WhitePrediction predictWhite(CuePlayParams params, double lengthAfterWall) {
         double whiteX = cueBall.x;
         double whiteY = cueBall.y;
         if (cueBall.isPotted()) return null;
@@ -178,7 +182,7 @@ public abstract class Game {
                 params.sideSpin / calculationsPerSec);
         WhitePredictor whitePredictor = new WhitePredictor();
         long st = System.currentTimeMillis();
-        WhitePrediction prediction = whitePredictor.predict();
+        WhitePrediction prediction = whitePredictor.predict(lengthAfterWall);
 //        System.out.println("White prediction ms: " + (System.currentTimeMillis() - st));
         cueBall.setX(whiteX);
         cueBall.setY(whiteY);
@@ -492,13 +496,16 @@ public abstract class Game {
     }
 
     public class WhitePredictor {
+        private double lenAfterWall;
         private WhitePrediction prediction;
-        private double cumulatedPhysicalTime = 0.0;
-        private double lastPhysicalTime = 0.0;
+//        private double cumulatedPhysicalTime = 0.0;
+//        private double lastPhysicalTime = 0.0;
+        private double dtWhenHitFirstWall = -1.0;
         private boolean notTerminated = true;
         private boolean hitWall;
 
-        WhitePrediction predict() {
+        WhitePrediction predict(double lenAfterWall) {
+            this.lenAfterWall = lenAfterWall;
             prediction = new WhitePrediction(cueBall);
 
             while (!oneRun() && notTerminated) {
@@ -513,32 +520,40 @@ public abstract class Game {
          * 返回白球是否已经停止
          */
         private boolean oneRun() {
-//            lastPhysicalTime = cumulatedPhysicalTime;
-//            cumulatedPhysicalTime += calculateMs;
-
-//            if (Math.floor(cumulatedPhysicalTime / parent.frameTimeMs) !=
-//                    Math.floor(lastPhysicalTime / parent.frameTimeMs)) {
             prediction.getWhitePath().add(new double[]{cueBall.x, cueBall.y});
-//                System.out.println(cueBall.x + ", " + cueBall.y);
-//            }
-
             cueBall.prepareMove();
 
             if (cueBall.isLikelyStopped()) return true;
             if (cueBall.willPot()) {
                 return true;
             }
+
+            if (prediction.getFirstCollide() == null && 
+                    dtWhenHitFirstWall >= 0.0 &&
+                    cueBall.getDistanceMoved() - dtWhenHitFirstWall > lenAfterWall) {
+                // 解斯诺克不能太容易了
+                return true;
+            }
+            
             int holeAreaResult = cueBall.tryHitHoleArea();
             if (holeAreaResult != 0) {
                 // 袋口区域
                 if (prediction.getFirstCollide() == null) {
                     tryHitBall();
                 }
-                if (holeAreaResult == 2) hitWall = true;
+                if (holeAreaResult == 2) {
+                    if (!hitWall) {
+                        dtWhenHitFirstWall = cueBall.getDistanceMoved();
+                    }
+                    hitWall = true;
+                }
                 return false;
             }
             if (cueBall.tryHitWall()) {
                 // 库边
+                if (!hitWall) {
+                    dtWhenHitFirstWall = cueBall.getDistanceMoved();
+                }
                 hitWall = true;
                 return false;
             }
