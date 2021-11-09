@@ -68,7 +68,7 @@ implements NeedBigBreak{
 
     @Override
     protected void initPlayers() {
-        player1 = new SidePocketBallPlayer(1, gameSettings.getPlayer1(), true);
+        player1 = new SidePocketBallPlayer(1, gameSettings.getPlayer1());
         player2 = new SidePocketBallPlayer(2, gameSettings.getPlayer2());
     }
 

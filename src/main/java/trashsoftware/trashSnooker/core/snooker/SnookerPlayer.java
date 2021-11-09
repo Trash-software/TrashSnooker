@@ -5,7 +5,9 @@ import trashsoftware.trashSnooker.core.InGamePlayer;
 import trashsoftware.trashSnooker.core.Player;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class SnookerPlayer extends Player {
 
@@ -26,6 +28,13 @@ public class SnookerPlayer extends Player {
             singlePole.put(freeBall, singlePole.get(freeBall) + 1);
         } else {
             singlePole.put(freeBall, 1);
+        }
+    }
+
+    @Override
+    protected void addScoreOfPotted(Collection<Ball> pottedBalls) {
+        for (Ball ball : pottedBalls) {
+            score += ball.getValue();
         }
     }
 

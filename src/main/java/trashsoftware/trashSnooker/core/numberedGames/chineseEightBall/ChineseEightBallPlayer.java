@@ -6,12 +6,8 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 public class ChineseEightBallPlayer extends NumberedBallPlayer {
     private int ballRange = 0;  // 0=未选球，8=8，16=1~7，17=9~15
 
-    public ChineseEightBallPlayer(int number, InGamePlayer playerPerson, boolean breakingPlayer) {
-        super(number, playerPerson, breakingPlayer);
-    }
-
     public ChineseEightBallPlayer(int number, InGamePlayer playerPerson) {
-        this(number, playerPerson, false);
+        super(number, playerPerson);
     }
 
     public void setBallRange(int ballRange) {

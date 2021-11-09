@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS ChineseEightRecord (
     PlayerName VARCHAR(32) REFERENCES Player,
     BreakClear INTEGER DEFAULT 0,
     ContinueClear INTEGER DEFAULT 0,
+    Highest INTEGER DEFAULT 0,  -- 最多单杆连续进球
     PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName)
 );
 
@@ -61,5 +62,6 @@ CREATE TABLE IF NOT EXISTS SidePocketRecord (
     PlayerName VARCHAR(32) REFERENCES Player,
     BreakClear INTEGER DEFAULT 0,
     ContinueClear INTEGER DEFAULT 0,
+    Highest INTEGER DEFAULT 0,  -- 最多单杆连续进球
     PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName)
 );

@@ -96,8 +96,38 @@ public abstract class EntireGameRecord {
             return res;
         }
     }
+    
+    public abstract static class NumberedBall extends EntireGameRecord {
 
-    public static class ChineseEight extends EntireGameRecord {
+        NumberedBall(EntireGameTitle title, 
+                     SortedMap<Integer, PlayerFrameRecord[]> frameRecords, 
+                     SortedMap<Integer, Integer> frameDurations) {
+            super(title, frameRecords, frameDurations);
+        }
+        
+        public int[][] totalScores() {
+            int[][] res = new int[2][3];
+            for (PlayerFrameRecord[] records : getFrameRecords().values()) {
+                PlayerFrameRecord.Numbered p1r = (PlayerFrameRecord.Numbered) records[0];
+                PlayerFrameRecord.Numbered p2r = (PlayerFrameRecord.Numbered) records[1];
+                
+                res[0][0] += p1r.clears[0];
+                res[0][1] += p1r.clears[1];
+                res[1][0] += p2r.clears[0];
+                res[1][1] += p2r.clears[1];
+                
+                if (res[0][2] < p1r.clears[2]) {
+                    res[0][2] = p1r.clears[2];
+                }
+                if (res[1][2] < p2r.clears[2]) {
+                    res[1][2] = p2r.clears[2];
+                }
+            }
+            return res;
+        }
+    }
+
+    public static class ChineseEight extends NumberedBall {
 
         ChineseEight(EntireGameTitle title,
                      SortedMap<Integer, PlayerFrameRecord[]> frameRecords,
@@ -106,7 +136,7 @@ public abstract class EntireGameRecord {
         }
     }
 
-    public static class SidePocket extends EntireGameRecord {
+    public static class SidePocket extends NumberedBall {
 
         SidePocket(EntireGameTitle title,
                    SortedMap<Integer, PlayerFrameRecord[]> frameRecords,

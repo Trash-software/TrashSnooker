@@ -28,4 +28,14 @@ public abstract class PlayerFrameRecord implements Comparable<PlayerFrameRecord>
             this.snookerScores = snookerScores;
         }
     }
+
+    public static class Numbered extends PlayerFrameRecord {
+
+        public final int[] clears;  // break-clear, continue-clear, highest
+
+        Numbered(int frameIndex, int[] basicPots, String winnerName, int[] clears) {
+            super(frameIndex, basicPots, winnerName);
+            this.clears = clears;
+        }
+    }
 }

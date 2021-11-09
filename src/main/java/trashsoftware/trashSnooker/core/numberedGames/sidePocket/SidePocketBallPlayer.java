@@ -7,12 +7,8 @@ public class SidePocketBallPlayer extends NumberedBallPlayer {
 
     private int target;
 
-    public SidePocketBallPlayer(int number, InGamePlayer playerPerson, boolean breakingPlayer) {
-        super(number, playerPerson, breakingPlayer);
-    }
-
     public SidePocketBallPlayer(int number, InGamePlayer playerPerson) {
-        this(number, playerPerson, false);
+        super(number, playerPerson);
     }
 
     public void setTarget(int target) {

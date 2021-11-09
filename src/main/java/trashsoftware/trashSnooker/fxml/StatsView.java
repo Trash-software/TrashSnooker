@@ -178,6 +178,14 @@ public class StatsView implements Initializable {
                 resultPane.add(new Label(String.valueOf(breaksScores[3])), 1, rowIndex++);
                 resultPane.add(new Label("单杆147"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
+            } else if (gameType == GameType.CHINESE_EIGHT || gameType == GameType.SIDE_POCKET) {
+                int[] breaksScores = db.getNumberedBallGamesTotal(gameType, name);
+                resultPane.add(new Label("炸清"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
+                resultPane.add(new Label("接清"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(breaksScores[1])), 1, rowIndex++);
+                resultPane.add(new Label("最高单杆球数"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(breaksScores[2])), 1, rowIndex++);
             }
             rightPane.getChildren().add(resultPane);
         }
@@ -496,6 +504,23 @@ public class StatsView implements Initializable {
                 page.add(new Label("147"), 0, rowIndex);
                 page.add(new Label(String.valueOf(totalSnookerScores[0][4])), 1, rowIndex);
                 page.add(new Label(String.valueOf(totalSnookerScores[1][4])), 5, rowIndex);
+                rowIndex++;
+            } else if (egt.gameType == GameType.CHINESE_EIGHT || 
+                    egt.gameType == GameType.SIDE_POCKET) {
+                int[][] numberedBreaks = ((EntireGameRecord.NumberedBall) matchRec).totalScores();
+                page.add(new Label("炸清"), 0, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[0][0])), 1, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[1][0])), 5, rowIndex);
+                rowIndex++;
+
+                page.add(new Label("接清"), 0, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[0][1])), 1, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[1][1])), 5, rowIndex);
+                rowIndex++;
+
+                page.add(new Label("单杆最高球数"), 0, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[0][2])), 1, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[1][2])), 5, rowIndex);
                 rowIndex++;
             }
 

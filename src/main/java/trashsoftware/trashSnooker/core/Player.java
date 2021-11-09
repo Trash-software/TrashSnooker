@@ -16,6 +16,8 @@ public abstract class Player {
         this.number = number;
         this.playerPerson = playerPerson;
     }
+    
+    protected abstract void addScoreOfPotted(Collection<Ball> pottedBalls);
 
     public PlayerPerson getPlayerPerson() {
         return playerPerson.getPlayerPerson();
@@ -49,15 +51,15 @@ public abstract class Player {
         return score;
     }
 
-    public void correctPotBalls(Set<Ball> pottedBalls) {
+    public final void correctPotBalls(Collection<Ball> pottedBalls) {
         for (Ball ball : pottedBalls) {
-            score += ball.getValue();
             if (singlePole.containsKey(ball)) {
                 singlePole.put(ball, singlePole.get(ball) + 1);
             } else {
                 singlePole.put(ball, 1);
             }
         }
+        addScoreOfPotted(pottedBalls);
     }
 
     public TreeMap<Ball, Integer> getSinglePole() {

@@ -7,10 +7,8 @@ import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.Util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ChineseEightBallGame extends NumberedBallGame
         implements NeedBigBreak {
@@ -96,7 +94,7 @@ public class ChineseEightBallGame extends NumberedBallGame
 
     @Override
     protected void initPlayers() {
-        player1 = new ChineseEightBallPlayer(1, gameSettings.getPlayer1(), true);
+        player1 = new ChineseEightBallPlayer(1, gameSettings.getPlayer1());
         player2 = new ChineseEightBallPlayer(2, gameSettings.getPlayer2());
     }
 
@@ -163,6 +161,14 @@ public class ChineseEightBallGame extends NumberedBallGame
             if (isFullBall(ball)) return false;
         }
         return true;
+    }
+    
+    private Collection<Ball> fullBallsOf(Set<Ball> balls) {
+        return balls.stream().filter(this::isFullBall).collect(Collectors.toSet());
+    }
+
+    private Collection<Ball> halfBallsOf(Set<Ball> balls) {
+        return balls.stream().filter(this::isHalfBall).collect(Collectors.toSet());
     }
 
     private int fullBallsCount(Set<Ball> balls) {
@@ -288,26 +294,26 @@ public class ChineseEightBallGame extends NumberedBallGame
                     ((ChineseEightBallPlayer) getAnotherPlayer()).setBallRange(17);
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     lastPotSuccess = true;
-                    currentPlayer.addScore(fullBallsCount(pottedBalls));
+                    currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
                 }
                 if (allHalfBalls(pottedBalls)) {
                     ((ChineseEightBallPlayer) currentPlayer).setBallRange(17);
                     ((ChineseEightBallPlayer) getAnotherPlayer()).setBallRange(16);
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     lastPotSuccess = true;
-                    currentPlayer.addScore(halfBallsCount(pottedBalls));
+                    currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
                 }
             } else {
                 if (currentTarget == 16) {
                     if (hasFullBalls(pottedBalls)) {
                         lastPotSuccess = true;
                     }
-                    currentPlayer.addScore(fullBallsCount(pottedBalls));
+                    currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
                 } else if (currentTarget == 17) {
                     if (hasHalfBalls(pottedBalls)) {
                         lastPotSuccess = true;
                     }
-                    currentPlayer.addScore(halfBallsCount(pottedBalls));
+                    currentPlayer.correctPotBalls(halfBallsOf(pottedBalls));
                 }
             }
         }

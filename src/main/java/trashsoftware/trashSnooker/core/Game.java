@@ -15,7 +15,7 @@ import trashsoftware.trashSnooker.fxml.GameView;
 import java.util.*;
 
 public abstract class Game {
-    public static final double calculateMs = 1;
+    public static final double calculateMs = 0.5;
     public static final double calculationsPerSec = 1000.0 / calculateMs;
     public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
     public static final double speedReducer = 120.0 / calculationsPerSecSqr;
@@ -62,7 +62,11 @@ public abstract class Game {
 
         initPlayers();
         currentPlayer = gameSettings.isPlayer1Breaks() ? player1 : player2;
+        setBreakingPlayer(currentPlayer);
         cueBall = createWhiteBall();
+    }
+    
+    protected void setBreakingPlayer(Player breakingPlayer) {
     }
 
     public static Game createGame(GameView gameView, GameSettings gameSettings,
@@ -609,6 +613,16 @@ public abstract class Game {
             }
 //            endMove();
             notTerminated = false;
+            
+            for (Ball ball : getAllBalls()) {
+                if (!ball.isPotted()) {
+                    if (ball.getX() < 0 || ball.getX() >= gameValues.outerWidth || 
+                            ball.getY() < 0 || ball.getY() >= gameValues.outerHeight) {
+                        System.err.println("Ball " + ball + " at a weired position: " +
+                                ball.getX() + ", " + ball.getY());
+                    }
+                }
+            }
 
             return movement;
         }

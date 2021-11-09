@@ -27,7 +27,7 @@ public class Util {
     
     public static String secondsToString(int sec) {
         if (sec < 3600) {
-            return String.format("%d:%d", sec / 60, sec % 60);
+            return String.format("%02d:%02d", sec / 60, sec % 60);
         } else {
             return String.format("%d:%s", sec / 3600, secondsToString(sec % 3600));
         }

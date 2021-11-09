@@ -150,7 +150,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         }
 
         double speed = getSpeed();
-        double reducedSpeed = speed - Game.speedReducer;
+        double reducedSpeed = speed - (Game.speedReducer / values.ballWeightRatio);  // 重的球减速慢
         double ratio = reducedSpeed / speed;
         vx *= ratio;
         vy *= ratio;

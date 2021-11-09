@@ -1,6 +1,8 @@
 package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -191,6 +193,37 @@ public class DBAccess {
     }
 
     /**
+     * 返回{炸请，接清}
+     */
+    public int[] getNumberedBallGamesTotal(GameType gameType, String playerName) {
+        int[] rtn = new int[3];
+        String pns = "'" + playerName + "'";
+        String tableName = gameType.toSqlKey() + "Record";
+        String typeKey = "'" + gameType.toSqlKey() + "'";
+        String highestQuery =
+                "SELECT * FROM " + tableName + " " +
+                        "WHERE (PlayerName = " + pns + " AND EntireBeginTime IN " +
+                        "(SELECT EntireBeginTime FROM EntireGame " +
+                        "WHERE GameType = " + typeKey + "));";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(highestQuery);
+            while (resultSet.next()) {
+                int highInResult = resultSet.getInt("Highest");
+                rtn[0] += resultSet.getInt("BreakClear");
+                rtn[1] += resultSet.getInt("ContinueClear");
+                if (highInResult > rtn[2]) {
+                    rtn[2] = highInResult;
+                }
+            }
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rtn;
+    }
+
+    /**
      * 返回{进攻次数，进攻成功次数，长台进攻次数，长台成功次数，防守次数，防守成功次数}
      */
     public int[] getBasicPotStatusAll(GameType gameType, String playerName) {
@@ -270,7 +303,7 @@ public class DBAccess {
                     int[] scores = new int[5];  // total score, highest, breaks50, breaks100, 147
                     scores[0] = snRes.getInt("TotalScore");
                     scores[1] = snRes.getInt("Highest");
-                    scores[2] += snRes.getInt("Breaks50");
+                    scores[2] = snRes.getInt("Breaks50");
                     if (scores[1] >= 100) {
                         scores[3]++;
                     }
@@ -289,9 +322,38 @@ public class DBAccess {
                 sn.close();
                 
                 return new EntireGameRecord.Snooker(title, records, durations);
+            } else if (title.gameType == GameType.CHINESE_EIGHT || 
+                    title.gameType == GameType.SIDE_POCKET) {
+                String tableName = title.gameType.toSqlKey() + "Record";
+                String numQuery = "SELECT * FROM " + tableName + " " +
+                        "WHERE EntireBeginTime = " + Util.timeStampFmt(title.startTime) +
+                        ";";
+                Statement numStatement = connection.createStatement();
+                ResultSet numRs = numStatement.executeQuery(numQuery);
+                while (numRs.next()) {
+                    int index = numRs.getInt("FrameIndex");
+                    int playerIndex = numRs.getString("PlayerName")
+                            .equals(title.player1Name) ? 0 : 1;
+                    int[] scores = new int[3];  // break clear, continue clear, highest
+                    scores[0] = numRs.getInt("BreakClear");
+                    scores[1] = numRs.getInt("ContinueClear");
+                    scores[2] = numRs.getInt("Highest");
+                    PlayerFrameRecord.Numbered numbered = new PlayerFrameRecord.Numbered(
+                            index, framesPotMap.get(index)[playerIndex],
+                            framesWinnerMap.get(index), scores
+                    );
+                    PlayerFrameRecord[] thisFrame =
+                            records.computeIfAbsent(index, k -> new PlayerFrameRecord[2]);
+                    thisFrame[playerIndex] = numbered;
+                }
+                numStatement.close();
+                
+                if (title.gameType == GameType.CHINESE_EIGHT) {
+                    return new EntireGameRecord.ChineseEight(title, records, durations);
+                } else {
+                    return new EntireGameRecord.SidePocket(title, records, durations);
+                }
             }
-            
-            // todo: 黑八和九球
             
         } catch (SQLException e) {
             e.printStackTrace();
@@ -314,8 +376,38 @@ public class DBAccess {
                 (endLine ? ";" : "");
     }
     
-    public void recordChineseEightResult() {
-        // todo
+    public void recordNumberedBallResult(EntireGame entireGame, Game frame,
+                                         NumberedBallPlayer player, boolean wins, 
+                                         List<Integer> continuousPots) {
+        String tableName = entireGame.gameType.toSqlKey() + "Record";
+        int playTimes = player.getPlayTimes();
+        boolean breaks = player.isBreakingPlayer();
+        int breakClear = 0;
+        int continueClear = 0;
+        int highest = 0;
+        // 输的人不可能清台
+        if (wins) {
+            if (playTimes == 1) {
+                if (breaks) {  // 炸清
+                    breakClear = 1;
+                } else {  // 接清
+                    continueClear = 1;
+                }
+            }
+        }
+        for (Integer b : continuousPots) {
+            if (b > highest) highest = b;
+        }
+        String query = "INSERT INTO " + tableName + " VALUES (" + 
+                entireGame.getStartTimeSqlString() + ", " + 
+                frame.frameIndex + ", " +
+                "'" + player.getPlayerPerson().getName() + "', " +
+                breakClear + ", " + continueClear + ", " + highest + ");";
+        try {
+            executeStatement(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void recordSnookerBreaks(EntireGame entireGame, Game frame,

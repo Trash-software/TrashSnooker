@@ -69,8 +69,8 @@ public class EntireGame {
     public boolean playerWinsAframe(InGamePlayer player) {
         DBAccess.getInstance().recordAFrameEnds(
                 this, game, player.getPlayerPerson());
-        updateFrameRecords(game.getPlayer1());
-        updateFrameRecords(game.getPlayer2());
+        updateFrameRecords(game.getPlayer1(), player);
+        updateFrameRecords(game.getPlayer2(), player);
         if (player.getPlayerPerson().equals(p1.getPlayerPerson())) {
             return p1WinsAFrame();
         } else {
@@ -96,17 +96,24 @@ public class EntireGame {
         return p2Wins > totalFrames / 2;
     }
 
-    private void updateFrameRecords(Player framePlayer) {
+    private void updateFrameRecords(Player framePlayer, InGamePlayer winingPlayer) {
         if (framePlayer instanceof SnookerPlayer) {
             SnookerPlayer snookerPlayer = (SnookerPlayer) framePlayer;
             snookerPlayer.flushSinglePoles();
             DBAccess.getInstance().recordSnookerBreaks(this,
                     getGame(),
-                    (SnookerPlayer) framePlayer, 
+                    snookerPlayer, 
                     snookerPlayer.getSinglePolesInThisGame());
-            
         } else if (framePlayer instanceof NumberedBallPlayer) {
             // 炸清和接清
+            NumberedBallPlayer numberedBallPlayer = (NumberedBallPlayer) framePlayer;
+            numberedBallPlayer.flushSinglePoles();
+            DBAccess.getInstance().recordNumberedBallResult(this,
+                    getGame(),
+                    numberedBallPlayer,
+                    winingPlayer.getPlayerPerson().equals(
+                            framePlayer.playerPerson.getPlayerPerson()),
+                    numberedBallPlayer.getContinuousPots());
         }
     }
 

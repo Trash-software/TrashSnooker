@@ -14,6 +14,13 @@ public abstract class NumberedBallGame extends Game {
 
     protected abstract double breakPointX();
 
+    @Override
+    protected void setBreakingPlayer(Player breakingPlayer) {
+        super.setBreakingPlayer(breakingPlayer);
+
+        ((NumberedBallPlayer) breakingPlayer).setBreakingPlayer();
+    }
+
     protected double breakLineX() {
         return gameValues.leftX + 635.0;
     }
