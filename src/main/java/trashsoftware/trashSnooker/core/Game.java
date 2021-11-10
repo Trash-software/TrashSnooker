@@ -15,7 +15,7 @@ import trashsoftware.trashSnooker.fxml.GameView;
 import java.util.*;
 
 public abstract class Game {
-    public static final double calculateMs = 0.5;
+    public static final double calculateMs = 1.0;
     public static final double calculationsPerSec = 1000.0 / calculateMs;
     public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
     public static final double speedReducer = 120.0 / calculationsPerSecSqr;
@@ -578,7 +578,7 @@ public abstract class Game {
                             gameValues.ballDiameter) {
                         double whiteVx = cueBall.vx;
                         double whiteVy = cueBall.vy;
-                        cueBall.hitStaticBallCore(ball);
+                        cueBall.twoMovingBallsHitCore(ball);
                         double[] ballDirectionUnitVec = Algebra.unitVector(ball.vx, ball.vy);
                         double[] whiteDirectionUnitVec = Algebra.unitVector(whiteVx, whiteVy);
                         ball.vx = 0;
@@ -621,6 +621,10 @@ public abstract class Game {
                         System.err.println("Ball " + ball + " at a weired position: " +
                                 ball.getX() + ", " + ball.getY());
                     }
+                }
+                if (ball.getValue() == 6) {
+                    System.out.println("Pick speed " + ball.vx + ", " + ball.vy + ", " + 
+                            ball.x + " " + ball.y);
                 }
             }
 

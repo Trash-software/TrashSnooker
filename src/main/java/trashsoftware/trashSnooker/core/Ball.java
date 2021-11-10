@@ -2,6 +2,8 @@ package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
+
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     private final int value;
     private final Color color;
@@ -13,7 +15,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ballRadius);
-        
+
         this.potted = initPotted;
         this.value = value;
         this.color = generateColor(value);
@@ -354,6 +356,71 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
 
         this.vx = (this.vx - ballVX) * Values.BALL_BOUNCE_RATIO;
         this.vy = (this.vy - ballVY) * Values.BALL_BOUNCE_RATIO;
+
+        nextX = x + vx;
+        nextY = y + vy;
+        ball.nextX = ball.x + ball.vx;
+        ball.nextY = ball.y + ball.vy;
+    }
+
+    void twoMovingBallsHitCore(Ball ball) {
+        // 提高精确度
+        double x1 = x;
+        double y1 = y;
+        double dx1 = vx / Values.DETAILED_PHYSICAL;
+        double dy1 = vy / Values.DETAILED_PHYSICAL;
+        
+        double x2 = ball.x;;
+        double y2 = ball.y;
+        double dx2 = ball.vx / Values.DETAILED_PHYSICAL;
+        double dy2 = ball.vy / Values.DETAILED_PHYSICAL;
+
+        for (int i = 0; i < Values.DETAILED_PHYSICAL; ++i) {
+            if (Algebra.distanceToPoint(x1, y1, x2, y2) < values.ballDiameter) {
+                break;
+            }
+            x1 += dx1;
+            y1 += dy1;
+            x2 += dx2;
+            y2 += dy2;
+        }
+        
+        double[] thisV = new double[]{vx, vy};
+        double[] ballV = new double[]{ball.vx, ball.vy};
+
+        double[] normVec = new double[]{x1 - x2, y1 - y2};  // 两球连线=法线
+        double[] tangentVec = Algebra.normalVector(normVec);  // 切线
+
+        double thisVerV = Algebra.projectionLengthOn(normVec, thisV);  // 垂直于切线的速率
+        double thisHorV = Algebra.projectionLengthOn(tangentVec, thisV);  // 平行于切线的速率
+        double ballVerV = Algebra.projectionLengthOn(normVec, ballV);
+        double ballHorV = Algebra.projectionLengthOn(tangentVec, ballV);
+//        System.out.printf("(%f, %f), (%f, %f)\n", thisHorV, thisVerV, ballHorV, ballVerV);
+//        System.out.print("Ball 1 " + this + " ");
+        
+        if (thisHorV == 0) thisHorV = 0.0000000001;
+        if (thisVerV == 0) thisVerV = 0.0000000001;
+        if (ballHorV == 0) ballHorV = 0.0000000001;
+        if (ballVerV == 0) ballVerV = 0.0000000001;
+
+        // 碰撞后，两球平行于切线的速率不变，垂直于切线的速率互换
+        double[] thisOut = Algebra.antiProjection(tangentVec,
+                new double[]{thisHorV, ballVerV});
+//        System.out.println("Ball 1 out " + Arrays.toString(thisOut));
+//        System.out.print("Ball 2 " + ball + " ");
+        double[] ballOut = Algebra.antiProjection(tangentVec,
+                new double[]{ballHorV, thisVerV});
+//        System.out.println("Ball 2 out " + Arrays.toString(ballOut));
+
+        this.vx = thisOut[0] * Values.BALL_BOUNCE_RATIO;
+        this.vy = thisOut[1] * Values.BALL_BOUNCE_RATIO;
+        ball.vx = ballOut[0] * Values.BALL_BOUNCE_RATIO;
+        ball.vy = ballOut[1] * Values.BALL_BOUNCE_RATIO;
+
+        nextX = x + vx;
+        nextY = y + vy;
+        ball.nextX = ball.x + ball.vx;
+        ball.nextY = ball.y + ball.vy;
     }
 
     boolean tryHitBall(Ball ball, boolean checkMovingBall) {
@@ -375,34 +442,14 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
                 }
             }
             if (ball.isNotMoving()) {
-//                if (checkMovingBall) System.out.println("Hit static ball!=====================");
-                hitStaticBallCore(ball);
+//                if (checkMovingBall) System.out.println("Hit static ball!=====================");4
+                twoMovingBallsHitCore(ball);
+//                hitStaticBallCore(ball);
             } else {
                 if (!checkMovingBall) return false;
 //                System.out.println("Hit moving ball!=====================");
 
-                double[] thisV = new double[]{vx, vy};
-                double[] ballV = new double[]{ball.vx, ball.vy};
-
-                double[] normVec = new double[]{this.x - ball.x, this.y - ball.y};  // 两球连线=法线
-                double[] tangentVec = Algebra.normalVector(normVec);  // 切线
-
-                double thisVerV = Algebra.projectionLengthOn(normVec, thisV);  // 垂直于切线的速率
-                double thisHorV = Algebra.projectionLengthOn(tangentVec, thisV);  // 平行于切线的速率
-                double ballVerV = Algebra.projectionLengthOn(normVec, ballV);
-                double ballHorV = Algebra.projectionLengthOn(tangentVec, ballV);
-//            System.out.printf("(%f, %f), (%f, %f)\n", thisHorV, thisVerV, ballHorV, ballVerV);
-                System.out.print("Ball 1 " + this + " ");
-
-                // 碰撞后，两球平行于切线的速率不变，垂直于切线的速率互换
-                double[] thisOut = Algebra.antiProjection(tangentVec, new double[]{thisHorV, ballVerV});
-                System.out.print("Ball 2 " + ball + " ");
-                double[] ballOut = Algebra.antiProjection(tangentVec, new double[]{ballHorV, thisVerV});
-
-                this.vx = thisOut[0] * Values.BALL_BOUNCE_RATIO;
-                this.vy = thisOut[1] * Values.BALL_BOUNCE_RATIO;
-                ball.vx = ballOut[0] * Values.BALL_BOUNCE_RATIO;
-                ball.vy = ballOut[1] * Values.BALL_BOUNCE_RATIO;
+                twoMovingBallsHitCore(ball);
             }
 
             justHit = ball;

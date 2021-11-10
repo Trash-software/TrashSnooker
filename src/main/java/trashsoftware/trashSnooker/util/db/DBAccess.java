@@ -2,7 +2,6 @@ package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
-import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -55,7 +54,7 @@ public class DBAccess {
 //        db.printQuery("SELECT * FROM GeneralRecord WHERE PlayerName = 'Kid';");
 //        System.out.println("========");
         db.printQuery("SELECT * FROM SnookerRecord;");
-        
+
         db.printQuery("SELECT * FROM Game INNER JOIN GeneralRecord USING (EntireBeginTime, FrameIndex)" +
                 " WHERE EntireBeginTime = '2021-11-06 17:20:25.53';");
 //        db.insertPlayerIfNotExists("Ding");
@@ -81,7 +80,7 @@ public class DBAccess {
     private String getTypeKey(GameType gameType, String playerName) {
         return String.format("'%s_%s'", playerName, gameType.toSqlKey());
     }
-    
+
     private void storeAttemptsForOnePlayer(EntireGame entireGame, Game frame, Player player) {
         // attempts, successes, long attempts, long successes, 
         // defenses, defense successes
@@ -100,10 +99,10 @@ public class DBAccess {
                 data[5]++;
             }
         }
-        
-        String queryWhere = getFrameQueryWhere(entireGame, frame, 
+
+        String queryWhere = getFrameQueryWhere(entireGame, frame,
                 player.getPlayerPerson().getName(), true);
-        String query = 
+        String query =
                 "UPDATE GeneralRecord SET " +
                         "Attempts = Attempts + " + data[0] + ", " +
                         "Successes = Successes + " + data[1] + ", " +
@@ -120,12 +119,12 @@ public class DBAccess {
     }
 
     public void storeAttempts(EntireGame entireGame, Game frame) {
-        storeAttemptsForOnePlayer(entireGame, frame, 
+        storeAttemptsForOnePlayer(entireGame, frame,
                 frame.getPlayer1());
         storeAttemptsForOnePlayer(entireGame, frame,
                 frame.getPlayer2());
     }
-    
+
     public List<EntireGameTitle> getAllMatches(GameType gameType, String playerName) {
         String typeStr = "'" + gameType.toSqlKey() + "'";
         String playerStr = "'" + playerName + "'";
@@ -137,7 +136,7 @@ public class DBAccess {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            
+
             while (resultSet.next()) {
                 EntireGameTitle egr = new EntireGameTitle(
                         resultSet.getTimestamp("EntireBeginTime"),
@@ -148,7 +147,7 @@ public class DBAccess {
                 );
                 rtn.add(egr);
             }
-            
+
             resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -252,7 +251,7 @@ public class DBAccess {
         }
         return array;
     }
-    
+
     public EntireGameRecord getMatchDetail(EntireGameTitle title) {
         Map<Integer, int[][]> framesPotMap = new HashMap<>();
         Map<Integer, String> framesWinnerMap = new HashMap<>();
@@ -266,7 +265,7 @@ public class DBAccess {
             Statement general = connection.createStatement();
             ResultSet result = general.executeQuery(query);
 //            ResultSetMetaData metaData = result.getMetaData();
-            
+
             while (result.next()) {
                 int index = result.getInt("FrameIndex");
                 int[] array = new int[6];
@@ -289,7 +288,7 @@ public class DBAccess {
                 framesWinnerMap.put(index, frameWinner);
             }
             general.close();
-            
+
             if (title.gameType.snookerLike) {
                 String snookerQuery = "SELECT * FROM SnookerRecord " +
                         "WHERE EntireBeginTime = " + Util.timeStampFmt(title.startTime) +
@@ -311,18 +310,18 @@ public class DBAccess {
                         scores[4]++;
                     }
                     PlayerFrameRecord.Snooker snooker = new PlayerFrameRecord.Snooker(
-                            index, framesPotMap.get(index)[playerIndex], 
+                            index, framesPotMap.get(index)[playerIndex],
                             framesWinnerMap.get(index), scores
                     );
-                    PlayerFrameRecord[] thisFrame = 
+                    PlayerFrameRecord[] thisFrame =
                             records.computeIfAbsent(index, k -> new PlayerFrameRecord[2]);
                     thisFrame[playerIndex] = snooker;
                 }
-                
+
                 sn.close();
-                
+
                 return new EntireGameRecord.Snooker(title, records, durations);
-            } else if (title.gameType == GameType.CHINESE_EIGHT || 
+            } else if (title.gameType == GameType.CHINESE_EIGHT ||
                     title.gameType == GameType.SIDE_POCKET) {
                 String tableName = title.gameType.toSqlKey() + "Record";
                 String numQuery = "SELECT * FROM " + tableName + " " +
@@ -347,18 +346,18 @@ public class DBAccess {
                     thisFrame[playerIndex] = numbered;
                 }
                 numStatement.close();
-                
+
                 if (title.gameType == GameType.CHINESE_EIGHT) {
                     return new EntireGameRecord.ChineseEight(title, records, durations);
                 } else {
                     return new EntireGameRecord.SidePocket(title, records, durations);
                 }
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return null;
     }
 
@@ -369,15 +368,15 @@ public class DBAccess {
     }
 
     private String getFrameQueryWhere(EntireGame entireGame, Game game, String playerName,
-                                           boolean endLine) {
+                                      boolean endLine) {
         return " WHERE (EntireBeginTime = " + entireGame.getStartTimeSqlString() + " AND " +
                 "FrameIndex = " + game.frameIndex + " AND " +
-                "PlayerName = '" + playerName + "')" + 
+                "PlayerName = '" + playerName + "')" +
                 (endLine ? ";" : "");
     }
-    
+
     public void recordNumberedBallResult(EntireGame entireGame, Game frame,
-                                         NumberedBallPlayer player, boolean wins, 
+                                         NumberedBallPlayer player, boolean wins,
                                          List<Integer> continuousPots) {
         String tableName = entireGame.gameType.toSqlKey() + "Record";
         int playTimes = player.getPlayTimes();
@@ -398,8 +397,8 @@ public class DBAccess {
         for (Integer b : continuousPots) {
             if (b > highest) highest = b;
         }
-        String query = "INSERT INTO " + tableName + " VALUES (" + 
-                entireGame.getStartTimeSqlString() + ", " + 
+        String query = "INSERT INTO " + tableName + " VALUES (" +
+                entireGame.getStartTimeSqlString() + ", " +
                 frame.frameIndex + ", " +
                 "'" + player.getPlayerPerson().getName() + "', " +
                 breakClear + ", " + continueClear + ", " + highest + ");";
@@ -426,7 +425,7 @@ public class DBAccess {
                 player.getScore() + ", " +
                 breaks50 + ", " +
                 highBreak + ");";
-        
+
         try {
             executeStatement(query);
         } catch (SQLException e) {
@@ -489,7 +488,7 @@ public class DBAccess {
         }
     }
 
-    private void createRecordForFrame(EntireGame entireGame, Game game, String playerName) 
+    private void createRecordForFrame(EntireGame entireGame, Game game, String playerName)
             throws SQLException {
         String command1 = "INSERT INTO GeneralRecord VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
@@ -522,15 +521,15 @@ public class DBAccess {
                 game.frameIndex + ", 0, NULL);";
         try {
             executeStatement(generalCmd);
-            createRecordForFrame(entireGame, game, 
+            createRecordForFrame(entireGame, game,
                     entireGame.getPlayer1().getPlayerPerson().getName());
-            createRecordForFrame(entireGame, game, 
+            createRecordForFrame(entireGame, game,
                     entireGame.getPlayer2().getPlayerPerson().getName());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
+
     public void recordAFrameEnds(EntireGame entireGame, Game game, PlayerPerson winner) {
         long duration = (System.currentTimeMillis() - game.frameStartTime) / 1000 + 1;
         String generalCmd = "UPDATE Game SET DurationSeconds = " + duration + ", " +
@@ -544,7 +543,7 @@ public class DBAccess {
             e.printStackTrace();
         }
     }
-    
+
     public void abortEntireGame(EntireGame entireGame) {
         String cmd = "DELETE FROM EntireGame " +
                 "WHERE EntireBeginTime = " + entireGame.getStartTimeSqlString() + ";";
@@ -562,12 +561,12 @@ public class DBAccess {
             e.printStackTrace();
         }
     }
-    
+
     public void printQuery(String query) {
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            
+
             ResultSetMetaData meta = rs.getMetaData();
             int colCount = meta.getColumnCount();
             for (int c = 1; c <= colCount; c++) {
@@ -580,7 +579,7 @@ public class DBAccess {
                 }
                 System.out.println();
             }
-            
+
             stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();

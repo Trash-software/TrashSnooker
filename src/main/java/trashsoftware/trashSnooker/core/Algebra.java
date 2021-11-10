@@ -49,7 +49,7 @@ public class Algebra {
     public static double[] antiProjection(double[] base, double[] vecOnBase) {
         double[] unitBase = unitVector(base);  // 切线的单位向量
         double theta = thetaOf(vecOnBase);
-        System.out.println("Theta: " + Math.toDegrees(theta));
+//        System.out.println("Theta: " + Math.toDegrees(theta));
         if (Double.isNaN(theta)) {
             System.out.println(Arrays.toString(vecOnBase) + ", " + Arrays.toString(unitBase));
         }
