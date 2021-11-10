@@ -28,7 +28,9 @@ import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
+import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.fxml.projection.BallProjection;
 import trashsoftware.trashSnooker.fxml.projection.CushionProjection;
@@ -164,7 +166,12 @@ public class GameView implements Initializable {
         player2TarCanvas.setHeight(ballDiameter * 1.2);
         player2TarCanvas.setWidth(ballDiameter * 1.2);
         singlePoleCanvas.setHeight(ballDiameter * 1.2);
-        singlePoleCanvas.setWidth(ballDiameter * 7 * 1.2);
+        if (gameType.snookerLike) 
+            singlePoleCanvas.setWidth(ballDiameter * 7 * 1.2);
+        else if (gameType == GameType.CHINESE_EIGHT) 
+            singlePoleCanvas.setWidth(ballDiameter * 8 * 1.2);
+        else if (gameType == GameType.SIDE_POCKET)
+            singlePoleCanvas.setWidth(ballDiameter * 9 * 1.2);
 
         singlePoleCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
         singlePoleCanvas.getGraphicsContext2D().setStroke(WHITE);
@@ -255,7 +262,7 @@ public class GameView implements Initializable {
                             game.getGame().getPlayer2().getScore(),
                             game.getPlayer2().getPlayerPerson().getName()),
                     String.format("%s 赢得一局。", wonPlayer.getPlayerPerson().getName()));
-            
+
             if (entireGameEnd) {
                 AlertShower.showInfo(stage,
                         String.format("%s (%d) : (%d) %s",
@@ -625,7 +632,7 @@ public class GameView implements Initializable {
                 // 如进攻成功，则上一杆防守失败了
                 curDefAttempt.setSuccess(!success);
                 if (success) {
-                    System.out.println(curDefAttempt.defensePlayer.getPlayerPerson().getName() + 
+                    System.out.println(curDefAttempt.defensePlayer.getPlayerPerson().getName() +
                             " defense failed!");
                 }
             }
@@ -1062,8 +1069,26 @@ public class GameView implements Initializable {
             player2ScoreLabel.setText(String.valueOf(game.getGame().getPlayer2().getScore()));
             player1FramesLabel.setText(String.valueOf(game.getP1Wins()));
             player2FramesLabel.setText(String.valueOf(game.getP2Wins()));
-            drawSinglePoleBalls(cuePlayer.getSinglePole());
-            singlePoleLabel.setText(String.valueOf(cuePlayer.getSinglePoleScore()));
+
+            singlePoleCanvas.getGraphicsContext2D().setFill(WHITE);
+            singlePoleCanvas.getGraphicsContext2D().fillRect(0, 0,
+                    singlePoleCanvas.getWidth(), singlePoleCanvas.getHeight());
+
+            if (game.gameType.snookerLike) {
+                drawSnookerSinglePoles(cuePlayer.getSinglePole());
+                singlePoleLabel.setText(String.valueOf(cuePlayer.getSinglePoleScore()));
+            } else if (game.gameType == GameType.CHINESE_EIGHT ||
+                    game.gameType == GameType.SIDE_POCKET) {
+                if (cuePlayer == game.getGame().getCuingPlayer()) {
+                    // 进攻成功了
+                    drawNumberedAllTargets((NumberedBallGame) game.getGame(),
+                            (NumberedBallPlayer) cuePlayer);
+                } else {
+                    // 进攻失败了
+                    drawNumberedAllTargets((NumberedBallGame) game.getGame(),
+                            (NumberedBallPlayer) game.getGame().getCuingPlayer());
+                }
+            }
         });
     }
 
@@ -1096,15 +1121,41 @@ public class GameView implements Initializable {
         }
     }
 
-    private void drawSinglePoleBalls(TreeMap<Ball, Integer> singlePoleBalls) {
+    private void drawNumberedAllTargets(NumberedBallGame frame, NumberedBallPlayer player) {
+        double x = ballDiameter * 0.6;
+        double y = ballDiameter * 0.6;
+        if (frame.getCurrentTarget() != 0) {
+            Map<Integer, Ball> numberBallMap = frame.getNumberBallMap();
+            if (frame instanceof ChineseEightBallGame) {
+                int target = ((ChineseEightBallPlayer) player).getBallRange();
+                final int base = target == ChineseEightBallGame.FULL_BALL_REP ? 1 : 9;
+                for (int i = base; i < base + 7; i++) {
+                    Ball ball = numberBallMap.get(i);
+                    if (!ball.isPotted()) {
+                        NumberedBallGame.drawPoolBallEssential(
+                                x, y, ballDiameter, ball.getColor(), ball.getValue(),
+                                singlePoleCanvas.getGraphicsContext2D());
+                        x += ballDiameter * 1.2;
+                    }
+                }
+                Ball eight = numberBallMap.get(8);
+                if (!eight.isPotted()) {
+                    NumberedBallGame.drawPoolBallEssential(
+                            x, y, ballDiameter, eight.getColor(), eight.getValue(),
+                            singlePoleCanvas.getGraphicsContext2D());
+                }
+            }
+        }
+    }
+
+    private void drawSnookerSinglePoles(TreeMap<Ball, Integer> singlePoleBalls) {
         GraphicsContext gc = singlePoleCanvas.getGraphicsContext2D();
-        gc.setFill(WHITE);
-        gc.fillRect(0, 0, singlePoleCanvas.getWidth(), singlePoleCanvas.getHeight());
         double x = 0;
         double y = ballDiameter * 0.1;
         double textY = ballDiameter * 0.8;
         for (Map.Entry<Ball, Integer> ballCount : singlePoleBalls.entrySet()) {
-            gc.setFill(ballCount.getKey().getColor());
+            Ball ball = ballCount.getKey();
+            gc.setFill(ball.getColor());
             gc.fillOval(x + ballDiameter * 0.1, y, ballDiameter, ballDiameter);
             gc.strokeText(String.valueOf(ballCount.getValue()), x + ballDiameter * 0.6, textY);
             x += ballDiameter * 1.2;
@@ -1137,7 +1188,6 @@ public class GameView implements Initializable {
         if (value == 0) {
             drawTargetColoredBall(canvas);
         } else {
-
             NumberedBallGame.drawPoolBallEssential(
                     ballDiameter * 0.6,
                     ballDiameter * 0.6,

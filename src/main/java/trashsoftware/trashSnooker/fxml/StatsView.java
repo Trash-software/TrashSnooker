@@ -136,35 +136,35 @@ public class StatsView implements Initializable {
             resultPane.add(new Label("进攻次数"), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(potAttempts)), 1, rowIndex++);
             resultPane.add(new Label("进攻成功次数"), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(potSuccesses)), 1, rowIndex++);
-            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(potSuccesses)), 1, rowIndex);
+//            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
             resultPane.add(new Label(
                     potAttempts == 0 ? "0%" :
-                            String.format("%.1f%%", potSuccesses * 100.0 / potAttempts)), 1, rowIndex++);
+                            String.format("%.1f%%", potSuccesses * 100.0 / potAttempts)), 2, rowIndex++);
 
             int longPotAttempts = potRecords[2];
             int longPotSuccesses = potRecords[3];
             resultPane.add(new Label("长台进攻次数"), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(longPotAttempts)), 1, rowIndex++);
             resultPane.add(new Label("长台进攻成功次数"), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(longPotSuccesses)), 1, rowIndex++);
-            resultPane.add(new Label("长台进攻成功率"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(longPotSuccesses)), 1, rowIndex);
+//            resultPane.add(new Label("长台进攻成功率"), 0, rowIndex);
             resultPane.add(new Label(
                     longPotAttempts == 0 ? "0%" :
                             String.format("%.1f%%",
-                                    longPotSuccesses * 100.0 / longPotAttempts)), 1, rowIndex++);
+                                    longPotSuccesses * 100.0 / longPotAttempts)), 2, rowIndex++);
 
             int defAttempts = potRecords[4];
             int defSuccesses = potRecords[5];
             resultPane.add(new Label("防守次数"), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(defAttempts)), 1, rowIndex++);
             resultPane.add(new Label("防守成功次数"), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(defSuccesses)), 1, rowIndex++);
-            resultPane.add(new Label("防守成功率"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(defSuccesses)), 1, rowIndex);
+//            resultPane.add(new Label("防守成功率"), 0, rowIndex);
             resultPane.add(new Label(
                     defAttempts == 0 ? "0%" :
                             String.format("%.1f%%",
-                                    defSuccesses * 100.0 / defAttempts)), 1, rowIndex++);
+                                    defSuccesses * 100.0 / defAttempts)), 2, rowIndex++);
 
             if (gameType.snookerLike) {
                 int[] breaksScores = db.getSnookerBreaksTotal(gameType, name);

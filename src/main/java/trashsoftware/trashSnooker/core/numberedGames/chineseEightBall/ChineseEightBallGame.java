@@ -12,6 +12,9 @@ import java.util.stream.Collectors;
 
 public class ChineseEightBallGame extends NumberedBallGame
         implements NeedBigBreak {
+    
+    public static final int FULL_BALL_REP = 16;
+    public static final int HALF_BALL_REP = 17;
 
     private static final int[] FULL_BALL_SLOTS = {0, 2, 3, 7, 9, 10, 12};
     private static final int[] HALF_BALL_SLOTS = {1, 5, 6, 7, 11, 13, 14};
@@ -171,22 +174,6 @@ public class ChineseEightBallGame extends NumberedBallGame
         return balls.stream().filter(this::isHalfBall).collect(Collectors.toSet());
     }
 
-    private int fullBallsCount(Set<Ball> balls) {
-        int count = 0;
-        for (Ball ball : balls) {
-            if (isFullBall(ball)) count++;
-        }
-        return count;
-    }
-
-    private int halfBallsCount(Set<Ball> balls) {
-        int count = 0;
-        for (Ball ball : balls) {
-            if (isHalfBall(ball)) count++;
-        }
-        return count;
-    }
-
     private boolean hasFullBalls(Set<Ball> balls) {
         for (Ball ball : balls) {
             if (isFullBall(ball)) return true;
@@ -204,12 +191,12 @@ public class ChineseEightBallGame extends NumberedBallGame
     private int getTargetOfPlayer(Player playerX) {
         ChineseEightBallPlayer player = (ChineseEightBallPlayer) playerX;
         if (player.getBallRange() == 0) return 0;
-        if (player.getBallRange() == 16) {
-            if (hasFullBallOnTable()) return 16;
+        if (player.getBallRange() == FULL_BALL_REP) {
+            if (hasFullBallOnTable()) return FULL_BALL_REP;
             else return 8;
         }
-        if (player.getBallRange() == 17) {
-            if (hasHalfBallOnTable()) return 17;
+        if (player.getBallRange() == HALF_BALL_REP) {
+            if (hasHalfBallOnTable()) return HALF_BALL_REP;
             else return 8;
         }
         throw new RuntimeException("不可能");
@@ -247,12 +234,12 @@ public class ChineseEightBallGame extends NumberedBallGame
             foul = true;
             foulReason = "空杆";
         } else {
-            if (currentTarget == 16) {
+            if (currentTarget == FULL_BALL_REP) {
                 if (!isFullBall(whiteFirstCollide)) {
                     foul = true;
                     foulReason = "目标球为全色球，但击打了半色球";
                 }
-            } else if (currentTarget == 17) {
+            } else if (currentTarget == HALF_BALL_REP) {
                 if (!isHalfBall(whiteFirstCollide)) {
                     foul = true;
                     foulReason = "目标球为半色球，但击打了全色球";
@@ -290,26 +277,26 @@ public class ChineseEightBallGame extends NumberedBallGame
                     return;
                 }
                 if (allFullBalls(pottedBalls)) {
-                    ((ChineseEightBallPlayer) currentPlayer).setBallRange(16);
-                    ((ChineseEightBallPlayer) getAnotherPlayer()).setBallRange(17);
+                    ((ChineseEightBallPlayer) currentPlayer).setBallRange(FULL_BALL_REP);
+                    ((ChineseEightBallPlayer) getAnotherPlayer()).setBallRange(HALF_BALL_REP);
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     lastPotSuccess = true;
                     currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
                 }
                 if (allHalfBalls(pottedBalls)) {
-                    ((ChineseEightBallPlayer) currentPlayer).setBallRange(17);
-                    ((ChineseEightBallPlayer) getAnotherPlayer()).setBallRange(16);
+                    ((ChineseEightBallPlayer) currentPlayer).setBallRange(HALF_BALL_REP);
+                    ((ChineseEightBallPlayer) getAnotherPlayer()).setBallRange(FULL_BALL_REP);
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     lastPotSuccess = true;
                     currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
                 }
             } else {
-                if (currentTarget == 16) {
+                if (currentTarget == FULL_BALL_REP) {
                     if (hasFullBalls(pottedBalls)) {
                         lastPotSuccess = true;
                     }
                     currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
-                } else if (currentTarget == 17) {
+                } else if (currentTarget == HALF_BALL_REP) {
                     if (hasHalfBalls(pottedBalls)) {
                         lastPotSuccess = true;
                     }

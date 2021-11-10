@@ -320,6 +320,7 @@ public abstract class AbstractSnookerGame extends Game {
             updateTargetPotFailed();
             switchPlayer();
             lastCueFoul = true;
+            lastCueFoul = true;
             if (!cueBall.isPotted() && hasFreeBall()) {
                 doingFreeBall = true;
                 System.out.println("Free ball!");

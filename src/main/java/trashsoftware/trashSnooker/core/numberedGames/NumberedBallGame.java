@@ -5,7 +5,12 @@ import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.fxml.GameView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class NumberedBallGame extends Game {
+    
+    protected Map<Integer, Ball> numberBallMap;
 
     protected NumberedBallGame(GameView parent, GameSettings gameSettings, 
                                GameValues gameValues, int frameIndex) {
@@ -13,6 +18,16 @@ public abstract class NumberedBallGame extends Game {
     }
 
     protected abstract double breakPointX();
+
+    public Map<Integer, Ball> getNumberBallMap() {
+        if (numberBallMap == null) {
+            numberBallMap = new HashMap<>();
+            for (Ball ball : getAllBalls()) {
+                numberBallMap.put(ball.getValue(), ball);
+            }
+        }
+        return numberBallMap;
+    }
 
     @Override
     protected void setBreakingPlayer(Player breakingPlayer) {
