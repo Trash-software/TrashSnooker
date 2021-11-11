@@ -352,26 +352,26 @@ public abstract class Game {
         ballInHand = true;
     }
 
-    public void collisionTest() {
+    public Movement collisionTest() {
         Ball ball1 = getAllBalls()[0];
         Ball ball2 = getAllBalls()[1];
 
         ball1.pickup();
         ball2.pickup();
 
-        ball1.setX(1000);
-        ball1.setY(1000);
+        ball1.setX(800);
+        ball1.setY(800);
 
-        ball1.setVx(0.5);
-        ball1.setVy(0.5);
+        ball1.setVx(6);
+        ball1.setVy(0.0);
 
         ball2.setX(2000);
-        ball2.setY(1500);
+        ball2.setY(800);
 
-        ball2.setVx(-1);
-        ball2.setVy(-0.3);
+        ball2.setVx(1);
+        ball2.setVy(0.0);
 
-        physicalCalculate();
+        return physicalCalculate();
     }
 
     public void tieTest() {

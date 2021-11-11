@@ -481,7 +481,8 @@ public class GameView implements Initializable {
 
     @FXML
     void testAction() {
-        game.getGame().collisionTest();
+        movement = game.getGame().collisionTest();
+        playMovement();
     }
 
     @FXML

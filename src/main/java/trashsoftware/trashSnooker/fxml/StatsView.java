@@ -333,34 +333,45 @@ public class StatsView implements Initializable {
 
             int rowIndex = 0;
             gridPane.add(new Label(thisPlayer), 0, rowIndex);
-            gridPane.add(new Label(oppoName), 2, rowIndex);
+            gridPane.add(new Label(oppoName), 4, rowIndex);
             rowIndex++;
 
-            gridPane.add(new Label("交手次数"), 1, rowIndex);
+            gridPane.add(new Label("交手次数"), 2, rowIndex);
             gridPane.add(new Label(String.valueOf(egtList.size())), 0, rowIndex);
-            gridPane.add(new Label(String.valueOf(egtList.size())), 2, rowIndex);
+            gridPane.add(new Label(String.valueOf(egtList.size())), 4, rowIndex);
             rowIndex++;
-
-            gridPane.add(new Label("胜利"), 1, rowIndex);
+            
+            double matchWinRate = (double) thisWinMatches / egtList.size() * 100;
+            gridPane.add(new Label("胜利"), 2, rowIndex);
             gridPane.add(new Label(String.valueOf(thisWinMatches)), 0, rowIndex);
+            gridPane.add(new Label(String.format("%.1f%%", matchWinRate)), 1, rowIndex);
             gridPane.add(new Label(String.valueOf(egtList.size() - thisWinMatches)),
-                    2, rowIndex);
+                    4, rowIndex);
+            gridPane.add(new Label(String.format("%.1f%%", 100 - matchWinRate)), 3, rowIndex);
             rowIndex++;
 
-            gridPane.add(new Label("总胜局数"), 1, rowIndex);
+            double frameWinRate = (double) thisWinFrames / (thisWinFrames + oppoWinFrames) * 100;
+            gridPane.add(new Label("总胜局数"), 2, rowIndex);
             gridPane.add(new Label(String.valueOf(thisWinFrames)), 0, rowIndex);
+            gridPane.add(new Label(String.format("%.1f%%", frameWinRate)), 1, rowIndex);
             gridPane.add(new Label(String.valueOf(oppoWinFrames)),
-                    2, rowIndex);
+                    4, rowIndex);
+            gridPane.add(new Label(String.format("%.1f%%", 100 - frameWinRate)), 3, rowIndex);
             rowIndex++;
 
-            gridPane.add(new Separator(), 0, rowIndex++, 3, 1);
+            gridPane.add(new Separator(), 0, rowIndex++, 5, 1);
             for (Map.Entry<Integer, int[]> entry : playerOppoWinsByTotalFrames.entrySet()) {
+                int pWins = entry.getValue()[0];
+                int oWins = entry.getValue()[1];
+                double pRate = (double) pWins / (pWins + oWins) * 100;
                 gridPane.add(
                         new Label(String.format("%d局%d胜制", 
                                 entry.getKey(), entry.getKey() / 2 + 1)),
-                        1, rowIndex);
-                gridPane.add(new Label(String.valueOf(entry.getValue()[0])), 0, rowIndex);
-                gridPane.add(new Label(String.valueOf(entry.getValue()[1])), 2, rowIndex);
+                        2, rowIndex);
+                gridPane.add(new Label(String.valueOf(pWins)), 0, rowIndex);
+                gridPane.add(new Label(String.format("%.1f%%", pRate)), 1, rowIndex);
+                gridPane.add(new Label(String.format("%.1f%%", 100 - pRate)), 3, rowIndex);
+                gridPane.add(new Label(String.valueOf(oWins)), 4, rowIndex);
                 rowIndex++;
             }
 
