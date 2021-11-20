@@ -502,7 +502,7 @@ public abstract class Game {
     public class WhitePredictor {
         private double lenAfterWall;
         private WhitePrediction prediction;
-//        private double cumulatedPhysicalTime = 0.0;
+        private double cumulatedPhysicalTime = 0.0;
 //        private double lastPhysicalTime = 0.0;
         private double dtWhenHitFirstWall = -1.0;
         private boolean notTerminated = true;
@@ -513,7 +513,11 @@ public abstract class Game {
             prediction = new WhitePrediction(cueBall);
 
             while (!oneRun() && notTerminated) {
-
+                if (cumulatedPhysicalTime >= 30000) {
+                    // Must be something wrong
+                    System.err.println("White prediction congestion");
+                    break;
+                }
             }
 
             notTerminated = false;
@@ -524,6 +528,7 @@ public abstract class Game {
          * 返回白球是否已经停止
          */
         private boolean oneRun() {
+            cumulatedPhysicalTime += calculateMs;
             prediction.getWhitePath().add(new double[]{cueBall.x, cueBall.y});
             cueBall.prepareMove();
 

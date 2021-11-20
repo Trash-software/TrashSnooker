@@ -14,7 +14,7 @@ public class PlayerPerson {
     private final List<Cue> privateCues = new ArrayList<>();
     private final double minPullDt;
     private final double maxPullDt;
-    private double powerControl;
+    private final double powerControl;
     private double[] cuePointMuSigmaXY;  // 横向的mu，横向的sigma，纵向的mu，纵向的sigma
     private final double cueSwingMag;
     private final CuePlayType cuePlayType;

@@ -555,6 +555,7 @@ public class GameView implements Initializable {
         Random random = new Random();
         double powerError = random.nextGaussian();
         powerError = powerError * (100.0 - playerPerson.getPowerControl()) / 100.0;
+        powerError *= wantPower / 50;  // 用力越大误差越大
         power += power * powerError;
         System.out.println("Want power: " + wantPower + ", actual power: " + power);
 

@@ -334,11 +334,9 @@ public class StatsView implements Initializable {
             int rowIndex = 0;
             gridPane.add(new Label(thisPlayer), 0, rowIndex);
             gridPane.add(new Label(oppoName), 4, rowIndex);
-            rowIndex++;
-
-            gridPane.add(new Label("交手次数"), 2, rowIndex);
-            gridPane.add(new Label(String.valueOf(egtList.size())), 0, rowIndex);
-            gridPane.add(new Label(String.valueOf(egtList.size())), 4, rowIndex);
+            gridPane.add(new Label(String.format("交手%d次，共%d局", egtList.size(), 
+                            thisWinFrames + oppoWinFrames)), 
+                    2, rowIndex);
             rowIndex++;
             
             double matchWinRate = (double) thisWinMatches / egtList.size() * 100;
