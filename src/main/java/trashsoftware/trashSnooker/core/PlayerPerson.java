@@ -7,6 +7,7 @@ import java.util.Objects;
 public class PlayerPerson {
 
     private final String name;
+    public final String category;
     private final double maxPowerPercentage;
     private final double controllablePowerPercentage;
     private final double maxSpinPercentage;
@@ -22,6 +23,7 @@ public class PlayerPerson {
     private final CuePlayType cuePlayType;
 
     public PlayerPerson(String name,
+                        String category,
                         double maxPowerPercentage,
                         double controllablePowerPercentage,
                         double maxSpinPercentage,
@@ -35,6 +37,7 @@ public class PlayerPerson {
                         double powerControl,
                         CuePlayType cuePlayType) {
         this.name = name;
+        this.category = category;
         this.maxPowerPercentage = maxPowerPercentage;
         this.controllablePowerPercentage = controllablePowerPercentage;
         this.maxSpinPercentage = maxSpinPercentage;
@@ -58,6 +61,7 @@ public class PlayerPerson {
                         double longPrecision) {
         this(
                 name,
+                "Amateur",
                 maxPowerPercentage,
                 controllablePowerPercentage,
                 maxSpinPercentage,

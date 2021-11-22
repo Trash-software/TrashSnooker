@@ -264,7 +264,6 @@ public class DBAccess {
         try {
             Statement general = connection.createStatement();
             ResultSet result = general.executeQuery(query);
-//            ResultSetMetaData metaData = result.getMetaData();
 
             while (result.next()) {
                 int index = result.getInt("FrameIndex");

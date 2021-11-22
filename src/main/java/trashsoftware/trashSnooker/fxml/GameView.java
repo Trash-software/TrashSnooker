@@ -551,6 +551,8 @@ public class GameView implements Initializable {
                 }
             }
         }
+        
+        Cue cue = player.getInGamePlayer().getCurrentCue(game.getGame());
 
         double power = getPowerPercentage();
         final double wantPower = power;
@@ -558,6 +560,7 @@ public class GameView implements Initializable {
         Random random = new Random();
         double powerError = random.nextGaussian();
         powerError = powerError * (100.0 - playerPerson.getPowerControl()) / 100.0;
+        powerError *= cue.powerMultiplier;  // 发力范围越大的杆控力越粗糙
         powerError *= wantPower / 50;  // 用力越大误差越大
         power += power * powerError;
         System.out.println("Want power: " + wantPower + ", actual power: " + power);

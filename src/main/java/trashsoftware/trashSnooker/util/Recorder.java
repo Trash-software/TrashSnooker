@@ -104,6 +104,7 @@ public class Recorder {
                             }
                             playerPerson = new PlayerPerson(
                                     name,
+                                    personObj.getString("category"),
                                     personObj.getDouble("maxPower"),
                                     personObj.getDouble("controllablePower"),
                                     personObj.getDouble("spin"),

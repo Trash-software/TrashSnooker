@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.fxml;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -121,7 +122,8 @@ public class StatsView implements Initializable {
         @Override
         void setRightPane(Pane rightPane) {
             rightPane.getChildren().clear();
-            GridPane resultPane = new GridPane();
+
+            final GridPane resultPane = new GridPane();
             resultPane.setVgap(10.0);
             resultPane.setHgap(20.0);
             resultPane.setAlignment(Pos.CENTER);
@@ -187,7 +189,113 @@ public class StatsView implements Initializable {
                 resultPane.add(new Label("最高单杆球数"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[2])), 1, rowIndex++);
             }
+            resultPane.add(new Separator(), 0, rowIndex++, 3, 1);
+            final Button gameStatsButton = new Button("对局统计");
+            resultPane.add(gameStatsButton, 0, rowIndex++);
+
+            final int lastNormalRowIndex = rowIndex;
+            gameStatsButton.setOnAction(e -> {
+                ProgressIndicator pi = new ProgressIndicator();
+                resultPane.add(pi, 0, lastNormalRowIndex);
+                Thread thread = new Thread(() ->
+                        fillGameStats(pi, resultPane, gameStatsButton, lastNormalRowIndex));
+                thread.start();
+            });
+
             rightPane.getChildren().add(resultPane);
+        }
+
+        private void fillGameStats(final ProgressIndicator indicator, final GridPane resultPane,
+                                   final Button button, final int startRowIndex) {
+            long st = System.currentTimeMillis();
+            List<EntireGameTitle> allMatches =
+                    DBAccess.getInstance().getAllMatches(gameType, name);
+            List<EntireGameRecord> entireRecords = new ArrayList<>();
+            for (EntireGameTitle egt : allMatches) {
+                entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));
+            }
+
+            // int[2]{胜场，总场次} of 这个 match size
+            // 注：和下面有opponent那个不一样
+            SortedMap<Integer, int[]> playerWinsByTotalFrames = new TreeMap<>();
+            int thisWinFrames = 0;
+            int totalFrames = 0;
+            int thisWinMatches = 0;
+            for (EntireGameRecord egr : entireRecords) {
+                boolean thisIsP1 = egr.getTitle().player1Name.equals(name);
+                int[] playerWinsInThisMatchSize =
+                        playerWinsByTotalFrames.computeIfAbsent(
+                                egr.getTitle().totalFrames, k -> new int[2]);
+                playerWinsInThisMatchSize[1]++;
+                int[] p1p2wins = egr.getP1P2WinsCount();
+                totalFrames += egr.getTitle().totalFrames;
+                if (thisIsP1) {
+                    if (p1p2wins[0] > p1p2wins[1]) {
+                        thisWinMatches++;
+                        playerWinsInThisMatchSize[0]++;
+                    }
+                    thisWinFrames += p1p2wins[0];
+                } else {
+                    if (p1p2wins[1] > p1p2wins[0]) {
+                        thisWinMatches++;
+                        playerWinsInThisMatchSize[0]++;
+                    }
+                    thisWinFrames += p1p2wins[1];
+                }
+            }
+
+            final int thisWinFramesFinal = thisWinFrames;
+            final int totalFramesFinal = totalFrames;
+            final int thisWinMatchesFinal = thisWinMatches;
+
+            System.out.println("db time: " + (System.currentTimeMillis() - st));
+
+            Platform.runLater(() -> {
+                indicator.setManaged(false);
+                indicator.setVisible(false);
+                button.setManaged(false);
+                button.setVisible(false);
+
+                int rowIndex = startRowIndex;
+
+                resultPane.add(new Label("总场次"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(allMatches.size())), 1, rowIndex++);
+
+                resultPane.add(new Label("总胜场"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(thisWinMatchesFinal)), 1, rowIndex);
+                
+                resultPane.add(new Label(
+                                String.format("%.1f%%", 
+                                        (double) thisWinMatchesFinal / allMatches.size() * 100)),
+                        2, rowIndex++);
+
+                resultPane.add(new Label("总局数"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(totalFramesFinal)), 1, rowIndex++);
+
+                resultPane.add(new Label("总胜局数"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(thisWinFramesFinal)), 1, rowIndex);
+                
+                resultPane.add(new Label(
+                                String.format("%.1f%%",
+                                        (double) thisWinFramesFinal / totalFramesFinal * 100)),
+                        2, rowIndex++);
+                
+                resultPane.add(new Separator(), 0, rowIndex++, 3, 1);
+
+                // 每种局长的胜率
+                for (Map.Entry<Integer, int[]> entry : playerWinsByTotalFrames.entrySet()) {
+                    int pWins = entry.getValue()[0];
+                    int total = entry.getValue()[1];
+                    double pRate = (double) pWins / total * 100;
+                    resultPane.add(
+                            new Label(String.format("%d局%d胜制",
+                                    entry.getKey(), entry.getKey() / 2 + 1)),
+                            0, rowIndex);
+                    resultPane.add(new Label(String.format("%d场%d胜", total, pWins)), 1, rowIndex);
+                    resultPane.add(new Label(String.format("%.1f%%", pRate)), 2, rowIndex);
+                    rowIndex++;
+                }
+            });
         }
     }
 
@@ -334,11 +442,11 @@ public class StatsView implements Initializable {
             int rowIndex = 0;
             gridPane.add(new Label(thisPlayer), 0, rowIndex);
             gridPane.add(new Label(oppoName), 4, rowIndex);
-            gridPane.add(new Label(String.format("交手%d次，共%d局", egtList.size(), 
-                            thisWinFrames + oppoWinFrames)), 
+            gridPane.add(new Label(String.format("交手%d次，共%d局", egtList.size(),
+                            thisWinFrames + oppoWinFrames)),
                     2, rowIndex);
             rowIndex++;
-            
+
             double matchWinRate = (double) thisWinMatches / egtList.size() * 100;
             gridPane.add(new Label("胜利"), 2, rowIndex);
             gridPane.add(new Label(String.valueOf(thisWinMatches)), 0, rowIndex);
@@ -363,7 +471,7 @@ public class StatsView implements Initializable {
                 int oWins = entry.getValue()[1];
                 double pRate = (double) pWins / (pWins + oWins) * 100;
                 gridPane.add(
-                        new Label(String.format("%d局%d胜制", 
+                        new Label(String.format("%d局%d胜制",
                                 entry.getKey(), entry.getKey() / 2 + 1)),
                         2, rowIndex);
                 gridPane.add(new Label(String.valueOf(pWins)), 0, rowIndex);
@@ -514,7 +622,7 @@ public class StatsView implements Initializable {
                 page.add(new Label(String.valueOf(totalSnookerScores[0][4])), 1, rowIndex);
                 page.add(new Label(String.valueOf(totalSnookerScores[1][4])), 5, rowIndex);
                 rowIndex++;
-            } else if (egt.gameType == GameType.CHINESE_EIGHT || 
+            } else if (egt.gameType == GameType.CHINESE_EIGHT ||
                     egt.gameType == GameType.SIDE_POCKET) {
                 int[][] numberedBreaks = ((EntireGameRecord.NumberedBall) matchRec).totalScores();
                 page.add(new Label("炸清"), 0, rowIndex);

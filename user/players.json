@@ -12,7 +12,8 @@
     "cueSwingMag": 0,
     "cuePointMuSigma": [0, 0, 0, 0],
     "powerControl": 100,
-    "privateCues": ["Master的杆"]
+    "privateCues": ["Master的杆"],
+    "category": "God"
   },
   "莽子": {
     "spin": 75,
@@ -27,7 +28,8 @@
     "cueSwingMag": 50,
     "cuePointMuSigma": [15, 50, 0, 30],
     "powerControl": 80.0,
-    "privateCues": []
+    "privateCues": [],
+    "category": "Amateur"
   },
   "Kid": {
     "spin": 96,
@@ -42,7 +44,8 @@
     "cueSwingMag": 2,
     "cuePointMuSigma": [0, 1, 0, 1],
     "powerControl": 99.5,
-    "privateCues": ["Kid's cue"]
+    "privateCues": ["Kid's cue"],
+    "category": "Professional"
   },
   "老油条": {
     "spin": 90.96009879932735,
@@ -57,7 +60,8 @@
     "cueSwingMag": 25,
     "cuePointMuSigma": [0, 15, 0, 10],
     "powerControl": 94.0,
-    "privateCues": []
+    "privateCues": [],
+    "category": "Amateur"
   },
   "Mou moumou": {
     "spin": 80,
@@ -72,7 +76,8 @@
     "cueSwingMag": 20,
     "cuePointMuSigma": [0, 15, 0, 10],
     "powerControl": 95.0,
-    "privateCues": []
+    "privateCues": [],
+    "category": "Amateur"
   },
   "Brown": {
     "spin": 85,
@@ -87,7 +92,8 @@
     "cueSwingMag": 12,
     "cuePointMuSigma": [0, 10, 0, 6],
     "powerControl": 96.0,
-    "privateCues": []
+    "privateCues": [],
+    "category": "Professional"
   },
   "Ding": {
     "spin": 90.0,
@@ -102,7 +108,24 @@
     "cueSwingMag": 10,
     "cuePointMuSigma": [0, 2, 0, 4],
     "powerControl": 98.5,
-    "privateCues": []
+    "privateCues": [],
+    "category": "Professional"
+  },
+  "John Wizard": {
+    "spin": 96.0,
+    "precision": 85.0,
+    "anglePrecision": 1.1,
+    "longPrecision": 0.8,
+    "name": "John Wizard",
+    "maxPower": 90,
+    "controllablePower": 78,
+    "pullDt": [40.0, 190.0],
+    "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,r",
+    "cueSwingMag": 8,
+    "cuePointMuSigma": [0, 2, 0, 2],
+    "powerControl": 99.0,
+    "privateCues": [],
+    "category": "Professional"
   },
   "Trump": {
     "spin": 98,
@@ -117,7 +140,8 @@
     "cueSwingMag": 8,
     "cuePointMuSigma": [0, 1, 0, 6],
     "powerControl": 96.5,
-    "privateCues": ["Trump's cue"]
+    "privateCues": ["Trump's cue"],
+    "category": "Professional"
   },
   "Murphy": {
     "spin": 95,
@@ -132,7 +156,8 @@
     "cueSwingMag": 1,
     "cuePointMuSigma": [0, 1, 0, 4],
     "powerControl": 98.0,
-    "privateCues": []
+    "privateCues": [],
+    "category": "Professional"
   },
   "流氓": {
     "spin": 50,
@@ -147,7 +172,8 @@
     "cueSwingMag": 0,
     "cuePointMuSigma": [0, 0, 0, 5],
     "powerControl": 85.0,
-    "privateCues": ["准神杆"]
+    "privateCues": ["准神杆"],
+    "category": "Amateur"
   },
   "Smart": {
     "spin": 97,
@@ -162,7 +188,8 @@
     "cueSwingMag": 4,
     "cuePointMuSigma": [0, 1, 0, 10],
     "powerControl": 90.0,
-    "privateCues": []
+    "privateCues": [],
+    "category": "Professional"
   },
   "莽大力": {
     "spin": 100,
@@ -177,7 +204,8 @@
     "cueSwingMag": 25,
     "cuePointMuSigma": [0, 15, 0, 1],
     "powerControl": 95,
-    "privateCues": ["Mang's cue"]
+    "privateCues": ["Mang's cue"],
+    "category": "Amateur"
   },
   "Lolita": {
     "spin": 100,
@@ -192,7 +220,8 @@
     "cueSwingMag": 5,
     "cuePointMuSigma": [0, 1, 0, 4],
     "powerControl": 99.0,
-    "privateCues": ["Lolita's cue", "Lolita's pool cue"]
+    "privateCues": ["Lolita's cue", "Lolita's pool cue"],
+    "category": "Professional"
   },
   "Noob": {
     "spin": 30,
@@ -207,6 +236,7 @@
     "cueSwingMag": 80,
     "cuePointMuSigma": [-30, 70, 10, 50],
     "powerControl": 70.0,
-    "privateCues": []
+    "privateCues": [],
+    "category": "Amateur"
   }
 }}
