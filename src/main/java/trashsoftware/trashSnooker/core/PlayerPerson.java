@@ -11,6 +11,8 @@ public class PlayerPerson {
     private final double controllablePowerPercentage;
     private final double maxSpinPercentage;
     private final double precisionPercentage;
+    private final double anglePrecision;
+    private final double longPrecision;
     private final List<Cue> privateCues = new ArrayList<>();
     private final double minPullDt;
     private final double maxPullDt;
@@ -24,6 +26,8 @@ public class PlayerPerson {
                         double controllablePowerPercentage,
                         double maxSpinPercentage,
                         double precisionPercentage,
+                        double anglePrecision,
+                        double longPrecision,
                         double minPullDt,
                         double maxPullDt,
                         double cueSwingMag,
@@ -35,6 +39,8 @@ public class PlayerPerson {
         this.controllablePowerPercentage = controllablePowerPercentage;
         this.maxSpinPercentage = maxSpinPercentage;
         this.precisionPercentage = precisionPercentage;
+        this.anglePrecision = anglePrecision;
+        this.longPrecision = longPrecision;
         this.minPullDt = minPullDt;
         this.maxPullDt = maxPullDt;
         this.cueSwingMag = cueSwingMag;
@@ -47,13 +53,17 @@ public class PlayerPerson {
                         double maxPowerPercentage,
                         double controllablePowerPercentage,
                         double maxSpinPercentage,
-                        double precisionPercentage) {
+                        double precisionPercentage,                        
+                        double anglePrecision,
+                        double longPrecision) {
         this(
                 name,
                 maxPowerPercentage,
                 controllablePowerPercentage,
                 maxSpinPercentage,
                 precisionPercentage,
+                anglePrecision,
+                longPrecision,
                 50.0,
                 200.0,
                 100.0,
@@ -127,6 +137,14 @@ public class PlayerPerson {
 
     public double getPrecisionPercentage() {
         return precisionPercentage;
+    }
+
+    public double getAnglePrecision() {
+        return anglePrecision;
+    }
+
+    public double getLongPrecision() {
+        return longPrecision;
     }
 
     public double getPowerControl() {

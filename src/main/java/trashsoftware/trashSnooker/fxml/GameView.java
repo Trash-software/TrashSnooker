@@ -125,11 +125,14 @@ public class GameView implements Initializable {
     private boolean isDragging;
     private double lastDragAngle;
     private Timeline timeline;
+    
+    private double predictionMultiplier = 2000.0;
 
-    private double minRealPredictLength = 300.0;
-    private double maxRealPredictLength = 1000.0;
-    private double minPredictLengthPotDt = 2000.0;
-    private double maxPredictLengthPotDt = 500.0;
+//    private double minRealPredictLength = 300.0;
+    private static final double DEFAULT_MAX_PREDICT_LENGTH = 1200.0;
+    private double maxRealPredictLength = DEFAULT_MAX_PREDICT_LENGTH;
+    private final double minPredictLengthPotDt = 2000.0;
+    private final double maxPredictLengthPotDt = 100.0;
     private double whitePredictLenAfterWall = 1000.0;
 
     @Override
@@ -710,14 +713,14 @@ public class GameView implements Initializable {
 
     void setDifficulty(SettingsView.Difficulty difficulty) {
         if (difficulty == SettingsView.Difficulty.EASY) {
-            minRealPredictLength = 600.0;
-            maxRealPredictLength = 2000.0;
+//            minRealPredictLength = 600.0;
+            maxRealPredictLength = DEFAULT_MAX_PREDICT_LENGTH * 1.5;
         } else if (difficulty == SettingsView.Difficulty.MEDIUM) {
-            minRealPredictLength = 300.0;
-            maxRealPredictLength = 1000.0;
+//            minRealPredictLength = 300.0;
+            maxRealPredictLength = DEFAULT_MAX_PREDICT_LENGTH;
         } else if (difficulty == SettingsView.Difficulty.HARD) {
-            minRealPredictLength = 150.0;
-            maxRealPredictLength = 500.0;
+//            minRealPredictLength = 150.0;
+            maxRealPredictLength = DEFAULT_MAX_PREDICT_LENGTH * 0.5;
         }
     }
 
@@ -1216,24 +1219,33 @@ public class GameView implements Initializable {
 
     private double getPredictionLineTotalLength(double potDt, PlayerPerson playerPerson) {
         Cue cue = game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame());
-        double maxLen = maxRealPredictLength * cue.accuracyMultiplier;
-
-        double predictLineTotalLen;
-        if (potDt >= minPredictLengthPotDt) predictLineTotalLen = minRealPredictLength;
-        else if (potDt < maxPredictLengthPotDt) predictLineTotalLen = maxLen;
-        else {
-            double potDtRange = minPredictLengthPotDt - maxPredictLengthPotDt;
-            double lineLengthRange = maxLen - minRealPredictLength;
-            double potDtInRange = (potDt - maxPredictLengthPotDt) / potDtRange;
-            predictLineTotalLen = maxLen - potDtInRange * lineLengthRange;
-        }
-        double side = Math.abs(cuePointX - cueCanvasWH / 2) / cueCanvasWH;  // 0和0.5之间
-        double afterSide =
-                predictLineTotalLen * (1 - side) * playerPerson.getPrecisionPercentage() / 100;  // 加塞影响瞄准
-        double mul = 1 - Math.sin(Math.toRadians(cueAngleDeg)); // 抬高杆尾影响瞄准
-//        if (cueAngleDeg > 5) {
-//            mul *= 1 - ((cueAngleDeg - 5) / (MAX_CUE_ANGLE + 5));
+        
+        // 最大的预测长度
+        double origMaxLength = playerPerson.getPrecisionPercentage() / 100 * 
+                cue.accuracyMultiplier * maxRealPredictLength;
+        // 只计算距离的最小长度
+        double minLength = origMaxLength / 2.5 * playerPerson.getLongPrecision();
+        
+        double potDt2 = Math.max(potDt, maxPredictLengthPotDt);
+        double dtRange = minPredictLengthPotDt - maxPredictLengthPotDt;
+        double lengthRange = origMaxLength - minLength;
+        double potDtInRange = (potDt2 - maxPredictLengthPotDt) / dtRange;
+        double predictLength = origMaxLength - potDtInRange * lengthRange;
+        
+//        double maxLen = maxRealPredictLength * cue.accuracyMultiplier;
+//
+//        double predictLineTotalLen;
+//        if (potDt >= minPredictLengthPotDt) predictLineTotalLen = minRealPredictLength;
+//        else if (potDt < maxPredictLengthPotDt) predictLineTotalLen = maxLen;
+//        else {
+//            double potDtRange = minPredictLengthPotDt - maxPredictLengthPotDt;
+//            double lineLengthRange = maxLen - minRealPredictLength;
+//            double potDtInRange = (potDt - maxPredictLengthPotDt) / potDtRange;
+//            predictLineTotalLen = maxLen - potDtInRange * lineLengthRange;
 //        }
+        double side = Math.abs(cuePointX - cueCanvasWH / 2) / cueCanvasWH;  // 0和0.5之间
+        double afterSide = predictLength * (1 - side);  // 加塞影响瞄准
+        double mul = 1 - Math.sin(Math.toRadians(cueAngleDeg)); // 抬高杆尾影响瞄准
         return afterSide * mul;
     }
 
@@ -1293,14 +1305,16 @@ public class GameView implements Initializable {
                 if (theta > Math.PI) {
                     theta = Math.PI * 2 - theta;
                 }
-//                System.out.println(Math.toDegrees(theta) + " " + predictLineTotalLen);
 
                 // 角度越大，目标球预测线越短
-                double multiplier = predictLineTotalLen *
-                        ((Math.PI / 2 - theta) / Math.PI * 2);
+                double pureMultiplier = ((Math.PI / 2 - theta) / Math.PI * 2);
+                PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
+                double multiplier = Math.pow(pureMultiplier, 1 / playerPerson.getAnglePrecision());
+                
+                double totalLen = predictLineTotalLen * multiplier;
 
-                double lineX = targetPredictionUnitX * multiplier * scale;
-                double lineY = targetPredictionUnitY * multiplier * scale;
+                double lineX = targetPredictionUnitX * totalLen * scale;
+                double lineY = targetPredictionUnitY * totalLen * scale;
 
                 double tarCanvasX = canvasX(predict.getFirstCollide().getX());
                 double tarCanvasY = canvasY(predict.getFirstCollide().getY());
@@ -1309,103 +1323,6 @@ public class GameView implements Initializable {
                 graphicsContext.strokeLine(tarCanvasX, tarCanvasY,
                         tarCanvasX + lineX, tarCanvasY + lineY);
             }
-        }
-    }
-
-    private void drawCursor2() {
-        // todo
-        if (game.getGame().isEnded()) return;
-        if (isPlayingMovement()) return;
-        if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
-
-        double whiteAbsX;
-        double whiteAbsY;
-        Ball whiteBall = game.getGame().getCueBall();
-
-        double targetX = 0.0;
-        double targetY = 0.0;
-        double predictWhiteX;
-        double predictWhiteY;
-        Ball targetBall;
-        if ((isGameCalculating() || isPlayingCueAnimation()) && predictionOfCue != null) {
-            // 显示保存的预测线
-            whiteAbsX = predictionOfCue.whiteX;
-            whiteAbsY = predictionOfCue.whiteY;
-            targetBall = predictionOfCue.predictHitBall;
-            targetX = predictionOfCue.ballX;
-            targetY = predictionOfCue.ballY;
-            predictWhiteX = predictionOfCue.whiteHitX;
-            predictWhiteY = predictionOfCue.whiteHitY;
-        } else {
-            if (whiteBall.isPotted()) return;
-            whiteAbsX = whiteBall.getX();
-            whiteAbsY = whiteBall.getY();
-
-            double[] unitXYWithSpin = getUnitXYWithSpins(getUnitSideSpin(), getPowerPercentage());
-            double unitX = unitXYWithSpin[0];
-            double unitY = unitXYWithSpin[1];
-            PredictedPos predictedPos = game.getGame().getPredictedHitBall(unitX, unitY);
-            if (predictedPos == null) {
-                targetBall = null;
-                predictWhiteX = whiteAbsX + unitX * 3000;
-                predictWhiteY = whiteAbsY + unitY * 3000;
-            } else {
-                targetBall = predictedPos.getTargetBall();
-                targetX = targetBall.getX();
-                targetY = targetBall.getY();
-                predictWhiteX = predictedPos.getPredictedWhitePos()[0];
-                predictWhiteY = predictedPos.getPredictedWhitePos()[1];
-            }
-        }
-        double whiteCanvasX = canvasX(whiteAbsX);
-        double whiteCanvasY = canvasY(whiteAbsY);
-
-//        double[] unitXYWithSpin = getUnitXYWithSpins(getUnitSideSpin(), getPowerPercentage());
-//        double unitX = unitXYWithSpin[0];
-//        double unitY = unitXYWithSpin[1];
-//        PredictedPos predictedPos = game.getPredictedHitBall(unitX, unitY);
-
-        graphicsContext.setStroke(WHITE);
-        if (targetBall == null) {
-            graphicsContext.strokeLine(whiteCanvasX, whiteCanvasY,
-                    canvasX(predictWhiteX), canvasY(predictWhiteY));
-        } else {
-//            predictedTargetBall = predictedPos.getTargetBall();
-//            double[] targetPos = predictedPos.getPredictedWhitePos();
-//            double[] ballPos = new double[]{predictedPos.getTargetBall().getX(), predictedPos.getTargetBall().getY()};
-            double tarCanvasX = canvasX(predictWhiteX);
-            double tarCanvasY = canvasY(predictWhiteY);
-            graphicsContext.strokeLine(whiteCanvasX, whiteCanvasY, tarCanvasX, tarCanvasY);
-            graphicsContext.strokeOval(tarCanvasX - ballRadius, tarCanvasY - ballRadius,
-                    ballDiameter, ballDiameter);  // 绘制预测撞击点的白球
-
-            double potDt = Algebra.distanceToPoint(predictWhiteX, predictWhiteY, whiteAbsX, whiteAbsY);
-            // 白球行进距离越长，预测线越短
-            double predictLineTotalLen = getPredictionLineTotalLength(potDt, game.getGame().getCuingPlayer().getPlayerPerson());
-
-            double whiteUnitX = (predictWhiteX - whiteAbsX) / potDt;
-            double whiteUnitY = (predictWhiteY - whiteAbsY) / potDt;
-            double ang = (predictWhiteX - targetX) / (predictWhiteY - targetY);
-            targetPredictionUnitY = (ang * whiteUnitX + whiteUnitY) / (ang * ang + 1);
-            targetPredictionUnitX = ang * targetPredictionUnitY;
-
-            double predictWhiteLineX = whiteUnitX - targetPredictionUnitX;
-            double predictWhiteLineY = whiteUnitY - targetPredictionUnitY;
-
-            double predictTarMag = Math.hypot(targetPredictionUnitX, targetPredictionUnitY);
-            double predictWhiteMag = Math.hypot(predictWhiteLineX, predictWhiteLineY);
-            double totalMag = predictTarMag + predictWhiteMag;
-            double multiplier = predictLineTotalLen / totalMag;
-
-            double lineX = targetPredictionUnitX * multiplier * scale;
-            double lineY = targetPredictionUnitY * multiplier * scale;
-            double whiteLineX = predictWhiteLineX * multiplier * scale;
-            double whiteLineY = predictWhiteLineY * multiplier * scale;
-
-            graphicsContext.strokeLine(tarCanvasX, tarCanvasY, tarCanvasX + whiteLineX, tarCanvasY + whiteLineY);
-
-            graphicsContext.setStroke(targetBall.getColor().brighter().brighter());
-            graphicsContext.strokeLine(tarCanvasX, tarCanvasY, tarCanvasX + lineX, tarCanvasY + lineY);
         }
     }
 

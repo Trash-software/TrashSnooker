@@ -108,6 +108,8 @@ public class Recorder {
                                     personObj.getDouble("controllablePower"),
                                     personObj.getDouble("spin"),
                                     personObj.getDouble("precision"),
+                                    personObj.getDouble("anglePrecision"),
+                                    personObj.getDouble("longPrecision"),
                                     minPullDt,
                                     maxPullDt,
                                     cueSwingMag,
@@ -121,7 +123,9 @@ public class Recorder {
                                     personObj.getDouble("maxPower"),
                                     personObj.getDouble("controllablePower"),
                                     personObj.getDouble("spin"),
-                                    personObj.getDouble("precision")
+                                    personObj.getDouble("precision"),
+                                    personObj.getDouble("anglePrecision"),
+                                    personObj.getDouble("longPrecision")
                             );
                         }
                         if (personObj.has("privateCues")) {

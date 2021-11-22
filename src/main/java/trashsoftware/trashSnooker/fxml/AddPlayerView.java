@@ -56,6 +56,8 @@ public class AddPlayerView implements Initializable {
                 powerSlider.getValue(),
                 powerSlider.getValue() * 0.85,
                 spinSlider.getValue(),
+                precisionSlider.getValue(),
+                precisionSlider.getValue(),
                 precisionSlider.getValue()
         );
         Recorder.addPlayerPerson(playerPerson);
