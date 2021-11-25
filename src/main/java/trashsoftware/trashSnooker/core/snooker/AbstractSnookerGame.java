@@ -136,6 +136,10 @@ public abstract class AbstractSnookerGame extends Game {
                 throw new RuntimeException("没有这种彩球。");
         }
     }
+    
+    public int getScoreDiff() {
+        return Math.abs(player1.getScore() - player2.getScore());
+    }
 
     public int getScoreDiff(Player player) {
         Player another = player == player1 ? player2 : player1;
@@ -390,7 +394,7 @@ public abstract class AbstractSnookerGame extends Game {
         return result;
     }
 
-    private int remainingRedCount() {
+    public int remainingRedCount() {
         int count = 0;
         for (Ball ball : redBalls) {
             if (!ball.isPotted()) count++;

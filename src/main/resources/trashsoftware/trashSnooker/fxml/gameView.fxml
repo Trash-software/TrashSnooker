@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.scene.canvas.Canvas?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="trashsoftware.trashSnooker.fxml.GameView"
@@ -42,12 +38,12 @@
             <MenuItem text="clear red balls" onAction="#clearRedBallsAction"/>
         </Menu>
     </MenuBar>
-    
+
     <Canvas fx:id="cueAngleCanvas" GridPane.rowIndex="1" width="80.0" height="80.0"/>
     <Label fx:id="cueAngleLabel" GridPane.rowIndex="2" text="5°"/>
 
     <Canvas fx:id="ballCanvas" GridPane.rowIndex="3" width="80.0" height="80.0"/>
-    
+
     <VBox alignment="TOP_CENTER" GridPane.rowIndex="4" spacing="10.0">
         <Slider fx:id="powerSlider" prefHeight="320.0" orientation="VERTICAL"/>
         <Label fx:id="powerLabel"/>
@@ -55,7 +51,7 @@
     </VBox>
 
     <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="4">
-        <Canvas fx:id="gameCanvas" />
+        <Canvas fx:id="gameCanvas"/>
 
         <GridPane>
             <columnConstraints>
@@ -67,7 +63,7 @@
                 <RowConstraints/>
                 <RowConstraints/>
             </rowConstraints>
-            
+
             <HBox alignment="CENTER_LEFT" spacing="20.0">
                 <Label fx:id="player1Label" text="Player 1"/>
                 <Label fx:id="player1ScoreLabel" text="0"/>
@@ -86,6 +82,11 @@
                 <Canvas fx:id="player2TarCanvas"/>
                 <Label fx:id="player2ScoreLabel" text="0"/>
                 <Label fx:id="player2Label" text="Player 2"/>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="0"
+                  GridPane.rowIndex="1">
+                <Label fx:id="snookerScoreDiffLabel"/>
+                <Label fx:id="snookerScoreRemainingLabel"/>
             </HBox>
         </GridPane>
     </VBox>

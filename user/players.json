@@ -13,7 +13,8 @@
     "cuePointMuSigma": [0, 0, 0, 0],
     "powerControl": 100,
     "privateCues": ["Master的杆"],
-    "category": "God"
+    "category": "God",
+    "psy": 100
   },
   "莽子": {
     "spin": 75,
@@ -29,7 +30,8 @@
     "cuePointMuSigma": [15, 50, 0, 30],
     "powerControl": 80.0,
     "privateCues": [],
-    "category": "Amateur"
+    "category": "Amateur",
+    "psy": 95
   },
   "Kid": {
     "spin": 96,
@@ -45,7 +47,8 @@
     "cuePointMuSigma": [0, 1, 0, 1],
     "powerControl": 99.5,
     "privateCues": ["Kid's cue"],
-    "category": "Professional"
+    "category": "Professional",
+    "psy": 80
   },
   "老油条": {
     "spin": 90.96009879932735,
@@ -61,7 +64,8 @@
     "cuePointMuSigma": [0, 15, 0, 10],
     "powerControl": 94.0,
     "privateCues": [],
-    "category": "Amateur"
+    "category": "Amateur",
+    "psy": 75
   },
   "Mou moumou": {
     "spin": 80,
@@ -77,7 +81,8 @@
     "cuePointMuSigma": [0, 15, 0, 10],
     "powerControl": 95.0,
     "privateCues": [],
-    "category": "Amateur"
+    "category": "Amateur",
+    "psy": 80
   },
   "Brown": {
     "spin": 85,
@@ -93,7 +98,8 @@
     "cuePointMuSigma": [0, 10, 0, 6],
     "powerControl": 96.0,
     "privateCues": [],
-    "category": "Professional"
+    "category": "Professional",
+    "psy": 70
   },
   "Ding": {
     "spin": 90.0,
@@ -109,13 +115,14 @@
     "cuePointMuSigma": [0, 2, 0, 4],
     "powerControl": 98.5,
     "privateCues": [],
-    "category": "Professional"
+    "category": "Professional",
+    "psy": 65
   },
   "John Wizard": {
     "spin": 96.0,
     "precision": 85.0,
     "anglePrecision": 1.1,
-    "longPrecision": 0.8,
+    "longPrecision": 0.9,
     "name": "John Wizard",
     "maxPower": 90,
     "controllablePower": 78,
@@ -125,7 +132,25 @@
     "cuePointMuSigma": [0, 2, 0, 2],
     "powerControl": 99.0,
     "privateCues": [],
-    "category": "Professional"
+    "category": "Professional",
+    "psy": 90
+  },
+  "Matthew Stevens": {
+    "spin": 94.0,
+    "precision": 90.0,
+    "anglePrecision": 1.0,
+    "longPrecision": 1.05,
+    "name": "Matthew Stevens",
+    "maxPower": 92,
+    "controllablePower": 81,
+    "pullDt": [50.0, 200.0],
+    "cuePlayType": "p1,h800,e500;s,s,s,s,r,l,l,r",
+    "cueSwingMag": 10,
+    "cuePointMuSigma": [0, 4, 0, 5],
+    "powerControl": 97.0,
+    "privateCues": [],
+    "category": "Professional",
+    "psy": 40
   },
   "Trump": {
     "spin": 98,
@@ -141,7 +166,8 @@
     "cuePointMuSigma": [0, 1, 0, 6],
     "powerControl": 96.5,
     "privateCues": ["Trump's cue"],
-    "category": "Professional"
+    "category": "Professional",
+    "psy": 70
   },
   "Murphy": {
     "spin": 95,
@@ -157,7 +183,8 @@
     "cuePointMuSigma": [0, 1, 0, 4],
     "powerControl": 98.0,
     "privateCues": [],
-    "category": "Professional"
+    "category": "Professional",
+    "psy": 75
   },
   "流氓": {
     "spin": 50,
@@ -173,7 +200,8 @@
     "cuePointMuSigma": [0, 0, 0, 5],
     "powerControl": 85.0,
     "privateCues": ["准神杆"],
-    "category": "Amateur"
+    "category": "Amateur",
+    "psy": 95
   },
   "Smart": {
     "spin": 97,
@@ -189,7 +217,8 @@
     "cuePointMuSigma": [0, 1, 0, 10],
     "powerControl": 90.0,
     "privateCues": [],
-    "category": "Professional"
+    "category": "Professional",
+    "psy": 85
   },
   "莽大力": {
     "spin": 100,
@@ -205,7 +234,8 @@
     "cuePointMuSigma": [0, 15, 0, 1],
     "powerControl": 95,
     "privateCues": ["Mang's cue"],
-    "category": "Amateur"
+    "category": "Amateur",
+    "psy": 95
   },
   "Lolita": {
     "spin": 100,
@@ -221,7 +251,8 @@
     "cuePointMuSigma": [0, 1, 0, 4],
     "powerControl": 99.0,
     "privateCues": ["Lolita's cue", "Lolita's pool cue"],
-    "category": "Professional"
+    "category": "Professional",
+    "psy": 35
   },
   "Noob": {
     "spin": 30,
@@ -237,6 +268,7 @@
     "cuePointMuSigma": [-30, 70, 10, 50],
     "powerControl": 70.0,
     "privateCues": [],
-    "category": "Amateur"
+    "category": "Amateur",
+    "psy": 50
   }
 }}

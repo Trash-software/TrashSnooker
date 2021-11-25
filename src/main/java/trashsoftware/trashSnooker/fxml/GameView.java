@@ -53,7 +53,10 @@ public class GameView implements Initializable {
     public static final double HAND_DT_TO_MAX_PULL = 30.0;
 
     public static final double MAX_CUE_ANGLE = 60;
-
+    //    private double minRealPredictLength = 300.0;
+    private static final double DEFAULT_MAX_PREDICT_LENGTH = 1200.0;
+    private final double minPredictLengthPotDt = 2000.0;
+    private final double maxPredictLengthPotDt = 100.0;
     public double scale = 0.32;
     public double frameTimeMs = 20.0;
     @FXML
@@ -78,6 +81,8 @@ public class GameView implements Initializable {
     Label player1Label, player2Label, player1ScoreLabel, player2ScoreLabel;
     @FXML
     Label player1FramesLabel, totalFramesLabel, player2FramesLabel;
+    @FXML
+    Label snookerScoreDiffLabel, snookerScoreRemainingLabel;
     @FXML
     Canvas player1TarCanvas, player2TarCanvas;
     @FXML
@@ -109,11 +114,9 @@ public class GameView implements Initializable {
     private Movement movement;
     private boolean playingMovement = false;
     private DefenseAttempt curDefAttempt;
-
     // 用于播放运杆动画时持续显示预测线（含出杆随机偏移）
     private SavedPrediction predictionOfCue;
     private ObstacleProjection obstacleProjection;
-
     private double mouseX, mouseY;
     private double cuePointX, cuePointY;  // 杆法的击球点
     private double intentCuePointX = -1, intentCuePointY = -1;  // 计划的杆法击球点
@@ -121,19 +124,13 @@ public class GameView implements Initializable {
     private double cueAngleBaseVer = 10.0;
     private double cueAngleBaseHor = 10.0;
     private CueAnimationPlayer cueAnimationPlayer;
-
     private boolean isDragging;
     private double lastDragAngle;
     private Timeline timeline;
-    
     private double predictionMultiplier = 2000.0;
-
-//    private double minRealPredictLength = 300.0;
-    private static final double DEFAULT_MAX_PREDICT_LENGTH = 1200.0;
     private double maxRealPredictLength = DEFAULT_MAX_PREDICT_LENGTH;
-    private final double minPredictLengthPotDt = 2000.0;
-    private final double maxPredictLengthPotDt = 100.0;
     private double whitePredictLenAfterWall = 1000.0;
+    private boolean enablePsy = true;  // 由游戏决定心理影响
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -169,9 +166,9 @@ public class GameView implements Initializable {
         player2TarCanvas.setHeight(ballDiameter * 1.2);
         player2TarCanvas.setWidth(ballDiameter * 1.2);
         singlePoleCanvas.setHeight(ballDiameter * 1.2);
-        if (gameType.snookerLike) 
+        if (gameType.snookerLike)
             singlePoleCanvas.setWidth(ballDiameter * 7 * 1.2);
-        else if (gameType == GameType.CHINESE_EIGHT) 
+        else if (gameType == GameType.CHINESE_EIGHT)
             singlePoleCanvas.setWidth(ballDiameter * 8 * 1.2);
         else if (gameType == GameType.SIDE_POCKET)
             singlePoleCanvas.setWidth(ballDiameter * 9 * 1.2);
@@ -202,8 +199,8 @@ public class GameView implements Initializable {
         startGame(totalFrames);
 
         setupPowerSlider();
-
         generateScales();
+        setUiFrameStart();
 
         stage.setOnCloseRequest(e -> {
             if (!game.isFinished()) {
@@ -224,12 +221,28 @@ public class GameView implements Initializable {
         });
     }
 
+    private void setUiFrameStart() {
+        powerSlider.setMajorTickUnit(
+                game.getGame().getCuingPlayer().getPlayerPerson().getControllablePowerPercentage()
+        );
+        updateScoreDiffLabels();
+    }
+
+    private void updateScoreDiffLabels() {
+        if (game.gameType.snookerLike) {
+            AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+            snookerScoreDiffLabel.setText("分差 " + asg.getScoreDiff());
+            snookerScoreRemainingLabel.setText("台面剩余 " + asg.getRemainingScore());
+        }
+    }
+
     public void finishCue(Player justCuedPlayer, Player nextCuePlayer) {
 //        updateCuePlayerSinglePole(justCuedPlayer);
         drawScoreBoard(justCuedPlayer);
         drawTargetBoard();
         restoreCuePoint();
         restoreCueAngle();
+        updateScoreDiffLabels();
         Platform.runLater(() -> {
             powerSlider.setValue(40.0);
             powerSlider.setMajorTickUnit(
@@ -247,8 +260,6 @@ public class GameView implements Initializable {
 
     private void endFrame() {
         Player wonPlayer = game.getGame().getWiningPlayer();
-        Player lostPlayer = wonPlayer == game.getGame().getPlayer1() ?
-                game.getGame().getPlayer2() : game.getGame().getPlayer1();
 
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
 
@@ -287,6 +298,7 @@ public class GameView implements Initializable {
                         game.startNextFrame();
                         drawScoreBoard(game.getGame().getCuingPlayer());
                         drawTargetBoard();
+                        setUiFrameStart();
                     });
                 } else {
                     game.save();
@@ -532,16 +544,20 @@ public class GameView implements Initializable {
         // 判断是否为进攻杆
         PotAttempt currentAttempt = null;
         if (predictedTargetBall != null) {
-            List<double[][]> holeDirectionsAndHoles = game.getGame().directionsToAccessibleHoles(predictedTargetBall);
+            List<double[][]> holeDirectionsAndHoles =
+                    game.getGame().directionsToAccessibleHoles(predictedTargetBall);
             for (double[][] directionHole : holeDirectionsAndHoles) {
                 double pottingDirection = Algebra.thetaOf(directionHole[0]);
-                double aimingDirection = Algebra.thetaOf(targetPredictionUnitX, targetPredictionUnitY);
-                if (Math.abs(pottingDirection - aimingDirection) <= Game.MAX_ATTACK_DECISION_ANGLE) {
+                double aimingDirection =
+                        Algebra.thetaOf(targetPredictionUnitX, targetPredictionUnitY);
+                if (Math.abs(pottingDirection - aimingDirection) <=
+                        Game.MAX_ATTACK_DECISION_ANGLE) {
                     currentAttempt = new PotAttempt(
                             gameType,
                             game.getGame().getCuingPlayer().getPlayerPerson(),
                             predictedTargetBall,
-                            new double[]{game.getGame().getCueBall().getX(), game.getGame().getCueBall().getY()},
+                            new double[]{game.getGame().getCueBall().getX(),
+                                    game.getGame().getCueBall().getY()},
                             new double[]{predictedTargetBall.getX(), predictedTargetBall.getY()},
                             directionHole[1]
                     );
@@ -551,7 +567,7 @@ public class GameView implements Initializable {
                 }
             }
         }
-        
+
         Cue cue = player.getInGamePlayer().getCurrentCue(game.getGame());
 
         double power = getPowerPercentage();
@@ -561,7 +577,11 @@ public class GameView implements Initializable {
         double powerError = random.nextGaussian();
         powerError = powerError * (100.0 - playerPerson.getPowerControl()) / 100.0;
         powerError *= cue.powerMultiplier;  // 发力范围越大的杆控力越粗糙
-        powerError *= wantPower / 50;  // 用力越大误差越大
+        powerError *= wantPower / 40;  // 用力越大误差越大
+        if (enablePsy) {
+            double psyPowerMul = getPsyControlMultiplier(playerPerson);
+            powerError /= psyPowerMul;
+        }
         power += power * powerError;
         System.out.println("Want power: " + wantPower + ", actual power: " + power);
 
@@ -1222,34 +1242,121 @@ public class GameView implements Initializable {
 
     private double getPredictionLineTotalLength(double potDt, PlayerPerson playerPerson) {
         Cue cue = game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame());
-        
+
         // 最大的预测长度
-        double origMaxLength = playerPerson.getPrecisionPercentage() / 100 * 
+        double origMaxLength = playerPerson.getPrecisionPercentage() / 100 *
                 cue.accuracyMultiplier * maxRealPredictLength;
         // 只计算距离的最小长度
         double minLength = origMaxLength / 2.5 * playerPerson.getLongPrecision();
-        
+
         double potDt2 = Math.max(potDt, maxPredictLengthPotDt);
         double dtRange = minPredictLengthPotDt - maxPredictLengthPotDt;
         double lengthRange = origMaxLength - minLength;
         double potDtInRange = (potDt2 - maxPredictLengthPotDt) / dtRange;
         double predictLength = origMaxLength - potDtInRange * lengthRange;
-        
-//        double maxLen = maxRealPredictLength * cue.accuracyMultiplier;
-//
-//        double predictLineTotalLen;
-//        if (potDt >= minPredictLengthPotDt) predictLineTotalLen = minRealPredictLength;
-//        else if (potDt < maxPredictLengthPotDt) predictLineTotalLen = maxLen;
-//        else {
-//            double potDtRange = minPredictLengthPotDt - maxPredictLengthPotDt;
-//            double lineLengthRange = maxLen - minRealPredictLength;
-//            double potDtInRange = (potDt - maxPredictLengthPotDt) / potDtRange;
-//            predictLineTotalLen = maxLen - potDtInRange * lineLengthRange;
-//        }
+
         double side = Math.abs(cuePointX - cueCanvasWH / 2) / cueCanvasWH;  // 0和0.5之间
         double afterSide = predictLength * (1 - side);  // 加塞影响瞄准
         double mul = 1 - Math.sin(Math.toRadians(cueAngleDeg)); // 抬高杆尾影响瞄准
-        return afterSide * mul;
+        double res = afterSide * mul;
+        if (enablePsy) {
+            res *= getPsyAccuracyMultiplier(playerPerson);
+        }
+        return res;
+    }
+
+    private GamePlayStage gamePlayStage() {
+        if (game.gameType.snookerLike) {
+            AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+            int targetValue = asg.getCurrentTarget();
+            int singlePoleScore = asg.getCuingPlayer().getSinglePoleScore();
+            if (singlePoleScore >= 140 && targetValue == 7) {
+                // 打进黑球就是147
+                System.out.println("打进就是147！");
+                return GamePlayStage.THIS_BALL_WIN;
+            }
+            if (singlePoleScore >= 134 && targetValue == 6) {
+                // 打进粉球再打进黑球就是147
+                System.out.println("冲击147！");
+                return GamePlayStage.NEXT_BALL_WIN;
+            }
+
+            int ahead = asg.getScoreDiff(asg.getCuingPlayer());
+            int remaining = asg.getRemainingScore();
+            int aheadAfter;  // 打进后的领先
+            int remainingAfter;  // 打进后的剩余
+            int aheadAfter2;  // 打进再下一颗球后的领先
+            int remainingAfter2;  // 打进再下一颗球后的剩余
+            if (targetValue == 1) {
+                // 打红球
+                aheadAfter = ahead + 1;
+                remainingAfter = remaining - 8;
+                aheadAfter2 = aheadAfter + 7;
+                remainingAfter2 = remainingAfter;
+            } else if (targetValue == 0) {
+                if (predictedTargetBall != null && predictedTargetBall.getValue() != 1) {
+                    aheadAfter = ahead + predictedTargetBall.getValue();
+                } else {
+                    aheadAfter = ahead + 7;
+                }
+                remainingAfter = remaining;  // 打进彩球不改变
+                if (asg.remainingRedCount() == 0) {
+                    // 打完现在的彩球后该打黄球了
+                    aheadAfter2 = aheadAfter + 2;
+                    remainingAfter2 = remainingAfter - 2;
+                } else {
+                    // 打完打红球
+                    aheadAfter2 = aheadAfter + 1;
+                    remainingAfter2 = remainingAfter - 8;
+                }
+            } else {
+                // 清彩球阶段
+                aheadAfter = ahead + targetValue;
+                remainingAfter = remaining - targetValue;
+                aheadAfter2 = aheadAfter + targetValue + 1;
+                remainingAfter2 = remainingAfter - targetValue - 1;
+            }
+            if (ahead < remaining && aheadAfter >= remainingAfter) {
+                // 打进目标球超分或延分
+                System.out.println("打进超分！");
+                return GamePlayStage.THIS_BALL_WIN;
+            }
+            if (targetValue != 7 &&
+                    aheadAfter < remainingAfter &&
+                    aheadAfter2 >= remainingAfter2) {
+                System.out.println("准备超分！");
+                return GamePlayStage.NEXT_BALL_WIN;
+            }
+            if (ahead >= remaining && ahead - remaining <= 8) {
+                System.out.println("接近锁定胜局！");
+                return GamePlayStage.ENHANCE_WIN;
+            }
+        } else if (game.gameType == GameType.CHINESE_EIGHT) {
+            ChineseEightBallGame ceb = (ChineseEightBallGame) game.getGame();
+        }
+        return GamePlayStage.NORMAL;
+    }
+
+    private double getPsyAccuracyMultiplier(PlayerPerson playerPerson) {
+        GamePlayStage stage = gamePlayStage();
+        switch (stage) {
+            case THIS_BALL_WIN:
+            case ENHANCE_WIN:
+                return playerPerson.psy / 100;
+            default:
+                return 1.0;
+        }
+    }
+
+    private double getPsyControlMultiplier(PlayerPerson playerPerson) {
+        GamePlayStage stage = gamePlayStage();
+        switch (stage) {
+            case THIS_BALL_WIN:
+            case NEXT_BALL_WIN:
+                return playerPerson.psy / 100;
+            default:
+                return 1.0;
+        }
     }
 
     private void drawCursor() {
@@ -1313,7 +1420,7 @@ public class GameView implements Initializable {
                 double pureMultiplier = ((Math.PI / 2 - theta) / Math.PI * 2);
                 PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
                 double multiplier = Math.pow(pureMultiplier, 1 / playerPerson.getAnglePrecision());
-                
+
                 double totalLen = predictLineTotalLen * multiplier;
 
                 double lineX = targetPredictionUnitX * totalLen * scale;
@@ -1744,6 +1851,13 @@ public class GameView implements Initializable {
 
     private boolean isPlayingCueAnimation() {
         return cueAnimationPlayer != null;
+    }
+
+    enum GamePlayStage {
+        NORMAL,
+        NEXT_BALL_WIN,  // 打进下一颗球胜利/超分/147
+        THIS_BALL_WIN,  // 打进目标球胜利/超分/147
+        ENHANCE_WIN  // 打进目标球锁定胜局
     }
 
     class CueAnimationPlayer {

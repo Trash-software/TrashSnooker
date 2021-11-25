@@ -11,6 +11,7 @@ import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
 
@@ -29,6 +30,8 @@ public abstract class Game {
     protected static final double MIN_GAP_DISTANCE = 3.0;
     public final long frameStartTime = System.currentTimeMillis();
     public final int frameIndex;
+    private Ball[] randomOrderBallPool1;
+    private Ball[] randomOrderBallPool2;
     protected final Set<Ball> newPotted = new HashSet<>();
     protected final GameView parent;
     protected final Map<Ball, double[]> recordedPositions = new HashMap<>();  // 记录上一杆时球的位置，复位用
@@ -270,6 +273,17 @@ public abstract class Game {
     protected abstract boolean canPlaceWhiteInTable(double x, double y);
 
     public abstract Ball[] getAllBalls();
+    
+    private void reorderRandomPool() {
+        if (randomOrderBallPool1 == null) {
+            Ball[] allBalls = getAllBalls();
+            randomOrderBallPool1 = Arrays.copyOf(allBalls, allBalls.length);
+            randomOrderBallPool2 = Arrays.copyOf(allBalls, allBalls.length);
+        }
+//        Util.reverseArray(randomArrangedBalls);
+        Util.shuffleArray(randomOrderBallPool1);
+        Util.shuffleArray(randomOrderBallPool2);
+    }
 
     /**
      * 返回白球后方障碍物的距离与高度
@@ -331,7 +345,9 @@ public abstract class Game {
             for (int i = 0; i < distance; ++i) {
                 for (Ball ball : getAllBalls()) {
                     if (ball != targetBall) {
-                        if (Algebra.distanceToPoint(x, y, ball.x, ball.y) < gameValues.ballRadius) {
+                        if (Algebra.distanceToPoint(x, y, ball.x, ball.y) < 
+                                gameValues.ballDiameter) {
+                            // 这个洞被挡住了
                             continue BIG_LOOP;
                         }
                     }
@@ -639,6 +655,7 @@ public abstract class Game {
         private boolean oneRun() {
             boolean noBallMoving = true;
 //            long st = System.nanoTime();
+            reorderRandomPool();
             for (Ball ball : getAllBalls()) {
                 ball.prepareMove();
             }
@@ -697,9 +714,9 @@ public abstract class Game {
             }
 
             boolean noHit = true;
-            for (Ball secondBall : getAllBalls()) {
+            for (Ball secondBall : randomOrderBallPool1) {
                 if (ball != secondBall) {
-                    for (Ball thirdBall : getAllBalls()) {
+                    for (Ball thirdBall : randomOrderBallPool2) {
                         if (ball != thirdBall && secondBall != thirdBall) {
                             if (ball.tryHitTwoBalls(secondBall, thirdBall)) {
                                 // 同时撞到两颗球
@@ -715,7 +732,7 @@ public abstract class Game {
 
         private boolean tryHitBall(Ball ball) {
             boolean noHit = true;
-            for (Ball otherBall : getAllBalls()) {
+            for (Ball otherBall : randomOrderBallPool1) {
                 if (ball != otherBall) {
                     if (ball.tryHitBall(otherBall)) {
                         // hit ball

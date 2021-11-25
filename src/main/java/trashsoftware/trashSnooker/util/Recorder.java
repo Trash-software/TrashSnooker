@@ -116,6 +116,7 @@ public class Recorder {
                                     cueSwingMag,
                                     muSigma,
                                     personObj.getDouble("powerControl"),
+                                    personObj.getDouble("psy"),
                                     cuePlayType
                             );
                         } else {
