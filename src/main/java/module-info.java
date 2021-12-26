@@ -12,6 +12,7 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker;
     exports trashsoftware.trashSnooker.fxml;
     exports trashsoftware.trashSnooker.core;
+    exports trashsoftware.trashSnooker.core.ai;
 
     opens trashsoftware.trashSnooker.fxml;
     exports trashsoftware.trashSnooker.core.snooker;

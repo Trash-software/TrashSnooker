@@ -21,9 +21,11 @@
 
         <ComboBox fx:id="player1Box"/>
         <ComboBox fx:id="player1CueBox" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="player1Player" GridPane.columnIndex="2"/>
         <Label text="VS" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
         <ComboBox fx:id="player2Box" GridPane.rowIndex="2"/>
         <ComboBox fx:id="player2CueBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="player2Player" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
         <Button text="添加球员" onAction="#addPlayerAction"
                 GridPane.rowIndex="3" GridPane.columnSpan="2"/>
     </GridPane>

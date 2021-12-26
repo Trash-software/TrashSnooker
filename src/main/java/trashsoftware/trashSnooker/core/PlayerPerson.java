@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +23,7 @@ public class PlayerPerson {
     private double[] cuePointMuSigmaXY;  // 横向的mu，横向的sigma，纵向的mu，纵向的sigma
     private final double cueSwingMag;
     private final CuePlayType cuePlayType;
+    private final AiPlayStyle aiPlayStyle;
     public final double psy;
 
     public PlayerPerson(String name,
@@ -37,7 +40,8 @@ public class PlayerPerson {
                         double[] cuePointMuSigmaXY,
                         double powerControl,
                         double psy,
-                        CuePlayType cuePlayType) {
+                        CuePlayType cuePlayType,
+                        AiPlayStyle aiPlayStyle) {
         this.name = name;
         this.category = category;
         this.maxPowerPercentage = maxPowerPercentage;
@@ -53,6 +57,7 @@ public class PlayerPerson {
         this.powerControl = powerControl;
         this.psy = psy;
         this.cuePlayType = cuePlayType;
+        this.aiPlayStyle = aiPlayStyle;
     }
 
     public PlayerPerson(String name,
@@ -61,7 +66,8 @@ public class PlayerPerson {
                         double maxSpinPercentage,
                         double precisionPercentage,                        
                         double anglePrecision,
-                        double longPrecision) {
+                        double longPrecision,
+                        AiPlayStyle aiPlayStyle) {
         this(
                 name,
                 "Amateur",
@@ -77,8 +83,13 @@ public class PlayerPerson {
                 new double[]{0, 0, 0, 0},
                 100.0,
                 100.0,
-                CuePlayType.DEFAULT_PERFECT
+                CuePlayType.DEFAULT_PERFECT,
+                aiPlayStyle
         );
+    }
+
+    public AiPlayStyle getAiPlayStyle() {
+        return aiPlayStyle;
     }
 
     public double[] getCuePointMuSigmaXY() {

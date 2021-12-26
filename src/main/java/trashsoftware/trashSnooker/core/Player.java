@@ -17,7 +17,7 @@ public abstract class Player {
         this.playerPerson = playerPerson;
     }
     
-    protected abstract void addScoreOfPotted(Collection<Ball> pottedBalls);
+    protected abstract void addScoreOfPotted(Collection<? extends Ball> pottedBalls);
 
     public PlayerPerson getPlayerPerson() {
         return playerPerson.getPlayerPerson();
@@ -51,7 +51,7 @@ public abstract class Player {
         return score;
     }
 
-    public final void correctPotBalls(Collection<Ball> pottedBalls) {
+    public final void correctPotBalls(Collection<? extends Ball> pottedBalls) {
         for (Ball ball : pottedBalls) {
             if (singlePole.containsKey(ball)) {
                 singlePole.put(ball, singlePole.get(ball) + 1);

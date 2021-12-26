@@ -20,7 +20,7 @@ public abstract class NumberedBallPlayer extends Player {
     }
 
     @Override
-    protected void addScoreOfPotted(Collection<Ball> pottedBalls) {
+    protected void addScoreOfPotted(Collection<? extends Ball> pottedBalls) {
         score += pottedBalls.size();
     }
 

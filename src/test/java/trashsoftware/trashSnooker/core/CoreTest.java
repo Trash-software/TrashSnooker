@@ -12,6 +12,7 @@ public class CoreTest {
         double[] a = {2, 1};
         double[] b = {1, 1};
         System.out.println(Algebra.projectionLengthOn(a, b));
+        System.out.println("========");
 
         double[][] testVectors = {
                 {1, 2},

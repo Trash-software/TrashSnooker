@@ -60,7 +60,19 @@ public class Algebra {
     }
 
     /**
-     * 返回向量与X轴正半轴的夹角，范围
+     * @param angleRad 角，弧度
+     * @return 力经过一个角度之后剩下的比例，角度越大，力传得越差
+     */
+    public static double powerTransferOfAngle(double angleRad) {
+        return (Math.PI / 2 - angleRad) / Math.PI * 2;
+    }
+    
+    public static double[] unitVectorOfAngle(double angleRad) {
+        return new double[]{Math.cos(angleRad), Math.sin(angleRad)};
+    }
+
+    /**
+     * 返回向量与X轴正半轴的夹角，范围 [0~2PI)
      * 
      * @param x 向量的x
      * @param y 向量的y
@@ -77,6 +89,24 @@ public class Algebra {
 
     public static double thetaOf(double[] vec) {
         return thetaOf(vec[0], vec[1]);
+    }
+    
+    public static double thetaBetweenVectors(double[] v1, double[] v2) {
+        return thetaBetweenVectors(v1[0], v1[1], v2[0], v2[1]);
+    }
+
+    /**
+     * 返回两个向量之间的夹角，小于等于180度
+     */
+    public static double thetaBetweenVectors(double v1x, double v1y, double v2x, double v2y) {
+        double t1 = thetaOf(v1x, v1y);
+        double t2 = thetaOf(v2x, v2y);
+        
+        double theta = Math.abs(t1 - t2);
+        if (theta > Math.PI) {
+            theta = Math.PI * 2 - theta;
+        }
+        return theta;
     }
 
     /**

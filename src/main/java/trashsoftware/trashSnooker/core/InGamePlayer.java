@@ -8,16 +8,18 @@ public class InGamePlayer {
     private final PersonRecord personRecord;
     private final Cue breakCue;
     private final Cue playCue;
+    private final PlayerType playerType;
 
-    public InGamePlayer(PlayerPerson playerPerson, Cue breakCue, Cue playCue) {
+    public InGamePlayer(PlayerPerson playerPerson, Cue breakCue, Cue playCue, PlayerType playerType) {
         this.playerPerson = playerPerson;
         this.breakCue = breakCue;
         this.playCue = playCue;
         this.personRecord = PersonRecord.loadRecord(playerPerson.getName());
+        this.playerType = playerType;
     }
 
-    public InGamePlayer(PlayerPerson playerPerson, Cue cue) {
-        this(playerPerson, cue, cue);
+    public InGamePlayer(PlayerPerson playerPerson, Cue cue, PlayerType playerType) {
+        this(playerPerson, cue, cue, playerType);
     }
 
     public Cue getCurrentCue(Game game) {
@@ -27,6 +29,10 @@ public class InGamePlayer {
             }
         }
         return playCue;
+    }
+
+    public PlayerType getPlayerType() {
+        return playerType;
     }
 
     public Cue getBreakCue() {

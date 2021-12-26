@@ -1,18 +1,17 @@
 package trashsoftware.trashSnooker.core.numberedGames.sidePocket;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
-import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
-import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SidePocketGame extends NumberedBallGame
-implements NeedBigBreak{
+public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
+        implements NeedBigBreak {
 
     private final PoolBall[] allBalls = new PoolBall[10];
     private boolean isBreaking = true;
@@ -25,7 +24,7 @@ implements NeedBigBreak{
     }
 
     private void initBalls() {
-        allBalls[0] = (PoolBall) cueBall;
+        allBalls[0] = cueBall;
         for (int i = 1; i < 10; ++i) {
             allBalls[i] = new PoolBall(i, false, gameValues);
         }
@@ -62,6 +61,26 @@ implements NeedBigBreak{
     }
 
     @Override
+    protected AiCue<?, ?> createAiCue(SidePocketBallPlayer aiPlayer) {
+        return null;
+    }
+
+    @Override
+    public List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall) {
+        return null;
+    }
+
+    @Override
+    public int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall) {
+        return 0;
+    }
+
+    @Override
+    public double priceOfTarget(int targetRep, Ball ball) {
+        return 1.0;
+    }
+
+    @Override
     public boolean isBreaking() {
         return isBreaking;
     }
@@ -82,7 +101,7 @@ implements NeedBigBreak{
     }
 
     @Override
-    public Ball[] getAllBalls() {
+    public PoolBall[] getAllBalls() {
         return allBalls;
     }
 

@@ -6,7 +6,7 @@ public class GameValues {
 
     public static final GameValues SNOOKER_VALUES = new Builder()
             .tableColor(Color.GREEN, Color.SADDLEBROWN)
-            .tableDimension(3820.0, 3569.0, 
+            .tableDimension(3820.0, 3569.0,
                     2035.0, 1788.0,
                     33.34)
             .ballSize(52.5)
@@ -15,8 +15,8 @@ public class GameValues {
 
     public static final GameValues MINI_SNOOKER_VALUES = new Builder()
             .tableColor(Color.GREEN, Color.SADDLEBROWN)
-            .tableDimension(2830.0, 2540.0, 
-                    1550.0, 1270.0, 
+            .tableDimension(2830.0, 2540.0,
+                    1550.0, 1270.0,
                     42.0)
             .ballSize(52.5)
             .holeSizeCurved(85.0, 100.0)
@@ -24,8 +24,8 @@ public class GameValues {
 
     public static final GameValues CHINESE_EIGHT_VALUES = new Builder()
             .tableColor(Color.GREEN, Color.SADDLEBROWN)
-            .tableDimension(2830.0, 2540.0, 
-                    1550.0, 1270.0, 
+            .tableDimension(2830.0, 2540.0,
+                    1550.0, 1270.0,
                     42.0)
             .ballSize(57.15)
             .holeSizeCurved(85.0, 100.0)
@@ -33,7 +33,7 @@ public class GameValues {
 
     public static final GameValues SIDE_POCKET = new Builder()
             .tableColor(Color.STEELBLUE, Color.BLACK)
-            .tableDimension(2905.0, 2540.0, 
+            .tableDimension(2905.0, 2540.0,
                     1635.0, 1270.0,
                     42.0)
             .ballSize(57.15)
@@ -51,6 +51,7 @@ public class GameValues {
     public double leftX, rightX, topY, botY, midX, midY;
     public double maxLength;  // 对角线长度
     public double cushionHeight;
+    public double speedReduceMultiplier = 1.0;  // 台泥的阻力系数，值越大阻力越大
 
     public double ballDiameter;
     public double ballRadius;
@@ -290,6 +291,20 @@ public class GameValues {
         return Math.hypot(innerWidth, innerHeight);
     }
 
+    public double speedReducerPerInterval() {
+        return (Game.speedReducer * speedReduceMultiplier / ballWeightRatio);  // 重的球减速慢
+    }
+
+    /**
+     * @param speed 初始速度，mm/s
+     * @return 预估的直线移动距离，mm。
+     */
+    public double estimatedMoveDistance(double speed) {
+        double acceleration = speedReducerPerInterval() * Game.calculationsPerSecSqr;
+        double t = speed / acceleration;  // 加速时间，秒
+        return acceleration / 2 * t * t;  // S = 1/2at^2
+    }
+
     public static class Builder {
         private final GameValues values = new GameValues();
 
@@ -299,7 +314,7 @@ public class GameValues {
             return this;
         }
 
-        public Builder tableDimension(double outerWidth, double innerWidth, 
+        public Builder tableDimension(double outerWidth, double innerWidth,
                                       double outerHeight, double innerHeight,
                                       double cushionHeight) {
             values.outerWidth = outerWidth;

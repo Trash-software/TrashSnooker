@@ -7,6 +7,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.util.Recorder;
 
 import java.net.URL;
@@ -58,7 +59,8 @@ public class AddPlayerView implements Initializable {
                 spinSlider.getValue(),
                 precisionSlider.getValue(),
                 precisionSlider.getValue(),
-                precisionSlider.getValue()
+                precisionSlider.getValue(),
+                AiPlayStyle.DEFAULT
         );
         Recorder.addPlayerPerson(playerPerson);
         parent.reloadPlayerList();

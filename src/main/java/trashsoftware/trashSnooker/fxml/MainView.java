@@ -9,10 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import trashsoftware.trashSnooker.core.Cue;
-import trashsoftware.trashSnooker.core.GameType;
-import trashsoftware.trashSnooker.core.InGamePlayer;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.GameSaver;
 import trashsoftware.trashSnooker.util.Recorder;
@@ -35,6 +32,9 @@ public class MainView implements Initializable {
 
     @FXML
     ComboBox<CueItem> player1CueBox, player2CueBox;
+    
+    @FXML
+    ComboBox<PlayerType> player1Player, player2Player;
 
     private Stage stage;
 
@@ -87,6 +87,11 @@ public class MainView implements Initializable {
 
         addPlayerBoxProperty(player1Box, player1CueBox);
         addPlayerBoxProperty(player2Box, player2CueBox);
+        
+        player1Player.getItems().addAll(PlayerType.PLAYER, PlayerType.COMPUTER);
+        player2Player.getItems().addAll(PlayerType.PLAYER, PlayerType.COMPUTER);
+        player1Player.getSelectionModel().select(0);
+        player2Player.getSelectionModel().select(0);
     }
 
     private void addPlayerBoxProperty(ComboBox<PlayerPerson> playerBox, ComboBox<CueItem> cueBox) {
@@ -189,11 +194,11 @@ public class MainView implements Initializable {
         if (stdBreakCue == null ||
                 gameType == GameType.SNOOKER ||
                 gameType == GameType.MINI_SNOOKER) {
-            igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue);
-            igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue);
+            igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue());
+            igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue, player2Player.getValue());
         } else {
-            igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue);
-            igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue);
+            igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue());
+            igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue());
         }
 
         try {

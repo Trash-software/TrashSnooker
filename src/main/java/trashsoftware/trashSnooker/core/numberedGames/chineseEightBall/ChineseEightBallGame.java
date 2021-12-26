@@ -1,6 +1,8 @@
 package trashsoftware.trashSnooker.core.numberedGames.chineseEightBall;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.ai.AiCue;
+import trashsoftware.trashSnooker.core.ai.ChineseEightAiCue;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
@@ -10,9 +12,10 @@ import trashsoftware.trashSnooker.util.Util;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ChineseEightBallGame extends NumberedBallGame
+public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlayer>
         implements NeedBigBreak {
     
+    public static final int NOT_SELECTED_REP = 0;
     public static final int FULL_BALL_REP = 16;
     public static final int HALF_BALL_REP = 17;
 
@@ -86,6 +89,40 @@ public class ChineseEightBallGame extends NumberedBallGame
     }
 
     @Override
+    protected AiCue<?, ?> createAiCue(ChineseEightBallPlayer aiPlayer) {
+        return new ChineseEightAiCue(this, aiPlayer);
+    }
+
+    @Override
+    public List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall) {
+        List<Ball> res = new ArrayList<>();
+        for (Ball ball : getAllBalls()) {
+            if (!ball.isPotted() && !ball.isWhite()) {
+                if (targetRep == NOT_SELECTED_REP) {
+                    if (ball.getValue() != 8) res.add(ball);
+                } else if (targetRep == FULL_BALL_REP) {
+                    if (ball.getValue() < 8) res.add(ball);
+                } else if (targetRep == HALF_BALL_REP) {
+                    if (ball.getValue() > 8) res.add(ball);
+                } else if (targetRep == 8) {
+                    if (ball.getValue() == 8) res.add(ball);
+                }
+            }
+        }
+        return res;
+    }
+
+    @Override
+    public int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall) {
+        return 0;
+    }
+
+    @Override
+    public double priceOfTarget(int targetRep, Ball ball) {
+        return 1.0;
+    }
+
+    @Override
     public boolean isBreaking() {
         return isBreaking;
     }
@@ -116,7 +153,7 @@ public class ChineseEightBallGame extends NumberedBallGame
     }
 
     private boolean isTargetSelected() {
-        return ((ChineseEightBallPlayer) player1).getBallRange() != 0;
+        return player1.getBallRange() != 0;
     }
 
     @Override
@@ -152,37 +189,37 @@ public class ChineseEightBallGame extends NumberedBallGame
         return false;
     }
 
-    private boolean allFullBalls(Set<Ball> balls) {
-        for (Ball ball : balls) {
+    private boolean allFullBalls(Set<PoolBall> balls) {
+        for (PoolBall ball : balls) {
             if (isHalfBall(ball)) return false;
         }
         return true;
     }
 
-    private boolean allHalfBalls(Set<Ball> balls) {
-        for (Ball ball : balls) {
+    private boolean allHalfBalls(Set<PoolBall> balls) {
+        for (PoolBall ball : balls) {
             if (isFullBall(ball)) return false;
         }
         return true;
     }
     
-    private Collection<Ball> fullBallsOf(Set<Ball> balls) {
+    private Collection<PoolBall> fullBallsOf(Set<PoolBall> balls) {
         return balls.stream().filter(this::isFullBall).collect(Collectors.toSet());
     }
 
-    private Collection<Ball> halfBallsOf(Set<Ball> balls) {
+    private Collection<PoolBall> halfBallsOf(Set<PoolBall> balls) {
         return balls.stream().filter(this::isHalfBall).collect(Collectors.toSet());
     }
 
-    private boolean hasFullBalls(Set<Ball> balls) {
-        for (Ball ball : balls) {
+    private boolean hasFullBalls(Set<PoolBall> balls) {
+        for (PoolBall ball : balls) {
             if (isFullBall(ball)) return true;
         }
         return false;
     }
 
-    private boolean hasHalfBalls(Set<Ball> balls) {
-        for (Ball ball : balls) {
+    private boolean hasHalfBalls(Set<PoolBall> balls) {
+        for (PoolBall ball : balls) {
             if (isHalfBall(ball)) return true;
         }
         return false;
@@ -206,7 +243,7 @@ public class ChineseEightBallGame extends NumberedBallGame
         return finishedCuesCount == 1;
     }
 
-    private void updateScore(Set<Ball> pottedBalls) {
+    private void updateScore(Set<PoolBall> pottedBalls) {
         boolean foul = false;
         if (!collidesWall && pottedBalls.isEmpty()) {
             foul = true;
@@ -223,7 +260,7 @@ public class ChineseEightBallGame extends NumberedBallGame
         if (cueBall.isPotted()) {
             if (eightBall.isPotted()) {  // 白球黑八一起进
                 ended = true;
-                winingPlayer = (ChineseEightBallPlayer) getAnotherPlayer();
+                winingPlayer = getAnotherPlayer();
                 return;
             }
             foul = true;
@@ -266,26 +303,26 @@ public class ChineseEightBallGame extends NumberedBallGame
             if (pottedBalls.contains(eightBall)) {
                 ended = true;
                 if (currentTarget == 8) {
-                    winingPlayer = (ChineseEightBallPlayer) currentPlayer;
+                    winingPlayer = currentPlayer;
                 } else {  // 误进黑八 todo: 检查开球
-                    winingPlayer = (ChineseEightBallPlayer) getAnotherPlayer();
+                    winingPlayer = getAnotherPlayer();
                 }
                 return;
             }
-            if (currentTarget == 0) {  // 未选球
+            if (currentTarget == NOT_SELECTED_REP) {  // 未选球
                 if (isBreaking) {  // 开球进袋不算选球
                     return;
                 }
                 if (allFullBalls(pottedBalls)) {
-                    ((ChineseEightBallPlayer) currentPlayer).setBallRange(FULL_BALL_REP);
-                    ((ChineseEightBallPlayer) getAnotherPlayer()).setBallRange(HALF_BALL_REP);
+                    currentPlayer.setBallRange(FULL_BALL_REP);
+                    getAnotherPlayer().setBallRange(HALF_BALL_REP);
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     lastPotSuccess = true;
                     currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
                 }
                 if (allHalfBalls(pottedBalls)) {
-                    ((ChineseEightBallPlayer) currentPlayer).setBallRange(HALF_BALL_REP);
-                    ((ChineseEightBallPlayer) getAnotherPlayer()).setBallRange(FULL_BALL_REP);
+                    currentPlayer.setBallRange(HALF_BALL_REP);
+                    getAnotherPlayer().setBallRange(FULL_BALL_REP);
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     lastPotSuccess = true;
                     currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));

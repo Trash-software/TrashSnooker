@@ -3,12 +3,17 @@ package trashsoftware.trashSnooker.core.snooker;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.ArcType;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.ai.AiCue;
+import trashsoftware.trashSnooker.core.ai.SnookerAiCue;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.*;
 
-public abstract class AbstractSnookerGame extends Game {
+public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlayer> {
 
+    public static final int RAW_COLORED_REP = 0;  // 代表任意彩球
+    public static final int END_REP = 8;
+    
     protected final double[][] pointsRankHighToLow = new double[6][];
     private final SnookerBall yellowBall;
     private final SnookerBall greenBall;
@@ -53,7 +58,7 @@ public abstract class AbstractSnookerGame extends Game {
         allBalls[redBalls.length + 3] = blueBall;
         allBalls[redBalls.length + 4] = pinkBall;
         allBalls[redBalls.length + 5] = blackBall;
-        allBalls[redBalls.length + 6] = (SnookerBall) cueBall;
+        allBalls[redBalls.length + 6] = cueBall;
     }
 
     protected abstract double breakLineX();
@@ -107,16 +112,16 @@ public abstract class AbstractSnookerGame extends Game {
     }
 
     @Override
-    protected Ball createWhiteBall() {
+    protected SnookerBall createWhiteBall() {
         return new SnookerBall(0, gameValues);
     }
 
     @Override
-    public Ball[] getAllBalls() {
+    public SnookerBall[] getAllBalls() {
         return allBalls;
     }
 
-    public Ball getBallOfValue(int score) {
+    public SnookerBall getBallOfValue(int score) {
         switch (score) {
             case 1:
                 return redBalls[0];
@@ -136,13 +141,18 @@ public abstract class AbstractSnookerGame extends Game {
                 throw new RuntimeException("没有这种彩球。");
         }
     }
-    
+
+    @Override
+    protected AiCue<?, ?> createAiCue(SnookerPlayer aiPlayer) {
+        return new SnookerAiCue(this, aiPlayer);
+    }
+
     public int getScoreDiff() {
         return Math.abs(player1.getScore() - player2.getScore());
     }
 
-    public int getScoreDiff(Player player) {
-        Player another = player == player1 ? player2 : player1;
+    public int getScoreDiff(SnookerPlayer player) {
+        SnookerPlayer another = player == player1 ? player2 : player1;
         return player.getScore() - another.getScore();
     }
 
@@ -195,14 +205,29 @@ public abstract class AbstractSnookerGame extends Game {
             return false;
         }
     }
+    
+    /**
+     * 对于斯诺克，pottingBall没有任何作用
+     */
+    @Override
+    public int getTargetAfterPotSuccess(Ball pottingBall, boolean isFreeBall) {
+        if (currentTarget == 1) {
+            return RAW_COLORED_REP;
+        } else if (currentTarget == RAW_COLORED_REP) {
+            if (hasRed()) return 1;
+            else return 2;  // 最后一颗红球附带的彩球打完
+        } else if (currentTarget == 7) {  // 黑球进了
+            return END_REP;
+        } else if (!isFreeBall) {
+            return currentTarget + 1;
+        }
+        // 其余情况：清彩球阶段的自由球，目标球不变
+        return currentTarget;
+    }
 
     protected void updateTargetPotSuccess(boolean isFreeBall) {
-        if (currentTarget == 1) {
-            currentTarget = 0;
-        } else if (currentTarget == 0) {
-            if (hasRed()) currentTarget = 1;
-            else currentTarget = 2;  // 最后一颗红球附带的彩球打完
-        } else if (currentTarget == 7) {  // 黑球进了
+        int nextTarget = getTargetAfterPotSuccess(null, isFreeBall);
+        if (nextTarget == END_REP) {
             if (player1.getScore() != player2.getScore()) ended = true;
             else {
                 // 延分，争黑球
@@ -214,21 +239,20 @@ public abstract class AbstractSnookerGame extends Game {
                     currentPlayer = player2;
                 }
             }
-        } else if (!isFreeBall) {
-            currentTarget++;
+        } else {
+            currentTarget = nextTarget;
         }
-        // 其余情况：清彩球阶段的自由球，目标球不变
     }
 
     protected void updateTargetPotFailed() {
         if (hasRed()) currentTarget = 1;
-        else if (currentTarget == 0) currentTarget = 2;  // 最后一颗红球附带的彩球进攻失败
+        else if (currentTarget == RAW_COLORED_REP) currentTarget = 2;  // 最后一颗红球附带的彩球进攻失败
         // 其他情况目标球不变
     }
 
-    private int[] scoreFoulOfFreeBall(Set<Ball> pottedBalls) {
+    private int[] scoreFoulOfFreeBall(Set<SnookerBall> pottedBalls) {
 //        System.out.println("Free ball of " + currentTarget);
-        if (currentTarget == 0) throw new RuntimeException("不可能自由球打任意彩球");
+        if (currentTarget == RAW_COLORED_REP) throw new RuntimeException("不可能自由球打任意彩球");
         Ball target = whiteFirstCollide;  // not null
 
         if (currentTarget == target.getValue()) {  // 必须选择非当前真正目标球的球作为自由球，todo: 规则存疑
@@ -253,9 +277,9 @@ public abstract class AbstractSnookerGame extends Game {
         }
     }
 
-    private int getMaxFoul(Set<Ball> pottedBalls) {
+    private int getMaxFoul(Set<SnookerBall> pottedBalls) {
         int foul = 0;
-        for (Ball ball : pottedBalls) {
+        for (SnookerBall ball : pottedBalls) {
             if (ball.isColored() && ball.getValue() > foul) foul = ball.getValue();
             else foul = getDefaultFoulValue();
         }
@@ -263,11 +287,11 @@ public abstract class AbstractSnookerGame extends Game {
     }
 
     private int getDefaultFoulValue() {
-        if (currentTarget == 0 || currentTarget < 4) return 4;
+        if (currentTarget == RAW_COLORED_REP || currentTarget < 4) return 4;
         else return currentTarget;
     }
 
-    protected void updateScore(Set<Ball> pottedBalls, boolean isFreeBall) {
+    protected void updateScore(Set<SnookerBall> pottedBalls, boolean isFreeBall) {
         int score = 0;
         int foul = 0;
         if (whiteFirstCollide == null) {
@@ -282,7 +306,7 @@ public abstract class AbstractSnookerGame extends Game {
             foul = scoreFoul[1];
         } else if (currentTarget == 1) {
             if (whiteFirstCollide.isRed()) {
-                for (Ball ball : pottedBalls) {
+                for (SnookerBall ball : pottedBalls) {
                     if (ball.isRed()) {
                         score++;  // 进了颗红球
                     } else {
@@ -324,7 +348,6 @@ public abstract class AbstractSnookerGame extends Game {
             updateTargetPotFailed();
             switchPlayer();
             lastCueFoul = true;
-            lastCueFoul = true;
             if (!cueBall.isPotted() && hasFreeBall()) {
                 doingFreeBall = true;
                 System.out.println("Free ball!");
@@ -332,7 +355,7 @@ public abstract class AbstractSnookerGame extends Game {
         } else if (score > 0) {
             if (isFreeBall) {
                 if (pottedBalls.size() != 1) throw new RuntimeException("为什么进了这么多自由球？？？");
-                ((SnookerPlayer) currentPlayer).potFreeBall(score);
+                currentPlayer.potFreeBall(score);
             } else currentPlayer.correctPotBalls(pottedBalls);
             potSuccess(isFreeBall);
             lastCueFoul = false;
@@ -370,8 +393,8 @@ public abstract class AbstractSnookerGame extends Game {
         lastCueFoul = false;
         ballInHand = false;
         doingFreeBall = false;
-        for (Map.Entry<Ball, double[]> entry : recordedPositions.entrySet()) {
-            Ball ball = entry.getKey();
+        for (Map.Entry<SnookerBall, double[]> entry : recordedPositions.entrySet()) {
+            SnookerBall ball = entry.getKey();
             ball.setX(entry.getValue()[0]);
             ball.setY(entry.getValue()[1]);
             if (ball.isPotted()) ball.pickup();
@@ -385,7 +408,7 @@ public abstract class AbstractSnookerGame extends Game {
         if (currentTarget == 1) {
             for (Ball ball : redBalls)
                 if (!ball.isPotted()) result.add(ball);
-        } else if (currentTarget == 0) {
+        } else if (currentTarget == RAW_COLORED_REP) {
             for (Ball ball : coloredBalls)
                 if (!ball.isPotted()) result.add(ball);
         } else {
@@ -407,18 +430,18 @@ public abstract class AbstractSnookerGame extends Game {
         return false;
     }
 
-    private void pickupPottedBalls(Set<Ball> pottedBalls) {
-        List<Ball> balls = new ArrayList<>(pottedBalls);
+    private void pickupPottedBalls(Set<SnookerBall> pottedBalls) {
+        List<SnookerBall> balls = new ArrayList<>(pottedBalls);
         Collections.sort(balls);
         Collections.reverse(balls);  // 如有多颗彩球落袋，优先放置分值高的
 //        System.out.print("Pick up");
 //        System.out.println(balls);
-        if (currentTarget == 0 || currentTarget == 1) {
-            for (Ball ball : balls) {
+        if (currentTarget == RAW_COLORED_REP || currentTarget == 1) {
+            for (SnookerBall ball : balls) {
                 if (ball.isColored()) pickupColorBall(ball);
             }
         } else {
-            for (Ball ball : balls) {
+            for (SnookerBall ball : balls) {
                 if (ball.getValue() >= currentTarget) pickupColorBall(ball);
             }
         }
@@ -470,7 +493,7 @@ public abstract class AbstractSnookerGame extends Game {
     }
 
     @Override
-    public Player getWiningPlayer() {
+    public SnookerPlayer getWiningPlayer() {
         if (player1.isWithdrawn()) return player2;
         else if (player2.isWithdrawn()) return player1;
 
@@ -498,6 +521,37 @@ public abstract class AbstractSnookerGame extends Game {
                 gameValues.ballDiameter * scale,
                 ball.getColor(),
                 graphicsContext);
+    }
+
+    @Override
+    public List<Ball> getAllLegalBalls(int targetRep, boolean isFreeBall) {
+        List<Ball> res = new ArrayList<>();
+        for (Ball ball : getAllBalls()) {
+            if (!ball.isPotted() && !ball.isWhite()) {
+                if (targetRep == RAW_COLORED_REP) {
+                    if (ball.isColored()) res.add(ball);
+                } else {
+                    if (ball.getValue() == targetRep) res.add(ball);
+                }
+            }
+        }
+        return res;
+    }
+
+    @Override
+    public boolean isDoingSnookerFreeBll() {
+        return isDoingFreeBall();
+    }
+
+    @Override
+    public double priceOfTarget(int targetRep, Ball ball) {
+        if (targetRep == 1) {
+            return 1;  // 目标球是红球，有可能是自由球
+        } else if (targetRep == AbstractSnookerGame.RAW_COLORED_REP) {
+            return ball.getValue() / 7.0;
+        } else {  // 清彩球阶段
+            return 1;
+        }
     }
 
     private void initRedBalls() {

@@ -8,9 +8,10 @@ import trashsoftware.trashSnooker.fxml.GameView;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class NumberedBallGame extends Game {
+public abstract class NumberedBallGame<P extends NumberedBallPlayer> 
+        extends Game<PoolBall, P> {
     
-    protected Map<Integer, Ball> numberBallMap;
+    protected Map<Integer, PoolBall> numberBallMap;
 
     protected NumberedBallGame(GameView parent, GameSettings gameSettings, 
                                GameValues gameValues, int frameIndex) {
@@ -19,10 +20,10 @@ public abstract class NumberedBallGame extends Game {
 
     protected abstract double breakPointX();
 
-    public Map<Integer, Ball> getNumberBallMap() {
+    public Map<Integer, PoolBall> getNumberBallMap() {
         if (numberBallMap == null) {
             numberBallMap = new HashMap<>();
-            for (Ball ball : getAllBalls()) {
+            for (PoolBall ball : getAllBalls()) {
                 numberBallMap.put(ball.getValue(), ball);
             }
         }
@@ -43,11 +44,11 @@ public abstract class NumberedBallGame extends Game {
     @Override
     public void switchPlayer() {
         super.switchPlayer();
-        ((NumberedBallPlayer) currentPlayer).incrementPlayTimes();
+        currentPlayer.incrementPlayTimes();
     }
 
     @Override
-    protected Ball createWhiteBall() {
+    protected PoolBall createWhiteBall() {
         return new PoolBall(0, true, gameValues);
     }
 

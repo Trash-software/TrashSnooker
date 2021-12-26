@@ -16,6 +16,7 @@ public class Values {
 //    public static final double[] NORMAL_45 = {1, 1};  // 左下至右上
 //    public static final double[] NORMAL_315 = {1, -1};  // 左上至右下
 
+    public static final double MIN_SELECTED_POWER = 1.0;
     // 击球最大速度，mm/s
     public static final double MAX_POWER_SPEED = 6000.0;
     // 由旋转产生的理论最大瞬时速度（该速度不可能达到），mm/s

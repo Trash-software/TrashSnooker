@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Cue;
 import trashsoftware.trashSnooker.core.CuePlayType;
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 
 import java.io.*;
 import java.util.Collection;
@@ -89,6 +90,16 @@ public class Recorder {
                     JSONObject personObj = (JSONObject) obj;
                     try {
                         String name = personObj.getString("name");
+                        AiPlayStyle aiPlayStyle;
+                        if (personObj.has("ai")) {
+                            JSONObject aiObject = personObj.getJSONObject("ai");
+                            aiPlayStyle = new AiPlayStyle(
+                                    aiObject.getDouble("precision"),
+                                    aiObject.getDouble("position")
+                            );
+                        } else {
+                            aiPlayStyle = AiPlayStyle.DEFAULT;
+                        }
                         PlayerPerson playerPerson;
                         if (personObj.has("pullDt")) {
                             JSONArray pullDt = personObj.getJSONArray("pullDt");
@@ -117,7 +128,8 @@ public class Recorder {
                                     muSigma,
                                     personObj.getDouble("powerControl"),
                                     personObj.getDouble("psy"),
-                                    cuePlayType
+                                    cuePlayType,
+                                    aiPlayStyle
                             );
                         } else {
                             playerPerson = new PlayerPerson(
@@ -127,7 +139,8 @@ public class Recorder {
                                     personObj.getDouble("spin"),
                                     personObj.getDouble("precision"),
                                     personObj.getDouble("anglePrecision"),
-                                    personObj.getDouble("longPrecision")
+                                    personObj.getDouble("longPrecision"),
+                                    aiPlayStyle
                             );
                         }
                         if (personObj.has("privateCues")) {

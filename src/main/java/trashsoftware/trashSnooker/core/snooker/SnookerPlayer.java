@@ -32,7 +32,7 @@ public class SnookerPlayer extends Player {
     }
 
     @Override
-    protected void addScoreOfPotted(Collection<Ball> pottedBalls) {
+    protected void addScoreOfPotted(Collection<? extends Ball> pottedBalls) {
         for (Ball ball : pottedBalls) {
             score += ball.getValue();
         }

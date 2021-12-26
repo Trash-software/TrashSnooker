@@ -17,7 +17,7 @@ public class EntireGame {
     private final GameView gameView;
     InGamePlayer p1;
     InGamePlayer p2;
-    Game game;
+    Game<? extends Ball, ? extends Player> game;
     private int p1Wins;
     private int p2Wins;
     private boolean p1Breaks;
@@ -46,7 +46,7 @@ public class EntireGame {
         GameSaver.save(this);
     }
 
-    public Game getGame() {
+    public Game<? extends Ball, ? extends Player> getGame() {
         return game;
     }
 

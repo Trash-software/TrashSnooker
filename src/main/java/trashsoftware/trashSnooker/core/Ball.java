@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import java.util.Arrays;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
-    private final int value;
+    protected final int value;
     private final Color color;
     protected double xSpin, ySpin;
     protected double sideSpin;
@@ -152,7 +152,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         }
 
         double speed = getSpeed();
-        double reducedSpeed = speed - (Game.speedReducer / values.ballWeightRatio);  // 重的球减速慢
+        double reducedSpeed = speed - values.speedReducerPerInterval();
         double ratio = reducedSpeed / speed;
         vx *= ratio;
         vy *= ratio;
@@ -497,6 +497,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         return this == o;
     }
 
+    /**
+     * @return ball实例的原生hashcode。注意不要用value来生成hashcode，因为斯诺克有15颗value一样的红球
+     */
     @Override
     public int hashCode() {
         return super.hashCode();
