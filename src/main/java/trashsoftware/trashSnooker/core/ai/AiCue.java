@@ -10,6 +10,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
     public static final double ATTACK_DIFFICULTY_THRESHOLD = 8000.0;
     public static final double ATTACK_PRICE_THRESHOLD = 6.0;
+    public static final double NO_DIFFICULTY_ANGLE_RAD = 0.3;
     private static final double[] FRONT_BACK_SPIN_POINTS =
             {0.0, -0.27, 0.27, -0.54, 0.54, -0.81, 0.81};
     protected G game;
@@ -67,6 +68,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         return new IntegratedAttackChoice(
                 attackChoice,
                 nextStepAttackChoices,
+                params,
                 selectedPower,
                 selectedFrontBackSpin,
                 wp.whiteCollideOtherBall());
@@ -74,7 +76,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
     private IntegratedAttackChoice attack(AttackChoice choice) {
         double powerLimit = aiPlayer.getPlayerPerson().getControllablePowerPercentage();
-        final double tick = 200.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().position;
+        final double tick = 300.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().position;
 
         GameValues values = game.getGameValues();
 
@@ -95,7 +97,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                     if (bestOfThisSpin == null || iac.price > bestOfThisSpin.price) {
                         bestOfThisSpin = iac;
                     } else {
-                        break;
+//                        break;
                     }
                 }
                 if (flag == -1) multiplier++;
@@ -103,10 +105,10 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             if (bestOfThisSpin != null) {
                 if (best == null || bestOfThisSpin.price > best.price) {
                     best = bestOfThisSpin;
-                    if (best.price >= ATTACK_PRICE_THRESHOLD) {
-                        System.out.println("price: " + best.price);
-                        break;
-                    }
+//                    if (best.price >= ATTACK_PRICE_THRESHOLD) {
+//                        System.out.println("price: " + best.price);
+//                        break;
+//                    }
                 }
             }
         }
@@ -120,7 +122,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         if (!attackAttackChoices.isEmpty()) {
             double bestPrice = 0.0;
             IntegratedAttackChoice best = null;
-            for (int i = 0; i < Math.min(3, attackAttackChoices.size()); i++) {
+            for (int i = 0; i < Math.min(2, attackAttackChoices.size()); i++) {
                 AttackChoice choice = attackAttackChoices.get(i);
                 IntegratedAttackChoice iac = attack(choice);
                 if (iac != null && iac.price > bestPrice) {
@@ -129,16 +131,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 }
             }
             if (best != null) {
-                CuePlayParams params = CuePlayParams.makeIdealParams(
-                        best.attackChoice.cueDirectionUnitVector[0],
-                        best.attackChoice.cueDirectionUnitVector[1],
-                        CuePlayParams.unitFrontBackSpin(best.selectedFrontBackSpin,
-                                aiPlayer.getInGamePlayer(), game),
-                        0,
-                        5.0,
-                        selectedPowerToActualPower(best.selectedPower)
-                );
-                return new AiCueResult(params,
+                return new AiCueResult(best.params,
                         best.attackChoice.cueDirectionUnitVector[0],
                         best.attackChoice.cueDirectionUnitVector[1],
                         best.selectedFrontBackSpin,
@@ -326,7 +319,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     public static class AttackChoice implements Comparable<AttackChoice> {
         protected Ball ball;
         protected Game<?, ?> game;
-        protected double angleRad;
+        protected double angleRad;  // 范围 [0, PI/2)
         protected double targetHoleDistance;
         protected double whiteCollisionDistance;
         protected double difficulty;
@@ -385,14 +378,20 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         }
 
         private void calculateDifficulty() {
-            double angleDifficulty = 1 / Algebra.powerTransferOfAngle(angleRad);
+            // 把[0, PI/2) 展开至 [-没有难度, PI/2)
+            double angleScaleRatio = (Math.PI / 2) / (Math.PI / 2 - NO_DIFFICULTY_ANGLE_RAD);
+            double lowerLimit = -NO_DIFFICULTY_ANGLE_RAD * angleScaleRatio;
+            double scaledAngle = angleRad * angleScaleRatio + lowerLimit;
+            if (scaledAngle < 0) scaledAngle = 0;
+            
+            double difficultySore = 1 / Algebra.powerTransferOfAngle(scaledAngle);
             double totalDt = whiteCollisionDistance + targetHoleDistance;
             double holeAngleMultiplier = 1;
             if (isMidHole()) {
                 double midHoleOffset = Math.abs(targetHoleVec[1]);  // 单位向量的y值绝对值越大，这球越简单
-                holeAngleMultiplier /= Math.pow(midHoleOffset, 1.5);  // 次幂可以调，越小，ai越愿意打中袋
+                holeAngleMultiplier /= Math.pow(midHoleOffset, 1.3);  // 次幂可以调，越小，ai越愿意打中袋
             }
-            difficulty = totalDt * angleDifficulty * holeAngleMultiplier;
+            difficulty = totalDt * difficultySore * holeAngleMultiplier;
         }
 
         private boolean isMidHole() {
@@ -427,11 +426,13 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         final List<AttackChoice> nextStepAttackChoices;
         final double selectedPower;
         final double selectedFrontBackSpin;
+        CuePlayParams params;
         boolean willCollideOtherBall;
         private double price;
 
         protected IntegratedAttackChoice(AttackChoice attackChoice,
                                          List<AttackChoice> nextStepAttackChoices,
+                                         CuePlayParams params,
                                          double selectedPower,
                                          double selectedFrontBackSpin,
                                          boolean willCollideOtherBall) {
@@ -440,6 +441,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             this.selectedPower = selectedPower;
             this.selectedFrontBackSpin = selectedFrontBackSpin;
             this.willCollideOtherBall = willCollideOtherBall;
+            this.params = params;
 
             generatePrice();
         }

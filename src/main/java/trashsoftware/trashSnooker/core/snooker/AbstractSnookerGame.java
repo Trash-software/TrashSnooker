@@ -531,7 +531,11 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 if (targetRep == RAW_COLORED_REP) {
                     if (ball.isColored()) res.add(ball);
                 } else {
-                    if (ball.getValue() == targetRep) res.add(ball);
+                    if (isFreeBall) {
+                        res.add(ball);
+                    } else if (ball.getValue() == targetRep) {
+                        res.add(ball);
+                    }
                 }
             }
         }
