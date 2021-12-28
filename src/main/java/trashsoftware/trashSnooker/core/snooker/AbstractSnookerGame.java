@@ -225,6 +225,13 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return currentTarget;
     }
 
+    @Override
+    public int getTargetAfterPotFailed() {
+        if (hasRed()) return 1;  // 剩余红球在台面时，无论打的是红还是彩，打不进之后都应该打红
+        else if (currentTarget == RAW_COLORED_REP) return 2;  // 最后一颗红球附带的彩球进攻失败
+        else return currentTarget;  // 其他情况目标球不变
+    }
+
     protected void updateTargetPotSuccess(boolean isFreeBall) {
         int nextTarget = getTargetAfterPotSuccess(null, isFreeBall);
         if (nextTarget == END_REP) {
@@ -245,9 +252,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     protected void updateTargetPotFailed() {
-        if (hasRed()) currentTarget = 1;
-        else if (currentTarget == RAW_COLORED_REP) currentTarget = 2;  // 最后一颗红球附带的彩球进攻失败
-        // 其他情况目标球不变
+        currentTarget = getTargetAfterPotFailed();
     }
 
     private int[] scoreFoulOfFreeBall(Set<SnookerBall> pottedBalls) {
@@ -524,22 +529,17 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     @Override
-    public List<Ball> getAllLegalBalls(int targetRep, boolean isFreeBall) {
-        List<Ball> res = new ArrayList<>();
-        for (Ball ball : getAllBalls()) {
-            if (!ball.isPotted() && !ball.isWhite()) {
-                if (targetRep == RAW_COLORED_REP) {
-                    if (ball.isColored()) res.add(ball);
-                } else {
-                    if (isFreeBall) {
-                        res.add(ball);
-                    } else if (ball.getValue() == targetRep) {
-                        res.add(ball);
-                    }
-                }
+    public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall) {
+        if (!ball.isPotted() && !ball.isWhite()) {
+            if (targetRep == RAW_COLORED_REP) {
+                return ball.isColored();
+            } else {
+                if (isSnookerFreeBall) {
+                    return true;
+                } else return ball.getValue() == targetRep;
             }
         }
-        return res;
+        return false;
     }
 
     @Override

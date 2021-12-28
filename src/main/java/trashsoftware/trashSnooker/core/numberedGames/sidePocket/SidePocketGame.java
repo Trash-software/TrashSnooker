@@ -66,12 +66,17 @@ public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
     }
 
     @Override
-    public List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall) {
-        return null;
+    public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall) {
+        return false;
     }
 
     @Override
     public int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall) {
+        return 0;
+    }
+
+    @Override
+    public int getTargetAfterPotFailed() {
         return 0;
     }
 

@@ -6,6 +6,8 @@ import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 
 import java.util.*;
 
+// todo: assume pickup
+
 public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player> {
 
     public static final double ATTACK_DIFFICULTY_THRESHOLD = 8000.0;
@@ -27,10 +29,12 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         return selectedPower * aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier;
     }
 
-    private IntegratedAttackChoice addToIntAttackChoices(double selectedPower,
-                                                         double selectedFrontBackSpin,
-                                                         AttackChoice attackChoice,
-                                                         GameValues values) {
+    private IntegratedAttackChoice createIntAttackChoices(double selectedPower,
+                                                          double selectedFrontBackSpin,
+                                                          AttackChoice attackChoice,
+                                                          GameValues values,
+                                                          int nextTarget,
+                                                          List<Ball> nextStepLegalBalls) {
 //        System.out.print(selectedPower);
 
         CuePlayParams params = CuePlayParams.makeIdealParams(
@@ -63,7 +67,9 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         }
         double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
         List<AttackChoice> nextStepAttackChoices =
-                getNextStepAttackChoices(wp.getFirstCollide(),
+                getAttackChoices(nextTarget,
+                        wp.getFirstCollide(),
+                        nextStepLegalBalls, 
                         whiteStopPos);
         return new IntegratedAttackChoice(
                 attackChoice,
@@ -74,7 +80,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 wp.whiteCollideOtherBall());
     }
 
-    private IntegratedAttackChoice attack(AttackChoice choice) {
+    private IntegratedAttackChoice attack(AttackChoice choice, int nextTarget, List<Ball> nextStepLegalBalls) {
         double powerLimit = aiPlayer.getPlayerPerson().getControllablePowerPercentage();
         final double tick = 300.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().position;
 
@@ -92,12 +98,11 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 double selectedPower = comfortablePower + tick * multiplier * flag;
                 if (selectedPower <= tick) continue;  // 同上一条注释：<=0.5
                 IntegratedAttackChoice iac =
-                        addToIntAttackChoices(selectedPower, spin, choice, values);
+                        createIntAttackChoices(selectedPower, spin, choice, values,
+                                nextTarget, nextStepLegalBalls);
                 if (iac != null) {
                     if (bestOfThisSpin == null || iac.price > bestOfThisSpin.price) {
                         bestOfThisSpin = iac;
-                    } else {
-//                        break;
                     }
                 }
                 if (flag == -1) multiplier++;
@@ -105,10 +110,6 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             if (bestOfThisSpin != null) {
                 if (best == null || bestOfThisSpin.price > best.price) {
                     best = bestOfThisSpin;
-//                    if (best.price >= ATTACK_PRICE_THRESHOLD) {
-//                        System.out.println("price: " + best.price);
-//                        break;
-//                    }
                 }
             }
         }
@@ -124,7 +125,12 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             IntegratedAttackChoice best = null;
             for (int i = 0; i < Math.min(2, attackAttackChoices.size()); i++) {
                 AttackChoice choice = attackAttackChoices.get(i);
-                IntegratedAttackChoice iac = attack(choice);
+                int nextTargetIfThisSuccess = game.getTargetAfterPotSuccess(choice.ball,
+                        game.isDoingSnookerFreeBll());
+                List<Ball> nextStepLegalBalls =
+                        game.getAllLegalBalls(nextTargetIfThisSuccess,
+                                false);  // 这颗进了下一颗怎么可能是自由球
+                IntegratedAttackChoice iac = attack(choice, nextTargetIfThisSuccess, nextStepLegalBalls);
                 if (iac != null && iac.price > bestPrice) {
                     best = iac;
                     bestPrice = iac.price;
@@ -138,22 +144,21 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                         best.selectedPower);
             }
         }
-        List<DefenseChoice> defenseChoices = getGoodDefenseChoices();
-        if (!defenseChoices.isEmpty()) {
-            DefenseChoice best = defenseChoices.get(0);
+        DefenseChoice defenseChoice = getBestDefenseChoice();
+        if (defenseChoice != null) {
             CuePlayParams params = CuePlayParams.makeIdealParams(
-                    best.cueDirectionUnitVector[0],
-                    best.cueDirectionUnitVector[1],
+                    defenseChoice.cueDirectionUnitVector[0],
+                    defenseChoice.cueDirectionUnitVector[1],
                     0,
                     0,
                     5.0,
-                    40.0 // todo: player power
+                    selectedPowerToActualPower(defenseChoice.selectedPower) // todo: player power
             );
             return new AiCueResult(params,
-                    best.cueDirectionUnitVector[0],
-                    best.cueDirectionUnitVector[1],
+                    defenseChoice.cueDirectionUnitVector[0],
+                    defenseChoice.cueDirectionUnitVector[1],
                     0,
-                    40.0);
+                    defenseChoice.selectedPower);
         }
         DefenseChoice solveSnookerChoice = getSolveSnookerChoices();
         if (solveSnookerChoice != null) {
@@ -191,12 +196,22 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
     private List<AttackChoice> getAttackChoices(int attackTarget,
                                                 Ball lastPottingBall,
-                                                boolean lastIsSnookerFreeBall,
+                                                boolean isSnookerFreeBall,
                                                 double[] whitePos) {
-        List<Ball> legalBalls = game.getAllLegalBalls(attackTarget, lastIsSnookerFreeBall);
+        return getAttackChoices(attackTarget,
+                lastPottingBall,
+                game.getAllLegalBalls(attackTarget, isSnookerFreeBall),
+                whitePos
+        );
+    }
+
+    private List<AttackChoice> getAttackChoices(int attackTarget,
+                                                Ball lastPottingBall,
+                                                List<Ball> legalBalls,
+                                                double[] whitePos) {
         List<AttackChoice> attackChoices = new ArrayList<>();
         for (Ball ball : legalBalls) {
-            if (ball == lastPottingBall) continue;
+            if (ball.isPotted() || ball == lastPottingBall) continue;  // todo: 潜在bug：斯诺克清彩阶段自由球
             List<double[][]> dirHoles = game.directionsToAccessibleHoles(ball);
             double[] ballPos = new double[]{ball.getX(), ball.getY()};
 
@@ -234,16 +249,65 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 game.isDoingSnookerFreeBll(),
                 new double[]{game.getCueBall().getX(), game.getCueBall().getY()});
     }
+    
+    protected DefenseChoice getBestDefenseChoice() {
+        int curTarget = game.getCurrentTarget();
+        boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
+        List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
+                isSnookerFreeBall);
+        Set<Ball> legalSet = new HashSet<>(legalBalls);
+        
+        DefenseChoice best = null;
 
-    protected List<AttackChoice> getNextStepAttackChoices(Ball thisStepPottingBall,
-                                                          double[] whitePosAfterThis) {
-        return getAttackChoices(game.getTargetAfterPotSuccess(thisStepPottingBall, game.isDoingSnookerFreeBll()),
-                thisStepPottingBall,
-                game.isDoingSnookerFreeBll(),
-                whitePosAfterThis);
+        double degreesTick = 1.0;
+        double powerTick = 10.0;
+        for (double selectedPower = 5.0;
+             selectedPower < aiPlayer.getPlayerPerson().getControllablePowerPercentage();
+             selectedPower += powerTick) {
+            for (double deg = 0.0; deg < 360; deg += degreesTick) {
+                double[] unitXY = Algebra.unitVectorOfAngle(Math.toRadians(deg));
+                CuePlayParams cpp = CuePlayParams.makeIdealParams(
+                        unitXY[0],
+                        unitXY[1],
+                        0.0,
+                        0.0,
+                        5.0,
+                        selectedPowerToActualPower(selectedPower)
+                );
+                WhitePrediction wp = game.predictWhite(cpp, 100000.0, false);
+                double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
+                Ball firstCollide = wp.getFirstCollide();
+                if (firstCollide != null && legalSet.contains(firstCollide)) {
+                    int opponentTarget = game.getTargetAfterPotFailed();
+                    List<Ball> opponentBalls = game.getAllLegalBalls(opponentTarget, false);
+                    List<AttackChoice> attackChoices = getAttackChoices(
+                            opponentTarget,
+                            null,
+                            opponentBalls,
+                            whiteStopPos
+                    );
+                    double opponentPrice = 0.0;
+                    for (AttackChoice ac : attackChoices) {
+                        opponentPrice += ac.price;
+                    }
+                    DefenseChoice choice = new DefenseChoice(
+                            firstCollide,
+                            -opponentPrice,  // 对手的price越小，防守越成功
+                            false,
+                            unitXY,
+                            selectedPower,
+                            cpp
+                    );
+                    if (best == null || choice.price > best.price) {
+                        best = choice;
+                    }
+                }
+            }
+        }
+        return best;
     }
 
-    protected List<DefenseChoice> getGoodDefenseChoices() {
+    protected List<DefenseChoice> getSimpleDefenseChoices() {
         List<Ball> legalBalls = game.getAllLegalBalls(game.getCurrentTarget(), game.isDoingSnookerFreeBll());
         double[] whitePos = new double[]{game.getCueBall().getX(), game.getCueBall().getY()};
 
@@ -354,6 +418,9 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 return null;  // 不可能打进的球
             }
             double whiteDistance = Math.hypot(whiteToColl[0], whiteToColl[1]);
+            if (whiteDistance < game.getGameValues().ballDiameter) {
+                return null;  // 白球和目标球挤在一起了
+            }
             double targetHoleDistance = Math.hypot(ball.getX() - holePos[0],
                     ball.getY() - holePos[1]);
 
@@ -383,13 +450,22 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             double lowerLimit = -NO_DIFFICULTY_ANGLE_RAD * angleScaleRatio;
             double scaledAngle = angleRad * angleScaleRatio + lowerLimit;
             if (scaledAngle < 0) scaledAngle = 0;
-            
+
             double difficultySore = 1 / Algebra.powerTransferOfAngle(scaledAngle);
             double totalDt = whiteCollisionDistance + targetHoleDistance;
             double holeAngleMultiplier = 1;
             if (isMidHole()) {
                 double midHoleOffset = Math.abs(targetHoleVec[1]);  // 单位向量的y值绝对值越大，这球越简单
-                holeAngleMultiplier /= Math.pow(midHoleOffset, 1.3);  // 次幂可以调，越小，ai越愿意打中袋
+                holeAngleMultiplier /= Math.pow(midHoleOffset, 1.4);  // 次幂可以调，越小，ai越愿意打中袋
+            }
+            double tooCloseMul = (whiteCollisionDistance - 
+                    game.getGameValues().ballDiameter) / game.getGameValues().ballDiameter;
+            
+            // 太近了角度不好瞄
+            if (tooCloseMul < 0.1) {
+                holeAngleMultiplier *= 10;
+            } else if (tooCloseMul < 1) {
+                holeAngleMultiplier /= tooCloseMul;
             }
             difficulty = totalDt * difficultySore * holeAngleMultiplier;
         }
@@ -453,12 +529,11 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 price += next.price * mul;
                 mul /= 4;
             }
-            if (nextStepAttackChoices.isEmpty()) {
-                // todo: 最后一颗球不用走位
-                if (willCollideOtherBall) price *= 2.0;  // 下一步没球了，去k球
-            } else {
+//            if (nextStepAttackChoices.isEmpty()) {
+//                if (willCollideOtherBall) price *= 2.0;  // 下一步没球了，去k球
+//            } else {
                 if (willCollideOtherBall) price *= 0.5;
-            }
+//            }
         }
 
         @Override
@@ -470,18 +545,18 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     public static class DefenseChoice implements Comparable<DefenseChoice> {
 
         protected Ball ball;
-        protected double effect;
+        protected double price;
         protected boolean collideOtherBall;
         protected double[] cueDirectionUnitVector;
         double selectedPower;
         CuePlayParams cuePlayParams;
 
-        protected DefenseChoice(Ball ball, double effect, boolean collideOtherBall,
+        protected DefenseChoice(Ball ball, double price, boolean collideOtherBall,
                                 double[] cueDirectionUnitVector,
                                 double selectedPower,
                                 CuePlayParams cuePlayParams) {
             this.ball = ball;
-            this.effect = effect;
+            this.price = price;
             this.collideOtherBall = collideOtherBall;
             this.cueDirectionUnitVector = cueDirectionUnitVector;
             this.selectedPower = selectedPower;
@@ -495,7 +570,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             } else if (!this.collideOtherBall && o.collideOtherBall) {
                 return -1;
             }
-            return -Double.compare(this.effect, o.effect);
+            return -Double.compare(this.price, o.price);
         }
     }
 }

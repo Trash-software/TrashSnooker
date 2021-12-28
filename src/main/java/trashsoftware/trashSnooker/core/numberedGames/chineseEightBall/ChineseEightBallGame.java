@@ -94,27 +94,29 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     @Override
-    public List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall) {
-        List<Ball> res = new ArrayList<>();
-        for (Ball ball : getAllBalls()) {
-            if (!ball.isPotted() && !ball.isWhite()) {
-                if (targetRep == NOT_SELECTED_REP) {
-                    if (ball.getValue() != 8) res.add(ball);
-                } else if (targetRep == FULL_BALL_REP) {
-                    if (ball.getValue() < 8) res.add(ball);
-                } else if (targetRep == HALF_BALL_REP) {
-                    if (ball.getValue() > 8) res.add(ball);
-                } else if (targetRep == 8) {
-                    if (ball.getValue() == 8) res.add(ball);
-                }
+    public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall) {
+        if (!ball.isPotted() && !ball.isWhite()) {
+            if (targetRep == NOT_SELECTED_REP) {
+                return ball.getValue() != 8;
+            } else if (targetRep == FULL_BALL_REP) {
+                return ball.getValue() < 8;
+            } else if (targetRep == HALF_BALL_REP) {
+                return ball.getValue() > 8;
+            } else if (targetRep == 8) {
+                return ball.getValue() == 8;
             }
         }
-        return res;
+        return false;
     }
 
     @Override
     public int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall) {
         return 0;
+    }
+
+    @Override
+    public int getTargetAfterPotFailed() {
+        return getTargetOfPlayer(getAnotherPlayer());
     }
 
     @Override
@@ -227,7 +229,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     private int getTargetOfPlayer(Player playerX) {
         ChineseEightBallPlayer player = (ChineseEightBallPlayer) playerX;
-        if (player.getBallRange() == 0) return 0;
+        if (player.getBallRange() == NOT_SELECTED_REP) return NOT_SELECTED_REP;
         if (player.getBallRange() == FULL_BALL_REP) {
             if (hasFullBallOnTable()) return FULL_BALL_REP;
             else return 8;

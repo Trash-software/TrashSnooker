@@ -154,7 +154,15 @@ public abstract class Game<B extends Ball, P extends Player> {
     /**
      * 返回所有能打的球
      */
-    public abstract List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall);
+    public List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall) {
+        List<Ball> balls = new ArrayList<>();
+        for (Ball ball : getAllBalls()) {
+            if (isLegalBall(ball, targetRep, isSnookerFreeBall)) balls.add(ball);
+        }
+        return balls;
+    }
+    
+    public abstract boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall);
 
     /**
      * 返回目标的价值，前提条件：ball是有效目标
@@ -498,6 +506,8 @@ public abstract class Game<B extends Ball, P extends Player> {
     }
     
     public abstract int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall);
+    
+    public abstract int getTargetAfterPotFailed();
 
     public void withdraw(Player player) {
         player.withdraw();

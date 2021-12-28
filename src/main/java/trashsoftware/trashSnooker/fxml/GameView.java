@@ -133,6 +133,7 @@ public class GameView implements Initializable {
     private double maxRealPredictLength = DEFAULT_MAX_PREDICT_LENGTH;
     private double whitePredictLenAfterWall = 1000.0;
     private boolean enablePsy = true;  // 由游戏决定心理影响
+    private boolean aiCalculating;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -712,33 +713,38 @@ public class GameView implements Initializable {
     }
 
     private void aiCue(Player player) {
-        System.out.println(" ai cue");
-        long st = System.currentTimeMillis();
-        AiCueResult cueResult = game.getGame().aiCue(player);
-        System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
-//        System.out.println(cueResult);
-        if (cueResult == null) {
-            withdraw(player);
-            return;
-        }
-        
-        cursorDirectionUnitX = cueResult.getUnitX();
-        cursorDirectionUnitY = cueResult.getUnitY();
-        powerSlider.setValue(cueResult.getSelectedPower());
-        cuePointX = cueCanvasWH / 2;
-        cuePointY = cueCanvasWH / 2 - cueResult.getSelectedFrontBackSpin() * cueAreaRadius;
-        cueAngleDeg = 5.0;
+        cueButton.setText("正在思考");
+        cueButton.setDisable(true);
+        aiCalculating = true;
+        Thread aiCalculation = new Thread(() -> {
+            System.out.println(" ai cue");
+            long st = System.currentTimeMillis();
+            AiCueResult cueResult = game.getGame().aiCue(player);
+            System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
+            if (cueResult == null) {
+                withdraw(player);
+                return;
+            }
+            Platform.runLater(() -> {
+                cueButton.setText("正在击球");
+                cursorDirectionUnitX = cueResult.getUnitX();
+                cursorDirectionUnitY = cueResult.getUnitY();
+                powerSlider.setValue(cueResult.getSelectedPower());
+                cuePointX = cueCanvasWH / 2;
+                cuePointY = cueCanvasWH / 2 - cueResult.getSelectedFrontBackSpin() * cueAreaRadius;
+                cueAngleDeg = 5.0;
 
-        CuePlayParams realParams = applyRandomCueError(player);
+                CuePlayParams realParams = applyRandomCueError(player);
 
-        double whiteStartingX = game.getGame().getCueBall().getX();
-        double whiteStartingY = game.getGame().getCueBall().getY();
-        movement = game.getGame().cue(realParams);
-        
-        Platform.runLater(() -> {
-            beginCueAnimation(whiteStartingX, whiteStartingY, cueResult.getSelectedPower(),
-                    cueResult.getUnitX(), cueResult.getUnitY());
+                double whiteStartingX = game.getGame().getCueBall().getX();
+                double whiteStartingY = game.getGame().getCueBall().getY();
+                movement = game.getGame().cue(realParams);
+                aiCalculating = false;
+                beginCueAnimation(whiteStartingX, whiteStartingY, cueResult.getSelectedPower(),
+                        cueResult.getUnitX(), cueResult.getUnitY());
+            });
         });
+        aiCalculation.start();
     }
 
     @FXML
@@ -932,6 +938,7 @@ public class GameView implements Initializable {
     }
 
     private void oneFrame() {
+        if (aiCalculating) return;
         draw();
         drawCueBallCanvas();
         drawCueAngleCanvas();
