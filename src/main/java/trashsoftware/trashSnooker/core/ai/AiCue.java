@@ -6,7 +6,7 @@ import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 
 import java.util.*;
 
-// todo: assume pickup
+// todo: assume pickup, 大力K球奖励, 开球固定式
 
 public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player> {
 
@@ -160,14 +160,6 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                     0,
                     defenseChoice.selectedPower);
         }
-        DefenseChoice solveSnookerChoice = getSolveSnookerChoices();
-        if (solveSnookerChoice != null) {
-            return new AiCueResult(solveSnookerChoice.cuePlayParams,
-                    solveSnookerChoice.cueDirectionUnitVector[0],
-                    solveSnookerChoice.cueDirectionUnitVector[1],
-                    0.0,
-                    solveSnookerChoice.selectedPower);
-        }
         return randomAngryCue();
     }
 
@@ -250,54 +242,45 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 new double[]{game.getCueBall().getX(), game.getCueBall().getY()});
     }
     
-    protected DefenseChoice getBestDefenseChoice() {
-        int curTarget = game.getCurrentTarget();
-        boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
-        List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
-                isSnookerFreeBall);
-        Set<Ball> legalSet = new HashSet<>(legalBalls);
-        
-        DefenseChoice best = null;
+    private DefenseChoice directDefense(List<Ball> legalBalls, 
+                                        double origDegreesTick,
+                                        double origPowerTick) {
+        double realPowerTick = origPowerTick / 2;
+        double realRadTick = Math.toRadians(origDegreesTick / 5);
+        Ball cueBall = game.getCueBall();
+        double[] whitePos = new double[]{cueBall.getX(), cueBall.getY()};
+        List<Double> availRads = new ArrayList<>();
+        for (Ball ball : legalBalls) {
+            double[] directionVec = new double[]{ball.getX() - whitePos[0], ball.getY() - whitePos[1]};
+            double distance = Math.hypot(directionVec[0], directionVec[1]);
+            double alpha = Algebra.thetaOf(directionVec);  // 白球到目标球球心连线的绝对角
+            double theta = Math.asin(game.getGameValues().ballDiameter / distance);  // 中心连线与薄边连线的夹角
 
-        double degreesTick = 1.0;
-        double powerTick = 10.0;
+            int offsetTicks = (int) (theta / realRadTick);
+//            System.out.println(offsetTicks + " radians offsets to " + ball + realRadTick + theta);
+            
+            for (int i = -offsetTicks; i <= offsetTicks; i++) {
+                double angle = Algebra.normalizeAngle(alpha + i * realRadTick);
+                double[] vec = Algebra.unitVectorOfAngle(angle);
+                PredictedPos leftPP = game.getPredictedHitBall(vec[0], vec[1]);
+                if (leftPP.getTargetBall() == null || leftPP.getTargetBall() == ball) {
+                    availRads.add(angle);
+                }
+            }
+        }
+        if (availRads.isEmpty()) return null;
+
+        System.out.println(availRads.size() + " defense angles");
+        Set<Ball> legalSet = new HashSet<>(legalBalls);
+        DefenseChoice best = null;
         for (double selectedPower = 5.0;
              selectedPower < aiPlayer.getPlayerPerson().getControllablePowerPercentage();
-             selectedPower += powerTick) {
-            for (double deg = 0.0; deg < 360; deg += degreesTick) {
-                double[] unitXY = Algebra.unitVectorOfAngle(Math.toRadians(deg));
-                CuePlayParams cpp = CuePlayParams.makeIdealParams(
-                        unitXY[0],
-                        unitXY[1],
-                        0.0,
-                        0.0,
-                        5.0,
-                        selectedPowerToActualPower(selectedPower)
+             selectedPower += realPowerTick) {
+            for (Double rad : availRads) {
+                DefenseChoice choice = defenseChoiceOfAngleAndPower(
+                        rad, selectedPower, legalSet
                 );
-                WhitePrediction wp = game.predictWhite(cpp, 100000.0, false);
-                double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
-                Ball firstCollide = wp.getFirstCollide();
-                if (firstCollide != null && legalSet.contains(firstCollide)) {
-                    int opponentTarget = game.getTargetAfterPotFailed();
-                    List<Ball> opponentBalls = game.getAllLegalBalls(opponentTarget, false);
-                    List<AttackChoice> attackChoices = getAttackChoices(
-                            opponentTarget,
-                            null,
-                            opponentBalls,
-                            whiteStopPos
-                    );
-                    double opponentPrice = 0.0;
-                    for (AttackChoice ac : attackChoices) {
-                        opponentPrice += ac.price;
-                    }
-                    DefenseChoice choice = new DefenseChoice(
-                            firstCollide,
-                            -opponentPrice,  // 对手的price越小，防守越成功
-                            false,
-                            unitXY,
-                            selectedPower,
-                            cpp
-                    );
+                if (choice != null) {
                     if (best == null || choice.price > best.price) {
                         best = choice;
                     }
@@ -305,6 +288,131 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             }
         }
         return best;
+    }
+    
+    private DefenseChoice solveSnookerDefense(List<Ball> legalBalls, 
+                                              double degreesTick, double powerTick) {
+        Set<Ball> legalSet = new HashSet<>(legalBalls);
+        DefenseChoice best = null;
+        
+        for (double selectedPower = 5.0;
+             selectedPower < aiPlayer.getPlayerPerson().getControllablePowerPercentage();
+             selectedPower += powerTick) {
+            for (double deg = 0.0; deg < 360; deg += degreesTick) {
+                DefenseChoice choice = defenseChoiceOfAngleAndPower(
+                        Math.toRadians(deg), selectedPower, legalSet
+                );
+                if (choice != null) {
+                    if (best == null || choice.price > best.price) {
+                        best = choice;
+                    }
+                }
+            }
+        }
+        return best;
+    }
+    
+    protected DefenseChoice defenseChoiceOfAngleAndPower(double rad, double selectedPower, 
+                                                         Set<Ball> legalSet) {
+        double[] unitXY = Algebra.unitVectorOfAngle(rad);
+        CuePlayParams cpp = CuePlayParams.makeIdealParams(
+                unitXY[0],
+                unitXY[1],
+                0.0,
+                0.0,
+                5.0,
+                selectedPowerToActualPower(selectedPower)
+        );
+        WhitePrediction wp = game.predictWhite(cpp, 100000.0, false);
+        double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
+        Ball firstCollide = wp.getFirstCollide();
+        if (firstCollide != null && legalSet.contains(firstCollide)) {
+            int opponentTarget = game.getTargetAfterPotFailed();
+            List<Ball> opponentBalls = game.getAllLegalBalls(opponentTarget, false);
+            List<AttackChoice> attackChoices = getAttackChoices(
+                    opponentTarget,
+                    null,
+                    opponentBalls,
+                    whiteStopPos
+            );
+            double opponentPrice = 0.0;
+            for (AttackChoice ac : attackChoices) {
+                opponentPrice += ac.price;
+            }
+            return new DefenseChoice(
+                    firstCollide,
+                    -opponentPrice,  // 对手的price越小，防守越成功
+                    false,
+                    unitXY,
+                    selectedPower,
+                    cpp
+            );
+        }
+        return null;
+    }
+    
+    protected DefenseChoice getBestDefenseChoice() {
+        int curTarget = game.getCurrentTarget();
+        boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
+        List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
+                isSnookerFreeBall);
+
+        double degreesTick = 100.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().defense;
+        double powerTick = 1000.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().defense;
+        DefenseChoice normalDefense = directDefense(legalBalls, degreesTick, powerTick);
+        if (normalDefense != null) return normalDefense;
+        return solveSnookerDefense(legalBalls, degreesTick, powerTick);
+        
+//        Set<Ball> legalSet = new HashSet<>(legalBalls);
+//        
+//        DefenseChoice best = null;
+//
+//        double degreesTick = 100.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().defense;
+//        double powerTick = 1000.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().defense;
+//        for (double selectedPower = 5.0;
+//             selectedPower < aiPlayer.getPlayerPerson().getControllablePowerPercentage();
+//             selectedPower += powerTick) {
+//            for (double deg = 0.0; deg < 360; deg += degreesTick) {
+//                double[] unitXY = Algebra.unitVectorOfAngle(Math.toRadians(deg));
+//                CuePlayParams cpp = CuePlayParams.makeIdealParams(
+//                        unitXY[0],
+//                        unitXY[1],
+//                        0.0,
+//                        0.0,
+//                        5.0,
+//                        selectedPowerToActualPower(selectedPower)
+//                );
+//                WhitePrediction wp = game.predictWhite(cpp, 100000.0, false);
+//                double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
+//                Ball firstCollide = wp.getFirstCollide();
+//                if (firstCollide != null && legalSet.contains(firstCollide)) {
+//                    int opponentTarget = game.getTargetAfterPotFailed();
+//                    List<Ball> opponentBalls = game.getAllLegalBalls(opponentTarget, false);
+//                    List<AttackChoice> attackChoices = getAttackChoices(
+//                            opponentTarget,
+//                            null,
+//                            opponentBalls,
+//                            whiteStopPos
+//                    );
+//                    double opponentPrice = 0.0;
+//                    for (AttackChoice ac : attackChoices) {
+//                        opponentPrice += ac.price;
+//                    }
+//                    DefenseChoice choice = new DefenseChoice(
+//                            firstCollide,
+//                            -opponentPrice,  // 对手的price越小，防守越成功
+//                            false,
+//                            unitXY,
+//                            selectedPower,
+//                            cpp
+//                    );
+//                    if (best == null || choice.price > best.price) {
+//                        best = choice;
+//                    }
+//                }
+//            }
+//        }
+//        return best;
     }
 
     protected List<DefenseChoice> getSimpleDefenseChoices() {

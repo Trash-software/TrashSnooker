@@ -95,7 +95,8 @@ public class Recorder {
                             JSONObject aiObject = personObj.getJSONObject("ai");
                             aiPlayStyle = new AiPlayStyle(
                                     aiObject.getDouble("precision"),
-                                    aiObject.getDouble("position")
+                                    aiObject.getDouble("position"),
+                                    aiObject.getDouble("defense")
                             );
                         } else {
                             aiPlayStyle = AiPlayStyle.DEFAULT;

@@ -395,27 +395,6 @@ public abstract class Game<B extends Ball, P extends Player> {
         List<double[][]> list = new ArrayList<>();
 //        BIG_LOOP:
         for (double[] hole : gameValues.allHoleOpenCenters) {
-//            double directionX = hole[0] - targetBall.x;
-//            double directionY = hole[1] - targetBall.y;
-//            int distance = (int) Math.hypot(directionX, directionY) + 1;
-//            double[] unitXY = Algebra.unitVector(directionX, directionY);
-//            double unitX = unitXY[0];
-//            double unitY = unitXY[1];
-//            double x = targetBall.x;
-//            double y = targetBall.y;
-//            for (int i = 0; i < distance; ++i) {
-//                for (Ball ball : getAllBalls()) {
-//                    if (ball != targetBall) {
-//                        if (Algebra.distanceToPoint(x, y, ball.x, ball.y) < 
-//                                gameValues.ballDiameter) {
-//                            // 这个洞被挡住了
-//                            continue BIG_LOOP;
-//                        }
-//                    }
-//                }
-//                x += unitX;
-//                y += unitY;
-//            }
             if (pointToPointCanPassBall(targetBall.x, targetBall.y, hole[0], hole[1], targetBall,
                     null)) {
                 double directionX = hole[0] - targetBall.x;

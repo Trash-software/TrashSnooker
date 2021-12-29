@@ -173,7 +173,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public boolean hasFreeBall() {
         if (lastCueFoul) {
             // 当从白球处无法看到任何一颗目标球的最薄边时
-            List<Ball> currentTarBalls = currentTargetBalls();
+            List<Ball> currentTarBalls = getAllLegalBalls(currentTarget, false);
             // 使用预测击球线的方法：如瞄准最薄边时，预测线显示打到的就是这颗球（不会碰到其他球），则没有自由球。
             double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
             for (Ball ball : currentTarBalls) {
@@ -189,8 +189,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 double leftAng = Algebra.normalizeAngle(alpha + theta);
                 double rightAng = Algebra.normalizeAngle(alpha - theta);
 
-                double[] leftUnitVec = Algebra.angleToUnitVector(leftAng);
-                double[] rightUnitVec = Algebra.angleToUnitVector(rightAng);
+                double[] leftUnitVec = Algebra.unitVectorOfAngle(leftAng);
+                double[] rightUnitVec = Algebra.unitVectorOfAngle(rightAng);
 
                 PredictedPos leftPP = getPredictedHitBall(leftUnitVec[0], leftUnitVec[1]);
                 PredictedPos rightPP = getPredictedHitBall(rightUnitVec[0], rightUnitVec[1]);
@@ -408,19 +408,19 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         currentTarget = recordedTarget;
     }
 
-    private List<Ball> currentTargetBalls() {
-        List<Ball> result = new ArrayList<>();
-        if (currentTarget == 1) {
-            for (Ball ball : redBalls)
-                if (!ball.isPotted()) result.add(ball);
-        } else if (currentTarget == RAW_COLORED_REP) {
-            for (Ball ball : coloredBalls)
-                if (!ball.isPotted()) result.add(ball);
-        } else {
-            result.add(coloredBalls[currentTarget - 2]);
-        }
-        return result;
-    }
+//    private List<Ball> currentTargetBalls() {
+//        List<Ball> result = new ArrayList<>();
+//        if (currentTarget == 1) {
+//            for (Ball ball : redBalls)
+//                if (!ball.isPotted()) result.add(ball);
+//        } else if (currentTarget == RAW_COLORED_REP) {
+//            for (Ball ball : coloredBalls)
+//                if (!ball.isPotted()) result.add(ball);
+//        } else {
+//            result.add(coloredBalls[currentTarget - 2]);
+//        }
+//        return result;
+//    }
 
     public int remainingRedCount() {
         int count = 0;
