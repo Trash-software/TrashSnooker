@@ -654,7 +654,8 @@ public abstract class Game<B extends Ball, P extends Player> {
                 if (!ball.isWhite() && !ball.isPotted()) {
                     if (cueBall.predictedDtToPoint(ball.x, ball.y) <
                             gameValues.ballDiameter) {
-                        prediction.setSecondCollide();
+                        prediction.setSecondCollide(
+                                Math.hypot(cueBall.vx, cueBall.vy) * Game.calculationsPerSec);
                     }
                 }
             }

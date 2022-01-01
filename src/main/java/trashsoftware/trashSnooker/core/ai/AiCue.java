@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 // todo: assume pickup, 大力K球奖励, 开球固定式
 
@@ -77,7 +78,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 params,
                 selectedPower,
                 selectedFrontBackSpin,
-                wp.whiteCollideOtherBall());
+                wp.whiteCollideOtherBall(),
+                wp.getWhiteSpeedWhenHitSecondBall());
     }
 
     private IntegratedAttackChoice attack(AttackChoice choice, int nextTarget, List<Ball> nextStepLegalBalls) {
@@ -89,9 +91,10 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         double comfortablePower = powerLimit * 0.35;
         int maxIterations = (int) Math.round((powerLimit - comfortablePower) / tick) * 2;  // 注：仅适用于倍数<=0.5的情况
 
-        IntegratedAttackChoice best = null;
+        List<IntegratedAttackChoice> choiceList = new ArrayList<>();
+//        IntegratedAttackChoice best = null;
         for (double spin : FRONT_BACK_SPIN_POINTS) {
-            IntegratedAttackChoice bestOfThisSpin = null;
+//            IntegratedAttackChoice bestOfThisSpin = null;
             int multiplier = 0;
             for (int i = 0; i < maxIterations; i++) {
                 int flag = i % 2 == 0 ? 1 : -1;
@@ -100,20 +103,29 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 IntegratedAttackChoice iac =
                         createIntAttackChoices(selectedPower, spin, choice, values,
                                 nextTarget, nextStepLegalBalls);
-                if (iac != null) {
-                    if (bestOfThisSpin == null || iac.price > bestOfThisSpin.price) {
-                        bestOfThisSpin = iac;
-                    }
-                }
+                if (iac != null) choiceList.add(iac);
+//                if (iac != null) {
+//                    if (bestOfThisSpin == null || iac.price > bestOfThisSpin.price) {
+//                        bestOfThisSpin = iac;
+//                    }
+//                }
                 if (flag == -1) multiplier++;
             }
-            if (bestOfThisSpin != null) {
-                if (best == null || bestOfThisSpin.price > best.price) {
-                    best = bestOfThisSpin;
-                }
+//            if (bestOfThisSpin != null) {
+//                if (best == null || bestOfThisSpin.price > best.price) {
+//                    best = bestOfThisSpin;
+//                }
+//            }
+        }
+        if (choiceList.isEmpty()) return null;
+        choiceList.sort(IntegratedAttackChoice::normalCompare);
+        for (IntegratedAttackChoice iac : choiceList) {
+            if (!iac.nextStepAttackChoices.isEmpty()) {
+                return choiceList.get(0);
             }
         }
-        return best;
+        choiceList.sort(IntegratedAttackChoice::compareWhenNoAvailNextBall);
+        return choiceList.get(0);
     }
 
     protected AiCueResult regularCueDecision() {
@@ -249,7 +261,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         double realRadTick = Math.toRadians(origDegreesTick / 5);
         Ball cueBall = game.getCueBall();
         double[] whitePos = new double[]{cueBall.getX(), cueBall.getY()};
-        List<Double> availRads = new ArrayList<>();
+        NavigableSet<Double> availableRads = new TreeSet<>();
         for (Ball ball : legalBalls) {
             double[] directionVec = new double[]{ball.getX() - whitePos[0], ball.getY() - whitePos[1]};
             double distance = Math.hypot(directionVec[0], directionVec[1]);
@@ -259,24 +271,31 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             int offsetTicks = (int) (theta / realRadTick);
 //            System.out.println(offsetTicks + " radians offsets to " + ball + realRadTick + theta);
             
+            double halfOfTick = realRadTick / 2;
+            
             for (int i = -offsetTicks; i <= offsetTicks; i++) {
                 double angle = Algebra.normalizeAngle(alpha + i * realRadTick);
                 double[] vec = Algebra.unitVectorOfAngle(angle);
                 PredictedPos leftPP = game.getPredictedHitBall(vec[0], vec[1]);
                 if (leftPP.getTargetBall() == null || leftPP.getTargetBall() == ball) {
-                    availRads.add(angle);
+                    // 如果与已有的角度太接近就不考虑了
+                    Double floorRad = availableRads.floor(angle);
+                    Double ceilRad = availableRads.ceiling(angle);
+                    if (floorRad != null && angle - floorRad < halfOfTick) continue;
+                    if (ceilRad != null && ceilRad - angle < halfOfTick) continue;
+                    availableRads.add(angle);
                 }
             }
         }
-        if (availRads.isEmpty()) return null;
-
-        System.out.println(availRads.size() + " defense angles");
+        if (availableRads.isEmpty()) return null;
+        
+        System.out.println(availableRads.size() + " defense angles");
         Set<Ball> legalSet = new HashSet<>(legalBalls);
         DefenseChoice best = null;
         for (double selectedPower = 5.0;
              selectedPower < aiPlayer.getPlayerPerson().getControllablePowerPercentage();
              selectedPower += realPowerTick) {
-            for (Double rad : availRads) {
+            for (Double rad : availableRads) {
                 DefenseChoice choice = defenseChoiceOfAngleAndPower(
                         rad, selectedPower, legalSet
                 );
@@ -571,9 +590,9 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             
             // 太近了角度不好瞄
             if (tooCloseMul < 0.1) {
-                holeAngleMultiplier *= 10;
+                holeAngleMultiplier *= 5;
             } else if (tooCloseMul < 1) {
-                holeAngleMultiplier /= tooCloseMul;
+                holeAngleMultiplier /= tooCloseMul * 2;
             }
             difficulty = totalDt * difficultySore * holeAngleMultiplier;
         }
@@ -604,7 +623,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         }
     }
 
-    public static class IntegratedAttackChoice implements Comparable<IntegratedAttackChoice> {
+    public static class IntegratedAttackChoice {
 
         final AttackChoice attackChoice;
         final List<AttackChoice> nextStepAttackChoices;
@@ -612,6 +631,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         final double selectedFrontBackSpin;
         CuePlayParams params;
         boolean willCollideOtherBall;
+        double speedWhenWhiteCollidesOther;
         private double price;
 
         protected IntegratedAttackChoice(AttackChoice attackChoice,
@@ -619,15 +639,39 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                                          CuePlayParams params,
                                          double selectedPower,
                                          double selectedFrontBackSpin,
-                                         boolean willCollideOtherBall) {
+                                         boolean willCollideOtherBall,
+                                         double speedWhenWhiteCollidesOther) {
             this.attackChoice = attackChoice;
             this.nextStepAttackChoices = nextStepAttackChoices;
             this.selectedPower = selectedPower;
             this.selectedFrontBackSpin = selectedFrontBackSpin;
             this.willCollideOtherBall = willCollideOtherBall;
+            this.speedWhenWhiteCollidesOther = speedWhenWhiteCollidesOther;
             this.params = params;
 
             generatePrice();
+        }
+        
+        static int normalCompare(IntegratedAttackChoice o1, 
+                                 IntegratedAttackChoice o2) {
+            double price1 = o1.price;
+            double price2 = o2.price;
+            return -Double.compare(price1, price2);
+        }
+        
+        static int compareWhenNoAvailNextBall(IntegratedAttackChoice o1, 
+                                              IntegratedAttackChoice o2) {
+            return -Double.compare(priceWhenNoAvailNextBall(o1), priceWhenNoAvailNextBall(o2));
+        }
+        
+        static double priceWhenNoAvailNextBall(IntegratedAttackChoice choice) {
+            // todo: 不同的球
+            double speedThreshold = Values.MAX_POWER_SPEED / 10.0;
+            double price = choice.price;
+            if (choice.speedWhenWhiteCollidesOther < speedThreshold) {
+                price *= choice.speedWhenWhiteCollidesOther / speedThreshold;
+            }
+            return price;
         }
 
         private void generatePrice() {
@@ -637,16 +681,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 price += next.price * mul;
                 mul /= 4;
             }
-//            if (nextStepAttackChoices.isEmpty()) {
-//                if (willCollideOtherBall) price *= 2.0;  // 下一步没球了，去k球
-//            } else {
-                if (willCollideOtherBall) price *= 0.5;
-//            }
-        }
-
-        @Override
-        public int compareTo(@NotNull AiCue.IntegratedAttackChoice o) {
-            return -Double.compare(this.price, o.price);
+            if (willCollideOtherBall) price *= 0.5;
         }
     }
 

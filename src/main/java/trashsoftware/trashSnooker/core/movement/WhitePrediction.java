@@ -10,7 +10,6 @@ public class WhitePrediction {
     public final double whiteY;
     private final List<double[]> whitePath = new ArrayList<>();
     private Ball firstCollide;
-    private boolean willWhiteCollideOtherBall;
     // 目标球碰撞后的单位行进方向
     private double ballDirectionX;
     private double ballDirectionY;
@@ -23,6 +22,10 @@ public class WhitePrediction {
     private double whiteCollisionY;
     private boolean hitWallBeforeHitBall;
     private boolean cueBallWillPot;
+    
+    // 非必选项
+    private boolean willWhiteCollideOtherBall;
+    private double whiteSpeedWhenHitSecondBall;
 
     public WhitePrediction(Ball whiteBall) {
         whiteX = whiteBall.getX();
@@ -58,8 +61,16 @@ public class WhitePrediction {
         return cueBallWillPot;
     }
 
-    public void setSecondCollide() {
+    /**
+     * 白球撞上第二颗球时的速度，如果有的话。单位mm/s
+     */
+    public void setSecondCollide(double whiteSpeedWhenCollision) {
         willWhiteCollideOtherBall = true;
+        this.whiteSpeedWhenHitSecondBall = whiteSpeedWhenCollision;
+    }
+
+    public double getWhiteSpeedWhenHitSecondBall() {
+        return whiteSpeedWhenHitSecondBall;
     }
 
     public boolean whiteCollideOtherBall() {
