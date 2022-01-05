@@ -26,7 +26,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     private final PoolBall eightBall;
     private final PoolBall[] allBalls = new PoolBall[16];
-    private boolean isBreaking = true;
     private String foulReason;
 
     public ChineseEightBallGame(GameView parent, GameSettings gameSettings, int frameIndex) {
@@ -46,7 +45,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             halfBalls.add(new PoolBall(i + 9, false, gameValues));
         }
 
-        allBalls[0] = (PoolBall) cueBall;
+        allBalls[0] = cueBall;
         for (int i = 0; i < 7; ++i) {
             allBalls[i + 1] = fullBalls.get(i);
         }
@@ -125,11 +124,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     @Override
-    public boolean isBreaking() {
-        return isBreaking;
-    }
-
-    @Override
     protected double breakPointX() {
         return gameValues.leftX + (gameValues.innerWidth * 0.75);
     }
@@ -161,7 +155,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     @Override
     protected void endMoveAndUpdate() {
         updateScore(newPotted);
-        isBreaking = false;
     }
 
     @Override

@@ -1,27 +1,39 @@
 package trashsoftware.trashSnooker.core.ai;
 
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.CuePlayParams;
+
+import java.util.Random;
 
 public class AiCueResult {
     
-    private final CuePlayParams cuePlayParams;
     private double unitX, unitY;
     private double selectedFrontBackSpin;  // 球手想要的高低杆，范围(-1.0, 1.0)，高杆正低杆负
     private double selectedPower;
     
-    public AiCueResult(CuePlayParams cuePlayParams, 
+    public AiCueResult(AiPlayStyle aiPlayStyle, 
                        double unitX, double unitY, 
                        double selectedFrontBackSpin,
                        double selectedPower) {
-        this.cuePlayParams = cuePlayParams;
         this.unitX = unitX;
         this.unitY = unitY;
         this.selectedFrontBackSpin = selectedFrontBackSpin;
         this.selectedPower = selectedPower;
+        
+        applyRandomError(aiPlayStyle);
     }
-
-    public CuePlayParams getCuePlayParams() {
-        return cuePlayParams;
+    
+    private void applyRandomError(AiPlayStyle aiPlayStyle) {
+        Random random = new Random();
+        double rad = Algebra.thetaOf(unitX, unitY);
+        
+        double sd = (100 - aiPlayStyle.precision) / 5000.0;  // 再歪也歪不了太多吧？
+        System.out.println("Random offset: " + sd);
+        double afterRandom = random.nextGaussian() * sd + rad;
+        
+        double[] vecAfterRandom = Algebra.unitVectorOfAngle(afterRandom);
+        unitX = vecAfterRandom[0];
+        unitY = vecAfterRandom[1];
     }
 
     public double getSelectedFrontBackSpin() {

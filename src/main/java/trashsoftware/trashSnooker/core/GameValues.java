@@ -165,8 +165,8 @@ public class GameValues {
         botLeftHoleOpenCenter = new double[]{leftX + ballRadius, botY - ballRadius};
         topRightHoleOpenCenter = new double[]{rightX - ballRadius, topY + ballRadius};
         botRightHoleOpenCenter = new double[]{rightX - ballRadius, botY - ballRadius};
-        topMidHoleOpenCenter = new double[]{midX, topY - ballRadius};  // 特殊：中心点其实在台外
-        botMidHoleOpenCenter = new double[]{midX, botY + ballRadius};
+        topMidHoleOpenCenter = new double[]{midX, topY - ballRadius * 0.75};  // 特殊：中心点其实在台外
+        botMidHoleOpenCenter = new double[]{midX, botY + ballRadius * 0.75};
 
         allHoleOpenCenters = new double[][]{
                 topLeftHoleOpenCenter,

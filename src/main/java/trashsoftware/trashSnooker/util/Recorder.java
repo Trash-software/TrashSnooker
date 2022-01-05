@@ -96,7 +96,8 @@ public class Recorder {
                             aiPlayStyle = new AiPlayStyle(
                                     aiObject.getDouble("precision"),
                                     aiObject.getDouble("position"),
-                                    aiObject.getDouble("defense")
+                                    aiObject.getDouble("defense"),
+                                    aiObject.getDouble("attackPri")
                             );
                         } else {
                             aiPlayStyle = AiPlayStyle.DEFAULT;

@@ -24,7 +24,7 @@ public class WhitePrediction {
     private boolean cueBallWillPot;
     
     // 非必选项
-    private boolean willWhiteCollideOtherBall;
+    private Ball whiteSecondCollide;
     private double whiteSpeedWhenHitSecondBall;
 
     public WhitePrediction(Ball whiteBall) {
@@ -64,8 +64,8 @@ public class WhitePrediction {
     /**
      * 白球撞上第二颗球时的速度，如果有的话。单位mm/s
      */
-    public void setSecondCollide(double whiteSpeedWhenCollision) {
-        willWhiteCollideOtherBall = true;
+    public void setSecondCollide(Ball secondCollide, double whiteSpeedWhenCollision) {
+        this.whiteSecondCollide = secondCollide;
         this.whiteSpeedWhenHitSecondBall = whiteSpeedWhenCollision;
     }
 
@@ -73,8 +73,8 @@ public class WhitePrediction {
         return whiteSpeedWhenHitSecondBall;
     }
 
-    public boolean whiteCollideOtherBall() {
-        return willWhiteCollideOtherBall;
+    public Ball getSecondCollide() {
+        return whiteSecondCollide;
     }
 
     public double getBallInitSpeed() {

@@ -13,6 +13,11 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     @Override
+    protected DefenseChoice breakCue() {
+        return null;
+    }
+
+    @Override
     public AiCueResult makeCue() {
         return regularCueDecision();
     }

@@ -18,7 +18,8 @@
     "ai": {
       "precision": 100,
       "position": 100,
-      "defense": 100
+      "defense": 100,
+      "attackPri": 100
     }
   },
   "莽子": {
@@ -70,7 +71,13 @@
     "powerControl": 94.0,
     "privateCues": [],
     "category": "Amateur",
-    "psy": 75
+    "psy": 75,
+    "ai": {
+      "precision": 65,
+      "position": 85,
+      "defense": 90,
+      "attackPri": 50
+    }
   },
   "Mou moumou": {
     "spin": 80,
@@ -87,7 +94,13 @@
     "powerControl": 95.0,
     "privateCues": [],
     "category": "Amateur",
-    "psy": 80
+    "psy": 80,
+    "ai": {
+      "precision": 80,
+      "position": 80,
+      "defense": 80,
+      "attackPri": 80
+    }
   },
   "Brown": {
     "spin": 85,
@@ -172,7 +185,13 @@
     "powerControl": 96.5,
     "privateCues": ["Trump's cue"],
     "category": "Professional",
-    "psy": 70
+    "psy": 70,
+    "ai": {
+      "precision": 96,
+      "position": 91,
+      "defense": 82,
+      "attackPri": 95
+    }
   },
   "Murphy": {
     "spin": 95,
@@ -223,7 +242,13 @@
     "powerControl": 90.0,
     "privateCues": [],
     "category": "Professional",
-    "psy": 85
+    "psy": 85,
+    "ai": {
+      "precision": 99,
+      "position": 85,
+      "defense": 60,
+      "attackPri": 98
+    }
   },
   "莽大力": {
     "spin": 100,
@@ -274,6 +299,12 @@
     "powerControl": 70.0,
     "privateCues": [],
     "category": "Amateur",
-    "psy": 50
+    "psy": 50,
+    "ai": {
+      "precision": 30,
+      "position": 10,
+      "defense": 10,
+      "attackPri": 100
+    }
   }
 }}

@@ -53,6 +53,7 @@ public abstract class Game<B extends Ball, P extends Player> {
     protected boolean ballInHand = true;
     protected boolean lastCueFoul = false;
     protected boolean lastPotSuccess;
+    protected boolean isBreaking = true;
     protected GameValues gameValues;
     private B[] randomOrderBallPool1;
     private B[] randomOrderBallPool2;
@@ -237,6 +238,7 @@ public abstract class Game<B extends Ball, P extends Player> {
         physicsCalculator = null;
 
         Player player = currentPlayer;
+        isBreaking = false;
         endMoveAndUpdate();
         finishedCuesCount++;
         parent.finishCue(player, currentPlayer);
@@ -408,6 +410,10 @@ public abstract class Game<B extends Ball, P extends Player> {
 
     public boolean isBallInHand() {
         return ballInHand;
+    }
+
+    public boolean isBreaking() {
+        return isBreaking;
     }
 
     public void setBallInHand() {
@@ -618,7 +624,7 @@ public abstract class Game<B extends Ball, P extends Player> {
                 // 袋口区域
                 if (prediction.getFirstCollide() == null) {
                     tryHitBall();
-                } else if (checkCollisionAfterFirst && !prediction.whiteCollideOtherBall()) {
+                } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                     tryPassSecondBall();
                 }
                 if (holeAreaResult == 2) {
@@ -642,7 +648,7 @@ public abstract class Game<B extends Ball, P extends Player> {
                     cueBall.normalMove();
                     return false;
                 }
-            } else if (checkCollisionAfterFirst && !prediction.whiteCollideOtherBall()) {
+            } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                 tryPassSecondBall();
             }
             cueBall.normalMove();
@@ -654,7 +660,7 @@ public abstract class Game<B extends Ball, P extends Player> {
                 if (!ball.isWhite() && !ball.isPotted()) {
                     if (cueBall.predictedDtToPoint(ball.x, ball.y) <
                             gameValues.ballDiameter) {
-                        prediction.setSecondCollide(
+                        prediction.setSecondCollide(ball, 
                                 Math.hypot(cueBall.vx, cueBall.vy) * Game.calculationsPerSec);
                     }
                 }
