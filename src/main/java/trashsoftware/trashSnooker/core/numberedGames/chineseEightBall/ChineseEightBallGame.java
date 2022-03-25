@@ -110,7 +110,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     public int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall) {
-        return 0;
+        return getTargetOfPlayer(getCuingPlayer());
     }
 
     @Override
@@ -306,6 +306,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             }
             if (currentTarget == NOT_SELECTED_REP) {  // 未选球
                 if (isBreaking) {  // 开球进袋不算选球
+                    System.out.println("开球进球不选球");
                     return;
                 }
                 if (allFullBalls(pottedBalls)) {

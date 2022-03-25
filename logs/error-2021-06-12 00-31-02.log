@@ -1,7 +1,7 @@
 org.json.JSONException: JSONObject["players"] is not a JSONArray.
 	at org.json@20190722/org.json.JSONObject.getJSONArray(JSONObject.java:752)
 	at TrashSnooker/trashsoftware.trashSnooker.util.Recorder.loadAll(Recorder.java:22)
-	at TrashSnooker/trashsoftware.trashSnooker.Main.start(Main.java:28)
+	at TrashSnooker/trashsoftware.trashSnooker.fxml.App.start(Main.java:28)
 	at javafx.graphics/com.sun.javafx.application.LauncherImpl.lambda$launchApplication1$9(LauncherImpl.java:846)
 	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runAndWait$12(PlatformImpl.java:455)
 	at javafx.graphics/com.sun.javafx.application.PlatformImpl.lambda$runLater$10(PlatformImpl.java:428)

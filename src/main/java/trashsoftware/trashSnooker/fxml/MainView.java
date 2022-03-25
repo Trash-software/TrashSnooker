@@ -117,6 +117,7 @@ public class MainView implements Initializable {
                     getClass().getResource("addPlayerView.fxml")
             );
             Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
 
             Stage stage = new Stage();
             stage.initOwner(this.stage);
@@ -141,6 +142,7 @@ public class MainView implements Initializable {
                     getClass().getResource("statsView.fxml")
             );
             Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
 
             Stage stage = new Stage();
             stage.initOwner(this.stage);
@@ -206,6 +208,7 @@ public class MainView implements Initializable {
                     getClass().getResource("gameView.fxml")
             );
             Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
 
             Stage stage = new Stage();
             stage.initOwner(this.stage);

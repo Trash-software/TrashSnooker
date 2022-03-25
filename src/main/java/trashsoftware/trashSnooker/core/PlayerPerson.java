@@ -67,6 +67,7 @@ public class PlayerPerson {
                         double precisionPercentage,                        
                         double anglePrecision,
                         double longPrecision,
+                        double powerControl,
                         AiPlayStyle aiPlayStyle) {
         this(
                 name,
@@ -80,8 +81,8 @@ public class PlayerPerson {
                 50.0,
                 200.0,
                 100.0,
-                new double[]{0, 0, 0, 0},
-                100.0,
+                new double[]{0, 0, 0, (100.0 - powerControl) / 4.0},
+                powerControl,
                 100.0,
                 CuePlayType.DEFAULT_PERFECT,
                 aiPlayStyle

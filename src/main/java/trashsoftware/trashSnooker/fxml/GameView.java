@@ -134,6 +134,7 @@ public class GameView implements Initializable {
     private double whitePredictLenAfterWall = 1000.0;
     private boolean enablePsy = true;  // 由游戏决定心理影响
     private boolean aiCalculating;
+    private boolean aiAutoPlay = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -228,6 +229,7 @@ public class GameView implements Initializable {
         powerSlider.setMajorTickUnit(
                 game.getGame().getCuingPlayer().getPlayerPerson().getControllablePowerPercentage()
         );
+        cueButton.setDisable(false);
         updateScoreDiffLabels();
     }
 
@@ -546,13 +548,12 @@ public class GameView implements Initializable {
         if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
             setButtonsCueStart();
             aiCue(player);
-            return;
+        } else {
+
+            if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
+            setButtonsCueStart();
+            playerCue(player);
         }
-        
-        if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
-        setButtonsCueStart();
-        
-        playerCue(player);
     }
 
     private CuePlayParams applyRandomCueError(Player player) {
@@ -662,9 +663,6 @@ public class GameView implements Initializable {
         }
 
         CuePlayParams params = applyRandomCueError(player);
-//        CuePlayParams params = generateCueParams(power);
-
-//        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
         double[] unitXYWithSpin = getUnitXYWithSpins(params.sideSpin, params.power);
 
         double whiteStartingX = game.getGame().getCueBall().getX();
@@ -722,6 +720,7 @@ public class GameView implements Initializable {
             AiCueResult cueResult = game.getGame().aiCue(player);
             System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
             if (cueResult == null) {
+                aiCalculating = false;
                 withdraw(player);
                 return;
             }
@@ -764,6 +763,7 @@ public class GameView implements Initializable {
                 getClass().getResource("settingsView.fxml")
         );
         Parent root = loader.load();
+        root.setStyle(App.FONT_STYLE);
 
         Stage newStage = new Stage();
         newStage.initOwner(stage);
@@ -790,21 +790,6 @@ public class GameView implements Initializable {
         return CuePlayParams.makeIdealParams(cursorDirectionUnitX, cursorDirectionUnitY,
                 getUnitFrontBackSpin(), unitSideSpin, 
                 cueAngleDeg, power);
-//        PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
-
-//        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
-//
-//        double vx = unitXYWithSpin[0] * power * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
-//        double vy = unitXYWithSpin[1] * power * Values.MAX_POWER_SPEED / 100.0;
-//
-//        // 重新计算，因为unitSideSpin有呲杆补偿
-//        double[] spins = calculateSpins(vx, vy);
-//        if (cueAngleDeg > 5) {
-//            // 出杆越陡，球速越慢
-//            vx *= (95 - cueAngleDeg) / 90.0;
-//            vy *= (95 - cueAngleDeg) / 90.0;
-//        }
-//        return new CuePlayParams(vx, vy, spins[0], spins[1], spins[2], power);
     }
 
     void setDifficulty(SettingsView.Difficulty difficulty) {
@@ -833,6 +818,9 @@ public class GameView implements Initializable {
             cueButton.setText("击球");
         } else {
             cueButton.setText("电脑击球");
+            if (!game.isFinished() && aiAutoPlay) {
+                aiCue(nextCuePlayer);
+            }
         }
     }
 

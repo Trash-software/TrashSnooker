@@ -18,9 +18,9 @@ public class AddPlayerView implements Initializable {
     @FXML
     TextField nameField;
     @FXML
-    Slider powerSlider, spinSlider, precisionSlider;
+    Slider powerSlider, spinSlider, precisionSlider, positionSlider;
     @FXML
-    Label powerLabel, spinLabel, precisionLabel;
+    Label powerLabel, spinLabel, precisionLabel, positionLabel;
 
     private Stage stage;
     private MainView parent;
@@ -33,10 +33,13 @@ public class AddPlayerView implements Initializable {
                 spinLabel.setText(String.valueOf(Math.round(newValue.doubleValue())))));
         precisionSlider.valueProperty().addListener(((observable, oldValue, newValue) ->
                 precisionLabel.setText(String.valueOf(Math.round(newValue.doubleValue())))));
+        positionSlider.valueProperty().addListener(((observable, oldValue, newValue) ->
+                positionLabel.setText(String.valueOf(Math.round(newValue.doubleValue())))));
 
         powerSlider.setValue(80.0);
         spinSlider.setValue(80.0);
         precisionSlider.setValue(80.0);
+        positionSlider.setValue(80.0);
     }
 
     public void setStage(Stage stage, MainView parent) {
@@ -60,6 +63,7 @@ public class AddPlayerView implements Initializable {
                 precisionSlider.getValue(),
                 precisionSlider.getValue(),
                 precisionSlider.getValue(),
+                positionSlider.getValue(), 
                 AiPlayStyle.DEFAULT
         );
         Recorder.addPlayerPerson(playerPerson);

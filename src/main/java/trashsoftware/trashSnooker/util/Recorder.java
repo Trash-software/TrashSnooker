@@ -142,6 +142,7 @@ public class Recorder {
                                     personObj.getDouble("precision"),
                                     personObj.getDouble("anglePrecision"),
                                     personObj.getDouble("longPrecision"),
+                                    personObj.getDouble("powerControl"),
                                     aiPlayStyle
                             );
                         }

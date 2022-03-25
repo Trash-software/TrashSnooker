@@ -6,7 +6,7 @@ import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 
 import java.util.*;
 
-// todo: assume pickup, 大力K球奖励, 开球固定式
+// todo: assume pickup, 大力K球奖励, 开球固定式, 袋角权重
 
 public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player> {
 
@@ -384,6 +384,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         DefenseChoice normalDefense = directDefense(legalBalls, degreesTick, powerTick,
                 actualPowerLow, actualPowerHigh);
         if (normalDefense != null) return normalDefense;
+
+        System.err.println("AI cannot find defense!");
         return solveSnookerDefense(legalBalls, degreesTick, powerTick);
     }
 
@@ -562,7 +564,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
         private void generatePrice() {
             price = attackChoice.price;
-            double mul = 1.0;
+            double mul = 0.5;
             for (AttackChoice next : nextStepAttackChoices) {
                 price += next.price * mul;
                 mul /= 4;

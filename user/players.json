@@ -37,7 +37,13 @@
     "powerControl": 80.0,
     "privateCues": [],
     "category": "Amateur",
-    "psy": 95
+    "psy": 95,
+    "ai": {
+      "precision": 75,
+      "position": 80,
+      "defense": 50,
+      "attackPri": 99
+    }
   },
   "Kid": {
     "spin": 96,
@@ -54,7 +60,13 @@
     "powerControl": 99.5,
     "privateCues": ["Kid's cue"],
     "category": "Professional",
-    "psy": 80
+    "psy": 80,
+    "ai": {
+      "precision": 98,
+      "position": 95,
+      "defense": 75,
+      "attackPri": 95
+    }
   },
   "老油条": {
     "spin": 90.96009879932735,
@@ -117,7 +129,13 @@
     "powerControl": 96.0,
     "privateCues": [],
     "category": "Professional",
-    "psy": 70
+    "psy": 70,
+    "ai": {
+      "precision": 92,
+      "position": 92,
+      "defense": 75,
+      "attackPri": 90
+    }
   },
   "Ding": {
     "spin": 90.0,
@@ -134,7 +152,13 @@
     "powerControl": 98.5,
     "privateCues": [],
     "category": "Professional",
-    "psy": 65
+    "psy": 65,
+    "ai": {
+      "precision": 93,
+      "position": 97,
+      "defense": 90,
+      "attackPri": 90
+    }
   },
   "John Wizard": {
     "spin": 96.0,
@@ -151,7 +175,13 @@
     "powerControl": 99.0,
     "privateCues": [],
     "category": "Professional",
-    "psy": 90
+    "psy": 90,
+    "ai": {
+      "precision": 93,
+      "position": 99,
+      "defense": 95,
+      "attackPri": 85
+    }
   },
   "Matthew Stevens": {
     "spin": 94.0,
@@ -168,7 +198,13 @@
     "powerControl": 97.0,
     "privateCues": [],
     "category": "Professional",
-    "psy": 40
+    "psy": 40,
+    "ai": {
+      "precision": 94,
+      "position": 96,
+      "defense": 75,
+      "attackPri": 90
+    }
   },
   "Trump": {
     "spin": 98,
@@ -187,7 +223,7 @@
     "category": "Professional",
     "psy": 70,
     "ai": {
-      "precision": 96,
+      "precision": 97,
       "position": 91,
       "defense": 82,
       "attackPri": 95
@@ -208,7 +244,13 @@
     "powerControl": 98.0,
     "privateCues": [],
     "category": "Professional",
-    "psy": 75
+    "psy": 75,
+    "ai": {
+      "precision": 94,
+      "position": 95,
+      "defense": 75,
+      "attackPri": 90
+    }
   },
   "流氓": {
     "spin": 50,
@@ -225,7 +267,13 @@
     "powerControl": 85.0,
     "privateCues": ["准神杆"],
     "category": "Amateur",
-    "psy": 95
+    "psy": 95,
+    "ai": {
+      "precision": 99,
+      "position": 50,
+      "defense": 30,
+      "attackPri": 99
+    }
   },
   "Smart": {
     "spin": 97,
@@ -265,24 +313,13 @@
     "powerControl": 95,
     "privateCues": ["Mang's cue"],
     "category": "Amateur",
-    "psy": 95
-  },
-  "Lolita": {
-    "spin": 100,
-    "precision": 98,
-    "anglePrecision": 1.0,
-    "longPrecision": 1.25,
-    "name": "Lolita",
-    "maxPower": 76,
-    "controllablePower": 64,
-    "pullDt": [40.0, 200.0],
-    "cuePlayType": "p1,h800,e500;s,s,s,s,l,l,r,r",
-    "cueSwingMag": 5,
-    "cuePointMuSigma": [0, 1, 0, 4],
-    "powerControl": 99.0,
-    "privateCues": ["Lolita's cue", "Lolita's pool cue"],
-    "category": "Professional",
-    "psy": 35
+    "psy": 95,
+    "ai": {
+      "precision": 75,
+      "position": 95,
+      "defense": 50,
+      "attackPri": 99
+    }
   },
   "Noob": {
     "spin": 30,
@@ -305,6 +342,29 @@
       "position": 10,
       "defense": 10,
       "attackPri": 100
+    }
+  },
+  "Lolita": {
+    "spin": 100,
+    "precision": 98,
+    "anglePrecision": 1.0,
+    "longPrecision": 1.25,
+    "name": "Lolita",
+    "maxPower": 76,
+    "controllablePower": 64,
+    "pullDt": [40.0, 200.0],
+    "cuePlayType": "p1,h800,e500;s,s,s,s,l,l,r,r",
+    "cueSwingMag": 5,
+    "cuePointMuSigma": [0, 1, 0, 4],
+    "powerControl": 99.0,
+    "privateCues": ["Lolita's cue", "Lolita's pool cue"],
+    "category": "Professional",
+    "psy": 35,
+    "ai": {
+      "precision": 99,
+      "position": 96,
+      "defense": 80,
+      "attackPri": 95
     }
   }
 }}

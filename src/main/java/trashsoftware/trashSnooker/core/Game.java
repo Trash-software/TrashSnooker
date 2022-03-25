@@ -238,8 +238,8 @@ public abstract class Game<B extends Ball, P extends Player> {
         physicsCalculator = null;
 
         Player player = currentPlayer;
-        isBreaking = false;
         endMoveAndUpdate();
+        isBreaking = false;
         finishedCuesCount++;
         parent.finishCue(player, currentPlayer);
     }
