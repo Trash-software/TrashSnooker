@@ -717,6 +717,10 @@ public class GameView implements Initializable {
         Thread aiCalculation = new Thread(() -> {
             System.out.println(" ai cue");
             long st = System.currentTimeMillis();
+            // todo: AI放置
+            if (game.getGame().isBallInHand()) {
+                System.out.println("AI is trying to place ball");
+            }
             AiCueResult cueResult = game.getGame().aiCue(player);
             System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
             if (cueResult == null) {

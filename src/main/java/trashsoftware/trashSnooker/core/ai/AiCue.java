@@ -382,7 +382,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         double degreesTick = 100.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().defense;
         double powerTick = 1000.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().defense;
         DefenseChoice normalDefense = directDefense(legalBalls, degreesTick, powerTick,
-                actualPowerLow, actualPowerHigh);
+                15.0, actualPowerHigh);  // todo: low power
         if (normalDefense != null) return normalDefense;
 
         System.err.println("AI cannot find defense!");
