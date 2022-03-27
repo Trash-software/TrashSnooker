@@ -76,6 +76,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
         List<AttackChoice> nextStepAttackChoices =
                 getAttackChoices(nextTarget,
+                        aiPlayer,
                         wp.getFirstCollide(),
                         nextStepLegalBalls,
                         whiteStopPos);
@@ -90,7 +91,9 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 wp.getWhiteSpeedWhenHitSecondBall());
     }
 
-    private IntegratedAttackChoice attack(AttackChoice choice, int nextTarget, List<Ball> nextStepLegalBalls) {
+    private IntegratedAttackChoice attack(AttackChoice choice, 
+                                          int nextTarget, 
+                                          List<Ball> nextStepLegalBalls) {
         double powerLimit = aiPlayer.getPlayerPerson().getControllablePowerPercentage();
         final double tick = 300.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().position;
 
@@ -193,6 +196,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                                                 boolean isSnookerFreeBall,
                                                 double[] whitePos) {
         return getAttackChoices(attackTarget,
+                aiPlayer,
                 lastPottingBall,
                 game.getAllLegalBalls(attackTarget, isSnookerFreeBall),
                 whitePos
@@ -200,6 +204,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     }
 
     private List<AttackChoice> getAttackChoices(int attackTarget,
+                                                Player attackingPlayer,
                                                 Ball lastPottingBall,
                                                 List<Ball> legalBalls,
                                                 double[] whitePos) {
@@ -218,7 +223,10 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                     // 从白球处看得到进球点
                     AttackChoice attackChoice = AttackChoice.createChoice(
                             game,
-                            whitePos, ball,
+                            attackingPlayer,
+                            whitePos, 
+                            ball,
+                            lastPottingBall,
                             attackTarget,
                             collisionPointX, collisionPointY,
                             dirHole
@@ -345,6 +353,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             List<Ball> opponentBalls = game.getAllLegalBalls(opponentTarget, false);
             List<AttackChoice> attackChoices = getAttackChoices(
                     opponentTarget,
+                    game.getAnotherPlayer(aiPlayer),
                     null,
                     opponentBalls,
                     whiteStopPos
@@ -392,6 +401,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     public static class AttackChoice implements Comparable<AttackChoice> {
         protected Ball ball;
         protected Game<?, ?> game;
+        protected Player attackingPlayer;
         protected double angleRad;  // 范围 [0, PI/2)
         protected double targetHoleDistance;
         protected double whiteCollisionDistance;
@@ -405,8 +415,14 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         private AttackChoice() {
         }
 
+        /**
+         * @param lastAiPottedBall 如果这杆为走位预测，则该值为AI第一步想打的球。如这杆就是第一杆，则为null
+         */
         protected static AttackChoice createChoice(Game<?, ?> game,
-                                                   double[] whitePos, Ball ball,
+                                                   Player attackingPlayer,
+                                                   double[] whitePos, 
+                                                   Ball ball,
+                                                   Ball lastAiPottedBall,
                                                    int attackTarget,
                                                    double collisionPointX, double collisionPointY,
                                                    double[][] dirHole) {
@@ -446,7 +462,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             attackChoice.calculateDifficulty();
 
             attackChoice.price = 10000.0 / attackChoice.difficulty *
-                    game.priceOfTarget(attackTarget, ball);
+                    game.priceOfTarget(attackTarget, ball, attackingPlayer, lastAiPottedBall);
 
 //            System.out.println(attackChoice.price + " " + attackChoice.difficulty);
 

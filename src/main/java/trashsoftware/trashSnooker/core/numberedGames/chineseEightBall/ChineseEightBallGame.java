@@ -119,8 +119,38 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     @Override
-    public double priceOfTarget(int targetRep, Ball ball) {
+    public double priceOfTarget(int targetRep, Ball ball, Player attackingPlayer,
+                                Ball lastPotting) {
         return 1.0;
+    }
+
+    /**
+     * 返回给定的球员还剩几颗球没打，含黑八
+     */
+    public int getRemainingBallsOfPlayer(Player player) {
+        int target = getTargetOfPlayer(player);
+        if (target == 8) return 1;
+        else if (target == FULL_BALL_REP) {
+            int rem = 0;
+            for (int i = 1; i <= 8; i++) {
+                Ball ball = getAllBalls()[i];
+                if (!ball.isPotted()) rem++;
+            }
+            return rem;
+        } else if (target == HALF_BALL_REP) {
+            int rem = 0;
+            for (int i = 8; i <= 15; i++) {
+                Ball ball = getAllBalls()[i];
+                if (!ball.isPotted()) rem++;
+            }
+            return rem;
+        } else {
+            int rem = 0;
+            for (Ball ball : getAllBalls()) {
+                if (!ball.isWhite() && !ball.isPotted()) rem++;
+            }
+            return rem;
+        }
     }
 
     @Override

@@ -81,7 +81,8 @@ public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
     }
 
     @Override
-    public double priceOfTarget(int targetRep, Ball ball) {
+    public double priceOfTarget(int targetRep, Ball ball, Player attackingPlayer,
+                                Ball lastPotting) {
         return 1.0;
     }
 

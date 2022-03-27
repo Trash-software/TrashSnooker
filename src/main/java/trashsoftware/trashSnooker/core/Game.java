@@ -167,8 +167,11 @@ public abstract class Game<B extends Ball, P extends Player> {
 
     /**
      * 返回目标的价值，前提条件：ball是有效目标
+     * 
+     * @param lastPotting 如果这杆为走位预测，则该值为AI第一步想打的球。如这杆就是第一杆，则为null
      */
-    public abstract double priceOfTarget(int targetRep, Ball ball);
+    public abstract double priceOfTarget(int targetRep, Ball ball, Player attackingPlayer, 
+                                         Ball lastPotting);
     
     public boolean isDoingSnookerFreeBll() {
         return false;
@@ -566,9 +569,13 @@ public abstract class Game<B extends Ball, P extends Player> {
         currentPlayer.clearSinglePole();
         currentPlayer = getAnotherPlayer();
     }
+    
+    public P getAnotherPlayer(P player) {
+        return player == player1 ? player2 : player1;
+    }
 
     protected P getAnotherPlayer() {
-        return currentPlayer == player1 ? player2 : player1;
+        return getAnotherPlayer(currentPlayer);
     }
 
     public class WhitePredictor {

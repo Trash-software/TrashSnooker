@@ -823,6 +823,11 @@ public class GameView implements Initializable {
         } else {
             cueButton.setText("电脑击球");
             if (!game.isFinished() && aiAutoPlay) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 aiCue(nextCuePlayer);
             }
         }
@@ -1417,6 +1422,14 @@ public class GameView implements Initializable {
             }
         } else if (game.gameType == GameType.CHINESE_EIGHT) {
             ChineseEightBallGame ceb = (ChineseEightBallGame) game.getGame();
+            int rems = ceb.getRemainingBallsOfPlayer(ceb.getCuingPlayer());
+            if (rems == 1) {
+                System.out.println("打进就赢！");
+                return GamePlayStage.THIS_BALL_WIN;
+            } else if (rems == 2) {
+                System.out.println("下一颗赢！");
+                return GamePlayStage.NEXT_BALL_WIN;
+            }
         }
         return GamePlayStage.NORMAL;
     }

@@ -13,7 +13,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     public static final int RAW_COLORED_REP = 0;  // 代表任意彩球
     public static final int END_REP = 8;
-    
+
     protected final double[][] pointsRankHighToLow = new double[6][];
     private final SnookerBall yellowBall;
     private final SnookerBall greenBall;
@@ -26,7 +26,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private final SnookerBall[] allBalls;
     private boolean doingFreeBall = false;  // 正在击打自由球
 
-    AbstractSnookerGame(GameView parent, GameSettings gameSettings, GameValues gameValues, 
+    AbstractSnookerGame(GameView parent, GameSettings gameSettings, GameValues gameValues,
                         int frameIndex) {
         super(parent, gameSettings, gameValues, frameIndex);
 
@@ -38,7 +38,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         blueBall = new SnookerBall(5, blueBallPos(), gameValues);
         pinkBall = new SnookerBall(6, pinkBallPos(), gameValues);
         blackBall = new SnookerBall(7, blackBallPos(), gameValues);
-        coloredBalls = 
+        coloredBalls =
                 new SnookerBall[]{yellowBall, greenBall, brownBall, blueBall, pinkBall, blackBall};
 
         pointsRankHighToLow[0] = blackBallPos();
@@ -64,7 +64,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     protected abstract double breakLineX();
 
     protected abstract double breakArcRadius();
-    
+
     protected abstract int numRedBalls();
 
     @Override
@@ -205,7 +205,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             return false;
         }
     }
-    
+
     /**
      * 对于斯诺克，pottingBall没有任何作用
      */
@@ -548,24 +548,63 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     @Override
-    public double priceOfTarget(int targetRep, Ball ball) {
+    public double priceOfTarget(int targetRep, Ball ball, Player attackingPlayer,
+                                Ball lastPotting) {
         if (targetRep == 1) {
-            return 1;  // 目标球是红球，有可能是自由球
+            return 1.0;  // 目标球是红球，有可能是自由球
         } else if (targetRep == AbstractSnookerGame.RAW_COLORED_REP) {
+            int scoreBehind;
+            int remReds = remainingRedCount();
+            int remMax;
+            
+            if (lastPotting == null) {
+                scoreBehind = -getScoreDiff((SnookerPlayer) attackingPlayer);
+                remMax = remReds * 8 + 34;
+            } else {
+                scoreBehind = -getScoreDiff((SnookerPlayer) attackingPlayer) - 1;
+                remMax = remReds * 8 + 26;
+            }
+            
+//            System.out.println(scoreBehind + ", rem: " + remMax);
+            if (remMax == scoreBehind) {
+                // 即使清完黑球也是延分
+                if (ball.getValue() == 7) return 1.0;
+                else return ball.getValue() / 50.0;
+            } else if (remMax > scoreBehind && remMax - 7 < scoreBehind) {
+                // 没被超分，但必须打高分彩球
+                int minScoreReq = scoreBehind - remMax + 8;
+                if (ball.getValue() >= minScoreReq) return ball.getValue() / 7.0;
+                else return ball.getValue() / 50.0;
+            }
+            
+            int curSinglePole = attackingPlayer.getSinglePoleScore();
+            if (lastPotting != null) curSinglePole += 1;
+//            System.out.println(curSinglePole + " " + remMax);
+            if (curSinglePole > 24 && curSinglePole + remMax == 147) {
+                // 有机会冲击147
+                if (ball.getValue() == 7) return 1.0;
+                if (curSinglePole > -scoreBehind) {
+                    // 已经超分
+                    return ball.getValue() / 50.0;
+                } else {
+                    return ball.getValue() / 21.0;
+                }
+            }
+
             return ball.getValue() / 7.0;
         } else {  // 清彩球阶段
-            return 1;
+            return 1.0;
         }
     }
 
     private void initRedBalls() {
         double curX = pinkBallPos()[0] + gameValues.ballDiameter + Game.MIN_GAP_DISTANCE;  // 粉球与红球堆空隙
         double rowStartY = gameValues.midY;
-        double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0)) + 
+        double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0)) +
                 Game.MIN_PLACE_DISTANCE * 0.8;
-        
+
         double gapDt = Game.MIN_PLACE_DISTANCE;
-        
+
         int ballCountInRow = 1;
         int index = 0;
         for (int row = 0; row < 5; ++row) {
