@@ -16,12 +16,12 @@ public class SnookerGame extends AbstractSnookerGame {
     }
 
     @Override
-    protected double breakLineX() {
+    public double breakLineX() {
         return gameValues.leftX + 737.0;
     }
 
     @Override
-    protected double breakArcRadius() {
+    public double breakArcRadius() {
         return 292.0;
     }
 

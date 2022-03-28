@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="trashsoftware.trashSnooker.fxml.AbilityView"
+          prefHeight="400.0" prefWidth="600.0" alignment="CENTER" vgap="10.0" hgap="20.0">
+    
+    <Label fx:id="nameLabel" text="Name" GridPane.columnSpan="3" alignment="CENTER">
+        <font>
+            <Font size="18.0"/>
+        </font>
+    </Label>
+    
+    <Label fx:id="categoryLabel" text="职业选手" GridPane.rowIndex="1"/>
+    
+    <Label text="瞄准" GridPane.rowIndex="2"/>
+    <ProgressBar fx:id="aimingBar" prefWidth="240.0" 
+                 GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <Label fx:id="aimingLabel" text="99" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+
+    <Label text="出杆准确度" GridPane.rowIndex="3"/>
+    <ProgressBar fx:id="cuePrecisionBar" prefWidth="240.0"
+                 GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    <Label fx:id="cuePrecisionLabel" text="99" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+
+    <Label text="力量/最大力量" GridPane.rowIndex="4"/>
+    <ProgressBar fx:id="powerBar" prefWidth="240.0"
+                 GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    <Label fx:id="powerLabel" text="99/99" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+
+    <Label text="力量控制" GridPane.rowIndex="5"/>
+    <ProgressBar fx:id="powerControlBar" prefWidth="240.0"
+                 GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    <Label fx:id="powerControlLabel" text="99" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
+
+    <Label text="杆法" GridPane.rowIndex="6"/>
+    <ProgressBar fx:id="spinBar" prefWidth="240.0"
+                 GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+    <Label fx:id="spinLabel" text="99" GridPane.rowIndex="6" GridPane.columnIndex="2"/>
+
+    <Label text="杆法控制" GridPane.rowIndex="7"/>
+    <ProgressBar fx:id="spinControlBar" prefWidth="240.0"
+                 GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+    <Label fx:id="spinControlLabel" text="99" GridPane.rowIndex="7" GridPane.columnIndex="2"/>
+
+</GridPane>

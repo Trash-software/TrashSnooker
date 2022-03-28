@@ -62,7 +62,7 @@
     "category": "Professional",
     "psy": 80,
     "ai": {
-      "precision": 98,
+      "precision": 96,
       "position": 95,
       "defense": 75,
       "attackPri": 95
@@ -85,7 +85,7 @@
     "category": "Amateur",
     "psy": 75,
     "ai": {
-      "precision": 65,
+      "precision": 50,
       "position": 85,
       "defense": 90,
       "attackPri": 50
@@ -131,7 +131,7 @@
     "category": "Professional",
     "psy": 70,
     "ai": {
-      "precision": 92,
+      "precision": 80,
       "position": 92,
       "defense": 75,
       "attackPri": 90
@@ -154,7 +154,7 @@
     "category": "Professional",
     "psy": 65,
     "ai": {
-      "precision": 93,
+      "precision": 90,
       "position": 97,
       "defense": 90,
       "attackPri": 90
@@ -177,7 +177,7 @@
     "category": "Professional",
     "psy": 90,
     "ai": {
-      "precision": 93,
+      "precision": 85,
       "position": 99,
       "defense": 95,
       "attackPri": 85
@@ -200,7 +200,7 @@
     "category": "Professional",
     "psy": 40,
     "ai": {
-      "precision": 94,
+      "precision": 90,
       "position": 96,
       "defense": 75,
       "attackPri": 90
@@ -208,7 +208,7 @@
   },
   "Trump": {
     "spin": 98,
-    "precision": 98,
+    "precision": 97,
     "anglePrecision": 1.1,
     "longPrecision": 1.2,
     "name": "Trump",
@@ -223,7 +223,7 @@
     "category": "Professional",
     "psy": 70,
     "ai": {
-      "precision": 97,
+      "precision": 95,
       "position": 91,
       "defense": 82,
       "attackPri": 95
@@ -233,7 +233,7 @@
     "spin": 95,
     "precision": 82,
     "anglePrecision": 0.9,
-    "longPrecision": 1,
+    "longPrecision": 1.1,
     "name": "Murphy",
     "maxPower": 95,
     "controllablePower": 87,
@@ -246,7 +246,7 @@
     "category": "Professional",
     "psy": 75,
     "ai": {
-      "precision": 94,
+      "precision": 82,
       "position": 95,
       "defense": 75,
       "attackPri": 90
@@ -269,7 +269,7 @@
     "category": "Amateur",
     "psy": 95,
     "ai": {
-      "precision": 99,
+      "precision": 97,
       "position": 50,
       "defense": 30,
       "attackPri": 99
@@ -292,7 +292,7 @@
     "category": "Professional",
     "psy": 85,
     "ai": {
-      "precision": 99,
+      "precision": 96,
       "position": 85,
       "defense": 60,
       "attackPri": 98
@@ -315,7 +315,7 @@
     "category": "Amateur",
     "psy": 95,
     "ai": {
-      "precision": 75,
+      "precision": 50,
       "position": 95,
       "defense": 50,
       "attackPri": 99
@@ -335,7 +335,7 @@
     "cuePointMuSigma": [-30, 70, 10, 50],
     "powerControl": 70.0,
     "privateCues": [],
-    "category": "Amateur",
+    "category": "Noob",
     "psy": 50,
     "ai": {
       "precision": 30,
@@ -360,8 +360,9 @@
     "privateCues": ["Lolita's cue", "Lolita's pool cue"],
     "category": "Professional",
     "psy": 35,
+    "hidden": true,
     "ai": {
-      "precision": 99,
+      "precision": 97,
       "position": 96,
       "defense": 80,
       "attackPri": 95

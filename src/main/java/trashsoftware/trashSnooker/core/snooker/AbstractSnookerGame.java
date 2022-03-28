@@ -61,9 +61,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         allBalls[redBalls.length + 6] = cueBall;
     }
 
-    protected abstract double breakLineX();
+    public abstract double breakLineX();
 
-    protected abstract double breakArcRadius();
+    public abstract double breakArcRadius();
 
     protected abstract int numRedBalls();
 
@@ -192,8 +192,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 double[] leftUnitVec = Algebra.unitVectorOfAngle(leftAng);
                 double[] rightUnitVec = Algebra.unitVectorOfAngle(rightAng);
 
-                PredictedPos leftPP = getPredictedHitBall(leftUnitVec[0], leftUnitVec[1]);
-                PredictedPos rightPP = getPredictedHitBall(rightUnitVec[0], rightUnitVec[1]);
+                PredictedPos leftPP = getPredictedHitBall(cueBall.getX(), cueBall.getY(), 
+                        leftUnitVec[0], leftUnitVec[1]);
+                PredictedPos rightPP = getPredictedHitBall(cueBall.getX(), cueBall.getY(), 
+                        rightUnitVec[0], rightUnitVec[1]);
 
                 if ((leftPP == null || leftPP.getTargetBall().getValue() == ball.getValue()) &&
                         (rightPP == null || rightPP.getTargetBall().getValue() == ball.getValue()))

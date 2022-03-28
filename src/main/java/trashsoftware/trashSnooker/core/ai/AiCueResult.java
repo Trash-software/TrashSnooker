@@ -1,11 +1,12 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.Algebra;
-import trashsoftware.trashSnooker.core.CuePlayParams;
 
 import java.util.Random;
 
 public class AiCueResult {
+    
+    public double aiPrecisionFactor = 10000.0;
     
     private double unitX, unitY;
     private double selectedFrontBackSpin;  // 球手想要的高低杆，范围(-1.0, 1.0)，高杆正低杆负
@@ -27,7 +28,7 @@ public class AiCueResult {
         Random random = new Random();
         double rad = Algebra.thetaOf(unitX, unitY);
         
-        double sd = (100 - aiPlayStyle.precision) / 5000.0;  // 再歪也歪不了太多吧？
+        double sd = (100 - aiPlayStyle.precision) / aiPrecisionFactor;  // 再歪也歪不了太多吧？
         System.out.println("Random offset: " + sd);
         double afterRandom = random.nextGaussian() * sd + rad;
         

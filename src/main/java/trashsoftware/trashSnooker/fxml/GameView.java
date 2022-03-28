@@ -24,6 +24,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
@@ -243,6 +244,7 @@ public class GameView implements Initializable {
 
     public void finishCue(Player justCuedPlayer, Player nextCuePlayer) {
 //        updateCuePlayerSinglePole(justCuedPlayer);
+        oneFrame();
         drawScoreBoard(justCuedPlayer);
         drawTargetBoard();
         restoreCuePoint();
@@ -257,9 +259,16 @@ public class GameView implements Initializable {
 
         if (game.getGame().isEnded()) {
             endFrame();
-        } else if ((game.getGame() instanceof AbstractSnookerGame) &&
-                ((AbstractSnookerGame) game.getGame()).canReposition()) {
-            askReposition();
+        } else if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
+            if ((game.getGame() instanceof AbstractSnookerGame) &&
+                    ((AbstractSnookerGame) game.getGame()).canReposition()) {
+                askReposition();
+            }
+        } else {
+            if (!game.isFinished() && 
+                    aiAutoPlay) {
+                Platform.runLater(() -> aiCue(nextCuePlayer));
+            }
         }
     }
 
@@ -406,6 +415,8 @@ public class GameView implements Initializable {
 
     private void onSingleClick(MouseEvent mouseEvent) {
         System.out.println("Clicked!");
+        if (aiCalculating) return;
+        
         if (game.getGame().getCueBall().isPotted()) {
             game.getGame().placeWhiteBall(realX(mouseEvent.getX()), realY(mouseEvent.getY()));
         } else if (!game.getGame().isCalculating() && movement == null) {
@@ -668,7 +679,9 @@ public class GameView implements Initializable {
         double whiteStartingX = game.getGame().getCueBall().getX();
         double whiteStartingY = game.getGame().getCueBall().getY();
 
-        PredictedPos predictionWithRandom = game.getGame().getPredictedHitBall(unitXYWithSpin[0], unitXYWithSpin[1]);
+        PredictedPos predictionWithRandom = game.getGame().getPredictedHitBall(
+                whiteStartingX, whiteStartingY,
+                unitXYWithSpin[0], unitXYWithSpin[1]);
         if (predictionWithRandom == null) {
             predictionOfCue = new SavedPrediction(whiteStartingX, whiteStartingY,
                     unitXYWithSpin[0], unitXYWithSpin[1]);
@@ -715,11 +728,14 @@ public class GameView implements Initializable {
         cueButton.setDisable(true);
         aiCalculating = true;
         Thread aiCalculation = new Thread(() -> {
-            System.out.println(" ai cue");
+            System.out.println("ai cue");
             long st = System.currentTimeMillis();
-            // todo: AI放置
             if (game.getGame().isBallInHand()) {
                 System.out.println("AI is trying to place ball");
+                double[] pos = AiCueBallPlacer.createAiCueBallPlacer(game.getGame(), player)
+                        .getPositionToPlaceCueBall();
+                game.getGame().placeWhiteBall(pos[0], pos[1]);
+                Platform.runLater(this::draw);
             }
             AiCueResult cueResult = game.getGame().aiCue(player);
             System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
@@ -822,14 +838,6 @@ public class GameView implements Initializable {
             cueButton.setText("击球");
         } else {
             cueButton.setText("电脑击球");
-            if (!game.isFinished() && aiAutoPlay) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                aiCue(nextCuePlayer);
-            }
         }
     }
 
@@ -973,8 +981,11 @@ public class GameView implements Initializable {
         cueAngleCanvas.setOnMouseDragged(this::onCueAngleCanvasDragged);
     }
 
-    private void drawPottedWhiteBall() {
-        if (!game.getGame().isCalculating() && movement == null && game.getGame().isBallInHand()) {
+    private void drawBallInHand() {
+        if (!game.getGame().isCalculating() && 
+                movement == null && 
+                game.getGame().isBallInHand() &&
+                game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
             GameValues values = game.getGame().getGameValues();
 
             double x = realX(mouseX);
@@ -1532,7 +1543,7 @@ public class GameView implements Initializable {
         drawTable();
         drawBalls();
         drawCursor();
-        drawPottedWhiteBall();
+        drawBallInHand();
     }
 
     private void playMovement() {

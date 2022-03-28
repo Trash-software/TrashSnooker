@@ -154,7 +154,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     @Override
-    protected double breakPointX() {
+    public double breakPointX() {
         return gameValues.leftX + (gameValues.innerWidth * 0.75);
     }
 
@@ -264,7 +264,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         throw new RuntimeException("不可能");
     }
 
-    private boolean isJustAfterBreak() {
+    public boolean isJustAfterBreak() {
         return finishedCuesCount == 1;
     }
 

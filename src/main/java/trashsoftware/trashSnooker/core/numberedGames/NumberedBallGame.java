@@ -18,7 +18,7 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
         super(parent, gameSettings, gameValues, frameIndex);
     }
 
-    protected abstract double breakPointX();
+    public abstract double breakPointX();
 
     public Map<Integer, PoolBall> getNumberBallMap() {
         if (numberBallMap == null) {
@@ -37,7 +37,7 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
         ((NumberedBallPlayer) breakingPlayer).setBreakingPlayer();
     }
 
-    protected double breakLineX() {
+    public double breakLineX() {
         return gameValues.leftX + 635.0;
     }
 

@@ -132,7 +132,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
     }
 
     @Override
-    protected double breakPointX() {
+    public double breakPointX() {
         return gameValues.leftX + (gameValues.innerWidth * 0.75);
     }
 }

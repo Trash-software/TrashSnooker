@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.CuePlayParams;
+import trashsoftware.trashSnooker.core.GameValues;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 
@@ -10,6 +11,11 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
     public SnookerAiCue(AbstractSnookerGame game, SnookerPlayer aiPlayer) {
         super(game, aiPlayer);
+    }
+    
+    public static double[] getPositionToPlaceCueBall(AbstractSnookerGame game) {
+
+        return new double[0];
     }
 
     @Override

@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Recorder {
+    
+    public static final boolean SHOW_HIDDEN = true;
 
     private static final String PLAYER_LIST_FILE = "user" + File.separator + "players.json";
     private static final String CUE_LIST_FILE = "user" + File.separator + "cues.json";
@@ -89,6 +91,11 @@ public class Recorder {
                 if (obj instanceof JSONObject) {
                     JSONObject personObj = (JSONObject) obj;
                     try {
+                        if (!SHOW_HIDDEN && 
+                                personObj.has("hidden") && 
+                                personObj.getBoolean("hidden")) {
+                            continue;
+                        }
                         String name = personObj.getString("name");
                         AiPlayStyle aiPlayStyle;
                         if (personObj.has("ai")) {

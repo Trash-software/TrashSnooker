@@ -16,12 +16,12 @@ public class MiniSnookerGame extends AbstractSnookerGame {
     }
 
     @Override
-    protected double breakLineX() {
+    public double breakLineX() {
         return gameValues.leftX + 635.0;
     }
 
     @Override
-    protected double breakArcRadius() {
+    public double breakArcRadius() {
         return 219.0;  // todo: 存疑
     }
 

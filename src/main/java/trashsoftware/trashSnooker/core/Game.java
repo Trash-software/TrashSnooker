@@ -341,12 +341,13 @@ public abstract class Game<B extends Ball, P extends Player> {
         return cueBackPredictor.predict();
     }
 
-    public PredictedPos getPredictedHitBall(double xUnitDirection, double yUnitDirection) {
+    public PredictedPos getPredictedHitBall(double cueBallX, double cueBallY, 
+                                            double xUnitDirection, double yUnitDirection) {
         double dx = Values.PREDICTION_INTERVAL * xUnitDirection;
         double dy = Values.PREDICTION_INTERVAL * yUnitDirection;
 
-        double x = cueBall.x + dx;
-        double y = cueBall.y + dy;
+        double x = cueBallX + dx;
+        double y = cueBallY + dy;
         while (x >= gameValues.leftX &&
                 x < gameValues.rightX &&
                 y >= gameValues.topY &&
@@ -382,7 +383,6 @@ public abstract class Game<B extends Ball, P extends Player> {
                 if (ball != selfBall1 && ball != selfBall2) {
                     if (Algebra.distanceToPoint(x, y, ball.x, ball.y) <
                             gameValues.ballDiameter) {
-                        // 这个洞被挡住了
                         return false;
                     }
                 }
@@ -391,6 +391,31 @@ public abstract class Game<B extends Ball, P extends Player> {
             y += unitY;
         }
         return true;
+    }
+    
+    public boolean canSeeBall(double p1x, double p1y, double p2x, double p2y,
+                              Ball selfBall1, Ball selfBall2) {
+        double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
+        
+        // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
+        double xDiff = p2x - p1x;
+        double yDiff = p2y - p1y;
+        double[] vec = new double[]{xDiff, yDiff};
+        double[] unitVec = Algebra.unitVector(vec);
+        double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
+        double theta = Math.asin(simulateBallDiameter / dt);  // 连线与预测线的夹角
+        double alpha = Algebra.thetaOf(unitVec);  // 两球连线与X轴的夹角
+        
+        for (double d = -1.0; d <= 1.0; d += 0.25) {
+            double ang = Algebra.normalizeAngle(alpha + theta * d);
+            double[] angUnitVec = Algebra.unitVectorOfAngle(ang);
+//            System.out.println(ang + " orig ang: " + alpha);
+
+            PredictedPos pp = getPredictedHitBall(p1x, p1y, angUnitVec[0], angUnitVec[1]);
+//            System.out.println(pp);
+            if (pp != null && pp.getTargetBall().getValue() == selfBall2.getValue()) return true;
+        }
+        return false;
     }
 
     /**
