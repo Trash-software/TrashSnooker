@@ -26,9 +26,16 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private final SnookerBall[] allBalls;
     private boolean doingFreeBall = false;  // 正在击打自由球
 
+    public final double redRowOccupyX;
+    public final double redGapDt;
+
     AbstractSnookerGame(GameView parent, GameSettings gameSettings, GameValues gameValues,
                         int frameIndex) {
         super(parent, gameSettings, gameValues, frameIndex);
+
+        redRowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0)) +
+                Game.MIN_PLACE_DISTANCE * 0.8;
+        redGapDt = Game.MIN_PLACE_DISTANCE;
 
         currentTarget = 1;
 
@@ -599,27 +606,93 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
     }
 
+    @Override
+    public GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage) {
+        int targetValue = getCurrentTarget();
+        int singlePoleScore = getCuingPlayer().getSinglePoleScore();
+        if (singlePoleScore >= 140 && targetValue == 7) {
+            // 打进黑球就是147
+            if (printPlayStage) System.out.println("打进就是147！");
+            return GamePlayStage.THIS_BALL_WIN;
+        }
+        if (singlePoleScore >= 134 && targetValue == 6) {
+            // 打进粉球再打进黑球就是147
+            if (printPlayStage) System.out.println("冲击147！");
+            return GamePlayStage.NEXT_BALL_WIN;
+        }
+
+        int ahead = getScoreDiff(getCuingPlayer());
+        int remaining = getRemainingScore();
+        int aheadAfter;  // 打进后的领先
+        int remainingAfter;  // 打进后的剩余
+        int aheadAfter2;  // 打进再下一颗球后的领先
+        int remainingAfter2;  // 打进再下一颗球后的剩余
+        if (targetValue == 1) {
+            // 打红球
+            aheadAfter = ahead + 1;
+            remainingAfter = remaining - 8;
+            aheadAfter2 = aheadAfter + 7;
+            remainingAfter2 = remainingAfter;
+        } else if (targetValue == 0) {
+            if (predictedTargetBall != null && predictedTargetBall.getValue() != 1) {
+                aheadAfter = ahead + predictedTargetBall.getValue();
+            } else {
+                aheadAfter = ahead + 7;
+            }
+            remainingAfter = remaining;  // 打进彩球不改变
+            if (remainingRedCount() == 0) {
+                // 打完现在的彩球后该打黄球了
+                aheadAfter2 = aheadAfter + 2;
+                remainingAfter2 = remainingAfter - 2;
+            } else {
+                // 打完打红球
+                aheadAfter2 = aheadAfter + 1;
+                remainingAfter2 = remainingAfter - 8;
+            }
+        } else {
+            // 清彩球阶段
+            aheadAfter = ahead + targetValue;
+            remainingAfter = remaining - targetValue;
+            aheadAfter2 = aheadAfter + targetValue + 1;
+            remainingAfter2 = remainingAfter - targetValue - 1;
+        }
+        if (ahead < remaining && aheadAfter >= remainingAfter) {
+            // 打进目标球超分或延分
+            if (printPlayStage) System.out.println("打进超分！");
+            return GamePlayStage.THIS_BALL_WIN;
+        }
+        if (targetValue != 7 &&
+                aheadAfter < remainingAfter &&
+                aheadAfter2 >= remainingAfter2) {
+            if (printPlayStage) System.out.println("准备超分！");
+            return GamePlayStage.NEXT_BALL_WIN;
+        }
+        if (ahead >= remaining && ahead - remaining <= 8) {
+            if (printPlayStage) System.out.println("接近锁定胜局！");
+            return GamePlayStage.ENHANCE_WIN;
+        }
+        return GamePlayStage.NORMAL;
+    }
+
     private void initRedBalls() {
-        double curX = pinkBallPos()[0] + gameValues.ballDiameter + Game.MIN_GAP_DISTANCE;  // 粉球与红球堆空隙
+        double curX = firstRedX();
         double rowStartY = gameValues.midY;
-        double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0)) +
-                Game.MIN_PLACE_DISTANCE * 0.8;
-
-        double gapDt = Game.MIN_PLACE_DISTANCE;
-
-        int ballCountInRow = 1;
+        
         int index = 0;
         for (int row = 0; row < 5; ++row) {
             double y = rowStartY;
-            for (int col = 0; col < ballCountInRow; ++col) {
+            for (int col = 0; col < row + 1; ++col) {
                 redBalls[index++] = new SnookerBall(1, new double[]{curX, y}, gameValues);
-                y += gameValues.ballDiameter + gapDt;
+                y += gameValues.ballDiameter + redGapDt;
             }
-            ballCountInRow++;
-            rowStartY -= gameValues.ballRadius + gapDt * 0.6;
-            curX += rowOccupyX;
+            rowStartY -= gameValues.ballRadius + redGapDt * 0.6;
+            curX += redRowOccupyX;
             if (index >= numRedBalls()) break;
         }
+    }
+    
+    public double firstRedX() {
+        return pinkBallPos()[0] + gameValues.ballDiameter + Game.MIN_GAP_DISTANCE;  // 粉球与红球堆空隙
     }
 
     protected double[] yellowBallPos() {

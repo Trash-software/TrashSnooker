@@ -4,38 +4,38 @@ public class CuePlayParams {
 
     public final double vx;
     public final double vy;
+    // 记录向，不参与实际运算
+    public final double power;
     public double xSpin;
     public double ySpin;
     public double sideSpin;
-    
-    // 记录向，不参与实际运算
-    public final double power;
 
     /**
-     * @param vx       x speed, in real, mm/s
-     * @param vy       y speed, in real, mm/s
-     * @param xSpin    由旋转产生的横向最大速度，mm/s
-     * @param ySpin    由旋转产生的纵向最大速度，mm/s
-     * @param sideSpin 由侧旋产生的最大速度，mm/s
+     * @param vx          x speed, in real, mm/s
+     * @param vy          y speed, in real, mm/s
+     * @param xSpin       由旋转产生的横向最大速度，mm/s
+     * @param ySpin       由旋转产生的纵向最大速度，mm/s
+     * @param sideSpin    由侧旋产生的最大速度，mm/s
+     * @param actualPower 实际的力量，考虑球员力量、球杆、球的重量
      */
     public CuePlayParams(double vx, double vy, double xSpin, double ySpin,
-                         double sideSpin, double power) {
+                         double sideSpin, double actualPower) {
         this.vx = vx;
         this.vy = vy;
         this.xSpin = xSpin;
         this.ySpin = ySpin;
         this.sideSpin = sideSpin;
-        
-        this.power = power;
+
+        this.power = actualPower;
     }
-    
-    public static CuePlayParams makeIdealParams(double directionX, double directionY, 
+
+    public static CuePlayParams makeIdealParams(double directionX, double directionY,
                                                 double actualFrontBackSpin, double actualSideSpin,
                                                 double cueAngleDeg,
                                                 double actualPower) {
-        
+
         if (actualPower < Values.MIN_SELECTED_POWER) actualPower = Values.MIN_SELECTED_POWER;
-        
+
         double[] unitXYWithSpin = unitXYWithSpins(actualSideSpin, actualPower, directionX, directionY);
 
         double vx = unitXYWithSpin[0] * actualPower * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
@@ -54,7 +54,7 @@ public class CuePlayParams {
     public static double unitFrontBackSpin(double unitCuePoint, InGamePlayer inGamePlayer,
                                            Game<?, ?> game) {
         return unitCuePoint * inGamePlayer.getCurrentCue(game).spinMultiplier *
-                inGamePlayer.getPlayerPerson().getMaxSpinPercentage() / 100;
+                inGamePlayer.getPlayerPerson().getMaxSpinPercentage() / 100.0;
     }
 
     public static double unitSideSpin(double unitCuePoint, InGamePlayer inGamePlayer,
@@ -64,7 +64,7 @@ public class CuePlayParams {
 
     public static double[] unitXYWithSpins(double unitSideSpin, double power,
                                            double cueDirX, double cueDirY) {
-        double offsetAngleRad = -unitSideSpin * power / 2400;
+        double offsetAngleRad = -unitSideSpin * power / 2400.0;
         return Algebra.rotateVector(cueDirX, cueDirY, offsetAngleRad);
     }
 
@@ -72,7 +72,7 @@ public class CuePlayParams {
      * @param vx
      * @param vy
      * @param frontBackSpin 高杆正，低杆负
-     * @param sideSpin 右塞正（顶视的逆时针），左塞负
+     * @param sideSpin      右塞正（顶视的逆时针），左塞负
      * @param cueAngleDeg
      * @return
      */

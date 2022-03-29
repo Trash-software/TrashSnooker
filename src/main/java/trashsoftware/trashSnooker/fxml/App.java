@@ -40,6 +40,7 @@ public class App extends Application {
             mainView.setStage(primaryStage);
 
             Scene scene = new Scene(root);
+//            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
             primaryStage.setScene(scene);
 
             primaryStage.setOnHidden(e -> {

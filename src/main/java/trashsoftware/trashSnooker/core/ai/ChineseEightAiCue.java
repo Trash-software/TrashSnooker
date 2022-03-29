@@ -30,7 +30,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
         double dirX = game.breakPointX() - game.getCueBall().getX();
         double dirY = game.getGameValues().midY - game.getCueBall().getY();
         double[] unitXY = Algebra.unitVector(dirX, dirY);
-        double selectedPower = aiPlayer.getPlayerPerson().getControllablePowerPercentage();
+        double selectedPower = aiPlayer.getPlayerPerson().getMaxPowerPercentage();
         CuePlayParams cpp = CuePlayParams.makeIdealParams(
                 unitXY[0],
                 unitXY[1],

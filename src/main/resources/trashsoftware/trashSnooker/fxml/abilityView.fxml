@@ -25,17 +25,29 @@
                  GridPane.rowIndex="2" GridPane.columnIndex="1"/>
     <Label fx:id="aimingLabel" text="99" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
 
-    <Label text="出杆准确度" GridPane.rowIndex="3"/>
+    <Label text="出杆准确度" GridPane.rowIndex="3">
+        <tooltip>
+            <Tooltip text="出杆准确度较低的选手可能无法打中瞄准的方向"/>
+        </tooltip>
+    </Label>
     <ProgressBar fx:id="cuePrecisionBar" prefWidth="240.0"
                  GridPane.rowIndex="3" GridPane.columnIndex="1"/>
     <Label fx:id="cuePrecisionLabel" text="99" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
 
-    <Label text="力量/最大力量" GridPane.rowIndex="4"/>
+    <Label text="力量/最大力量" GridPane.rowIndex="4">
+        <tooltip>
+            <Tooltip text="使用过大的力量可能导致准确度大幅下降，甚至呲杆"/>
+        </tooltip>
+    </Label>
     <ProgressBar fx:id="powerBar" prefWidth="240.0"
                  GridPane.rowIndex="4" GridPane.columnIndex="1"/>
     <Label fx:id="powerLabel" text="99/99" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
 
-    <Label text="力量控制" GridPane.rowIndex="5"/>
+    <Label text="力量控制" GridPane.rowIndex="5">
+        <tooltip>
+            <Tooltip text="选手精确打出指定力量的能力"/>
+        </tooltip>
+    </Label>
     <ProgressBar fx:id="powerControlBar" prefWidth="240.0"
                  GridPane.rowIndex="5" GridPane.columnIndex="1"/>
     <Label fx:id="powerControlLabel" text="99" GridPane.rowIndex="5" GridPane.columnIndex="2"/>

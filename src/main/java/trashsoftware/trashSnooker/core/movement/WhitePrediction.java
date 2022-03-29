@@ -26,6 +26,7 @@ public class WhitePrediction {
     // 非必选项
     private Ball whiteSecondCollide;
     private double whiteSpeedWhenHitSecondBall;
+    private boolean whiteCollidesHoleArcs = false;  // 是否碰撞了袋角
 
     public WhitePrediction(Ball whiteBall) {
         whiteX = whiteBall.getX();
@@ -67,6 +68,14 @@ public class WhitePrediction {
     public void setSecondCollide(Ball secondCollide, double whiteSpeedWhenCollision) {
         this.whiteSecondCollide = secondCollide;
         this.whiteSpeedWhenHitSecondBall = whiteSpeedWhenCollision;
+    }
+
+    public void whiteCollidesHoleArcs() {
+        this.whiteCollidesHoleArcs = true;
+    }
+
+    public boolean isWhiteCollidesHoleArcs() {
+        return whiteCollidesHoleArcs;
     }
 
     public double getWhiteSpeedWhenHitSecondBall() {

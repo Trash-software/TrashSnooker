@@ -135,4 +135,9 @@ public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
     public double breakPointX() {
         return gameValues.leftX + (gameValues.innerWidth * 0.75);
     }
+
+    @Override
+    public GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage) {
+        return GamePlayStage.NORMAL;
+    }
 }

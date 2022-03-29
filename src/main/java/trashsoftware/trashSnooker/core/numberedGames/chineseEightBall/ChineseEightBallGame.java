@@ -4,7 +4,6 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.ChineseEightAiCue;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
-import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.Util;
@@ -110,7 +109,21 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     public int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall) {
-        return getTargetOfPlayer(getCuingPlayer());
+        ChineseEightBallPlayer player = getCuingPlayer();
+        if (player.getBallRange() == NOT_SELECTED_REP) {
+            if (isFullBall(pottingBall)) return FULL_BALL_REP;
+            else if (isHalfBall(pottingBall)) return HALF_BALL_REP;
+            else return 0;  
+        }
+        if (player.getBallRange() == FULL_BALL_REP) {
+            if (getRemFullBallOnTable() > 1) return FULL_BALL_REP;
+            else return 8;
+        }
+        if (player.getBallRange() == HALF_BALL_REP) {
+            if (getRemHalfBallOnTable() > 1) return HALF_BALL_REP;
+            else return 8;
+        }
+        throw new RuntimeException("不可能");
     }
 
     @Override
@@ -192,6 +205,19 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         return winingPlayer;
     }
 
+    @Override
+    public GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage) {
+        int rems = getRemainingBallsOfPlayer(getCuingPlayer());
+        if (rems == 1) {
+            if (printPlayStage) System.out.println("打进就赢！");
+            return GamePlayStage.THIS_BALL_WIN;
+        } else if (rems == 2) {
+            if (printPlayStage) System.out.println("下一颗赢！");
+            return GamePlayStage.NEXT_BALL_WIN;
+        }
+        return GamePlayStage.NORMAL;
+    }
+
     private boolean isFullBall(Ball ball) {
         return ball.getValue() >= 1 && ball.getValue() <= 7;
     }
@@ -199,19 +225,29 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     private boolean isHalfBall(Ball ball) {
         return ball.getValue() >= 9 && ball.getValue() <= 15;
     }
+    
+    private int getRemFullBallOnTable() {
+        int count = 0;
+        for (PoolBall ball : allBalls) {
+            if (!ball.isPotted() && isFullBall(ball)) count++;
+        }
+        return count;
+    }
+
+    private int getRemHalfBallOnTable() {
+        int count = 0;
+        for (PoolBall ball : allBalls) {
+            if (!ball.isPotted() && isHalfBall(ball)) count++;
+        }
+        return count;
+    }
 
     private boolean hasFullBallOnTable() {
-        for (PoolBall ball : allBalls) {
-            if (!ball.isPotted() && isFullBall(ball)) return true;
-        }
-        return false;
+        return getRemFullBallOnTable() > 0;
     }
 
     private boolean hasHalfBallOnTable() {
-        for (PoolBall ball : allBalls) {
-            if (!ball.isPotted() && isHalfBall(ball)) return true;
-        }
-        return false;
+        return getRemHalfBallOnTable() > 0;
     }
 
     private boolean allFullBalls(Set<PoolBall> balls) {

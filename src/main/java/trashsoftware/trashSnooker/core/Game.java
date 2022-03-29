@@ -495,15 +495,15 @@ public abstract class Game<B extends Ball, P extends Player> {
 
     public abstract Player getWiningPlayer();
 
-    public Player getCuingPlayer() {
+    public P getCuingPlayer() {
         return currentPlayer;
     }
 
-    public Player getPlayer1() {
+    public P getPlayer1() {
         return player1;
     }
 
-    public Player getPlayer2() {
+    public P getPlayer2() {
         return player2;
     }
 
@@ -588,6 +588,8 @@ public abstract class Game<B extends Ball, P extends Player> {
     protected abstract void updateTargetPotSuccess(boolean isSnookerFreeBall);
 
     protected abstract void updateTargetPotFailed();
+    
+    public abstract GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage);
 
     protected void switchPlayer() {
 //        parent.notifyPlayerWillSwitch(currentPlayer);
@@ -664,6 +666,7 @@ public abstract class Game<B extends Ball, P extends Player> {
                         dtWhenHitFirstWall = cueBall.getDistanceMoved();
                     }
                     hitWall = true;
+                    prediction.whiteCollidesHoleArcs();
                 }
                 return false;
             }

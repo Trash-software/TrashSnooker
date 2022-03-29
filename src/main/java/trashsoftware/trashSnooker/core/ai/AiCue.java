@@ -6,7 +6,7 @@ import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 
 import java.util.*;
 
-// todo: assume pickup, 大力K球奖励, 开球固定式, 袋角权重
+// todo: assume pickup, 大力K球奖励, 黑八半场自由球只能向下打
 
 public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player> {
 
@@ -73,11 +73,15 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     protected abstract DefenseChoice breakCue();
 
     protected double selectedPowerToActualPower(double selectedPower) {
-        return selectedPower * aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier;
+        return selectedPower * 
+                aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier / 
+                game.getGameValues().ballWeightRatio;
     }
 
     protected double actualPowerToSelectedPower(double actualPower) {
-        return actualPower / aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier;
+        return actualPower / 
+                aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier * 
+                game.getGameValues().ballWeightRatio;
     }
 
     private IntegratedAttackChoice createIntAttackChoices(double selectedPower,
@@ -132,7 +136,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 selectedPower,
                 selectedFrontBackSpin,
                 wp.getSecondCollide(),
-                wp.getWhiteSpeedWhenHitSecondBall());
+                wp.getWhiteSpeedWhenHitSecondBall(),
+                wp.isWhiteCollidesHoleArcs());
     }
 
     private IntegratedAttackChoice attack(AttackChoice choice,
@@ -172,7 +177,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     }
 
     protected AiCueResult makeDefenseCue(DefenseChoice choice) {
-        return new AiCueResult(aiPlayer.getPlayerPerson().getAiPlayStyle(),
+        return new AiCueResult(aiPlayer.getPlayerPerson(),
+                GamePlayStage.NORMAL,
                 choice.cueDirectionUnitVector[0],
                 choice.cueDirectionUnitVector[1],
                 0,
@@ -205,7 +211,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 }
             }
             if (best != null) {
-                return new AiCueResult(aiPlayer.getPlayerPerson().getAiPlayStyle(),
+                return new AiCueResult(aiPlayer.getPlayerPerson(),
+                        game.getGamePlayStage(best.attackChoice.ball, true),
                         best.attackChoice.cueDirectionUnitVector[0],
                         best.attackChoice.cueDirectionUnitVector[1],
                         best.selectedFrontBackSpin,
@@ -227,7 +234,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 (aiPlayer.getPlayerPerson().getMaxPowerPercentage() - 20.0) + 20.0;
         double[] directionVec = Algebra.unitVectorOfAngle(directionRad);
         return new AiCueResult(
-                aiPlayer.getPlayerPerson().getAiPlayStyle(),
+                aiPlayer.getPlayerPerson(),
+                GamePlayStage.NORMAL,
                 directionVec[0],
                 directionVec[1],
                 0.0,
@@ -584,6 +592,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         Ball whiteSecondCollide;
         double speedWhenWhiteCollidesOther;
         private double price;
+        private boolean whiteCollideHoleArcs;
 
         protected IntegratedAttackChoice(AttackChoice attackChoice,
                                          List<AttackChoice> nextStepAttackChoices,
@@ -592,7 +601,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                                          double selectedPower,
                                          double selectedFrontBackSpin,
                                          Ball whiteSecondCollide,
-                                         double speedWhenWhiteCollidesOther) {
+                                         double speedWhenWhiteCollidesOther,
+                                         boolean whiteCollideHoleArcs) {
             this.attackChoice = attackChoice;
             this.nextStepAttackChoices = nextStepAttackChoices;
             this.nextStepTarget = nextStepTarget;
@@ -601,6 +611,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             this.whiteSecondCollide = whiteSecondCollide;
             this.speedWhenWhiteCollidesOther = speedWhenWhiteCollidesOther;
             this.params = params;
+            this.whiteCollideHoleArcs = whiteCollideHoleArcs;
 
             generatePrice();
         }
@@ -627,6 +638,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             if (speedWhenWhiteCollidesOther < speedThreshold) {
                 price *= speedWhenWhiteCollidesOther / speedThreshold;
             }
+            if (whiteCollideHoleArcs) price *= 0.5;
             return price;
         }
 
@@ -638,6 +650,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 mul /= 4;
             }
             if (whiteSecondCollide != null) price *= 0.5;
+            if (whiteCollideHoleArcs) price *= 0.5;
         }
     }
 }

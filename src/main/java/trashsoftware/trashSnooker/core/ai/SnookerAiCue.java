@@ -1,26 +1,35 @@
 package trashsoftware.trashSnooker.core.ai;
 
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.CuePlayParams;
-import trashsoftware.trashSnooker.core.GameValues;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
-
-import java.util.List;
 
 public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
     public SnookerAiCue(AbstractSnookerGame game, SnookerPlayer aiPlayer) {
         super(game, aiPlayer);
     }
-    
-    public static double[] getPositionToPlaceCueBall(AbstractSnookerGame game) {
-
-        return new double[0];
-    }
 
     @Override
     protected DefenseChoice breakCue() {
-        return getBestDefenseChoice(40, 41);
+        double aimingPosX = game.firstRedX() + 
+                game.getGameValues().ballDiameter * game.redRowOccupyX * 4;
+        double aimingPosY = game.getGameValues().midY + 
+                (game.getGameValues().ballDiameter + game.redGapDt * 0.6) * 3.9;
+        double dirX = aimingPosX - game.getCueBall().getX();
+        double dirY = aimingPosY - game.getCueBall().getY();
+        double[] unitXY = Algebra.unitVector(dirX, dirY);
+        double selectedPower = actualPowerToSelectedPower(40.0);
+        CuePlayParams cpp = CuePlayParams.makeIdealParams(
+                unitXY[0],
+                unitXY[1],
+                0.0,
+                0.0,
+                5.0,
+                selectedPowerToActualPower(selectedPower)
+        );
+        return new DefenseChoice(unitXY, selectedPower, cpp);
     }
 
     @Override
