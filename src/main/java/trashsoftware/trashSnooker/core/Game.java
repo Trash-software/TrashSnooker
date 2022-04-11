@@ -22,9 +22,9 @@ public abstract class Game<B extends Ball, P extends Player> {
     public static final double calculationsPerSec = 1000.0 / calculateMs;
     public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
     public static final double speedReducer = 120.0 / calculationsPerSecSqr;
-    public static final double spinReducer = 3400.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
+    public static final double spinReducer = 4000.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
     public static final double sideSpinReducer = 100.0 / calculationsPerSecSqr;
-    public static final double spinEffect = 1900.0 / calculateMs;  // 数值越小影响越大
+    public static final double spinEffect = 1400.0 / calculateMs;  // 数值越小影响越大
     // 进攻球判定角
     // 如实际角度与可通过的袋口连线的夹角小于该值，判定为进攻球
     public static final double MAX_ATTACK_DECISION_ANGLE = Math.toRadians(7.5);
@@ -58,6 +58,7 @@ public abstract class Game<B extends Ball, P extends Player> {
     private B[] randomOrderBallPool1;
     private B[] randomOrderBallPool2;
     private PhysicsCalculator physicsCalculator;
+    protected String foulReason;
 
     protected Game(GameView parent, GameSettings gameSettings, GameValues gameValues,
                    int frameIndex) {
@@ -590,6 +591,14 @@ public abstract class Game<B extends Ball, P extends Player> {
     protected abstract void updateTargetPotFailed();
     
     public abstract GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage);
+    
+    public String getFoulReason() {
+        return foulReason;   
+    }
+
+    public boolean isLastCueFoul() {
+        return lastCueFoul;
+    }
 
     protected void switchPlayer() {
 //        parent.notifyPlayerWillSwitch(currentPlayer);

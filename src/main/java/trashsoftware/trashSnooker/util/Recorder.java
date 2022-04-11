@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.util;
 
+import javafx.scene.effect.Reflection;
 import javafx.scene.paint.Color;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,6 +11,8 @@ import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 
 import java.io.*;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +22,8 @@ public class Recorder {
     public static final boolean SHOW_HIDDEN = true;
 
     private static final String PLAYER_LIST_FILE = "user" + File.separator + "players.json";
+    private static final String CUSTOM_PLAYER_LIST_FILE = 
+            "user" + File.separator + "custom_players.json";
     private static final String CUE_LIST_FILE = "user" + File.separator + "cues.json";
     public static final String RECORDS_DIRECTORY = "user" + File.separator + "records";
 
@@ -32,7 +37,9 @@ public class Recorder {
 
         playerPeople.clear();
         JSONObject playersRoot = loadFromDisk(PLAYER_LIST_FILE);
-        loadPlayers(playersRoot);
+        JSONObject customPlayersRoot = loadFromDisk(CUSTOM_PLAYER_LIST_FILE);
+        loadPlayers(playersRoot, false);
+        loadPlayers(customPlayersRoot, true);
     }
 
     private static void loadCues(JSONObject root) {
@@ -83,7 +90,7 @@ public class Recorder {
         return color;
     }
 
-    private static void loadPlayers(JSONObject root) {
+    private static void loadPlayers(JSONObject root, boolean isCustomPlayer) {
         if (root.has("players")) {
             JSONObject array = root.getJSONObject("players");
             for (String key : array.keySet()) {
@@ -150,7 +157,8 @@ public class Recorder {
                                     personObj.getDouble("anglePrecision"),
                                     personObj.getDouble("longPrecision"),
                                     personObj.getDouble("powerControl"),
-                                    aiPlayStyle
+                                    aiPlayStyle,
+                                    isCustomPlayer
                             );
                         }
                         if (personObj.has("privateCues")) {
@@ -166,7 +174,7 @@ public class Recorder {
                                 }
                             }
                         }
-
+                        playerPerson.setCustom(isCustomPlayer);
                         playerPeople.put(name, playerPerson);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -178,7 +186,7 @@ public class Recorder {
 
     public static void addPlayerPerson(PlayerPerson playerPerson) {
         playerPeople.put(playerPerson.getName(), playerPerson);
-        saveToDisk(makeJsonObject(), PLAYER_LIST_FILE);
+        saveToDisk(makeJsonObject(), CUSTOM_PLAYER_LIST_FILE);
     }
 
     public static Collection<PlayerPerson> getPlayerPeople() {
@@ -198,23 +206,14 @@ public class Recorder {
     }
 
     private static JSONObject makeJsonObject() {
-        JSONObject array = new JSONObject();
+        JSONObject result = new JSONObject();
         for (PlayerPerson playerPerson : playerPeople.values()) {
-            JSONObject personObject = new JSONObject();
-            personObject.put("name", playerPerson.getName());
-            personObject.put("power", playerPerson.getMaxPowerPercentage());
-            personObject.put("spin", playerPerson.getMaxSpinPercentage());
-            personObject.put("precision", playerPerson.getPrecisionPercentage());
-            array.put(playerPerson.getName(), personObject);
-
-            JSONArray cuesArray = new JSONArray();
-            for (Cue cue : playerPerson.getPrivateCues()) {
-                cuesArray.put(cue.getName());
-            }
-            personObject.put("privateCues", cuesArray);
+            if (!playerPerson.isCustom()) continue;
+            JSONObject personObject = playerPerson.toJsonObject();
+            result.put(playerPerson.getName(), personObject);
         }
         JSONObject root = new JSONObject();
-        root.put("players", array);
+        root.put("players", result);
         return root;
     }
 

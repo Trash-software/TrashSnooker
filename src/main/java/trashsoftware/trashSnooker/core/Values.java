@@ -8,9 +8,9 @@ public class Values {
 
     public static final double MAX_LENGTH = Math.hypot(SNOOKER_OUTER_WIDTH, SNOOKER_OUTER_HEIGHT);  // 对角线长度
 
-    public static final double WALL_BOUNCE_RATIO = 0.92;
-    public static final double BALL_BOUNCE_RATIO = 0.97;
-    public static final double WALL_SPIN_PRESERVE_RATIO = 0.75;
+//    public static final double WALL_BOUNCE_RATIO = 0.92;
+//    public static final double BALL_BOUNCE_RATIO = 0.97;
+//    public static final double WALL_SPIN_PRESERVE_RATIO = 0.75;
 
     // 袋角直线的法向量
 //    public static final double[] NORMAL_45 = {1, 1};  // 左下至右上
@@ -18,11 +18,11 @@ public class Values {
 
     public static final double MIN_SELECTED_POWER = 1.0;
     // 击球最大速度，mm/s
-    public static final double MAX_POWER_SPEED = 6000.0;
+    public static final double MAX_POWER_SPEED = 6400.0;
     // 由旋转产生的理论最大瞬时速度（该速度不可能达到），mm/s
     public static final double MAX_SPIN_SPEED = 7400.0;
     // 由侧旋产生的最大瞬时速度，mm/s
-    public static final double MAX_SIDE_SPIN_SPEED = 1400.0;
+    public static final double MAX_SIDE_SPIN_SPEED = 1600.0;
     public static final int DETAILED_PHYSICAL = 12;
     // 每两次物理碰撞运算之间的最大间隔距离
     public static final double PREDICTION_INTERVAL = MAX_POWER_SPEED / 1000.0 / DETAILED_PHYSICAL;

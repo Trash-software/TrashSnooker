@@ -14,9 +14,9 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     @Override
     protected DefenseChoice breakCue() {
         double aimingPosX = game.firstRedX() + 
-                game.getGameValues().ballDiameter * game.redRowOccupyX * 4;
+                game.getGameValues().ballDiameter * game.redRowOccupyX * 4.0;
         double aimingPosY = game.getGameValues().midY + 
-                (game.getGameValues().ballDiameter + game.redGapDt * 0.6) * 3.9;
+                (game.getGameValues().ballDiameter + game.redGapDt * 0.6) * 6.65;
         double dirX = aimingPosX - game.getCueBall().getX();
         double dirY = aimingPosY - game.getCueBall().getY();
         double[] unitXY = Algebra.unitVector(dirX, dirY);

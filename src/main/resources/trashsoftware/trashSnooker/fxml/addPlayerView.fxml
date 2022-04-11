@@ -41,6 +41,6 @@
     <Slider fx:id="positionSlider" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
     <Label fx:id="positionLabel" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
 
-    <Button text="保存" onAction="#saveAction" GridPane.rowIndex="4"/>
+    <Button text="保存" onAction="#saveAction" GridPane.rowIndex="5"/>
 
 </GridPane>

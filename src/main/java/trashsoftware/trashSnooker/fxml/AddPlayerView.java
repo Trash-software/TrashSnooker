@@ -58,13 +58,19 @@ public class AddPlayerView implements Initializable {
         PlayerPerson playerPerson = new PlayerPerson(
                 name,
                 powerSlider.getValue(),
-                powerSlider.getValue() * 0.85,
+                powerSlider.getValue() * 0.88,
                 spinSlider.getValue(),
                 precisionSlider.getValue(),
-                precisionSlider.getValue(),
-                precisionSlider.getValue(),
-                positionSlider.getValue(), 
-                AiPlayStyle.DEFAULT
+                1.0,
+                1.0,
+                positionSlider.getValue(),
+                new AiPlayStyle(
+                        Math.min(99.5, precisionSlider.getValue() * 1.1),
+                        Math.min(99.5, positionSlider.getValue() * 1.1),
+                        Math.min(99.5, positionSlider.getValue() * 1.1),
+                        Math.min(100, precisionSlider.getValue())
+                ),
+                true
         );
         Recorder.addPlayerPerson(playerPerson);
         parent.reloadPlayerList();

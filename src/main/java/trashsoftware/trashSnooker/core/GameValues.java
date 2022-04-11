@@ -10,7 +10,9 @@ public class GameValues {
                     2035.0, 1788.0,
                     33.34)
             .ballSize(52.5)
-            .holeSizeCurved(85.0, 100.0)
+            .holeSizeCurved(85.0, 90.0)
+            .resistanceAndCushionBounce(1.0, 0.9, 0.75)
+            .ballBounce(0.97)
             .build();
 
     public static final GameValues MINI_SNOOKER_VALUES = new Builder()
@@ -19,7 +21,9 @@ public class GameValues {
                     1550.0, 1270.0,
                     42.0)
             .ballSize(52.5)
-            .holeSizeCurved(85.0, 100.0)
+            .holeSizeCurved(85.0, 90.0)
+            .resistanceAndCushionBounce(1.05, 0.85, 0.7)  // 裤边太高影响反弹
+            .ballBounce(0.97)
             .build();
 
     public static final GameValues CHINESE_EIGHT_VALUES = new Builder()
@@ -28,7 +32,9 @@ public class GameValues {
                     1550.0, 1270.0,
                     42.0)
             .ballSize(57.15)
-            .holeSizeCurved(85.0, 100.0)
+            .holeSizeCurved(85.0, 90.0)
+            .resistanceAndCushionBounce(1.05, 0.9, 0.75)
+            .ballBounce(0.96)
             .build();
 
     public static final GameValues SIDE_POCKET = new Builder()
@@ -39,6 +45,8 @@ public class GameValues {
             .ballSize(57.15)
             .holeSizeStraight(105.0, 105.0,
                     5.0, 20.0)
+            .resistanceAndCushionBounce(1.0, 0.8, 0.9)
+            .ballBounce(0.96)
             .build();
 
     public Color tableColor;
@@ -133,6 +141,11 @@ public class GameValues {
     public double[][][] allMidHoleLines;
 
     private boolean straightHole;
+    
+    public double tableResistanceRatio;
+    public double ballBounceRatio;
+    public double wallBounceRatio;
+    public double wallSpinPreserveRatio;
 
     public boolean isStraightHole() {
         return straightHole;
@@ -382,6 +395,20 @@ public class GameValues {
             values.cornerArcDiameter = values.cornerArcRadius * 2;
             values.cornerLineLonger = values.cornerHoleRadius;  // 底袋角直线的占地长宽
             values.cornerLineShorter = values.cornerHoleRadius;
+            return this;
+        }
+        
+        public Builder resistanceAndCushionBounce(double tableResistance, 
+                                                  double wallBounce,
+                                                  double wallSpinPreserve) {
+            values.tableResistanceRatio = tableResistance;
+            values.wallBounceRatio = wallBounce;
+            values.wallSpinPreserveRatio = wallSpinPreserve;
+            return this;
+        }
+        
+        public Builder ballBounce(double ballBounceRatio) {
+            values.ballBounceRatio = ballBounceRatio;
             return this;
         }
 

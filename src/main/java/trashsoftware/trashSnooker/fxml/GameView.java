@@ -261,11 +261,30 @@ public class GameView implements Initializable {
                     nextCuePlayer.getPlayerPerson().getControllablePowerPercentage());
         });
         setButtonsCueEnd(nextCuePlayer);
+        obstacleProjection = null;
         printPlayStage = true;
 
         if (game.getGame().isEnded()) {
             endFrame();
-        } else if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
+        } else {
+            if (game.getGame().isLastCueFoul()) {
+                String foulReason = game.getGame().getFoulReason();
+                Platform.runLater(() -> {
+                    AlertShower.showInfo(
+                            stage,
+                            foulReason,
+                            "犯规"
+                    );
+                    finishCueNextStep(nextCuePlayer);
+                });
+            } else {
+                finishCueNextStep(nextCuePlayer);
+            }
+        }
+    }
+    
+    private void finishCueNextStep(Player nextCuePlayer) {
+        if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
             if ((game.getGame() instanceof AbstractSnookerGame) &&
                     ((AbstractSnookerGame) game.getGame()).canReposition()) {
                 askReposition();
@@ -337,6 +356,10 @@ public class GameView implements Initializable {
                             ((AbstractSnookerGame) game.getGame()).reposition();
                             drawScoreBoard(game.getGame().getCuingPlayer());
                             drawTargetBoard();
+                            if (aiAutoPlay &&
+                                    game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
+                                aiCue(game.getGame().getCuingPlayer());
+                            }
                         }, null));
     }
 
@@ -861,13 +884,14 @@ public class GameView implements Initializable {
     }
 
     private void setButtonsCueEnd(Player nextCuePlayer) {
-        withdrawMenu.setDisable(false);
         cueButton.setDisable(false);
 
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
             cueButton.setText("击球");
+            withdrawMenu.setDisable(false);
         } else {
             cueButton.setText("电脑击球");
+            withdrawMenu.setDisable(true);
         }
     }
 
@@ -876,16 +900,12 @@ public class GameView implements Initializable {
                 game.getGame().getCuingPlayer().getInGamePlayer(),
                 game.getGame()
         );
-//        return (cueCanvasWH / 2 - cuePointY) / cueAreaRadius *
-//                game.getGame().getCuingPlayer().getInGamePlayer().getPlayCue().spinMultiplier;
     }
 
     private double getUnitSideSpin() {
         return CuePlayParams.unitSideSpin((cuePointX - cueCanvasWH / 2) / cueAreaRadius,
                 game.getGame().getCuingPlayer().getInGamePlayer(),
                 game.getGame());
-//        return (cuePointX - cueCanvasWH / 2) / cueAreaRadius *
-//                game.getGame().getCuingPlayer().getInGamePlayer().getPlayCue().spinMultiplier;
     }
 
     /**
@@ -894,8 +914,6 @@ public class GameView implements Initializable {
     private double[] getUnitXYWithSpins(double unitSideSpin, double powerPercentage) {
         return CuePlayParams.unitXYWithSpins(unitSideSpin, powerPercentage,
                 cursorDirectionUnitX, cursorDirectionUnitY);
-//        double offsetAngleRad = -unitSideSpin * powerPercentage / 2400;
-//        return Algebra.rotateVector(cursorDirectionUnitX, cursorDirectionUnitY, offsetAngleRad);
     }
 
     /**

@@ -25,7 +25,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     private final PoolBall eightBall;
     private final PoolBall[] allBalls = new PoolBall[16];
-    private String foulReason;
 
     public ChineseEightBallGame(GameView parent, GameSettings gameSettings, int frameIndex) {
         super(parent, gameSettings, GameValues.CHINESE_EIGHT_VALUES, frameIndex);
@@ -345,7 +344,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             } else if (currentTarget == 8) {
                 if (whiteFirstCollide.getValue() != 8) {
                     foul = true;
-                    foulReason = "目标球为黑球，但击打了其他";
+                    foulReason = "目标球为黑球，但击打了其他球";
                 }
             }
         }

@@ -291,7 +291,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 PredictedPos leftPP = game.getPredictedHitBall(
                         cueBall.getX(), cueBall.getY(),
                         vec[0], vec[1]);
-                if (leftPP.getTargetBall() == null || leftPP.getTargetBall() == ball) {
+                if (leftPP == null || leftPP.getTargetBall() == null || 
+                        leftPP.getTargetBall() == ball) {
                     // 如果与已有的角度太接近就不考虑了
                     Double floorRad = availableRads.floor(angle);
                     Double ceilRad = availableRads.ceiling(angle);

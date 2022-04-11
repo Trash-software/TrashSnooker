@@ -213,20 +213,20 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
 
     protected void hitHoleArcArea(double[] arcXY) {
         super.hitHoleArcArea(arcXY);
-        vx *= Values.WALL_BOUNCE_RATIO;
-        vy *= Values.WALL_BOUNCE_RATIO;
-        xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
-        ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
-        sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
+        vx *= values.wallBounceRatio;
+        vy *= values.wallBounceRatio;
+        xSpin *= (values.wallSpinPreserveRatio * 0.9);
+        ySpin *= (values.wallSpinPreserveRatio * 0.9);
+        sideSpin *= values.wallSpinPreserveRatio;
     }
 
     protected void hitHoleLineArea(double[] lineNormalVec) {
         super.hitHoleLineArea(lineNormalVec);
-        vx *= Values.WALL_BOUNCE_RATIO;
-        vy *= Values.WALL_BOUNCE_RATIO;
-        xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
-        ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
-        sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
+        vx *= values.wallBounceRatio;
+        vy *= values.wallBounceRatio;
+        xSpin *= (values.wallSpinPreserveRatio * 0.9);
+        ySpin *= (values.wallSpinPreserveRatio * 0.9);
+        sideSpin *= values.wallSpinPreserveRatio;
     }
 
     /**
@@ -236,31 +236,31 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         if (nextX < values.ballRadius + values.leftX ||
                 nextX >= values.rightX - values.ballRadius) {
             // 顶库
-            vx = -vx * Values.WALL_BOUNCE_RATIO;
-            vy *= Values.WALL_BOUNCE_RATIO;
+            vx = -vx * values.wallBounceRatio;
+            vy *= values.wallBounceRatio;
             if (nextX < values.ballRadius + values.leftX) {
                 vy -= sideSpin;
             } else {
                 vy += sideSpin;
             }
-            xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.7);
-            ySpin *= Values.WALL_SPIN_PRESERVE_RATIO;
-            sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
+            xSpin *= (values.wallSpinPreserveRatio * 0.7);
+            ySpin *= values.wallSpinPreserveRatio;
+            sideSpin *= values.wallSpinPreserveRatio;
             return true;
         }
         if (nextY < values.ballRadius + values.topY ||
                 nextY >= values.botY - values.ballRadius) {
             // 边库
-            vx *= Values.WALL_BOUNCE_RATIO;
-            vy = -vy * Values.WALL_BOUNCE_RATIO;
+            vx *= values.wallBounceRatio;
+            vy = -vy * values.wallBounceRatio;
             if (nextY < values.ballRadius + values.topY) {
                 vx += sideSpin;
             } else {
                 vx -= sideSpin;
             }
-            xSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
-            ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.7);
-            sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
+            xSpin *= values.wallSpinPreserveRatio;
+            ySpin *= (values.wallSpinPreserveRatio * 0.7);
+            sideSpin *= values.wallSpinPreserveRatio;
 //            System.out.println("Hit wall!======================");
             return true;
         }
@@ -351,11 +351,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         double ballVY = (ang * this.vx + this.vy) / (ang * ang + 1);
         double ballVX = ang * ballVY;
 
-        ball.vy = ballVY * Values.BALL_BOUNCE_RATIO;
-        ball.vx = ballVX * Values.BALL_BOUNCE_RATIO;
+        ball.vy = ballVY * values.ballBounceRatio;
+        ball.vx = ballVX * values.ballBounceRatio;
 
-        this.vx = (this.vx - ballVX) * Values.BALL_BOUNCE_RATIO;
-        this.vy = (this.vy - ballVY) * Values.BALL_BOUNCE_RATIO;
+        this.vx = (this.vx - ballVX) * values.ballBounceRatio;
+        this.vy = (this.vy - ballVY) * values.ballBounceRatio;
 
         nextX = x + vx;
         nextY = y + vy;
@@ -412,10 +412,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
                 new double[]{ballHorV, thisVerV});
 //        System.out.println("Ball 2 out " + Arrays.toString(ballOut));
 
-        this.vx = thisOut[0] * Values.BALL_BOUNCE_RATIO;
-        this.vy = thisOut[1] * Values.BALL_BOUNCE_RATIO;
-        ball.vx = ballOut[0] * Values.BALL_BOUNCE_RATIO;
-        ball.vy = ballOut[1] * Values.BALL_BOUNCE_RATIO;
+        this.vx = thisOut[0] * values.ballBounceRatio;
+        this.vy = thisOut[1] * values.ballBounceRatio;
+        ball.vx = ballOut[0] * values.ballBounceRatio;
+        ball.vy = ballOut[1] * values.ballBounceRatio;
 
         nextX = x + vx;
         nextY = y + vy;

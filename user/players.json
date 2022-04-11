@@ -36,7 +36,7 @@
     "cuePointMuSigma": [15, 50, 0, 30],
     "powerControl": 80.0,
     "privateCues": [],
-    "category": "Amateur",
+    "category": "Noob",
     "psy": 95,
     "ai": {
       "precision": 75,
@@ -70,7 +70,7 @@
   },
   "老油条": {
     "spin": 90.96009879932735,
-    "precision": 42.61845386533666,
+    "precision": 55.61845386533666,
     "anglePrecision": 1.2,
     "longPrecision": 0.7,
     "name": "老油条",
@@ -85,7 +85,7 @@
     "category": "Amateur",
     "psy": 75,
     "ai": {
-      "precision": 50,
+      "precision": 65,
       "position": 85,
       "defense": 90,
       "attackPri": 50
@@ -343,29 +343,28 @@
       "defense": 10,
       "attackPri": 100
     }
-  },
-  "Lolita": {
-    "spin": 100,
-    "precision": 98,
-    "anglePrecision": 1.0,
-    "longPrecision": 1.25,
-    "name": "Lolita",
-    "maxPower": 76,
-    "controllablePower": 64,
-    "pullDt": [40.0, 200.0],
-    "cuePlayType": "p1,h800,e500;s,s,s,s,l,l,r,r",
-    "cueSwingMag": 5,
-    "cuePointMuSigma": [0, 1, 0, 4],
-    "powerControl": 99.0,
-    "privateCues": ["Lolita's cue", "Lolita's pool cue"],
+  },  
+  "垫底职业选手": {
+    "spin": 90,
+    "precision": 90,
+    "anglePrecision": 1,
+    "longPrecision": 1,
+    "name": "垫底职业选手",
+    "maxPower": 90,
+    "controllablePower": 77,
+    "pullDt": [40.0, 180.0],
+    "cuePlayType": "p1,h500,e500;l,l,l,r,r,r,r",
+    "cueSwingMag": 12,
+    "cuePointMuSigma": [0, 10, 0, 10],
+    "powerControl": 95.0,
+    "privateCues": [],
     "category": "Professional",
-    "psy": 35,
-    "hidden": true,
+    "psy": 60,
     "ai": {
-      "precision": 97,
-      "position": 96,
-      "defense": 80,
-      "attackPri": 95
+      "precision": 90,
+      "position": 90,
+      "defense": 90,
+      "attackPri": 90
     }
   }
 }}
