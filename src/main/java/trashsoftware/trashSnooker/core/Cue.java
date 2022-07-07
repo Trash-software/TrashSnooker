@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 
 public class Cue {
 
+    public final String cueId;
     public final String name;
     public final double frontLength;
     public final double midLength;
@@ -24,7 +25,8 @@ public class Cue {
 
     public final boolean privacy;
 
-    public Cue(String name,
+    public Cue(String cueId,
+               String name,
                double frontLength,
                double midLength,
                double backLength,
@@ -40,6 +42,7 @@ public class Cue {
                double spinMultiplier,
                double accuracyMultiplier,
                boolean privacy) {
+        this.cueId = cueId;
         this.name = name;
         this.frontLength = frontLength;
         this.midLength = midLength;

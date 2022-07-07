@@ -56,4 +56,66 @@ public class Util {
             array[array.length - i - 1] = temp;
         }
     }
+    
+    public static void intToBytesN(long num, byte[] arr, int index, int nBytes) {
+        for (int i = 0; i < nBytes; i++) arr[index + i] = 
+                (byte) ((num >>> ((nBytes - 1 - i) << 3)) & 0xff);
+    }
+    
+    public static long bytesToIntN(byte[] arr, int index, int nBytes) {
+        long result = 0;
+        for (int i = 0; i < nBytes; i++) result = 
+                (arr[index + i] & 0xffL) << ((nBytes - 1 - i) << 3) | result;
+        return result;
+    }
+    
+    public static void int32ToBytes(int n, byte[] arr, int index) {
+        intToBytesN(n, arr, index, 4);
+    }
+    
+    public static int bytesToInt32(byte[] arr, int index) {
+        return (int) bytesToIntN(arr, index, 4);
+    }
+
+    /**
+     * Convert a long into an 8-byte array in big-endian.
+     *
+     * @param l the long.
+     */
+    public static void longToBytes(long l, byte[] arr, int index) {
+        intToBytesN(l, arr, index, 8);
+//        for (int i = 0; i < 8; i++) arr[index + i] = (byte) ((l >> ((7 - i) << 3)) & 0xff);
+    }
+
+    /**
+     * Convert a 8-byte array into signed long in big-endian.
+     *
+     * @param b byte array.
+     * @return signed long.
+     */
+    public static long bytesToLong(byte[] b, int index) {
+        return bytesToIntN(b, index, 8);
+//        long result = 0;
+//        for (int i = 0; i < 8; i++) result = (b[index + i] & 0xffL) << ((7 - i) << 3) | result;
+//        return result;
+    }
+    
+    public static void doubleToBytes(double d, byte[] arr, int index) {
+        long bits = Double.doubleToLongBits(d);
+        longToBytes(bits, arr, index);
+    }
+    
+    public static double bytesToDouble(byte[] b, int index) {
+        return Double.longBitsToDouble(bytesToLong(b, index));
+    }
+    
+    public static int indexOf(char c, char[] arr) {
+        for (int i = 0; i < arr.length; i++) if (c == arr[i]) return i;
+        return -1;
+    }
+
+    public static int indexOf(byte c, byte[] arr) {
+        for (int i = 0; i < arr.length; i++) if (c == arr[i]) return i;
+        return -1;
+    }
 }

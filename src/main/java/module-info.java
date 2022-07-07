@@ -9,10 +9,12 @@ module TrashSnooker {
     requires org.xerial.sqlitejdbc;
 
     exports trashsoftware.trashSnooker;
-    exports trashsoftware.trashSnooker.fxml;
     exports trashsoftware.trashSnooker.core;
     exports trashsoftware.trashSnooker.core.ai;
+    exports trashsoftware.trashSnooker.fxml;
     exports trashsoftware.trashSnooker.fxml.alert;
+    exports trashsoftware.trashSnooker.recorder;
+    exports trashsoftware.trashSnooker.core.table;
 
     opens trashsoftware.trashSnooker.fxml;
     opens trashsoftware.trashSnooker.fxml.alert;

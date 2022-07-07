@@ -27,6 +27,7 @@ public class CueBackPredictor {
     }
     
     public Result predict() {
+        Phy phy = Phy.PREDICT;
         CueBackPredictObject predictor = 
                 new CueBackPredictObject(game.gameValues, cueRadius, INTERVAL);
         
@@ -41,13 +42,13 @@ public class CueBackPredictor {
             Result res = checkBalls(predictor);
             if (res != null) return res;
             
-            if (predictor.willPot()) {
+            if (predictor.willPot(phy)) {
                 return new Result(predictor.distance + game.gameValues.midHoleDiameter,
                         game.gameValues.cushionHeight);
             }
             
             // 检测袋口区域
-            int holeAreaResult = predictor.tryHitHoleArea();
+            int holeAreaResult = predictor.tryHitHoleArea(phy);
             if (holeAreaResult != 0) {
                 // 袋口区域
                 Result res2 = checkBalls(predictor);
@@ -61,7 +62,7 @@ public class CueBackPredictor {
                 return new Result(predictor.distance, game.gameValues.cushionHeight);
             }
             
-            predictor.normalMove();
+            predictor.normalMove(phy);
         }
         return null;
     }

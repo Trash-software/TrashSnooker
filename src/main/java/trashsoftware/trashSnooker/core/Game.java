@@ -12,24 +12,28 @@ import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEig
 import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
+import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.recorder.GameRecorder;
+import trashsoftware.trashSnooker.recorder.NaiveGameRecorder;
 import trashsoftware.trashSnooker.util.Util;
 
+import java.io.IOException;
 import java.util.*;
 
 public abstract class Game<B extends Ball, P extends Player> {
-    public static final double calculateMs = 1.0;
-    public static final double calculationsPerSec = 1000.0 / calculateMs;
-    public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
-    public static final double speedReducer = 120.0 / calculationsPerSecSqr;
-    public static final double spinReducer = 4000.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
-    public static final double sideSpinReducer = 100.0 / calculationsPerSecSqr;
-    public static final double spinEffect = 1400.0 / calculateMs;  // 数值越小影响越大
+//    public static final double calculateMs = 1.0;
+//    public static final double calculationsPerSec = 1000.0 / calculateMs;
+//    public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
+//    public static final double speedReducer = 120.0 / calculationsPerSecSqr;
+//    public static final double spinReducer = 4000.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
+//    public static final double sideSpinReducer = 100.0 / calculationsPerSecSqr;
+//    public static final double spinEffect = 1400.0 / calculateMs;  // 数值越小影响越大
     // 进攻球判定角
     // 如实际角度与可通过的袋口连线的夹角小于该值，判定为进攻球
     public static final double MAX_ATTACK_DECISION_ANGLE = Math.toRadians(7.5);
-    protected static final double MIN_PLACE_DISTANCE = 0.0;  // 防止物理运算卡bug
-    protected static final double MIN_GAP_DISTANCE = 3.0;
+    public static final double MIN_PLACE_DISTANCE = 0.0;  // 防止物理运算卡bug
+    public static final double MIN_GAP_DISTANCE = 3.0;
     public final long frameStartTime = System.currentTimeMillis();
     public final int frameIndex;
     protected final Set<B> newPotted = new HashSet<>();
@@ -49,7 +53,7 @@ public abstract class Game<B extends Ball, P extends Player> {
     protected int currentTarget;
     protected Ball whiteFirstCollide;  // 这一杆白球碰到的第一颗球
     protected boolean collidesWall;
-    protected boolean ended;
+    private boolean ended;
     protected boolean ballInHand = true;
     protected boolean lastCueFoul = false;
     protected boolean lastPotSuccess;
@@ -59,6 +63,8 @@ public abstract class Game<B extends Ball, P extends Player> {
     private B[] randomOrderBallPool2;
     private PhysicsCalculator physicsCalculator;
     protected String foulReason;
+    
+    protected GameRecorder recorder;
 
     protected Game(GameView parent, GameSettings gameSettings, GameValues gameValues,
                    int frameIndex) {
@@ -75,74 +81,30 @@ public abstract class Game<B extends Ball, P extends Player> {
 
     public static Game<? extends Ball, ? extends Player> createGame(GameView gameView, GameSettings gameSettings,
                                                                     GameType gameType, int frameIndex) {
+        Game<? extends Ball, ? extends Player> game;
         if (gameType == GameType.SNOOKER) {
-            return new SnookerGame(gameView, gameSettings, frameIndex);
+            game = new SnookerGame(gameView, gameSettings, frameIndex);
         } else if (gameType == GameType.MINI_SNOOKER) {
-            return new MiniSnookerGame(gameView, gameSettings, frameIndex);
+            game = new MiniSnookerGame(gameView, gameSettings, frameIndex);
         } else if (gameType == GameType.CHINESE_EIGHT) {
-            return new ChineseEightBallGame(gameView, gameSettings, frameIndex);
+            game = new ChineseEightBallGame(gameView, gameSettings, frameIndex);
         } else if (gameType == GameType.SIDE_POCKET) {
-            return new SidePocketGame(gameView, gameSettings, frameIndex);
+            game = new SidePocketGame(gameView, gameSettings, frameIndex);
+        } else throw new RuntimeException("Unexpected game type " + gameType);
+
+        try {
+            game.recorder = new NaiveGameRecorder(game);
+            game.recorder.startRecoding();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        throw new RuntimeException("Unexpected game type " + gameType);
+        
+        return game;
     }
-
-    protected static void drawBallBase(double canvasX,
-                                       double canvasY,
-                                       double ballCanvasDiameter,
-                                       Color color,
-                                       GraphicsContext graphicsContext) {
-        drawBallBase(canvasX, canvasY, ballCanvasDiameter, color, graphicsContext, false);
-    }
-
-    protected static void drawBallBase(
-            double canvasX,
-            double canvasY,
-            double canvasBallDiameter,
-            Color color,
-            GraphicsContext graphicsContext,
-            boolean drawWhiteBorder) {
-        double ballRadius = canvasBallDiameter / 2;
-        graphicsContext.setStroke(Values.BALL_CONTOUR);
-        graphicsContext.strokeOval(
-                canvasX - ballRadius,
-                canvasY - ballRadius,
-                canvasBallDiameter,
-                canvasBallDiameter
-        );
-
-        graphicsContext.setFill(color);
-        graphicsContext.fillOval(
-                canvasX - ballRadius,
-                canvasY - ballRadius,
-                canvasBallDiameter,
-                canvasBallDiameter);
-
-        // 16球9-15号球顶端和底端的白带
-        if (drawWhiteBorder) {
-            double angle = 50.0;
-            graphicsContext.setFill(Values.WHITE);
-            graphicsContext.fillArc(
-                    canvasX - ballRadius,
-                    canvasY - ballRadius,
-                    canvasBallDiameter,
-                    canvasBallDiameter,
-                    90 - angle,
-                    angle * 2,
-                    ArcType.CHORD
-            );
-            graphicsContext.fillArc(
-                    canvasX - ballRadius,
-                    canvasY - ballRadius,
-                    canvasBallDiameter,
-                    canvasBallDiameter,
-                    270 - angle,
-                    angle * 2,
-                    ArcType.CHORD
-            );
-        }
-    }
+    
+    public abstract GameType getGameType();
+    
+    public abstract Table getTable();
 
     protected void setBreakingPlayer(Player breakingPlayer) {
     }
@@ -182,23 +144,28 @@ public abstract class Game<B extends Ball, P extends Player> {
         return gameValues;
     }
 
+    public GameRecorder getRecorder() {
+        return recorder;
+    }
+
     public Movement cue(CuePlayParams params) {
         whiteFirstCollide = null;
         collidesWall = false;
         lastPotSuccess = false;
+        lastCueFoul = false;
         newPotted.clear();
         recordPositions();
         recordedTarget = currentTarget;
 
         lastCueVx = params.vx;
-        cueBall.setVx(params.vx / calculationsPerSec);
-        cueBall.setVy(params.vy / calculationsPerSec);
+        cueBall.setVx(params.vx / Phy.PLAY.calculationsPerSec);
+        cueBall.setVy(params.vy / Phy.PLAY.calculationsPerSec);
         params.xSpin = params.xSpin == 0.0d ? params.vx / 1000.0 : params.xSpin;  // 避免完全无旋转造成的NaN
         params.ySpin = params.ySpin == 0.0d ? params.vy / 1000.0 : params.ySpin;
         cueBall.setSpin(
-                params.xSpin / calculationsPerSec,
-                params.ySpin / calculationsPerSec,
-                params.sideSpin / calculationsPerSec);
+                params.xSpin / Phy.PLAY.calculationsPerSec,
+                params.ySpin / Phy.PLAY.calculationsPerSec,
+                params.sideSpin / Phy.PLAY.calculationsPerSec);
         return physicalCalculate();
     }
 
@@ -209,27 +176,29 @@ public abstract class Game<B extends Ball, P extends Player> {
 
     /**
      * @param params                   击球参数
+     * @param phy                      使用哪一个物理值
      * @param lengthAfterWall          直接碰库后白球预测线的长度
      * @param checkCollisionAfterFirst 是否检查白球打到目标球后是否碰到下一颗球
      */
     public WhitePrediction predictWhite(CuePlayParams params,
+                                        Phy phy,
                                         double lengthAfterWall,
                                         boolean checkCollisionAfterFirst) {
         double whiteX = cueBall.x;
         double whiteY = cueBall.y;
         if (cueBall.isPotted()) return null;
-        cueBall.setVx(params.vx / calculationsPerSec);
-        cueBall.setVy(params.vy / calculationsPerSec);
+        cueBall.setVx(params.vx / phy.calculationsPerSec);
+        cueBall.setVy(params.vy / phy.calculationsPerSec);
         params.xSpin = params.xSpin == 0.0d ? params.vx / 1000.0 : params.xSpin;  // 避免完全无旋转造成的NaN
         params.ySpin = params.ySpin == 0.0d ? params.vy / 1000.0 : params.ySpin;
         cueBall.setSpin(
-                params.xSpin / calculationsPerSec,
-                params.ySpin / calculationsPerSec,
-                params.sideSpin / calculationsPerSec);
+                params.xSpin / phy.calculationsPerSec,
+                params.ySpin / phy.calculationsPerSec,
+                params.sideSpin / phy.calculationsPerSec);
         WhitePredictor whitePredictor = new WhitePredictor();
 //        long st = System.currentTimeMillis();
         WhitePrediction prediction = 
-                whitePredictor.predict(lengthAfterWall, checkCollisionAfterFirst);
+                whitePredictor.predict(phy, lengthAfterWall, checkCollisionAfterFirst);
 //        System.out.println("White prediction ms: " + (System.currentTimeMillis() - st));
         cueBall.setX(whiteX);
         cueBall.setY(whiteY);
@@ -262,34 +231,6 @@ public abstract class Game<B extends Ball, P extends Player> {
     public B getCueBall() {
         return cueBall;
     }
-
-    public void forcedDrawWhiteBall(double realX,
-                                    double realY,
-                                    GraphicsContext graphicsContext,
-                                    double scale) {
-        drawBallBase(
-                parent.canvasX(realX),
-                parent.canvasY(realY),
-                gameValues.ballDiameter * scale,
-                Values.WHITE,
-                graphicsContext);
-    }
-
-    public void drawStoppedBalls(GraphicsContext graphicsContext, double scale) {
-        for (B ball : getAllBalls()) {
-            if (!ball.isPotted()) {
-                forceDrawBall(ball, ball.getX(), ball.getY(), graphicsContext, scale);
-            }
-        }
-    }
-
-    /**
-     * 绘制球桌上的线条、点位等
-     *
-     * @param graphicsContext 画布
-     * @param scale           比例
-     */
-    public abstract void drawTableMarks(GraphicsContext graphicsContext, double scale);
 
     public void quitGame() {
     }
@@ -525,7 +466,7 @@ public abstract class Game<B extends Ball, P extends Player> {
 
     public void withdraw(Player player) {
         player.withdraw();
-        ended = true;
+        end();
     }
 
     private void whiteCollide(Ball ball) {
@@ -554,25 +495,14 @@ public abstract class Game<B extends Ball, P extends Player> {
         return false;
     }
 
-    /**
-     * 在指定的位置强行绘制一颗球，无论球是否已经落袋
-     */
-    public abstract void forceDrawBall(Ball ball,
-                                       double absoluteX,
-                                       double absoluteY,
-                                       GraphicsContext graphicsContext,
-                                       double scale);
-
     private Movement physicalCalculate() {
 //        physicsTimer = new Timer();
         long st = System.currentTimeMillis();
-        physicsCalculator = new PhysicsCalculator();
+        physicsCalculator = new PhysicsCalculator(Phy.PLAY);
         Movement movement = physicsCalculator.calculate();
         System.out.println("Physical calculation ends in " + (System.currentTimeMillis() - st) + " ms");
 
         return movement;
-
-//        physicsTimer.scheduleAtFixedRate(physicsCalculator, calculateMs, calculateMs);
     }
 
     protected void potSuccess(boolean isSnookerFreeBall) {
@@ -613,6 +543,15 @@ public abstract class Game<B extends Ball, P extends Player> {
     protected P getAnotherPlayer() {
         return getAnotherPlayer(currentPlayer);
     }
+    
+    protected void end() {
+        ended = true;
+        try {
+            recorder.stopRecording();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public class WhitePredictor {
         private double lenAfterWall;
@@ -623,8 +562,10 @@ public abstract class Game<B extends Ball, P extends Player> {
         private boolean notTerminated = true;
         private boolean hitWall;
         private boolean checkCollisionAfterFirst;
+        private Phy phy;
 
-        WhitePrediction predict(double lenAfterWall, boolean checkCollisionAfterFirst) {
+        WhitePrediction predict(Phy phy, double lenAfterWall, boolean checkCollisionAfterFirst) {
+            this.phy = phy;
             this.lenAfterWall = lenAfterWall;
             this.checkCollisionAfterFirst = checkCollisionAfterFirst;
             prediction = new WhitePrediction(cueBall);
@@ -645,12 +586,12 @@ public abstract class Game<B extends Ball, P extends Player> {
          * 返回白球是否已经停止
          */
         private boolean oneRun() {
-            cumulatedPhysicalTime += calculateMs;
+            cumulatedPhysicalTime += phy.calculateMs;
             prediction.getWhitePath().add(new double[]{cueBall.x, cueBall.y});
             cueBall.prepareMove();
 
-            if (cueBall.isLikelyStopped()) return true;
-            if (cueBall.willPot()) {
+            if (cueBall.isLikelyStopped(phy)) return true;
+            if (cueBall.willPot(phy)) {
                 prediction.potCueBall();
                 return true;
             }
@@ -662,7 +603,7 @@ public abstract class Game<B extends Ball, P extends Player> {
                 return true;
             }
 
-            int holeAreaResult = cueBall.tryHitHoleArea();
+            int holeAreaResult = cueBall.tryHitHoleArea(phy);
             if (holeAreaResult != 0) {
                 // 袋口区域
                 if (prediction.getFirstCollide() == null) {
@@ -689,13 +630,13 @@ public abstract class Game<B extends Ball, P extends Player> {
             }
             if (prediction.getFirstCollide() == null) {
                 if (tryHitBall()) {
-                    cueBall.normalMove();
+                    cueBall.normalMove(phy);
                     return false;
                 }
             } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                 tryPassSecondBall();
             }
-            cueBall.normalMove();
+            cueBall.normalMove(phy);
             return false;
         }
 
@@ -705,7 +646,7 @@ public abstract class Game<B extends Ball, P extends Player> {
                     if (cueBall.predictedDtToPoint(ball.x, ball.y) <
                             gameValues.ballDiameter) {
                         prediction.setSecondCollide(ball, 
-                                Math.hypot(cueBall.vx, cueBall.vy) * Game.calculationsPerSec);
+                                Math.hypot(cueBall.vx, cueBall.vy) * phy.calculationsPerSec);
                     }
                 }
             }
@@ -721,7 +662,7 @@ public abstract class Game<B extends Ball, P extends Player> {
                         cueBall.twoMovingBallsHitCore(ball);
                         double[] ballDirectionUnitVec = Algebra.unitVector(ball.vx, ball.vy);
                         double[] whiteDirectionUnitVec = Algebra.unitVector(whiteVx, whiteVy);
-                        double ballInitVMmPerS = Math.hypot(ball.vx, ball.vy) * Game.calculationsPerSec;
+                        double ballInitVMmPerS = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         ball.vx = 0;
                         ball.vy = 0;
                         prediction.setFirstCollide(ball, hitWall,
@@ -743,6 +684,11 @@ public abstract class Game<B extends Ball, P extends Player> {
         private double cumulatedPhysicalTime = 0.0;
         private double lastPhysicalTime = 0.0;
         private boolean notTerminated = true;
+        private Phy phy;
+        
+        PhysicsCalculator(Phy phy) {
+            this.phy = phy;
+        }
 
         Movement calculate() {
             movement = new Movement(getAllBalls());
@@ -783,14 +729,14 @@ public abstract class Game<B extends Ball, P extends Player> {
 
             for (B ball : getAllBalls()) {
                 if (ball.isPotted()) continue;
-                if (!ball.isLikelyStopped()) {
+                if (!ball.isLikelyStopped(phy)) {
                     noBallMoving = false;
-                    if (ball.willPot()) {
+                    if (ball.willPot(phy)) {
                         ball.pot();
                         newPotted.add(ball);
                         continue;
                     }
-                    int holeAreaResult = ball.tryHitHoleArea();
+                    int holeAreaResult = ball.tryHitHoleArea(phy);
                     if (holeAreaResult != 0) {
                         // 袋口区域
                         tryHitBall(ball);
@@ -806,7 +752,7 @@ public abstract class Game<B extends Ball, P extends Player> {
                     boolean noHit = tryHitThreeBalls(ball);
                     if (noHit) {
                         if (tryHitBall(ball)) {
-                            ball.normalMove();
+                            ball.normalMove(phy);
                         }
                     }
 //                    ball.normalMove();
@@ -814,7 +760,7 @@ public abstract class Game<B extends Ball, P extends Player> {
                 }
             }
             lastPhysicalTime = cumulatedPhysicalTime;
-            cumulatedPhysicalTime += calculateMs;
+            cumulatedPhysicalTime += phy.calculateMs;
 
             if (Math.floor(cumulatedPhysicalTime / parent.frameTimeMs) !=
                     Math.floor(lastPhysicalTime / parent.frameTimeMs)) {

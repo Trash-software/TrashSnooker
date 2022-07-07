@@ -95,6 +95,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         return potted;
     }
 
+    public void setPotted(boolean potted) {
+        this.potted = potted;
+    }
+
     public void pickup() {
         potted = false;
         vx = 0.0;
@@ -124,8 +128,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         this.sideSpin = sideSpin;
     }
 
-    public boolean isLikelyStopped() {
-        if (getSpeed() < Game.speedReducer && getSpinTargetSpeed() < Game.spinReducer) {
+    public boolean isLikelyStopped(Phy phy) {
+        if (getSpeed() < phy.speedReducer && getSpinTargetSpeed() < phy.spinReducer) {
             vx = 0.0;
             vy = 0.0;
             sideSpin = 0.0;
@@ -140,19 +144,19 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         return Math.hypot(xSpin, ySpin);
     }
 
-    protected void normalMove() {
+    protected void normalMove(Phy phy) {
         distance += Math.hypot(vx, vy);
         x = nextX;
         y = nextY;
         msSinceCue++;
-        if (sideSpin >= Game.sideSpinReducer) {
-            sideSpin -= Game.sideSpinReducer;
-        } else if (sideSpin <= -Game.sideSpinReducer) {
-            sideSpin += Game.sideSpinReducer;
+        if (sideSpin >= phy.sideSpinReducer) {
+            sideSpin -= phy.sideSpinReducer;
+        } else if (sideSpin <= -phy.sideSpinReducer) {
+            sideSpin += phy.sideSpinReducer;
         }
 
         double speed = getSpeed();
-        double reducedSpeed = speed - values.speedReducerPerInterval();
+        double reducedSpeed = speed - values.speedReducerPerInterval(phy);
         double ratio = reducedSpeed / speed;
         vx *= ratio;
         vy *= ratio;
@@ -162,7 +166,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
 
         // A linear reduce
         double spinDiffTotal = Math.hypot(xSpinDiff, ySpinDiff);
-        double spinReduceRatio = Game.spinReducer / spinDiffTotal;
+        double spinReduceRatio = phy.spinReducer / spinDiffTotal;
         double xSpinReducer = Math.abs(xSpinDiff * spinReduceRatio);
         double ySpinReducer = Math.abs(ySpinDiff * spinReduceRatio);
 
@@ -171,20 +175,20 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
 //        double spinEffect = 3000.0;  // 越小影响越大
 
         if (xSpinDiff < -xSpinReducer) {
-            vx += xSpinDiff / Game.spinEffect;
+            vx += xSpinDiff / phy.spinEffect;
             xSpin += xSpinReducer;
         } else if (xSpinDiff >= xSpinReducer) {
-            vx += xSpinDiff / Game.spinEffect;
+            vx += xSpinDiff / phy.spinEffect;
             xSpin -= xSpinReducer;
         } else {
             xSpin = vx;
         }
 
         if (ySpinDiff < -ySpinReducer) {
-            vy += ySpinDiff / Game.spinEffect;
+            vy += ySpinDiff / phy.spinEffect;
             ySpin += ySpinReducer;
         } else if (ySpinDiff >= ySpinReducer) {
-            vy += ySpinDiff / Game.spinEffect;
+            vy += ySpinDiff / phy.spinEffect;
             ySpin -= ySpinReducer;
         } else {
             ySpin = vy;
@@ -207,8 +211,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
      *
      * @return (0.6, 1.2)之间的一个值
      */
-    protected double midHolePowerFactor() {
-        return 1.2 - (getSpeed() * Game.calculationsPerSec / Values.MAX_POWER_SPEED) * 0.6;
+    protected double midHolePowerFactor(Phy phy) {
+        return 1.2 - (getSpeed() * phy.calculationsPerSec / Values.MAX_POWER_SPEED) * 0.6;
     }
 
     protected void hitHoleArcArea(double[] arcXY) {

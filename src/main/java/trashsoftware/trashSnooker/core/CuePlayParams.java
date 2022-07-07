@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.recorder.CueRecord;
+
 public class CuePlayParams {
 
     public final double vx;
@@ -52,14 +54,13 @@ public class CuePlayParams {
     }
 
     public static double unitFrontBackSpin(double unitCuePoint, InGamePlayer inGamePlayer,
-                                           Game<?, ?> game) {
-        return unitCuePoint * inGamePlayer.getCurrentCue(game).spinMultiplier *
+                                           Cue cue) {
+        return unitCuePoint * cue.spinMultiplier *
                 inGamePlayer.getPlayerPerson().getMaxSpinPercentage() / 100.0;
     }
 
-    public static double unitSideSpin(double unitCuePoint, InGamePlayer inGamePlayer,
-                                      Game<?, ?> game) {
-        return unitCuePoint * inGamePlayer.getCurrentCue(game).spinMultiplier;
+    public static double unitSideSpin(double unitCuePoint, Cue cue) {
+        return unitCuePoint * cue.spinMultiplier;
     }
 
     public static double[] unitXYWithSpins(double unitSideSpin, double power,

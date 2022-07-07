@@ -12,6 +12,7 @@ import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -49,6 +50,7 @@ public class Recorder {
                 try {
                     JSONObject cueObject = object.getJSONObject(key);
                     Cue cue = new Cue(
+                            key,
                             cueObject.getString("name"),
                             cueObject.getDouble("frontLength"),
                             cueObject.getDouble("midLength"),
@@ -130,6 +132,7 @@ public class Recorder {
                                 muSigma[i] = muSigmaArray.getDouble(i);
                             }
                             playerPerson = new PlayerPerson(
+                                    key,
                                     name,
                                     personObj.getString("category"),
                                     personObj.getDouble("maxPower"),
@@ -149,6 +152,7 @@ public class Recorder {
                             );
                         } else {
                             playerPerson = new PlayerPerson(
+                                    key,
                                     name,
                                     personObj.getDouble("maxPower"),
                                     personObj.getDouble("controllablePower"),
@@ -221,7 +225,8 @@ public class Recorder {
         createIfNotExists();
 
         String s = object.toString(2);
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter bw = new BufferedWriter(
+                new FileWriter(fileName, StandardCharsets.UTF_8))) {
             bw.write(s);
         } catch (IOException e) {
             e.printStackTrace();
@@ -229,7 +234,8 @@ public class Recorder {
     }
 
     public static JSONObject loadFromDisk(String fileName) {
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader br = new BufferedReader(
+                new FileReader(fileName, StandardCharsets.UTF_8))) {
             StringBuilder builder = new StringBuilder();
             String line;
             while ((line = br.readLine()) != null) {

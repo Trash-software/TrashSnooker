@@ -73,14 +73,14 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     protected abstract DefenseChoice breakCue();
 
     protected double selectedPowerToActualPower(double selectedPower) {
-        return selectedPower * 
-                aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier / 
+        return selectedPower *
+                aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier /
                 game.getGameValues().ballWeightRatio;
     }
 
     protected double actualPowerToSelectedPower(double actualPower) {
-        return actualPower / 
-                aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier * 
+        return actualPower /
+                aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier *
                 game.getGameValues().ballWeightRatio;
     }
 
@@ -96,20 +96,21 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 attackChoice.cueDirectionUnitVector[0],
                 attackChoice.cueDirectionUnitVector[1],
                 CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin,
-                        aiPlayer.getInGamePlayer(), game),
+                        aiPlayer.getInGamePlayer(),
+                        game.getCuingPlayer().getInGamePlayer().getCurrentCue(game)),
                 0,
                 5.0,
                 selectedPowerToActualPower(selectedPower)
         );
         // 直接能打到的球，必不会在打到目标球之前碰库
-        WhitePrediction wp = game.predictWhite(params, 0.0, true);
+        WhitePrediction wp = game.predictWhite(params, Phy.PREDICT, 0.0, true);
         if (wp.getFirstCollide() == null) {
             // 连球都碰不到，没吃饭？
 //            System.out.println("too less");
             return null;
         }
 
-        double targetCanMove = values.estimatedMoveDistance(wp.getBallInitSpeed());
+        double targetCanMove = values.estimatedMoveDistance(Phy.PREDICT, wp.getBallInitSpeed());
         if (targetCanMove - values.ballDiameter * 1.5 <= attackChoice.targetHoleDistance) {
             // 确保球不会停在袋口
             // 如果小于，说明力量太轻或低杆太多，打不到
@@ -291,7 +292,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 PredictedPos leftPP = game.getPredictedHitBall(
                         cueBall.getX(), cueBall.getY(),
                         vec[0], vec[1]);
-                if (leftPP == null || leftPP.getTargetBall() == null || 
+                if (leftPP == null || leftPP.getTargetBall() == null ||
                         leftPP.getTargetBall() == ball) {
                     // 如果与已有的角度太接近就不考虑了
                     Double floorRad = availableRads.floor(angle);
@@ -359,7 +360,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 5.0,
                 selectedPowerToActualPower(selectedPower)
         );
-        WhitePrediction wp = game.predictWhite(cpp, 100000.0, false);
+        WhitePrediction wp = game.predictWhite(cpp, Phy.PREDICT, 100000.0, false);
         double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
         Ball firstCollide = wp.getFirstCollide();
         if (firstCollide != null && legalSet.contains(firstCollide)) {
@@ -474,6 +475,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             attackChoice.whiteCollisionDistance = whiteDistance;
             attackChoice.cueDirectionUnitVector = cueDirUnit;
             attackChoice.attackTarget = attackTarget;
+            attackChoice.attackingPlayer = attackingPlayer;
             attackChoice.calculateDifficulty();
 
             attackChoice.price = 10000.0 / attackChoice.difficulty *
@@ -584,6 +586,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
     public class IntegratedAttackChoice {
 
+        static final double kickBallMul = 0.5;
+
         final AttackChoice attackChoice;
         final List<AttackChoice> nextStepAttackChoices;
         final double selectedPower;
@@ -618,8 +622,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         }
 
         int normalCompareTo(IntegratedAttackChoice o2) {
-            double price2 = o2.price;
-            return -Double.compare(price, price2);
+            return -Double.compare(this.price, o2.price);
         }
 
         int compareToWhenNoAvailNextBall(IntegratedAttackChoice o2) {
@@ -627,15 +630,16 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         }
 
         double priceWhenNoAvailNextBall() {
-            if (whiteSecondCollide == null) return attackChoice.price * 0.5;  // k不到球，相当于没走位
+            System.out.println(whiteSecondCollide);
+            if (whiteSecondCollide == null) return attackChoice.price * kickBallMul;  // k不到球，相当于没走位
 
             double targetMultiplier;
             if (game.isLegalBall(whiteSecondCollide, nextStepTarget, false))
-                targetMultiplier = 1.0;  // k到目标球优先
-            else targetMultiplier = 0.5;
+                targetMultiplier = 1.0 / kickBallMul;  // k到目标球优先
+            else targetMultiplier = 1.0;  // k到其他球也还将就
 
             double speedThreshold = Values.MAX_POWER_SPEED / 10.0;
-            double price = this.price * targetMultiplier;
+            double price = this.price * targetMultiplier;  // this.price本身已有k球惩罚，需补偿
             if (speedWhenWhiteCollidesOther < speedThreshold) {
                 price *= speedWhenWhiteCollidesOther / speedThreshold;
             }
@@ -645,12 +649,14 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
         private void generatePrice() {
             price = attackChoice.price;
-            double mul = 0.5;
+            // 走位粗糙的人，下一颗权重低
+            double mul = 0.5 *
+                    attackChoice.attackingPlayer.getPlayerPerson().getAiPlayStyle().position / 100;
             for (AttackChoice next : nextStepAttackChoices) {
                 price += next.price * mul;
                 mul /= 4;
             }
-            if (whiteSecondCollide != null) price *= 0.5;
+            if (whiteSecondCollide != null) price *= kickBallMul;
             if (whiteCollideHoleArcs) price *= 0.5;
         }
     }

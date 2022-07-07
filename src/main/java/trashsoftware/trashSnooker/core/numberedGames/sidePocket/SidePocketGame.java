@@ -4,6 +4,9 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.table.SidePocketTable;
+import trashsoftware.trashSnooker.core.table.Table;
+import trashsoftware.trashSnooker.core.table.Tables;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.ArrayList;
@@ -21,6 +24,11 @@ public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
         super(parent, gameSettings, GameValues.SIDE_POCKET, frameIndex);
 
         initBalls();
+    }
+
+    @Override
+    public GameType getGameType() {
+        return GameType.SIDE_POCKET;
     }
 
     private void initBalls() {
@@ -42,7 +50,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
             }
         }
 
-        double curX = breakPointX();
+        double curX = getTable().breakPointX();
         double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0))
                 + Game.MIN_PLACE_DISTANCE * 0.6;
 
@@ -92,6 +100,11 @@ public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
     }
 
     @Override
+    public SidePocketTable getTable() {
+        return Tables.SIDE_POCKET_TABLE;
+    }
+
+    @Override
     protected void initPlayers() {
         player1 = new SidePocketBallPlayer(1, gameSettings.getPlayer1());
         player2 = new SidePocketBallPlayer(2, gameSettings.getPlayer2());
@@ -100,7 +113,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
     @Override
     protected boolean canPlaceWhiteInTable(double x, double y) {
         if (isBreaking) {
-            return x < breakLineX() && !isOccupied(x, y);
+            return x < getTable().breakLineX() && !isOccupied(x, y);
         } else {
             return !isOccupied(x, y);
         }
@@ -129,11 +142,6 @@ public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
     @Override
     protected void updateTargetPotFailed() {
 
-    }
-
-    @Override
-    public double breakPointX() {
-        return gameValues.leftX + (gameValues.innerWidth * 0.75);
     }
 
     @Override

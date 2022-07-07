@@ -5,6 +5,9 @@ import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.ChineseEightAiCue;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.table.ChineseEightTable;
+import trashsoftware.trashSnooker.core.table.Table;
+import trashsoftware.trashSnooker.core.table.Tables;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -33,6 +36,11 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         initBalls();
     }
 
+    @Override
+    public GameType getGameType() {
+        return GameType.CHINESE_EIGHT;
+    }
+
     private void initBalls() {
         List<PoolBall> fullBalls = new ArrayList<>();
         List<PoolBall> halfBalls = new ArrayList<>();
@@ -55,7 +63,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         Collections.shuffle(fullBalls);
         Collections.shuffle(halfBalls);
 
-        double curX = breakPointX();
+        double curX = getTable().breakPointX();
         double rowStartY = gameValues.midY;
         double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0))
                 + Game.MIN_PLACE_DISTANCE * 0.6;
@@ -166,8 +174,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     @Override
-    public double breakPointX() {
-        return gameValues.leftX + (gameValues.innerWidth * 0.75);
+    public ChineseEightTable getTable() {
+        return Tables.CHINESE_EIGHT_TABLE;
     }
 
     @Override
@@ -179,7 +187,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     @Override
     protected boolean canPlaceWhiteInTable(double x, double y) {
         if (isJustAfterBreak()) {
-            return x < breakLineX() && !isOccupied(x, y);
+            return x < getTable().breakLineX() && !isOccupied(x, y);
         } else {
             return !isOccupied(x, y);
         }
@@ -319,7 +327,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
         if (cueBall.isPotted()) {
             if (eightBall.isPotted()) {  // 白球黑八一起进
-                ended = true;
+                end();
                 winingPlayer = getAnotherPlayer();
                 return;
             }
@@ -361,7 +369,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
         if (!pottedBalls.isEmpty()) {
             if (pottedBalls.contains(eightBall)) {
-                ended = true;
+                end();
                 if (currentTarget == 8) {
                     winingPlayer = currentPlayer;
                 } else {  // 误进黑八 todo: 检查开球

@@ -15,14 +15,14 @@ public class SnookerAiCueBallPlacer extends AiCueBallPlacer<AbstractSnookerGame,
 
     @Override
     protected double[] breakPosition() {
-        return new double[]{game.breakLineX(), 
+        return new double[]{game.getTable().breakLineX(), 
                 game.getGameValues().midY + game.getGameValues().ballDiameter * 2};
     }
 
     @Override
     protected List<double[]> legalPositions() {
-        double breakLineX = game.breakLineX();
-        double breakArcRadius = game.breakArcRadius();
+        double breakLineX = game.getTable().breakLineX();
+        double breakArcRadius = game.getTable().breakArcRadius();
         GameValues values = game.getGameValues();
         double centerY = values.midY;
         

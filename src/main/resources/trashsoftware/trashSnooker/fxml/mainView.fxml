@@ -10,6 +10,7 @@
     <MenuBar>
         <Menu text="文件">
             <MenuItem text="纪录" onAction="#recordsAction"/>
+            <MenuItem text="回放" onAction="#replayAction"/>
         </Menu>
     </MenuBar>
 

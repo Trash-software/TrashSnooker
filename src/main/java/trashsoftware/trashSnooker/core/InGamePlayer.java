@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.util.PersonRecord;
 
 public class InGamePlayer {

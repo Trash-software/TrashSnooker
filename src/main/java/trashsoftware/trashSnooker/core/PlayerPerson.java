@@ -10,6 +10,7 @@ import java.util.Objects;
 
 public class PlayerPerson {
 
+    private final String playerId;
     private final String name;
     public final String category;
     private boolean isCustom;
@@ -29,7 +30,8 @@ public class PlayerPerson {
     private final AiPlayStyle aiPlayStyle;
     public final double psy;
 
-    public PlayerPerson(String name,
+    public PlayerPerson(String playerId,
+                        String name,
                         String category,
                         double maxPowerPercentage,
                         double controllablePowerPercentage,
@@ -45,6 +47,7 @@ public class PlayerPerson {
                         double psy,
                         CuePlayType cuePlayType,
                         AiPlayStyle aiPlayStyle) {
+        this.playerId = playerId;
         this.name = name;
         this.category = category;
         this.maxPowerPercentage = maxPowerPercentage;
@@ -63,7 +66,8 @@ public class PlayerPerson {
         this.aiPlayStyle = aiPlayStyle;
     }
 
-    public PlayerPerson(String name,
+    public PlayerPerson(String playerId,
+                        String name,
                         double maxPowerPercentage,
                         double controllablePowerPercentage,
                         double maxSpinPercentage,
@@ -74,6 +78,7 @@ public class PlayerPerson {
                         AiPlayStyle aiPlayStyle,
                         boolean isCustom) {
         this(
+                playerId,
                 name,
                 estimateCategory(precisionPercentage, control),
                 maxPowerPercentage,
@@ -204,6 +209,10 @@ public class PlayerPerson {
 
     public String getName() {
         return name;
+    }
+
+    public String getPlayerId() {
+        return playerId;
     }
 
     public double getMaxPowerPercentage() {

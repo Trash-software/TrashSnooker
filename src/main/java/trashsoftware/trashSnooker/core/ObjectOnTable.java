@@ -59,7 +59,7 @@ public abstract class ObjectOnTable {
         nextY = y + vy;
     }
 
-    protected abstract void normalMove();
+    protected abstract void normalMove(Phy phy);
 
     protected double currentDtTo(Ball ball) {
         return Algebra.distanceToPoint(x, y, ball.x, ball.y);
@@ -89,12 +89,12 @@ public abstract class ObjectOnTable {
         return Algebra.distanceToPoint(nextX, nextY, px, py);
     }
     
-    protected double midHolePowerFactor() {
+    protected double midHolePowerFactor(Phy phy) {
         return 1;
     }
     
-    protected boolean willPot() {
-        double midHoleFactor = midHolePowerFactor();
+    protected boolean willPot(Phy phy) {
+        double midHoleFactor = midHolePowerFactor(phy);
         return predictedDtToPoint(values.topLeftHoleXY) < values.cornerHoleRadius ||
                 predictedDtToPoint(values.botLeftHoleXY) < values.cornerHoleRadius ||
                 predictedDtToPoint(values.topRightHoleXY) < values.cornerHoleRadius ||
@@ -120,7 +120,7 @@ public abstract class ObjectOnTable {
     /**
      * 检测是否撞击袋角或进入袋角区域。如果撞击袋角，返回{@code 2}且处理撞击。如果进入袋角区域但未发生撞击，返回{@code 1}。如未进入，返回{@code 0}
      */
-    protected int tryHitHoleArea() {
+    protected int tryHitHoleArea(Phy phy) {
         boolean enteredCorner = false;
         if (nextY < radius + values.topY) {
             if (nextX < values.midHoleAreaRightX && nextX >= values.midHoleAreaLeftX) {
@@ -150,11 +150,11 @@ public abstract class ObjectOnTable {
                                 Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
                         return 2;
                     }
-                    normalMove();
+                    normalMove(phy);
                     prepareMove();
                     return 1;
                 } else {
-                    normalMove();
+                    normalMove(phy);
                     prepareMove();
                     return 1;
                 }
@@ -188,11 +188,11 @@ public abstract class ObjectOnTable {
                                 Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
                         return 2;
                     }
-                    normalMove();
+                    normalMove(phy);
                     prepareMove();
                     return 1;
                 } else {
-                    normalMove();
+                    normalMove(phy);
                     prepareMove();
                     return 1;
                 }
@@ -226,7 +226,7 @@ public abstract class ObjectOnTable {
                     }
                 }
             }
-            normalMove();
+            normalMove(phy);
             prepareMove();
             return 1;
         }

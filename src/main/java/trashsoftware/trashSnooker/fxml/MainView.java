@@ -202,6 +202,28 @@ public class MainView implements Initializable {
             EventLogger.log(e);
         }
     }
+    
+    @FXML
+    void replayAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("replayView.fxml")
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Stage stage = new Stage();
+            stage.initOwner(this.stage);
+            stage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+
+            stage.show();
+        } catch (IOException e) {
+            EventLogger.log(e);
+        }
+    }
 
     @FXML
     void resumeAction() {

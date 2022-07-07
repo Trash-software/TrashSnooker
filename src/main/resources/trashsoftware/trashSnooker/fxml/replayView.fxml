@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.ReplayView"
+      prefHeight="400.0" prefWidth="300.0" spacing="10.0">
+    
+    <padding>
+        <Insets topRightBottomLeft="5.0"/>
+    </padding>
+    
+    <TableView fx:id="replayTable">
+        <columns>
+            <TableColumn text="回放"/>
+            <TableColumn text="玩家1"/>
+            <TableColumn text="玩家2"/>
+        </columns>
+    </TableView>
+    
+    <HBox alignment="BOTTOM_RIGHT">
+        <Button text="播放" onAction="#playAction"/>
+    </HBox>
+
+</VBox>

@@ -17,9 +17,9 @@ public class ChineseEightAiCueBallPlacer extends
     @Override
     protected double[] breakPosition() {
         if (ChineseEightAiCue.isCenterBreak(player)) {
-            return new double[]{game.breakLineX(), game.getGameValues().midY};
+            return new double[]{game.getTable().breakLineX(), game.getGameValues().midY};
         } else {
-            return new double[]{game.breakLineX(), 
+            return new double[]{game.getTable().breakLineX(), 
                     game.getGameValues().botY - game.getGameValues().ballDiameter * 1.5};
         }
     }
@@ -29,7 +29,7 @@ public class ChineseEightAiCueBallPlacer extends
         GameValues values = game.getGameValues();
         double xLimit = values.rightX - values.ballRadius;
         if (game.isBreaking() || game.isJustAfterBreak()) {
-            xLimit = game.breakLineX();
+            xLimit = game.getTable().breakLineX();
         }
         
         List<double[]> posList = new ArrayList<>();

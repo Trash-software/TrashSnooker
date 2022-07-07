@@ -1,7 +1,10 @@
 package trashsoftware.trashSnooker.core.snooker;
 
 import trashsoftware.trashSnooker.core.GameSettings;
+import trashsoftware.trashSnooker.core.GameType;
 import trashsoftware.trashSnooker.core.GameValues;
+import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
+import trashsoftware.trashSnooker.core.table.Tables;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public class MiniSnookerGame extends AbstractSnookerGame {
@@ -11,22 +14,17 @@ public class MiniSnookerGame extends AbstractSnookerGame {
     }
 
     @Override
+    public AbstractSnookerTable getTable() {
+        return Tables.MINI_SNOOKER_TABLE;
+    }
+
+    @Override
+    public GameType getGameType() {
+        return GameType.MINI_SNOOKER;
+    }
+
+    @Override
     protected int numRedBalls() {
         return 6;
-    }
-
-    @Override
-    public double breakLineX() {
-        return gameValues.leftX + 635.0;
-    }
-
-    @Override
-    public double breakArcRadius() {
-        return 219.0;  // todo: 存疑
-    }
-
-    @Override
-    protected double[] blackBallPos() {
-        return new double[]{gameValues.rightX - 243.0, gameValues.midY};  // todo: 存疑
     }
 }

@@ -56,6 +56,7 @@ public class AddPlayerView implements Initializable {
         }
 
         PlayerPerson playerPerson = new PlayerPerson(
+                generatePlayerId(name),
                 name,
                 powerSlider.getValue(),
                 powerSlider.getValue() * 0.88,
@@ -76,5 +77,9 @@ public class AddPlayerView implements Initializable {
         parent.reloadPlayerList();
 
         stage.close();
+    }
+    
+    private String generatePlayerId(String name) {
+        return name.replace(" ", "_");
     }
 }

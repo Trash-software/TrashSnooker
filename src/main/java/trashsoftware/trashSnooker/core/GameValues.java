@@ -304,16 +304,16 @@ public class GameValues {
         return Math.hypot(innerWidth, innerHeight);
     }
 
-    public double speedReducerPerInterval() {
-        return (Game.speedReducer * speedReduceMultiplier / ballWeightRatio);  // 重的球减速慢
+    public double speedReducerPerInterval(Phy phy) {
+        return (phy.speedReducer * speedReduceMultiplier / ballWeightRatio);  // 重的球减速慢
     }
 
     /**
      * @param speed 初始速度，mm/s
      * @return 预估的直线移动距离，mm。
      */
-    public double estimatedMoveDistance(double speed) {
-        double acceleration = speedReducerPerInterval() * Game.calculationsPerSecSqr;
+    public double estimatedMoveDistance(Phy phy, double speed) {
+        double acceleration = speedReducerPerInterval(phy) * phy.calculationsPerSecSqr;
         double t = speed / acceleration;  // 加速时间，秒
         return acceleration / 2 * t * t;  // S = 1/2at^2
     }
