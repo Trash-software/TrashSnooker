@@ -8,6 +8,8 @@ import trashsoftware.trashSnooker.core.GameValues;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.fxml.GameView;
 
+import java.util.HashMap;
+
 public abstract class Table {
     
     protected GameValues gameValues;
@@ -42,12 +44,25 @@ public abstract class Table {
     }
 
     public void drawStoppedBalls(GameView view, 
-                                 Ball[] allBalls, 
+                                 Ball[] allBalls,
+                                 HashMap<Ball, double[]> positionsPot,
                                  GraphicsContext graphicsContext, 
                                  double scale) {
         for (Ball ball : allBalls) {
-            if (!ball.isPotted()) {
-                forceDrawBall(view, ball, ball.getX(), ball.getY(), graphicsContext, scale);
+            boolean pot;
+            double x, y;
+            if (positionsPot == null) {
+                pot = ball.isPotted();
+                x = ball.getX();
+                y = ball.getY();
+            } else {
+                double[] xyp = positionsPot.get(ball);
+                pot = xyp[2] == 1;
+                x = xyp[0];
+                y = xyp[1];
+            }
+            if (!pot) {
+                forceDrawBall(view, ball, x, y, graphicsContext, scale);
             }
         }
     }

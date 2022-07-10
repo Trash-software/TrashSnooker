@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.ChineseEightAiCue;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.table.ChineseEightTable;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.core.table.Tables;
@@ -94,6 +95,11 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     @Override
+    public ScoreResult makeScoreResult(Player justCuedPlayer) {
+        return null;
+    }
+
+    @Override
     protected AiCue<?, ?> createAiCue(ChineseEightBallPlayer aiPlayer) {
         return new ChineseEightAiCue(this, aiPlayer);
     }
@@ -180,8 +186,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     protected void initPlayers() {
-        player1 = new ChineseEightBallPlayer(1, gameSettings.getPlayer1());
-        player2 = new ChineseEightBallPlayer(2, gameSettings.getPlayer2());
+        player1 = new ChineseEightBallPlayer(gameSettings.getPlayer1());
+        player2 = new ChineseEightBallPlayer(gameSettings.getPlayer2());
     }
 
     @Override

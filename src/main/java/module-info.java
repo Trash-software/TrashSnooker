@@ -14,6 +14,7 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.fxml;
     exports trashsoftware.trashSnooker.fxml.alert;
     exports trashsoftware.trashSnooker.recorder;
+    exports trashsoftware.trashSnooker.core.scoreResult;
     exports trashsoftware.trashSnooker.core.table;
 
     opens trashsoftware.trashSnooker.fxml;

@@ -140,7 +140,7 @@ public class EntireGame {
                 .player1Breaks(p1Breaks)
                 .players(p1, p2)
                 .build();
-        game = Game.createGame(gameView, gameSettings, gameType, p1Wins + p2Wins + 1);
+        game = Game.createGame(gameView, gameSettings, gameType, this);
         DBAccess.getInstance().recordAFrameStarts(
                 this, game);
     }

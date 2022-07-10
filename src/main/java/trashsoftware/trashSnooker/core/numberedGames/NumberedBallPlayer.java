@@ -15,8 +15,8 @@ public abstract class NumberedBallPlayer extends Player {
     private final List<Integer> continuousPots = new ArrayList<>();
     private boolean flushed = false;
 
-    public NumberedBallPlayer(int number, InGamePlayer playerPerson) {
-        super(number, playerPerson);
+    public NumberedBallPlayer(InGamePlayer playerPerson) {
+        super(playerPerson);
     }
 
     @Override

@@ -4,8 +4,8 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.table.SidePocketTable;
-import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.core.table.Tables;
 import trashsoftware.trashSnooker.fxml.GameView;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
+public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
         implements NeedBigBreak {
 
     private final PoolBall[] allBalls = new PoolBall[10];
@@ -69,7 +69,12 @@ public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
     }
 
     @Override
-    protected AiCue<?, ?> createAiCue(SidePocketBallPlayer aiPlayer) {
+    public ScoreResult makeScoreResult(Player justCuedPlayer) {
+        return null;
+    }
+
+    @Override
+    protected AiCue<?, ?> createAiCue(SidePocketPlayer aiPlayer) {
         return null;
     }
 
@@ -106,8 +111,8 @@ public class SidePocketGame extends NumberedBallGame<SidePocketBallPlayer>
 
     @Override
     protected void initPlayers() {
-        player1 = new SidePocketBallPlayer(1, gameSettings.getPlayer1());
-        player2 = new SidePocketBallPlayer(2, gameSettings.getPlayer2());
+        player1 = new SidePocketPlayer(gameSettings.getPlayer1());
+        player2 = new SidePocketPlayer(gameSettings.getPlayer2());
     }
 
     @Override

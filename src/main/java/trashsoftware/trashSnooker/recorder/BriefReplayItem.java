@@ -16,8 +16,14 @@ public class BriefReplayItem {
     private final File file;
     final int replayType;
     public final GameType gameType;
-    private final int totalCues; 
-    private final int durationSec;
+    final int recordVersion;
+//    private final int totalCues;
+    protected final int compression;
+    public final long beginTime;
+    public final int totalFrames;
+    public final int p1Wins;
+    public final int p2Wins;
+//    private final int durationSec;
     private final InGamePlayer p1;
     private final InGamePlayer p2;
     
@@ -35,18 +41,21 @@ public class BriefReplayItem {
             replayType = header[4];
             gameType = GameType.values()[header[5] & 0xff];
 
-            int version = (int) Util.bytesToIntN(header, 6, 2);
-            if (version != App.VERSION) throw new RuntimeException("Record of old version");
+            recordVersion = (int) Util.bytesToIntN(header, 6, 2);
 
-            totalCues = Util.bytesToInt32(header, 8);
-            durationSec = Util.bytesToInt32(header, 12);
+            compression = header[8] & 0xff;
+            beginTime = Util.bytesToLong(header, 12);
             
-            p1 = readOnePlayer(raf);
-            p2 = readOnePlayer(raf);
+            totalFrames = header[20] & 0xff;
+            p1Wins = header[21] & 0xff;
+            p2Wins = header[22] & 0xff;
+            
+            p1 = readOnePlayer(raf, 1);
+            p2 = readOnePlayer(raf, 2);
         }
     }
 
-    private InGamePlayer readOnePlayer(RandomAccessFile raf) throws IOException {
+    private InGamePlayer readOnePlayer(RandomAccessFile raf, int num) throws IOException {
         byte[] buf = new byte[2];
         if (raf.read(buf) != buf.length) throw new IOException();
         boolean isAi = buf[0] == 1;
@@ -72,7 +81,7 @@ public class BriefReplayItem {
         Cue playCue = Objects.requireNonNull(Recorder.getCues().get(playCueId));
         Cue breakCue = Objects.requireNonNull(Recorder.getCues().get(breakCueId));
 
-        return new InGamePlayer(playerPerson, breakCue, playCue, type);
+        return new InGamePlayer(playerPerson, breakCue, playCue, type, num);
     }
 
     public InGamePlayer getP1() {
@@ -87,9 +96,9 @@ public class BriefReplayItem {
         return file;
     }
 
-    public int getTotalCues() {
-        return totalCues;
-    }
+//    public int getTotalCues() {
+//        return totalCues;
+//    }
 
     public GameType getGameType() {
         return gameType;
@@ -99,9 +108,9 @@ public class BriefReplayItem {
         return replayType;
     }
 
-    public int getDurationSec() {
-        return durationSec;
-    }
+//    public int getDurationSec() {
+//        return durationSec;
+//    }
     
     @FXML
     public String getFileName() {
@@ -124,8 +133,6 @@ public class BriefReplayItem {
                 "file=" + file +
                 ", replayType=" + replayType +
                 ", gameType=" + gameType +
-                ", totalCues=" + totalCues +
-                ", durationSec=" + durationSec +
                 '}';
     }
 }

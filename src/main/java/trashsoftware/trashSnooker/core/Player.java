@@ -4,16 +4,17 @@ import java.util.*;
 
 public abstract class Player {
 
-    protected final int number;
+//    protected final int number;
     protected final InGamePlayer playerPerson;
     protected final TreeMap<Ball, Integer> singlePole = new TreeMap<>();
     protected final List<PotAttempt> attempts = new ArrayList<>();
     protected final List<DefenseAttempt> defenseAttempts = new ArrayList<>();
     protected int score;
+    protected int lastAddedScore;
     private boolean withdrawn = false;
 
-    public Player(int number, InGamePlayer playerPerson) {
-        this.number = number;
+    public Player(InGamePlayer playerPerson) {
+//        this.number = number;
         this.playerPerson = playerPerson;
     }
     
@@ -43,9 +44,9 @@ public abstract class Player {
         return defenseAttempts;
     }
 
-    public int getNumber() {
-        return number;
-    }
+//    public int getNumber() {
+//        return number;
+//    }
 
     public int getScore() {
         return score;
@@ -59,7 +60,9 @@ public abstract class Player {
                 singlePole.put(ball, 1);
             }
         }
+        int curScore = score;
         addScoreOfPotted(pottedBalls);
+        lastAddedScore = score - curScore;
     }
 
     public TreeMap<Ball, Integer> getSinglePole() {
@@ -74,12 +77,17 @@ public abstract class Player {
         return singlePoleScore;
     }
 
+    public int getLastAddedScore() {
+        return lastAddedScore;
+    }
+
     public void clearSinglePole() {
         singlePole.clear();
     }
 
     public void addScore(int score) {
         this.score += score;
+        this.lastAddedScore = score;
     }
 
     public boolean isWithdrawn() {

@@ -1,11 +1,10 @@
 package trashsoftware.trashSnooker.core.ai;
 
-import trashsoftware.trashSnooker.core.CuePlayParams;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketBallPlayer;
+import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 
-public class SidePocketAiCue extends AiCue<SidePocketGame, SidePocketBallPlayer> {
-    public SidePocketAiCue(SidePocketGame game, SidePocketBallPlayer aiPlayer) {
+public class SidePocketAiCue extends AiCue<SidePocketGame, SidePocketPlayer> {
+    public SidePocketAiCue(SidePocketGame game, SidePocketPlayer aiPlayer) {
         super(game, aiPlayer);
     }
 

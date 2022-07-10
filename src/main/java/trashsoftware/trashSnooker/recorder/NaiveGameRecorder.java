@@ -1,24 +1,20 @@
 package trashsoftware.trashSnooker.recorder;
 
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
+import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
 import java.util.Deque;
-import java.util.Map;
 
 public class NaiveGameRecorder extends GameRecorder {
 
-    public NaiveGameRecorder(Game game) {
-        super(game);
-    }
-
-    @Override
-    protected void writeInitMessage() throws IOException {
-
+    public NaiveGameRecorder(Game game, EntireGame entireGame) {
+        super(game, entireGame);
     }
 
     @Override
@@ -33,16 +29,21 @@ public class NaiveGameRecorder extends GameRecorder {
     }
 
     private void writeCueRecord(CueRecord cueRecord) throws IOException {
-        byte[] buf = new byte[56];
-        buf[0] = (byte) (game.getPlayer1().getInGamePlayer() == cueRecord.cuePlayer ? 1 : 2);
-        buf[1] = (byte) (game.isBreaking() ? 1 : 0);
+        byte[] buf = new byte[80];
+        buf[0] = (byte) cueRecord.cuePlayer.getPlayerNumber();
+        buf[1] = (byte) (cueRecord.isBreaking ? 1 : 0);
+        buf[2] = (byte) cueRecord.targetRep;
+        buf[3] = (byte) (cueRecord.isSnookerFreeBall ? 1 : 0); 
 
         Util.doubleToBytes(cueRecord.selectedPower, buf, 8);
-        Util.doubleToBytes(cueRecord.aimUnitX, buf, 16);
-        Util.doubleToBytes(cueRecord.aimUnitY, buf, 24);
-        Util.doubleToBytes(cueRecord.wantedUnitVerSpin, buf, 32);
-        Util.doubleToBytes(cueRecord.wantedUnitSideSpin, buf, 40);
-        Util.doubleToBytes(cueRecord.cueAngle, buf, 48);
+        Util.doubleToBytes(cueRecord.actualPower, buf, 16);
+        Util.doubleToBytes(cueRecord.aimUnitX, buf, 24);
+        Util.doubleToBytes(cueRecord.aimUnitY, buf, 32);
+        Util.doubleToBytes(cueRecord.intendedVerPoint, buf, 40);
+        Util.doubleToBytes(cueRecord.intendedHorPoint, buf, 48);
+        Util.doubleToBytes(cueRecord.actualVerPoint, buf, 56);
+        Util.doubleToBytes(cueRecord.actualHorPoint, buf, 64);
+        Util.doubleToBytes(cueRecord.cueAngle, buf, 72);
 
         outputStream.write(buf);
     }
@@ -51,7 +52,7 @@ public class NaiveGameRecorder extends GameRecorder {
         int steps = -1;
         for (Ball ball : game.getAllBalls()) {
             // 顺序很重要
-            Deque<MovementFrame> frames = movement.getMovementMap().get(ball);
+            Deque<MovementFrame> frames = movement.getImmutableMap().get(ball);
             if (steps == -1) {
                 steps = frames.size();  // 记录有多少帧
                 byte[] stepsBytes = new byte[4];

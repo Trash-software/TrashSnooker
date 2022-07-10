@@ -75,7 +75,6 @@ public class ReplayView implements Initializable {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                
             }
         }
     }

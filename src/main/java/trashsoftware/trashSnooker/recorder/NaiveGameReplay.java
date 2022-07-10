@@ -51,7 +51,7 @@ public class NaiveGameReplay extends GameReplay {
     }
 
     @Override
-    public void loadBallPositions() throws IOException {
+    protected void loadBallPositions() throws IOException {
         if (balls == null) balls = new Ball[gameType.nBalls];
 
         for (int i = 0; i < balls.length; i++) {
@@ -106,7 +106,7 @@ public class NaiveGameReplay extends GameReplay {
                     double y = Util.bytesToDouble(posBuf, 9);
 
                     MovementFrame frame = new MovementFrame(x, y, potted);
-                    movement.getMovementMap().get(ball).addLast(frame);
+                    movement.addFrame(ball, frame);
                 }
             }
 
@@ -118,18 +118,23 @@ public class NaiveGameReplay extends GameReplay {
 
     private CueRecord getNextCueRecord() {
         try {
-            byte[] buf = new byte[56];
+            byte[] buf = new byte[80];
             if (inputStream.read(buf) != buf.length) throw new IOException();
 
             return new CueRecord(
                     buf[0] == 1 ? p1 : p2,
+                    buf[2] & 0xff,
+                    buf[1] == 1,
+                    buf[3] == 1,
                     Util.bytesToDouble(buf, 8),
                     Util.bytesToDouble(buf, 16),
                     Util.bytesToDouble(buf, 24),
                     Util.bytesToDouble(buf, 32),
                     Util.bytesToDouble(buf, 40),
                     Util.bytesToDouble(buf, 48),
-                    buf[1] == 1
+                    Util.bytesToDouble(buf, 56),
+                    Util.bytesToDouble(buf, 64),
+                    Util.bytesToDouble(buf, 72)
             );
         } catch (IOException e) {
             throw new RuntimeException(e);

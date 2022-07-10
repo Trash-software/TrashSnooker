@@ -4,6 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SnookerAiCue;
+import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
+import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
 import trashsoftware.trashSnooker.core.table.Tables;
 import trashsoftware.trashSnooker.fxml.GameView;
@@ -22,7 +24,6 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private final SnookerBall blueBall;
     private final SnookerBall pinkBall;
     private final SnookerBall blackBall;
-    private final SnookerBall[] coloredBalls;
     private final SnookerBall[] redBalls = new SnookerBall[numRedBalls()];
     private final SnookerBall[] allBalls;
     private boolean doingFreeBall = false;  // 正在击打自由球
@@ -44,8 +45,6 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         blueBall = new SnookerBall(5, getTable().blueBallPos(), gameValues);
         pinkBall = new SnookerBall(6, getTable().pinkBallPos(), gameValues);
         blackBall = new SnookerBall(7, getTable().blackBallPos(), gameValues);
-        coloredBalls =
-                new SnookerBall[]{yellowBall, greenBall, brownBall, blueBall, pinkBall, blackBall};
 
         initRedBalls();
 
@@ -90,8 +89,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     @Override
     protected void initPlayers() {
-        player1 = new SnookerPlayer(1, gameSettings.getPlayer1(), this);
-        player2 = new SnookerPlayer(2, gameSettings.getPlayer2(), this);
+        player1 = new SnookerPlayer(gameSettings.getPlayer1(), this);
+        player2 = new SnookerPlayer(gameSettings.getPlayer2(), this);
     }
 
     @Override
@@ -402,20 +401,6 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
     }
 
-//    private List<Ball> currentTargetBalls() {
-//        List<Ball> result = new ArrayList<>();
-//        if (currentTarget == 1) {
-//            for (Ball ball : redBalls)
-//                if (!ball.isPotted()) result.add(ball);
-//        } else if (currentTarget == RAW_COLORED_REP) {
-//            for (Ball ball : coloredBalls)
-//                if (!ball.isPotted()) result.add(ball);
-//        } else {
-//            result.add(coloredBalls[currentTarget - 2]);
-//        }
-//        return result;
-//    }
-
     public void reposition() {
         System.out.println("Reposition!");
         lastCueFoul = false;
@@ -504,6 +489,19 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         updateScore(newPotted, isFreeBall);
         if (!isEnded())
             pickupPottedBalls(newPotted);  // 必须在updateScore之后
+    }
+
+    @Override
+    public ScoreResult makeScoreResult(Player justCuedPlayer) {
+        return new SnookerScoreResult(
+                thinkTime,
+                player1.getScore(),
+                player2.getScore(),
+                player1.getLastAddedScore(),
+                player2.getLastAddedScore(),
+                justCuedPlayer == player1 ? 1 : 2,
+                justCuedPlayer.getSinglePole()
+        );
     }
 
     @Override

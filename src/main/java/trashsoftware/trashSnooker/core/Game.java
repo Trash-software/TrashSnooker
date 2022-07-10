@@ -1,8 +1,5 @@
 package trashsoftware.trashSnooker.core;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.movement.Movement;
@@ -10,6 +7,7 @@ import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
+import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.core.table.Table;
@@ -22,7 +20,7 @@ import java.io.IOException;
 import java.util.*;
 
 public abstract class Game<B extends Ball, P extends Player> {
-//    public static final double calculateMs = 1.0;
+    //    public static final double calculateMs = 1.0;
 //    public static final double calculationsPerSec = 1000.0 / calculateMs;
 //    public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
 //    public static final double speedReducer = 120.0 / calculationsPerSecSqr;
@@ -53,18 +51,20 @@ public abstract class Game<B extends Ball, P extends Player> {
     protected int currentTarget;
     protected Ball whiteFirstCollide;  // 这一杆白球碰到的第一颗球
     protected boolean collidesWall;
-    private boolean ended;
     protected boolean ballInHand = true;
     protected boolean lastCueFoul = false;
     protected boolean lastPotSuccess;
     protected boolean isBreaking = true;
     protected GameValues gameValues;
+    protected String foulReason;
+    protected int thinkTime;
+    protected long cueFinishTime;
+    protected long cueStartTime;
+    protected GameRecorder recorder;
+    private boolean ended;
     private B[] randomOrderBallPool1;
     private B[] randomOrderBallPool2;
     private PhysicsCalculator physicsCalculator;
-    protected String foulReason;
-    
-    protected GameRecorder recorder;
 
     protected Game(GameView parent, GameSettings gameSettings, GameValues gameValues,
                    int frameIndex) {
@@ -79,8 +79,10 @@ public abstract class Game<B extends Ball, P extends Player> {
         cueBall = createWhiteBall();
     }
 
-    public static Game<? extends Ball, ? extends Player> createGame(GameView gameView, GameSettings gameSettings,
-                                                                    GameType gameType, int frameIndex) {
+    public static Game<? extends Ball, ? extends Player> createGame(
+            GameView gameView, GameSettings gameSettings,
+            GameType gameType, EntireGame entireGame) {
+        int frameIndex = entireGame.getP1Wins() + entireGame.getP2Wins() + 1;
         Game<? extends Ball, ? extends Player> game;
         if (gameType == GameType.SNOOKER) {
             game = new SnookerGame(gameView, gameSettings, frameIndex);
@@ -93,17 +95,17 @@ public abstract class Game<B extends Ball, P extends Player> {
         } else throw new RuntimeException("Unexpected game type " + gameType);
 
         try {
-            game.recorder = new NaiveGameRecorder(game);
+            game.recorder = new NaiveGameRecorder(game, entireGame);
             game.recorder.startRecoding();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         return game;
     }
-    
+
     public abstract GameType getGameType();
-    
+
     public abstract Table getTable();
 
     protected void setBreakingPlayer(Player breakingPlayer) {
@@ -115,6 +117,8 @@ public abstract class Game<B extends Ball, P extends Player> {
 
     protected abstract AiCue<?, ?> createAiCue(P aiPlayer);
 
+    public abstract ScoreResult makeScoreResult(Player justCuedPlayer);
+
     /**
      * 返回所有能打的球
      */
@@ -125,17 +129,17 @@ public abstract class Game<B extends Ball, P extends Player> {
         }
         return balls;
     }
-    
+
     public abstract boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall);
 
     /**
      * 返回目标的价值，前提条件：ball是有效目标
-     * 
+     *
      * @param lastPotting 如果这杆为走位预测，则该值为AI第一步想打的球。如这杆就是第一杆，则为null
      */
-    public abstract double priceOfTarget(int targetRep, Ball ball, Player attackingPlayer, 
+    public abstract double priceOfTarget(int targetRep, Ball ball, Player attackingPlayer,
                                          Ball lastPotting);
-    
+
     public boolean isDoingSnookerFreeBll() {
         return false;
     }
@@ -149,6 +153,9 @@ public abstract class Game<B extends Ball, P extends Player> {
     }
 
     public Movement cue(CuePlayParams params) {
+        cueStartTime = System.currentTimeMillis();
+        if (cueFinishTime != 0) thinkTime = (int) (cueStartTime - cueFinishTime);
+
         whiteFirstCollide = null;
         collidesWall = false;
         lastPotSuccess = false;
@@ -197,7 +204,7 @@ public abstract class Game<B extends Ball, P extends Player> {
                 params.sideSpin / phy.calculationsPerSec);
         WhitePredictor whitePredictor = new WhitePredictor();
 //        long st = System.currentTimeMillis();
-        WhitePrediction prediction = 
+        WhitePrediction prediction =
                 whitePredictor.predict(phy, lengthAfterWall, checkCollisionAfterFirst);
 //        System.out.println("White prediction ms: " + (System.currentTimeMillis() - st));
         cueBall.setX(whiteX);
@@ -209,6 +216,7 @@ public abstract class Game<B extends Ball, P extends Player> {
     public void finishMove() {
         System.out.println("Move end");
         physicsCalculator = null;
+        cueFinishTime = System.currentTimeMillis();
 
         Player player = currentPlayer;
         endMoveAndUpdate();
@@ -283,7 +291,7 @@ public abstract class Game<B extends Ball, P extends Player> {
         return cueBackPredictor.predict();
     }
 
-    public PredictedPos getPredictedHitBall(double cueBallX, double cueBallY, 
+    public PredictedPos getPredictedHitBall(double cueBallX, double cueBallY,
                                             double xUnitDirection, double yUnitDirection) {
         double dx = Values.PREDICTION_INTERVAL * xUnitDirection;
         double dy = Values.PREDICTION_INTERVAL * yUnitDirection;
@@ -334,11 +342,11 @@ public abstract class Game<B extends Ball, P extends Player> {
         }
         return true;
     }
-    
+
     public boolean canSeeBall(double p1x, double p1y, double p2x, double p2y,
                               Ball selfBall1, Ball selfBall2) {
         double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
-        
+
         // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
         double xDiff = p2x - p1x;
         double yDiff = p2y - p1y;
@@ -347,7 +355,7 @@ public abstract class Game<B extends Ball, P extends Player> {
         double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
         double theta = Math.asin(simulateBallDiameter / dt);  // 连线与预测线的夹角
         double alpha = Algebra.thetaOf(unitVec);  // 两球连线与X轴的夹角
-        
+
         for (double d = -1.0; d <= 1.0; d += 0.25) {
             double ang = Algebra.normalizeAngle(alpha + theta * d);
             double[] angUnitVec = Algebra.unitVectorOfAngle(ang);
@@ -459,9 +467,9 @@ public abstract class Game<B extends Ball, P extends Player> {
     public int getCurrentTarget() {
         return currentTarget;
     }
-    
+
     public abstract int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall);
-    
+
     public abstract int getTargetAfterPotFailed();
 
     public void withdraw(Player player) {
@@ -519,11 +527,11 @@ public abstract class Game<B extends Ball, P extends Player> {
     protected abstract void updateTargetPotSuccess(boolean isSnookerFreeBall);
 
     protected abstract void updateTargetPotFailed();
-    
+
     public abstract GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage);
-    
+
     public String getFoulReason() {
-        return foulReason;   
+        return foulReason;
     }
 
     public boolean isLastCueFoul() {
@@ -535,7 +543,7 @@ public abstract class Game<B extends Ball, P extends Player> {
         currentPlayer.clearSinglePole();
         currentPlayer = getAnotherPlayer();
     }
-    
+
     public P getAnotherPlayer(P player) {
         return player == player1 ? player2 : player1;
     }
@@ -543,14 +551,9 @@ public abstract class Game<B extends Ball, P extends Player> {
     protected P getAnotherPlayer() {
         return getAnotherPlayer(currentPlayer);
     }
-    
+
     protected void end() {
         ended = true;
-        try {
-            recorder.stopRecording();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public class WhitePredictor {
@@ -645,7 +648,7 @@ public abstract class Game<B extends Ball, P extends Player> {
                 if (!ball.isWhite() && !ball.isPotted()) {
                     if (cueBall.predictedDtToPoint(ball.x, ball.y) <
                             gameValues.ballDiameter) {
-                        prediction.setSecondCollide(ball, 
+                        prediction.setSecondCollide(ball,
                                 Math.hypot(cueBall.vx, cueBall.vy) * phy.calculationsPerSec);
                     }
                 }
@@ -685,7 +688,7 @@ public abstract class Game<B extends Ball, P extends Player> {
         private double lastPhysicalTime = 0.0;
         private boolean notTerminated = true;
         private Phy phy;
-        
+
         PhysicsCalculator(Phy phy) {
             this.phy = phy;
         }
@@ -765,7 +768,7 @@ public abstract class Game<B extends Ball, P extends Player> {
             if (Math.floor(cumulatedPhysicalTime / parent.frameTimeMs) !=
                     Math.floor(lastPhysicalTime / parent.frameTimeMs)) {
                 for (B ball : getAllBalls()) {
-                    movement.getMovementMap().get(ball).addLast(new MovementFrame(ball.x, ball.y, ball.isPotted()));
+                    movement.addFrame(ball, new MovementFrame(ball.x, ball.y, ball.isPotted()));
                 }
             }
             return noBallMoving;

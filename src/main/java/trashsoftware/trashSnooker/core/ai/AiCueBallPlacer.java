@@ -3,13 +3,12 @@ package trashsoftware.trashSnooker.core.ai;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketBallPlayer;
+import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 
 import java.util.List;
-import java.util.Random;
 
 public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
     protected final G game;
@@ -29,7 +28,7 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
                     (ChineseEightBallGame) game, (ChineseEightBallPlayer) aiPlayer);
         } else if (game instanceof SidePocketGame) {
             return new SidePocketAiCueBallPlacer(
-                    (SidePocketGame) game, (SidePocketBallPlayer) aiPlayer);
+                    (SidePocketGame) game, (SidePocketPlayer) aiPlayer);
         } else {
             throw new RuntimeException("No such game type");
         }

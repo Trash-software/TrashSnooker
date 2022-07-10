@@ -264,11 +264,11 @@ public class MainView implements Initializable {
         if (stdBreakCue == null ||
                 gameType == GameType.SNOOKER ||
                 gameType == GameType.MINI_SNOOKER) {
-            igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue());
-            igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue, player2Player.getValue());
+            igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue(), 1);
+            igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue, player2Player.getValue(), 2);
         } else {
-            igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue());
-            igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue());
+            igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue(), 1);
+            igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue(), 2);
         }
 
         try {
