@@ -499,7 +499,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 player2.getScore(),
                 player1.getLastAddedScore(),
                 player2.getLastAddedScore(),
-                justCuedPlayer == player1 ? 1 : 2,
+                justCuedPlayer.getInGamePlayer().getPlayerNumber(),
                 justCuedPlayer.getSinglePole()
         );
     }

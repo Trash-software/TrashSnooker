@@ -31,11 +31,14 @@ import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
+import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
+import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
+import trashsoftware.trashSnooker.core.table.ChineseEightTable;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.projection.BallProjection;
@@ -215,7 +218,7 @@ public class GameView implements Initializable {
         setupPowerSlider();
         generateScales();
         setUiFrameStart();
-        
+
         setOnHidden();
 
         while (replay.loadNext() && replay.getCurrentFlag() == GameRecorder.FLAG_HANDBALL) {
@@ -286,7 +289,7 @@ public class GameView implements Initializable {
         } else {
             playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
         }
-        
+
         powerSlider.setMajorTickUnit(
                 playerPerson.getControllablePowerPercentage()
         );
@@ -297,7 +300,7 @@ public class GameView implements Initializable {
     private void updateScoreDiffLabels() {
         if (gameType.snookerLike) {
             if (replay != null) {
-                
+
             } else {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
                 snookerScoreDiffLabel.setText("分差 " + asg.getScoreDiff());
@@ -316,6 +319,7 @@ public class GameView implements Initializable {
             updateScoreDiffLabels();
         } else {
             System.out.println("Replay finished!");
+
         }
     }
 
@@ -335,7 +339,7 @@ public class GameView implements Initializable {
         setButtonsCueEnd(nextCuePlayer);
         obstacleProjection = null;
         printPlayStage = true;
-        
+
         game.getGame().getRecorder().recordScore(game.getGame().makeScoreResult(justCuedPlayer));
         game.getGame().getRecorder().writeCueToStream();
 
@@ -376,7 +380,7 @@ public class GameView implements Initializable {
         Player wonPlayer = game.getGame().getWiningPlayer();
 
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
-        
+
         game.getGame().getRecorder().stopRecording();
         game.getPlayer1().getPersonRecord().writeToFile();
         game.getPlayer2().getPersonRecord().writeToFile();
@@ -463,7 +467,7 @@ public class GameView implements Initializable {
     private double getCuePointRelY(double y) {
         return (y - cueCanvasWH / 2) / cueAreaRadius;
     }
-    
+
     private double getCuePointCanvasX(double x) {
         return x * cueAreaRadius + cueCanvasWH / 2;
     }
@@ -678,7 +682,6 @@ public class GameView implements Initializable {
         if (game.getGame().isEnded() || cueAnimationPlayer != null) return;
 
         if (replay != null) {
-            replayCue();
             return;
         }
 
@@ -768,13 +771,13 @@ public class GameView implements Initializable {
 
     private CueRecord makeCueRecord(Player cuePlayer, CuePlayParams paramsWithError) {
         System.out.println("Target " + game.getGame().getCurrentTarget());
-        return new CueRecord(cuePlayer.getInGamePlayer(), 
+        return new CueRecord(cuePlayer.getInGamePlayer(),
                 game.getGame().getCurrentTarget(),
                 game.getGame().isBreaking(),
                 game.getGame().isDoingSnookerFreeBll(),
                 getSelectedPower(),
                 paramsWithError.power,
-                cursorDirectionUnitX, 
+                cursorDirectionUnitX,
                 cursorDirectionUnitY,
                 getCuePointRelY(intentCuePointY),
                 getCuePointRelX(intentCuePointX),
@@ -821,7 +824,7 @@ public class GameView implements Initializable {
         CuePlayParams params = applyRandomCueError(player);
         CueRecord cueRecord = makeCueRecord(player, params);  // 必须在randomCueError之后
         game.getGame().getRecorder().recordCue(cueRecord);
-        
+
         double[] unitXYWithSpin = getUnitXYWithSpins(params.sideSpin, params.power);
 
         double whiteStartingX = game.getGame().getCueBall().getX();
@@ -907,12 +910,12 @@ public class GameView implements Initializable {
                 CuePlayParams realParams = applyRandomCueError(player);
                 CueRecord cueRecord = makeCueRecord(player, realParams);  // 必须在randomCueError之后
                 game.getGame().getRecorder().recordCue(cueRecord);
-                
+
                 double whiteStartingX = game.getGame().getCueBall().getX();
                 double whiteStartingY = game.getGame().getCueBall().getY();
                 movement = game.getGame().cue(realParams);
                 game.getGame().getRecorder().recordMovement(movement);
-                
+
                 aiCalculating = false;
                 beginCueAnimation(game.getGame().getCuingPlayer().getInGamePlayer(),
                         whiteStartingX, whiteStartingY, cueResult.getSelectedPower(),
@@ -925,18 +928,19 @@ public class GameView implements Initializable {
     private void replayCue() {
         if (replay.getCurrentFlag() == GameRecorder.FLAG_CUE) {
             CueRecord cueRecord = replay.getCueRecord();
+            if (cueRecord == null) return;
             movement = replay.getMovement();
             System.out.println(movement.getMovementMap().get(replay.getCueBall()).size());
 
             cursorDirectionUnitX = cueRecord.aimUnitX;
             cursorDirectionUnitY = cueRecord.aimUnitY;
-            
+
             intentCuePointX = getCuePointCanvasX(cueRecord.intendedHorPoint);
             intentCuePointY = getCuePointCanvasY(cueRecord.intendedVerPoint);
             cuePointX = getCuePointCanvasX(cueRecord.actualHorPoint);
             cuePointY = getCuePointCanvasY(cueRecord.actualVerPoint);
             cueAngleDeg = cueRecord.cueAngle;
-            
+
             powerSlider.setValue(cueRecord.actualPower);
             Platform.runLater(() -> powerSlider.setMajorTickUnit(
                     cueRecord.cuePlayer.getPlayerPerson().getControllablePowerPercentage()));
@@ -947,6 +951,10 @@ public class GameView implements Initializable {
                     cueRecord.selectedPower, cueRecord.aimUnitX, cueRecord.aimUnitY);
         } else if (replay.getCurrentFlag() == GameRecorder.FLAG_HANDBALL) {
             System.out.println("Ball in hand!");
+            replayStopTime = System.currentTimeMillis();
+            if (!replay.loadNext()) {
+                System.out.println("Finished with a hand ball?");
+            }
         }
     }
 
@@ -1395,11 +1403,10 @@ public class GameView implements Initializable {
             if (movement == null) {
                 if (replay != null) {
                     replay.getTable().drawStoppedBalls(this, replay.getAllBalls(), replay.getLastPositions(), graphicsContext, scale);
-                    
+
                     if (!replay.finished() && System.currentTimeMillis() - replayStopTime > replayGap) {
                         replayCue();
                     }
-                    
                 } else {
                     game.getGame().getTable().drawStoppedBalls(this, game.getGame().getAllBalls(), null, graphicsContext, scale);
                 }
@@ -1424,16 +1431,25 @@ public class GameView implements Initializable {
             Platform.runLater(() -> {
                 player1FramesLabel.setText(String.valueOf(replay.getItem().p1Wins));
                 player2FramesLabel.setText(String.valueOf(replay.getItem().p2Wins));
-                
-                if (replay.gameType.snookerLike) {
+
+                singlePoleCanvas.getGraphicsContext2D().setFill(WHITE);
+                singlePoleCanvas.getGraphicsContext2D().fillRect(0, 0,
+                        singlePoleCanvas.getWidth(), singlePoleCanvas.getHeight());
+
+                if (gameType.snookerLike) {
                     SnookerScoreResult ssr = (SnookerScoreResult) replay.getScoreResult();
                     player1ScoreLabel.setText(String.valueOf(ssr.getP1TotalScore()));
                     player2ScoreLabel.setText(String.valueOf(ssr.getP2TotalScore()));
                     drawSnookerSinglePoles(ssr.getSinglePoleMap());
                     singlePoleLabel.setText(String.valueOf(ssr.getSinglePoleScore()));
-                } 
-                // todo
-                
+                } else if (gameType == GameType.CHINESE_EIGHT) {
+                    ChineseEightScoreResult csr = (ChineseEightScoreResult) replay.getScoreResult();
+//                    List<PoolBall> rems = ChineseEightTable.filterRemainingTargetOfPlayer(replay.getCueRecord().targetRep, replay);
+                    List<PoolBall> rems = replay.getCueRecord().cuePlayer.getPlayerNumber() == 1 ?
+                            csr.getP1Rems() : csr.getP2Rems();
+                    System.out.println(rems.size());
+                    drawChineseEightAllTargets(rems);
+                }
             });
         } else {
             Platform.runLater(() -> {
@@ -1449,8 +1465,8 @@ public class GameView implements Initializable {
                 if (game.gameType.snookerLike) {
                     drawSnookerSinglePoles(cuePlayer.getSinglePole());
                     singlePoleLabel.setText(String.valueOf(cuePlayer.getSinglePoleScore()));
-                } else if (game.gameType == GameType.CHINESE_EIGHT ||
-                        game.gameType == GameType.SIDE_POCKET) {
+                } else if (gameType == GameType.CHINESE_EIGHT ||
+                        gameType == GameType.SIDE_POCKET) {
                     if (cuePlayer == game.getGame().getCuingPlayer()) {
                         // 进攻成功了
                         drawNumberedAllTargets((NumberedBallGame) game.getGame(),
@@ -1513,7 +1529,7 @@ public class GameView implements Initializable {
             p1 = game1.getCuingPlayer().getInGamePlayer().getPlayerNumber() == 1;
             tar = game1.getCurrentTarget();
         }
-        
+
         if (p1) {
             drawPoolTargetBall(player1TarCanvas, tar);
             wipeCanvas(player2TarCanvas);
@@ -1523,31 +1539,46 @@ public class GameView implements Initializable {
         }
     }
 
-    private void drawNumberedAllTargets(NumberedBallGame frame, NumberedBallPlayer player) {
+    private void drawChineseEightAllTargets(List<PoolBall> targets) {
         double x = ballDiameter * 0.6;
         double y = ballDiameter * 0.6;
-        if (frame.getCurrentTarget() != 0) {
-            Map<Integer, Ball> numberBallMap = frame.getNumberBallMap();
-            if (frame instanceof ChineseEightBallGame) {
-                int target = ((ChineseEightBallPlayer) player).getBallRange();
-                final int base = target == ChineseEightBallGame.FULL_BALL_REP ? 1 : 9;
-                for (int i = base; i < base + 7; i++) {
-                    Ball ball = numberBallMap.get(i);
-                    if (!ball.isPotted()) {
-                        NumberedBallTable.drawPoolBallEssential(
-                                x, y, ballDiameter, ball.getColor(), ball.getValue(),
-                                singlePoleCanvas.getGraphicsContext2D());
-                        x += ballDiameter * 1.2;
-                    }
-                }
-                Ball eight = numberBallMap.get(8);
-                if (!eight.isPotted()) {
-                    NumberedBallTable.drawPoolBallEssential(
-                            x, y, ballDiameter, eight.getColor(), eight.getValue(),
-                            singlePoleCanvas.getGraphicsContext2D());
-                }
+
+        if (gameType == GameType.CHINESE_EIGHT) {
+            for (PoolBall ball : targets) {
+                NumberedBallTable.drawPoolBallEssential(
+                        x, y, ballDiameter, ball.getColor(), ball.getValue(),
+                        singlePoleCanvas.getGraphicsContext2D());
+                x += ballDiameter * 1.2;
             }
         }
+    }
+
+    private void drawNumberedAllTargets(NumberedBallGame frame, NumberedBallPlayer player) {
+//        if (frame.getCurrentTarget() != 0) {
+            if (frame instanceof ChineseEightBallGame) {
+                int ballRange = ((ChineseEightBallPlayer) player).getBallRange();
+                List<PoolBall> targets = ChineseEightTable.filterRemainingTargetOfPlayer(
+                        ballRange, frame
+                );
+                drawChineseEightAllTargets(targets);
+            }
+//        }
+//        double x = ballDiameter * 0.6;
+//        double y = ballDiameter * 0.6;
+//        if (frame.getCurrentTarget() != 0) {
+//            if (frame instanceof ChineseEightBallGame) {
+//                int target = ((ChineseEightBallPlayer) player).getBallRange();
+//                List<PoolBall> targets = ChineseEightTable.filterRemainingTargetOfPlayer(
+//                        target, frame
+//                );
+//                for (PoolBall ball: targets) {
+//                    NumberedBallTable.drawPoolBallEssential(
+//                            x, y, ballDiameter, ball.getColor(), ball.getValue(),
+//                            singlePoleCanvas.getGraphicsContext2D());
+//                    x += ballDiameter * 1.2;
+//                }
+//            }
+//        }
     }
 
     private void drawSnookerSinglePoles(SortedMap<Ball, Integer> singlePoleBalls) {

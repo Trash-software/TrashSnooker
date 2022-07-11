@@ -7,6 +7,7 @@ module TrashSnooker {
     requires org.jetbrains.annotations;
     requires java.sql;
     requires org.xerial.sqlitejdbc;
+    requires org.tukaani.xz;
 
     exports trashsoftware.trashSnooker;
     exports trashsoftware.trashSnooker.core;

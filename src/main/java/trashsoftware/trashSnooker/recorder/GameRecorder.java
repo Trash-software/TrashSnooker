@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.recorder;
 
+import org.tukaani.xz.LZMA2Options;
+import org.tukaani.xz.XZOutputStream;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.Player;
@@ -14,6 +16,8 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPOutputStream;
 
 public abstract class GameRecorder {
     public static final int HEADER_LENGTH = 32;
@@ -29,11 +33,13 @@ public abstract class GameRecorder {
 
     public static final int NO_COMPRESSION = 0;
     public static final int DEFLATE_COMPRESSION = 1;
+    public static final int GZ_COMPRESSION = 2;
+    public static final int XZ_COMPRESSION = 3;
     protected static final String RECORD_DIR = "user" + File.separator + "replays";
     protected int compression = 0;
     protected File outFile;
     protected OutputStream outputStream;
-    protected OutputStream wrapperStream;
+    private OutputStream wrapperStream;
 
     protected Game game;
     protected EntireGame entireGame;
@@ -48,9 +54,15 @@ public abstract class GameRecorder {
         this.entireGame = entireGame;
         
         createDirIfNotExist();
+        
+        setCompression(XZ_COMPRESSION);
 
         outFile = new File(String.format("%s%sreplay_%s.replay",
                 RECORD_DIR, File.separator, dateFormat.format(new Date())));
+    }
+    
+    public void setCompression(int compression) {
+        this.compression = compression;
     }
 
     protected abstract byte recorderType();
@@ -108,7 +120,7 @@ public abstract class GameRecorder {
     protected abstract void writeBallInHand() throws IOException;
 
     public final void startRecoding() throws IOException {
-        wrapperStream = new BufferedOutputStream(new FileOutputStream(outFile));
+        wrapperStream = new FileOutputStream(outFile);
 
         byte[] header = new byte[HEADER_LENGTH];
 
@@ -145,14 +157,34 @@ public abstract class GameRecorder {
         P2Wins           22     1
          */
 
-        wrapperStream.write(header);  // Naive
+        wrapperStream.write(header);
 
         writeOnePlayer(p1);
         writeOnePlayer(p2);
 
-        outputStream = new BufferedOutputStream(wrapperStream);
+//        outputStream = new BufferedOutputStream(wrapperStream);
+        createStream();
 
         recordPositions();
+    }
+    
+    private void createStream() throws IOException {
+        switch (compression) {
+            case NO_COMPRESSION:
+                outputStream = new BufferedOutputStream(wrapperStream);
+                break;
+            case DEFLATE_COMPRESSION:
+                outputStream = new DeflaterOutputStream(wrapperStream, true);
+                break;
+            case GZ_COMPRESSION:
+                outputStream = new GZIPOutputStream(wrapperStream, true);
+                break;
+            case XZ_COMPRESSION:
+                outputStream = new XZOutputStream(wrapperStream, new LZMA2Options());
+                break;
+            default:
+                throw new RuntimeException();
+        }
     }
 
     private void writeOnePlayer(Player player) throws IOException {
@@ -175,6 +207,13 @@ public abstract class GameRecorder {
             try {
                 outputStream.write(FLAG_TERMINATE);
                 outputStream.flush();
+                
+                if (outputStream instanceof GZIPOutputStream) {
+                    ((GZIPOutputStream) outputStream).finish();
+                } else if (outputStream instanceof XZOutputStream) {
+                    ((XZOutputStream) outputStream).finish();
+                }
+                
                 outputStream.close();
                 wrapperStream.close();
             } catch (IOException e) {

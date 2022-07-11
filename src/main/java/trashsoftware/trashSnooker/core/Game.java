@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
+import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
@@ -19,7 +20,7 @@ import trashsoftware.trashSnooker.util.Util;
 import java.io.IOException;
 import java.util.*;
 
-public abstract class Game<B extends Ball, P extends Player> {
+public abstract class Game<B extends Ball, P extends Player> implements GameHolder {
     //    public static final double calculateMs = 1.0;
 //    public static final double calculationsPerSec = 1000.0 / calculateMs;
 //    public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
@@ -64,6 +65,7 @@ public abstract class Game<B extends Ball, P extends Player> {
     private boolean ended;
     private B[] randomOrderBallPool1;
     private B[] randomOrderBallPool2;
+    protected Map<Integer, B> numberBallMap;
     private PhysicsCalculator physicsCalculator;
 
     protected Game(GameView parent, GameSettings gameSettings, GameValues gameValues,
@@ -316,6 +318,24 @@ public abstract class Game<B extends Ball, P extends Player> {
         }
 
         return null;
+    }
+
+    /**
+     * Get ball by ball's number.
+     */
+    private Map<Integer, B> getNumberBallMap() {
+        if (numberBallMap == null) {
+            numberBallMap = new HashMap<>();
+            for (B ball : getAllBalls()) {
+                numberBallMap.put(ball.getValue(), ball);
+            }
+        }
+        return numberBallMap;
+    }
+
+    public B getBallByValue(int number) {
+        Map<Integer, B> map = getNumberBallMap();
+        return map.get(number);
     }
 
     public boolean pointToPointCanPassBall(double p1x, double p1y, double p2x, double p2y,

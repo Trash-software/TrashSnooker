@@ -58,6 +58,7 @@ public class NaiveGameReplay extends GameReplay {
             Ball b = loadOneBallPos(balls[i]);
             if (balls[i] == null) {
                 balls[i] = b;
+                valueBallMap.put(b.getValue(), b);
                 if (b.isWhite()) cueBall = b;
             }
         }

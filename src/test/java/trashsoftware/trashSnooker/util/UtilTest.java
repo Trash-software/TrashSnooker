@@ -12,4 +12,11 @@ public class UtilTest {
         long res = Util.bytesToIntN(buf, 0, 2);
         System.out.println(res);
     }
+    
+    @Test
+    public void testString() {
+        byte[] buf = new byte[]{'a', 'b', 'c', 0, 0, 0, 0, 0, 0, 0};
+        String s = new String(buf);
+        System.out.println(s);
+    }
 }

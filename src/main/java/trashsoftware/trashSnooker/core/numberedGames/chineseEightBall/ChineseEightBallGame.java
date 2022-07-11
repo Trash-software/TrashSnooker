@@ -3,8 +3,10 @@ package trashsoftware.trashSnooker.core.numberedGames.chineseEightBall;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.ChineseEightAiCue;
+import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.table.ChineseEightTable;
 import trashsoftware.trashSnooker.core.table.Table;
@@ -26,6 +28,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     private static final int[] HALF_BALL_SLOTS = {1, 5, 6, 7, 11, 13, 14};
 
     private ChineseEightBallPlayer winingPlayer;
+    private ChineseEightScoreResult curResult;
 
     private final PoolBall eightBall;
     private final PoolBall[] allBalls = new PoolBall[16];
@@ -96,7 +99,20 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     public ScoreResult makeScoreResult(Player justCuedPlayer) {
-        return null;
+        return curResult;
+    }
+
+    public Movement cue(CuePlayParams params) {
+        createScoreResult();
+        return super.cue(params);
+    }
+    
+    private void createScoreResult() {
+        curResult = new ChineseEightScoreResult(
+                thinkTime,
+                getCuingPlayer().getInGamePlayer().getPlayerNumber(),
+                ChineseEightTable.filterRemainingTargetOfPlayer(player1.getBallRange(), this),
+                ChineseEightTable.filterRemainingTargetOfPlayer(player2.getBallRange(), this));
     }
 
     @Override
@@ -126,7 +142,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         if (player.getBallRange() == NOT_SELECTED_REP) {
             if (isFullBall(pottingBall)) return FULL_BALL_REP;
             else if (isHalfBall(pottingBall)) return HALF_BALL_REP;
-            else return 0;  
+            else return 0;
         }
         if (player.getBallRange() == FULL_BALL_REP) {
             if (getRemFullBallOnTable() > 1) return FULL_BALL_REP;

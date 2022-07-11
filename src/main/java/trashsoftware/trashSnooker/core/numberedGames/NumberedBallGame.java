@@ -11,22 +11,10 @@ import java.util.Map;
 
 public abstract class NumberedBallGame<P extends NumberedBallPlayer> 
         extends Game<PoolBall, P> {
-    
-    protected Map<Integer, PoolBall> numberBallMap;
 
     protected NumberedBallGame(GameView parent, GameSettings gameSettings, 
                                GameValues gameValues, int frameIndex) {
         super(parent, gameSettings, gameValues, frameIndex);
-    }
-
-    public Map<Integer, PoolBall> getNumberBallMap() {
-        if (numberBallMap == null) {
-            numberBallMap = new HashMap<>();
-            for (PoolBall ball : getAllBalls()) {
-                numberBallMap.put(ball.getValue(), ball);
-            }
-        }
-        return numberBallMap;
     }
 
     @Override

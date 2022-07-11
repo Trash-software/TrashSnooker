@@ -14,7 +14,6 @@ public class SnookerScoreResult extends ScoreResult {
     private final int p2TotalScore;
     private final int p1AddedScore;
     private final int p2AddedScore;
-    private final int justCuedPlayerNum;
     private final SortedMap<Ball, Integer> singlePoleMap;  // 一定得是SortedMap
     private final byte[] singlePoles = new byte[7];
     
@@ -23,13 +22,12 @@ public class SnookerScoreResult extends ScoreResult {
                               int p1AddedScore, int p2AddedScore,
                               int justCuedPlayerNum,
                               SortedMap<Ball, Integer> singlePoleMap) {
-        super(thinkTime);
+        super(thinkTime, justCuedPlayerNum);
         
         this.p1TotalScore = p1Score;
         this.p2TotalScore = p2Score;
         this.p1AddedScore = p1AddedScore;
         this.p2AddedScore = p2AddedScore;
-        this.justCuedPlayerNum = justCuedPlayerNum;
         this.singlePoleMap = singlePoleMap;
     }
 
@@ -59,10 +57,6 @@ public class SnookerScoreResult extends ScoreResult {
             singlePoleScore += entry.getKey().getValue() * entry.getValue();
         }
         return singlePoleScore;
-    }
-
-    public int getJustCuedPlayerNum() {
-        return justCuedPlayerNum;
     }
 
     /**
