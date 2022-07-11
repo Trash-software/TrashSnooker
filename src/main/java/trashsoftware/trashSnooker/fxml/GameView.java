@@ -951,6 +951,7 @@ public class GameView implements Initializable {
                     cueRecord.selectedPower, cueRecord.aimUnitX, cueRecord.aimUnitY);
         } else if (replay.getCurrentFlag() == GameRecorder.FLAG_HANDBALL) {
             System.out.println("Ball in hand!");
+            drawTargetBoard();
             replayStopTime = System.currentTimeMillis();
             if (!replay.loadNext()) {
                 System.out.println("Finished with a hand ball?");
@@ -1554,15 +1555,13 @@ public class GameView implements Initializable {
     }
 
     private void drawNumberedAllTargets(NumberedBallGame frame, NumberedBallPlayer player) {
-//        if (frame.getCurrentTarget() != 0) {
-            if (frame instanceof ChineseEightBallGame) {
-                int ballRange = ((ChineseEightBallPlayer) player).getBallRange();
-                List<PoolBall> targets = ChineseEightTable.filterRemainingTargetOfPlayer(
-                        ballRange, frame
-                );
-                drawChineseEightAllTargets(targets);
-            }
-//        }
+        if (frame instanceof ChineseEightBallGame) {
+            int ballRange = ((ChineseEightBallPlayer) player).getBallRange();
+            List<PoolBall> targets = ChineseEightTable.filterRemainingTargetOfPlayer(
+                    ballRange, frame
+            );
+            drawChineseEightAllTargets(targets);
+        }
 //        double x = ballDiameter * 0.6;
 //        double y = ballDiameter * 0.6;
 //        if (frame.getCurrentTarget() != 0) {

@@ -13,7 +13,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    private static final boolean SAVE = false;
+    private static final boolean SAVE = true;
     private static DBAccess database;
 
     private Connection connection;
@@ -500,12 +500,16 @@ public class DBAccess {
 
     public void recordAnEntireGameStarts(EntireGame entireGame) {
         String typeStr = "'" + entireGame.gameType.toSqlKey() + "'";
+        int p1t = entireGame.getPlayer1().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
+        int p2t = entireGame.getPlayer2().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
         String command =
                 "INSERT INTO EntireGame VALUES (" +
                         entireGame.getStartTimeSqlString() + ", " +
                         typeStr + ", " +
                         "'" + entireGame.getPlayer1().getPlayerPerson().getName() + "', " +
                         "'" + entireGame.getPlayer2().getPlayerPerson().getName() + "', " +
+                        p1t + ", " + 
+                        p2t + ", " +
                         entireGame.getTotalFrames() + ");";
         try {
             executeStatement(command);
