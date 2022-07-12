@@ -131,6 +131,8 @@ public class GameView implements Initializable {
     private SavedPrediction predictionOfCue;
     private ObstacleProjection obstacleProjection;
     private double mouseX, mouseY;
+    
+    // 杆法的击球点。注意: cuePointY用在击球点的canvas上，值越大杆法越低，而unitFrontBackSpin相反
     private double cuePointX, cuePointY;  // 杆法的击球点
     private double intentCuePointX = -1, intentCuePointY = -1;  // 计划的杆法击球点
     private double cueAngleDeg = 5.0;
@@ -272,6 +274,9 @@ public class GameView implements Initializable {
                     ex.printStackTrace();
                 }
             } else {
+                if (!game.getGame().getRecorder().isFinished()) {
+                    game.getGame().getRecorder().stopRecording();
+                }
                 game.quitGame();
             }
             timeline.stop();
@@ -698,35 +703,49 @@ public class GameView implements Initializable {
     }
 
     private CuePlayParams applyRandomCueError(Player player) {
+        Random random = new Random();
+        return applyCueError(player,
+                random.nextGaussian(), random.nextGaussian(), random.nextGaussian(), true);
+    }
+
+    /**
+     * 三个factor都是指几倍标准差
+     */
+    private CuePlayParams applyCueError(Player player,
+                                        double powerFactor, double frontBackSpinFactor, double sideSpinFactor,
+                                        boolean mutate) {
         Cue cue = player.getInGamePlayer().getCurrentCue(game.getGame());
         PlayerPerson playerPerson = player.getPlayerPerson();
 
         double power = getPowerPercentage();
         final double wantPower = power;
         // 因为力量控制导致的力量偏差
-        Random random = new Random();
-        double powerError = random.nextGaussian();
-        powerError = powerError * (100.0 - playerPerson.getPowerControl()) / 100.0;
-        powerError *= cue.powerMultiplier;  // 发力范围越大的杆控力越粗糙
-        powerError *= wantPower / 40;  // 用力越大误差越大
+        powerFactor = powerFactor * (100.0 - playerPerson.getPowerControl()) / 100.0;
+        powerFactor *= cue.powerMultiplier;  // 发力范围越大的杆控力越粗糙
+        powerFactor *= wantPower / 40;  // 用力越大误差越大
         if (enablePsy) {
             double psyPowerMul = getPsyControlMultiplier(playerPerson);
-            powerError /= psyPowerMul;
+            powerFactor /= psyPowerMul;
         }
-        power += power * powerError;
-        System.out.println("Want power: " + wantPower + ", actual power: " + power);
+        power += power * powerFactor;
+//        System.out.println("Want power: " + wantPower + ", actual power: " + power);
 
+//        if (mutate) {
         intentCuePointX = cuePointX;
         intentCuePointY = cuePointY;
         // 因为出杆质量而导致的打点偏移
+//        }
+
+        double cpx = cuePointX;
+        double cpy = cuePointY;
 
         int counter = 0;
         while (counter < 10) {
-            double xError = random.nextGaussian();
-            double yError = random.nextGaussian();
+            double xError = sideSpinFactor;
+            double yError = frontBackSpinFactor;
             double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
             double xSig = muSigXy[1];
-            double ySig = muSigXy[3];
+            double ySig = -muSigXy[3];
 
             double mulWithPower = getErrorMultiplierOfPower(playerPerson, getSelectedPower());
 
@@ -734,39 +753,47 @@ public class GameView implements Initializable {
             yError = yError * ySig + muSigXy[2];
             xError = xError * mulWithPower * cueAreaRadius / 200;
             yError = yError * mulWithPower * cueAreaRadius / 200;
-            cuePointX = intentCuePointX + xError;
-            cuePointY = intentCuePointY + yError;
+            cpx = intentCuePointX + xError;
+            cpy = intentCuePointY + yError;
+            if (mutate) {
+                cuePointX = cpx;
+                cuePointY = cpy;
+            }
 
             if (obstacleProjection == null || obstacleProjection.cueAble(
-                    getCuePointRelX(cuePointX), getCuePointRelY(cuePointY),
+                    getCuePointRelX(cpx), getCuePointRelY(cpy),
                     getRatioOfCueAndBall())) {
                 break;
             }
 
             counter++;
         }
-        if (counter == 10) {
+        if (mutate && counter == 10) {
             System.out.println("Failed to find a random cueAble position");
             cuePointX = intentCuePointX;
             cuePointY = intentCuePointY;
         }
 
-        System.out.println("intent: " + intentCuePointX + ", " + intentCuePointY);
-        System.out.println("actual: " + cuePointX + ", " + cuePointY);
+        if (mutate) {
+            System.out.println("intent: " + intentCuePointX + ", " + intentCuePointY);
+            System.out.println("actual: " + cuePointX + ", " + cuePointY);
+        }
 
-        double unitSideSpin = getUnitSideSpin();
+//        System.out.println(cpx + " " + cuePointX);
+        double unitSideSpin = getUnitSideSpin(cpx);
 
-        if (Algebra.distanceToPoint(cuePointX, cuePointY, cueCanvasWH / 2, cueCanvasWH / 2)
-                > cueAreaRadius - cueRadius) {
-            power /= 3;
-            unitSideSpin *= 10;
-
-            System.out.println("滑杆了！");
+        if (mutate) {
+            if (Algebra.distanceToPoint(cuePointX, cuePointY, cueCanvasWH / 2, cueCanvasWH / 2)
+                    > cueAreaRadius - cueRadius) {
+                power /= 3;
+                unitSideSpin *= 10;
+                System.out.println("滑杆了！");
+            }
         }
 
 //        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
 
-        return generateCueParams(power, unitSideSpin, cueAngleDeg);
+        return generateCueParams(power, getUnitFrontBackSpin(cpy), unitSideSpin, cueAngleDeg);
     }
 
     private CueRecord makeCueRecord(Player cuePlayer, CuePlayParams paramsWithError) {
@@ -1005,14 +1032,47 @@ public class GameView implements Initializable {
         return generateCueParams(getPowerPercentage());
     }
 
+    private CuePlayParams[] generateCueParamsSd1() {
+        Player player = game.getGame().getCuingPlayer();
+        double sd = 1;
+        double corner = Math.sqrt(2) / 2 * sd;
+        CuePlayParams[] res = new CuePlayParams[9];
+        res[0] = generateCueParams();
+//        res[1] = applyCueError(player, -sd, -sd, 0, false);  // 又小又低
+//        res[2] = applyCueError(player, -corner, -corner, -corner, false);  // 偏小，左下
+//        res[3] = applyCueError(player, 0, 0, -sd, false);  // 最左
+//        res[4] = applyCueError(player, corner, corner, -corner, false);  // 偏大，左上
+//        res[5] = applyCueError(player, sd, sd, 0, false);  // 又大又高
+//        res[6] = applyCueError(player, corner, corner, corner, false);  // 偏大，右上
+//        res[7] = applyCueError(player, 0, 0, sd, false);  // 最右
+//        res[8] = applyCueError(player, -corner, -corner, corner, false);  // 偏小，右下
+
+        res[1] = applyCueError(player, -sd, sd, 0, false);  // 又小又低
+        res[2] = applyCueError(player, -corner, corner, -corner, false);  // 偏小，左下
+        res[3] = applyCueError(player, 0, 0, -sd, false);  // 最左
+        res[4] = applyCueError(player, corner, -corner, -corner, false);  // 偏大，左上
+        res[5] = applyCueError(player, sd, -sd, 0, false);  // 又大又高
+        res[6] = applyCueError(player, corner, -corner, corner, false);  // 偏大，右上
+        res[7] = applyCueError(player, 0, 0, sd, false);  // 最右
+        res[8] = applyCueError(player, -corner, corner, corner, false);  // 偏小，右下
+        return res;
+    }
+
     private CuePlayParams generateCueParams(double power) {
         return generateCueParams(power, getUnitSideSpin(), cueAngleDeg);
     }
 
     private CuePlayParams generateCueParams(double power, double unitSideSpin,
                                             double cueAngleDeg) {
+        return generateCueParams(power, getUnitFrontBackSpin(), unitSideSpin, cueAngleDeg);
+    }
+
+    private CuePlayParams generateCueParams(double power,
+                                            double unitFrontBackSpin,
+                                            double unitSideSpin,
+                                            double cueAngleDeg) {
         return CuePlayParams.makeIdealParams(cursorDirectionUnitX, cursorDirectionUnitY,
-                getUnitFrontBackSpin(), unitSideSpin,
+                unitFrontBackSpin, unitSideSpin,
                 cueAngleDeg, power);
     }
 
@@ -1047,26 +1107,34 @@ public class GameView implements Initializable {
     }
 
     private double getUnitFrontBackSpin() {
+        return getUnitFrontBackSpin(cuePointY);
+    }
+
+    private double getUnitFrontBackSpin(double cpy) {
         Cue cue;
         if (replay != null) {
             cue = replay.getCurrentCue();
         } else {
             cue = game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame());
         }
-        return CuePlayParams.unitFrontBackSpin((cueCanvasWH / 2 - cuePointY) / cueAreaRadius,
+        return CuePlayParams.unitFrontBackSpin((cueCanvasWH / 2 - cpy) / cueAreaRadius,
                 game.getGame().getCuingPlayer().getInGamePlayer(),
                 cue
         );
     }
 
     private double getUnitSideSpin() {
+        return getUnitSideSpin(cuePointX);
+    }
+
+    private double getUnitSideSpin(double cpx) {
         Cue cue;
         if (replay != null) {
             cue = replay.getCurrentCue();
         } else {
             cue = game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame());
         }
-        return CuePlayParams.unitSideSpin((cuePointX - cueCanvasWH / 2) / cueAreaRadius,
+        return CuePlayParams.unitSideSpin((cpx - cueCanvasWH / 2) / cueAreaRadius,
                 cue);
     }
 
@@ -1706,46 +1774,79 @@ public class GameView implements Initializable {
         if (movement != null) return;
         if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
 
-//        WhitePrediction predict;
-//        if ((isGameCalculating() || isPlayingCueAnimation()) && prediction != null) {
-//            predict = prediction;
-//        } else {
-        CuePlayParams params = generateCueParams();
-        WhitePrediction predict = game.getGame().predictWhite(params, Phy.PLAY, whitePredictLenAfterWall, false);
-        if (predict == null) return;
+//        long st = System.currentTimeMillis();
+        CuePlayParams[] possibles = generateCueParamsSd1();
+        WhitePrediction[] clockwise = new WhitePrediction[8];
+        WhitePrediction center = game.getGame().predictWhite(
+                possibles[0], Phy.PREDICT, whitePredictLenAfterWall, false);
+        for (int i = 1; i < possibles.length; i++) {
+            clockwise[i - 1] = game.getGame().predictWhite(
+                    possibles[i], Phy.PREDICT, whitePredictLenAfterWall, false
+            );
+        }
+
+        if (center == null) return;
+        
+        double[][] predictionStops = new double[clockwise.length + 1][];
+        predictionStops[0] = center.stopPoint();
+        for (int i = 0 ; i < clockwise.length; i++) {
+            predictionStops[i + 1] = clockwise[i].stopPoint();
+        }
+        List<double[]> outPoints = Algebra.grahamScanEnclose(predictionStops);
+
+        graphicsContext.setStroke(WHITE.darker());
+        for (int i = 1; i < outPoints.size(); i++) {
+            connectEndPoint(outPoints.get(i - 1), outPoints.get(i), graphicsContext);
+        }
+        connectEndPoint(outPoints.get(outPoints.size() - 1), outPoints.get(0), graphicsContext);
+        
+//        for (double[] point : predictionStops) {
+//            graphicsContext.strokeOval(canvasX(point[0]) - 1, canvasY(point[1]) - 1, 3, 3);
 //        }
+        
+//        for (int i = 1; i < clockwise.length; i++) {
+//            connectEndPoint(clockwise[i - 1], clockwise[i], graphicsContext);
+//        }
+//        connectEndPoint(clockwise[clockwise.length - 1], clockwise[0], graphicsContext);
+//        WhitePrediction predict = game.getGame().predictWhite(params, Phy.PREDICT, whitePredictLenAfterWall, false);
+//        if (predict == null) return;
+//        System.out.println("White time " + (System.currentTimeMillis() - st));
 
 //        System.out.println(predict.getWhitePath().size());
 
         graphicsContext.setStroke(WHITE);
+//        for (WhitePrediction predict : predictions) {
         double lastX = canvasX(game.getGame().getCueBall().getX());
         double lastY = canvasY(game.getGame().getCueBall().getY());
-        for (double[] pos : predict.getWhitePath()) {
+        for (double[] pos : center.getWhitePath()) {
             double canvasX = canvasX(pos[0]);
             double canvasY = canvasY(pos[1]);
             graphicsContext.strokeLine(lastX, lastY, canvasX, canvasY);
             lastX = canvasX;
             lastY = canvasY;
         }
-        if (predict.getFirstCollide() != null) {
-            graphicsContext.strokeOval(canvasX(predict.getWhiteCollisionX()) - ballRadius,
-                    canvasY(predict.getWhiteCollisionY()) - ballRadius,
+//            graphicsContext.setStroke(Color.GRAY);
+//        }
+//        graphicsContext.setStroke(WHITE);
+        if (center.getFirstCollide() != null) {
+            graphicsContext.strokeOval(canvasX(center.getWhiteCollisionX()) - ballRadius,
+                    canvasY(center.getWhiteCollisionY()) - ballRadius,
                     ballDiameter, ballDiameter);  // 绘制预测撞击点的白球
 
             // 弹库的球就不给预测线了
-            if (!predict.isHitWallBeforeHitBall()) {
-                predictedTargetBall = predict.getFirstCollide();
+            if (!center.isHitWallBeforeHitBall()) {
+                predictedTargetBall = center.getFirstCollide();
                 double potDt = Algebra.distanceToPoint(
-                        predict.getWhiteCollisionX(), predict.getWhiteCollisionY(),
-                        predict.whiteX, predict.whiteY);
+                        center.getWhiteCollisionX(), center.getWhiteCollisionY(),
+                        center.whiteX, center.whiteY);
                 // 白球行进距离越长，预测线越短
                 double predictLineTotalLen = getPredictionLineTotalLength(potDt,
                         game.getGame().getCuingPlayer().getPlayerPerson());
 
-                targetPredictionUnitY = predict.getBallDirectionY();
-                targetPredictionUnitX = predict.getBallDirectionX();
-                double whiteUnitXBefore = predict.getWhiteDirectionXBeforeCollision();
-                double whiteUnitYBefore = predict.getWhiteDirectionYBeforeCollision();
+                targetPredictionUnitY = center.getBallDirectionY();
+                targetPredictionUnitX = center.getBallDirectionX();
+                double whiteUnitXBefore = center.getWhiteDirectionXBeforeCollision();
+                double whiteUnitYBefore = center.getWhiteDirectionYBeforeCollision();
 
                 double theta = Algebra.thetaBetweenVectors(
                         targetPredictionUnitX, targetPredictionUnitY,
@@ -1762,14 +1863,42 @@ public class GameView implements Initializable {
                 double lineX = targetPredictionUnitX * totalLen * scale;
                 double lineY = targetPredictionUnitY * totalLen * scale;
 
-                double tarCanvasX = canvasX(predict.getFirstCollide().getX());
-                double tarCanvasY = canvasY(predict.getFirstCollide().getY());
+                double tarCanvasX = canvasX(center.getFirstCollide().getX());
+                double tarCanvasY = canvasY(center.getFirstCollide().getY());
 
-                graphicsContext.setStroke(predict.getFirstCollide().getColor().brighter().brighter());
+                graphicsContext.setStroke(center.getFirstCollide().getColor().brighter().brighter());
                 graphicsContext.strokeLine(tarCanvasX, tarCanvasY,
                         tarCanvasX + lineX, tarCanvasY + lineY);
             }
         }
+    }
+
+    private void connectEndPoint(WhitePrediction wp1, WhitePrediction wp2, GraphicsContext gc) {
+        double[] pos1 = wp1.stopPoint();
+        double[] pos2 = wp2.stopPoint();
+        connectEndPoint(pos1, pos2, gc);
+    }
+
+    private void connectEndPoint(double[] pos1, double[] pos2, GraphicsContext gc) {
+        gc.strokeLine(canvasX(pos1[0]), canvasY(pos1[1]), canvasX(pos2[0]), canvasY(pos2[1]));
+    }
+
+    private double[] predictionWidthDeviation(WhitePrediction[] predictions) {
+        WhitePrediction center = predictions[0];
+        double[] centerPos = center.stopPoint();
+        double[] unitVec = Algebra.unitVector(center.lastVector());
+        double[] normalVec = Algebra.normalVector(unitVec);
+        double min = gameType.gameValues.innerWidth / 2;
+        double max = -gameType.gameValues.innerWidth / 2;
+        for (int i = 1; i < predictions.length; i++) {
+            WhitePrediction wp = predictions[i];
+            double[] stopPoint = wp.stopPoint();
+            double[] connection = new double[]{centerPos[0] - stopPoint[0], centerPos[1] - stopPoint[1]};
+            double proj = Algebra.projectionLengthOn(connection, normalVec);
+            if (proj > max) max = proj;
+            if (proj < min) min = proj;
+        }
+        return new double[]{min, max};
     }
 
     private void draw() {

@@ -24,7 +24,10 @@ public class PlayerPerson {
     private final double minPullDt;
     private final double maxPullDt;
     private final double powerControl;
-    private final double[] cuePointMuSigmaXY;  // 横向的mu，横向的sigma，纵向的mu，纵向的sigma
+    
+    // 横向的mu，横向的sigma，纵向的mu，纵向的sigma
+    // 横向的左塞负右塞正，纵向的高杆正低杆负
+    private final double[] cuePointMuSigmaXY;
     private final double cueSwingMag;
     private final CuePlayType cuePlayType;
     private final AiPlayStyle aiPlayStyle;

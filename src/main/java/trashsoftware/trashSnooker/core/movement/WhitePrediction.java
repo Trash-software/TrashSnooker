@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.movement;
 
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class WhitePrediction {
     private Ball whiteSecondCollide;
     private double whiteSpeedWhenHitSecondBall;
     private boolean whiteCollidesHoleArcs = false;  // 是否碰撞了袋角
+    private double pathLength;
 
     public WhitePrediction(Ball whiteBall) {
         whiteX = whiteBall.getX();
@@ -35,6 +37,30 @@ public class WhitePrediction {
 
     public List<double[]> getWhitePath() {
         return whitePath;
+    }
+    
+    public double[] lastVector() {
+        if (whitePath.size() < 2) return new double[]{1, 1};
+        double[] last = whitePath.get(whitePath.size() - 1);
+        double[] secondLast = whitePath.get(whitePath.size() - 2);
+        
+        return new double[]{last[0] - secondLast[0], last[1] - secondLast[1]};
+    }
+    
+    public double[] stopPoint() {
+        return whitePath.get(whitePath.size() - 1); 
+    }
+    
+    public void addPointInPath(double[] point) {
+        if (!whitePath.isEmpty()) {
+            double[] lastPoint = whitePath.get(whitePath.size() - 1);
+            pathLength += Algebra.distanceToPoint(point[0], point[1], lastPoint[0], lastPoint[1]);
+        }
+        whitePath.add(point);
+    }
+
+    public double getPathLength() {
+        return pathLength;
     }
 
     public void setFirstCollide(Ball firstCollide, boolean hitWallBeforeHitBall,

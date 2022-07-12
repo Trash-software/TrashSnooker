@@ -610,7 +610,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
          */
         private boolean oneRun() {
             cumulatedPhysicalTime += phy.calculateMs;
-            prediction.getWhitePath().add(new double[]{cueBall.x, cueBall.y});
+            prediction.addPointInPath(new double[]{cueBall.x, cueBall.y});
             cueBall.prepareMove();
 
             if (cueBall.isLikelyStopped(phy)) return true;

@@ -48,6 +48,7 @@ public abstract class GameRecorder {
     protected CueRecord cueRecord;
     protected Movement movement;
     protected ScoreResult scoreResult;
+    protected boolean finished = false;
 
     public GameRecorder(Game game, EntireGame entireGame) {
         this.game = game;
@@ -202,7 +203,12 @@ public abstract class GameRecorder {
         wrapperStream.write(buffer);
     }
 
+    public boolean isFinished() {
+        return finished;
+    }
+
     public void stopRecording() {
+        this.finished = true;
         if (outputStream != null && wrapperStream != null) {
             try {
                 outputStream.write(FLAG_TERMINATE);
