@@ -8,6 +8,7 @@ module TrashSnooker {
     requires java.sql;
     requires org.xerial.sqlitejdbc;
     requires org.tukaani.xz;
+    requires java.desktop;
 
     exports trashsoftware.trashSnooker;
     exports trashsoftware.trashSnooker.core;

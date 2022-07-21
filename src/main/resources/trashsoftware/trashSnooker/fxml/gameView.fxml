@@ -36,6 +36,8 @@
             <MenuItem text="test" onAction="#testAction"/>
             <MenuItem text="tie" onAction="#tieTestAction"/>
             <MenuItem text="clear red balls" onAction="#clearRedBallsAction"/>
+            <MenuItem text="p1+10" onAction="#p1AddScoreAction"/>
+            <MenuItem text="p2+10" onAction="#p2AddScoreAction"/>
         </Menu>
     </MenuBar>
 

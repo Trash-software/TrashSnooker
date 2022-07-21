@@ -23,6 +23,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import trashsoftware.trashSnooker.audio.GameAudio;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
@@ -131,7 +132,7 @@ public class GameView implements Initializable {
     private SavedPrediction predictionOfCue;
     private ObstacleProjection obstacleProjection;
     private double mouseX, mouseY;
-    
+
     // 杆法的击球点。注意: cuePointY用在击球点的canvas上，值越大杆法越低，而unitFrontBackSpin相反
     private double cuePointX, cuePointY;  // 杆法的击球点
     private double intentCuePointX = -1, intentCuePointY = -1;  // 计划的杆法击球点
@@ -652,6 +653,16 @@ public class GameView implements Initializable {
     }
 
     @FXML
+    void p1AddScoreAction() {
+        game.getGame().getPlayer1().addScore(10);
+    }
+
+    @FXML
+    void p2AddScoreAction() {
+        game.getGame().getPlayer2().addScore(10);
+    }
+
+    @FXML
     void withdrawAction() {
         if (game.getGame() instanceof AbstractSnookerGame) {
             Player curPlayer = game.getGame().getCuingPlayer();
@@ -887,7 +898,7 @@ public class GameView implements Initializable {
             }
             currentAttempt.setSuccess(success);
             player.addAttempt(currentAttempt);
-            if (currentAttempt.getTargetBall().isPotted()) {
+            if (success) {
                 System.out.println("Pot success!");
             } else {
                 System.out.println("Pot failed!");
@@ -944,6 +955,38 @@ public class GameView implements Initializable {
                 game.getGame().getRecorder().recordMovement(movement);
 
                 aiCalculating = false;
+                if (cueResult.isAttack()) {
+                    PotAttempt currentAttempt = new PotAttempt(
+                            gameType,
+                            game.getGame().getCuingPlayer().getPlayerPerson(),
+                            cueResult.getTargetBall(),
+                            new double[]{whiteStartingX, whiteStartingY},
+                            cueResult.getTargetOrigPos(), 
+                            cueResult.getTargetDirHole()[1]
+                    );
+                    boolean success = currentAttempt.getTargetBall().isPotted();
+                    if (curDefAttempt != null && curDefAttempt.defensePlayer != player) {
+                        // 如进攻成功，则上一杆防守失败了
+                        curDefAttempt.setSuccess(!success);
+                        if (success) {
+                            System.out.println(curDefAttempt.defensePlayer.getPlayerPerson().getName() +
+                                    " player defense failed!");
+                        }
+                    }
+                    currentAttempt.setSuccess(success);
+                    player.addAttempt(currentAttempt);
+                    if (success) {
+                        System.out.println("AI Pot success!");
+                    } else {
+                        System.out.println("AI Pot failed!");
+                    }
+                    curDefAttempt = null;
+                } else {
+                    curDefAttempt = new DefenseAttempt(player);
+                    player.addDefenseAttempt(curDefAttempt);
+                    System.out.println("AI Defense!");
+                }
+                
                 beginCueAnimation(game.getGame().getCuingPlayer().getInGamePlayer(),
                         whiteStartingX, whiteStartingY, cueResult.getSelectedPower(),
                         cueResult.getUnitX(), cueResult.getUnitY());
@@ -1461,6 +1504,16 @@ public class GameView implements Initializable {
                 if (entry.getValue().isEmpty()) {
                     isLast = true;
                 }
+                switch (frame.movementType) {
+                    case MovementFrame.COLLISION:
+                        break;
+                    case MovementFrame.CUSHION:
+                        GameAudio.hitCushion(gameType.gameValues, frame.movementValue);
+                        break;
+                    case MovementFrame.POT:
+                        GameAudio.pot(gameType.gameValues, frame.movementValue);
+                        break;
+                }
             }
             if (isLast) {
                 playingMovement = false;
@@ -1778,18 +1831,43 @@ public class GameView implements Initializable {
         CuePlayParams[] possibles = generateCueParamsSd1();
         WhitePrediction[] clockwise = new WhitePrediction[8];
         WhitePrediction center = game.getGame().predictWhite(
-                possibles[0], Phy.PREDICT, whitePredictLenAfterWall, false);
+                possibles[0], Phy.PREDICT, whitePredictLenAfterWall, false, false, true);
+        if (center == null) return;
+
+//        PredictedPos coll = game.getGame().getPredictedHitBall(
+//                center.whiteX, center.whiteY, cursorDirectionUnitX, cursorDirectionUnitY
+//        );
+//        if (coll != null)
+//            SnookerTable.drawBallBase(
+//                    canvasX(coll.getPredictedWhitePos()[0]),
+//                    canvasY(coll.getPredictedWhitePos()[1]),
+//                    52.5 * scale,
+//                    Color.GRAY,
+//                    graphicsContext
+//            );
+
+//        List<double[][]> g = game.getGame().directionsToAccessibleHoles(center.getFirstCollide());
+//        for (double[][] gg : g) {
+//            System.out.print(gameType.gameValues.getHoleOpenCenter(gg[1]) + ", ");
+//        }
+//        System.out.println();
+
+//        Ball fc = center.getFirstCollide();
+//        if (fc != null) {
+//            Table.drawBallBase(canvasX(fc.getX()), canvasY(fc.getY()), 20, Color.GRAY, graphicsContext);
+//        }
+//        center.resetToInit();
+
         for (int i = 1; i < possibles.length; i++) {
             clockwise[i - 1] = game.getGame().predictWhite(
-                    possibles[i], Phy.PREDICT, whitePredictLenAfterWall, false
+                    possibles[i], Phy.PREDICT, whitePredictLenAfterWall,
+                    false, false, true
             );
         }
 
-        if (center == null) return;
-        
         double[][] predictionStops = new double[clockwise.length + 1][];
         predictionStops[0] = center.stopPoint();
-        for (int i = 0 ; i < clockwise.length; i++) {
+        for (int i = 0; i < clockwise.length; i++) {
             predictionStops[i + 1] = clockwise[i].stopPoint();
         }
         List<double[]> outPoints = Algebra.grahamScanEnclose(predictionStops);
@@ -1799,20 +1877,6 @@ public class GameView implements Initializable {
             connectEndPoint(outPoints.get(i - 1), outPoints.get(i), graphicsContext);
         }
         connectEndPoint(outPoints.get(outPoints.size() - 1), outPoints.get(0), graphicsContext);
-        
-//        for (double[] point : predictionStops) {
-//            graphicsContext.strokeOval(canvasX(point[0]) - 1, canvasY(point[1]) - 1, 3, 3);
-//        }
-        
-//        for (int i = 1; i < clockwise.length; i++) {
-//            connectEndPoint(clockwise[i - 1], clockwise[i], graphicsContext);
-//        }
-//        connectEndPoint(clockwise[clockwise.length - 1], clockwise[0], graphicsContext);
-//        WhitePrediction predict = game.getGame().predictWhite(params, Phy.PREDICT, whitePredictLenAfterWall, false);
-//        if (predict == null) return;
-//        System.out.println("White time " + (System.currentTimeMillis() - st));
-
-//        System.out.println(predict.getWhitePath().size());
 
         graphicsContext.setStroke(WHITE);
 //        for (WhitePrediction predict : predictions) {

@@ -2,7 +2,7 @@ package trashsoftware.trashSnooker.core;
 
 public enum Phy {
     PLAY(1.0),
-    PREDICT(5.0);
+    PREDICT(1.0);
 
     public final double calculateMs;
     public final double calculationsPerSec;

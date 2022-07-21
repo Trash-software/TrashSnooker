@@ -22,4 +22,9 @@ public class SnookerTable extends AbstractSnookerTable {
     public double[] blackBallPos() {
         return new double[]{gameValues.rightX - 324.0, gameValues.midY};
     }
+
+    @Override
+    public int nBalls() {
+        return 22;
+    }
 }

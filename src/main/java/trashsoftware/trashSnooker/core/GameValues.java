@@ -2,6 +2,8 @@ package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
+
 public class GameValues {
 
     public static final GameValues SNOOKER_VALUES = new Builder()
@@ -316,6 +318,21 @@ public class GameValues {
         double acceleration = speedReducerPerInterval(phy) * phy.calculationsPerSecSqr;
         double t = speed / acceleration;  // 加速时间，秒
         return acceleration / 2 * t * t;  // S = 1/2at^2
+    }
+    
+    public Hole getHoleOpenCenter(double[] pos) {
+        if (Arrays.equals(pos, topLeftHoleOpenCenter)) return Hole.TOP_LEFT;
+        else if (Arrays.equals(pos, topMidHoleOpenCenter)) return Hole.TOP_MID;
+        else if (Arrays.equals(pos, topRightHoleOpenCenter)) return Hole.TOP_RIGHT;
+        else if (Arrays.equals(pos, botLeftHoleOpenCenter)) return Hole.BOT_LEFT;
+        else if (Arrays.equals(pos, botMidHoleOpenCenter)) return Hole.BOT_MID;
+        else if (Arrays.equals(pos, botRightHoleOpenCenter)) return Hole.BOT_RIGHT;
+        else return null;
+    }
+    
+    public enum Hole {
+        TOP_LEFT, TOP_MID, TOP_RIGHT,
+        BOT_LEFT, BOT_MID, BOT_RIGHT
     }
 
     public static class Builder {

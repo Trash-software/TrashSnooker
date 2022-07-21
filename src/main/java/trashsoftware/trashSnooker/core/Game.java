@@ -1,11 +1,12 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.audio.GameAudio;
+import trashsoftware.trashSnooker.audio.SoundPlayer;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
-import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
@@ -62,10 +63,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected long cueFinishTime;
     protected long cueStartTime;
     protected GameRecorder recorder;
+    protected Map<Integer, B> numberBallMap;
     private boolean ended;
     private B[] randomOrderBallPool1;
     private B[] randomOrderBallPool2;
-    protected Map<Integer, B> numberBallMap;
     private PhysicsCalculator physicsCalculator;
 
     protected Game(GameView parent, GameSettings gameSettings, GameValues gameValues,
@@ -188,13 +189,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
      * @param phy                      使用哪一个物理值
      * @param lengthAfterWall          直接碰库后白球预测线的长度
      * @param checkCollisionAfterFirst 是否检查白球打到目标球后是否碰到下一颗球
+     * @param recordTargetPos          是否记录第一颗碰撞球的信息
+     * @param wipe                     是否还原预测前的状态
      */
     public WhitePrediction predictWhite(CuePlayParams params,
                                         Phy phy,
                                         double lengthAfterWall,
-                                        boolean checkCollisionAfterFirst) {
-        double whiteX = cueBall.x;
-        double whiteY = cueBall.y;
+                                        boolean checkCollisionAfterFirst,
+                                        boolean recordTargetPos,
+                                        boolean wipe) {
         if (cueBall.isPotted()) return null;
         cueBall.setVx(params.vx / phy.calculationsPerSec);
         cueBall.setVy(params.vy / phy.calculationsPerSec);
@@ -207,11 +210,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         WhitePredictor whitePredictor = new WhitePredictor();
 //        long st = System.currentTimeMillis();
         WhitePrediction prediction =
-                whitePredictor.predict(phy, lengthAfterWall, checkCollisionAfterFirst);
+                whitePredictor.predict(phy, lengthAfterWall, checkCollisionAfterFirst, recordTargetPos);
 //        System.out.println("White prediction ms: " + (System.currentTimeMillis() - st));
-        cueBall.setX(whiteX);
-        cueBall.setY(whiteY);
-        cueBall.pickup();
+//        cueBall.setX(whiteX);
+//        cueBall.setY(whiteY);
+//        cueBall.pickup();
+        if (wipe) prediction.resetToInit();
+//        System.out.println(canSeeBall(cueBall, getAllBalls()[20]));
         return prediction;
     }
 
@@ -295,6 +300,37 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public PredictedPos getPredictedHitBall(double cueBallX, double cueBallY,
                                             double xUnitDirection, double yUnitDirection) {
+
+//        double high = gameValues.maxLength;
+//        double low = gameValues.ballRadius;
+//
+//        Ball obstacle = null;
+//        double collisionX = 0.0;
+//        double collisionY = 0.0;
+//        while (high - low > Values.PREDICTION_INTERVAL) {
+//            double mid = (high + low) / 2;
+//            double endX = xUnitDirection * mid + cueBallX;
+//            double endY = yUnitDirection * mid + cueBallY;
+//            Ball firstObs = pointToPointObstacleBall(
+//                    cueBallX, cueBallY,
+//                    endX, endY,
+//                    cueBall, null,
+//                    true, true
+//            );
+//            if (firstObs == null) {  // 太近了
+//                low = mid;
+//            } else {
+//                high = mid;
+//                obstacle = firstObs;
+//                collisionX = endX;
+//                collisionY = endY;
+//            }
+//        }
+//        if (obstacle == null) return null;
+
+
+//        return new PredictedPos(obstacle, new double[]{collisionX, collisionY});
+
         double dx = Values.PREDICTION_INTERVAL * xUnitDirection;
         double dy = Values.PREDICTION_INTERVAL * yUnitDirection;
 
@@ -338,55 +374,240 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return map.get(number);
     }
 
+    /**
+     * @param checkFullBall 如true，检查是否能过全球；如false，检查是否有薄边
+     * @return 两点之间能不能过球
+     */
     public boolean pointToPointCanPassBall(double p1x, double p1y, double p2x, double p2y,
-                                           Ball selfBall1, Ball selfBall2) {
-        double directionX = p2x - p1x;
-        double directionY = p2y - p1y;
-        int distance = (int) Math.hypot(directionX, directionY) + 1;
-        double[] unitXY = Algebra.unitVector(directionX, directionY);
-        double unitX = unitXY[0];
-        double unitY = unitXY[1];
-        double x = p1x;
-        double y = p1y;
-        for (int i = 0; i < distance; ++i) {
-            for (Ball ball : getAllBalls()) {
-                if (ball != selfBall1 && ball != selfBall2) {
-                    if (Algebra.distanceToPoint(x, y, ball.x, ball.y) <
-                            gameValues.ballDiameter) {
+                                           Ball selfBall1, Ball selfBall2, boolean checkFullBall) {
+
+        double shadowRadius = checkFullBall ? gameValues.ballDiameter : gameValues.ballRadius;
+//        double p2Radius = gameValues.ballRadius;
+
+        double circle = Math.PI * 2;
+
+        double xDiff0 = p2x - p1x;
+        double yDiff0 = p2y - p1y;
+        double pointsDt = Math.hypot(xDiff0, yDiff0);
+        double angle = Algebra.thetaOf(xDiff0, yDiff0);
+
+        double extraShadowAngle;
+        if (checkFullBall) {
+            extraShadowAngle = 0;
+        } else {
+            extraShadowAngle = -Math.asin(gameValues.ballDiameter / pointsDt);
+        }
+//        System.out.printf("%f %f %f %f\n", p1x, p1y, p2x, p2y);
+
+        for (Ball ball : getAllBalls()) {
+            if (ball != selfBall1 && ball != selfBall2 && !ball.isPotted()) {
+                // 计算这个球遮住的角度范围
+                double xDiff = ball.x - p1x;
+                double yDiff = ball.y - p1y;
+                double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
+                if (dt > pointsDt) {
+                    continue;  // 障碍球比目标远，不可能挡。这个算式不够精确，实际应结合角度计算三角函数
+                }
+                double connectionAngle = Algebra.thetaOf(xDiff, yDiff);  // 连线的绝对角度
+
+                double ballRadiusAngle = Math.asin(shadowRadius / dt);  // 从selfBall看ball占的的角
+//                if ()
+//                // 起始球与障碍球切线长度
+//                double tanDt = Math.sqrt(Math.pow(dt, 2) - Math.pow(gameValues.ballRadius, 2));
+//                // 起始球自己的半径占的角度
+//                double selfPassAngle = Math.asin(gameValues.ballRadius / tanDt);
+
+                double left = connectionAngle + ballRadiusAngle + extraShadowAngle;
+                double right = connectionAngle - ballRadiusAngle - extraShadowAngle;
+
+                if (left > circle) {  // 连线中心小于360，左侧大于360
+                    if (angle >= right) {
+                        return false;  // angle在right与x正轴之间，挡住
+                    } else if (angle <= left - circle) {
+                        return false;
+                    }
+                } else if (right <= 0) {  // 连线右侧小于0
+                    if (angle > circle + right) {
+                        return false;  // angle在right以上x正轴之下，挡住
+                    } else if (angle <= left) {
                         return false;
                     }
                 }
+
+                if (left >= angle && right <= angle) {
+                    return false;
+                }
+
             }
-            x += unitX;
-            y += unitY;
         }
         return true;
+        
     }
 
-    public boolean canSeeBall(double p1x, double p1y, double p2x, double p2y,
-                              Ball selfBall1, Ball selfBall2) {
-        double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
+//    private boolean canSeeBall(Ball b1, Ball b2) {
+//        return canSeeBall(b1.x, b1.y, b2.x, b2.y, b1, b2);
+//    }
 
-        // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
-        double xDiff = p2x - p1x;
-        double yDiff = p2y - p1y;
-        double[] vec = new double[]{xDiff, yDiff};
-        double[] unitVec = Algebra.unitVector(vec);
-        double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
-        double theta = Math.asin(simulateBallDiameter / dt);  // 连线与预测线的夹角
-        double alpha = Algebra.thetaOf(unitVec);  // 两球连线与X轴的夹角
-
-        for (double d = -1.0; d <= 1.0; d += 0.25) {
-            double ang = Algebra.normalizeAngle(alpha + theta * d);
-            double[] angUnitVec = Algebra.unitVectorOfAngle(ang);
-//            System.out.println(ang + " orig ang: " + alpha);
-
-            PredictedPos pp = getPredictedHitBall(p1x, p1y, angUnitVec[0], angUnitVec[1]);
-//            System.out.println(pp);
-            if (pp != null && pp.getTargetBall().getValue() == selfBall2.getValue()) return true;
+    /**
+     * @param situation 1:薄边 2:全球 3:缝隙能过全球（斯诺克自由球那种）
+     * @return 能看到的目标球数量
+     */
+    public int countSeeAbleTargetBalls(double whiteX, double whiteY,
+                                       Collection<Ball> legalBalls, int situation) {
+        Set<Ball> legalSet;
+        if (legalBalls instanceof Set) {
+            legalSet = (Set<Ball>) legalBalls;
+        } else {
+            legalSet = new HashSet<>(legalBalls);
         }
-        return false;
+        double shadowRadius = situation == 3 ? gameValues.ballRadius : gameValues.ballDiameter;
+        int result = 0;
+
+        double circle = Math.PI * 2;
+
+        for (Ball target : legalBalls) {
+            double xDiff0 = target.x - whiteX;
+            double yDiff0 = target.y - whiteY;
+            double whiteTarDt = Math.hypot(xDiff0, yDiff0);
+            double angle = Algebra.thetaOf(xDiff0, yDiff0);
+            
+            double extraShadowAngle;
+            if (situation == 1) {
+                extraShadowAngle = -Math.asin(gameValues.ballDiameter / whiteTarDt);
+            } else if (situation == 2) {
+                extraShadowAngle = 0;
+            } else {
+                extraShadowAngle = Math.asin(gameValues.ballDiameter / whiteTarDt);  // 目标球本身的投影角
+            }
+
+            boolean canSee = true;
+
+            for (Ball ball : getAllBalls()) {
+                if (!ball.isWhite() && !ball.isPotted() && !legalSet.contains(ball)) {
+                    // 是障碍球
+                    double xDiff = ball.x - whiteX;
+                    double yDiff = ball.y - whiteY;
+                    double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
+                    if (dt > whiteTarDt + gameValues.ballRadius) {
+                        continue;  // 障碍球比目标球远，不可能挡
+                    }
+                    double connectionAngle = Algebra.thetaOf(xDiff, yDiff);  // 连线的绝对角度
+
+                    double ballShadowAngle = Math.asin(shadowRadius / dt);  // 从selfBall看ball占的的角
+                    
+                    double selfPassAngle = 0;
+                    if (situation == 3) {
+                        // 起始球与障碍球切线长度
+                        double tanDt = Math.sqrt(Math.pow(dt, 2) - Math.pow(gameValues.ballRadius, 2));
+                        // 起始球自己的半径占的角度
+                        selfPassAngle = Math.asin(gameValues.ballRadius / tanDt);
+                    }
+                    double left = connectionAngle + selfPassAngle + ballShadowAngle + extraShadowAngle;
+                    double right = connectionAngle - selfPassAngle - ballShadowAngle - extraShadowAngle;
+//                    System.out.printf("%f, Ball %s, %f %f %f\n", angle, ball, left, connectionAngle, right);
+
+                    if (left > circle) {  // 连线中心小于360，左侧大于360
+                        if (angle >= right) {
+                            canSee = false;  // angle在right与x正轴之间，挡住
+//                            System.out.println(ball + " obstacle 1");
+                            break;
+                        } else if (angle <= left - circle) {
+                            canSee = false;  // angle在x正轴与left之间，挡住
+//                            System.out.println(ball + " obstacle 1.1");
+                            break;
+                        }
+                    } else if (right < 0) {  // 连线右侧小于0
+                        if (angle >= circle + right) {
+                            canSee = false;  // angle在right以上x正轴之下，挡住
+//                            System.out.println(ball + " obstacle 2");
+                            break;
+                        } else if (angle <= left) {
+                            canSee = false;  // angle在x正轴以上left之下，挡住
+//                            System.out.println(ball + " obstacle 2.1");
+                            break;
+                        }
+                    }
+                    if (left >= angle && right <= angle) {
+                        canSee = false;
+//                        System.out.println(ball + " obstacle 3");
+                        break;
+                    }
+                }
+            }
+            if (canSee) result++;
+        }
+        return result;
     }
+
+//    public boolean canSeeBall(double p1x, double p1y, double p2x, double p2y,
+//                              Ball selfBall1, Ball selfBall2) {
+//        Ball obs = getFirstObstacleBall(p1x, p1y, p2x, p2y, selfBall1, selfBall2);
+//        return obs == null;
+//    }
+
+//    public Ball getFirstObstacleBall(double p1x, double p1y, double p2x, double p2y,
+//                                     Ball selfBall1, Ball selfBall2) {
+////        double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
+//        double circle = Math.PI * 2;
+//
+//        double xDiff0 = p2x - p1x;
+//        double yDiff0 = p2y - p1y;
+//        double pointsDt = Math.hypot(xDiff0, yDiff0);
+//        double angle = Algebra.thetaOf(xDiff0, yDiff0);
+////        System.out.printf("%f %f %f %f\n", p1x, p1y, p2x, p2y);
+//
+//        for (Ball ball : getAllBalls()) {
+//            if (ball != selfBall1 && ball != selfBall2 && !ball.isPotted()) {
+//                // 计算这个球遮住的角度范围
+//                double xDiff = ball.getX() - p1x;
+//                double yDiff = ball.getY() - p1y;
+//                double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
+//                if (dt > pointsDt + gameValues.ballDiameter) {
+//                    continue;  // 障碍球比目标远，不可能挡
+//                }
+//                double connectionAngle = Algebra.thetaOf(xDiff, yDiff);  // 连线的绝对角度
+//
+//                double ballRadiusAngle = Math.asin(gameValues.ballRadius / dt);  // 从selfBall看ball占的的角
+//                double left = connectionAngle + ballRadiusAngle;
+//                double right = connectionAngle - ballRadiusAngle;
+////                System.out.println(angle + " " + left + " " + right);
+//
+//                if (left > circle) {  // 连线中心小于360，左侧大于360
+//                    if (angle >= right) {
+//                        return ball;  // angle在right与x正轴之间，挡住
+//                    }
+//                } else if (right <= 0) {  // 连线右侧小于0
+//                    if (angle > circle + right) {
+//                        return ball;  // angle在right以上x正轴之下，挡住
+//                    }
+//                }
+//                if (left >= angle && right <= angle) {
+//                    return ball;
+//                }
+//            }
+//        }
+//        return null;
+
+    // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
+//        double xDiff = p2x - p1x;
+//        double yDiff = p2y - p1y;
+//        double[] vec = new double[]{xDiff, yDiff};
+//        double[] unitVec = Algebra.unitVector(vec);
+//        double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
+//        double theta = Math.asin(simulateBallDiameter / dt);  // 连线与预测线的夹角
+//        double alpha = Algebra.thetaOf(unitVec);  // 两球连线与X轴的夹角
+//
+//        for (double d = -1.0; d <= 1.0; d += 0.25) {
+//            double ang = Algebra.normalizeAngle(alpha + theta * d);
+//            double[] angUnitVec = Algebra.unitVectorOfAngle(ang);
+////            System.out.println(ang + " orig ang: " + alpha);
+//
+//            PredictedPos pp = getPredictedHitBall(p1x, p1y, angUnitVec[0], angUnitVec[1]);
+////            System.out.println(pp);
+//            if (pp != null && pp.getTargetBall().getValue() == selfBall2.getValue()) return true;
+//        }
+//        return false;
+//    }
 
     /**
      * 返回{目标球与"从目标球处能直接看到的洞口"的连线的单位向量, 洞口坐标(注意不是洞底坐标)}。
@@ -396,7 +617,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //        BIG_LOOP:
         for (double[] hole : gameValues.allHoleOpenCenters) {
             if (pointToPointCanPassBall(targetBall.x, targetBall.y, hole[0], hole[1], targetBall,
-                    null)) {
+                    null, true)) {
                 double directionX = hole[0] - targetBall.x;
                 double directionY = hole[1] - targetBall.y;
                 double[] unitXY = Algebra.unitVector(directionX, directionY);
@@ -585,12 +806,17 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private boolean notTerminated = true;
         private boolean hitWall;
         private boolean checkCollisionAfterFirst;
+        private boolean recordTargetPos;
         private Phy phy;
 
-        WhitePrediction predict(Phy phy, double lenAfterWall, boolean checkCollisionAfterFirst) {
+        WhitePrediction predict(Phy phy,
+                                double lenAfterWall,
+                                boolean checkCollisionAfterFirst,
+                                boolean recordTargetPos) {
             this.phy = phy;
             this.lenAfterWall = lenAfterWall;
             this.checkCollisionAfterFirst = checkCollisionAfterFirst;
+            this.recordTargetPos = recordTargetPos;
             prediction = new WhitePrediction(cueBall);
 
             while (!oneRun() && notTerminated) {
@@ -606,10 +832,43 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
 
         /**
-         * 返回白球是否已经停止
+         * 返回是否所有运算已经完毕
          */
         private boolean oneRun() {
             cumulatedPhysicalTime += phy.calculateMs;
+            boolean whiteRun = oneRunWhite();
+            Ball firstBall = prediction.getFirstCollide();
+            if (recordTargetPos && firstBall != null) {
+                boolean firstBallRun = oneRunFirstBall(firstBall);
+                return whiteRun && firstBallRun;
+            } else {
+                return whiteRun;
+            }
+        }
+
+        private boolean oneRunFirstBall(Ball firstBall) {
+            firstBall.prepareMove();
+
+            if (firstBall.isLikelyStopped(phy)) return true;
+            if (firstBall.willPot(phy)) {
+                prediction.potFirstBall();
+                return true;
+            }
+
+            int holeAreaResult = firstBall.tryHitHoleArea(phy);
+            if (holeAreaResult != 0) {
+                tryHitBallOther(firstBall);
+                return false;
+            }
+            if (firstBall.tryHitWall()) {
+                return false;
+            }
+            tryHitBallOther(firstBall);
+            firstBall.normalMove(phy);
+            return false;
+        }
+
+        private boolean oneRunWhite() {
             prediction.addPointInPath(new double[]{cueBall.x, cueBall.y});
             cueBall.prepareMove();
 
@@ -630,7 +889,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             if (holeAreaResult != 0) {
                 // 袋口区域
                 if (prediction.getFirstCollide() == null) {
-                    tryHitBall();
+                    tryWhiteHitBall();
                 } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                     tryPassSecondBall();
                 }
@@ -652,7 +911,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 return false;
             }
             if (prediction.getFirstCollide() == null) {
-                if (tryHitBall()) {
+                if (tryWhiteHitBall()) {
                     cueBall.normalMove(phy);
                     return false;
                 }
@@ -662,6 +921,51 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             cueBall.normalMove(phy);
             return false;
         }
+
+//        private boolean ballPhysical(Ball ball) {
+//            boolean isCueBall = ball.isWhite();
+//            int holeAreaResult = ball.tryHitHoleArea(phy);
+//            if (holeAreaResult != 0) {
+//                // 袋口区域
+//                if (isCueBall) {
+//                    if (prediction.getFirstCollide() == null) {
+//                        tryHitBall();
+//                    } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
+//                        tryPassSecondBall();
+//                    }
+//                    if (holeAreaResult == 2) {
+//                        if (!hitWall) {
+//                            dtWhenHitFirstWall = cueBall.getDistanceMoved();
+//                        }
+//                        hitWall = true;
+//                        prediction.whiteCollidesHoleArcs();
+//                    }
+//                    return false;
+//                }
+//            }
+//            if (ball.tryHitWall()) {
+//                // 库边
+//                if (isCueBall) {
+//                    if (!hitWall) {
+//                        dtWhenHitFirstWall = cueBall.getDistanceMoved();
+//                    }
+//                    hitWall = true;
+//                    return false;
+//                }
+//            }
+//            if (isCueBall) {
+//                if (prediction.getFirstCollide() == null) {
+//                    if (tryHitBall()) {
+//                        cueBall.normalMove(phy);
+//                        return false;
+//                    }
+//                } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
+//                    tryPassSecondBall();
+//                }
+//                cueBall.normalMove(phy);
+//            }
+//            return false;
+//        }
 
         private void tryPassSecondBall() {
             for (Ball ball : getAllBalls()) {
@@ -675,7 +979,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
         }
 
-        private boolean tryHitBall() {
+        private void tryHitBallOther(Ball firstHit) {
+            for (Ball b : getAllBalls()) {
+                if (b != firstHit && !b.isPotted()) {
+                    if (firstHit.predictedDtToPoint(b.x, b.y) <
+                            gameValues.ballDiameter) {
+                        prediction.setFirstBallCollidesOther();
+                    }
+                }
+            }
+        }
+
+        private boolean tryWhiteHitBall() {
             for (Ball ball : getAllBalls()) {
                 if (!ball.isWhite() && !ball.isPotted()) {
                     if (cueBall.predictedDtToPoint(ball.x, ball.y) <
@@ -686,8 +1001,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         double[] ballDirectionUnitVec = Algebra.unitVector(ball.vx, ball.vy);
                         double[] whiteDirectionUnitVec = Algebra.unitVector(whiteVx, whiteVy);
                         double ballInitVMmPerS = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
-                        ball.vx = 0;
-                        ball.vy = 0;
+                        if (!recordTargetPos) {
+                            ball.vx = 0;
+                            ball.vy = 0;
+                        }
                         prediction.setFirstCollide(ball, hitWall,
                                 ballDirectionUnitVec[0], ballDirectionUnitVec[1],
                                 ballInitVMmPerS,
@@ -705,9 +1022,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         private Movement movement;
         private double cumulatedPhysicalTime = 0.0;
-        private double lastPhysicalTime = 0.0;
         private boolean notTerminated = true;
-        private Phy phy;
+        private final Phy phy;
+
+        private final int[] movementTypes = new int[getTable().nBalls()];
+        private final double[] movementValues = new double[getTable().nBalls()];
 
         PhysicsCalculator(Phy phy) {
             this.phy = phy;
@@ -746,15 +1065,19 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             boolean noBallMoving = true;
 //            long st = System.nanoTime();
             reorderRandomPool();
-            for (B ball : getAllBalls()) {
+            B[] allBalls = getAllBalls();
+            for (B ball : allBalls) {
                 ball.prepareMove();
             }
 
-            for (B ball : getAllBalls()) {
+            for (int i = 0; i < allBalls.length; i++) {
+                B ball = allBalls[i];
                 if (ball.isPotted()) continue;
                 if (!ball.isLikelyStopped(phy)) {
                     noBallMoving = false;
                     if (ball.willPot(phy)) {
+                        movementTypes[i] = MovementFrame.POT;
+                        movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         ball.pot();
                         newPotted.add(ball);
                         continue;
@@ -763,12 +1086,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (holeAreaResult != 0) {
                         // 袋口区域
                         tryHitBall(ball);
-                        if (holeAreaResult == 2) collidesWall = true;
+                        if (holeAreaResult == 2) {
+                            collidesWall = true;
+                            movementTypes[i] = MovementFrame.CUSHION;
+                            movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
+                        }
                         continue;
                     }
                     if (ball.tryHitWall()) {
                         // 库边
                         collidesWall = true;
+                        movementTypes[i] = MovementFrame.CUSHION;
+                        movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         continue;
                     }
 
@@ -782,13 +1111,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //                    if (noHit) ball.normalMove();
                 }
             }
-            lastPhysicalTime = cumulatedPhysicalTime;
+            double lastPhysicalTime = cumulatedPhysicalTime;
             cumulatedPhysicalTime += phy.calculateMs;
 
             if (Math.floor(cumulatedPhysicalTime / parent.frameTimeMs) !=
                     Math.floor(lastPhysicalTime / parent.frameTimeMs)) {
-                for (B ball : getAllBalls()) {
-                    movement.addFrame(ball, new MovementFrame(ball.x, ball.y, ball.isPotted()));
+                for (int i = 0; i < allBalls.length; i++) {
+                    B ball = allBalls[i];
+                    movement.addFrame(ball, 
+                            new MovementFrame(ball.x, ball.y, ball.isPotted(), 
+                                    movementTypes[i], movementValues[i]));
+                    movementTypes[i] = MovementFrame.NORMAL;
+                    movementValues[i] = 0.0;
                 }
             }
             return noBallMoving;

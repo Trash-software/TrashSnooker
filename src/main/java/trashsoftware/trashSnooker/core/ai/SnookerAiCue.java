@@ -33,6 +33,16 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     }
 
     @Override
+    protected DefenseChoice standardDefense() {
+        return null;
+    }
+
+    @Override
+    protected DefenseChoice solveSnooker() {
+        return null;
+    }
+
+    @Override
     public AiCueResult makeCue() {
         int behind = -game.getScoreDiff(aiPlayer);
         int rem = game.getRemainingScore();
@@ -45,6 +55,17 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 else if (behind > rem + 8 && rem <= 27) return null; // 清彩阶段，落后多了就认输
             }
             // 其他情况还可以挣扎
+            if (game.getCurrentTarget() == 1) {
+                if (game.remainingRedCount() == 1) {
+                    System.out.println("Last red, make snooker");
+                    DefenseChoice def = getBestDefenseChoice();
+                    if (def != null) return makeDefenseCue(def);
+                }
+            } else if (game.getCurrentTarget() != AbstractSnookerGame.RAW_COLORED_REP) {
+                System.out.println("Ordered colors, make snooker");
+                DefenseChoice def = getBestDefenseChoice();
+                if (def != null) return makeDefenseCue(def);
+            }
         }
         return regularCueDecision();
     }

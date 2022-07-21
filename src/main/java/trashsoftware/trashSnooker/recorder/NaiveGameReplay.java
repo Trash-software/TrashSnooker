@@ -86,7 +86,7 @@ public class NaiveGameReplay extends GameReplay {
 
             int steps = Util.bytesToInt32(stepsBuf, 0);
 
-            byte[] posBuf = new byte[17];
+            byte[] posBuf = new byte[26];
             byte[] ballValueBuf = new byte[1];
 
             Movement movement = new Movement(balls);
@@ -103,10 +103,12 @@ public class NaiveGameReplay extends GameReplay {
                 for (int s = 0; s < steps; s++) {
                     if (inputStream.read(posBuf) != posBuf.length) throw new IOException();
                     boolean potted = posBuf[0] == 1;
-                    double x = Util.bytesToDouble(posBuf, 1);
-                    double y = Util.bytesToDouble(posBuf, 9);
+                    int movementType = posBuf[1] & 0xff;
+                    double x = Util.bytesToDouble(posBuf, 2);
+                    double y = Util.bytesToDouble(posBuf, 10);
+                    double movementValue = Util.bytesToDouble(posBuf, 18);
 
-                    MovementFrame frame = new MovementFrame(x, y, potted);
+                    MovementFrame frame = new MovementFrame(x, y, potted, movementType, movementValue);
                     movement.addFrame(ball, frame);
                 }
             }

@@ -156,35 +156,41 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (lastCueFoul) {
             // 当从白球处无法看到任何一颗目标球的最薄边时
             List<Ball> currentTarBalls = getAllLegalBalls(currentTarget, false);
-            // 使用预测击球线的方法：如瞄准最薄边时，预测线显示打到的就是这颗球（不会碰到其他球），则没有自由球。
-            double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
-            for (Ball ball : currentTarBalls) {
-                // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
-                double xDiff = ball.getX() - cueBall.getX();
-                double yDiff = ball.getY() - cueBall.getY();
-                double[] vec = new double[]{xDiff, yDiff};
-                double[] unitVec = Algebra.unitVector(vec);
-                double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
-                double theta = Math.asin(simulateBallDiameter / dt);  // 连线与预测线的夹角
-                double alpha = Algebra.thetaOf(unitVec);  // 两球连线与X轴的夹角
-
-                double leftAng = Algebra.normalizeAngle(alpha + theta);
-                double rightAng = Algebra.normalizeAngle(alpha - theta);
-
-                double[] leftUnitVec = Algebra.unitVectorOfAngle(leftAng);
-                double[] rightUnitVec = Algebra.unitVectorOfAngle(rightAng);
-
-                PredictedPos leftPP = getPredictedHitBall(cueBall.getX(), cueBall.getY(),
-                        leftUnitVec[0], leftUnitVec[1]);
-                PredictedPos rightPP = getPredictedHitBall(cueBall.getX(), cueBall.getY(),
-                        rightUnitVec[0], rightUnitVec[1]);
-
-                if ((leftPP == null || leftPP.getTargetBall().getValue() == ball.getValue()) &&
-                        (rightPP == null || rightPP.getTargetBall().getValue() == ball.getValue()))
-                    // 对于红球而言，能看到任意一颗红球的左侧与任意（可为另一颗）的右侧，则没有自由球
-                    return false;  // 两侧都看得到或者看得穿，没有自由球
-            }
-            return true;
+            int canSeeBallCount = countSeeAbleTargetBalls(cueBall.getX(), cueBall.getY(),
+                    currentTarBalls, 3);
+            System.out.println("Target: " + currentTarget + ", Free ball check: " + 
+                    canSeeBallCount + ", n targets: " + currentTarBalls.size());
+            return canSeeBallCount == 0;
+            
+//            // 使用预测击球线的方法：如瞄准最薄边时，预测线显示打到的就是这颗球（不会碰到其他球），则没有自由球。
+//            double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
+//            for (Ball ball : currentTarBalls) {
+//                // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
+//                double xDiff = ball.getX() - cueBall.getX();
+//                double yDiff = ball.getY() - cueBall.getY();
+//                double[] vec = new double[]{xDiff, yDiff};
+//                double[] unitVec = Algebra.unitVector(vec);
+//                double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
+//                double theta = Math.asin(simulateBallDiameter / dt);  // 连线与预测线的夹角
+//                double alpha = Algebra.thetaOf(unitVec);  // 两球连线与X轴的夹角
+//
+//                double leftAng = Algebra.normalizeAngle(alpha + theta);
+//                double rightAng = Algebra.normalizeAngle(alpha - theta);
+//
+//                double[] leftUnitVec = Algebra.unitVectorOfAngle(leftAng);
+//                double[] rightUnitVec = Algebra.unitVectorOfAngle(rightAng);
+//
+//                PredictedPos leftPP = getPredictedHitBall(cueBall.getX(), cueBall.getY(),
+//                        leftUnitVec[0], leftUnitVec[1]);
+//                PredictedPos rightPP = getPredictedHitBall(cueBall.getX(), cueBall.getY(),
+//                        rightUnitVec[0], rightUnitVec[1]);
+//
+//                if ((leftPP == null || leftPP.getTargetBall().getValue() == ball.getValue()) &&
+//                        (rightPP == null || rightPP.getTargetBall().getValue() == ball.getValue()))
+//                    // 对于红球而言，能看到任意一颗红球的左侧与任意（可为另一颗）的右侧，则没有自由球
+//                    return false;  // 两侧都看得到或者看得穿，没有自由球
+//            }
+//            return true;
         } else {
             return false;
         }
@@ -658,6 +664,15 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (ahead >= remaining && ahead - remaining <= 8) {
             if (printPlayStage) System.out.println("接近锁定胜局！");
             return GamePlayStage.ENHANCE_WIN;
+        } else if (ahead > remaining) {
+            // todo: 需检查
+            if (singlePoleScore + remaining >= 147) {
+                if (printPlayStage) System.out.println("147路上");
+                return GamePlayStage.NORMAL;
+            }
+
+            if (printPlayStage) System.out.println("超分了，瞎JB打都行");
+            return GamePlayStage.NO_PRESSURE;
         }
         return GamePlayStage.NORMAL;
     }

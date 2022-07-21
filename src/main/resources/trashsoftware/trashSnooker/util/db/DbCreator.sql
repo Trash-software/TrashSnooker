@@ -28,13 +28,14 @@ CREATE TABLE IF NOT EXISTS GeneralRecord (
     EntireBeginTime TIMESTAMP REFERENCES Game ON DELETE CASCADE,
     FrameIndex INTEGER REFERENCES Game ON DELETE CASCADE,
     PlayerName VARCHAR(32) REFERENCES Player,
+    PlayerIsAI INTEGER,
     Attempts INTEGER DEFAULT 0,
     Successes INTEGER DEFAULT 0,
     LongAttempts INTEGER DEFAULT 0,
     LongSuccesses INTEGER DEFAULT 0,
     Defenses INTEGER DEFAULT 0,
     DefenseSuccesses INTEGER DEFAULT 0,
-    PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName)
+    PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName, PlayerIsAI)
 );
 
 -- 一局内的score
@@ -42,28 +43,31 @@ CREATE TABLE IF NOT EXISTS SnookerRecord (
     EntireBeginTime TIMESTAMP REFERENCES GeneralRecord ON DELETE CASCADE,
     FrameIndex INTEGER,
     PlayerName VARCHAR(32) REFERENCES Player,
+    PlayerIsAI INTEGER,
     TotalScore INTEGER DEFAULT 0,
     Breaks50 INTEGER DEFAULT 0,
     Highest INTEGER DEFAULT 0,
-    PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName)
+    PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName, PlayerIsAI)
 );
 
 CREATE TABLE IF NOT EXISTS ChineseEightRecord (
     EntireBeginTime TIMESTAMP REFERENCES GeneralRecord ON DELETE CASCADE,
     FrameIndex INTEGER,
     PlayerName VARCHAR(32) REFERENCES Player,
+    PlayerIsAI INTEGER,
     BreakClear INTEGER DEFAULT 0,
     ContinueClear INTEGER DEFAULT 0,
     Highest INTEGER DEFAULT 0,  -- 最多单杆连续进球
-    PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName)
+    PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName, PlayerIsAI)
 );
 
 CREATE TABLE IF NOT EXISTS SidePocketRecord (
     EntireBeginTime TIMESTAMP REFERENCES GeneralRecord ON DELETE CASCADE,
     FrameIndex INTEGER,
     PlayerName VARCHAR(32) REFERENCES Player,
+    PlayerIsAI INTEGER,
     BreakClear INTEGER DEFAULT 0,
     ContinueClear INTEGER DEFAULT 0,
     Highest INTEGER DEFAULT 0,  -- 最多单杆连续进球
-    PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName)
+    PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName, PlayerIsAI)
 );

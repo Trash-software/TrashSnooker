@@ -9,6 +9,16 @@ public class SidePocketAiCue extends AiCue<SidePocketGame, SidePocketPlayer> {
     }
 
     @Override
+    protected DefenseChoice standardDefense() {
+        return null;
+    }
+
+    @Override
+    protected DefenseChoice solveSnooker() {
+        return null;
+    }
+
+    @Override
     protected DefenseChoice breakCue() {
         return null;
     }

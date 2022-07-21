@@ -28,9 +28,10 @@
       "psy": 100,
       "ai": {
         "precision": 100,
+        "stable": 100,
         "position": 100,
         "defense": 100,
-        "attackPri": 100
+        "attackPri": 95
       }
     },
     "O‘Sullivan": {
@@ -59,7 +60,8 @@
       "category": "Professional",
       "psy": 90,
       "ai": {
-        "precision": 90,
+        "precision": 92,
+        "stable": 95,
         "position": 99,
         "defense": 100,
         "attackPri": 90
@@ -91,6 +93,7 @@
       "psy": 95,
       "ai": {
         "precision": 75,
+        "stable": 75,
         "position": 80,
         "defense": 50,
         "attackPri": 99
@@ -124,9 +127,10 @@
       "psy": 80,
       "ai": {
         "precision": 96,
+        "stable": 85,
         "position": 95,
         "defense": 75,
-        "attackPri": 95
+        "attackPri": 90
       }
     },
     "老油条": {
@@ -155,6 +159,7 @@
       "psy": 75,
       "ai": {
         "precision": 65,
+        "stable": 95,
         "position": 85,
         "defense": 90,
         "attackPri": 50
@@ -186,6 +191,7 @@
       "psy": 80,
       "ai": {
         "precision": 80,
+        "stable": 80,
         "position": 80,
         "defense": 80,
         "attackPri": 80
@@ -217,13 +223,14 @@
       "psy": 70,
       "ai": {
         "precision": 80,
+        "stable": 90,
         "position": 92,
         "defense": 75,
-        "attackPri": 90
+        "attackPri": 80
       }
     },
     "丁俊晖": {
-      "spin": 90.0,
+      "spin": 93.0,
       "precision": 90.0,
       "anglePrecision": 1.2,
       "longPrecision": 1,
@@ -247,14 +254,15 @@
       "category": "Professional",
       "psy": 75,
       "ai": {
-        "precision": 90,
+        "precision": 92,
+        "stable": 88,
         "position": 97,
         "defense": 90,
-        "attackPri": 90
+        "attackPri": 75
       }
     },
     "John Wizard": {
-      "spin": 96.0,
+      "spin": 90.0,
       "precision": 85.0,
       "anglePrecision": 1.1,
       "longPrecision": 0.9,
@@ -278,10 +286,11 @@
       "category": "Professional",
       "psy": 90,
       "ai": {
-        "precision": 85,
+        "precision": 88,
+        "stable": 85,
         "position": 99,
-        "defense": 95,
-        "attackPri": 85
+        "defense": 98,
+        "attackPri": 75
       }
     },
     "Matthew Stevens": {
@@ -310,6 +319,7 @@
       "psy": 40,
       "ai": {
         "precision": 90,
+        "stable": 88,
         "position": 96,
         "defense": 75,
         "attackPri": 90
@@ -342,10 +352,11 @@
       "category": "Professional",
       "psy": 70,
       "ai": {
-        "precision": 95,
+        "precision": 96,
+        "stable": 87,
         "position": 91,
         "defense": 82,
-        "attackPri": 95
+        "attackPri": 90
       }
     },
     "Murphy": {
@@ -374,9 +385,10 @@
       "psy": 75,
       "ai": {
         "precision": 88,
+        "stable": 96,
         "position": 95,
         "defense": 75,
-        "attackPri": 90
+        "attackPri": 85
       }
     },
     "流氓": {
@@ -407,6 +419,7 @@
       "psy": 95,
       "ai": {
         "precision": 97,
+        "stable": 70,
         "position": 50,
         "defense": 30,
         "attackPri": 99
@@ -437,10 +450,11 @@
       "category": "Professional",
       "psy": 85,
       "ai": {
-        "precision": 96,
+        "precision": 97,
+        "stable": 82,
         "position": 85,
         "defense": 60,
-        "attackPri": 98
+        "attackPri": 96
       }
     },
     "莽大力": {
@@ -471,6 +485,7 @@
       "psy": 95,
       "ai": {
         "precision": 50,
+        "stable": 60,
         "position": 95,
         "defense": 50,
         "attackPri": 99
@@ -502,6 +517,7 @@
       "psy": 50,
       "ai": {
         "precision": 30,
+        "stable": 50,
         "position": 10,
         "defense": 10,
         "attackPri": 100
@@ -533,9 +549,10 @@
       "psy": 60,
       "ai": {
         "precision": 90,
+        "stable": 85,
         "position": 90,
         "defense": 90,
-        "attackPri": 90
+        "attackPri": 80
       }
     },
     "玻璃心": {
@@ -564,9 +581,10 @@
       "psy": 15,
       "ai": {
         "precision": 92,
+        "stable": 80,
         "position": 97,
         "defense": 90,
-        "attackPri": 90
+        "attackPri": 87
       }
     }
   }

@@ -13,7 +13,7 @@ public class Movement {
     public Movement(Ball[] allBalls) {
         for (Ball ball : allBalls) {
             ArrayDeque<MovementFrame> positionList = new ArrayDeque<>();
-            MovementFrame frame = new MovementFrame(ball.getX(), ball.getY(), ball.isPotted());
+            MovementFrame frame = new MovementFrame(ball.getX(), ball.getY(), ball.isPotted(), MovementFrame.NORMAL, 0.0);
             positionList.addFirst(frame);
 
             ArrayDeque<MovementFrame> positionListImm = new ArrayDeque<>();

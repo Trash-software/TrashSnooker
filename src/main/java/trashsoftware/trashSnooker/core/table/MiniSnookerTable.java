@@ -22,4 +22,9 @@ public class MiniSnookerTable extends AbstractSnookerTable {
     public double[] blackBallPos() {
         return new double[]{gameValues.rightX - 243.0, gameValues.midY};  // todo: 存疑
     }
+
+    @Override
+    public int nBalls() {
+        return 14;
+    }
 }

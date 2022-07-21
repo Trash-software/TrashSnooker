@@ -21,4 +21,9 @@ public class SidePocketTable extends NumberedBallTable {
                 breakLineX,
                 view.canvasY(gameValues.topY + gameValues.innerHeight));
     }
+
+    @Override
+    public int nBalls() {
+        return 10;
+    }
 }

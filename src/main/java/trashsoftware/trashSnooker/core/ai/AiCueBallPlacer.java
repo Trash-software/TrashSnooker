@@ -75,10 +75,10 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
             for (Ball ball : legalBalls) {
                 for (double[] pos : legalPositions) {
 //                    System.out.println();
-                    if (game.canSeeBall(
+                    if (game.pointToPointCanPassBall(
                             pos[0], pos[1],
                             ball.getX(), ball.getY(),
-                            game.getCueBall(), ball)) return pos;
+                            game.getCueBall(), ball, true)) return pos;
                 }
             }
             // 要是还是null

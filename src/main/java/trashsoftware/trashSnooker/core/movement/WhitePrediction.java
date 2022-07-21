@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WhitePrediction {
+    public final Ball cueBall;
     public final double whiteX;
     public final double whiteY;
     private final List<double[]> whitePath = new ArrayList<>();
@@ -21,6 +22,12 @@ public class WhitePrediction {
     private double whiteDirectionYBeforeCollision;
     private double whiteCollisionX;
     private double whiteCollisionY;
+    // 第一颗碰到的球的初始位置
+    private double firstBallX;
+    private double firstBallY;
+    private boolean firstBallWillPot;
+    private boolean firstBallCollidesOther;
+    
     private boolean hitWallBeforeHitBall;
     private boolean cueBallWillPot;
     
@@ -31,8 +38,21 @@ public class WhitePrediction {
     private double pathLength;
 
     public WhitePrediction(Ball whiteBall) {
+        this.cueBall = whiteBall;
         whiteX = whiteBall.getX();
         whiteY = whiteBall.getY();
+    }
+
+    public void resetToInit() {
+        cueBall.setX(whiteX);
+        cueBall.setY(whiteY);
+        cueBall.pickup();
+        
+        if (firstCollide != null) {
+            firstCollide.setX(firstBallX);
+            firstCollide.setY(firstBallY);
+            firstCollide.pickup();
+        }
     }
 
     public List<double[]> getWhitePath() {
@@ -78,14 +98,40 @@ public class WhitePrediction {
         this.whiteDirectionYBeforeCollision = whiteDirectionYBeforeCollision;
         this.whiteCollisionX = whiteCollisionX;
         this.whiteCollisionY = whiteCollisionY;
+        this.firstBallX = firstCollide.getX();
+        this.firstBallY = firstCollide.getY();
     }
 
     public void potCueBall() {
         this.cueBallWillPot = true;
     }
+    
+    public void potFirstBall() {
+        this.firstBallWillPot = true;
+    }
+    
+    public void setFirstBallCollidesOther() {
+        this.firstBallCollidesOther = true;
+    }
+
+    public boolean isFirstBallCollidesOther() {
+        return firstBallCollidesOther;
+    }
 
     public boolean willCueBallPot() {
         return cueBallWillPot;
+    }
+
+    public boolean willFirstBallPot() {
+        return firstBallWillPot;
+    }
+
+    public double getFirstBallX() {
+        return firstBallX;
+    }
+
+    public double getFirstBallY() {
+        return firstBallY;
     }
 
     /**
