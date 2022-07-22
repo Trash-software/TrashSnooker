@@ -59,7 +59,7 @@ public class CoreTest {
         Game game = new SnookerGame(null, new GameSettings.Builder().build(), 1);
         Ball blue = game.getAllBalls()[18];
         boolean b = game.pointToPointCanPassBall(
-                blue.getX(), blue.getY(), hole[0], hole[1], blue, null, true
+                blue.getX(), blue.getY(), hole[0], hole[1], blue, null, true, true
         );
         System.out.println(b);
     }

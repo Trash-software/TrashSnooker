@@ -41,7 +41,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 double collisionPointY = ballPos[1] - game.getGameValues().ballDiameter * dirHole[0][1];
 
                 if (game.pointToPointCanPassBall(whitePos[0], whitePos[1],
-                        collisionPointX, collisionPointY, game.getCueBall(), ball, true)) {
+                        collisionPointX, collisionPointY, game.getCueBall(), ball, true,
+                        true)) {
                     // 从白球处看得到进球点
                     AttackChoice attackChoice = AttackChoice.createChoice(
                             game,

@@ -376,10 +376,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     /**
      * @param checkFullBall 如true，检查是否能过全球；如false，检查是否有薄边
+     * @param extendCheck   如true，多检查一颗球的距离。比如检查进球点，因为进球点是个虚拟的球，不会碰撞
      * @return 两点之间能不能过球
      */
     public boolean pointToPointCanPassBall(double p1x, double p1y, double p2x, double p2y,
-                                           Ball selfBall1, Ball selfBall2, boolean checkFullBall) {
+                                           Ball selfBall1, Ball selfBall2, boolean checkFullBall,
+                                           boolean extendCheck) {
 
         double shadowRadius = checkFullBall ? gameValues.ballDiameter : gameValues.ballRadius;
 //        double p2Radius = gameValues.ballRadius;
@@ -401,6 +403,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         for (Ball ball : getAllBalls()) {
             if (ball != selfBall1 && ball != selfBall2 && !ball.isPotted()) {
+                if (extendCheck) {
+                    // 障碍球占用了目标点
+                    double ballTargetDt = Math.hypot(ball.x - p2x, ball.y - p2y);
+                    if (ballTargetDt <= gameValues.ballDiameter) return false;
+                }
+                
                 // 计算这个球遮住的角度范围
                 double xDiff = ball.x - p1x;
                 double yDiff = ball.y - p1y;
@@ -617,7 +625,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //        BIG_LOOP:
         for (double[] hole : gameValues.allHoleOpenCenters) {
             if (pointToPointCanPassBall(targetBall.x, targetBall.y, hole[0], hole[1], targetBall,
-                    null, true)) {
+                    null, true, false)) {
                 double directionX = hole[0] - targetBall.x;
                 double directionY = hole[1] - targetBall.y;
                 double[] unitXY = Algebra.unitVector(directionX, directionY);

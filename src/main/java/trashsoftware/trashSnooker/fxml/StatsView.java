@@ -39,16 +39,18 @@ public class StatsView implements Initializable {
     private void initTree() {
         TreeItem<RecordTree> root = new TreeItem<>(new RecordTree("记录"));
         DBAccess db = DBAccess.getInstance();
-        
-        TreeItem<RecordTree> humanRoot = new TreeItem<>(new RecordTree("玩家"));
-        TreeItem<RecordTree> aiRoot = new TreeItem<>(new RecordTree("电脑"));
+
+        TreeItem<RecordTree> humanRoot = new TreeItem<>(new PlayerTypeTree(false));
+        TreeItem<RecordTree> aiRoot = new TreeItem<>(new PlayerTypeTree(true));
         root.getChildren().add(humanRoot);
         root.getChildren().add(aiRoot);
-        
+
         List<String> names = db.listAllPlayerNames();
         for (String name : names) {
-            humanRoot.getChildren().add(new PersonTreeItem(name, false));
-            aiRoot.getChildren().add(new PersonTreeItem(name, true));
+            PlayerAi paiHuman = new PlayerAi(name, false);
+            PlayerAi paiAi = new PlayerAi(name, true);
+            humanRoot.getChildren().add(new PersonTreeItem(paiHuman));
+            aiRoot.getChildren().add(new PersonTreeItem(paiAi));
         }
         treeView.setRoot(root);
         treeView.getSelectionModel().selectedItemProperty()
@@ -62,24 +64,21 @@ public class StatsView implements Initializable {
     }
 
     public static class PersonTreeItem extends TreeItem<RecordTree> {
-        private final String name;
-
-        private final boolean isAi;
+        private final PlayerAi playerAi;
         private boolean firstTimeChildren = true;
 
-        PersonTreeItem(String name, boolean isAi) {
-            this.name = name;
-            this.isAi = isAi;
-            
-            setValue(new RecordTree(this.name));
+        PersonTreeItem(PlayerAi playerAi) {
+            this.playerAi = playerAi;
+
+            setValue(new RecordTree(this.playerAi.toString()));
         }
 
-        private static ObservableList<TreeItem<RecordTree>> buildChildren(String name, boolean isAi) {
+        private static ObservableList<TreeItem<RecordTree>> buildChildren(PlayerAi playerAi) {
             ObservableList<TreeItem<RecordTree>> children = FXCollections.observableArrayList();
             for (GameType gameType : GameType.values()) {
-                TreeItem<RecordTree> typeItem = new TreeItem<>(new GameTypeTree(name, gameType, isAi));
-                typeItem.getChildren().add(new RecordSorting(gameType, name, isAi, "time"));
-                typeItem.getChildren().add(new RecordSorting(gameType, name, isAi, "opponent"));
+                TreeItem<RecordTree> typeItem = new TreeItem<>(new GameTypeTree(playerAi, gameType));
+                typeItem.getChildren().add(new RecordSorting(gameType, playerAi, "time"));
+                typeItem.getChildren().add(new RecordSorting(gameType, playerAi, "opponent"));
                 children.add(typeItem);
             }
             return children;
@@ -89,7 +88,7 @@ public class StatsView implements Initializable {
         public ObservableList<TreeItem<RecordTree>> getChildren() {
             if (firstTimeChildren) {
                 firstTimeChildren = false;
-                super.getChildren().setAll(buildChildren(name, isAi));
+                super.getChildren().setAll(buildChildren(playerAi));
             }
             return super.getChildren();
         }
@@ -101,20 +100,18 @@ public class StatsView implements Initializable {
 
         @Override
         public String toString() {
-            return name;
+            return playerAi.toString();
         }
     }
 
     public static class GameTypeTree extends RecordTree {
-        private final String name;
+        private final PlayerAi pai;
         private final GameType gameType;
-        private final boolean isAi;
 
-        GameTypeTree(String name, GameType gameType, boolean isAi) {
+        GameTypeTree(PlayerAi pai, GameType gameType) {
             super(getString(gameType));
-            this.name = name;
+            this.pai = pai;
             this.gameType = gameType;
-            this.isAi = isAi;
         }
 
         public static String getString(GameType gameType) {
@@ -141,7 +138,7 @@ public class StatsView implements Initializable {
             resultPane.setAlignment(Pos.CENTER);
 
             DBAccess db = DBAccess.getInstance();
-            int[] potRecords = db.getBasicPotStatusAll(gameType, name, isAi);
+            int[] potRecords = db.getBasicPotStatusAll(gameType, pai.playerName, pai.isAi);
 
             int rowIndex = 0;
 
@@ -181,7 +178,7 @@ public class StatsView implements Initializable {
                                     defSuccesses * 100.0 / defAttempts)), 2, rowIndex++);
 
             if (gameType.snookerLike) {
-                int[] breaksScores = db.getSnookerBreaksTotal(gameType, name, isAi);
+                int[] breaksScores = db.getSnookerBreaksTotal(gameType, pai.playerName, pai.isAi);
                 resultPane.add(new Label("总得分"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
                 resultPane.add(new Label("最高单杆"), 0, rowIndex);
@@ -193,7 +190,7 @@ public class StatsView implements Initializable {
                 resultPane.add(new Label("单杆147"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
             } else if (gameType == GameType.CHINESE_EIGHT || gameType == GameType.SIDE_POCKET) {
-                int[] breaksScores = db.getNumberedBallGamesTotal(gameType, name, isAi);
+                int[] breaksScores = db.getNumberedBallGamesTotal(gameType, pai.playerName, pai.isAi);
                 resultPane.add(new Label("炸清"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
                 resultPane.add(new Label("接清"), 0, rowIndex);
@@ -221,7 +218,7 @@ public class StatsView implements Initializable {
                                    final Button button, final int startRowIndex) {
             long st = System.currentTimeMillis();
             List<EntireGameTitle> allMatches =
-                    DBAccess.getInstance().getAllMatches(gameType, name, isAi);
+                    DBAccess.getInstance().getAllPveMatches(gameType, pai.playerName, pai.isAi);
             List<EntireGameRecord> entireRecords = new ArrayList<>();
             for (EntireGameTitle egt : allMatches) {
                 entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));
@@ -234,7 +231,7 @@ public class StatsView implements Initializable {
             int totalFrames = 0;
             int thisWinMatches = 0;
             for (EntireGameRecord egr : entireRecords) {
-                boolean thisIsP1 = egr.getTitle().player1Name.equals(name);
+                boolean thisIsP1 = egr.getTitle().player1Name.equals(pai.playerName);
                 int[] playerWinsInThisMatchSize =
                         playerWinsByTotalFrames.computeIfAbsent(
                                 egr.getTitle().totalFrames, k -> new int[2]);
@@ -275,9 +272,9 @@ public class StatsView implements Initializable {
 
                 resultPane.add(new Label("总胜场"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(thisWinMatchesFinal)), 1, rowIndex);
-                
+
                 resultPane.add(new Label(
-                                String.format("%.1f%%", 
+                                String.format("%.1f%%",
                                         (double) thisWinMatchesFinal / allMatches.size() * 100)),
                         2, rowIndex++);
 
@@ -286,12 +283,12 @@ public class StatsView implements Initializable {
 
                 resultPane.add(new Label("总胜局数"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(thisWinFramesFinal)), 1, rowIndex);
-                
+
                 resultPane.add(new Label(
                                 String.format("%.1f%%",
                                         (double) thisWinFramesFinal / totalFramesFinal * 100)),
                         2, rowIndex++);
-                
+
                 resultPane.add(new Separator(), 0, rowIndex++, 3, 1);
 
                 // 每种局长的胜率
@@ -328,27 +325,152 @@ public class StatsView implements Initializable {
         }
     }
 
+    public static class PlayerTypeTree extends RecordTree {
+
+        final boolean isAi;
+        boolean expand = false;
+
+        PlayerTypeTree(boolean isAi) {
+            super(isAi ? "电脑" : "玩家");
+
+            this.isAi = isAi;
+        }
+
+        @Override
+        void setRightPane(Pane rightPane) {
+            rightPane.getChildren().clear();
+            if (!expand) {
+                VBox vBox = new VBox();
+                Button button = new Button("查询记录");
+                button.setOnAction(event -> {
+                    expand = true;
+                    setRightPane(rightPane);
+                });
+                vBox.getChildren().add(button);
+                rightPane.getChildren().add(vBox);
+            } else {
+                GridPane gridPane = new GridPane();
+                gridPane.setVgap(10.0);
+                gridPane.setHgap(20.0);
+                gridPane.setAlignment(Pos.CENTER);
+
+                appendToPane(GameType.SNOOKER, gridPane);
+                appendToPane(GameType.MINI_SNOOKER, gridPane);
+                appendToPane(GameType.CHINESE_EIGHT, gridPane);
+                appendToPane(GameType.SIDE_POCKET, gridPane);
+
+                rightPane.getChildren().add(gridPane);
+            }
+        }
+
+        private void appendToPane(GameType gameType, GridPane gridPane) {
+            List<EntireGameTitle> egtList = DBAccess.getInstance().getAllPveMatches(gameType);
+            List<EntireGameRecord> entireRecords = new ArrayList<>();
+            for (EntireGameTitle egt : egtList) {
+                entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));
+            }
+
+            SortedMap<Integer, int[]> playerOppoWinsByTotalFrames = new TreeMap<>();
+            int thisWinFrames = 0;
+            int oppoWinFrames = 0;
+            int thisWinMatches = 0;
+            for (EntireGameRecord egr : entireRecords) {
+                boolean thisIsP1 = egr.getTitle().player1isAi == isAi;
+                int[] p1p2wins = egr.getP1P2WinsCount();
+                int[] playerOppoWinsInThisMatchSize =
+                        playerOppoWinsByTotalFrames.computeIfAbsent(
+                                egr.getTitle().totalFrames, k -> new int[2]);
+                if (thisIsP1) {
+                    if (p1p2wins[0] > p1p2wins[1]) {
+                        thisWinMatches++;
+                        playerOppoWinsInThisMatchSize[0]++;
+                    } else {
+                        playerOppoWinsInThisMatchSize[1]++;
+                    }
+                    thisWinFrames += p1p2wins[0];
+                    oppoWinFrames += p1p2wins[1];
+                } else {
+                    if (p1p2wins[1] > p1p2wins[0]) {
+                        thisWinMatches++;
+                        playerOppoWinsInThisMatchSize[0]++;
+                    } else {
+                        playerOppoWinsInThisMatchSize[1]++;
+                    }
+                    thisWinFrames += p1p2wins[1];
+                    oppoWinFrames += p1p2wins[0];
+                }
+            }
+
+
+            int rowIndex = gridPane.getRowCount();
+            gridPane.add(new Label(GameTypeTree.getString(gameType)), 2, rowIndex++);
+
+            String thisShown = isAi ? "电脑" : "玩家";
+            String oppoShown = isAi ? "玩家" : "电脑";
+
+            gridPane.add(new Label(thisShown), 0, rowIndex);
+            gridPane.add(new Label(oppoShown), 4, rowIndex);
+            gridPane.add(new Label(String.format("交手%d次，共%d局", egtList.size(),
+                            thisWinFrames + oppoWinFrames)),
+                    2, rowIndex);
+            rowIndex++;
+
+            double matchWinRate = (double) thisWinMatches / egtList.size() * 100;
+            gridPane.add(new Label("胜利"), 2, rowIndex);
+            gridPane.add(new Label(String.valueOf(thisWinMatches)), 0, rowIndex);
+            gridPane.add(new Label(String.format("%.1f%%", matchWinRate)), 1, rowIndex);
+            gridPane.add(new Label(String.valueOf(egtList.size() - thisWinMatches)),
+                    4, rowIndex);
+            gridPane.add(new Label(String.format("%.1f%%", 100 - matchWinRate)), 3, rowIndex);
+            rowIndex++;
+
+            double frameWinRate = (double) thisWinFrames / (thisWinFrames + oppoWinFrames) * 100;
+            gridPane.add(new Label("总胜局数"), 2, rowIndex);
+            gridPane.add(new Label(String.valueOf(thisWinFrames)), 0, rowIndex);
+            gridPane.add(new Label(String.format("%.1f%%", frameWinRate)), 1, rowIndex);
+            gridPane.add(new Label(String.valueOf(oppoWinFrames)),
+                    4, rowIndex);
+            gridPane.add(new Label(String.format("%.1f%%", 100 - frameWinRate)), 3, rowIndex);
+            rowIndex++;
+
+            gridPane.add(new Separator(), 0, rowIndex++, 5, 1);
+            for (Map.Entry<Integer, int[]> entry : playerOppoWinsByTotalFrames.entrySet()) {
+                int pWins = entry.getValue()[0];
+                int oWins = entry.getValue()[1];
+                double pRate = (double) pWins / (pWins + oWins) * 100;
+                gridPane.add(
+                        new Label(String.format("%d局%d胜制",
+                                entry.getKey(), entry.getKey() / 2 + 1)),
+                        2, rowIndex);
+                gridPane.add(new Label(String.valueOf(pWins)), 0, rowIndex);
+                gridPane.add(new Label(String.format("%.1f%%", pRate)), 1, rowIndex);
+                gridPane.add(new Label(String.format("%.1f%%", 100 - pRate)), 3, rowIndex);
+                gridPane.add(new Label(String.valueOf(oWins)), 4, rowIndex);
+                rowIndex++;
+            }
+            gridPane.add(new Separator(), 0, rowIndex, 5, 1);
+        }
+    }
+
     public static class RecordSorting extends TreeItem<RecordTree> {
         private final String shown;
-        private final String playerName;
-        private final boolean isAi;
+        private final PlayerAi playerAi;
         private final GameType gameType;
         private boolean firstTimeChildren = true;
 
-        RecordSorting(GameType gameType, String playerName, boolean isAi, String shown) {
+        RecordSorting(GameType gameType, PlayerAi playerAi, String shown) {
             this.shown = shown;
-            this.playerName = playerName;
+            this.playerAi = playerAi;
             this.gameType = gameType;
-            this.isAi = isAi;
 
             setValue(new RecordTree(getShowingStr()));
         }
 
         private static ObservableList<TreeItem<RecordTree>> buildChildren(
-                GameType gameType, String playerName, boolean isAi, String type) {
+                GameType gameType, PlayerAi playerAi, String type) {
             ObservableList<TreeItem<RecordTree>> children = FXCollections.observableArrayList();
             DBAccess dbAccess = DBAccess.getInstance();
-            List<EntireGameTitle> gameRecords = dbAccess.getAllMatches(gameType, playerName, isAi);
+            List<EntireGameTitle> gameRecords = dbAccess.getAllPveMatches(gameType, playerAi.playerName, playerAi.isAi);
             if ("time".equals(type)) {
                 // 按照比赛
                 for (EntireGameTitle egt : gameRecords) {
@@ -356,17 +478,22 @@ public class StatsView implements Initializable {
                 }
             } else {
                 // 按照对手
-                Map<String, List<EntireGameTitle>> opponentMap = new HashMap<>();
+                Map<PlayerAi, List<EntireGameTitle>> opponentMap = new HashMap<>();
                 for (EntireGameTitle egt : gameRecords) {
-                    String oppoName = egt.player1Name.equals(playerName) ?
+                    boolean oppoIsP2 = egt.player1Name.equals(playerAi.playerName);
+                    String oppoName = oppoIsP2 ?
                             egt.player2Name : egt.player1Name;
+                    boolean oppoIsAi = oppoIsP2 ?
+                            egt.player2isAi : egt.player1isAi;
+
+                    PlayerAi oppo = new PlayerAi(oppoName, oppoIsAi);
                     List<EntireGameTitle> list =
-                            opponentMap.get(oppoName);
+                            opponentMap.get(oppo);
                     if (list == null) {
                         list = new ArrayList<>();
-                        opponentMap.put(oppoName, list);
+                        opponentMap.put(oppo, list);
                         children.add(new TreeItem<>(
-                                new OpponentRecord(playerName, oppoName, list)));
+                                new OpponentRecord(playerAi, oppo, list)));
                     }
                     list.add(egt);
                 }
@@ -378,7 +505,7 @@ public class StatsView implements Initializable {
         public ObservableList<TreeItem<RecordTree>> getChildren() {
             if (firstTimeChildren) {
                 firstTimeChildren = false;
-                super.getChildren().setAll(buildChildren(gameType, playerName, isAi, shown));
+                super.getChildren().setAll(buildChildren(gameType, playerAi, shown));
             }
             return super.getChildren();
         }
@@ -399,11 +526,11 @@ public class StatsView implements Initializable {
     }
 
     public static class OpponentRecord extends RecordTree {
-        final String thisPlayer;
+        final PlayerAi thisPlayer;
         final List<EntireGameTitle> egtList;
 
-        OpponentRecord(String thisPlayer, String opponent, List<EntireGameTitle> egtList) {
-            super(opponent);
+        OpponentRecord(PlayerAi thisPlayer, PlayerAi opponent, List<EntireGameTitle> egtList) {
+            super(opponent.toString());
             this.thisPlayer = thisPlayer;
             this.egtList = egtList;
         }
@@ -429,7 +556,7 @@ public class StatsView implements Initializable {
             int oppoWinFrames = 0;
             int thisWinMatches = 0;
             for (EntireGameRecord egr : entireRecords) {
-                boolean thisIsP1 = egr.getTitle().player1Name.equals(thisPlayer);
+                boolean thisIsP1 = egr.getTitle().player1Name.equals(thisPlayer.playerName);
                 int[] p1p2wins = egr.getP1P2WinsCount();
                 int[] playerOppoWinsInThisMatchSize =
                         playerOppoWinsByTotalFrames.computeIfAbsent(
@@ -456,7 +583,7 @@ public class StatsView implements Initializable {
             }
 
             int rowIndex = 0;
-            gridPane.add(new Label(thisPlayer), 0, rowIndex);
+            gridPane.add(new Label(thisPlayer.playerName), 0, rowIndex);
             gridPane.add(new Label(oppoName), 4, rowIndex);
             gridPane.add(new Label(String.format("交手%d次，共%d局", egtList.size(),
                             thisWinFrames + oppoWinFrames)),
@@ -694,6 +821,36 @@ public class StatsView implements Initializable {
             }
 
             rightPane.getChildren().add(page);
+        }
+    }
+
+    public static class PlayerAi {
+        final String playerName;
+        final boolean isAi;
+        final String shown;
+
+        PlayerAi(String playerName, boolean isAi) {
+            this.playerName = playerName;
+            this.isAi = isAi;
+            this.shown = playerName + (isAi ? "(电脑)" : "(玩家)");
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            PlayerAi playerAi = (PlayerAi) o;
+            return isAi == playerAi.isAi && Objects.equals(playerName, playerAi.playerName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(playerName, isAi);
+        }
+
+        @Override
+        public String toString() {
+            return shown;
         }
     }
 }

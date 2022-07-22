@@ -127,8 +127,17 @@ public class DBAccess {
         storeAttemptsForOnePlayer(entireGame, frame,
                 frame.getPlayer2());
     }
+    
+    public List<EntireGameTitle> getAllPveMatches(GameType gameType) {
+        String typeStr = "'" + gameType.toSqlKey() + "'";
+        String query = "SELECT * FROM EntireGame " +
+                "WHERE GameType = " + typeStr + " AND " +
+                "((Player1IsAI = 1 AND Player2IsAI = 0) OR (Player1IsAI = 0 AND Player2IsAI = 1))" +
+                "ORDER BY EntireBeginTime;";
+        return getMatchesBy(gameType, query);
+    }
 
-    public List<EntireGameTitle> getAllMatches(GameType gameType, String playerName, boolean playerIsAi) {
+    public List<EntireGameTitle> getAllPveMatches(GameType gameType, String playerName, boolean playerIsAi) {
         String typeStr = "'" + gameType.toSqlKey() + "'";
         String playerStr = "'" + playerName + "'";
         int aiRep = playerIsAi ? 1 : 0;
@@ -139,6 +148,10 @@ public class DBAccess {
                 ") OR (Player2Name = " + playerStr + " AND " +
                 "Player2IsAI = " + aiRep + "))" +
                 "ORDER BY EntireBeginTime;";
+        return getMatchesBy(gameType, query);
+    }
+    
+    private List<EntireGameTitle> getMatchesBy(GameType gameType, String query) {
         List<EntireGameTitle> rtn = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();

@@ -319,7 +319,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         score++;  // 进了颗红球
                     } else {
                         foul = getMaxFoul(pottedBalls);  // 进了颗彩球
-                        foulReason = "目标球为红球，但击打了彩球";
+                        foulReason = "目标球为红球，但有彩球落袋";
                     }
                 }
             } else {  // 该打红球时打了彩球
