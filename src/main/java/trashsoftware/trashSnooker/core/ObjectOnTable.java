@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.phy.Phy;
+
 public abstract class ObjectOnTable {
     protected final GameValues values;
     protected final double radius;
@@ -54,7 +56,7 @@ public abstract class ObjectOnTable {
         return distance;
     }
 
-    protected void prepareMove() {
+    protected void prepareMove(Phy phy) {
         nextX = x + vx;
         nextY = y + vy;
     }
@@ -151,11 +153,11 @@ public abstract class ObjectOnTable {
                         return 2;
                     }
                     normalMove(phy);
-                    prepareMove();
+                    prepareMove(phy);
                     return 1;
                 } else {
                     normalMove(phy);
-                    prepareMove();
+                    prepareMove(phy);
                     return 1;
                 }
                 return 2;
@@ -189,11 +191,11 @@ public abstract class ObjectOnTable {
                         return 2;
                     }
                     normalMove(phy);
-                    prepareMove();
+                    prepareMove(phy);
                     return 1;
                 } else {
                     normalMove(phy);
-                    prepareMove();
+                    prepareMove(phy);
                     return 1;
                 }
                 return 2;
@@ -227,7 +229,7 @@ public abstract class ObjectOnTable {
                 }
             }
             normalMove(phy);
-            prepareMove();
+            prepareMove(phy);
             return 1;
         }
         return 0;

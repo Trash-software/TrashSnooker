@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.phy.Phy;
+
 public class CueBackPredictor {
     
     private final static double INTERVAL = 1.0;  // 每个预测的间隔，毫米
@@ -27,7 +29,7 @@ public class CueBackPredictor {
     }
     
     public Result predict() {
-        Phy phy = Phy.PREDICT;
+        Phy phy = game.entireGame.predictPhy;
         CueBackPredictObject predictor = 
                 new CueBackPredictObject(game.gameValues, cueRadius, INTERVAL);
         
@@ -38,7 +40,7 @@ public class CueBackPredictor {
         
         while (predictor.distance < maxDistance) {
             // 检测后方障碍球
-            predictor.prepareMove();
+            predictor.prepareMove(phy);
             Result res = checkBalls(predictor);
             if (res != null) return res;
             

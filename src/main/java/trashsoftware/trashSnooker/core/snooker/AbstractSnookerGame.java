@@ -29,9 +29,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private boolean doingFreeBall = false;  // 正在击打自由球
     private int lastFoulPoints = 0;
 
-    AbstractSnookerGame(GameView parent, GameSettings gameSettings, GameValues gameValues,
+    AbstractSnookerGame(GameView parent, EntireGame entireGame,
+                        GameSettings gameSettings, GameValues gameValues,
                         int frameIndex) {
-        super(parent, gameSettings, gameValues, frameIndex);
+        super(parent, entireGame, gameSettings, gameValues, frameIndex);
 
         redRowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0)) +
                 Game.MIN_PLACE_DISTANCE * 0.8;

@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.phy.Phy;
 
 import java.util.Arrays;
 

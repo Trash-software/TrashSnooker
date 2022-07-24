@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.phy.Phy;
+
 public class CueBackPredictObject extends ObjectOnTable {
     
     final double eachMove;

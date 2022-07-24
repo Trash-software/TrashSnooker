@@ -6,6 +6,7 @@ import trashsoftware.trashSnooker.core.ai.ChineseEightAiCue;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.table.ChineseEightTable;
@@ -33,8 +34,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     private final PoolBall eightBall;
     private final PoolBall[] allBalls = new PoolBall[16];
 
-    public ChineseEightBallGame(GameView parent, GameSettings gameSettings, int frameIndex) {
-        super(parent, gameSettings, GameValues.CHINESE_EIGHT_VALUES, frameIndex);
+    public ChineseEightBallGame(GameView parent, EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
+        super(parent, entireGame, gameSettings, GameValues.CHINESE_EIGHT_VALUES, frameIndex);
 
         eightBall = new PoolBall(8, false, gameValues);
         initBalls();
@@ -102,9 +103,9 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         return curResult;
     }
 
-    public Movement cue(CuePlayParams params) {
+    public Movement cue(CuePlayParams params, Phy phy) {
         createScoreResult();
-        return super.cue(params);
+        return super.cue(params, phy);
     }
     
     private void createScoreResult() {

@@ -1,6 +1,8 @@
 package trashsoftware.trashSnooker.core;
 
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
+import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.GameSaver;
@@ -18,12 +20,15 @@ public class EntireGame {
     InGamePlayer p1;
     InGamePlayer p2;
     Game<? extends Ball, ? extends Player> game;
+    public final TableCloth cloth;
+    public final Phy playPhy;
+    public final Phy predictPhy;
     private int p1Wins;
     private int p2Wins;
     private boolean p1Breaks;
 
     public EntireGame(GameView gameView, InGamePlayer p1, InGamePlayer p2, GameType gameType,
-                      int totalFrames) {
+                      int totalFrames, TableCloth cloth) {
         this.p1 = p1;
         this.p2 = p2;
         if (totalFrames % 2 != 1) {
@@ -32,6 +37,9 @@ public class EntireGame {
         this.gameType = gameType;
         this.totalFrames = totalFrames;
         this.gameView = gameView;
+        this.cloth = cloth;
+        this.playPhy = Phy.Factory.createPlayPhy(cloth);
+        this.predictPhy = Phy.Factory.createPredictPhy(cloth);
 
         DBAccess.getInstance().recordAnEntireGameStarts(this);
 

@@ -1,8 +1,9 @@
 package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.phy.Phy;
 
-import java.util.Arrays;
+import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     protected final int value;
@@ -12,6 +13,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     private boolean potted;
     private long msSinceCue;
     private Ball justHit;
+    private static final Random ERROR_GENERATOR = new Random();
+    private double currentXError;
+    private double currentYError;
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ballRadius);
@@ -160,36 +164,51 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         double ratio = reducedSpeed / speed;
         vx *= ratio;
         vy *= ratio;
+        
+        if (!phy.isPrediction) {
+            double xErr = ERROR_GENERATOR.nextGaussian() * phy.cloth.goodness.errorFactor / phy.calculationsPerSec / 1.2 + 
+                    phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec / 180;
+            double yErr = ERROR_GENERATOR.nextGaussian() * phy.cloth.goodness.errorFactor / phy.calculationsPerSec / 1.2;
+//            currentXError += xErr;
+//            currentYError += yErr;
+            vx += xErr;
+            vy += yErr;
+        }
 
         double xSpinDiff = xSpin - vx;
         double ySpinDiff = ySpin - vy;
 
-        // A linear reduce
+        // 对于滑的桌子，转速差越大，旋转reducer和effect反而越小
         double spinDiffTotal = Math.hypot(xSpinDiff, ySpinDiff);
-        double spinReduceRatio = phy.spinReducer / spinDiffTotal;
+        double spinDiffFactor = spinDiffTotal / Values.MAX_SPIN_DIFF * phy.calculationsPerSec;
+        spinDiffFactor = Math.min(1.0, spinDiffFactor);
+        double dynamicDragFactor = 1 - phy.cloth.smoothness.tailSpeedFactor * spinDiffFactor;
+        
+//        if (isWhite() && !phy.isPrediction) System.out.println(dynamicDragFactor);
+
+        // 乘和除抵了，所以第一部分是线性的
+        double spinReduceRatio = phy.spinReducer / spinDiffTotal * dynamicDragFactor;
         double xSpinReducer = Math.abs(xSpinDiff * spinReduceRatio);
         double ySpinReducer = Math.abs(ySpinDiff * spinReduceRatio);
 
 //        if (isWhite()) System.out.printf("vx: %f, vy: %f, xr: %f, yr: %f, spin: %f\n", vx, vy, xSpinReducer, ySpinReducer, SnookerGame.spinReducer);
 
-//        double spinEffect = 3000.0;  // 越小影响越大
-
         if (xSpinDiff < -xSpinReducer) {
-            vx += xSpinDiff / phy.spinEffect;
-            xSpin += xSpinReducer;
+            vx += xSpinDiff / phy.spinEffect * dynamicDragFactor;
+            xSpin += xSpinReducer * dynamicDragFactor;
         } else if (xSpinDiff >= xSpinReducer) {
-            vx += xSpinDiff / phy.spinEffect;
-            xSpin -= xSpinReducer;
+            vx += xSpinDiff / phy.spinEffect * dynamicDragFactor;
+            xSpin -= xSpinReducer * dynamicDragFactor;
         } else {
             xSpin = vx;
         }
 
         if (ySpinDiff < -ySpinReducer) {
-            vy += ySpinDiff / phy.spinEffect;
-            ySpin += ySpinReducer;
+            vy += ySpinDiff / phy.spinEffect * dynamicDragFactor;
+            ySpin += ySpinReducer * dynamicDragFactor;
         } else if (ySpinDiff >= ySpinReducer) {
-            vy += ySpinDiff / phy.spinEffect;
-            ySpin -= ySpinReducer;
+            vy += ySpinDiff / phy.spinEffect * dynamicDragFactor;
+            ySpin -= ySpinReducer * dynamicDragFactor;
         } else {
             ySpin = vy;
         }
@@ -473,9 +492,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         justHit = null;
     }
 
-    protected void prepareMove() {
-        super.prepareMove();
+    protected void prepareMove(Phy phy) {
+        super.prepareMove(phy);
         justHit = null;
+        currentXError = phy.cloth.goodness.fixedErrorFactor * phy.calculationsPerSec;
+        currentYError = 0.0;
     }
 
     public Color getColor() {

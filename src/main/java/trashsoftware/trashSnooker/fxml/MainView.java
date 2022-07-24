@@ -11,6 +11,7 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.GameSaver;
 import trashsoftware.trashSnooker.util.Recorder;
@@ -33,6 +34,12 @@ public class MainView implements Initializable {
     ComboBox<Integer> totalFramesBox;
 
     @FXML
+    ComboBox<TableCloth.Smoothness> clothSmoothBox;
+    
+    @FXML
+    ComboBox<TableCloth.Goodness> clothGoodBox;
+
+    @FXML
     ComboBox<PlayerPerson> player1Box, player2Box;
 
     @FXML
@@ -46,6 +53,7 @@ public class MainView implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initTotalFramesBox();
+        initClothBox();
         loadPlayerList();
         loadCueList();
 
@@ -66,6 +74,13 @@ public class MainView implements Initializable {
                 21, 23, 25, 27, 29, 31, 33, 35
         );
         totalFramesBox.getSelectionModel().select(0);
+    }
+    
+    private void initClothBox() {
+        clothSmoothBox.getItems().addAll(TableCloth.Smoothness.values());
+        clothGoodBox.getItems().addAll(TableCloth.Goodness.values());
+        clothSmoothBox.getSelectionModel().select(1);
+        clothGoodBox.getSelectionModel().select(1);
     }
 
     private void loadCueList() {
@@ -270,6 +285,8 @@ public class MainView implements Initializable {
             igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue(), 1);
             igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue(), 2);
         }
+        
+        TableCloth cloth = new TableCloth(clothGoodBox.getValue(), clothSmoothBox.getValue());
 
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -287,7 +304,7 @@ public class MainView implements Initializable {
 
             GameView gameView = loader.getController();
             gameView.setup(stage, gameType, totalFramesBox.getSelectionModel().getSelectedItem(),
-                    igp1, igp2);
+                    igp1, igp2, cloth);
 
             stage.show();
         } catch (Exception e) {

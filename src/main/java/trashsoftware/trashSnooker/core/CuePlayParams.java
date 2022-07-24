@@ -86,7 +86,7 @@ public class CuePlayParams {
 //        double leftRightSpin = getUnitSideSpin();  // 
         if (frontBackSpin > 0) {
             // 高杆补偿
-            frontBackSpin *= 1.25;
+            frontBackSpin *= Values.HIGH_CUE_FACTOR;
         }
 
         // 小力高低杆补偿

@@ -20,8 +20,8 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
     private boolean isBreaking = true;
     private String foulReason;
 
-    public SidePocketGame(GameView parent, GameSettings gameSettings, int frameIndex) {
-        super(parent, gameSettings, GameValues.SIDE_POCKET, frameIndex);
+    public SidePocketGame(GameView parent, EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
+        super(parent, entireGame, gameSettings, GameValues.SIDE_POCKET, frameIndex);
 
         initBalls();
     }

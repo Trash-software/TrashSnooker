@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.snooker;
 
+import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.GameSettings;
 import trashsoftware.trashSnooker.core.GameType;
 import trashsoftware.trashSnooker.core.GameValues;
@@ -9,8 +10,9 @@ import trashsoftware.trashSnooker.fxml.GameView;
 
 public class MiniSnookerGame extends AbstractSnookerGame {
 
-    public MiniSnookerGame(GameView parent, GameSettings gameSettings, int frameIndex) {
-        super(parent, gameSettings, GameValues.MINI_SNOOKER_VALUES, frameIndex);
+    public MiniSnookerGame(GameView parent, EntireGame entireGame, 
+                           GameSettings gameSettings, int frameIndex) {
+        super(parent, entireGame, gameSettings, GameValues.MINI_SNOOKER_VALUES, frameIndex);
     }
 
     @Override

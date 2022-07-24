@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.CuePlayParams;
+import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 
@@ -20,7 +21,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double dirX = aimingPosX - game.getCueBall().getX();
         double dirY = aimingPosY - game.getCueBall().getY();
         double[] unitXY = Algebra.unitVector(dirX, dirY);
-        double selectedPower = actualPowerToSelectedPower(40.0);
+        double selectedPower = actualPowerToSelectedPower(34.0);
         CuePlayParams cpp = CuePlayParams.makeIdealParams(
                 unitXY[0],
                 unitXY[1],
@@ -43,7 +44,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     }
 
     @Override
-    public AiCueResult makeCue() {
+    public AiCueResult makeCue(Phy phy) {
         int behind = -game.getScoreDiff(aiPlayer);
         int rem = game.getRemainingScore();
         if (behind > rem) {
@@ -58,16 +59,16 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             if (game.getCurrentTarget() == 1) {
                 if (game.remainingRedCount() == 1) {
                     System.out.println("Last red, make snooker");
-                    DefenseChoice def = getBestDefenseChoice();
+                    DefenseChoice def = getBestDefenseChoice(phy);
                     if (def != null) return makeDefenseCue(def);
                 }
             } else if (game.getCurrentTarget() != AbstractSnookerGame.RAW_COLORED_REP) {
                 System.out.println("Ordered colors, make snooker");
-                DefenseChoice def = getBestDefenseChoice();
+                DefenseChoice def = getBestDefenseChoice(phy);
                 if (def != null) return makeDefenseCue(def);
             }
         }
-        return regularCueDecision();
+        return regularCueDecision(phy);
     }
 
 }

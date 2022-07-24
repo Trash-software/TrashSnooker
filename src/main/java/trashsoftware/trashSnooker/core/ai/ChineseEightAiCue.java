@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
+import trashsoftware.trashSnooker.core.phy.Phy;
 
 public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightBallPlayer> {
 
@@ -53,7 +54,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     @Override
-    public AiCueResult makeCue() {
-        return regularCueDecision();
+    public AiCueResult makeCue(Phy phy) {
+        return regularCueDecision(phy);
     }
 }

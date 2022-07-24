@@ -35,6 +35,8 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
+import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
@@ -231,7 +233,8 @@ public class GameView implements Initializable {
     }
 
     public void setup(Stage stage, GameType gameType, int totalFrames,
-                      InGamePlayer player1, InGamePlayer player2) {
+                      InGamePlayer player1, InGamePlayer player2,
+                      TableCloth cloth) {
         this.stage = stage;
         this.gameType = gameType;
         this.player1 = player1;
@@ -241,7 +244,7 @@ public class GameView implements Initializable {
         player2Label.setText(player2.getPlayerPerson().getName());
         totalFramesLabel.setText(String.format("(%d)", totalFrames));
 
-        startGame(totalFrames);
+        startGame(totalFrames, cloth);
 
         setupPowerSlider();
         generateScales();
@@ -614,8 +617,8 @@ public class GameView implements Initializable {
         stage.getScene().setCursor(Cursor.DEFAULT);
     }
 
-    private void startGame(int totalFrames) {
-        game = new EntireGame(this, player1, player2, gameType, totalFrames);
+    private void startGame(int totalFrames, TableCloth cloth) {
+        game = new EntireGame(this, player1, player2, gameType, totalFrames, cloth);
         powerSlider.setMajorTickUnit(
                 game.getGame().getCuingPlayer().getPlayerPerson().getControllablePowerPercentage());
     }
@@ -883,7 +886,7 @@ public class GameView implements Initializable {
                     predictionWithRandom.getPredictedWhitePos()[1]);
         }
 
-        movement = game.getGame().cue(params);
+        movement = game.getGame().cue(params, game.playPhy);
         game.getGame().getRecorder().recordMovement(movement);
 
         if (currentAttempt != null) {
@@ -929,7 +932,7 @@ public class GameView implements Initializable {
                 game.getGame().getRecorder().writeBallInHandPlacement();
                 Platform.runLater(this::draw);
             }
-            AiCueResult cueResult = game.getGame().aiCue(player);
+            AiCueResult cueResult = game.getGame().aiCue(player, game.predictPhy);
             System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
             if (cueResult == null) {
                 aiCalculating = false;
@@ -951,7 +954,7 @@ public class GameView implements Initializable {
 
                 double whiteStartingX = game.getGame().getCueBall().getX();
                 double whiteStartingY = game.getGame().getCueBall().getY();
-                movement = game.getGame().cue(realParams);
+                movement = game.getGame().cue(realParams, game.playPhy);
                 game.getGame().getRecorder().recordMovement(movement);
 
                 aiCalculating = false;
@@ -1036,7 +1039,7 @@ public class GameView implements Initializable {
                     stage,
                     "真的要开始新游戏吗？", "请确认",
                     () -> {
-                        startGame(game.totalFrames);
+                        startGame(game.totalFrames, game.cloth);
                         drawTargetBoard();
                         drawScoreBoard(game.getGame().getCuingPlayer());
                     },
@@ -1831,7 +1834,8 @@ public class GameView implements Initializable {
         CuePlayParams[] possibles = generateCueParamsSd1();
         WhitePrediction[] clockwise = new WhitePrediction[8];
         WhitePrediction center = game.getGame().predictWhite(
-                possibles[0], Phy.PREDICT, whitePredictLenAfterWall, false, false, true);
+                possibles[0], game.predictPhy, whitePredictLenAfterWall, 
+                false, false, true);
         if (center == null) return;
 
 //        PredictedPos coll = game.getGame().getPredictedHitBall(
@@ -1860,7 +1864,7 @@ public class GameView implements Initializable {
 
         for (int i = 1; i < possibles.length; i++) {
             clockwise[i - 1] = game.getGame().predictWhite(
-                    possibles[i], Phy.PREDICT, whitePredictLenAfterWall,
+                    possibles[i], game.predictPhy, whitePredictLenAfterWall,
                     false, false, true
             );
         }

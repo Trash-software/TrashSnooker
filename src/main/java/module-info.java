@@ -28,4 +28,5 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.util;
     exports trashsoftware.trashSnooker.core.movement;
     exports trashsoftware.trashSnooker.util.db;
+    exports trashsoftware.trashSnooker.core.phy;
 }

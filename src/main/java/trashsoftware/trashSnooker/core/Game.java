@@ -1,7 +1,5 @@
 package trashsoftware.trashSnooker.core;
 
-import trashsoftware.trashSnooker.audio.GameAudio;
-import trashsoftware.trashSnooker.audio.SoundPlayer;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.movement.Movement;
@@ -9,6 +7,7 @@ import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
+import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
@@ -38,6 +37,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public final int frameIndex;
     protected final Set<B> newPotted = new HashSet<>();
     protected final GameView parent;
+    protected final EntireGame entireGame;
     protected final Map<B, double[]> recordedPositions = new HashMap<>();  // 记录上一杆时球的位置，复位用
     protected final B cueBall;
     protected final GameSettings gameSettings;
@@ -69,9 +69,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     private B[] randomOrderBallPool2;
     private PhysicsCalculator physicsCalculator;
 
-    protected Game(GameView parent, GameSettings gameSettings, GameValues gameValues,
+    protected Game(GameView parent, EntireGame entireGame, 
+                   GameSettings gameSettings, GameValues gameValues,
                    int frameIndex) {
         this.parent = parent;
+        this.entireGame = entireGame;
         this.gameValues = gameValues;
         this.gameSettings = gameSettings;
         this.frameIndex = frameIndex;
@@ -88,13 +90,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         int frameIndex = entireGame.getP1Wins() + entireGame.getP2Wins() + 1;
         Game<? extends Ball, ? extends Player> game;
         if (gameType == GameType.SNOOKER) {
-            game = new SnookerGame(gameView, gameSettings, frameIndex);
+            game = new SnookerGame(gameView, entireGame, gameSettings, frameIndex);
         } else if (gameType == GameType.MINI_SNOOKER) {
-            game = new MiniSnookerGame(gameView, gameSettings, frameIndex);
+            game = new MiniSnookerGame(gameView, entireGame, gameSettings, frameIndex);
         } else if (gameType == GameType.CHINESE_EIGHT) {
-            game = new ChineseEightBallGame(gameView, gameSettings, frameIndex);
+            game = new ChineseEightBallGame(gameView, entireGame, gameSettings, frameIndex);
         } else if (gameType == GameType.SIDE_POCKET) {
-            game = new SidePocketGame(gameView, gameSettings, frameIndex);
+            game = new SidePocketGame(gameView, entireGame, gameSettings, frameIndex);
         } else throw new RuntimeException("Unexpected game type " + gameType);
 
         try {
@@ -155,7 +157,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return recorder;
     }
 
-    public Movement cue(CuePlayParams params) {
+    public Movement cue(CuePlayParams params, Phy phy) {
         cueStartTime = System.currentTimeMillis();
         if (cueFinishTime != 0) thinkTime = (int) (cueStartTime - cueFinishTime);
 
@@ -168,20 +170,20 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         recordedTarget = currentTarget;
 
         lastCueVx = params.vx;
-        cueBall.setVx(params.vx / Phy.PLAY.calculationsPerSec);
-        cueBall.setVy(params.vy / Phy.PLAY.calculationsPerSec);
+        cueBall.setVx(params.vx / phy.calculationsPerSec);
+        cueBall.setVy(params.vy / phy.calculationsPerSec);
         params.xSpin = params.xSpin == 0.0d ? params.vx / 1000.0 : params.xSpin;  // 避免完全无旋转造成的NaN
         params.ySpin = params.ySpin == 0.0d ? params.vy / 1000.0 : params.ySpin;
         cueBall.setSpin(
-                params.xSpin / Phy.PLAY.calculationsPerSec,
-                params.ySpin / Phy.PLAY.calculationsPerSec,
-                params.sideSpin / Phy.PLAY.calculationsPerSec);
-        return physicalCalculate();
+                params.xSpin / phy.calculationsPerSec,
+                params.ySpin / phy.calculationsPerSec,
+                params.sideSpin / phy.calculationsPerSec);
+        return physicalCalculate(phy);
     }
 
-    public AiCueResult aiCue(Player aiPlayer) {
+    public AiCueResult aiCue(Player aiPlayer, Phy phy) {
         AiCue<?, ?> aiCue = createAiCue((P) aiPlayer);
-        return aiCue.makeCue();
+        return aiCue.makeCue(phy);
     }
 
     /**
@@ -666,7 +668,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         ball2.setVx(1);
         ball2.setVy(0.0);
 
-        return physicalCalculate();
+        return physicalCalculate(entireGame.playPhy);
     }
 
     public void tieTest() {
@@ -752,10 +754,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return false;
     }
 
-    private Movement physicalCalculate() {
+    private Movement physicalCalculate(Phy phy) {
 //        physicsTimer = new Timer();
         long st = System.currentTimeMillis();
-        physicsCalculator = new PhysicsCalculator(Phy.PLAY);
+        physicsCalculator = new PhysicsCalculator(phy);
         Movement movement = physicsCalculator.calculate();
         System.out.println("Physical calculation ends in " + (System.currentTimeMillis() - st) + " ms");
 
@@ -855,7 +857,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
 
         private boolean oneRunFirstBall(Ball firstBall) {
-            firstBall.prepareMove();
+            firstBall.prepareMove(phy);
 
             if (firstBall.isLikelyStopped(phy)) return true;
             if (firstBall.willPot(phy)) {
@@ -878,7 +880,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         private boolean oneRunWhite() {
             prediction.addPointInPath(new double[]{cueBall.x, cueBall.y});
-            cueBall.prepareMove();
+            cueBall.prepareMove(phy);
 
             if (cueBall.isLikelyStopped(phy)) return true;
             if (cueBall.willPot(phy)) {
@@ -1075,7 +1077,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             reorderRandomPool();
             B[] allBalls = getAllBalls();
             for (B ball : allBalls) {
-                ball.prepareMove();
+                ball.prepareMove(phy);
             }
 
             for (int i = 0; i < allBalls.length; i++) {

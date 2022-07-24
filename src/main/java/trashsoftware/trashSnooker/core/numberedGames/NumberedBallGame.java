@@ -12,9 +12,9 @@ import java.util.Map;
 public abstract class NumberedBallGame<P extends NumberedBallPlayer> 
         extends Game<PoolBall, P> {
 
-    protected NumberedBallGame(GameView parent, GameSettings gameSettings, 
+    protected NumberedBallGame(GameView parent, EntireGame entireGame, GameSettings gameSettings, 
                                GameValues gameValues, int frameIndex) {
-        super(parent, gameSettings, gameValues, frameIndex);
+        super(parent, entireGame, gameSettings, gameValues, frameIndex);
     }
 
     @Override

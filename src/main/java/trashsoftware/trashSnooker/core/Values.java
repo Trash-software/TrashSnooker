@@ -20,12 +20,16 @@ public class Values {
     // 击球最大速度，mm/s
     public static final double MAX_POWER_SPEED = 6400.0;
     // 由旋转产生的理论最大瞬时速度（该速度不可能达到），mm/s
-    public static final double MAX_SPIN_SPEED = 7400.0;
+    public static final double MAX_SPIN_SPEED = 6400.0;
+    // 因为ball的spin值是球想要达到的速度，范围
+    public static final double HIGH_CUE_FACTOR = 1.6;
     // 由侧旋产生的最大瞬时速度，mm/s
     public static final double MAX_SIDE_SPIN_SPEED = 1600.0;
     public static final int DETAILED_PHYSICAL = 12;
     // 每两次物理碰撞运算之间的最大间隔距离
     public static final double PREDICTION_INTERVAL = MAX_POWER_SPEED / 1000.0 / DETAILED_PHYSICAL;
+    
+    public static final double MAX_SPIN_DIFF = Math.max(MAX_SPIN_SPEED, MAX_POWER_SPEED);
 
     public static final Color WHITE = Color.SNOW;
     public static final Color RED = Color.RED;
