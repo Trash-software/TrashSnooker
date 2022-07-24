@@ -10,6 +10,7 @@ public class AiCueResult {
     
     private double unitX, unitY;
     private final double selectedFrontBackSpin;  // 球手想要的高低杆，范围(-1.0, 1.0)，高杆正低杆负
+    private final double selectedSideSpin;
     private final double selectedPower;
     private final boolean attack;
     private final double[] targetOrigPos;
@@ -22,12 +23,15 @@ public class AiCueResult {
                        double[] targetOrigPos,
                        double[][] targetDirHole,
                        Ball targetBall,
-                       double unitX, double unitY,
+                       double unitX, 
+                       double unitY,
                        double selectedFrontBackSpin,
+                       double selectedSideSpin,
                        double selectedPower) {
         this.unitX = unitX;
         this.unitY = unitY;
         this.selectedFrontBackSpin = selectedFrontBackSpin;
+        this.selectedSideSpin = selectedSideSpin;
         this.selectedPower = selectedPower;
         this.attack = attack;
         this.targetOrigPos = targetOrigPos;
@@ -81,6 +85,10 @@ public class AiCueResult {
 
     public double getSelectedFrontBackSpin() {
         return selectedFrontBackSpin;
+    }
+
+    public double getSelectedSideSpin() {
+        return selectedSideSpin;
     }
 
     public double getUnitX() {

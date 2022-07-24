@@ -69,6 +69,12 @@ public class CuePlayParams {
         return Algebra.rotateVector(cueDirX, cueDirY, offsetAngleRad);
     }
 
+    public static double[] aimingUnitXYIfSpin(double unitSideSpin, double power,
+                                              double cueDirX, double cueDirY) {
+        double offsetAngleRad = -unitSideSpin * power / 2400.0;
+        return Algebra.rotateVector(cueDirX, cueDirY, -offsetAngleRad);
+    }
+
     /**
      * @param vx
      * @param vy

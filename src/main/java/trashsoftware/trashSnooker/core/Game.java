@@ -868,9 +868,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             int holeAreaResult = firstBall.tryHitHoleArea(phy);
             if (holeAreaResult != 0) {
                 tryHitBallOther(firstBall);
+                if (holeAreaResult == 2) {
+                    prediction.firstBallHitCushion();
+                }
                 return false;
             }
             if (firstBall.tryHitWall()) {
+                prediction.firstBallHitCushion();
                 return false;
             }
             tryHitBallOther(firstBall);
@@ -909,6 +913,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
                     hitWall = true;
                     prediction.whiteCollidesHoleArcs();
+                    prediction.whiteHitCushion();
                 }
                 return false;
             }
@@ -918,6 +923,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     dtWhenHitFirstWall = cueBall.getDistanceMoved();
                 }
                 hitWall = true;
+                prediction.whiteHitCushion();
                 return false;
             }
             if (prediction.getFirstCollide() == null) {

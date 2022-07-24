@@ -14,8 +14,21 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     public static final double ATTACK_DIFFICULTY_THRESHOLD = 6000.0;  // 越大，AI越倾向于进攻
     public static final double NO_DIFFICULTY_ANGLE_RAD = 0.3;
     public static final double EACH_BALL_SEE_PRICE = 0.5;
-    private static final double[] FRONT_BACK_SPIN_POINTS =
-            {0.0, -0.27, 0.27, -0.54, 0.54, -0.81, 0.81};
+    //    private static final double[] FRONT_BACK_SPIN_POINTS =
+//            {0.0, -0.27, 0.27, -0.54, 0.54, -0.81, 0.81};
+    private static final double[][] SPIN_POINTS = {  // 高低杆，左右塞
+            {0.0, 0.0}, {0.0, 0.35}, {0.0, -0.35}, {0.0, 0.7}, {0.0, -0.7},
+            {-0.27, 0.0}, {-0.27, 0.3}, {-0.27, -0.3}, {-0.27, 0.6}, {-0.27, -0.6},
+            {0.27, 0.0}, {0.27, 0.3}, {0.27, -0.3}, {0.27, 0.6}, {0.27, -0.6},
+            {-0.54, 0.0}, {-0.54, 0.25}, {-0.54, -0.25}, {-0.54, 0.5}, {-0.54, -0.5},
+            {0.54, 0.0}, {0.54, 0.25}, {0.54, -0.25}, {0.54, 0.5}, {0.54, -0.5},
+            {-0.81, 0.0}, {-0.76, 0.3}, {-0.76, -0.3},
+            {0.81, 0.0}, {0.76, 0.3}, {0.76, -0.3}
+    };
+    static {
+        Arrays.sort(SPIN_POINTS, Comparator.comparingDouble(a -> Math.abs(a[0]) + Math.abs(a[1])));
+    }
+    
     protected G game;
     protected P aiPlayer;
 
@@ -94,22 +107,35 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
     private IntegratedAttackChoice createIntAttackChoices(double selectedPower,
                                                           double selectedFrontBackSpin,
+                                                          double selectedSideSpin,
                                                           AttackChoice attackChoice,
+                                                          double playerSelfPrice,
                                                           GameValues values,
                                                           int nextTarget,
                                                           List<Ball> nextStepLegalBalls,
                                                           Phy phy) {
 //        System.out.print(selectedPower);
+        double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
+                game.getCuingPlayer().getInGamePlayer().getCurrentCue(game));
+        double actualPower = selectedPowerToActualPower(selectedPower);
+        double[] directionIfApplySideSpin = CuePlayParams.aimingUnitXYIfSpin(
+                actualSideSpin, 
+                actualPower,
+                attackChoice.cueDirectionUnitVector[0],
+                attackChoice.cueDirectionUnitVector[1]
+        );
+        
+        AttackChoice correctedChoice = attackChoice.copyWithNewDirection(directionIfApplySideSpin);
 
         CuePlayParams params = CuePlayParams.makeIdealParams(
-                attackChoice.cueDirectionUnitVector[0],
-                attackChoice.cueDirectionUnitVector[1],
+                correctedChoice.cueDirectionUnitVector[0],
+                correctedChoice.cueDirectionUnitVector[1],
                 CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin,
                         aiPlayer.getInGamePlayer(),
                         game.getCuingPlayer().getInGamePlayer().getCurrentCue(game)),
-                0,
+                actualSideSpin,
                 5.0,
-                selectedPowerToActualPower(selectedPower)
+                actualPower
         );
         // 直接能打到的球，必不会在打到目标球之前碰库
         WhitePrediction wp = game.predictWhite(params, phy, 0.0,
@@ -119,9 +145,13 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 //            System.out.println("too less");
             return null;
         }
+        if (wp.getWhiteCushionCount() == 0 && selectedSideSpin != 0.0) {
+            // 不吃库的球加个卵的塞
+            return null;
+        }
 
         double targetCanMove = values.estimatedMoveDistance(phy, wp.getBallInitSpeed());
-        if (targetCanMove - values.ballDiameter * 1.5 <= attackChoice.targetHoleDistance) {
+        if (targetCanMove - values.ballDiameter * 1.5 <= correctedChoice.targetHoleDistance) {
             // 确保球不会停在袋口
             // 如果小于，说明力量太轻或低杆太多，打不到
 //            System.out.println("little less " + targetCanMove + ", " + attackChoice.targetHoleDistance);
@@ -140,12 +170,14 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                         nextStepLegalBalls,
                         whiteStopPos);
         return new IntegratedAttackChoice(
-                attackChoice,
+                correctedChoice,
                 nextStepAttackChoices,
                 nextTarget,
+                playerSelfPrice,
                 params,
                 selectedPower,
                 selectedFrontBackSpin,
+                selectedSideSpin,
                 wp.getSecondCollide(),
                 wp.getWhiteSpeedWhenHitSecondBall(),
                 wp.isWhiteCollidesHoleArcs());
@@ -160,23 +192,36 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
         GameValues values = game.getGameValues();
 
-        double comfortablePower = powerLimit * 0.35;
-        int maxIterations = (int) Math.round((powerLimit - comfortablePower) / tick) * 2;  // 注：仅适用于倍数<=0.5的情况
+//        double comfortablePower = powerLimit * 0.35;
+//        int maxIterations = (int) Math.round((powerLimit - comfortablePower) / tick) * 2;  // 注：仅适用于倍数<=0.5的情况
 
         List<IntegratedAttackChoice> choiceList = new ArrayList<>();
-        for (double spin : FRONT_BACK_SPIN_POINTS) {
-            int multiplier = 0;
-            for (int i = 0; i < maxIterations; i++) {
-                int flag = i % 2 == 0 ? 1 : -1;
-                double selectedPower = comfortablePower + tick * multiplier * flag;
-                if (selectedPower <= tick) continue;  // 同上一条注释：<=0.5
-                IntegratedAttackChoice iac =
-                        createIntAttackChoices(selectedPower, spin, choice, values,
-                                nextTarget, nextStepLegalBalls, phy);
+        AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
+//        double likeShow = aiPlayer.getPlayerPerson().getAiPlayStyle().likeShow;  // 喜欢大力及杆法的程度
+        
+        for (double selectedPower = tick; selectedPower <= powerLimit; selectedPower += tick) {
+            for (double[] spins : SPIN_POINTS) {
+                double price = aps.priceOf(
+                        spins, 
+                        selectedPower,
+                        aiPlayer.getInGamePlayer(), 
+                        game.getGamePlayStage(choice.ball, false)
+                );
+                IntegratedAttackChoice iac = createIntAttackChoices(
+                        selectedPower,
+                        spins[0],
+                        spins[1],
+                        choice,
+                        price,
+                        values,
+                        nextTarget,
+                        nextStepLegalBalls,
+                        phy
+                );
                 if (iac != null) choiceList.add(iac);
-                if (flag == -1) multiplier++;
             }
         }
+        
         if (choiceList.isEmpty()) return null;
         choiceList.sort(IntegratedAttackChoice::normalCompareTo);
         for (IntegratedAttackChoice iac : choiceList) {
@@ -194,10 +239,11 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 false,
                 null,
                 null,
-                choice.ball, 
+                choice.ball,
                 choice.cueDirectionUnitVector[0],
                 choice.cueDirectionUnitVector[1],
-                0,
+                0.0,
+                0.0,
                 choice.selectedPower);
     }
 
@@ -228,6 +274,9 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 }
             }
             if (best != null) {
+                System.out.printf("Best int attack choice: dir %f, %f, power %f, spins %f, %f \n",
+                        best.attackChoice.cueDirectionUnitVector[0], best.attackChoice.cueDirectionUnitVector[1],
+                        best.selectedPower, best.selectedFrontBackSpin, best.selectedSideSpin);
                 return new AiCueResult(aiPlayer.getPlayerPerson(),
                         game.getGamePlayStage(best.attackChoice.ball, true),
                         true,
@@ -237,6 +286,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                         best.attackChoice.cueDirectionUnitVector[0],
                         best.attackChoice.cueDirectionUnitVector[1],
                         best.selectedFrontBackSpin,
+                        best.selectedSideSpin,
                         best.selectedPower);
             }
         }
@@ -271,6 +321,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 null,
                 directionVec[0],
                 directionVec[1],
+                0.0,
                 0.0,
                 power
         );
@@ -401,7 +452,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         if (firstCollide != null && legalSet.contains(firstCollide)) {
             int opponentTarget = game.getTargetAfterPotFailed();
             List<Ball> opponentBalls = game.getAllLegalBalls(opponentTarget, false);
-            
+
             int seeAbleBalls = game.countSeeAbleTargetBalls(
                     whiteStopPos[0], whiteStopPos[1],
                     legalSet,
@@ -507,7 +558,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         protected double targetHoleDistance;
         protected double whiteCollisionDistance;
         protected double difficulty;
-        protected double[][] dirHole;  
+        protected double[][] dirHole;
         protected double[] targetOrigPos;
         protected double[] targetHoleVec;
         protected double[] holePos;  // 洞口瞄准点的坐标，非洞底
@@ -516,6 +567,27 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         double price;
 
         private AttackChoice() {
+        }
+        
+        AttackChoice copyWithNewDirection(double[] newDirection) {
+            AttackChoice copied = new AttackChoice();
+
+            copied.game = game;
+            copied.ball = ball;
+            copied.targetHoleVec = targetHoleVec;
+            copied.holePos = holePos;
+            copied.angleRad = angleRad;
+            copied.targetHoleDistance = targetHoleDistance;
+            copied.whiteCollisionDistance = whiteCollisionDistance;
+            copied.cueDirectionUnitVector = newDirection;
+            copied.dirHole = dirHole;
+            copied.targetOrigPos = new double[]{ball.getX(), ball.getY()};
+            copied.attackTarget = attackTarget;
+            copied.attackingPlayer = attackingPlayer;
+            copied.difficulty = difficulty;
+            copied.price = price;
+            
+            return copied;
         }
 
         /**
@@ -681,27 +753,33 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         final List<AttackChoice> nextStepAttackChoices;
         final double selectedPower;
         final double selectedFrontBackSpin;
+        final double selectedSideSpin;
         int nextStepTarget;
         CuePlayParams params;
         Ball whiteSecondCollide;
         double speedWhenWhiteCollidesOther;
+        private final double playerSelfPrice;
         private double price;
         private boolean whiteCollideHoleArcs;
 
         protected IntegratedAttackChoice(AttackChoice attackChoice,
                                          List<AttackChoice> nextStepAttackChoices,
                                          int nextStepTarget,
+                                         double playerSelfPrice,
                                          CuePlayParams params,
                                          double selectedPower,
                                          double selectedFrontBackSpin,
+                                         double selectedSideSpin,
                                          Ball whiteSecondCollide,
                                          double speedWhenWhiteCollidesOther,
                                          boolean whiteCollideHoleArcs) {
             this.attackChoice = attackChoice;
             this.nextStepAttackChoices = nextStepAttackChoices;
             this.nextStepTarget = nextStepTarget;
+            this.playerSelfPrice = playerSelfPrice;  // 球手自己喜不喜欢这颗球
             this.selectedPower = selectedPower;
             this.selectedFrontBackSpin = selectedFrontBackSpin;
+            this.selectedSideSpin = selectedSideSpin;
             this.whiteSecondCollide = whiteSecondCollide;
             this.speedWhenWhiteCollidesOther = speedWhenWhiteCollidesOther;
             this.params = params;
@@ -737,7 +815,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         }
 
         private void generatePrice() {
-            price = attackChoice.price;
+            price = attackChoice.price * playerSelfPrice;
             // 走位粗糙的人，下一颗权重低
             double mul = 0.5 *
                     attackChoice.attackingPlayer.getPlayerPerson().getAiPlayStyle().position / 100;

@@ -35,7 +35,6 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
-import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
@@ -731,7 +730,7 @@ public class GameView implements Initializable {
         Cue cue = player.getInGamePlayer().getCurrentCue(game.getGame());
         PlayerPerson playerPerson = player.getPlayerPerson();
 
-        double power = getPowerPercentage();
+        double power = getActualPowerPercentage();
         final double wantPower = power;
         // 因为力量控制导致的力量偏差
         powerFactor = powerFactor * (100.0 - playerPerson.getPowerControl()) / 100.0;
@@ -866,7 +865,7 @@ public class GameView implements Initializable {
         CueRecord cueRecord = makeCueRecord(player, params);  // 必须在randomCueError之后
         game.getGame().getRecorder().recordCue(cueRecord);
 
-        double[] unitXYWithSpin = getUnitXYWithSpins(params.sideSpin, params.power);
+        double[] unitXYWithSpin = getUnitXYWithSpins(params.sideSpin, params.power);  // todo: 检查actual
 
         double whiteStartingX = game.getGame().getCueBall().getX();
         double whiteStartingY = game.getGame().getCueBall().getY();
@@ -943,8 +942,9 @@ public class GameView implements Initializable {
                 cueButton.setText("正在击球");
                 cursorDirectionUnitX = cueResult.getUnitX();
                 cursorDirectionUnitY = cueResult.getUnitY();
+                System.out.printf("Ai direction: %f, %f\n", cursorDirectionUnitX, cursorDirectionUnitY);
                 powerSlider.setValue(cueResult.getSelectedPower());
-                cuePointX = cueCanvasWH / 2;
+                cuePointX = cueCanvasWH / 2 + cueResult.getSelectedSideSpin() * cueAreaRadius;
                 cuePointY = cueCanvasWH / 2 - cueResult.getSelectedFrontBackSpin() * cueAreaRadius;
                 cueAngleDeg = 5.0;
 
@@ -1075,7 +1075,7 @@ public class GameView implements Initializable {
     }
 
     private CuePlayParams generateCueParams() {
-        return generateCueParams(getPowerPercentage());
+        return generateCueParams(getActualPowerPercentage());
     }
 
     private CuePlayParams[] generateCueParamsSd1() {
@@ -1187,8 +1187,8 @@ public class GameView implements Initializable {
     /**
      * 返回受到侧塞影响的白球单位向量
      */
-    private double[] getUnitXYWithSpins(double unitSideSpin, double powerPercentage) {
-        return CuePlayParams.unitXYWithSpins(unitSideSpin, powerPercentage,
+    private double[] getUnitXYWithSpins(double unitSideSpin, double actualPower) {
+        return CuePlayParams.unitXYWithSpins(unitSideSpin, actualPower,
                 cursorDirectionUnitX, cursorDirectionUnitY);
     }
 
@@ -1199,11 +1199,11 @@ public class GameView implements Initializable {
         return Math.max(powerSlider.getValue(), 0.01);
     }
 
-    private double getPowerPercentage() {
-        return getPowerPercentage(getSelectedPower());
+    private double getActualPowerPercentage() {
+        return getActualPowerPercentage(getSelectedPower());
     }
 
-    private double getPowerPercentage(double selectedPower) {
+    private double getActualPowerPercentage(double selectedPower) {
         return selectedPower / game.getGame().getGameValues().ballWeightRatio *
                 game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(
                         game.getGame()).powerMultiplier;

@@ -114,7 +114,8 @@ public class Recorder {
                                     aiObject.getDouble("stable"),
                                     aiObject.getDouble("position"),
                                     aiObject.getDouble("defense"),
-                                    aiObject.getDouble("attackPri")
+                                    aiObject.getDouble("attackPri"),
+                                    aiObject.getDouble("likeShow")
                             );
                         } else {
                             aiPlayStyle = AiPlayStyle.DEFAULT;
