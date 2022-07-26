@@ -19,16 +19,17 @@ public class SnookerScoreFactory implements ScoreFactory {
         TreeMap<Ball, Integer> singlePole = new TreeMap<>();
         // 这个还原很jb扯
         Ball[] allBalls = replay.getAllBalls();
-        Ball redBallRep = allBalls[1];
+        Ball redBallRep = allBalls[0];
         int nRedBalls = allBalls.length - 7;
         int redsPots = bytes[24] & 0xff;
         if (redsPots > 0) singlePole.put(redBallRep, redsPots);
-        for (int i = 1; i < 7; i++) {
-            int pos = i + 24;
-            Ball ball = allBalls[nRedBalls + i];
+        for (int i = 2; i <= 7; i++) {
+            int pos = i + 23;
+            Ball ball = allBalls[nRedBalls + i - 2];
             int nPots = bytes[pos] & 0xff;
             if (nPots > 0) singlePole.put(ball, nPots);
         }
+        System.out.println(singlePole);
         
         return new SnookerScoreResult(
                 Util.bytesToInt32(bytes, 4),

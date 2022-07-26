@@ -11,12 +11,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
@@ -49,6 +47,7 @@ import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 import trashsoftware.trashSnooker.recorder.CueRecord;
 import trashsoftware.trashSnooker.recorder.GameRecorder;
 import trashsoftware.trashSnooker.recorder.GameReplay;
+import trashsoftware.trashSnooker.recorder.TargetRecord;
 
 import java.io.IOException;
 import java.net.URL;
@@ -87,6 +86,12 @@ public class GameView implements Initializable {
     Label powerLabel;
     @FXML
     Button cueButton;
+    @FXML
+    Button replayNextCueButton, replayLastCueButton;
+    @FXML
+    CheckBox replayAutoPlayBox;
+    @FXML
+    VBox gameButtonBox, replayButtonBox;
     @FXML
     Label singlePoleLabel;
     @FXML
@@ -205,7 +210,7 @@ public class GameView implements Initializable {
 
         setupCanvas();
         startAnimation();
-        drawTargetBoard();
+        drawTargetBoard(true);
     }
 
     public void setupReplay(Stage stage, GameReplay replay) {
@@ -214,6 +219,9 @@ public class GameView implements Initializable {
         this.gameType = replay.gameType;
         this.player1 = replay.getP1();
         this.player2 = replay.getP2();
+        
+        gameButtonBox.setVisible(false);
+        gameButtonBox.setManaged(false);
 
         player1Label.setText(player1.getPlayerPerson().getName());
         player2Label.setText(player2.getPlayerPerson().getName());
@@ -225,10 +233,10 @@ public class GameView implements Initializable {
 
         setOnHidden();
 
-        while (replay.loadNext() && replay.getCurrentFlag() == GameRecorder.FLAG_HANDBALL) {
-            // do nothing
-        }
-        replayCue();
+//        while (replay.loadNext() && replay.getCurrentFlag() == GameRecorder.FLAG_HANDBALL) {
+//            // do nothing
+//        }
+//        replayCue();
     }
 
     public void setup(Stage stage, GameType gameType, int totalFrames,
@@ -238,6 +246,9 @@ public class GameView implements Initializable {
         this.gameType = gameType;
         this.player1 = player1;
         this.player2 = player2;
+
+        replayButtonBox.setVisible(false);
+        replayButtonBox.setManaged(false);
 
         player1Label.setText(player1.getPlayerPerson().getName());
         player2Label.setText(player2.getPlayerPerson().getName());
@@ -319,23 +330,31 @@ public class GameView implements Initializable {
 
     public void finishCueReplay() {
         replayStopTime = System.currentTimeMillis();
+
+        drawScoreBoard(null, true);
+        drawTargetBoard(true);
+        restoreCuePoint();
+        restoreCueAngle();
+        updateScoreDiffLabels();
+
+        replayNextCueButton.setDisable(false);
+        replayLastCueButton.setDisable(false);
+    }
+    
+    private void replayLoadNext() {
         if (replay.loadNext()) {
-            drawScoreBoard(null);
-            drawTargetBoard();
-            restoreCuePoint();
-            restoreCueAngle();
-            updateScoreDiffLabels();
+            drawTargetBoard(false);
+            replayCue();
         } else {
             System.out.println("Replay finished!");
-
         }
     }
 
     public void finishCue(Player justCuedPlayer, Player nextCuePlayer) {
 //        updateCuePlayerSinglePole(justCuedPlayer);
         oneFrame();
-        drawScoreBoard(justCuedPlayer);
-        drawTargetBoard();
+        drawScoreBoard(justCuedPlayer, true);
+        drawTargetBoard(true);
         restoreCuePoint();
         restoreCueAngle();
         updateScoreDiffLabels();
@@ -349,6 +368,7 @@ public class GameView implements Initializable {
         printPlayStage = true;
 
         game.getGame().getRecorder().recordScore(game.getGame().makeScoreResult(justCuedPlayer));
+        game.getGame().getRecorder().recordNextTarget(makeTargetRecord(nextCuePlayer));
         game.getGame().getRecorder().writeCueToStream();
 
         if (game.getGame().isEnded()) {
@@ -421,8 +441,8 @@ public class GameView implements Initializable {
                         "保存并退出",
                         () -> {
                             game.startNextFrame();
-                            drawScoreBoard(game.getGame().getCuingPlayer());
-                            drawTargetBoard();
+                            drawScoreBoard(game.getGame().getCuingPlayer(), true);
+                            drawTargetBoard(true);
                             setUiFrameStart();
 //                            if (game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
 //                                ss
@@ -442,8 +462,8 @@ public class GameView implements Initializable {
                 AlertShower.askConfirmation(stage, "是否复位？", "对方犯规",
                         () -> {
                             ((AbstractSnookerGame) game.getGame()).reposition();
-                            drawScoreBoard(game.getGame().getCuingPlayer());
-                            drawTargetBoard();
+                            drawScoreBoard(game.getGame().getCuingPlayer(), true);
+                            drawTargetBoard(true);
                             if (aiAutoPlay &&
                                     game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
                                 aiCue(game.getGame().getCuingPlayer());
@@ -644,14 +664,14 @@ public class GameView implements Initializable {
     @FXML
     void tieTestAction() {
         game.getGame().tieTest();
-        drawTargetBoard();
-        drawScoreBoard(game.getGame().getCuingPlayer());
+        drawTargetBoard(true);
+        drawScoreBoard(game.getGame().getCuingPlayer(), true);
     }
 
     @FXML
     void clearRedBallsAction() {
         game.getGame().clearRedBallsTest();
-        drawTargetBoard();
+        drawTargetBoard(true);
     }
 
     @FXML
@@ -693,6 +713,25 @@ public class GameView implements Initializable {
     private void withdraw(Player curPlayer) {
         game.getGame().withdraw(curPlayer);
         endFrame();
+    }
+    
+    @FXML
+    void replayNextCueAction() {
+        replayLoadNext();
+    }
+    
+    @FXML
+    void replayLastCueAction() {
+        replay.loadLast();
+        playingMovement = false;
+        movement = null;
+        cueAnimationPlayer = null;
+        
+        drawTargetBoard(false);
+        drawScoreBoard(null, false);
+        restoreCuePoint();
+        restoreCueAngle();
+        updateScoreDiffLabels();
     }
 
     @FXML
@@ -810,11 +849,8 @@ public class GameView implements Initializable {
     }
 
     private CueRecord makeCueRecord(Player cuePlayer, CuePlayParams paramsWithError) {
-        System.out.println("Target " + game.getGame().getCurrentTarget());
         return new CueRecord(cuePlayer.getInGamePlayer(),
-                game.getGame().getCurrentTarget(),
                 game.getGame().isBreaking(),
-                game.getGame().isDoingSnookerFreeBll(),
                 getSelectedPower(),
                 paramsWithError.power,
                 cursorDirectionUnitX,
@@ -824,7 +860,12 @@ public class GameView implements Initializable {
                 getCuePointRelY(cuePointY),
                 getCuePointRelX(cuePointX),
                 cueAngleDeg);
-
+    }
+    
+    private TargetRecord makeTargetRecord(Player willCuePlayer) {
+        return new TargetRecord(willCuePlayer.getInGamePlayer().getPlayerNumber(),
+                game.getGame().getCurrentTarget(), 
+                game.getGame().isDoingSnookerFreeBll());
     }
 
     private void playerCue(Player player) {
@@ -862,9 +903,7 @@ public class GameView implements Initializable {
         }
 
         CuePlayParams params = applyRandomCueError(player);
-        CueRecord cueRecord = makeCueRecord(player, params);  // 必须在randomCueError之后
-        game.getGame().getRecorder().recordCue(cueRecord);
-
+        
         double[] unitXYWithSpin = getUnitXYWithSpins(params.sideSpin, params.power);  // todo: 检查actual
 
         double whiteStartingX = game.getGame().getCueBall().getX();
@@ -886,6 +925,9 @@ public class GameView implements Initializable {
         }
 
         movement = game.getGame().cue(params, game.playPhy);
+        CueRecord cueRecord = makeCueRecord(player, params);  // 必须在randomCueError之后
+        TargetRecord thisTarget = makeTargetRecord(player);
+        game.getGame().getRecorder().recordCue(cueRecord, thisTarget);
         game.getGame().getRecorder().recordMovement(movement);
 
         if (currentAttempt != null) {
@@ -949,12 +991,14 @@ public class GameView implements Initializable {
                 cueAngleDeg = 5.0;
 
                 CuePlayParams realParams = applyRandomCueError(player);
-                CueRecord cueRecord = makeCueRecord(player, realParams);  // 必须在randomCueError之后
-                game.getGame().getRecorder().recordCue(cueRecord);
 
                 double whiteStartingX = game.getGame().getCueBall().getX();
                 double whiteStartingY = game.getGame().getCueBall().getY();
                 movement = game.getGame().cue(realParams, game.playPhy);
+
+                CueRecord cueRecord = makeCueRecord(player, realParams);  // 必须在randomCueError之后
+                TargetRecord thisTarget = makeTargetRecord(player);
+                game.getGame().getRecorder().recordCue(cueRecord, thisTarget);
                 game.getGame().getRecorder().recordMovement(movement);
 
                 aiCalculating = false;
@@ -1002,6 +1046,10 @@ public class GameView implements Initializable {
         if (replay.getCurrentFlag() == GameRecorder.FLAG_CUE) {
             CueRecord cueRecord = replay.getCueRecord();
             if (cueRecord == null) return;
+            
+            replayNextCueButton.setDisable(true);
+            replayLastCueButton.setDisable(true);
+            
             movement = replay.getMovement();
             System.out.println(movement.getMovementMap().get(replay.getCueBall()).size());
 
@@ -1024,11 +1072,11 @@ public class GameView implements Initializable {
                     cueRecord.selectedPower, cueRecord.aimUnitX, cueRecord.aimUnitY);
         } else if (replay.getCurrentFlag() == GameRecorder.FLAG_HANDBALL) {
             System.out.println("Ball in hand!");
-            drawTargetBoard();
-            replayStopTime = System.currentTimeMillis();
-            if (!replay.loadNext()) {
-                System.out.println("Finished with a hand ball?");
-            }
+//            drawScoreBoard(null);
+            drawTargetBoard(true);
+            restoreCuePoint();
+            restoreCueAngle();
+            updateScoreDiffLabels();
         }
     }
 
@@ -1040,8 +1088,8 @@ public class GameView implements Initializable {
                     "真的要开始新游戏吗？", "请确认",
                     () -> {
                         startGame(game.totalFrames, game.cloth);
-                        drawTargetBoard();
-                        drawScoreBoard(game.getGame().getCuingPlayer());
+                        drawTargetBoard(true);
+                        drawScoreBoard(game.getGame().getCuingPlayer(), true);
                     },
                     null
             );
@@ -1492,11 +1540,12 @@ public class GameView implements Initializable {
     }
 
     private void drawBalls() {
+//        System.out.println(playingMovement + " " + movement);
         if (playingMovement) {
-            boolean isLast = false;
-            for (Map.Entry<Ball, Deque<MovementFrame>> entry :
+            int index = movement.incrementIndex();
+            for (Map.Entry<Ball, List<MovementFrame>> entry :
                     movement.getMovementMap().entrySet()) {
-                MovementFrame frame = entry.getValue().removeFirst();
+                MovementFrame frame = entry.getValue().get(index);
                 if (!frame.potted) {
                     if (replay != null) {
                         replay.table.forceDrawBall(this, entry.getKey(), frame.x, frame.y, graphicsContext, scale);
@@ -1504,9 +1553,7 @@ public class GameView implements Initializable {
                         game.getGame().getTable().forceDrawBall(this, entry.getKey(), frame.x, frame.y, graphicsContext, scale);
                     }
                 }
-                if (entry.getValue().isEmpty()) {
-                    isLast = true;
-                }
+
                 switch (frame.movementType) {
                     case MovementFrame.COLLISION:
                         break;
@@ -1518,7 +1565,7 @@ public class GameView implements Initializable {
                         break;
                 }
             }
-            if (isLast) {
+            if (!movement.hasNext()) {
                 playingMovement = false;
                 movement = null;
                 if (replay != null) finishCueReplay();
@@ -1527,10 +1574,13 @@ public class GameView implements Initializable {
         } else {
             if (movement == null) {
                 if (replay != null) {
-                    replay.getTable().drawStoppedBalls(this, replay.getAllBalls(), replay.getLastPositions(), graphicsContext, scale);
+                    replay.getTable().drawStoppedBalls(this, replay.getAllBalls(), 
+                            replay.getCurrentPositions(), graphicsContext, scale);
 
-                    if (!replay.finished() && System.currentTimeMillis() - replayStopTime > replayGap) {
-                        replayCue();
+                    if (!replay.finished() && 
+                            System.currentTimeMillis() - replayStopTime > replayGap && 
+                            replayAutoPlayBox.isSelected()) {
+                        replayNextCueAction();
                     }
                 } else {
                     game.getGame().getTable().drawStoppedBalls(this, game.getGame().getAllBalls(), null, graphicsContext, scale);
@@ -1550,7 +1600,7 @@ public class GameView implements Initializable {
         }
     }
 
-    private void drawScoreBoard(Player cuePlayer) {
+    private void drawScoreBoard(Player cuePlayer, boolean showNextCue) {
         // TODO
         if (replay != null) {
             Platform.runLater(() -> {
@@ -1606,26 +1656,27 @@ public class GameView implements Initializable {
         }
     }
 
-    private void drawTargetBoard() {
+    private void drawTargetBoard(boolean showNextTarget) {
         Platform.runLater(() -> {
             if (gameType.snookerLike)
-                drawSnookerTargetBoard();
+                drawSnookerTargetBoard(showNextTarget);
             else if (gameType == GameType.CHINESE_EIGHT)
-                drawPoolTargetBoard();
+                drawPoolTargetBoard(showNextTarget);
         });
     }
 
-    private void drawSnookerTargetBoard() {
+    private void drawSnookerTargetBoard(boolean showNextCue) {
         int tar;
         boolean p1;
         boolean snookerFreeBall;
         if (replay != null) {
             CueRecord cueRecord = replay.getCueRecord();
-            if (cueRecord == null) return;
-            p1 = cueRecord.cuePlayer.getPlayerNumber() == 1;
-            tar = cueRecord.targetRep;
-            snookerFreeBall = cueRecord.isSnookerFreeBall;
-            System.out.println(p1 + " " + tar);
+            TargetRecord target = showNextCue ? replay.getNextTarget() : replay.getThisTarget();
+            if (cueRecord == null || target == null) return;
+            p1 = target.playerNum == 1;
+            tar = target.targetRep;
+            snookerFreeBall = target.isSnookerFreeBall;
+            System.out.println("Target: " + tar + ", player: " + target.playerNum);
         } else {
             AbstractSnookerGame game1 = (AbstractSnookerGame) game.getGame();
             p1 = game1.getCuingPlayer().getInGamePlayer().getPlayerNumber() == 1;
@@ -1641,14 +1692,15 @@ public class GameView implements Initializable {
         }
     }
 
-    private void drawPoolTargetBoard() {
+    private void drawPoolTargetBoard(boolean showNextCue) {
         int tar;
         boolean p1;
         if (replay != null) {
             CueRecord cueRecord = replay.getCueRecord();
-            if (cueRecord == null) return;
-            p1 = cueRecord.cuePlayer.getPlayerNumber() == 1;
-            tar = cueRecord.targetRep;
+            TargetRecord target = showNextCue ? replay.getNextTarget() : replay.getThisTarget();
+            if (cueRecord == null || target == null) return;
+            p1 = target.playerNum == 1;
+            tar = target.targetRep;
         } else {
             NumberedBallGame<?> game1 = (NumberedBallGame<?>) game.getGame();
             p1 = game1.getCuingPlayer().getInGamePlayer().getPlayerNumber() == 1;
@@ -2042,10 +2094,8 @@ public class GameView implements Initializable {
     private void drawCue() {
         boolean notPlay = false;
         Ball cueBall;
-        InGamePlayer igp;
         if (replay != null) {
             cueBall = replay.getCueBall();
-
         } else {
             if (game.getGame().isEnded()) notPlay = true;
             cueBall = game.getGame().getCueBall();

@@ -25,10 +25,11 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             {-0.81, 0.0}, {-0.76, 0.3}, {-0.76, -0.3},
             {0.81, 0.0}, {0.76, 0.3}, {0.76, -0.3}
     };
+
     static {
         Arrays.sort(SPIN_POINTS, Comparator.comparingDouble(a -> Math.abs(a[0]) + Math.abs(a[1])));
     }
-    
+
     protected G game;
     protected P aiPlayer;
 
@@ -118,14 +119,15 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
                 game.getCuingPlayer().getInGamePlayer().getCurrentCue(game));
         double actualPower = selectedPowerToActualPower(selectedPower);
-        double[] directionIfApplySideSpin = CuePlayParams.aimingUnitXYIfSpin(
-                actualSideSpin, 
+//        double[] correctedDirection = attackChoice.cueDirectionUnitVector;
+        double[] correctedDirection = CuePlayParams.aimingUnitXYIfSpin(
+                actualSideSpin,
                 actualPower,
                 attackChoice.cueDirectionUnitVector[0],
                 attackChoice.cueDirectionUnitVector[1]
         );
-        
-        AttackChoice correctedChoice = attackChoice.copyWithNewDirection(directionIfApplySideSpin);
+
+        AttackChoice correctedChoice = attackChoice.copyWithNewDirection(correctedDirection);
 
         CuePlayParams params = CuePlayParams.makeIdealParams(
                 correctedChoice.cueDirectionUnitVector[0],
@@ -198,13 +200,13 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         List<IntegratedAttackChoice> choiceList = new ArrayList<>();
         AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
 //        double likeShow = aiPlayer.getPlayerPerson().getAiPlayStyle().likeShow;  // 喜欢大力及杆法的程度
-        
+
         for (double selectedPower = tick; selectedPower <= powerLimit; selectedPower += tick) {
             for (double[] spins : SPIN_POINTS) {
                 double price = aps.priceOf(
-                        spins, 
+                        spins,
                         selectedPower,
-                        aiPlayer.getInGamePlayer(), 
+                        aiPlayer.getInGamePlayer(),
                         game.getGamePlayStage(choice.ball, false)
                 );
                 IntegratedAttackChoice iac = createIntAttackChoices(
@@ -221,7 +223,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 if (iac != null) choiceList.add(iac);
             }
         }
-        
+
         if (choiceList.isEmpty()) return null;
         choiceList.sort(IntegratedAttackChoice::normalCompareTo);
         for (IntegratedAttackChoice iac : choiceList) {
@@ -235,7 +237,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
     protected AiCueResult makeDefenseCue(DefenseChoice choice) {
         return new AiCueResult(aiPlayer.getPlayerPerson(),
-                GamePlayStage.NORMAL,
+                game.getGamePlayStage(choice.ball, true),
                 false,
                 null,
                 null,
@@ -568,27 +570,6 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
         private AttackChoice() {
         }
-        
-        AttackChoice copyWithNewDirection(double[] newDirection) {
-            AttackChoice copied = new AttackChoice();
-
-            copied.game = game;
-            copied.ball = ball;
-            copied.targetHoleVec = targetHoleVec;
-            copied.holePos = holePos;
-            copied.angleRad = angleRad;
-            copied.targetHoleDistance = targetHoleDistance;
-            copied.whiteCollisionDistance = whiteCollisionDistance;
-            copied.cueDirectionUnitVector = newDirection;
-            copied.dirHole = dirHole;
-            copied.targetOrigPos = new double[]{ball.getX(), ball.getY()};
-            copied.attackTarget = attackTarget;
-            copied.attackingPlayer = attackingPlayer;
-            copied.difficulty = difficulty;
-            copied.price = price;
-            
-            return copied;
-        }
 
         /**
          * @param lastAiPottedBall 如果这杆为走位预测，则该值为AI第一步想打的球。如这杆就是第一杆，则为null
@@ -645,6 +626,27 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 //            System.out.println(attackChoice.price + " " + attackChoice.difficulty);
 
             return attackChoice;
+        }
+
+        AttackChoice copyWithNewDirection(double[] newDirection) {
+            AttackChoice copied = new AttackChoice();
+
+            copied.game = game;
+            copied.ball = ball;
+            copied.targetHoleVec = targetHoleVec;
+            copied.holePos = holePos;
+            copied.angleRad = angleRad;
+            copied.targetHoleDistance = targetHoleDistance;
+            copied.whiteCollisionDistance = whiteCollisionDistance;
+            copied.cueDirectionUnitVector = newDirection;
+            copied.dirHole = dirHole;
+            copied.targetOrigPos = new double[]{ball.getX(), ball.getY()};
+            copied.attackTarget = attackTarget;
+            copied.attackingPlayer = attackingPlayer;
+            copied.difficulty = difficulty;
+            copied.price = price;
+
+            return copied;
         }
 
         private void calculateDifficulty() {
@@ -754,11 +756,11 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         final double selectedPower;
         final double selectedFrontBackSpin;
         final double selectedSideSpin;
+        private final double playerSelfPrice;
         int nextStepTarget;
         CuePlayParams params;
         Ball whiteSecondCollide;
         double speedWhenWhiteCollidesOther;
-        private final double playerSelfPrice;
         private double price;
         private boolean whiteCollideHoleArcs;
 

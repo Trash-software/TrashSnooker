@@ -49,7 +49,14 @@
     <VBox alignment="TOP_CENTER" GridPane.rowIndex="4" spacing="10.0">
         <Slider fx:id="powerSlider" prefHeight="320.0" orientation="VERTICAL"/>
         <Label fx:id="powerLabel"/>
-        <Button fx:id="cueButton" text="击球" onAction="#cueAction"/>
+        <VBox fx:id="gameButtonBox" alignment="CENTER">
+            <Button fx:id="cueButton" text="击球" onAction="#cueAction"/>
+        </VBox>
+        <VBox fx:id="replayButtonBox" spacing="10.0" alignment="CENTER">
+            <Button fx:id="replayLastCueButton" text="上一杆" onAction="#replayLastCueAction"/>
+            <Button fx:id="replayNextCueButton" text="下一杆" onAction="#replayNextCueAction"/>
+            <CheckBox fx:id="replayAutoPlayBox" text="自动播放"/>
+        </VBox>
     </VBox>
 
     <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="4">

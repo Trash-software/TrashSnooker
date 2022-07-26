@@ -4,8 +4,6 @@ import trashsoftware.trashSnooker.core.InGamePlayer;
 
 public class CueRecord {
     public final InGamePlayer cuePlayer;
-    public final int targetRep;
-    public final boolean isSnookerFreeBall;
     public final double selectedPower;
     public final double actualPower;
     public final double aimUnitX;
@@ -18,9 +16,7 @@ public class CueRecord {
     public final boolean isBreaking;
     
     public CueRecord(InGamePlayer cuePlayer,
-                     int targetRep,
                      boolean isBreaking,
-                     boolean isSnookerFreeBall,
                      double selectedPower,
                      double actualPower,
                      double aimUnitX,
@@ -31,8 +27,6 @@ public class CueRecord {
                      double actualHorPoint,
                      double cueAngle) {
         this.cuePlayer = cuePlayer;
-        this.targetRep = targetRep;
-        this.isSnookerFreeBall = isSnookerFreeBall;
         this.selectedPower = selectedPower;
         this.actualPower = actualPower;
         this.aimUnitX = aimUnitX;

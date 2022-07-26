@@ -3,13 +3,17 @@ package trashsoftware.trashSnooker.recorder;
 import org.tukaani.xz.XZInputStream;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.Movement;
+import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.scoreResult.*;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.core.table.Tables;
 import trashsoftware.trashSnooker.fxml.App;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 public abstract class GameReplay implements GameHolder {
@@ -27,12 +31,16 @@ public abstract class GameReplay implements GameHolder {
     protected CueRecord currentCueRecord;
     protected Movement currentMovement;
     protected ScoreResult currentScoreResult;
+    protected TargetRecord thisTarget;
+    protected TargetRecord nextTarget;
     protected int currentFlag = GameRecorder.FLAG_NOT_BEGUN;
     protected Ball[] balls;
     protected HashMap<Integer, Ball> valueBallMap = new HashMap<>();
-    protected HashMap<Ball, double[]> lastPositions = new HashMap<>();
+//    protected HashMap<Ball, double[]> lastPositions = new HashMap<>();
     protected Ball cueBall;
-    protected int movementCount = 0;
+    protected int stepIndex = 0;
+    
+    protected List<CueStep> historySteps = new ArrayList<>();
 
     protected GameReplay(BriefReplayItem item) throws IOException {
         if (item.recordVersion != App.VERSION) throw new RuntimeException("Record of old version");
@@ -121,49 +129,110 @@ public abstract class GameReplay implements GameHolder {
     }
 
     public boolean loadNext() {
-        try {
-            if (inputStream.read(buffer1) != buffer1.length) throw new IOException();
-            currentFlag = buffer1[0] & 0xff;
-            System.out.println("Flag: " + currentFlag);
-            next();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        System.out.println("Step: " + stepIndex + ", total: " + historySteps.size());
+        if (stepIndex < historySteps.size()) {
+            setCurrentFromHistory();
+            Map<Ball, MovementFrame> endPos = currentMovement.getEndingPositions();
+            for (Ball ball : getAllBalls()) {
+                MovementFrame lastFrame = endPos.get(ball);
+                ball.setPotted(lastFrame.potted);
+                ball.setX(lastFrame.x);
+                ball.setY(lastFrame.y);
+            }
+            stepIndex++;
+            return true;
+        } else {
+            try {
+                if (inputStream.read(buffer1) != buffer1.length) return false;
+                currentFlag = buffer1[0] & 0xff;
+                System.out.println("Flag: " + currentFlag);
+                readNext();
+                stepIndex++;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return currentFlag != GameRecorder.FLAG_TERMINATE;
         }
-        return currentFlag != GameRecorder.FLAG_TERMINATE;
+    }
+    
+    private void setCurrentFromHistory() {
+        CueStep step = historySteps.get(stepIndex);
+        if (step instanceof ActualStep) {
+            ActualStep actualStep = (ActualStep) step;
+            currentCueRecord = actualStep.cueRecord;
+            currentMovement = actualStep.movement;
+            currentMovement.reset();
+            currentScoreResult = actualStep.scoreResult;
+            thisTarget = actualStep.thisTarget;
+            nextTarget = actualStep.nextTarget;
+            currentFlag = GameRecorder.FLAG_CUE;
+
+            Map<Ball, MovementFrame> sps = currentMovement.getStartingPositions();
+            for (Ball ball : getAllBalls()) {
+                MovementFrame sp = sps.get(ball);
+                ball.setX(sp.x);
+                ball.setY(sp.y);
+            }
+        } else if (step instanceof BallInHandStep) {
+            currentFlag = GameRecorder.FLAG_HANDBALL;
+        }
+    }
+    
+    public boolean loadLast() {
+        if (stepIndex < 1) return false;
+        stepIndex -= 1;
+        setCurrentFromHistory();
+        return true;
     }
 
     public int getCurrentFlag() {
         return currentFlag;
     }
 
-    protected synchronized void next() throws IOException {
+    protected synchronized void readNext() throws IOException {
         if (currentFlag == GameRecorder.FLAG_CUE) {
-            storeLastPositions();
+//            storeLastPositions();
             loadNextRecordAndMovement();
             loadNextScoreResult();
             loadBallPositions();
             System.out.println("Next: " + currentCueRecord.cuePlayer.getPlayerPerson().getName());
+            ActualStep actualStep = new ActualStep(
+                    currentCueRecord,
+                    currentMovement,
+                    currentScoreResult,
+                    thisTarget,
+                    nextTarget
+            );
+            historySteps.add(actualStep);
         } else if (currentFlag == GameRecorder.FLAG_HANDBALL) {
-            storeLastPositions();
+//            storeLastPositions();
             loadBallInHand();
+            BallInHandStep step = new BallInHandStep();
+            historySteps.add(step);
         } else if (currentFlag == GameRecorder.FLAG_TERMINATE) {
-            storeLastPositions();
+//            storeLastPositions();
         }
     }
-
-    private void storeLastPositions() {
+    
+    public HashMap<Ball, double[]> getCurrentPositions() {
+        HashMap<Ball, double[]> pos = new HashMap<>();
         for (Ball ball : balls) {
-            lastPositions.put(ball, new double[]{ball.getX(), ball.getY(), ball.isPotted() ? 1 : 0});
+            pos.put(ball, new double[]{ball.getX(), ball.getY(), ball.isPotted() ? 1 : 0});
         }
-    }
-
-    public HashMap<Ball, double[]> getLastPositions() {
-        return lastPositions;
+        return pos;
     }
 
     public Cue getCurrentCue() {
         return currentCueRecord.isBreaking ?
                 currentCueRecord.cuePlayer.getBreakCue() : currentCueRecord.cuePlayer.getPlayCue();
+    }
+
+    public TargetRecord getNextTarget() {
+        return nextTarget;
+    }
+
+    public TargetRecord getThisTarget() {
+        return thisTarget;
     }
 
     @Override
@@ -177,10 +246,6 @@ public abstract class GameReplay implements GameHolder {
 
     public ScoreResult getScoreResult() {
         return currentScoreResult;
-    }
-
-    public int getMovementCount() {
-        return movementCount;
     }
 
     public CueRecord getCueRecord() {
@@ -213,5 +278,28 @@ public abstract class GameReplay implements GameHolder {
     public void close() throws IOException {
         inputStream.close();
         wrapperStream.close();
+    }
+    
+    protected abstract static class CueStep {
+    }
+    
+    protected static class BallInHandStep extends CueStep {
+    }
+    
+    protected static class ActualStep extends CueStep {
+        protected final CueRecord cueRecord;
+        protected final Movement movement;
+        protected final ScoreResult scoreResult;
+        protected final TargetRecord thisTarget;
+        protected final TargetRecord nextTarget;
+        
+        ActualStep(CueRecord cueRecord, Movement movement, ScoreResult scoreResult, 
+                   TargetRecord thisTarget, TargetRecord nextTarget) {
+            this.cueRecord = cueRecord;
+            this.movement = movement;
+            this.scoreResult = scoreResult;
+            this.thisTarget = thisTarget;
+            this.nextTarget = nextTarget;
+        }
     }
 }

@@ -48,6 +48,10 @@ public abstract class GameRecorder {
     protected CueRecord cueRecord;
     protected Movement movement;
     protected ScoreResult scoreResult;
+    
+    protected TargetRecord thisTarget;
+    // 这玩意一定和下一杆的thisTarget一样，但是为了方便所以记录，反正3字节的事
+    protected TargetRecord nextTarget;
     protected boolean finished = false;
 
     public GameRecorder(Game game, EntireGame entireGame) {
@@ -70,9 +74,11 @@ public abstract class GameRecorder {
 
     public abstract void recordPositions() throws IOException;
 
-    public final void recordCue(CueRecord cueRecord) {
-        if (this.cueRecord != null) throw new RuntimeException("Repeated recording");
+    public final void recordCue(CueRecord cueRecord, TargetRecord thisTarget) {
+        if (this.cueRecord != null || this.thisTarget != null) 
+            throw new RuntimeException("Repeated recording");
         this.cueRecord = cueRecord;
+        this.thisTarget = thisTarget;
     }
 
     public final void recordMovement(Movement movement) {
@@ -85,15 +91,21 @@ public abstract class GameRecorder {
         if (this.scoreResult != null) throw new RuntimeException("Repeated recording");
         this.scoreResult = scoreResult;
     }
+    
+    public final void recordNextTarget(TargetRecord nextTarget) {
+        if (this.nextTarget != null) throw new RuntimeException("Repeated recording");
+        this.nextTarget = nextTarget;
+    }
 
     public final void writeCueToStream() {
-        if (cueRecord == null || movement == null || scoreResult == null) {
-            throw new RuntimeException("Score not filled");
+        if (cueRecord == null || movement == null || scoreResult == null || thisTarget == null || nextTarget == null) {
+            throw new RuntimeException(String.format("Score not filled: %s, %s, %s, %s\n",
+                    cueRecord, movement, scoreResult, nextTarget));
         }
-        System.out.println(movement);
+//        System.out.println(movement);
         try {
             outputStream.write(FLAG_CUE);
-            writeCue(cueRecord, movement);
+            writeCue(cueRecord, movement, thisTarget, nextTarget);
             byte[] b = scoreResult.toBytes();
             outputStream.write(b);
             recordPositions();
@@ -101,6 +113,8 @@ public abstract class GameRecorder {
             cueRecord = null;
             movement = null;
             scoreResult = null;
+            thisTarget = null;
+            nextTarget = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,7 +130,9 @@ public abstract class GameRecorder {
     }
 
     protected abstract void writeCue(CueRecord cueRecord,
-                                     Movement movement) throws IOException;
+                                     Movement movement,
+                                     TargetRecord thisTarget,
+                                     TargetRecord nextTarget) throws IOException;
 
     protected abstract void writeBallInHand() throws IOException;
 

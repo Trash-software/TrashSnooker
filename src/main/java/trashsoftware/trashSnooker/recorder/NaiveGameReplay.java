@@ -66,7 +66,7 @@ public class NaiveGameReplay extends GameReplay {
 
     @Override
     protected void loadNextRecordAndMovement() {
-        currentCueRecord = getNextCueRecord();
+        readCueRecordAndTargets();
         currentMovement = getNextMovement();
     }
 
@@ -119,16 +119,14 @@ public class NaiveGameReplay extends GameReplay {
         }
     }
 
-    private CueRecord getNextCueRecord() {
+    private void readCueRecordAndTargets() {
         try {
             byte[] buf = new byte[80];
             if (inputStream.read(buf) != buf.length) throw new IOException();
 
-            return new CueRecord(
+            currentCueRecord = new CueRecord(
                     buf[0] == 1 ? p1 : p2,
-                    buf[2] & 0xff,
                     buf[1] == 1,
-                    buf[3] == 1,
                     Util.bytesToDouble(buf, 8),
                     Util.bytesToDouble(buf, 16),
                     Util.bytesToDouble(buf, 24),
@@ -138,6 +136,17 @@ public class NaiveGameReplay extends GameReplay {
                     Util.bytesToDouble(buf, 56),
                     Util.bytesToDouble(buf, 64),
                     Util.bytesToDouble(buf, 72)
+            );
+            
+            thisTarget = new TargetRecord(
+                    buf[2] & 0xff,
+                    buf[3] & 0xff,
+                    buf[4] == 1
+            );
+            nextTarget = new TargetRecord(
+                    buf[5] & 0xff,
+                    buf[6] & 0xff,
+                    buf[7] == 1
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
