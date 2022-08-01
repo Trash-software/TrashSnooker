@@ -11,9 +11,11 @@ import java.io.IOException;
 import java.util.List;
 
 public class NaiveGameRecorder extends GameRecorder {
+    
+    public static final int CUE_RECORD_LENGTH = 84;
 
-    public NaiveGameRecorder(Game game, EntireGame entireGame) {
-        super(game, entireGame);
+    public NaiveGameRecorder(Game game) {
+        super(game);
     }
 
     @Override
@@ -32,7 +34,7 @@ public class NaiveGameRecorder extends GameRecorder {
 
     private void writeCueRecord(CueRecord cueRecord, 
                                 TargetRecord thisTarget, TargetRecord nextTarget) throws IOException {
-        byte[] buf = new byte[80];
+        byte[] buf = new byte[CUE_RECORD_LENGTH];
         buf[0] = (byte) cueRecord.cuePlayer.getPlayerNumber();
         buf[1] = (byte) (cueRecord.isBreaking ? 1 : 0);
         buf[2] = (byte) thisTarget.playerNum;
@@ -51,6 +53,8 @@ public class NaiveGameRecorder extends GameRecorder {
         Util.doubleToBytes(cueRecord.actualVerPoint, buf, 56);
         Util.doubleToBytes(cueRecord.actualHorPoint, buf, 64);
         Util.doubleToBytes(cueRecord.cueAngle, buf, 72);
+        
+        buf[80] = (byte) cueRecord.playStage.ordinal(); 
 
         outputStream.write(buf);
     }

@@ -75,7 +75,7 @@ public abstract class Table {
     }
 
     public abstract void drawTableMarks(GameView view, GraphicsContext graphicsContext, double scale);
-    
+
     public abstract int nBalls();
 
     /**
@@ -88,17 +88,19 @@ public abstract class Table {
                                        GraphicsContext graphicsContext,
                                        double scale);
 
-    public void forcedDrawWhiteBall(GameView view,
+    public void forceDrawBallInHand(GameView view,
+                                    Ball ball,
                                     double realX,
                                     double realY,
                                     GraphicsContext graphicsContext,
                                     double scale) {
-        drawBallBase(
-                view.canvasX(realX),
-                view.canvasY(realY),
-                gameValues.ballDiameter * scale,
-                Values.WHITE,
-                graphicsContext);
+        forceDrawBall(view, ball, realX, realY, graphicsContext, scale);
+//        drawBallBase(
+//                view.canvasX(realX),
+//                view.canvasY(realY),
+//                gameValues.ballDiameter * scale,
+//                ball.getColor(),
+//                graphicsContext);
     }
 
     public void drawStoppedBalls(GameView view,

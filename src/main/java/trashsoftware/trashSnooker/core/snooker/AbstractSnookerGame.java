@@ -1,13 +1,11 @@
 package trashsoftware.trashSnooker.core.snooker;
 
-import javafx.scene.canvas.GraphicsContext;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SnookerAiCue;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
-import trashsoftware.trashSnooker.core.table.Tables;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.*;
@@ -26,6 +24,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private final SnookerBall blackBall;
     private final SnookerBall[] redBalls = new SnookerBall[numRedBalls()];
     private final SnookerBall[] allBalls;
+    private final SnookerBall[] coloredBalls = new SnookerBall[6];
     private boolean doingFreeBall = false;  // 正在击打自由球
     private int lastFoulPoints = 0;
 
@@ -58,6 +57,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         allBalls[redBalls.length + 4] = pinkBall;
         allBalls[redBalls.length + 5] = blackBall;
         allBalls[redBalls.length + 6] = cueBall;
+
+        System.arraycopy(allBalls, redBalls.length, coloredBalls, 0, 6);
     }
 
     public static String ballValueToColorName(int ballValue) {
@@ -295,7 +296,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         else return currentTarget;
     }
 
-    protected void updateScore(Set<SnookerBall> pottedBalls, boolean isFreeBall) {
+    protected void updateScoreAndTarget(Set<SnookerBall> pottedBalls, boolean isFreeBall) {
         int score = 0;
         int foul = 0;
         if (whiteFirstCollide == null) {
@@ -436,24 +437,20 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return false;
     }
 
-    private void pickupPottedBalls(Set<SnookerBall> pottedBalls) {
-        List<SnookerBall> balls = new ArrayList<>(pottedBalls);
-        Collections.sort(balls);
-        Collections.reverse(balls);  // 如有多颗彩球落袋，优先放置分值高的
-//        System.out.print("Pick up");
-//        System.out.println(balls);
-        if (currentTarget == RAW_COLORED_REP || currentTarget == 1) {
-            for (SnookerBall ball : balls) {
-                if (ball.isColored()) pickupColorBall(ball);
+    public void pickupPottedBalls(int lastCueTarget) {
+        if (lastCueTarget == RAW_COLORED_REP || lastCueTarget == 1) {
+            for (int i = 5; i >= 0; i--) {
+                pickupColorBall(coloredBalls[i]);
             }
         } else {
-            for (SnookerBall ball : balls) {
-                if (ball.getValue() >= currentTarget) pickupColorBall(ball);
+            for (int i = 5; i >= lastCueTarget - 1; i--) {
+                pickupColorBall(coloredBalls[i]);
             }
         }
     }
 
     private void pickupColorBall(Ball ball) {
+        if (!ball.isPotted()) return;
         double[] placePoint = getTable().pointsRankHighToLow[7 - ball.getValue()];
         if (isOccupied(placePoint[0], placePoint[1])) {
             boolean placed = false;
@@ -493,9 +490,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         boolean isFreeBall = doingFreeBall;
         doingFreeBall = false;
 
-        updateScore(newPotted, isFreeBall);
+        updateScoreAndTarget(newPotted, isFreeBall);
         if (!isEnded())
-            pickupPottedBalls(newPotted);  // 必须在updateScore之后
+            pickupPottedBalls(recordedTarget);
     }
 
     @Override

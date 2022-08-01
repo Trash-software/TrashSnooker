@@ -24,7 +24,7 @@ public class Values {
     // 因为ball的spin值是球想要达到的速度，范围
     public static final double HIGH_CUE_FACTOR = 1.55;
     // 由侧旋产生的最大瞬时速度，mm/s
-    public static final double MAX_SIDE_SPIN_SPEED = 1600.0;
+    public static final double MAX_SIDE_SPIN_SPEED = 1400.0;
     public static final int DETAILED_PHYSICAL = 12;
     // 每两次物理碰撞运算之间的最大间隔距离
     public static final double PREDICTION_INTERVAL = MAX_POWER_SPEED / 1000.0 / DETAILED_PHYSICAL;

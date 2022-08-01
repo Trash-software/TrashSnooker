@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core;
 import java.util.*;
 
 public class Algebra {
+    
+    public static final double SQRT2 = Math.sqrt(2);
 
     public static double[] symmetricVector(double vx, double vy, double axisVX, double axisVY) {
         double scalar = 2 * vectorDot(vx, vy, axisVX, axisVY) / vectorDot(axisVX, axisVY, axisVX, axisVY);
@@ -61,7 +63,7 @@ public class Algebra {
 
     /**
      * @param angleRad 角，弧度
-     * @return 力经过一个角度之后剩下的比例，角度越大，力传得越差
+     * @return 力经过一个角度之后剩下的比例，角度越大，力传得越差，范围[0,1]
      */
     public static double powerTransferOfAngle(double angleRad) {
         return (Math.PI / 2 - angleRad) / Math.PI * 2;

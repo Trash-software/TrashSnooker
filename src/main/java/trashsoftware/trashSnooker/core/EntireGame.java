@@ -141,6 +141,10 @@ public class EntireGame {
     public String getStartTimeSqlString() {
         return Util.timeStampFmt(startTime);
     }
+    
+    public long getBeginTime() {
+        return startTime.getTime();
+    }
 
     private void createNextFrame() {
         p1Breaks = !p1Breaks;

@@ -2,13 +2,14 @@ package trashsoftware.trashSnooker.recorder;
 
 import javafx.fxml.FXML;
 import trashsoftware.trashSnooker.core.*;
-import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Recorder;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 public class BriefReplayItem {
@@ -16,18 +17,25 @@ public class BriefReplayItem {
     private final File file;
     final int replayType;
     public final GameType gameType;
-    final int recordVersion;
+    public final int primaryVersion;
+    public final int secondaryVersion;
 //    private final int totalCues;
     protected final int compression;
-    public final long beginTime;
+    public final long gameBeginTime;
+    public final long frameBeginTime;
+    public final long duration;
+    public final int nCues;
     public final int totalFrames;
     public final int p1Wins;
     public final int p2Wins;
+    public final int frameWinnerNumber;
 //    private final int durationSec;
     private final InGamePlayer p1;
     private final InGamePlayer p2;
+
+    protected static DateFormat showingDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     
-    public BriefReplayItem(File file) throws IOException {
+    public BriefReplayItem(File file) throws IOException, VersionException {
         this.file = file;
 
         try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
@@ -41,14 +49,22 @@ public class BriefReplayItem {
             replayType = header[4];
             gameType = GameType.values()[header[5] & 0xff];
 
-            recordVersion = (int) Util.bytesToIntN(header, 6, 2);
+            primaryVersion = (int) Util.bytesToIntN(header, 6, 2);
+            secondaryVersion = (int) Util.bytesToIntN(header, 8, 2);
+            if (primaryVersion != GameRecorder.RECORD_PRIMARY_VERSION) {
+                throw new VersionException(primaryVersion, secondaryVersion);
+            }
 
-            compression = header[8] & 0xff;
-            beginTime = Util.bytesToLong(header, 12);
+            compression = header[10] & 0xff;
+            totalFrames = header[11] & 0xff;
+            p1Wins = header[12] & 0xff;
+            p2Wins = header[13] & 0xff;
             
-            totalFrames = header[20] & 0xff;
-            p1Wins = header[21] & 0xff;
-            p2Wins = header[22] & 0xff;
+            gameBeginTime = Util.bytesToLong(header, 14);
+            frameBeginTime = Util.bytesToLong(header, 22);
+            duration = Util.bytesToInt32(header, 30);
+            nCues = Util.bytesToInt32(header, 34);
+            frameWinnerNumber = header[38] & 0xff;
             
             p1 = readOnePlayer(raf, 1);
             p2 = readOnePlayer(raf, 2);
@@ -103,14 +119,20 @@ public class BriefReplayItem {
     public GameType getGameType() {
         return gameType;
     }
-
-    public int getReplayType() {
-        return replayType;
+    
+    @FXML
+    public String getGameTypeName() {
+        return GameType.toReadable(gameType);
+    }
+    
+    @FXML
+    public String getFrameBeginTimeString() {
+        return showingDateFormat.format(frameBeginTime);
     }
 
-//    public int getDurationSec() {
-//        return durationSec;
-//    }
+    public String getGameBeginTimeString() {
+        return showingDateFormat.format(gameBeginTime);
+    }
     
     @FXML
     public String getFileName() {
@@ -125,6 +147,16 @@ public class BriefReplayItem {
     @FXML
     public String getP2Name() {
         return p2.getPlayerPerson().getName() + (p2.getPlayerType() == PlayerType.COMPUTER ? "(AI)" : "");
+    }
+    
+    @FXML
+    public String getDuration() {
+        return Util.timeToReadable(duration);
+    }
+    
+    @FXML
+    public String getNCues() {
+        return String.valueOf(nCues);
     }
 
     @Override

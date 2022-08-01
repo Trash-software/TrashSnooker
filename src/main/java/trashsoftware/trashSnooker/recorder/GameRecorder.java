@@ -8,7 +8,6 @@ import trashsoftware.trashSnooker.core.Player;
 import trashsoftware.trashSnooker.core.PlayerType;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
-import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.*;
@@ -20,7 +19,9 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
 public abstract class GameRecorder {
-    public static final int HEADER_LENGTH = 32;
+    public static final int RECORD_PRIMARY_VERSION = 10;
+    public static final int RECORD_SECONDARY_VERSION = 6;
+    public static final int HEADER_LENGTH = 40;
     public static final int PLAYER_HEADER_LENGTH = 98;
     public static final int TOTAL_HEADER_LENGTH = HEADER_LENGTH + PLAYER_HEADER_LENGTH * 2;
     public static final String SIGNATURE = "TSR_";
@@ -42,8 +43,7 @@ public abstract class GameRecorder {
     private OutputStream wrapperStream;
 
     protected Game game;
-    protected EntireGame entireGame;
-    protected DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+    protected static DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 
     protected CueRecord cueRecord;
     protected Movement movement;
@@ -53,10 +53,11 @@ public abstract class GameRecorder {
     // 这玩意一定和下一杆的thisTarget一样，但是为了方便所以记录，反正3字节的事
     protected TargetRecord nextTarget;
     protected boolean finished = false;
+    protected int nCues = 0;  // 只计击打，不计放置等
+    protected long recordBeginTime;
 
-    public GameRecorder(Game game, EntireGame entireGame) {
+    public GameRecorder(Game game) {
         this.game = game;
-        this.entireGame = entireGame;
         
         createDirIfNotExist();
         
@@ -79,6 +80,7 @@ public abstract class GameRecorder {
             throw new RuntimeException("Repeated recording");
         this.cueRecord = cueRecord;
         this.thisTarget = thisTarget;
+        this.nCues++;
     }
 
     public final void recordMovement(Movement movement) {
@@ -150,14 +152,18 @@ public abstract class GameRecorder {
         header[4] = recorderType();
         header[5] = (byte) game.getGameType().ordinal();
 
-        Util.intToBytesN(App.VERSION, header, 6, 2);
+        Util.intToBytesN(RECORD_PRIMARY_VERSION, header, 6, 2);
+        Util.intToBytesN(RECORD_SECONDARY_VERSION, header, 8, 2);
 
-        header[8] = (byte) compression;
+        header[10] = (byte) compression;
+        
+        header[11] = (byte) game.getEntireGame().getTotalFrames();  // todo
+        header[12] = (byte) game.getEntireGame().getP1Wins();
+        header[13] = (byte) game.getEntireGame().getP2Wins();
 
-        Util.longToBytes(System.currentTimeMillis(), header, 12);
-        header[20] = (byte) entireGame.getTotalFrames();  // todo
-        header[21] = (byte) entireGame.getP1Wins();
-        header[22] = (byte) entireGame.getP2Wins(); 
+        Util.longToBytes(game.getEntireGame().getBeginTime(), header, 14);
+        recordBeginTime = game.frameStartTime;
+        Util.longToBytes(recordBeginTime, header, 22);
         
         /*
         header:
@@ -165,13 +171,17 @@ public abstract class GameRecorder {
         Signature        0      4       TSR_
         RecordType       4      1
         GameType         5      1
-        RecordVersion    6      2
-        Compression      8      1
-        Reserved         9      3
-        BeginTime        12     8
-        TotalFrames      20     1
-        P1Wins           21     1       都不包含当前这一局
-        P2Wins           22     1
+        PrimaryVersion   6      2
+        SecondaryVersion 8      2
+        Compression      10     1
+        TotalFrames      11     1
+        P1Wins           12     1       都不包含当前这一局
+        P2Wins           13     1
+        GameBeginTime    14     8       整场比赛开始时间
+        FrameBeginTime   22     8       单局开始时间
+        DurationMs       30     4       关闭stream时写入
+        nCues            34     4       关闭stream时写入
+        winnerNumber     38     1       胜者是1还是2,关闭时写入
          */
 
         wrapperStream.write(header);
@@ -223,7 +233,7 @@ public abstract class GameRecorder {
         return finished;
     }
 
-    public void stopRecording() {
+    public void stopRecording(boolean normalFinish) {
         this.finished = true;
         if (outputStream != null && wrapperStream != null) {
             try {
@@ -238,6 +248,26 @@ public abstract class GameRecorder {
                 
                 outputStream.close();
                 wrapperStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            
+            try (RandomAccessFile raf = new RandomAccessFile(outFile, "rw")) {
+                long duration = System.currentTimeMillis() - recordBeginTime;
+                byte[] buffer4 = new byte[4];
+                
+                raf.seek(30);
+                Util.int32ToBytes((int) duration, buffer4, 0);
+                raf.write(buffer4);
+                
+                Util.int32ToBytes(nCues, buffer4, 0);
+                raf.write(buffer4);
+                
+                if (normalFinish)
+                    raf.write(game.getWiningPlayer().getInGamePlayer().getPlayerNumber());
+                else 
+                    raf.write(0);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -191,8 +191,18 @@ public class Recorder {
     }
 
     public static void addPlayerPerson(PlayerPerson playerPerson) {
-        playerPeople.put(playerPerson.getName(), playerPerson);
+        playerPeople.put(getNextCustomPlayerId(), playerPerson);
         saveToDisk(makeJsonObject(), CUSTOM_PLAYER_LIST_FILE);
+    }
+    
+    public static String getNextCustomPlayerId() {
+        int current = playerPeople.size() + 1;
+        String id;
+        do {
+            id = "custom_player_" + current;
+            current++;
+        } while (playerPeople.containsKey(id));
+        return id;
     }
 
     public static Collection<PlayerPerson> getPlayerPeople() {

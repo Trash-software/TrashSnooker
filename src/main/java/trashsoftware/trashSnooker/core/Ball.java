@@ -234,19 +234,20 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         return 1.2 - (getSpeed() * phy.calculationsPerSec / Values.MAX_POWER_SPEED) * 0.6;
     }
 
-    protected void hitHoleArcArea(double[] arcXY) {
-        super.hitHoleArcArea(arcXY);
-        vx *= values.wallBounceRatio;
-        vy *= values.wallBounceRatio;
+    protected void hitHoleArcArea(double[] arcXY, Phy phy) {
+        super.hitHoleArcArea(arcXY, phy);
+        // 一般来说袋角的弹性没库边好
+        vx *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
+        vy *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
         xSpin *= (values.wallSpinPreserveRatio * 0.9);
         ySpin *= (values.wallSpinPreserveRatio * 0.9);
         sideSpin *= values.wallSpinPreserveRatio;
     }
 
-    protected void hitHoleLineArea(double[] lineNormalVec) {
-        super.hitHoleLineArea(lineNormalVec);
-        vx *= values.wallBounceRatio;
-        vy *= values.wallBounceRatio;
+    protected void hitHoleLineArea(double[] lineNormalVec, Phy phy) {
+        super.hitHoleLineArea(lineNormalVec, phy);
+        vx *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.8;
+        vy *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.8;
         xSpin *= (values.wallSpinPreserveRatio * 0.9);
         ySpin *= (values.wallSpinPreserveRatio * 0.9);
         sideSpin *= values.wallSpinPreserveRatio;
@@ -255,18 +256,18 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     /**
      * 该方法不检测袋口
      */
-    protected boolean tryHitWall() {
+    protected boolean tryHitWall(Phy phy) {
         if (nextX < values.ballRadius + values.leftX ||
                 nextX >= values.rightX - values.ballRadius) {
             // 顶库
-            vx = -vx * values.wallBounceRatio;
-            vy *= values.wallBounceRatio;
+            vx = -vx * values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+            vy *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             if (nextX < values.ballRadius + values.leftX) {
                 vy -= sideSpin;
             } else {
                 vy += sideSpin;
             }
-            xSpin *= (values.wallSpinPreserveRatio * 0.7);
+            xSpin *= (values.wallSpinPreserveRatio * 0.8);
             ySpin *= values.wallSpinPreserveRatio;
             sideSpin *= values.wallSpinPreserveRatio;
             return true;
@@ -274,15 +275,15 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         if (nextY < values.ballRadius + values.topY ||
                 nextY >= values.botY - values.ballRadius) {
             // 边库
-            vx *= values.wallBounceRatio;
-            vy = -vy * values.wallBounceRatio;
+            vx *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+            vy = -vy * values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             if (nextY < values.ballRadius + values.topY) {
                 vx += sideSpin;
             } else {
                 vx -= sideSpin;
             }
             xSpin *= values.wallSpinPreserveRatio;
-            ySpin *= (values.wallSpinPreserveRatio * 0.7);
+            ySpin *= (values.wallSpinPreserveRatio * 0.8);
             sideSpin *= values.wallSpinPreserveRatio;
 //            System.out.println("Hit wall!======================");
             return true;

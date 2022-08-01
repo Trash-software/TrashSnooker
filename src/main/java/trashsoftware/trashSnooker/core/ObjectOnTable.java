@@ -105,7 +105,7 @@ public abstract class ObjectOnTable {
                 predictedDtToPoint(values.botMidHoleXY) < values.midHoleRadius * midHoleFactor;
     }
 
-    protected void hitHoleArcArea(double[] arcXY) {
+    protected void hitHoleArcArea(double[] arcXY, Phy phy) {
         double axisX = arcXY[0] - x;  // 切线的法向量
         double axisY = arcXY[1] - y;
         double[] reflect = Algebra.symmetricVector(vx, vy, axisX, axisY);
@@ -113,7 +113,7 @@ public abstract class ObjectOnTable {
         vy = -reflect[1];
     }
 
-    protected void hitHoleLineArea(double[] lineNormalVec) {
+    protected void hitHoleLineArea(double[] lineNormalVec, Phy phy) {
         double[] reflect = Algebra.symmetricVector(vx, vy, lineNormalVec[0], lineNormalVec[1]);
         vx = -reflect[0];
         vy = -reflect[1];
@@ -130,11 +130,11 @@ public abstract class ObjectOnTable {
                 if (predictedDtToPoint(values.topMidHoleLeftArcXy) < values.midArcRadius + radius &&
                         currentDtToPoint(values.topMidHoleLeftArcXy) >= values.midArcRadius + radius) {
                     // 击中上方中袋左侧
-                    hitHoleArcArea(values.topMidHoleLeftArcXy);
+                    hitHoleArcArea(values.topMidHoleLeftArcXy, phy);
                 } else if (predictedDtToPoint(values.topMidHoleRightArcXy) < values.midArcRadius + radius &&
                         currentDtToPoint(values.topMidHoleRightArcXy) >= values.midArcRadius + radius) {
                     // 击中上方中袋右侧
-                    hitHoleArcArea(values.topMidHoleRightArcXy);
+                    hitHoleArcArea(values.topMidHoleRightArcXy, phy);
                 } else if (values.isStraightHole() &&
                         nextX >= values.midHoleLineLeftX && nextX < values.midHoleLineRightX) {
                     // 疑似上方中袋直线
@@ -142,14 +142,16 @@ public abstract class ObjectOnTable {
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
+                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}), 
+                                phy);
                         return 2;
                     }
                     line = values.topMidHoleRightLine;
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
+                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
+                                phy);
                         return 2;
                     }
                     normalMove(phy);
@@ -168,11 +170,11 @@ public abstract class ObjectOnTable {
                 if (predictedDtToPoint(values.botMidHoleLeftArcXy) < values.midArcRadius + radius &&
                         currentDtToPoint(values.botMidHoleLeftArcXy) >= values.midArcRadius + radius) {
                     // 击中下方中袋左侧
-                    hitHoleArcArea(values.botMidHoleLeftArcXy);
+                    hitHoleArcArea(values.botMidHoleLeftArcXy, phy);
                 } else if (predictedDtToPoint(values.botMidHoleRightArcXy) < values.midArcRadius + radius &&
                         currentDtToPoint(values.botMidHoleRightArcXy) >= values.midArcRadius + radius) {
                     // 击中下方中袋右侧
-                    hitHoleArcArea(values.botMidHoleRightArcXy);
+                    hitHoleArcArea(values.botMidHoleRightArcXy, phy);
                 } else if (values.isStraightHole() &&
                         nextX >= values.midHoleLineLeftX && nextX < values.midHoleLineRightX) {
                     // 疑似下方中袋直线
@@ -180,14 +182,16 @@ public abstract class ObjectOnTable {
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
+                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
+                                phy);
                         return 2;
                     }
                     line = values.botMidHoleRightLine;
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
+                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
+                                phy);
                         return 2;
                     }
                     normalMove(phy);
@@ -215,7 +219,8 @@ public abstract class ObjectOnTable {
 
                 if (predictedDtToLine(line) < radius && currentDtToLine(line) >= radius) {
                     hitHoleLineArea(
-                            Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}));
+                            Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
+                            phy);
                     return 2;
                 }
             }
@@ -223,7 +228,7 @@ public abstract class ObjectOnTable {
                 for (double[] cornerArc : values.allCornerArcs) {
                     if (predictedDtToPoint(cornerArc) < values.cornerArcRadius + radius &&
                             currentDtToPoint(cornerArc) >= values.cornerArcRadius + radius) {
-                        hitHoleArcArea(cornerArc);
+                        hitHoleArcArea(cornerArc, phy);
                         return 2;
                     }
                 }

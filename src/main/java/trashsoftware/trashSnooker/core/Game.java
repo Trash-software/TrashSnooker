@@ -69,7 +69,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     private B[] randomOrderBallPool2;
     private PhysicsCalculator physicsCalculator;
 
-    protected Game(GameView parent, EntireGame entireGame, 
+    protected Game(GameView parent, EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
                    int frameIndex) {
         this.parent = parent;
@@ -100,13 +100,17 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         } else throw new RuntimeException("Unexpected game type " + gameType);
 
         try {
-            game.recorder = new NaiveGameRecorder(game, entireGame);
+            game.recorder = new NaiveGameRecorder(game);
             game.recorder.startRecoding();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return game;
+    }
+
+    public EntireGame getEntireGame() {
+        return entireGame;
     }
 
     public abstract GameType getGameType();
@@ -261,11 +265,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
     }
 
-    public final boolean canPlaceWhite(double x, double y) {
+    public boolean isInTable(double x, double y) {
         return x >= gameValues.leftX + gameValues.ballRadius &&
                 x < gameValues.rightX - gameValues.ballRadius &&
                 y >= gameValues.topY + gameValues.ballRadius &&
-                y < gameValues.botY - gameValues.ballRadius &&
+                y < gameValues.botY - gameValues.ballRadius;
+    }
+
+    public final boolean canPlaceWhite(double x, double y) {
+        return isInTable(x, y) &&
                 canPlaceWhiteInTable(x, y);
     }
 
@@ -410,7 +418,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     double ballTargetDt = Math.hypot(ball.x - p2x, ball.y - p2y);
                     if (ballTargetDt <= gameValues.ballDiameter) return false;
                 }
-                
+
                 // 计算这个球遮住的角度范围
                 double xDiff = ball.x - p1x;
                 double yDiff = ball.y - p1y;
@@ -451,7 +459,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
         }
         return true;
-        
+
     }
 
 //    private boolean canSeeBall(Ball b1, Ball b2) {
@@ -480,7 +488,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             double yDiff0 = target.y - whiteY;
             double whiteTarDt = Math.hypot(xDiff0, yDiff0);
             double angle = Algebra.thetaOf(xDiff0, yDiff0);
-            
+
             double extraShadowAngle;
             if (situation == 1) {
                 extraShadowAngle = -Math.asin(gameValues.ballDiameter / whiteTarDt);
@@ -504,7 +512,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     double connectionAngle = Algebra.thetaOf(xDiff, yDiff);  // 连线的绝对角度
 
                     double ballShadowAngle = Math.asin(shadowRadius / dt);  // 从selfBall看ball占的的角
-                    
+
                     double selfPassAngle = 0;
                     if (situation == 3) {
                         // 起始球与障碍球切线长度
@@ -620,18 +628,31 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //    }
 
     /**
-     * 返回{目标球与"从目标球处能直接看到的洞口"的连线的单位向量, 洞口坐标(注意不是洞底坐标)}。
+     * 返回{目标球与"从目标球处能直接看到的洞口"的连线的单位向量, 洞口进球坐标(注意: 只有对于袋口球来说是洞底坐标)}。
      */
     public List<double[][]> directionsToAccessibleHoles(Ball targetBall) {
         List<double[][]> list = new ArrayList<>();
+        double x = targetBall.x;
+        double y = targetBall.y;
 //        BIG_LOOP:
-        for (double[] hole : gameValues.allHoleOpenCenters) {
-            if (pointToPointCanPassBall(targetBall.x, targetBall.y, hole[0], hole[1], targetBall,
-                    null, true, false)) {
-                double directionX = hole[0] - targetBall.x;
-                double directionY = hole[1] - targetBall.y;
+        for (int i = 0; i < 6; i++) {
+            double[] holeOpenCenter = gameValues.allHoleOpenCenters[i];
+            double[] holeBottom = gameValues.allHoles[i];
+            if (i < 4 && 
+                    Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ballRadius &&
+                    pointToPointCanPassBall(x, y, holeBottom[0], holeBottom[1], targetBall, 
+                            null, true, true)) {
+                // 目标球离袋口瞄球点太近了，转而检查真正的袋口
+                double directionX = holeBottom[0] - x;
+                double directionY = holeBottom[1] - y;
                 double[] unitXY = Algebra.unitVector(directionX, directionY);
-                list.add(new double[][]{unitXY, hole});
+                list.add(new double[][]{unitXY, holeBottom});
+            } else if (pointToPointCanPassBall(x, y, holeOpenCenter[0], holeOpenCenter[1], targetBall,
+                    null, true, true)) {
+                double directionX = holeOpenCenter[0] - x;
+                double directionY = holeOpenCenter[1] - y;
+                double[] unitXY = Algebra.unitVector(directionX, directionY);
+                list.add(new double[][]{unitXY, holeOpenCenter});
             }
         }
         return list;
@@ -744,7 +765,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
     }
 
-    protected boolean isOccupied(double x, double y) {
+    public boolean isOccupied(double x, double y) {
         for (B ball : getAllBalls()) {
             if (!ball.isPotted()) {
                 double dt = Algebra.distanceToPoint(x, y, ball.x, ball.y);
@@ -873,7 +894,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 }
                 return false;
             }
-            if (firstBall.tryHitWall()) {
+            if (firstBall.tryHitWall(phy)) {
                 prediction.firstBallHitCushion();
                 return false;
             }
@@ -896,6 +917,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     dtWhenHitFirstWall >= 0.0 &&
                     cueBall.getDistanceMoved() - dtWhenHitFirstWall > lenAfterWall) {
                 // 解斯诺克不能太容易了
+                prediction.whiteHitCushion();
                 return true;
             }
 
@@ -917,7 +939,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 }
                 return false;
             }
-            if (cueBall.tryHitWall()) {
+            if (cueBall.tryHitWall(phy)) {
                 // 库边
                 if (!hitWall) {
                     dtWhenHitFirstWall = cueBall.getDistanceMoved();
@@ -937,51 +959,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             cueBall.normalMove(phy);
             return false;
         }
-
-//        private boolean ballPhysical(Ball ball) {
-//            boolean isCueBall = ball.isWhite();
-//            int holeAreaResult = ball.tryHitHoleArea(phy);
-//            if (holeAreaResult != 0) {
-//                // 袋口区域
-//                if (isCueBall) {
-//                    if (prediction.getFirstCollide() == null) {
-//                        tryHitBall();
-//                    } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
-//                        tryPassSecondBall();
-//                    }
-//                    if (holeAreaResult == 2) {
-//                        if (!hitWall) {
-//                            dtWhenHitFirstWall = cueBall.getDistanceMoved();
-//                        }
-//                        hitWall = true;
-//                        prediction.whiteCollidesHoleArcs();
-//                    }
-//                    return false;
-//                }
-//            }
-//            if (ball.tryHitWall()) {
-//                // 库边
-//                if (isCueBall) {
-//                    if (!hitWall) {
-//                        dtWhenHitFirstWall = cueBall.getDistanceMoved();
-//                    }
-//                    hitWall = true;
-//                    return false;
-//                }
-//            }
-//            if (isCueBall) {
-//                if (prediction.getFirstCollide() == null) {
-//                    if (tryHitBall()) {
-//                        cueBall.normalMove(phy);
-//                        return false;
-//                    }
-//                } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
-//                    tryPassSecondBall();
-//                }
-//                cueBall.normalMove(phy);
-//            }
-//            return false;
-//        }
 
         private void tryPassSecondBall() {
             for (Ball ball : getAllBalls()) {
@@ -1036,13 +1013,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public class PhysicsCalculator {
 
+        private final Phy phy;
+        private final int[] movementTypes = new int[getTable().nBalls()];
+        private final double[] movementValues = new double[getTable().nBalls()];
         private Movement movement;
         private double cumulatedPhysicalTime = 0.0;
         private boolean notTerminated = true;
-        private final Phy phy;
-
-        private final int[] movementTypes = new int[getTable().nBalls()];
-        private final double[] movementValues = new double[getTable().nBalls()];
 
         PhysicsCalculator(Phy phy) {
             this.phy = phy;
@@ -1109,7 +1085,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         }
                         continue;
                     }
-                    if (ball.tryHitWall()) {
+                    if (ball.tryHitWall(phy)) {
                         // 库边
                         collidesWall = true;
                         movementTypes[i] = MovementFrame.CUSHION;
@@ -1134,8 +1110,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     Math.floor(lastPhysicalTime / parent.frameTimeMs)) {
                 for (int i = 0; i < allBalls.length; i++) {
                     B ball = allBalls[i];
-                    movement.addFrame(ball, 
-                            new MovementFrame(ball.x, ball.y, ball.isPotted(), 
+                    movement.addFrame(ball,
+                            new MovementFrame(ball.x, ball.y, ball.isPotted(),
                                     movementTypes[i], movementValues[i]));
                     movementTypes[i] = MovementFrame.NORMAL;
                     movementValues[i] = 0.0;

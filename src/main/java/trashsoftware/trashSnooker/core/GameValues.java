@@ -145,6 +145,9 @@ public class GameValues {
 
     private boolean straightHole;
     
+    public double ballHoleRatio;
+    public double cornerHoleAngleRatio;  // 打底袋最差的角度和最好的角度差多少
+    
     public double tableResistanceRatio;
     public double ballBounceRatio;
     public double wallBounceRatio;
@@ -155,6 +158,11 @@ public class GameValues {
     }
 
     private void build() {
+        ballHoleRatio = ballDiameter / cornerHoleDiameter;
+        double bestSpace = cornerHoleDiameter - ballRadius;
+        double worstSpace = cornerHoleDiameter * Math.sqrt(2) / 2 - ballRadius;
+        cornerHoleAngleRatio = worstSpace / bestSpace;
+        
         topLeftHoleXY = new double[]
                 {leftX - cornerHoleDt, topY - cornerHoleDt};
         botLeftHoleXY = new double[]
@@ -181,8 +189,8 @@ public class GameValues {
         botLeftHoleOpenCenter = new double[]{leftX + ballRadius, botY - ballRadius};
         topRightHoleOpenCenter = new double[]{rightX - ballRadius, topY + ballRadius};
         botRightHoleOpenCenter = new double[]{rightX - ballRadius, botY - ballRadius};
-        topMidHoleOpenCenter = new double[]{midX, topY - ballRadius * 0.75};  // 特殊：中心点其实在台外
-        botMidHoleOpenCenter = new double[]{midX, botY + ballRadius * 0.75};
+        topMidHoleOpenCenter = new double[]{midX, topY - ballRadius * 0.6};  // 特殊：中心点其实在台外
+        botMidHoleOpenCenter = new double[]{midX, botY + ballRadius * 0.6};
 
         allHoleOpenCenters = new double[][]{
                 topLeftHoleOpenCenter,
@@ -192,6 +200,7 @@ public class GameValues {
                 topMidHoleOpenCenter,
                 botMidHoleOpenCenter
         };
+        // open center 和 hole顺序必须一致
 
         if (straightHole) {
             leftCornerHoleAreaRightX = leftX + cornerLineLonger;

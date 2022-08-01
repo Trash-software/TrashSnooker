@@ -13,7 +13,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     }
 
     @Override
-    protected DefenseChoice breakCue() {
+    protected DefenseChoice breakCue(Phy phy) {
         double aimingPosX = game.getTable().firstRedX() + 
                 game.getGameValues().ballDiameter * game.redRowOccupyX * 4.0;
         double aimingPosY = game.getGameValues().midY + 
@@ -21,7 +21,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double dirX = aimingPosX - game.getCueBall().getX();
         double dirY = aimingPosY - game.getCueBall().getY();
         double[] unitXY = Algebra.unitVector(dirX, dirY);
-        double selectedPower = actualPowerToSelectedPower(34.0);
+        double selectedPower = actualPowerToSelectedPower(0.33 * phy.cloth.smoothness.speedReduceFactor);
         CuePlayParams cpp = CuePlayParams.makeIdealParams(
                 unitXY[0],
                 unitXY[1],
@@ -31,6 +31,11 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 selectedPowerToActualPower(selectedPower)
         );
         return new DefenseChoice(unitXY, selectedPower, cpp);
+    }
+
+    @Override
+    protected boolean requireHitCushion() {
+        return false;
     }
 
     @Override

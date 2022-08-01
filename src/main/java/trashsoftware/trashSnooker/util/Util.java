@@ -118,4 +118,17 @@ public class Util {
         for (int i = 0; i < arr.length; i++) if (c == arr[i]) return i;
         return -1;
     }
+    
+    public static String timeToReadable(long ms) {
+        long s = Math.round(ms / 1000.0);
+        if (s < 60) {
+            return "0:" + s;
+        } else if (s < 3600) {
+            return String.format("%d:%d", s / 60, s % 60);
+        } else {
+            long h = s / 3600;
+            long mm_ss = s % 3600;
+            return String.format("%d:%d:%d", h, mm_ss / 60, mm_ss % 60);
+        }
+    }
 }

@@ -24,7 +24,7 @@ public class Phy {
         calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
         speedReducer = cloth.smoothness.speedReduceFactor / calculationsPerSecSqr;
         spinReducer = cloth.smoothness.spinReduceFactor / calculationsPerSecSqr;
-        sideSpinReducer = 100.0 / calculationsPerSecSqr;
+        sideSpinReducer = 120.0 / calculationsPerSecSqr;
         spinEffect = cloth.smoothness.spinEffectFactor / calculateMs;
     }
     

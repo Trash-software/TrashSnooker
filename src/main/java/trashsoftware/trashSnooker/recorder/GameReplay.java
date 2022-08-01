@@ -7,7 +7,6 @@ import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.scoreResult.*;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.core.table.Tables;
-import trashsoftware.trashSnooker.fxml.App;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -42,8 +41,9 @@ public abstract class GameReplay implements GameHolder {
     
     protected List<CueStep> historySteps = new ArrayList<>();
 
-    protected GameReplay(BriefReplayItem item) throws IOException {
-        if (item.recordVersion != App.VERSION) throw new RuntimeException("Record of old version");
+    protected GameReplay(BriefReplayItem item) throws IOException, VersionException {
+        if (item.secondaryVersion != GameRecorder.RECORD_SECONDARY_VERSION) 
+            throw new VersionException(item.primaryVersion, item.secondaryVersion);
 
         this.item = item;
         this.gameType = item.getGameType();
@@ -83,7 +83,8 @@ public abstract class GameReplay implements GameHolder {
         loadBallPositions();
     }
 
-    public static GameReplay loadReplay(BriefReplayItem item) throws IOException {
+    public static GameReplay loadReplay(BriefReplayItem item) 
+            throws IOException, VersionException {
         if (item.replayType == 0) return new NaiveGameReplay(item);
 
         throw new RuntimeException("No such record type");
@@ -170,6 +171,7 @@ public abstract class GameReplay implements GameHolder {
             Map<Ball, MovementFrame> sps = currentMovement.getStartingPositions();
             for (Ball ball : getAllBalls()) {
                 MovementFrame sp = sps.get(ball);
+                ball.setPotted(sp.potted);
                 ball.setX(sp.x);
                 ball.setY(sp.y);
             }

@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 
 import java.util.*;
 
@@ -11,17 +12,18 @@ import java.util.*;
 
 public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player> {
 
-    public static final double ATTACK_DIFFICULTY_THRESHOLD = 6000.0;  // 越大，AI越倾向于进攻
+    public static final double ATTACK_DIFFICULTY_THRESHOLD = 18000.0;  // 越大，AI越倾向于进攻
     public static final double NO_DIFFICULTY_ANGLE_RAD = 0.3;
     public static final double EACH_BALL_SEE_PRICE = 0.5;
+    public static final double WHITE_HIT_CORNER_PENALTY = 0.5;
     //    private static final double[] FRONT_BACK_SPIN_POINTS =
 //            {0.0, -0.27, 0.27, -0.54, 0.54, -0.81, 0.81};
     private static final double[][] SPIN_POINTS = {  // 高低杆，左右塞
-            {0.0, 0.0}, {0.0, 0.35}, {0.0, -0.35}, {0.0, 0.7}, {0.0, -0.7},
-            {-0.27, 0.0}, {-0.27, 0.3}, {-0.27, -0.3}, {-0.27, 0.6}, {-0.27, -0.6},
-            {0.27, 0.0}, {0.27, 0.3}, {0.27, -0.3}, {0.27, 0.6}, {0.27, -0.6},
-            {-0.54, 0.0}, {-0.54, 0.25}, {-0.54, -0.25}, {-0.54, 0.5}, {-0.54, -0.5},
-            {0.54, 0.0}, {0.54, 0.25}, {0.54, -0.25}, {0.54, 0.5}, {0.54, -0.5},
+            {0.0, 0.0}, {0.0, 0.3}, {0.0, -0.3}, {0.0, 0.6}, {0.0, -0.6},
+            {-0.27, 0.0}, {-0.27, 0.25}, {-0.27, -0.25}, {-0.27, 0.5}, {-0.27, -0.5},
+            {0.27, 0.0}, {0.27, 0.25}, {0.27, -0.25}, {0.27, 0.5}, {0.27, -0.5},
+            {-0.54, 0.0}, {-0.54, 0.2}, {-0.54, -0.2}, {-0.54, 0.4}, {-0.54, -0.4},
+            {0.54, 0.0}, {0.54, 0.2}, {0.54, -0.2}, {0.54, 0.4}, {0.54, -0.4},
             {-0.81, 0.0}, {-0.76, 0.3}, {-0.76, -0.3},
             {0.81, 0.0}, {0.76, 0.3}, {0.76, -0.3}
     };
@@ -29,7 +31,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     static {
         Arrays.sort(SPIN_POINTS, Comparator.comparingDouble(a -> Math.abs(a[0]) + Math.abs(a[1])));
     }
-
+    
     protected G game;
     protected P aiPlayer;
 
@@ -88,11 +90,16 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     /**
      * 开球
      */
-    protected abstract DefenseChoice breakCue();
+    protected abstract DefenseChoice breakCue(Phy phy);
 
     protected abstract DefenseChoice standardDefense();
 
     protected abstract DefenseChoice solveSnooker();
+
+    /**
+     * @return 是否需要有球碰库
+     */
+    protected abstract boolean requireHitCushion();
 
     protected double selectedPowerToActualPower(double selectedPower) {
         return selectedPower *
@@ -136,7 +143,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                         aiPlayer.getInGamePlayer(),
                         game.getCuingPlayer().getInGamePlayer().getCurrentCue(game)),
                 actualSideSpin,
-                5.0,
+                0.0,
                 actualPower
         );
         // 直接能打到的球，必不会在打到目标球之前碰库
@@ -147,7 +154,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 //            System.out.println("too less");
             return null;
         }
-        if (wp.getWhiteCushionCount() == 0 && selectedSideSpin != 0.0) {
+        if (wp.getWhiteCushionCountAfter() == 0 && selectedSideSpin != 0.0) {
             // 不吃库的球加个卵的塞
             return null;
         }
@@ -164,6 +171,10 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             return null;
         }
         double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
+        if (game instanceof AbstractSnookerGame) {
+            AbstractSnookerGame asg = (AbstractSnookerGame) game;
+            asg.pickupPottedBalls(correctedChoice.attackTarget);
+        }
         List<AttackChoice> nextStepAttackChoices =
                 getAttackChoices(game,
                         nextTarget,
@@ -251,7 +262,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
     protected AiCueResult regularCueDecision(Phy phy) {
         if (game.isBreaking()) {
-            DefenseChoice breakChoice = breakCue();
+            DefenseChoice breakChoice = breakCue(phy);
             if (breakChoice != null) return makeDefenseCue(breakChoice);
         }
 
@@ -276,9 +287,10 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 }
             }
             if (best != null) {
-                System.out.printf("Best int attack choice: dir %f, %f, power %f, spins %f, %f \n",
+                System.out.printf("Best int attack choice: dir %f, %f, power %f, spins %f, %f, difficulty, %f \n",
                         best.attackChoice.cueDirectionUnitVector[0], best.attackChoice.cueDirectionUnitVector[1],
-                        best.selectedPower, best.selectedFrontBackSpin, best.selectedSideSpin);
+                        best.selectedPower, best.selectedFrontBackSpin, best.selectedSideSpin,
+                        best.attackChoice.difficulty);
                 return new AiCueResult(aiPlayer.getPlayerPerson(),
                         game.getGamePlayStage(best.attackChoice.ball, true),
                         true,
@@ -403,7 +415,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 DefenseChoice choice = defenseChoiceOfAngleAndPower(
                         rad, selectedPower, legalSet, phy
                 );
-                if (choice != null) {
+                if (choice != null && notViolateCushionRule(choice)) {
                     if (best == null || choice.price > best.price) {
                         best = choice;
                     }
@@ -412,6 +424,16 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         }
         if (best != null) System.out.println(best.price);
         return best;
+    }
+
+    private boolean notViolateCushionRule(DefenseChoice choice) {
+        if (requireHitCushion()) {
+            if (choice.wp == null) return true;
+            else return choice.wp.getWhiteCushionCountAfter() > 0 ||
+                    choice.wp.getFirstBallCushionCount() > 0;
+        } else {
+            return true;
+        }
     }
 
     private DefenseChoice solveSnookerDefense(List<Ball> legalBalls,
@@ -426,7 +448,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 DefenseChoice choice = defenseChoiceOfAngleAndPower(
                         Math.toRadians(deg), selectedPower, legalSet, phy
                 );
-                if (choice != null) {
+                if (choice != null && notViolateCushionRule(choice)) {
                     if (best == null || choice.price > best.price) {
                         best = choice;
                     }
@@ -444,7 +466,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 unitXY[1],
                 0.0,
                 0.0,
-                5.0,
+                0.0,
                 selectedPowerToActualPower(selectedPower)
         );
         WhitePrediction wp = game.predictWhite(cpp, phy, 10000000.0,
@@ -462,14 +484,14 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             );
 //            System.out.println("See: " + seeAbleBalls);
 //            if (seeAbleBalls == 0) {  // 斯诺克
-            double opponentPrice = 0.1 + EACH_BALL_SEE_PRICE * seeAbleBalls;
+            final double maxPrice = EACH_BALL_SEE_PRICE * game.getAllBalls().length;
+            double defensePrice = maxPrice - EACH_BALL_SEE_PRICE * seeAbleBalls;
             if (wp.getSecondCollide() != null) {
-                opponentPrice *= 10;
+                defensePrice /= 10;
             }
             if (wp.isFirstBallCollidesOther()) {
-                opponentPrice *= 3;
+                defensePrice /= 3;
             }
-            opponentPrice -= 0.1;
 //            } else {
             if (seeAbleBalls != 0) {
                 List<AttackChoice> attackChoices = getAttackChoices(
@@ -482,44 +504,31 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 );
 
                 for (AttackChoice ac : attackChoices) {
-                    opponentPrice += ac.price;
+                    defensePrice -= ac.price;
                 }
 
                 if (wp.getSecondCollide() != null) {
-                    opponentPrice *= 3;
+                    defensePrice /= 3;
                 }
                 if (wp.isFirstBallCollidesOther()) {
-                    opponentPrice *= 3;
+                    defensePrice /= 3;
                 }
             }
-//            System.out.println(opponentPrice);
-//            if (opponentPrice == 0) {  // 对手没有进攻机会
-//                opponentPrice = 0.01;
-//                for (Ball ball : opponentBalls) {
-////                    if (game.canSeeBall(whiteStopPos[0], whiteStopPos[1],
-////                            ball.getX(), ball.getY(),
-////                            game.getCueBall(), ball)) {
-////                        // todo: 检查同样的球而不是同一颗球
-////                        opponentPrice += 0.01;
-////                    }
-//                }
-//                if (wp.getSecondCollide() != null) {
-//                    opponentPrice *= 4;
-//                }
-//                if (wp.isFirstBallCollidesOther()) {
-//                    opponentPrice *= 4;
-//                }
-//                opponentPrice -= 0.01;
-////            System.out.println("Snooker price " + opponentPrice);
-//                
-//            }
+            double whiteCushionMul = 1.0;
+            if (wp.getWhiteCushionCountBefore() > 2) {
+                whiteCushionMul /= (wp.getWhiteCushionCountBefore() - 1.5);
+            }
+            if (wp.isWhiteCollidesHoleArcs()) {
+                defensePrice *= WHITE_HIT_CORNER_PENALTY;
+            }
             wp.resetToInit();
             return new DefenseChoice(
                     firstCollide,
-                    -opponentPrice,  // 对手的price越小，防守越成功
+                    defensePrice * whiteCushionMul,  // price越大越好
                     false,
                     unitXY,
                     selectedPower,
+                    wp,
                     cpp
             );
         }
@@ -545,7 +554,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         double degreesTick = 100.0 / 2 / aiPlayer.getPlayerPerson().getAiPlayStyle().defense;
         double powerTick = 1000.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().defense;
         DefenseChoice normalDefense = directDefense(legalBalls, degreesTick, powerTick,
-                15.0, actualPowerHigh, phy);  // todo: low power
+                5.0, actualPowerHigh, phy);  // todo: low power
         if (normalDefense != null) return normalDefense;
 
         System.err.println("AI cannot find defense!");
@@ -650,29 +659,78 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         }
 
         private void calculateDifficulty() {
-            // 把[0, PI/2) 展开至 [-没有难度, PI/2)
-            double angleScaleRatio = (Math.PI / 2) / (Math.PI / 2 - NO_DIFFICULTY_ANGLE_RAD);
-            double lowerLimit = -NO_DIFFICULTY_ANGLE_RAD * angleScaleRatio;
-            double scaledAngle = angleRad * angleScaleRatio + lowerLimit;
-            if (scaledAngle < 0) scaledAngle = 0;
+            /* 难度分4部分: 
+               1. 目标球的角度在目视方向的投影长度
+               2. 白球与目标球间的距离
+               3. 总行程
+               4. 袋的进球角度
+             */
 
-            double difficultySore = 1 / Algebra.powerTransferOfAngle(scaledAngle);
-            double totalDt = whiteCollisionDistance + targetHoleDistance;
-            double holeAngleMultiplier = 1;
+            // 就是说从白球处看击打点，需要偏多少距离才是袋，300毫米是保底: 偏30厘米以内一般不影响瞄准
+            double targetDifficulty =
+                    Math.cos(Math.PI / 2 - angleRad) * targetHoleDistance;
+            targetDifficulty = Math.max(targetDifficulty, 300);
+
+            double baseDifficulty = (whiteCollisionDistance + 300) * targetDifficulty / 100;
+            double totalDtDifficulty = whiteCollisionDistance + targetHoleDistance;
+
+            double holeDifficulty;
             if (isMidHole()) {
                 double midHoleOffset = Math.abs(targetHoleVec[1]);  // 单位向量的y值绝对值越大，这球越简单
-                holeAngleMultiplier /= Math.pow(midHoleOffset, 1.45);  // 次幂可以调，越小，ai越愿意打中袋
+                holeDifficulty = 1 / Math.pow(midHoleOffset, 1.4);  // 次幂可以调，越小，ai越愿意打中袋
+            } else {
+                // 底袋，45度时难度系数为1，0度或90度时难度系数最大，为 sqrt(2)/2 * 袋直径 - 球半径 的倒数
+                double easy = 1 - Math.abs(targetHoleVec[0] - targetHoleVec[1]);  // [0,1]
+                double range = 1 - game.getGameValues().cornerHoleAngleRatio;
+                holeDifficulty = 1 / (easy * range + game.getGameValues().cornerHoleAngleRatio);
             }
-            double tooCloseMul = (whiteCollisionDistance -
-                    game.getGameValues().ballDiameter) / game.getGameValues().ballDiameter;
+
+//            System.out.printf("bd %f, hd %f, tdd %f\n", baseDifficulty, holeDifficulty, totalDtDifficulty);
+            
+            difficulty = baseDifficulty * holeDifficulty + totalDtDifficulty;
+//            difficulty = Math.max(difficulty, 36.0 * attackingPlayer.getPlayerPerson().getAiPlayStyle().precision);
+
+//            double angleDifficulty = 1 - Algebra.powerTransferOfAngle(angleRad);
+
+            // 目标球离袋远又有角度就很难打, 100是远距离直球本身的难度
+//            double targetDifficulty = angleDifficulty * targetHoleDistance + 100;
+//            double thresholdDt = game.getGameValues().ballDiameter * 5;  // 最低难度的距离
+//            
+//            final double whiteBaseDifficulty = 20;
+//            double whiteDifficulty;
+//            if (whiteCollisionDistance > thresholdDt) {
+//                whiteDifficulty = (whiteCollisionDistance - thresholdDt) / 25 + whiteBaseDifficulty;
+//            } else {
+//                whiteDifficulty = thresholdDt / whiteCollisionDistance * whiteBaseDifficulty;
+//            }
+//            
+//            double difficultySore = whiteDifficulty + targetDifficulty;
+//            
+////            // 把[0, PI/2) 展开至 [-没有难度, PI/2)
+////            double angleScaleRatio = (Math.PI / 2) / (Math.PI / 2 - NO_DIFFICULTY_ANGLE_RAD);
+////            double lowerLimit = -NO_DIFFICULTY_ANGLE_RAD * angleScaleRatio;
+////            double scaledAngle = angleRad * angleScaleRatio + lowerLimit;
+////            if (scaledAngle < 0) scaledAngle = 0;
+////
+////            double difficultySore = 1 / Algebra.powerTransferOfAngle(scaledAngle);
+////            double totalDt = whiteCollisionDistance + targetHoleDistance;
+//            double holeAngleMultiplier = 1;
+//            if (isMidHole()) {
+//                double midHoleOffset = Math.abs(targetHoleVec[1]);  // 单位向量的y值绝对值越大，这球越简单
+//                holeAngleMultiplier /= Math.pow(midHoleOffset, 1.45);  // 次幂可以调，越小，ai越愿意打中袋
+//            }
+//            double tooCloseMul = (whiteCollisionDistance -
+//                    game.getGameValues().ballDiameter) / game.getGameValues().ballDiameter;
 
             // 太近了角度不好瞄
-            if (tooCloseMul < 0.1) {
-                holeAngleMultiplier *= 5;
-            } else if (tooCloseMul < 1) {
-                holeAngleMultiplier /= tooCloseMul * 2;
-            }
-            difficulty = totalDt * difficultySore * holeAngleMultiplier;
+//            if (tooCloseMul < 0.1) {
+//                holeAngleMultiplier *= 5;
+//            } else if (tooCloseMul < 1) {
+//                holeAngleMultiplier /= tooCloseMul * 2;
+//            }
+//            difficulty = totalDt * difficultySore * holeAngleMultiplier;
+//            difficulty = Math.max(difficultySore * holeAngleMultiplier - 180, 1);
+//            difficulty = difficultySore * holeAngleMultiplier;
         }
 
         private boolean isMidHole() {
@@ -709,10 +767,12 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         protected double[] cueDirectionUnitVector;
         double selectedPower;
         CuePlayParams cuePlayParams;
+        WhitePrediction wp;
 
         protected DefenseChoice(Ball ball, double price, boolean collideOtherBall,
                                 double[] cueDirectionUnitVector,
                                 double selectedPower,
+                                WhitePrediction wp,
                                 CuePlayParams cuePlayParams) {
             this.ball = ball;
             this.price = price;
@@ -720,6 +780,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             this.cueDirectionUnitVector = cueDirectionUnitVector;
             this.selectedPower = selectedPower;
             this.cuePlayParams = cuePlayParams;
+            this.wp = wp;
         }
 
         /**
@@ -733,16 +794,17 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                     true,
                     cueDirectionUnitVector,
                     selectedPower,
+                    null,
                     cuePlayParams);
         }
 
         @Override
         public int compareTo(@NotNull AiCue.DefenseChoice o) {
-            if (this.collideOtherBall && !o.collideOtherBall) {
-                return 1;
-            } else if (!this.collideOtherBall && o.collideOtherBall) {
-                return -1;
-            }
+//            if (this.collideOtherBall && !o.collideOtherBall) {
+//                return 1;
+//            } else if (!this.collideOtherBall && o.collideOtherBall) {
+//                return -1;
+//            }
             return -Double.compare(this.price, o.price);
         }
     }
@@ -812,7 +874,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             if (speedWhenWhiteCollidesOther < speedThreshold) {
                 price *= speedWhenWhiteCollidesOther / speedThreshold;
             }
-            if (whiteCollideHoleArcs) price *= 0.5;
+            if (whiteCollideHoleArcs) price *= WHITE_HIT_CORNER_PENALTY;
             return price;
         }
 

@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.recorder;
 
+import trashsoftware.trashSnooker.core.GamePlayStage;
 import trashsoftware.trashSnooker.core.InGamePlayer;
 
 public class CueRecord {
@@ -14,6 +15,7 @@ public class CueRecord {
     public final double actualHorPoint;
     public final double cueAngle;
     public final boolean isBreaking;
+    public final GamePlayStage playStage;
     
     public CueRecord(InGamePlayer cuePlayer,
                      boolean isBreaking,
@@ -25,7 +27,8 @@ public class CueRecord {
                      double intendedHorPoint,
                      double actualVerPoint,
                      double actualHorPoint,
-                     double cueAngle) {
+                     double cueAngle,
+                     GamePlayStage playStage) {
         this.cuePlayer = cuePlayer;
         this.selectedPower = selectedPower;
         this.actualPower = actualPower;
@@ -37,5 +40,6 @@ public class CueRecord {
         this.actualHorPoint = actualHorPoint;
         this.cueAngle = cueAngle;
         this.isBreaking = isBreaking;
+        this.playStage = playStage;
     }
 }

@@ -109,23 +109,9 @@ public class StatsView implements Initializable {
         private final GameType gameType;
 
         GameTypeTree(PlayerAi pai, GameType gameType) {
-            super(getString(gameType));
+            super(GameType.toReadable(gameType));
             this.pai = pai;
             this.gameType = gameType;
-        }
-
-        public static String getString(GameType gameType) {
-            if (gameType == GameType.SNOOKER) {
-                return "斯诺克";
-            } else if (gameType == GameType.MINI_SNOOKER) {
-                return "小斯诺克";
-            } else if (gameType == GameType.CHINESE_EIGHT) {
-                return "中式八球";
-            } else if (gameType == GameType.SIDE_POCKET) {
-                return "美式九球";
-            } else {
-                return "";
-            }
         }
 
         @Override
@@ -403,7 +389,7 @@ public class StatsView implements Initializable {
 
 
             int rowIndex = gridPane.getRowCount();
-            gridPane.add(new Label(GameTypeTree.getString(gameType)), 2, rowIndex++);
+            gridPane.add(new Label(GameType.toReadable(gameType)), 2, rowIndex++);
 
             String thisShown = isAi ? "电脑" : "玩家";
             String oppoShown = isAi ? "玩家" : "电脑";

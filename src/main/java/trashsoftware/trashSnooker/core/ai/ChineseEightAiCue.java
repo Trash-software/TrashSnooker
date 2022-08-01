@@ -17,6 +17,11 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     @Override
+    protected boolean requireHitCushion() {
+        return true;
+    }
+
+    @Override
     protected DefenseChoice standardDefense() {
         return null;
     }
@@ -27,7 +32,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     @Override
-    protected DefenseChoice breakCue() {
+    protected DefenseChoice breakCue(Phy phy) {
         // todo: 小力开球和大力开球
 //        if (aiPlayer.getPlayerPerson().getControllablePowerPercentage() < 80.0) {
 //            

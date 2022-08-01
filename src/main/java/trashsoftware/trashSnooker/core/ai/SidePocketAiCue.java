@@ -15,12 +15,17 @@ public class SidePocketAiCue extends AiCue<SidePocketGame, SidePocketPlayer> {
     }
 
     @Override
+    protected boolean requireHitCushion() {
+        return true;
+    }
+
+    @Override
     protected DefenseChoice solveSnooker() {
         return null;
     }
 
     @Override
-    protected DefenseChoice breakCue() {
+    protected DefenseChoice breakCue(Phy phy) {
         return null;
     }
 

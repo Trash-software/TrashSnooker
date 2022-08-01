@@ -46,39 +46,45 @@ public class TableCloth {
                 100, 
                 6700, 
                 1500,
-                0.65),
+                0.65,
+                1.0),
         NORMAL("专业",
                 120,
                 7200,
                 1400,
-                0.5),
+                0.5,
+                0.95),
         MEDIUM("普通", 
                 150, 
                 7800,
                 1200,
-                0.25),
+                0.25, 0.85),
         SLOW("旧", 
                 180, 
                 8400,
                 1000,
-                0.0);
+                0.0,
+                0.7);
         
         private final String shown;
         public final double speedReduceFactor;  
         public final double spinReduceFactor;  // 数值越大，旋转衰减越大
         public final double spinEffectFactor;  // 数值越小影响越大
         public final double tailSpeedFactor;  // 尾速相关
+        public final double cushionBounceFactor;
         
         Smoothness(String shown, 
                    double speedReduceFactor,
                    double spinReduceFactor,
                    double spinEffectFactor,
-                   double tailSpeedFactor) {
+                   double tailSpeedFactor,
+                   double cushionBounceFactor) {
             this.shown = shown;
             this.speedReduceFactor = speedReduceFactor;
             this.spinReduceFactor = spinReduceFactor;
             this.spinEffectFactor = spinEffectFactor;
             this.tailSpeedFactor = tailSpeedFactor;
+            this.cushionBounceFactor = cushionBounceFactor;
         }
 
         @Override

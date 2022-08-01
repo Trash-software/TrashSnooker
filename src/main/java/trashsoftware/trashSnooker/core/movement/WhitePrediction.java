@@ -22,7 +22,8 @@ public class WhitePrediction {
     private double whiteDirectionYBeforeCollision;
     private double whiteCollisionX;
     private double whiteCollisionY;
-    private int whiteCushionCount;
+    private int whiteCushionCountBefore;  // 碰第一颗球之前的库数
+    private int whiteCushionCountAfter;  // 碰第一颗球之后的库数
     // 第一颗碰到的球的初始位置
     private double firstBallX;
     private double firstBallY;
@@ -136,8 +137,12 @@ public class WhitePrediction {
         return firstBallY;
     }
 
-    public int getWhiteCushionCount() {
-        return whiteCushionCount;
+    public int getWhiteCushionCountBefore() {
+        return whiteCushionCountBefore;
+    }
+
+    public int getWhiteCushionCountAfter() {
+        return whiteCushionCountAfter;
     }
 
     public int getFirstBallCushionCount() {
@@ -145,7 +150,11 @@ public class WhitePrediction {
     }
     
     public void whiteHitCushion() {
-        whiteCushionCount++;
+        if (firstCollide == null) {
+            whiteCushionCountBefore++;
+        } else {
+            whiteCushionCountAfter++;
+        }
     }
     
     public void firstBallHitCushion() {

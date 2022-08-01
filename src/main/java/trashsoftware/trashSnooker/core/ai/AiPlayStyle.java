@@ -34,8 +34,8 @@ public class AiPlayStyle {
      */
     public double priceOf(double[] spins, double selectedPower,
                           InGamePlayer inGamePlayer, GamePlayStage playStage) {
-        double maxSpin = 2.41;  // 0.81 + 0.8 * 2
-        double spinTotal = Math.abs(spins[0]) + Math.abs(spins[1]) * 2;
+        double maxSpin = 2.972;  // 0.81 * 1.2 + 0.8 * 2.5
+        double spinTotal = Math.abs(spins[0]) * 1.2 + Math.abs(spins[1]) * 2.5;
         double powerMax = inGamePlayer.getPlayerPerson().getControllablePowerPercentage();
         double comfortableLow = 110.0 - inGamePlayer.getPlayerPerson().getPowerControl();
         double comfortableHigh;

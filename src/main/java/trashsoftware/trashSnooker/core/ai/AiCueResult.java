@@ -65,18 +65,22 @@ public class AiCueResult {
         if (gamePlayStage == GamePlayStage.THIS_BALL_WIN || 
                 gamePlayStage == GamePlayStage.ENHANCE_WIN) {
             precisionFactor *= (playerPerson.psy / 100);
+            System.out.println(gamePlayStage + ", precision: " + precisionFactor);
         }
         
         double mistake = random.nextDouble() * 100;
         double mistakeFactor = 1.0;
+        double maxPrecision = 100.0;
         if (mistake > playerPerson.getAiPlayStyle().stability) {
             mistakeFactor = 2.0;
+            maxPrecision = 90.0;
             System.out.println("Mistake");
         }
         
         double sd = (100 - playerPerson.getAiPlayStyle().precision) / precisionFactor;  // 再歪也歪不了太多吧？
         System.out.println("Precision factor: " + precisionFactor + ", Random offset: " + sd);
         double afterRandom = random.nextGaussian() * sd * mistakeFactor + rad;
+        afterRandom = Math.min(afterRandom, maxPrecision);
         
         double[] vecAfterRandom = Algebra.unitVectorOfAngle(afterRandom);
         unitX = vecAfterRandom[0];

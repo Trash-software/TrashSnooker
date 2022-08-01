@@ -31,8 +31,9 @@
             <MenuItem text="重新放置手中球" fx:id="replaceBallInHandMenu" disable="true"/>
             <MenuItem text="让杆" fx:id="letOtherPlayMenu" disable="true"/>
         </Menu>
-        <Menu text="Debug">
+        <Menu fx:id="debugMenu" text="Debug">
             <MenuItem text="terminate" onAction="#terminateAction"/>
+            <MenuItem fx:id="debugModeMenu" text="debug mode" onAction="#debugModeAction"/>
             <MenuItem text="test" onAction="#testAction"/>
             <MenuItem text="tie" onAction="#tieTestAction"/>
             <MenuItem text="clear red balls" onAction="#clearRedBallsAction"/>
@@ -55,6 +56,7 @@
         <VBox fx:id="replayButtonBox" spacing="10.0" alignment="CENTER">
             <Button fx:id="replayLastCueButton" text="上一杆" onAction="#replayLastCueAction"/>
             <Button fx:id="replayNextCueButton" text="下一杆" onAction="#replayNextCueAction"/>
+            <Button text="快进" onAction="#replayFastForwardAction"/>
             <CheckBox fx:id="replayAutoPlayBox" text="自动播放"/>
         </VBox>
     </VBox>

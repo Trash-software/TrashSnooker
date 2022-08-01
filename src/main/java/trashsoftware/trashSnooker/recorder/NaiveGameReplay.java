@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.recorder;
 
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.GamePlayStage;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
@@ -11,7 +12,7 @@ import java.io.IOException;
 
 public class NaiveGameReplay extends GameReplay {
     protected NaiveGameReplay(BriefReplayItem item)
-            throws IOException {
+            throws IOException, VersionException {
         super(item);
     }
 
@@ -121,7 +122,7 @@ public class NaiveGameReplay extends GameReplay {
 
     private void readCueRecordAndTargets() {
         try {
-            byte[] buf = new byte[80];
+            byte[] buf = new byte[NaiveGameRecorder.CUE_RECORD_LENGTH];
             if (inputStream.read(buf) != buf.length) throw new IOException();
 
             currentCueRecord = new CueRecord(
@@ -135,7 +136,8 @@ public class NaiveGameReplay extends GameReplay {
                     Util.bytesToDouble(buf, 48),
                     Util.bytesToDouble(buf, 56),
                     Util.bytesToDouble(buf, 64),
-                    Util.bytesToDouble(buf, 72)
+                    Util.bytesToDouble(buf, 72),
+                    GamePlayStage.values()[buf[80] & 0xff]
             );
             
             thisTarget = new TargetRecord(
