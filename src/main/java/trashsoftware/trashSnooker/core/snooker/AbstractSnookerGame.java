@@ -159,7 +159,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             // 当从白球处无法看到任何一颗目标球的最薄边时
             List<Ball> currentTarBalls = getAllLegalBalls(currentTarget, false);
             int canSeeBallCount = countSeeAbleTargetBalls(cueBall.getX(), cueBall.getY(),
-                    currentTarBalls, 3);
+                    currentTarBalls, 3).seeAbleTargets;
             System.out.println("Target: " + currentTarget + ", Free ball check: " + 
                     canSeeBallCount + ", n targets: " + currentTarBalls.size());
             return canSeeBallCount == 0;

@@ -386,12 +386,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     /**
      * @param checkFullBall 如true，检查是否能过全球；如false，检查是否有薄边
-     * @param extendCheck   如true，多检查一颗球的距离。比如检查进球点，因为进球点是个虚拟的球，不会碰撞
+     * @param checkPotPoint 如true，检查进球点，因为进球点是个虚拟的球，不会碰撞
      * @return 两点之间能不能过球
      */
     public boolean pointToPointCanPassBall(double p1x, double p1y, double p2x, double p2y,
                                            Ball selfBall1, Ball selfBall2, boolean checkFullBall,
-                                           boolean extendCheck) {
+                                           boolean checkPotPoint) {
 
         double shadowRadius = checkFullBall ? gameValues.ballDiameter : gameValues.ballRadius;
 //        double p2Radius = gameValues.ballRadius;
@@ -413,7 +413,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         for (Ball ball : getAllBalls()) {
             if (ball != selfBall1 && ball != selfBall2 && !ball.isPotted()) {
-                if (extendCheck) {
+                if (checkPotPoint) {
                     // 障碍球占用了目标点
                     double ballTargetDt = Math.hypot(ball.x - p2x, ball.y - p2y);
                     if (ballTargetDt <= gameValues.ballDiameter) return false;
@@ -462,16 +462,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     }
 
-//    private boolean canSeeBall(Ball b1, Ball b2) {
-//        return canSeeBall(b1.x, b1.y, b2.x, b2.y, b1, b2);
-//    }
-
     /**
      * @param situation 1:薄边 2:全球 3:缝隙能过全球（斯诺克自由球那种）
      * @return 能看到的目标球数量
      */
-    public int countSeeAbleTargetBalls(double whiteX, double whiteY,
-                                       Collection<Ball> legalBalls, int situation) {
+    public SeeAble countSeeAbleTargetBalls(double whiteX, double whiteY,
+                                           Collection<Ball> legalBalls, int situation) {
         Set<Ball> legalSet;
         if (legalBalls instanceof Set) {
             legalSet = (Set<Ball>) legalBalls;
@@ -482,12 +478,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         int result = 0;
 
         double circle = Math.PI * 2;
+        double maxShadowAngle = 0.0;
+        double sumTargetDt = 0.0;
 
         for (Ball target : legalBalls) {
             double xDiff0 = target.x - whiteX;
             double yDiff0 = target.y - whiteY;
             double whiteTarDt = Math.hypot(xDiff0, yDiff0);
             double angle = Algebra.thetaOf(xDiff0, yDiff0);
+            sumTargetDt += whiteTarDt;
 
             double extraShadowAngle;
             if (situation == 1) {
@@ -528,33 +527,33 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         if (angle >= right) {
                             canSee = false;  // angle在right与x正轴之间，挡住
 //                            System.out.println(ball + " obstacle 1");
-                            break;
                         } else if (angle <= left - circle) {
                             canSee = false;  // angle在x正轴与left之间，挡住
 //                            System.out.println(ball + " obstacle 1.1");
-                            break;
                         }
                     } else if (right < 0) {  // 连线右侧小于0
                         if (angle >= circle + right) {
                             canSee = false;  // angle在right以上x正轴之下，挡住
 //                            System.out.println(ball + " obstacle 2");
-                            break;
                         } else if (angle <= left) {
                             canSee = false;  // angle在x正轴以上left之下，挡住
 //                            System.out.println(ball + " obstacle 2.1");
-                            break;
                         }
                     }
-                    if (left >= angle && right <= angle) {
+                    if (canSee && left >= angle && right <= angle) {
                         canSee = false;
 //                        System.out.println(ball + " obstacle 3");
-                        break;
+                    }
+                    if (!canSee) {
+                        if (maxShadowAngle < ballShadowAngle) {
+                            maxShadowAngle = ballShadowAngle;
+                        }
                     }
                 }
             }
             if (canSee) result++;
         }
-        return result;
+        return new SeeAble(result, sumTargetDt / legalBalls.size(), maxShadowAngle);
     }
 
 //    public boolean canSeeBall(double p1x, double p1y, double p2x, double p2y,
@@ -628,7 +627,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //    }
 
     /**
-     * 返回{目标球与"从目标球处能直接看到的洞口"的连线的单位向量, 洞口进球坐标(注意: 只有对于袋口球来说是洞底坐标)}。
+     * 返回
+     * {
+     * 目标球与"从目标球处能直接看到的洞口"的连线的单位向量,
+     * 洞口进球坐标(注意: 只有对于袋口球来说是洞底坐标),
+     * 进球碰撞点坐标
+     * }。
      */
     public List<double[][]> directionsToAccessibleHoles(Ball targetBall) {
         List<double[][]> list = new ArrayList<>();
@@ -638,21 +642,27 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         for (int i = 0; i < 6; i++) {
             double[] holeOpenCenter = gameValues.allHoleOpenCenters[i];
             double[] holeBottom = gameValues.allHoles[i];
-            if (i < 4 && 
+            if (i < 4 &&
                     Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ballRadius &&
-                    pointToPointCanPassBall(x, y, holeBottom[0], holeBottom[1], targetBall, 
+                    pointToPointCanPassBall(x, y, holeBottom[0], holeBottom[1], targetBall,
                             null, true, true)) {
                 // 目标球离袋口瞄球点太近了，转而检查真正的袋口
                 double directionX = holeBottom[0] - x;
                 double directionY = holeBottom[1] - y;
                 double[] unitXY = Algebra.unitVector(directionX, directionY);
-                list.add(new double[][]{unitXY, holeBottom});
+                double collisionPointX = x - gameValues.ballDiameter * unitXY[0];
+                double collisionPointY = y - gameValues.ballDiameter * unitXY[1];
+
+                list.add(new double[][]{unitXY, holeBottom, new double[]{collisionPointX, collisionPointY}});
             } else if (pointToPointCanPassBall(x, y, holeOpenCenter[0], holeOpenCenter[1], targetBall,
                     null, true, true)) {
                 double directionX = holeOpenCenter[0] - x;
                 double directionY = holeOpenCenter[1] - y;
                 double[] unitXY = Algebra.unitVector(directionX, directionY);
-                list.add(new double[][]{unitXY, holeOpenCenter});
+                double collisionPointX = x - gameValues.ballDiameter * unitXY[0];
+                double collisionPointY = y - gameValues.ballDiameter * unitXY[1];
+
+                list.add(new double[][]{unitXY, holeOpenCenter, new double[]{collisionPointX, collisionPointY}});
             }
         }
         return list;
@@ -826,6 +836,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     protected void end() {
         ended = true;
+    }
+
+    public static class SeeAble {
+        public final int seeAbleTargets;
+        public final double avgTargetDistance;
+        public final double maxShadowAngle;  // 那颗球离白球的距离
+
+        SeeAble(int seeAbleTargets, double avgTargetDistance, double maxShadowAngle) {
+            this.seeAbleTargets = seeAbleTargets;
+            this.avgTargetDistance = avgTargetDistance;
+            this.maxShadowAngle = maxShadowAngle;
+        }
     }
 
     public class WhitePredictor {
@@ -1043,10 +1065,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         System.err.println("Ball " + ball + " at a weired position: " +
                                 ball.getX() + ", " + ball.getY());
                     }
-                }
-                if (ball.getValue() == 6) {
-                    System.out.println("Pick speed " + ball.vx + ", " + ball.vy + ", " +
-                            ball.x + " " + ball.y);
                 }
             }
 

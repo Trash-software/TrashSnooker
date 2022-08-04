@@ -5,6 +5,7 @@ import java.util.*;
 public class Algebra {
     
     public static final double SQRT2 = Math.sqrt(2);
+    public static final double TWO_PI = Math.PI * 2;
 
     public static double[] symmetricVector(double vx, double vy, double axisVX, double axisVY) {
         double scalar = 2 * vectorDot(vx, vy, axisVX, axisVY) / vectorDot(axisVX, axisVY, axisVX, axisVY);

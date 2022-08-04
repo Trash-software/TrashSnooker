@@ -22,7 +22,7 @@ public class Values {
     // 由旋转产生的理论最大瞬时速度（该速度不可能达到），mm/s
     public static final double MAX_SPIN_SPEED = 6800.0;
     // 因为ball的spin值是球想要达到的速度，范围
-    public static final double HIGH_CUE_FACTOR = 1.55;
+    public static final double FRONT_SPIN_FACTOR = 1.45;
     // 由侧旋产生的最大瞬时速度，mm/s
     public static final double MAX_SIDE_SPIN_SPEED = 1400.0;
     public static final int DETAILED_PHYSICAL = 12;

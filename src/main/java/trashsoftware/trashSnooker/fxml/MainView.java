@@ -69,10 +69,9 @@ public class MainView implements Initializable {
     }
 
     private void initTotalFramesBox() {
-        totalFramesBox.getItems().addAll(
-                1, 3, 5, 7, 9, 11, 13, 15, 17, 19,
-                21, 23, 25, 27, 29, 31, 33, 35
-        );
+        for (int i = 1; i <= 41; i += 2) {
+            totalFramesBox.getItems().add(i);
+        }
         totalFramesBox.getSelectionModel().select(0);
     }
     

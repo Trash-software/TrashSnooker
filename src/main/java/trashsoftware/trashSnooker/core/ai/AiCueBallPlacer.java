@@ -60,7 +60,9 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
                     player,
                     null,
                     legalBalls,
-                    pos
+                    pos,
+                    false,
+                    false
             );
             for (AiCue.AttackChoice choice : attackChoices) {
                 if (choice.price > maxPrice) {

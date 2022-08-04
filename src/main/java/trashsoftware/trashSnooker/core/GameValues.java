@@ -147,6 +147,7 @@ public class GameValues {
     
     public double ballHoleRatio;
     public double cornerHoleAngleRatio;  // 打底袋最差的角度和最好的角度差多少
+    public double midHoleBestAngleWidth;  // 中袋对正的容错空间
     
     public double tableResistanceRatio;
     public double ballBounceRatio;
@@ -162,6 +163,7 @@ public class GameValues {
         double bestSpace = cornerHoleDiameter - ballRadius;
         double worstSpace = cornerHoleDiameter * Math.sqrt(2) / 2 - ballRadius;
         cornerHoleAngleRatio = worstSpace / bestSpace;
+        midHoleBestAngleWidth = midHoleDiameter - ballRadius;
         
         topLeftHoleXY = new double[]
                 {leftX - cornerHoleDt, topY - cornerHoleDt};
@@ -189,8 +191,8 @@ public class GameValues {
         botLeftHoleOpenCenter = new double[]{leftX + ballRadius, botY - ballRadius};
         topRightHoleOpenCenter = new double[]{rightX - ballRadius, topY + ballRadius};
         botRightHoleOpenCenter = new double[]{rightX - ballRadius, botY - ballRadius};
-        topMidHoleOpenCenter = new double[]{midX, topY - ballRadius * 0.6};  // 特殊：中心点其实在台外
-        botMidHoleOpenCenter = new double[]{midX, botY + ballRadius * 0.6};
+        topMidHoleOpenCenter = new double[]{midX, topY - ballRadius * 0.25};  // 特殊：中心点其实在台外
+        botMidHoleOpenCenter = new double[]{midX, botY + ballRadius * 0.25};
 
         allHoleOpenCenters = new double[][]{
                 topLeftHoleOpenCenter,

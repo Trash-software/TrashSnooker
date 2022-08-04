@@ -224,6 +224,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     private boolean isNotMoving() {
         return vx == 0.0 && vy == 0.0;
     }
+    
+    public static double midHolePowerFactor(double speed) {
+        return 1.2 - (speed / Values.MAX_POWER_SPEED) * 0.6;
+    }
 
     /**
      * 众所周知，中袋大力容易打不进
@@ -231,7 +235,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
      * @return (0.6, 1.2)之间的一个值
      */
     protected double midHolePowerFactor(Phy phy) {
-        return 1.2 - (getSpeed() * phy.calculationsPerSec / Values.MAX_POWER_SPEED) * 0.6;
+        return midHolePowerFactor(getSpeed() * phy.calculationsPerSec);
     }
 
     protected void hitHoleArcArea(double[] arcXY, Phy phy) {

@@ -1,7 +1,5 @@
 package trashsoftware.trashSnooker.core;
 
-import trashsoftware.trashSnooker.recorder.CueRecord;
-
 public class CuePlayParams {
 
     public final double vx;
@@ -92,7 +90,7 @@ public class CuePlayParams {
 //        double leftRightSpin = getUnitSideSpin();  // 
         if (frontBackSpin > 0) {
             // 高杆补偿
-            frontBackSpin *= Values.HIGH_CUE_FACTOR;
+            frontBackSpin *= Values.FRONT_SPIN_FACTOR;
         }
 
         // 小力高低杆补偿
