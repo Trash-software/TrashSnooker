@@ -395,13 +395,21 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                 end();
                 if (currentTarget == 8) {
                     winingPlayer = currentPlayer;
-                } else {  // 误进黑八 todo: 检查开球
+                } else if (currentTarget == NOT_SELECTED_REP) {
+                    // todo: 捡回去
+                    if (isBreaking) {
+                        // todo: 继续打
+                    } else {
+                        switchPlayer();
+                    }
+                } else {  // 误进黑八
                     winingPlayer = getAnotherPlayer();
                 }
                 return;
             }
             if (currentTarget == NOT_SELECTED_REP) {  // 未选球
                 if (isBreaking) {  // 开球进袋不算选球
+                    currentPlayer.setBreakSuccess();
                     System.out.println("开球进球不选球");
                     return;
                 }

@@ -177,12 +177,20 @@ public class StatsView implements Initializable {
                 resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
             } else if (gameType == GameType.CHINESE_EIGHT || gameType == GameType.SIDE_POCKET) {
                 int[] breaksScores = db.getNumberedBallGamesTotal(gameType, pai.playerName, pai.isAi);
-                resultPane.add(new Label("炸清"), 0, rowIndex);
+                resultPane.add(new Label("开球次数"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
-                resultPane.add(new Label("接清"), 0, rowIndex);
+                resultPane.add(new Label("开球进球次数"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[1])), 1, rowIndex++);
-                resultPane.add(new Label("最高单杆球数"), 0, rowIndex);
+                resultPane.add(new Label("开球成功率"), 0, rowIndex);
+                resultPane.add(new Label(String.format("%.1f%%",
+                        breaksScores[1] * 100.0 / breaksScores[0])), 
+                        1, rowIndex++);
+                resultPane.add(new Label("炸清"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[2])), 1, rowIndex++);
+                resultPane.add(new Label("接清"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(breaksScores[3])), 1, rowIndex++);
+                resultPane.add(new Label("最高单杆球数"), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
             }
             resultPane.add(new Separator(), 0, rowIndex++, 3, 1);
             final Button gameStatsButton = new Button("对局统计");
@@ -756,19 +764,38 @@ public class StatsView implements Initializable {
             } else if (egt.gameType == GameType.CHINESE_EIGHT ||
                     egt.gameType == GameType.SIDE_POCKET) {
                 int[][] numberedBreaks = ((EntireGameRecord.NumberedBall) matchRec).totalScores();
-                page.add(new Label("炸清"), 0, rowIndex);
+                page.add(new Label("开球次数"), 0, rowIndex);
                 page.add(new Label(String.valueOf(numberedBreaks[0][0])), 1, rowIndex);
                 page.add(new Label(String.valueOf(numberedBreaks[1][0])), 5, rowIndex);
                 rowIndex++;
 
-                page.add(new Label("接清"), 0, rowIndex);
+                page.add(new Label("开球进球次数"), 0, rowIndex);
                 page.add(new Label(String.valueOf(numberedBreaks[0][1])), 1, rowIndex);
                 page.add(new Label(String.valueOf(numberedBreaks[1][1])), 5, rowIndex);
                 rowIndex++;
 
-                page.add(new Label("单杆最高球数"), 0, rowIndex);
+                page.add(new Label("开球成功率"), 0, rowIndex);
+                page.add(new Label(String.format("%.1f%%", 
+                                numberedBreaks[0][1] * 100.0 / numberedBreaks[0][0])), 
+                        1, rowIndex);
+                page.add(new Label(String.format("%.1f%%",
+                                numberedBreaks[1][1] * 100.0 / numberedBreaks[1][0])),
+                        5, rowIndex);
+                rowIndex++;
+                
+                page.add(new Label("炸清"), 0, rowIndex);
                 page.add(new Label(String.valueOf(numberedBreaks[0][2])), 1, rowIndex);
                 page.add(new Label(String.valueOf(numberedBreaks[1][2])), 5, rowIndex);
+                rowIndex++;
+
+                page.add(new Label("接清"), 0, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[0][3])), 1, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[1][3])), 5, rowIndex);
+                rowIndex++;
+
+                page.add(new Label("单杆最高球数"), 0, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[0][4])), 1, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[1][4])), 5, rowIndex);
                 rowIndex++;
             }
 

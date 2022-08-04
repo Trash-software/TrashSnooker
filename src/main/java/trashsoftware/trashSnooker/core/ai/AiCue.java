@@ -733,6 +733,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 // 基本上就是往中袋的投影占比
                 double holeProjWidth = Math.abs(targetHoleVec[1]) * game.getGameValues().midHoleDiameter;
                 double errorToleranceWidth = holeProjWidth - game.getGameValues().ballRadius;
+                errorToleranceWidth = Math.max(errorToleranceWidth, 0.00001);
                 return game.getGameValues().midHoleBestAngleWidth / errorToleranceWidth;
             } else {
                 // 底袋，45度时难度系数为1，0度或90度时难度系数最大，为 sqrt(2)/2 * 袋直径 - 球半径 的倒数

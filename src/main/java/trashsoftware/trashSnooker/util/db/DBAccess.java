@@ -220,7 +220,7 @@ public class DBAccess {
      * 返回{炸请，接清}
      */
     public int[] getNumberedBallGamesTotal(GameType gameType, String playerName, boolean playerIsAi) {
-        int[] rtn = new int[3];
+        int[] rtn = new int[5];
         String pns = "'" + playerName + "'";
         String tableName = gameType.toSqlKey() + "Record";
         String typeKey = "'" + gameType.toSqlKey() + "'";
@@ -236,11 +236,13 @@ public class DBAccess {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(highestQuery);
             while (resultSet.next()) {
+                rtn[0] += resultSet.getInt("Breaks");
+                rtn[1] += resultSet.getInt("BreakPots");
                 int highInResult = resultSet.getInt("Highest");
-                rtn[0] += resultSet.getInt("BreakClear");
-                rtn[1] += resultSet.getInt("ContinueClear");
-                if (highInResult > rtn[2]) {
-                    rtn[2] = highInResult;
+                rtn[2] += resultSet.getInt("BreakClear");
+                rtn[3] += resultSet.getInt("ContinueClear");
+                if (highInResult > rtn[4]) {
+                    rtn[4] = highInResult;
                 }
             }
             statement.close();
@@ -363,10 +365,12 @@ public class DBAccess {
                     int index = numRs.getInt("FrameIndex");
                     int playerIndex = numRs.getString("PlayerName")
                             .equals(title.player1Name) ? 0 : 1;
-                    int[] scores = new int[3];  // break clear, continue clear, highest
-                    scores[0] = numRs.getInt("BreakClear");
-                    scores[1] = numRs.getInt("ContinueClear");
-                    scores[2] = numRs.getInt("Highest");
+                    int[] scores = new int[5];  // breaks, break successes, break clear, continue clear, highest
+                    scores[0] = numRs.getInt("Breaks");
+                    scores[1] = numRs.getInt("BreakPots");
+                    scores[2] = numRs.getInt("BreakClear");
+                    scores[3] = numRs.getInt("ContinueClear");
+                    scores[4] = numRs.getInt("Highest");
                     PlayerFrameRecord.Numbered numbered = new PlayerFrameRecord.Numbered(
                             index, framesPotMap.get(index)[playerIndex],
                             framesWinnerMap.get(index), scores
@@ -414,6 +418,7 @@ public class DBAccess {
         String tableName = entireGame.gameType.toSqlKey() + "Record";
         int playTimes = player.getPlayTimes();
         boolean breaks = player.isBreakingPlayer();
+        boolean breakPot = player.isBreakSuccess();
         int breakClear = 0;
         int continueClear = 0;
         int highest = 0;
@@ -435,6 +440,7 @@ public class DBAccess {
                 frame.frameIndex + ", " +
                 "'" + player.getPlayerPerson().getName() + "', " +
                 (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) + ", " +
+                (breaks ? 1 : 0) + ", " + (breakPot ? 1 : 0) + ", " +
                 breakClear + ", " + continueClear + ", " + highest + ");";
         try {
             executeStatement(query);
