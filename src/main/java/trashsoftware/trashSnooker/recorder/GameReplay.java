@@ -215,11 +215,16 @@ public abstract class GameReplay implements GameHolder {
 //            storeLastPositions();
         }
     }
-    
+
+    /**
+     * @return {ball: [x, y, axisX, axisY, axisZ, rotationDeg, potted]}
+     */
     public HashMap<Ball, double[]> getCurrentPositions() {
         HashMap<Ball, double[]> pos = new HashMap<>();
         for (Ball ball : balls) {
-            pos.put(ball, new double[]{ball.getX(), ball.getY(), ball.isPotted() ? 1 : 0});
+            pos.put(ball, new double[]{ball.getX(), ball.getY(), 
+                    ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getRotateDeg(), 
+                    ball.isPotted() ? 1 : 0});
         }
         return pos;
     }

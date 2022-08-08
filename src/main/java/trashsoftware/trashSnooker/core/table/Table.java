@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.table;
 
+import javafx.geometry.Point3D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -81,12 +82,21 @@ public abstract class Table {
     /**
      * 在指定的位置强行绘制一颗球，无论球是否已经落袋
      */
-    public abstract void forceDrawBall(GameView view,
-                                       Ball ball,
-                                       double absoluteX,
-                                       double absoluteY,
-                                       GraphicsContext graphicsContext,
-                                       double scale);
+    public void forceDrawBall(GameView view,
+                              Ball ball,
+                              double absoluteX,
+                              double absoluteY,
+                              double axisX,
+                              double axisY,
+                              double axisZ,
+                              double rotateDeg,
+                              GraphicsContext graphicsContext,
+                              double scale) {
+        ball.model.setX(absoluteX);
+        ball.model.setY(absoluteY);
+        ball.model.rotation.setAxis(new Point3D(axisX, axisY, axisZ));
+        ball.model.rotation.setAngle(rotateDeg / view.frameRate / 15);
+    }
 
     public void forceDrawBallInHand(GameView view,
                                     Ball ball,
@@ -94,7 +104,8 @@ public abstract class Table {
                                     double realY,
                                     GraphicsContext graphicsContext,
                                     double scale) {
-        forceDrawBall(view, ball, realX, realY, graphicsContext, scale);
+        ball.model.sphere.setVisible(true);
+        forceDrawBall(view, ball, realX, realY, 0, 0, 0, 0, graphicsContext, scale);
 //        drawBallBase(
 //                view.canvasX(realX),
 //                view.canvasY(realY),
@@ -110,19 +121,28 @@ public abstract class Table {
                                  double scale) {
         for (Ball ball : allBalls) {
             boolean pot;
-            double x, y;
+            double x, y, ax, ay, az, rd;
             if (positionsPot == null) {
                 pot = ball.isPotted();
                 x = ball.getX();
                 y = ball.getY();
+                ax = ball.getAxisX();
+                ay = ball.getAxisY();
+                az = ball.getAxisZ();
+                rd = ball.getRotateDeg();
             } else {
                 double[] xyp = positionsPot.get(ball);
-                pot = xyp[2] == 1;
+                pot = xyp[6] == 1;
                 x = xyp[0];
                 y = xyp[1];
+                ax = xyp[2];
+                ay = xyp[3];
+                az = xyp[4];
+                rd = xyp[5];
             }
+            ball.model.sphere.setVisible(!pot);
             if (!pot) {
-                forceDrawBall(view, ball, x, y, graphicsContext, scale);
+                forceDrawBall(view, ball, x, y, ax, ay, az, rd, graphicsContext, scale);
             }
         }
     }

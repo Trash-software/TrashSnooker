@@ -3,6 +3,7 @@ module TrashSnooker {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
+    requires javafx.swing;
     requires org.json;
     requires org.jetbrains.annotations;
     requires java.sql;
@@ -18,6 +19,7 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.recorder;
     exports trashsoftware.trashSnooker.core.scoreResult;
     exports trashsoftware.trashSnooker.core.table;
+    exports trashsoftware.trashSnooker.fxml.ballDrawing;
 
     opens trashsoftware.trashSnooker.fxml;
     opens trashsoftware.trashSnooker.fxml.alert;

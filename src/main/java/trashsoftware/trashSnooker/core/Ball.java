@@ -1,28 +1,47 @@
 package trashsoftware.trashSnooker.core;
 
+import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Sphere;
+import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.fxml.ballDrawing.BallModel;
+import trashsoftware.trashSnooker.fxml.ballDrawing.PoolBallModel;
 
 import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     protected final int value;
+    public final BallModel model;
     private final Color color;
     protected double xSpin, ySpin;
     protected double sideSpin;
+    protected double axisX, axisY, axisZ, rotateDeg;
+    
     private boolean potted;
     private long msSinceCue;
     private Ball justHit;
     private static final Random ERROR_GENERATOR = new Random();
     private double currentXError;
     private double currentYError;
+    private static final Random randomGenerator = new Random();
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ballRadius);
-
-        this.potted = initPotted;
+        
         this.value = value;
         this.color = generateColor(value);
+        
+        this.axisX = randomGenerator.nextDouble();
+        this.axisY = randomGenerator.nextDouble();
+        this.axisZ = randomGenerator.nextDouble();
+        this.rotateDeg = randomGenerator.nextDouble() * 360.0 * 1000;
+        
+        model = BallModel.createModel(this);
+        setPotted(initPotted);
     }
 
     protected Ball(int value, double[] xy, GameValues values) {
@@ -104,13 +123,29 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     }
 
     public void pickup() {
-        potted = false;
+        setPotted(false);
         vx = 0.0;
         vy = 0.0;
         sideSpin = 0.0;
         xSpin = 0.0;
         ySpin = 0.0;
         distance = 0.0;
+    }
+
+    public double getAxisX() {
+        return axisX;
+    }
+
+    public double getAxisY() {
+        return axisY;
+    }
+
+    public double getAxisZ() {
+        return axisZ;
+    }
+
+    public double getRotateDeg() {
+        return rotateDeg;
     }
 
     public boolean isRed() {
@@ -133,10 +168,13 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     }
 
     public boolean isLikelyStopped(Phy phy) {
-        if (getSpeed() < phy.speedReducer && getSpinTargetSpeed() < phy.spinReducer) {
+        if (getSpeed() < phy.speedReducer && 
+                getSpinTargetSpeed() < phy.spinReducer) {
             vx = 0.0;
             vy = 0.0;
-            sideSpin = 0.0;
+            if (phy.isPrediction) {
+                sideSpin = 0.0;
+            }
             xSpin = 0.0;
             ySpin = 0.0;
             return true;
@@ -148,10 +186,37 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         return Math.hypot(xSpin, ySpin);
     }
 
+    private void calculateAxis(Phy phy) {
+        axisX = ySpin;
+        axisY = -xSpin;
+        double ss = sideSpin * 8.0;
+//        if (isWhite()) System.out.println(xSpin + " " + ySpin + " " + sideSpin);
+        if (Double.isNaN(ss)) ss = 0.0;
+        axisZ = -ss;
+        double degChange = 
+                Math.sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ) * phy.calculationsPerSec;
+        rotateDeg += degChange;
+    }
+    
+    protected boolean sideSpinStopped(Phy phy) {
+        msSinceCue++;
+        if (sideSpin >= phy.sideSpinReducer) {
+            sideSpin -= phy.sideSpinReducer;
+        } else if (sideSpin <= -phy.sideSpinReducer) {
+            sideSpin += phy.sideSpinReducer;
+        } else {
+            return true;
+        }
+        return false;
+    }
+
     protected void normalMove(Phy phy) {
         distance += Math.hypot(vx, vy);
-        x = nextX;
-        y = nextY;
+        setX(nextX);
+        setY(nextY);
+        
+        if (!phy.isPrediction) calculateAxis(phy);
+        
         msSinceCue++;
         if (sideSpin >= phy.sideSpinReducer) {
             sideSpin -= phy.sideSpinReducer;
@@ -166,11 +231,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         vy *= ratio;
         
         if (!phy.isPrediction) {
+            // 这部分是台泥造成的线路偏差
             double xErr = ERROR_GENERATOR.nextGaussian() * phy.cloth.goodness.errorFactor / phy.calculationsPerSec / 1.2 + 
                     phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec / 180;
             double yErr = ERROR_GENERATOR.nextGaussian() * phy.cloth.goodness.errorFactor / phy.calculationsPerSec / 1.2;
-//            currentXError += xErr;
-//            currentYError += yErr;
             vx += xErr;
             vy += yErr;
         }
@@ -215,7 +279,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     }
 
     public void pot() {
-        potted = true;
+        setPotted(true);
         x = 0.0;
         y = 0.0;
         clearMovement();
@@ -274,6 +338,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
             xSpin *= (values.wallSpinPreserveRatio * 0.8);
             ySpin *= values.wallSpinPreserveRatio;
             sideSpin *= values.wallSpinPreserveRatio;
+//            rotateDeg = 0.0;
             return true;
         }
         if (nextY < values.ballRadius + values.topY ||
@@ -290,6 +355,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
             ySpin *= (values.wallSpinPreserveRatio * 0.8);
             sideSpin *= values.wallSpinPreserveRatio;
 //            System.out.println("Hit wall!======================");
+//            rotateDeg = 0.0;
             return true;
         }
         return false;

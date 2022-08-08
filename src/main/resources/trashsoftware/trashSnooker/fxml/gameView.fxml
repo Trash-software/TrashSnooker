@@ -62,7 +62,9 @@
     </VBox>
 
     <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="4">
-        <Canvas fx:id="gameCanvas"/>
+        <Pane fx:id="ballPane">
+            <Canvas fx:id="gameCanvas"/>
+        </Pane>
 
         <GridPane>
             <columnConstraints>

@@ -14,6 +14,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -70,10 +71,13 @@ public class GameView implements Initializable {
     private static final double DEFAULT_MAX_PREDICT_LENGTH = 1000.0;
     private final double minPredictLengthPotDt = 2000.0;
     private final double maxPredictLengthPotDt = 100.0;
-    public double scale = 0.32;
+    public static double scale = 0.32;
     public double frameTimeMs = 20.0;
+    public double frameRate = 1000.0 / frameTimeMs;
     @FXML
     Canvas gameCanvas;
+    @FXML
+    Pane ballPane;
     @FXML
     Canvas cueAngleCanvas;
     @FXML
@@ -244,6 +248,8 @@ public class GameView implements Initializable {
         setUiFrameStart();
         setupDebug();
 
+        setupBalls();
+
         setOnHidden();
 
 //        while (replay.loadNext() && replay.getCurrentFlag() == GameRecorder.FLAG_HANDBALL) {
@@ -273,6 +279,8 @@ public class GameView implements Initializable {
         generateScales();
         setUiFrameStart();
         setupDebug();
+        
+        setupBalls();
 
         stage.setOnCloseRequest(e -> {
             if (!game.isFinished()) {
@@ -416,6 +424,7 @@ public class GameView implements Initializable {
                 Platform.runLater(() -> aiCue(nextCuePlayer));
             }
         }
+        updatePlayStage();
     }
 
     private void endFrame() {
@@ -455,6 +464,8 @@ public class GameView implements Initializable {
                         "保存并退出",
                         () -> {
                             game.startNextFrame();
+                            setupBalls();
+                            
                             drawScoreBoard(game.getGame().getCuingPlayer(), true);
                             drawTargetBoard(true);
                             setUiFrameStart();
@@ -469,6 +480,22 @@ public class GameView implements Initializable {
                 );
             }
         });
+    }
+    
+    private void setupBalls() {
+        ballPane.getChildren().clear();
+        ballPane.getChildren().add(gameCanvas);
+        if (replay != null) {
+            for (Ball ball : replay.getAllBalls()) {
+                ballPane.getChildren().add(ball.model.sphere);
+                ball.model.sphere.setMouseTransparent(true);
+            }
+        } else {
+            for (Ball ball : game.getGame().getAllBalls()) {
+                ballPane.getChildren().add(ball.model.sphere);
+                ball.model.sphere.setMouseTransparent(true);
+            }
+        }
     }
 
     private void askReposition() {
@@ -926,7 +953,6 @@ public class GameView implements Initializable {
     }
 
     private void playerCue(Player player) {
-        updatePlayStage();
         // 判断是否为进攻杆
         PotAttempt currentAttempt = null;
         if (predictedTargetBall != null) {
@@ -1017,7 +1043,6 @@ public class GameView implements Initializable {
     }
 
     private void aiCue(Player player) {
-        updatePlayStage();
         cueButton.setText("正在思考");
         cueButton.setDisable(true);
         aiCalculating = true;
@@ -1384,6 +1409,8 @@ public class GameView implements Initializable {
     private void setupCanvas() {
         gameCanvas.setWidth(canvasWidth);
         gameCanvas.setHeight(canvasHeight);
+        ballPane.setPrefWidth(canvasWidth);
+        ballPane.setPrefHeight(canvasHeight);
     }
 
     private void setupPowerSlider() {
@@ -1613,11 +1640,20 @@ public class GameView implements Initializable {
                     movement.getMovementMap().entrySet()) {
                 MovementFrame frame = entry.getValue().get(index);
                 if (!frame.potted) {
+                    entry.getKey().model.sphere.setVisible(true);
                     if (replay != null) {
-                        replay.table.forceDrawBall(this, entry.getKey(), frame.x, frame.y, graphicsContext, scale);
+                        replay.table.forceDrawBall(this, entry.getKey(), 
+                                frame.x, frame.y,
+                                frame.axisX, frame.axisY, frame.axisZ, frame.rotateDeg, 
+                                graphicsContext, scale);
                     } else {
-                        game.getGame().getTable().forceDrawBall(this, entry.getKey(), frame.x, frame.y, graphicsContext, scale);
+                        game.getGame().getTable().forceDrawBall(this, entry.getKey(), 
+                                frame.x, frame.y,
+                                frame.axisX, frame.axisY, frame.axisZ, frame.rotateDeg,
+                                graphicsContext, scale);
                     }
+                } else {
+                    entry.getKey().model.sphere.setVisible(false);
                 }
 
                 switch (frame.movementType) {
@@ -1649,17 +1685,27 @@ public class GameView implements Initializable {
                         replayNextCueAction();
                     }
                 } else {
-                    game.getGame().getTable().drawStoppedBalls(this, game.getGame().getAllBalls(), null, graphicsContext, scale);
+                    game.getGame().getTable().drawStoppedBalls(this, game.getGame().getAllBalls(), 
+                            null, graphicsContext, scale);
                 }
             } else {
                 // 已经算出，但还在放运杆动画
                 for (Map.Entry<Ball, MovementFrame> entry : movement.getStartingPositions().entrySet()) {
                     MovementFrame frame = entry.getValue();
                     if (!frame.potted) {
+                        entry.getKey().model.sphere.setVisible(true);
                         if (replay != null)
-                            replay.getTable().forceDrawBall(this, entry.getKey(), frame.x, frame.y, graphicsContext, scale);
+                            replay.getTable().forceDrawBall(this, entry.getKey(), 
+                                    frame.x, frame.y,
+                                    frame.axisX, frame.axisY, frame.axisZ, frame.rotateDeg,
+                                    graphicsContext, scale);
                         else
-                            game.getGame().getTable().forceDrawBall(this, entry.getKey(), frame.x, frame.y, graphicsContext, scale);
+                            game.getGame().getTable().forceDrawBall(this, entry.getKey(), 
+                                    frame.x, frame.y,
+                                    frame.axisX, frame.axisY, frame.axisZ, frame.rotateDeg,
+                                    graphicsContext, scale);
+                    } else {
+                        entry.getKey().model.sphere.setVisible(false);
                     }
                 }
             }
@@ -1957,7 +2003,7 @@ public class GameView implements Initializable {
         CuePlayParams[] possibles = generateCueParamsSd1();
         WhitePrediction[] clockwise = new WhitePrediction[8];
         WhitePrediction center = game.getGame().predictWhite(
-                possibles[0], game.predictPhy, whitePredictLenAfterWall,
+                possibles[0], game.whitePhy, whitePredictLenAfterWall,
                 false, false, true);
         if (center == null) return;
 
@@ -1987,7 +2033,7 @@ public class GameView implements Initializable {
 
         for (int i = 1; i < possibles.length; i++) {
             clockwise[i - 1] = game.getGame().predictWhite(
-                    possibles[i], game.predictPhy, whitePredictLenAfterWall,
+                    possibles[i], game.whitePhy, whitePredictLenAfterWall,
                     false, false, true
             );
         }
@@ -2505,19 +2551,19 @@ public class GameView implements Initializable {
         ballCanvasGc.fillOval(cuePointX - cueRadius, cuePointY - cueRadius, cueRadius * 2, cueRadius * 2);
     }
 
-    public double canvasX(double realX) {
+    public static double canvasX(double realX) {
         return realX * scale;
     }
 
-    public double canvasY(double realY) {
+    public static double canvasY(double realY) {
         return realY * scale;
     }
 
-    public double realX(double canvasX) {
+    public static double realX(double canvasX) {
         return canvasX / scale;
     }
 
-    public double realY(double canvasY) {
+    public static double realY(double canvasY) {
         return canvasY / scale;
     }
 

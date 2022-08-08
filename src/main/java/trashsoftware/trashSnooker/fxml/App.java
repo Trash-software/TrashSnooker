@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.stage.Stage;
 //import trashsoftware.configLoader.ConfigLoader;
 import trashsoftware.trashSnooker.fxml.GameView;
@@ -43,7 +44,7 @@ public class App extends Application {
             MainView mainView = loader.getController();
             mainView.setStage(primaryStage);
 
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
             primaryStage.setScene(scene);
 

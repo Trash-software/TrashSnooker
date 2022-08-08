@@ -75,13 +75,17 @@ public class NaiveGameRecorder extends GameRecorder {
 
             outputStream.write(ball.getValue());
 
-            byte[] buf = new byte[26];
+            byte[] buf = new byte[58];
             for (MovementFrame frame : frames) {
                 buf[0] = (byte) (frame.potted ? 1 : 0);
                 buf[1] = (byte) frame.movementType;
                 Util.doubleToBytes(frame.x, buf, 2);
                 Util.doubleToBytes(frame.y, buf, 10);
                 Util.doubleToBytes(frame.movementValue,  buf,18);
+                Util.doubleToBytes(frame.axisX, buf, 26);
+                Util.doubleToBytes(frame.axisY, buf, 34);
+                Util.doubleToBytes(frame.axisZ, buf, 42);
+                Util.doubleToBytes(frame.rotateDeg, buf, 50);
                 outputStream.write(buf);
             }
         }

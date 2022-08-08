@@ -1119,6 +1119,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
 //                    ball.normalMove();
 //                    if (noHit) ball.normalMove();
+                } else {
+                    if (!ball.sideSpinStopped(phy)) {
+                        noBallMoving = false;
+                    }
                 }
             }
             double lastPhysicalTime = cumulatedPhysicalTime;
@@ -1129,7 +1133,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 for (int i = 0; i < allBalls.length; i++) {
                     B ball = allBalls[i];
                     movement.addFrame(ball,
-                            new MovementFrame(ball.x, ball.y, ball.isPotted(),
+                            new MovementFrame(ball.x, ball.y, 
+                                    ball.axisX, ball.axisY, ball.axisZ, ball.rotateDeg, 
+                                    ball.isPotted(),
                                     movementTypes[i], movementValues[i]));
                     movementTypes[i] = MovementFrame.NORMAL;
                     movementValues[i] = 0.0;

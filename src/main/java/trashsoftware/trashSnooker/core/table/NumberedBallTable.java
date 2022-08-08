@@ -54,19 +54,19 @@ public abstract class NumberedBallTable extends Table {
         return gameValues.leftX + 635.0;
     }
 
-    @Override
-    public void forceDrawBall(GameView view,
-                              Ball ball,
-                              double absoluteX,
-                              double absoluteY,
-                              GraphicsContext graphicsContext,
-                              double scale) {
-        drawPoolBallEssential(
-                view.canvasX(absoluteX),
-                view.canvasY(absoluteY),
-                gameValues.ballDiameter * scale,
-                ball.getColor(),
-                ball.getValue(),
-                graphicsContext);
-    }
+//    @Override
+//    public void forceDrawBall(GameView view,
+//                              Ball ball,
+//                              double absoluteX,
+//                              double absoluteY,
+//                              GraphicsContext graphicsContext,
+//                              double scale) {
+//        drawPoolBallEssential(
+//                view.canvasX(absoluteX),
+//                view.canvasY(absoluteY),
+//                gameValues.ballDiameter * scale,
+//                ball.getColor(),
+//                ball.getValue(),
+//                graphicsContext);
+//    }
 }

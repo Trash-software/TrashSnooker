@@ -60,20 +60,20 @@ public abstract class AbstractSnookerTable extends Table {
         }
     }
 
-    @Override
-    public void forceDrawBall(GameView view,
-                              Ball ball,
-                              double absoluteX,
-                              double absoluteY,
-                              GraphicsContext graphicsContext,
-                              double scale) {
-        drawBallBase(
-                view.canvasX(absoluteX),
-                view.canvasY(absoluteY),
-                gameValues.ballDiameter * scale,
-                ball.getColor(),
-                graphicsContext);
-    }
+//    @Override
+//    public void forceDrawBall(GameView view,
+//                              Ball ball,
+//                              double absoluteX,
+//                              double absoluteY,
+//                              GraphicsContext graphicsContext,
+//                              double scale) {
+//        drawBallBase(
+//                view.canvasX(absoluteX),
+//                view.canvasY(absoluteY),
+//                gameValues.ballDiameter * scale,
+//                ball.getColor(),
+//                graphicsContext);
+//    }
     
     public abstract double breakLineX();
     

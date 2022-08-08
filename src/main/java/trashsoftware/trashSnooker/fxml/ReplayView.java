@@ -109,10 +109,10 @@ public class ReplayView implements Initializable {
                 alert.setHeaderText("不能播放旧版本的录像");
                 alert.setContentText(String.format(
                         "当前游戏版本: %d.%d, 录像版本: %d.%d",
-                        item.getValue().primaryVersion,
-                        item.getValue().secondaryVersion,
                         GameRecorder.RECORD_PRIMARY_VERSION,
-                        GameRecorder.RECORD_SECONDARY_VERSION));
+                        GameRecorder.RECORD_SECONDARY_VERSION,
+                        item.getValue().primaryVersion,
+                        item.getValue().secondaryVersion));
                 alert.show();
             } catch (IOException e) {
                 throw new RuntimeException(e);

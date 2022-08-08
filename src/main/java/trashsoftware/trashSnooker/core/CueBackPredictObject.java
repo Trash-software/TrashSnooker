@@ -14,8 +14,8 @@ public class CueBackPredictObject extends ObjectOnTable {
 
     @Override
     protected void normalMove(Phy phy) {
-        x = nextX;
-        y = nextY;
+        setX(nextX);
+        setY(nextY);
         distance += eachMove;
     }
     

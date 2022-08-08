@@ -35,6 +35,41 @@
         "likeShow": 80
       }
     },
+    "Master2": {
+      "spin": 100,
+      "precision": 100,
+      "anglePrecision": 1.25,
+      "longPrecision": 1.25,
+      "name": "Master 2",
+      "maxPower": 100,
+      "controllablePower": 100,
+      "pullDt": [
+        50.0,
+        200.0
+      ],
+      "cuePlayType": "p1,h800,e500;s",
+      "cueSwingMag": 0,
+      "cuePointMuSigma": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "powerControl": 100,
+      "privateCues": [
+        "MasterCue"
+      ],
+      "category": "God",
+      "psy": 100,
+      "ai": {
+        "precision": 100,
+        "stable": 100,
+        "position": 100,
+        "defense": 100,
+        "attackPri": 80,
+        "likeShow": 80
+      }
+    },
     "O'Sullivan": {
       "spin": 95,
       "precision": 92,

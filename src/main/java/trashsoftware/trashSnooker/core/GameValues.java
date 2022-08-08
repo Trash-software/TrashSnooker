@@ -14,7 +14,7 @@ public class GameValues {
                     33.34)
             .ballSize(52.5)
             .holeSizeCurved(85.0, 90.0)
-            .resistanceAndCushionBounce(1.0, 0.9, 0.75)
+            .resistanceAndCushionBounce(1.0, 0.9, 0.8)
             .ballBounce(0.97)
             .build();
 
@@ -25,7 +25,7 @@ public class GameValues {
                     42.0)
             .ballSize(52.5)
             .holeSizeCurved(85.0, 90.0)
-            .resistanceAndCushionBounce(1.05, 0.85, 0.7)  // 裤边太高影响反弹
+            .resistanceAndCushionBounce(1.05, 0.85, 0.75)  // 裤边太高影响反弹
             .ballBounce(0.97)
             .build();
 
@@ -36,7 +36,7 @@ public class GameValues {
                     42.0)
             .ballSize(57.15)
             .holeSizeCurved(85.0, 90.0)
-            .resistanceAndCushionBounce(1.05, 0.9, 0.75)
+            .resistanceAndCushionBounce(1.05, 0.9, 0.8)
             .ballBounce(0.96)
             .build();
 

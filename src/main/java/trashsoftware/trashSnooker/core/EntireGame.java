@@ -23,6 +23,7 @@ public class EntireGame {
     public final TableCloth cloth;
     public final Phy playPhy;
     public final Phy predictPhy;
+    public final Phy whitePhy;
     private int p1Wins;
     private int p2Wins;
     private boolean p1Breaks;
@@ -39,7 +40,8 @@ public class EntireGame {
         this.gameView = gameView;
         this.cloth = cloth;
         this.playPhy = Phy.Factory.createPlayPhy(cloth);
-        this.predictPhy = Phy.Factory.createPredictPhy(cloth);
+        this.predictPhy = Phy.Factory.createAiPredictPhy(cloth);
+        this.whitePhy = Phy.Factory.createWhitePredictPhy(cloth);
 
         DBAccess.getInstance().recordAnEntireGameStarts(this);
 

@@ -3,7 +3,8 @@ package trashsoftware.trashSnooker.core.phy;
 public class Phy {
     
     public static final double PLAY_MS = 1.0;
-    public static final double PREDICT_MS = 1.0;
+    public static final double WHITE_PREDICT_MS = 1.0;
+    public static final double AI_PREDICT_MS = 1.0;
 
     public final TableCloth cloth;
     public final boolean isPrediction;
@@ -34,9 +35,14 @@ public class Phy {
             return new Phy(PLAY_MS, cloth, false);
         }
 
-        public static Phy createPredictPhy(TableCloth cloth) {
+        public static Phy createWhitePredictPhy(TableCloth cloth) {
             System.out.println("Predict " + cloth);
-            return new Phy(PREDICT_MS, cloth, true);
+            return new Phy(WHITE_PREDICT_MS, cloth, true);
+        }
+
+        public static Phy createAiPredictPhy(TableCloth cloth) {
+            System.out.println("Predict " + cloth);
+            return new Phy(AI_PREDICT_MS, cloth, true);
         }
     }
 }
