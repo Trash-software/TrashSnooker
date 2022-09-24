@@ -12,6 +12,7 @@
         50.0,
         200.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s",
       "cueSwingMag": 0,
       "cuePointMuSigma": [
@@ -32,7 +33,10 @@
         "position": 100,
         "defense": 100,
         "attackPri": 80,
-        "likeShow": 80
+        "likeShow": 80,
+        "solving": 100,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "Master2": {
@@ -47,6 +51,7 @@
         50.0,
         200.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s",
       "cueSwingMag": 0,
       "cuePointMuSigma": [
@@ -67,7 +72,10 @@
         "position": 100,
         "defense": 100,
         "attackPri": 80,
-        "likeShow": 80
+        "likeShow": 80,
+        "solving": 100,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "O'Sullivan": {
@@ -82,6 +90,7 @@
         50.0,
         200.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;l,l,r,r,l,l,r,r",
       "cueSwingMag": 15,
       "cuePointMuSigma": [
@@ -99,9 +108,12 @@
         "precision": 92,
         "stable": 95,
         "position": 99,
-        "defense": 100,
+        "defense": 96,
         "attackPri": 90,
-        "likeShow": 50
+        "likeShow": 50,
+        "solving": 90,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "Mang Zi": {
@@ -116,6 +128,7 @@
         100.0,
         250.0
       ],
+      "aimingOffset": 0.2,
       "cuePlayType": "p2.5,h100,e500;l,l,r,r,r,l,l,l",
       "cueSwingMag": 50,
       "cuePointMuSigma": [
@@ -134,7 +147,10 @@
         "position": 80,
         "defense": 50,
         "attackPri": 99,
-        "likeShow": 60
+        "likeShow": 60,
+        "solving": 50,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "Kid": {
@@ -149,6 +165,7 @@
         40.0,
         160.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1.2,h800,e500;s,s,s,s,s,s,s,s",
       "cueSwingMag": 2,
       "cuePointMuSigma": [
@@ -169,7 +186,10 @@
         "position": 95,
         "defense": 75,
         "attackPri": 90,
-        "likeShow": 30
+        "likeShow": 30,
+        "solving": 75,
+        "snookerBreak": "right",
+        "cebSideBreak": true
       }
     },
     "Lao Youtiao": {
@@ -184,6 +204,7 @@
         40.0,
         160.0
       ],
+      "aimingOffset": -0.25,
       "cuePlayType": "p1.2,h300,e500;r,r,l,l,l,l,l",
       "cueSwingMag": 25,
       "cuePointMuSigma": [
@@ -202,7 +223,10 @@
         "position": 85,
         "defense": 90,
         "attackPri": 50,
-        "likeShow": 30
+        "likeShow": 30,
+        "solving": 80,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "Mou Moumou": {
@@ -217,6 +241,7 @@
         40.0,
         180.0
       ],
+      "aimingOffset": -0.15,
       "cuePlayType": "p1.2,h600,e500;l,l,l,r,r,r,r",
       "cueSwingMag": 20,
       "cuePointMuSigma": [
@@ -235,7 +260,10 @@
         "position": 80,
         "defense": 80,
         "attackPri": 80,
-        "likeShow": 40
+        "likeShow": 40,
+        "solving": 80,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "Brown": {
@@ -250,6 +278,7 @@
         40.0,
         180.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1.2,h600,e500;l,l,l,r,r,r,r",
       "cueSwingMag": 12,
       "cuePointMuSigma": [
@@ -263,12 +292,15 @@
       "category": "Professional",
       "psy": 70,
       "ai": {
-        "precision": 80,
+        "precision": 84,
         "stable": 90,
         "position": 92,
         "defense": 75,
         "attackPri": 80,
-        "likeShow": 40
+        "likeShow": 40,
+        "solving": 85,
+        "snookerBreak": "left",
+        "cebSideBreak": false
       }
     },
     "Ding Junhui": {
@@ -283,6 +315,7 @@
         40.0,
         180.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1,h400,e500;s",
       "cueSwingMag": 5,
       "cuePointMuSigma": [
@@ -299,9 +332,12 @@
         "precision": 92,
         "stable": 88,
         "position": 97,
-        "defense": 90,
+        "defense": 95,
         "attackPri": 75,
-        "likeShow": 40
+        "likeShow": 40,
+        "solving": 85,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "John Wizard": {
@@ -316,6 +352,7 @@
         40.0,
         190.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,r",
       "cueSwingMag": 8,
       "cuePointMuSigma": [
@@ -332,9 +369,12 @@
         "precision": 88,
         "stable": 85,
         "position": 99,
-        "defense": 98,
+        "defense": 97,
         "attackPri": 75,
-        "likeShow": 35
+        "likeShow": 35,
+        "solving": 95,
+        "snookerBreak": "left",
+        "cebSideBreak": false
       }
     },
     "Matthew Stevens": {
@@ -349,6 +389,7 @@
         50.0,
         200.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s,s,s,s,r,l,l,r",
       "cueSwingMag": 10,
       "cuePointMuSigma": [
@@ -365,9 +406,12 @@
         "precision": 90,
         "stable": 88,
         "position": 96,
-        "defense": 75,
+        "defense": 82,
         "attackPri": 90,
-        "likeShow": 65
+        "likeShow": 65,
+        "solving": 80,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "Trump": {
@@ -382,15 +426,16 @@
         50.0,
         220.0
       ],
-      "cuePlayType": "p1,h800,e500;r,r,l,l,l,r,r,r",
-      "cueSwingMag": 8,
+      "aimingOffset": -0.25,
+      "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
+      "cueSwingMag": 5,
       "cuePointMuSigma": [
         0,
         1,
         0,
         6
       ],
-      "powerControl": 96.5,
+      "powerControl": 96,
       "privateCues": [
         "TrumpCue"
       ],
@@ -399,10 +444,13 @@
       "ai": {
         "precision": 96,
         "stable": 87,
-        "position": 91,
-        "defense": 82,
+        "position": 89,
+        "defense": 87,
         "attackPri": 90,
-        "likeShow": 75
+        "likeShow": 75,
+        "solving": 85,
+        "snookerBreak": "left",
+        "cebSideBreak": false
       }
     },
     "Murphy": {
@@ -417,6 +465,7 @@
         50.0,
         200.0
       ],
+      "aimingOffset": 0.05,
       "cuePlayType": "p1,h800,e500;s,s,s,s,s,s,s,s",
       "cueSwingMag": 1,
       "cuePointMuSigma": [
@@ -430,12 +479,15 @@
       "category": "Professional",
       "psy": 75,
       "ai": {
-        "precision": 88,
+        "precision": 90,
         "stable": 96,
-        "position": 95,
-        "defense": 75,
-        "attackPri": 85,
-        "likeShow": 60
+        "position": 93,
+        "defense": 86,
+        "attackPri": 80,
+        "likeShow": 60,
+        "solving": 90,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "Liu Mang": {
@@ -450,6 +502,7 @@
         50.0,
         200.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s",
       "cueSwingMag": 0,
       "cuePointMuSigma": [
@@ -470,7 +523,10 @@
         "position": 50,
         "defense": 30,
         "attackPri": 99,
-        "likeShow": 50
+        "likeShow": 50,
+        "solving": 60,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "Smart": {
@@ -485,6 +541,7 @@
         50.0,
         250.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1,h1000,e500;l,l,r,r,l,l,r,r",
       "cueSwingMag": 4,
       "cuePointMuSigma": [
@@ -503,7 +560,10 @@
         "position": 85,
         "defense": 60,
         "attackPri": 96,
-        "likeShow": 85
+        "likeShow": 85,
+        "solving": 65,
+        "snookerBreak": "left",
+        "cebSideBreak": false
       }
     },
     "Mang Dali": {
@@ -518,6 +578,7 @@
         80.0,
         250.0
       ],
+      "aimingOffset": 0.35,
       "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,l",
       "cueSwingMag": 25,
       "cuePointMuSigma": [
@@ -538,7 +599,10 @@
         "position": 95,
         "defense": 50,
         "attackPri": 99,
-        "likeShow": 90
+        "likeShow": 90,
+        "solving": 40,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "Noob": {
@@ -553,6 +617,7 @@
         30.0,
         150.0
       ],
+      "aimingOffset": 0.4,
       "cuePlayType": "p1.5,h200,e400;r,r,l,l,l,l,l,l",
       "cueSwingMag": 80,
       "cuePointMuSigma": [
@@ -571,7 +636,10 @@
         "position": 10,
         "defense": 10,
         "attackPri": 100,
-        "likeShow": 50
+        "likeShow": 50,
+        "solving": 30,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       }
     },
     "Worst Professional": {
@@ -586,6 +654,7 @@
         40.0,
         180.0
       ],
+      "aimingOffset": 0.2,
       "cuePlayType": "p1,h500,e500;l,l,l,r,r,r,r",
       "cueSwingMag": 12,
       "cuePointMuSigma": [
@@ -604,7 +673,10 @@
         "position": 90,
         "defense": 90,
         "attackPri": 80,
-        "likeShow": 40
+        "likeShow": 40,
+        "solving": 70,
+        "snookerBreak": "left",
+        "cebSideBreak": false
       }
     },
     "Glass Heart": {
@@ -619,6 +691,7 @@
         40.0,
         180.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,l",
       "cueSwingMag": 5,
       "cuePointMuSigma": [
@@ -637,7 +710,47 @@
         "position": 97,
         "defense": 90,
         "attackPri": 87,
-        "likeShow": 70
+        "likeShow": 70,
+        "solving": 75,
+        "snookerBreak": "right",
+        "cebSideBreak": false
+      }
+    },
+    "Selby": {
+      "spin": 91.0,
+      "precision": 87.0,
+      "anglePrecision": 1.2,
+      "longPrecision": 0.8,
+      "name": "Selby",
+      "maxPower": 96,
+      "controllablePower": 84,
+      "pullDt": [
+        50.0,
+        210.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,r",
+      "cueSwingMag": 4,
+      "cuePointMuSigma": [
+        0,
+        2,
+        0,
+        2
+      ],
+      "powerControl": 98.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 90,
+      "ai": {
+        "precision": 89,
+        "stable": 96,
+        "position": 95,
+        "defense": 98,
+        "attackPri": 45,
+        "likeShow": 40,
+        "solving": 95,
+        "snookerBreak": "left",
+        "cebSideBreak": false
       }
     }
   }

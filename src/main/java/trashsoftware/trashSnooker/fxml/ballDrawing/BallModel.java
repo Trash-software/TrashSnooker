@@ -14,12 +14,14 @@ import java.util.Random;
 public abstract class BallModel {
     
     public final Sphere sphere;
-    public final Rotate rotation = new Rotate();
+    public final Rotate rx = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
+    public final Rotate ry = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
+    public final Rotate rz = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
     
     protected BallModel(double physicalRadius) {
         sphere = new Sphere(physicalRadius * GameView.scale);
         
-        sphere.getTransforms().add(rotation);
+        sphere.getTransforms().addAll(rz, ry, rx);
     }
     
     public static BallModel createModel(Ball ball) {

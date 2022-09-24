@@ -1,5 +1,15 @@
 package trashsoftware.trashSnooker.core;
 
+/**
+ * 一个比赛类型。
+ *
+ * 一文厘清这几个的关系:
+ * GameType指这个游系，如斯诺克，与GameValues其实是完全对应的，只是因为初期设计原因分开了。
+ * @see GameValues 已经说了
+ * @see trashsoftware.trashSnooker.core.table.Table 与GameType还是一一对应的，只不过主要功能是绘图
+ * @see EntireGame 一场比赛的实例
+ * @see Game 一局游戏的实例
+ */
 public enum GameType {
     SNOOKER(true, GameValues.SNOOKER_VALUES, 22, "Snooker"),
     MINI_SNOOKER(true, GameValues.MINI_SNOOKER_VALUES, 22, "MiniSnooker"),

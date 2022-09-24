@@ -6,6 +6,8 @@ import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 
+import java.util.Arrays;
+
 public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
     public SnookerAiCue(AbstractSnookerGame game, SnookerPlayer aiPlayer) {
@@ -14,23 +16,47 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
     @Override
     protected DefenseChoice breakCue(Phy phy) {
+        AiPlayStyle.SnookerBreakMethod method = 
+                aiPlayer.getPlayerPerson().getAiPlayStyle().snookerBreakMethod;
+        
+        if (method == AiPlayStyle.SnookerBreakMethod.BACK) return backBreak(phy);
+        boolean leftBreak = method == AiPlayStyle.SnookerBreakMethod.LEFT;
+        
         double aimingPosX = game.getTable().firstRedX() + 
                 game.getGameValues().ballDiameter * game.redRowOccupyX * 4.0;
-        double aimingPosY = game.getGameValues().midY + 
-                (game.getGameValues().ballDiameter + game.redGapDt * 0.6) * 6.60;
+        double yOffset = (game.getGameValues().ballDiameter + game.redGapDt * 0.6) * 7.40;
+        if (leftBreak) yOffset = -yOffset;
+        double aimingPosY = game.getGameValues().midY + yOffset;
+                
         double dirX = aimingPosX - game.getCueBall().getX();
         double dirY = aimingPosY - game.getCueBall().getY();
         double[] unitXY = Algebra.unitVector(dirX, dirY);
-        double selectedPower = actualPowerToSelectedPower(0.33 * phy.cloth.smoothness.speedReduceFactor);
-        CuePlayParams cpp = CuePlayParams.makeIdealParams(
+        double actualPower = 28.0;
+        double selectedPower = actualPowerToSelectedPower(actualPower / 100 * phy.cloth.smoothness.speedReduceFactor);
+        double selectedSideSpin = leftBreak ? -0.6 : 0.6;
+        double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
+                aiPlayer.getInGamePlayer().getCurrentCue(game));
+
+        double[] correctedXY = CuePlayParams.aimingUnitXYIfSpin(
+                actualSideSpin,
+                actualPower,
                 unitXY[0],
-                unitXY[1],
-                0.0,
-                0.0,
-                5.0,
-                selectedPowerToActualPower(selectedPower)
+                unitXY[1]
         );
-        return new DefenseChoice(unitXY, selectedPower, cpp);
+        CuePlayParams cpp = CuePlayParams.makeIdealParams(
+                correctedXY[0],
+                correctedXY[1],
+                0.0,
+                actualSideSpin,
+                0.0,
+                actualPower
+        );
+//        System.out.println(Arrays.toString(unitXY) + Arrays.toString(correctedXY));
+        return new DefenseChoice(correctedXY, selectedPower, selectedSideSpin, cpp);
+    }
+    
+    private DefenseChoice backBreak(Phy phy) {
+        return null;
     }
 
     @Override

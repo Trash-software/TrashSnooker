@@ -237,6 +237,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     public GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage) {
+        if (isBreaking()) return GamePlayStage.BREAK;
         int rems = getRemainingBallsOfPlayer(getCuingPlayer());
         if (rems == 1) {
             if (printPlayStage) System.out.println("打进就赢！");

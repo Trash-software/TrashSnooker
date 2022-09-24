@@ -18,7 +18,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
     
     public static boolean isCenterBreak(ChineseEightBallPlayer player) {
-        return player.getPlayerPerson().getControllablePowerPercentage() >= 80.0;
+        return player.getPlayerPerson().getAiPlayStyle().cebSideBreak;
     }
 
     @Override
@@ -57,10 +57,10 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 unitXY[1],
                 0.0,
                 0.0,
-                5.0,
+                0.0,
                 selectedPowerToActualPower(selectedPower)
         );
-        return new DefenseChoice(unitXY, selectedPower, cpp);
+        return new DefenseChoice(unitXY, selectedPower, 0.0, cpp);
     }
 
     @Override

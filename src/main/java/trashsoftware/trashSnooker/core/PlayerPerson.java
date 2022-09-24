@@ -23,6 +23,7 @@ public class PlayerPerson {
     private final List<Cue> privateCues = new ArrayList<>();
     private final double minPullDt;
     private final double maxPullDt;
+    private final double aimingOffset;  // 瞄和打的偏差，正值向右偏
     private final double powerControl;
     
     // 横向的mu，横向的sigma，纵向的mu，纵向的sigma
@@ -44,6 +45,7 @@ public class PlayerPerson {
                         double longPrecision,
                         double minPullDt,
                         double maxPullDt,
+                        double aimingOffset,
                         double cueSwingMag,
                         double[] cuePointMuSigmaXY,
                         double powerControl,
@@ -61,6 +63,7 @@ public class PlayerPerson {
         this.longPrecision = longPrecision;
         this.minPullDt = minPullDt;
         this.maxPullDt = maxPullDt;
+        this.aimingOffset = aimingOffset;
         this.cueSwingMag = cueSwingMag;
         this.cuePointMuSigmaXY = cuePointMuSigmaXY;
         this.powerControl = powerControl;
@@ -92,6 +95,7 @@ public class PlayerPerson {
                 longPrecision,
                 50.0,
                 200.0,
+                0.0,
                 100.0,
                 estimateCuePoint(precisionPercentage, control),
                 control,
@@ -132,6 +136,7 @@ public class PlayerPerson {
         JSONArray cueAction = new JSONArray(List.of(getMinPullDt(), getMaxPullDt()));
         obj.put("pullDt", cueAction);
         obj.put("cuePlayType", getCuePlayType().toString());
+        obj.put("aimingOffset", getAimingOffset());
         obj.put("cueSwingMag", getCueSwingMag());
         
         JSONArray cuePoint = new JSONArray(cuePointMuSigmaXY);
@@ -170,6 +175,10 @@ public class PlayerPerson {
 
     public CuePlayType getCuePlayType() {
         return cuePlayType;
+    }
+
+    public double getAimingOffset() {
+        return aimingOffset;
     }
 
     public double getCueSwingMag() {

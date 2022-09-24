@@ -4,9 +4,13 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.GamePlayStage;
 import trashsoftware.trashSnooker.core.InGamePlayer;
 
+import java.util.Locale;
+
 public class AiPlayStyle {
     public static final AiPlayStyle DEFAULT =
-            new AiPlayStyle(100.0, 100.0, 100.0, 100.0, 80.0, 50);
+            new AiPlayStyle(100.0, 100.0, 100.0, 100.0, 
+                    80.0, 50, 
+                    "right", false);
 
     public final double precision;
     public final double stability;  // 准度稳定性
@@ -14,15 +18,20 @@ public class AiPlayStyle {
     public final double defense;
     public final double attackPrivilege;  // 进攻偏好
     public final double likeShow;  // 偏好大力及杆法
+    public final SnookerBreakMethod snookerBreakMethod;
+    public final boolean cebSideBreak;  // Chinese eight balls 侧面冲球
 
     public AiPlayStyle(double precision, double stability, double position, double defense,
-                       double attackPrivilege, double likeShow) {
+                       double attackPrivilege, double likeShow, 
+                       String snookerBreakMethod, boolean cebSideBreak) {
         this.precision = precision;
         this.stability = stability;
         this.position = position;
         this.defense = defense;
         this.attackPrivilege = attackPrivilege;
         this.likeShow = likeShow;
+        this.snookerBreakMethod = SnookerBreakMethod.valueOf(snookerBreakMethod.toUpperCase(Locale.ROOT));
+        this.cebSideBreak = cebSideBreak;
     }
 
     /**
@@ -79,7 +88,13 @@ public class AiPlayStyle {
         obj.put("position", position);
         obj.put("defense", defense);
         obj.put("attackPri", attackPrivilege);
+        obj.put("snookerBreak", snookerBreakMethod.name());
+        obj.put("cebSideBreak", cebSideBreak);
 
         return obj;
+    }
+    
+    public enum SnookerBreakMethod {
+        LEFT, RIGHT, BACK
     }
 }

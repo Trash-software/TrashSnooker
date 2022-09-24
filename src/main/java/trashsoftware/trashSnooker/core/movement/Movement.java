@@ -17,7 +17,7 @@ public class Movement {
         for (Ball ball : allBalls) {
             List<MovementFrame> positionList = new ArrayList<>();
             MovementFrame frame = new MovementFrame(ball.getX(), ball.getY(), 
-                    ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getRotateDeg(),
+                    ball.getXAngle(), ball.getYAngle(), ball.getZAngle(),
                     ball.isPotted(), MovementFrame.NORMAL, 0.0);
             positionList.add(frame);
 

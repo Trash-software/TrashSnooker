@@ -10,7 +10,10 @@
         "precision": 75.10723505947657,
         "position": 99.5,
         "attackPri": 68.27930459952414,
-        "likeShow": 50.0
+        "likeShow": 50.0,
+        "solving": 90,
+        "snookerBreak": "right",
+        "cebSideBreak": false
       },
       "cuePointMuSigma": [
         0,
@@ -24,6 +27,7 @@
         50,
         200
       ],
+      "aimingOffset": 0.2,
       "psy": 90,
       "name": "老选手",
       "controllablePower": 80.71421613812149,
@@ -45,6 +49,7 @@
         40.0,
         180.0
       ],
+      "aimingOffset": 0.2,
       "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,l",
       "cueSwingMag": 15,
       "cuePointMuSigma": [
@@ -63,7 +68,10 @@
         "position": 95,
         "defense": 80,
         "attackPri": 90,
-        "likeShow": 70
+        "likeShow": 70,
+        "solving": 65,
+        "snookerBreak": "left",
+        "cebSideBreak": false
       }
     },
     "custom_player_3": {
@@ -78,6 +86,7 @@
         30.0,
         120.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,l",
       "cueSwingMag": 5,
       "cuePointMuSigma": [
@@ -96,11 +105,14 @@
         "position": 98,
         "defense": 90,
         "attackPri": 70,
-        "likeShow": 20
+        "likeShow": 20,
+        "solving": 70,
+        "snookerBreak": "right",
+        "cebSideBreak": true
       }
     },
     "custom_player_4": {
-      "spin": 93.0,
+      "spin": 95.0,
       "precision": 88.0,
       "anglePrecision": 1.2,
       "longPrecision": 0.9,
@@ -111,6 +123,7 @@
         25.0,
         150.0
       ],
+      "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s,s,s,l,l,l,r,r",
       "cueSwingMag": 3,
       "cuePointMuSigma": [
@@ -124,12 +137,15 @@
       "category": "Professional",
       "psy": 5,
       "ai": {
-        "precision": 87,
+        "precision": 88,
         "stable": 95,
         "position": 99,
         "defense": 99,
         "attackPri": 40,
-        "likeShow": 15
+        "likeShow": 15,
+        "solving": 90,
+        "snookerBreak": "right",
+        "cebSideBreak": true
       }
     }
   }

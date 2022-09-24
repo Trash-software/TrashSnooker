@@ -15,8 +15,22 @@ public class SnookerAiCueBallPlacer extends AiCueBallPlacer<AbstractSnookerGame,
 
     @Override
     protected double[] breakPosition() {
+        double yOff;
+        switch (player.getPlayerPerson().getAiPlayStyle().snookerBreakMethod) {
+            case LEFT:
+                yOff = -105.0;
+                break;
+            case RIGHT:
+                yOff = 105.0;
+                break;
+            case BACK:
+                yOff = 230.0;
+                break;
+            default:
+                throw new EnumConstantNotPresentException(AiPlayStyle.SnookerBreakMethod.class, "Java编译器是不是脑壳出问题了");
+        }
         return new double[]{game.getTable().breakLineX(), 
-                game.getGameValues().midY + game.getGameValues().ballDiameter * 2};
+                game.getGameValues().midY + yOff};
     }
 
     @Override

@@ -66,6 +66,8 @@ public class AiCueResult {
                 gamePlayStage == GamePlayStage.ENHANCE_WIN) {
             precisionFactor *= (playerPerson.psy / 100);
             System.out.println(gamePlayStage + ", precision: " + precisionFactor);
+        } else if (gamePlayStage == GamePlayStage.BREAK) {
+            precisionFactor *= 2.0;
         }
         
         double mistake = random.nextDouble() * 100;
@@ -77,8 +79,16 @@ public class AiCueResult {
             System.out.println("Mistake");
         }
         
-        double sd = (100 - playerPerson.getAiPlayStyle().precision) / precisionFactor;  // 再歪也歪不了太多吧？
-        System.out.println("Precision factor: " + precisionFactor + ", Random offset: " + sd);
+        double sd;
+        if (attack) {
+            sd = (100 - playerPerson.getAiPlayStyle().precision) / precisionFactor;  // 再歪也歪不了太多吧？
+            System.out.println("Precision factor: " + precisionFactor + ", Random offset: " + sd);
+        } else if (gamePlayStage == GamePlayStage.BREAK) {
+            sd = (100 - Math.max(playerPerson.getAiPlayStyle().precision, 
+                    playerPerson.getAiPlayStyle().defense))/ precisionFactor;
+        } else {
+            sd = (100 - playerPerson.getAiPlayStyle().defense) / precisionFactor;
+        }
         double afterRandom = random.nextGaussian() * sd * mistakeFactor + rad;
         afterRandom = Math.min(afterRandom, maxPrecision);
         

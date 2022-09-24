@@ -105,12 +105,14 @@ public abstract class ObjectOnTable {
                 predictedDtToPoint(values.botMidHoleXY) < values.midHoleRadius * midHoleFactor;
     }
 
-    protected void hitHoleArcArea(double[] arcXY, Phy phy) {
+    protected double[] hitHoleArcArea(double[] arcXY, Phy phy) {
         double axisX = arcXY[0] - x;  // 切线的法向量
         double axisY = arcXY[1] - y;
         double[] reflect = Algebra.symmetricVector(vx, vy, axisX, axisY);
         vx = -reflect[0];
         vy = -reflect[1];
+        
+        return new double[]{axisX, axisY};  // 返回切线的法向量
     }
 
     protected void hitHoleLineArea(double[] lineNormalVec, Phy phy) {

@@ -97,27 +97,29 @@ public class BallImageGenerator extends Application {
                 for (int i = 0; i < 4; i++) {
                     gc2d.fillOval(i * dotGap, dotY, dotW, dotH);  // 中间一圈的点
                 }
-                // 极点的点，为了简单这都是近似值
-                double faceRadiusRatio = dotRatio / (Math.PI * 2);
-                double centerAngle = Math.atan(faceRadiusRatio);
-                double polarDotH = dotH * faceRadiusRatio;
-//                System.out.println(Math.toDegrees(centerAngle));
-//                gc2d.fillRect(0, 0, width, polarDotH);
-//                gc2d.fillRect(0, height - polarDotH, width, height);
-                // canvas有抗锯齿，这里直接搞
-                PixelWriter pixelWriter = gc2d.getPixelWriter();
-                int start = (int) Math.round(polarDotH);
-                int botStart = (height - start);
-                for (int r = 0; r < start; r++) {
-                    for (int c = 0; c < width; c++) {
-                        pixelWriter.setColor(c, r, dotColor);
-                    }
-                }
-                for (int r = botStart; r < height; r++) {
-                    for (int c = 0; c < width; c++) {
-                        pixelWriter.setColor(c, r, dotColor);
-                    }
-                }
+                gc2d.fillRect(0, 0, width, dotH / 2);
+                gc2d.fillRect(0, height - dotH / 2, width, dotH / 2);
+//                // 极点的点，为了简单这都是近似值
+//                double faceRadiusRatio = dotRatio / (Math.PI * 2);
+//                double centerAngle = Math.atan(faceRadiusRatio);
+//                double polarDotH = dotH * faceRadiusRatio;
+////                System.out.println(Math.toDegrees(centerAngle));
+////                gc2d.fillRect(0, 0, width, polarDotH);
+////                gc2d.fillRect(0, height - polarDotH, width, height);
+//                // canvas有抗锯齿，这里直接搞
+//                PixelWriter pixelWriter = gc2d.getPixelWriter();
+//                int start = (int) Math.round(polarDotH);
+//                int botStart = (height - start);
+//                for (int r = 0; r < start; r++) {
+//                    for (int c = 0; c < width; c++) {
+//                        pixelWriter.setColor(c, r, dotColor);
+//                    }
+//                }
+//                for (int r = botStart; r < height; r++) {
+//                    for (int c = 0; c < width; c++) {
+//                        pixelWriter.setColor(c, r, dotColor);
+//                    }
+//                }
             } else {
                 gc2d.setFont(font);
                 double textDown = font.getSize() * 0.36;

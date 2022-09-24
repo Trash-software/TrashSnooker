@@ -332,6 +332,16 @@ public class GameValues {
         return acceleration / 2 * t * t;  // S = 1/2at^2
     }
     
+    public double dtToClosetCushion(double x, double y) {
+        double closedLongCushion = Math.min(x - leftX, rightX - x);
+        double closedShortCushion = Math.min(y - topY, botY - y);
+        return Math.min(closedLongCushion, closedShortCushion);
+    }
+    
+    public double closeCushionPenaltyThreshold() {
+        return innerHeight / 8;
+    }
+    
     public Hole getHoleOpenCenter(double[] pos) {
         if (Arrays.equals(pos, topLeftHoleOpenCenter)) return Hole.TOP_LEFT;
         else if (Arrays.equals(pos, topMidHoleOpenCenter)) return Hole.TOP_MID;

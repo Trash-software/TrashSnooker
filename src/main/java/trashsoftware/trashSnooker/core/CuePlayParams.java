@@ -29,6 +29,10 @@ public class CuePlayParams {
         this.power = actualPower;
     }
 
+    /**
+     * @param directionX selected x direction
+     * @param directionY selected y direction
+     */
     public static CuePlayParams makeIdealParams(double directionX, double directionY,
                                                 double actualFrontBackSpin, double actualSideSpin,
                                                 double cueAngleDeg,
@@ -55,6 +59,10 @@ public class CuePlayParams {
                                            Cue cue) {
         return unitCuePoint * cue.spinMultiplier *
                 inGamePlayer.getPlayerPerson().getMaxSpinPercentage() / 100.0;
+    }
+    
+    public static double getSelectedSideSpin(double actualSideSpin, Cue cue) {
+        return actualSideSpin / cue.spinMultiplier;
     }
 
     public static double unitSideSpin(double unitCuePoint, Cue cue) {

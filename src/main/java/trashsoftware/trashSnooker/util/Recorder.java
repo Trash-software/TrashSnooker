@@ -115,7 +115,9 @@ public class Recorder {
                                     aiObject.getDouble("position"),
                                     aiObject.getDouble("defense"),
                                     aiObject.getDouble("attackPri"),
-                                    aiObject.getDouble("likeShow")
+                                    aiObject.getDouble("likeShow"),
+                                    aiObject.getString("snookerBreak"),
+                                    aiObject.getBoolean("cebSideBreak")
                             );
                         } else {
                             aiPlayStyle = AiPlayStyle.DEFAULT;
@@ -125,6 +127,7 @@ public class Recorder {
                             JSONArray pullDt = personObj.getJSONArray("pullDt");
                             double minPullDt = pullDt.getDouble(0);
                             double maxPullDt = pullDt.getDouble(1);
+                            double aimingOffset = personObj.getDouble("aimingOffset");
                             double cueSwingMag = personObj.getDouble("cueSwingMag");
                             String cuePlayTypeStr = personObj.getString("cuePlayType");
                             CuePlayType cuePlayType = parseCuePlayType(cuePlayTypeStr);
@@ -145,6 +148,7 @@ public class Recorder {
                                     personObj.getDouble("longPrecision"),
                                     minPullDt,
                                     maxPullDt,
+                                    aimingOffset,
                                     cueSwingMag,
                                     muSigma,
                                     personObj.getDouble("powerControl"),

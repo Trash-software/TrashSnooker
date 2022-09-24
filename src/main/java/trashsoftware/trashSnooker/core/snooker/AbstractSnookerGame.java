@@ -8,7 +8,9 @@ import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
 import trashsoftware.trashSnooker.fxml.GameView;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlayer> {
 
@@ -26,6 +28,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private final SnookerBall[] allBalls;
     private final SnookerBall[] coloredBalls = new SnookerBall[6];
     private boolean doingFreeBall = false;  // 正在击打自由球
+    private boolean blackBattle = false;
     private int lastFoulPoints = 0;
 
     AbstractSnookerGame(GameView parent, EntireGame entireGame,
@@ -83,7 +86,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 throw new RuntimeException();
         }
     }
-    
+
     @Override
     public abstract AbstractSnookerTable getTable();
 
@@ -160,10 +163,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             List<Ball> currentTarBalls = getAllLegalBalls(currentTarget, false);
             int canSeeBallCount = countSeeAbleTargetBalls(cueBall.getX(), cueBall.getY(),
                     currentTarBalls, 3).seeAbleTargets;
-            System.out.println("Target: " + currentTarget + ", Free ball check: " + 
+            System.out.println("Target: " + currentTarget + ", Free ball check: " +
                     canSeeBallCount + ", n targets: " + currentTarBalls.size());
             return canSeeBallCount == 0;
-            
+
 //            // 使用预测击球线的方法：如瞄准最薄边时，预测线显示打到的就是这颗球（不会碰到其他球），则没有自由球。
 //            double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
 //            for (Ball ball : currentTarBalls) {
@@ -209,7 +212,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             if (hasRed()) return 1;
             else return 2;  // 最后一颗红球附带的彩球打完
         } else if (currentTarget == 7) {  // 黑球进了
-            return END_REP;
+//            System.out.println(getCuingPlayer().getScore() + ", " + getAnotherPlayer().getScore());
+//            if (getCuingPlayer().getScore() + 7 == getAnotherPlayer().getScore()) {
+//                return BLACK_BATTLE_REP;
+//            } else {
+                return END_REP;
+//            }
         } else if (!isFreeBall) {
             return currentTarget + 1;
         }
@@ -230,7 +238,11 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             if (player1.getScore() != player2.getScore()) end();
             else {
                 // 延分，争黑球
+                blackBattle = true;
                 cueBall.pot();
+                currentTarget = 7;
+                pickupColorBall(blackBall);
+                System.out.println("Black battle!");
                 ballInHand = true;
                 if (Math.random() < 0.5) {
                     currentPlayer = player1;
@@ -365,6 +377,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
         lastFoulPoints = foul;
         if (foul > 0) {
+            // todo: 三次瞎打判负规则
+            if (blackBattle) {
+                // 抢黑时犯规就直接判负
+                getAnotherPlayer().addScore(foul);
+                end();
+                return;
+            }
+            
             getAnotherPlayer().addScore(foul);
             updateTargetPotFailed();
             switchPlayer();
@@ -400,6 +420,20 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         } else {
             return false;
         }
+    }
+
+    public void tieTest() {
+        for (Ball ball : redBalls) ball.pot();
+        yellowBall.pot();
+        greenBall.pot();
+        brownBall.pot();
+        blueBall.pot();
+        pinkBall.pot();
+        blackBall.pickup();
+        player2.addScore(-player2.getScore() + 7);
+        player1.addScore(-player1.getScore());
+        currentPlayer = player1;
+        currentTarget = 7;
     }
 
     @Override
@@ -600,6 +634,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     @Override
     public GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage) {
+        if (isBreaking()) return GamePlayStage.BREAK;
         int targetValue = getCurrentTarget();
         int singlePoleScore = getCuingPlayer().getSinglePoleScore();
         if (singlePoleScore >= 140 && targetValue == 7) {

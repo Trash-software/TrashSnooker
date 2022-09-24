@@ -703,16 +703,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public void tieTest() {
-//        for (Ball ball : redBalls) ball.pot();
-//        yellowBall.pot();
-//        greenBall.pot();
-//        brownBall.pot();
-//        blueBall.pot();
-//        pinkBall.pot();
-//        player2.addScore(-player2.getScore() + 7);
-//        player1.addScore(-player1.getScore());
-//        currentPlayer = player1;
-//        currentTarget = 7;
     }
 
     public void clearRedBallsTest() {
@@ -1132,9 +1122,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     Math.floor(lastPhysicalTime / parent.frameTimeMs)) {
                 for (int i = 0; i < allBalls.length; i++) {
                     B ball = allBalls[i];
+                    ball.calculateAxis(phy);
                     movement.addFrame(ball,
                             new MovementFrame(ball.x, ball.y, 
-                                    ball.axisX, ball.axisY, ball.axisZ, ball.rotateDeg, 
+                                    ball.xAngle, ball.yAngle, ball.zAngle, 
                                     ball.isPotted(),
                                     movementTypes[i], movementValues[i]));
                     movementTypes[i] = MovementFrame.NORMAL;

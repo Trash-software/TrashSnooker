@@ -151,6 +151,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
 
     @Override
     public GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage) {
+        if (isBreaking()) return GamePlayStage.BREAK;
         return GamePlayStage.NORMAL;
     }
 }

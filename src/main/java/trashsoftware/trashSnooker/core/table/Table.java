@@ -86,16 +86,16 @@ public abstract class Table {
                               Ball ball,
                               double absoluteX,
                               double absoluteY,
-                              double axisX,
-                              double axisY,
-                              double axisZ,
-                              double rotateDeg,
+                              double xAngle,
+                              double yAngle,
+                              double zAngle,
                               GraphicsContext graphicsContext,
                               double scale) {
         ball.model.setX(absoluteX);
         ball.model.setY(absoluteY);
-        ball.model.rotation.setAxis(new Point3D(axisX, axisY, axisZ));
-        ball.model.rotation.setAngle(rotateDeg / view.frameRate / 15);
+        ball.model.rx.setAngle(Math.toDegrees(xAngle) / 10);
+        ball.model.ry.setAngle(Math.toDegrees(yAngle) / 10);
+        ball.model.rz.setAngle(Math.toDegrees(zAngle) / 10);
     }
 
     public void forceDrawBallInHand(GameView view,
@@ -105,7 +105,7 @@ public abstract class Table {
                                     GraphicsContext graphicsContext,
                                     double scale) {
         ball.model.sphere.setVisible(true);
-        forceDrawBall(view, ball, realX, realY, 0, 0, 0, 0, graphicsContext, scale);
+        forceDrawBall(view, ball, realX, realY, 0, 0, 0, graphicsContext, scale);
 //        drawBallBase(
 //                view.canvasX(realX),
 //                view.canvasY(realY),
@@ -121,28 +121,26 @@ public abstract class Table {
                                  double scale) {
         for (Ball ball : allBalls) {
             boolean pot;
-            double x, y, ax, ay, az, rd;
+            double x, y, xa, ya, za;
             if (positionsPot == null) {
                 pot = ball.isPotted();
                 x = ball.getX();
                 y = ball.getY();
-                ax = ball.getAxisX();
-                ay = ball.getAxisY();
-                az = ball.getAxisZ();
-                rd = ball.getRotateDeg();
+                xa = ball.getXAngle();
+                ya = ball.getYAngle();
+                za = ball.getZAngle();
             } else {
                 double[] xyp = positionsPot.get(ball);
                 pot = xyp[6] == 1;
                 x = xyp[0];
                 y = xyp[1];
-                ax = xyp[2];
-                ay = xyp[3];
-                az = xyp[4];
-                rd = xyp[5];
+                xa = xyp[2];
+                ya = xyp[3];
+                za = xyp[4];
             }
             ball.model.sphere.setVisible(!pot);
             if (!pot) {
-                forceDrawBall(view, ball, x, y, ax, ay, az, rd, graphicsContext, scale);
+                forceDrawBall(view, ball, x, y, xa, ya, za, graphicsContext, scale);
             }
         }
     }

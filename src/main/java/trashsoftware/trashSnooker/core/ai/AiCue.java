@@ -281,8 +281,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 choice.ball,
                 choice.cueDirectionUnitVector[0],
                 choice.cueDirectionUnitVector[1],
-                0.0,
-                0.0,
+                0.0,  // todo
+                choice.selectedSideSpin,
                 choice.selectedPower);
     }
 
@@ -607,6 +607,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                     penalty,
                     unitXY,
                     selectedPower,
+                    0.0,
                     wp,
                     cpp
             );
@@ -872,7 +873,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         protected double snookerPrice;
         protected double opponentAttackPrice;
         protected double price;
-        protected double[] cueDirectionUnitVector;
+        protected double[] cueDirectionUnitVector;  // selected
+        double selectedSideSpin;
         double selectedPower;
         CuePlayParams cuePlayParams;
         WhitePrediction wp;
@@ -883,6 +885,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                                 double penalty,
                                 double[] cueDirectionUnitVector,
                                 double selectedPower,
+                                double selectedSideSpin,
                                 WhitePrediction wp,
                                 CuePlayParams cuePlayParams) {
             this.ball = ball;
@@ -893,6 +896,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 //            this.collideOtherBall = collideOtherBall;
             this.cueDirectionUnitVector = cueDirectionUnitVector;
             this.selectedPower = selectedPower;
+            this.selectedSideSpin = selectedSideSpin;
             this.cuePlayParams = cuePlayParams;
             this.wp = wp;
 
@@ -904,6 +908,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
          */
         protected DefenseChoice(double[] cueDirectionUnitVector,
                                 double selectedPower,
+                                double selectedSideSpin,
                                 CuePlayParams cuePlayParams) {
             this(null,
                     0.0,
@@ -911,6 +916,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                     0.0,
                     cueDirectionUnitVector,
                     selectedPower,
+                    selectedSideSpin,
                     null,
                     cuePlayParams);
         }

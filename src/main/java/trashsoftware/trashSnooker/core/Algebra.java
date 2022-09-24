@@ -69,10 +69,6 @@ public class Algebra {
     public static double powerTransferOfAngle(double angleRad) {
         return (Math.PI / 2 - angleRad) / Math.PI * 2;
     }
-    
-    public static double[] unitVectorOfAngle(double angleRad) {
-        return new double[]{Math.cos(angleRad), Math.sin(angleRad)};
-    }
 
     /**
      * 返回向量与X轴正半轴的夹角，范围 [0~2PI)
@@ -145,6 +141,11 @@ public class Algebra {
     public static double normalizeAngle(double angleRad) {
         double ang = realMod(angleRad, Math.PI * 2);
         return ang > Math.PI ? ang - Math.PI * 2 : ang;
+    }
+
+    // 这两个到底是怎么在混用，没看懂
+    public static double[] unitVectorOfAngle(double angleRad) {
+        return new double[]{Math.cos(angleRad), Math.sin(angleRad)};
     }
 
     public static double[] angleToUnitVector(double angle) {

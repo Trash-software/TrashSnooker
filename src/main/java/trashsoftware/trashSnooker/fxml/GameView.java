@@ -65,13 +65,16 @@ public class GameView implements Initializable {
     public static final Font POOL_NUMBER_FONT = new Font(8.0);
 
     public static final double HAND_DT_TO_MAX_PULL = 30.0;
+    public static final double MIN_CUE_BALL_DT = 30.0;  // 运杆时杆头离白球的最小距离
 
     public static final double MAX_CUE_ANGLE = 60;
     //    private double minRealPredictLength = 300.0;
-    private static final double DEFAULT_MAX_PREDICT_LENGTH = 1000.0;
-    private final double minPredictLengthPotDt = 2000.0;
-    private final double maxPredictLengthPotDt = 100.0;
-    public static double scale = 0.32;
+    private static double defaultMaxPredictLength = 1000;
+    private double minPredictLengthPotDt = 2000;
+    private double maxPredictLengthPotDt = 100;
+    public static final double BIG_TABLE_SCALE = 0.32;
+    public static final double MID_TABLE_SCALE = 0.45;
+    public static double scale;
     public double frameTimeMs = 20.0;
     public double frameRate = 1000.0 / frameTimeMs;
     @FXML
@@ -159,7 +162,7 @@ public class GameView implements Initializable {
     private double lastDragAngle;
     private Timeline timeline;
     private double predictionMultiplier = 2000.0;
-    private double maxRealPredictLength = DEFAULT_MAX_PREDICT_LENGTH;
+    private double maxRealPredictLength = defaultMaxPredictLength;
     private double whitePredictLenAfterWall = 1000.0;
     private boolean enablePsy = true;  // 由游戏决定心理影响
     private boolean aiCalculating;
@@ -187,6 +190,12 @@ public class GameView implements Initializable {
 
     private void generateScales() {
         GameValues values = gameType.gameValues;
+        if (values == GameValues.SNOOKER_VALUES) {
+            scale = BIG_TABLE_SCALE;
+        } else {
+            scale = MID_TABLE_SCALE;
+        }
+        
         canvasWidth = values.outerWidth * scale;
         canvasHeight = values.outerHeight * scale;
         innerHeight = values.innerHeight * scale;
@@ -243,8 +252,9 @@ public class GameView implements Initializable {
         player2Label.setText(player2.getPlayerPerson().getName());
         totalFramesLabel.setText(String.format("(%d)", replay.getItem().totalFrames));
 
-        setupPowerSlider();
         generateScales();
+        
+        setupPowerSlider();
         setUiFrameStart();
         setupDebug();
 
@@ -273,10 +283,11 @@ public class GameView implements Initializable {
         player2Label.setText(player2.getPlayerPerson().getName());
         totalFramesLabel.setText(String.format("(%d)", totalFrames));
 
+        generateScales();
+
         startGame(totalFrames, cloth);
 
         setupPowerSlider();
-        generateScales();
         setUiFrameStart();
         setupDebug();
         
@@ -1257,13 +1268,13 @@ public class GameView implements Initializable {
     void setDifficulty(SettingsView.Difficulty difficulty) {
         if (difficulty == SettingsView.Difficulty.EASY) {
 //            minRealPredictLength = 600.0;
-            maxRealPredictLength = DEFAULT_MAX_PREDICT_LENGTH * 1.5;
+            maxRealPredictLength = defaultMaxPredictLength * 1.5;
         } else if (difficulty == SettingsView.Difficulty.MEDIUM) {
 //            minRealPredictLength = 300.0;
-            maxRealPredictLength = DEFAULT_MAX_PREDICT_LENGTH;
+            maxRealPredictLength = defaultMaxPredictLength;
         } else if (difficulty == SettingsView.Difficulty.HARD) {
 //            minRealPredictLength = 150.0;
-            maxRealPredictLength = DEFAULT_MAX_PREDICT_LENGTH * 0.5;
+            maxRealPredictLength = defaultMaxPredictLength * 0.5;
         }
     }
 
@@ -1644,12 +1655,12 @@ public class GameView implements Initializable {
                     if (replay != null) {
                         replay.table.forceDrawBall(this, entry.getKey(), 
                                 frame.x, frame.y,
-                                frame.axisX, frame.axisY, frame.axisZ, frame.rotateDeg, 
+                                frame.xAngle, frame.yAngle, frame.zAngle, 
                                 graphicsContext, scale);
                     } else {
                         game.getGame().getTable().forceDrawBall(this, entry.getKey(), 
                                 frame.x, frame.y,
-                                frame.axisX, frame.axisY, frame.axisZ, frame.rotateDeg,
+                                frame.xAngle, frame.yAngle, frame.zAngle,
                                 graphicsContext, scale);
                     }
                 } else {
@@ -1697,12 +1708,12 @@ public class GameView implements Initializable {
                         if (replay != null)
                             replay.getTable().forceDrawBall(this, entry.getKey(), 
                                     frame.x, frame.y,
-                                    frame.axisX, frame.axisY, frame.axisZ, frame.rotateDeg,
+                                    frame.xAngle, frame.yAngle, frame.zAngle,
                                     graphicsContext, scale);
                         else
                             game.getGame().getTable().forceDrawBall(this, entry.getKey(), 
                                     frame.x, frame.y,
-                                    frame.axisX, frame.axisY, frame.axisZ, frame.rotateDeg,
+                                    frame.xAngle, frame.yAngle, frame.zAngle,
                                     graphicsContext, scale);
                     } else {
                         entry.getKey().model.sphere.setVisible(false);
@@ -1933,7 +1944,9 @@ public class GameView implements Initializable {
         }
     }
 
-    private double getPredictionLineTotalLength(double potDt, PlayerPerson playerPerson) {
+    private double getPredictionLineTotalLength(
+            WhitePrediction prediction,
+            double potDt, PlayerPerson playerPerson) {
         Cue cue = game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame());
 
         // 最大的预测长度
@@ -1952,6 +1965,31 @@ public class GameView implements Initializable {
         double afterSide = predictLength * (1 - side);  // 加塞影响瞄准
         double mul = 1 - Math.sin(Math.toRadians(cueAngleDeg)); // 抬高杆尾影响瞄准
         double res = afterSide * mul;
+        
+        // 这是对靠近库边球瞄准线的惩罚
+        // 因为游戏里贴库球瞄准线有库边作参照物，比现实中简单得多，所以要惩罚回来
+        double dtToClosetCushion = 
+                gameType.gameValues.dtToClosetCushion(
+                        prediction.getFirstBallX(),
+                        prediction.getFirstBallY()) - gameType.gameValues.ballRadius;
+        double threshold = gameType.gameValues.closeCushionPenaltyThreshold();
+        
+        // 越接近1说明打底袋的角度越差，但是中袋角度越好
+        // 但是又因为离库近的球必定不适合打中袋，所以二次补偿回来的也还将就
+        // 唯一的问题就是中袋袋口附近90度的球，预测线会很短；但是那种球拿脚都打得进，所以也无所谓了
+        double directionBadness = 
+                Math.abs(Math.abs(prediction.getBallDirectionX()) - 
+                        Math.abs(prediction.getBallDirectionY()));
+        if (dtToClosetCushion < threshold) {
+            double cushionBadness = 1 - dtToClosetCushion / threshold;
+            double badness = cushionBadness + directionBadness - 1.0;
+            badness = Math.max(badness, 0.0);  // 必须要都很差才算差
+            double minimum = 0.25;
+            double mul2 = (1 - badness) * (1 - minimum) + minimum;
+//            System.out.println("Close to wall, " + directionBadness + ", " + cushionBadness + ", " + mul2);
+            res *= mul2;
+        }
+        
         if (enablePsy) {
             res *= getPsyAccuracyMultiplier(playerPerson);
         }
@@ -2007,30 +2045,6 @@ public class GameView implements Initializable {
                 false, false, true);
         if (center == null) return;
 
-//        PredictedPos coll = game.getGame().getPredictedHitBall(
-//                center.whiteX, center.whiteY, cursorDirectionUnitX, cursorDirectionUnitY
-//        );
-//        if (coll != null)
-//            SnookerTable.drawBallBase(
-//                    canvasX(coll.getPredictedWhitePos()[0]),
-//                    canvasY(coll.getPredictedWhitePos()[1]),
-//                    52.5 * scale,
-//                    Color.GRAY,
-//                    graphicsContext
-//            );
-
-//        List<double[][]> g = game.getGame().directionsToAccessibleHoles(center.getFirstCollide());
-//        for (double[][] gg : g) {
-//            System.out.print(gameType.gameValues.getHoleOpenCenter(gg[1]) + ", ");
-//        }
-//        System.out.println();
-
-//        Ball fc = center.getFirstCollide();
-//        if (fc != null) {
-//            Table.drawBallBase(canvasX(fc.getX()), canvasY(fc.getY()), 20, Color.GRAY, graphicsContext);
-//        }
-//        center.resetToInit();
-
         for (int i = 1; i < possibles.length; i++) {
             clockwise[i - 1] = game.getGame().predictWhite(
                     possibles[i], game.whitePhy, whitePredictLenAfterWall,
@@ -2077,7 +2091,9 @@ public class GameView implements Initializable {
                         center.getWhiteCollisionX(), center.getWhiteCollisionY(),
                         center.whiteX, center.whiteY);
                 // 白球行进距离越长，预测线越短
-                double predictLineTotalLen = getPredictionLineTotalLength(potDt,
+                double predictLineTotalLen = getPredictionLineTotalLength(
+                        center,
+                        potDt,
                         game.getGame().getCuingPlayer().getPlayerPerson());
 
                 targetPredictionUnitY = center.getBallDirectionY();
@@ -2170,14 +2186,11 @@ public class GameView implements Initializable {
     private void beginCueAnimation(InGamePlayer cuingPlayer, double whiteStartingX, double whiteStartingY,
                                    double selectedPower, double directionX, double directionY) {
         PlayerPerson playerPerson = cuingPlayer.getPlayerPerson();
-        double personPower = selectedPower / playerPerson.getMaxPowerPercentage();  // 球手的用力程度
+        double personPower = getPersonPower(playerPerson);  // 球手的用力程度
         double errMulWithPower = getErrorMultiplierOfPower(playerPerson, selectedPower);
-        double maxPullDt =
-                (playerPerson.getMaxPullDt() - playerPerson.getMinPullDt()) *
-                        personPower + playerPerson.getMinPullDt();
+        double maxPullDt = pullDtOf(playerPerson, personPower);
         double handDt = maxPullDt + HAND_DT_TO_MAX_PULL;
-        double handX = whiteStartingX - handDt * directionX;
-        double handY = whiteStartingY - handDt * directionY;
+        double[] handXY = handPosition(handDt, whiteStartingX, whiteStartingY, directionX, directionY);
 
         Cue cue;
         if (replay != null) {
@@ -2188,12 +2201,12 @@ public class GameView implements Initializable {
 
         // 出杆速度与白球球速算法相同
         cueAnimationPlayer = new CueAnimationPlayer(
-                60.0,
+                MIN_CUE_BALL_DT,
                 maxPullDt,
                 selectedPower,
                 errMulWithPower,
-                handX,
-                handY,
+                handXY[0],
+                handXY[1],
                 directionX,
                 directionY,
                 cue,
@@ -2228,19 +2241,37 @@ public class GameView implements Initializable {
             if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
 
             if (cueBall.isPotted()) return;
+            
+            double aimingOffset = aimingOffsetOfPlayer(
+                    game.getGame().getCuingPlayer().getPlayerPerson(),
+                    getSelectedPower());
+            double trueAimingAngle = Algebra.thetaOf(cursorDirectionUnitX, cursorDirectionUnitY);
+            double angleWithOffset = trueAimingAngle - aimingOffset;
+            double[] cuePointing = Algebra.unitVectorOfAngle(angleWithOffset);
+            
+            PlayerPerson person = game.getGame().getCuingPlayer().getPlayerPerson();
+            double personPower = getPersonPower(person);  // 球手的用力程度
+            double maxPullDt = pullDtOf(person, personPower);
+            double handDt = maxPullDt + HAND_DT_TO_MAX_PULL;
+            double[] handXY = handPosition(handDt, 
+                    cueBall.getX(), cueBall.getY(), 
+                    cursorDirectionUnitX, cursorDirectionUnitY);
 
-            drawCueWithDtToHand(cueBall.getX(), cueBall.getY(),
-                    cursorDirectionUnitX,
-                    cursorDirectionUnitY,
-                    60.0 + HAND_DT_TO_MAX_PULL,
+            drawCueWithDtToHand(handXY[0], handXY[1],
+                    cuePointing[0], 
+                    cuePointing[1],
+                    MIN_CUE_BALL_DT - 
+                            maxPullDt - HAND_DT_TO_MAX_PULL +
+                            gameType.gameValues.ballRadius,
                     game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame()));
         } else {
 //            System.out.println("Drawing!");
+            double[] pointingVec = Algebra.unitVectorOfAngle(cueAnimationPlayer.pointingAngle);
             drawCueWithDtToHand(
                     cueAnimationPlayer.handX,
                     cueAnimationPlayer.handY,
-                    cueAnimationPlayer.pointingUnitX,
-                    cueAnimationPlayer.pointingUnitY,
+                    pointingVec[0],
+                    pointingVec[1], 
                     cueAnimationPlayer.cueDtToWhite -
                             cueAnimationPlayer.maxPullDistance - HAND_DT_TO_MAX_PULL +
                             gameType.gameValues.ballRadius,
@@ -2566,6 +2597,29 @@ public class GameView implements Initializable {
     public static double realY(double canvasY) {
         return canvasY / scale;
     }
+    
+    private double getPersonPower(PlayerPerson person) {
+        return getSelectedPower() / person.getMaxPowerPercentage();
+    }
+    
+    private static double pullDtOf(PlayerPerson person, double personPower) {
+        return (person.getMaxPullDt() - person.getMinPullDt()) *
+                personPower + person.getMinPullDt();
+    }
+    
+    private static double[] handPosition(double handDt, 
+                                         double whiteX, double whiteY,
+                                         double trueAimingX, double trueAimingY) {
+        double handX = whiteX - handDt * trueAimingX;
+        double handY = whiteY - handDt * trueAimingY;
+        return new double[]{handX, handY};
+    }
+    
+    private static double aimingOffsetOfPlayer(PlayerPerson person, double selectedPower) {
+        double playerAimingOffset = person.getAimingOffset();
+        // 这个比较固定，不像出杆扭曲那样，发暴力时歪得夸张
+        return (playerAimingOffset * (selectedPower / 100.0) + playerAimingOffset) / 8.0;
+    }
 
     private boolean isGameCalculating() {
         return game.getGame().isCalculating();
@@ -2590,6 +2644,7 @@ public class GameView implements Initializable {
         //        private final double cueBallX, cueBallY;
         private final double handX, handY;  // 手架的位置，作为杆的摇摆中心点
         private final double errMulWithPower;
+        private final double aimingOffset;  // 针对瞄偏打正的球手，杆头向右拐的正
         private final Cue cue;
         private final PlayerPerson playerPerson;
         private long heldMs = 0;
@@ -2597,7 +2652,7 @@ public class GameView implements Initializable {
         private double cueDtToWhite;  // 杆的动画离白球的真实距离，未接触前为正
         private boolean touched;  // 是否已经接触白球
         private boolean reachedMaxPull;
-        private double pointingUnitX, pointingUnitY;
+        private double pointingAngle;
 
         CueAnimationPlayer(double initDistance,
                            double maxPullDt,
@@ -2617,12 +2672,11 @@ public class GameView implements Initializable {
             this.maxExtension = -maxPullDistance *
                     (playerPerson.getMaxSpinPercentage() * 0.75 / 100);  // 杆法好的人延伸长
             this.cueMoveSpeed = selectedPower * Values.MAX_POWER_SPEED / 100_000.0;
-//            this.cueBallX = cueBallInitX;
-//            this.cueBallY = cueBallInitY;
             this.errMulWithPower = errMulWithPower;
-
-            this.pointingUnitX = pointingUnitX;
-            this.pointingUnitY = pointingUnitY;
+            
+            this.aimingOffset = aimingOffsetOfPlayer(playerPerson, selectedPower);
+            double correctPointingAngle = Algebra.thetaOf(pointingUnitX, pointingUnitY);
+            pointingAngle = correctPointingAngle - aimingOffset;
 
             this.handX = handX;
             this.handY = handY;
@@ -2645,7 +2699,7 @@ public class GameView implements Initializable {
                     endCueAnimation();
                 }
             } else if (reachedMaxPull) {
-
+                double lastCueDtToWhite = cueDtToWhite;
                 // 正常出杆
                 if (cueDtToWhite > maxPullDistance / 2) {
                     cueDtToWhite -= cueMoveSpeed * frameTimeMs / 2;
@@ -2664,20 +2718,16 @@ public class GameView implements Initializable {
                     double psyFactor = 1.0 - getPsyAccuracyMultiplier(playerPerson);
                     baseSwingMag *= (1.0 + psyFactor * 5);
                 }
+                if (!touched) {
+                    double changeRatio = (lastCueDtToWhite - cueDtToWhite) / maxPullDistance;
+                    pointingAngle += aimingOffset * changeRatio;
+                }
                 if (stage < 0) {  // 向左扭
-                    double angle = Algebra.thetaOf(pointingUnitX, pointingUnitY);
-                    double newAngle = angle + baseSwingMag *
+                    pointingAngle = pointingAngle + baseSwingMag *
                             errMulWithPower / 2000;
-                    double[] newUnit = Algebra.angleToUnitVector(newAngle);
-                    pointingUnitX = newUnit[0];
-                    pointingUnitY = newUnit[1];
                 } else if (stage > 0) {  // 向右扭
-                    double angle = Algebra.thetaOf(pointingUnitX, pointingUnitY);
-                    double newAngle = angle - baseSwingMag *
+                    pointingAngle = pointingAngle - baseSwingMag *
                             errMulWithPower / 2000;
-                    double[] newUnit = Algebra.angleToUnitVector(newAngle);
-                    pointingUnitX = newUnit[0];
-                    pointingUnitY = newUnit[1];
                 }
 
                 if (cueDtToWhite <= maxExtension) {  // 出杆结束了
@@ -2691,7 +2741,7 @@ public class GameView implements Initializable {
                     }
                 }
             } else {
-                cueDtToWhite += (cueMoveSpeed / 5) * frameTimeMs *
+                cueDtToWhite += frameTimeMs / 3.0 *
                         playerPerson.getCuePlayType().getPullSpeedMul();  // 往后拉
                 if (cueDtToWhite >= maxPullDistance) {
                     reachedMaxPull = true;

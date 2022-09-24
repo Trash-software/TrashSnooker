@@ -15,29 +15,34 @@ import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.Arrays;
+
 public class TestApp extends Application {
     private double x = 300, y = 300;
     double ballRadius = 100.0;
     private double rx, ry, rz;
     double vx = 1;
     double vy = 3;
-    Rotate onlyRotate = new Rotate();
+    Rotate rotate1 = new Rotate();
+    Rotate rotate2 = new Rotate();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Sphere sphere = new Sphere(ballRadius);
-        sphere.setEffect(null);
         Image img = new Image(getClass().getResource("/trashsoftware/trashSnooker/img/pool/pool9.png").toExternalForm());
-//        Image white = new Image(getClass().getResource("/trashsoftware/trashSnooker/img/white.png").toExternalForm());
         PhongMaterial material = new PhongMaterial();
-//        material.setDiffuseColor(Color.RED);
         material.setDiffuseMap(img);
-//        material.setSpecularColor(null);
-//        material.setSelfIlluminationMap(white);
-//        material.setSpecularPower(1);
         sphere.setMaterial(material);
-        sphere.setLayoutX(300);
-        sphere.setLayoutY(300);
+        
+        sphere.setTranslateX(300);
+        sphere.setTranslateY(300);
+
+        Sphere sphere2 = new Sphere(ballRadius);
+        sphere2.setMaterial(material);
+        
+        sphere2.setTranslateX(600);
+        sphere2.setTranslateY(300);
+        
         Canvas canvas = new Canvas();
 
         canvas.setHeight(720);
@@ -45,23 +50,19 @@ public class TestApp extends Application {
         canvas.getGraphicsContext2D().setFill(Color.GREEN);
         canvas.getGraphicsContext2D().fillRect(0, 0, 1280, 720);
 
-//        GridPane gridPane = new GridPane();
-//        gridPane.add(canvas, 0, 0);
-
         Pane group = new Pane();
         group.getChildren().add(canvas);
         group.getChildren().add(sphere);
-
-//        gridPane.add(sphere, 0, 0);
-//        gridPane.add(group, 0, 0);
+        group.getChildren().add(sphere2);
 
         Scene scene = new Scene(group);
         Rotate xRotate = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
         Rotate yRotate = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
         Rotate zRotate = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
+        sphere2.getTransforms().addAll(zRotate, yRotate, xRotate);
 
 //        sphere.getTransforms().addAll(xRotate, yRotate, zRotate);
-        sphere.getTransforms().add(onlyRotate);
+        sphere.getTransforms().addAll(rotate1, rotate2);
 
         primaryStage.setScene(scene);
 
@@ -70,29 +71,77 @@ public class TestApp extends Application {
 //        xRotate.setAngle(15);
 //        yRotate.setAngle(-15);
 //        zRotate.setAngle(45);
-        rx = 1;
+        rotate1.setAxis(new Point3D(1, 1, 0));
+        rotate1.setAngle(45);
+//        rotate2.setAxis(new Point3D(0, 1, 1));
+//        rotate2.setAngle(30);
+        
+        System.out.printf("%f %f %f\n", rotate1.getMxx(), rotate1.getMxy(), rotate1.getMxz());
+        System.out.printf("%f %f %f\n", rotate1.getMyx(), rotate1.getMyy(), rotate1.getMyz());
+        System.out.printf("%f %f %f\n", rotate1.getMzx(), rotate1.getMzy(), rotate1.getMzz());
+        
+        double[] r1 = getEulerAngles(rotate1);
+//        double[] r2 = getEulerAngles(rotate2);
+        double[] r2 = {0, 0, 0};
+        
+        zRotate.setAngle(-26.57);
+//        yRotate.setAngle(30);
+//        xRotate.setAngle(30);
+//        xRotate.setAngle(Math.toDegrees(r1[0] + r2[0]));
+//        yRotate.setAngle(Math.toDegrees(r1[1] + r2[1]));
+//        zRotate.setAngle(Math.toDegrees(r1[2] + r2[2]));
+        
+////        sphere.getTransforms().clear();
+//        Rotate r2 = new Rotate();
+//        sphere.getTransforms().add(r2);
+//        r2.setAxis(new Point3D(1, 0, 0));
+//        r2.setAngle(20);
+        
+        double[] last = new double[3];
 
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(new KeyFrame(new Duration(20), e -> {
-            sphere.setLayoutX(x);
-            sphere.setLayoutY(y);
+            sphere.setTranslateX(x);
+            sphere.setTranslateY(y);
+            sphere2.setTranslateX(x + 300);
+            sphere2.setTranslateY(y);
             x += vx;
             y += vy;
 //            xRotate.set
-            onlyRotate.setAxis(calculateAxis(vx, vy, 0));
-            onlyRotate.setAngle(onlyRotate.getAngle() + Math.hypot(vx, vy));
+            rotate1.setAxis(calculateAxis(vx, vy, 0));
+            rotate1.setAngle(
+                    rotate1.getAngle() + 
+                    Math.hypot(vx, vy));
+            double[] ea = getEulerAngles(rotate1);
+            System.out.printf("%f, %f, %f\n", ea[0] - last[0], ea[1] - last[1], ea[2] - last[2]);
+            
+//            Point3D axis = calculateAxis(vx, vy, 0);
+//            Math.sin()
+            
+//            System.out.println(Arrays.toString(ea));
+            xRotate.setAngle(xRotate.getAngle() + 3);
+//            xRotate.setAngle(Math.toDegrees(ea[0]));
+//            yRotate.setAngle(Math.toDegrees(ea[1]));
+//            zRotate.setAngle(Math.toDegrees(ea[2]));
+            System.arraycopy(ea, 0, last, 0, 3);
             
             if (y + ballRadius >= canvas.getHeight() || y < ballRadius) {
-                double ang = onlyRotate.getAngle() % 360.0;
-                onlyRotate.setAxis(calculateAxis(vx, vy, 0));
-                onlyRotate.setAngle(360.0 - ang);
-                onlyRotate.getMxx();
+//                rotate1 = new Rotate();
+//                sphere.getTransforms().add(rotate1);
                 vy = -vy;
             }
             
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+    }
+    
+    private double[] getEulerAngles(Rotate r) {
+        double theta = -Math.asin(r.getMzx());
+        double cosTheta = Math.cos(theta);
+        double psi = Math.atan2(r.getMzy() / cosTheta, r.getMzz() / cosTheta);
+        double phi = Math.atan2(r.getMyx() / cosTheta, r.getMxx() / cosTheta);
+        return new double[]{psi, theta, phi};
     }
     
     private Point3D calculateAxis(double xSpin, double ySpin, double sideSpin) {
