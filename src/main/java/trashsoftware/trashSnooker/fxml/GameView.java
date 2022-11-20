@@ -49,6 +49,7 @@ import trashsoftware.trashSnooker.recorder.CueRecord;
 import trashsoftware.trashSnooker.recorder.GameRecorder;
 import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.recorder.TargetRecord;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
 import java.net.URL;
@@ -516,8 +517,10 @@ public class GameView implements Initializable {
                             ((AbstractSnookerGame) game.getGame()).reposition();
                             drawScoreBoard(game.getGame().getCuingPlayer(), true);
                             drawTargetBoard(true);
+                            draw();
                             if (aiAutoPlay &&
                                     game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
+//                                Platform.runLater(() -> aiCue(game.getGame().getCuingPlayer()));
                                 aiCue(game.getGame().getCuingPlayer());
                             }
                         }, null));
@@ -1343,11 +1346,14 @@ public class GameView implements Initializable {
     }
 
     private double getActualPowerPercentage() {
-        return getActualPowerPercentage(getSelectedPower());
+        return getActualPowerPercentage(getSelectedPower(), getUnitSideSpin(), getUnitFrontBackSpin());
     }
 
-    private double getActualPowerPercentage(double selectedPower) {
-        return selectedPower / game.getGame().getGameValues().ballWeightRatio *
+    private double getActualPowerPercentage(double selectedPower, 
+                                            double unitCuePointX, 
+                                            double unitCuePointY) {
+        double mul = Util.powerMultiplierOfCuePoint(unitCuePointX, unitCuePointY);
+        return selectedPower * mul / game.getGame().getGameValues().ballWeightRatio *
                 game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(
                         game.getGame()).powerMultiplier;
     }

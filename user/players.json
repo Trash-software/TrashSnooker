@@ -379,7 +379,7 @@
     },
     "Matthew Stevens": {
       "spin": 94.0,
-      "precision": 90.0,
+      "precision": 95.0,
       "anglePrecision": 1.0,
       "longPrecision": 1.05,
       "name": "Matthew Stevens",
@@ -403,8 +403,8 @@
       "category": "Professional",
       "psy": 40,
       "ai": {
-        "precision": 90,
-        "stable": 88,
+        "precision": 95,
+        "stable": 85,
         "position": 96,
         "defense": 82,
         "attackPri": 90,
@@ -749,6 +749,44 @@
         "attackPri": 45,
         "likeShow": 40,
         "solving": 95,
+        "snookerBreak": "left",
+        "cebSideBreak": false
+      }
+    },
+    "Mark Williams": {
+      "spin": 94,
+      "precision": 97.5,
+      "anglePrecision": 1.15,
+      "longPrecision": 1.15,
+      "name": "Mark Williams",
+      "maxPower": 94,
+      "controllablePower": 81,
+      "pullDt": [
+        50.0,
+        200.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
+      "cueSwingMag": 1,
+      "cuePointMuSigma": [
+        0,
+        1,
+        0,
+        8
+      ],
+      "powerControl": 95,
+      "privateCues": [
+      ],
+      "category": "Professional",
+      "psy": 90,
+      "ai": {
+        "precision": 97,
+        "stable": 83,
+        "position": 86,
+        "defense": 84,
+        "attackPri": 92,
+        "likeShow": 60,
+        "solving": 88,
         "snookerBreak": "left",
         "cebSideBreak": false
       }

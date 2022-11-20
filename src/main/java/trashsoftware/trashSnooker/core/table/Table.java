@@ -131,13 +131,14 @@ public abstract class Table {
                 za = ball.getZAngle();
             } else {
                 double[] xyp = positionsPot.get(ball);
-                pot = xyp[6] == 1;
+                pot = xyp[5] == 1;
                 x = xyp[0];
                 y = xyp[1];
                 xa = xyp[2];
                 ya = xyp[3];
                 za = xyp[4];
             }
+//            System.out.println(pot + " " + x + ", " + y + ", " + ball.model.sphere.getMaterial() + " ");
             ball.model.sphere.setVisible(!pot);
             if (!pot) {
                 forceDrawBall(view, ball, x, y, xa, ya, za, graphicsContext, scale);

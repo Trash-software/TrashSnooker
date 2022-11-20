@@ -12,14 +12,14 @@ public class AiCueResult {
     private final double selectedFrontBackSpin;  // 球手想要的高低杆，范围(-1.0, 1.0)，高杆正低杆负
     private final double selectedSideSpin;
     private final double selectedPower;
-    private final boolean attack;
+    private final CueType cueType;
     private final double[] targetOrigPos;
     private final double[][] targetDirHole;
     private final Ball targetBall;
     
     public AiCueResult(PlayerPerson playerPerson,
                        GamePlayStage gamePlayStage,
-                       boolean attack,
+                       CueType cueType,
                        double[] targetOrigPos,
                        double[][] targetDirHole,
                        Ball targetBall,
@@ -33,7 +33,7 @@ public class AiCueResult {
         this.selectedFrontBackSpin = selectedFrontBackSpin;
         this.selectedSideSpin = selectedSideSpin;
         this.selectedPower = selectedPower;
-        this.attack = attack;
+        this.cueType = cueType;
         this.targetOrigPos = targetOrigPos;
         this.targetDirHole = targetDirHole;
         this.targetBall = targetBall;
@@ -50,7 +50,7 @@ public class AiCueResult {
     }
 
     public boolean isAttack() {
-        return attack;
+        return cueType == CueType.ATTACK;
     }
 
     public double[][] getTargetDirHole() {
@@ -80,12 +80,15 @@ public class AiCueResult {
         }
         
         double sd;
-        if (attack) {
+        if (cueType == CueType.ATTACK) {
             sd = (100 - playerPerson.getAiPlayStyle().precision) / precisionFactor;  // 再歪也歪不了太多吧？
             System.out.println("Precision factor: " + precisionFactor + ", Random offset: " + sd);
-        } else if (gamePlayStage == GamePlayStage.BREAK) {
+        } else if (cueType == CueType.BREAK || gamePlayStage == GamePlayStage.BREAK) {
             sd = (100 - Math.max(playerPerson.getAiPlayStyle().precision, 
                     playerPerson.getAiPlayStyle().defense))/ precisionFactor;
+        } else if (cueType == CueType.SOLVE) {
+            sd = (100 - playerPerson.getAiPlayStyle().solving) / precisionFactor * 10.0;
+//            System.out.println("Solving sd: " + sd);
         } else {
             sd = (100 - playerPerson.getAiPlayStyle().defense) / precisionFactor;
         }
@@ -115,5 +118,12 @@ public class AiCueResult {
 
     public double getSelectedPower() {
         return selectedPower;
+    }
+    
+    public enum CueType {
+        ATTACK,
+        DEFENSE,
+        BREAK,
+        SOLVE
     }
 }

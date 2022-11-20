@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
 
@@ -104,21 +105,37 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
     protected abstract DefenseChoice standardDefense();
 
-    protected abstract DefenseChoice solveSnooker();
+    protected DefenseChoice solveSnooker(Phy phy) {
+        int curTarget = game.getCurrentTarget();
+        boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
+        List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
+                isSnookerFreeBall);
+        
+        AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
+        double degreesTick = 100.0 / 2 / aps.solving;
+        double powerTick = 1000.0 / aps.solving;
+
+        System.out.println("AI solving snooker!");
+        return solveSnookerDefense(legalBalls, degreesTick, powerTick, phy);
+    }
 
     /**
      * @return 是否需要有球碰库
      */
     protected abstract boolean requireHitCushion();
 
-    protected double selectedPowerToActualPower(double selectedPower) {
-        return selectedPower *
+    protected double selectedPowerToActualPower(double selectedPower, 
+                                                double unitCuePointX, double unitCuePointY) {
+        double mul = Util.powerMultiplierOfCuePoint(unitCuePointX, unitCuePointY);
+        return selectedPower * mul *
                 aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier /
                 game.getGameValues().ballWeightRatio;
     }
 
-    protected double actualPowerToSelectedPower(double actualPower) {
-        return actualPower /
+    protected double actualPowerToSelectedPower(double actualPower, 
+                                                double unitSpinX, double unitSpinY) {
+        double mul = Util.powerMultiplierOfCuePoint(unitSpinX, unitSpinY);
+        return actualPower / mul /
                 aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier *
                 game.getGameValues().ballWeightRatio;
     }
@@ -133,9 +150,12 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                                                           List<Ball> nextStepLegalBalls,
                                                           Phy phy) {
 //        System.out.print(selectedPower);
+        double actualFbSpin = CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin,
+                aiPlayer.getInGamePlayer(),
+                game.getCuingPlayer().getInGamePlayer().getCurrentCue(game));
         double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
                 game.getCuingPlayer().getInGamePlayer().getCurrentCue(game));
-        double actualPower = selectedPowerToActualPower(selectedPower);
+        double actualPower = selectedPowerToActualPower(selectedPower, actualSideSpin, actualFbSpin);
 //        double[] correctedDirection = attackChoice.cueDirectionUnitVector;
         double[] correctedDirection = CuePlayParams.aimingUnitXYIfSpin(
                 actualSideSpin,
@@ -149,9 +169,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         CuePlayParams params = CuePlayParams.makeIdealParams(
                 correctedChoice.cueDirectionUnitVector[0],
                 correctedChoice.cueDirectionUnitVector[1],
-                CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin,
-                        aiPlayer.getInGamePlayer(),
-                        game.getCuingPlayer().getInGamePlayer().getCurrentCue(game)),
+                actualFbSpin,
                 actualSideSpin,
                 0.0,
                 actualPower
@@ -261,7 +279,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     protected AiCueResult makeAttackCue(IntegratedAttackChoice iac) {
         return new AiCueResult(aiPlayer.getPlayerPerson(),
                 game.getGamePlayStage(iac.attackChoice.ball, true),
-                true,
+                AiCueResult.CueType.ATTACK,
                 iac.attackChoice.targetOrigPos,
                 iac.attackChoice.dirHole,
                 iac.attackChoice.ball,
@@ -272,10 +290,10 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 iac.selectedPower);
     }
 
-    protected AiCueResult makeDefenseCue(DefenseChoice choice) {
+    protected AiCueResult makeDefenseCue(DefenseChoice choice, AiCueResult.CueType cueType) {
         return new AiCueResult(aiPlayer.getPlayerPerson(),
                 game.getGamePlayStage(choice.ball, true),
-                false,
+                cueType,
                 null,
                 null,
                 choice.ball,
@@ -289,7 +307,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     protected AiCueResult regularCueDecision(Phy phy) {
         if (game.isBreaking()) {
             DefenseChoice breakChoice = breakCue(phy);
-            if (breakChoice != null) return makeDefenseCue(breakChoice);
+            if (breakChoice != null) return makeDefenseCue(breakChoice, AiCueResult.CueType.BREAK);
         }
 
         IntegratedAttackChoice attackChoice = standardAttack(phy);
@@ -298,15 +316,15 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         }
         DefenseChoice stdDefense = standardDefense();
         if (stdDefense != null) {
-            return makeDefenseCue(stdDefense);
+            return makeDefenseCue(stdDefense, AiCueResult.CueType.DEFENSE);
         }
         DefenseChoice defenseChoice = getBestDefenseChoice(phy);
         if (defenseChoice != null) {
-            return makeDefenseCue(defenseChoice);
+            return makeDefenseCue(defenseChoice, AiCueResult.CueType.DEFENSE);
         }
-        DefenseChoice solveSnooker = solveSnooker();
+        DefenseChoice solveSnooker = solveSnooker(phy);
         if (solveSnooker != null) {
-            return makeDefenseCue(solveSnooker);
+            return makeDefenseCue(solveSnooker, AiCueResult.CueType.SOLVE);
         }
         return randomAngryCue();
     }
@@ -357,7 +375,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         return new AiCueResult(
                 aiPlayer.getPlayerPerson(),
                 GamePlayStage.NORMAL,
-                false,
+                AiCueResult.CueType.DEFENSE,
                 null,
                 null,
                 null,
@@ -461,8 +479,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         System.out.println(availableRads.size() + " defense angles");
         Set<Ball> legalSet = new HashSet<>(legalBalls);
         DefenseChoice best = null;
-        double selPowLow = actualPowerToSelectedPower(actualPowerLow);
-        double selPowHigh = actualPowerToSelectedPower(actualPowerHigh);
+        double selPowLow = actualPowerToSelectedPower(actualPowerLow, 0, 0);
+        double selPowHigh = actualPowerToSelectedPower(actualPowerHigh, 0, 0);
         for (double selectedPower = selPowLow;
              selectedPower < selPowHigh;
              selectedPower += realPowerTick) {
@@ -525,7 +543,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 0.0,
                 0.0,
                 0.0,
-                selectedPowerToActualPower(selectedPower)
+                selectedPowerToActualPower(selectedPower, 0, 0)
         );
         WhitePrediction wp = game.predictWhite(cpp, phy, 10000000.0,
                 true, true, false);
@@ -620,7 +638,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         return getBestDefenseChoice(
                 5.0,
                 selectedPowerToActualPower(
-                        aiPlayer.getPlayerPerson().getControllablePowerPercentage()),
+                        aiPlayer.getPlayerPerson().getControllablePowerPercentage(), 
+                        0, 0),
                 phy
         );
     }
@@ -631,14 +650,11 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
                 isSnookerFreeBall);
 
-        double degreesTick = 100.0 / 2 / aiPlayer.getPlayerPerson().getAiPlayStyle().defense;
-        double powerTick = 1000.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().defense;
-        DefenseChoice normalDefense = directDefense(legalBalls, degreesTick, powerTick,
-                5.0, actualPowerHigh, phy);  // todo: low power
-        if (normalDefense != null) return normalDefense;
-
-        System.err.println("AI cannot find defense!");
-        return solveSnookerDefense(legalBalls, degreesTick, powerTick, phy);
+        AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
+        double degreesTick = 100.0 / 2 / aps.defense;
+        double powerTick = 1000.0 / aps.defense;
+        return directDefense(legalBalls, degreesTick, powerTick,
+                5.0, actualPowerHigh, phy);
     }
 
     public static class AttackChoice implements Comparable<AttackChoice> {

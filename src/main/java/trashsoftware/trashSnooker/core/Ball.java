@@ -312,8 +312,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     protected double[] hitHoleArcArea(double[] arcXY, Phy phy) {
         double[] normalVec = super.hitHoleArcArea(arcXY, phy);  // 碰撞点切线的法向量
         // 一般来说袋角的弹性没库边好
-        vx *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.8;
-        vy *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.8;
+        vx *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
+        vy *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
         applySpinsWhenHitCushion(phy, normalVec);
         
         return normalVec;
@@ -321,8 +321,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
 
     protected void hitHoleLineArea(double[] lineNormalVec, Phy phy) {
         super.hitHoleLineArea(lineNormalVec, phy);
-        vx *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
-        vy *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
+        vx *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
+        vy *= values.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
         applySpinsWhenHitCushion(phy, lineNormalVec);
     }
 

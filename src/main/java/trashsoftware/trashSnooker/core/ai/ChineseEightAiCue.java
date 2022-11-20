@@ -32,11 +32,6 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     @Override
-    protected DefenseChoice solveSnooker() {
-        return null;
-    }
-
-    @Override
     protected DefenseChoice breakCue(Phy phy) {
         // todo: 小力开球和大力开球
 //        if (aiPlayer.getPlayerPerson().getControllablePowerPercentage() < 80.0) {
@@ -58,7 +53,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 0.0,
                 0.0,
                 0.0,
-                selectedPowerToActualPower(selectedPower)
+                selectedPowerToActualPower(selectedPower, 0, 0)
         );
         return new DefenseChoice(unitXY, selectedPower, 0.0, cpp);
     }

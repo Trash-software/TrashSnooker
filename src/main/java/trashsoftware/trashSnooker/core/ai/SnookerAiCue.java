@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.Arrays;
 
@@ -31,12 +32,17 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double dirX = aimingPosX - game.getCueBall().getX();
         double dirY = aimingPosY - game.getCueBall().getY();
         double[] unitXY = Algebra.unitVector(dirX, dirY);
-        double actualPower = 28.0;
-        double selectedPower = actualPowerToSelectedPower(actualPower / 100 * phy.cloth.smoothness.speedReduceFactor);
+        double actualPower = 22.0;
         double selectedSideSpin = leftBreak ? -0.6 : 0.6;
         double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
                 aiPlayer.getInGamePlayer().getCurrentCue(game));
-
+        System.out.println(actualSideSpin + " " + Util.powerMultiplierOfCuePoint(0.6, 0));
+        double selectedPower = actualPowerToSelectedPower(
+                actualPower / 100 * phy.cloth.smoothness.speedReduceFactor,
+                actualSideSpin,  // fixme
+                0
+                );
+        
         double[] correctedXY = CuePlayParams.aimingUnitXYIfSpin(
                 actualSideSpin,
                 actualPower,
@@ -70,11 +76,6 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     }
 
     @Override
-    protected DefenseChoice solveSnooker() {
-        return null;
-    }
-
-    @Override
     public AiCueResult makeCue(Phy phy) {
         int behind = -game.getScoreDiff(aiPlayer);
         int rem = game.getRemainingScore();
@@ -91,12 +92,12 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 if (game.remainingRedCount() == 1) {
                     System.out.println("Last red, make snooker");
                     DefenseChoice def = getBestDefenseChoice(phy);
-                    if (def != null) return makeDefenseCue(def);
+                    if (def != null) return makeDefenseCue(def, AiCueResult.CueType.DEFENSE);
                 }
             } else if (game.getCurrentTarget() != AbstractSnookerGame.RAW_COLORED_REP) {
                 System.out.println("Ordered colors, make snooker");
                 DefenseChoice def = getBestDefenseChoice(phy);
-                if (def != null) return makeDefenseCue(def);
+                if (def != null) return makeDefenseCue(def, AiCueResult.CueType.DEFENSE);
             }
         }
         return regularCueDecision(phy);

@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.util;
 
+import trashsoftware.trashSnooker.core.Values;
+
 import java.sql.Timestamp;
 import java.util.Random;
 
@@ -130,5 +132,11 @@ public class Util {
             long mm_ss = s % 3600;
             return String.format("%d:%d:%d", h, mm_ss / 60, mm_ss % 60);
         }
+    }
+    
+    public static double powerMultiplierOfCuePoint(double unitX, double unitY) {
+        double dt = Math.hypot(Math.abs(unitX), Math.abs(unitY));  // 0-1之间
+        double gap = 1 - Values.CUE_POINT_MULTIPLIER;
+        return (1 - dt) * gap + Values.CUE_POINT_MULTIPLIER;
     }
 }

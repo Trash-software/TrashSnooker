@@ -10,7 +10,6 @@ import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.table.ChineseEightTable;
-import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.core.table.Tables;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.Util;
@@ -20,19 +19,17 @@ import java.util.stream.Collectors;
 
 public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlayer>
         implements NeedBigBreak {
-    
+
     public static final int NOT_SELECTED_REP = 0;
     public static final int FULL_BALL_REP = 16;
     public static final int HALF_BALL_REP = 17;
 
     private static final int[] FULL_BALL_SLOTS = {0, 2, 3, 7, 9, 10, 12};
     private static final int[] HALF_BALL_SLOTS = {1, 5, 6, 7, 11, 13, 14};
-
-    private ChineseEightBallPlayer winingPlayer;
-    private ChineseEightScoreResult curResult;
-
     private final PoolBall eightBall;
     private final PoolBall[] allBalls = new PoolBall[16];
+    private ChineseEightBallPlayer winingPlayer;
+    private ChineseEightScoreResult curResult;
 
     public ChineseEightBallGame(GameView parent, EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
         super(parent, entireGame, gameSettings, GameValues.CHINESE_EIGHT_VALUES, frameIndex);
@@ -44,6 +41,12 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     @Override
     public GameType getGameType() {
         return GameType.CHINESE_EIGHT;
+    }
+
+    @Override
+    public void withdraw(Player player) {
+        winingPlayer = getAnotherPlayer((ChineseEightBallPlayer) player);
+        super.withdraw(player);
     }
 
     private void initBalls() {
@@ -107,7 +110,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         createScoreResult();
         return super.cue(params, phy);
     }
-    
+
     private void createScoreResult() {
         curResult = new ChineseEightScoreResult(
                 thinkTime,
@@ -256,7 +259,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     private boolean isHalfBall(Ball ball) {
         return ball.getValue() >= 9 && ball.getValue() <= 15;
     }
-    
+
     private int getRemFullBallOnTable() {
         int count = 0;
         for (PoolBall ball : allBalls) {
@@ -294,7 +297,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         }
         return true;
     }
-    
+
     private Collection<PoolBall> fullBallsOf(Set<PoolBall> balls) {
         return balls.stream().filter(this::isFullBall).collect(Collectors.toSet());
     }
@@ -364,12 +367,18 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             foulReason = "空杆";
         } else {
             if (currentTarget == FULL_BALL_REP) {
-                if (!isFullBall(whiteFirstCollide)) {
+                if (whiteFirstCollide.getValue() == 8) {
+                    foul = true;
+                    foulReason = "目标球为全色球，但击打了黑球";
+                } else if (!isFullBall(whiteFirstCollide)) {
                     foul = true;
                     foulReason = "目标球为全色球，但击打了半色球";
                 }
             } else if (currentTarget == HALF_BALL_REP) {
-                if (!isHalfBall(whiteFirstCollide)) {
+                if (whiteFirstCollide.getValue() == 8) {
+                    foul = true;
+                    foulReason = "目标球为半色球，但击打了黑球";
+                } else if (!isHalfBall(whiteFirstCollide)) {
                     foul = true;
                     foulReason = "目标球为半色球，但击打了全色球";
                 }
@@ -381,7 +390,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             }
         }
 
-        if (foul) {
+        if (foul && !eightBall.isPotted()) {
             lastCueFoul = true;
             cueBall.pot();
             ballInHand = true;

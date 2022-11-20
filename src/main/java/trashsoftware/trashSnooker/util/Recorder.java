@@ -116,6 +116,7 @@ public class Recorder {
                                     aiObject.getDouble("defense"),
                                     aiObject.getDouble("attackPri"),
                                     aiObject.getDouble("likeShow"),
+                                    aiObject.getDouble("solving"),
                                     aiObject.getString("snookerBreak"),
                                     aiObject.getBoolean("cebSideBreak")
                             );

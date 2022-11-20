@@ -4,8 +4,10 @@ public class CuePlayParams {
 
     public final double vx;
     public final double vy;
+
     // 记录向，不参与实际运算
     public final double power;
+
     public double xSpin;
     public double ySpin;
     public double sideSpin;
@@ -60,7 +62,7 @@ public class CuePlayParams {
         return unitCuePoint * cue.spinMultiplier *
                 inGamePlayer.getPlayerPerson().getMaxSpinPercentage() / 100.0;
     }
-    
+
     public static double getSelectedSideSpin(double actualSideSpin, Cue cue) {
         return actualSideSpin / cue.spinMultiplier;
     }

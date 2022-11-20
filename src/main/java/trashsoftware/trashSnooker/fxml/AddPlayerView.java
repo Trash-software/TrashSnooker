@@ -72,6 +72,7 @@ public class AddPlayerView implements Initializable {
                         Math.min(99.5, positionSlider.getValue() * 1.1),
                         Math.min(100, precisionSlider.getValue()),
                         50,
+                        Math.min(99.5, (precisionSlider.getValue() + positionSlider.getValue()) / 2),
                         "right",
                         powerSlider.getValue() * 0.88 < 80.0  // 不化简是为了易读
                 ),
