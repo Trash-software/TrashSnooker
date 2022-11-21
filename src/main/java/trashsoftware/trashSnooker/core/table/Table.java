@@ -1,6 +1,5 @@
 package trashsoftware.trashSnooker.core.table;
 
-import javafx.geometry.Point3D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;

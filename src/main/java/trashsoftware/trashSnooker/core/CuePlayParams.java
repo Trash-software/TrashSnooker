@@ -83,6 +83,66 @@ public class CuePlayParams {
         return Algebra.rotateVector(cueDirX, cueDirY, -offsetAngleRad);
     }
 
+    public static PlayerPerson.HandSkill getPlayableHand(double whiteX, double whiteY,
+                                                         double aimingX, double aimingY,
+                                                         GameValues gameValues,
+                                                         PlayerPerson person) {
+        PlayerPerson.HandSkill primary = person.handBody.getPrimary();
+        if (primary.hand == PlayerPerson.Hand.REST) {
+            return primary;
+        }
+
+        double[][] standingPosPri = personStandingPosition(whiteX, whiteY,
+                aimingX, aimingY,
+                person, primary.hand);
+
+        if (!gameValues.isInOuterTable(standingPosPri[0][0], standingPosPri[0][1]) ||
+                !gameValues.isInOuterTable(standingPosPri[1][0], standingPosPri[1][1])) {
+            return primary;
+        }
+
+        PlayerPerson.HandSkill secondary = person.handBody.getSecondary();
+        if (secondary.hand == PlayerPerson.Hand.REST) {
+            return secondary;
+        }
+        double[][] standingPosSec = personStandingPosition(whiteX, whiteY,
+                aimingX, aimingY,
+                person, secondary.hand);
+
+        if (!gameValues.isInOuterTable(standingPosSec[0][0], standingPosSec[0][1]) ||
+                !gameValues.isInOuterTable(standingPosSec[1][0], standingPosSec[1][1])) {
+            return secondary;
+        }
+
+        PlayerPerson.HandSkill third = person.handBody.getThird();
+        assert third.hand == PlayerPerson.Hand.REST;
+        return third;
+    }
+
+    public static double[][] personStandingPosition(double whiteX, double whiteY,
+                                                    double aimingX, double aimingY,
+                                                    PlayerPerson person,
+                                                    PlayerPerson.Hand hand) {
+        double heightMul = 10 * 0.85;  // 厘米到毫米
+        double personLengthX = person.handBody.height * -aimingX * heightMul;
+        double personLengthY = person.handBody.height * -aimingY * heightMul;
+
+        int mul = hand == PlayerPerson.Hand.LEFT ? -1 : 1;
+        double widthMulMin = person.handBody.bodyWidth * 320.0 * mul;
+        double widthMulMax = person.handBody.height * 10 * 0.35 * mul;
+        double personWidthX1 = aimingY * widthMulMin;
+        double personWidthY1 = -aimingX * widthMulMin;
+        double personWidthX2 = aimingY * widthMulMax;
+        double personWidthY2 = -aimingX * widthMulMax;
+
+        return new double[][]{
+                {whiteX + personLengthX + personWidthX1,
+                        whiteY + personLengthY + personWidthY1},
+                {whiteX + personLengthX + personWidthX2,
+                        whiteY + personLengthY + personWidthY2},
+        };
+    }
+
     /**
      * @param vx
      * @param vy

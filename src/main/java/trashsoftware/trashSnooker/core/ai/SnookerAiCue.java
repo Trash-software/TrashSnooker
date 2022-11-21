@@ -40,7 +40,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double selectedPower = actualPowerToSelectedPower(
                 actualPower / 100 * phy.cloth.smoothness.speedReduceFactor,
                 actualSideSpin,  // fixme
-                0
+                0,
+                aiPlayer.getPlayerPerson().handBody.getPrimary()
                 );
         
         double[] correctedXY = CuePlayParams.aimingUnitXYIfSpin(
@@ -58,7 +59,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 actualPower
         );
 //        System.out.println(Arrays.toString(unitXY) + Arrays.toString(correctedXY));
-        return new DefenseChoice(correctedXY, selectedPower, selectedSideSpin, cpp);
+        return new DefenseChoice(correctedXY, selectedPower, selectedSideSpin, cpp, 
+                aiPlayer.getPlayerPerson().handBody.getPrimary());
     }
     
     private DefenseChoice backBreak(Phy phy) {

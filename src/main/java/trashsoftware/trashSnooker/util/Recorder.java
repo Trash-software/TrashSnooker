@@ -123,6 +123,21 @@ public class Recorder {
                         } else {
                             aiPlayStyle = AiPlayStyle.DEFAULT;
                         }
+
+                        PlayerPerson.HandBody handBody;
+                        if (personObj.has("hand")) {
+                            JSONObject handObj = personObj.getJSONObject("hand");
+                            handBody = new PlayerPerson.HandBody(
+                                    personObj.getDouble("height"),
+                                    personObj.getDouble("width"),
+                                    handObj.getDouble("left"),
+                                    handObj.getDouble("right"),
+                                    handObj.getDouble("rest")
+                            );
+                        } else {
+                            handBody = PlayerPerson.HandBody.DEFAULT;
+                        }
+                        
                         PlayerPerson playerPerson;
                         if (personObj.has("pullDt")) {
                             JSONArray pullDt = personObj.getJSONArray("pullDt");
@@ -137,6 +152,7 @@ public class Recorder {
                             for (int i = 0; i < 4; ++i) {
                                 muSigma[i] = muSigmaArray.getDouble(i);
                             }
+                            
                             playerPerson = new PlayerPerson(
                                     key,
                                     name,
@@ -155,7 +171,8 @@ public class Recorder {
                                     personObj.getDouble("powerControl"),
                                     personObj.getDouble("psy"),
                                     cuePlayType,
-                                    aiPlayStyle
+                                    aiPlayStyle,
+                                    handBody
                             );
                         } else {
                             playerPerson = new PlayerPerson(
@@ -220,6 +237,10 @@ public class Recorder {
 
     public static Cue getStdBreakCue() {
         return cues.get("stdBreakCue");
+    }
+    
+    public static Cue getRestCue() {
+        return cues.get("restCue");
     }
 
     private static CuePlayType parseCuePlayType(String s) {

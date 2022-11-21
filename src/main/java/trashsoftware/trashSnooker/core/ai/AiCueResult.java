@@ -16,6 +16,7 @@ public class AiCueResult {
     private final double[] targetOrigPos;
     private final double[][] targetDirHole;
     private final Ball targetBall;
+    private final PlayerPerson.HandSkill handSkill;
     
     public AiCueResult(PlayerPerson playerPerson,
                        GamePlayStage gamePlayStage,
@@ -23,11 +24,12 @@ public class AiCueResult {
                        double[] targetOrigPos,
                        double[][] targetDirHole,
                        Ball targetBall,
-                       double unitX, 
+                       double unitX,
                        double unitY,
                        double selectedFrontBackSpin,
                        double selectedSideSpin,
-                       double selectedPower) {
+                       double selectedPower,
+                       PlayerPerson.HandSkill handSkill) {
         this.unitX = unitX;
         this.unitY = unitY;
         this.selectedFrontBackSpin = selectedFrontBackSpin;
@@ -37,6 +39,7 @@ public class AiCueResult {
         this.targetOrigPos = targetOrigPos;
         this.targetDirHole = targetDirHole;
         this.targetBall = targetBall;
+        this.handSkill = handSkill;
         
         applyRandomError(playerPerson, gamePlayStage);
     }
@@ -55,6 +58,10 @@ public class AiCueResult {
 
     public double[][] getTargetDirHole() {
         return targetDirHole;
+    }
+
+    public PlayerPerson.HandSkill getHandSkill() {
+        return handSkill;
     }
 
     private void applyRandomError(PlayerPerson playerPerson, GamePlayStage gamePlayStage) {
@@ -92,6 +99,10 @@ public class AiCueResult {
         } else {
             sd = (100 - playerPerson.getAiPlayStyle().defense) / precisionFactor;
         }
+        
+        double handSdMul = PlayerPerson.HandBody.getSdOfHand(handSkill);
+        sd *= handSdMul;
+        
         double afterRandom = random.nextGaussian() * sd * mistakeFactor + rad;
         afterRandom = Math.min(afterRandom, maxPrecision);
         

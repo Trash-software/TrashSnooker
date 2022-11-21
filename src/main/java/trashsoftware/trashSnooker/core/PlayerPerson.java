@@ -1,10 +1,13 @@
 package trashsoftware.trashSnooker.core;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +35,7 @@ public class PlayerPerson {
     private final double cueSwingMag;
     private final CuePlayType cuePlayType;
     private final AiPlayStyle aiPlayStyle;
+    public final HandBody handBody;
     public final double psy;
 
     public PlayerPerson(String playerId,
@@ -51,7 +55,8 @@ public class PlayerPerson {
                         double powerControl,
                         double psy,
                         CuePlayType cuePlayType,
-                        AiPlayStyle aiPlayStyle) {
+                        AiPlayStyle aiPlayStyle,
+                        HandBody handBody) {
         this.playerId = playerId;
         this.name = name;
         this.category = category;
@@ -70,6 +75,7 @@ public class PlayerPerson {
         this.psy = psy;
         this.cuePlayType = cuePlayType;
         this.aiPlayStyle = aiPlayStyle;
+        this.handBody = handBody;
     }
 
     public PlayerPerson(String playerId,
@@ -101,7 +107,8 @@ public class PlayerPerson {
                 control,
                 90,
                 CuePlayType.DEFAULT_PERFECT,
-                aiPlayStyle
+                aiPlayStyle,
+                HandBody.DEFAULT
         );
         
         setCustom(isCustom);
@@ -153,6 +160,15 @@ public class PlayerPerson {
         obj.put("psy", psy);
         
         obj.put("ai", getAiPlayStyle().toJsonObject());
+        
+        JSONObject handObj = new JSONObject();
+        handObj.put("left", handBody.leftHand);
+        handObj.put("right", handBody.rightHand);
+        handObj.put("rest", handBody.restPot);
+        
+        obj.put("height", handBody.height);
+        obj.put("width", handBody.bodyWidth);
+        obj.put("hand", handObj);
         
         return obj;
     }
@@ -253,5 +269,103 @@ public class PlayerPerson {
 
     public double getPowerControl() {
         return powerControl;
+    }
+    
+    public enum Hand {
+        LEFT(1.0),
+        RIGHT(1.0),
+        REST(0.7);
+        
+        public final double powerMul;
+        
+        Hand(double powerMul) {
+            this.powerMul = powerMul;
+        }
+    }
+    
+    public static class HandSkill implements Comparable<HandSkill> {
+        public final Hand hand;
+        public final double skill;
+        
+        HandSkill(Hand hand, double skill) {
+            this.hand = hand;
+            this.skill = skill;
+        }
+
+        @Override
+        public int compareTo(@NotNull PlayerPerson.HandSkill o) {
+            return -Double.compare(this.skill, o.skill);
+        }
+
+        @Override
+        public String toString() {
+            return "HandSkill{" +
+                    "hand=" + hand +
+                    ", skill=" + skill +
+                    '}';
+        }
+    }
+    
+    public static class HandBody {
+        public static final HandBody DEFAULT = 
+                new HandBody(180.0, 1.0, 50.0, 100.0, 80.0);
+        
+        public final double height;
+        public final double bodyWidth;
+        public final double leftHand;
+        public final double rightHand;
+        public final double restPot;
+        private boolean leftHandRest;    // 是否用左手拿架杆
+
+        private final HandSkill[] precedence;
+        
+        public HandBody(double height, double bodyWidth,
+                        double leftHand, double rightHand, double restPot) {
+            this.height = height;
+            this.bodyWidth = bodyWidth;
+            this.leftHand = leftHand;
+            this.rightHand = rightHand;
+            this.restPot = restPot;
+            
+            precedence = new HandSkill[]{
+                    new HandSkill(Hand.LEFT, leftHand),
+                    new HandSkill(Hand.RIGHT, rightHand),
+                    new HandSkill(Hand.REST, restPot)
+            };
+            Arrays.sort(precedence);
+            this.leftHandRest = precedence[0].hand == Hand.RIGHT;
+        }
+        
+        public HandSkill getPrimary() {
+            return precedence[0];
+        }
+        
+        public HandSkill getSecondary() {
+            return precedence[1];
+        }
+        
+        public HandSkill getThird() {
+            return precedence[2];
+        }
+        
+        public static double getPowerMulOfHand(@Nullable HandSkill handSkill) {
+            return handSkill == null ? 1.0 : (handSkill.skill * handSkill.hand.powerMul / 100);
+        }
+        
+        public static double getPrecisionOfHand(@Nullable HandSkill handSkill) {
+            return handSkill == null ? 1.0 : (handSkill.skill / 100);
+        }
+
+        public static double getSdOfHand(@Nullable HandSkill handSkill) {
+            return handSkill == null ? 1.0 : (100.0 / handSkill.skill);
+        }
+        
+        public double getRestPot() {
+            return restPot;
+        }
+
+        public boolean isLeftHandRest() {
+            return leftHandRest;
+        }
     }
 }

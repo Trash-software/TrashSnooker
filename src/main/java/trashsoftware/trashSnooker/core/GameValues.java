@@ -341,6 +341,10 @@ public class GameValues {
     public double closeCushionPenaltyThreshold() {
         return innerHeight / 8;
     }
+
+    public boolean isInOuterTable(double x, double y) {
+        return x >= 0 && x < outerWidth && y >= 0 && y < outerHeight;
+    }
     
     public Hole getHoleOpenCenter(double[] pos) {
         if (Arrays.equals(pos, topLeftHoleOpenCenter)) return Hole.TOP_LEFT;

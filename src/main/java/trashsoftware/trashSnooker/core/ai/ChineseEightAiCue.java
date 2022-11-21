@@ -53,9 +53,11 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 0.0,
                 0.0,
                 0.0,
-                selectedPowerToActualPower(selectedPower, 0, 0)
+                selectedPowerToActualPower(selectedPower, 0, 0, 
+                        aiPlayer.getPlayerPerson().handBody.getPrimary())
         );
-        return new DefenseChoice(unitXY, selectedPower, 0.0, cpp);
+        return new DefenseChoice(unitXY, selectedPower, 0.0, cpp, 
+                aiPlayer.getPlayerPerson().handBody.getPrimary());
     }
 
     @Override
