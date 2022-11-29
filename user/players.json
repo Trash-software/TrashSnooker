@@ -8,6 +8,7 @@
       "name": "Master",
       "maxPower": 100,
       "controllablePower": 100,
+      "solving": 100,
       "pullDt": [
         50.0,
         200.0
@@ -41,9 +42,9 @@
         "defense": 100,
         "attackPri": 80,
         "likeShow": 80,
-        "solving": 100,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     },
     "Master2": {
@@ -54,6 +55,7 @@
       "name": "Master 2",
       "maxPower": 100,
       "controllablePower": 100,
+      "solving": 100,
       "pullDt": [
         50.0,
         200.0
@@ -87,9 +89,9 @@
         "defense": 100,
         "attackPri": 80,
         "likeShow": 80,
-        "solving": 100,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     },
     "O'Sullivan": {
@@ -100,6 +102,7 @@
       "name": "O‘Sullivan",
       "maxPower": 93,
       "controllablePower": 80,
+      "solving": 90,
       "pullDt": [
         50.0,
         200.0
@@ -132,9 +135,9 @@
         "defense": 96,
         "attackPri": 90,
         "likeShow": 50,
-        "solving": 90,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     },
     "Mang Zi": {
@@ -145,6 +148,7 @@
       "name": "莽子",
       "maxPower": 100,
       "controllablePower": 86,
+      "solving": 50,
       "pullDt": [
         100.0,
         250.0
@@ -176,9 +180,9 @@
         "defense": 50,
         "attackPri": 99,
         "likeShow": 60,
-        "solving": 50,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 1
       }
     },
     "Kid": {
@@ -189,6 +193,7 @@
       "name": "Kid",
       "maxPower": 56,
       "controllablePower": 44,
+      "solving": 60,
       "pullDt": [
         40.0,
         160.0
@@ -222,19 +227,20 @@
         "defense": 75,
         "attackPri": 90,
         "likeShow": 30,
-        "solving": 75,
         "snookerBreak": "right",
-        "cebSideBreak": true
+        "cebSideBreak": true,
+        "withdrawAfter": 2
       }
     },
     "Lao Youtiao": {
-      "spin": 90.96009879932735,
-      "precision": 55.61845386533666,
+      "spin": 91,
+      "precision": 55,
       "anglePrecision": 1.2,
       "longPrecision": 0.7,
       "name": "老油条",
       "maxPower": 84,
       "controllablePower": 70,
+      "solving": 70,
       "pullDt": [
         40.0,
         160.0
@@ -266,9 +272,9 @@
         "defense": 90,
         "attackPri": 50,
         "likeShow": 30,
-        "solving": 80,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 3
       }
     },
     "Mou Moumou": {
@@ -279,6 +285,7 @@
       "name": "某某某",
       "maxPower": 88,
       "controllablePower": 72,
+      "solving": 80,
       "pullDt": [
         40.0,
         180.0
@@ -310,9 +317,9 @@
         "defense": 80,
         "attackPri": 80,
         "likeShow": 40,
-        "solving": 80,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     },
     "Brown": {
@@ -323,6 +330,7 @@
       "name": "Brown",
       "maxPower": 93,
       "controllablePower": 79,
+      "solving": 80,
       "pullDt": [
         40.0,
         180.0
@@ -348,15 +356,15 @@
         "rest": 88
       },
       "ai": {
-        "precision": 84,
+        "precision": 86,
         "stable": 90,
         "position": 92,
         "defense": 75,
         "attackPri": 80,
         "likeShow": 40,
-        "solving": 85,
         "snookerBreak": "left",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 3
       }
     },
     "Ding Junhui": {
@@ -367,6 +375,7 @@
       "name": "丁俊晖",
       "maxPower": 92,
       "controllablePower": 80,
+      "solving": 85,
       "pullDt": [
         40.0,
         180.0
@@ -398,19 +407,20 @@
         "defense": 95,
         "attackPri": 75,
         "likeShow": 40,
-        "solving": 85,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     },
     "John Wizard": {
       "spin": 90.0,
-      "precision": 85.0,
+      "precision": 87.0,
       "anglePrecision": 1.1,
       "longPrecision": 0.9,
       "name": "John Wizard",
       "maxPower": 90,
       "controllablePower": 78,
+      "solving": 90,
       "pullDt": [
         40.0,
         190.0
@@ -436,15 +446,15 @@
         "rest": 90
       },
       "ai": {
-        "precision": 88,
+        "precision": 89,
         "stable": 85,
         "position": 99,
         "defense": 97,
         "attackPri": 75,
         "likeShow": 35,
-        "solving": 95,
         "snookerBreak": "left",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     },
     "Matthew Stevens": {
@@ -455,6 +465,7 @@
       "name": "Matthew Stevens",
       "maxPower": 92,
       "controllablePower": 81,
+      "solving": 80,
       "pullDt": [
         50.0,
         200.0
@@ -486,9 +497,9 @@
         "defense": 82,
         "attackPri": 90,
         "likeShow": 65,
-        "solving": 80,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     },
     "Trump": {
@@ -499,6 +510,7 @@
       "name": "Trump",
       "maxPower": 99,
       "controllablePower": 92,
+      "solving": 80,
       "pullDt": [
         50.0,
         220.0
@@ -517,7 +529,7 @@
         "TrumpCue"
       ],
       "category": "Professional",
-      "psy": 70,
+      "psy": 65,
       "height": 183,
       "width": 1.0,
       "hand": {
@@ -526,15 +538,15 @@
         "rest": 87
       },
       "ai": {
-        "precision": 96,
-        "stable": 87,
+        "precision": 95,
+        "stable": 85,
         "position": 89,
         "defense": 87,
         "attackPri": 90,
         "likeShow": 75,
-        "solving": 85,
         "snookerBreak": "left",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     },
     "Murphy": {
@@ -545,6 +557,7 @@
       "name": "Murphy",
       "maxPower": 95,
       "controllablePower": 87,
+      "solving": 92,
       "pullDt": [
         50.0,
         200.0
@@ -570,15 +583,15 @@
         "rest": 88
       },
       "ai": {
-        "precision": 90,
+        "precision": 91,
         "stable": 96,
         "position": 93,
         "defense": 86,
         "attackPri": 80,
         "likeShow": 60,
-        "solving": 90,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     },
     "Liu Mang": {
@@ -589,6 +602,7 @@
       "name": "流氓",
       "maxPower": 100,
       "controllablePower": 80,
+      "solving": 60,
       "pullDt": [
         50.0,
         200.0
@@ -616,15 +630,15 @@
         "rest": 80
       },
       "ai": {
-        "precision": 97,
+        "precision": 96.5,
         "stable": 70,
         "position": 50,
         "defense": 30,
         "attackPri": 99,
         "likeShow": 50,
-        "solving": 60,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 1
       }
     },
     "Smart": {
@@ -635,6 +649,7 @@
       "name": "Smart",
       "maxPower": 100,
       "controllablePower": 88,
+      "solving": 55,
       "pullDt": [
         50.0,
         250.0
@@ -660,15 +675,15 @@
         "rest": 50
       },
       "ai": {
-        "precision": 97,
+        "precision": 96.5,
         "stable": 82,
         "position": 85,
         "defense": 60,
         "attackPri": 96,
         "likeShow": 85,
-        "solving": 65,
         "snookerBreak": "left",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     },
     "Mang Dali": {
@@ -679,6 +694,7 @@
       "name": "莽大力",
       "maxPower": 100,
       "controllablePower": 98,
+      "solving": 30,
       "pullDt": [
         80.0,
         250.0
@@ -712,9 +728,9 @@
         "defense": 50,
         "attackPri": 99,
         "likeShow": 90,
-        "solving": 40,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 1
       }
     },
     "Noob": {
@@ -725,6 +741,7 @@
       "name": "Noob",
       "maxPower": 65,
       "controllablePower": 42,
+      "solving": 30,
       "pullDt": [
         30.0,
         150.0
@@ -756,9 +773,9 @@
         "defense": 10,
         "attackPri": 100,
         "likeShow": 50,
-        "solving": 30,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 0
       }
     },
     "Worst Professional": {
@@ -769,6 +786,7 @@
       "name": "垫底职业选手",
       "maxPower": 90,
       "controllablePower": 77,
+      "solving": 65,
       "pullDt": [
         40.0,
         180.0
@@ -800,9 +818,9 @@
         "defense": 90,
         "attackPri": 80,
         "likeShow": 40,
-        "solving": 70,
         "snookerBreak": "left",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 3
       }
     },
     "Glass Heart": {
@@ -813,6 +831,7 @@
       "name": "玻璃心",
       "maxPower": 96,
       "controllablePower": 82,
+      "solving": 75,
       "pullDt": [
         40.0,
         180.0
@@ -844,9 +863,9 @@
         "defense": 90,
         "attackPri": 87,
         "likeShow": 70,
-        "solving": 75,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 1
       }
     },
     "Selby": {
@@ -857,6 +876,7 @@
       "name": "Selby",
       "maxPower": 96,
       "controllablePower": 84,
+      "solving": 92,
       "pullDt": [
         50.0,
         210.0
@@ -882,15 +902,15 @@
         "rest": 86
       },
       "ai": {
-        "precision": 89,
+        "precision": 91,
         "stable": 96,
         "position": 95,
         "defense": 98,
-        "attackPri": 45,
+        "attackPri": 55,
         "likeShow": 40,
-        "solving": 95,
         "snookerBreak": "left",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 4
       }
     },
     "Mark Williams": {
@@ -901,6 +921,7 @@
       "name": "Mark Williams",
       "maxPower": 94,
       "controllablePower": 81,
+      "solving": 90,
       "pullDt": [
         50.0,
         200.0
@@ -933,9 +954,9 @@
         "defense": 84,
         "attackPri": 92,
         "likeShow": 60,
-        "solving": 88,
         "snookerBreak": "left",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     }
   }

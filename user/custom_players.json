@@ -13,7 +13,8 @@
         "likeShow": 50.0,
         "solving": 90,
         "snookerBreak": "right",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 3
       },
       "cuePointMuSigma": [
         0,
@@ -23,6 +24,7 @@
       ],
       "cuePlayType": "p1.000000,h800,e500;s",
       "spin": 92.01995012468828,
+      "solving": 80,
       "pullDt": [
         50,
         200
@@ -52,6 +54,7 @@
       "name": "性感美女",
       "maxPower": 84,
       "controllablePower": 76,
+      "solving": 65,
       "pullDt": [
         40.0,
         180.0
@@ -85,7 +88,8 @@
         "likeShow": 70,
         "solving": 65,
         "snookerBreak": "left",
-        "cebSideBreak": false
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     },
     "custom_player_3": {
@@ -96,6 +100,7 @@
       "name": "可爱萝莉",
       "maxPower": 56,
       "controllablePower": 54,
+      "solving": 35,
       "pullDt": [
         30.0,
         120.0
@@ -125,11 +130,12 @@
         "stable": 90,
         "position": 98,
         "defense": 90,
-        "attackPri": 70,
+        "attackPri": 90,
         "likeShow": 20,
         "solving": 70,
         "snookerBreak": "right",
-        "cebSideBreak": true
+        "cebSideBreak": true,
+        "withdrawAfter": 2
       }
     },
     "custom_player_4": {
@@ -140,6 +146,7 @@
       "name": "温柔美女",
       "maxPower": 68,
       "controllablePower": 64,
+      "solving": 85,
       "pullDt": [
         25.0,
         150.0
@@ -173,7 +180,8 @@
         "likeShow": 15,
         "solving": 90,
         "snookerBreak": "right",
-        "cebSideBreak": true
+        "cebSideBreak": true,
+        "withdrawAfter": 3
       }
     }
   }

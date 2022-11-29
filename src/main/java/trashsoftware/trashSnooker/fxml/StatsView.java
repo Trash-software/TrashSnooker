@@ -52,6 +52,22 @@ public class StatsView implements Initializable {
             humanRoot.getChildren().add(new PersonTreeItem(paiHuman));
             aiRoot.getChildren().add(new PersonTreeItem(paiAi));
         }
+        
+        TreeItem<RecordTree> matchesRoot = new TreeItem<>(new RecordTree("比赛"));
+        
+        for (GameType gameType : GameType.values()) {
+            List<EntireGameTitle> matchesOfType = db.getAllMatches(gameType);
+            TreeItem<RecordTree> typeRoot = new TreeItem<>(new AllMatchesTree(gameType));
+            
+            for (EntireGameTitle egt : matchesOfType) {
+                MatchRecord mr = new MatchRecord(egt);
+                typeRoot.getChildren().add(new TreeItem<>(mr));
+            }
+            
+            matchesRoot.getChildren().add(typeRoot);
+        }
+        root.getChildren().add(matchesRoot);
+        
         treeView.setRoot(root);
         treeView.getSelectionModel().selectedItemProperty()
                 .addListener(((observable, oldValue, newValue) -> {
@@ -151,6 +167,28 @@ public class StatsView implements Initializable {
                             String.format("%.1f%%",
                                     longPotSuccesses * 100.0 / longPotAttempts)), 2, rowIndex++);
 
+            int restAttempts = potRecords[8];
+            int restSuccesses = potRecords[9];
+            resultPane.add(new Label("架杆进攻次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(restAttempts)), 1, rowIndex++);
+            resultPane.add(new Label("架杆成功次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(restSuccesses)), 1, rowIndex);
+//            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
+            resultPane.add(new Label(
+                    restAttempts == 0 ? "0%" :
+                            String.format("%.1f%%", restSuccesses * 100.0 / restAttempts)), 2, rowIndex++);
+
+            int positionAttempts = potRecords[6];
+            int positionSuccesses = potRecords[7];
+            resultPane.add(new Label("走位次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(positionAttempts)), 1, rowIndex++);
+            resultPane.add(new Label("走位成功次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(positionSuccesses)), 1, rowIndex);
+//            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
+            resultPane.add(new Label(
+                    positionAttempts == 0 ? "0%" :
+                            String.format("%.1f%%", positionSuccesses * 100.0 / positionAttempts)), 2, rowIndex++);
+
             int defAttempts = potRecords[4];
             int defSuccesses = potRecords[5];
             resultPane.add(new Label("防守次数"), 0, rowIndex);
@@ -162,6 +200,18 @@ public class StatsView implements Initializable {
                     defAttempts == 0 ? "0%" :
                             String.format("%.1f%%",
                                     defSuccesses * 100.0 / defAttempts)), 2, rowIndex++);
+
+            int solves = potRecords[10];
+            int solveSuccesses = potRecords[11];
+            resultPane.add(new Label("解球次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(solves)), 1, rowIndex++);
+            resultPane.add(new Label("解球成功次数"), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(solveSuccesses)), 1, rowIndex);
+//            resultPane.add(new Label("防守成功率"), 0, rowIndex);
+            resultPane.add(new Label(
+                    solves == 0 ? "0%" :
+                            String.format("%.1f%%",
+                                    solveSuccesses * 100.0 / solves)), 2, rowIndex++);
 
             if (gameType.snookerLike) {
                 int[] breaksScores = db.getSnookerBreaksTotal(gameType, pai.playerName, pai.isAi);
@@ -316,6 +366,18 @@ public class StatsView implements Initializable {
         @Override
         public String toString() {
             return shown;
+        }
+    }
+    
+    public static class AllMatchesTree extends RecordTree {
+
+        AllMatchesTree(GameType gameType) {
+            super(GameType.toReadable(gameType));
+        }
+
+        @Override
+        void setRightPane(Pane rightPane) {
+            rightPane.getChildren().clear();
         }
     }
 
@@ -710,6 +772,56 @@ public class StatsView implements Initializable {
                     5, rowIndex);
             rowIndex++;
 
+            page.add(new Label("架杆进攻次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][8])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][8])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("架杆进攻成功次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][9])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][9])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("架杆进攻成功率"), 0, rowIndex);
+            page.add(new Label(
+                            playersTotalBasics[0][9] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[0][9] * 100.0 /
+                                                    playersTotalBasics[0][8])),
+                    1, rowIndex);
+            page.add(new Label(
+                            playersTotalBasics[1][9] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[1][9] * 100.0 /
+                                                    playersTotalBasics[1][8])),
+                    5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("走位次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][6])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][6])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("走位成功次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][7])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][7])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("走位成功率"), 0, rowIndex);
+            page.add(new Label(
+                            playersTotalBasics[0][7] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[0][7] * 100.0 /
+                                                    playersTotalBasics[0][6])),
+                    1, rowIndex);
+            page.add(new Label(
+                            playersTotalBasics[1][7] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[1][7] * 100.0 /
+                                                    playersTotalBasics[1][6])),
+                    5, rowIndex);
+            rowIndex++;
+
             page.add(new Label("防守次数"), 0, rowIndex);
             page.add(new Label(String.valueOf(playersTotalBasics[0][4])), 1, rowIndex);
             page.add(new Label(String.valueOf(playersTotalBasics[1][4])), 5, rowIndex);
@@ -732,6 +844,31 @@ public class StatsView implements Initializable {
                                     String.format("%.1f%%",
                                             playersTotalBasics[1][5] * 100.0 /
                                                     playersTotalBasics[1][4])),
+                    5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("解球次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][10])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][10])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("解球成功次数"), 0, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[0][11])), 1, rowIndex);
+            page.add(new Label(String.valueOf(playersTotalBasics[1][11])), 5, rowIndex);
+            rowIndex++;
+
+            page.add(new Label("解球成功率"), 0, rowIndex);
+            page.add(new Label(
+                            playersTotalBasics[0][11] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[0][11] * 100.0 /
+                                                    playersTotalBasics[0][10])),
+                    1, rowIndex);
+            page.add(new Label(
+                            playersTotalBasics[1][11] == 0 ? "0%" :
+                                    String.format("%.1f%%",
+                                            playersTotalBasics[1][11] * 100.0 /
+                                                    playersTotalBasics[1][10])),
                     5, rowIndex);
             rowIndex++;
 
@@ -818,6 +955,20 @@ public class StatsView implements Initializable {
                     PlayerFrameRecord.Snooker p2sr = (PlayerFrameRecord.Snooker) p2r;
                     p1ScoreLabel.setText(String.valueOf(p1sr.snookerScores[0]));
                     p2ScoreLabel.setText(String.valueOf(p2sr.snookerScores[0]));
+                    if (p1sr.snookerScores[1] >= 50) {
+                        Label p1SinglePole = new Label();
+                        p1SinglePole.setText(String.format("(%d)", p1sr.snookerScores[1]));
+                        page.add(p1SinglePole, 0, rowIndex);
+                    }
+                    if (p2sr.snookerScores[1] >= 50) {
+                        Label p2SinglePole = new Label();
+                        p2SinglePole.setText(String.format("(%d)", p2sr.snookerScores[1]));
+                        page.add(p2SinglePole, 6, rowIndex);
+                    }
+                }
+                
+                if (egt.gameType == GameType.CHINESE_EIGHT) {
+                    // todo: 炸清，接清
                 }
 
                 if (p1r.winnerName.equals(egt.player1Name)) {

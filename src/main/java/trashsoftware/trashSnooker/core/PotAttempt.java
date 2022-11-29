@@ -9,6 +9,8 @@ public class PotAttempt {
     private final double[] targetBallOrigPos;
     private final double[] targetedHole;
     private boolean success;
+    private Position positionSuccess = Position.NOT_SET;
+    private PlayerPerson.HandSkill handSkill;
 
     public PotAttempt(GameType gameType, PlayerPerson playerPerson,
                       Ball targetBall,
@@ -22,12 +24,28 @@ public class PotAttempt {
         this.targetedHole = targetedHole;
     }
 
+    public boolean isSuccess() {
+        return success;
+    }
+
     public void setSuccess(boolean success) {
         this.success = success;
     }
 
-    public boolean isSuccess() {
-        return success;
+    public Position getPositionSuccess() {
+        return positionSuccess;
+    }
+
+    public void setPositionSuccess(boolean positionSuccess) {
+        this.positionSuccess = positionSuccess ? Position.SUCCESS : Position.FAILED;
+    }
+
+    public void setHandSkill(PlayerPerson.HandSkill handSkill) {
+        this.handSkill = handSkill;
+    }
+
+    public boolean isRestPot() {
+        return handSkill.hand == PlayerPerson.Hand.REST;
     }
 
     public GameType getGameType() {
@@ -61,5 +79,11 @@ public class PotAttempt {
         );
         double totalLength = whiteTargetDt + targetHoleDt;
         return totalLength >= gameType.gameValues.diagonalLength() * 0.6667;
+    }
+
+    public enum Position {
+        NOT_SET,
+        SUCCESS,
+        FAILED
     }
 }

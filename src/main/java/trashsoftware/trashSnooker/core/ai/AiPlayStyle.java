@@ -9,9 +9,8 @@ import java.util.Locale;
 public class AiPlayStyle {
     public static final AiPlayStyle DEFAULT =
             new AiPlayStyle(100.0, 100.0, 100.0, 100.0, 
-                    80.0, 50, 
-                    100.0,
-                    "right", false);
+                    80.0, 50,
+                    "right", false, 2);
 
     public final double precision;
     public final double stability;  // 准度稳定性
@@ -19,23 +18,23 @@ public class AiPlayStyle {
     public final double defense;
     public final double attackPrivilege;  // 进攻偏好
     public final double likeShow;  // 偏好大力及杆法
-    public final double solving;  // 解斯诺克能力
     public final SnookerBreakMethod snookerBreakMethod;
     public final boolean cebSideBreak;  // Chinese eight balls 侧面冲球
+    public final int snookerWithdrawLimit;  // 需要做多少杆斯诺克才认输
 
     public AiPlayStyle(double precision, double stability, double position, double defense,
-                       double attackPrivilege, double likeShow, 
-                       double solving,
-                       String snookerBreakMethod, boolean cebSideBreak) {
+                       double attackPrivilege, double likeShow,
+                       String snookerBreakMethod, boolean cebSideBreak,
+                       int snookerWithdrawLimit) {
         this.precision = precision;
         this.stability = stability;
         this.position = position;
         this.defense = defense;
         this.attackPrivilege = attackPrivilege;
         this.likeShow = likeShow;
-        this.solving = solving;
         this.snookerBreakMethod = SnookerBreakMethod.valueOf(snookerBreakMethod.toUpperCase(Locale.ROOT));
         this.cebSideBreak = cebSideBreak;
+        this.snookerWithdrawLimit = snookerWithdrawLimit;
     }
 
     /**

@@ -1,14 +1,14 @@
 package trashsoftware.trashSnooker.core.ai;
 
-import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.Algebra;
+import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.GamePlayStage;
+import trashsoftware.trashSnooker.core.PlayerPerson;
 
 import java.util.Random;
 
 public class AiCueResult {
-    
-    public double aiPrecisionFactor = 10500.0;  // 越大，大家越准
-    
-    private double unitX, unitY;
+
     private final double selectedFrontBackSpin;  // 球手想要的高低杆，范围(-1.0, 1.0)，高杆正低杆负
     private final double selectedSideSpin;
     private final double selectedPower;
@@ -17,7 +17,9 @@ public class AiCueResult {
     private final double[][] targetDirHole;
     private final Ball targetBall;
     private final PlayerPerson.HandSkill handSkill;
-    
+    public double aiPrecisionFactor = 10500.0;  // 越大，大家越准
+    private double unitX, unitY;
+
     public AiCueResult(PlayerPerson playerPerson,
                        GamePlayStage gamePlayStage,
                        CueType cueType,
@@ -40,7 +42,7 @@ public class AiCueResult {
         this.targetDirHole = targetDirHole;
         this.targetBall = targetBall;
         this.handSkill = handSkill;
-        
+
         applyRandomError(playerPerson, gamePlayStage);
     }
 
@@ -64,19 +66,23 @@ public class AiCueResult {
         return handSkill;
     }
 
+    public CueType getCueType() {
+        return cueType;
+    }
+
     private void applyRandomError(PlayerPerson playerPerson, GamePlayStage gamePlayStage) {
         Random random = new Random();
         double rad = Algebra.thetaOf(unitX, unitY);
-        
+
         double precisionFactor = aiPrecisionFactor;
-        if (gamePlayStage == GamePlayStage.THIS_BALL_WIN || 
+        if (gamePlayStage == GamePlayStage.THIS_BALL_WIN ||
                 gamePlayStage == GamePlayStage.ENHANCE_WIN) {
             precisionFactor *= (playerPerson.psy / 100);
             System.out.println(gamePlayStage + ", precision: " + precisionFactor);
         } else if (gamePlayStage == GamePlayStage.BREAK) {
-            precisionFactor *= 2.0;
+            precisionFactor *= 5.0;
         }
-        
+
         double mistake = random.nextDouble() * 100;
         double mistakeFactor = 1.0;
         double maxPrecision = 100.0;
@@ -85,27 +91,27 @@ public class AiCueResult {
             maxPrecision = 90.0;
             System.out.println("Mistake");
         }
-        
+
         double sd;
         if (cueType == CueType.ATTACK) {
             sd = (100 - playerPerson.getAiPlayStyle().precision) / precisionFactor;  // 再歪也歪不了太多吧？
             System.out.println("Precision factor: " + precisionFactor + ", Random offset: " + sd);
         } else if (cueType == CueType.BREAK || gamePlayStage == GamePlayStage.BREAK) {
-            sd = (100 - Math.max(playerPerson.getAiPlayStyle().precision, 
-                    playerPerson.getAiPlayStyle().defense))/ precisionFactor;
+            sd = (100 - Math.max(playerPerson.getAiPlayStyle().precision,
+                    playerPerson.getAiPlayStyle().defense)) / precisionFactor;
         } else if (cueType == CueType.SOLVE) {
-            sd = (100 - playerPerson.getAiPlayStyle().solving) / precisionFactor * 10.0;
+            sd = (100 - playerPerson.getSolving()) / precisionFactor * 20.0;
 //            System.out.println("Solving sd: " + sd);
         } else {
             sd = (100 - playerPerson.getAiPlayStyle().defense) / precisionFactor;
         }
-        
+
         double handSdMul = PlayerPerson.HandBody.getSdOfHand(handSkill);
         sd *= handSdMul;
-        
+
         double afterRandom = random.nextGaussian() * sd * mistakeFactor + rad;
         afterRandom = Math.min(afterRandom, maxPrecision);
-        
+
         double[] vecAfterRandom = Algebra.unitVectorOfAngle(afterRandom);
         unitX = vecAfterRandom[0];
         unitY = vecAfterRandom[1];
@@ -130,7 +136,7 @@ public class AiCueResult {
     public double getSelectedPower() {
         return selectedPower;
     }
-    
+
     public enum CueType {
         ATTACK,
         DEFENSE,

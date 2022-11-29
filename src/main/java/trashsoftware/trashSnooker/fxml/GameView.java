@@ -73,10 +73,11 @@ public class GameView implements Initializable {
     public static final double MAX_CUE_ANGLE = 60;
     public static final double BIG_TABLE_SCALE = 0.32;
     public static final double MID_TABLE_SCALE = 0.45;
+    private static final double DEFAULT_POWER = 30.0;
+    private static final double WHITE_PREDICT_LEN_AFTER_WALL = 1000.0;  // todo: 根据球员
     public static double scale;
     //    private double minRealPredictLength = 300.0;
     private static double defaultMaxPredictLength = 1000;
-    private static final double DEFAULT_POWER = 30.0;
     public double frameTimeMs = 20.0;
     public double frameRate = 1000.0 / frameTimeMs;
     @FXML
@@ -150,6 +151,7 @@ public class GameView implements Initializable {
     private Movement movement;
     private boolean playingMovement = false;
     private GamePlayStage currentPlayStage;  // 只对game有效, 并且不要直接access这个变量, 请用getter
+    private PotAttempt lastPotAttempt;
     private DefenseAttempt curDefAttempt;
     // 用于播放运杆动画时持续显示预测线（含出杆随机偏移）
     private SavedPrediction predictionOfCue;
@@ -167,7 +169,6 @@ public class GameView implements Initializable {
     private Timeline timeline;
     private double predictionMultiplier = 2000.0;
     private double maxRealPredictLength = defaultMaxPredictLength;
-    private double whitePredictLenAfterWall = 1000.0;
     private boolean enablePsy = true;  // 由游戏决定心理影响
     private boolean aiCalculating;
     private boolean aiAutoPlay = true;
@@ -442,6 +443,10 @@ public class GameView implements Initializable {
         obstacleProjection = null;
         printPlayStage = true;
 
+        if (curDefAttempt != null && curDefAttempt.isSolvingSnooker()) {
+            curDefAttempt.setSolveSuccess(!game.getGame().isLastCueFoul());
+        }
+
         game.getGame().getRecorder().recordScore(game.getGame().makeScoreResult(justCuedPlayer));
         game.getGame().getRecorder().recordNextTarget(makeTargetRecord(nextCuePlayer));
         game.getGame().getRecorder().writeCueToStream();
@@ -552,19 +557,23 @@ public class GameView implements Initializable {
     }
 
     private void askReposition() {
+        AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
         Platform.runLater(() ->
                 AlertShower.askConfirmation(stage, "是否复位？", "对方犯规",
                         () -> {
-                            ((AbstractSnookerGame) game.getGame()).reposition();
+                            asg.reposition();
                             drawScoreBoard(game.getGame().getCuingPlayer(), true);
                             drawTargetBoard(true);
                             draw();
+                            if (asg.isNoHitThreeWarning()) {
+                                showThreeNoHitWarning();
+                            }
                             if (aiAutoPlay &&
                                     game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
 //                                Platform.runLater(() -> aiCue(game.getGame().getCuingPlayer()));
                                 aiCue(game.getGame().getCuingPlayer());
                             }
-                        }, null));
+                        }, asg::notReposition));
     }
 
     private void onCanvasClicked(MouseEvent mouseEvent) {
@@ -907,7 +916,7 @@ public class GameView implements Initializable {
                                         boolean mutate, PlayerPerson.HandSkill handSkill) {
         Cue cue = player.getInGamePlayer().getCurrentCue(game.getGame());
         PlayerPerson playerPerson = player.getPlayerPerson();
-        
+
         // 用架杆影响打点精确度
         double handSdMul = PlayerPerson.HandBody.getSdOfHand(handSkill);
         frontBackSpinFactor *= handSdMul;
@@ -1004,7 +1013,8 @@ public class GameView implements Initializable {
                 getCuePointRelY(cuePointY),
                 getCuePointRelX(cuePointX),
                 cueAngleDeg,
-                gamePlayStage());
+                gamePlayStage(),
+                currentHand.hand);
     }
 
     private TargetRecord makeTargetRecord(Player willCuePlayer) {
@@ -1015,8 +1025,10 @@ public class GameView implements Initializable {
 
     private void playerCue(Player player) {
         // 判断是否为进攻杆
+        PlayerPerson.HandSkill usedHand = currentHand;
         PotAttempt currentAttempt = null;
-        if (predictedTargetBall != null) {
+        boolean snookered = game.getGame().isSnookered();
+        if (!snookered && predictedTargetBall != null) {
             List<double[][]> holeDirectionsAndHoles =
                     game.getGame().directionsToAccessibleHoles(predictedTargetBall);
             for (double[][] directionHole : holeDirectionsAndHoles) {
@@ -1076,7 +1088,7 @@ public class GameView implements Initializable {
         game.getGame().getRecorder().recordMovement(movement);
 
         if (currentAttempt != null) {
-            boolean success = currentAttempt.getTargetBall().isPotted();
+            boolean success = currentAttempt.getTargetBall().isPotted() && !game.getGame().isLastCueFoul();
             if (curDefAttempt != null && curDefAttempt.defensePlayer != player) {
                 // 如进攻成功，则上一杆防守失败了
                 curDefAttempt.setSuccess(!success);
@@ -1085,6 +1097,11 @@ public class GameView implements Initializable {
                             " defense failed!");
                 }
             }
+            if (lastPotAttempt != null && lastPotAttempt.getPlayerPerson() == player.getPlayerPerson()) {
+                // 如上一杆也是进攻，则这一杆进不进就是上一杆走位成不成功
+                lastPotAttempt.setPositionSuccess(success);
+            }
+            currentAttempt.setHandSkill(usedHand);
             currentAttempt.setSuccess(success);
             player.addAttempt(currentAttempt);
             if (success) {
@@ -1092,12 +1109,19 @@ public class GameView implements Initializable {
             } else {
                 System.out.println("Pot failed!");
             }
+            lastPotAttempt = currentAttempt;
             curDefAttempt = null;
         } else {
             // 防守
-            curDefAttempt = new DefenseAttempt(player);
+            if (lastPotAttempt != null && lastPotAttempt.getPlayerPerson() == player.getPlayerPerson()) {
+                // 如上一杆是本人进攻，则走位失败
+                lastPotAttempt.setPositionSuccess(false);
+            }
+
+            curDefAttempt = new DefenseAttempt(player, snookered);
             player.addDefenseAttempt(curDefAttempt);
-            System.out.println("Defense!");
+            System.out.println("Defense!" + (snookered ? " Solving" : ""));
+            lastPotAttempt = null;
         }
 
         beginCueAnimationOfHumanPlayer(whiteStartingX, whiteStartingY);
@@ -1118,6 +1142,36 @@ public class GameView implements Initializable {
                 game.getGame().getRecorder().writeBallInHandPlacement();
                 Platform.runLater(this::draw);
             }
+            if (gameType.snookerLike) {
+                AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+                if (asg.canReposition()) {
+                    if (asg.aiConsiderReposition(game.predictPhy)) {
+                        Platform.runLater(() -> {
+                            AlertShower.showInfo(
+                                    stage,
+                                    "AI要求复位。",
+                                    "复位"
+                            );
+                            cueButton.setText("击球");
+                            aiCalculating = false;
+                            asg.reposition();
+                            drawScoreBoard(game.getGame().getCuingPlayer(), true);
+                            drawTargetBoard(true);
+                            draw();
+                            endCueAnimation();
+                            finishCueNextStep(game.getGame().getCuingPlayer());
+                            
+                            if (asg.isNoHitThreeWarning()) {
+                                showThreeNoHitWarning();
+                            }
+                        });
+                        return;
+                    } else {
+                        asg.notReposition();
+                    }
+                }
+            }
+            
             AiCueResult cueResult = game.getGame().aiCue(player, game.predictPhy);
             System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
             if (cueResult == null) {
@@ -1158,6 +1212,7 @@ public class GameView implements Initializable {
                             cueResult.getTargetDirHole()[1]
                     );
                     boolean success = currentAttempt.getTargetBall().isPotted();
+//                     && !game.getGame().isLastCueFoul() todo: 想办法
                     if (curDefAttempt != null && curDefAttempt.defensePlayer != player) {
                         // 如进攻成功，则上一杆防守失败了
                         curDefAttempt.setSuccess(!success);
@@ -1166,6 +1221,11 @@ public class GameView implements Initializable {
                                     " player defense failed!");
                         }
                     }
+                    if (lastPotAttempt != null && lastPotAttempt.getPlayerPerson() == player.getPlayerPerson()) {
+                        // 如上一杆也是进攻，则这一杆进不进就是上一杆走位成不成功
+                        lastPotAttempt.setPositionSuccess(success);
+                    }
+                    currentAttempt.setHandSkill(cueResult.getHandSkill());
                     currentAttempt.setSuccess(success);
                     player.addAttempt(currentAttempt);
                     if (success) {
@@ -1173,11 +1233,20 @@ public class GameView implements Initializable {
                     } else {
                         System.out.println("AI Pot failed!");
                     }
+                    lastPotAttempt = currentAttempt;
                     curDefAttempt = null;
                 } else {
-                    curDefAttempt = new DefenseAttempt(player);
+                    curDefAttempt = new DefenseAttempt(player,
+                            cueResult.getCueType() == AiCueResult.CueType.SOLVE);
+
                     player.addDefenseAttempt(curDefAttempt);
-                    System.out.println("AI Defense!");
+                    System.out.println("AI Defense!" + (curDefAttempt.isSolvingSnooker() ? " Solving" : ""));
+
+                    if (lastPotAttempt != null && lastPotAttempt.getPlayerPerson() == player.getPlayerPerson()) {
+                        // 如上一杆是本人进攻，则走位失败
+                        lastPotAttempt.setPositionSuccess(false);
+                    }
+                    lastPotAttempt = null;
                 }
 
                 beginCueAnimation(game.getGame().getCuingPlayer().getInGamePlayer(),
@@ -1207,6 +1276,7 @@ public class GameView implements Initializable {
             cuePointX = getCuePointCanvasX(cueRecord.actualHorPoint);
             cuePointY = getCuePointCanvasY(cueRecord.actualVerPoint);
             cueAngleDeg = cueRecord.cueAngle;
+            currentHand = cueRecord.cuePlayer.getPlayerPerson().handBody.getHandSkillByHand(cueRecord.hand);
 
             powerSlider.setValue(cueRecord.actualPower);
             Platform.runLater(() -> powerSlider.setMajorTickUnit(
@@ -1224,6 +1294,14 @@ public class GameView implements Initializable {
             restoreCueAngle();
             updateScoreDiffLabels();
         }
+    }
+    
+    private void showThreeNoHitWarning() {
+        AlertShower.showInfo(
+                stage,
+                "有目标球可见，但已经两次未击中，如再不击中就直接判负",
+                "警告"
+        );
     }
 
     @FXML
@@ -2107,17 +2185,22 @@ public class GameView implements Initializable {
 
         if (drawStandingPos) drawStandingPos();
 
+        PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
 //        long st = System.currentTimeMillis();
         CuePlayParams[] possibles = generateCueParamsSd1();
         WhitePrediction[] clockwise = new WhitePrediction[8];
         WhitePrediction center = game.getGame().predictWhite(
-                possibles[0], game.whitePhy, whitePredictLenAfterWall,
+                possibles[0],
+                game.whitePhy,
+                WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
                 false, false, true);
         if (center == null) return;
 
         for (int i = 1; i < possibles.length; i++) {
             clockwise[i - 1] = game.getGame().predictWhite(
-                    possibles[i], game.whitePhy, whitePredictLenAfterWall,
+                    possibles[i],
+                    game.whitePhy,
+                    WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
                     false, false, true
             );
         }
@@ -2179,12 +2262,11 @@ public class GameView implements Initializable {
                 // 画预测线
                 // 角度越大，目标球预测线越短
                 double pureMultiplier = Algebra.powerTransferOfAngle(theta);
-                PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
                 double multiplier = Math.pow(pureMultiplier, 1 / playerPerson.getAnglePrecision());
 
                 // 击球的手的multiplier
                 double handMul = PlayerPerson.HandBody.getPrecisionOfHand(currentHand);
-                
+
                 double totalLen = predictLineTotalLen * multiplier * handMul;
 
                 double lineX = targetPredictionUnitX * totalLen * scale;
@@ -2791,11 +2873,11 @@ public class GameView implements Initializable {
             this.cueDtToWhite = this.initDistance;
             this.maxExtension = -maxPullDistance *
                     (playerPerson.getMaxSpinPercentage() * 0.75 / 100);  // 杆法好的人延伸长
-            
-            this.cueMoveSpeed = selectedPower * 
-                    PlayerPerson.HandBody.getPowerMulOfHand(handSkill) * 
+
+            this.cueMoveSpeed = selectedPower *
+                    PlayerPerson.HandBody.getPowerMulOfHand(handSkill) *
                     Values.MAX_POWER_SPEED / 100_000.0;
-            
+
             this.errMulWithPower = errMulWithPower;
 
             this.aimingOffset = aimingOffsetOfPlayer(playerPerson, selectedPower);

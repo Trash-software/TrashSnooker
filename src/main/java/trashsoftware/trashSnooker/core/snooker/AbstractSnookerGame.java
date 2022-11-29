@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.snooker;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SnookerAiCue;
+import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
@@ -30,6 +31,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private boolean doingFreeBall = false;  // 正在击打自由球
     private boolean blackBattle = false;
     private int lastFoulPoints = 0;
+    
+    private int repositionCount;
+    private boolean willLoseBecauseThisFoul;
 
     AbstractSnookerGame(GameView parent, EntireGame entireGame,
                         GameSettings gameSettings, GameValues gameValues,
@@ -143,6 +147,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return player.getScore() - another.getScore();
     }
 
+    /**
+     * 返回当前的台面剩余，非负
+     */
     public int getRemainingScore() {
         if (currentTarget == 1) {
             return remainingRedCount() * 8 + 27;
@@ -212,12 +219,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             if (hasRed()) return 1;
             else return 2;  // 最后一颗红球附带的彩球打完
         } else if (currentTarget == 7) {  // 黑球进了
-//            System.out.println(getCuingPlayer().getScore() + ", " + getAnotherPlayer().getScore());
-//            if (getCuingPlayer().getScore() + 7 == getAnotherPlayer().getScore()) {
-//                return BLACK_BATTLE_REP;
-//            } else {
-                return END_REP;
-//            }
+            return END_REP;
         } else if (!isFreeBall) {
             return currentTarget + 1;
         }
@@ -303,7 +305,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return foul;
     }
 
-    private int getDefaultFoulValue() {
+    public int getDefaultFoulValue() {
         if (currentTarget == RAW_COLORED_REP || currentTarget < 4) return 4;
         else return currentTarget;
     }
@@ -377,14 +379,21 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
         lastFoulPoints = foul;
         if (foul > 0) {
-            // todo: 三次瞎打判负规则
+            if (willLoseBecauseThisFoul) {
+                // 三次瞎打判负
+                getAnotherPlayer().addScore(foul);
+                getCuingPlayer().withdraw();
+                end();
+                return;
+            }
+            
             if (blackBattle) {
                 // 抢黑时犯规就直接判负
                 getAnotherPlayer().addScore(foul);
                 end();
                 return;
             }
-            
+
             getAnotherPlayer().addScore(foul);
             updateTargetPotFailed();
             switchPlayer();
@@ -393,16 +402,19 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 doingFreeBall = true;
                 System.out.println("Free ball!");
             }
-        } else if (score > 0) {
-            if (isFreeBall) {
-                if (pottedBalls.size() != 1) throw new RuntimeException("为什么进了这么多自由球？？？");
-                currentPlayer.potFreeBall(score);
-            } else currentPlayer.correctPotBalls(pottedBalls);
-            potSuccess(isFreeBall);
-            lastCueFoul = false;
         } else {
-            updateTargetPotFailed();
-            switchPlayer();
+            if (score > 0) {
+                if (isFreeBall) {
+                    if (pottedBalls.size() != 1) throw new RuntimeException("为什么进了这么多自由球？？？");
+                    currentPlayer.potFreeBall(score);
+                } else currentPlayer.correctPotBalls(pottedBalls);
+                potSuccess(isFreeBall);
+            } else {
+                updateTargetPotFailed();
+                switchPlayer();
+            }
+            repositionCount = 0;
+            willLoseBecauseThisFoul = false;
             lastCueFoul = false;
         }
 //        System.out.println("Potted: " + pottedBalls + ", first: " + whiteFirstCollide + " score: " + score + ", foul: " + foul);
@@ -420,6 +432,11 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         } else {
             return false;
         }
+    }
+
+    public boolean aiConsiderReposition(Phy phy) {
+        SnookerAiCue sac = new SnookerAiCue(this, getCuingPlayer());
+        return sac.considerReposition(phy, recordedPositions);
     }
 
     public void tieTest() {
@@ -442,6 +459,11 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             redBalls[i].pot();
         }
     }
+    
+    public void notReposition() {
+        repositionCount = 0;
+        willLoseBecauseThisFoul = false;
+    }
 
     public void reposition() {
         System.out.println("Reposition!");
@@ -456,6 +478,15 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
         switchPlayer();
         currentTarget = recordedTarget;
+        repositionCount++;
+    }
+
+    /**
+     * 在复位之后再call这个。
+     */
+    public boolean isNoHitThreeWarning() {
+        willLoseBecauseThisFoul = isAnyFullBallVisible() && repositionCount == 2;
+        return willLoseBecauseThisFoul;
     }
 
     public int remainingRedCount() {

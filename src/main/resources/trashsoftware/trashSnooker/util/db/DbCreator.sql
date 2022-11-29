@@ -35,6 +35,12 @@ CREATE TABLE IF NOT EXISTS GeneralRecord (
     LongSuccesses INTEGER DEFAULT 0,
     Defenses INTEGER DEFAULT 0,
     DefenseSuccesses INTEGER DEFAULT 0,
+    Positions INTEGER DEFAULT 0,
+    PositionSuccesses INTEGER DEFAULT 0,
+    RestAttempts INTEGER DEFAULT 0,
+    RestSuccesses INTEGER DEFAULT 0,
+    Solves INTEGER DEFAULT 0,
+    SolveSuccesses INTEGER DEFAULT 0,
     PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName, PlayerIsAI)
 );
 

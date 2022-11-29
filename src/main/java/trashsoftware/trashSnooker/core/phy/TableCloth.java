@@ -20,9 +20,9 @@ public class TableCloth {
 
     public enum Goodness {
         EXCELLENT("极佳", 0.0, 0.0),
-        GOOD("优质", 0.05, 0.2),
-        NORMAL("一般", 0.25, 0.1),
-        BAD("劣质", 0.5, 0.1),
+        GOOD("优质", 0.08, 0.2),
+        NORMAL("一般", 0.2, 0.1),
+        BAD("劣质", 0.45, 0.1),
         TERRIBLE("垃圾", 1, 0.0);
 
         private final String shown;
@@ -44,25 +44,25 @@ public class TableCloth {
     public enum Smoothness {
         FAST("全新", 
                 100, 
-                5400, 
-                1900,
+                5700, 
+                1650,
                 0.75,
                 1.0),
         NORMAL("专业",
                 120,
-                6000,
-                1800,
+                6400,
+                1500,
                 0.65,
                 0.95),
         MEDIUM("普通", 
                 150, 
-                6800,
-                1650,
+                7200,
+                1400,
                 0.4, 0.85),
         SLOW("旧", 
                 180, 
-                8000,
-                1450,
+                8400,
+                1250,
                 0.1,
                 0.7);
         

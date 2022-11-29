@@ -17,7 +17,7 @@ public abstract class EntireGameRecord {
     }
 
     public int[][] totalBasicStats() {
-        int[][] res = new int[2][6];
+        int[][] res = new int[2][12];
         for (PlayerFrameRecord[] oneFrame : frameRecords.values()) {
             res[0][0] += oneFrame[0].basicPots[0];
             res[0][1] += oneFrame[0].basicPots[1];
@@ -25,6 +25,12 @@ public abstract class EntireGameRecord {
             res[0][3] += oneFrame[0].basicPots[3];
             res[0][4] += oneFrame[0].basicPots[4];
             res[0][5] += oneFrame[0].basicPots[5];
+            res[0][6] += oneFrame[0].basicPots[6];
+            res[0][7] += oneFrame[0].basicPots[7];
+            res[0][8] += oneFrame[0].basicPots[8];
+            res[0][9] += oneFrame[0].basicPots[9];
+            res[0][10] += oneFrame[0].basicPots[10];
+            res[0][11] += oneFrame[0].basicPots[11];
 
             res[1][0] += oneFrame[1].basicPots[0];
             res[1][1] += oneFrame[1].basicPots[1];
@@ -32,6 +38,12 @@ public abstract class EntireGameRecord {
             res[1][3] += oneFrame[1].basicPots[3];
             res[1][4] += oneFrame[1].basicPots[4];
             res[1][5] += oneFrame[1].basicPots[5];
+            res[1][6] += oneFrame[1].basicPots[6];
+            res[1][7] += oneFrame[1].basicPots[7];
+            res[1][8] += oneFrame[1].basicPots[8];
+            res[1][9] += oneFrame[1].basicPots[9];
+            res[1][10] += oneFrame[1].basicPots[10];
+            res[1][11] += oneFrame[1].basicPots[11];
         }
         return res;
     }

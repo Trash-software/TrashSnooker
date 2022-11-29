@@ -24,6 +24,7 @@ public class PlayerPerson {
     private final double anglePrecision;
     private final double longPrecision;
     private final List<Cue> privateCues = new ArrayList<>();
+    private final double solving;
     private final double minPullDt;
     private final double maxPullDt;
     private final double aimingOffset;  // 瞄和打的偏差，正值向右偏
@@ -47,6 +48,7 @@ public class PlayerPerson {
                         double precisionPercentage,
                         double anglePrecision,
                         double longPrecision,
+                        double solving,
                         double minPullDt,
                         double maxPullDt,
                         double aimingOffset,
@@ -66,6 +68,7 @@ public class PlayerPerson {
         this.precisionPercentage = precisionPercentage;
         this.anglePrecision = anglePrecision;
         this.longPrecision = longPrecision;
+        this.solving = solving;
         this.minPullDt = minPullDt;
         this.maxPullDt = maxPullDt;
         this.aimingOffset = aimingOffset;
@@ -99,6 +102,7 @@ public class PlayerPerson {
                 precisionPercentage,
                 anglePrecision,
                 longPrecision,
+                (precisionPercentage + control) / 2,
                 50.0,
                 200.0,
                 0.0,
@@ -139,6 +143,7 @@ public class PlayerPerson {
         
         obj.put("maxPower", getMaxPowerPercentage());
         obj.put("controllablePower", getControllablePowerPercentage());
+        obj.put("solving", getSolving());
 
         JSONArray cueAction = new JSONArray(List.of(getMinPullDt(), getMaxPullDt()));
         obj.put("pullDt", cueAction);
@@ -171,6 +176,10 @@ public class PlayerPerson {
         obj.put("hand", handObj);
         
         return obj;
+    }
+
+    public double getSolving() {
+        return solving;
     }
 
     public boolean isCustom() {
@@ -315,7 +324,7 @@ public class PlayerPerson {
         public final double leftHand;
         public final double rightHand;
         public final double restPot;
-        private boolean leftHandRest;    // 是否用左手拿架杆
+        private final boolean leftHandRest;    // 是否用左手拿架杆
 
         private final HandSkill[] precedence;
         
@@ -366,6 +375,13 @@ public class PlayerPerson {
 
         public boolean isLeftHandRest() {
             return leftHandRest;
+        }
+        
+        public HandSkill getHandSkillByHand(Hand hand) {
+            for (HandSkill handSkill : precedence) {
+                if (handSkill.hand == hand) return handSkill;
+            }
+            throw new RuntimeException("No such hand");
         }
     }
 }

@@ -13,7 +13,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    private static final boolean SAVE = false;
+    private static final boolean SAVE = true;
     private static DBAccess database;
 
     private Connection connection;
@@ -82,9 +82,13 @@ public class DBAccess {
     }
 
     private void storeAttemptsForOnePlayer(EntireGame entireGame, Game frame, Player player) {
-        // attempts, successes, long attempts, long successes, 
-        // defenses, defense successes
-        int[] data = new int[6];
+        // attempts, successes, 
+        // long attempts, long successes, 
+        // defenses, defense successes,
+        // position, position success
+        // rest attempts, rest success
+        // solves, solve successes
+        int[] data = new int[12];
         System.out.println(player.getPlayerPerson().getName() + ": " + player.getAttempts().size());
         for (PotAttempt attempt : player.getAttempts()) {
             data[0]++;
@@ -93,11 +97,31 @@ public class DBAccess {
                 data[2]++;
                 if (attempt.isSuccess()) data[3]++;
             }
+            PotAttempt.Position position = attempt.getPositionSuccess();
+            if (position != PotAttempt.Position.NOT_SET) {
+                data[6]++;
+                if (position == PotAttempt.Position.SUCCESS) {
+                    data[7]++;
+                }
+            }
+            
+            if (attempt.isRestPot()) {
+                data[8]++;
+                if (attempt.isSuccess()) {
+                    data[9]++;
+                }
+            }
         }
         for (DefenseAttempt defenseAttempt : player.getDefenseAttempts()) {
             data[4]++;
             if (defenseAttempt.isSuccess()) {
                 data[5]++;
+            }
+            if (defenseAttempt.isSolvingSnooker()) {
+                data[10]++;
+                if (defenseAttempt.isSolveSuccess()) {
+                    data[11]++;
+                }
             }
         }
 
@@ -112,7 +136,13 @@ public class DBAccess {
                         "LongAttempts = LongAttempts + " + data[2] + ", " +
                         "LongSuccesses = LongSuccesses + " + data[3] + ", " +
                         "Defenses = Defenses + " + data[4] + ", " +
-                        "DefenseSuccesses = DefenseSuccesses + " + data[5] +
+                        "DefenseSuccesses = DefenseSuccesses + " + data[5] + ", " +
+                        "Positions = Positions + " + data[6] + ", " +
+                        "PositionSuccesses = PositionSuccesses + " + data[7] + ", " +
+                        "RestAttempts = RestAttempts + " + data[8] + ", " +
+                        "RestSuccesses = RestSuccesses + " + data[9] + ", " +
+                        "Solves = Solves + " + data[10] + ", " +
+                        "SolveSuccesses = SolveSuccesses + " + data[11] + 
                         queryWhere;
         try {
             executeStatement(query);
@@ -126,6 +156,11 @@ public class DBAccess {
                 frame.getPlayer1());
         storeAttemptsForOnePlayer(entireGame, frame,
                 frame.getPlayer2());
+    }
+    
+    public List<EntireGameTitle> getAllMatches(GameType gameType) {
+        String query = "SELECT * FROM EntireGame;";
+        return getMatchesBy(gameType, query);
     }
     
     public List<EntireGameTitle> getAllPveMatches(GameType gameType) {
@@ -174,6 +209,7 @@ public class DBAccess {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Collections.reverse(rtn);
         return rtn;
     }
 
@@ -253,10 +289,10 @@ public class DBAccess {
     }
 
     /**
-     * 返回{进攻次数，进攻成功次数，长台进攻次数，长台成功次数，防守次数，防守成功次数}
+     * 返回{进攻次数，进攻成功次数，长台进攻次数，长台成功次数，防守次数，防守成功次数，走位次数，走位成功次数，架杆进攻次数，架杆进攻成功次数，解球次数，解球成功次数}
      */
     public int[] getBasicPotStatusAll(GameType gameType, String playerName, boolean isAi) {
-        int[] array = new int[6];
+        int[] array = new int[12];
         String pns = "'" + playerName + "'";
         String typeKey = "'" + gameType.toSqlKey() + "'";
         int aiRep = isAi ? 1 : 0;
@@ -277,6 +313,12 @@ public class DBAccess {
                 array[3] += result.getInt("LongSuccesses");
                 array[4] += result.getInt("Defenses");
                 array[5] += result.getInt("DefenseSuccesses");
+                array[6] += result.getInt("Positions");
+                array[7] += result.getInt("PositionSuccesses");
+                array[8] += result.getInt("RestAttempts");
+                array[9] += result.getInt("RestSuccesses");
+                array[10] += result.getInt("Solves");
+                array[11] += result.getInt("SolveSuccesses");
             }
             statement.close();
         } catch (SQLException e) {
@@ -300,13 +342,19 @@ public class DBAccess {
 
             while (result.next()) {
                 int index = result.getInt("FrameIndex");
-                int[] array = new int[6];
+                int[] array = new int[12];
                 array[0] = result.getInt("Attempts");
                 array[1] = result.getInt("Successes");
                 array[2] = result.getInt("LongAttempts");
                 array[3] = result.getInt("LongSuccesses");
                 array[4] += result.getInt("Defenses");
                 array[5] += result.getInt("DefenseSuccesses");
+                array[6] += result.getInt("Positions");
+                array[7] += result.getInt("PositionSuccesses");
+                array[8] += result.getInt("RestAttempts");
+                array[9] += result.getInt("RestSuccesses");
+                array[10] += result.getInt("Solves");
+                array[11] += result.getInt("SolveSuccesses");
                 durations.put(index, result.getInt("DurationSeconds"));
                 String frameWinner = result.getString("WinnerName");
                 if (frameWinner == null) {
@@ -537,7 +585,7 @@ public class DBAccess {
                 game.frameIndex + ", " +
                 "'" + playerName + "', " +
                 aiRep + ", " +
-                "0, 0, 0, 0, 0, 0" +
+                "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0" +
                 ");";
         executeStatement(command1);
     }

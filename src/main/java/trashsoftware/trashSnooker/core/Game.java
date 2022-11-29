@@ -468,6 +468,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
      */
     public SeeAble countSeeAbleTargetBalls(double whiteX, double whiteY,
                                            Collection<Ball> legalBalls, int situation) {
+        if (situation != 1 && situation != 2 && situation != 3) {
+            throw new RuntimeException("Unknown situation " + situation);
+        }
         Set<Ball> legalSet;
         if (legalBalls instanceof Set) {
             legalSet = (Set<Ball>) legalBalls;
@@ -678,6 +681,22 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public void setBallInHand() {
         ballInHand = true;
+    }
+    
+    public boolean isSnookered() {
+        return isSnookered(cueBall.x, cueBall.y, getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll()));
+    }
+    
+    public boolean isSnookered(double whiteX, double whiteY, List<Ball> legalBalls) {
+        return countSeeAbleTargetBalls(whiteX, whiteY, legalBalls, 1).seeAbleTargets == 0;
+    }
+    
+    public boolean isAnyFullBallVisible() {
+        return countSeeAbleTargetBalls(
+                cueBall.x, cueBall.y, 
+                getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll()), 
+                2)
+                .seeAbleTargets != 0;
     }
 
     public Movement collisionTest() {
@@ -1002,7 +1021,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             gameValues.ballDiameter) {
                         double whiteVx = cueBall.vx;
                         double whiteVy = cueBall.vy;
-                        cueBall.twoMovingBallsHitCore(ball);
+                        cueBall.twoMovingBallsHitCore(ball, phy);
                         double[] ballDirectionUnitVec = Algebra.unitVector(ball.vx, ball.vy);
                         double[] whiteDirectionUnitVec = Algebra.unitVector(whiteVx, whiteVy);
                         double ballInitVMmPerS = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
@@ -1039,7 +1058,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         Movement calculate() {
             movement = new Movement(getAllBalls());
             while (!oneRun() && notTerminated) {
-                if (cumulatedPhysicalTime > 30000) {
+                if (cumulatedPhysicalTime > 50000) {
                     // Must be something wrong
                     System.err.println("Physical calculation congestion");
                     break;
@@ -1149,7 +1168,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 if (ball != secondBall) {
                     for (Ball thirdBall : randomOrderBallPool2) {
                         if (ball != thirdBall && secondBall != thirdBall) {
-                            if (ball.tryHitTwoBalls(secondBall, thirdBall)) {
+                            if (ball.tryHitTwoBalls(secondBall, thirdBall, phy)) {
                                 // 同时撞到两颗球
                                 noHit = false;
                                 break;
@@ -1165,7 +1184,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             boolean noHit = true;
             for (B otherBall : randomOrderBallPool1) {
                 if (ball != otherBall) {
-                    if (ball.tryHitBall(otherBall)) {
+                    if (ball.tryHitBall(otherBall, phy)) {
                         // hit ball
                         noHit = false;
                         if (ball.isWhite()) whiteCollide(otherBall);  // 记录白球撞到的球

@@ -54,7 +54,8 @@ public class NaiveGameRecorder extends GameRecorder {
         Util.doubleToBytes(cueRecord.actualHorPoint, buf, 64);
         Util.doubleToBytes(cueRecord.cueAngle, buf, 72);
         
-        buf[80] = (byte) cueRecord.playStage.ordinal(); 
+        buf[80] = (byte) cueRecord.playStage.ordinal();
+        buf[81] = (byte) cueRecord.hand.ordinal();
 
         outputStream.write(buf);
     }

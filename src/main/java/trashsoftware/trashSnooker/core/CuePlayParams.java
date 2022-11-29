@@ -20,7 +20,7 @@ public class CuePlayParams {
      * @param sideSpin    由侧旋产生的最大速度，mm/s
      * @param actualPower 实际的力量，考虑球员力量、球杆、球的重量
      */
-    public CuePlayParams(double vx, double vy, double xSpin, double ySpin,
+    protected CuePlayParams(double vx, double vy, double xSpin, double ySpin,
                          double sideSpin, double actualPower) {
         this.vx = vx;
         this.vy = vy;
@@ -123,13 +123,14 @@ public class CuePlayParams {
                                                     double aimingX, double aimingY,
                                                     PlayerPerson person,
                                                     PlayerPerson.Hand hand) {
-        double heightMul = 10 * 0.85;  // 厘米到毫米
-        double personLengthX = person.handBody.height * -aimingX * heightMul;
-        double personLengthY = person.handBody.height * -aimingY * heightMul;
+        double upBodyLength = person.handBody.height * 10 - 851;
+        double heightMul = 1.65;  
+        double personLengthX = upBodyLength * -aimingX * heightMul;
+        double personLengthY = upBodyLength * -aimingY * heightMul;
 
         int mul = hand == PlayerPerson.Hand.LEFT ? -1 : 1;
-        double widthMulMin = person.handBody.bodyWidth * 320.0 * mul;
-        double widthMulMax = person.handBody.height * 10 * 0.35 * mul;
+        double widthMulMin = person.handBody.bodyWidth * 280.0 * mul;
+        double widthMulMax = upBodyLength * 0.68 * mul;
         double personWidthX1 = aimingY * widthMulMin;
         double personWidthY1 = -aimingX * widthMulMin;
         double personWidthX2 = aimingY * widthMulMax;

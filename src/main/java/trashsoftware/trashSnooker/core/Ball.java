@@ -1,7 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
 import javafx.geometry.Point3D;
-import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -11,6 +10,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
+    public static final double MAX_GEAR_EFFECT = 0.1;  // 齿轮效应造成的最严重分离角损耗
     private static final Random ERROR_GENERATOR = new Random();
     private static final Random randomGenerator = new Random();
     private static final double[] SIDE_CUSHION_VEC = {1.0, 0.0};
@@ -398,17 +398,17 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         return false;
     }
 
-    boolean tryHitTwoBalls(Ball ball1, Ball ball2) {
+    boolean tryHitTwoBalls(Ball ball1, Ball ball2, Phy phy) {
         if (this.isNotMoving()) {
             if (ball1.isNotMoving()) {
                 if (ball2.isNotMoving()) {
                     return false;  // 三颗球都没动
                 } else {
-                    return ball2.tryHitTwoBalls(this, ball1);
+                    return ball2.tryHitTwoBalls(this, ball1, phy);
                 }
             } else {
                 if (ball2.isNotMoving()) {
-                    return ball1.tryHitTwoBalls(this, ball2);
+                    return ball1.tryHitTwoBalls(this, ball2, phy);
                 } else {
                     return false;  // ball1、ball2 都在动，无法处理
                 }
@@ -442,11 +442,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
                     }
 
                     if (ball1First) {
-                        tryHitBall(ball1, false);
-                        tryHitBall(ball2, false);
+                        tryHitBall(ball1, false, phy);
+                        tryHitBall(ball2, false, phy);
                     } else {
-                        tryHitBall(ball2, false);
-                        tryHitBall(ball1, false);
+                        tryHitBall(ball2, false, phy);
+                        tryHitBall(ball1, false, phy);
                     }
 
                     return true;
@@ -459,8 +459,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         }
     }
 
-    boolean tryHitBall(Ball ball) {
-        return tryHitBall(ball, true);
+    boolean tryHitBall(Ball ball, Phy phy) {
+        return tryHitBall(ball, true, phy);
     }
 
     void hitStaticBallCore(Ball ball) {
@@ -494,7 +494,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         ball.nextY = ball.y + ball.vy;
     }
 
-    void twoMovingBallsHitCore(Ball ball) {
+    void twoMovingBallsHitCore(Ball ball, Phy phy) {
         // 提高精确度
         double x1 = x;
         double y1 = y;
@@ -535,14 +535,37 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         if (ballHorV == 0) ballHorV = 0.0000000001;
         if (ballVerV == 0) ballVerV = 0.0000000001;
 
+        double thisOutHor = thisHorV;
+        double thisOutVer = ballVerV;
+        double ballOutHor = ballHorV;
+        double ballOutVer = thisVerV;
+        if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
+            double totalSpeed = (Math.hypot(this.vx, this.vy) + Math.hypot(ball.vx, ball.vy)) * phy.calculationsPerSec;
+            double powerGear = Math.min(1.0, totalSpeed / 0.5 / Values.MAX_POWER_SPEED * values.ballWeightRatio);  // 50的力就没有效应了
+            double gearRemain = (1 - powerGear) * MAX_GEAR_EFFECT;
+            double gearEffect = 1 - gearRemain;
+
+            // todo: 1.还没考虑旋转 2.目标球的偏移由于AI算不了而取消了
+//            double transformed = thisOutHor * (1 - gearEffect);
+            
+            ballOutVer *= gearEffect;
+            thisOutVer = thisVerV * gearRemain;
+            
+//            thisOutVer = thisVerV * gearEffect;
+//            ballOutHor = thisHorV * gearEffect;
+            
+            // 不要试图干这事
+//            ballOutVer = ballVerV * gearRemain;
+//            thisOutHor = ballHorV * gearRemain;
+
+//            System.out.printf("Gear %f, %f, %f, Out angle %f\n", gearEffect, thisVerV, thisHorV, Math.atan2(thisVerV, thisHorV));
+        }
+
         // 碰撞后，两球平行于切线的速率不变，垂直于切线的速率互换
         double[] thisOut = Algebra.antiProjection(tangentVec,
-                new double[]{thisHorV, ballVerV});
-//        System.out.println("Ball 1 out " + Arrays.toString(thisOut));
-//        System.out.print("Ball 2 " + ball + " ");
+                new double[]{thisOutHor, thisOutVer});
         double[] ballOut = Algebra.antiProjection(tangentVec,
-                new double[]{ballHorV, thisVerV});
-//        System.out.println("Ball 2 out " + Arrays.toString(ballOut));
+                new double[]{ballOutHor, ballOutVer});
 
         this.vx = thisOut[0] * values.ballBounceRatio;
         this.vy = thisOut[1] * values.ballBounceRatio;
@@ -555,7 +578,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         ball.nextY = ball.y + ball.vy;
     }
 
-    boolean tryHitBall(Ball ball, boolean checkMovingBall) {
+    boolean tryHitBall(Ball ball, boolean checkMovingBall, Phy phy) {
         double dt = predictedDtTo(ball);
         if (dt < values.ballDiameter
                 && currentDtTo(ball) > dt
@@ -570,18 +593,18 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
                         return false;
                     }
                 } else {
-                    return ball.tryHitBall(this);
+                    return ball.tryHitBall(this, phy);
                 }
             }
             if (ball.isNotMoving()) {
 //                if (checkMovingBall) System.out.println("Hit static ball!=====================");4
-                twoMovingBallsHitCore(ball);
+                twoMovingBallsHitCore(ball, phy);
 //                hitStaticBallCore(ball);
             } else {
                 if (!checkMovingBall) return false;
 //                System.out.println("Hit moving ball!=====================");
 
-                twoMovingBallsHitCore(ball);
+                twoMovingBallsHitCore(ball, phy);
             }
 
             justHit = ball;

@@ -332,6 +332,12 @@ public class GameValues {
         return acceleration / 2 * t * t;  // S = 1/2at^2
     }
     
+    public double estimateSpeedNeeded(Phy phy, double distance) {
+        double acceleration = speedReducerPerInterval(phy) * phy.calculationsPerSecSqr;
+        double t2 = distance * 2 / acceleration;
+        return Math.sqrt(t2);
+    }
+    
     public double dtToClosetCushion(double x, double y) {
         double closedLongCushion = Math.min(x - leftX, rightX - x);
         double closedShortCushion = Math.min(y - topY, botY - y);

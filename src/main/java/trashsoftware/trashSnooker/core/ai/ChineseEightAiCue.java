@@ -118,7 +118,8 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 fullBalls,
                 whitePos,
                 false,
-                false
+                false,
+                ATTACK_DIFFICULTY_THRESHOLD
         );
         List<AttackChoice> halfChoices = getAttackChoices(
                 game,
@@ -128,11 +129,12 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 halfBalls,
                 whitePos,
                 false,
-                false
+                false,
+                ATTACK_DIFFICULTY_THRESHOLD
         );
         
-        IntegratedAttackChoice fullAttack = attackGivenChoices(fullChoices, phy);
-        IntegratedAttackChoice halfAttack = attackGivenChoices(halfChoices, phy);
+        IntegratedAttackChoice fullAttack = attackGivenChoices(fullChoices, phy, ATTACK_DIFFICULTY_THRESHOLD);
+        IntegratedAttackChoice halfAttack = attackGivenChoices(halfChoices, phy, ATTACK_DIFFICULTY_THRESHOLD);
         
         if (fullAttack == null) {
             if (halfAttack != null) {

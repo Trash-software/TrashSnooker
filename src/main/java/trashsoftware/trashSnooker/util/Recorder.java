@@ -116,9 +116,9 @@ public class Recorder {
                                     aiObject.getDouble("defense"),
                                     aiObject.getDouble("attackPri"),
                                     aiObject.getDouble("likeShow"),
-                                    aiObject.getDouble("solving"),
                                     aiObject.getString("snookerBreak"),
-                                    aiObject.getBoolean("cebSideBreak")
+                                    aiObject.getBoolean("cebSideBreak"),
+                                    aiObject.getInt("withdrawAfter")
                             );
                         } else {
                             aiPlayStyle = AiPlayStyle.DEFAULT;
@@ -163,6 +163,7 @@ public class Recorder {
                                     personObj.getDouble("precision"),
                                     personObj.getDouble("anglePrecision"),
                                     personObj.getDouble("longPrecision"),
+                                    personObj.getDouble("solving"),
                                     minPullDt,
                                     maxPullDt,
                                     aimingOffset,
