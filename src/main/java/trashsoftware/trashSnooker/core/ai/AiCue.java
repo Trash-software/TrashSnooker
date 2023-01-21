@@ -154,6 +154,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                                                             int nextTarget,
                                                             List<Ball> nextStepLegalBalls,
                                                             Phy phy,
+                                                            GamePlayStage stage,
                                                             double attackThreshold) {
 //        System.out.print(selectedPower);
         double actualFbSpin = CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin,
@@ -230,9 +231,12 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 selectedPower,
                 selectedFrontBackSpin,
                 selectedSideSpin,
-                wp.getSecondCollide(),
-                wp.getWhiteSpeedWhenHitSecondBall(),
-                wp.isWhiteCollidesHoleArcs());
+//                wp.getSecondCollide(),
+//                wp.getWhiteSpeedWhenHitSecondBall(),
+//                wp.isWhiteCollidesHoleArcs()
+                wp,
+                stage
+        );
     }
 
     private IntegratedAttackChoice attack(AttackChoice choice,
@@ -251,14 +255,14 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         List<IntegratedAttackChoice> choiceList = new ArrayList<>();
         AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
 //        double likeShow = aiPlayer.getPlayerPerson().getAiPlayStyle().likeShow;  // 喜欢大力及杆法的程度
-
+        GamePlayStage stage = game.getGamePlayStage(choice.ball, false);
         for (double selectedPower = tick; selectedPower <= powerLimit; selectedPower += tick) {
             for (double[] spins : SPIN_POINTS) {
                 double price = aps.priceOf(
                         spins,
                         selectedPower,
                         aiPlayer.getInGamePlayer(),
-                        game.getGamePlayStage(choice.ball, false)
+                        stage
                 );
                 IntegratedAttackChoice iac = createIntAttackChoices(
                         selectedPower,
@@ -270,6 +274,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                         nextTarget,
                         nextStepLegalBalls,
                         phy,
+                        stage,
                         attackThreshold
                 );
                 if (iac != null) choiceList.add(iac);
@@ -1024,9 +1029,11 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         protected double price;
         int nextStepTarget;
         CuePlayParams params;
-        Ball whiteSecondCollide;
-        double speedWhenWhiteCollidesOther;
-        private boolean whiteCollideHoleArcs;
+//        Ball whiteSecondCollide;
+//        double speedWhenWhiteCollidesOther;
+//        private boolean whiteCollideHoleArcs;
+        private final WhitePrediction whitePrediction;
+        private final GamePlayStage stage;
 
         protected IntegratedAttackChoice(AttackChoice attackChoice,
                                          List<AttackChoice> nextStepAttackChoices,
@@ -1036,9 +1043,12 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                                          double selectedPower,
                                          double selectedFrontBackSpin,
                                          double selectedSideSpin,
-                                         Ball whiteSecondCollide,
-                                         double speedWhenWhiteCollidesOther,
-                                         boolean whiteCollideHoleArcs) {
+//                                         Ball whiteSecondCollide,
+//                                         double speedWhenWhiteCollidesOther,
+//                                         boolean whiteCollideHoleArcs
+                                         WhitePrediction whitePrediction,
+                                         GamePlayStage stage
+        ) {
             this.attackChoice = attackChoice;
             this.nextStepAttackChoices = nextStepAttackChoices;
             this.nextStepTarget = nextStepTarget;
@@ -1046,10 +1056,12 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             this.selectedPower = selectedPower;
             this.selectedFrontBackSpin = selectedFrontBackSpin;
             this.selectedSideSpin = selectedSideSpin;
-            this.whiteSecondCollide = whiteSecondCollide;
-            this.speedWhenWhiteCollidesOther = speedWhenWhiteCollidesOther;
+            this.whitePrediction = whitePrediction;
+            this.stage = stage;
+//            this.whiteSecondCollide = whiteSecondCollide;
+//            this.speedWhenWhiteCollidesOther = speedWhenWhiteCollidesOther;
             this.params = params;
-            this.whiteCollideHoleArcs = whiteCollideHoleArcs;
+//            this.whiteCollideHoleArcs = whiteCollideHoleArcs;
 
             generatePrice();
         }
@@ -1064,19 +1076,20 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
         double priceWhenNoAvailNextBall() {
 //            System.out.println(whiteSecondCollide);
-            if (whiteSecondCollide == null) return attackChoice.price * kickBallMul;  // k不到球，相当于没走位
+            if (whitePrediction.getSecondCollide() == null) 
+                return attackChoice.price * kickBallMul;  // k不到球，相当于没走位
 
             double targetMultiplier;
-            if (game.isLegalBall(whiteSecondCollide, nextStepTarget, false))
+            if (game.isLegalBall(whitePrediction.getSecondCollide(), nextStepTarget, false))
                 targetMultiplier = 1.0 / kickBallMul;  // k到目标球优先
             else targetMultiplier = 1.0;  // k到其他球也还将就
 
             double speedThreshold = Values.MAX_POWER_SPEED / 8.0;
             double price = this.price * targetMultiplier;  // this.price本身已有k球惩罚，需补偿
-            if (speedWhenWhiteCollidesOther < speedThreshold) {
-                price *= speedWhenWhiteCollidesOther / speedThreshold;
+            if (whitePrediction.getWhiteSpeedWhenHitSecondBall() < speedThreshold) {
+                price *= whitePrediction.getWhiteSpeedWhenHitSecondBall() / speedThreshold;
             }
-            if (whiteCollideHoleArcs) price *= WHITE_HIT_CORNER_PENALTY;
+            if (whitePrediction.isWhiteCollidesHoleArcs()) price *= WHITE_HIT_CORNER_PENALTY;
             return price;
         }
 
@@ -1089,8 +1102,15 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 price += next.price * mul;
                 mul /= 4;
             }
-            if (whiteSecondCollide != null) price *= kickBallMul;
-            if (whiteCollideHoleArcs) price *= 0.5;
+            if (whitePrediction.getSecondCollide() != null) price *= kickBallMul;
+            if (whitePrediction.isWhiteCollidesHoleArcs()) price *= 0.5;
+            
+            if (stage != GamePlayStage.NO_PRESSURE) {
+                // 正常情况下少走点库
+                int cushions = whitePrediction.getWhiteCushionCountAfter();
+                double cushionDiv = Math.max(2, cushions) / 4.0 + 0.5;  // Math.max(x, cushions) / y + (1 - x / y)
+                price /= cushionDiv;
+            }
         }
     }
 }

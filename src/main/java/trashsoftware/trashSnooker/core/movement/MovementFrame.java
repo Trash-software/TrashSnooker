@@ -8,9 +8,10 @@ public class MovementFrame {
     
     public final double x;
     public final double y;
-    public final double xAngle;  // x,y,z旋转轴的角度，都是以radians为标准
-    public final double yAngle;
-    public final double zAngle;
+    public final double xAxis;
+    public final double yAxis;
+    public final double zAxis;
+    public final double frameDegChange;
     public final boolean potted;
     public final int movementType;  // 记录这一帧是否有碰库等情况
     public final double movementValue;
@@ -20,13 +21,14 @@ public class MovementFrame {
 //    }
 
     public MovementFrame(double x, double y,
-                         double xAngle, double yAngle, double zAngle,
+                         double xAxis, double yAxis, double zAxis, double frameDegChange,
                          boolean potted, int movementType, double movementValue) {
         this.x = x;
         this.y = y;
-        this.xAngle = xAngle;
-        this.yAngle = yAngle;
-        this.zAngle = zAngle;
+        this.xAxis = xAxis;
+        this.yAxis = yAxis;
+        this.zAxis = zAxis;
+        this.frameDegChange = frameDegChange;
         this.potted = potted;
         this.movementType = movementType;
         this.movementValue = movementValue;

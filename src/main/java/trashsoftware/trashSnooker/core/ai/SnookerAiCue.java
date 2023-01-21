@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
@@ -28,14 +29,14 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
         double aimingPosX = game.getTable().firstRedX() +
                 game.getGameValues().ballDiameter * game.redRowOccupyX * 4.0;
-        double yOffset = (game.getGameValues().ballDiameter + game.redGapDt * 0.6) * 7.10;
+        double yOffset = (game.getGameValues().ballDiameter + game.redGapDt * 0.6) * 6.90;
         if (leftBreak) yOffset = -yOffset;
         double aimingPosY = game.getGameValues().midY + yOffset;
 
         double dirX = aimingPosX - game.getCueBall().getX();
         double dirY = aimingPosY - game.getCueBall().getY();
         double[] unitXY = Algebra.unitVector(dirX, dirY);
-        double actualPower = 22.0;
+        double actualPower = 23.0 * phy.cloth.smoothness.speedReduceFactor / TableCloth.Smoothness.NORMAL.speedReduceFactor;
         double selectedSideSpin = leftBreak ? -0.6 : 0.6;
         double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
                 aiPlayer.getInGamePlayer().getCurrentCue(game));
@@ -70,7 +71,11 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         return null;
     }
 
-    public boolean considerReposition(Phy phy, Map<SnookerBall, double[]> lastPositions) {
+    public boolean considerReposition(Phy phy, 
+                                      Map<SnookerBall, double[]> lastPositions, 
+                                      PotAttempt opponentAttempt) {
+        if (opponentAttempt != null) return false;  // 对手都在进攻，你还敢复位？
+        
         IntegratedAttackChoice attackChoice = standardAttack(phy, ATTACK_DIFFICULTY_THRESHOLD / 2);
         return attackChoice == null;  // 先就这样吧，暂时不考虑更好的防一杆
     }
@@ -151,6 +156,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double[] spin;
         double power;
         if (isSmallPower) {  // 是否是小力轻推
+            System.out.println("Small power!");
             Ball cueBall = game.getCueBall();
             spin = SPIN_POINTS[0];
             power = actualPowerToSelectedPower(
@@ -167,6 +173,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                     )
             );
         } else {
+            System.out.println("Big power!");
             int index = random.nextInt(SPIN_POINTS.length);
             spin = SPIN_POINTS[index];
             double powerLow = pp.getControllablePowerPercentage() * 0.7;
@@ -184,6 +191,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 AbstractSnookerGame.END_REP,
                 new ArrayList<>(),
                 phy,
+                GamePlayStage.NO_PRESSURE,
                 ATTACK_DIFFICULTY_THRESHOLD
         );
     }

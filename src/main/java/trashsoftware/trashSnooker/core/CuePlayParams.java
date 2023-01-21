@@ -7,6 +7,7 @@ public class CuePlayParams {
 
     // 记录向，不参与实际运算
     public final double power;
+//    public final boolean slideCue;  // 是否滑杆，也是记录向
 
     public double xSpin;
     public double ySpin;
@@ -31,18 +32,40 @@ public class CuePlayParams {
         this.power = actualPower;
     }
 
+    public static CuePlayParams makeIdealParams(double directionX, double directionY,
+                                                double actualFrontBackSpin, double actualSideSpin,
+                                                double cueAngleDeg,
+                                                double actualPower) {
+        return makeIdealParams(directionX, directionY, 
+                actualFrontBackSpin, actualSideSpin, 
+                cueAngleDeg, actualPower,
+                false);
+    }
+
     /**
+     * Ideal指不带随机
+     * 
      * @param directionX selected x direction
      * @param directionY selected y direction
      */
     public static CuePlayParams makeIdealParams(double directionX, double directionY,
                                                 double actualFrontBackSpin, double actualSideSpin,
                                                 double cueAngleDeg,
-                                                double actualPower) {
+                                                double actualPower,
+                                                boolean slideCue) {
 
         if (actualPower < Values.MIN_SELECTED_POWER) actualPower = Values.MIN_SELECTED_POWER;
+        
+        double directionalPower = actualPower;
+        double directionalSideSpin = actualSideSpin;  // 参与击球方向计算的sideSpin
+        if (slideCue) {
+            directionalPower = actualPower;
+            actualPower /= 4.0;
+            directionalSideSpin = actualSideSpin * 10.0;
+            actualSideSpin /= 4.0;
+        }
 
-        double[] unitXYWithSpin = unitXYWithSpins(actualSideSpin, actualPower, directionX, directionY);
+        double[] unitXYWithSpin = unitXYWithSpins(directionalSideSpin, directionalPower, directionX, directionY);
 
         double vx = unitXYWithSpin[0] * actualPower * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
         double vy = unitXYWithSpin[1] * actualPower * Values.MAX_POWER_SPEED / 100.0;

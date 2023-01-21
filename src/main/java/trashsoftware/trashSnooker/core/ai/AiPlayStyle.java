@@ -30,7 +30,7 @@ public class AiPlayStyle {
         this.stability = stability;
         this.position = position;
         this.defense = defense;
-        this.attackPrivilege = attackPrivilege;
+        this.attackPrivilege = attackPrivilege == 100 ? Double.POSITIVE_INFINITY : attackPrivilege;  // 权重100的选手只要有下就会进攻
         this.likeShow = likeShow;
         this.snookerBreakMethod = SnookerBreakMethod.valueOf(snookerBreakMethod.toUpperCase(Locale.ROOT));
         this.cebSideBreak = cebSideBreak;
@@ -49,7 +49,7 @@ public class AiPlayStyle {
         double maxSpin = 2.972;  // 0.81 * 1.2 + 0.8 * 2.5
         double spinTotal = Math.abs(spins[0]) * 1.2 + Math.abs(spins[1]) * 2.5;
         double powerMax = inGamePlayer.getPlayerPerson().getControllablePowerPercentage();
-        double comfortableLow = 110.0 - inGamePlayer.getPlayerPerson().getPowerControl();
+        double comfortableLow = 105.0 - inGamePlayer.getPlayerPerson().getPowerControl();
         double comfortableHigh;
         double spinLimit;
         if (playStage == GamePlayStage.NO_PRESSURE) {

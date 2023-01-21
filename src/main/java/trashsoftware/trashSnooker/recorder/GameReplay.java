@@ -223,7 +223,7 @@ public abstract class GameReplay implements GameHolder {
         HashMap<Ball, double[]> pos = new HashMap<>();
         for (Ball ball : balls) {
             pos.put(ball, new double[]{ball.getX(), ball.getY(), 
-                    ball.getXAngle(), ball.getYAngle(), ball.getZAngle(),
+                    ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(),
                     ball.isPotted() ? 1 : 0});
         }
         return pos;

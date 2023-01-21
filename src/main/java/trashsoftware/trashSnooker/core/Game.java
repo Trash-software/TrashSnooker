@@ -1076,6 +1076,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
                 }
             }
+            System.out.println("Frames: " + movement.getMovementMap().get(cueBall).size());
 
             return movement;
         }
@@ -1128,23 +1129,26 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
 //                    ball.normalMove();
 //                    if (noHit) ball.normalMove();
-                } else {
-                    if (!ball.sideSpinStopped(phy)) {
-                        noBallMoving = false;
-                    }
-                }
+                } 
+//                else {
+//                    // fixme: 暂时修不好这个bug，但是在贴图实装之前也没得用
+//                    if (!ball.sideSpinStopped(phy)) {
+//                        noBallMoving = false;
+//                    }
+//                }
             }
             double lastPhysicalTime = cumulatedPhysicalTime;
             cumulatedPhysicalTime += phy.calculateMs;
 
             if (Math.floor(cumulatedPhysicalTime / parent.frameTimeMs) !=
                     Math.floor(lastPhysicalTime / parent.frameTimeMs)) {
+                // 一个动画帧执行一次
                 for (int i = 0; i < allBalls.length; i++) {
                     B ball = allBalls[i];
-                    ball.calculateAxis(phy);
+                    ball.calculateAxis(phy, parent.frameTimeMs);
                     movement.addFrame(ball,
                             new MovementFrame(ball.x, ball.y, 
-                                    ball.xAngle, ball.yAngle, ball.zAngle, 
+                                    ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(), 
                                     ball.isPotted(),
                                     movementTypes[i], movementValues[i]));
                     movementTypes[i] = MovementFrame.NORMAL;

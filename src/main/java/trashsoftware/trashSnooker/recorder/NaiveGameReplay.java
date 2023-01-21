@@ -115,7 +115,7 @@ public class NaiveGameReplay extends GameReplay {
                     double rotateDeg = Util.bytesToDouble(posBuf, 50);
 
                     MovementFrame frame = new MovementFrame(x, y, 
-                            axisX, axisY, axisZ, potted, movementType, movementValue);
+                            axisX, axisY, axisZ, rotateDeg, potted, movementType, movementValue);
                     movement.addFrame(ball, frame);
                 }
             }

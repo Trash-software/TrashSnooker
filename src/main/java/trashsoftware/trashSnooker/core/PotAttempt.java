@@ -1,6 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
-public class PotAttempt {
+public class PotAttempt extends CueAttempt {
 
     private final GameType gameType;
     private final PlayerPerson playerPerson;
@@ -8,7 +8,6 @@ public class PotAttempt {
     private final double[] cueBallOrigPos;
     private final double[] targetBallOrigPos;
     private final double[] targetedHole;
-    private boolean success;
     private Position positionSuccess = Position.NOT_SET;
     private PlayerPerson.HandSkill handSkill;
 
@@ -22,14 +21,6 @@ public class PotAttempt {
         this.cueBallOrigPos = cueBallOrigPos;
         this.targetBallOrigPos = targetBallOrigPos;
         this.targetedHole = targetedHole;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
     }
 
     public Position getPositionSuccess() {

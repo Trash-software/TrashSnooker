@@ -14,10 +14,7 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.GameType;
-import trashsoftware.trashSnooker.recorder.BriefReplayItem;
-import trashsoftware.trashSnooker.recorder.GameRecorder;
-import trashsoftware.trashSnooker.recorder.GameReplay;
-import trashsoftware.trashSnooker.recorder.VersionException;
+import trashsoftware.trashSnooker.recorder.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -318,13 +315,16 @@ public class ReplayView implements Initializable {
                 protected Void call() throws Exception {
                     File[] replays = GameReplay.listReplays();
                     if (replays != null) {
-                        for (File f : replays) {
+                        for (int i = replays.length - 1; i >= 0; i--) {
+                            File f = replays[i];
                             try {
                                 BriefReplayItem item = new BriefReplayItem(f);
                                 replayList.add(item);
                             } catch (VersionException ve) {
                                 System.err.printf("Record version: %d.%d\n",
                                         ve.recordPrimaryVersion, ve.recordSecondaryVersion);
+                            } catch (RecordException re) {
+                                System.err.println(re.getMessage());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

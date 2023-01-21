@@ -35,7 +35,7 @@ public class BriefReplayItem {
 
     protected static DateFormat showingDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     
-    public BriefReplayItem(File file) throws IOException, VersionException {
+    public BriefReplayItem(File file) throws IOException, VersionException, RecordException {
         this.file = file;
 
         try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
@@ -44,7 +44,7 @@ public class BriefReplayItem {
                 throw new IOException();
 
             String sig = new String(header, 0, 4);
-            if (!GameRecorder.SIGNATURE.equals(sig)) throw new RuntimeException("Not a replay");
+            if (!GameRecorder.SIGNATURE.equals(sig)) throw new RecordException("Not a replay");
 
             replayType = header[4];
             gameType = GameType.values()[header[5] & 0xff];
@@ -71,7 +71,7 @@ public class BriefReplayItem {
         }
     }
 
-    private InGamePlayer readOnePlayer(RandomAccessFile raf, int num) throws IOException {
+    private InGamePlayer readOnePlayer(RandomAccessFile raf, int num) throws IOException, RecordException {
         byte[] buf = new byte[2];
         if (raf.read(buf) != buf.length) throw new IOException();
         boolean isAi = buf[0] == 1;
@@ -92,7 +92,7 @@ public class BriefReplayItem {
                 break;
             }
         }
-        if (playerPerson == null) throw new RuntimeException("No such player");
+        if (playerPerson == null) throw new RecordException("Player " + pid + " does not exist in current database");
 
         Cue playCue = Objects.requireNonNull(Recorder.getCues().get(playCueId));
         Cue breakCue = Objects.requireNonNull(Recorder.getCues().get(breakCueId));

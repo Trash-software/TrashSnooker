@@ -83,10 +83,10 @@ public class NaiveGameRecorder extends GameRecorder {
                 Util.doubleToBytes(frame.x, buf, 2);
                 Util.doubleToBytes(frame.y, buf, 10);
                 Util.doubleToBytes(frame.movementValue,  buf,18);
-//                Util.doubleToBytes(frame.axisX, buf, 26);
-//                Util.doubleToBytes(frame.axisY, buf, 34);
-//                Util.doubleToBytes(frame.axisZ, buf, 42);
-//                Util.doubleToBytes(frame.rotateDeg, buf, 50);
+                Util.doubleToBytes(frame.xAxis, buf, 26);
+                Util.doubleToBytes(frame.yAxis, buf, 34);
+                Util.doubleToBytes(frame.zAxis, buf, 42);
+                Util.doubleToBytes(frame.frameDegChange, buf, 50);
                 outputStream.write(buf);
             }
         }

@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class App extends Application {
     
-    public static final int VERSION = 5;
+    public static final int VERSION = 10;
     public static boolean enableDebug = true;
 
     private static final String CONFIG = "user" + File.separator + "config.cfg";

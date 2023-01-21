@@ -1,6 +1,5 @@
 package trashsoftware.trashSnooker.util;
 
-import javafx.scene.effect.Reflection;
 import javafx.scene.paint.Color;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,23 +10,19 @@ import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Recorder {
-    
-    public static final boolean SHOW_HIDDEN = true;
 
+    public static final boolean SHOW_HIDDEN = true;
+    public static final String RECORDS_DIRECTORY = "user" + File.separator + "records";
     private static final String PLAYER_LIST_FILE = "user" + File.separator + "players.json";
-    private static final String CUSTOM_PLAYER_LIST_FILE = 
+    private static final String CUSTOM_PLAYER_LIST_FILE =
             "user" + File.separator + "custom_players.json";
     private static final String CUE_LIST_FILE = "user" + File.separator + "cues.json";
-    public static final String RECORDS_DIRECTORY = "user" + File.separator + "records";
-
     private static final Map<String, PlayerPerson> playerPeople = new HashMap<>();
     private static final Map<String, Cue> cues = new HashMap<>();
 
@@ -68,6 +63,10 @@ public class Recorder {
                             cueObject.getDouble("accuracy"),
                             cueObject.getBoolean("privacy")
                     );
+                    if (cueObject.has("arrow")) {
+                        JSONObject arrowObj = cueObject.getJSONObject("arrow");
+                        cue.createArrow(arrowObj);
+                    }
                     cues.put(key, cue);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -76,7 +75,7 @@ public class Recorder {
         }
     }
 
-    private static Color parseColor(String colorStr) {
+    public static Color parseColor(String colorStr) {
         StringBuilder builder = new StringBuilder();
         int brighterCount = 0;
         int darkerCount = 0;
@@ -100,8 +99,8 @@ public class Recorder {
                 if (obj instanceof JSONObject) {
                     JSONObject personObj = (JSONObject) obj;
                     try {
-                        if (!SHOW_HIDDEN && 
-                                personObj.has("hidden") && 
+                        if (!SHOW_HIDDEN &&
+                                personObj.has("hidden") &&
                                 personObj.getBoolean("hidden")) {
                             continue;
                         }
@@ -137,7 +136,7 @@ public class Recorder {
                         } else {
                             handBody = PlayerPerson.HandBody.DEFAULT;
                         }
-                        
+
                         PlayerPerson playerPerson;
                         if (personObj.has("pullDt")) {
                             JSONArray pullDt = personObj.getJSONArray("pullDt");
@@ -152,7 +151,7 @@ public class Recorder {
                             for (int i = 0; i < 4; ++i) {
                                 muSigma[i] = muSigmaArray.getDouble(i);
                             }
-                            
+
                             playerPerson = new PlayerPerson(
                                     key,
                                     name,
@@ -217,7 +216,7 @@ public class Recorder {
         playerPeople.put(getNextCustomPlayerId(), playerPerson);
         saveToDisk(makeJsonObject(), CUSTOM_PLAYER_LIST_FILE);
     }
-    
+
     public static String getNextCustomPlayerId() {
         int current = playerPeople.size() + 1;
         String id;
@@ -226,6 +225,14 @@ public class Recorder {
             current++;
         } while (playerPeople.containsKey(id));
         return id;
+    }
+    
+    public static PlayerPerson getPlayerPerson(String playerId) {
+        return playerPeople.get(playerId);
+    }
+    
+    public static boolean hasPlayer(String playerId) {
+        return getPlayerPerson(playerId) != null;
     }
 
     public static Collection<PlayerPerson> getPlayerPeople() {
@@ -239,7 +246,7 @@ public class Recorder {
     public static Cue getStdBreakCue() {
         return cues.get("stdBreakCue");
     }
-    
+
     public static Cue getRestCue() {
         return cues.get("restCue");
     }

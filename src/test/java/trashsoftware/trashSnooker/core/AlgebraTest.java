@@ -8,6 +8,14 @@ import java.util.List;
 public class AlgebraTest {
     
     @Test
+    public void testAngleBtwVectors() {
+        double[] u = new double[]{-1, -3};
+        double[] v = new double[]{2, 1};
+        double theta = Algebra.thetaBetweenVectors(v, u);
+        System.out.println(theta);
+    }
+    
+    @Test
     public void testGameValues() {
         double[] uv = Algebra.unitVectorOfAngle(Math.toRadians(270));
         System.out.println(Arrays.toString(uv));

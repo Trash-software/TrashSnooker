@@ -23,6 +23,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     public static final int NOT_SELECTED_REP = 0;
     public static final int FULL_BALL_REP = 16;
     public static final int HALF_BALL_REP = 17;
+    
+    private double eightBallPosX;
 
     private static final int[] FULL_BALL_SLOTS = {0, 2, 3, 7, 9, 10, 12};
     private static final int[] HALF_BALL_SLOTS = {1, 5, 6, 7, 11, 13, 14};
@@ -81,6 +83,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             double y = rowStartY;
             for (int col = 0; col < ballCountInRow; ++col) {
                 if (index == 4) {
+                    eightBallPosX = curX;
                     eightBall.setX(curX);
                     eightBall.setY(y);
                 } else if (Util.arrayContains(FULL_BALL_SLOTS, index)) {
@@ -337,6 +340,19 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     public boolean isJustAfterBreak() {
         return finishedCuesCount == 1;
     }
+    
+    private void pickupBlackBall() {
+        double y = gameValues.midY;
+        for (double x = eightBallPosX; x < gameValues.rightX - gameValues.ballRadius; x += 1.0) {
+            if (!isOccupied(x, y)) {
+                eightBall.setX(x);
+                eightBall.setY(y);
+                eightBall.pickup();
+                return;
+            }
+        }
+        throw new RuntimeException("Cannot place eight ball");
+    }
 
     private void updateScore(Set<PoolBall> pottedBalls) {
         boolean foul = false;
@@ -402,18 +418,30 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
         if (!pottedBalls.isEmpty()) {
             if (pottedBalls.contains(eightBall)) {
-                end();
                 if (currentTarget == 8) {
                     winingPlayer = currentPlayer;
+                    end();
                 } else if (currentTarget == NOT_SELECTED_REP) {
-                    // todo: 捡回去
                     if (isBreaking) {
-                        // todo: 继续打
+                        pickupBlackBall();
+                        if (foul) {
+                            lastCueFoul = true;
+                            cueBall.pot();
+                            ballInHand = true;
+                            switchPlayer();
+                            System.out.println(foulReason);
+                        } else {
+                            currentPlayer.setBreakSuccess();
+                            System.out.println("开球黑八不选球");
+                        }
                     } else {
-                        switchPlayer();
+//                        switchPlayer();
+                        winingPlayer = getAnotherPlayer();
+                        end();
                     }
                 } else {  // 误进黑八
                     winingPlayer = getAnotherPlayer();
+                    end();
                 }
                 return;
             }

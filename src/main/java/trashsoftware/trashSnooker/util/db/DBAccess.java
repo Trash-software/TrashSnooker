@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.util.db;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
+import trashsoftware.trashSnooker.util.Recorder;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.BufferedReader;
@@ -202,7 +203,9 @@ public class DBAccess {
                         resultSet.getInt("Player2IsAI") == 1,
                         resultSet.getInt("TotalFrames")
                 );
-                rtn.add(egr);
+                if (isValidPlayer(egr.player1Name) && isValidPlayer(egr.player2Name)) {
+                    rtn.add(egr);
+                }
             }
 
             resultSet.close();
@@ -211,6 +214,10 @@ public class DBAccess {
         }
         Collections.reverse(rtn);
         return rtn;
+    }
+    
+    private boolean isValidPlayer(String playerId) {
+        return Recorder.hasPlayer(playerId);
     }
 
     /**
@@ -529,7 +536,10 @@ public class DBAccess {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(cmd);
             while (result.next()) {
-                list.add(result.getString("Name"));
+                String name = result.getString("Name");
+                if (isValidPlayer(name)) {
+                    list.add(name);
+                }
             }
             statement.close();
         } catch (SQLException e) {
@@ -544,7 +554,10 @@ public class DBAccess {
         statement.close();
     }
 
-    private boolean playerExists(String playerName) {
+    /**
+     * 只返回sqlite里有没有这个player，和player.json与custom_player.json里有没有无关
+     */
+    private boolean playerExistsInSql(String playerName) {
         String cmd = "SELECT Name FROM Player WHERE Player.Name = '" + playerName + "';";
         try {
             Statement stmt = connection.createStatement();
@@ -561,7 +574,7 @@ public class DBAccess {
     }
 
     public void insertPlayerIfNotExists(String playerName) {
-        if (playerExists(playerName)) return;
+        if (playerExistsInSql(playerName)) return;
         String[] commands =
                 new String[]{
                         "INSERT INTO Player VALUES ('" + playerName + "')"

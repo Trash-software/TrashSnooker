@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,6 +18,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -42,6 +46,7 @@ import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.core.table.ChineseEightTable;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
+import trashsoftware.trashSnooker.fxml.drawing.CueModel;
 import trashsoftware.trashSnooker.fxml.projection.BallProjection;
 import trashsoftware.trashSnooker.fxml.projection.CushionProjection;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
@@ -64,6 +69,7 @@ public class GameView implements Initializable {
     public static final Color INTENT_CUE_POINT = Color.NAVY;
     public static final Color CUE_TIP_COLOR = Color.LIGHTSEAGREEN;
     public static final Color REST_METAL_COLOR = Color.GOLDENROD;
+    public static final Color WHITE_PREDICTION_COLOR = new Color(1.0, 1.0, 1.0, 0.5);
 
     public static final Font POOL_NUMBER_FONT = new Font(8.0);
 
@@ -136,6 +142,7 @@ public class GameView implements Initializable {
     private GraphicsContext graphicsContext;
     private GraphicsContext ballCanvasGc;
     private GraphicsContext cueAngleCanvasGc;
+    private Pane basePane;  // 杆是画在这个pane上的
     private Stage stage;
     private InGamePlayer player1;
     private InGamePlayer player2;
@@ -179,6 +186,7 @@ public class GameView implements Initializable {
     private long replayGap = 1000;
 
     private boolean drawStandingPos = true;
+    private boolean drawTargetRefLine = false;
     private PlayerPerson.HandSkill currentHand;
 
     public static double canvasX(double realX) {
@@ -283,6 +291,7 @@ public class GameView implements Initializable {
 
     public void setupReplay(Stage stage, GameReplay replay) {
         this.stage = stage;
+        this.basePane = (Pane) stage.getScene().getRoot();
         this.replay = replay;
         this.gameType = replay.gameType;
         this.player1 = replay.getP1();
@@ -305,16 +314,22 @@ public class GameView implements Initializable {
 
         setOnHidden();
 
+        for (CueModel cueModel : CueModel.getAllCueModels()) {
+            basePane.getChildren().add(cueModel);
+        }
+
 //        while (replay.loadNext() && replay.getCurrentFlag() == GameRecorder.FLAG_HANDBALL) {
 //            // do nothing
 //        }
 //        replayCue();
     }
 
-    public void setup(Stage stage, GameType gameType, int totalFrames,
+    public void setup(Stage stage,
+                      GameType gameType, int totalFrames,
                       InGamePlayer player1, InGamePlayer player2,
                       TableCloth cloth) {
         this.stage = stage;
+        this.basePane = (Pane) stage.getScene().getRoot();
         this.gameType = gameType;
         this.player1 = player1;
         this.player2 = player2;
@@ -353,6 +368,10 @@ public class GameView implements Initializable {
         });
 
         setOnHidden();
+
+        for (CueModel cueModel : CueModel.getAllCueModels()) {
+            basePane.getChildren().add(cueModel);
+        }
     }
 
     private void setOnHidden() {
@@ -543,6 +562,9 @@ public class GameView implements Initializable {
     private void setupBalls() {
         ballPane.getChildren().clear();
         ballPane.getChildren().add(gameCanvas);
+//        for (CueModel cueModel : CueModel.getAllCueModels()) {
+//            ballPane.getChildren().add(cueModel);
+//        }
         if (replay != null) {
             for (Ball ball : replay.getAllBalls()) {
                 ballPane.getChildren().add(ball.model.sphere);
@@ -913,7 +935,8 @@ public class GameView implements Initializable {
      */
     private CuePlayParams applyCueError(Player player,
                                         double powerFactor, double frontBackSpinFactor, double sideSpinFactor,
-                                        boolean mutate, PlayerPerson.HandSkill handSkill) {
+                                        boolean mutate,
+                                        PlayerPerson.HandSkill handSkill) {
         Cue cue = player.getInGamePlayer().getCurrentCue(game.getGame());
         PlayerPerson playerPerson = player.getPlayerPerson();
 
@@ -987,18 +1010,20 @@ public class GameView implements Initializable {
 //        System.out.println(cpx + " " + cuePointX);
         double unitSideSpin = getUnitSideSpin(cpx);
 
+        boolean slidedCue = false;
         if (mutate) {
             if (Algebra.distanceToPoint(cuePointX, cuePointY, cueCanvasWH / 2, cueCanvasWH / 2)
                     > cueAreaRadius - cueRadius) {
-                power /= 3;
-                unitSideSpin *= 10;
+//                power /= 4;
+//                unitSideSpin *= 10;
                 System.out.println("滑杆了！");
+                slidedCue = true;
             }
         }
 
 //        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
 
-        return generateCueParams(power, getUnitFrontBackSpin(cpy), unitSideSpin, cueAngleDeg);
+        return generateCueParams(power, getUnitFrontBackSpin(cpy), unitSideSpin, cueAngleDeg, slidedCue);
     }
 
     private CueRecord makeCueRecord(Player cuePlayer, CuePlayParams paramsWithError) {
@@ -1145,7 +1170,7 @@ public class GameView implements Initializable {
             if (gameType.snookerLike) {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
                 if (asg.canReposition()) {
-                    if (asg.aiConsiderReposition(game.predictPhy)) {
+                    if (asg.aiConsiderReposition(game.predictPhy, lastPotAttempt)) {
                         Platform.runLater(() -> {
                             AlertShower.showInfo(
                                     stage,
@@ -1160,7 +1185,7 @@ public class GameView implements Initializable {
                             draw();
                             endCueAnimation();
                             finishCueNextStep(game.getGame().getCuingPlayer());
-                            
+
                             if (asg.isNoHitThreeWarning()) {
                                 showThreeNoHitWarning();
                             }
@@ -1171,7 +1196,7 @@ public class GameView implements Initializable {
                     }
                 }
             }
-            
+
             AiCueResult cueResult = game.getGame().aiCue(player, game.predictPhy);
             System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
             if (cueResult == null) {
@@ -1295,7 +1320,7 @@ public class GameView implements Initializable {
             updateScoreDiffLabels();
         }
     }
-    
+
     private void showThreeNoHitWarning() {
         AlertShower.showInfo(
                 stage,
@@ -1374,16 +1399,19 @@ public class GameView implements Initializable {
 
     private CuePlayParams generateCueParams(double power, double unitSideSpin,
                                             double cueAngleDeg) {
-        return generateCueParams(power, getUnitFrontBackSpin(), unitSideSpin, cueAngleDeg);
+        return generateCueParams(power, getUnitFrontBackSpin(), unitSideSpin, cueAngleDeg, false);
     }
 
     private CuePlayParams generateCueParams(double power,
                                             double unitFrontBackSpin,
                                             double unitSideSpin,
-                                            double cueAngleDeg) {
-        return CuePlayParams.makeIdealParams(cursorDirectionUnitX, cursorDirectionUnitY,
+                                            double cueAngleDeg,
+                                            boolean slideCue) {
+        return CuePlayParams.makeIdealParams(
+                cursorDirectionUnitX, cursorDirectionUnitY,
                 unitFrontBackSpin, unitSideSpin,
-                cueAngleDeg, power);
+                cueAngleDeg, power,
+                slideCue);
     }
 
     void setDifficulty(SettingsView.Difficulty difficulty) {
@@ -1781,12 +1809,12 @@ public class GameView implements Initializable {
                     if (replay != null) {
                         replay.table.forceDrawBall(this, entry.getKey(),
                                 frame.x, frame.y,
-                                frame.xAngle, frame.yAngle, frame.zAngle,
+                                frame.xAxis, frame.yAxis, frame.zAxis, frame.frameDegChange,
                                 graphicsContext, scale);
                     } else {
                         game.getGame().getTable().forceDrawBall(this, entry.getKey(),
                                 frame.x, frame.y,
-                                frame.xAngle, frame.yAngle, frame.zAngle,
+                                frame.xAxis, frame.yAxis, frame.zAxis, frame.frameDegChange,
                                 graphicsContext, scale);
                     }
                 } else {
@@ -1834,12 +1862,12 @@ public class GameView implements Initializable {
                         if (replay != null)
                             replay.getTable().forceDrawBall(this, entry.getKey(),
                                     frame.x, frame.y,
-                                    frame.xAngle, frame.yAngle, frame.zAngle,
+                                    frame.xAxis, frame.yAxis, frame.zAxis, frame.frameDegChange,
                                     graphicsContext, scale);
                         else
                             game.getGame().getTable().forceDrawBall(this, entry.getKey(),
                                     frame.x, frame.y,
-                                    frame.xAngle, frame.yAngle, frame.zAngle,
+                                    frame.xAxis, frame.yAxis, frame.zAxis, frame.frameDegChange,
                                     graphicsContext, scale);
                     } else {
                         entry.getKey().model.sphere.setVisible(false);
@@ -2176,6 +2204,96 @@ public class GameView implements Initializable {
         graphicsContext.strokeOval(canvasX2 - 5, canvasY2 - 5, 10, 10);
     }
 
+    private void drawWhitePathSingle(WhitePrediction prediction) {
+        graphicsContext.setStroke(WHITE);
+        double lastX = canvasX(game.getGame().getCueBall().getX());
+        double lastY = canvasY(game.getGame().getCueBall().getY());
+        for (double[] pos : prediction.getWhitePath()) {
+            double canvasX = canvasX(pos[0]);
+            double canvasY = canvasY(pos[1]);
+            graphicsContext.strokeLine(lastX, lastY, canvasX, canvasY);
+            lastX = canvasX;
+            lastY = canvasY;
+        }
+    }
+
+    private void drawWhitePathDouble(WhitePrediction prediction) {
+//        graphicsContext.setFill(WHITE_PREDICTION_COLOR);
+        graphicsContext.setStroke(WHITE);
+//        double lastX = canvasX(game.getGame().getCueBall().getX());
+//        double lastY = canvasY(game.getGame().getCueBall().getY());
+//        for (double[] pos : prediction.getWhitePath()) {
+//            double canvasX = canvasX(pos[0]);
+//            double canvasY = canvasY(pos[1]);
+//            graphicsContext.strokeLine(lastX, lastY, canvasX, canvasY);
+//            lastX = canvasX;
+//            lastY = canvasY;
+//        }
+
+        List<double[]> whitePath = prediction.getWhitePath();
+        if (whitePath.size() < 3) return;
+
+        // 这里可以考虑用cueBall的位置，但是不清楚whitePath的第一个位置是cueBall的原位还是第一帧移动之后的位置，所以保险起见这样写的
+        double[] initPos = whitePath.get(0);
+//        double[] secondPos = whitePath.get(1);
+
+        double lastX = initPos[0];
+        double lastY = initPos[1];
+
+        double lastLeftX = 0.0;
+        double lastLeftY = 0.0;
+
+        double lastRightX = 0.0;
+        double lastRightY = 0.0;
+
+        double[] lastDirectionOrt = null;
+
+        for (int i = 1; i < whitePath.size(); i++) {
+            double[] pos = whitePath.get(i);
+            double[] directionVecOrt = Algebra.unitVector(
+                    -pos[1] + lastY,
+                    pos[0] - lastX);
+            double leftX = canvasX(pos[0] - directionVecOrt[0] * gameType.gameValues.ballRadius);
+            double leftY = canvasY(pos[1] - directionVecOrt[1] * gameType.gameValues.ballRadius);
+
+            double rightX = canvasX(pos[0] + directionVecOrt[0] * gameType.gameValues.ballRadius);
+            double rightY = canvasY(pos[1] + directionVecOrt[1] * gameType.gameValues.ballRadius);
+
+            if (i > 1) {  // 第一下不画
+                graphicsContext.strokeLine(lastLeftX, lastLeftY, leftX, leftY);
+                graphicsContext.strokeLine(lastRightX, lastRightY, rightX, rightY);
+
+//                graphicsContext.fillPolygon(
+//                        new double[]{lastLeftX, leftX, rightX, lastRightX},
+//                        new double[]{lastLeftY, leftY, rightY, lastRightY},
+//                        4
+//                );
+
+                // 不会是null
+                double radChange = Algebra.thetaBetweenVectors(directionVecOrt, lastDirectionOrt);
+//                System.out.println(radChange);
+                if (radChange > 0.1) {
+                    // 吃库或者碰撞了
+                    System.out.println(radChange);
+//                    graphicsContext.strokeText("xxx", canvasX(pos[0]), canvasY(pos[1]));
+                    graphicsContext.strokeOval(
+                            canvasX(pos[0]) - ballRadius,
+                            canvasY(pos[1]) - ballRadius,
+                            ballDiameter,
+                            ballDiameter);  // 绘制预测撞击点的白球
+                }
+            }
+
+            lastX = pos[0];
+            lastY = pos[1];
+            lastDirectionOrt = directionVecOrt;
+            lastLeftX = leftX;
+            lastLeftY = leftY;
+            lastRightX = rightX;
+            lastRightY = rightY;
+        }
+    }
+
     private void drawCursor() {
         if (replay != null) return;
         if (game.getGame().isEnded()) return;
@@ -2201,7 +2319,9 @@ public class GameView implements Initializable {
                     possibles[i],
                     game.whitePhy,
                     WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
-                    false, false, true
+                    false,
+                    false,
+                    true
             );
         }
 
@@ -2218,24 +2338,18 @@ public class GameView implements Initializable {
         }
         connectEndPoint(outPoints.get(outPoints.size() - 1), outPoints.get(0), graphicsContext);
 
-        graphicsContext.setStroke(WHITE);
-//        for (WhitePrediction predict : predictions) {
-        double lastX = canvasX(game.getGame().getCueBall().getX());
-        double lastY = canvasY(game.getGame().getCueBall().getY());
-        for (double[] pos : center.getWhitePath()) {
-            double canvasX = canvasX(pos[0]);
-            double canvasY = canvasY(pos[1]);
-            graphicsContext.strokeLine(lastX, lastY, canvasX, canvasY);
-            lastX = canvasX;
-            lastY = canvasY;
-        }
+        // 画白球路线
+//        drawWhitePathDouble(center);
+        drawWhitePathSingle(center);
 //            graphicsContext.setStroke(Color.GRAY);
 //        }
 //        graphicsContext.setStroke(WHITE);
         if (center.getFirstCollide() != null) {
-            graphicsContext.strokeOval(canvasX(center.getWhiteCollisionX()) - ballRadius,
+            graphicsContext.strokeOval(
+                    canvasX(center.getWhiteCollisionX()) - ballRadius,
                     canvasY(center.getWhiteCollisionY()) - ballRadius,
-                    ballDiameter, ballDiameter);  // 绘制预测撞击点的白球
+                    ballDiameter,
+                    ballDiameter);  // 绘制预测撞击点的白球
 
             // 弹库的球就不给预测线了
             if (!center.isHitWallBeforeHitBall()) {
@@ -2269,15 +2383,102 @@ public class GameView implements Initializable {
 
                 double totalLen = predictLineTotalLen * multiplier * handMul;
 
-                double lineX = targetPredictionUnitX * totalLen * scale;
-                double lineY = targetPredictionUnitY * totalLen * scale;
+                double lineX = targetPredictionUnitX * totalLen;
+                double lineY = targetPredictionUnitY * totalLen;
 
-                double tarCanvasX = canvasX(center.getFirstCollide().getX());
-                double tarCanvasY = canvasY(center.getFirstCollide().getY());
+                Ball targetBall = center.getFirstCollide();
+                double tarX = targetBall.getX();
+                double tarY = targetBall.getY();
 
-                graphicsContext.setStroke(center.getFirstCollide().getColor().brighter().brighter());
-                graphicsContext.strokeLine(tarCanvasX, tarCanvasY,
-                        tarCanvasX + lineX, tarCanvasY + lineY);
+                // 画宽线
+                double xShift = targetPredictionUnitY * gameType.gameValues.ballRadius;
+                double yShift = -targetPredictionUnitX * gameType.gameValues.ballRadius;
+
+                double leftStartX = canvasX(tarX - xShift);
+                double rightStartX = canvasX(tarX + xShift);
+                double leftStartY = canvasY(tarY - yShift);
+                double rightStartY = canvasY(tarY + yShift);
+
+                double leftEndX = canvasX(tarX - xShift + lineX);
+                double rightEndX = canvasX(tarX + xShift + lineX);
+                double leftEndY = canvasY(tarY - yShift + lineY);
+                double rightEndY = canvasY(tarY + yShift + lineY);
+
+                Stop[] stops = new Stop[]{
+                        new Stop(0, targetBall.getColorWithOpa()),
+                        new Stop(1, targetBall.getColorTransparent())
+                };
+
+//                Bounds ballPanePos = ballPane.localToScene(ballPane.getBoundsInLocal());
+
+                double sx, sy, ex, ey;
+                if (targetPredictionUnitX < 0) {
+                    sx = -targetPredictionUnitX;
+                    ex = 0;
+                } else {
+                    sx = 0;
+                    ex = targetPredictionUnitX;
+                }
+                if (targetPredictionUnitY < 0) {
+                    sy = -targetPredictionUnitY;
+                    ey = 0;
+                } else {
+                    sy = 0;
+                    ey = targetPredictionUnitY;
+                }
+                
+//                if (targetPredictionUnitX < 0) {
+//                    if (targetPredictionUnitY < 0) {
+//                        // 第三象限
+//                    } else {
+//                        // 第二象限
+//                        sx = -targetPredictionUnitX;
+//                        ex = 0;
+//                        sy = 0;
+//                        ey = 
+//                    }
+//                } else {
+//                    if (targetPredictionUnitY < 0) {
+//                        // 第四象限
+//                        sx = 0;
+//                        ex = targetPredictionUnitX;
+//                        sy = -targetPredictionUnitY;
+//                        ey = 0;
+//                    } else {
+//                        // 第一象限
+//                        sx = 0;
+//                        ex = targetPredictionUnitX;
+//                        sy = 0;
+//                        ey = targetPredictionUnitY;
+//                    }
+//                }
+
+                LinearGradient fill = new LinearGradient(
+//                        canvasX(tarX) - ballPanePos.getMinX(), 
+//                        canvasY(tarY) - ballPanePos.getMinY(),
+//                        canvasX(tarX) - ballPanePos.getMinX() + lineX * scale, 
+//                        canvasY(tarY) - ballPanePos.getMinY() + lineY * scale,
+//                        0,0,targetPredictionUnitX,targetPredictionUnitY,
+                        sx, sy, ex, ey,
+                        true,
+                        CycleMethod.NO_CYCLE,
+                        stops
+                );
+
+                graphicsContext.setFill(fill);
+                graphicsContext.fillPolygon(
+                        new double[]{leftStartX, leftEndX, rightEndX, rightStartX},
+                        new double[]{leftStartY, leftEndY, rightEndY, rightStartY},
+                        4
+                );
+
+                if (drawTargetRefLine) {
+                    double tarCanvasX = canvasX(tarX);
+                    double tarCanvasY = canvasY(tarY);
+                    graphicsContext.setStroke(center.getFirstCollide().getColor().brighter().brighter());
+                    graphicsContext.strokeLine(tarCanvasX, tarCanvasY,
+                            tarCanvasX + lineX * scale, tarCanvasY + lineY * scale);
+                }
             }
         }
     }
@@ -2376,6 +2577,9 @@ public class GameView implements Initializable {
 
     private void endCueAnimation() {
 //        System.out.println("End!");
+        for (CueModel cueModel : CueModel.getAllCueModels()) {
+            cueModel.hide();
+        }
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
         cueAnimationPlayer = null;
@@ -2430,6 +2634,8 @@ public class GameView implements Initializable {
                         0.0,
                         restCue,
                         true);
+            } else {
+                Recorder.getRestCue().getCueModel(basePane).hide();
             }
 
             drawCueWithDtToHand(handXY[0], handXY[1],
@@ -2453,6 +2659,8 @@ public class GameView implements Initializable {
                         0.0,
                         restCue,
                         true);
+            } else {
+                Recorder.getRestCue().getCueModel(basePane).hide();
             }
 
             double[] pointingVec = Algebra.unitVectorOfAngle(cueAnimationPlayer.pointingAngle);
@@ -2497,213 +2705,241 @@ public class GameView implements Initializable {
 
         double correctedTipX = touchXY[0] - pointingUnitX * realDistance * scale;
         double correctedTipY = touchXY[1] - pointingUnitY * realDistance * scale;
-        double correctedEndX = correctedTipX - pointingUnitX *
-                cue.getTotalLength() * scale;
-        double correctedEndY = correctedTipY - pointingUnitY *
-                cue.getTotalLength() * scale;
+//        double correctedEndX = correctedTipX - pointingUnitX *
+//                cue.getTotalLength() * scale;
+//        double correctedEndY = correctedTipY - pointingUnitY *
+//                cue.getTotalLength() * scale;
 
-        drawCueEssential(correctedTipX, correctedTipY, correctedEndX, correctedEndY,
-                pointingUnitX, pointingUnitY, cue, isRest);
+//        drawCueEssential(correctedTipX, correctedTipY, correctedEndX, correctedEndY,
+//                pointingUnitX, pointingUnitY, cue, isRest);
+
+        Bounds ballPanePos = ballPane.localToScene(ballPane.getBoundsInLocal());
+        cue.getCueModel(basePane).show(
+                ballPanePos.getMinX() + correctedTipX,
+                ballPanePos.getMinY() + correctedTipY,
+                pointingUnitX, pointingUnitY,
+                cueAngleDeg,
+                scale);
     }
 
-    private void drawCueEssential(double cueTipX, double cueTipY,
-                                  double cueEndX, double cueEndY,
-                                  double pointingUnitX, double pointingUnitY,
-                                  Cue cue, boolean isRest) {
-//        Cue cue = game.getCuingPlayer().getInGamePlayer().getCurrentCue(game);
-
-        // 杆头，不包含皮头。或者是架杆头的前部
-        double cueFrontX = cueTipX - cue.cueTipThickness * pointingUnitX * scale;
-        double cueFrontY = cueTipY - cue.cueTipThickness * pointingUnitY * scale;
-
-        // 架杆头的后部
-        double restRootX = cueTipX - 20.0 * pointingUnitX * scale;
-        double restRootY = cueTipY - 20.0 * pointingUnitY * scale;
-
-        // 皮头环
-        double ringFrontX = cueFrontX - cue.tipRingThickness * pointingUnitX * scale;
-        double ringFrontY = cueFrontY - cue.tipRingThickness * pointingUnitY * scale;
-
-        // 杆前段的尾部
-        double cueFrontLastX = ringFrontX - cue.frontLength * pointingUnitX * scale;
-        double cueFrontLastY = ringFrontY - cue.frontLength * pointingUnitY * scale;
-
-        // 杆中段的尾部
-        double cueMidLastX = cueFrontLastX - cue.midLength * pointingUnitX * scale;
-        double cueMidLastY = cueFrontLastY - cue.midLength * pointingUnitY * scale;
-
-        // 杆尾弧线
-        double tailLength = cue.getEndWidth() * 0.2;
-        double tailWidth = tailLength * 1.5;
-        double tailX = cueEndX - tailLength * pointingUnitX * scale;
-        double tailY = cueEndY - tailLength * pointingUnitY * scale;
-        double[] tailLeft = new double[]{
-                tailX - tailWidth * -pointingUnitY * scale / 2,
-                tailY - tailWidth * pointingUnitX * scale / 2
-        };
-        double[] tailRight = new double[]{
-                tailX + tailWidth * -pointingUnitY * scale / 2,
-                tailY + tailWidth * pointingUnitX * scale / 2
-        };
-
-        double[] cueEndLeft = new double[]{
-                cueEndX - cue.getEndWidth() * -pointingUnitY * scale / 2,
-                cueEndY - cue.getEndWidth() * pointingUnitX * scale / 2
-        };
-        double[] cueEndRight = new double[]{
-                cueEndX + cue.getEndWidth() * -pointingUnitY * scale / 2,
-                cueEndY + cue.getEndWidth() * pointingUnitX * scale / 2
-        };
-        double[] cueMidLastLeft = new double[]{
-                cueMidLastX - cue.getMidMaxWidth() * -pointingUnitY * scale / 2,
-                cueMidLastY - cue.getMidMaxWidth() * pointingUnitX * scale / 2
-        };
-        double[] cueMidLastRight = new double[]{
-                cueMidLastX + cue.getMidMaxWidth() * -pointingUnitY * scale / 2,
-                cueMidLastY + cue.getMidMaxWidth() * pointingUnitX * scale / 2
-        };
-        double[] cueFrontLastLeft = new double[]{
-                cueFrontLastX - cue.getFrontMaxWidth() * -pointingUnitY * scale / 2,
-                cueFrontLastY - cue.getFrontMaxWidth() * pointingUnitX * scale / 2
-        };
-        double[] cueFrontLastRight = new double[]{
-                cueFrontLastX + cue.getFrontMaxWidth() * -pointingUnitY * scale / 2,
-                cueFrontLastY + cue.getFrontMaxWidth() * pointingUnitX * scale / 2
-        };
-        double[] cueRingLastLeft = new double[]{
-                ringFrontX - cue.getRingMaxWidth() * -pointingUnitY * scale / 2,
-                ringFrontY - cue.getRingMaxWidth() * pointingUnitX * scale / 2
-        };
-        double[] cueRingLastRight = new double[]{
-                ringFrontX + cue.getRingMaxWidth() * -pointingUnitY * scale / 2,
-                ringFrontY + cue.getRingMaxWidth() * pointingUnitX * scale / 2
-        };
-        double[] cueHeadLeft = new double[]{
-                cueFrontX - cue.getCueTipWidth() * -pointingUnitY * scale / 2,
-                cueFrontY - cue.getCueTipWidth() * pointingUnitX * scale / 2
-        };
-        double[] cueHeadRight = new double[]{
-                cueFrontX + cue.getCueTipWidth() * -pointingUnitY * scale / 2,
-                cueFrontY + cue.getCueTipWidth() * pointingUnitX * scale / 2
-        };
-        double[] cueTipLeft = new double[]{
-                cueTipX - cue.getCueTipWidth() * -pointingUnitY * scale / 2,
-                cueTipY - cue.getCueTipWidth() * pointingUnitX * scale / 2
-        };
-        double[] cueTipRight = new double[]{
-                cueTipX + cue.getCueTipWidth() * -pointingUnitY * scale / 2,
-                cueTipY + cue.getCueTipWidth() * pointingUnitX * scale / 2
-        };
-
-        double restThick = 60.0;
-        double[] restTopLeft = new double[]{
-                cueFrontX - restThick * -pointingUnitY * scale / 2,
-                cueFrontY - restThick * pointingUnitX * scale / 2
-        };
-        double[] restTopRight = new double[]{
-                cueFrontX + restThick * -pointingUnitY * scale / 2,
-                cueFrontY + restThick * pointingUnitX * scale / 2
-        };
-        double[] restRootLeft = new double[]{
-                restRootX - restThick * -pointingUnitY * scale / 2,
-                restRootY - restThick * pointingUnitX * scale / 2
-        };
-        double[] restRootRight = new double[]{
-                restRootX + restThick * -pointingUnitY * scale / 2,
-                restRootY + restThick * pointingUnitX * scale / 2
-        };
-
-        // 杆尾弧线
-        double[] tailXs = {
-                tailLeft[0], tailRight[0], cueEndRight[0], cueEndLeft[0]
-        };
-        double[] tailYs = {
-                tailLeft[1], tailRight[1], cueEndRight[1], cueEndLeft[1]
-        };
-
-        // 末段
-        double[] endXs = {
-                cueEndLeft[0], cueEndRight[0], cueMidLastRight[0], cueMidLastLeft[0]
-        };
-        double[] endYs = {
-                cueEndLeft[1], cueEndRight[1], cueMidLastRight[1], cueMidLastLeft[1]
-        };
-
-        // 中段
-        double[] midXs = {
-                cueMidLastLeft[0], cueMidLastRight[0], cueFrontLastRight[0], cueFrontLastLeft[0]
-        };
-        double[] midYs = {
-                cueMidLastLeft[1], cueMidLastRight[1], cueFrontLastRight[1], cueFrontLastLeft[1]
-        };
-
-        // 前段
-        double[] frontXs = {
-                cueFrontLastLeft[0], cueFrontLastRight[0], cueRingLastRight[0], cueRingLastLeft[0]
-        };
-        double[] frontYs = {
-                cueFrontLastLeft[1], cueFrontLastRight[1], cueRingLastRight[1], cueRingLastLeft[1]
-        };
-
-        // 皮头环
-        double[] ringXs = {
-                cueRingLastLeft[0], cueRingLastRight[0], cueHeadRight[0], cueHeadLeft[0]
-        };
-        double[] ringYs = {
-                cueRingLastLeft[1], cueRingLastRight[1], cueHeadRight[1], cueHeadLeft[1]
-        };
-
-        // 皮头
-        double[] tipXs = {
-                cueHeadLeft[0], cueHeadRight[0], cueTipRight[0], cueTipLeft[0]
-        };
-        double[] tipYs = {
-                cueHeadLeft[1], cueHeadRight[1], cueTipRight[1], cueTipLeft[1]
-        };
-
-        // 架杆杆头
-        double[] restTopXs = {
-                restTopLeft[0], restTopRight[0], restRootRight[0], restRootLeft[0]
-        };
-        double[] restTopYs = {
-                restTopLeft[1], restTopRight[1], restRootRight[1], restRootLeft[1]
-        };
-
-//        // 总轮廓线
-//        double[] xs = {
-//                cueTipLeft[0], cueTipRight[0], cueEndRight[0], cueEndLeft[0]
+//    private void drawCueEssential(double cueTipX, double cueTipY,
+//                                  double cueEndX, double cueEndY,
+//                                  double pointingUnitX, double pointingUnitY,
+//                                  Cue cue, boolean isRest) {
+////        Cue cue = game.getCuingPlayer().getInGamePlayer().getCurrentCue(game);
+//
+//        // 杆头，不包含皮头。或者是架杆头的前部
+//        double cueFrontX = cueTipX - cue.cueTipThickness * pointingUnitX * scale;
+//        double cueFrontY = cueTipY - cue.cueTipThickness * pointingUnitY * scale;
+//
+//        // 架杆头的后部
+//        double restRootX = cueTipX - 20.0 * pointingUnitX * scale;
+//        double restRootY = cueTipY - 20.0 * pointingUnitY * scale;
+//
+//        // 皮头环
+//        double ringFrontX = cueFrontX - cue.tipRingThickness * pointingUnitX * scale;
+//        double ringFrontY = cueFrontY - cue.tipRingThickness * pointingUnitY * scale;
+//
+//        // 杆前段的尾部
+//        double cueFrontLastX = ringFrontX - cue.frontLength * pointingUnitX * scale;
+//        double cueFrontLastY = ringFrontY - cue.frontLength * pointingUnitY * scale;
+//
+//        // 杆中段的尾部
+//        double cueMidLastX = cueFrontLastX - cue.midLength * pointingUnitX * scale;
+//        double cueMidLastY = cueFrontLastY - cue.midLength * pointingUnitY * scale;
+//
+//        // 杆尾弧线
+//        double tailLength = cue.getEndWidth() * 0.2;
+//        double tailWidth = tailLength * 1.5;
+//        double tailX = cueEndX - tailLength * pointingUnitX * scale;
+//        double tailY = cueEndY - tailLength * pointingUnitY * scale;
+//        double[] tailLeft = new double[]{
+//                tailX - tailWidth * -pointingUnitY * scale / 2,
+//                tailY - tailWidth * pointingUnitX * scale / 2
 //        };
-//        double[] ys = {
-//                cueTipLeft[1], cueTipRight[1], cueEndRight[1], cueEndLeft[1]
+//        double[] tailRight = new double[]{
+//                tailX + tailWidth * -pointingUnitY * scale / 2,
+//                tailY + tailWidth * pointingUnitX * scale / 2
 //        };
-
-        if (isRest) {
-            graphicsContext.setFill(REST_METAL_COLOR);
-            graphicsContext.fillPolygon(restTopXs, restTopYs, 4);
-        } else {
-            graphicsContext.setFill(CUE_TIP_COLOR);
-            graphicsContext.fillPolygon(tipXs, tipYs, 4);
-        }
-        graphicsContext.setFill(cue.tipRingColor);
-        graphicsContext.fillPolygon(ringXs, ringYs, 4);
-        graphicsContext.setFill(cue.frontColor);
-        graphicsContext.fillPolygon(frontXs, frontYs, 4);
-        graphicsContext.setFill(cue.midColor);
-        graphicsContext.fillPolygon(midXs, midYs, 4);
-        graphicsContext.setFill(cue.backColor);
-        graphicsContext.fillPolygon(endXs, endYs, 4);
-        graphicsContext.setFill(Color.BLACK.brighter());
-        graphicsContext.fillPolygon(tailXs, tailYs, 4);
-
-//        System.out.printf("Successfully drawn at (%f, %f), (%f, %f)\n",
-//                cueTipX, cueTipY, cueEndX, cueEndY);
-
-//        graphicsContext.setLineWidth(1.0);
-//        graphicsContext.setStroke(Color.BLACK);
-//        graphicsContext.strokePolygon(xs, ys, 4);
-
-        // 杆尾圆弧
-    }
+//
+//        double[] cueEndLeft = new double[]{
+//                cueEndX - cue.getEndWidth() * -pointingUnitY * scale / 2,
+//                cueEndY - cue.getEndWidth() * pointingUnitX * scale / 2
+//        };
+//        double[] cueEndRight = new double[]{
+//                cueEndX + cue.getEndWidth() * -pointingUnitY * scale / 2,
+//                cueEndY + cue.getEndWidth() * pointingUnitX * scale / 2
+//        };
+//        double[] cueMidLastLeft = new double[]{
+//                cueMidLastX - cue.getMidMaxWidth() * -pointingUnitY * scale / 2,
+//                cueMidLastY - cue.getMidMaxWidth() * pointingUnitX * scale / 2
+//        };
+//        double[] cueMidLastRight = new double[]{
+//                cueMidLastX + cue.getMidMaxWidth() * -pointingUnitY * scale / 2,
+//                cueMidLastY + cue.getMidMaxWidth() * pointingUnitX * scale / 2
+//        };
+//        double[] cueFrontLastLeft = new double[]{
+//                cueFrontLastX - cue.getFrontMaxWidth() * -pointingUnitY * scale / 2,
+//                cueFrontLastY - cue.getFrontMaxWidth() * pointingUnitX * scale / 2
+//        };
+//        double[] cueFrontLastRight = new double[]{
+//                cueFrontLastX + cue.getFrontMaxWidth() * -pointingUnitY * scale / 2,
+//                cueFrontLastY + cue.getFrontMaxWidth() * pointingUnitX * scale / 2
+//        };
+//        double[] cueRingLastLeft = new double[]{
+//                ringFrontX - cue.getRingMaxWidth() * -pointingUnitY * scale / 2,
+//                ringFrontY - cue.getRingMaxWidth() * pointingUnitX * scale / 2
+//        };
+//        double[] cueRingLastRight = new double[]{
+//                ringFrontX + cue.getRingMaxWidth() * -pointingUnitY * scale / 2,
+//                ringFrontY + cue.getRingMaxWidth() * pointingUnitX * scale / 2
+//        };
+//        double[] cueHeadLeft = new double[]{
+//                cueFrontX - cue.getCueTipWidth() * -pointingUnitY * scale / 2,
+//                cueFrontY - cue.getCueTipWidth() * pointingUnitX * scale / 2
+//        };
+//        double[] cueHeadRight = new double[]{
+//                cueFrontX + cue.getCueTipWidth() * -pointingUnitY * scale / 2,
+//                cueFrontY + cue.getCueTipWidth() * pointingUnitX * scale / 2
+//        };
+//        double[] cueTipLeft = new double[]{
+//                cueTipX - cue.getCueTipWidth() * -pointingUnitY * scale / 2,
+//                cueTipY - cue.getCueTipWidth() * pointingUnitX * scale / 2
+//        };
+//        double[] cueTipRight = new double[]{
+//                cueTipX + cue.getCueTipWidth() * -pointingUnitY * scale / 2,
+//                cueTipY + cue.getCueTipWidth() * pointingUnitX * scale / 2
+//        };
+//
+//        double restThick = 60.0;
+//        double[] restTopLeft = new double[]{
+//                cueFrontX - restThick * -pointingUnitY * scale / 2,
+//                cueFrontY - restThick * pointingUnitX * scale / 2
+//        };
+//        double[] restTopRight = new double[]{
+//                cueFrontX + restThick * -pointingUnitY * scale / 2,
+//                cueFrontY + restThick * pointingUnitX * scale / 2
+//        };
+//        double[] restRootLeft = new double[]{
+//                restRootX - restThick * -pointingUnitY * scale / 2,
+//                restRootY - restThick * pointingUnitX * scale / 2
+//        };
+//        double[] restRootRight = new double[]{
+//                restRootX + restThick * -pointingUnitY * scale / 2,
+//                restRootY + restThick * pointingUnitX * scale / 2
+//        };
+//
+//        // 杆尾弧线
+//        double[] tailXs = {
+//                tailLeft[0], tailRight[0], cueEndRight[0], cueEndLeft[0]
+//        };
+//        double[] tailYs = {
+//                tailLeft[1], tailRight[1], cueEndRight[1], cueEndLeft[1]
+//        };
+//
+//        // 末段
+//        double[] endXs = {
+//                cueEndLeft[0], cueEndRight[0], cueMidLastRight[0], cueMidLastLeft[0]
+//        };
+//        double[] endYs = {
+//                cueEndLeft[1], cueEndRight[1], cueMidLastRight[1], cueMidLastLeft[1]
+//        };
+//
+//        // 中段
+//        double[] midXs = {
+//                cueMidLastLeft[0], cueMidLastRight[0], cueFrontLastRight[0], cueFrontLastLeft[0]
+//        };
+//        double[] midYs = {
+//                cueMidLastLeft[1], cueMidLastRight[1], cueFrontLastRight[1], cueFrontLastLeft[1]
+//        };
+//
+//        // 前段
+//        double[] frontXs = {
+//                cueFrontLastLeft[0], cueFrontLastRight[0], cueRingLastRight[0], cueRingLastLeft[0]
+//        };
+//        double[] frontYs = {
+//                cueFrontLastLeft[1], cueFrontLastRight[1], cueRingLastRight[1], cueRingLastLeft[1]
+//        };
+//
+//        // 皮头环
+//        double[] ringXs = {
+//                cueRingLastLeft[0], cueRingLastRight[0], cueHeadRight[0], cueHeadLeft[0]
+//        };
+//        double[] ringYs = {
+//                cueRingLastLeft[1], cueRingLastRight[1], cueHeadRight[1], cueHeadLeft[1]
+//        };
+//
+//        // 皮头
+//        double[] tipXs = {
+//                cueHeadLeft[0], cueHeadRight[0], cueTipRight[0], cueTipLeft[0]
+//        };
+//        double[] tipYs = {
+//                cueHeadLeft[1], cueHeadRight[1], cueTipRight[1], cueTipLeft[1]
+//        };
+//
+//        // 架杆杆头
+//        double[] restTopXs = {
+//                restTopLeft[0], restTopRight[0], restRootRight[0], restRootLeft[0]
+//        };
+//        double[] restTopYs = {
+//                restTopLeft[1], restTopRight[1], restRootRight[1], restRootLeft[1]
+//        };
+//
+////        // 总轮廓线
+////        double[] xs = {
+////                cueTipLeft[0], cueTipRight[0], cueEndRight[0], cueEndLeft[0]
+////        };
+////        double[] ys = {
+////                cueTipLeft[1], cueTipRight[1], cueEndRight[1], cueEndLeft[1]
+////        };
+//
+//        if (isRest) {
+//            graphicsContext.setFill(REST_METAL_COLOR);
+//            graphicsContext.fillPolygon(restTopXs, restTopYs, 4);
+//        } else {
+//            graphicsContext.setFill(CUE_TIP_COLOR);
+//            graphicsContext.fillPolygon(tipXs, tipYs, 4);
+//        }
+//        graphicsContext.setFill(cue.tipRingColor);
+//        graphicsContext.fillPolygon(ringXs, ringYs, 4);
+//        graphicsContext.setFill(cue.frontColor);
+//        graphicsContext.fillPolygon(frontXs, frontYs, 4);
+//        graphicsContext.setFill(cue.midColor);
+//        graphicsContext.fillPolygon(midXs, midYs, 4);
+//        graphicsContext.setFill(cue.backColor);
+//        graphicsContext.fillPolygon(endXs, endYs, 4);
+//        graphicsContext.setFill(Color.BLACK.brighter());
+//        graphicsContext.fillPolygon(tailXs, tailYs, 4);
+//        
+//        // 箭头纹
+//        if (cue.arrow != null) {
+//            graphicsContext.setStroke(cue.arrow.arrowColor);
+//            for (int i = 0; i < cue.arrow.arrowScales.length; i++) {
+//                double[] arrowTopTail = cue.arrow.arrowScales[i];
+//                
+//                double[] arrowTop = new double[]{
+//                        ringFrontX - pointingUnitX * arrowTopTail[0] * scale,
+//                        ringFrontY - pointingUnitY * arrowTopTail[0] * scale
+//                };
+////                graphicsContext.stro
+//                
+//
+////                double[] cueEndLeft = new double[]{
+////                        cueEndX - cue.getEndWidth() * -pointingUnitY * scale / 2,
+////                        cueEndY - cue.getEndWidth() * pointingUnitX * scale / 2
+////                };
+//            }
+//        }
+//
+////        System.out.printf("Successfully drawn at (%f, %f), (%f, %f)\n",
+////                cueTipX, cueTipY, cueEndX, cueEndY);
+//
+////        graphicsContext.setLineWidth(1.0);
+////        graphicsContext.setStroke(Color.BLACK);
+////        graphicsContext.strokePolygon(xs, ys, 4);
+//
+//        // 杆尾圆弧
+//    }
 
     private void recalculateUiRestrictions() {
         Cue currentCue = game.getGame().getCuingPlayer().getInGamePlayer()

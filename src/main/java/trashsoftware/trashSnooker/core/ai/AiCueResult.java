@@ -100,7 +100,7 @@ public class AiCueResult {
             sd = (100 - Math.max(playerPerson.getAiPlayStyle().precision,
                     playerPerson.getAiPlayStyle().defense)) / precisionFactor;
         } else if (cueType == CueType.SOLVE) {
-            sd = (100 - playerPerson.getSolving()) / precisionFactor * 20.0;
+            sd = (100 - playerPerson.getSolving()) / precisionFactor * 15.0;
 //            System.out.println("Solving sd: " + sd);
         } else {
             sd = (100 - playerPerson.getAiPlayStyle().defense) / precisionFactor;

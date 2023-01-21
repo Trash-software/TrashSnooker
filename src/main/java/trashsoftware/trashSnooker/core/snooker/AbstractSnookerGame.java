@@ -434,9 +434,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
     }
 
-    public boolean aiConsiderReposition(Phy phy) {
+    public boolean aiConsiderReposition(Phy phy, PotAttempt lastPotAttempt) {
         SnookerAiCue sac = new SnookerAiCue(this, getCuingPlayer());
-        return sac.considerReposition(phy, recordedPositions);
+        return sac.considerReposition(phy, recordedPositions, lastPotAttempt);
     }
 
     public void tieTest() {
