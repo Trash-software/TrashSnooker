@@ -68,15 +68,19 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     private B[] randomOrderBallPool1;
     private B[] randomOrderBallPool2;
     private PhysicsCalculator physicsCalculator;
+    
+    protected Table table;
 
     protected Game(GameView parent, EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
+                   Table table,
                    int frameIndex) {
         this.parent = parent;
         this.entireGame = entireGame;
         this.gameValues = gameValues;
         this.gameSettings = gameSettings;
         this.frameIndex = frameIndex;
+        this.table = table;
 
         initPlayers();
         currentPlayer = gameSettings.isPlayer1Breaks() ? player1 : player2;
@@ -86,18 +90,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public static Game<? extends Ball, ? extends Player> createGame(
             GameView gameView, GameSettings gameSettings,
-            GameType gameType, EntireGame entireGame) {
+            GameValues gameValues, EntireGame entireGame) {
         int frameIndex = entireGame.getP1Wins() + entireGame.getP2Wins() + 1;
         Game<? extends Ball, ? extends Player> game;
-        if (gameType == GameType.SNOOKER) {
+        if (gameValues.rule == GameRule.SNOOKER) {
             game = new SnookerGame(gameView, entireGame, gameSettings, frameIndex);
-        } else if (gameType == GameType.MINI_SNOOKER) {
+        } else if (gameValues.rule == GameRule.MINI_SNOOKER) {
             game = new MiniSnookerGame(gameView, entireGame, gameSettings, frameIndex);
-        } else if (gameType == GameType.CHINESE_EIGHT) {
+        } else if (gameValues.rule == GameRule.CHINESE_EIGHT) {
             game = new ChineseEightBallGame(gameView, entireGame, gameSettings, frameIndex);
-        } else if (gameType == GameType.SIDE_POCKET) {
+        } else if (gameValues.rule == GameRule.SIDE_POCKET) {
             game = new SidePocketGame(gameView, entireGame, gameSettings, frameIndex);
-        } else throw new RuntimeException("Unexpected game type " + gameType);
+        } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
 
         try {
             game.recorder = new NaiveGameRecorder(game);
@@ -113,9 +117,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return entireGame;
     }
 
-    public abstract GameType getGameType();
+    public abstract GameRule getGameType();
 
-    public abstract Table getTable();
+    public Table getTable() {
+        return table;
+    }
 
     protected void setBreakingPlayer(Player breakingPlayer) {
     }
@@ -266,10 +272,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public boolean isInTable(double x, double y) {
-        return x >= gameValues.leftX + gameValues.ballRadius &&
-                x < gameValues.rightX - gameValues.ballRadius &&
-                y >= gameValues.topY + gameValues.ballRadius &&
-                y < gameValues.botY - gameValues.ballRadius;
+        return x >= gameValues.table.leftX + gameValues.ball.ballRadius &&
+                x < gameValues.table.rightX - gameValues.ball.ballRadius &&
+                y >= gameValues.table.topY + gameValues.ball.ballRadius &&
+                y < gameValues.table.botY - gameValues.ball.ballRadius;
     }
 
     public final boolean canPlaceWhite(double x, double y) {
@@ -346,15 +352,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         double x = cueBallX + dx;
         double y = cueBallY + dy;
-        while (x >= gameValues.leftX &&
-                x < gameValues.rightX &&
-                y >= gameValues.topY &&
-                y < gameValues.botY) {
+        while (x >= gameValues.table.leftX &&
+                x < gameValues.table.rightX &&
+                y >= gameValues.table.topY &&
+                y < gameValues.table.botY) {
             for (Ball ball : getAllBalls()) {
                 if (!ball.isPotted() && !ball.isWhite()) {
                     if (Algebra.distanceToPoint(
                             x, y, ball.x, ball.y
-                    ) < gameValues.ballDiameter) {
+                    ) < gameValues.ball.ballDiameter) {
                         return new PredictedPos(ball, new double[]{x, y});
                     }
                 }
@@ -393,7 +399,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                            Ball selfBall1, Ball selfBall2, boolean checkFullBall,
                                            boolean checkPotPoint) {
 
-        double shadowRadius = checkFullBall ? gameValues.ballDiameter : gameValues.ballRadius;
+        double shadowRadius = checkFullBall ? gameValues.ball.ballDiameter : gameValues.ball.ballRadius;
 //        double p2Radius = gameValues.ballRadius;
 
         double circle = Math.PI * 2;
@@ -407,7 +413,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         if (checkFullBall) {
             extraShadowAngle = 0;
         } else {
-            extraShadowAngle = -Math.asin(gameValues.ballDiameter / pointsDt);
+            extraShadowAngle = -Math.asin(gameValues.ball.ballDiameter / pointsDt);
         }
 //        System.out.printf("%f %f %f %f\n", p1x, p1y, p2x, p2y);
 
@@ -416,7 +422,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 if (checkPotPoint) {
                     // 障碍球占用了目标点
                     double ballTargetDt = Math.hypot(ball.x - p2x, ball.y - p2y);
-                    if (ballTargetDt <= gameValues.ballDiameter) return false;
+                    if (ballTargetDt <= gameValues.ball.ballDiameter) return false;
                 }
 
                 // 计算这个球遮住的角度范围
@@ -477,7 +483,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         } else {
             legalSet = new HashSet<>(legalBalls);
         }
-        double shadowRadius = situation == 3 ? gameValues.ballRadius : gameValues.ballDiameter;
+        double shadowRadius = situation == 3 ? gameValues.ball.ballRadius : gameValues.ball.ballDiameter;
         int result = 0;
 
         double circle = Math.PI * 2;
@@ -493,11 +499,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
             double extraShadowAngle;
             if (situation == 1) {
-                extraShadowAngle = -Math.asin(gameValues.ballDiameter / whiteTarDt);
+                extraShadowAngle = -Math.asin(gameValues.ball.ballDiameter / whiteTarDt);
             } else if (situation == 2) {
                 extraShadowAngle = 0;
             } else {
-                extraShadowAngle = Math.asin(gameValues.ballDiameter / whiteTarDt);  // 目标球本身的投影角
+                extraShadowAngle = Math.asin(gameValues.ball.ballDiameter / whiteTarDt);  // 目标球本身的投影角
             }
 
             boolean canSee = true;
@@ -508,7 +514,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     double xDiff = ball.x - whiteX;
                     double yDiff = ball.y - whiteY;
                     double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
-                    if (dt > whiteTarDt + gameValues.ballRadius) {
+                    if (dt > whiteTarDt + gameValues.ball.ballRadius) {
                         continue;  // 障碍球比目标球远，不可能挡
                     }
                     double connectionAngle = Algebra.thetaOf(xDiff, yDiff);  // 连线的绝对角度
@@ -518,9 +524,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     double selfPassAngle = 0;
                     if (situation == 3) {
                         // 起始球与障碍球切线长度
-                        double tanDt = Math.sqrt(Math.pow(dt, 2) - Math.pow(gameValues.ballRadius, 2));
+                        double tanDt = Math.sqrt(Math.pow(dt, 2) - Math.pow(gameValues.ball.ballRadius, 2));
                         // 起始球自己的半径占的角度
-                        selfPassAngle = Math.asin(gameValues.ballRadius / tanDt);
+                        selfPassAngle = Math.asin(gameValues.ball.ballRadius / tanDt);
                     }
                     double left = connectionAngle + selfPassAngle + ballShadowAngle + extraShadowAngle;
                     double right = connectionAngle - selfPassAngle - ballShadowAngle - extraShadowAngle;
@@ -644,17 +650,17 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //        BIG_LOOP:
         for (int i = 0; i < 6; i++) {
             double[] holeOpenCenter = gameValues.allHoleOpenCenters[i];
-            double[] holeBottom = gameValues.allHoles[i];
+            double[] holeBottom = gameValues.table.allHoles[i];
             if (i < 4 &&
-                    Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ballRadius &&
+                    Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ball.ballRadius &&
                     pointToPointCanPassBall(x, y, holeBottom[0], holeBottom[1], targetBall,
                             null, true, true)) {
                 // 目标球离袋口瞄球点太近了，转而检查真正的袋口
                 double directionX = holeBottom[0] - x;
                 double directionY = holeBottom[1] - y;
                 double[] unitXY = Algebra.unitVector(directionX, directionY);
-                double collisionPointX = x - gameValues.ballDiameter * unitXY[0];
-                double collisionPointY = y - gameValues.ballDiameter * unitXY[1];
+                double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
+                double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
 
                 list.add(new double[][]{unitXY, holeBottom, new double[]{collisionPointX, collisionPointY}});
             } else if (pointToPointCanPassBall(x, y, holeOpenCenter[0], holeOpenCenter[1], targetBall,
@@ -662,8 +668,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 double directionX = holeOpenCenter[0] - x;
                 double directionY = holeOpenCenter[1] - y;
                 double[] unitXY = Algebra.unitVector(directionX, directionY);
-                double collisionPointX = x - gameValues.ballDiameter * unitXY[0];
-                double collisionPointY = y - gameValues.ballDiameter * unitXY[1];
+                double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
+                double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
 
                 list.add(new double[][]{unitXY, holeOpenCenter, new double[]{collisionPointX, collisionPointY}});
             }
@@ -788,7 +794,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         for (B ball : getAllBalls()) {
             if (!ball.isPotted()) {
                 double dt = Algebra.distanceToPoint(x, y, ball.x, ball.y);
-                if (dt < gameValues.ballDiameter + MIN_GAP_DISTANCE) return true;
+                if (dt < gameValues.ball.ballDiameter + MIN_GAP_DISTANCE) return true;
             }
         }
         return false;
@@ -995,7 +1001,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             for (Ball ball : getAllBalls()) {
                 if (!ball.isWhite() && !ball.isPotted()) {
                     if (cueBall.predictedDtToPoint(ball.x, ball.y) <
-                            gameValues.ballDiameter) {
+                            gameValues.ball.ballDiameter) {
                         prediction.setSecondCollide(ball,
                                 Math.hypot(cueBall.vx, cueBall.vy) * phy.calculationsPerSec);
                     }
@@ -1007,7 +1013,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             for (Ball b : getAllBalls()) {
                 if (b != firstHit && !b.isPotted()) {
                     if (firstHit.predictedDtToPoint(b.x, b.y) <
-                            gameValues.ballDiameter) {
+                            gameValues.ball.ballDiameter) {
                         prediction.setFirstBallCollidesOther();
                     }
                 }
@@ -1018,7 +1024,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             for (Ball ball : getAllBalls()) {
                 if (!ball.isWhite() && !ball.isPotted()) {
                     if (cueBall.predictedDtToPoint(ball.x, ball.y) <
-                            gameValues.ballDiameter) {
+                            gameValues.ball.ballDiameter) {
                         double whiteVx = cueBall.vx;
                         double whiteVy = cueBall.vy;
                         cueBall.twoMovingBallsHitCore(ball, phy);
@@ -1069,8 +1075,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
             for (Ball ball : getAllBalls()) {
                 if (!ball.isPotted()) {
-                    if (ball.getX() < 0 || ball.getX() >= gameValues.outerWidth ||
-                            ball.getY() < 0 || ball.getY() >= gameValues.outerHeight) {
+                    if (ball.getX() < 0 || ball.getX() >= gameValues.table.outerWidth ||
+                            ball.getY() < 0 || ball.getY() >= gameValues.table.outerHeight) {
                         System.err.println("Ball " + ball + " at a weired position: " +
                                 ball.getX() + ", " + ball.getY());
                     }

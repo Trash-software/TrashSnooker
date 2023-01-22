@@ -28,16 +28,16 @@ public class NaiveGameReplay extends GameReplay {
         double y = Util.bytesToDouble(buf, 10);
 
         if (b == null) {
-            switch (gameType) {
+            switch (gameValues.rule) {
                 case CHINESE_EIGHT:
                 case SIDE_POCKET:
-                    b = new PoolBall(val, potted, gameType.gameValues);
+                    b = new PoolBall(val, potted, gameValues);
                     b.setX(x);
                     b.setY(y);
                     break;
                 case SNOOKER:
                 case MINI_SNOOKER:
-                    b = new SnookerBall(val, new double[]{x, y}, gameType.gameValues);
+                    b = new SnookerBall(val, new double[]{x, y}, gameValues);
                     b.setPotted(potted);
                     break;
                 default:
@@ -54,7 +54,7 @@ public class NaiveGameReplay extends GameReplay {
 
     @Override
     protected void loadBallPositions() throws IOException {
-        if (balls == null) balls = new Ball[gameType.nBalls];
+        if (balls == null) balls = new Ball[gameValues.rule.nBalls];
 
         for (int i = 0; i < balls.length; i++) {
             Ball b = loadOneBallPos(balls[i]);
@@ -92,7 +92,7 @@ public class NaiveGameReplay extends GameReplay {
             byte[] ballValueBuf = new byte[1];
 
             Movement movement = new Movement(balls);
-            for (int ballIndex = 0; ballIndex < gameType.nBalls; ballIndex++) {
+            for (int ballIndex = 0; ballIndex < gameValues.rule.nBalls; ballIndex++) {
                 if (inputStream.read(ballValueBuf) != ballValueBuf.length) {
                     throw new IOException();
                 }

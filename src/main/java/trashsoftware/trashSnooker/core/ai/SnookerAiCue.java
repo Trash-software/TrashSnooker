@@ -27,11 +27,11 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         if (method == AiPlayStyle.SnookerBreakMethod.BACK) return backBreak(phy);
         boolean leftBreak = method == AiPlayStyle.SnookerBreakMethod.LEFT;
 
-        double aimingPosX = game.getTable().firstRedX() +
-                game.getGameValues().ballDiameter * game.redRowOccupyX * 4.0;
-        double yOffset = (game.getGameValues().ballDiameter + game.redGapDt * 0.6) * 6.90;
+        double aimingPosX = game.firstRedX() +
+                game.getGameValues().ball.ballDiameter * game.redRowOccupyX * 4.0;
+        double yOffset = (game.getGameValues().ball.ballDiameter + game.redGapDt * 0.6) * 6.90;
         if (leftBreak) yOffset = -yOffset;
-        double aimingPosY = game.getGameValues().midY + yOffset;
+        double aimingPosY = game.getGameValues().table.midY + yOffset;
 
         double dirX = aimingPosX - game.getCueBall().getX();
         double dirY = aimingPosY - game.getCueBall().getY();
@@ -147,7 +147,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         // 刚好推进的白球球速
         double minWhiteSpeed = values.estimateSpeedNeeded(phy,
                 choice.targetHoleDistance + 
-                        (choice.whiteCollisionDistance / (1 - Ball.MAX_GEAR_EFFECT)) + values.ballDiameter * 1.5);
+                        (choice.whiteCollisionDistance / (1 - Ball.MAX_GEAR_EFFECT)) + values.ball.ballDiameter * 1.5);
         double minActualPower = minWhiteSpeed / Values.MAX_POWER_SPEED * 100;
 
         Random random = new Random();
@@ -168,7 +168,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
-                            game.getGameValues(),
+                            game.getGameValues().table,
                             pp
                     )
             );

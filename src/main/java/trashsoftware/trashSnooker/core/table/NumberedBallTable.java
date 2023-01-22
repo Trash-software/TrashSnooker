@@ -2,15 +2,14 @@ package trashsoftware.trashSnooker.core.table;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.GameValues;
+import trashsoftware.trashSnooker.core.TableMetrics;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public abstract class NumberedBallTable extends Table {
 
-    protected NumberedBallTable(GameValues gameValues) {
-        super(gameValues);
+    protected NumberedBallTable(TableMetrics tableMetrics) {
+        super(tableMetrics);
     }
 
     public static void drawPoolBallEssential(
@@ -47,11 +46,11 @@ public abstract class NumberedBallTable extends Table {
     }
 
     public double breakPointX() {
-        return gameValues.leftX + (gameValues.innerWidth * 0.75);
+        return tableMetrics.leftX + (tableMetrics.innerWidth * 0.75);
     }
 
     public double breakLineX() {
-        return gameValues.leftX + 635.0;
+        return tableMetrics.leftX + 635.0;
     }
 
 //    @Override

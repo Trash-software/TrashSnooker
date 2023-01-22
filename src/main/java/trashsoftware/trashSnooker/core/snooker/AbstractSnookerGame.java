@@ -7,6 +7,7 @@ import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
+import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.List;
@@ -36,11 +37,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private boolean willLoseBecauseThisFoul;
 
     AbstractSnookerGame(GameView parent, EntireGame entireGame,
-                        GameSettings gameSettings, GameValues gameValues,
+                        GameSettings gameSettings, 
+                        Table table,
                         int frameIndex) {
-        super(parent, entireGame, gameSettings, gameValues, frameIndex);
+        super(parent, entireGame, gameSettings, entireGame.gameValues, table, frameIndex);
 
-        redRowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0)) +
+        redRowOccupyX = gameValues.ball.ballDiameter * Math.sin(Math.toRadians(60.0)) +
                 Game.MIN_PLACE_DISTANCE * 0.8;
         redGapDt = Game.MIN_PLACE_DISTANCE;
 
@@ -92,7 +94,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     @Override
-    public abstract AbstractSnookerTable getTable();
+    public AbstractSnookerTable getTable() {
+        return (AbstractSnookerTable) super.getTable();
+    }
 
     protected abstract int numRedBalls();
 
@@ -502,13 +506,30 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return false;
     }
 
-    public void pickupPottedBalls(int lastCueTarget) {
+    public void pickupPottedBallsLast(int lastCueTarget) {
         if (lastCueTarget == RAW_COLORED_REP || lastCueTarget == 1) {
             for (int i = 5; i >= 0; i--) {
                 pickupColorBall(coloredBalls[i]);
             }
         } else {
             for (int i = 5; i >= lastCueTarget - 1; i--) {
+                pickupColorBall(coloredBalls[i]);
+            }
+        }
+    }
+
+    public void pickupPottedBalls(int updatedTarget) {
+        if (updatedTarget == RAW_COLORED_REP || updatedTarget == 1) {
+            for (int i = 5; i >= 0; i--) {
+                pickupColorBall(coloredBalls[i]);
+            }
+        } else if (updatedTarget == 2) {
+            // 下个目标是黄球
+            for (int i = 5; i >= 0; i--) {
+                pickupColorBall(coloredBalls[i]);
+            }
+        } else {
+            for (int i = 5; i >= updatedTarget - 2; i--) {
                 pickupColorBall(coloredBalls[i]);
             }
         }
@@ -529,7 +550,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             }
             if (!placed) {
                 double x = placePoint[0] + MIN_GAP_DISTANCE;
-                while (x < gameValues.rightX - gameValues.ballRadius) {
+                while (x < gameValues.table.rightX - gameValues.ball.ballRadius) {
                     if (!isOccupied(x, placePoint[1])) {
                         ball.setX(x);
                         ball.setY(placePoint[1]);
@@ -557,7 +578,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
         updateScoreAndTarget(newPotted, isFreeBall);
         if (!isEnded())
-            pickupPottedBalls(recordedTarget);
+            pickupPottedBalls(currentTarget);
     }
 
     @Override
@@ -742,20 +763,24 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     private void initRedBalls() {
-        double curX = getTable().firstRedX();
-        double rowStartY = gameValues.midY;
+        double curX = firstRedX();
+        double rowStartY = gameValues.table.midY;
 
         int index = 0;
         for (int row = 0; row < 5; ++row) {
             double y = rowStartY;
             for (int col = 0; col < row + 1; ++col) {
                 redBalls[index++] = new SnookerBall(1, new double[]{curX, y}, gameValues);
-                y += gameValues.ballDiameter + redGapDt;
+                y += gameValues.ball.ballDiameter + redGapDt;
             }
-            rowStartY -= gameValues.ballRadius + redGapDt * 0.6;
+            rowStartY -= gameValues.ball.ballRadius + redGapDt * 0.6;
             curX += redRowOccupyX;
             if (index >= numRedBalls()) break;
         }
+    }
+
+    public double firstRedX() {
+        return getTable().pinkBallPos()[0] + gameValues.ball.ballDiameter + Game.MIN_GAP_DISTANCE;  // 粉球与红球堆空隙
     }
 
     @Override

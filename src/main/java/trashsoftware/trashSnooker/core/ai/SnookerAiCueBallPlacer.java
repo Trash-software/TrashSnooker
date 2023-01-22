@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.GameValues;
+import trashsoftware.trashSnooker.core.TableMetrics;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 
@@ -30,7 +31,7 @@ public class SnookerAiCueBallPlacer extends AiCueBallPlacer<AbstractSnookerGame,
                 throw new EnumConstantNotPresentException(AiPlayStyle.SnookerBreakMethod.class, "Java编译器是不是脑壳出问题了");
         }
         return new double[]{game.getTable().breakLineX(), 
-                game.getGameValues().midY + yOff};
+                game.getGameValues().table.midY + yOff};
     }
 
     @Override
@@ -38,12 +39,12 @@ public class SnookerAiCueBallPlacer extends AiCueBallPlacer<AbstractSnookerGame,
         double breakLineX = game.getTable().breakLineX();
         double breakArcRadius = game.getTable().breakArcRadius();
         GameValues values = game.getGameValues();
-        double centerY = values.midY;
+        double centerY = values.table.midY;
         
         List<double[]> posList = new ArrayList<>();
 //        System.out.println("X: " + breakLineX + ", Y: " + centerY);
-        for (double radius = 0.0; radius < breakArcRadius; radius += values.ballRadius) {
-            int thisRadiusCapacity = (int) (radius * Math.PI / values.ballRadius) + 1;
+        for (double radius = 0.0; radius < breakArcRadius; radius += values.ball.ballRadius) {
+            int thisRadiusCapacity = (int) (radius * Math.PI / values.ball.ballRadius) + 1;
             double eachRad = Math.PI / thisRadiusCapacity;
             for (int n = 0; n < thisRadiusCapacity; n++) {
                 double theta = n * eachRad;

@@ -14,28 +14,28 @@ import java.sql.Timestamp;
 public class EntireGame {
 
     public final int totalFrames;
-    public final GameType gameType;
+    public final GameValues gameValues;
+    public final TableCloth cloth;
+    public final Phy playPhy;
+    public final Phy predictPhy;
+    public final Phy whitePhy;
     private final Timestamp startTime = new Timestamp(System.currentTimeMillis());
     private final GameView gameView;
     InGamePlayer p1;
     InGamePlayer p2;
     Game<? extends Ball, ? extends Player> game;
-    public final TableCloth cloth;
-    public final Phy playPhy;
-    public final Phy predictPhy;
-    public final Phy whitePhy;
     private int p1Wins;
     private int p2Wins;
     private boolean p1Breaks;
 
-    public EntireGame(GameView gameView, InGamePlayer p1, InGamePlayer p2, GameType gameType,
+    public EntireGame(GameView gameView, InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
                       int totalFrames, TableCloth cloth) {
         this.p1 = p1;
         this.p2 = p2;
         if (totalFrames % 2 != 1) {
             throw new RuntimeException("Total frames must be odd.");
         }
-        this.gameType = gameType;
+        this.gameValues = gameValues;
         this.totalFrames = totalFrames;
         this.gameView = gameView;
         this.cloth = cloth;
@@ -43,7 +43,8 @@ public class EntireGame {
         this.predictPhy = Phy.Factory.createAiPredictPhy(cloth);
         this.whitePhy = Phy.Factory.createWhitePredictPhy(cloth);
 
-        DBAccess.getInstance().recordAnEntireGameStarts(this);
+        if (gameValues.isStandard())
+            DBAccess.getInstance().recordAnEntireGameStarts(this);
 
         createNextFrame();
     }
@@ -77,10 +78,13 @@ public class EntireGame {
     }
 
     public boolean playerWinsAframe(InGamePlayer player) {
-        DBAccess.getInstance().recordAFrameEnds(
-                this, game, player.getPlayerPerson());
+        if (gameValues.isStandard()) {
+            DBAccess.getInstance().recordAFrameEnds(
+                    this, game, player.getPlayerPerson());
+        }
         updateFrameRecords(game.getPlayer1(), player);
         updateFrameRecords(game.getPlayer2(), player);
+
         if (player.getPlayerPerson().equals(p1.getPlayerPerson())) {
             return p1WinsAFrame();
         } else {
@@ -110,20 +114,22 @@ public class EntireGame {
         if (framePlayer instanceof SnookerPlayer) {
             SnookerPlayer snookerPlayer = (SnookerPlayer) framePlayer;
             snookerPlayer.flushSinglePoles();
-            DBAccess.getInstance().recordSnookerBreaks(this,
-                    getGame(),
-                    snookerPlayer, 
-                    snookerPlayer.getSinglePolesInThisGame());
+            if (gameValues.isStandard())
+                DBAccess.getInstance().recordSnookerBreaks(this,
+                        getGame(),
+                        snookerPlayer,
+                        snookerPlayer.getSinglePolesInThisGame());
         } else if (framePlayer instanceof NumberedBallPlayer) {
             // 炸清和接清
             NumberedBallPlayer numberedBallPlayer = (NumberedBallPlayer) framePlayer;
             numberedBallPlayer.flushSinglePoles();
-            DBAccess.getInstance().recordNumberedBallResult(this,
-                    getGame(),
-                    numberedBallPlayer,
-                    winingPlayer.getPlayerPerson().equals(
-                            framePlayer.playerPerson.getPlayerPerson()),
-                    numberedBallPlayer.getContinuousPots());
+            if (gameValues.isStandard())
+                DBAccess.getInstance().recordNumberedBallResult(this,
+                        getGame(),
+                        numberedBallPlayer,
+                        winingPlayer.getPlayerPerson().equals(
+                                framePlayer.playerPerson.getPlayerPerson()),
+                        numberedBallPlayer.getContinuousPots());
         }
     }
 
@@ -132,7 +138,8 @@ public class EntireGame {
             game.quitGame();
         }
         if (!isFinished()) {
-            DBAccess.getInstance().abortEntireGame(this);
+            if (gameValues.isStandard())
+                DBAccess.getInstance().abortEntireGame(this);
         }
     }
 
@@ -143,7 +150,7 @@ public class EntireGame {
     public String getStartTimeSqlString() {
         return Util.timeStampFmt(startTime);
     }
-    
+
     public long getBeginTime() {
         return startTime.getTime();
     }
@@ -154,8 +161,9 @@ public class EntireGame {
                 .player1Breaks(p1Breaks)
                 .players(p1, p2)
                 .build();
-        game = Game.createGame(gameView, gameSettings, gameType, this);
-        DBAccess.getInstance().recordAFrameStarts(
-                this, game);
+        game = Game.createGame(gameView, gameSettings, gameValues, this);
+        if (gameValues.isStandard())
+            DBAccess.getInstance().recordAFrameStarts(
+                    this, game);
     }
 }

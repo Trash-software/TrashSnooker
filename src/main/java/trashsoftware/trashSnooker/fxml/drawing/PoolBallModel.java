@@ -2,13 +2,14 @@ package trashsoftware.trashSnooker.fxml.drawing;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
-import trashsoftware.trashSnooker.core.GameValues;
+import trashsoftware.trashSnooker.core.BallMetrics;
+import trashsoftware.trashSnooker.core.TableMetrics;
 
 import java.util.Objects;
 
 public class PoolBallModel extends BallModel {
     protected PoolBallModel(int number) {
-        super(GameValues.CHINESE_EIGHT_VALUES.ballRadius);
+        super(BallMetrics.POOL_BALL.ballRadius);
         
         String fileName = "/trashsoftware/trashSnooker/img/pool/pool" + number + ".png";
         Image img = new Image(Objects.requireNonNull(getClass().getResource(fileName)).toExternalForm());

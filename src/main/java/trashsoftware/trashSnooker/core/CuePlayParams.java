@@ -108,7 +108,7 @@ public class CuePlayParams {
 
     public static PlayerPerson.HandSkill getPlayableHand(double whiteX, double whiteY,
                                                          double aimingX, double aimingY,
-                                                         GameValues gameValues,
+                                                         TableMetrics tableMetrics,
                                                          PlayerPerson person) {
         PlayerPerson.HandSkill primary = person.handBody.getPrimary();
         if (primary.hand == PlayerPerson.Hand.REST) {
@@ -119,8 +119,8 @@ public class CuePlayParams {
                 aimingX, aimingY,
                 person, primary.hand);
 
-        if (!gameValues.isInOuterTable(standingPosPri[0][0], standingPosPri[0][1]) ||
-                !gameValues.isInOuterTable(standingPosPri[1][0], standingPosPri[1][1])) {
+        if (!tableMetrics.isInOuterTable(standingPosPri[0][0], standingPosPri[0][1]) ||
+                !tableMetrics.isInOuterTable(standingPosPri[1][0], standingPosPri[1][1])) {
             return primary;
         }
 
@@ -132,8 +132,8 @@ public class CuePlayParams {
                 aimingX, aimingY,
                 person, secondary.hand);
 
-        if (!gameValues.isInOuterTable(standingPosSec[0][0], standingPosSec[0][1]) ||
-                !gameValues.isInOuterTable(standingPosSec[1][0], standingPosSec[1][1])) {
+        if (!tableMetrics.isInOuterTable(standingPosSec[0][0], standingPosSec[0][1]) ||
+                !tableMetrics.isInOuterTable(standingPosSec[1][0], standingPosSec[1][1])) {
             return secondary;
         }
 
@@ -188,7 +188,7 @@ public class CuePlayParams {
         }
 
         // 小力高低杆补偿
-        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.45);
+        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.35);
         double sideSpinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.75);
 
         double side = sideSpinRatio * sideSpin * Values.MAX_SIDE_SPIN_SPEED;

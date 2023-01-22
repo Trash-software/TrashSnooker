@@ -32,12 +32,24 @@ public class MainView implements Initializable {
 
     @FXML
     ComboBox<Integer> totalFramesBox;
+    
+    @FXML
+    ComboBox<GameRule> gameRuleBox;
+    
+    @FXML
+    ComboBox<TableMetrics.TableBuilderFactory> tableMetricsBox;
+    
+    @FXML
+    ComboBox<BallMetrics> ballMetricsBox;
 
     @FXML
     ComboBox<TableCloth.Smoothness> clothSmoothBox;
     
     @FXML
     ComboBox<TableCloth.Goodness> clothGoodBox;
+    
+    @FXML
+    ComboBox<TableMetrics.HoleSize> holeSizeBox;
 
     @FXML
     ComboBox<PlayerPerson> player1Box, player2Box;
@@ -52,6 +64,7 @@ public class MainView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initGameTypeBox();
         initTotalFramesBox();
         initClothBox();
         loadPlayerList();
@@ -80,6 +93,27 @@ public class MainView implements Initializable {
         clothGoodBox.getItems().addAll(TableCloth.Goodness.values());
         clothSmoothBox.getSelectionModel().select(1);
         clothGoodBox.getSelectionModel().select(1);
+    }
+    
+    private void initGameTypeBox() {
+        gameRuleBox.getItems().addAll(
+                GameRule.values()
+        );
+        tableMetricsBox.getItems().addAll(
+                TableMetrics.TableBuilderFactory.values()
+        );
+        ballMetricsBox.getItems().addAll(
+                BallMetrics.SNOOKER_BALL,
+                BallMetrics.POOL_BALL
+        );
+        
+        tableMetricsBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                holeSizeBox.getItems().clear();
+                holeSizeBox.getItems().addAll(newValue.supportedHoles);
+                holeSizeBox.getSelectionModel().select(newValue.supportedHoles.length / 2);
+            }
+        });
     }
 
     private void loadCueList() {
@@ -245,26 +279,25 @@ public class MainView implements Initializable {
     }
 
     @FXML
-    void snookerAction() {
-        showGame(GameType.SNOOKER);
+    void startGameAction() {
+        TableMetrics.TableBuilderFactory tableMetricsFactory = 
+                tableMetricsBox.getValue();
+        TableMetrics tableMetrics = tableMetricsFactory
+                .create()
+                .holeSize(holeSizeBox.getValue())
+                .build();
+        
+        GameRule rule = gameRuleBox.getValue();
+        BallMetrics ballMetrics = ballMetricsBox.getValue();
+        
+        // todo: 检查规则兼容性
+        
+        GameValues values = new GameValues(rule, tableMetrics, ballMetrics);
+        
+        showGame(values);
     }
 
-    @FXML
-    void miniSnookerAction() {
-        showGame(GameType.MINI_SNOOKER);
-    }
-
-    @FXML
-    void chineseEightAction() {
-        showGame(GameType.CHINESE_EIGHT);
-    }
-
-    @FXML
-    void sidePocketAction() {
-        showGame(GameType.SIDE_POCKET);
-    }
-
-    private void showGame(GameType gameType) {
+    private void showGame(GameValues gameValues) {
         PlayerPerson p1 = player1Box.getValue();
         PlayerPerson p2 = player2Box.getValue();
         if (p1 == null || p2 == null) {
@@ -276,8 +309,8 @@ public class MainView implements Initializable {
         InGamePlayer igp2;
         Cue stdBreakCue = Recorder.getStdBreakCue();
         if (stdBreakCue == null ||
-                gameType == GameType.SNOOKER ||
-                gameType == GameType.MINI_SNOOKER) {
+                gameValues.rule == GameRule.SNOOKER ||
+                gameValues.rule == GameRule.MINI_SNOOKER) {
             igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue(), 1);
             igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue, player2Player.getValue(), 2);
         } else {
@@ -302,7 +335,7 @@ public class MainView implements Initializable {
             stage.setScene(scene);
 
             GameView gameView = loader.getController();
-            gameView.setup(stage, gameType, totalFramesBox.getSelectionModel().getSelectedItem(),
+            gameView.setup(stage, gameValues, totalFramesBox.getSelectionModel().getSelectedItem(),
                     igp1, igp2, cloth);
 
             stage.show();

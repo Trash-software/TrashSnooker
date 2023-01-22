@@ -19,9 +19,9 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
 public abstract class GameRecorder {
-    public static final int RECORD_PRIMARY_VERSION = 10;
+    public static final int RECORD_PRIMARY_VERSION = 11;
     public static final int RECORD_SECONDARY_VERSION = 7;
-    public static final int HEADER_LENGTH = 40;
+    public static final int HEADER_LENGTH = 50;
     public static final int PLAYER_HEADER_LENGTH = 98;
     public static final int TOTAL_HEADER_LENGTH = HEADER_LENGTH + PLAYER_HEADER_LENGTH * 2;
     public static final String SIGNATURE = "TSR_";
@@ -150,38 +150,45 @@ public abstract class GameRecorder {
         System.arraycopy(signature, 0, header, 0, 4);
 
         header[4] = recorderType();
-        header[5] = (byte) game.getGameType().ordinal();
+        header[5] = (byte) compression;
 
         Util.intToBytesN(RECORD_PRIMARY_VERSION, header, 6, 2);
         Util.intToBytesN(RECORD_SECONDARY_VERSION, header, 8, 2);
-
-        header[10] = (byte) compression;
         
-        header[11] = (byte) game.getEntireGame().getTotalFrames();  // todo
-        header[12] = (byte) game.getEntireGame().getP1Wins();
-        header[13] = (byte) game.getEntireGame().getP2Wins();
+        header[10] = (byte) game.getGameValues().rule.ordinal();
+        header[11] = (byte) game.getGameValues().table.getOrdinal();
+        header[12] = (byte) game.getGameValues().table.getHoleSizeOrdinal();
+        header[13] = (byte) game.getGameValues().ball.ordinal();
+        
+        header[20] = (byte) game.getEntireGame().getTotalFrames();  // todo
+        header[21] = (byte) game.getEntireGame().getP1Wins();
+        header[22] = (byte) game.getEntireGame().getP2Wins();
 
-        Util.longToBytes(game.getEntireGame().getBeginTime(), header, 14);
+        Util.longToBytes(game.getEntireGame().getBeginTime(), header, 24);
         recordBeginTime = game.frameStartTime;
-        Util.longToBytes(recordBeginTime, header, 22);
+        Util.longToBytes(recordBeginTime, header, 32);
         
         /*
         header:
         Part             Index  Length  Comment
         Signature        0      4       TSR_
         RecordType       4      1
-        GameType         5      1
+        Compression      5      1
         PrimaryVersion   6      2
         SecondaryVersion 8      2
-        Compression      10     1
-        TotalFrames      11     1
-        P1Wins           12     1       都不包含当前这一局
-        P2Wins           13     1
-        GameBeginTime    14     8       整场比赛开始时间
-        FrameBeginTime   22     8       单局开始时间
-        DurationMs       30     4       关闭stream时写入
-        nCues            34     4       关闭stream时写入
-        winnerNumber     38     1       胜者是1还是2,关闭时写入
+        GameRule         10     1
+        TableTypeIndex   11     1      
+        HoleSizeIndex    12     1
+        BallTypeIndex    13     1
+        Reserved
+        TotalFrames      20     1
+        P1Wins           21     1       都不包含当前这一局
+        P2Wins           22     1
+        GameBeginTime    24     8       整场比赛开始时间
+        FrameBeginTime   32     8       单局开始时间
+        DurationMs       40     4       关闭stream时写入
+        nCues            44     4       关闭stream时写入
+        winnerNumber     48     1       胜者是1还是2,关闭时写入
          */
 
         wrapperStream.write(header);
@@ -257,7 +264,7 @@ public abstract class GameRecorder {
                 long duration = System.currentTimeMillis() - recordBeginTime;
                 byte[] buffer4 = new byte[4];
                 
-                raf.seek(30);
+                raf.seek(40);
                 Util.int32ToBytes((int) duration, buffer4, 0);
                 raf.write(buffer4);
                 

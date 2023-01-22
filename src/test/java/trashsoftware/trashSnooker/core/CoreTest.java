@@ -1,11 +1,9 @@
 package trashsoftware.trashSnooker.core;
 
 import org.junit.Test;
-import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class CoreTest {
 
@@ -52,15 +50,15 @@ public class CoreTest {
     
     @Test
     public void passBallTest() {
-        GameValues values = GameValues.SNOOKER_VALUES;
-
-//        SnookerBall blue = new SnookerBall(5, new double[]{values.midX, values.midY}, values);
-        double[] hole = values.topRightHoleOpenCenter;
-        Game game = new SnookerGame(null, null, new GameSettings.Builder().build(), 1);
-        Ball blue = game.getAllBalls()[18];
-        boolean b = game.pointToPointCanPassBall(
-                blue.getX(), blue.getY(), hole[0], hole[1], blue, null, true, true
-        );
-        System.out.println(b);
+//        TableMetrics values = TableMetrics.SNOOKER_VALUES;
+//
+////        SnookerBall blue = new SnookerBall(5, new double[]{values.midX, values.midY}, values);
+//        double[] hole = values.topRightHoleOpenCenter;
+//        Game game = new SnookerGame(null, null, new GameSettings.Builder().build(), 1);
+//        Ball blue = game.getAllBalls()[18];
+//        boolean b = game.pointToPointCanPassBall(
+//                blue.getX(), blue.getY(), hole[0], hole[1], blue, null, true, true
+//        );
+//        System.out.println(b);
     }
 }

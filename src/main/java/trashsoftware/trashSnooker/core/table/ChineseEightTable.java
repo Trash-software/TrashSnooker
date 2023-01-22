@@ -3,7 +3,7 @@ package trashsoftware.trashSnooker.core.table;
 import javafx.scene.canvas.GraphicsContext;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.GameHolder;
-import trashsoftware.trashSnooker.core.GameValues;
+import trashsoftware.trashSnooker.core.TableMetrics;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.fxml.GameView;
@@ -13,8 +13,8 @@ import java.util.List;
 
 public class ChineseEightTable extends NumberedBallTable {
 
-    protected ChineseEightTable() {
-        super(GameValues.CHINESE_EIGHT_VALUES);
+    public ChineseEightTable(TableMetrics tableMetrics) {
+        super(tableMetrics);
     }
 
     @Override
@@ -24,9 +24,9 @@ public class ChineseEightTable extends NumberedBallTable {
         graphicsContext.setStroke(GameView.WHITE);
         graphicsContext.strokeLine(
                 breakLineX,
-                view.canvasY(gameValues.topY),
+                view.canvasY(tableMetrics.topY),
                 breakLineX,
-                view.canvasY(gameValues.topY + gameValues.innerHeight));
+                view.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
     }
     
     public static List<PoolBall> filterRemainingTargetOfPlayer(

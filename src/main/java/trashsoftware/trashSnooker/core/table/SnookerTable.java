@@ -1,16 +1,16 @@
 package trashsoftware.trashSnooker.core.table;
 
-import trashsoftware.trashSnooker.core.GameValues;
+import trashsoftware.trashSnooker.core.TableMetrics;
 
 public class SnookerTable extends AbstractSnookerTable {
 
-    SnookerTable() {
-        super(GameValues.SNOOKER_VALUES);
+    public SnookerTable(TableMetrics tableMetrics) {
+        super(tableMetrics);
     }
 
     @Override
     public double breakLineX() {
-        return gameValues.leftX + 737.0;
+        return tableMetrics.leftX + 737.0;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class SnookerTable extends AbstractSnookerTable {
 
     @Override
     public double[] blackBallPos() {
-        return new double[]{gameValues.rightX - 324.0, gameValues.midY};
+        return new double[]{tableMetrics.rightX - 324.0, tableMetrics.midY};
     }
 
     @Override

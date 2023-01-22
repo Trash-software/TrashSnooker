@@ -44,7 +44,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     
     private DefenseChoice centerBreak() {
         double dirX = game.getTable().breakPointX() - game.getCueBall().getX();
-        double dirY = game.getGameValues().midY - game.getCueBall().getY();
+        double dirY = game.getGameValues().table.midY - game.getCueBall().getY();
         double[] unitXY = Algebra.unitVector(dirX, dirY);
         double selectedPower = aiPlayer.getPlayerPerson().getMaxPowerPercentage();
         CuePlayParams cpp = CuePlayParams.makeIdealParams(
@@ -72,7 +72,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     private double ballAlivePrice(Ball ball) {
         List<double[][]> dirHolePoints = game.directionsToAccessibleHoles(ball);
         double price = 0.0;
-        final double diameter = game.getGameValues().ballDiameter;
+        final double diameter = game.getGameValues().ball.ballDiameter;
         OUT_LOOP:
         for (double[][] dirHolePoint : dirHolePoints) {
             for (Ball other : game.getAllBalls()) {
@@ -86,7 +86,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
             }
             double potDifficulty = AiCue.AttackChoice.holeDifficulty(
                     game,
-                    dirHolePoint[1][0] == game.getGameValues().midX,
+                    dirHolePoint[1][0] == game.getGameValues().table.midX,
                     dirHolePoint[0]
             ) * Math.hypot(ball.getX() - dirHolePoint[1][0], ball.getY() - dirHolePoint[1][1]);
             price += 10000.0 / potDifficulty;

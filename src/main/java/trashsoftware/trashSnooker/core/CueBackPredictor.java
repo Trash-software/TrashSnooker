@@ -45,8 +45,8 @@ public class CueBackPredictor {
             if (res != null) return res;
             
             if (predictor.willPot(phy)) {
-                return new Result(predictor.distance + game.gameValues.midHoleDiameter,
-                        game.gameValues.cushionHeight);
+                return new Result(predictor.distance + game.gameValues.table.midHoleDiameter,
+                        game.gameValues.table.cushionHeight);
             }
             
             // 检测袋口区域
@@ -56,12 +56,12 @@ public class CueBackPredictor {
                 Result res2 = checkBalls(predictor);
                 if (res2 != null) return res2;
                 if (holeAreaResult == 2) return new Result(predictor.distance, 
-                        game.gameValues.cushionHeight);
+                        game.gameValues.table.cushionHeight);
                 continue;
             }
             // 检测裤边
             if (predictor.hitWall()) {
-                return new Result(predictor.distance, game.gameValues.cushionHeight);
+                return new Result(predictor.distance, game.gameValues.table.cushionHeight);
             }
             
             predictor.normalMove(phy);
@@ -70,13 +70,13 @@ public class CueBackPredictor {
     }
     
     private Result checkBalls(CueBackPredictObject predictor) {
-        double threshold = cueRadius + game.gameValues.ballRadius;
+        double threshold = cueRadius + game.gameValues.ball.ballRadius;
         for (Ball ball : game.getAllBalls()) {
             if (!ball.isPotted() && !ball.isWhite()) {
                 if (Algebra.distanceToPoint(predictor.x, predictor.y, 
                         ball.x, ball.y) < threshold) {
-                    return new Result(predictor.distance + game.gameValues.ballRadius,
-                            game.gameValues.ballDiameter, ball);
+                    return new Result(predictor.distance + game.gameValues.ball.ballRadius,
+                            game.gameValues.ball.ballDiameter, ball);
                 }
             }
         }

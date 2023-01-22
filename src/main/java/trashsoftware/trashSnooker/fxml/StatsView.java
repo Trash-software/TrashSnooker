@@ -10,7 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import trashsoftware.trashSnooker.core.GameType;
+import trashsoftware.trashSnooker.core.GameRule;
 import trashsoftware.trashSnooker.fxml.widgets.MatchRecordPage;
 import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
@@ -55,9 +55,9 @@ public class StatsView implements Initializable {
         
         TreeItem<RecordTree> matchesRoot = new TreeItem<>(new RecordTree("比赛"));
         
-        for (GameType gameType : GameType.values()) {
-            List<EntireGameTitle> matchesOfType = db.getAllMatches(gameType);
-            TreeItem<RecordTree> typeRoot = new TreeItem<>(new AllMatchesTree(gameType));
+        for (GameRule gameRule : GameRule.values()) {
+            List<EntireGameTitle> matchesOfType = db.getAllMatches(gameRule);
+            TreeItem<RecordTree> typeRoot = new TreeItem<>(new AllMatchesTree(gameRule));
             
             for (EntireGameTitle egt : matchesOfType) {
                 MatchRecord mr = new MatchRecord(egt);
@@ -91,10 +91,10 @@ public class StatsView implements Initializable {
 
         private static ObservableList<TreeItem<RecordTree>> buildChildren(PlayerAi playerAi) {
             ObservableList<TreeItem<RecordTree>> children = FXCollections.observableArrayList();
-            for (GameType gameType : GameType.values()) {
-                TreeItem<RecordTree> typeItem = new TreeItem<>(new GameTypeTree(playerAi, gameType));
-                typeItem.getChildren().add(new RecordSorting(gameType, playerAi, "time"));
-                typeItem.getChildren().add(new RecordSorting(gameType, playerAi, "opponent"));
+            for (GameRule gameRule : GameRule.values()) {
+                TreeItem<RecordTree> typeItem = new TreeItem<>(new GameTypeTree(playerAi, gameRule));
+                typeItem.getChildren().add(new RecordSorting(gameRule, playerAi, "time"));
+                typeItem.getChildren().add(new RecordSorting(gameRule, playerAi, "opponent"));
                 children.add(typeItem);
             }
             return children;
@@ -122,12 +122,12 @@ public class StatsView implements Initializable {
 
     public static class GameTypeTree extends RecordTree {
         private final PlayerAi pai;
-        private final GameType gameType;
+        private final GameRule gameRule;
 
-        GameTypeTree(PlayerAi pai, GameType gameType) {
-            super(GameType.toReadable(gameType));
+        GameTypeTree(PlayerAi pai, GameRule gameRule) {
+            super(GameRule.toReadable(gameRule));
             this.pai = pai;
-            this.gameType = gameType;
+            this.gameRule = gameRule;
         }
 
         @Override
@@ -140,7 +140,7 @@ public class StatsView implements Initializable {
             resultPane.setAlignment(Pos.CENTER);
 
             DBAccess db = DBAccess.getInstance();
-            int[] potRecords = db.getBasicPotStatusAll(gameType, pai.playerName, pai.isAi);
+            int[] potRecords = db.getBasicPotStatusAll(gameRule, pai.playerName, pai.isAi);
 
             int rowIndex = 0;
 
@@ -213,8 +213,8 @@ public class StatsView implements Initializable {
                             String.format("%.1f%%",
                                     solveSuccesses * 100.0 / solves)), 2, rowIndex++);
 
-            if (gameType.snookerLike) {
-                int[] breaksScores = db.getSnookerBreaksTotal(gameType, pai.playerName, pai.isAi);
+            if (gameRule.snookerLike) {
+                int[] breaksScores = db.getSnookerBreaksTotal(gameRule, pai.playerName, pai.isAi);
                 resultPane.add(new Label("总得分"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
                 resultPane.add(new Label("最高单杆"), 0, rowIndex);
@@ -225,8 +225,8 @@ public class StatsView implements Initializable {
                 resultPane.add(new Label(String.valueOf(breaksScores[3])), 1, rowIndex++);
                 resultPane.add(new Label("单杆147"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
-            } else if (gameType == GameType.CHINESE_EIGHT || gameType == GameType.SIDE_POCKET) {
-                int[] breaksScores = db.getNumberedBallGamesTotal(gameType, pai.playerName, pai.isAi);
+            } else if (gameRule == GameRule.CHINESE_EIGHT || gameRule == GameRule.SIDE_POCKET) {
+                int[] breaksScores = db.getNumberedBallGamesTotal(gameRule, pai.playerName, pai.isAi);
                 resultPane.add(new Label("开球次数"), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
                 resultPane.add(new Label("开球进球次数"), 0, rowIndex);
@@ -262,7 +262,7 @@ public class StatsView implements Initializable {
                                    final Button button, final int startRowIndex) {
             long st = System.currentTimeMillis();
             List<EntireGameTitle> allMatches =
-                    DBAccess.getInstance().getAllPveMatches(gameType, pai.playerName, pai.isAi);
+                    DBAccess.getInstance().getAllPveMatches(gameRule, pai.playerName, pai.isAi);
             List<EntireGameRecord> entireRecords = new ArrayList<>();
             for (EntireGameTitle egt : allMatches) {
                 entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));
@@ -371,8 +371,8 @@ public class StatsView implements Initializable {
     
     public static class AllMatchesTree extends RecordTree {
 
-        AllMatchesTree(GameType gameType) {
-            super(GameType.toReadable(gameType));
+        AllMatchesTree(GameRule gameRule) {
+            super(GameRule.toReadable(gameRule));
         }
 
         @Override
@@ -410,17 +410,17 @@ public class StatsView implements Initializable {
                 gridPane.setHgap(20.0);
                 gridPane.setAlignment(Pos.CENTER);
 
-                appendToPane(GameType.SNOOKER, gridPane);
-                appendToPane(GameType.MINI_SNOOKER, gridPane);
-                appendToPane(GameType.CHINESE_EIGHT, gridPane);
-                appendToPane(GameType.SIDE_POCKET, gridPane);
+                appendToPane(GameRule.SNOOKER, gridPane);
+                appendToPane(GameRule.MINI_SNOOKER, gridPane);
+                appendToPane(GameRule.CHINESE_EIGHT, gridPane);
+                appendToPane(GameRule.SIDE_POCKET, gridPane);
 
                 rightPane.getChildren().add(gridPane);
             }
         }
 
-        private void appendToPane(GameType gameType, GridPane gridPane) {
-            List<EntireGameTitle> egtList = DBAccess.getInstance().getAllPveMatches(gameType);
+        private void appendToPane(GameRule gameRule, GridPane gridPane) {
+            List<EntireGameTitle> egtList = DBAccess.getInstance().getAllPveMatches(gameRule);
             List<EntireGameRecord> entireRecords = new ArrayList<>();
             for (EntireGameTitle egt : egtList) {
                 entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));
@@ -459,7 +459,7 @@ public class StatsView implements Initializable {
 
 
             int rowIndex = gridPane.getRowCount();
-            gridPane.add(new Label(GameType.toReadable(gameType)), 2, rowIndex++);
+            gridPane.add(new Label(GameRule.toReadable(gameRule)), 2, rowIndex++);
 
             String thisShown = isAi ? "电脑" : "玩家";
             String oppoShown = isAi ? "玩家" : "电脑";
@@ -511,22 +511,22 @@ public class StatsView implements Initializable {
     public static class RecordSorting extends TreeItem<RecordTree> {
         private final String shown;
         private final PlayerAi playerAi;
-        private final GameType gameType;
+        private final GameRule gameRule;
         private boolean firstTimeChildren = true;
 
-        RecordSorting(GameType gameType, PlayerAi playerAi, String shown) {
+        RecordSorting(GameRule gameRule, PlayerAi playerAi, String shown) {
             this.shown = shown;
             this.playerAi = playerAi;
-            this.gameType = gameType;
+            this.gameRule = gameRule;
 
             setValue(new RecordTree(getShowingStr()));
         }
 
         private static ObservableList<TreeItem<RecordTree>> buildChildren(
-                GameType gameType, PlayerAi playerAi, String type) {
+                GameRule gameRule, PlayerAi playerAi, String type) {
             ObservableList<TreeItem<RecordTree>> children = FXCollections.observableArrayList();
             DBAccess dbAccess = DBAccess.getInstance();
-            List<EntireGameTitle> gameRecords = dbAccess.getAllPveMatches(gameType, playerAi.playerName, playerAi.isAi);
+            List<EntireGameTitle> gameRecords = dbAccess.getAllPveMatches(gameRule, playerAi.playerName, playerAi.isAi);
             if ("time".equals(type)) {
                 // 按照比赛
                 for (EntireGameTitle egt : gameRecords) {
@@ -561,7 +561,7 @@ public class StatsView implements Initializable {
         public ObservableList<TreeItem<RecordTree>> getChildren() {
             if (firstTimeChildren) {
                 firstTimeChildren = false;
-                super.getChildren().setAll(buildChildren(gameType, playerAi, shown));
+                super.getChildren().setAll(buildChildren(gameRule, playerAi, shown));
             }
             return super.getChildren();
         }
@@ -872,7 +872,7 @@ public class StatsView implements Initializable {
                     5, rowIndex);
             rowIndex++;
 
-            if (egt.gameType.snookerLike) {
+            if (egt.gameRule.snookerLike) {
                 int[][] totalSnookerScores = ((EntireGameRecord.Snooker) matchRec).totalScores();
                 page.add(new Label("总得分"), 0, rowIndex);
                 page.add(new Label(String.valueOf(totalSnookerScores[0][0])), 1, rowIndex);
@@ -898,8 +898,8 @@ public class StatsView implements Initializable {
                 page.add(new Label(String.valueOf(totalSnookerScores[0][4])), 1, rowIndex);
                 page.add(new Label(String.valueOf(totalSnookerScores[1][4])), 5, rowIndex);
                 rowIndex++;
-            } else if (egt.gameType == GameType.CHINESE_EIGHT ||
-                    egt.gameType == GameType.SIDE_POCKET) {
+            } else if (egt.gameRule == GameRule.CHINESE_EIGHT ||
+                    egt.gameRule == GameRule.SIDE_POCKET) {
                 int[][] numberedBreaks = ((EntireGameRecord.NumberedBall) matchRec).totalScores();
                 page.add(new Label("开球次数"), 0, rowIndex);
                 page.add(new Label(String.valueOf(numberedBreaks[0][0])), 1, rowIndex);
@@ -950,7 +950,7 @@ public class StatsView implements Initializable {
 
                 Label p1ScoreLabel = new Label();
                 Label p2ScoreLabel = new Label();
-                if (egt.gameType.snookerLike) {
+                if (egt.gameRule.snookerLike) {
                     PlayerFrameRecord.Snooker p1sr = (PlayerFrameRecord.Snooker) p1r;
                     PlayerFrameRecord.Snooker p2sr = (PlayerFrameRecord.Snooker) p2r;
                     p1ScoreLabel.setText(String.valueOf(p1sr.snookerScores[0]));
@@ -967,7 +967,7 @@ public class StatsView implements Initializable {
                     }
                 }
                 
-                if (egt.gameType == GameType.CHINESE_EIGHT) {
+                if (egt.gameRule == GameRule.CHINESE_EIGHT) {
                     // todo: 炸清，接清
                 }
 

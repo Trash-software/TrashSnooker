@@ -2,17 +2,16 @@ package trashsoftware.trashSnooker.core.table;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.ArcType;
-import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.Game;
-import trashsoftware.trashSnooker.core.GameValues;
+import trashsoftware.trashSnooker.core.TableMetrics;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public abstract class AbstractSnookerTable extends Table {
     
     public final double[][] pointsRankHighToLow = new double[6][];
     
-    public AbstractSnookerTable(GameValues gameValues) {
-        super(gameValues);
+    public AbstractSnookerTable(TableMetrics tableMetrics) {
+        super(tableMetrics);
 
         pointsRankHighToLow[0] = blackBallPos();
         pointsRankHighToLow[1] = pinkBallPos();
@@ -29,15 +28,15 @@ public abstract class AbstractSnookerTable extends Table {
         graphicsContext.setStroke(GameView.WHITE);
         graphicsContext.strokeLine(
                 breakLineX,
-                view.canvasY(gameValues.topY),
+                view.canvasY(tableMetrics.topY),
                 breakLineX,
-                view.canvasY(gameValues.topY + gameValues.innerHeight));
+                view.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
 
         // 开球半圆
         double breakArcRadius = breakArcRadius() * scale;
         graphicsContext.strokeArc(
                 breakLineX - breakArcRadius,
-                view.canvasY(gameValues.midY) - breakArcRadius,
+                view.canvasY(tableMetrics.midY) - breakArcRadius,
                 breakArcRadius * 2,
                 breakArcRadius * 2,
                 90.0,
@@ -79,28 +78,24 @@ public abstract class AbstractSnookerTable extends Table {
     
     public abstract double breakArcRadius();
 
-    public double firstRedX() {
-        return pinkBallPos()[0] + gameValues.ballDiameter + Game.MIN_GAP_DISTANCE;  // 粉球与红球堆空隙
-    }
-
     public double[] yellowBallPos() {
-        return new double[]{breakLineX(), gameValues.midY + breakArcRadius()};
+        return new double[]{breakLineX(), tableMetrics.midY + breakArcRadius()};
     }
 
     public double[] greenBallPos() {
-        return new double[]{breakLineX(), gameValues.midY - breakArcRadius()};
+        return new double[]{breakLineX(), tableMetrics.midY - breakArcRadius()};
     }
 
     public double[] brownBallPos() {
-        return new double[]{breakLineX(), gameValues.midY};
+        return new double[]{breakLineX(), tableMetrics.midY};
     }
 
     public double[] blueBallPos() {
-        return new double[]{gameValues.midX, gameValues.midY};
+        return new double[]{tableMetrics.midX, tableMetrics.midY};
     }
 
     public double[] pinkBallPos() {
-        return new double[]{(blackBallPos()[0] + blueBallPos()[0]) / 2, gameValues.midY};
+        return new double[]{(blackBallPos()[0] + blueBallPos()[0]) / 2, tableMetrics.midY};
     }
 
     public abstract double[] blackBallPos();

@@ -3,7 +3,8 @@ package trashsoftware.trashSnooker.core;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 public abstract class ObjectOnTable {
-    protected final GameValues values;
+    protected final GameValues gameValues;
+    protected final TableMetrics table;
     protected final double radius;
     protected double distance;
     protected double x, y;
@@ -11,7 +12,8 @@ public abstract class ObjectOnTable {
     protected double vx, vy;  // unit: mm/(sec/frameRate)
 
     public ObjectOnTable(GameValues gameValues, double radius) {
-        this.values = gameValues;
+        this.gameValues = gameValues;
+        this.table = gameValues.table;
         this.radius = radius;
     }
 
@@ -96,13 +98,23 @@ public abstract class ObjectOnTable {
     }
     
     protected boolean willPot(Phy phy) {
-        double midHoleFactor = midHolePowerFactor(phy);
-        return predictedDtToPoint(values.topLeftHoleXY) < values.cornerHoleRadius ||
-                predictedDtToPoint(values.botLeftHoleXY) < values.cornerHoleRadius ||
-                predictedDtToPoint(values.topRightHoleXY) < values.cornerHoleRadius ||
-                predictedDtToPoint(values.botRightHoleXY) < values.cornerHoleRadius ||
-                predictedDtToPoint(values.topMidHoleXY) < values.midHoleRadius * midHoleFactor ||
-                predictedDtToPoint(values.botMidHoleXY) < values.midHoleRadius * midHoleFactor;
+//        double midHoleFactor = midHolePowerFactor(phy);
+//        return predictedDtToPoint(table.topLeftHoleXY) < table.cornerHoleRadius ||
+//                predictedDtToPoint(table.botLeftHoleXY) < table.cornerHoleRadius ||
+//                predictedDtToPoint(table.topRightHoleXY) < table.cornerHoleRadius ||
+//                predictedDtToPoint(table.botRightHoleXY) < table.cornerHoleRadius ||
+//                predictedDtToPoint(table.topMidHoleXY) < table.midHoleRadius * midHoleFactor ||
+//                predictedDtToPoint(table.botMidHoleXY) < table.midHoleRadius * midHoleFactor;
+
+        double cornerRoom = table.cornerHoleRadius - gameValues.ball.ballRadius;
+        double midRoom = table.midHoleRadius - gameValues.ball.ballRadius;
+        
+        return predictedDtToPoint(table.topLeftHoleXY) < cornerRoom ||
+                predictedDtToPoint(table.botLeftHoleXY) < cornerRoom ||
+                predictedDtToPoint(table.topRightHoleXY) < cornerRoom ||
+                predictedDtToPoint(table.botRightHoleXY) < cornerRoom ||
+                predictedDtToPoint(table.topMidHoleXY) < midRoom ||
+                predictedDtToPoint(table.botMidHoleXY) < midRoom;
     }
 
     protected double[] hitHoleArcArea(double[] arcXY, Phy phy) {
@@ -120,27 +132,55 @@ public abstract class ObjectOnTable {
         vx = -reflect[0];
         vy = -reflect[1];
     }
+    
+    protected void tryEnterGravityArea(Phy phy, double[] holeXy, boolean isMidHole) {
+        double xDiff = holeXy[0] - nextX;
+        double yDiff = holeXy[1] - nextY;
+        double dt = Math.hypot(xDiff, yDiff);
+        
+        double holeRadius = isMidHole ? table.midHoleRadius : table.cornerHoleRadius;
+        double holeAndSlopeRadius = holeRadius + table.holeExtraSlopeWidth;
+        
+        if (dt < holeAndSlopeRadius) {
+            // dt应该不会小于 holeRadius - ballRadius 太多
+            double accMag;
+            if (dt < holeRadius) {
+                accMag = 1;
+            } else {
+                accMag = (table.holeExtraSlopeWidth - dt + holeRadius) / table.holeExtraSlopeWidth;
+            }
+            
+            accMag *= 3600;
+            accMag /= phy.calculationsPerSecSqr;
+            
+            double[] accVec = Algebra.unitVector(xDiff, yDiff);
+            accVec[0] *= accMag;
+            accVec[1] *= accMag;
+            
+            vx += accVec[0];
+            vy += accVec[1];
+        }
+    }
 
     /**
      * 检测是否撞击袋角或进入袋角区域。如果撞击袋角，返回{@code 2}且处理撞击。如果进入袋角区域但未发生撞击，返回{@code 1}。如未进入，返回{@code 0}
      */
     protected int tryHitHoleArea(Phy phy) {
-        boolean enteredCorner = false;
-        if (nextY < radius + values.topY) {
-            if (nextX < values.midHoleAreaRightX && nextX >= values.midHoleAreaLeftX) {
+        if (nextY < radius + table.topY) {
+            if (nextX < table.midHoleAreaRightX && nextX >= table.midHoleAreaLeftX) {
                 // 上方中袋在袋角范围内
-                if (predictedDtToPoint(values.topMidHoleLeftArcXy) < values.midArcRadius + radius &&
-                        currentDtToPoint(values.topMidHoleLeftArcXy) >= values.midArcRadius + radius) {
+                if (predictedDtToPoint(table.topMidHoleLeftArcXy) < table.midArcRadius + radius &&
+                        currentDtToPoint(table.topMidHoleLeftArcXy) >= table.midArcRadius + radius) {
                     // 击中上方中袋左侧
-                    hitHoleArcArea(values.topMidHoleLeftArcXy, phy);
-                } else if (predictedDtToPoint(values.topMidHoleRightArcXy) < values.midArcRadius + radius &&
-                        currentDtToPoint(values.topMidHoleRightArcXy) >= values.midArcRadius + radius) {
+                    hitHoleArcArea(table.topMidHoleLeftArcXy, phy);
+                } else if (predictedDtToPoint(table.topMidHoleRightArcXy) < table.midArcRadius + radius &&
+                        currentDtToPoint(table.topMidHoleRightArcXy) >= table.midArcRadius + radius) {
                     // 击中上方中袋右侧
-                    hitHoleArcArea(values.topMidHoleRightArcXy, phy);
-                } else if (values.isStraightHole() &&
-                        nextX >= values.midHoleLineLeftX && nextX < values.midHoleLineRightX) {
+                    hitHoleArcArea(table.topMidHoleRightArcXy, phy);
+                } else if (table.isStraightHole() &&
+                        nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
                     // 疑似上方中袋直线
-                    double[][] line = values.topMidHoleLeftLine;
+                    double[][] line = table.topMidHoleLeftLine;
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
@@ -148,7 +188,7 @@ public abstract class ObjectOnTable {
                                 phy);
                         return 2;
                     }
-                    line = values.topMidHoleRightLine;
+                    line = table.topMidHoleRightLine;
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
@@ -156,31 +196,35 @@ public abstract class ObjectOnTable {
                                 phy);
                         return 2;
                     }
+                    
+                    tryEnterGravityArea(phy, table.topMidHoleXY, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
                 } else {
+
+                    tryEnterGravityArea(phy, table.topMidHoleXY, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
                 }
                 return 2;
             }
-        } else if (nextY >= values.botY - radius) {
-            if (nextX < values.midHoleAreaRightX && nextX >= values.midHoleAreaLeftX) {
+        } else if (nextY >= table.botY - radius) {
+            if (nextX < table.midHoleAreaRightX && nextX >= table.midHoleAreaLeftX) {
                 // 下方中袋袋角范围内
-                if (predictedDtToPoint(values.botMidHoleLeftArcXy) < values.midArcRadius + radius &&
-                        currentDtToPoint(values.botMidHoleLeftArcXy) >= values.midArcRadius + radius) {
+                if (predictedDtToPoint(table.botMidHoleLeftArcXy) < table.midArcRadius + radius &&
+                        currentDtToPoint(table.botMidHoleLeftArcXy) >= table.midArcRadius + radius) {
                     // 击中下方中袋左侧
-                    hitHoleArcArea(values.botMidHoleLeftArcXy, phy);
-                } else if (predictedDtToPoint(values.botMidHoleRightArcXy) < values.midArcRadius + radius &&
-                        currentDtToPoint(values.botMidHoleRightArcXy) >= values.midArcRadius + radius) {
+                    hitHoleArcArea(table.botMidHoleLeftArcXy, phy);
+                } else if (predictedDtToPoint(table.botMidHoleRightArcXy) < table.midArcRadius + radius &&
+                        currentDtToPoint(table.botMidHoleRightArcXy) >= table.midArcRadius + radius) {
                     // 击中下方中袋右侧
-                    hitHoleArcArea(values.botMidHoleRightArcXy, phy);
-                } else if (values.isStraightHole() &&
-                        nextX >= values.midHoleLineLeftX && nextX < values.midHoleLineRightX) {
+                    hitHoleArcArea(table.botMidHoleRightArcXy, phy);
+                } else if (table.isStraightHole() &&
+                        nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
                     // 疑似下方中袋直线
-                    double[][] line = values.botMidHoleLeftLine;
+                    double[][] line = table.botMidHoleLeftLine;
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
@@ -188,7 +232,7 @@ public abstract class ObjectOnTable {
                                 phy);
                         return 2;
                     }
-                    line = values.botMidHoleRightLine;
+                    line = table.botMidHoleRightLine;
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
@@ -196,10 +240,14 @@ public abstract class ObjectOnTable {
                                 phy);
                         return 2;
                     }
+
+                    tryEnterGravityArea(phy, table.botMidHoleXY, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
                 } else {
+
+                    tryEnterGravityArea(phy, table.botMidHoleXY, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
@@ -207,17 +255,18 @@ public abstract class ObjectOnTable {
                 return 2;
             }
         }
-        if (nextY < values.topCornerHoleAreaDownY) {
-            if (nextX < values.leftCornerHoleAreaRightX) enteredCorner = true;  // 左上底袋
-            else if (nextX >= values.rightCornerHoleAreaLeftX) enteredCorner = true;  // 右上底袋
-        } else if (nextY >= values.botCornerHoleAreaUpY) {
-            if (nextX < values.leftCornerHoleAreaRightX) enteredCorner = true;  // 左下底袋
-            else if (nextX >= values.rightCornerHoleAreaLeftX) enteredCorner = true;  // 右下底袋
+        double[] probHole = null;
+        if (nextY < table.topCornerHoleAreaDownY) {
+            if (nextX < table.leftCornerHoleAreaRightX) probHole = table.topLeftHoleXY;  // 左上底袋
+            else if (nextX >= table.rightCornerHoleAreaLeftX) probHole = table.topRightHoleXY;  // 右上底袋
+        } else if (nextY >= table.botCornerHoleAreaUpY) {
+            if (nextX < table.leftCornerHoleAreaRightX) probHole = table.botLeftHoleXY;  // 左下底袋
+            else if (nextX >= table.rightCornerHoleAreaLeftX) probHole = table.botRightHoleXY;  // 右下底袋
         }
 
-        if (enteredCorner) {
-            for (int i = 0; i < values.allCornerLines.length; ++i) {
-                double[][] line = values.allCornerLines[i];
+        if (probHole != null) {
+            for (int i = 0; i < table.allCornerLines.length; ++i) {
+                double[][] line = table.allCornerLines[i];
 
                 if (predictedDtToLine(line) < radius && currentDtToLine(line) >= radius) {
                     hitHoleLineArea(
@@ -226,15 +275,17 @@ public abstract class ObjectOnTable {
                     return 2;
                 }
             }
-            if (!values.isStraightHole()) {
-                for (double[] cornerArc : values.allCornerArcs) {
-                    if (predictedDtToPoint(cornerArc) < values.cornerArcRadius + radius &&
-                            currentDtToPoint(cornerArc) >= values.cornerArcRadius + radius) {
+            if (!table.isStraightHole()) {
+                for (double[] cornerArc : table.allCornerArcs) {
+                    if (predictedDtToPoint(cornerArc) < table.cornerArcRadius + radius &&
+                            currentDtToPoint(cornerArc) >= table.cornerArcRadius + radius) {
                         hitHoleArcArea(cornerArc, phy);
                         return 2;
                     }
                 }
             }
+            
+            tryEnterGravityArea(phy, probHole, false);
             normalMove(phy);
             prepareMove(phy);
             return 1;

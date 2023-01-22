@@ -14,7 +14,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    private static final boolean SAVE = true;
+    private static final boolean SAVE = false;
     private static DBAccess database;
 
     private Connection connection;
@@ -78,8 +78,8 @@ public class DBAccess {
         }
     }
 
-    private String getTypeKey(GameType gameType, String playerName) {
-        return String.format("'%s_%s'", playerName, gameType.toSqlKey());
+    private String getTypeKey(GameRule gameRule, String playerName) {
+        return String.format("'%s_%s'", playerName, gameRule.toSqlKey());
     }
 
     private void storeAttemptsForOnePlayer(EntireGame entireGame, Game frame, Player player) {
@@ -159,22 +159,22 @@ public class DBAccess {
                 frame.getPlayer2());
     }
     
-    public List<EntireGameTitle> getAllMatches(GameType gameType) {
+    public List<EntireGameTitle> getAllMatches(GameRule gameRule) {
         String query = "SELECT * FROM EntireGame;";
-        return getMatchesBy(gameType, query);
+        return getMatchesBy(gameRule, query);
     }
     
-    public List<EntireGameTitle> getAllPveMatches(GameType gameType) {
-        String typeStr = "'" + gameType.toSqlKey() + "'";
+    public List<EntireGameTitle> getAllPveMatches(GameRule gameRule) {
+        String typeStr = "'" + gameRule.toSqlKey() + "'";
         String query = "SELECT * FROM EntireGame " +
                 "WHERE GameType = " + typeStr + " AND " +
                 "((Player1IsAI = 1 AND Player2IsAI = 0) OR (Player1IsAI = 0 AND Player2IsAI = 1))" +
                 "ORDER BY EntireBeginTime;";
-        return getMatchesBy(gameType, query);
+        return getMatchesBy(gameRule, query);
     }
 
-    public List<EntireGameTitle> getAllPveMatches(GameType gameType, String playerName, boolean playerIsAi) {
-        String typeStr = "'" + gameType.toSqlKey() + "'";
+    public List<EntireGameTitle> getAllPveMatches(GameRule gameRule, String playerName, boolean playerIsAi) {
+        String typeStr = "'" + gameRule.toSqlKey() + "'";
         String playerStr = "'" + playerName + "'";
         int aiRep = playerIsAi ? 1 : 0;
         String query = "SELECT * FROM EntireGame " +
@@ -184,10 +184,10 @@ public class DBAccess {
                 ") OR (Player2Name = " + playerStr + " AND " +
                 "Player2IsAI = " + aiRep + "))" +
                 "ORDER BY EntireBeginTime;";
-        return getMatchesBy(gameType, query);
+        return getMatchesBy(gameRule, query);
     }
     
-    private List<EntireGameTitle> getMatchesBy(GameType gameType, String query) {
+    private List<EntireGameTitle> getMatchesBy(GameRule gameRule, String query) {
         List<EntireGameTitle> rtn = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -196,7 +196,7 @@ public class DBAccess {
             while (resultSet.next()) {
                 EntireGameTitle egr = new EntireGameTitle(
                         resultSet.getTimestamp("EntireBeginTime"),
-                        gameType,
+                        gameRule,
                         resultSet.getString("Player1Name"),
                         resultSet.getString("Player2Name"),
                         resultSet.getInt("Player1IsAI") == 1,
@@ -223,10 +223,10 @@ public class DBAccess {
     /**
      * 返回{totalScore, highest, 50+，100+，147}
      */
-    public int[] getSnookerBreaksTotal(GameType gameType, String playerName, boolean playerIsAi) {
+    public int[] getSnookerBreaksTotal(GameRule gameRule, String playerName, boolean playerIsAi) {
         int[] rtn = new int[5];
         String pns = "'" + playerName + "'";
-        String typeKey = "'" + gameType.toSqlKey() + "'";
+        String typeKey = "'" + gameRule.toSqlKey() + "'";
         int aiRep = playerIsAi ? 1 : 0;
         String highestQuery =
                 "SELECT * FROM SnookerRecord " +
@@ -262,11 +262,11 @@ public class DBAccess {
     /**
      * 返回{炸请，接清}
      */
-    public int[] getNumberedBallGamesTotal(GameType gameType, String playerName, boolean playerIsAi) {
+    public int[] getNumberedBallGamesTotal(GameRule gameRule, String playerName, boolean playerIsAi) {
         int[] rtn = new int[5];
         String pns = "'" + playerName + "'";
-        String tableName = gameType.toSqlKey() + "Record";
-        String typeKey = "'" + gameType.toSqlKey() + "'";
+        String tableName = gameRule.toSqlKey() + "Record";
+        String typeKey = "'" + gameRule.toSqlKey() + "'";
         int aiRep = playerIsAi ? 1 : 0;
         String highestQuery =
                 "SELECT * FROM " + tableName + " " +
@@ -298,10 +298,10 @@ public class DBAccess {
     /**
      * 返回{进攻次数，进攻成功次数，长台进攻次数，长台成功次数，防守次数，防守成功次数，走位次数，走位成功次数，架杆进攻次数，架杆进攻成功次数，解球次数，解球成功次数}
      */
-    public int[] getBasicPotStatusAll(GameType gameType, String playerName, boolean isAi) {
+    public int[] getBasicPotStatusAll(GameRule gameRule, String playerName, boolean isAi) {
         int[] array = new int[12];
         String pns = "'" + playerName + "'";
-        String typeKey = "'" + gameType.toSqlKey() + "'";
+        String typeKey = "'" + gameRule.toSqlKey() + "'";
         int aiRep = isAi ? 1 : 0;
         String cmd =
                 "SELECT * FROM GeneralRecord " +
@@ -376,7 +376,7 @@ public class DBAccess {
             }
             general.close();
 
-            if (title.gameType.snookerLike) {
+            if (title.gameRule.snookerLike) {
                 String snookerQuery = "SELECT * FROM SnookerRecord " +
                         "WHERE EntireBeginTime = " + Util.timeStampFmt(title.startTime) +
                         ";";
@@ -408,9 +408,9 @@ public class DBAccess {
                 sn.close();
 
                 return new EntireGameRecord.Snooker(title, records, durations);
-            } else if (title.gameType == GameType.CHINESE_EIGHT ||
-                    title.gameType == GameType.SIDE_POCKET) {
-                String tableName = title.gameType.toSqlKey() + "Record";
+            } else if (title.gameRule == GameRule.CHINESE_EIGHT ||
+                    title.gameRule == GameRule.SIDE_POCKET) {
+                String tableName = title.gameRule.toSqlKey() + "Record";
                 String numQuery = "SELECT * FROM " + tableName + " " +
                         "WHERE EntireBeginTime = " + Util.timeStampFmt(title.startTime) +
                         ";";
@@ -436,7 +436,7 @@ public class DBAccess {
                 }
                 numStatement.close();
 
-                if (title.gameType == GameType.CHINESE_EIGHT) {
+                if (title.gameRule == GameRule.CHINESE_EIGHT) {
                     return new EntireGameRecord.ChineseEight(title, records, durations);
                 } else {
                     return new EntireGameRecord.SidePocket(title, records, durations);
@@ -470,7 +470,7 @@ public class DBAccess {
     public void recordNumberedBallResult(EntireGame entireGame, Game frame,
                                          NumberedBallPlayer player, boolean wins,
                                          List<Integer> continuousPots) {
-        String tableName = entireGame.gameType.toSqlKey() + "Record";
+        String tableName = entireGame.gameValues.rule.toSqlKey() + "Record";
         int playTimes = player.getPlayTimes();
         boolean breaks = player.isBreakingPlayer();
         boolean breakPot = player.isBreakSuccess();
@@ -604,7 +604,7 @@ public class DBAccess {
     }
 
     public void recordAnEntireGameStarts(EntireGame entireGame) {
-        String typeStr = "'" + entireGame.gameType.toSqlKey() + "'";
+        String typeStr = "'" + entireGame.gameValues.rule.toSqlKey() + "'";
         int p1t = entireGame.getPlayer1().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
         int p2t = entireGame.getPlayer2().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
         String command =

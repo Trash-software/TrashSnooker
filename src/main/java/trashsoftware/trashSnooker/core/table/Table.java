@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.GameValues;
+import trashsoftware.trashSnooker.core.TableMetrics;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.fxml.GameView;
 
@@ -12,10 +12,10 @@ import java.util.HashMap;
 
 public abstract class Table {
 
-    protected GameValues gameValues;
+    protected TableMetrics tableMetrics;
 
-    protected Table(GameValues gameValues) {
-        this.gameValues = gameValues;
+    protected Table(TableMetrics tableMetrics) {
+        this.tableMetrics = tableMetrics;
     }
 
     public static void drawBallBase(double canvasX,

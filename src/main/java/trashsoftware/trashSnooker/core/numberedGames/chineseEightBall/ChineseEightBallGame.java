@@ -34,15 +34,15 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     private ChineseEightScoreResult curResult;
 
     public ChineseEightBallGame(GameView parent, EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
-        super(parent, entireGame, gameSettings, GameValues.CHINESE_EIGHT_VALUES, frameIndex);
+        super(parent, entireGame, gameSettings, new ChineseEightTable(entireGame.gameValues.table), frameIndex);
 
         eightBall = new PoolBall(8, false, gameValues);
         initBalls();
     }
 
     @Override
-    public GameType getGameType() {
-        return GameType.CHINESE_EIGHT;
+    public GameRule getGameType() {
+        return GameRule.CHINESE_EIGHT;
     }
 
     @Override
@@ -74,8 +74,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         Collections.shuffle(halfBalls);
 
         double curX = getTable().breakPointX();
-        double rowStartY = gameValues.midY;
-        double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0))
+        double rowStartY = gameValues.table.midY;
+        double rowOccupyX = gameValues.ball.ballDiameter * Math.sin(Math.toRadians(60.0))
                 + Game.MIN_PLACE_DISTANCE * 0.6;
         int ballCountInRow = 1;
         int index = 0;
@@ -96,10 +96,10 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                     ball.setY(y);
                 }
                 index++;
-                y += gameValues.ballDiameter + Game.MIN_PLACE_DISTANCE;
+                y += gameValues.ball.ballDiameter + Game.MIN_PLACE_DISTANCE;
             }
             ballCountInRow++;
-            rowStartY -= gameValues.ballRadius + Game.MIN_PLACE_DISTANCE;
+            rowStartY -= gameValues.ball.ballRadius + Game.MIN_PLACE_DISTANCE;
             curX += rowOccupyX;
         }
     }
@@ -204,7 +204,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     public ChineseEightTable getTable() {
-        return Tables.CHINESE_EIGHT_TABLE;
+        return (ChineseEightTable) super.getTable();
     }
 
     @Override
@@ -342,8 +342,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
     
     private void pickupBlackBall() {
-        double y = gameValues.midY;
-        for (double x = eightBallPosX; x < gameValues.rightX - gameValues.ballRadius; x += 1.0) {
+        double y = gameValues.table.midY;
+        for (double x = eightBallPosX; x < gameValues.table.rightX - gameValues.ball.ballRadius; x += 1.0) {
             if (!isOccupied(x, y)) {
                 eightBall.setX(x);
                 eightBall.setY(y);

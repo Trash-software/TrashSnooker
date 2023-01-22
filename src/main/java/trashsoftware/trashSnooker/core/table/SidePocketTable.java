@@ -1,13 +1,13 @@
 package trashsoftware.trashSnooker.core.table;
 
 import javafx.scene.canvas.GraphicsContext;
-import trashsoftware.trashSnooker.core.GameValues;
+import trashsoftware.trashSnooker.core.TableMetrics;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public class SidePocketTable extends NumberedBallTable {
 
-    protected SidePocketTable() {
-        super(GameValues.SIDE_POCKET);
+    public SidePocketTable(TableMetrics tableMetrics) {
+        super(tableMetrics);
     }
     
     @Override
@@ -17,9 +17,9 @@ public class SidePocketTable extends NumberedBallTable {
         graphicsContext.setStroke(GameView.WHITE);
         graphicsContext.strokeLine(
                 breakLineX,
-                view.canvasY(gameValues.topY),
+                view.canvasY(tableMetrics.topY),
                 breakLineX,
-                view.canvasY(gameValues.topY + gameValues.innerHeight));
+                view.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
     }
 
     @Override

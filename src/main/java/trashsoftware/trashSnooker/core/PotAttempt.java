@@ -2,7 +2,7 @@ package trashsoftware.trashSnooker.core;
 
 public class PotAttempt extends CueAttempt {
 
-    private final GameType gameType;
+    private final GameValues gameValues;
     private final PlayerPerson playerPerson;
     private final Ball targetBall;
     private final double[] cueBallOrigPos;
@@ -11,11 +11,11 @@ public class PotAttempt extends CueAttempt {
     private Position positionSuccess = Position.NOT_SET;
     private PlayerPerson.HandSkill handSkill;
 
-    public PotAttempt(GameType gameType, PlayerPerson playerPerson,
+    public PotAttempt(GameValues gameValues, PlayerPerson playerPerson,
                       Ball targetBall,
                       double[] cueBallOrigPos, double[] targetBallOrigPos,
                       double[] targetedHole) {
-        this.gameType = gameType;
+        this.gameValues = gameValues;
         this.playerPerson = playerPerson;
         this.targetBall = targetBall;
         this.cueBallOrigPos = cueBallOrigPos;
@@ -39,8 +39,8 @@ public class PotAttempt extends CueAttempt {
         return handSkill.hand == PlayerPerson.Hand.REST;
     }
 
-    public GameType getGameType() {
-        return gameType;
+    public GameRule getGameType() {
+        return gameValues.rule;
     }
 
     public PlayerPerson getPlayerPerson() {
@@ -69,7 +69,7 @@ public class PotAttempt extends CueAttempt {
                 targetedHole[1] - targetBallOrigPos[1]
         );
         double totalLength = whiteTargetDt + targetHoleDt;
-        return totalLength >= gameType.gameValues.diagonalLength() * 0.6667;
+        return totalLength >= gameValues.table.diagonalLength() * 0.6667;
     }
 
     public enum Position {

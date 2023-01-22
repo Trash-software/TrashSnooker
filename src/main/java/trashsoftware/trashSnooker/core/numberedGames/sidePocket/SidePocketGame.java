@@ -21,14 +21,14 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
     private String foulReason;
 
     public SidePocketGame(GameView parent, EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
-        super(parent, entireGame, gameSettings, GameValues.SIDE_POCKET, frameIndex);
+        super(parent, entireGame, gameSettings, new SidePocketTable(entireGame.gameValues.table), frameIndex);
 
         initBalls();
     }
 
     @Override
-    public GameType getGameType() {
-        return GameType.SIDE_POCKET;
+    public GameRule getGameType() {
+        return GameRule.SIDE_POCKET;
     }
 
     private void initBalls() {
@@ -51,17 +51,17 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
         }
 
         double curX = getTable().breakPointX();
-        double rowOccupyX = gameValues.ballDiameter * Math.sin(Math.toRadians(60.0))
+        double rowOccupyX = gameValues.ball.ballDiameter * Math.sin(Math.toRadians(60.0))
                 + Game.MIN_PLACE_DISTANCE * 0.6;
 
         int[] numBallsRow = new int[]{1, 2, 3, 2, 1};
         int index = 0;
         for (int row = 0; row < 5; ++row) {
             double rowBalls = numBallsRow[row];
-            double y = gameValues.midY - (gameValues.ballRadius + Game.MIN_PLACE_DISTANCE) * (rowBalls - 1);
+            double y = gameValues.table.midY - (gameValues.ball.ballRadius + Game.MIN_PLACE_DISTANCE) * (rowBalls - 1);
             for (int col = 0; col < rowBalls; ++col) {
                 placeOrder.get(index++).setXY(curX, y);
-                y += gameValues.ballDiameter + Game.MIN_PLACE_DISTANCE;
+                y += gameValues.ball.ballDiameter + Game.MIN_PLACE_DISTANCE;
             }
 
             curX += rowOccupyX;
@@ -106,7 +106,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
 
     @Override
     public SidePocketTable getTable() {
-        return Tables.SIDE_POCKET_TABLE;
+        return (SidePocketTable) super.getTable();
     }
 
     @Override

@@ -1,14 +1,16 @@
 package trashsoftware.trashSnooker.core.numberedGames;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public abstract class NumberedBallGame<P extends NumberedBallPlayer>
         extends Game<PoolBall, P> {
 
     protected NumberedBallGame(GameView parent, EntireGame entireGame, GameSettings gameSettings,
-                               GameValues gameValues, int frameIndex) {
-        super(parent, entireGame, gameSettings, gameValues, frameIndex);
+                               Table table,
+                               int frameIndex) {
+        super(parent, entireGame, gameSettings, entireGame.gameValues, table, frameIndex);
     }
 
     @Override

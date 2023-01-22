@@ -5,8 +5,7 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.scoreResult.*;
-import trashsoftware.trashSnooker.core.table.Table;
-import trashsoftware.trashSnooker.core.table.Tables;
+import trashsoftware.trashSnooker.core.table.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.zip.GZIPInputStream;
 
 public abstract class GameReplay implements GameHolder {
 
-    public final GameType gameType;
+    public final GameValues gameValues;
     public final Table table;
     protected final ScoreFactory scoreFactory;
     protected final byte[] buffer1 = new byte[1];
@@ -46,7 +45,8 @@ public abstract class GameReplay implements GameHolder {
             throw new VersionException(item.primaryVersion, item.secondaryVersion);
 
         this.item = item;
-        this.gameType = item.getGameType();
+        GameRule gameRule = item.getGameType();
+        gameValues = item.gameValues;
         this.p1 = item.getP1();
         this.p2 = item.getP2();
 
@@ -56,27 +56,26 @@ public abstract class GameReplay implements GameHolder {
         }
         System.out.println(wrapperStream.available());
         createInputStream(item.compression);
-//        inputStream = new BufferedInputStream(wrapperStream);
 
-        switch (gameType) {
+        switch (gameRule) {
             case SNOOKER:
-                table = Tables.SNOOKER_TABLE;
+                table = new SnookerTable(gameValues.table);
                 scoreFactory = new SnookerScoreFactory();
                 break;
             case MINI_SNOOKER:
-                table = Tables.MINI_SNOOKER_TABLE;
+                table = new MiniSnookerTable(gameValues.table);
                 scoreFactory = new SnookerScoreFactory();
                 break;
             case CHINESE_EIGHT:
-                table = Tables.CHINESE_EIGHT_TABLE;
+                table = new ChineseEightTable(gameValues.table);
                 scoreFactory = new ChineseEightScoreFactory();
                 break;
             case SIDE_POCKET:
-                table = Tables.SIDE_POCKET_TABLE;
+                table = new SidePocketTable(gameValues.table);
                 scoreFactory = new SidePocketScoreFactory();
                 break;
             default:
-                throw new EnumConstantNotPresentException(GameType.class, gameType.name());
+                throw new EnumConstantNotPresentException(GameRule.class, gameRule.name());
         }
         scoreResBuf = new byte[scoreFactory.byteLength()];
 

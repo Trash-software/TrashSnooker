@@ -132,7 +132,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
         return selectedPower * handMul * mul *
                 aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier /
-                game.getGameValues().ballWeightRatio;
+                game.getGameValues().ball.ballWeightRatio;
     }
 
     protected double actualPowerToSelectedPower(double actualPower,
@@ -142,7 +142,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
         return actualPower / handMul / mul /
                 aiPlayer.getInGamePlayer().getCurrentCue(game).powerMultiplier *
-                game.getGameValues().ballWeightRatio;
+                game.getGameValues().ball.ballWeightRatio;
     }
 
     protected IntegratedAttackChoice createIntAttackChoices(double selectedPower,
@@ -197,7 +197,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         }
 
         double targetCanMove = values.estimatedMoveDistance(phy, wp.getBallInitSpeed());
-        if (targetCanMove - values.ballDiameter * 1.5 <= correctedChoice.targetHoleDistance) {
+        if (targetCanMove - values.ball.ballDiameter * 1.5 <= correctedChoice.targetHoleDistance) {
             // 确保球不会停在袋口
             // 如果小于，说明力量太轻或低杆太多，打不到
 //            System.out.println("little less " + targetCanMove + ", " + attackChoice.targetHoleDistance);
@@ -210,7 +210,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
         if (game instanceof AbstractSnookerGame) {
             AbstractSnookerGame asg = (AbstractSnookerGame) game;
-            asg.pickupPottedBalls(correctedChoice.attackTarget);
+            asg.pickupPottedBallsLast(correctedChoice.attackTarget);
         }
         List<AttackChoice> nextStepAttackChoices =
                 getAttackChoices(game,
@@ -396,7 +396,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         PlayerPerson.HandSkill handSkill = CuePlayParams.getPlayableHand(
                 game.getCueBall().getX(), game.getCueBall().getY(),
                 directionVec[0], directionVec[1],
-                game.getGameValues(),
+                game.getGameValues().table,
                 game.getCuingPlayer().getPlayerPerson()
         );
         return new AiCueResult(
@@ -481,7 +481,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             double[] directionVec = new double[]{ball.getX() - whitePos[0], ball.getY() - whitePos[1]};
             double distance = Math.hypot(directionVec[0], directionVec[1]);
             double alpha = Algebra.thetaOf(directionVec);  // 白球到目标球球心连线的绝对角
-            double theta = Math.asin(game.getGameValues().ballDiameter / distance);  // 中心连线与薄边连线的夹角
+            double theta = Math.asin(game.getGameValues().ball.ballDiameter / distance);  // 中心连线与薄边连线的夹角
 
             int offsetTicks = (int) (theta / realRadTick);
 //            System.out.println(offsetTicks + " radians offsets to " + ball + realRadTick + theta);
@@ -579,7 +579,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 whitePos[1],
                 unitXY[0],  // fixme: 这里存疑
                 unitXY[1],
-                game.getGameValues(),
+                game.getGameValues().table,
                 game.getCuingPlayer().getPlayerPerson()
         );
 
@@ -748,7 +748,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
             PlayerPerson.HandSkill handSkill = CuePlayParams.getPlayableHand(
                     whitePos[0], whitePos[1],
                     cueDirUnit[0], cueDirUnit[1],
-                    game.getGameValues(),
+                    game.getGameValues().table,
                     attackingPlayer.getPlayerPerson()
             );
 
@@ -763,7 +763,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 return null;  // 不可能打进的球
             }
             double whiteDistance = Math.hypot(whiteToColl[0], whiteToColl[1]);
-            if (whiteDistance < game.getGameValues().ballDiameter) {
+            if (whiteDistance < game.getGameValues().ball.ballDiameter) {
                 return null;  // 白球和目标球挤在一起了
             }
             double targetHoleDistance = Math.hypot(ball.getX() - holePos[0],
@@ -807,8 +807,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 //                double midHoleOffset = Math.abs(targetHoleVec[1]);  // 单位向量的y值绝对值越大，这球越简单
 //                return 1 / Math.pow(midHoleOffset, 1.4);  // 次幂可以调，越小，ai越愿意打中袋
                 // 基本上就是往中袋的投影占比
-                double holeProjWidth = Math.abs(targetHoleVec[1]) * game.getGameValues().midHoleDiameter;
-                double errorToleranceWidth = holeProjWidth - game.getGameValues().ballRadius;
+                double holeProjWidth = Math.abs(targetHoleVec[1]) * game.getGameValues().table.midHoleDiameter;
+                double errorToleranceWidth = holeProjWidth - game.getGameValues().ball.ballRadius;
                 errorToleranceWidth = Math.max(errorToleranceWidth, 0.00001);
                 return game.getGameValues().midHoleBestAngleWidth / errorToleranceWidth;
             } else {
@@ -862,7 +862,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
             double penalty = 1.0;
             if (isPositioning) {
-                double dtLow = game.getGameValues().ballDiameter * 5;
+                double dtLow = game.getGameValues().ball.ballDiameter * 5;
                 if (whiteCollisionDistance < dtLow) {
                     penalty *= dtLow / whiteCollisionDistance;
                 }
@@ -917,7 +917,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         }
 
         private boolean isMidHole() {
-            return holePos[0] == game.getGameValues().midX;
+            return holePos[0] == game.getGameValues().table.midX;
         }
 
         @Override

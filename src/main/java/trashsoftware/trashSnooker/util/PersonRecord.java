@@ -3,11 +3,9 @@ package trashsoftware.trashSnooker.util;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.EntireGame;
-import trashsoftware.trashSnooker.core.GameType;
+import trashsoftware.trashSnooker.core.GameRule;
 import trashsoftware.trashSnooker.core.Player;
-import trashsoftware.trashSnooker.core.PotAttempt;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
-import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.File;
@@ -21,10 +19,10 @@ public class PersonRecord {
     public static boolean RECORD = false;
 
     private final String playerName;
-    private final Map<GameType, Map<String, Integer>> intRecords = new HashMap<>();
+    private final Map<GameRule, Map<String, Integer>> intRecords = new HashMap<>();
 
     // (wins, ties, losses) for each opponent
-    private final Map<GameType, Map<String, Map<String, Object>>> opponentsRecords = new HashMap<>();
+    private final Map<GameRule, Map<String, Map<String, Object>>> opponentsRecords = new HashMap<>();
 
     PersonRecord(String playerName) {
         this.playerName = playerName;
@@ -38,7 +36,7 @@ public class PersonRecord {
         PersonRecord record = new PersonRecord(playerName);
         try {
             for (String gameTypeStr : root.keySet()) {
-                GameType gameType = GameType.valueOf(gameTypeStr);
+                GameRule gameRule = GameRule.valueOf(gameTypeStr);
                 Map<String, Integer> typeRecords = new HashMap<>();
                 Map<String, Map<String, Object>> oppoRecords = new HashMap<>();
                 JSONObject object = root.getJSONObject(gameTypeStr);
@@ -76,8 +74,8 @@ public class PersonRecord {
                         typeRecords.put(key, value);
                     }
                 }
-                record.intRecords.put(gameType, typeRecords);
-                record.opponentsRecords.put(gameType, oppoRecords);
+                record.intRecords.put(gameRule, typeRecords);
+                record.opponentsRecords.put(gameRule, oppoRecords);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,9 +131,9 @@ public class PersonRecord {
 //        }
 //    }
 
-    public void wonFrameAgainstOpponent(GameType gameType, Player player, String opponentName) {
+    public void wonFrameAgainstOpponent(GameRule gameRule, Player player, String opponentName) {
         Map<String, Map<String, Object>> oppo =
-                opponentsRecords.computeIfAbsent(gameType, k -> new HashMap<>());
+                opponentsRecords.computeIfAbsent(gameRule, k -> new HashMap<>());
         Map<String, Object> winLoss = oppo.get(opponentName);
         if (winLoss == null) {
             winLoss = new TreeMap<>();
@@ -149,7 +147,7 @@ public class PersonRecord {
         if (player instanceof NumberedBallPlayer) {
             int playTimes = ((NumberedBallPlayer) player).getPlayTimes();
             boolean breaks = ((NumberedBallPlayer) player).isBreakingPlayer();
-            Map<String, Integer> intMap = getIntRecordOfType(gameType);
+            Map<String, Integer> intMap = getIntRecordOfType(gameRule);
             System.out.println("Play times: " + playTimes);
             if (playTimes == 1) {
                 if (breaks) {  // 炸清
@@ -161,9 +159,9 @@ public class PersonRecord {
         }
     }
 
-    public void lostFrameAgainstOpponent(GameType gameType, String opponentName) {
+    public void lostFrameAgainstOpponent(GameRule gameRule, String opponentName) {
         Map<String, Map<String, Object>> oppo =
-                opponentsRecords.computeIfAbsent(gameType, k -> new HashMap<>());
+                opponentsRecords.computeIfAbsent(gameRule, k -> new HashMap<>());
         Map<String, Object> winLoss = oppo.get(opponentName);
         if (winLoss == null) {
             winLoss = new TreeMap<>();
@@ -178,7 +176,7 @@ public class PersonRecord {
     public void wonEntireGameAgainstOpponent(EntireGame entireGame,
                                              String opponentName) {
         Map<String, Map<String, Object>> oppo =
-                opponentsRecords.computeIfAbsent(entireGame.gameType, k -> new HashMap<>());
+                opponentsRecords.computeIfAbsent(entireGame.gameValues.rule, k -> new HashMap<>());
         Map<String, Object> winLoss = oppo.get(opponentName);
         if (winLoss == null) {
             throw new RuntimeException("一局没输，一局没赢，你咋就赢一场比赛了？");
@@ -199,7 +197,7 @@ public class PersonRecord {
     public void lostEntireGameAgainstOpponent(EntireGame entireGame,
                                               String opponentName) {
         Map<String, Map<String, Object>> oppo =
-                opponentsRecords.computeIfAbsent(entireGame.gameType, k -> new HashMap<>());
+                opponentsRecords.computeIfAbsent(entireGame.gameValues.rule, k -> new HashMap<>());
         Map<String, Object> winLoss = oppo.get(opponentName);
         if (winLoss == null) {
             throw new RuntimeException("一局没输，一局没赢，你咋就赢一场比赛了？");
@@ -220,7 +218,7 @@ public class PersonRecord {
     public void writeToFile() {
         if (!RECORD) return;
         JSONObject root = new JSONObject();
-        for (Map.Entry<GameType, Map<String, Integer>> entry : intRecords.entrySet()) {
+        for (Map.Entry<GameRule, Map<String, Integer>> entry : intRecords.entrySet()) {
             JSONObject object = new JSONObject();
             for (Map.Entry<String, Integer> item : entry.getValue().entrySet()) {
                 object.put(item.getKey(), item.getValue());
@@ -257,33 +255,33 @@ public class PersonRecord {
                 Recorder.RECORDS_DIRECTORY + File.separator + playerName + ".json");
     }
 
-    public Map<GameType, Map<String, Integer>> getIntRecords() {
+    public Map<GameRule, Map<String, Integer>> getIntRecords() {
         return intRecords;
     }
 
     @NotNull
-    private Map<String, Integer> getIntRecordOfType(GameType gameType) {
-        Map<String, Integer> intMap = intRecords.get(gameType);
+    private Map<String, Integer> getIntRecordOfType(GameRule gameRule) {
+        Map<String, Integer> intMap = intRecords.get(gameRule);
         if (intMap == null) {
-            intMap = createTypeMap(gameType);
-            intRecords.put(gameType, intMap);
+            intMap = createTypeMap(gameRule);
+            intRecords.put(gameRule, intMap);
         }
         return intMap;
     }
 
-    private Map<String, Integer> createTypeMap(GameType gameType) {
+    private Map<String, Integer> createTypeMap(GameRule gameRule) {
         Map<String, Integer> map = new HashMap<>();
         map.put("potAttempts", 0);
         map.put("potSuccesses", 0);
         map.put("longPotAttempts", 0);
         map.put("longPotSuccesses", 0);
 
-        if (gameType.snookerLike) {
+        if (gameRule.snookerLike) {
             map.put("highestBreak", 0);
             map.put("50+breaks", 0);
             map.put("100+breaks", 0);
             map.put("147", 0);
-        } else if (gameType == GameType.CHINESE_EIGHT || gameType == GameType.SIDE_POCKET) {
+        } else if (gameRule == GameRule.CHINESE_EIGHT || gameRule == GameRule.SIDE_POCKET) {
             map.put("break-clear", 0);
             map.put("continue-clear", 0);
         }

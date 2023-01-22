@@ -20,11 +20,11 @@ public class CueBackPredictObject extends ObjectOnTable {
     }
     
     boolean hitWall() {
-        if (nextX < radius + values.leftX ||
-                nextX >= values.rightX - radius) {
+        if (nextX < radius + table.leftX ||
+                nextX >= table.rightX - radius) {
             return true;
         }
-        return nextY < radius + values.topY ||
-                nextY >= values.botY - radius;
+        return nextY < radius + table.topY ||
+                nextY >= table.botY - radius;
     }
 }

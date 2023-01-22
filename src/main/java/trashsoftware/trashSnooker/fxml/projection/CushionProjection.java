@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.fxml.projection;
 
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.GameValues;
+import trashsoftware.trashSnooker.core.TableMetrics;
 
 public class CushionProjection extends ObstacleProjection {
     // 和BallProjection类似，只不过不是中心。
@@ -9,7 +10,7 @@ public class CushionProjection extends ObstacleProjection {
     private final double lineY;
 
     public CushionProjection(GameValues gameValues,
-                             Ball whiteBall, double distance, double cueAngleDeg, 
+                             Ball whiteBall, double distance, double cueAngleDeg,
                              double cueRadius) {
         // 简化版，不考虑角度
         double realDt = distance - cueRadius;
@@ -18,9 +19,9 @@ public class CushionProjection extends ObstacleProjection {
             realDt = 0.0;
         }
         double down = Math.tan(Math.toRadians(cueAngleDeg)) * realDt;  // 杆向下的垂直高度
-        double dtToBot = gameValues.cushionHeight - down;  // 最低点离球底的位置
+        double dtToBot = gameValues.table.cushionHeight - down;  // 最低点离球底的位置
 
-        lineY = (0.5 - dtToBot / gameValues.ballDiameter) * 2;
+        lineY = (0.5 - dtToBot / gameValues.ball.ballDiameter) * 2;
     }
 
     public double getLineY() {
