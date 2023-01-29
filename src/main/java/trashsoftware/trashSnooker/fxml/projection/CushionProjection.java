@@ -1,8 +1,7 @@
 package trashsoftware.trashSnooker.fxml.projection;
 
 import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.GameValues;
-import trashsoftware.trashSnooker.core.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 
 public class CushionProjection extends ObstacleProjection {
     // 和BallProjection类似，只不过不是中心。

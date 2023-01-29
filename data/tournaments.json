@@ -1,0 +1,115 @@
+{
+  "tournaments": [
+    {
+      "id": "masters",
+      "name": "斯诺克大师赛",
+      "type": "snooker",
+      "seeds": 16,
+      "places": 16,
+      "pre_matches": [
+      ],
+      "frames": [
+        9, 7, 5, 5
+      ],
+      "awards": [
+        250000, 100000, 60000, 30000, 15000
+      ],
+      "perks": [
+        10, 8, 6, 4, 2
+      ],
+      "best_single": 15000,
+      "ranked": false,
+      "professional": true,
+      "date": "01/15",
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "hole_size": "mid"
+      }
+    },
+    {
+      "id": "challenger_champ",
+      "name": "斯诺克挑战者锦标赛",
+      "type": "snooker",
+      "seeds": 4,
+      "places": 8,
+      "pre_matches": [
+        0, 8, 16
+      ],
+      "frames": [
+        5, 3, 3, 3, 3, 3
+      ],
+      "awards": [
+        150000, 60000, 35000, 15000
+      ],
+      "perks": [
+        5, 3, 2, 1
+      ],
+      "best_single": 15000,
+      "ranked": false,
+      "professional": false,
+      "date": "01/25",
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "hole_size": "small"
+      }
+    },
+    {
+      "id": "cat_give_power_champ",
+      "name": "斯诺克猫给力锦标赛",
+      "type": "snooker",
+      "seeds": 8,
+      "places": 16,
+      "pre_matches": [
+        8, 16
+      ],
+      "frames": [
+        5, 3, 3, 3, 3, 3
+      ],
+      "awards": [
+        125000, 50000, 30000, 15000, 8000
+      ],
+      "perks": [
+        7, 5, 3, 2, 1
+      ],
+      "best_single": 15000,
+      "ranked": true,
+      "professional": false,
+      "date": "02/10",
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "hole_size": "mid"
+      }
+    },
+    {
+      "id": "dog_give_power_open",
+      "name": "斯诺克狗给力公开赛",
+      "type": "snooker",
+      "seeds": 0,
+      "places": 16,
+      "pre_matches": [
+        16, 32
+      ],
+      "frames": [
+        5, 3, 3, 3, 3, 1
+      ],
+      "awards": [
+        80000, 35000, 20000, 10000, 5000
+      ],
+      "perks": [
+        5, 4, 3, 2, 1
+      ],
+      "best_single": 5000,
+      "ranked": false,
+      "professional": false,
+      "date": "06/20",
+      "table": {
+        "goodness": "normal",
+        "smoothness": "normal",
+        "hole_size": "mid"
+      }
+    }
+  ]
+}

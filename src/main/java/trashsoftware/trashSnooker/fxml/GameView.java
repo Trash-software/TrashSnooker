@@ -30,6 +30,10 @@ import trashsoftware.trashSnooker.audio.GameAudio;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
+import trashsoftware.trashSnooker.core.career.championship.PlayerVsAiMatch;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
@@ -54,7 +58,7 @@ import trashsoftware.trashSnooker.recorder.CueRecord;
 import trashsoftware.trashSnooker.recorder.GameRecorder;
 import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.recorder.TargetRecord;
-import trashsoftware.trashSnooker.util.Recorder;
+import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
@@ -188,6 +192,7 @@ public class GameView implements Initializable {
     private boolean drawStandingPos = true;
     private boolean drawTargetRefLine = false;
     private PlayerPerson.HandSkill currentHand;
+    private PlayerVsAiMatch careerMatch;
 
     public static double canvasX(double realX) {
         return realX * scale;
@@ -373,6 +378,10 @@ public class GameView implements Initializable {
             basePane.getChildren().add(cueModel);
         }
     }
+    
+    public void setCareerMatch(PlayerVsAiMatch careerMatch) {
+        this.careerMatch = careerMatch;
+    }
 
     private void setOnHidden() {
         this.stage.setOnHidden(e -> {
@@ -387,6 +396,12 @@ public class GameView implements Initializable {
                     game.getGame().getRecorder().stopRecording(false);
                 }
                 game.quitGame();
+                if (careerMatch != null) {
+                    PlayerPerson opponent = 
+                            player1.getPlayerType() == PlayerType.PLAYER ? 
+                                    player1.getPlayerPerson() : player2.getPlayerPerson();
+                    careerMatch.finish(opponent, game.getP1Wins(), game.getP2Wins());  // 这里没用endFrame或者withdraw，因为不想影响数据库
+                }
             }
             timeline.stop();
         });
@@ -510,8 +525,8 @@ public class GameView implements Initializable {
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
 
         game.getGame().getRecorder().stopRecording(true);
-        game.getPlayer1().getPersonRecord().writeToFile();
-        game.getPlayer2().getPersonRecord().writeToFile();
+//        game.getPlayer1().getPersonRecord().writeToFile();
+//        game.getPlayer2().getPersonRecord().writeToFile();
 
         Platform.runLater(() -> {
             AlertShower.showInfo(stage,
@@ -525,6 +540,10 @@ public class GameView implements Initializable {
                     String.format("%s 赢得一局。", wonPlayer.getPlayerPerson().getName()));
 
             if (entireGameEnd) {
+                if (careerMatch != null) {
+                    careerMatch.finish(wonPlayer.getPlayerPerson(), game.getP1Wins(), game.getP2Wins());
+                }
+                
                 AlertShower.showInfo(stage,
                         String.format("%s (%d) : (%d) %s",
                                 game.getPlayer1().getPlayerPerson().getName(),
@@ -2637,7 +2656,7 @@ public class GameView implements Initializable {
                 double restAngleWithOffset = trueAimingAngle - restCueAngleOffset;
                 double[] restCuePointing = Algebra.unitVectorOfAngle(restAngleWithOffset);
 
-                Cue restCue = Recorder.getRestCue();
+                Cue restCue = DataLoader.getInstance().getRestCue();
                 drawCueWithDtToHand(handXY[0], handXY[1],
                         restCuePointing[0],
                         restCuePointing[1],
@@ -2645,7 +2664,7 @@ public class GameView implements Initializable {
                         restCue,
                         true);
             } else {
-                Recorder.getRestCue().getCueModel(basePane).hide();
+                DataLoader.getInstance().getRestCue().getCueModel(basePane).hide();
             }
 
             drawCueWithDtToHand(handXY[0], handXY[1],
@@ -2660,7 +2679,7 @@ public class GameView implements Initializable {
 //            System.out.println("Drawing!");
             if (currentHand != null && currentHand.hand == PlayerPerson.Hand.REST) {
                 // 画架杆，要在画杆之前
-                Cue restCue = Recorder.getRestCue();
+                Cue restCue = DataLoader.getInstance().getRestCue();
                 drawCueWithDtToHand(
                         cueAnimationPlayer.handX,
                         cueAnimationPlayer.handY,
@@ -2670,7 +2689,7 @@ public class GameView implements Initializable {
                         restCue,
                         true);
             } else {
-                Recorder.getRestCue().getCueModel(basePane).hide();
+                DataLoader.getInstance().getRestCue().getCueModel(basePane).hide();
             }
 
             double[] pointingVec = Algebra.unitVectorOfAngle(cueAnimationPlayer.pointingAngle);

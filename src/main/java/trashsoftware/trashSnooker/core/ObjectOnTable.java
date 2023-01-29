@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 public abstract class ObjectOnTable {

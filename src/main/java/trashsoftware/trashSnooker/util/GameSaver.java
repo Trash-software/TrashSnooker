@@ -22,7 +22,7 @@ public class GameSaver {
     
     public static EntireGame load() {
         if (new File(SAVE_PATH).exists()) {
-            JSONObject object = Recorder.loadFromDisk(SAVE_PATH);
+            JSONObject object = DataLoader.loadFromDisk(SAVE_PATH);
             
             
         }

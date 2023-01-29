@@ -11,10 +11,14 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.metrics.BallMetrics;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.GameSaver;
-import trashsoftware.trashSnooker.util.Recorder;
+import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.io.IOException;
 import java.net.URL;
@@ -123,7 +127,7 @@ public class MainView implements Initializable {
 
     private void refreshCueList(ComboBox<CueItem> box) {
         box.getItems().clear();
-        for (Cue cue : Recorder.getCues().values()) {
+        for (Cue cue : DataLoader.getInstance().getCues().values()) {
             if (!cue.privacy) {
                 box.getItems().add(new CueItem(cue, cue.getName()));
             }
@@ -132,7 +136,7 @@ public class MainView implements Initializable {
     }
 
     private void loadPlayerList() {
-        Collection<PlayerPerson> playerPeople = Recorder.getPlayerPeople();
+        Collection<PlayerPerson> playerPeople = DataLoader.getInstance().getActualPlayers();
         player1Box.getItems().clear();
         player2Box.getItems().clear();
         player1Box.getItems().addAll(playerPeople);
@@ -212,9 +216,6 @@ public class MainView implements Initializable {
                 Parent root = loader.load();
                 root.setStyle(App.FONT_STYLE);
                 
-                AbilityView controller = loader.getController();
-                controller.setup(person);
-
                 Stage stage = new Stage();
                 stage.initOwner(this.stage);
                 stage.initModality(Modality.WINDOW_MODAL);
@@ -223,6 +224,9 @@ public class MainView implements Initializable {
                 stage.setScene(scene);
 
                 stage.show();
+
+                AbilityView controller = loader.getController();
+                controller.setup(scene, person);
             } catch (IOException e) {
                 EventLogger.log(e);
             }
@@ -307,7 +311,7 @@ public class MainView implements Initializable {
 
         InGamePlayer igp1;
         InGamePlayer igp2;
-        Cue stdBreakCue = Recorder.getStdBreakCue();
+        Cue stdBreakCue = DataLoader.getInstance().getStdBreakCue();
         if (stdBreakCue == null ||
                 gameValues.rule == GameRule.SNOOKER ||
                 gameValues.rule == GameRule.MINI_SNOOKER) {

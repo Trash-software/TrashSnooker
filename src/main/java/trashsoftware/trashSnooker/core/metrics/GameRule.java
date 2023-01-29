@@ -1,4 +1,7 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.metrics;
+
+import trashsoftware.trashSnooker.core.EntireGame;
+import trashsoftware.trashSnooker.core.Game;
 
 /**
  * 一个比赛类型。

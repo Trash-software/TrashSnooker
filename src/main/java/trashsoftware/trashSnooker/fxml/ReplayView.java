@@ -13,7 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import trashsoftware.trashSnooker.core.GameRule;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.recorder.*;
 
 import java.io.File;

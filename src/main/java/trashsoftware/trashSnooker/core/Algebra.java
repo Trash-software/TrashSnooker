@@ -266,4 +266,14 @@ public class Algebra {
         }
         return stack;
     }
+    
+    public static int log2(int powerOf2) {
+        int bit = powerOf2 - 1;
+        int count = 0;
+        while (bit != 0) {
+            count++;
+            bit >>= 1;
+        }
+        return count;
+    }
 }

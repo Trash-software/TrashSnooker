@@ -22,7 +22,7 @@ public class TableCloth {
     }
     public enum Goodness {
         EXCELLENT("极佳", 0.0, 0.0),
-        GOOD("优质", 0.08, 0.2),
+        GOOD("优质", 0.07, 0.15),
         NORMAL("一般", 0.2, 0.1),
         BAD("劣质", 0.45, 0.1),
         TERRIBLE("垃圾", 1, 0.0);

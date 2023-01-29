@@ -2,8 +2,7 @@ package trashsoftware.trashSnooker.core.table;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.ArcType;
-import trashsoftware.trashSnooker.core.Game;
-import trashsoftware.trashSnooker.core.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public abstract class AbstractSnookerTable extends Table {

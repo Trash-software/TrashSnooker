@@ -1,4 +1,4 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.metrics;
 
 import trashsoftware.trashSnooker.core.phy.Phy;
 

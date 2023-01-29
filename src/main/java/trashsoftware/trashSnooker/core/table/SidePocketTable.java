@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.core.table;
 
 import javafx.scene.canvas.GraphicsContext;
-import trashsoftware.trashSnooker.core.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public class SidePocketTable extends NumberedBallTable {

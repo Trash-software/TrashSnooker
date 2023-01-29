@@ -3,7 +3,7 @@ package trashsoftware.trashSnooker.util;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.EntireGame;
-import trashsoftware.trashSnooker.core.GameRule;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.Player;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.util.db.DBAccess;
@@ -31,8 +31,8 @@ public class PersonRecord {
     }
 
     public static PersonRecord loadRecord(String playerName) {
-        JSONObject root = Recorder.loadFromDisk(
-                Recorder.RECORDS_DIRECTORY + File.separator + playerName + ".json");
+        JSONObject root = DataLoader.loadFromDisk(
+                DataLoader.RECORDS_DIRECTORY + File.separator + playerName + ".json");
         PersonRecord record = new PersonRecord(playerName);
         try {
             for (String gameTypeStr : root.keySet()) {
@@ -84,7 +84,7 @@ public class PersonRecord {
     }
 
     public static File[] listRecordFiles() {
-        File root = new File(Recorder.RECORDS_DIRECTORY);
+        File root = new File(DataLoader.RECORDS_DIRECTORY);
         File[] recFiles = root.listFiles();
         return Objects.requireNonNullElse(recFiles, new File[0]);
     }
@@ -251,8 +251,8 @@ public class PersonRecord {
             object.put("opponents", opponents);
             root.put(entry.getKey().name(), object);
         }
-        Recorder.saveToDisk(root,
-                Recorder.RECORDS_DIRECTORY + File.separator + playerName + ".json");
+        DataLoader.saveToDisk(root,
+                DataLoader.RECORDS_DIRECTORY + File.separator + playerName + ".json");
     }
 
     public Map<GameRule, Map<String, Integer>> getIntRecords() {

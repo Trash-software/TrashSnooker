@@ -1,0 +1,185 @@
+package trashsoftware.trashSnooker.core.career.championship;
+
+import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.career.*;
+import trashsoftware.trashSnooker.core.career.aiMatch.SnookerAiVsAi;
+
+public class MatchTreeNode {
+
+    private MatchTreeNode player1Position;
+    private MatchTreeNode player2Position;
+    private ChampionshipStage stage;
+    private Career winner;
+    private int p1Wins;
+    private int p2Wins;
+
+    public MatchTreeNode(Career winner) {
+        this.winner = winner;
+    }
+
+    public MatchTreeNode(MatchTreeNode player1Position,
+                         MatchTreeNode player2Position,
+                         ChampionshipStage stage) {
+        this.player1Position = player1Position;
+        this.player2Position = player2Position;
+        this.stage = stage;
+    }
+
+    public static MatchTreeNode fromJsonObject(JSONObject object) {
+        if (object.has("stage")) {
+            ChampionshipStage stage = ChampionshipStage.valueOf(object.getString("stage"));
+            MatchTreeNode p1 = MatchTreeNode.fromJsonObject(object.getJSONObject("p1"));
+            MatchTreeNode p2 = MatchTreeNode.fromJsonObject(object.getJSONObject("p2"));
+
+            MatchTreeNode rtn = new MatchTreeNode(p1, p2, stage);
+
+            if (object.has("winner")) {
+                rtn.winner = CareerManager.getInstance().findCareerByPlayerId(object.getString("winner"));
+                rtn.p1Wins = object.getInt("p1wins");
+                rtn.p2Wins = object.getInt("p2wins");
+            }
+            return rtn;
+        } else if (object.has("winner")) {
+            return new MatchTreeNode(
+                    CareerManager.getInstance().findCareerByPlayerId(object.getString("winner"))
+            );
+        } else {
+            throw new RuntimeException("Unknown node " + object);
+        }
+    }
+
+    public JSONObject saveToJson() {
+        JSONObject object = new JSONObject();
+
+        if (stage == null) {
+            // 仅表示参赛选手
+            object.put("winner", winner.getPlayerPerson().getPlayerId());
+        } else {
+            object.put("stage", stage.name());
+            object.put("p1", player1Position.saveToJson());
+            object.put("p2", player2Position.saveToJson());
+
+            if (winner != null) {
+                object.put("winner", winner.getPlayerPerson().getPlayerId());
+                object.put("p1wins", p1Wins);
+                object.put("p2wins", p2Wins);
+            }
+        }
+
+        return object;
+    }
+
+    public ChampionshipStage getStage() {
+        return stage;
+    }
+
+    public MatchTreeNode getPlayer1Position() {
+        return player1Position;
+    }
+
+    public MatchTreeNode getPlayer2Position() {
+        return player2Position;
+    }
+
+    public int getP1Wins() {
+        return p1Wins;
+    }
+
+    public int getP2Wins() {
+        return p2Wins;
+    }
+
+    PlayerVsAiMatch performMatches(ChampionshipData data, ChampionshipStage stage) {
+        if (stage == this.stage) {
+            if (player1Position == null || player2Position == null ||
+                    !player1Position.isFinished() || !player2Position.isFinished()) {
+                throw new RuntimeException("Inconsistent stage of " + stage);
+            }
+            Career c1 = player1Position.winner;
+            Career c2 = player2Position.winner;
+            if (c1.isHumanPlayer() || c2.isHumanPlayer()) {
+                return new PlayerVsAiMatch(c1, c2, data, stage, this);
+            }
+
+            performAiVsAiMatch(data, stage);
+            return null;
+        } else if (this.winner != null) {
+            return null;  // 这属于守株待兔的选手
+        } else if (this.stage == null) {
+            throw new RuntimeException("Tree does not have stage " + stage);
+        } else {
+            var up = player1Position.performMatches(data, stage);
+            var down = player2Position.performMatches(data, stage);
+            return up == null ? down : up;
+        }
+    }
+
+    private void performAiVsAiMatch(ChampionshipData data, ChampionshipStage stage) {
+        switch (data.getType()) {
+            case SNOOKER:
+                SnookerAiVsAi aiVsAi = new SnookerAiVsAi(
+                        player1Position.winner,
+                        player2Position.winner,
+                        data.getNFramesOfStage(stage));
+                aiVsAi.simulate();
+                Career winner = aiVsAi.getWinner();
+                setWinner(winner, aiVsAi.getP1WinFrames(), aiVsAi.getP2WinFrames());
+                System.out.println(aiVsAi);
+                break;
+            case CHINESE_EIGHT:
+            case SIDE_POCKET:
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
+
+    public void distributeAwards(ChampionshipData data, int year, int depth) {
+        // 目前暂不考虑单杆最高的事
+        if (depth == 0) {
+            ChampionshipScore champion = new ChampionshipScore(
+                    data.getId(),
+                    year,
+                    new ChampionshipScore.Rank[]{ChampionshipScore.Rank.CHAMPION});
+            winner.addChampionshipScore(champion);
+        }
+        Career loser = getLoser();  // 除了冠军，每个人都只会输一次（目前没有双败赛制）
+        ChampionshipScore.Rank rank;
+        if (stage.isMain) {
+            rank = ChampionshipScore.Rank.values()[depth + 1];
+        } else {
+            rank = ChampionshipScore.Rank.PRE_GAMES;
+        }
+        ChampionshipScore score = new ChampionshipScore(
+                data.getId(),
+                year,
+                new ChampionshipScore.Rank[]{rank}
+        );
+        loser.addChampionshipScore(score);
+
+        if (!player1Position.isLeaf()) player1Position.distributeAwards(data, year, depth + 1);
+        if (!player2Position.isLeaf()) player2Position.distributeAwards(data, year, depth + 1);
+    }
+
+    public Career getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Career winner, int p1Wins, int p2Wins) {
+        if (winner == null) throw new RuntimeException("Why no winner");
+        this.p1Wins = p1Wins;
+        this.p2Wins = p2Wins;
+        this.winner = winner;
+    }
+
+    public Career getLoser() {
+        return winner == player1Position.winner ? player2Position.winner : player1Position.winner;
+    }
+
+    public boolean isFinished() {
+        return winner != null;
+    }
+
+    public boolean isLeaf() {
+        return player1Position == null && player2Position == null;  // 同时也意味着stage == null
+    }
+}

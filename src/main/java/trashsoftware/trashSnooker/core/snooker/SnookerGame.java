@@ -2,11 +2,9 @@ package trashsoftware.trashSnooker.core.snooker;
 
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.GameSettings;
-import trashsoftware.trashSnooker.core.GameRule;
-import trashsoftware.trashSnooker.core.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
 import trashsoftware.trashSnooker.core.table.SnookerTable;
-import trashsoftware.trashSnooker.core.table.Tables;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public class SnookerGame extends AbstractSnookerGame {

@@ -1,7 +1,6 @@
 package trashsoftware.trashSnooker.core.ai;
 
-import trashsoftware.trashSnooker.core.GameValues;
-import trashsoftware.trashSnooker.core.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 

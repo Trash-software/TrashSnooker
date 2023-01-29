@@ -1,9 +1,10 @@
 package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
-import trashsoftware.trashSnooker.util.Recorder;
+import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.BufferedReader;
@@ -217,7 +218,7 @@ public class DBAccess {
     }
     
     private boolean isValidPlayer(String playerId) {
-        return Recorder.hasPlayer(playerId);
+        return DataLoader.getInstance().hasPlayer(playerId);
     }
 
     /**

@@ -4,21 +4,15 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SceneAntialiasing;
 import javafx.stage.Stage;
 //import trashsoftware.configLoader.ConfigLoader;
-import trashsoftware.trashSnooker.fxml.GameView;
-import trashsoftware.trashSnooker.fxml.MainView;
 import trashsoftware.trashSnooker.util.EventLogger;
-import trashsoftware.trashSnooker.util.Recorder;
-import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.File;
-import java.io.IOException;
 
 public class App extends Application {
     
-    public static final int VERSION = 10;
+    public static final int VERSION = 11;
     public static boolean enableDebug = true;
 
     private static final String CONFIG = "user" + File.separator + "config.cfg";
@@ -32,29 +26,19 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-//            ConfigLoader.startLoader(CONFIG);
-            Recorder.loadAll();
-
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("mainView.fxml")
+                    getClass().getResource("entryView.fxml")
             );
-            Parent root = loader.load();
-            root.setStyle(FONT_STYLE);
-
-            MainView mainView = loader.getController();
-            mainView.setStage(primaryStage);
-
-            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
-//            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
+            Parent parent = loader.load();
+            
+            EntryView entryView = loader.getController();
+            entryView.setup(primaryStage);
+            
+            Scene scene = new Scene(parent);
             primaryStage.setScene(scene);
-
-            primaryStage.setOnHidden(e -> {
-//                Recorder.save();
-//                ConfigLoader.stopLoader();
-                DBAccess.closeDB();
-            });
-
+            
             primaryStage.show();
+            
         } catch (Exception e) {
             EventLogger.log(e);
         }

@@ -15,30 +15,88 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Recorder {
+public class DataLoader {
 
     public static final boolean SHOW_HIDDEN = true;
-    public static final String RECORDS_DIRECTORY = "user" + File.separator + "records";
-    private static final String PLAYER_LIST_FILE = "user" + File.separator + "players.json";
-    private static final String CUSTOM_PLAYER_LIST_FILE =
-            "user" + File.separator + "custom_players.json";
-    private static final String CUE_LIST_FILE = "user" + File.separator + "cues.json";
-    private static final Map<String, PlayerPerson> playerPeople = new HashMap<>();
-    private static final Map<String, Cue> cues = new HashMap<>();
+    public static final String RECORDS_DIRECTORY = "user/records";
+    private static final String[] PLAYER_LIST_FILES = {
+            "data/players_prof.json",
+            "data/players_amateur.json"
+    };
+    private static final String CUSTOM_PLAYER_LIST_FILE = "user/custom_players.json";
+    private static final String RANDOM_PLAYERS_LIST_FILE = "user/players_random.json";
+    private static final String CUE_LIST_FILE = "data/cues.json";
+    
+    private static DataLoader instance;
+    
+    private final Map<String, PlayerPerson> actualPlayers = new HashMap<>();
+    private final Map<String, PlayerPerson> playerPeople = new HashMap<>();
+    private final Map<String, Cue> cues = new HashMap<>();
 
-    public static void loadAll() {
+    public static DataLoader getInstance() {
+        if (instance == null) {
+            instance = new DataLoader();
+            instance.loadAll();
+        }
+        return instance;
+    }
+    
+    private Map<String, PlayerPerson> generateAndSaveRandomPlayers(int nRandomPlayers) {
+        JSONObject root = new JSONObject();
+        JSONObject object = new JSONObject();
+        Map<String, PlayerPerson> result = new HashMap<>();
+        for (int i = 0; i < nRandomPlayers; i++) {
+            String rid = "random_player_" + i;
+            String name = "Random Player " + i;
+            PlayerPerson rp = PlayerPerson.randomPlayer(
+                    rid,
+                    name,
+                    65.0, 
+                    85.0
+            );
+            result.put(rid, rp);
+            object.put(rid, rp.toJsonObject());
+        }
+        root.put("players", object);
+        saveToDisk(root, RANDOM_PLAYERS_LIST_FILE);
+        
+        return result;
+    }
+
+    private void loadAll() {
         cues.clear();
         JSONObject cuesRoot = loadFromDisk(CUE_LIST_FILE);
         loadCues(cuesRoot);
 
         playerPeople.clear();
-        JSONObject playersRoot = loadFromDisk(PLAYER_LIST_FILE);
+        actualPlayers.clear();
+        
+        for (String fileName : PLAYER_LIST_FILES) {
+            JSONObject playersRoot = loadFromDisk(fileName);
+            Map<String, PlayerPerson> people = loadPlayers(playersRoot, cues, false);
+            playerPeople.putAll(people);
+            actualPlayers.putAll(people);
+        }
+
         JSONObject customPlayersRoot = loadFromDisk(CUSTOM_PLAYER_LIST_FILE);
-        loadPlayers(playersRoot, false);
-        loadPlayers(customPlayersRoot, true);
+        var customs = loadPlayers(customPlayersRoot, cues, true);
+        playerPeople.putAll(customs);
+        actualPlayers.putAll(customs);
+
+        // 随机球员，填充位置用，以免人数凑不齐
+        if (new File(RANDOM_PLAYERS_LIST_FILE).exists()) {
+            JSONObject randomPlayers = loadFromDisk(RANDOM_PLAYERS_LIST_FILE);
+            var randoms = loadPlayers(randomPlayers, cues, false);
+            playerPeople.putAll(randoms);
+        } else {
+            var randoms = generateAndSaveRandomPlayers(128);
+            playerPeople.putAll(randoms);
+        }
+
+        System.out.println(playerPeople.size() + " players loaded, " + actualPlayers.size() + " actual");
     }
 
-    private static void loadCues(JSONObject root) {
+    private void loadCues(JSONObject root) {
         if (root.has("cues")) {
             JSONObject object = root.getJSONObject("cues");
             for (String key : object.keySet()) {
@@ -91,9 +149,12 @@ public class Recorder {
         return color;
     }
 
-    private static void loadPlayers(JSONObject root, boolean isCustomPlayer) {
+    private static Map<String, PlayerPerson> loadPlayers(JSONObject root, 
+                                                         Map<String, Cue> cues,
+                                                         boolean isCustomPlayer) {
         if (root.has("players")) {
             JSONObject array = root.getJSONObject("players");
+            Map<String, PlayerPerson> result = new HashMap<>();
             for (String key : array.keySet()) {
                 Object obj = array.get(key);
                 if (obj instanceof JSONObject) {
@@ -108,19 +169,9 @@ public class Recorder {
                         AiPlayStyle aiPlayStyle;
                         if (personObj.has("ai")) {
                             JSONObject aiObject = personObj.getJSONObject("ai");
-                            aiPlayStyle = new AiPlayStyle(
-                                    aiObject.getDouble("precision"),
-                                    aiObject.getDouble("stable"),
-                                    aiObject.getDouble("position"),
-                                    aiObject.getDouble("defense"),
-                                    aiObject.getDouble("attackPri"),
-                                    aiObject.getDouble("likeShow"),
-                                    aiObject.getString("snookerBreak"),
-                                    aiObject.getBoolean("cebSideBreak"),
-                                    aiObject.getInt("withdrawAfter")
-                            );
+                            aiPlayStyle = AiPlayStyle.fromJson(aiObject);
                         } else {
-                            aiPlayStyle = AiPlayStyle.DEFAULT;
+                            aiPlayStyle = null;
                         }
 
                         PlayerPerson.HandBody handBody;
@@ -138,57 +189,43 @@ public class Recorder {
                         }
 
                         PlayerPerson playerPerson;
-                        if (personObj.has("pullDt")) {
-                            JSONArray pullDt = personObj.getJSONArray("pullDt");
-                            double minPullDt = pullDt.getDouble(0);
-                            double maxPullDt = pullDt.getDouble(1);
-                            double aimingOffset = personObj.getDouble("aimingOffset");
-                            double cueSwingMag = personObj.getDouble("cueSwingMag");
-                            String cuePlayTypeStr = personObj.getString("cuePlayType");
-                            CuePlayType cuePlayType = parseCuePlayType(cuePlayTypeStr);
-                            JSONArray muSigmaArray = personObj.getJSONArray("cuePointMuSigma");
-                            double[] muSigma = new double[4];
-                            for (int i = 0; i < 4; ++i) {
-                                muSigma[i] = muSigmaArray.getDouble(i);
-                            }
 
-                            playerPerson = new PlayerPerson(
-                                    key,
-                                    name,
-                                    personObj.getString("category"),
-                                    personObj.getDouble("maxPower"),
-                                    personObj.getDouble("controllablePower"),
-                                    personObj.getDouble("spin"),
-                                    personObj.getDouble("precision"),
-                                    personObj.getDouble("anglePrecision"),
-                                    personObj.getDouble("longPrecision"),
-                                    personObj.getDouble("solving"),
-                                    minPullDt,
-                                    maxPullDt,
-                                    aimingOffset,
-                                    cueSwingMag,
-                                    muSigma,
-                                    personObj.getDouble("powerControl"),
-                                    personObj.getDouble("psy"),
-                                    cuePlayType,
-                                    aiPlayStyle,
-                                    handBody
-                            );
-                        } else {
-                            playerPerson = new PlayerPerson(
-                                    key,
-                                    name,
-                                    personObj.getDouble("maxPower"),
-                                    personObj.getDouble("controllablePower"),
-                                    personObj.getDouble("spin"),
-                                    personObj.getDouble("precision"),
-                                    personObj.getDouble("anglePrecision"),
-                                    personObj.getDouble("longPrecision"),
-                                    personObj.getDouble("powerControl"),
-                                    aiPlayStyle,
-                                    isCustomPlayer
-                            );
+                        JSONArray pullDt = personObj.getJSONArray("pullDt");
+                        double minPullDt = pullDt.getDouble(0);
+                        double maxPullDt = pullDt.getDouble(1);
+                        double aimingOffset = personObj.getDouble("aimingOffset");
+                        double cueSwingMag = personObj.getDouble("cueSwingMag");
+                        String cuePlayTypeStr = personObj.getString("cuePlayType");
+                        CuePlayType cuePlayType = parseCuePlayType(cuePlayTypeStr);
+                        JSONArray muSigmaArray = personObj.getJSONArray("cuePointMuSigma");
+                        double[] muSigma = new double[4];
+                        for (int i = 0; i < 4; ++i) {
+                            muSigma[i] = muSigmaArray.getDouble(i);
                         }
+
+                        playerPerson = new PlayerPerson(
+                                key,
+                                name,
+                                personObj.getString("category"),
+                                personObj.getDouble("maxPower"),
+                                personObj.getDouble("controllablePower"),
+                                personObj.getDouble("spin"),
+                                personObj.getDouble("precision"),
+                                personObj.getDouble("anglePrecision"),
+                                personObj.getDouble("longPrecision"),
+                                personObj.getDouble("solving"),
+                                minPullDt,
+                                maxPullDt,
+                                aimingOffset,
+                                cueSwingMag,
+                                muSigma,
+                                personObj.getDouble("powerControl"),
+                                personObj.getDouble("psy"),
+                                cuePlayType,
+                                aiPlayStyle,
+                                handBody
+                        );
+                        
                         if (personObj.has("privateCues")) {
                             JSONArray pCues = personObj.getJSONArray("privateCues");
                             for (Object cueObj : pCues) {
@@ -203,21 +240,24 @@ public class Recorder {
                             }
                         }
                         playerPerson.setCustom(isCustomPlayer);
-                        playerPeople.put(name, playerPerson);
+                        result.put(key, playerPerson);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }
+            return result;
+        } else {
+            throw new RuntimeException("Invalid player root file");
         }
     }
 
-    public static void addPlayerPerson(PlayerPerson playerPerson) {
-        playerPeople.put(getNextCustomPlayerId(), playerPerson);
-        saveToDisk(makeJsonObject(), CUSTOM_PLAYER_LIST_FILE);
+    public void addPlayerPerson(PlayerPerson playerPerson) {
+        playerPeople.put(playerPerson.getPlayerId(), playerPerson);
+        saveToDisk(makeCustomJson(), CUSTOM_PLAYER_LIST_FILE);
     }
 
-    public static String getNextCustomPlayerId() {
+    public String getNextCustomPlayerId() {
         int current = playerPeople.size() + 1;
         String id;
         do {
@@ -226,28 +266,55 @@ public class Recorder {
         } while (playerPeople.containsKey(id));
         return id;
     }
-    
-    public static PlayerPerson getPlayerPerson(String playerId) {
+
+    public PlayerPerson getPlayerPerson(String playerId) {
         return playerPeople.get(playerId);
     }
     
-    public static boolean hasPlayer(String playerId) {
+    public boolean hasActualPlayer(String playerId) {
+        return actualPlayers.containsKey(playerId);
+    }
+
+    public boolean hasPlayer(String playerId) {
         return getPlayerPerson(playerId) != null;
     }
 
-    public static Collection<PlayerPerson> getPlayerPeople() {
-        return playerPeople.values();
+    public Collection<PlayerPerson> getActualPlayers() {
+        return actualPlayers.values();
+    }
+    
+    public void updatePlayer(PlayerPerson playerPerson) {
+        // assert isCustom and is not random
+        String id = playerPerson.getPlayerId();
+        playerPeople.put(id, playerPerson);
+        
+        if (actualPlayers.containsKey(id)) {
+            actualPlayers.put(id, playerPerson);
+        }
+        
+        saveToDisk(makeCustomJson(), CUSTOM_PLAYER_LIST_FILE);
     }
 
-    public static Map<String, Cue> getCues() {
+    /**
+     * @return 所有的player，包括随机的
+     */
+    public Collection<PlayerPerson> getAllPlayers() {
+        return playerPeople.values();
+    }
+    
+    public Map<String, PlayerPerson> getPlayerPeopleCopy() {
+        return new HashMap<>(playerPeople);
+    }
+
+    public Map<String, Cue> getCues() {
         return cues;
     }
 
-    public static Cue getStdBreakCue() {
+    public Cue getStdBreakCue() {
         return cues.get("stdBreakCue");
     }
 
-    public static Cue getRestCue() {
+    public Cue getRestCue() {
         return cues.get("restCue");
     }
 
@@ -255,12 +322,12 @@ public class Recorder {
         return new CuePlayType(s);
     }
 
-    private static JSONObject makeJsonObject() {
+    private JSONObject makeCustomJson() {
         JSONObject result = new JSONObject();
         for (PlayerPerson playerPerson : playerPeople.values()) {
             if (!playerPerson.isCustom()) continue;
             JSONObject personObject = playerPerson.toJsonObject();
-            result.put(playerPerson.getName(), personObject);
+            result.put(playerPerson.getPlayerId(), personObject);
         }
         JSONObject root = new JSONObject();
         root.put("players", result);
@@ -289,11 +356,12 @@ public class Recorder {
             }
             return new JSONObject(builder.toString());
         } catch (FileNotFoundException e) {
-            return new JSONObject();
+            JSONObject empty = new JSONObject();
+            empty.put("players", new JSONObject());
+            return empty;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return new JSONObject();
     }
 
     private static void createIfNotExists() {

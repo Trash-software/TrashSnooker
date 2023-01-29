@@ -2,7 +2,11 @@ package trashsoftware.trashSnooker.recorder;
 
 import javafx.fxml.FXML;
 import trashsoftware.trashSnooker.core.*;
-import trashsoftware.trashSnooker.util.Recorder;
+import trashsoftware.trashSnooker.core.metrics.BallMetrics;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.*;
@@ -91,7 +95,7 @@ public class BriefReplayItem {
         String breakCueId = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
 
         PlayerPerson playerPerson = null;
-        for (PlayerPerson person : Recorder.getPlayerPeople()) {
+        for (PlayerPerson person : DataLoader.getInstance().getAllPlayers()) {
             if (person.getPlayerId().equals(pid)) {
                 playerPerson = person;
                 break;
@@ -99,8 +103,8 @@ public class BriefReplayItem {
         }
         if (playerPerson == null) throw new RecordException("Player " + pid + " does not exist in current database");
 
-        Cue playCue = Objects.requireNonNull(Recorder.getCues().get(playCueId));
-        Cue breakCue = Objects.requireNonNull(Recorder.getCues().get(breakCueId));
+        Cue playCue = Objects.requireNonNull(DataLoader.getInstance().getCues().get(playCueId));
+        Cue breakCue = Objects.requireNonNull(DataLoader.getInstance().getCues().get(breakCueId));
 
         return new InGamePlayer(playerPerson, breakCue, playCue, type, num);
     }

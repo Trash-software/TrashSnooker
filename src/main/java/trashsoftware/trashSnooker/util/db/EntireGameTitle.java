@@ -1,6 +1,6 @@
 package trashsoftware.trashSnooker.util.db;
 
-import trashsoftware.trashSnooker.core.GameRule;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;

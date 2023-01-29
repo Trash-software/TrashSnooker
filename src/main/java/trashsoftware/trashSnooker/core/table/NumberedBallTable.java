@@ -2,7 +2,7 @@ package trashsoftware.trashSnooker.core.table;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import trashsoftware.trashSnooker.core.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.fxml.GameView;
 

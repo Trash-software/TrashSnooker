@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+
 public class CuePlayParams {
 
     public final double vx;

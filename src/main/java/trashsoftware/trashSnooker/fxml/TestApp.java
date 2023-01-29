@@ -4,14 +4,11 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Point3D;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.*;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -20,9 +17,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import trashsoftware.trashSnooker.core.Cue;
 import trashsoftware.trashSnooker.fxml.drawing.CueModel;
-import trashsoftware.trashSnooker.util.Recorder;
-
-import java.util.Arrays;
+import trashsoftware.trashSnooker.util.DataLoader;
 
 public class TestApp extends Application {
     private double x = 300, y = 300;
@@ -157,8 +152,7 @@ public class TestApp extends Application {
     }
     
     private void testCue(Pane group) {
-        Recorder.loadAll();
-        Cue cue = Recorder.getCues().get("GirlCue");
+        Cue cue = DataLoader.getInstance().getCues().get("GirlCue");
 //        Cue cue = Recorder.getCues().get("restCue");
 
         CueModel cueModel = cue.getCueModel(group);

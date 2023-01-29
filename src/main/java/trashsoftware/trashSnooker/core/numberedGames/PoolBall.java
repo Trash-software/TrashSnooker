@@ -2,8 +2,7 @@ package trashsoftware.trashSnooker.core.numberedGames;
 
 import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.GameValues;
-import trashsoftware.trashSnooker.core.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 
 public class PoolBall extends Ball {
 

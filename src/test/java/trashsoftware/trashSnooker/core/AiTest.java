@@ -2,15 +2,14 @@ package trashsoftware.trashSnooker.core;
 
 import org.junit.Test;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
-import trashsoftware.trashSnooker.util.Recorder;
+import trashsoftware.trashSnooker.util.DataLoader;
 
 public class AiTest {
     
     @Test
     public void testAiPlayerPrice() {
-        Recorder.loadAll();
         PlayerPerson pp = null;
-        for (PlayerPerson p : Recorder.getPlayerPeople()) {
+        for (PlayerPerson p : DataLoader.getInstance().getAllPlayers()) {
             if (p.getName().equals("Trump")) {
                 pp = p;
                 break;
@@ -18,7 +17,7 @@ public class AiTest {
         }
         InGamePlayer inGamePlayer = new InGamePlayer(
                 pp,
-                Recorder.getCues().get("stdSnookerCue"),
+                DataLoader.getInstance().getCues().get("stdSnookerCue"),
                 PlayerType.COMPUTER, 
                 1
         );

@@ -7,7 +7,7 @@ import trashsoftware.trashSnooker.core.InGamePlayer;
 import java.util.Locale;
 
 public class AiPlayStyle {
-    public static final AiPlayStyle DEFAULT =
+    public static final AiPlayStyle PERFECT =
             new AiPlayStyle(100.0, 100.0, 100.0, 100.0, 
                     80.0, 50,
                     "right", false, 2);
@@ -83,16 +83,33 @@ public class AiPlayStyle {
         }
         return powerPrice * spinPrice;
     }
+    
+    public static AiPlayStyle fromJson(JSONObject aiObject) {
+        return new AiPlayStyle(
+                aiObject.getDouble("precision"),
+                aiObject.getDouble("stable"),
+                aiObject.getDouble("position"),
+                aiObject.getDouble("defense"),
+                aiObject.getDouble("attackPri"),
+                aiObject.getDouble("likeShow"),
+                aiObject.getString("snookerBreak"),
+                aiObject.getBoolean("cebSideBreak"),
+                aiObject.getInt("withdrawAfter")
+        );
+    }
 
     public JSONObject toJsonObject() {
         JSONObject obj = new JSONObject();
 
         obj.put("precision", precision);
+        obj.put("stable", stability);
         obj.put("position", position);
         obj.put("defense", defense);
         obj.put("attackPri", attackPrivilege);
+        obj.put("likeShow", likeShow);
         obj.put("snookerBreak", snookerBreakMethod.name());
         obj.put("cebSideBreak", cebSideBreak);
+        obj.put("withdrawAfter", snookerWithdrawLimit);
 
         return obj;
     }

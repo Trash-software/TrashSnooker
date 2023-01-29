@@ -1,4 +1,4 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.metrics;
 
 import javafx.scene.paint.Color;
 
@@ -341,6 +341,10 @@ public class TableMetrics {
         TableBuilderFactory(String name, HoleSize[] supportedHoles) {
             this.name = name;
             this.supportedHoles = supportedHoles;
+        }
+        
+        public HoleSize defaultHole() {
+            return supportedHoles[supportedHoles.length / 2];
         }
 
         @Override

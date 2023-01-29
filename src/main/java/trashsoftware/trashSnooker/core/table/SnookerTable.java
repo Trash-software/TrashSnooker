@@ -1,6 +1,6 @@
 package trashsoftware.trashSnooker.core.table;
 
-import trashsoftware.trashSnooker.core.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 
 public class SnookerTable extends AbstractSnookerTable {
 

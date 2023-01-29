@@ -1,5 +1,8 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
+
 public class PotAttempt extends CueAttempt {
 
     private final GameValues gameValues;

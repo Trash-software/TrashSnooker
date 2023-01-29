@@ -1,6 +1,6 @@
 package trashsoftware.trashSnooker.audio;
 
-import trashsoftware.trashSnooker.core.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.Values;
 
 public class GameAudio {

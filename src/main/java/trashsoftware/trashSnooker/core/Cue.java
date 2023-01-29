@@ -1,14 +1,10 @@
 package trashsoftware.trashSnooker.core;
 
-import javafx.event.Event;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.fxml.drawing.CueModel;
-import trashsoftware.trashSnooker.util.Recorder;
+import trashsoftware.trashSnooker.util.DataLoader;
 
 public class Cue {
 
@@ -124,7 +120,7 @@ public class Cue {
     
     public void createArrow(JSONObject arrowObj) {
         this.arrow = new Arrow(
-                Recorder.parseColor(arrowObj.getString("color")),
+                DataLoader.parseColor(arrowObj.getString("color")),
                 arrowObj.getDouble("firstGap"),
                 arrowObj.getDouble("lastGap"),
                 arrowObj.getDouble("firstScale"),

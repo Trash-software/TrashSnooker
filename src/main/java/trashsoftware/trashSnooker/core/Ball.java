@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.fxml.drawing.BallModel;
 
@@ -146,6 +147,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         xSpin = 0.0;
         ySpin = 0.0;
         distance = 0.0;
+        frameDegChange = 0.0;
     }
 
 //    public double getXAngle() {
