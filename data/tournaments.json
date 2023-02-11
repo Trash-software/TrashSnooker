@@ -9,7 +9,7 @@
       "pre_matches": [
       ],
       "frames": [
-        9, 7, 5, 5
+        7, 5, 5, 3
       ],
       "awards": [
         250000, 100000, 60000, 30000, 15000
@@ -28,8 +28,8 @@
       }
     },
     {
-      "id": "challenger_champ",
-      "name": "斯诺克挑战者锦标赛",
+      "id": "challenger_open",
+      "name": "斯诺克挑战者公开赛",
       "type": "snooker",
       "seeds": 4,
       "places": 8,
@@ -51,8 +51,36 @@
       "date": "01/25",
       "table": {
         "goodness": "good",
-        "smoothness": "normal",
+        "smoothness": "fast",
         "hole_size": "small"
+      }
+    },
+    {
+      "id": "dog_give_power_open",
+      "name": "斯诺克狗给力公开赛",
+      "type": "snooker",
+      "seeds": 0,
+      "places": 32,
+      "pre_matches": [
+        64
+      ],
+      "frames": [
+        5, 3, 3, 3, 1, 1
+      ],
+      "awards": [
+        80000, 35000, 20000, 10000, 5000, 2500
+      ],
+      "perks": [
+        5, 4, 3, 2, 1, 1
+      ],
+      "best_single": 5000,
+      "ranked": true,
+      "professional": false,
+      "date": "02/27",
+      "table": {
+        "goodness": "normal",
+        "smoothness": "normal",
+        "hole_size": "mid"
       }
     },
     {
@@ -68,15 +96,15 @@
         5, 3, 3, 3, 3, 3
       ],
       "awards": [
-        125000, 50000, 30000, 15000, 8000
+        125000, 50000, 30000, 15000, 8000, 5000
       ],
       "perks": [
-        7, 5, 3, 2, 1
+        7, 5, 3, 2, 1, 0
       ],
       "best_single": 15000,
       "ranked": true,
-      "professional": false,
-      "date": "02/10",
+      "professional": true,
+      "date": "03/05",
       "table": {
         "goodness": "good",
         "smoothness": "normal",
@@ -84,31 +112,116 @@
       }
     },
     {
-      "id": "dog_give_power_open",
-      "name": "斯诺克狗给力公开赛",
+      "id": "china_open",
+      "name": "斯诺克中国公开赛",
       "type": "snooker",
-      "seeds": 0,
-      "places": 16,
+      "seeds": 16,
+      "places": 32,
       "pre_matches": [
         16, 32
+      ],
+      "frames": [
+        5, 3, 3, 3, 3, 1, 1
+      ],
+      "awards": [
+        80000, 35000, 20000, 10000, 5000, 2500
+      ],
+      "perks": [
+        6, 5, 4, 3, 2, 1
+      ],
+      "best_single": 5000,
+      "ranked": true,
+      "professional": false,
+      "date": "03/25",
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "hole_size": "mid"
+      }
+    },
+    {
+      "id": "world_champ",
+      "name": "斯诺克世界锦标赛",
+      "type": "snooker",
+      "seeds": 16,
+      "places": 32,
+      "pre_matches": [
+        0, 32, 64
+      ],
+      "frames": [
+        11, 9, 7, 5, 5, 5, 3, 3
+      ],
+      "awards": [
+        500000, 200000, 100000, 50000, 30000, 20000, 15000, 10000
+      ],
+      "perks": [
+        15, 12, 9, 6, 4, 2, 1, 1
+      ],
+      "best_single": 15000,
+      "147": 55000,
+      "ranked": true,
+      "professional": true,
+      "date": "04/17",
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "hole_size": "mid"
+      }
+    },
+    {
+      "id": "space_grand_prix",
+      "name": "斯诺克太空国大奖赛",
+      "type": "snooker",
+      "seeds": 16,
+      "places": 32,
+      "pre_matches": [
+        32
+      ],
+      "frames": [
+        5, 3, 3, 3, 1, 1
+      ],
+      "awards": [
+        120000, 50000, 25000, 15000, 10000, 2500
+      ],
+      "perks": [
+        6, 5, 4, 3, 2, 1
+      ],
+      "best_single": 10000,
+      "ranked": true,
+      "professional": false,
+      "date": "05/25",
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "hole_size": "mid"
+      }
+    },
+    {
+      "id": "chongqing_open",
+      "name": "斯诺克重庆公开赛",
+      "type": "snooker",
+      "seeds": 0,
+      "places": 32,
+      "pre_matches": [
+        64
       ],
       "frames": [
         5, 3, 3, 3, 3, 1
       ],
       "awards": [
-        80000, 35000, 20000, 10000, 5000
+        50000, 20000, 12000, 6000, 3000, 2000
       ],
       "perks": [
-        5, 4, 3, 2, 1
+        5, 4, 3, 2, 1, 1
       ],
-      "best_single": 5000,
-      "ranked": false,
+      "best_single": 3000,
+      "ranked": true,
       "professional": false,
-      "date": "06/20",
+      "date": "07/10",
       "table": {
         "goodness": "normal",
         "smoothness": "normal",
-        "hole_size": "mid"
+        "hole_size": "big"
       }
     }
   ]

@@ -17,8 +17,8 @@ import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.util.EventLogger;
-import trashsoftware.trashSnooker.util.GameSaver;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.GeneralSaveManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -74,7 +74,11 @@ public class MainView implements Initializable {
         loadPlayerList();
         loadCueList();
 
-        resumeButton.setDisable(!GameSaver.hasSavedGame());
+        resumeButton.setDisable(!GeneralSaveManager.getInstance().hasSavedGame());
+        
+        gameRuleBox.getSelectionModel().select(0);
+        tableMetricsBox.getSelectionModel().select(0);
+        ballMetricsBox.getSelectionModel().select(0);
     }
 
     public void setStage(Stage stage) {
@@ -279,7 +283,12 @@ public class MainView implements Initializable {
 
     @FXML
     void resumeAction() {
-
+        EntireGame game = GeneralSaveManager.getInstance().getSave();
+        if (game != null) {
+            startGame(game);
+        } else {
+            throw new RuntimeException("???");
+        }
     }
 
     @FXML
@@ -315,15 +324,20 @@ public class MainView implements Initializable {
         if (stdBreakCue == null ||
                 gameValues.rule == GameRule.SNOOKER ||
                 gameValues.rule == GameRule.MINI_SNOOKER) {
-            igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue(), 1);
-            igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue, player2Player.getValue(), 2);
+            igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue(), 1, 1.0);
+            igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue, player2Player.getValue(), 2, 1.0);
         } else {
-            igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue(), 1);
-            igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue(), 2);
+            igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue(), 1, 1.0);
+            igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue(), 2, 1.0);
         }
         
         TableCloth cloth = new TableCloth(clothGoodBox.getValue(), clothSmoothBox.getValue());
 
+        EntireGame game = new EntireGame(igp1, igp2, gameValues, totalFramesBox.getValue(), cloth);
+        startGame(game);
+    }
+    
+    private void startGame(EntireGame entireGame) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("gameView.fxml")
@@ -339,8 +353,7 @@ public class MainView implements Initializable {
             stage.setScene(scene);
 
             GameView gameView = loader.getController();
-            gameView.setup(stage, gameValues, totalFramesBox.getSelectionModel().getSelectedItem(),
-                    igp1, igp2, cloth);
+            gameView.setup(stage, entireGame);
 
             stage.show();
         } catch (Exception e) {
@@ -349,7 +362,7 @@ public class MainView implements Initializable {
     }
 
     public static class CueItem {
-        private final Cue cue;
+        public final Cue cue;
         private final String string;
 
         CueItem(Cue cue, String string) {

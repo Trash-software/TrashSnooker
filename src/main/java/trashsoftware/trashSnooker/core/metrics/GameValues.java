@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.metrics;
 
+import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 import java.util.Arrays;
@@ -29,6 +30,33 @@ public class GameValues {
         this.ball = ballMetrics;
 
         build();
+    }
+    
+    public static GameValues fromJson(JSONObject jsonObject) {
+        GameRule rule = GameRule.valueOf(jsonObject.getString("gameRule"));
+        BallMetrics ballMetrics = BallMetrics.valueOf(jsonObject.getString("ball"));
+
+        JSONObject tableObj = jsonObject.getJSONObject("table");
+        TableMetrics.TableBuilderFactory factory = 
+                TableMetrics.fromOrdinal(tableObj.getInt("tableOrdinal"));
+        TableMetrics.HoleSize holeSize = factory.supportedHoles[tableObj.getInt("holeSizeOrdinal")];
+        TableMetrics tableMetrics = factory.create().holeSize(holeSize).build();
+        
+        return new GameValues(rule, tableMetrics, ballMetrics);
+    }
+    
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        
+        jsonObject.put("gameRule", rule.name());
+        jsonObject.put("ball", ball.name());
+        
+        JSONObject tableObj = new JSONObject();
+        tableObj.put("tableOrdinal", table.getOrdinal());
+        tableObj.put("holeSizeOrdinal", table.getHoleSizeOrdinal());
+        jsonObject.put("table", tableObj);
+        
+        return jsonObject;
     }
 
     private void build() {

@@ -37,7 +37,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double dirX = aimingPosX - game.getCueBall().getX();
         double dirY = aimingPosY - game.getCueBall().getY();
         double[] unitXY = Algebra.unitVector(dirX, dirY);
-        double actualPower = 23.0 * phy.cloth.smoothness.speedReduceFactor / TableCloth.Smoothness.NORMAL.speedReduceFactor;
+        double actualPower = 27.0 * phy.cloth.smoothness.speedReduceFactor / TableCloth.Smoothness.NORMAL.speedReduceFactor;
         double selectedSideSpin = leftBreak ? -0.6 : 0.6;
         double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
                 aiPlayer.getInGamePlayer().getCurrentCue(game));

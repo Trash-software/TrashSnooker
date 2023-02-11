@@ -63,9 +63,9 @@
       "cueSwingMag": 25,
       "cuePointMuSigma": [
         0,
-        15,
+        10,
         0,
-        10
+        8
       ],
       "powerControl": 94.0,
       "privateCues": [],
@@ -108,7 +108,7 @@
       "cueSwingMag": 20,
       "cuePointMuSigma": [
         0,
-        15,
+        10,
         0,
         10
       ],
@@ -153,7 +153,7 @@
       "cueSwingMag": 0,
       "cuePointMuSigma": [
         0,
-        0,
+        0.5,
         0,
         5
       ],
@@ -294,7 +294,7 @@
         -10,
         12,
         0,
-        30
+        20
       ],
       "powerControl": 80,
       "privateCues": [],
@@ -339,7 +339,7 @@
         20,
         25,
         0,
-        40
+        30
       ],
       "powerControl": 80,
       "privateCues": [],
@@ -362,6 +362,141 @@
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 0
+      }
+    },
+    "Wang Xu": {
+      "spin": 92,
+      "precision": 75,
+      "anglePrecision": 1.2,
+      "longPrecision": 0.8,
+      "name": "绪哥",
+      "maxPower": 88,
+      "controllablePower": 74,
+      "solving": 70,
+      "pullDt": [
+        40.0,
+        160.0
+      ],
+      "aimingOffset": 0.2,
+      "cuePlayType": "p1.2,h300,e500;r,r,l,l,l,l,l",
+      "cueSwingMag": 25,
+      "cuePointMuSigma": [
+        0,
+        9,
+        0,
+        6
+      ],
+      "powerControl": 94.0,
+      "privateCues": [],
+      "category": "Amateur",
+      "psy": 70,
+      "height": 173,
+      "width": 1.15,
+      "hand": {
+        "left": 70,
+        "right": 100,
+        "rest": 85
+      },
+      "ai": {
+        "precision": 82,
+        "stable": 90,
+        "position": 88,
+        "defense": 90,
+        "attackPri": 60,
+        "likeShow": 30,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 3
+      }
+    },
+    "Summer Brave": {
+      "spin": 86,
+      "precision": 72,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "夏勇",
+      "maxPower": 80,
+      "controllablePower": 67,
+      "solving": 70,
+      "pullDt": [
+        70.0,
+        210.0
+      ],
+      "aimingOffset": 0.1,
+      "cuePlayType": "p1.2,h800,e500;r,r,l,l,l,l,l",
+      "cueSwingMag": 15,
+      "cuePointMuSigma": [
+        0,
+        8,
+        0,
+        8
+      ],
+      "powerControl": 85.0,
+      "privateCues": [],
+      "category": "Amateur",
+      "psy": 75,
+      "height": 172,
+      "width": 1.0,
+      "hand": {
+        "left": 50,
+        "right": 100,
+        "rest": 80
+      },
+      "ai": {
+        "precision": 77,
+        "stable": 85,
+        "position": 78,
+        "defense": 60,
+        "attackPri": 80,
+        "likeShow": 50,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "High Stick": {
+      "spin": 88,
+      "precision": 85,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "高个",
+      "maxPower": 88,
+      "controllablePower": 75,
+      "solving": 70,
+      "pullDt": [
+        70.0,
+        210.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1.0,h600,e500;r,r,l,l,r,r,l",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        4,
+        0,
+        7
+      ],
+      "powerControl": 87.0,
+      "privateCues": [],
+      "category": "Amateur",
+      "psy": 88,
+      "height": 187,
+      "width": 0.95,
+      "hand": {
+        "left": 50,
+        "right": 100,
+        "rest": 75
+      },
+      "ai": {
+        "precision": 87,
+        "stable": 85,
+        "position": 83,
+        "defense": 60,
+        "attackPri": 80,
+        "likeShow": 50,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     }
   }

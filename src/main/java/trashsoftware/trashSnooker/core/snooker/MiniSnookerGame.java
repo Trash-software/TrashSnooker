@@ -9,9 +9,9 @@ import trashsoftware.trashSnooker.fxml.GameView;
 
 public class MiniSnookerGame extends AbstractSnookerGame {
 
-    public MiniSnookerGame(GameView parent, EntireGame entireGame, 
+    public MiniSnookerGame(EntireGame entireGame, 
                            GameSettings gameSettings, int frameIndex) {
-        super(parent, entireGame, gameSettings, new MiniSnookerTable(entireGame.gameValues.table), frameIndex);
+        super(entireGame, gameSettings, new MiniSnookerTable(entireGame.gameValues.table), frameIndex);
     }
 
     @Override

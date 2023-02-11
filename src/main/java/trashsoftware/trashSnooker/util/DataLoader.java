@@ -317,6 +317,10 @@ public class DataLoader {
     public Cue getRestCue() {
         return cues.get("restCue");
     }
+    
+    public Cue getCueById(String cueId) {
+        return cues.get(cueId);
+    }
 
     private static CuePlayType parseCuePlayType(String s) {
         return new CuePlayType(s);

@@ -87,8 +87,8 @@ public class GameView implements Initializable {
     private static final double WHITE_PREDICT_LEN_AFTER_WALL = 1000.0;  // todo: 根据球员
     public static double scale;
     //    private double minRealPredictLength = 300.0;
-    private static double defaultMaxPredictLength = 1000;
-    public double frameTimeMs = 20.0;
+    private static double defaultMaxPredictLength = 1200;
+    public static double frameTimeMs = 20.0;
     public double frameRate = 1000.0 / frameTimeMs;
     @FXML
     Canvas gameCanvas;
@@ -130,6 +130,10 @@ public class GameView implements Initializable {
     Menu debugMenu;
     @FXML
     MenuItem debugModeMenu;
+//            , saveGameMenu, newGameMenu;
+    @FXML 
+    ToggleGroup animationPlaySpeedToggle;
+    boolean enableDebug = true;
     boolean debugMode = false;
     private double minPredictLengthPotDt = 2000;
     private double maxPredictLengthPotDt = 100;
@@ -193,6 +197,8 @@ public class GameView implements Initializable {
     private boolean drawTargetRefLine = false;
     private PlayerPerson.HandSkill currentHand;
     private PlayerVsAiMatch careerMatch;
+    
+    private int aiAnimationSpeed = 1;
 
     public static double canvasX(double realX) {
         return realX * scale;
@@ -231,6 +237,15 @@ public class GameView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        animationPlaySpeedToggle.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                aiAnimationSpeed = Integer.parseInt(newValue.getUserData().toString());
+                System.out.println("New speed " + aiAnimationSpeed);
+            }
+        }));
+        
+        animationPlaySpeedToggle.selectToggle(animationPlaySpeedToggle.getToggles().get(0));
+        
         graphicsContext = gameCanvas.getGraphicsContext2D();
         ballCanvasGc = ballCanvas.getGraphicsContext2D();
         cueAngleCanvasGc = cueAngleCanvas.getGraphicsContext2D();
@@ -244,7 +259,7 @@ public class GameView implements Initializable {
         powerSlider.setShowTickLabels(true);
     }
 
-    private void generateScales() {
+    private void generateScales(GameValues gameValues) {
         TableMetrics values = gameValues.table;
         if (gameValues.table.rightX > 3500) {
             scale = BIG_TABLE_SCALE;
@@ -275,6 +290,7 @@ public class GameView implements Initializable {
             singlePoleCanvas.setWidth(ballDiameter * 8 * 1.2);
         else if (gameValues.rule == GameRule.SIDE_POCKET)
             singlePoleCanvas.setWidth(ballDiameter * 9 * 1.2);
+        else throw new RuntimeException("nmsl");
 
         singlePoleCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
         singlePoleCanvas.getGraphicsContext2D().setStroke(WHITE);
@@ -283,18 +299,18 @@ public class GameView implements Initializable {
         player2TarCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
         player2TarCanvas.getGraphicsContext2D().setStroke(WHITE);
 
-        setupCanvas();
-        startAnimation();
-        drawTargetBoard(true);
+//        setupCanvas();
+//        startAnimation();
+//        drawTargetBoard(true);
     }
 
     private void setupDebug() {
-        if (!App.enableDebug) {
-            debugMenu.setVisible(false);
-        }
+        System.out.println("Debug: " + enableDebug);
+        debugMenu.setVisible(enableDebug);
     }
 
     public void setupReplay(Stage stage, GameReplay replay) {
+        this.enableDebug = false;
         this.stage = stage;
         this.basePane = (Pane) stage.getScene().getRoot();
         this.replay = replay;
@@ -309,7 +325,10 @@ public class GameView implements Initializable {
         player2Label.setText(player2.getPlayerPerson().getName());
         totalFramesLabel.setText(String.format("(%d)", replay.getItem().totalFrames));
 
-        generateScales();
+        generateScales(replay.gameValues);
+        setupCanvas();
+        startAnimation();
+        drawTargetBoard(true);
 
         setupPowerSlider();
         setUiFrameStart();
@@ -328,27 +347,50 @@ public class GameView implements Initializable {
 //        }
 //        replayCue();
     }
-
-    public void setup(Stage stage,
-                      GameValues gameValues, int totalFrames,
-                      InGamePlayer player1, InGamePlayer player2,
-                      TableCloth cloth) {
+    
+    public void setup(Stage stage, EntireGame entireGame) {
+        this.game = entireGame;
+        this.gameValues = entireGame.gameValues;
+        this.player1 = entireGame.getPlayer1();
+        this.player2 = entireGame.getPlayer2();
         this.stage = stage;
+        
         this.basePane = (Pane) stage.getScene().getRoot();
-        this.gameValues = gameValues;
-        this.player1 = player1;
-        this.player2 = player2;
+
+//        game = new EntireGame(entireGame.getPlayer1(), entireGame.getPlayer2(),
+//                entireGame.gameValues, entireGame.totalFrames, entireGame.cloth);
+        
+        generateScales(entireGame.gameValues);
+        setupCanvas();
+        startAnimation();
+        drawTargetBoard(true);
+        
+        game.startNextFrame();  // fixme: 问题 game.game不是null的时候就渲染不出球
+        drawScoreBoard(game.getGame().getCuingPlayer(), true);
+        
+//        this.game = entireGame;
+        
+//        game = new EntireGame(entireGame.getPlayer1(), entireGame.getPlayer2(),
+//                entireGame.gameValues, entireGame.totalFrames, entireGame.cloth);
+//        setupCanvas();
+//        startAnimation();
+        
+//        startGame(game.totalFrames, game.cloth);
 
         replayButtonBox.setVisible(false);
         replayButtonBox.setManaged(false);
 
         player1Label.setText(player1.getPlayerPerson().getName());
         player2Label.setText(player2.getPlayerPerson().getName());
-        totalFramesLabel.setText(String.format("(%d)", totalFrames));
-
-        generateScales();
-
-        startGame(totalFrames, cloth);
+        totalFramesLabel.setText(String.format("(%d)", entireGame.totalFrames));
+        
+//        startGame(game.totalFrames, game.cloth);
+//        game = new EntireGame(entireGame.getPlayer1(), entireGame.getPlayer2(), 
+//                entireGame.gameValues, entireGame.totalFrames, entireGame.cloth);
+//        game = entireGame;
+        powerSlider.setMajorTickUnit(
+                game.getGame().getCuingPlayer().getPlayerPerson().getControllablePowerPercentage());
+        updatePlayStage();
 
         setupPowerSlider();
         setUiFrameStart();
@@ -378,9 +420,22 @@ public class GameView implements Initializable {
             basePane.getChildren().add(cueModel);
         }
     }
+
+    public void setup(Stage stage,
+                      GameValues gameValues, int totalFrames,
+                      InGamePlayer player1, InGamePlayer player2,
+                      TableCloth cloth) {
+        EntireGame entireGame = new EntireGame(player1, player2, gameValues,
+                totalFrames, cloth);
+        setup(stage, entireGame);
+    }
     
-    public void setCareerMatch(PlayerVsAiMatch careerMatch) {
+    public void setupCareerMatch(Stage stage,
+                                 PlayerVsAiMatch careerMatch) {
         this.careerMatch = careerMatch;
+        this.enableDebug = false;
+        
+        setup(stage, careerMatch.getGame());
     }
 
     private void setOnHidden() {
@@ -395,12 +450,34 @@ public class GameView implements Initializable {
                 if (!game.getGame().getRecorder().isFinished()) {
                     game.getGame().getRecorder().stopRecording(false);
                 }
-                game.quitGame();
-                if (careerMatch != null) {
-                    PlayerPerson opponent = 
-                            player1.getPlayerType() == PlayerType.PLAYER ? 
-                                    player1.getPlayerPerson() : player2.getPlayerPerson();
-                    careerMatch.finish(opponent, game.getP1Wins(), game.getP2Wins());  // 这里没用endFrame或者withdraw，因为不想影响数据库
+                if (!game.isFinished() && !game.getGame().isEnded()) {
+                    game.quitGame();
+                    InGamePlayer winner;
+                    if (careerMatch != null) {
+                        winner = player1.getPlayerType() == PlayerType.PLAYER ?
+                                player2 : player1;
+                    } else {
+                        winner =
+                                (game.getGame().getCuingPlayer() == game.getGame().getPlayer1() ?
+                                        game.getGame().getPlayer2() : game.getGame().getPlayer1())
+                                        .getInGamePlayer();
+                    }
+
+                    boolean matchFinish = game.playerWinsAframe(winner);
+                    
+                    if (careerMatch != null) {
+//                        game.saveTo(PlayerVsAiMatch.getMatchSave());
+                        if (matchFinish) {
+                            careerMatch.finish(winner.getPlayerPerson(),
+                                    game.getP1Wins(),
+                                    game.getP2Wins());  // 这里没用endFrame或者withdraw，因为不想影响数据库
+                        } else {
+                            careerMatch.saveMatch();
+                            careerMatch.saveAndExit();
+                        }
+                    } else {
+                        game.generalSave();
+                    }
                 }
             }
             timeline.stop();
@@ -528,6 +605,12 @@ public class GameView implements Initializable {
 //        game.getPlayer1().getPersonRecord().writeToFile();
 //        game.getPlayer2().getPersonRecord().writeToFile();
 
+        if (careerMatch != null) {
+            careerMatch.saveMatch();
+        } else {
+            game.generalSave();
+        }
+
         Platform.runLater(() -> {
             AlertShower.showInfo(stage,
                     String.format("%s  %d (%d) : (%d) %d  %s",
@@ -570,7 +653,12 @@ public class GameView implements Initializable {
 //                            }
                         },
                         () -> {
-                            game.save();
+                            if (careerMatch != null) {
+                                careerMatch.saveMatch();
+                                careerMatch.saveAndExit();
+                            } else {
+                                game.generalSave();
+                            }
                             stage.hide();
                         }
                 );
@@ -804,15 +892,15 @@ public class GameView implements Initializable {
     }
 
     private void startGame(int totalFrames, TableCloth cloth) {
-        game = new EntireGame(this, player1, player2, gameValues, totalFrames, cloth);
-        powerSlider.setMajorTickUnit(
-                game.getGame().getCuingPlayer().getPlayerPerson().getControllablePowerPercentage());
-        updatePlayStage();
+        game = new EntireGame(player1, player2, gameValues, totalFrames, cloth);
+//        powerSlider.setMajorTickUnit(
+//                game.getGame().getCuingPlayer().getPlayerPerson().getControllablePowerPercentage());
+//        updatePlayStage();
     }
 
     @FXML
     void saveGameAction() {
-        game.save();
+        game.generalSave();
     }
 
     @FXML
@@ -953,7 +1041,9 @@ public class GameView implements Initializable {
      * 三个factor都是指几倍标准差
      */
     private CuePlayParams applyCueError(Player player,
-                                        double powerFactor, double frontBackSpinFactor, double sideSpinFactor,
+                                        double powerFactor, 
+                                        double frontBackSpinFactor, 
+                                        double sideSpinFactor,
                                         boolean mutate,
                                         PlayerPerson.HandSkill handSkill) {
         Cue cue = player.getInGamePlayer().getCurrentCue(game.getGame());
@@ -982,6 +1072,8 @@ public class GameView implements Initializable {
         intentCuePointY = cuePointY;
         // 因为出杆质量而导致的打点偏移
 //        }
+        
+        // todo: 高低杆偏差稍微小点，斯登大点
 
         double cpx = cuePointX;
         double cpy = cuePointY;
@@ -1346,28 +1438,6 @@ public class GameView implements Initializable {
                 "有目标球可见，但已经两次未击中，如再不击中就直接判负",
                 "警告"
         );
-    }
-
-    @FXML
-    void newGameAction() {
-        Platform.runLater(() -> {
-            AlertShower.askConfirmation(
-                    stage,
-                    "真的要开始新游戏吗？", "请确认",
-                    () -> {
-                        startGame(game.totalFrames, game.cloth);
-                        drawTargetBoard(true);
-                        drawScoreBoard(game.getGame().getCuingPlayer(), true);
-                    },
-                    null
-            );
-
-//            if (NativeAlertShower.askConfirmation(stage, "真的要开始新游戏吗？", "请确认")) {
-//                startGame(game.totalFrames);
-//                drawTargetBoard();
-//                drawScoreBoard(game.getGame().getCuingPlayer());
-//            }
-        });
     }
 
     @FXML
@@ -1829,7 +1899,19 @@ public class GameView implements Initializable {
     private void drawBalls() {
 //        System.out.println(playingMovement + " " + movement);
         if (playingMovement) {
-            int index = movement.incrementIndex();
+            // 处理倍速
+            int index;
+            if (replay == null) {
+                Player player = game.getGame().getCuingPlayer();
+                if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
+                    index = movement.incrementIndex(aiAnimationSpeed);
+                } else {
+                    index = movement.incrementIndex();
+                }
+            } else {
+                index = movement.incrementIndex(aiAnimationSpeed);
+            }
+            
             for (Map.Entry<Ball, List<MovementFrame>> entry :
                     movement.getMovementMap().entrySet()) {
                 MovementFrame frame = entry.getValue().get(index);
@@ -1865,7 +1947,7 @@ public class GameView implements Initializable {
                 playingMovement = false;
                 movement = null;
                 if (replay != null) finishCueReplay();
-                else game.getGame().finishMove();
+                else game.getGame().finishMove(this);
             }
         } else {
             if (movement == null) {
@@ -2598,7 +2680,7 @@ public class GameView implements Initializable {
                 directionX,
                 directionY,
                 cue,
-                playerPerson,
+                cuingPlayer,
                 currentHand,
                 restCuePointing
         );
@@ -3111,6 +3193,7 @@ public class GameView implements Initializable {
         private final double errMulWithPower;
         private final double aimingOffset;  // 针对瞄偏打正的球手，杆头向右拐的正
         private final Cue cue;
+        private final InGamePlayer igp;
         private final PlayerPerson playerPerson;
         private long heldMs = 0;
         private long endHeldMs = 0;
@@ -3118,6 +3201,8 @@ public class GameView implements Initializable {
         private boolean touched;  // 是否已经接触白球
         private boolean reachedMaxPull;
         private double pointingAngle;
+        private final int playSpeedMultiplier;
+        private boolean ended = false;
 
         CueAnimationPlayer(double initDistance,
                            double maxPullDt,
@@ -3126,9 +3211,11 @@ public class GameView implements Initializable {
                            double handX, double handY,
                            double pointingUnitX, double pointingUnitY,
                            Cue cue,
-                           PlayerPerson playerPerson,
+                           InGamePlayer igp,
                            PlayerPerson.HandSkill handSkill,
                            double[] restCuePointing) {
+            
+            playerPerson = igp.getPlayerPerson();
 
             if (selectedPower < Values.MIN_SELECTED_POWER)
                 selectedPower = Values.MIN_SELECTED_POWER;
@@ -3156,18 +3243,28 @@ public class GameView implements Initializable {
             System.out.println(cueDtToWhite + ", " + this.cueMoveSpeed + ", " + maxExtension);
 
             this.cue = cue;
-            this.playerPerson = playerPerson;
+            this.igp = igp;
+            this.playSpeedMultiplier = igp.getPlayerType() == PlayerType.COMPUTER ?
+                    aiAnimationSpeed : 1;
 
             this.holdMs = playerPerson.getCuePlayType().getPullHoldMs();
             this.endHoldMs = playerPerson.getCuePlayType().getEndHoldMs();
         }
-
+        
         void nextFrame() {
+            for (int i = 0; i < playSpeedMultiplier; i++) {
+                if (ended) break;
+                calculateOneFrame();
+            }
+        }
+
+        private void calculateOneFrame() {
             if (reachedMaxPull && heldMs < holdMs) {
                 heldMs += frameTimeMs;
             } else if (endHeldMs > 0) {
                 endHeldMs += frameTimeMs;
                 if (endHeldMs >= endHoldMs) {
+                    ended = true;
                     endCueAnimation();
                 }
             } else if (reachedMaxPull) {

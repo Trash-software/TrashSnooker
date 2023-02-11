@@ -9,12 +9,12 @@ public class TableMetrics {
     public static final String SIDE_POCKET = "SIDE_POCKET";
     public static final HoleSize[] SNOOKER_HOLES = {
             new HoleSize("加大", 89, 98),
-            new HoleSize("标准", 85, 90),
+            new HoleSize("标准", 85, 92),
             new HoleSize("小", 78, 85)
     };
     public static final HoleSize[] CHINESE_EIGHT_HOLES = {
             new HoleSize("加大", 89, 98),
-            new HoleSize("标准", 85, 90),
+            new HoleSize("标准", 85, 92),
             new HoleSize("小", 78, 85)
     };
     public static final HoleSize[] SIDE_POCKET_HOLES = {
@@ -23,6 +23,7 @@ public class TableMetrics {
     private static final String[] NAMES = {SNOOKER, CHINESE_EIGHT, SIDE_POCKET};
     public final String tableName;
     public final TableBuilderFactory factory;
+    private HoleSize holeSize;
 
     public Color tableColor;
     public Color gravityAreaColor;
@@ -370,14 +371,14 @@ public class TableMetrics {
             this.values = new TableMetrics(factory, tableName);
         }
 
-        public Builder tableColor(Color color, Color borderColor) {
+        Builder tableColor(Color color, Color borderColor) {
             values.tableColor = color;
             values.gravityAreaColor = color.deriveColor(0, 1, 0.9, 1);
             values.tableBorderColor = borderColor;
             return this;
         }
 
-        public Builder tableDimension(double outerWidth, double innerWidth,
+        Builder tableDimension(double outerWidth, double innerWidth,
                                       double outerHeight, double innerHeight,
                                       double cushionHeight) {
             values.outerWidth = outerWidth;
@@ -395,20 +396,13 @@ public class TableMetrics {
             return this;
         }
 
-//        public Builder ballSize(double diameter) {
-//            values.ballDiameter = diameter;
-//            values.ballRadius = diameter / 2;
-//            values.ballWeightRatio = Math.pow(diameter, 3) / Math.pow(52.5, 3);
-//            return this;
-//        }
-
-        public Builder curvedHole(double extraSlopeWidth) {
+        Builder curvedHole(double extraSlopeWidth) {
             values.straightHole = false;
             values.holeExtraSlopeWidth = extraSlopeWidth;
             return this;
         }
 
-        public Builder straightHole(double extraSlopeWidth, double cornerHoleOpenAngle, double midHoleOpenAngle) {
+        Builder straightHole(double extraSlopeWidth, double cornerHoleOpenAngle, double midHoleOpenAngle) {
             values.straightHole = true;
             values.holeExtraSlopeWidth = extraSlopeWidth;
             this.cornerHoleOpenAngle = cornerHoleOpenAngle;
@@ -436,6 +430,7 @@ public class TableMetrics {
         }
 
         public Builder holeSize(HoleSize holeSize) {
+            values.holeSize = holeSize;
             if (values.straightHole) {
                 return holeSizeStraight(holeSize.cornerHoleDiameter, holeSize.midHoleDiameter);
             } else {
@@ -469,7 +464,7 @@ public class TableMetrics {
             return this;
         }
 
-        public Builder resistanceAndCushionBounce(double tableResistance,
+        Builder resistanceAndCushionBounce(double tableResistance,
                                                   double wallBounce,
                                                   double wallSpinPreserve) {
             values.tableResistanceRatio = tableResistance;

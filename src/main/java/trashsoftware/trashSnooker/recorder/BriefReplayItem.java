@@ -106,7 +106,7 @@ public class BriefReplayItem {
         Cue playCue = Objects.requireNonNull(DataLoader.getInstance().getCues().get(playCueId));
         Cue breakCue = Objects.requireNonNull(DataLoader.getInstance().getCues().get(breakCueId));
 
-        return new InGamePlayer(playerPerson, breakCue, playCue, type, num);
+        return new InGamePlayer(playerPerson, breakCue, playCue, type, num, 1.0);
     }
 
     public InGamePlayer getP1() {

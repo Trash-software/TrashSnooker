@@ -83,6 +83,10 @@ public class Cue {
         return cueModel;
     }
 
+    public String getCueId() {
+        return cueId;
+    }
+
     public String getName() {
         return name;
     }

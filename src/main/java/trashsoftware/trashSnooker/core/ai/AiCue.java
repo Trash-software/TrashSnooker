@@ -294,7 +294,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     }
 
     protected AiCueResult makeAttackCue(IntegratedAttackChoice iac) {
-        return new AiCueResult(aiPlayer.getPlayerPerson(),
+        return new AiCueResult(aiPlayer.getInGamePlayer(),
                 game.getGamePlayStage(iac.attackChoice.ball, true),
                 AiCueResult.CueType.ATTACK,
                 iac.attackChoice.targetOrigPos,
@@ -309,7 +309,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     }
 
     protected AiCueResult makeDefenseCue(DefenseChoice choice, AiCueResult.CueType cueType) {
-        return new AiCueResult(aiPlayer.getPlayerPerson(),
+        return new AiCueResult(aiPlayer.getInGamePlayer(),
                 game.getGamePlayStage(choice.ball, true),
                 cueType,
                 null,
@@ -401,7 +401,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 game.getCuingPlayer().getPlayerPerson()
         );
         return new AiCueResult(
-                aiPlayer.getPlayerPerson(),
+                aiPlayer.getInGamePlayer(),
                 GamePlayStage.NORMAL,
                 AiCueResult.CueType.DEFENSE,
                 null,

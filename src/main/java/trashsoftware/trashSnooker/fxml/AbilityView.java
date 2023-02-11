@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.widgets.AbilityShower;
+import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,6 +23,7 @@ public class AbilityView implements Initializable {
     }
 
     public void setup(Scene scene, PlayerPerson pp) {
-        abilityContainer.setup(pp, false);
+        PerkManager pm = new PerkManager(null, 0, PlayerPerson.ReadableAbility.fromPlayerPerson(pp));
+        abilityContainer.setup(pm, false);
     }
 }

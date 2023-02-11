@@ -8,9 +8,7 @@ import trashsoftware.trashSnooker.core.career.aiMatch.SnookerAiVsAi;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.util.DataLoader;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 public class Career {
 
@@ -19,15 +17,19 @@ public class Career {
     private PlayerPerson playerPerson;
     private int cumulatedPerks = 0;
     private int usedPerks = 0;
+    private double handFeel = 0.9;
+    private final transient Map<GameRule, Double> efforts = new HashMap<>();
 
     private Career(PlayerPerson person, boolean isHumanPlayer) {
         this.playerPerson = person;
         this.isHumanPlayer = isHumanPlayer;
+        
+        for (GameRule gameRule : GameRule.values()) efforts.put(gameRule, 1.0);
     }
 
     public static Career createByPerson(PlayerPerson playerPerson, boolean isHumanPlayer) {
         Career career = new Career(playerPerson, isHumanPlayer);
-
+        career.cumulatedPerks = CareerManager.INIT_PERKS;
         return career;
     }
 
@@ -38,6 +40,18 @@ public class Career {
         Career career = new Career(playerPerson, jsonObject.getBoolean("human"));
         career.cumulatedPerks = jsonObject.getInt("cumulatedPerks");
         career.usedPerks = jsonObject.getInt("usedPerks");
+        
+        if (jsonObject.has("handFeel")) {
+            career.handFeel = jsonObject.getDouble("handFeel");
+        }
+        if (jsonObject.has("efforts")) {
+            JSONObject effortObj = jsonObject.getJSONObject("efforts");
+            for (String key : effortObj.keySet()) {
+                GameRule rule = GameRule.valueOf(key);
+                double effort = effortObj.getDouble(key);
+                career.efforts.put(rule, effort);
+            }
+        }
 
         JSONArray scoreArr = jsonObject.getJSONArray("scores");
         for (int i = 0; i < scoreArr.length(); i++) {
@@ -57,11 +71,49 @@ public class Career {
         for (ChampionshipScore score : championshipScores) {
             scoreArr.put(score.toJsonObject());
         }
+        
+        JSONObject effortsObj = new JSONObject();
+        for (Map.Entry<GameRule, Double> eff : efforts.entrySet()) {
+            effortsObj.put(eff.getKey().name(), eff.getValue());
+        }
+        out.put("efforts", effortsObj);
         out.put("scores", scoreArr);
+        out.put("handFeel", handFeel);
         out.put("cumulatedPerks", cumulatedPerks);
         out.put("usedPerks", usedPerks);
 
         return out;
+    }
+
+    public double getEffort(GameRule rule) {
+        return Objects.requireNonNullElse(efforts.get(rule), 1.0);
+    }
+
+    public double getHandFeel() {
+        return handFeel;
+    }
+    
+    public double getHandFeelEffort(GameRule rule) {
+        return getHandFeel() * getEffort(rule);
+    }
+    
+    public void updateEffort(GameRule rule, double effort) {
+        efforts.put(rule, effort);
+
+        if (CareerManager.LOG && effort != 1.0) {
+            System.out.println(rule.name() + " effort: " + playerPerson.getPlayerId() + " " + effort);
+        }
+    }
+    
+    public void updateHandFeel() {
+        double handFeelChange = (Math.random() - 0.5) * 0.05;
+        this.handFeel += handFeelChange;
+        if (this.handFeel > 1.0) this.handFeel = 1.0;
+        else if (this.handFeel < 0.8) this.handFeel = 0.8;
+        
+        if (CareerManager.LOG) {
+            System.out.println("Hand feel: " + playerPerson.getPlayerId() + " " + handFeel);
+        }
     }
 
     public PlayerPerson getPlayerPerson() {
@@ -111,23 +163,6 @@ public class Career {
         return cumulatedPerks - usedPerks;
     }
 
-    public int snookerAwardsInRecentTwoYears(Calendar timestamp) {
-        Calendar startTime = Calendar.getInstance();
-        startTime.set(timestamp.get(Calendar.YEAR) - 2,
-                timestamp.get(Calendar.MONTH),
-                timestamp.get(Calendar.DAY_OF_MONTH) - 1);  // 上上届要算
-
-        int total = 0;
-        for (ChampionshipScore score : championshipScores) {
-            if (score.data.type == GameRule.SNOOKER && startTime.before(score.timestamp)) {
-                for (ChampionshipScore.Rank rank : score.ranks) {
-                    total += score.data.getAwardByRank(rank);
-                }
-            }
-        }
-        return total;
-    }
-
     @Override
     public String toString() {
         return "Career{" +
@@ -138,11 +173,47 @@ public class Career {
 
     public static class CareerWithAwards implements Comparable<CareerWithAwards> {
         public final Career career;
-        public final int recentAwards;
+        public final GameRule type;
+        private int recentAwards;
+        private int totalAwards;
 
-        public CareerWithAwards(Career career, int recentAwards) {
+        public CareerWithAwards(GameRule type, Career career, Calendar timestamp) {
             this.career = career;
-            this.recentAwards = recentAwards;
+            this.type = type;
+
+            calculateAwards(timestamp);
+        }
+
+        private void calculateAwards(Calendar timestamp) {
+            recentAwards = 0;
+            totalAwards = 0;
+            Calendar startTime = Calendar.getInstance();
+            startTime.set(timestamp.get(Calendar.YEAR) - 2,
+                    timestamp.get(Calendar.MONTH),
+                    timestamp.get(Calendar.DAY_OF_MONTH) - 1);  // 上上届要算
+
+            for (ChampionshipScore score : career.getChampionshipScores()) {
+                int awards = 0;
+                if (score.data.type == type) {
+                    for (ChampionshipScore.Rank rank : score.ranks) {
+                        awards += score.data.getAwardByRank(rank);
+                    }
+                    totalAwards += awards;
+                    if (score.data.ranked) {
+                        if (startTime.before(score.timestamp)) {
+                            recentAwards += awards;
+                        }
+                    }
+                }
+            }
+        }
+
+        public int getRecentAwards() {
+            return recentAwards;
+        }
+
+        public int getTotalAwards() {
+            return totalAwards;
         }
 
         private double winScore() {

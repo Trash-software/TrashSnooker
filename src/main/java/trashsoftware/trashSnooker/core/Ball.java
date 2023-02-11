@@ -360,7 +360,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         double mag = Math.abs(Algebra.projectionLengthOn(cushionNormalVec, new double[]{vx, vy})) *
                 phy.calculationsPerSec;
 
-        double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.62);
+        double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.67);
 //        System.out.println(mag + " " + sideSpinEffectMul);
         double effectiveSideSpin = sideSpin * sideSpinEffectMul;
 
@@ -386,7 +386,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
             ySpin *= (table.wallSpinPreserveRatio * 0.9);
         }
 
-        sideSpin *= table.wallSpinPreserveRatio * sideSpinEffectMul;
+        sideSpin -= effectiveSideSpin;
+        sideSpin *= table.wallSpinPreserveRatio;
+//        sideSpin *= table.wallSpinPreserveRatio / sideSpinEffectMul;
         
         // todo: 吃库之后侧旋
     }
@@ -562,9 +564,16 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         double ballOutVer = thisVerV;
         if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
             double totalSpeed = (Math.hypot(this.vx, this.vy) + Math.hypot(ball.vx, ball.vy)) * phy.calculationsPerSec;
-            double powerGear = Math.min(1.0, totalSpeed / 0.4 / Values.MAX_POWER_SPEED * values.ball.ballWeightRatio);  // 40的力就没有效应了
+            double powerGear = Math.min(1.0, totalSpeed / 0.35 / Values.MAX_POWER_SPEED * values.ball.ballWeightRatio);  // 35的力就没有效应了(高低杆要打出35的球速，起码要50的力)
             double gearRemain = (1 - powerGear) * MAX_GEAR_EFFECT;
             double gearEffect = 1 - gearRemain;
+            
+            double spinProj = Algebra.projectionLengthOn(thisV, 
+                    new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
+            
+            gearRemain *= spinProj;
+
+//            System.out.println("Gear " + gearRemain + " " + spinProj);
 
             // todo: 1.还没考虑旋转 2.目标球的偏移由于AI算不了而取消了
 //            double transformed = thisOutHor * (1 - gearEffect);

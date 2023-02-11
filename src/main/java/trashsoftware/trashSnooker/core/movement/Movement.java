@@ -37,6 +37,12 @@ public class Movement {
         return iterationIndex++;
     }
     
+    public int incrementIndex(int nFrames) {
+        int cur  = iterationIndex;
+        iterationIndex = Math.min(iterationIndex + nFrames, movementMap.get(anyBall).size());
+        return cur;
+    }
+    
     public void reset() {
         iterationIndex = 0;
     }

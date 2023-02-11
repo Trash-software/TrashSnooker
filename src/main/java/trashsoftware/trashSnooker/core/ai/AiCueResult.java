@@ -1,9 +1,6 @@
 package trashsoftware.trashSnooker.core.ai;
 
-import trashsoftware.trashSnooker.core.Algebra;
-import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.GamePlayStage;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.*;
 
 import java.util.Random;
 
@@ -20,7 +17,7 @@ public class AiCueResult {
     public double aiPrecisionFactor = 10500.0;  // 越大，大家越准
     private double unitX, unitY;
 
-    public AiCueResult(PlayerPerson playerPerson,
+    public AiCueResult(InGamePlayer inGamePlayer,
                        GamePlayStage gamePlayStage,
                        CueType cueType,
                        double[] targetOrigPos,
@@ -43,7 +40,7 @@ public class AiCueResult {
         this.targetBall = targetBall;
         this.handSkill = handSkill;
 
-        applyRandomError(playerPerson, gamePlayStage);
+        applyRandomError(inGamePlayer, gamePlayStage);
     }
 
     public Ball getTargetBall() {
@@ -70,14 +67,16 @@ public class AiCueResult {
         return cueType;
     }
 
-    private void applyRandomError(PlayerPerson playerPerson, GamePlayStage gamePlayStage) {
+    private void applyRandomError(InGamePlayer igp, GamePlayStage gamePlayStage) {
         Random random = new Random();
         double rad = Algebra.thetaOf(unitX, unitY);
+        
+        PlayerPerson person = igp.getPlayerPerson();
 
         double precisionFactor = aiPrecisionFactor;
         if (gamePlayStage == GamePlayStage.THIS_BALL_WIN ||
                 gamePlayStage == GamePlayStage.ENHANCE_WIN) {
-            precisionFactor *= (playerPerson.psy / 100);
+            precisionFactor *= (person.psy / 100);
             System.out.println(gamePlayStage + ", precision: " + precisionFactor);
         } else if (gamePlayStage == GamePlayStage.BREAK) {
             precisionFactor *= 5.0;
@@ -86,7 +85,7 @@ public class AiCueResult {
         double mistake = random.nextDouble() * 100;
         double mistakeFactor = 1.0;
         double maxPrecision = 100.0;
-        if (mistake > playerPerson.getAiPlayStyle().stability) {
+        if (mistake > igp.getPlayerPerson().getAiPlayStyle().stability) {
             mistakeFactor = 2.0;
             maxPrecision = 90.0;
             System.out.println("Mistake");
@@ -94,20 +93,24 @@ public class AiCueResult {
 
         double sd;
         if (cueType == CueType.ATTACK) {
-            sd = (100 - playerPerson.getAiPlayStyle().precision) / precisionFactor;  // 再歪也歪不了太多吧？
+            sd = (100 - person.getAiPlayStyle().precision) / precisionFactor;  // 再歪也歪不了太多吧？
             System.out.println("Precision factor: " + precisionFactor + ", Random offset: " + sd);
         } else if (cueType == CueType.BREAK || gamePlayStage == GamePlayStage.BREAK) {
-            sd = (100 - Math.max(playerPerson.getAiPlayStyle().precision,
-                    playerPerson.getAiPlayStyle().defense)) / precisionFactor;
+            sd = (100 - Math.max(person.getAiPlayStyle().precision,
+                    person.getAiPlayStyle().defense)) / precisionFactor;
         } else if (cueType == CueType.SOLVE) {
-            sd = (100 - playerPerson.getSolving()) / precisionFactor * 12.0;
+            sd = (100 - person.getSolving()) / precisionFactor * 10.0;
 //            System.out.println("Solving sd: " + sd);
         } else {
-            sd = (100 - playerPerson.getAiPlayStyle().defense) / precisionFactor;
+            sd = (100 - person.getAiPlayStyle().defense) / precisionFactor;
         }
 
         double handSdMul = PlayerPerson.HandBody.getSdOfHand(handSkill);
         sd *= handSdMul;
+        
+        // 手感差时偏差大
+        double handFeelMul = 1.0 / igp.getHandFeelEffort();
+        sd *= handFeelMul;
 
         double afterRandom = random.nextGaussian() * sd * mistakeFactor + rad;
         afterRandom = Math.min(afterRandom, maxPrecision);

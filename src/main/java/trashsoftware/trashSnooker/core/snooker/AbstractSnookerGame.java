@@ -8,7 +8,6 @@ import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
 import trashsoftware.trashSnooker.core.table.Table;
-import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.List;
 import java.util.Map;
@@ -35,12 +34,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     
     private int repositionCount;
     private boolean willLoseBecauseThisFoul;
+    
+    private int actualTarget;  // todo: 斯诺克规定，哪怕是打彩球时，也必须指定是打的哪颗球
 
-    AbstractSnookerGame(GameView parent, EntireGame entireGame,
+    AbstractSnookerGame(EntireGame entireGame,
                         GameSettings gameSettings, 
                         Table table,
                         int frameIndex) {
-        super(parent, entireGame, gameSettings, entireGame.gameValues, table, frameIndex);
+        super(entireGame, gameSettings, entireGame.gameValues, table, frameIndex);
 
         redRowOccupyX = gameValues.ball.ballDiameter * Math.sin(Math.toRadians(60.0)) +
                 Game.MIN_PLACE_DISTANCE * 0.8;
@@ -177,36 +178,6 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             System.out.println("Target: " + currentTarget + ", Free ball check: " +
                     canSeeBallCount + ", n targets: " + currentTarBalls.size());
             return canSeeBallCount == 0;
-
-//            // 使用预测击球线的方法：如瞄准最薄边时，预测线显示打到的就是这颗球（不会碰到其他球），则没有自由球。
-//            double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
-//            for (Ball ball : currentTarBalls) {
-//                // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
-//                double xDiff = ball.getX() - cueBall.getX();
-//                double yDiff = ball.getY() - cueBall.getY();
-//                double[] vec = new double[]{xDiff, yDiff};
-//                double[] unitVec = Algebra.unitVector(vec);
-//                double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
-//                double theta = Math.asin(simulateBallDiameter / dt);  // 连线与预测线的夹角
-//                double alpha = Algebra.thetaOf(unitVec);  // 两球连线与X轴的夹角
-//
-//                double leftAng = Algebra.normalizeAngle(alpha + theta);
-//                double rightAng = Algebra.normalizeAngle(alpha - theta);
-//
-//                double[] leftUnitVec = Algebra.unitVectorOfAngle(leftAng);
-//                double[] rightUnitVec = Algebra.unitVectorOfAngle(rightAng);
-//
-//                PredictedPos leftPP = getPredictedHitBall(cueBall.getX(), cueBall.getY(),
-//                        leftUnitVec[0], leftUnitVec[1]);
-//                PredictedPos rightPP = getPredictedHitBall(cueBall.getX(), cueBall.getY(),
-//                        rightUnitVec[0], rightUnitVec[1]);
-//
-//                if ((leftPP == null || leftPP.getTargetBall().getValue() == ball.getValue()) &&
-//                        (rightPP == null || rightPP.getTargetBall().getValue() == ball.getValue()))
-//                    // 对于红球而言，能看到任意一颗红球的左侧与任意（可为另一颗）的右侧，则没有自由球
-//                    return false;  // 两侧都看得到或者看得穿，没有自由球
-//            }
-//            return true;
         } else {
             return false;
         }
@@ -300,13 +271,13 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
     }
 
-    private int getMaxFoul(Set<SnookerBall> pottedBalls) {
+    private int getFoulScore(Set<SnookerBall> pottedBalls) {
         int foul = 0;
         for (SnookerBall ball : pottedBalls) {
-            if (ball.isColored() && ball.getValue() > foul) foul = ball.getValue();
-            else foul = getDefaultFoulValue();
+            if (ball.getValue() > foul) foul = ball.getValue();
         }
-        return foul;
+        if (foul == 0) throw new RuntimeException("No foul, why call this method");
+        return Math.max(getDefaultFoulValue(), foul);
     }
 
     public int getDefaultFoulValue() {
@@ -322,7 +293,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             foulReason = "空杆";
             if (cueBall.isPotted()) ballInHand = true;
         } else if (cueBall.isPotted()) {
-            foul = Math.max(getDefaultFoulValue(), getMaxFoul(pottedBalls));
+            foul = getFoulScore(pottedBalls);
             foulReason = "白球落袋";
             ballInHand = true;
         } else if (isFreeBall) {
@@ -338,7 +309,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                     if (ball.isRed()) {
                         score++;  // 进了颗红球
                     } else {
-                        foul = getMaxFoul(pottedBalls);  // 进了颗彩球
+                        foul = getFoulScore(pottedBalls);  // 进了颗彩球
                         foulReason = "目标球为红球，但有彩球落袋";
                     }
                 }
@@ -348,7 +319,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             }
         } else {
             if (whiteFirstCollide.getValue() == 1) {  // 该打彩球时打了红球
-                foul = Math.max(4, getMaxFoul(pottedBalls));
+                foul = Math.max(4, getFoulScore(pottedBalls));
                 foulReason = "目标球为" + ballValueToColorName(currentTarget) + "，但击打了红球";
             } else {
                 if (currentTarget != 0 && whiteFirstCollide.getValue() != currentTarget) {  // 打了非目标球的彩球
@@ -369,14 +340,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                             if (onlyBall.getValue() == currentTarget) {
                                 score = currentTarget;
                             } else {
-                                foul = Math.max(foul, getMaxFoul(pottedBalls));
+                                foul = Math.max(foul, getFoulScore(pottedBalls));
                                 foulReason = "目标球为" + ballValueToColorName(currentTarget) +
                                         "，但击打了" + ballValueToColorName(onlyBall.getValue());
                             }
                         }
                     }
                 } else if (!pottedBalls.isEmpty()) {
-                    foul = getMaxFoul(pottedBalls);
+                    foul = getFoulScore(pottedBalls);
                     foulReason = "击打彩球时有非目标球落袋";
                 }
             }

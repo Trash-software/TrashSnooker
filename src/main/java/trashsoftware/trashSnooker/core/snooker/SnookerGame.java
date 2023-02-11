@@ -9,8 +9,8 @@ import trashsoftware.trashSnooker.fxml.GameView;
 
 public class SnookerGame extends AbstractSnookerGame {
 
-    public SnookerGame(GameView parent, EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
-        super(parent, entireGame, gameSettings, new SnookerTable(entireGame.gameValues.table), frameIndex);
+    public SnookerGame(EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
+        super(entireGame, gameSettings, new SnookerTable(entireGame.gameValues.table), frameIndex);
     }
 
     @Override

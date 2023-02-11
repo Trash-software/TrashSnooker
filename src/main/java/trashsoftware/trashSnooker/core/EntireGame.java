@@ -1,15 +1,16 @@
 package trashsoftware.trashSnooker.core;
 
+import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
-import trashsoftware.trashSnooker.fxml.GameView;
-import trashsoftware.trashSnooker.util.GameSaver;
+import trashsoftware.trashSnooker.util.GeneralSaveManager;
 import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 
+import java.io.File;
 import java.sql.Timestamp;
 
 public class EntireGame {
@@ -20,17 +21,21 @@ public class EntireGame {
     public final Phy playPhy;
     public final Phy predictPhy;
     public final Phy whitePhy;
-    private final Timestamp startTime = new Timestamp(System.currentTimeMillis());
-    private final GameView gameView;
-    InGamePlayer p1;
-    InGamePlayer p2;
+    final InGamePlayer p1;
+    final InGamePlayer p2;
     Game<? extends Ball, ? extends Player> game;
+    private Timestamp startTime = new Timestamp(System.currentTimeMillis());
     private int p1Wins;
     private int p2Wins;
     private boolean p1Breaks;
 
-    public EntireGame(GameView gameView, InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
+    public EntireGame(InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
                       int totalFrames, TableCloth cloth) {
+        this(p1, p2, gameValues, totalFrames, cloth, true);
+    }
+
+    private EntireGame(InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
+                      int totalFrames, TableCloth cloth, boolean isNewCreate) {
         this.p1 = p1;
         this.p2 = p2;
         if (totalFrames % 2 != 1) {
@@ -38,24 +43,73 @@ public class EntireGame {
         }
         this.gameValues = gameValues;
         this.totalFrames = totalFrames;
-        this.gameView = gameView;
         this.cloth = cloth;
         this.playPhy = Phy.Factory.createPlayPhy(cloth);
         this.predictPhy = Phy.Factory.createAiPredictPhy(cloth);
         this.whitePhy = Phy.Factory.createWhitePredictPhy(cloth);
 
-        if (gameValues.isStandard())
+        if (isNewCreate && gameValues.isStandard())
             DBAccess.getInstance().recordAnEntireGameStarts(this);
 
-        createNextFrame();
+//        createNextFrame();
     }
 
-    public static EntireGame load() {
-        return GameSaver.load();
+    public static EntireGame fromJson(JSONObject jsonObject) {
+        int frames = jsonObject.getInt("totalFrames");
+        GameValues gameValues = GameValues.fromJson(jsonObject.getJSONObject("gameValues"));
+
+        JSONObject clothObj = jsonObject.getJSONObject("cloth");
+        TableCloth cloth = TableCloth.fromJson(clothObj);
+
+        InGamePlayer p1 = InGamePlayer.fromJson(jsonObject.getJSONObject("p1"));
+        InGamePlayer p2 = InGamePlayer.fromJson(jsonObject.getJSONObject("p2"));
+
+        EntireGame entireGame = new EntireGame(
+                p1,
+                p2,
+                gameValues,
+                frames,
+                cloth,
+                false
+        );
+
+        entireGame.p1Wins = jsonObject.getInt("p1Wins");
+        entireGame.p2Wins = jsonObject.getInt("p2Wins");
+        entireGame.p1Breaks = jsonObject.getBoolean("p1Breaks");
+        entireGame.startTime = new Timestamp(jsonObject.getLong("startTime"));
+        return entireGame;
     }
 
-    public void save() {
-        GameSaver.save(this);
+    public static EntireGame loadFrom(File file) {
+        if (!file.exists()) return null;
+        JSONObject json = Util.readJson(file);
+        assert json != null;
+        EntireGame eg = fromJson(json);
+        if (eg.isFinished()) return null;
+        return eg;
+    }
+
+    public JSONObject toJson() {
+        JSONObject object = new JSONObject();
+
+        object.put("totalFrames", totalFrames);
+        object.put("gameValues", gameValues.toJson());
+
+        object.put("cloth", cloth.toJson());
+
+        object.put("startTime", startTime.getTime());
+        object.put("p1Wins", p1Wins);
+        object.put("p2Wins", p2Wins);
+        object.put("p1Breaks", p1Breaks);
+
+        object.put("p1", p1.toJson());
+        object.put("p2", p2.toJson());
+
+        return object;
+    }
+
+    public void generalSave() {
+        GeneralSaveManager.getInstance().save(this);
     }
 
     public Game<? extends Ball, ? extends Player> getGame() {
@@ -162,7 +216,7 @@ public class EntireGame {
                 .player1Breaks(p1Breaks)
                 .players(p1, p2)
                 .build();
-        game = Game.createGame(gameView, gameSettings, gameValues, this);
+        game = Game.createGame(gameSettings, gameValues, this);
         if (gameValues.isStandard())
             DBAccess.getInstance().recordAFrameStarts(
                     this, game);

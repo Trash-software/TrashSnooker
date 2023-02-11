@@ -30,15 +30,21 @@ public class EntryView implements Initializable {
     @FXML
     Button continueCareerBtn;
 
-    private Stage parentStage;
+    private Stage selfStage;
 
-    static void startCareerView(Stage owner, Stage stage) throws IOException {
+    void startCareerView(Stage owner, Stage stage) {
         stage.initOwner(owner);
+        stage.initModality(Modality.WINDOW_MODAL);
 
         FXMLLoader loader = new FXMLLoader(
-                EntryView.class.getResource("careerView.fxml")
+                getClass().getResource("careerView.fxml")
         );
-        Parent root = loader.load();
+        Parent root;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         root.setStyle(App.FONT_STYLE);
 
         CareerView mainView = loader.getController();
@@ -60,11 +66,15 @@ public class EntryView implements Initializable {
             continueCareerBtn.setDisable(newValue == null);
         }));
     }
-
-    public void setup(Stage parentStage) {
-        this.parentStage = parentStage;
-
+    
+    public void refreshGui() {
         refreshTable();
+    }
+
+    public void setup(Stage selfStage) {
+        this.selfStage = selfStage;
+
+        refreshGui();
 
 //        CareerManager careerManager = CareerManager.getInstance();
 //        if (careerManager)
@@ -79,7 +89,7 @@ public class EntryView implements Initializable {
     void newCareer() throws IOException {
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(parentStage);
+        stage.initOwner(selfStage);
 
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("newCareerView.fxml")
@@ -88,7 +98,7 @@ public class EntryView implements Initializable {
         root.setStyle(App.FONT_STYLE);
 
         NewCareerView mainView = loader.getController();
-        mainView.setup(parentStage, stage);
+        mainView.setup(this, selfStage, stage);
 
         Scene scene = new Scene(root);
 
@@ -107,14 +117,14 @@ public class EntryView implements Initializable {
         CareerManager.setCurrentSave(selected);
 
         Stage stage = new Stage();
-        startCareerView(parentStage, stage);
+        startCareerView(selfStage, stage);
     }
 
     @FXML
     void fastGame() throws IOException {
 //            ConfigLoader.startLoader(CONFIG);
         Stage stage = new Stage();
-        stage.initOwner(parentStage);
+        stage.initOwner(selfStage);
         stage.initModality(Modality.WINDOW_MODAL);
 
         FXMLLoader loader = new FXMLLoader(

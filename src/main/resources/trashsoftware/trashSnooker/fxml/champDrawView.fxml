@@ -7,10 +7,12 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
+<?import javafx.scene.control.ComboBox?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.ChampDrawView"
-      prefHeight="700.0" prefWidth="1000.0">
+      prefHeight="720.0" prefWidth="1080.0" spacing="10.0">
 
     <padding>
         <Insets topRightBottomLeft="10.0"/>
@@ -18,12 +20,18 @@
 
     <Label fx:id="champNameLabel"/>
 
-    <ScrollPane prefHeight="600.0" prefWidth="980.0">
+    <ScrollPane prefHeight="540.0" prefWidth="1060.0" style="-fx-padding: 0;">
         <Canvas fx:id="treeCanvas"/>
     </ScrollPane>
 
     <HBox spacing="10.0">
-        <Label fx:id="currentStageLabel"/>
-        <Button fx:id="nextRoundButton" onAction="#nextRound" text="开始下一轮"/>
+        <VBox minWidth="100.0" spacing="10.0">
+            <Label fx:id="currentStageLabel"/>
+            <Button fx:id="nextRoundButton" onAction="#nextRound" text="开始下一轮"/>
+            <Label fx:id="savedRoundLabel"/>
+            <ComboBox fx:id="cueBox"/>
+        </VBox>
+
+        <LabelTable fx:id="matchResTable" HBox.hgrow="ALWAYS"/>
     </HBox>
 </VBox>

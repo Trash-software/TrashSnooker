@@ -33,8 +33,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     private ChineseEightBallPlayer winingPlayer;
     private ChineseEightScoreResult curResult;
 
-    public ChineseEightBallGame(GameView parent, EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
-        super(parent, entireGame, gameSettings, new ChineseEightTable(entireGame.gameValues.table), frameIndex);
+    public ChineseEightBallGame(EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
+        super(entireGame, gameSettings, new ChineseEightTable(entireGame.gameValues.table), frameIndex);
 
         eightBall = new PoolBall(8, false, gameValues);
         initBalls();

@@ -1,9 +1,11 @@
 package trashsoftware.trashSnooker.core.phy;
 
+import org.json.JSONObject;
+
 public class TableCloth {
 
     private static final double baseSpeedReducer = 90;
-    private static final double baseSpinReducer = 4300;
+    private static final double baseSpinReducer = 4600;
     private static final double baseSpinEffect = 1100;
     public final Goodness goodness;
     public final Smoothness smoothness;
@@ -11,6 +13,19 @@ public class TableCloth {
     public TableCloth(Goodness goodness, Smoothness smoothness) {
         this.goodness = goodness;
         this.smoothness = smoothness;
+    }
+    
+    public static TableCloth fromJson(JSONObject jsonObject) {
+        return new TableCloth(
+                Goodness.valueOf(jsonObject.getString("goodness")),
+                Smoothness.valueOf(jsonObject.getString("smoothness")));
+    }
+    
+    public JSONObject toJson() {
+        JSONObject clothObj = new JSONObject();
+        clothObj.put("smoothness", smoothness.name());
+        clothObj.put("goodness", goodness.name());
+        return clothObj;
     }
 
     @Override
@@ -23,9 +38,9 @@ public class TableCloth {
     public enum Goodness {
         EXCELLENT("极佳", 0.0, 0.0),
         GOOD("优质", 0.07, 0.15),
-        NORMAL("一般", 0.2, 0.1),
-        BAD("劣质", 0.45, 0.1),
-        TERRIBLE("垃圾", 1, 0.0);
+        NORMAL("一般", 0.18, 0.1),
+        BAD("劣质", 0.35, 0.1),
+        TERRIBLE("垃圾", 0.8, 0.0);
 
         public final double errorFactor;
         public final double fixedErrorFactor;

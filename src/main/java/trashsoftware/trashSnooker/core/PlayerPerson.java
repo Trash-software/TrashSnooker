@@ -10,6 +10,9 @@ import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
 import java.util.*;
 
 public class PlayerPerson {
+    
+    // 出杆准确度转化为的readable的multiplier。同样的打点标准差，这个值越大，readable的值越好
+    private static final double CUE_PRECISION_FACTOR = 3.0;
 
     public final String category;
     public final HandBody handBody;
@@ -109,7 +112,7 @@ public class PlayerPerson {
                 50.0,
                 200.0,
                 0.0,
-                100.0,
+                0.0,
                 estimateCuePoint(cuePrecision, spinControl),
                 powerControl,
                 90,
@@ -184,9 +187,9 @@ public class PlayerPerson {
 
     private static double[] estimateCuePoint(double cuePrecision, double spinControl) {
         return new double[]{0,
-                (100 - cuePrecision) / 4.0,
+                (100 - cuePrecision) / CUE_PRECISION_FACTOR,
                 0,
-                (100 - spinControl) / 4.0};
+                (100 - spinControl) / CUE_PRECISION_FACTOR};
     }
 
     private AiPlayStyle deriveAiStyle() {
@@ -238,9 +241,9 @@ public class PlayerPerson {
         obj.put("ai", getAiPlayStyle().toJsonObject());
 
         JSONObject handObj = new JSONObject();
-        handObj.put("left", handBody.leftHand);
-        handObj.put("right", handBody.rightHand);
-        handObj.put("rest", handBody.restPot);
+        handObj.put("left", handBody.getHandSkillByHand(Hand.LEFT).skill);
+        handObj.put("right", handBody.getHandSkillByHand(Hand.RIGHT).skill);
+        handObj.put("rest", handBody.getHandSkillByHand(Hand.REST).skill);
 
         obj.put("height", handBody.height);
         obj.put("width", handBody.bodyWidth);
@@ -354,7 +357,7 @@ public class PlayerPerson {
     public enum Hand {
         LEFT(1.0),
         RIGHT(1.0),
-        REST(0.7);
+        REST(0.8);
 
         public final double powerMul;
 
@@ -363,7 +366,7 @@ public class PlayerPerson {
         }
     }
 
-    public static class ReadableAbility {
+    public static class ReadableAbility implements Cloneable {
         public String category;
         public double aiming;
         public double normalPower;
@@ -375,8 +378,13 @@ public class PlayerPerson {
         private String playerId;
         private String name;
         private HandBody handBody;
-
+        
         public static ReadableAbility fromPlayerPerson(PlayerPerson playerPerson) {
+            return fromPlayerPerson(playerPerson, 1.0);
+        }
+
+        public static ReadableAbility fromPlayerPerson(PlayerPerson playerPerson, 
+                                                       double handFeelEffort) {
             ReadableAbility ra = new ReadableAbility();
             ra.playerId = playerPerson.playerId;
             ra.name = playerPerson.name;
@@ -385,17 +393,21 @@ public class PlayerPerson {
             ra.cuePrecision =
                     Math.max(0,
                             100.0 - (playerPerson.getCuePointMuSigmaXY()[0] +
-                                    playerPerson.getCuePointMuSigmaXY()[1]) * 4.0);
+                                    playerPerson.getCuePointMuSigmaXY()[1]) * CUE_PRECISION_FACTOR) * handFeelEffort;
             ra.normalPower = playerPerson.getControllablePowerPercentage();
             ra.maxPower = playerPerson.getMaxPowerPercentage();
-            ra.powerControl = playerPerson.getPowerControl();
+            ra.powerControl = playerPerson.getPowerControl() * handFeelEffort;
             ra.spin = playerPerson.getMaxSpinPercentage();
             ra.spinControl = Math.max(0,
                     100.0 - (playerPerson.getCuePointMuSigmaXY()[2] +
-                            playerPerson.getCuePointMuSigmaXY()[3]) * 4.0);
+                            playerPerson.getCuePointMuSigmaXY()[3]) * CUE_PRECISION_FACTOR) * handFeelEffort;
 
             ra.handBody = playerPerson.handBody;
             return ra;
+        }
+
+        public String getName() {
+            return name;
         }
 
         /**
@@ -411,41 +423,43 @@ public class PlayerPerson {
                     handBody.getSecondary().skill : handBody.getThird().skill;
         }
 
-        public static double addPerksHowMany(int addWhat, int perks) {
+        public double addPerksHowMany(int addWhat, int perks) {
             switch (addWhat) {
                 case PerkManager.AIMING:
-                    return perks * 0.5;
+                    return (100 - aiming) * 0.04 * perks;
                 case PerkManager.CUE_PRECISION:
-                    return perks * 0.5;
+                    return (100 - cuePrecision) * 0.04 * perks;
                 case PerkManager.POWER:
-                    return perks * 1.0;
+                    return (100 - normalPower) * 0.04 * perks;
                 case PerkManager.POWER_CONTROL:
-                    return perks * 0.8;
+                    return (100 - powerControl) * 0.04 * perks;
                 case PerkManager.SPIN:
-                    return perks * 0.8;
+                    return (100 - spin) * 0.04 * perks;
                 case PerkManager.SPIN_CONTROL:
-                    return perks * 0.7;
+                    return (100 - spinControl) * 0.04 * perks;
                 case PerkManager.ANTI_HAND:
-                    return perks * 0.9;
+                    return (100 - handBody.getAntiHand().skill) * 0.04 * perks;
                 case PerkManager.REST:
-                    return perks * 1.2;
+                    return (100 - handBody.getRest().skill) * 0.06 * perks;
                 default:
                     throw new RuntimeException("Unknown type " + addWhat);
             }
         }
 
         public void addPerks(int addWhat, int perks) {
+            System.out.println("Add " + addWhat + " " + perks);
             double many = addPerksHowMany(addWhat, perks);
             switch (addWhat) {
                 case PerkManager.AIMING:
                     aiming += many;
                     break;
                 case PerkManager.CUE_PRECISION:
-                    cuePrecision += many / 100.0;
+                    cuePrecision += many;
                     break;
                 case PerkManager.POWER:
                     normalPower += many;
                     maxPower += many / 0.9;
+                    maxPower = Math.min(maxPower, 100.0);
                     break;
                 case PerkManager.POWER_CONTROL:
                     powerControl += many;
@@ -454,17 +468,14 @@ public class PlayerPerson {
                     spin += many;
                     break;
                 case PerkManager.SPIN_CONTROL:
-                    spinControl += many / 100.0;
+                    spinControl += many;
                     break;
                 case PerkManager.ANTI_HAND:
-                    if (handBody.getPrimary().hand == Hand.LEFT) {
-                        handBody.rightHand += many;
-                    } else {
-                        handBody.leftHand += many;
-                    }
+                    handBody.getAntiHand().skill += many;
                     break;
                 case PerkManager.REST:
-                    handBody.restPot += many;
+                    handBody.getRest().skill += many;
+//                    handBody.restPot += many;
                     break;
                 default:
                     throw new RuntimeException("Unknown type " + addWhat);
@@ -489,15 +500,32 @@ public class PlayerPerson {
                     handBody
             );
         }
+
+        @Override
+        public ReadableAbility clone() {
+            try {
+                ReadableAbility clone = (ReadableAbility) super.clone();
+                // TODO: copy mutable state here, so the clone can't change the internals of the original
+                clone.handBody = handBody.clone();
+                return clone;
+            } catch (CloneNotSupportedException e) {
+                throw new AssertionError();
+            }
+        }
     }
 
-    public static class HandSkill implements Comparable<HandSkill> {
+    public static class HandSkill implements Comparable<HandSkill>, Cloneable {
         public final Hand hand;
-        public final double skill;
+        public double skill;
 
         HandSkill(Hand hand, double skill) {
             this.hand = hand;
             this.skill = skill;
+        }
+
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
         }
 
         @Override
@@ -514,26 +542,20 @@ public class PlayerPerson {
         }
     }
 
-    public static class HandBody {
+    public static class HandBody implements Cloneable {
         public static final HandBody DEFAULT =
                 new HandBody(180.0, 1.0, 50.0, 100.0, 80.0);
 
         public final double height;
         public final double bodyWidth;
-        public double leftHand;
-        public double rightHand;
-        public double restPot;
         private final boolean leftHandRest;    // 是否用左手拿架杆
 
-        private final HandSkill[] precedence;
+        private HandSkill[] precedence;
 
         public HandBody(double height, double bodyWidth,
                         double leftHand, double rightHand, double restPot) {
             this.height = height;
             this.bodyWidth = bodyWidth;
-            this.leftHand = leftHand;
-            this.rightHand = rightHand;
-            this.restPot = restPot;
 
             precedence = new HandSkill[]{
                     new HandSkill(Hand.LEFT, leftHand),
@@ -556,6 +578,16 @@ public class PlayerPerson {
             return handSkill == null ? 1.0 : (100.0 / handSkill.skill);
         }
 
+        @Override
+        protected HandBody clone() throws CloneNotSupportedException {
+            HandBody clone = (HandBody) super.clone();
+            clone.precedence = new HandSkill[precedence.length];
+            for (int i = 0; i < clone.precedence.length; i++) {
+                clone.precedence[i] = (HandSkill) precedence[i].clone();
+            }
+            return clone;
+        }
+
         public HandSkill getPrimary() {
             return precedence[0];
         }
@@ -568,12 +600,20 @@ public class PlayerPerson {
             return precedence[2];
         }
 
-        public double getRestPot() {
-            return restPot;
-        }
-
         public boolean isLeftHandRest() {
             return leftHandRest;
+        }
+        
+        public HandSkill getAntiHand() {
+            HandSkill sec = getSecondary();
+            return sec.hand == Hand.REST ? getThird() : sec;
+        }
+        
+        public HandSkill getRest() {
+            for (HandSkill hs : precedence) {
+                if (hs.hand == Hand.REST) return hs;
+            }
+            throw new RuntimeException();
         }
 
         public HandSkill getHandSkillByHand(Hand hand) {

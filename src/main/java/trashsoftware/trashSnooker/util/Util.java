@@ -1,7 +1,9 @@
 package trashsoftware.trashSnooker.util;
 
+import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Values;
 
+import java.io.*;
 import java.sql.Timestamp;
 import java.util.Random;
 
@@ -16,7 +18,7 @@ public class Util {
         for (int ele : array) if (ele == value) return true;
         return false;
     }
-    
+
     public static String timeStampFmt(Timestamp timestamp) {
         String str = timestamp.toString();
         int msDotIndex = str.lastIndexOf('.');
@@ -27,7 +29,7 @@ public class Util {
         }
         return "'" + noMs + "." + ms + "'";
     }
-    
+
     public static String secondsToString(int sec) {
         if (sec < 3600) {
             return String.format("%02d:%02d", sec / 60, sec % 60);
@@ -35,13 +37,13 @@ public class Util {
             return String.format("%d:%s", sec / 3600, secondsToString(sec % 3600));
         }
     }
-    
+
     private static <T> void swap(T[] array, int i, int j) {
         T temp = array[i];
         array[i] = array[j];
         array[j] = temp;
     }
-    
+
     public static <T> void shuffleArray(T[] array) {
         Random random = new Random();
         for (int i = array.length; i > 0; i--) {
@@ -49,7 +51,7 @@ public class Util {
             swap(array, index, i - 1);
         }
     }
-    
+
     public static <T> void reverseArray(T[] array) {
         int mid = array.length / 2;
         for (int i = 0; i < mid; i++) {
@@ -58,23 +60,25 @@ public class Util {
             array[array.length - i - 1] = temp;
         }
     }
-    
+
     public static void intToBytesN(long num, byte[] arr, int index, int nBytes) {
-        for (int i = 0; i < nBytes; i++) arr[index + i] = 
-                (byte) ((num >>> ((nBytes - 1 - i) << 3)) & 0xff);
+        for (int i = 0; i < nBytes; i++)
+            arr[index + i] =
+                    (byte) ((num >>> ((nBytes - 1 - i) << 3)) & 0xff);
     }
-    
+
     public static long bytesToIntN(byte[] arr, int index, int nBytes) {
         long result = 0;
-        for (int i = 0; i < nBytes; i++) result = 
-                (arr[index + i] & 0xffL) << ((nBytes - 1 - i) << 3) | result;
+        for (int i = 0; i < nBytes; i++)
+            result =
+                    (arr[index + i] & 0xffL) << ((nBytes - 1 - i) << 3) | result;
         return result;
     }
-    
+
     public static void int32ToBytes(int n, byte[] arr, int index) {
         intToBytesN(n, arr, index, 4);
     }
-    
+
     public static int bytesToInt32(byte[] arr, int index) {
         return (int) bytesToIntN(arr, index, 4);
     }
@@ -101,16 +105,16 @@ public class Util {
 //        for (int i = 0; i < 8; i++) result = (b[index + i] & 0xffL) << ((7 - i) << 3) | result;
 //        return result;
     }
-    
+
     public static void doubleToBytes(double d, byte[] arr, int index) {
         long bits = Double.doubleToLongBits(d);
         longToBytes(bits, arr, index);
     }
-    
+
     public static double bytesToDouble(byte[] b, int index) {
         return Double.longBitsToDouble(bytesToLong(b, index));
     }
-    
+
     public static int indexOf(char c, char[] arr) {
         for (int i = 0; i < arr.length; i++) if (c == arr[i]) return i;
         return -1;
@@ -120,7 +124,7 @@ public class Util {
         for (int i = 0; i < arr.length; i++) if (c == arr[i]) return i;
         return -1;
     }
-    
+
     public static String timeToReadable(long ms) {
         long s = Math.round(ms / 1000.0);
         if (s < 60) {
@@ -133,10 +137,33 @@ public class Util {
             return String.format("%d:%d:%d", h, mm_ss / 60, mm_ss % 60);
         }
     }
-    
+
     public static double powerMultiplierOfCuePoint(double unitX, double unitY) {
         double dt = Math.hypot(Math.abs(unitX), Math.abs(unitY));  // 0-1之间
         double gap = 1 - Values.CUE_POINT_MULTIPLIER;
         return (1 - dt) * gap + Values.CUE_POINT_MULTIPLIER;
+    }
+
+    public static JSONObject readJson(File file) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                builder.append(line);
+            }
+            return new JSONObject(builder.toString());
+        } catch (FileNotFoundException e) {
+            return null;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void writeJson(JSONObject jsonObject, File file) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            bw.write(jsonObject.toString(2));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

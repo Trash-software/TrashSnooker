@@ -505,7 +505,7 @@ public class DBAccess {
         }
     }
 
-    public void recordSnookerBreaks(EntireGame entireGame, Game frame,
+    public void recordSnookerBreaks(EntireGame entireGame, Game<?, ?> frame,
                                     SnookerPlayer player, List<Integer> breakScores) {
         System.out.println("Snooker breaks: " + breakScores);
         int highBreak = 0;
@@ -624,10 +624,11 @@ public class DBAccess {
         }
     }
 
-    public void recordAFrameStarts(EntireGame entireGame, Game game) {
+    public void recordAFrameStarts(EntireGame entireGame, Game<?, ?> game) {
         String generalCmd = "INSERT INTO Game VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
                 game.frameIndex + ", 0, NULL);";
+        System.out.println(generalCmd);
         try {
             executeStatement(generalCmd);
             createRecordForFrame(entireGame, game,
@@ -641,7 +642,7 @@ public class DBAccess {
         }
     }
 
-    public void recordAFrameEnds(EntireGame entireGame, Game game, PlayerPerson winner) {
+    public void recordAFrameEnds(EntireGame entireGame, Game<?, ?> game, PlayerPerson winner) {
         long duration = (System.currentTimeMillis() - game.frameStartTime) / 1000 + 1;
         String generalCmd = "UPDATE Game SET DurationSeconds = " + duration + ", " +
                 "WinnerName = '" + winner.getName() + "' " +

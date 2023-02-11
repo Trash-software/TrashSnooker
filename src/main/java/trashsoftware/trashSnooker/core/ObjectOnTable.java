@@ -152,7 +152,7 @@ public abstract class ObjectOnTable {
                 accMag = (table.holeExtraSlopeWidth - dt + holeRadius) / table.holeExtraSlopeWidth;
             }
             
-            accMag *= 3600;
+            accMag *= 4500;
             accMag /= phy.calculationsPerSecSqr;
             
             double[] accVec = Algebra.unitVector(xDiff, yDiff);

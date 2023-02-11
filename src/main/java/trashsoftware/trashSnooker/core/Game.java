@@ -38,7 +38,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public final long frameStartTime = System.currentTimeMillis();
     public final int frameIndex;
     protected final Set<B> newPotted = new HashSet<>();
-    protected final GameView parent;
+//    protected final GameView parent;
     protected final EntireGame entireGame;
     protected final Map<B, double[]> recordedPositions = new HashMap<>();  // 记录上一杆时球的位置，复位用
     protected final B cueBall;
@@ -73,11 +73,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     
     protected Table table;
 
-    protected Game(GameView parent, EntireGame entireGame,
+    protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
                    Table table,
                    int frameIndex) {
-        this.parent = parent;
+//        this.parent = parent;
         this.entireGame = entireGame;
         this.gameValues = gameValues;
         this.gameSettings = gameSettings;
@@ -91,18 +91,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public static Game<? extends Ball, ? extends Player> createGame(
-            GameView gameView, GameSettings gameSettings,
+            GameSettings gameSettings,
             GameValues gameValues, EntireGame entireGame) {
         int frameIndex = entireGame.getP1Wins() + entireGame.getP2Wins() + 1;
         Game<? extends Ball, ? extends Player> game;
         if (gameValues.rule == GameRule.SNOOKER) {
-            game = new SnookerGame(gameView, entireGame, gameSettings, frameIndex);
+            game = new SnookerGame(entireGame, gameSettings, frameIndex);
         } else if (gameValues.rule == GameRule.MINI_SNOOKER) {
-            game = new MiniSnookerGame(gameView, entireGame, gameSettings, frameIndex);
+            game = new MiniSnookerGame(entireGame, gameSettings, frameIndex);
         } else if (gameValues.rule == GameRule.CHINESE_EIGHT) {
-            game = new ChineseEightBallGame(gameView, entireGame, gameSettings, frameIndex);
+            game = new ChineseEightBallGame( entireGame, gameSettings, frameIndex);
         } else if (gameValues.rule == GameRule.SIDE_POCKET) {
-            game = new SidePocketGame(gameView, entireGame, gameSettings, frameIndex);
+            game = new SidePocketGame(entireGame, gameSettings, frameIndex);
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
 
         try {
@@ -234,7 +234,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return prediction;
     }
 
-    public void finishMove() {
+    public void finishMove(GameView gameView) {
         System.out.println("Move end");
         physicsCalculator = null;
         cueFinishTime = System.currentTimeMillis();
@@ -243,7 +243,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         endMoveAndUpdate();
         isBreaking = false;
         finishedCuesCount++;
-        parent.finishCue(player, currentPlayer);
+        gameView.finishCue(player, currentPlayer);
     }
 
     public boolean isCalculating() {
@@ -1148,12 +1148,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             double lastPhysicalTime = cumulatedPhysicalTime;
             cumulatedPhysicalTime += phy.calculateMs;
 
-            if (Math.floor(cumulatedPhysicalTime / parent.frameTimeMs) !=
-                    Math.floor(lastPhysicalTime / parent.frameTimeMs)) {
+            if (Math.floor(cumulatedPhysicalTime / GameView.frameTimeMs) !=
+                    Math.floor(lastPhysicalTime / GameView.frameTimeMs)) {
                 // 一个动画帧执行一次
                 for (int i = 0; i < allBalls.length; i++) {
                     B ball = allBalls[i];
-                    ball.calculateAxis(phy, parent.frameTimeMs);
+                    ball.calculateAxis(phy, GameView.frameTimeMs);
                     movement.addFrame(ball,
                             new MovementFrame(ball.x, ball.y, 
                                     ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(), 

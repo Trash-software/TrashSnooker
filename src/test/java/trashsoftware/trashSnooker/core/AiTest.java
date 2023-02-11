@@ -10,7 +10,7 @@ public class AiTest {
     public void testAiPlayerPrice() {
         PlayerPerson pp = null;
         for (PlayerPerson p : DataLoader.getInstance().getAllPlayers()) {
-            if (p.getName().equals("Trump")) {
+            if (p.getPlayerId().equals("Trump")) {
                 pp = p;
                 break;
             }
@@ -19,7 +19,8 @@ public class AiTest {
                 pp,
                 DataLoader.getInstance().getCues().get("stdSnookerCue"),
                 PlayerType.COMPUTER, 
-                1
+                1,
+                1.0
         );
         AiPlayStyle aps = inGamePlayer.getPlayerPerson().getAiPlayStyle();
         System.out.println(aps.priceOf(

@@ -1,13 +1,12 @@
 package trashsoftware.trashSnooker.core.career.championship;
 
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 public abstract class Championship {
 
@@ -17,6 +16,7 @@ public abstract class Championship {
     protected MatchTree matchTree;
     protected int currentStageIndex;
     protected boolean finished = false;
+    protected PlayerVsAiMatch activeMatch;
 
     public Championship(ChampionshipData data, Calendar timestamp) {
         this.data = data;
@@ -38,11 +38,17 @@ public abstract class Championship {
                 throw new RuntimeException("Currently unsupported");
         }
         championship.currentStageIndex = jsonObject.getInt("stageIndex");
+//        ChampionshipStage curStage = 
         championship.matchTree = MatchTree.fromJson(jsonObject.getJSONObject("matchTree"));
+//        championship.matchTree.getRoot().slCheck();
         championship.checkFinish();
 
         if (championship.finished != jsonObject.getBoolean("finished")) {
             throw new RuntimeException("Broken save");
+        }
+        
+        if (!championship.isFinished()) {
+            championship.loadMatchInProgress();
         }
 
         return championship;
@@ -61,6 +67,10 @@ public abstract class Championship {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    private void loadMatchInProgress() {
+        activeMatch = PlayerVsAiMatch.loadSaved(matchTree.getRoot(), data);  // 可以是null
     }
 
     public MatchTree getMatchTree() {
@@ -104,7 +114,7 @@ public abstract class Championship {
     }
 
     public ChampionshipStage getCurrentStage() {
-        return data.getStages().get(currentStageIndex);
+        return data.getStages()[currentStageIndex];
     }
 
     public void startChampionship(boolean playerJoin) {
@@ -122,7 +132,7 @@ public abstract class Championship {
         List<Career> nonSeeds = new ArrayList<>(careers.subList(data.getSeedPlaces(), data.getTotalPlaces()));
 
         matchTree = new MatchTree(data, seeds, nonSeeds);
-        currentStageIndex = data.getStages().size() - 1;
+        currentStageIndex = data.getStages().length - 1;
 
         if (save) {
             saveProgressToJson();
@@ -132,9 +142,29 @@ public abstract class Championship {
     public boolean isFinished() {
         return finished;
     }
+    
+    public SortedMap<ChampionshipScore.Rank, List<Career>> getResults() {
+        SortedMap<ChampionshipScore.Rank, List<Career>> result = new TreeMap<>();
+        matchTree.getRoot().getResults(data, result, 0);
+        return result;
+    }
 
     public boolean hasNextRound() {
         return currentStageIndex >= 0;
+    }
+    
+    public boolean hasSavedRound() {
+        return activeMatch != null;
+    }
+
+    public PlayerVsAiMatch getSavedRound() {
+        return activeMatch;
+    }
+
+    public PlayerVsAiMatch continueSavedRound() {
+        assert activeMatch != null;
+        setCallback(activeMatch, true);
+        return activeMatch;
     }
 
     public PlayerVsAiMatch startNextRound() {
@@ -142,11 +172,13 @@ public abstract class Championship {
     }
 
     public PlayerVsAiMatch startNextRound(boolean save) {
-        ChampionshipStage stage = data.getStages().get(currentStageIndex);
+        CareerManager.getInstance().updateHandFeels();
+        ChampionshipStage stage = data.getStages()[currentStageIndex];
         System.out.println(data.getId() + stage);
 //        saveProgressToJson();
 
         PlayerVsAiMatch playerVsAiMatch = matchTree.holdOneRoundMatches(data, stage);
+        activeMatch = playerVsAiMatch;
         if (playerVsAiMatch == null) {
             currentStageIndex--;
             checkFinish();
@@ -161,22 +193,31 @@ public abstract class Championship {
             }
             return null;
         } else {
-            playerVsAiMatch.setEndCallback(() -> {
-                System.out.println("PvE end of " + data.getStages().get(currentStageIndex));
-                currentStageIndex--;
-                checkFinish();
-                if (save) {
-                    saveProgressToJson();
-                }
-                if (finished) {
-                    distributeAwards();
-                    if (save) {
-                        saveAsHistory();
-                    }
-                }
-            });
+            if (save) {
+                saveProgressToJson();  // 把AI对战结果先存了来再说
+            }
+            
+            setCallback(playerVsAiMatch, save);
             return playerVsAiMatch;
         }
+    }
+    
+    private void setCallback(PlayerVsAiMatch match, boolean save) {
+        match.setEndCallback(() -> {
+            System.out.println("PvE end of " + data.getStages()[currentStageIndex]);
+            currentStageIndex--;
+            checkFinish();
+            activeMatch = null;
+            if (save) {
+                saveProgressToJson();
+            }
+            if (finished) {
+                distributeAwards();
+                if (save) {
+                    saveAsHistory();
+                }
+            }
+        });
     }
 
     private void checkFinish() {

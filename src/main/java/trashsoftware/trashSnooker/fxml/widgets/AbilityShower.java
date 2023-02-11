@@ -30,7 +30,7 @@ public class AbilityShower extends GridPane {
     @FXML
     ColumnConstraints buttonsCol;
     private Button[] buttons;
-    private PlayerPerson.ReadableAbility ability;
+//    private PlayerPerson.ReadableAbility ability;
     private PerkManager perkManager;
 
     public AbilityShower() {
@@ -67,15 +67,17 @@ public class AbilityShower extends GridPane {
         return d == (long) d ? String.format("%d", (long) d) : String.format("%.1f", d);
     }
 
-    public void setPerkManager(PerkManager perkManager) {
+//    public void setPerkManager(PerkManager perkManager) {
+//        this.perkManager = perkManager;
+//        perkManager.setAbility(ability);
+//
+//        noticePerksReset();
+//    }
+
+    public void setup(PerkManager perkManager, boolean showAddButtons) {
         this.perkManager = perkManager;
-        perkManager.setAbility(ability);
-
-        noticePerksReset();
-    }
-
-    public void setup(PlayerPerson pp, boolean showAddButtons) {
-        this.ability = PlayerPerson.ReadableAbility.fromPlayerPerson(pp);
+        
+//        this.ability = PlayerPerson.ReadableAbility.fromPlayerPerson(pp);
 
         if (!showAddButtons) {
             buttonsCol.setPrefWidth(0);
@@ -86,48 +88,91 @@ public class AbilityShower extends GridPane {
                 button.setManaged(false);
             }
         }
-
-        nameLabel.setText(pp.getName());
-
-        if ("Professional".equals(ability.category)) {
-            categoryLabel.setText("职业选手");
-        } else if ("Amateur".equals(ability.category)) {
-            categoryLabel.setText("业余选手");
-        } else if ("Noob".equals(ability.category)) {
-            categoryLabel.setText("菜鸡");
-        } else if ("God".equals(ability.category)) {
-            categoryLabel.setText("神");
-        }
         
         setupTexts();
     }
     
     private void setupTexts() {
-        aimingLabel.setText(numToString(ability.aiming));
-        aimingBar.setProgress(ability.aiming / 100.0);
+        PlayerPerson.ReadableAbility realAbility = perkManager.getOriginalAbility();
+        PlayerPerson.ReadableAbility preview = perkManager.getShownAbility();
+        
+        nameLabel.setText(realAbility.getName());
 
-        cuePrecisionLabel.setText(numToString(ability.cuePrecision));
-        cuePrecisionBar.setProgress(ability.cuePrecision / 100);
+        if ("Professional".equals(realAbility.category)) {
+            categoryLabel.setText("职业选手");
+        } else if ("Amateur".equals(realAbility.category)) {
+            categoryLabel.setText("业余选手");
+        } else if ("Noob".equals(realAbility.category)) {
+            categoryLabel.setText("菜鸡");
+        } else if ("God".equals(realAbility.category)) {
+            categoryLabel.setText("神");
+        }
+        
+        String aiming = numToString(realAbility.aiming);
+        if (preview.aiming != realAbility.aiming) {
+            aiming += " (" + numToString(preview.aiming) + ")";
+        }
+        
+        aimingLabel.setText(aiming);
+        aimingBar.setProgress(realAbility.aiming / 100.0);
 
-        powerLabel.setText(String.format("%s/%s",
-                numToString(ability.normalPower),
-                numToString(ability.maxPower)));
-        powerBar.setProgress(ability.normalPower / 100.0);
+        String cuePrecision = numToString(realAbility.cuePrecision);
+        if (preview.cuePrecision != realAbility.cuePrecision) {
+            cuePrecision += " (" + numToString(preview.cuePrecision) + ")";
+        }
+        cuePrecisionLabel.setText(cuePrecision);
+        cuePrecisionBar.setProgress(realAbility.cuePrecision / 100);
+        
+        String power = String.format("%s/%s",
+                numToString(realAbility.normalPower),
+                numToString(realAbility.maxPower));
+        
+        if (preview.normalPower != realAbility.normalPower) {
+            power += " (" + numToString(preview.normalPower) + ")";
+        }
 
-        powerControlLabel.setText(numToString(ability.powerControl));
-        powerControlBar.setProgress(ability.powerControl / 100.0);
+        powerLabel.setText(power);
+        powerBar.setProgress((realAbility.normalPower + realAbility.maxPower) / 200.0);
 
-        spinLabel.setText(numToString(ability.spin));
-        spinBar.setProgress(ability.spin / 100.0);
+        String powerControl = numToString(realAbility.powerControl);
+        if (preview.powerControl != realAbility.powerControl) {
+            powerControl += " (" + numToString(preview.powerControl) + ")";
+        }
 
-        spinControlLabel.setText(numToString(ability.spinControl));
-        spinControlBar.setProgress(ability.spinControl / 100);
+        powerControlLabel.setText(powerControl);
+        powerControlBar.setProgress(realAbility.powerControl / 100.0);
 
-        notGoodHandLabel.setText(numToString(ability.getAnotherHandGoodness()));
-        notGoodHandBar.setProgress(ability.getAnotherHandGoodness() / 100);
+        String spin = numToString(realAbility.spin);
+        if (preview.spin != realAbility.spin) {
+            spin += " (" + numToString(preview.spin) + ")";
+        }
+        
+        spinLabel.setText(spin);
+        spinBar.setProgress(realAbility.spin / 100.0);
 
-        restLabel.setText(numToString(ability.getRestGoodness()));
-        restBar.setProgress(ability.getRestGoodness() / 100);
+        String spinControl = numToString(realAbility.spinControl);
+        if (preview.spinControl != realAbility.spinControl) {
+            spinControl += " (" + numToString(preview.spinControl) + ")";
+        }
+
+        spinControlLabel.setText(spinControl);
+        spinControlBar.setProgress(realAbility.spinControl / 100);
+
+        String anotherHandGoodness = numToString(realAbility.getAnotherHandGoodness());
+        if (preview.getAnotherHandGoodness() != realAbility.getAnotherHandGoodness()) {
+            anotherHandGoodness += " (" + numToString(preview.getAnotherHandGoodness()) + ")";
+        }
+
+        notGoodHandLabel.setText(anotherHandGoodness);
+        notGoodHandBar.setProgress(realAbility.getAnotherHandGoodness() / 100);
+
+        String restGoodness = numToString(realAbility.getRestGoodness());
+        if (preview.getRestGoodness() != realAbility.getRestGoodness()) {
+            restGoodness += " (" + numToString(preview.getRestGoodness()) + ")";
+        }
+
+        restLabel.setText(restGoodness);
+        restBar.setProgress(realAbility.getRestGoodness() / 100);
     }
 
     @FXML
@@ -138,9 +183,11 @@ public class AbilityShower extends GridPane {
         int added = perkManager.addPerkTo(combo.cat);
         src.setText(added + "+");
         
-        Label label = combo.label;
-        String orig = label.getText().split("\\+")[0];
-        label.setText(orig + "+" + PlayerPerson.ReadableAbility.addPerksHowMany(combo.cat, added));
+        setupTexts();
+        
+//        Label label = combo.label;
+//        String orig = label.getText().split("\\+")[0];
+//        label.setText(orig + "+" + PlayerPerson.ReadableAbility.addPerksHowMany(combo.cat, added));
         
         if (perkManager.getAvailPerks() <= 0) {
             for (Button button : buttons) {

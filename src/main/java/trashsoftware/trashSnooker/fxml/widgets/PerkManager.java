@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.fxml.widgets;
 
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.CareerView;
+import trashsoftware.trashSnooker.util.DataLoader;
 
 public class PerkManager {
     
@@ -16,16 +17,28 @@ public class PerkManager {
 
     private CareerView parent;
     private PlayerPerson.ReadableAbility ability;
+    private PlayerPerson.ReadableAbility previewAbility;
     private int availPerks;
     private int[] addedPerks = new int[8];
 
-    public PerkManager(CareerView parent, int availPerks) {
+    public PerkManager(CareerView parent, int availPerks, PlayerPerson.ReadableAbility ability) {
         this.availPerks = availPerks;
         this.parent = parent;
+        
+        setAbility(ability);
     }
 
-    public void setAbility(PlayerPerson.ReadableAbility ability) {
+    private void setAbility(PlayerPerson.ReadableAbility ability) {
         this.ability = ability;
+        this.previewAbility = ability.clone();
+    }
+    
+    public PlayerPerson.ReadableAbility getOriginalAbility() {
+        return ability;
+    }
+    
+    public PlayerPerson.ReadableAbility getShownAbility() {
+        return previewAbility;
     }
 
     public int getAvailPerks() {
@@ -35,6 +48,7 @@ public class PerkManager {
     public int addPerkTo(int cat) {
         availPerks--;
         addedPerks[cat - 1] += 1;
+        previewAbility.addPerks(cat, 1);
         parent.noticePerksChanged();
         return addedPerks[cat - 1];
     }
@@ -44,6 +58,8 @@ public class PerkManager {
     }
     
     public void clearSelections() {
+        this.previewAbility = this.ability.clone();
+        
         int sum = 0;
         for (int i = 0; i < addedPerks.length; i++) {
             if (addedPerks[i] != 0) {
@@ -55,18 +71,16 @@ public class PerkManager {
     }
     
     public int applyPerks() {
+        this.ability = previewAbility;
+        DataLoader.getInstance().updatePlayer(this.ability.toPlayerPerson());
+        this.previewAbility = this.ability.clone();
         int sum = 0;
         for (int i = 0; i < addedPerks.length; i++) {
             if (addedPerks[i] != 0) {
                 sum += addedPerks[i];
-                ability.addPerks(i + 1, addedPerks[i]);
                 addedPerks[i] = 0;
             }
         }
         return sum;
-    }
-
-    public PlayerPerson.ReadableAbility getAbility() {
-        return ability;
     }
 }
