@@ -1,9 +1,7 @@
 package trashsoftware.trashSnooker.fxml;
 
-import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,19 +12,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.core.career.CareerManager;
-import trashsoftware.trashSnooker.core.career.CareerRank;
-import trashsoftware.trashSnooker.core.career.ChampionshipData;
-import trashsoftware.trashSnooker.core.career.ChampionshipScore;
+import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.widgets.AbilityShower;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
-import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.IOException;
@@ -41,7 +34,10 @@ public class CareerView implements Initializable {
     TableColumn<CareerRank, Integer> rankCol, rankedAwardCol, totalAwardCol;
     @FXML
     TableColumn<CareerRank, String> rankNameCol;
-
+    @FXML
+    Label levelLabel, levelExpLabel;
+    @FXML
+    ProgressBar levelExpBar;
     @FXML
     AbilityShower abilityShower;
     @FXML
@@ -134,8 +130,8 @@ public class CareerView implements Initializable {
                 new LabelTableColumn<>(champAwardsTable, "奖金", param ->
                         new ReadOnlyObjectWrapper<>(param.data.getAwardByRank(param.rank)));
         LabelTableColumn<AwardItem, Integer> perkCol =
-                new LabelTableColumn<>(champAwardsTable, "点数", param ->
-                        new ReadOnlyObjectWrapper<>(param.data.getPerkByRank(param.rank)));
+                new LabelTableColumn<>(champAwardsTable, "exp", param ->
+                        new ReadOnlyObjectWrapper<>(param.data.getExpByRank(param.rank)));
         
         champAwardsTable.addColumns(titleCol, awardCol, perkCol);
     }
@@ -158,6 +154,13 @@ public class CareerView implements Initializable {
     }
     
     public void refreshGui() {
+        Career myCareer = careerManager.getHumanPlayerCareer();
+        levelLabel.setText("Lv." + myCareer.getLevel());
+        int curExp = myCareer.getExpInThisLevel();
+        int expToNext = careerManager.getExpNeededToLevelUp(myCareer.getLevel());
+        levelExpBar.setProgress((double) curExp / expToNext);
+        levelExpLabel.setText(String.format("%d/%d", curExp, expToNext));
+        
         refreshRanks();
         refreshPersonalAwardsTable();
         currentDateLabel.setText(String.format("%d/%d/%d", 
@@ -224,9 +227,9 @@ public class CareerView implements Initializable {
     @FXML
     public void clearUsedPerks() {
         perkManager.clearSelections();
-        abilityShower.noticePerksReset();
+        abilityShower.notifyPerksReset();
 
-        noticePerksChanged();
+        notifyPerksChanged();
     }
 
     @FXML
@@ -236,10 +239,11 @@ public class CareerView implements Initializable {
 
 //        DataLoader.getInstance().updatePlayer(perkManager.getAbility().toPlayerPerson());
         careerManager.reloadHumanPlayerPerson();
+        careerManager.saveToDisk();
 
-        noticePerksChanged();
+        notifyPerksChanged();
 
-        abilityShower.noticePerksReset();
+        abilityShower.notifyPerksReset();
     }
 
     @FXML
@@ -287,7 +291,7 @@ public class CareerView implements Initializable {
         }
     }
 
-    public void noticePerksChanged() {
+    public void notifyPerksChanged() {
         availPerksLabel.setText(perkManager.getAvailPerks() + "");
     }
     

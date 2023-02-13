@@ -202,7 +202,7 @@ public class CuePlayParams {
         double spinY = vy * (spinSpeed / speed);
 //        System.out.printf("x %f, y %f, total %f, side %f\n", spinX, spinY, spinSpeed, side);
 
-        double mbummeMag = cueAngleDeg / 90.0 / 1000;  // 扎杆强度
+        double mbummeMag = cueAngleDeg / 90.0 / 1400;  // 扎杆强度
         double[] norm = Algebra.normalVector(vx, vy);  // 法线，扎杆就在这个方向
         double mbummeX = side * -norm[0] * mbummeMag;
         double mbummeY = side * -norm[1] * mbummeMag;

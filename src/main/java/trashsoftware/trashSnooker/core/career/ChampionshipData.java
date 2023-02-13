@@ -31,9 +31,10 @@ public class ChampionshipData {
     Map<ChampionshipStage, Integer> stageFrames = new HashMap<>();  // 每一轮的总局数
     ChampionshipStage[] stages ;  // 决赛在前
     ChampionshipScore.Rank[] ranksOfLosers;  // 决赛在前，各个的输家的rank
+    ChampionshipScore.Rank[] ranksOfAll;  // 也就比ranksOfLosers多一个冠军
 
     Map<ChampionshipScore.Rank, Integer> awards = new HashMap<>();  // 每个等级的奖金，包含单杆最高
-    Map<ChampionshipScore.Rank, Integer> perks = new HashMap<>();  // 每个等级的技能点
+    Map<ChampionshipScore.Rank, Integer> expMap = new HashMap<>();  // 每个等级的技能点
 
     TableSpec tableSpec;
 
@@ -63,16 +64,14 @@ public class ChampionshipData {
         data.analyzeFramesStages(frames);
 
         JSONArray awards = jsonObject.getJSONArray("awards");
-        JSONArray perks = jsonObject.getJSONArray("perks");
+        JSONArray expList = jsonObject.getJSONArray("exp");
         
-        for (int i = 0; i < awards.length(); i++) {
-            int awd = awards.getInt(i);
-            int perk = perks.getInt(i);
-            ChampionshipScore.Rank rank;
-            if (i == 0) rank = ChampionshipScore.Rank.CHAMPION;
-            else rank = data.ranksOfLosers[i - 1];
+        for (int i = 0; i < data.ranksOfAll.length; i++) {
+            int awd = i < awards.length() ? awards.getInt(i) : 0;
+            int exp = i < expList.length() ? expList.getInt(i) : 0;
+            ChampionshipScore.Rank rank = data.ranksOfAll[i];
             data.awards.put(rank, awd);
-            data.perks.put(rank, perk);
+            data.expMap.put(rank, exp);
         }
         data.awards.put(ChampionshipScore.Rank.BEST_SINGLE, jsonObject.getInt("best_single"));
         if (jsonObject.has("147")) {
@@ -152,6 +151,9 @@ public class ChampionshipData {
         
         stages = ChampionshipStage.getSequence(mainRounds, preRounds);
         ranksOfLosers = ChampionshipScore.Rank.getSequenceOfLosers(mainRounds, preRounds);
+        ranksOfAll = new ChampionshipScore.Rank[ranksOfLosers.length + 1];
+        ranksOfAll[0] = ChampionshipScore.Rank.CHAMPION;
+        System.arraycopy(ranksOfLosers, 0, ranksOfAll, 1, ranksOfLosers.length);
         
         for (int i = 0; i < stages.length; i++) {
             stageFrames.put(stages[i], frames.getInt(i));
@@ -178,11 +180,11 @@ public class ChampionshipData {
     }
 
     public int getAwardByRank(ChampionshipScore.Rank rank) {
-        return Objects.requireNonNullElse(awards.get(rank), 0);
+        return awards.get(rank);
     }
     
-    public int getPerkByRank(ChampionshipScore.Rank rank) {
-        return Objects.requireNonNullElse(perks.get(rank), 0);
+    public int getExpByRank(ChampionshipScore.Rank rank) {
+        return expMap.get(rank);
     }
 
     public String getId() {
@@ -233,8 +235,8 @@ public class ChampionshipData {
         return stageFrames.get(stage);
     }
 
-    public Map<ChampionshipScore.Rank, Integer> getPerks() {
-        return perks;
+    public Map<ChampionshipScore.Rank, Integer> getExpMap() {
+        return expMap;
     }
 
     public Map<ChampionshipScore.Rank, Integer> getAwards() {
@@ -283,14 +285,14 @@ public class ChampionshipData {
     }
     
     private void appendAwardString(ChampionshipScore.Rank rank, StringBuilder builder) {
-        int award = Objects.requireNonNullElse(awards.get(rank), 0);
-        int perk = Objects.requireNonNullElse(perks.get(rank), 0);
-        if (award == 0 && perk == 0) return;
+        int award = getAwardByRank(rank);
+        int exp = getExpByRank(rank);
+        if (award == 0 && exp == 0) return;
         builder.append(rank.getShown())
                 .append(": ")
                 .append(award)
                 .append(" / ")
-                .append(perk)
+                .append(exp)
                 .append('\n');
     }
 
@@ -305,7 +307,7 @@ public class ChampionshipData {
         builder.append("正赛名额：")
                 .append(mainPlaces)
                 .append("\n")
-                .append("奖金/点数：\n");
+                .append("奖金/经验：\n");
         appendAwardString(ChampionshipScore.Rank.CHAMPION, builder);
         for (ChampionshipScore.Rank rank : getRanksOfLosers()) {
             appendAwardString(rank, builder);

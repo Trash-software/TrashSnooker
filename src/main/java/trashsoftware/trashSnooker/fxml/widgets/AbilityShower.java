@@ -87,6 +87,8 @@ public class AbilityShower extends GridPane {
                 button.setVisible(false);
                 button.setManaged(false);
             }
+        } else {
+            notifyPerksReset();
         }
         
         setupTexts();
@@ -196,7 +198,7 @@ public class AbilityShower extends GridPane {
         }
     }
 
-    public void noticePerksReset() {
+    public void notifyPerksReset() {
         if (perkManager.getAvailPerks() <= 0) {
             for (Button button : buttons) {
                 // todo: 加满了就不准加了

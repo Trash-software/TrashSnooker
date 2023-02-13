@@ -49,7 +49,7 @@ public class PerkManager {
         availPerks--;
         addedPerks[cat - 1] += 1;
         previewAbility.addPerks(cat, 1);
-        parent.noticePerksChanged();
+        parent.notifyPerksChanged();
         return addedPerks[cat - 1];
     }
     

@@ -272,12 +272,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     private int getFoulScore(Set<SnookerBall> pottedBalls) {
-        int foul = 0;
+        int foul = getDefaultFoulValue();
         for (SnookerBall ball : pottedBalls) {
             if (ball.getValue() > foul) foul = ball.getValue();
         }
-        if (foul == 0) throw new RuntimeException("No foul, why call this method");
-        return Math.max(getDefaultFoulValue(), foul);
+//        if (foul == 0) throw new RuntimeException("No foul, why call this method");
+        return foul;
     }
 
     public int getDefaultFoulValue() {

@@ -14,22 +14,26 @@ public class Career {
 
     private final List<ChampionshipScore> championshipScores = new ArrayList<>();  // 不一定按时间顺序
     private final boolean isHumanPlayer;
-    private PlayerPerson playerPerson;
-    private int cumulatedPerks = 0;
-    private int usedPerks = 0;
-    private double handFeel = 0.9;
     private final transient Map<GameRule, Double> efforts = new HashMap<>();
+    private PlayerPerson playerPerson;
+    //    private int cumulatedPerks = 0;
+//    private int usedPerks = 0;
+    private int availPerks;
+    private int totalExp;
+    private int level;
+    private int expInThisLevel;
+    private double handFeel = 0.9;
 
     private Career(PlayerPerson person, boolean isHumanPlayer) {
         this.playerPerson = person;
         this.isHumanPlayer = isHumanPlayer;
-        
+
         for (GameRule gameRule : GameRule.values()) efforts.put(gameRule, 1.0);
     }
 
     public static Career createByPerson(PlayerPerson playerPerson, boolean isHumanPlayer) {
         Career career = new Career(playerPerson, isHumanPlayer);
-        career.cumulatedPerks = CareerManager.INIT_PERKS;
+        career.availPerks = CareerManager.INIT_PERKS;
         return career;
     }
 
@@ -38,9 +42,13 @@ public class Career {
         PlayerPerson playerPerson = DataLoader.getInstance().getPlayerPerson(playerId);
 
         Career career = new Career(playerPerson, jsonObject.getBoolean("human"));
-        career.cumulatedPerks = jsonObject.getInt("cumulatedPerks");
-        career.usedPerks = jsonObject.getInt("usedPerks");
+        career.availPerks = jsonObject.has("availPerks") ? jsonObject.getInt("availPerks") : 0;
+        career.totalExp = jsonObject.has("totalExp") ? jsonObject.getInt("totalExp") : 0;
+        career.level = jsonObject.has("level") ? jsonObject.getInt("level") : 1;
+        career.expInThisLevel = jsonObject.has("expInThisLevel") ? jsonObject.getInt("expInThisLevel") : 0;
         
+        career.validateLevel();
+
         if (jsonObject.has("handFeel")) {
             career.handFeel = jsonObject.getDouble("handFeel");
         }
@@ -71,7 +79,7 @@ public class Career {
         for (ChampionshipScore score : championshipScores) {
             scoreArr.put(score.toJsonObject());
         }
-        
+
         JSONObject effortsObj = new JSONObject();
         for (Map.Entry<GameRule, Double> eff : efforts.entrySet()) {
             effortsObj.put(eff.getKey().name(), eff.getValue());
@@ -79,8 +87,10 @@ public class Career {
         out.put("efforts", effortsObj);
         out.put("scores", scoreArr);
         out.put("handFeel", handFeel);
-        out.put("cumulatedPerks", cumulatedPerks);
-        out.put("usedPerks", usedPerks);
+        out.put("availPerks", availPerks);
+        out.put("totalExp", totalExp);
+        out.put("level", level);
+        out.put("expInThisLevel", expInThisLevel);
 
         return out;
     }
@@ -92,11 +102,11 @@ public class Career {
     public double getHandFeel() {
         return handFeel;
     }
-    
+
     public double getHandFeelEffort(GameRule rule) {
         return getHandFeel() * getEffort(rule);
     }
-    
+
     public void updateEffort(GameRule rule, double effort) {
         efforts.put(rule, effort);
 
@@ -104,13 +114,13 @@ public class Career {
             System.out.println(rule.name() + " effort: " + playerPerson.getPlayerId() + " " + effort);
         }
     }
-    
+
     public void updateHandFeel() {
         double handFeelChange = (Math.random() - 0.5) * 0.05;
         this.handFeel += handFeelChange;
         if (this.handFeel > 1.0) this.handFeel = 1.0;
         else if (this.handFeel < 0.8) this.handFeel = 0.8;
-        
+
         if (CareerManager.LOG) {
             System.out.println("Hand feel: " + playerPerson.getPlayerId() + " " + handFeel);
         }
@@ -126,15 +136,51 @@ public class Career {
 
     public void addChampionshipScore(ChampionshipScore score) {
         championshipScores.add(score);
-        int perks = 0;
         for (ChampionshipScore.Rank rank : score.ranks) {
-            Integer perk = score.data.getPerks().get(rank);
-            if (perk != null) {
-                // 因为预赛一般没有奖金
-                perks += perk;
-            }
+            int exp = score.data.getExpByRank(rank);
+            totalExp += exp;
+            expInThisLevel += exp;
         }
-        cumulatedPerks += perks;
+        tryLevelUp();
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public int getExpInThisLevel() {
+        return expInThisLevel;
+    }
+
+    private void tryLevelUp() {
+        CareerManager manager = CareerManager.getInstance();
+        int expNeed;
+        while (expInThisLevel >= (expNeed = manager.getExpNeededToLevelUp(level))) {
+            level++;
+            availPerks += CareerManager.PERKS_PER_LEVEL;
+            expInThisLevel -= expNeed;
+        }
+    }
+
+    void validateLevel() {
+        int levelTotal = 0;  // 累积的升级所需经验
+        int remExp = 0;
+        int lv = 1;
+        int[] expList = CareerManager.getExpRequiredLevelUp();
+        for (int i = 0; i < expList.length; i++) {
+            int nextLvReq = expList[i];
+            int nextLvTotal = levelTotal + nextLvReq;
+            remExp = totalExp - levelTotal;
+            lv = i + 1;
+            if (levelTotal <= totalExp && nextLvTotal > totalExp) {
+                // 结束了，就是这一级了
+                break;
+            }
+            levelTotal = nextLvTotal;
+        }
+        if (lv != level || remExp != expInThisLevel) {
+            System.err.println("You hacked your user data!");
+        }
     }
 
     public List<ChampionshipScore> getChampionshipScores() {
@@ -145,22 +191,14 @@ public class Career {
         return isHumanPlayer;
     }
 
-    public int getCumulatedPerks() {
-        return cumulatedPerks;
-    }
-
     public void usePerk(int used) {
-        usedPerks += used;
+        availPerks -= used;
 
         CareerManager.getInstance().saveToDisk();
     }
 
-    public int getUsedPerks() {
-        return usedPerks;
-    }
-
     public int getAvailablePerks() {
-        return cumulatedPerks - usedPerks;
+        return availPerks;
     }
 
     @Override

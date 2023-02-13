@@ -12,7 +12,7 @@ import java.io.File;
 
 public class App extends Application {
     
-    public static final int VERSION = 11;
+    public static final int VERSION = 12;
 
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     public static final String FONT_STYLE = "";

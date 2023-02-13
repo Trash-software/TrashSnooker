@@ -14,16 +14,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class CareerManager {
-    
+
     public static final boolean LOG = true;
 
+    public static final String LEVEL_INFO = "data/level.dat";
     public static final String CAREER_DIR = "user/career/";
     public static final String CAREER_JSON = "career.json";
     public static final String PROGRESS_FILE = "progress.json";
     public static final String HISTORY_DIR = "history";
     public static final int PROFESSIONAL_LIMIT = 32;
-    public static final int INIT_PERKS = 12;
-
+    public static final int INIT_PERKS = 6;
+    public static final int PERKS_PER_LEVEL = 2;
+    private static final int[] EXP_REQUIRED_LEVEL_UP = readExpLevelUp();
     private static CareerManager instance;
     private static CareerSave currentSave;
     private final CareerSave careerSave;
@@ -32,7 +34,6 @@ public class CareerManager {
     private final Calendar timestamp;
     private final List<Career.CareerWithAwards> snookerRanking = new ArrayList<>();
     private final List<Career.CareerWithAwards> chineseEightRanking = new ArrayList<>();
-    
     private Career humanPlayerCareer;  // 玩家的career
     private Championship inProgress;
 
@@ -45,6 +46,31 @@ public class CareerManager {
     private CareerManager(CareerSave save, Calendar timestamp) {
         this.careerSave = save;
         this.timestamp = timestamp;
+    }
+
+    private static int[] readExpLevelUp() {
+        try (BufferedReader br = new BufferedReader(new FileReader(LEVEL_INFO))) {
+            String line;
+            List<Integer> levelExp = new ArrayList<>();
+            while ((line = br.readLine()) != null) {
+                line = line.strip();
+                if (!line.isBlank()) {
+                    String[] parts = line.split(",");
+                    int exp = Integer.parseInt(parts[1].strip());
+                    levelExp.add(exp);
+                }
+            }
+            int[] res = new int[levelExp.size()];
+            for (int i = 0; i < res.length; i++) {
+                res[i] = levelExp.get(i);
+            }
+            return res;
+        } catch (FileNotFoundException e) {
+            DataGenerator.generateExpPerLevel();
+            return readExpLevelUp();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static List<CareerSave> careerLists() {
@@ -199,6 +225,10 @@ public class CareerManager {
                 c.get(Calendar.DAY_OF_MONTH));
     }
 
+    public static int[] getExpRequiredLevelUp() {
+        return EXP_REQUIRED_LEVEL_UP;
+    }
+
     public void simulateMatchesInPastTwoYears() {
         updateRanking();  // 按照能力初始化排名
 
@@ -230,6 +260,12 @@ public class CareerManager {
 
     public CareerSave getCareerSave() {
         return careerSave;
+    }
+
+    public int getExpNeededToLevelUp(int currentLevel) {
+        int index = currentLevel - 1;
+        if (index == EXP_REQUIRED_LEVEL_UP.length) return Integer.MAX_VALUE;
+        return EXP_REQUIRED_LEVEL_UP[index];
     }
 
     public Career findCareerByPlayerId(String playerId) {
@@ -421,14 +457,14 @@ public class CareerManager {
             career.updateHandFeel();
         }
     }
-    
+
     public void updateEfforts() {
         updateEffortByRank(GameRule.SNOOKER);
 //        updateEffortByRank(GameRule.CHINESE_EIGHT);
 //        updateEffortByRank(GameRule.SIDE_POCKET);
 //        updateEffortByRank(GameRule.MINI_SNOOKER);
     }
-    
+
     private List<Career.CareerWithAwards> getRankOfGame(GameRule rule) {
         List<Career.CareerWithAwards> rnk;
 
@@ -444,10 +480,10 @@ public class CareerManager {
             default:
                 throw new RuntimeException();
         }
-        
+
         return rnk;
     }
-    
+
     private void updateEffortByRank(GameRule rule) {
         List<Career.CareerWithAwards> rnk = getRankOfGame(rule);
 //        
@@ -461,7 +497,7 @@ public class CareerManager {
             double leakWaterRatio = (double) top.getRecentAwards() / second.getRecentAwards() - 0.5;  // 大于1
             leakWaterRatio = leakWaterRatio * 0.5 + 0.5;  // 0.5-1
             top.career.updateEffort(rule, Math.max(1 / leakWaterRatio, 0.7));
-            System.out.println("Updated effort of " + 
+            System.out.println("Updated effort of " +
                     top.career.getPlayerPerson().getPlayerId() + ": " + top.career.getEffort(rule));
         }
     }
