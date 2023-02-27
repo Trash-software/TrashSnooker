@@ -149,7 +149,7 @@ public class CuePlayParams {
                                                     PlayerPerson person,
                                                     PlayerPerson.Hand hand) {
         double upBodyLength = person.handBody.height * 10 - 851;
-        double heightMul = 1.65;  
+        double heightMul = 1.75;  
         double personLengthX = upBodyLength * -aimingX * heightMul;
         double personLengthY = upBodyLength * -aimingY * heightMul;
 

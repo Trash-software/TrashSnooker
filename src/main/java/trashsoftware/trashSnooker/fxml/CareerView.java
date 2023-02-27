@@ -54,14 +54,18 @@ public class CareerView implements Initializable {
     Label nextChampionshipLabel, champInProgLabel, champInProgStageLabel;
     @FXML
     CheckBox joinChampBox;
-//    @FXML
+    //    @FXML
 //    Label champAwardsLabel1, champAwardsLabel2;
     @FXML
     LabelTable<AwardItem> champAwardsTable;
     @FXML
     ComboBox<GameRule> rankTypeBox;
     @FXML
+    ComboBox<ChampionshipData.Selection> rankMethodBox;
+    @FXML
     Pane champInProgBox, nextChampInfoBox;
+    @FXML
+    LabelTable<PlayerAward> selectedPlayerInfoTable;
 
     CareerManager careerManager;
     private PerkManager perkManager;
@@ -72,11 +76,11 @@ public class CareerView implements Initializable {
         careerManager = CareerManager.getInstance();
 
         PlayerPerson pp = careerManager.getHumanPlayerCareer().getPlayerPerson();
-        perkManager = new PerkManager(this, 
-                careerManager.getHumanPlayerCareer().getAvailablePerks(), 
+        perkManager = new PerkManager(this,
+                careerManager.getHumanPlayerCareer().getAvailablePerks(),
                 PlayerPerson.ReadableAbility.fromPlayerPerson(pp));
         abilityShower.setup(perkManager, pp.isCustom());
-        
+
         initTypeBox();
         initTable();
         initAwardsTable();
@@ -87,7 +91,7 @@ public class CareerView implements Initializable {
     public void setSelfStage(Stage selfStage) {
         this.selfStage = selfStage;
     }
-    
+
     private void refreshPersonalAwardsTable() {
         allAwardsTable.clearItems();
         List<ChampionshipScore> cs = new ArrayList<>(careerManager.getHumanPlayerCareer().getChampionshipScores());
@@ -97,12 +101,33 @@ public class CareerView implements Initializable {
         }
     }
     
-    private void initAwardsTable() {
-        LabelTableColumn<PlayerAward, String> champCol = 
-                new LabelTableColumn<>(allAwardsTable, "赛事", param -> 
+    private void refreshSelectedPlayerTable(CareerRank selected) {
+        selectedPlayerInfoTable.clearItems();
+        
+        boolean currentlyVisible = selectedPlayerInfoTable.isVisible();
+        
+        if (selected == null) {
+            selectedPlayerInfoTable.setVisible(false);
+            selectedPlayerInfoTable.setManaged(false);
+        } else {
+            selectedPlayerInfoTable.setVisible(true);
+            selectedPlayerInfoTable.setManaged(true);
+            List<ChampionshipScore> cs = new ArrayList<>(selected.getCareer().getChampionshipScores());
+            Collections.reverse(cs);
+            for (ChampionshipScore score : cs) {
+                selectedPlayerInfoTable.addItem(new PlayerAward(score));
+            }
+        }
+        if (selfStage != null && (currentlyVisible != selectedPlayerInfoTable.isVisible())) 
+            selfStage.sizeToScene();
+    }
+    
+    private void setupAwdTable(LabelTable<PlayerAward> table) {
+        LabelTableColumn<PlayerAward, String> champCol =
+                new LabelTableColumn<>(table, "赛事", param ->
                         new ReadOnlyObjectWrapper<>(param.score.getYear() + " " + param.score.data.getName()));
         LabelTableColumn<PlayerAward, String> scoreCol =
-                new LabelTableColumn<>(allAwardsTable, "成绩", param -> {
+                new LabelTableColumn<>(table, "成绩", param -> {
                     StringBuilder builder = new StringBuilder();
                     for (ChampionshipScore.Rank rank : param.score.ranks) {
                         builder.append(rank.getShown()).append(' ');
@@ -110,21 +135,29 @@ public class CareerView implements Initializable {
                     return new ReadOnlyStringWrapper(builder.toString());
                 });
         LabelTableColumn<PlayerAward, Integer> awardMoneyCol =
-                new LabelTableColumn<>(allAwardsTable, "奖金", param -> {
+                new LabelTableColumn<>(table, "奖金", param -> {
                     int money = 0;
                     for (ChampionshipScore.Rank rank : param.score.ranks) {
                         money += param.score.data.getAwardByRank(rank);
                     }
                     return new ReadOnlyObjectWrapper<>(money);
                 });
-        
-        allAwardsTable.addColumns(champCol, scoreCol, awardMoneyCol);
 
+        table.addColumns(champCol, scoreCol, awardMoneyCol);
+    }
+
+    private void initAwardsTable() {
+        // 玩家自己的奖金表
+        setupAwdTable(allAwardsTable);
         refreshPersonalAwardsTable();
         
+        // 点选的球员的奖金表
+        setupAwdTable(selectedPlayerInfoTable);
+        refreshSelectedPlayerTable(null);
+
         // 赛事奖金表
-        LabelTableColumn<AwardItem, String> titleCol = 
-                new LabelTableColumn<>(champAwardsTable, "", param -> 
+        LabelTableColumn<AwardItem, String> titleCol =
+                new LabelTableColumn<>(champAwardsTable, "", param ->
                         new ReadOnlyStringWrapper(param.rank.getShown()));
         LabelTableColumn<AwardItem, Integer> awardCol =
                 new LabelTableColumn<>(champAwardsTable, "奖金", param ->
@@ -132,7 +165,7 @@ public class CareerView implements Initializable {
         LabelTableColumn<AwardItem, Integer> perkCol =
                 new LabelTableColumn<>(champAwardsTable, "exp", param ->
                         new ReadOnlyObjectWrapper<>(param.data.getExpByRank(param.rank)));
-        
+
         champAwardsTable.addColumns(titleCol, awardCol, perkCol);
     }
 
@@ -140,19 +173,31 @@ public class CareerView implements Initializable {
         rankTypeBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             refreshRanks();
         }));
-        
         rankTypeBox.getItems().addAll(GameRule.values());
+
+        rankMethodBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            refreshRanks();
+        }));
+        rankMethodBox.getItems().addAll(
+                ChampionshipData.Selection.REGULAR,
+                ChampionshipData.Selection.SINGLE_SEASON
+        );
+
+        rankMethodBox.getSelectionModel().select(ChampionshipData.Selection.REGULAR);
         rankTypeBox.getSelectionModel().select(GameRule.SNOOKER);
     }
-    
+
     private void initTable() {
         rankCol.setCellValueFactory(new PropertyValueFactory<>("rankFrom1"));
         rankNameCol.setCellValueFactory(param ->
                 new ReadOnlyStringWrapper(param.getValue().career.getPlayerPerson().getName()));
-        rankedAwardCol.setCellValueFactory(new PropertyValueFactory<>("recentAwards"));
+        rankedAwardCol.setCellValueFactory(new PropertyValueFactory<>("shownAwards"));
         totalAwardCol.setCellValueFactory(new PropertyValueFactory<>("totalAwards"));
+        
+        rankingTable.getSelectionModel().selectedItemProperty()
+                .addListener(((observable, oldValue, newValue) -> refreshSelectedPlayerTable(newValue)));
     }
-    
+
     public void refreshGui() {
         Career myCareer = careerManager.getHumanPlayerCareer();
         levelLabel.setText("Lv." + myCareer.getLevel());
@@ -160,10 +205,10 @@ public class CareerView implements Initializable {
         int expToNext = careerManager.getExpNeededToLevelUp(myCareer.getLevel());
         levelExpBar.setProgress((double) curExp / expToNext);
         levelExpLabel.setText(String.format("%d/%d", curExp, expToNext));
-        
+
         refreshRanks();
         refreshPersonalAwardsTable();
-        currentDateLabel.setText(String.format("%d/%d/%d", 
+        currentDateLabel.setText(String.format("%d/%d/%d",
                 careerManager.getTimestamp().get(Calendar.YEAR),
                 careerManager.getTimestamp().get(Calendar.MONTH) + 1,
                 careerManager.getTimestamp().get(Calendar.DAY_OF_MONTH)));
@@ -179,8 +224,8 @@ public class CareerView implements Initializable {
             nextChampInfoBox.setManaged(true);
             ChampionshipData.WithYear nextData = careerManager.nextChampionshipData();
             data = nextData.data;
-            
-            if (careerManager.humanPlayerQualifiedToJoinSnooker(data)) {
+
+            if (careerManager.humanPlayerQualifiedToJoinSnooker(data, data.getSelection())) {
                 joinChampBox.setDisable(false);
                 joinChampBox.setSelected(true);
             } else {
@@ -191,16 +236,16 @@ public class CareerView implements Initializable {
         } else {
             champInProgBox.setVisible(true);
             champInProgBox.setManaged(true);
-            
+
             nextChampInfoBox.setVisible(false);
             nextChampInfoBox.setManaged(false);
-            
+
             champInProgLabel.setText(inProgress.fullName());
             champInProgStageLabel.setText(inProgress.getCurrentStage().shown);
-            
+
             data = inProgress.getData();
         }
-        
+
         // 更新赛事奖金表
         champAwardsTable.clearItems();
         champAwardsTable.getColumns().get(0).setTitle(data.isRanked() ? "排名赛" : "非排名赛");
@@ -212,14 +257,17 @@ public class CareerView implements Initializable {
     }
 
     private void refreshRanks() {
-        rankingTable.getItems().clear();
-        rankingTable.getItems().addAll(careerManager.getRanking(rankTypeBox.getValue()));
+        if (rankTypeBox.getValue() == null || rankMethodBox.getValue() == null) return;
 
-        CareerRank myRank = careerManager.humanPlayerSnookerRanking();
-        myRankLabel.setText(String.format("%d  %s  %d",
+        rankingTable.getItems().clear();
+        rankingTable.getItems().addAll(careerManager.getRanking(rankTypeBox.getValue(), rankMethodBox.getValue()));
+
+        CareerRank myRank = careerManager.humanPlayerSnookerRanking(rankMethodBox.getValue());
+        myRankLabel.setText(String.format("%d  %s  %d  %d",
                 myRank.getRankFrom1(),
                 myRank.career.getPlayerPerson().getName(),
-                myRank.getRecentAwards()));
+                myRank.getShownAwards(),
+                myRank.getTotalAwards()));
 
         availPerksLabel.setText(String.valueOf(myRank.career.getAvailablePerks()));
     }
@@ -250,9 +298,9 @@ public class CareerView implements Initializable {
     public void nextChamp() {
         Championship championship = careerManager.startNextChampionship();
         championship.startChampionship(joinChampBox.isSelected());
-        
+
         refreshGui();
-        
+
         showChampDrawView();
     }
 
@@ -260,13 +308,13 @@ public class CareerView implements Initializable {
     public void continueChampInProg() {
         showChampDrawView();
     }
-    
+
     private void showChampDrawView() {
         try {
             Stage stage = new Stage();
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(selfStage);
-            
+
             stage.setTitle(CareerManager.getInstance().getChampionshipInProgress().fullName());
 
             FXMLLoader loader = new FXMLLoader(
@@ -294,13 +342,13 @@ public class CareerView implements Initializable {
     public void notifyPerksChanged() {
         availPerksLabel.setText(perkManager.getAvailPerks() + "");
     }
-    
+
     public enum CareerAwardTime {
         RANKED("排名"),
         TOTAL("生涯总奖金");
-        
+
         private final String shown;
-        
+
         CareerAwardTime(String shown) {
             this.shown = shown;
         }
@@ -310,19 +358,19 @@ public class CareerView implements Initializable {
             return shown;
         }
     }
-    
+
     public static class PlayerAward {
         final ChampionshipScore score;
-        
+
         PlayerAward(ChampionshipScore score) {
             this.score = score;
         }
     }
-    
+
     public static class AwardItem {
         final ChampionshipData data;
         final ChampionshipScore.Rank rank;
-        
+
         AwardItem(ChampionshipData data, ChampionshipScore.Rank rank) {
             this.data = data;
             this.rank = rank;

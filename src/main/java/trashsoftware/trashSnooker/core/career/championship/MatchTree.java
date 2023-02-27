@@ -19,6 +19,11 @@ public class MatchTree {
      * @param nonSeedPlayers 非种子选手，按排名排序
      */
     public MatchTree(ChampionshipData data, List<Career> seedPlayers, List<Career> nonSeedPlayers) {
+        if (seedPlayers.size() + nonSeedPlayers.size() != data.getTotalPlaces()) {
+            throw new RuntimeException("Expected " + data.getTotalPlaces() + " players, got " +
+                    (seedPlayers.size() + nonSeedPlayers.size()));
+        }
+        
         // 分上下半区
         List<Career> goodSeeds = new ArrayList<>(seedPlayers.subList(0, seedPlayers.size() / 2));
         List<Career> badSeeds = new ArrayList<>(seedPlayers.subList(seedPlayers.size() / 2, seedPlayers.size()));
@@ -36,11 +41,17 @@ public class MatchTree {
 
         // 非种子选手进正赛的名额
         int[] preNewAdd = data.getPreMatchNewAdded();
-        for (int roundPos : preNewAdd) {
-            List<Career> roundPlayers = new ArrayList<>(nonSeedPlayers.subList(0, roundPos));
-            nonSeedPlayers = new ArrayList<>(nonSeedPlayers.subList(roundPos, nonSeedPlayers.size()));
-            Collections.shuffle(roundPlayers);
-            players.add(roundPlayers);
+        if (preNewAdd.length > 0) {
+            for (int roundPos : preNewAdd) {
+                List<Career> roundPlayers = new ArrayList<>(nonSeedPlayers.subList(0, roundPos));
+                nonSeedPlayers = new ArrayList<>(nonSeedPlayers.subList(roundPos, nonSeedPlayers.size()));
+                Collections.shuffle(roundPlayers);
+                players.add(roundPlayers);
+            }
+        } else {
+            // 没有预赛，也没有种子的比赛
+            Collections.shuffle(nonSeedPlayers);
+            players.add(nonSeedPlayers);
         }
 
         build(data, players);

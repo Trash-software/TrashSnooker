@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.career;
 
 import javafx.fxml.FXML;
+import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.io.File;
@@ -26,7 +27,9 @@ public class CareerSave {
     
     @FXML
     public String getPlayerName() {
-        return DataLoader.getInstance().getPlayerPerson(playerId).getName();
+        PlayerPerson playerPerson = DataLoader.getInstance().getPlayerPerson(playerId);
+        if (playerPerson != null) return playerPerson.getName();
+        else return "";
     }
 
     public File getDir() {

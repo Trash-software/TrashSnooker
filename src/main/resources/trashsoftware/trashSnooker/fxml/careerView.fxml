@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 <?import trashsoftware.trashSnooker.fxml.widgets.AbilityShower?>
 <?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
 <GridPane xmlns="http://javafx.com/javafx"
@@ -36,16 +35,20 @@
             <Button text="确定分配" fx:id="confirmAddPerkBtn" onAction="#applyPerks"/>
         </HBox>
     </VBox>
-    
+
     <VBox GridPane.rowIndex="2" spacing="10.0">
-<!--        荣誉-->
+        <!--        荣誉-->
     </VBox>
-    
+
     <LabelTable fx:id="allAwardsTable" GridPane.rowIndex="6"/>
-    
+
     <HBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="10.0">
         <Label text="世界排名"/>
         <ComboBox fx:id="rankTypeBox"/>
+
+        <Separator orientation="VERTICAL"/>
+        <Label text="排名方式"/>
+        <ComboBox fx:id="rankMethodBox"/>
     </HBox>
 
     <TableView fx:id="rankingTable" prefWidth="360.0" prefHeight="360.0"
@@ -59,7 +62,7 @@
     </TableView>
 
     <Label fx:id="myRankLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-    
+
     <Label fx:id="currentDateLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
     <VBox fx:id="champInProgBox" GridPane.rowIndex="5" GridPane.columnIndex="1" spacing="10.0">
@@ -79,9 +82,12 @@
             <Button text="开始" onAction="#nextChamp"/>
         </HBox>
     </VBox>
-    
-    <LabelTable fx:id="champAwardsTable" 
-                GridPane.rowIndex="6" 
+
+    <LabelTable fx:id="champAwardsTable"
+                GridPane.rowIndex="6"
                 GridPane.columnIndex="1"/>
+
+    <LabelTable fx:id="selectedPlayerInfoTable" GridPane.rowIndex="1" GridPane.columnIndex="2"
+                visible="false" managed="false" prefWidth="360.0" prefHeight="360.0"/>
 
 </GridPane>

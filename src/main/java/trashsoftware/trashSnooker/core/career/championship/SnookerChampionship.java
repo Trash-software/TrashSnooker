@@ -19,7 +19,8 @@ public class SnookerChampionship extends Championship {
                 data.getTotalPlaces(),
                 data.isProfessionalOnly(),
                 playerJoin,
-                data.getType()
+                data.getType(),
+                data.getSelection()
         );
     }
 }

@@ -2,6 +2,8 @@ package trashsoftware.trashSnooker.core.career.championship;
 
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.*;
+import trashsoftware.trashSnooker.core.career.aiMatch.AiVsAi;
+import trashsoftware.trashSnooker.core.career.aiMatch.ChineseAiVsAi;
 import trashsoftware.trashSnooker.core.career.aiMatch.SnookerAiVsAi;
 
 import java.util.ArrayList;
@@ -138,23 +140,31 @@ public class MatchTreeNode {
     }
 
     private void performAiVsAiMatch(ChampionshipData data, ChampionshipStage stage) {
+        AiVsAi aiVsAi;
         switch (data.getType()) {
             case SNOOKER:
-                SnookerAiVsAi aiVsAi = new SnookerAiVsAi(
+                aiVsAi = new SnookerAiVsAi(
                         player1Position.winner,
                         player2Position.winner,
                         data,
                         data.getNFramesOfStage(stage));
-                aiVsAi.simulate();
-                Career winner = aiVsAi.getWinner();
-                setWinner(winner, aiVsAi.getP1WinFrames(), aiVsAi.getP2WinFrames());
-                System.out.println(aiVsAi);
                 break;
             case CHINESE_EIGHT:
+                aiVsAi = new ChineseAiVsAi(
+                        player1Position.winner,
+                        player2Position.winner,
+                        data,
+                        data.getNFramesOfStage(stage)
+                );
+                break;
             case SIDE_POCKET:
             default:
                 throw new UnsupportedOperationException();
         }
+        aiVsAi.simulate();
+        Career winner = aiVsAi.getWinner();
+        setWinner(winner, aiVsAi.getP1WinFrames(), aiVsAi.getP2WinFrames());
+        System.out.println(aiVsAi);
     }
 
     public void getResults(ChampionshipData data,

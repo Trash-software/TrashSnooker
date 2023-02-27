@@ -6,13 +6,13 @@ public class CareerRank {
     
     public final int rank;
     public final Career career;
-    private final int recentAwards;
+    private final int shownAwards;
     private final int totalAwards;
     
-    CareerRank(int rank, Career career, int recentAwards, int totalAwards) {
+    CareerRank(int rank, Career career, int shownAwards, int totalAwards) {
         this.rank = rank;
         this.career = career;
-        this.recentAwards = recentAwards;
+        this.shownAwards = shownAwards;
         this.totalAwards = totalAwards;
     }
 
@@ -25,10 +25,10 @@ public class CareerRank {
     }
 
     @FXML
-    public int getRecentAwards() {
-        return recentAwards;
+    public int getShownAwards() {
+        return shownAwards;
     }
-
+    
     @FXML
     public int getTotalAwards() {
         return totalAwards;

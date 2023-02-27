@@ -32,6 +32,8 @@ public abstract class Championship {
                 championship = new SnookerChampionship(data, timestamp);
                 break;
             case CHINESE_EIGHT:
+                championship = new ChineseEightChampionship(data, timestamp);
+                break;
             case SIDE_POCKET:
             case MINI_SNOOKER:
             default:

@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.career.aiMatch.AiVsAi;
 import trashsoftware.trashSnooker.core.career.aiMatch.SnookerAiVsAi;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.util.DataLoader;
@@ -19,8 +20,8 @@ public class Career {
     //    private int cumulatedPerks = 0;
 //    private int usedPerks = 0;
     private int availPerks;
-    private int totalExp;
-    private int level;
+    private int totalExp = 0;
+    private int level = 1;
     private int expInThisLevel;
     private double handFeel = 0.9;
 
@@ -40,6 +41,10 @@ public class Career {
     public static Career fromJson(JSONObject jsonObject) {
         String playerId = jsonObject.getString("playerId");
         PlayerPerson playerPerson = DataLoader.getInstance().getPlayerPerson(playerId);
+        if (playerPerson == null) {
+            // 有career记录，但是PlayerPerson已经被删了
+            return null;
+        }
 
         Career career = new Career(playerPerson, jsonObject.getBoolean("human"));
         career.availPerks = jsonObject.has("availPerks") ? jsonObject.getInt("availPerks") : 0;
@@ -209,10 +214,11 @@ public class Career {
                 '}';
     }
 
-    public static class CareerWithAwards implements Comparable<CareerWithAwards> {
+    public static class CareerWithAwards {
         public final Career career;
         public final GameRule type;
-        private int recentAwards;
+        private int oneSeasonAwards;
+        private int twoSeasonsAwards;
         private int totalAwards;
 
         public CareerWithAwards(GameRule type, Career career, Calendar timestamp) {
@@ -223,10 +229,17 @@ public class Career {
         }
 
         private void calculateAwards(Calendar timestamp) {
-            recentAwards = 0;
+            oneSeasonAwards = 0;
+            twoSeasonsAwards = 0;
             totalAwards = 0;
-            Calendar startTime = Calendar.getInstance();
-            startTime.set(timestamp.get(Calendar.YEAR) - 2,
+            
+            Calendar twoYearBefore = Calendar.getInstance();
+            twoYearBefore.set(timestamp.get(Calendar.YEAR) - 2,
+                    timestamp.get(Calendar.MONTH),
+                    timestamp.get(Calendar.DAY_OF_MONTH) - 1);  // 上上届要算
+
+            Calendar oneYearBefore = Calendar.getInstance();
+            oneYearBefore.set(timestamp.get(Calendar.YEAR) - 1,
                     timestamp.get(Calendar.MONTH),
                     timestamp.get(Calendar.DAY_OF_MONTH) - 1);  // 上上届要算
 
@@ -238,16 +251,23 @@ public class Career {
                     }
                     totalAwards += awards;
                     if (score.data.ranked) {
-                        if (startTime.before(score.timestamp)) {
-                            recentAwards += awards;
+                        if (oneYearBefore.before(score.timestamp)) {
+                            oneSeasonAwards += awards;
+                        }
+                        if (twoYearBefore.before(score.timestamp)) {
+                            twoSeasonsAwards += awards;
                         }
                     }
                 }
             }
         }
 
-        public int getRecentAwards() {
-            return recentAwards;
+        public int getTwoSeasonsAwards() {
+            return twoSeasonsAwards;
+        }
+
+        public int getOneSeasonAwards() {
+            return oneSeasonAwards;
         }
 
         public int getTotalAwards() {
@@ -255,32 +275,40 @@ public class Career {
         }
 
         private double winScore() {
-            return SnookerAiVsAi.playerSnookerWinningScore(
+            return AiVsAi.playerSimpleWinningScore(
                     career.getPlayerPerson(),
                     career.getPlayerPerson().getAiPlayStyle(),
                     PlayerPerson.ReadableAbility.fromPlayerPerson(career.getPlayerPerson()),
                     false
             );
         }
+        
+        public static int twoSeasonsCompare(CareerWithAwards t, Career.CareerWithAwards o) {
+            return compare(t, o, t.twoSeasonsAwards, o.twoSeasonsAwards);
+        }
 
-        @Override
-        public int compareTo(@NotNull Career.CareerWithAwards o) {
-            int awdCmp = -Integer.compare(this.recentAwards, o.recentAwards);
+        public static int oneSeasonCompare(CareerWithAwards t, Career.CareerWithAwards o) {
+            return compare(t, o, t.oneSeasonAwards, o.oneSeasonAwards);
+        }
+        
+        private static int compare(CareerWithAwards t, Career.CareerWithAwards o,
+                                   int tAwd, int oAwd) {
+            int awdCmp = -Integer.compare(tAwd, oAwd);
             if (awdCmp != 0) return awdCmp;
-            if ("God".equals(this.career.playerPerson.category) && !"God".equals(o.career.playerPerson.category)) {
+            if ("God".equals(t.career.playerPerson.category) && !"God".equals(o.career.playerPerson.category)) {
                 return 1;
             }
-            if ("God".equals(o.career.playerPerson.category) && !"God".equals(this.career.playerPerson.category)) {
+            if ("God".equals(o.career.playerPerson.category) && !"God".equals(t.career.playerPerson.category)) {
                 return -1;
             }
-            int rndCmp = Boolean.compare(this.career.playerPerson.isRandom, o.career.playerPerson.isRandom);
+            int rndCmp = Boolean.compare(t.career.playerPerson.isRandom, o.career.playerPerson.isRandom);
             if (rndCmp != 0) return rndCmp;
-            return -Double.compare(this.winScore(), o.winScore());
+            return -Double.compare(t.winScore(), o.winScore());
         }
 
         @Override
         public String toString() {
-            return career.getPlayerPerson().getPlayerId() + ": " + recentAwards;
+            return career.getPlayerPerson().getPlayerId() + ": " + twoSeasonsAwards;
         }
     }
 }

@@ -1138,15 +1138,20 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //                    ball.normalMove();
 //                    if (noHit) ball.normalMove();
                 } 
-//                else {
-//                    // fixme: 暂时修不好这个bug，但是在贴图实装之前也没得用
-//                    if (!ball.sideSpinStopped(phy)) {
-//                        noBallMoving = false;
-//                    }
-//                }
+                else {
+                    if (!ball.sideSpinAtPosition(phy)) {
+                        
+                    }
+                }
             }
             double lastPhysicalTime = cumulatedPhysicalTime;
             cumulatedPhysicalTime += phy.calculateMs;
+            
+            if (noBallMoving) {
+                for (Ball ball : getAllBalls()) {
+                    ball.clearMovement();
+                }
+            }
 
             if (Math.floor(cumulatedPhysicalTime / GameView.frameTimeMs) !=
                     Math.floor(lastPhysicalTime / GameView.frameTimeMs)) {

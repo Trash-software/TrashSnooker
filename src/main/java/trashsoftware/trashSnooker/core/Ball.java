@@ -141,13 +141,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
 
     public void pickup() {
         setPotted(false);
-        vx = 0.0;
-        vy = 0.0;
-        sideSpin = 0.0;
-        xSpin = 0.0;
-        ySpin = 0.0;
-        distance = 0.0;
-        frameDegChange = 0.0;
+        clearMovement();
     }
 
 //    public double getXAngle() {
@@ -180,16 +174,22 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         this.ySpin = ySpin;
         this.sideSpin = sideSpin;
     }
+    
+    public boolean isNotMoving(Phy phy) {
+        return getSpeed() < phy.speedReducer;
+    }
 
     public boolean isLikelyStopped(Phy phy) {
         if (getSpeed() < phy.speedReducer   // todo: 写不明白，旋转停
+                &&
+                getSpinTargetSpeed() < phy.spinReducer * 2
 //                &&
-//                getSpinTargetSpeed() < phy.spinReducer
+//                (!phy.isPrediction && Math.abs(sideSpin) < phy.sideSpinReducer)
         ) {
             vx = 0.0;
             vy = 0.0;
 //            if (phy.isPrediction) {
-                sideSpin = 0.0;  // todo: 同上
+//                sideSpin = 0.0;  // todo: 同上
 //            }
             xSpin = 0.0;
             ySpin = 0.0;
@@ -228,16 +228,20 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
 //        zAngle += phi;
     }
 
-    protected boolean sideSpinStopped(Phy phy) {
+    /**
+     * 原地转
+     */
+    protected boolean sideSpinAtPosition(Phy phy) {
         msSinceCue++;
         if (sideSpin >= phy.sideSpinReducer) {
             sideSpin -= phy.sideSpinReducer;
+            return true;
         } else if (sideSpin <= -phy.sideSpinReducer) {
             sideSpin += phy.sideSpinReducer;
-        } else {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     protected void normalMove(Phy phy) {
@@ -646,7 +650,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         return false;
     }
 
-    void clearMovement() {
+    public void clearMovement() {
         vx = 0.0;
         vy = 0.0;
         xSpin = 0.0;
@@ -654,6 +658,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         sideSpin = 0.0;
         distance = 0.0;
         justHit = null;
+        frameDegChange = 0.0;
     }
 
     protected void prepareMove(Phy phy) {

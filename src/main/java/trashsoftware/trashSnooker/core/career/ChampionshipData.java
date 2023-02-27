@@ -27,9 +27,10 @@ public class ChampionshipData {
     boolean ranked;  // 是否为排名赛
     int month;  // 真实的month，从1开始的，注意和calendar转化
     int day;
+    Selection selection;
 
     Map<ChampionshipStage, Integer> stageFrames = new HashMap<>();  // 每一轮的总局数
-    ChampionshipStage[] stages ;  // 决赛在前
+    ChampionshipStage[] stages;  // 决赛在前
     ChampionshipScore.Rank[] ranksOfLosers;  // 决赛在前，各个的输家的rank
     ChampionshipScore.Rank[] ranksOfAll;  // 也就比ranksOfLosers多一个冠军
 
@@ -53,6 +54,10 @@ public class ChampionshipData {
             data.preMatchNewAdded[i] = preNewAdd.getInt(i);
         }
 
+        data.selection = jsonObject.has("selection") ?
+                Selection.valueOf(jsonObject.getString("selection").toUpperCase(Locale.ROOT)) :
+                Selection.REGULAR;
+
         data.ranked = jsonObject.getBoolean("ranked");
         data.professionalOnly = jsonObject.getBoolean("professional");
 
@@ -65,7 +70,7 @@ public class ChampionshipData {
 
         JSONArray awards = jsonObject.getJSONArray("awards");
         JSONArray expList = jsonObject.getJSONArray("exp");
-        
+
         for (int i = 0; i < data.ranksOfAll.length; i++) {
             int awd = i < awards.length() ? awards.getInt(i) : 0;
             int exp = i < expList.length() ? expList.getInt(i) : 0;
@@ -73,7 +78,11 @@ public class ChampionshipData {
             data.awards.put(rank, awd);
             data.expMap.put(rank, exp);
         }
-        data.awards.put(ChampionshipScore.Rank.BEST_SINGLE, jsonObject.getInt("best_single"));
+
+        data.awards.put(ChampionshipScore.Rank.BEST_SINGLE,
+                jsonObject.has("best_single") ?
+                        jsonObject.getInt("best_single") :
+                        0);
         if (jsonObject.has("147")) {
             data.awards.put(ChampionshipScore.Rank.MAXIMUM, jsonObject.getInt("147"));
         }
@@ -148,13 +157,13 @@ public class ChampionshipData {
     private void analyzeFramesStages(JSONArray frames) {
 //        int nonSeedMainPos = mainPlaces - seedPlaces;
         int preRounds = preMatchNewAdded.length;
-        
+
         stages = ChampionshipStage.getSequence(mainRounds, preRounds);
         ranksOfLosers = ChampionshipScore.Rank.getSequenceOfLosers(mainRounds, preRounds);
         ranksOfAll = new ChampionshipScore.Rank[ranksOfLosers.length + 1];
         ranksOfAll[0] = ChampionshipScore.Rank.CHAMPION;
         System.arraycopy(ranksOfLosers, 0, ranksOfAll, 1, ranksOfLosers.length);
-        
+
         for (int i = 0; i < stages.length; i++) {
             stageFrames.put(stages[i], frames.getInt(i));
         }
@@ -182,9 +191,13 @@ public class ChampionshipData {
     public int getAwardByRank(ChampionshipScore.Rank rank) {
         return awards.get(rank);
     }
-    
+
     public int getExpByRank(ChampionshipScore.Rank rank) {
         return expMap.get(rank);
+    }
+
+    public Selection getSelection() {
+        return selection;
     }
 
     public String getId() {
@@ -212,7 +225,7 @@ public class ChampionshipData {
     }
 
     public int getTotalPlaces() {
-        return seedPlaces + Arrays.stream(preMatchNewAdded).sum();
+        return mainPlaces + Arrays.stream(preMatchNewAdded).sum();
     }
 
     public boolean isProfessionalOnly() {
@@ -283,7 +296,7 @@ public class ChampionshipData {
     public TableSpec getTableSpec() {
         return tableSpec;
     }
-    
+
     private void appendAwardString(ChampionshipScore.Rank rank, StringBuilder builder) {
         int award = getAwardByRank(rank);
         int exp = getExpByRank(rank);
@@ -314,6 +327,23 @@ public class ChampionshipData {
         }
 
         return builder.toString();
+    }
+
+    public enum Selection {
+        REGULAR("常规"),
+        SINGLE_SEASON("单赛季"),
+        ALL_CHAMP("冠军");
+
+        final String shown;
+
+        Selection(String shown) {
+            this.shown = shown;
+        }
+
+        @Override
+        public String toString() {
+            return shown;
+        }
     }
 
     public static class WithYear {
