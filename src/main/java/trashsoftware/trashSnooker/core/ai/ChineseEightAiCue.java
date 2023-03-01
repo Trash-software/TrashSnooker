@@ -3,18 +3,35 @@ package trashsoftware.trashSnooker.core.ai;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.CuePlayParams;
+import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightBallPlayer> {
+    
+    private final Map<Ball, Double> selfBallAlivePrices = new HashMap<>();
 
     public ChineseEightAiCue(ChineseEightBallGame game, ChineseEightBallPlayer aiPlayer) {
         super(game, aiPlayer);
+        
+        makeAlivePriceMap();
+    }
+    
+    private void makeAlivePriceMap() {
+        int range = aiPlayer.getBallRange();
+        if (range == ChineseEightBallGame.NOT_SELECTED_REP) return;
+        for (Ball ball : game.getAllLegalBalls(range, false)) {
+            selfBallAlivePrices.put(ball, ballAlivePrice(ball));
+        }
+        Ball eight = game.getBallByValue(8);
+        selfBallAlivePrices.put(eight, ballAlivePrice(eight));
     }
     
     public static boolean isCenterBreak(ChineseEightBallPlayer player) {
@@ -61,37 +78,29 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     @Override
+    protected double priceOfKick(Ball kickedBall, double kickSpeed) {
+        Double alivePrice = selfBallAlivePrices.get(kickedBall);
+        if (alivePrice == null) return KICK_USELESS_BALL_MUL;
+
+        double speedThreshold = Values.MAX_POWER_SPEED / 8.0;
+        double speedMul;
+        if (kickSpeed > speedThreshold * 2) speedMul = 1.5;
+        else if (kickSpeed > speedThreshold) speedMul = 1.0;
+        else speedMul = 0.5;
+        
+        if (alivePrice == 0) return 2.0 * speedMul;
+        double kickPriority = 20.0 / alivePrice;
+        
+        return Math.max(0.5, speedMul * Math.min(2.0, kickPriority));
+    }
+
+    @Override
     public AiCueResult makeCue(Phy phy) {
         if (game.getCurrentTarget() == ChineseEightBallGame.NOT_SELECTED_REP) {
             AiCueResult selection = selectBallCue(phy);
             if (selection != null) return selection;
         }
         return regularCueDecision(phy);
-    }
-    
-    private double ballAlivePrice(Ball ball) {
-        List<double[][]> dirHolePoints = game.directionsToAccessibleHoles(ball);
-        double price = 0.0;
-        final double diameter = game.getGameValues().ball.ballDiameter;
-        OUT_LOOP:
-        for (double[][] dirHolePoint : dirHolePoints) {
-            for (Ball other : game.getAllBalls()) {
-                if (ball != other && !other.isPotted() && !other.isWhite()) {
-                    double obstaclePotPointDt = 
-                            Math.hypot(other.getX() - dirHolePoint[2][0], other.getY() - dirHolePoint[2][1]);
-                    if (obstaclePotPointDt <= diameter) {
-                        continue OUT_LOOP;
-                    }
-                }
-            }
-            double potDifficulty = AiCue.AttackChoice.holeDifficulty(
-                    game,
-                    dirHolePoint[1][0] == game.getGameValues().table.midX,
-                    dirHolePoint[0]
-            ) * Math.hypot(ball.getX() - dirHolePoint[1][0], ball.getY() - dirHolePoint[1][1]);
-            price += 10000.0 / potDifficulty;
-        }
-        return price;
     }
     
     private double priceOfSet(Collection<Ball> balls) {

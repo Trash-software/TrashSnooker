@@ -18,6 +18,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
     public static final double NO_DIFFICULTY_ANGLE_RAD = 0.3;
     public static final double EACH_BALL_SEE_PRICE = 0.5;
     public static final double WHITE_HIT_CORNER_PENALTY = 0.25;
+    public static final double KICK_USELESS_BALL_MUL = 0.5;
     //    private static final double[] FRONT_BACK_SPIN_POINTS =
 //            {0.0, -0.27, 0.27, -0.54, 0.54, -0.81, 0.81};
     protected static final double[][] SPIN_POINTS = {  // 高低杆，左右塞
@@ -107,6 +108,31 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
     protected abstract DefenseChoice standardDefense();
 
+    protected double ballAlivePrice(Ball ball) {
+        List<double[][]> dirHolePoints = game.directionsToAccessibleHoles(ball);
+        double price = 0.0;
+        final double diameter = game.getGameValues().ball.ballDiameter;
+        OUT_LOOP:
+        for (double[][] dirHolePoint : dirHolePoints) {
+            for (Ball other : game.getAllBalls()) {
+                if (ball != other && !other.isPotted() && !other.isWhite()) {
+                    double obstaclePotPointDt =
+                            Math.hypot(other.getX() - dirHolePoint[2][0], other.getY() - dirHolePoint[2][1]);
+                    if (obstaclePotPointDt <= diameter) {
+                        continue OUT_LOOP;
+                    }
+                }
+            }
+            double potDifficulty = AiCue.AttackChoice.holeDifficulty(
+                    game,
+                    dirHolePoint[1][0] == game.getGameValues().table.midX,
+                    dirHolePoint[0]
+            ) * Math.hypot(ball.getX() - dirHolePoint[1][0], ball.getY() - dirHolePoint[1][1]);
+            price += 10000.0 / potDifficulty;
+        }
+        return price;
+    }
+
     protected DefenseChoice solveSnooker(Phy phy) {
         int curTarget = game.getCurrentTarget();
         boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
@@ -125,6 +151,8 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
      * @return 是否需要有球碰库
      */
     protected abstract boolean requireHitCushion();
+
+    protected abstract double priceOfKick(Ball kickedBall, double kickSpeed);
 
     protected double selectedPowerToActualPower(double selectedPower,
                                                 double unitCuePointX, double unitCuePointY,
@@ -289,8 +317,11 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 return choiceList.get(0);
             }
         }
-        choiceList.sort(IntegratedAttackChoice::compareToWhenNoAvailNextBall);
-        return choiceList.get(0);
+//        choiceList.sort(IntegratedAttackChoice::compareToWhenNoAvailNextBall);
+        IntegratedAttackChoice iac = choiceList.get(0);
+        if (iac.nextStepTarget != Game.END_REP && iac.whitePrediction.getSecondCollide() == null) 
+            return null;  // 打进了没位，打什么打
+        return iac;
     }
 
     protected AiCueResult makeAttackCue(IntegratedAttackChoice iac) {
@@ -869,52 +900,7 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 }
             }
 
-//            System.out.printf("bd %f, hd %f, tdd %f\n", baseDifficulty, holeDifficulty, totalDtDifficulty);
-
             difficulty = (baseDifficulty * holeDifficulty + totalDtDifficulty) * penalty;
-//            difficulty = Math.max(difficulty, 36.0 * attackingPlayer.getPlayerPerson().getAiPlayStyle().precision);
-
-//            double angleDifficulty = 1 - Algebra.powerTransferOfAngle(angleRad);
-
-            // 目标球离袋远又有角度就很难打, 100是远距离直球本身的难度
-//            double targetDifficulty = angleDifficulty * targetHoleDistance + 100;
-//            double thresholdDt = game.getGameValues().ballDiameter * 5;  // 最低难度的距离
-//            
-//            final double whiteBaseDifficulty = 20;
-//            double whiteDifficulty;
-//            if (whiteCollisionDistance > thresholdDt) {
-//                whiteDifficulty = (whiteCollisionDistance - thresholdDt) / 25 + whiteBaseDifficulty;
-//            } else {
-//                whiteDifficulty = thresholdDt / whiteCollisionDistance * whiteBaseDifficulty;
-//            }
-//            
-//            double difficultySore = whiteDifficulty + targetDifficulty;
-//            
-////            // 把[0, PI/2) 展开至 [-没有难度, PI/2)
-////            double angleScaleRatio = (Math.PI / 2) / (Math.PI / 2 - NO_DIFFICULTY_ANGLE_RAD);
-////            double lowerLimit = -NO_DIFFICULTY_ANGLE_RAD * angleScaleRatio;
-////            double scaledAngle = angleRad * angleScaleRatio + lowerLimit;
-////            if (scaledAngle < 0) scaledAngle = 0;
-////
-////            double difficultySore = 1 / Algebra.powerTransferOfAngle(scaledAngle);
-////            double totalDt = whiteCollisionDistance + targetHoleDistance;
-//            double holeAngleMultiplier = 1;
-//            if (isMidHole()) {
-//                double midHoleOffset = Math.abs(targetHoleVec[1]);  // 单位向量的y值绝对值越大，这球越简单
-//                holeAngleMultiplier /= Math.pow(midHoleOffset, 1.45);  // 次幂可以调，越小，ai越愿意打中袋
-//            }
-//            double tooCloseMul = (whiteCollisionDistance -
-//                    game.getGameValues().ballDiameter) / game.getGameValues().ballDiameter;
-
-            // 太近了角度不好瞄
-//            if (tooCloseMul < 0.1) {
-//                holeAngleMultiplier *= 5;
-//            } else if (tooCloseMul < 1) {
-//                holeAngleMultiplier /= tooCloseMul * 2;
-//            }
-//            difficulty = totalDt * difficultySore * holeAngleMultiplier;
-//            difficulty = Math.max(difficultySore * holeAngleMultiplier - 180, 1);
-//            difficulty = difficultySore * holeAngleMultiplier;
         }
 
         private boolean isMidHole() {
@@ -1019,22 +1005,20 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
     public class IntegratedAttackChoice {
 
-        static final double kickBallMul = 0.5;
-
         final AttackChoice attackChoice;
         final List<AttackChoice> nextStepAttackChoices;
         final double selectedPower;
         final double selectedFrontBackSpin;
         final double selectedSideSpin;
         private final double playerSelfPrice;
-        protected double price;
-        int nextStepTarget;
-        CuePlayParams params;
-//        Ball whiteSecondCollide;
+        //        Ball whiteSecondCollide;
 //        double speedWhenWhiteCollidesOther;
 //        private boolean whiteCollideHoleArcs;
         private final WhitePrediction whitePrediction;
         private final GamePlayStage stage;
+        protected double price;
+        int nextStepTarget;
+        CuePlayParams params;
 
         protected IntegratedAttackChoice(AttackChoice attackChoice,
                                          List<AttackChoice> nextStepAttackChoices,
@@ -1078,11 +1062,11 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
         double priceWhenNoAvailNextBall() {
 //            System.out.println(whiteSecondCollide);
             if (whitePrediction.getSecondCollide() == null) 
-                return attackChoice.price * kickBallMul;  // k不到球，相当于没走位
+                return attackChoice.price * 0.1;  // k不到球，相当于没走位
 
             double targetMultiplier;
             if (game.isLegalBall(whitePrediction.getSecondCollide(), nextStepTarget, false))
-                targetMultiplier = 1.0 / kickBallMul;  // k到目标球优先
+                targetMultiplier = 1.0 / KICK_USELESS_BALL_MUL;  // k到目标球优先
             else targetMultiplier = 1.0;  // k到其他球也还将就
 
             double speedThreshold = Values.MAX_POWER_SPEED / 8.0;
@@ -1103,9 +1087,15 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 price += next.price * mul;
                 mul /= 4;
             }
-            if (whitePrediction.getSecondCollide() != null) price *= kickBallMul;
+//            if (whitePrediction.getSecondCollide() != null) price *= kickBallMul;
+            if (whitePrediction.getSecondCollide() != null) {
+                double priceOfKick = priceOfKick(whitePrediction.getSecondCollide(), 
+                        whitePrediction.getWhiteSpeedWhenHitSecondBall());
+                price *= priceOfKick;
+            }
+
             if (whitePrediction.isWhiteCollidesHoleArcs()) price *= 0.5;
-            
+
             if (stage != GamePlayStage.NO_PRESSURE) {
                 // 正常情况下少走点库
                 int cushions = whitePrediction.getWhiteCushionCountAfter();

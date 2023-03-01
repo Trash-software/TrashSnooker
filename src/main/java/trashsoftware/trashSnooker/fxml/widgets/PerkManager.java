@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.fxml.widgets;
 
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.fxml.CareerView;
 import trashsoftware.trashSnooker.util.DataLoader;
 
@@ -31,6 +32,11 @@ public class PerkManager {
     private void setAbility(PlayerPerson.ReadableAbility ability) {
         this.ability = ability;
         this.previewAbility = ability.clone();
+    }
+    
+    public void synchronizePerks() {
+        clearSelections();
+        availPerks = CareerManager.getInstance().getHumanPlayerCareer().getAvailablePerks();
     }
     
     public PlayerPerson.ReadableAbility getOriginalAbility() {

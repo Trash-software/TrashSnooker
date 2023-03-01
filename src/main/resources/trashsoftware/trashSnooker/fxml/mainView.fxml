@@ -7,13 +7,6 @@
       fx:controller="trashsoftware.trashSnooker.fxml.MainView"
       prefHeight="420.0" prefWidth="540.0" spacing="10.0" alignment="TOP_CENTER">
 
-    <MenuBar>
-        <Menu text="文件">
-            <MenuItem text="纪录" onAction="#recordsAction"/>
-            <MenuItem text="回放" onAction="#replayAction"/>
-        </Menu>
-    </MenuBar>
-
     <GridPane vgap="5.0" hgap="10.0" alignment="CENTER">
         <columnConstraints>
             <ColumnConstraints halignment="CENTER"/>

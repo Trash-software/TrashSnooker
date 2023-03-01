@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.*;
 
 public abstract class Game<B extends Ball, P extends Player> implements GameHolder {
+    public static final int END_REP = 31;
     //    public static final double calculateMs = 1.0;
 //    public static final double calculationsPerSec = 1000.0 / calculateMs;
 //    public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;

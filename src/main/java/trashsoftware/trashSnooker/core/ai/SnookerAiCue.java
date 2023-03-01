@@ -9,15 +9,49 @@ import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.Util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
+    protected static final double ALIVE_THRESHOLD = 10.0;
+    private final Map<Ball, Double> selfBallAlivePrices = new HashMap<>();
+    private int allRedCount;
+    private int aliveRedCount;
+
     public SnookerAiCue(AbstractSnookerGame game, SnookerPlayer aiPlayer) {
         super(game, aiPlayer);
+        
+        makeAliveMap();
+    }
+    
+    private void makeAliveMap() {
+        for (Ball ball : game.getAllBalls()) {
+            if (ball.isRed() && !ball.isPotted()) {
+                allRedCount++;
+                double aliveScore = ballAlivePrice(ball);
+                if (aliveScore > ALIVE_THRESHOLD) aliveRedCount++;
+                selfBallAlivePrices.put(ball, aliveScore);
+            }
+        }
+    }
+
+    @Override
+    protected double priceOfKick(Ball kickedBall, double kickSpeed) {
+        if (aliveRedCount >= 2) return KICK_USELESS_BALL_MUL;  // 剩的多，不急着k
+        
+        Double alivePrice = selfBallAlivePrices.get(kickedBall);
+        if (alivePrice == null) return KICK_USELESS_BALL_MUL;
+
+        double speedThreshold = Values.MAX_POWER_SPEED / 8.0;
+        double speedMul;
+        if (kickSpeed > speedThreshold * 2) speedMul = 1.5;
+        else if (kickSpeed > speedThreshold) speedMul = 1.0;
+        else speedMul = 0.5;
+
+        if (alivePrice == 0) return 2.0 * speedMul;
+        double kickPriority = 20.0 / alivePrice;
+
+        return Math.max(0.5, speedMul * Math.min(2.0, kickPriority));
     }
 
     @Override

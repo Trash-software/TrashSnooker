@@ -12,7 +12,10 @@ import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 public class CareerManager {
 
@@ -23,7 +26,7 @@ public class CareerManager {
     public static final String CAREER_JSON = "career.json";
     public static final String PROGRESS_FILE = "progress.json";
     public static final String HISTORY_DIR = "history";
-//    public static final int PROFESSIONAL_LIMIT = 32;
+    //    public static final int PROFESSIONAL_LIMIT = 32;
     public static final int INIT_PERKS = 6;
     public static final int PERKS_PER_LEVEL = 2;
     private static final int[] EXP_REQUIRED_LEVEL_UP = readExpLevelUp();
@@ -289,9 +292,9 @@ public class CareerManager {
     /**
      * @return 玩家当前有没有资格参加
      */
-    public boolean humanPlayerQualifiedToJoinSnooker(ChampionshipData championshipData, 
+    public boolean humanPlayerQualifiedToJoinSnooker(ChampionshipData championshipData,
                                                      ChampionshipData.Selection selection) {
-        int humanRank = humanPlayerSnookerRanking(selection).rank;
+        int humanRank = humanPlayerRanking(championshipData.type, selection).rank;
 //        if (championshipData.professionalOnly) {
 //            if (humanRank >= PROFESSIONAL_LIMIT) return false;
 //        }
@@ -307,10 +310,10 @@ public class CareerManager {
     }
 
     /**
-     * @return 玩家的斯诺克排名，从0开始计
+     * @return 玩家的排名，从0开始计
      */
-    public CareerRank humanPlayerSnookerRanking(ChampionshipData.Selection selection) {
-        List<CareerRank> list = getRanking(GameRule.SNOOKER, selection);
+    public CareerRank humanPlayerRanking(GameRule gameRule, ChampionshipData.Selection selection) {
+        List<CareerRank> list = getRanking(gameRule, selection);
 
         for (CareerRank cr : list) {
             if (cr.getCareer().isHumanPlayer())
@@ -322,25 +325,22 @@ public class CareerManager {
     /**
      * 前提条件是球员已经有资格参赛了
      */
-    public List<Career> participants(int n,
-                                     boolean professionalOnly,
-                                     boolean humanJoin,
-                                     GameRule type,
-                                     ChampionshipData.Selection selection) {
-        if (professionalOnly) {
-            return professionalParticipants(n, humanJoin, type, selection);
+    public List<Career> participants(ChampionshipData data,
+                                     boolean humanJoin) {
+        if (data.professionalOnly) {
+            return professionalParticipants(data, data.getTotalPlaces(), humanJoin, data.getType(), data.getSelection());
         } else {
-            return openParticipants(n, humanJoin, type, selection);
+            return openParticipants(data, data.getTotalPlaces(), humanJoin, data.getType(), data.getSelection());
         }
     }
 
-    private List<Career.CareerWithAwards> getRankingPrivate(GameRule type, 
+    private List<Career.CareerWithAwards> getRankingPrivate(GameRule type,
                                                             ChampionshipData.Selection selection) {
         switch (type) {
             case SNOOKER:
                 if (selection == ChampionshipData.Selection.REGULAR)
                     return snookerRanking;
-                else if (selection == ChampionshipData.Selection.SINGLE_SEASON) 
+                else if (selection == ChampionshipData.Selection.SINGLE_SEASON)
                     return snookerRankingSingleSeason;
             case CHINESE_EIGHT:
                 return chineseEightRanking;
@@ -351,19 +351,33 @@ public class CareerManager {
         }
     }
 
-    public List<Career> professionalParticipants(int n, boolean humanJoin, GameRule type, ChampionshipData.Selection selection) {
+    public List<Career> professionalParticipants(ChampionshipData data,
+                                                 int n,
+                                                 boolean humanJoin,
+                                                 GameRule type,
+                                                 ChampionshipData.Selection selection) {
         List<Career> result = new ArrayList<>();
 
         List<Career.CareerWithAwards> ranking = getRankingPrivate(type, selection);
-        for (Career.CareerWithAwards cwa : ranking) {
+        for (int i = 0; i < ranking.size(); i++) {
+            Career.CareerWithAwards cwa = ranking.get(i);
             if (cwa.career.isHumanPlayer() && !humanJoin) continue;
-            result.add(cwa.career);
-            if (result.size() == n) break;
+            if (cwa.willJoinMatch(data,
+                    i,
+                    i == 0 ? null : ranking.get(i - 1),
+                    i == ranking.size() - 1 ? null : ranking.get(i + 1))) {
+                result.add(cwa.career);
+                if (result.size() == n) break;
+            }
         }
         return result;
     }
 
-    public List<Career> openParticipants(int n, boolean humanJoin, GameRule type, ChampionshipData.Selection selection) {
+    public List<Career> openParticipants(ChampionshipData data,
+                                         int n,
+                                         boolean humanJoin,
+                                         GameRule type,
+                                         ChampionshipData.Selection selection) {
         List<Career> result = new ArrayList<>();
 
         boolean humanAlreadyJoin = false;
@@ -379,7 +393,11 @@ public class CareerManager {
                         continue;
                     }
                 }
-                result.add(cwa.career);
+                if (cwa.willJoinMatch(data,
+                        i,
+                        i == 0 ? null : rankings.get(i - 1),
+                        i == rankings.size() - 1 ? null : rankings.get(i + 1)))
+                    result.add(cwa.career);
 
                 if (result.size() == n) {
                     break;
@@ -395,9 +413,14 @@ public class CareerManager {
                         if (!humanJoin) continue;
                         humanAlreadyJoin = true;
                     }
-                    result.add(cwa.career);
-                    if (result.size() == n) {
-                        break;
+                    if (cwa.willJoinMatch(data,
+                            i,
+                            i == 0 ? null : rankings.get(i - 1),
+                            i == rankings.size() - 1 ? null : rankings.get(i + 1))) {
+                        result.add(cwa.career);
+                        if (result.size() == n) {
+                            break; 
+                        }
                     }
                 }
             }
@@ -467,19 +490,19 @@ public class CareerManager {
         for (Career career : playerCareers) {
             snookerRanking.add(new Career.CareerWithAwards(GameRule.SNOOKER, career, timestamp));
         }
-        
+
         snookerRankingSingleSeason.clear();
         snookerRankingSingleSeason.addAll(snookerRanking);
-        
+
         snookerRanking.sort(Career.CareerWithAwards::twoSeasonsCompare);
         snookerRankingSingleSeason.sort(Career.CareerWithAwards::oneSeasonCompare);
-        
+
         // 黑八两年
         chineseEightRanking.clear();
         for (Career career : playerCareers) {
             chineseEightRanking.add(new Career.CareerWithAwards(GameRule.CHINESE_EIGHT, career, timestamp));
         }
-        
+
         chineseEightRanking.sort(Career.CareerWithAwards::twoSeasonsCompare);
     }
 

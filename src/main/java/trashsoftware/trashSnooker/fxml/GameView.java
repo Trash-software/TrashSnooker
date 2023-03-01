@@ -1053,19 +1053,27 @@ public class GameView implements Initializable {
         double handSdMul = PlayerPerson.HandBody.getSdOfHand(handSkill);
         frontBackSpinFactor *= handSdMul;
         sideSpinFactor *= handSdMul;
+        
+        double pMaxActualPower = getActualPowerPercentage(playerPerson.getMaxPowerPercentage(),
+                getUnitSideSpin(intentCuePointX), 
+                getUnitFrontBackSpin(intentCuePointY)) * 
+                cue.powerMultiplier;
 
+        double selPower = getSelectedPower();
         double power = getActualPowerPercentage();
         final double wantPower = power;
         // 因为力量控制导致的力量偏差
         powerFactor = powerFactor * (100.0 - playerPerson.getPowerControl()) / 100.0;
         powerFactor *= cue.powerMultiplier;  // 发力范围越大的杆控力越粗糙
-        powerFactor *= wantPower / 40;  // 用力越大误差越大
+        powerFactor *= selPower / 60;  // 用力越大误差越大
         if (enablePsy) {
             double psyPowerMul = getPsyControlMultiplier(playerPerson);
             powerFactor /= psyPowerMul;
         }
         power += power * powerFactor;
-//        System.out.println("Want power: " + wantPower + ", actual power: " + power);
+        
+        if (power > pMaxActualPower) power = pMaxActualPower;  // 控不了力也不可能打出怪力吧
+        if (mutate) System.out.println("Want power: " + wantPower + ", actual power: " + power);
 
 //        if (mutate) {
         intentCuePointX = cuePointX;
@@ -1086,7 +1094,7 @@ public class GameView implements Initializable {
             double xSig = muSigXy[1];
             double ySig = -muSigXy[3];
 
-            double mulWithPower = getErrorMultiplierOfPower(playerPerson, getSelectedPower());
+            double mulWithPower = getErrorMultiplierOfPower(playerPerson, selPower);
 
             xError = xError * xSig + muSigXy[0];
             yError = yError * ySig + muSigXy[2];
@@ -1114,7 +1122,7 @@ public class GameView implements Initializable {
         }
 
         if (mutate) {
-            System.out.println("intent: " + intentCuePointX + ", " + intentCuePointY);
+            System.out.print("intent: " + intentCuePointX + ", " + intentCuePointY + "; ");
             System.out.println("actual: " + cuePointX + ", " + cuePointY);
         }
 

@@ -153,10 +153,12 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         }
         if (player.getBallRange() == FULL_BALL_REP) {
             if (getRemFullBallOnTable() > 1) return FULL_BALL_REP;
+            else if (pottingBall.getValue() == 8) return END_REP;
             else return 8;
         }
         if (player.getBallRange() == HALF_BALL_REP) {
             if (getRemHalfBallOnTable() > 1) return HALF_BALL_REP;
+            else if (pottingBall.getValue() == 8) return END_REP;
             else return 8;
         }
         throw new RuntimeException("不可能");

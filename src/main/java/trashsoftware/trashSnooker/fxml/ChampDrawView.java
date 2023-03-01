@@ -260,6 +260,9 @@ public class ChampDrawView implements Initializable {
             root.setStyle(App.FONT_STYLE);
 
             Stage stage = new Stage();
+            
+            stage.setTitle(championship.fullName() + " " + championship.getCurrentStage().getShown());
+            
             stage.initOwner(this.selfStage);
             stage.initModality(Modality.WINDOW_MODAL);
 

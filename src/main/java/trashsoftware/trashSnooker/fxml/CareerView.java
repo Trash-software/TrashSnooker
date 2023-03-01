@@ -117,9 +117,10 @@ public class CareerView implements Initializable {
             for (ChampionshipScore score : cs) {
                 selectedPlayerInfoTable.addItem(new PlayerAward(score));
             }
+
+            if (selfStage != null && (currentlyVisible != selectedPlayerInfoTable.isVisible()))
+                selfStage.sizeToScene();
         }
-        if (selfStage != null && (currentlyVisible != selectedPlayerInfoTable.isVisible())) 
-            selfStage.sizeToScene();
     }
     
     private void setupAwdTable(LabelTable<PlayerAward> table) {
@@ -254,6 +255,11 @@ public class CareerView implements Initializable {
         for (ChampionshipScore.Rank rank : ranks) {
             champAwardsTable.addItem(new AwardItem(data, rank));
         }
+        
+        // 更新加点界面
+        perkManager.synchronizePerks();
+        notifyPerksChanged();
+        abilityShower.notifyPerksReset();
     }
 
     private void refreshRanks() {
@@ -262,14 +268,12 @@ public class CareerView implements Initializable {
         rankingTable.getItems().clear();
         rankingTable.getItems().addAll(careerManager.getRanking(rankTypeBox.getValue(), rankMethodBox.getValue()));
 
-        CareerRank myRank = careerManager.humanPlayerSnookerRanking(rankMethodBox.getValue());
+        CareerRank myRank = careerManager.humanPlayerRanking(rankTypeBox.getValue(), rankMethodBox.getValue());
         myRankLabel.setText(String.format("%d  %s  %d  %d",
                 myRank.getRankFrom1(),
                 myRank.career.getPlayerPerson().getName(),
                 myRank.getShownAwards(),
                 myRank.getTotalAwards()));
-
-        availPerksLabel.setText(String.valueOf(myRank.career.getAvailablePerks()));
     }
 
     @FXML

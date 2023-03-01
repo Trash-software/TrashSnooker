@@ -1,11 +1,9 @@
 package trashsoftware.trashSnooker.core.career;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.aiMatch.AiVsAi;
-import trashsoftware.trashSnooker.core.career.aiMatch.SnookerAiVsAi;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.util.DataLoader;
 
@@ -51,7 +49,7 @@ public class Career {
         career.totalExp = jsonObject.has("totalExp") ? jsonObject.getInt("totalExp") : 0;
         career.level = jsonObject.has("level") ? jsonObject.getInt("level") : 1;
         career.expInThisLevel = jsonObject.has("expInThisLevel") ? jsonObject.getInt("expInThisLevel") : 0;
-        
+
         career.validateLevel();
 
         if (jsonObject.has("handFeel")) {
@@ -228,11 +226,66 @@ public class Career {
             calculateAwards(timestamp);
         }
 
+        public static int twoSeasonsCompare(CareerWithAwards t, Career.CareerWithAwards o) {
+            return compare(t, o, t.twoSeasonsAwards, o.twoSeasonsAwards);
+        }
+
+        public static int oneSeasonCompare(CareerWithAwards t, Career.CareerWithAwards o) {
+            return compare(t, o, t.oneSeasonAwards, o.oneSeasonAwards);
+        }
+
+        private static int compare(CareerWithAwards t, Career.CareerWithAwards o,
+                                   int tAwd, int oAwd) {
+            int awdCmp = -Integer.compare(tAwd, oAwd);
+            if (awdCmp != 0) return awdCmp;
+            if ("God".equals(t.career.playerPerson.category) && !"God".equals(o.career.playerPerson.category)) {
+                return 1;
+            }
+            if ("God".equals(o.career.playerPerson.category) && !"God".equals(t.career.playerPerson.category)) {
+                return -1;
+            }
+            int rndCmp = Boolean.compare(t.career.playerPerson.isRandom, o.career.playerPerson.isRandom);
+            if (rndCmp != 0) return rndCmp;
+            return -Double.compare(t.winScore(), o.winScore());
+        }
+
+        /**
+         * 可能存在球员看不起小比赛的情况
+         *
+         * @param selfRanking 本人的排名，从0计
+         * @param front       前一位的，如果本人是冠军则null
+         * @param back        后一位的，如果本人是垫底则null
+         */
+        public boolean willJoinMatch(ChampionshipData data, int selfRanking,
+                                     CareerWithAwards front, CareerWithAwards back) {
+            if ("God".equals(career.getPlayerPerson().category)) return false;  // Master别出来打比赛
+
+            if (selfRanking < 16) {
+                int champAwd = data.getAwardByRank(ChampionshipScore.Rank.CHAMPION);
+
+                int selfAwd = getEffectiveAward(data.getSelection());
+
+                double mustJoinRatio = selfAwd * 0.2;
+                if (champAwd >= mustJoinRatio) return true;  // 大比赛，要去
+
+                int frontAwd = front == null ? Integer.MAX_VALUE : front.getEffectiveAward(data.getSelection());
+                int backAwd = back == null ? 0 : back.getEffectiveAward(data.getSelection());
+
+                if (selfAwd + champAwd < frontAwd) {
+                    return false;  // 拿了冠军也追不上前一名
+                }
+                if (backAwd + champAwd < selfAwd) {
+                    return false;  // 后一名拿了冠军也追不上我
+                }
+            }
+            return true;
+        }
+
         private void calculateAwards(Calendar timestamp) {
             oneSeasonAwards = 0;
             twoSeasonsAwards = 0;
             totalAwards = 0;
-            
+
             Calendar twoYearBefore = Calendar.getInstance();
             twoYearBefore.set(timestamp.get(Calendar.YEAR) - 2,
                     timestamp.get(Calendar.MONTH),
@@ -262,6 +315,17 @@ public class Career {
             }
         }
 
+        public int getEffectiveAward(ChampionshipData.Selection selection) {
+            switch (selection) {
+                case REGULAR:
+                case ALL_CHAMP:
+                default:
+                    return twoSeasonsAwards;
+                case SINGLE_SEASON:
+                    return oneSeasonAwards;
+            }
+        }
+
         public int getTwoSeasonsAwards() {
             return twoSeasonsAwards;
         }
@@ -281,29 +345,6 @@ public class Career {
                     PlayerPerson.ReadableAbility.fromPlayerPerson(career.getPlayerPerson()),
                     false
             );
-        }
-        
-        public static int twoSeasonsCompare(CareerWithAwards t, Career.CareerWithAwards o) {
-            return compare(t, o, t.twoSeasonsAwards, o.twoSeasonsAwards);
-        }
-
-        public static int oneSeasonCompare(CareerWithAwards t, Career.CareerWithAwards o) {
-            return compare(t, o, t.oneSeasonAwards, o.oneSeasonAwards);
-        }
-        
-        private static int compare(CareerWithAwards t, Career.CareerWithAwards o,
-                                   int tAwd, int oAwd) {
-            int awdCmp = -Integer.compare(tAwd, oAwd);
-            if (awdCmp != 0) return awdCmp;
-            if ("God".equals(t.career.playerPerson.category) && !"God".equals(o.career.playerPerson.category)) {
-                return 1;
-            }
-            if ("God".equals(o.career.playerPerson.category) && !"God".equals(t.career.playerPerson.category)) {
-                return -1;
-            }
-            int rndCmp = Boolean.compare(t.career.playerPerson.isRandom, o.career.playerPerson.isRandom);
-            if (rndCmp != 0) return rndCmp;
-            return -Double.compare(t.winScore(), o.winScore());
         }
 
         @Override

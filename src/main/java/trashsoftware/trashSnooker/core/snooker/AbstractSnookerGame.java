@@ -16,7 +16,6 @@ import java.util.Set;
 public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlayer> {
 
     public static final int RAW_COLORED_REP = 0;  // 代表任意彩球
-    public static final int END_REP = 8;
     public final double redRowOccupyX;
     public final double redGapDt;
     private final SnookerBall yellowBall;

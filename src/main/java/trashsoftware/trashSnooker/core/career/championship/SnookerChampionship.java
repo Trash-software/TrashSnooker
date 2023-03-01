@@ -16,11 +16,8 @@ public class SnookerChampionship extends Championship {
     @Override
     protected List<Career> getParticipantsByRank(boolean playerJoin) {
         return CareerManager.getInstance().participants(
-                data.getTotalPlaces(),
-                data.isProfessionalOnly(),
-                playerJoin,
-                data.getType(),
-                data.getSelection()
+                data,
+                playerJoin
         );
     }
 }

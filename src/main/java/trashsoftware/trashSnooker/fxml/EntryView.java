@@ -14,6 +14,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerSave;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.IOException;
@@ -47,14 +48,14 @@ public class EntryView implements Initializable {
         }
         root.setStyle(App.FONT_STYLE);
 
-        CareerView mainView = loader.getController();
-        mainView.setSelfStage(stage);
-
         Scene scene = new Scene(root);
 
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
         stage.setScene(scene);
+
+        CareerView mainView = loader.getController();
+        mainView.setSelfStage(stage);
 
         stage.show();
     }
@@ -83,6 +84,50 @@ public class EntryView implements Initializable {
     private void refreshTable() {
         careersTable.getItems().clear();
         careersTable.getItems().addAll(CareerManager.careerLists());
+    }
+
+    @FXML
+    void recordsAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("statsView.fxml")
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Stage stage = new Stage();
+            stage.initOwner(this.selfStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+
+            stage.show();
+        } catch (IOException e) {
+            EventLogger.log(e);
+        }
+    }
+
+    @FXML
+    void replayAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("replayView.fxml")
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Stage stage = new Stage();
+            stage.initOwner(this.selfStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+
+            stage.show();
+        } catch (IOException e) {
+            EventLogger.log(e);
+        }
     }
 
     @FXML

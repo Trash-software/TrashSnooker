@@ -23,21 +23,25 @@ public class MatchTree {
             throw new RuntimeException("Expected " + data.getTotalPlaces() + " players, got " +
                     (seedPlayers.size() + nonSeedPlayers.size()));
         }
-        
-        // 分上下半区
-        List<Career> goodSeeds = new ArrayList<>(seedPlayers.subList(0, seedPlayers.size() / 2));
-        List<Career> badSeeds = new ArrayList<>(seedPlayers.subList(seedPlayers.size() / 2, seedPlayers.size()));
-        Collections.shuffle(goodSeeds);
-        Collections.shuffle(badSeeds);
-        
-        List<Career> seedSeq = new ArrayList<>();
-        for (int i = 0; i < goodSeeds.size(); i++) {
-            seedSeq.add(goodSeeds.get(i));
-            seedSeq.add(badSeeds.get(i));
-        }
 
         List<List<Career>> players = new ArrayList<>();
-        players.add(seedSeq);
+        if (!seedPlayers.isEmpty()) {
+            // 分上下半区
+            List<Career> goodSeeds = new ArrayList<>(seedPlayers.subList(0, seedPlayers.size() / 2));
+            List<Career> badSeeds = new ArrayList<>(seedPlayers.subList(seedPlayers.size() / 2, seedPlayers.size()));
+            Collections.shuffle(goodSeeds);
+            Collections.shuffle(badSeeds);
+
+            List<Career> seedSeq = new ArrayList<>();
+            for (int i = 0; i < goodSeeds.size(); i++) {
+                seedSeq.add(goodSeeds.get(i));
+                seedSeq.add(badSeeds.get(i));
+            }
+            
+            players.add(seedSeq);
+        }
+        
+        // fixme: 不对
 
         // 非种子选手进正赛的名额
         int[] preNewAdd = data.getPreMatchNewAdded();
@@ -48,7 +52,7 @@ public class MatchTree {
                 Collections.shuffle(roundPlayers);
                 players.add(roundPlayers);
             }
-        } else {
+        } else if (!nonSeedPlayers.isEmpty()) {
             // 没有预赛，也没有种子的比赛
             Collections.shuffle(nonSeedPlayers);
             players.add(nonSeedPlayers);
@@ -116,33 +120,35 @@ public class MatchTree {
         }
         roundIndex--;
 
-        for (int index = players.size() - 2; index >= 0; index--) {
-            List<Career> roundPlayers = players.get(index);
-            List<MatchTreeNode> roundNodes = new ArrayList<>();
-            int newAdd = roundPlayers.size();
-            if (newAdd == 0) {
-                for (int i = 0; i < nodes.size(); i += 2) {
-                    MatchTreeNode node = new MatchTreeNode(
-                            nodes.get(i),
-                            nodes.get(i + 1),
-                            stages[roundIndex]);
-                    roundNodes.add(node);
+        if (data.getPreMatchNewAdded().length > 0) {
+            for (int index = players.size() - 2; index >= 0; index--) {
+                List<Career> roundPlayers = players.get(index);
+                List<MatchTreeNode> roundNodes = new ArrayList<>();
+                int newAdd = roundPlayers.size();
+                if (newAdd == 0) {
+                    for (int i = 0; i < nodes.size(); i += 2) {
+                        MatchTreeNode node = new MatchTreeNode(
+                                nodes.get(i),
+                                nodes.get(i + 1),
+                                stages[roundIndex]);
+                        roundNodes.add(node);
+                    }
+                } else if (newAdd == nodes.size()) {
+                    for (int i = 0; i < newAdd; i++) {
+                        MatchTreeNode newPlayerNode = new MatchTreeNode(roundPlayers.get(i));
+                        MatchTreeNode node = new MatchTreeNode(
+                                newPlayerNode,
+                                nodes.get(i),
+                                stages[roundIndex]
+                        );
+                        roundNodes.add(node);
+                    }
+                } else {
+                    throw new RuntimeException("Match node inconsistency");
                 }
-            } else if (newAdd == nodes.size()) {
-                for (int i = 0; i < newAdd; i++) {
-                    MatchTreeNode newPlayerNode = new MatchTreeNode(roundPlayers.get(i));
-                    MatchTreeNode node = new MatchTreeNode(
-                            newPlayerNode,
-                            nodes.get(i),
-                            stages[roundIndex]
-                    );
-                    roundNodes.add(node);
-                }
-            } else {
-                throw new RuntimeException("Match node inconsistency");
+                nodes = roundNodes;
+                roundIndex--;
             }
-            nodes = roundNodes;
-            roundIndex--;
         }
 
         // 正赛阶段
