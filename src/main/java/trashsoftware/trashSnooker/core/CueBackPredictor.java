@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.phy.Phy;
+
 public class CueBackPredictor {
     
     private final static double INTERVAL = 1.0;  // 每个预测的间隔，毫米
@@ -27,6 +29,7 @@ public class CueBackPredictor {
     }
     
     public Result predict() {
+        Phy phy = game.entireGame.predictPhy;
         CueBackPredictObject predictor = 
                 new CueBackPredictObject(game.gameValues, cueRadius, INTERVAL);
         
@@ -37,43 +40,43 @@ public class CueBackPredictor {
         
         while (predictor.distance < maxDistance) {
             // 检测后方障碍球
-            predictor.prepareMove();
+            predictor.prepareMove(phy);
             Result res = checkBalls(predictor);
             if (res != null) return res;
             
-            if (predictor.willPot()) {
-                return new Result(predictor.distance + game.gameValues.midHoleDiameter,
-                        game.gameValues.cushionHeight);
+            if (predictor.willPot(phy)) {
+                return new Result(predictor.distance + game.gameValues.table.midHoleDiameter,
+                        game.gameValues.table.cushionHeight);
             }
             
             // 检测袋口区域
-            int holeAreaResult = predictor.tryHitHoleArea();
+            int holeAreaResult = predictor.tryHitHoleArea(phy);
             if (holeAreaResult != 0) {
                 // 袋口区域
                 Result res2 = checkBalls(predictor);
                 if (res2 != null) return res2;
                 if (holeAreaResult == 2) return new Result(predictor.distance, 
-                        game.gameValues.cushionHeight);
+                        game.gameValues.table.cushionHeight);
                 continue;
             }
             // 检测裤边
             if (predictor.hitWall()) {
-                return new Result(predictor.distance, game.gameValues.cushionHeight);
+                return new Result(predictor.distance, game.gameValues.table.cushionHeight);
             }
             
-            predictor.normalMove();
+            predictor.normalMove(phy);
         }
         return null;
     }
     
     private Result checkBalls(CueBackPredictObject predictor) {
-        double threshold = cueRadius + game.gameValues.ballRadius;
+        double threshold = cueRadius + game.gameValues.ball.ballRadius;
         for (Ball ball : game.getAllBalls()) {
             if (!ball.isPotted() && !ball.isWhite()) {
                 if (Algebra.distanceToPoint(predictor.x, predictor.y, 
                         ball.x, ball.y) < threshold) {
-                    return new Result(predictor.distance + game.gameValues.ballRadius,
-                            game.gameValues.ballDiameter, ball);
+                    return new Result(predictor.distance + game.gameValues.ball.ballRadius,
+                            game.gameValues.ball.ballDiameter, ball);
                 }
             }
         }

@@ -3,92 +3,118 @@
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="trashsoftware.trashSnooker.fxml.GameView"
-          vgap="2.0" hgap="20.0">
+<Pane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.GameView">
 
-    <columnConstraints>
-        <ColumnConstraints halignment="CENTER"/>
-        <ColumnConstraints/>
-        <ColumnConstraints/>
-    </columnConstraints>
+    <GridPane
+            vgap="2.0" hgap="20.0">
 
-    <rowConstraints>
-        <RowConstraints/>
-        <RowConstraints/>
-        <RowConstraints/>
-        <RowConstraints/>
-    </rowConstraints>
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER"/>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+        </columnConstraints>
 
-    <MenuBar GridPane.columnSpan="2">
-        <Menu text="游戏">
-            <MenuItem text="设置" onAction="#settingsAction"/>
-            <SeparatorMenuItem/>
-            <MenuItem text="保存" onAction="#saveGameAction"/>
-            <MenuItem text="新游戏" onAction="#newGameAction"/>
-            <MenuItem text="认输" onAction="#withdrawAction" fx:id="withdrawMenu"/>
-            <MenuItem text="重新放置手中球" fx:id="replaceBallInHandMenu" disable="true"/>
-            <MenuItem text="让杆" fx:id="letOtherPlayMenu" disable="true"/>
-        </Menu>
-        <Menu text="Debug">
-            <MenuItem text="terminate" onAction="#terminateAction"/>
-            <MenuItem text="test" onAction="#testAction"/>
-            <MenuItem text="tie" onAction="#tieTestAction"/>
-            <MenuItem text="clear red balls" onAction="#clearRedBallsAction"/>
-        </Menu>
-    </MenuBar>
+        <rowConstraints>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+        </rowConstraints>
 
-    <Canvas fx:id="cueAngleCanvas" GridPane.rowIndex="1" width="80.0" height="80.0"/>
-    <Label fx:id="cueAngleLabel" GridPane.rowIndex="2" text="5°"/>
+        <MenuBar GridPane.columnSpan="2">
+            <Menu text="游戏">
+                <MenuItem text="设置" onAction="#settingsAction"/>
+                <SeparatorMenuItem/>
+<!--                <MenuItem fx:id="saveGameMenu" text="保存" onAction="#saveGameAction"/>-->
+                <MenuItem text="认输" onAction="#withdrawAction" fx:id="withdrawMenu"/>
+                <MenuItem text="重新放置手中球" fx:id="replaceBallInHandMenu" disable="true"/>
+                <MenuItem text="让杆" fx:id="letOtherPlayMenu" disable="true"/>
+            </Menu>
+            <Menu text="播放">
+                <fx:define>
+                    <ToggleGroup fx:id="animationPlaySpeedToggle"/>
+                </fx:define>
+                <RadioMenuItem text="1x" toggleGroup="$animationPlaySpeedToggle" userData="1"/>
+                <RadioMenuItem text="2x" toggleGroup="$animationPlaySpeedToggle" userData="2"/>
+                <RadioMenuItem text="4x" toggleGroup="$animationPlaySpeedToggle" userData="4"/>
+                <RadioMenuItem text="8x" toggleGroup="$animationPlaySpeedToggle" userData="8"/>
+            </Menu>
+            <Menu fx:id="debugMenu" text="Debug">
+                <MenuItem text="terminate" onAction="#terminateAction"/>
+                <MenuItem fx:id="debugModeMenu" text="debug mode" onAction="#debugModeAction"/>
+                <MenuItem text="test" onAction="#testAction"/>
+                <MenuItem text="tie" onAction="#tieTestAction"/>
+                <MenuItem text="clear red balls" onAction="#clearRedBallsAction"/>
+                <MenuItem text="p1+10" onAction="#p1AddScoreAction"/>
+                <MenuItem text="p2+10" onAction="#p2AddScoreAction"/>
+            </Menu>
+        </MenuBar>
 
-    <Canvas fx:id="ballCanvas" GridPane.rowIndex="3" width="80.0" height="80.0"/>
+        <Canvas fx:id="cueAngleCanvas" GridPane.rowIndex="1" width="80.0" height="80.0"/>
+        <Label fx:id="cueAngleLabel" GridPane.rowIndex="2" text="5°"/>
 
-    <VBox alignment="TOP_CENTER" GridPane.rowIndex="4" spacing="10.0">
-        <Slider fx:id="powerSlider" prefHeight="320.0" orientation="VERTICAL"/>
-        <Label fx:id="powerLabel"/>
-        <Button fx:id="cueButton" text="击球" onAction="#cueAction"/>
-    </VBox>
+        <Canvas fx:id="ballCanvas" GridPane.rowIndex="3" width="80.0" height="80.0"/>
 
-    <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="4">
-        <Canvas fx:id="gameCanvas"/>
+        <VBox alignment="TOP_CENTER" GridPane.rowIndex="4" spacing="10.0">
+            <Slider fx:id="powerSlider" prefHeight="320.0" orientation="VERTICAL"/>
+            <Label fx:id="powerLabel"/>
+            <VBox fx:id="gameButtonBox" alignment="CENTER">
+                <Button fx:id="cueButton" text="击球" onAction="#cueAction"/>
+            </VBox>
+            <VBox fx:id="replayButtonBox" spacing="10.0" alignment="CENTER">
+                <Button fx:id="replayLastCueButton" text="上一杆" onAction="#replayLastCueAction"/>
+                <Button fx:id="replayNextCueButton" text="下一杆" onAction="#replayNextCueAction"/>
+                <Button text="快进" onAction="#replayFastForwardAction"/>
+                <CheckBox fx:id="replayAutoPlayBox" text="自动播放"/>
+            </VBox>
+        </VBox>
 
-        <GridPane>
-            <columnConstraints>
-                <ColumnConstraints halignment="LEFT" percentWidth="30.0"/>
-                <ColumnConstraints halignment="CENTER" percentWidth="40.0"/>
-                <ColumnConstraints halignment="RIGHT" percentWidth="30.0"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints/>
-                <RowConstraints/>
-            </rowConstraints>
+        <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="4">
+            <Pane fx:id="ballPane">
+                <Canvas fx:id="gameCanvas"/>
+            </Pane>
 
-            <HBox alignment="CENTER_LEFT" spacing="20.0">
-                <Label fx:id="player1Label" text="Player 1"/>
-                <Label fx:id="player1ScoreLabel" text="0"/>
-                <Canvas fx:id="player1TarCanvas"/>
-            </HBox>
-            <HBox GridPane.columnIndex="1" alignment="CENTER" spacing="5.0">
-                <Label fx:id="player1FramesLabel" text="0"/>
-                <Label fx:id="totalFramesLabel" text="(9)"/>
-                <Label fx:id="player2FramesLabel" text="0"/>
-            </HBox>
-            <HBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <Label fx:id="singlePoleLabel" text="0"/>
-                <Canvas fx:id="singlePoleCanvas"/>
-            </HBox>
-            <HBox alignment="CENTER_RIGHT" spacing="20.0" GridPane.columnIndex="2">
-                <Canvas fx:id="player2TarCanvas"/>
-                <Label fx:id="player2ScoreLabel" text="0"/>
-                <Label fx:id="player2Label" text="Player 2"/>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="0"
-                  GridPane.rowIndex="1">
-                <Label fx:id="snookerScoreDiffLabel"/>
-                <Label fx:id="snookerScoreRemainingLabel"/>
-            </HBox>
-        </GridPane>
-    </VBox>
+            <GridPane>
+                <columnConstraints>
+                    <ColumnConstraints halignment="LEFT" percentWidth="30.0"/>
+                    <ColumnConstraints halignment="CENTER" percentWidth="40.0"/>
+                    <ColumnConstraints halignment="RIGHT" percentWidth="30.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                </rowConstraints>
 
-</GridPane>
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label fx:id="player1Label" text="Player 1"/>
+                    <Label fx:id="player1ScoreLabel" text="0"/>
+                    <Canvas fx:id="player1TarCanvas"/>
+                </HBox>
+                <HBox GridPane.columnIndex="1" alignment="CENTER" spacing="5.0">
+                    <Label fx:id="player1FramesLabel" text="0"/>
+                    <Label fx:id="totalFramesLabel" text="(9)"/>
+                    <Label fx:id="player2FramesLabel" text="0"/>
+                </HBox>
+                <HBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="1"
+                      GridPane.rowIndex="1">
+                    <Label fx:id="singlePoleLabel" text="0"/>
+                    <Canvas fx:id="singlePoleCanvas"/>
+                </HBox>
+                <HBox alignment="CENTER_RIGHT" spacing="20.0" GridPane.columnIndex="2">
+                    <Canvas fx:id="player2TarCanvas"/>
+                    <Label fx:id="player2ScoreLabel" text="0"/>
+                    <Label fx:id="player2Label" text="Player 2"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="0"
+                      GridPane.rowIndex="1">
+                    <Label fx:id="snookerScoreDiffLabel"/>
+                    <Label fx:id="snookerScoreRemainingLabel"/>
+                </HBox>
+            </GridPane>
+        </VBox>
+
+    </GridPane>
+</Pane>
+

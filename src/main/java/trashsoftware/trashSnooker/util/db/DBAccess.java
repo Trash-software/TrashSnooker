@@ -1,8 +1,10 @@
 package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
+import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.BufferedReader;
@@ -51,12 +53,12 @@ public class DBAccess {
         DBAccess db = getInstance();
 //        db.printQuery("SELECT * FROM SnookerRecord;");
 //        System.out.println("========");
-//        db.printQuery("SELECT * FROM GeneralRecord WHERE PlayerName = 'Kid';");
+        db.printQuery("SELECT * FROM GeneralRecord WHERE PlayerName = 'John Wizard';");
 //        System.out.println("========");
-        db.printQuery("SELECT * FROM SnookerRecord;");
+//        db.printQuery("SELECT * FROM SnookerRecord;");
 
-        db.printQuery("SELECT * FROM Game INNER JOIN GeneralRecord USING (EntireBeginTime, FrameIndex)" +
-                " WHERE EntireBeginTime = '2021-11-06 17:20:25.53';");
+//        db.printQuery("SELECT * FROM Game INNER JOIN GeneralRecord USING (EntireBeginTime, FrameIndex)" +
+//                " WHERE EntireBeginTime = '2021-11-06 17:20:25.53';");
 //        db.insertPlayerIfNotExists("Ding");
 //        System.out.println(db.playerExists("Ding"));
 //        db.getPlayerSnookerScores("Ding");
@@ -77,14 +79,19 @@ public class DBAccess {
         }
     }
 
-    private String getTypeKey(GameType gameType, String playerName) {
-        return String.format("'%s_%s'", playerName, gameType.toSqlKey());
+    private String getTypeKey(GameRule gameRule, String playerName) {
+        return String.format("'%s_%s'", playerName, gameRule.toSqlKey());
     }
 
     private void storeAttemptsForOnePlayer(EntireGame entireGame, Game frame, Player player) {
-        // attempts, successes, long attempts, long successes, 
-        // defenses, defense successes
-        int[] data = new int[6];
+        // attempts, successes, 
+        // long attempts, long successes, 
+        // defenses, defense successes,
+        // position, position success
+        // rest attempts, rest success
+        // solves, solve successes
+        int[] data = new int[12];
+        System.out.println(player.getPlayerPerson().getName() + ": " + player.getAttempts().size());
         for (PotAttempt attempt : player.getAttempts()) {
             data[0]++;
             if (attempt.isSuccess()) data[1]++;
@@ -92,16 +99,38 @@ public class DBAccess {
                 data[2]++;
                 if (attempt.isSuccess()) data[3]++;
             }
+            PotAttempt.Position position = attempt.getPositionSuccess();
+            if (position != PotAttempt.Position.NOT_SET) {
+                data[6]++;
+                if (position == PotAttempt.Position.SUCCESS) {
+                    data[7]++;
+                }
+            }
+            
+            if (attempt.isRestPot()) {
+                data[8]++;
+                if (attempt.isSuccess()) {
+                    data[9]++;
+                }
+            }
         }
         for (DefenseAttempt defenseAttempt : player.getDefenseAttempts()) {
             data[4]++;
             if (defenseAttempt.isSuccess()) {
                 data[5]++;
             }
+            if (defenseAttempt.isSolvingSnooker()) {
+                data[10]++;
+                if (defenseAttempt.isSolveSuccess()) {
+                    data[11]++;
+                }
+            }
         }
 
         String queryWhere = getFrameQueryWhere(entireGame, frame,
-                player.getPlayerPerson().getName(), true);
+                player.getPlayerPerson().getName(), 
+                player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER, 
+                true);
         String query =
                 "UPDATE GeneralRecord SET " +
                         "Attempts = Attempts + " + data[0] + ", " +
@@ -109,7 +138,13 @@ public class DBAccess {
                         "LongAttempts = LongAttempts + " + data[2] + ", " +
                         "LongSuccesses = LongSuccesses + " + data[3] + ", " +
                         "Defenses = Defenses + " + data[4] + ", " +
-                        "DefenseSuccesses = DefenseSuccesses + " + data[5] +
+                        "DefenseSuccesses = DefenseSuccesses + " + data[5] + ", " +
+                        "Positions = Positions + " + data[6] + ", " +
+                        "PositionSuccesses = PositionSuccesses + " + data[7] + ", " +
+                        "RestAttempts = RestAttempts + " + data[8] + ", " +
+                        "RestSuccesses = RestSuccesses + " + data[9] + ", " +
+                        "Solves = Solves + " + data[10] + ", " +
+                        "SolveSuccesses = SolveSuccesses + " + data[11] + 
                         queryWhere;
         try {
             executeStatement(query);
@@ -124,14 +159,36 @@ public class DBAccess {
         storeAttemptsForOnePlayer(entireGame, frame,
                 frame.getPlayer2());
     }
-
-    public List<EntireGameTitle> getAllMatches(GameType gameType, String playerName) {
-        String typeStr = "'" + gameType.toSqlKey() + "'";
-        String playerStr = "'" + playerName + "'";
+    
+    public List<EntireGameTitle> getAllMatches(GameRule gameRule) {
+        String query = "SELECT * FROM EntireGame;";
+        return getMatchesBy(gameRule, query);
+    }
+    
+    public List<EntireGameTitle> getAllPveMatches(GameRule gameRule) {
+        String typeStr = "'" + gameRule.toSqlKey() + "'";
         String query = "SELECT * FROM EntireGame " +
                 "WHERE GameType = " + typeStr + " AND " +
-                "(Player1Name = " + playerStr + " OR Player2Name = " + playerStr + ")" +
+                "((Player1IsAI = 1 AND Player2IsAI = 0) OR (Player1IsAI = 0 AND Player2IsAI = 1))" +
                 "ORDER BY EntireBeginTime;";
+        return getMatchesBy(gameRule, query);
+    }
+
+    public List<EntireGameTitle> getAllPveMatches(GameRule gameRule, String playerName, boolean playerIsAi) {
+        String typeStr = "'" + gameRule.toSqlKey() + "'";
+        String playerStr = "'" + playerName + "'";
+        int aiRep = playerIsAi ? 1 : 0;
+        String query = "SELECT * FROM EntireGame " +
+                "WHERE GameType = " + typeStr + " AND " +
+                "((Player1Name = " + playerStr + " AND " +
+                "Player1IsAI = " + aiRep +
+                ") OR (Player2Name = " + playerStr + " AND " +
+                "Player2IsAI = " + aiRep + "))" +
+                "ORDER BY EntireBeginTime;";
+        return getMatchesBy(gameRule, query);
+    }
+    
+    private List<EntireGameTitle> getMatchesBy(GameRule gameRule, String query) {
         List<EntireGameTitle> rtn = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -140,31 +197,43 @@ public class DBAccess {
             while (resultSet.next()) {
                 EntireGameTitle egr = new EntireGameTitle(
                         resultSet.getTimestamp("EntireBeginTime"),
-                        gameType,
+                        gameRule,
                         resultSet.getString("Player1Name"),
                         resultSet.getString("Player2Name"),
+                        resultSet.getInt("Player1IsAI") == 1,
+                        resultSet.getInt("Player2IsAI") == 1,
                         resultSet.getInt("TotalFrames")
                 );
-                rtn.add(egr);
+                if (isValidPlayer(egr.player1Name) && isValidPlayer(egr.player2Name)) {
+                    rtn.add(egr);
+                }
             }
 
             resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Collections.reverse(rtn);
         return rtn;
+    }
+    
+    private boolean isValidPlayer(String playerId) {
+        return DataLoader.getInstance().hasPlayer(playerId);
     }
 
     /**
      * 返回{totalScore, highest, 50+，100+，147}
      */
-    public int[] getSnookerBreaksTotal(GameType gameType, String playerName) {
+    public int[] getSnookerBreaksTotal(GameRule gameRule, String playerName, boolean playerIsAi) {
         int[] rtn = new int[5];
         String pns = "'" + playerName + "'";
-        String typeKey = "'" + gameType.toSqlKey() + "'";
+        String typeKey = "'" + gameRule.toSqlKey() + "'";
+        int aiRep = playerIsAi ? 1 : 0;
         String highestQuery =
                 "SELECT * FROM SnookerRecord " +
-                        "WHERE (PlayerName = " + pns + " AND EntireBeginTime IN " +
+                        "WHERE (PlayerName = " + pns + " AND " + 
+                        "PlayerIsAI = " + aiRep + " AND " +
+                        "EntireBeginTime IN " +
                         "(SELECT EntireBeginTime FROM EntireGame " +
                         "WHERE GameType = " + typeKey + "));";
         try {
@@ -194,25 +263,30 @@ public class DBAccess {
     /**
      * 返回{炸请，接清}
      */
-    public int[] getNumberedBallGamesTotal(GameType gameType, String playerName) {
-        int[] rtn = new int[3];
+    public int[] getNumberedBallGamesTotal(GameRule gameRule, String playerName, boolean playerIsAi) {
+        int[] rtn = new int[5];
         String pns = "'" + playerName + "'";
-        String tableName = gameType.toSqlKey() + "Record";
-        String typeKey = "'" + gameType.toSqlKey() + "'";
+        String tableName = gameRule.toSqlKey() + "Record";
+        String typeKey = "'" + gameRule.toSqlKey() + "'";
+        int aiRep = playerIsAi ? 1 : 0;
         String highestQuery =
                 "SELECT * FROM " + tableName + " " +
-                        "WHERE (PlayerName = " + pns + " AND EntireBeginTime IN " +
+                        "WHERE (PlayerName = " + pns + " AND " + 
+                        "PlayerIsAI = " + aiRep + " AND " +
+                        "EntireBeginTime IN " +
                         "(SELECT EntireBeginTime FROM EntireGame " +
                         "WHERE GameType = " + typeKey + "));";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(highestQuery);
             while (resultSet.next()) {
+                rtn[0] += resultSet.getInt("Breaks");
+                rtn[1] += resultSet.getInt("BreakPots");
                 int highInResult = resultSet.getInt("Highest");
-                rtn[0] += resultSet.getInt("BreakClear");
-                rtn[1] += resultSet.getInt("ContinueClear");
-                if (highInResult > rtn[2]) {
-                    rtn[2] = highInResult;
+                rtn[2] += resultSet.getInt("BreakClear");
+                rtn[3] += resultSet.getInt("ContinueClear");
+                if (highInResult > rtn[4]) {
+                    rtn[4] = highInResult;
                 }
             }
             statement.close();
@@ -223,15 +297,18 @@ public class DBAccess {
     }
 
     /**
-     * 返回{进攻次数，进攻成功次数，长台进攻次数，长台成功次数，防守次数，防守成功次数}
+     * 返回{进攻次数，进攻成功次数，长台进攻次数，长台成功次数，防守次数，防守成功次数，走位次数，走位成功次数，架杆进攻次数，架杆进攻成功次数，解球次数，解球成功次数}
      */
-    public int[] getBasicPotStatusAll(GameType gameType, String playerName) {
-        int[] array = new int[6];
+    public int[] getBasicPotStatusAll(GameRule gameRule, String playerName, boolean isAi) {
+        int[] array = new int[12];
         String pns = "'" + playerName + "'";
-        String typeKey = "'" + gameType.toSqlKey() + "'";
+        String typeKey = "'" + gameRule.toSqlKey() + "'";
+        int aiRep = isAi ? 1 : 0;
         String cmd =
                 "SELECT * FROM GeneralRecord " +
-                        "WHERE (PlayerName = " + pns + " AND EntireBeginTime IN " +
+                        "WHERE (PlayerName = " + pns + " AND " +
+                        "PlayerIsAI = " + aiRep + " AND " +
+                        "EntireBeginTime IN " +
                         "(SELECT EntireBeginTime FROM EntireGame " +
                         "WHERE GameType = " + typeKey + "));";
         try {
@@ -244,6 +321,12 @@ public class DBAccess {
                 array[3] += result.getInt("LongSuccesses");
                 array[4] += result.getInt("Defenses");
                 array[5] += result.getInt("DefenseSuccesses");
+                array[6] += result.getInt("Positions");
+                array[7] += result.getInt("PositionSuccesses");
+                array[8] += result.getInt("RestAttempts");
+                array[9] += result.getInt("RestSuccesses");
+                array[10] += result.getInt("Solves");
+                array[11] += result.getInt("SolveSuccesses");
             }
             statement.close();
         } catch (SQLException e) {
@@ -267,13 +350,19 @@ public class DBAccess {
 
             while (result.next()) {
                 int index = result.getInt("FrameIndex");
-                int[] array = new int[6];
+                int[] array = new int[12];
                 array[0] = result.getInt("Attempts");
                 array[1] = result.getInt("Successes");
                 array[2] = result.getInt("LongAttempts");
                 array[3] = result.getInt("LongSuccesses");
                 array[4] += result.getInt("Defenses");
                 array[5] += result.getInt("DefenseSuccesses");
+                array[6] += result.getInt("Positions");
+                array[7] += result.getInt("PositionSuccesses");
+                array[8] += result.getInt("RestAttempts");
+                array[9] += result.getInt("RestSuccesses");
+                array[10] += result.getInt("Solves");
+                array[11] += result.getInt("SolveSuccesses");
                 durations.put(index, result.getInt("DurationSeconds"));
                 String frameWinner = result.getString("WinnerName");
                 if (frameWinner == null) {
@@ -288,7 +377,7 @@ public class DBAccess {
             }
             general.close();
 
-            if (title.gameType.snookerLike) {
+            if (title.gameRule.snookerLike) {
                 String snookerQuery = "SELECT * FROM SnookerRecord " +
                         "WHERE EntireBeginTime = " + Util.timeStampFmt(title.startTime) +
                         ";";
@@ -320,9 +409,9 @@ public class DBAccess {
                 sn.close();
 
                 return new EntireGameRecord.Snooker(title, records, durations);
-            } else if (title.gameType == GameType.CHINESE_EIGHT ||
-                    title.gameType == GameType.SIDE_POCKET) {
-                String tableName = title.gameType.toSqlKey() + "Record";
+            } else if (title.gameRule == GameRule.CHINESE_EIGHT ||
+                    title.gameRule == GameRule.SIDE_POCKET) {
+                String tableName = title.gameRule.toSqlKey() + "Record";
                 String numQuery = "SELECT * FROM " + tableName + " " +
                         "WHERE EntireBeginTime = " + Util.timeStampFmt(title.startTime) +
                         ";";
@@ -332,10 +421,12 @@ public class DBAccess {
                     int index = numRs.getInt("FrameIndex");
                     int playerIndex = numRs.getString("PlayerName")
                             .equals(title.player1Name) ? 0 : 1;
-                    int[] scores = new int[3];  // break clear, continue clear, highest
-                    scores[0] = numRs.getInt("BreakClear");
-                    scores[1] = numRs.getInt("ContinueClear");
-                    scores[2] = numRs.getInt("Highest");
+                    int[] scores = new int[5];  // breaks, break successes, break clear, continue clear, highest
+                    scores[0] = numRs.getInt("Breaks");
+                    scores[1] = numRs.getInt("BreakPots");
+                    scores[2] = numRs.getInt("BreakClear");
+                    scores[3] = numRs.getInt("ContinueClear");
+                    scores[4] = numRs.getInt("Highest");
                     PlayerFrameRecord.Numbered numbered = new PlayerFrameRecord.Numbered(
                             index, framesPotMap.get(index)[playerIndex],
                             framesWinnerMap.get(index), scores
@@ -346,7 +437,7 @@ public class DBAccess {
                 }
                 numStatement.close();
 
-                if (title.gameType == GameType.CHINESE_EIGHT) {
+                if (title.gameRule == GameRule.CHINESE_EIGHT) {
                     return new EntireGameRecord.ChineseEight(title, records, durations);
                 } else {
                     return new EntireGameRecord.SidePocket(title, records, durations);
@@ -367,19 +458,23 @@ public class DBAccess {
     }
 
     private String getFrameQueryWhere(EntireGame entireGame, Game game, String playerName,
+                                      boolean playerIsAi,
                                       boolean endLine) {
+        int aiRep = playerIsAi ? 1 : 0;
         return " WHERE (EntireBeginTime = " + entireGame.getStartTimeSqlString() + " AND " +
                 "FrameIndex = " + game.frameIndex + " AND " +
-                "PlayerName = '" + playerName + "')" +
+                "PlayerName = '" + playerName + "' AND " + 
+                "PlayerIsAI = " + aiRep + ")" +
                 (endLine ? ";" : "");
     }
 
     public void recordNumberedBallResult(EntireGame entireGame, Game frame,
                                          NumberedBallPlayer player, boolean wins,
                                          List<Integer> continuousPots) {
-        String tableName = entireGame.gameType.toSqlKey() + "Record";
+        String tableName = entireGame.gameValues.rule.toSqlKey() + "Record";
         int playTimes = player.getPlayTimes();
         boolean breaks = player.isBreakingPlayer();
+        boolean breakPot = player.isBreakSuccess();
         int breakClear = 0;
         int continueClear = 0;
         int highest = 0;
@@ -400,6 +495,8 @@ public class DBAccess {
                 entireGame.getStartTimeSqlString() + ", " +
                 frame.frameIndex + ", " +
                 "'" + player.getPlayerPerson().getName() + "', " +
+                (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) + ", " +
+                (breaks ? 1 : 0) + ", " + (breakPot ? 1 : 0) + ", " +
                 breakClear + ", " + continueClear + ", " + highest + ");";
         try {
             executeStatement(query);
@@ -408,7 +505,7 @@ public class DBAccess {
         }
     }
 
-    public void recordSnookerBreaks(EntireGame entireGame, Game frame,
+    public void recordSnookerBreaks(EntireGame entireGame, Game<?, ?> frame,
                                     SnookerPlayer player, List<Integer> breakScores) {
         System.out.println("Snooker breaks: " + breakScores);
         int highBreak = 0;
@@ -421,6 +518,7 @@ public class DBAccess {
                 entireGame.getStartTimeSqlString() + ", " +
                 frame.frameIndex + ", " +
                 "'" + player.getPlayerPerson().getName() + "', " +
+                (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) + ", " +
                 player.getScore() + ", " +
                 breaks50 + ", " +
                 highBreak + ");";
@@ -439,7 +537,10 @@ public class DBAccess {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(cmd);
             while (result.next()) {
-                list.add(result.getString("Name"));
+                String name = result.getString("Name");
+                if (isValidPlayer(name)) {
+                    list.add(name);
+                }
             }
             statement.close();
         } catch (SQLException e) {
@@ -454,7 +555,10 @@ public class DBAccess {
         statement.close();
     }
 
-    private boolean playerExists(String playerName) {
+    /**
+     * 只返回sqlite里有没有这个player，和player.json与custom_player.json里有没有无关
+     */
+    private boolean playerExistsInSql(String playerName) {
         String cmd = "SELECT Name FROM Player WHERE Player.Name = '" + playerName + "';";
         try {
             Statement stmt = connection.createStatement();
@@ -471,7 +575,7 @@ public class DBAccess {
     }
 
     public void insertPlayerIfNotExists(String playerName) {
-        if (playerExists(playerName)) return;
+        if (playerExistsInSql(playerName)) return;
         String[] commands =
                 new String[]{
                         "INSERT INTO Player VALUES ('" + playerName + "')"
@@ -487,25 +591,31 @@ public class DBAccess {
         }
     }
 
-    private void createRecordForFrame(EntireGame entireGame, Game game, String playerName)
+    private void createRecordForFrame(EntireGame entireGame, Game game, String playerName, boolean playerIsAi)
             throws SQLException {
+        int aiRep = playerIsAi ? 1 : 0;
         String command1 = "INSERT INTO GeneralRecord VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
                 game.frameIndex + ", " +
                 "'" + playerName + "', " +
-                "0, 0, 0, 0, 0, 0" +
+                aiRep + ", " +
+                "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0" +
                 ");";
         executeStatement(command1);
     }
 
     public void recordAnEntireGameStarts(EntireGame entireGame) {
-        String typeStr = "'" + entireGame.gameType.toSqlKey() + "'";
+        String typeStr = "'" + entireGame.gameValues.rule.toSqlKey() + "'";
+        int p1t = entireGame.getPlayer1().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
+        int p2t = entireGame.getPlayer2().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
         String command =
                 "INSERT INTO EntireGame VALUES (" +
                         entireGame.getStartTimeSqlString() + ", " +
                         typeStr + ", " +
                         "'" + entireGame.getPlayer1().getPlayerPerson().getName() + "', " +
                         "'" + entireGame.getPlayer2().getPlayerPerson().getName() + "', " +
+                        p1t + ", " + 
+                        p2t + ", " +
                         entireGame.getTotalFrames() + ");";
         try {
             executeStatement(command);
@@ -514,22 +624,25 @@ public class DBAccess {
         }
     }
 
-    public void recordAFrameStarts(EntireGame entireGame, Game game) {
+    public void recordAFrameStarts(EntireGame entireGame, Game<?, ?> game) {
         String generalCmd = "INSERT INTO Game VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
                 game.frameIndex + ", 0, NULL);";
+        System.out.println(generalCmd);
         try {
             executeStatement(generalCmd);
             createRecordForFrame(entireGame, game,
-                    entireGame.getPlayer1().getPlayerPerson().getName());
+                    entireGame.getPlayer1().getPlayerPerson().getName(),
+                    entireGame.getPlayer1().getPlayerType() == PlayerType.COMPUTER);
             createRecordForFrame(entireGame, game,
-                    entireGame.getPlayer2().getPlayerPerson().getName());
+                    entireGame.getPlayer2().getPlayerPerson().getName(),
+                    entireGame.getPlayer2().getPlayerType() == PlayerType.COMPUTER);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void recordAFrameEnds(EntireGame entireGame, Game game, PlayerPerson winner) {
+    public void recordAFrameEnds(EntireGame entireGame, Game<?, ?> game, PlayerPerson winner) {
         long duration = (System.currentTimeMillis() - game.frameStartTime) / 1000 + 1;
         String generalCmd = "UPDATE Game SET DurationSeconds = " + duration + ", " +
                 "WinnerName = '" + winner.getName() + "' " +

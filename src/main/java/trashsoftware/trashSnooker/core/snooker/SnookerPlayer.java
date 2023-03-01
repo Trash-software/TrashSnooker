@@ -7,7 +7,6 @@ import trashsoftware.trashSnooker.core.Player;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class SnookerPlayer extends Player {
 
@@ -15,14 +14,15 @@ public class SnookerPlayer extends Player {
     private final List<Integer> singlePoleScores = new ArrayList<>();
     private boolean flushed = false;
 
-    public SnookerPlayer(int number, InGamePlayer playerPerson, AbstractSnookerGame game) {
-        super(number, playerPerson);
+    public SnookerPlayer(InGamePlayer playerPerson, AbstractSnookerGame game) {
+        super(playerPerson);
 
         this.game = game;
     }
 
     public void potFreeBall(int freeBallScore) {
         score += freeBallScore;
+        lastAddedScore = freeBallScore;
         Ball freeBall = game.getBallOfValue(freeBallScore);
         if (singlePole.containsKey(freeBall)) {
             singlePole.put(freeBall, singlePole.get(freeBall) + 1);
@@ -32,7 +32,7 @@ public class SnookerPlayer extends Player {
     }
 
     @Override
-    protected void addScoreOfPotted(Collection<Ball> pottedBalls) {
+    protected void addScoreOfPotted(Collection<? extends Ball> pottedBalls) {
         for (Ball ball : pottedBalls) {
             score += ball.getValue();
         }

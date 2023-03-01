@@ -1,0 +1,112 @@
+{
+  "stageIndex": -1,
+  "championshipId": "masters",
+  "matchTree": {"root": {
+    "p1wins": 3,
+    "p1": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Stuart Bingham"},
+          "p2": {"winner": "Ding Junhui"},
+          "winner": "Stuart Bingham",
+          "stage": "ROUND_1",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 0,
+          "p1": {"winner": "O'Sullivan"},
+          "p2": {"winner": "Murphy"},
+          "winner": "Murphy",
+          "stage": "ROUND_1",
+          "p2wins": 2
+        },
+        "winner": "Murphy",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 3
+      },
+      "p2": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 1,
+          "p1": {"winner": "Kid"},
+          "p2": {"winner": "Mark Williams"},
+          "winner": "Mark Williams",
+          "stage": "ROUND_1",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Liu Mang"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "p2wins": 1
+        },
+        "winner": "Mark Williams",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 2
+      },
+      "winner": "Murphy",
+      "stage": "SEMI_FINAL",
+      "p2wins": 1
+    },
+    "p2": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 1,
+          "p1": {"winner": "Glass Heart"},
+          "p2": {"winner": "Smart"},
+          "winner": "Smart",
+          "stage": "ROUND_1",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Trump"},
+          "p2": {"winner": "random_player_14"},
+          "winner": "Trump",
+          "stage": "ROUND_1",
+          "p2wins": 0
+        },
+        "winner": "Trump",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 3
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Selby"},
+          "p2": {"winner": "Mark Allen"},
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "Matthew Stevens"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "p2wins": 0
+        },
+        "winner": "Neil Robertson",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 3
+      },
+      "winner": "Trump",
+      "stage": "SEMI_FINAL",
+      "p2wins": 1
+    },
+    "winner": "Trump",
+    "stage": "FINAL",
+    "p2wins": 4
+  }},
+  "finished": true,
+  "timestamp": "2025/1/15"
+}

@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import java.util.Arrays;
+
 public class PredictedPos {
 
     private final Ball targetBall;
@@ -16,5 +18,13 @@ public class PredictedPos {
 
     public double[] getPredictedWhitePos() {
         return whitePos;
+    }
+
+    @Override
+    public String toString() {
+        return "PredictedPos{" +
+                "targetBall=" + targetBall +
+                ", whitePos=" + Arrays.toString(whitePos) +
+                '}';
     }
 }

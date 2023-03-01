@@ -58,4 +58,19 @@ public class CuePlayType {
     public List<Double> getSequence() {
         return sequence;
     }
+    
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(String.format("p%f,h%d,e%d;", pullSpeedMul, pullHoldMs, endHoldMs));
+        if (sequence.isEmpty()) {
+            builder.append("s");
+        } else {
+            for (double d : getSequence()) {
+                if (d == 0.0) builder.append("s");
+                else if (d == 1.0) builder.append("r");
+                else if (d == -1.0) builder.append("l");
+            }
+        }
+        return builder.toString();
+    }
 }

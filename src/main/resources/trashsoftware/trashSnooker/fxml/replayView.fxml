@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.ReplayView"
+      prefHeight="600.0" prefWidth="900.0" spacing="10.0">
+    
+    <padding>
+        <Insets topRightBottomLeft="5.0"/>
+    </padding>
+    
+    <TreeTableView fx:id="replayTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TreeTableColumn fx:id="replayCol" text="回放" prefWidth="120.0"/>
+            <TreeTableColumn fx:id="typeCol" text="类型" prefWidth="90.0"/>
+            <TreeTableColumn fx:id="p1Col" text="玩家1" prefWidth="120.0"/>
+            <TreeTableColumn fx:id="p2Col" text="玩家2" prefWidth="120.0"/>
+            <TreeTableColumn fx:id="beginTimeCol" text="开始时间" prefWidth="120.0"/>
+            <TreeTableColumn fx:id="durationCol" text="时长"/>
+            <TreeTableColumn fx:id="nCuesCol" text="总杆数"/>
+            <TreeTableColumn fx:id="resultCol" text="结果" prefWidth="240.0"/>
+        </columns>
+    </TreeTableView>
+    
+    <HBox alignment="BOTTOM_RIGHT">
+        <Button text="播放" onAction="#playAction"/>
+    </HBox>
+
+</VBox>

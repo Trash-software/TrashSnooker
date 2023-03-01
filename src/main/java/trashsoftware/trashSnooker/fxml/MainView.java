@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.fxml;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,26 +10,50 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import trashsoftware.trashSnooker.core.Cue;
-import trashsoftware.trashSnooker.core.GameType;
-import trashsoftware.trashSnooker.core.InGamePlayer;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.metrics.BallMetrics;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.util.EventLogger;
-import trashsoftware.trashSnooker.util.GameSaver;
-import trashsoftware.trashSnooker.util.Recorder;
+import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.GeneralSaveManager;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MainView implements Initializable {
-    
+
     @FXML
     Button resumeButton;
-    
+
+    @FXML
+    Button player1InfoButton, player2InfoButton;
+
     @FXML
     ComboBox<Integer> totalFramesBox;
+    
+    @FXML
+    ComboBox<GameRule> gameRuleBox;
+    
+    @FXML
+    ComboBox<TableMetrics.TableBuilderFactory> tableMetricsBox;
+    
+    @FXML
+    ComboBox<BallMetrics> ballMetricsBox;
+
+    @FXML
+    ComboBox<TableCloth.Smoothness> clothSmoothBox;
+    
+    @FXML
+    ComboBox<TableCloth.Goodness> clothGoodBox;
+    
+    @FXML
+    ComboBox<TableMetrics.HoleSize> holeSizeBox;
 
     @FXML
     ComboBox<PlayerPerson> player1Box, player2Box;
@@ -36,15 +61,24 @@ public class MainView implements Initializable {
     @FXML
     ComboBox<CueItem> player1CueBox, player2CueBox;
 
+    @FXML
+    ComboBox<PlayerType> player1Player, player2Player;
+
     private Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initGameTypeBox();
         initTotalFramesBox();
+        initClothBox();
         loadPlayerList();
         loadCueList();
+
+        resumeButton.setDisable(!GeneralSaveManager.getInstance().hasSavedGame());
         
-        resumeButton.setDisable(!GameSaver.hasSavedGame());
+        gameRuleBox.getSelectionModel().select(0);
+        tableMetricsBox.getSelectionModel().select(0);
+        ballMetricsBox.getSelectionModel().select(0);
     }
 
     public void setStage(Stage stage) {
@@ -54,13 +88,40 @@ public class MainView implements Initializable {
     public void reloadPlayerList() {
         loadPlayerList();
     }
-    
+
     private void initTotalFramesBox() {
-        totalFramesBox.getItems().addAll(
-                1, 3, 5, 7, 9, 11, 13, 15, 17, 19,
-                21, 23, 25, 27, 29, 31, 33, 35
-        );
+        for (int i = 1; i <= 41; i += 2) {
+            totalFramesBox.getItems().add(i);
+        }
         totalFramesBox.getSelectionModel().select(0);
+    }
+    
+    private void initClothBox() {
+        clothSmoothBox.getItems().addAll(TableCloth.Smoothness.values());
+        clothGoodBox.getItems().addAll(TableCloth.Goodness.values());
+        clothSmoothBox.getSelectionModel().select(1);
+        clothGoodBox.getSelectionModel().select(1);
+    }
+    
+    private void initGameTypeBox() {
+        gameRuleBox.getItems().addAll(
+                GameRule.values()
+        );
+        tableMetricsBox.getItems().addAll(
+                TableMetrics.TableBuilderFactory.values()
+        );
+        ballMetricsBox.getItems().addAll(
+                BallMetrics.SNOOKER_BALL,
+                BallMetrics.POOL_BALL
+        );
+        
+        tableMetricsBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                holeSizeBox.getItems().clear();
+                holeSizeBox.getItems().addAll(newValue.supportedHoles);
+                holeSizeBox.getSelectionModel().select(newValue.supportedHoles.length / 2);
+            }
+        });
     }
 
     private void loadCueList() {
@@ -70,7 +131,7 @@ public class MainView implements Initializable {
 
     private void refreshCueList(ComboBox<CueItem> box) {
         box.getItems().clear();
-        for (Cue cue : Recorder.getCues().values()) {
+        for (Cue cue : DataLoader.getInstance().getCues().values()) {
             if (!cue.privacy) {
                 box.getItems().add(new CueItem(cue, cue.getName()));
             }
@@ -79,28 +140,40 @@ public class MainView implements Initializable {
     }
 
     private void loadPlayerList() {
-        Collection<PlayerPerson> playerPeople = Recorder.getPlayerPeople();
+        Collection<PlayerPerson> playerPeople = DataLoader.getInstance().getActualPlayers();
         player1Box.getItems().clear();
         player2Box.getItems().clear();
         player1Box.getItems().addAll(playerPeople);
         player2Box.getItems().addAll(playerPeople);
 
-        addPlayerBoxProperty(player1Box, player1CueBox);
-        addPlayerBoxProperty(player2Box, player2CueBox);
+        addPlayerBoxProperty(player1Box, player1CueBox, player1InfoButton);
+        addPlayerBoxProperty(player2Box, player2CueBox, player2InfoButton);
+
+        player1Player.getItems().addAll(PlayerType.PLAYER, PlayerType.COMPUTER);
+        player2Player.getItems().addAll(PlayerType.PLAYER, PlayerType.COMPUTER);
+        player1Player.getSelectionModel().select(0);
+        player2Player.getSelectionModel().select(0);
     }
 
-    private void addPlayerBoxProperty(ComboBox<PlayerPerson> playerBox, ComboBox<CueItem> cueBox) {
+    private void addPlayerBoxProperty(ComboBox<PlayerPerson> playerBox, 
+                                      ComboBox<CueItem> cueBox, 
+                                      Button infoButton) {
         playerBox.getSelectionModel().selectedItemProperty()
                 .addListener(((observable, oldValue, newValue) -> {
-                    refreshCueList(cueBox);
-                    boolean sel = false;
-                    for (Cue cue : newValue.getPrivateCues()) {
-                        cueBox.getItems().add(new CueItem(cue, cue.getName()));
-                        if (!sel) {
-                            // 有私杆的人默认选择第一根私杆
-                            cueBox.getSelectionModel().select(cueBox.getItems().size() - 1);
-                            sel = true;
+                    if (newValue != null) {
+                        infoButton.setDisable(false);
+                        refreshCueList(cueBox);
+                        boolean sel = false;
+                        for (Cue cue : newValue.getPrivateCues()) {
+                            cueBox.getItems().add(new CueItem(cue, cue.getName()));
+                            if (!sel) {
+                                // 有私杆的人默认选择第一根私杆
+                                cueBox.getSelectionModel().select(cueBox.getItems().size() - 1);
+                                sel = true;
+                            }
                         }
+                    } else {
+                        infoButton.setDisable(true);
                     }
                 }));
     }
@@ -112,6 +185,7 @@ public class MainView implements Initializable {
                     getClass().getResource("addPlayerView.fxml")
             );
             Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
 
             Stage stage = new Stage();
             stage.initOwner(this.stage);
@@ -128,54 +202,71 @@ public class MainView implements Initializable {
             EventLogger.log(e);
         }
     }
-
-    @FXML
-    void recordsAction() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("statsView.fxml")
-            );
-            Parent root = loader.load();
-
-            Stage stage = new Stage();
-            stage.initOwner(this.stage);
-            stage.initModality(Modality.WINDOW_MODAL);
-
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-
-            stage.show();
-        } catch (IOException e) {
-            EventLogger.log(e);
-        }
-    }
     
     @FXML
+    void playerInfoAction(ActionEvent event) {
+        ComboBox<PlayerPerson> personBox;
+        if (Objects.equals(event.getSource(), player1InfoButton)) {
+            personBox = player1Box;
+        } else {
+            personBox = player2Box;
+        }
+        PlayerPerson person = personBox.getValue();
+        if (person != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("abilityView.fxml")
+                );
+                Parent root = loader.load();
+                root.setStyle(App.FONT_STYLE);
+                
+                Stage stage = new Stage();
+                stage.initOwner(this.stage);
+                stage.initModality(Modality.WINDOW_MODAL);
+
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+
+                stage.show();
+
+                AbilityView controller = loader.getController();
+                controller.setup(scene, person);
+            } catch (IOException e) {
+                EventLogger.log(e);
+            }
+        }
+    }
+
+    @FXML
     void resumeAction() {
+        EntireGame game = GeneralSaveManager.getInstance().getSave();
+        if (game != null) {
+            startGame(game);
+        } else {
+            throw new RuntimeException("???");
+        }
+    }
+
+    @FXML
+    void startGameAction() {
+        TableMetrics.TableBuilderFactory tableMetricsFactory = 
+                tableMetricsBox.getValue();
+        TableMetrics tableMetrics = tableMetricsFactory
+                .create()
+                .holeSize(holeSizeBox.getValue())
+                .build();
         
+        GameRule rule = gameRuleBox.getValue();
+        BallMetrics ballMetrics = ballMetricsBox.getValue();
+        
+        // todo: 检查规则兼容性
+        
+        GameValues values = new GameValues(rule, tableMetrics, ballMetrics);
+        
+        showGame(values);
     }
 
-    @FXML
-    void snookerAction() {
-        showGame(GameType.SNOOKER);
-    }
-
-    @FXML
-    void miniSnookerAction() {
-        showGame(GameType.MINI_SNOOKER);
-    }
-
-    @FXML
-    void chineseEightAction() {
-        showGame(GameType.CHINESE_EIGHT);
-    }
-
-    @FXML
-    void sidePocketAction() {
-        showGame(GameType.SIDE_POCKET);
-    }
-
-    private void showGame(GameType gameType) {
+    private void showGame(GameValues gameValues) {
         PlayerPerson p1 = player1Box.getValue();
         PlayerPerson p2 = player2Box.getValue();
         if (p1 == null || p2 == null) {
@@ -185,22 +276,30 @@ public class MainView implements Initializable {
 
         InGamePlayer igp1;
         InGamePlayer igp2;
-        Cue stdBreakCue = Recorder.getStdBreakCue();
+        Cue stdBreakCue = DataLoader.getInstance().getStdBreakCue();
         if (stdBreakCue == null ||
-                gameType == GameType.SNOOKER ||
-                gameType == GameType.MINI_SNOOKER) {
-            igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue);
-            igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue);
+                gameValues.rule == GameRule.SNOOKER ||
+                gameValues.rule == GameRule.MINI_SNOOKER) {
+            igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue(), 1, 1.0);
+            igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue, player2Player.getValue(), 2, 1.0);
         } else {
-            igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue);
-            igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue);
+            igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue(), 1, 1.0);
+            igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue(), 2, 1.0);
         }
+        
+        TableCloth cloth = new TableCloth(clothGoodBox.getValue(), clothSmoothBox.getValue());
 
+        EntireGame game = new EntireGame(igp1, igp2, gameValues, totalFramesBox.getValue(), cloth);
+        startGame(game);
+    }
+    
+    private void startGame(EntireGame entireGame) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("gameView.fxml")
             );
             Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
 
             Stage stage = new Stage();
             stage.initOwner(this.stage);
@@ -210,8 +309,7 @@ public class MainView implements Initializable {
             stage.setScene(scene);
 
             GameView gameView = loader.getController();
-            gameView.setup(stage, gameType, totalFramesBox.getSelectionModel().getSelectedItem(), 
-                    igp1, igp2);
+            gameView.setup(stage, entireGame);
 
             stage.show();
         } catch (Exception e) {
@@ -220,7 +318,7 @@ public class MainView implements Initializable {
     }
 
     public static class CueItem {
-        private final Cue cue;
+        public final Cue cue;
         private final String string;
 
         CueItem(Cue cue, String string) {

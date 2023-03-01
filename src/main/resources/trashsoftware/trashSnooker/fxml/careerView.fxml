@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import trashsoftware.trashSnooker.fxml.widgets.AbilityShower?>
+<?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="trashsoftware.trashSnooker.fxml.CareerView"
+          prefHeight="640.0" prefWidth="1000.0" vgap="10.0" hgap="20.0">
+
+    <padding>
+        <Insets topRightBottomLeft="10.0"/>
+    </padding>
+
+    <columnConstraints>
+        <ColumnConstraints/>
+        <ColumnConstraints/>
+    </columnConstraints>
+
+    <VBox GridPane.rowIndex="1" spacing="10.0">
+        <HBox spacing="10.0">
+            <Label fx:id="levelLabel"/>
+            <ProgressBar fx:id="levelExpBar" prefWidth="180.0"/>
+            <Label fx:id="levelExpLabel"/>
+        </HBox>
+        <AbilityShower fx:id="abilityShower"/>
+        <HBox spacing="20.0" alignment="CENTER">
+            <HBox alignment="CENTER">
+                <Label text="可用技能点："/>
+                <Label fx:id="availPerksLabel"/>
+            </HBox>
+            <Button text="重置" fx:id="clearPerkBtn" onAction="#clearUsedPerks"/>
+            <Button text="确定分配" fx:id="confirmAddPerkBtn" onAction="#applyPerks"/>
+        </HBox>
+    </VBox>
+
+    <VBox GridPane.rowIndex="2" spacing="10.0">
+        <!--        荣誉-->
+    </VBox>
+
+    <LabelTable fx:id="allAwardsTable" GridPane.rowIndex="6"/>
+
+    <HBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="10.0">
+        <Label text="世界排名"/>
+        <ComboBox fx:id="rankTypeBox"/>
+
+        <Separator orientation="VERTICAL"/>
+        <Label text="排名方式"/>
+        <ComboBox fx:id="rankMethodBox"/>
+    </HBox>
+
+    <TableView fx:id="rankingTable" prefWidth="360.0" prefHeight="360.0"
+               GridPane.rowIndex="1" GridPane.columnIndex="1">
+        <columns>
+            <TableColumn text="排名" fx:id="rankCol"/>
+            <TableColumn text="球员" fx:id="rankNameCol"/>
+            <TableColumn text="奖金" fx:id="rankedAwardCol"/>
+            <TableColumn text="生涯总奖金" fx:id="totalAwardCol"/>
+        </columns>
+    </TableView>
+
+    <Label fx:id="myRankLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+    <Label fx:id="currentDateLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+    <VBox fx:id="champInProgBox" GridPane.rowIndex="5" GridPane.columnIndex="1" spacing="10.0">
+        <HBox spacing="10.0">
+            <Label text="正在进行的比赛"/>
+            <Label fx:id="champInProgLabel"/>
+            <Label fx:id="champInProgStageLabel"/>
+            <Button text="继续" onAction="#continueChampInProg"/>
+        </HBox>
+    </VBox>
+
+    <VBox fx:id="nextChampInfoBox" GridPane.rowIndex="5" GridPane.columnIndex="1" spacing="10.0">
+        <HBox spacing="10.0">
+            <Label text="下场比赛"/>
+            <Label fx:id="nextChampionshipLabel"/>
+            <CheckBox fx:id="joinChampBox" text="报名"/>
+            <Button text="开始" onAction="#nextChamp"/>
+        </HBox>
+    </VBox>
+
+    <LabelTable fx:id="champAwardsTable"
+                GridPane.rowIndex="6"
+                GridPane.columnIndex="1"/>
+
+    <LabelTable fx:id="selectedPlayerInfoTable" GridPane.rowIndex="1" GridPane.columnIndex="2"
+                visible="false" managed="false" prefWidth="360.0" prefHeight="360.0"/>
+
+</GridPane>

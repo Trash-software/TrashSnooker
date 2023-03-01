@@ -1,24 +1,53 @@
 package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.fxml.drawing.BallModel;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
-    private final int value;
+    public static final double MAX_GEAR_EFFECT = 0.1;  // 齿轮效应造成的最严重分离角损耗
+    private static final Random ERROR_GENERATOR = new Random();
+    private static final Random randomGenerator = new Random();
+    private static final double[] SIDE_CUSHION_VEC = {1.0, 0.0};
+    private static final double[] TOP_BOT_CUSHION_VEC = {0.0, 1.0};
+    public final BallModel model;
+    private final GameValues values;
+    protected final int value;
     private final Color color;
+    private final Color colorWithOpa;
+    private final Color colorTransparent;
     protected double xSpin, ySpin;
     protected double sideSpin;
+    protected double axisX, axisY, axisZ,
+            frameDegChange;  // 全部都是针对一个动画帧
+    //    protected Rotate rotation = new Rotate();
+//    protected double xAngle, yAngle, zAngle;
     private boolean potted;
     private long msSinceCue;
     private Ball justHit;
+    private double currentXError;
+    private double currentYError;
 
     protected Ball(int value, boolean initPotted, GameValues values) {
-        super(values, values.ballRadius);
-
-        this.potted = initPotted;
+        super(values, values.ball.ballRadius);
+        
         this.value = value;
+        this.values = values;
         this.color = generateColor(value);
+        this.colorWithOpa = this.color.deriveColor(0, 1, 2, 0.5);
+        this.colorTransparent = colorWithOpa.deriveColor(0, 1, 1, 0);
+
+//        this.axisX = randomGenerator.nextDouble();
+//        this.axisY = randomGenerator.nextDouble();
+//        this.axisZ = randomGenerator.nextDouble();
+//        this.rotateDeg = randomGenerator.nextDouble() * 360.0 * 1000;
+
+        model = BallModel.createModel(this);
+        setPotted(initPotted);
     }
 
     protected Ball(int value, double[] xy, GameValues values) {
@@ -31,6 +60,13 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     protected Ball(int value, GameValues values) {
         this(value, true, values);
     }
+
+//    private static Paint makeGradientColor(Color ballColor) {
+//        Stop[] stops = new Stop[]{
+//                new Stop()
+//        };
+//        LinearGradient gradient = new LinearGradient()
+//    }
 
     public static Color snookerColor(int value) {
         switch (value) {
@@ -89,21 +125,36 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         }
     }
 
+    public static double midHolePowerFactor(double speed) {
+        return 1.2 - (speed / Values.MAX_POWER_SPEED) * 0.6;
+    }
+
     protected abstract Color generateColor(int value);
 
     public boolean isPotted() {
         return potted;
     }
 
-    public void pickup() {
-        potted = false;
-        vx = 0.0;
-        vy = 0.0;
-        sideSpin = 0.0;
-        xSpin = 0.0;
-        ySpin = 0.0;
-        distance = 0.0;
+    public void setPotted(boolean potted) {
+        this.potted = potted;
     }
+
+    public void pickup() {
+        setPotted(false);
+        clearMovement();
+    }
+
+//    public double getXAngle() {
+//        return xAngle;
+//    }
+//
+//    public double getYAngle() {
+//        return yAngle;
+//    }
+//
+//    public double getZAngle() {
+//        return zAngle;
+//    }
 
     public boolean isRed() {
         return value == 1;
@@ -123,12 +174,23 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         this.ySpin = ySpin;
         this.sideSpin = sideSpin;
     }
+    
+    public boolean isNotMoving(Phy phy) {
+        return getSpeed() < phy.speedReducer;
+    }
 
-    public boolean isLikelyStopped() {
-        if (getSpeed() < Game.speedReducer && getSpinTargetSpeed() < Game.spinReducer) {
+    public boolean isLikelyStopped(Phy phy) {
+        if (getSpeed() < phy.speedReducer   // todo: 写不明白，旋转停
+                &&
+                getSpinTargetSpeed() < phy.spinReducer * 2
+//                &&
+//                (!phy.isPrediction && Math.abs(sideSpin) < phy.sideSpinReducer)
+        ) {
             vx = 0.0;
             vy = 0.0;
-            sideSpin = 0.0;
+//            if (phy.isPrediction) {
+//                sideSpin = 0.0;  // todo: 同上
+//            }
             xSpin = 0.0;
             ySpin = 0.0;
             return true;
@@ -140,59 +202,118 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         return Math.hypot(xSpin, ySpin);
     }
 
-    protected void normalMove() {
-        distance += Math.hypot(vx, vy);
-        x = nextX;
-        y = nextY;
+    public void calculateAxis(Phy phy, double animationFrameMs) {
+        // 每个动画帧算一次，而不是物理帧
+        axisX = ySpin;
+        axisY = -xSpin;
+        double ss = sideSpin * 5.0;
+//        if (isWhite()) System.out.println(xSpin + " " + ySpin + " " + sideSpin);
+        if (Double.isNaN(ss)) ss = 0.0;
+        axisZ = -ss;
+
+        frameDegChange =
+                Math.sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ) 
+                        * phy.calculationsPerSec * animationFrameMs / 800.0;
+
+//        rotation.setAxis(new Point3D(axisX, axisY, axisZ));
+//        rotation.setAngle(degChange);
+//
+//        double theta = -Math.asin(rotation.getMzx());
+//        double cosTheta = Math.cos(theta);
+//        double psi = Math.atan2(rotation.getMzy() / cosTheta, rotation.getMzz() / cosTheta);
+//        double phi = Math.atan2(rotation.getMyx() / cosTheta, rotation.getMxx() / cosTheta);
+//
+//        xAngle += psi;
+//        yAngle += theta;
+//        zAngle += phi;
+    }
+
+    /**
+     * 原地转
+     */
+    protected boolean sideSpinAtPosition(Phy phy) {
         msSinceCue++;
-        if (sideSpin >= Game.sideSpinReducer) {
-            sideSpin -= Game.sideSpinReducer;
-        } else if (sideSpin <= -Game.sideSpinReducer) {
-            sideSpin += Game.sideSpinReducer;
+        if (sideSpin >= phy.sideSpinReducer) {
+            sideSpin -= phy.sideSpinReducer;
+            return true;
+        } else if (sideSpin <= -phy.sideSpinReducer) {
+            sideSpin += phy.sideSpinReducer;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected void normalMove(Phy phy) {
+        distance += Math.hypot(vx, vy);
+        setX(nextX);
+        setY(nextY);
+
+//        if (!phy.isPrediction) calculateAxis(phy);
+
+        msSinceCue++;
+        if (sideSpin >= phy.sideSpinReducer) {
+            sideSpin -= phy.sideSpinReducer;
+        } else if (sideSpin <= -phy.sideSpinReducer) {
+            sideSpin += phy.sideSpinReducer;
         }
 
         double speed = getSpeed();
-        double reducedSpeed = speed - (Game.speedReducer / values.ballWeightRatio);  // 重的球减速慢
+        double reducedSpeed = speed - values.speedReducerPerInterval(phy);
         double ratio = reducedSpeed / speed;
         vx *= ratio;
         vy *= ratio;
 
+        if (!phy.isPrediction) {
+            // 这部分是台泥造成的线路偏差
+            double xErr = ERROR_GENERATOR.nextGaussian() * phy.cloth.goodness.errorFactor / phy.calculationsPerSec / 1.2 +
+                    phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec / 180;
+            double yErr = ERROR_GENERATOR.nextGaussian() * phy.cloth.goodness.errorFactor / phy.calculationsPerSec / 1.2;
+            vx += xErr;
+            vy += yErr;
+        }
+
         double xSpinDiff = xSpin - vx;
         double ySpinDiff = ySpin - vy;
 
-        // A linear reduce
+        // 对于滑的桌子，转速差越大，旋转reducer和effect反而越小
         double spinDiffTotal = Math.hypot(xSpinDiff, ySpinDiff);
-        double spinReduceRatio = Game.spinReducer / spinDiffTotal;
+        double spinDiffFactor = spinDiffTotal / Values.MAX_SPIN_DIFF * phy.calculationsPerSec;
+        spinDiffFactor = Math.min(1.0, spinDiffFactor);
+        double dynamicDragFactor = 1 - phy.cloth.smoothness.tailSpeedFactor * spinDiffFactor;
+
+//        if (isWhite() && !phy.isPrediction) System.out.println(dynamicDragFactor);
+
+        // 乘和除抵了，所以第一部分是线性的
+        double spinReduceRatio = phy.spinReducer / spinDiffTotal * dynamicDragFactor;
         double xSpinReducer = Math.abs(xSpinDiff * spinReduceRatio);
         double ySpinReducer = Math.abs(ySpinDiff * spinReduceRatio);
 
 //        if (isWhite()) System.out.printf("vx: %f, vy: %f, xr: %f, yr: %f, spin: %f\n", vx, vy, xSpinReducer, ySpinReducer, SnookerGame.spinReducer);
 
-//        double spinEffect = 3000.0;  // 越小影响越大
-
         if (xSpinDiff < -xSpinReducer) {
-            vx += xSpinDiff / Game.spinEffect;
-            xSpin += xSpinReducer;
+            vx += xSpinDiff / phy.spinEffect * dynamicDragFactor;
+            xSpin += xSpinReducer * dynamicDragFactor;
         } else if (xSpinDiff >= xSpinReducer) {
-            vx += xSpinDiff / Game.spinEffect;
-            xSpin -= xSpinReducer;
+            vx += xSpinDiff / phy.spinEffect * dynamicDragFactor;
+            xSpin -= xSpinReducer * dynamicDragFactor;
         } else {
             xSpin = vx;
         }
 
         if (ySpinDiff < -ySpinReducer) {
-            vy += ySpinDiff / Game.spinEffect;
-            ySpin += ySpinReducer;
+            vy += ySpinDiff / phy.spinEffect * dynamicDragFactor;
+            ySpin += ySpinReducer * dynamicDragFactor;
         } else if (ySpinDiff >= ySpinReducer) {
-            vy += ySpinDiff / Game.spinEffect;
-            ySpin -= ySpinReducer;
+            vy += ySpinDiff / phy.spinEffect * dynamicDragFactor;
+            ySpin -= ySpinReducer * dynamicDragFactor;
         } else {
             ySpin = vy;
         }
     }
 
     public void pot() {
-        potted = true;
+        setPotted(true);
         x = 0.0;
         y = 0.0;
         clearMovement();
@@ -207,77 +328,114 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
      *
      * @return (0.6, 1.2)之间的一个值
      */
-    protected double midHolePowerFactor() {
-        return 1.2 - (getSpeed() * Game.calculationsPerSec / Values.MAX_POWER_SPEED) * 0.6;
+    protected double midHolePowerFactor(Phy phy) {
+        return midHolePowerFactor(getSpeed() * phy.calculationsPerSec);
     }
 
-    protected void hitHoleArcArea(double[] arcXY) {
-        super.hitHoleArcArea(arcXY);
-        vx *= Values.WALL_BOUNCE_RATIO;
-        vy *= Values.WALL_BOUNCE_RATIO;
-        xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
-        ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
-        sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
+    protected double[] hitHoleArcArea(double[] arcXY, Phy phy) {
+        double[] normalVec = super.hitHoleArcArea(arcXY, phy);  // 碰撞点切线的法向量
+        // 一般来说袋角的弹性没库边好
+        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
+        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
+        applySpinsWhenHitCushion(phy, normalVec);
+
+        return normalVec;
     }
 
-    protected void hitHoleLineArea(double[] lineNormalVec) {
-        super.hitHoleLineArea(lineNormalVec);
-        vx *= Values.WALL_BOUNCE_RATIO;
-        vy *= Values.WALL_BOUNCE_RATIO;
-        xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
-        ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.8);
-        sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
+    protected void hitHoleLineArea(double[] lineNormalVec, Phy phy) {
+        super.hitHoleLineArea(lineNormalVec, phy);
+        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
+        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
+        applySpinsWhenHitCushion(phy, lineNormalVec);
+    }
+
+    /**
+     * 碰库时的旋转:
+     * 1. 施加侧旋的效果
+     * 2. 更新所有旋转效果
+     * <p>
+     * 需在更新了vx和vy之后调用
+     *
+     * @param phy              物理
+     * @param cushionNormalVec 撞的库的法向量。比如说边库应是(1,0)或(-1,0)
+     */
+    private void applySpinsWhenHitCushion(Phy phy, double[] cushionNormalVec) {
+        // 库的切线方向的投影长度，意思是砸的深度，越深效果越强
+        double mag = Math.abs(Algebra.projectionLengthOn(cushionNormalVec, new double[]{vx, vy})) *
+                phy.calculationsPerSec;
+
+        double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.67);
+//        System.out.println(mag + " " + sideSpinEffectMul);
+        double effectiveSideSpin = sideSpin * sideSpinEffectMul;
+
+        // todo: 真的算，而不是用if。目前没考虑袋角
+        if (Arrays.equals(cushionNormalVec, SIDE_CUSHION_VEC)) {
+            if (vx < 0) {
+                vy += effectiveSideSpin;
+            } else {
+                vy -= effectiveSideSpin;
+            }
+            xSpin *= (table.wallSpinPreserveRatio * 0.8);
+            ySpin *= table.wallSpinPreserveRatio;
+        } else if (Arrays.equals(cushionNormalVec, TOP_BOT_CUSHION_VEC)) {
+            if (vy < 0) {
+                vx -= effectiveSideSpin;
+            } else {
+                vx += effectiveSideSpin;
+            }
+            xSpin *= table.wallSpinPreserveRatio;
+            ySpin *= (table.wallSpinPreserveRatio * 0.8);
+        } else {
+            xSpin *= (table.wallSpinPreserveRatio * 0.9);
+            ySpin *= (table.wallSpinPreserveRatio * 0.9);
+        }
+
+        sideSpin -= effectiveSideSpin;
+        sideSpin *= table.wallSpinPreserveRatio;
+//        sideSpin *= table.wallSpinPreserveRatio / sideSpinEffectMul;
+        
+        // todo: 吃库之后侧旋
     }
 
     /**
      * 该方法不检测袋口
      */
-    protected boolean tryHitWall() {
-        if (nextX < values.ballRadius + values.leftX ||
-                nextX >= values.rightX - values.ballRadius) {
+    protected boolean tryHitWall(Phy phy) {
+        if (nextX < values.ball.ballRadius + table.leftX ||
+                nextX >= table.rightX - values.ball.ballRadius) {
             // 顶库
-            vx = -vx * Values.WALL_BOUNCE_RATIO;
-            vy *= Values.WALL_BOUNCE_RATIO;
-            if (nextX < values.ballRadius + values.leftX) {
-                vy -= sideSpin;
-            } else {
-                vy += sideSpin;
-            }
-            xSpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.7);
-            ySpin *= Values.WALL_SPIN_PRESERVE_RATIO;
-            sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
+            vx = -vx * table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+            vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+
+            applySpinsWhenHitCushion(phy, SIDE_CUSHION_VEC);
+//            rotateDeg = 0.0;
             return true;
         }
-        if (nextY < values.ballRadius + values.topY ||
-                nextY >= values.botY - values.ballRadius) {
+        if (nextY < values.ball.ballRadius + table.topY ||
+                nextY >= table.botY - values.ball.ballRadius) {
             // 边库
-            vx *= Values.WALL_BOUNCE_RATIO;
-            vy = -vy * Values.WALL_BOUNCE_RATIO;
-            if (nextY < values.ballRadius + values.topY) {
-                vx += sideSpin;
-            } else {
-                vx -= sideSpin;
-            }
-            xSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
-            ySpin *= (Values.WALL_SPIN_PRESERVE_RATIO * 0.7);
-            sideSpin *= Values.WALL_SPIN_PRESERVE_RATIO;
+            vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+            vy = -vy * table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+
+            applySpinsWhenHitCushion(phy, TOP_BOT_CUSHION_VEC);
 //            System.out.println("Hit wall!======================");
+//            rotateDeg = 0.0;
             return true;
         }
         return false;
     }
 
-    boolean tryHitTwoBalls(Ball ball1, Ball ball2) {
+    boolean tryHitTwoBalls(Ball ball1, Ball ball2, Phy phy) {
         if (this.isNotMoving()) {
             if (ball1.isNotMoving()) {
                 if (ball2.isNotMoving()) {
                     return false;  // 三颗球都没动
                 } else {
-                    return ball2.tryHitTwoBalls(this, ball1);
+                    return ball2.tryHitTwoBalls(this, ball1, phy);
                 }
             } else {
                 if (ball2.isNotMoving()) {
-                    return ball1.tryHitTwoBalls(this, ball2);
+                    return ball1.tryHitTwoBalls(this, ball2, phy);
                 } else {
                     return false;  // ball1、ball2 都在动，无法处理
                 }
@@ -286,9 +444,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
             if (ball1.isNotMoving() && ball2.isNotMoving()) {
                 // this 去撞另外两颗
                 double dt1, dt2, dt12;
-                if (((dt1 = predictedDtTo(ball1)) < values.ballDiameter && currentDtTo(ball1) > dt1 &&
+                if (((dt1 = predictedDtTo(ball1)) < values.ball.ballDiameter && currentDtTo(ball1) > dt1 &&
                         justHit != ball1 && ball1.justHit != this) &&
-                        ((dt2 = predictedDtTo(ball2)) < values.ballDiameter && currentDtTo(ball2) > dt2 &&
+                        ((dt2 = predictedDtTo(ball2)) < values.ball.ballDiameter && currentDtTo(ball2) > dt2 &&
                                 justHit != ball2 && ball2.justHit != this)) {
                     System.out.println("Hit two static balls!=====================");
                     double xPos = x;
@@ -299,10 +457,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
                     boolean ball1First = true;
 
                     for (int i = 0; i < Values.DETAILED_PHYSICAL; ++i) {
-                        if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball1.x, ball1.y) < values.ballDiameter) {
+                        if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball1.x, ball1.y) < values.ball.ballDiameter) {
                             break;
                         }
-                        if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball2.x, ball2.y) < values.ballDiameter) {
+                        if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball2.x, ball2.y) < values.ball.ballDiameter) {
                             ball1First = false;
                             break;
                         }
@@ -311,11 +469,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
                     }
 
                     if (ball1First) {
-                        tryHitBall(ball1, false);
-                        tryHitBall(ball2, false);
+                        tryHitBall(ball1, false, phy);
+                        tryHitBall(ball2, false, phy);
                     } else {
-                        tryHitBall(ball2, false);
-                        tryHitBall(ball1, false);
+                        tryHitBall(ball2, false, phy);
+                        tryHitBall(ball1, false, phy);
                     }
 
                     return true;
@@ -328,8 +486,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         }
     }
 
-    boolean tryHitBall(Ball ball) {
-        return tryHitBall(ball, true);
+    boolean tryHitBall(Ball ball, Phy phy) {
+        return tryHitBall(ball, true, phy);
     }
 
     void hitStaticBallCore(Ball ball) {
@@ -339,7 +497,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         double dy = vy / Values.DETAILED_PHYSICAL;
 
         for (int i = 0; i < Values.DETAILED_PHYSICAL; ++i) {
-            if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball.x, ball.y) < values.ballDiameter) {
+            if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball.x, ball.y) < values.ball.ballDiameter) {
                 break;
             }
             xPos += dx;
@@ -351,11 +509,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         double ballVY = (ang * this.vx + this.vy) / (ang * ang + 1);
         double ballVX = ang * ballVY;
 
-        ball.vy = ballVY * Values.BALL_BOUNCE_RATIO;
-        ball.vx = ballVX * Values.BALL_BOUNCE_RATIO;
+        ball.vy = ballVY * values.ball.ballBounceRatio;
+        ball.vx = ballVX * values.ball.ballBounceRatio;
 
-        this.vx = (this.vx - ballVX) * Values.BALL_BOUNCE_RATIO;
-        this.vy = (this.vy - ballVY) * Values.BALL_BOUNCE_RATIO;
+        this.vx = (this.vx - ballVX) * values.ball.ballBounceRatio;
+        this.vy = (this.vy - ballVY) * values.ball.ballBounceRatio;
 
         nextX = x + vx;
         nextY = y + vy;
@@ -363,20 +521,21 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         ball.nextY = ball.y + ball.vy;
     }
 
-    void twoMovingBallsHitCore(Ball ball) {
+    void twoMovingBallsHitCore(Ball ball, Phy phy) {
         // 提高精确度
         double x1 = x;
         double y1 = y;
         double dx1 = vx / Values.DETAILED_PHYSICAL;
         double dy1 = vy / Values.DETAILED_PHYSICAL;
-        
-        double x2 = ball.x;;
+
+        double x2 = ball.x;
+        ;
         double y2 = ball.y;
         double dx2 = ball.vx / Values.DETAILED_PHYSICAL;
         double dy2 = ball.vy / Values.DETAILED_PHYSICAL;
 
         for (int i = 0; i < Values.DETAILED_PHYSICAL; ++i) {
-            if (Algebra.distanceToPoint(x1, y1, x2, y2) < values.ballDiameter) {
+            if (Algebra.distanceToPoint(x1, y1, x2, y2) < values.ball.ballDiameter) {
                 break;
             }
             x1 += dx1;
@@ -384,7 +543,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
             x2 += dx2;
             y2 += dy2;
         }
-        
+
         double[] thisV = new double[]{vx, vy};
         double[] ballV = new double[]{ball.vx, ball.vy};
 
@@ -397,35 +556,67 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         double ballHorV = Algebra.projectionLengthOn(tangentVec, ballV);
 //        System.out.printf("(%f, %f), (%f, %f)\n", thisHorV, thisVerV, ballHorV, ballVerV);
 //        System.out.print("Ball 1 " + this + " ");
-        
+
         if (thisHorV == 0) thisHorV = 0.0000000001;
         if (thisVerV == 0) thisVerV = 0.0000000001;
         if (ballHorV == 0) ballHorV = 0.0000000001;
         if (ballVerV == 0) ballVerV = 0.0000000001;
 
+        double thisOutHor = thisHorV;
+        double thisOutVer = ballVerV;
+        double ballOutHor = ballHorV;
+        double ballOutVer = thisVerV;
+        if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
+            double totalSpeed = (Math.hypot(this.vx, this.vy) + Math.hypot(ball.vx, ball.vy)) * phy.calculationsPerSec;
+            double powerGear = Math.min(1.0, totalSpeed / 0.35 / Values.MAX_POWER_SPEED * values.ball.ballWeightRatio);  // 35的力就没有效应了(高低杆要打出35的球速，起码要50的力)
+            double gearRemain = (1 - powerGear) * MAX_GEAR_EFFECT;
+            double gearEffect = 1 - gearRemain;
+            
+            double spinProj = Algebra.projectionLengthOn(thisV, 
+                    new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
+            
+            gearRemain *= spinProj;
+
+//            System.out.println("Gear " + gearRemain + " " + spinProj);
+
+            // todo: 1.还没考虑旋转 2.目标球的偏移由于AI算不了而取消了
+//            double transformed = thisOutHor * (1 - gearEffect);
+
+            ballOutVer *= gearEffect;
+            thisOutVer = thisVerV * gearRemain;
+
+//            thisOutVer = thisVerV * gearEffect;
+//            ballOutHor = thisHorV * gearEffect;
+
+            // 不要试图干这事
+//            ballOutVer = ballVerV * gearRemain;
+//            thisOutHor = ballHorV * gearRemain;
+
+//            System.out.printf("Gear %f, %f, %f, Out angle %f\n", gearEffect, thisVerV, thisHorV, Math.atan2(thisVerV, thisHorV));
+        }
+
         // 碰撞后，两球平行于切线的速率不变，垂直于切线的速率互换
         double[] thisOut = Algebra.antiProjection(tangentVec,
-                new double[]{thisHorV, ballVerV});
-//        System.out.println("Ball 1 out " + Arrays.toString(thisOut));
-//        System.out.print("Ball 2 " + ball + " ");
+                new double[]{thisOutHor, thisOutVer});
         double[] ballOut = Algebra.antiProjection(tangentVec,
-                new double[]{ballHorV, thisVerV});
-//        System.out.println("Ball 2 out " + Arrays.toString(ballOut));
+                new double[]{ballOutHor, ballOutVer});
 
-        this.vx = thisOut[0] * Values.BALL_BOUNCE_RATIO;
-        this.vy = thisOut[1] * Values.BALL_BOUNCE_RATIO;
-        ball.vx = ballOut[0] * Values.BALL_BOUNCE_RATIO;
-        ball.vy = ballOut[1] * Values.BALL_BOUNCE_RATIO;
+        this.vx = thisOut[0] * values.ball.ballBounceRatio;
+        this.vy = thisOut[1] * values.ball.ballBounceRatio;
+        ball.vx = ballOut[0] * values.ball.ballBounceRatio;
+        ball.vy = ballOut[1] * values.ball.ballBounceRatio;
 
         nextX = x + vx;
         nextY = y + vy;
         ball.nextX = ball.x + ball.vx;
         ball.nextY = ball.y + ball.vy;
+        
+        // todo: 齿轮效应带来的侧旋转
     }
 
-    boolean tryHitBall(Ball ball, boolean checkMovingBall) {
+    boolean tryHitBall(Ball ball, boolean checkMovingBall, Phy phy) {
         double dt = predictedDtTo(ball);
-        if (dt < values.ballDiameter
+        if (dt < values.ball.ballDiameter
                 && currentDtTo(ball) > dt
                 && justHit != ball && ball.justHit != this) {
 
@@ -438,18 +629,18 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
                         return false;
                     }
                 } else {
-                    return ball.tryHitBall(this);
+                    return ball.tryHitBall(this, phy);
                 }
             }
             if (ball.isNotMoving()) {
 //                if (checkMovingBall) System.out.println("Hit static ball!=====================");4
-                twoMovingBallsHitCore(ball);
+                twoMovingBallsHitCore(ball, phy);
 //                hitStaticBallCore(ball);
             } else {
                 if (!checkMovingBall) return false;
 //                System.out.println("Hit moving ball!=====================");
 
-                twoMovingBallsHitCore(ball);
+                twoMovingBallsHitCore(ball, phy);
             }
 
             justHit = ball;
@@ -459,7 +650,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         return false;
     }
 
-    void clearMovement() {
+    public void clearMovement() {
         vx = 0.0;
         vy = 0.0;
         xSpin = 0.0;
@@ -467,11 +658,22 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         sideSpin = 0.0;
         distance = 0.0;
         justHit = null;
+        frameDegChange = 0.0;
     }
 
-    protected void prepareMove() {
-        super.prepareMove();
+    protected void prepareMove(Phy phy) {
+        super.prepareMove(phy);
         justHit = null;
+        currentXError = phy.cloth.goodness.fixedErrorFactor * phy.calculationsPerSec;
+        currentYError = 0.0;
+    }
+
+    public Color getColorTransparent() {
+        return colorTransparent;
+    }
+
+    public Color getColorWithOpa() {
+        return colorWithOpa;
     }
 
     public Color getColor() {
@@ -480,6 +682,22 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
 
     public int getValue() {
         return value;
+    }
+
+    public double getAxisX() {
+        return axisX;
+    }
+
+    public double getAxisY() {
+        return axisY;
+    }
+
+    public double getAxisZ() {
+        return axisZ;
+    }
+
+    public double getFrameDegChange() {
+        return frameDegChange;
     }
 
     @Override
@@ -497,6 +715,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         return this == o;
     }
 
+    /**
+     * @return ball实例的原生hashcode。注意不要用value来生成hashcode，因为斯诺克有15颗value一样的红球
+     */
     @Override
     public int hashCode() {
         return super.hashCode();

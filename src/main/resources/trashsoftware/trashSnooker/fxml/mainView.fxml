@@ -5,13 +5,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.MainView"
-      prefHeight="400.0" prefWidth="400.0" spacing="20.0" alignment="TOP_CENTER">
-
-    <MenuBar>
-        <Menu text="文件">
-            <MenuItem text="纪录" onAction="#recordsAction"/>
-        </Menu>
-    </MenuBar>
+      prefHeight="420.0" prefWidth="540.0" spacing="10.0" alignment="TOP_CENTER">
 
     <GridPane vgap="5.0" hgap="10.0" alignment="CENTER">
         <columnConstraints>
@@ -19,27 +13,47 @@
             <ColumnConstraints halignment="CENTER"/>
         </columnConstraints>
 
-        <ComboBox fx:id="player1Box"/>
-        <ComboBox fx:id="player1CueBox" GridPane.columnIndex="1"/>
+        <Button fx:id="player1InfoButton" onAction="#playerInfoAction" text="(i)" disable="true"/>
+        <ComboBox fx:id="player1Box" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="player1CueBox" GridPane.columnIndex="2"/>
+        <ComboBox fx:id="player1Player" GridPane.columnIndex="3"/>
         <Label text="VS" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
-        <ComboBox fx:id="player2Box" GridPane.rowIndex="2"/>
-        <ComboBox fx:id="player2CueBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Button fx:id="player2InfoButton" text="(i)" onAction="#playerInfoAction"
+                GridPane.rowIndex="2" disable="true"/>
+        <ComboBox fx:id="player2Box" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="player2CueBox" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+        <ComboBox fx:id="player2Player" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
         <Button text="添加球员" onAction="#addPlayerAction"
-                GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+                GridPane.rowIndex="3" GridPane.columnSpan="4"/>
     </GridPane>
 
     <Separator/>
+    
+    <HBox spacing="10.0" alignment="CENTER">
+        <Label text="规则/球桌/球"/>
+        <ComboBox fx:id="gameRuleBox"/>
+        <ComboBox fx:id="tableMetricsBox"/>
+        <ComboBox fx:id="ballMetricsBox"/>
+    </HBox>
 
     <HBox spacing="10.0" alignment="CENTER">
         <Label text="总局数"/>
         <ComboBox fx:id="totalFramesBox">
         </ComboBox>
     </HBox>
+    
+    <HBox spacing="10.0" alignment="CENTER">
+        <Label text="台泥/桌布"/>
+        <ComboBox fx:id="clothSmoothBox"/>
+        <ComboBox fx:id="clothGoodBox"/>
+    </HBox>
 
-    <Button text="斯诺克" onAction="#snookerAction"/>
-    <Button text="斯诺克（小台）" onAction="#miniSnookerAction"/>
-    <Button text="中式八球" onAction="#chineseEightAction"/>
-    <Button text="花式九球" onAction="#sidePocketAction"/>
+    <HBox spacing="10.0" alignment="CENTER">
+        <Label text="洞口"/>
+        <ComboBox fx:id="holeSizeBox"/>
+    </HBox>
+
+    <Button text="开始游戏" onAction="#startGameAction"/>
 
     <Separator/>
 

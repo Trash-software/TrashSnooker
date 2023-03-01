@@ -1,8 +1,11 @@
 package trashsoftware.trashSnooker.core;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class Algebra {
+    
+    public static final double SQRT2 = Math.sqrt(2);
+    public static final double TWO_PI = Math.PI * 2;
 
     public static double[] symmetricVector(double vx, double vy, double axisVX, double axisVY) {
         double scalar = 2 * vectorDot(vx, vy, axisVX, axisVY) / vectorDot(axisVX, axisVY, axisVX, axisVY);
@@ -60,7 +63,15 @@ public class Algebra {
     }
 
     /**
-     * 返回向量与X轴正半轴的夹角，范围
+     * @param angleRad 角，弧度
+     * @return 力经过一个角度之后剩下的比例，角度越大，力传得越差，范围[0,1]
+     */
+    public static double powerTransferOfAngle(double angleRad) {
+        return (Math.PI / 2 - angleRad) / Math.PI * 2;
+    }
+
+    /**
+     * 返回向量与X轴正半轴的夹角，范围 [0~2PI)
      * 
      * @param x 向量的x
      * @param y 向量的y
@@ -75,8 +86,37 @@ public class Algebra {
         }
     }
 
+    /**
+     * 返回向量与X轴正半轴的夹角，范围 [-PI~PI)
+     *
+     * @param x 向量的x
+     * @param y 向量的y
+     * @return 夹角
+     */
+    public static double thetaOfNeg(double x, double y) {
+        return Math.atan(y / x);
+    }
+
     public static double thetaOf(double[] vec) {
         return thetaOf(vec[0], vec[1]);
+    }
+    
+    public static double thetaBetweenVectors(double[] v1, double[] v2) {
+        return thetaBetweenVectors(v1[0], v1[1], v2[0], v2[1]);
+    }
+
+    /**
+     * 返回两个向量之间的夹角，小于等于180度
+     */
+    public static double thetaBetweenVectors(double v1x, double v1y, double v2x, double v2y) {
+        double t1 = thetaOf(v1x, v1y);
+        double t2 = thetaOf(v2x, v2y);
+        
+        double theta = Math.abs(t1 - t2);
+        if (theta > Math.PI) {
+            theta = Math.PI * 2 - theta;
+        }
+        return theta;
     }
 
     /**
@@ -101,6 +141,11 @@ public class Algebra {
     public static double normalizeAngle(double angleRad) {
         double ang = realMod(angleRad, Math.PI * 2);
         return ang > Math.PI ? ang - Math.PI * 2 : ang;
+    }
+
+    // 这两个到底是怎么在混用，没看懂
+    public static double[] unitVectorOfAngle(double angleRad) {
+        return new double[]{Math.cos(angleRad), Math.sin(angleRad)};
     }
 
     public static double[] angleToUnitVector(double angle) {
@@ -157,5 +202,78 @@ public class Algebra {
         dx = x1 + t * pqx - x;
         dy = y1 + t * pqy - y;
         return Math.hypot(dx, dy);
+    }
+
+    public static double crossProduct(double ax, double ay, double bx, double by) {
+        return ax * by - bx * ay;
+    }
+    
+    public static double crossProduct(double[] a, double[] b) {
+        return crossProduct(a[0], a[1], b[0], b[1]);
+    }
+
+    /**
+     * @return 返回可以围成凸包的所有点，按逆时针顺序
+     */
+    public static List<double[]> grahamScanEnclose(double[][] allPoints) {
+        double[] basePoint = allPoints[0];
+        for (double[] point : allPoints) {
+            if (point[1] < basePoint[1]) {
+                basePoint = point;  // 最下面的点作为基点
+            }
+        }
+
+        final double[] base = basePoint;
+        double[][] otherPoints = new double[allPoints.length - 1][];
+        int oIndex = 0;
+        for (double[] point : allPoints) {
+            if (point != base) {
+                otherPoints[oIndex++] = point;
+            }
+        }
+        
+        Arrays.sort(otherPoints, (o1, o2) -> {
+            double o1vx = o1[0] - base[0];
+            double o1vy = o1[1] - base[1];
+            double o2vx = o2[0] - base[0];
+            double o2vy = o2[1] - base[1];
+            double cp = crossProduct(o1vx, o1vy, o2vx, o2vy);
+            if (cp < 0) return 1;
+            else if (cp > 0) return -1;
+            else {
+                return Double.compare(Math.hypot(o1vx, o1vy), Math.hypot(o2vx, o2vy));
+            }
+        });
+        
+        List<double[]> stack = new ArrayList<>();
+        stack.add(basePoint);
+        stack.add(otherPoints[0]);
+        
+        int i = 1;
+        while (i < otherPoints.length) {
+            double[] point = otherPoints[i];
+            double[] peek = stack.get(stack.size() - 1);
+            double[] older = stack.get(stack.size() - 2);
+            double[] lastEdge = new double[]{peek[0] - older[0], peek[1] - older[1]};
+            double[] newEdge = new double[]{point[0] - peek[0], point[1] - peek[1]};
+            double cross = crossProduct(lastEdge, newEdge);
+            if (cross >= 0) {
+                stack.add(point);
+                i++;
+            } else {
+                stack.remove(stack.size() - 1);
+            }
+        }
+        return stack;
+    }
+    
+    public static int log2(int powerOf2) {
+        int bit = powerOf2 - 1;
+        int count = 0;
+        while (bit != 0) {
+            count++;
+            bit >>= 1;
+        }
+        return count;
     }
 }

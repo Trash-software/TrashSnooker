@@ -1,18 +1,26 @@
 package trashsoftware.trashSnooker.core;
 
-public class DefenseAttempt {
+public class DefenseAttempt extends CueAttempt {
     public final Player defensePlayer;
-    private boolean success = true;
+    private boolean solvingSnooker = false;
+    private boolean solveSuccess;
 
-    public DefenseAttempt(Player player) {
+    public DefenseAttempt(Player player, boolean solvingSnooker) {
         this.defensePlayer = player;
+        this.solvingSnooker = solvingSnooker;
+        this.success = true;
     }
 
-    public boolean isSuccess() {
-        return success;
+    public boolean isSolveSuccess() {
+        return solveSuccess;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public boolean isSolvingSnooker() {
+        return solvingSnooker;
+    }
+
+    public void setSolveSuccess(boolean solveSuccess) {
+        this.solveSuccess = solveSuccess;
+        System.out.println("Solve success: " + solveSuccess);
     }
 }

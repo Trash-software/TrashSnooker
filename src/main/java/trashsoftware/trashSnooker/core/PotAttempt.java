@@ -1,20 +1,24 @@
 package trashsoftware.trashSnooker.core;
 
-public class PotAttempt {
+import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 
-    private final GameType gameType;
+public class PotAttempt extends CueAttempt {
+
+    private final GameValues gameValues;
     private final PlayerPerson playerPerson;
     private final Ball targetBall;
     private final double[] cueBallOrigPos;
     private final double[] targetBallOrigPos;
     private final double[] targetedHole;
-    private boolean success;
+    private Position positionSuccess = Position.NOT_SET;
+    private PlayerPerson.HandSkill handSkill;
 
-    public PotAttempt(GameType gameType, PlayerPerson playerPerson,
+    public PotAttempt(GameValues gameValues, PlayerPerson playerPerson,
                       Ball targetBall,
                       double[] cueBallOrigPos, double[] targetBallOrigPos,
                       double[] targetedHole) {
-        this.gameType = gameType;
+        this.gameValues = gameValues;
         this.playerPerson = playerPerson;
         this.targetBall = targetBall;
         this.cueBallOrigPos = cueBallOrigPos;
@@ -22,16 +26,24 @@ public class PotAttempt {
         this.targetedHole = targetedHole;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public Position getPositionSuccess() {
+        return positionSuccess;
     }
 
-    public boolean isSuccess() {
-        return success;
+    public void setPositionSuccess(boolean positionSuccess) {
+        this.positionSuccess = positionSuccess ? Position.SUCCESS : Position.FAILED;
     }
 
-    public GameType getGameType() {
-        return gameType;
+    public void setHandSkill(PlayerPerson.HandSkill handSkill) {
+        this.handSkill = handSkill;
+    }
+
+    public boolean isRestPot() {
+        return handSkill.hand == PlayerPerson.Hand.REST;
+    }
+
+    public GameRule getGameType() {
+        return gameValues.rule;
     }
 
     public PlayerPerson getPlayerPerson() {
@@ -60,6 +72,12 @@ public class PotAttempt {
                 targetedHole[1] - targetBallOrigPos[1]
         );
         double totalLength = whiteTargetDt + targetHoleDt;
-        return totalLength >= gameType.gameValues.diagonalLength() * 0.6667;
+        return totalLength >= gameValues.table.diagonalLength() * 0.6667;
+    }
+
+    public enum Position {
+        NOT_SET,
+        SUCCESS,
+        FAILED
     }
 }

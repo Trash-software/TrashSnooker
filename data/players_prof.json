@@ -1,0 +1,871 @@
+{
+  "players": {
+    "Master": {
+      "spin": 100,
+      "precision": 100,
+      "anglePrecision": 1.25,
+      "longPrecision": 1.25,
+      "name": "Master",
+      "maxPower": 100,
+      "controllablePower": 100,
+      "solving": 100,
+      "pullDt": [
+        50.0,
+        200.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1,h800,e500;s",
+      "cueSwingMag": 0,
+      "cuePointMuSigma": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "powerControl": 100,
+      "privateCues": [
+        "MasterCue"
+      ],
+      "category": "God",
+      "psy": 100,
+      "height": 182,
+      "width": 1.0,
+      "hand": {
+        "left": 100,
+        "right": 100,
+        "rest": 100
+      },
+      "ai": {
+        "precision": 100,
+        "stable": 100,
+        "position": 100,
+        "defense": 100,
+        "attackPri": 80,
+        "likeShow": 80,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "Master2": {
+      "spin": 100,
+      "precision": 100,
+      "anglePrecision": 1.25,
+      "longPrecision": 1.25,
+      "name": "Master 2",
+      "maxPower": 100,
+      "controllablePower": 100,
+      "solving": 100,
+      "pullDt": [
+        50.0,
+        200.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1,h800,e500;s",
+      "cueSwingMag": 0,
+      "cuePointMuSigma": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "powerControl": 100,
+      "privateCues": [
+        "MasterCue"
+      ],
+      "category": "God",
+      "psy": 100,
+      "height": 182,
+      "width": 1.0,
+      "hand": {
+        "left": 100,
+        "right": 100,
+        "rest": 100
+      },
+      "ai": {
+        "precision": 100,
+        "stable": 100,
+        "position": 100,
+        "defense": 100,
+        "attackPri": 80,
+        "likeShow": 80,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "O'Sullivan": {
+      "spin": 95,
+      "precision": 93,
+      "anglePrecision": 1.05,
+      "longPrecision": 0.9,
+      "name": "O‘Sullivan",
+      "maxPower": 93,
+      "controllablePower": 80,
+      "solving": 90,
+      "pullDt": [
+        50.0,
+        200.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1,h800,e500;l,l,r,r,l,l,r,r",
+      "cueSwingMag": 15,
+      "cuePointMuSigma": [
+        0,
+        2,
+        0,
+        2
+      ],
+      "powerControl": 99,
+      "privateCues": [
+      ],
+      "category": "Professional",
+      "psy": 90,
+      "height": 180,
+      "width": 1.0,
+      "hand": {
+        "left": 95,
+        "right": 100,
+        "rest": 88
+      },
+      "ai": {
+        "precision": 92,
+        "stable": 93,
+        "position": 99,
+        "defense": 96,
+        "attackPri": 90,
+        "likeShow": 50,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "Kid": {
+      "spin": 96,
+      "precision": 96,
+      "anglePrecision": 0.8,
+      "longPrecision": 1.25,
+      "name": "Kid",
+      "maxPower": 56,
+      "controllablePower": 44,
+      "solving": 60,
+      "pullDt": [
+        40.0,
+        160.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1.2,h800,e500;s,s,s,s,s,s,s,s",
+      "cueSwingMag": 2,
+      "cuePointMuSigma": [
+        0,
+        1,
+        0,
+        1
+      ],
+      "powerControl": 99.5,
+      "privateCues": [
+        "KidCue"
+      ],
+      "category": "Professional",
+      "psy": 80,
+      "height": 155,
+      "width": 0.9,
+      "hand": {
+        "left": 40,
+        "right": 100,
+        "rest": 95
+      },
+      "ai": {
+        "precision": 96,
+        "stable": 85,
+        "position": 95,
+        "defense": 75,
+        "attackPri": 90,
+        "likeShow": 30,
+        "snookerBreak": "right",
+        "cebSideBreak": true,
+        "withdrawAfter": 2
+      }
+    },
+    "Brown": {
+      "spin": 85,
+      "precision": 80,
+      "anglePrecision": 1,
+      "longPrecision": 1.05,
+      "name": "Brown",
+      "maxPower": 93,
+      "controllablePower": 79,
+      "solving": 80,
+      "pullDt": [
+        40.0,
+        180.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1.2,h600,e500;l,l,l,r,r,r,r",
+      "cueSwingMag": 12,
+      "cuePointMuSigma": [
+        0,
+        5,
+        0,
+        5
+      ],
+      "powerControl": 96.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 70,
+      "height": 175,
+      "width": 1.15,
+      "hand": {
+        "left": 65,
+        "right": 100,
+        "rest": 88
+      },
+      "ai": {
+        "precision": 86,
+        "stable": 90,
+        "position": 92,
+        "defense": 75,
+        "attackPri": 80,
+        "likeShow": 40,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 3
+      }
+    },
+    "Ding Junhui": {
+      "spin": 93.0,
+      "precision": 90.0,
+      "anglePrecision": 1.2,
+      "longPrecision": 1,
+      "name": "丁俊晖",
+      "maxPower": 92,
+      "controllablePower": 80,
+      "solving": 85,
+      "pullDt": [
+        40.0,
+        180.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1,h400,e500;s",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        1.5,
+        0,
+        2
+      ],
+      "powerControl": 98.5,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 75,
+      "height": 176,
+      "width": 1.15,
+      "hand": {
+        "left": 60,
+        "right": 100,
+        "rest": 92
+      },
+      "ai": {
+        "precision": 92,
+        "stable": 88,
+        "position": 97,
+        "defense": 95,
+        "attackPri": 75,
+        "likeShow": 40,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "John Wizard": {
+      "spin": 90.0,
+      "precision": 87.0,
+      "anglePrecision": 1.1,
+      "longPrecision": 0.9,
+      "name": "John Wizard",
+      "maxPower": 90,
+      "controllablePower": 78,
+      "solving": 90,
+      "pullDt": [
+        40.0,
+        190.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,r",
+      "cueSwingMag": 8,
+      "cuePointMuSigma": [
+        0,
+        2,
+        0,
+        2
+      ],
+      "powerControl": 99.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 90,
+      "height": 174,
+      "width": 1.05,
+      "hand": {
+        "left": 70,
+        "right": 100,
+        "rest": 90
+      },
+      "ai": {
+        "precision": 89,
+        "stable": 85,
+        "position": 99,
+        "defense": 97,
+        "attackPri": 75,
+        "likeShow": 35,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "Matthew Stevens": {
+      "spin": 94.0,
+      "precision": 95.0,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.05,
+      "name": "Matthew Stevens",
+      "maxPower": 92,
+      "controllablePower": 81,
+      "solving": 80,
+      "pullDt": [
+        50.0,
+        200.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1,h800,e500;s,s,s,s,r,l,l,r",
+      "cueSwingMag": 10,
+      "cuePointMuSigma": [
+        0,
+        3,
+        0,
+        5
+      ],
+      "powerControl": 97.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 40,
+      "height": 180,
+      "width": 1.05,
+      "hand": {
+        "left": 60,
+        "right": 100,
+        "rest": 86
+      },
+      "ai": {
+        "precision": 95,
+        "stable": 85,
+        "position": 96,
+        "defense": 82,
+        "attackPri": 90,
+        "likeShow": 65,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "Trump": {
+      "spin": 98,
+      "precision": 97,
+      "anglePrecision": 1.05,
+      "longPrecision": 1.15,
+      "name": "Judd Trump",
+      "maxPower": 99,
+      "controllablePower": 92,
+      "solving": 80,
+      "pullDt": [
+        50.0,
+        220.0
+      ],
+      "aimingOffset": -0.25,
+      "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        2,
+        0,
+        5
+      ],
+      "powerControl": 96,
+      "privateCues": [
+        "TrumpCue"
+      ],
+      "category": "Professional",
+      "psy": 65,
+      "height": 183,
+      "width": 1.0,
+      "hand": {
+        "left": 100,
+        "right": 85,
+        "rest": 84
+      },
+      "ai": {
+        "precision": 95,
+        "stable": 85,
+        "position": 89,
+        "defense": 87,
+        "attackPri": 90,
+        "likeShow": 75,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "Murphy": {
+      "spin": 95,
+      "precision": 88,
+      "anglePrecision": 0.9,
+      "longPrecision": 1.1,
+      "name": "Shaun Murphy",
+      "maxPower": 95,
+      "controllablePower": 87,
+      "solving": 92,
+      "pullDt": [
+        50.0,
+        200.0
+      ],
+      "aimingOffset": 0.05,
+      "cuePlayType": "p1,h800,e500;s,s,s,s,s,s,s,s",
+      "cueSwingMag": 1,
+      "cuePointMuSigma": [
+        0,
+        1,
+        0,
+        3
+      ],
+      "powerControl": 98.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 75,
+      "height": 181,
+      "width": 1.3,
+      "hand": {
+        "left": 60,
+        "right": 100,
+        "rest": 94
+      },
+      "ai": {
+        "precision": 91,
+        "stable": 96,
+        "position": 93,
+        "defense": 86,
+        "attackPri": 80,
+        "likeShow": 60,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "Smart": {
+      "spin": 97,
+      "precision": 99,
+      "anglePrecision": 1.2,
+      "longPrecision": 1.25,
+      "name": "Smart",
+      "maxPower": 100,
+      "controllablePower": 88,
+      "solving": 55,
+      "pullDt": [
+        50.0,
+        250.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1,h1000,e500;l,l,r,r,l,l,r,r",
+      "cueSwingMag": 4,
+      "cuePointMuSigma": [
+        0,
+        1,
+        0,
+        10
+      ],
+      "powerControl": 90.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 85,
+      "height": 187,
+      "width": 0.98,
+      "hand": {
+        "left": 10,
+        "right": 100,
+        "rest": 50
+      },
+      "ai": {
+        "precision": 96.5,
+        "stable": 82,
+        "position": 85,
+        "defense": 60,
+        "attackPri": 96,
+        "likeShow": 85,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "Worst Professional": {
+      "spin": 90,
+      "precision": 90,
+      "anglePrecision": 1,
+      "longPrecision": 1,
+      "name": "垫底职业选手",
+      "maxPower": 90,
+      "controllablePower": 77,
+      "solving": 65,
+      "pullDt": [
+        40.0,
+        180.0
+      ],
+      "aimingOffset": 0.2,
+      "cuePlayType": "p1,h500,e500;l,l,l,r,r,r,r",
+      "cueSwingMag": 12,
+      "cuePointMuSigma": [
+        0,
+        7,
+        0,
+        8
+      ],
+      "powerControl": 95.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 60,
+      "height": 173,
+      "width": 1.1,
+      "hand": {
+        "left": 50,
+        "right": 100,
+        "rest": 80
+      },
+      "ai": {
+        "precision": 90,
+        "stable": 85,
+        "position": 90,
+        "defense": 90,
+        "attackPri": 80,
+        "likeShow": 40,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 3
+      }
+    },
+    "Glass Heart": {
+      "spin": 95.0,
+      "precision": 95.0,
+      "anglePrecision": 1,
+      "longPrecision": 1,
+      "name": "玻璃心",
+      "maxPower": 96,
+      "controllablePower": 82,
+      "solving": 75,
+      "pullDt": [
+        40.0,
+        180.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,l",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        1.5,
+        0,
+        4
+      ],
+      "powerControl": 98.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 15,
+      "height": 177,
+      "width": 1.0,
+      "hand": {
+        "left": 40,
+        "right": 100,
+        "rest": 78
+      },
+      "ai": {
+        "precision": 92,
+        "stable": 80,
+        "position": 97,
+        "defense": 90,
+        "attackPri": 87,
+        "likeShow": 70,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 1
+      }
+    },
+    "Selby": {
+      "spin": 91.0,
+      "precision": 87.0,
+      "anglePrecision": 1.2,
+      "longPrecision": 0.8,
+      "name": "Selby",
+      "maxPower": 96,
+      "controllablePower": 84,
+      "solving": 92,
+      "pullDt": [
+        50.0,
+        210.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1,h800,e500;s,s,s,s,s,l,l,r",
+      "cueSwingMag": 4,
+      "cuePointMuSigma": [
+        0,
+        3,
+        0,
+        2
+      ],
+      "powerControl": 98.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 90,
+      "height": 183,
+      "width": 1.0,
+      "hand": {
+        "left": 60,
+        "right": 100,
+        "rest": 87
+      },
+      "ai": {
+        "precision": 91,
+        "stable": 96,
+        "position": 95,
+        "defense": 98,
+        "attackPri": 55,
+        "likeShow": 40,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 4
+      }
+    },
+    "Mark Williams": {
+      "spin": 94,
+      "precision": 97.5,
+      "anglePrecision": 1.15,
+      "longPrecision": 1.15,
+      "name": "Mark Williams",
+      "maxPower": 94,
+      "controllablePower": 81,
+      "solving": 90,
+      "pullDt": [
+        50.0,
+        200.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
+      "cueSwingMag": 1,
+      "cuePointMuSigma": [
+        0,
+        1,
+        0,
+        7
+      ],
+      "powerControl": 95,
+      "privateCues": [
+      ],
+      "category": "Professional",
+      "psy": 90,
+      "height": 183,
+      "width": 1.1,
+      "hand": {
+        "left": 100,
+        "right": 55,
+        "rest": 88
+      },
+      "ai": {
+        "precision": 97,
+        "stable": 83,
+        "position": 86,
+        "defense": 84,
+        "attackPri": 92,
+        "likeShow": 60,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "Neil Robertson": {
+      "spin": 96,
+      "precision": 96,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.25,
+      "name": "Neil Robertson",
+      "maxPower": 99.5,
+      "controllablePower": 95,
+      "solving": 82,
+      "pullDt": [
+        60.0,
+        240.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
+      "cueSwingMag": 2,
+      "cuePointMuSigma": [
+        0,
+        1,
+        0,
+        4
+      ],
+      "powerControl": 96.5,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 75,
+      "height": 185,
+      "width": 1.0,
+      "hand": {
+        "left": 100,
+        "right": 60,
+        "rest": 80
+      },
+      "ai": {
+        "precision": 94,
+        "stable": 91,
+        "position": 91,
+        "defense": 85,
+        "attackPri": 90,
+        "likeShow": 65,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 3
+      }
+    },
+    "Stuart Bingham": {
+      "spin": 90.0,
+      "precision": 90.0,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "Stuart Bingham",
+      "maxPower": 93,
+      "controllablePower": 80,
+      "solving": 88,
+      "pullDt": [
+        50.0,
+        200.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1,h1500,e500;s,s,s,s,s,l,l,r",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        2,
+        0,
+        3
+      ],
+      "powerControl": 97.5,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 65,
+      "height": 181,
+      "width": 1.2,
+      "hand": {
+        "left": 60,
+        "right": 100,
+        "rest": 87
+      },
+      "ai": {
+        "precision": 93,
+        "stable": 96,
+        "position": 95,
+        "defense": 90,
+        "attackPri": 75,
+        "likeShow": 60,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 3
+      }
+    },
+    "Mark Allen": {
+      "spin": 94,
+      "precision": 95,
+      "anglePrecision": 1.05,
+      "longPrecision": 1.0,
+      "name": "Mark Allen",
+      "maxPower": 89,
+      "controllablePower": 82,
+      "solving": 80,
+      "pullDt": [
+        50.0,
+        120.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1,h600,e500;r,r,l,l,r,r,l,l",
+      "cueSwingMag": 4,
+      "cuePointMuSigma": [
+        0,
+        2,
+        0,
+        4
+      ],
+      "powerControl": 96,
+      "privateCues": [
+      ],
+      "category": "Professional",
+      "psy": 90,
+      "height": 174,
+      "width": 1.1,
+      "hand": {
+        "left": 100,
+        "right": 60,
+        "rest": 88
+      },
+      "ai": {
+        "precision": 93,
+        "stable": 86,
+        "position": 91,
+        "defense": 85,
+        "attackPri": 80,
+        "likeShow": 65,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 3
+      }
+    },
+    "Jack Lisowski": {
+      "spin": 98,
+      "precision": 97,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.15,
+      "name": "Jack Lisowski",
+      "maxPower": 95,
+      "controllablePower": 89,
+      "solving": 75,
+      "pullDt": [
+        50.0,
+        220.0
+      ],
+      "aimingOffset": 0.03,
+      "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
+      "cueSwingMag": 4,
+      "cuePointMuSigma": [
+        0,
+        1.5,
+        0,
+        4
+      ],
+      "powerControl": 95.5,
+      "privateCues": [
+      ],
+      "category": "Professional",
+      "psy": 60,
+      "height": 178,
+      "width": 1.0,
+      "hand": {
+        "left": 100,
+        "right": 79,
+        "rest": 78
+      },
+      "ai": {
+        "precision": 95,
+        "stable": 70,
+        "position": 88,
+        "defense": 80,
+        "attackPri": 90,
+        "likeShow": 70,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    }
+  }
+}

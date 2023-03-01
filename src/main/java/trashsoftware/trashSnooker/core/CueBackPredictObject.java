@@ -1,5 +1,8 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.phy.Phy;
+
 public class CueBackPredictObject extends ObjectOnTable {
     
     final double eachMove;
@@ -11,18 +14,18 @@ public class CueBackPredictObject extends ObjectOnTable {
     }
 
     @Override
-    protected void normalMove() {
-        x = nextX;
-        y = nextY;
+    protected void normalMove(Phy phy) {
+        setX(nextX);
+        setY(nextY);
         distance += eachMove;
     }
     
     boolean hitWall() {
-        if (nextX < radius + values.leftX ||
-                nextX >= values.rightX - radius) {
+        if (nextX < radius + table.leftX ||
+                nextX >= table.rightX - radius) {
             return true;
         }
-        return nextY < radius + values.topY ||
-                nextY >= values.botY - radius;
+        return nextY < radius + table.topY ||
+                nextY >= table.botY - radius;
     }
 }

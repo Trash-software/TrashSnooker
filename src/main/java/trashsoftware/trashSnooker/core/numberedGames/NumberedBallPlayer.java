@@ -12,15 +12,16 @@ public abstract class NumberedBallPlayer extends Player {
 
     protected int playTimes = 0;  // 这一局打了几次球
     protected boolean isBreakingPlayer = false;
+    protected boolean breakSuccess = false;
     private final List<Integer> continuousPots = new ArrayList<>();
     private boolean flushed = false;
 
-    public NumberedBallPlayer(int number, InGamePlayer playerPerson) {
-        super(number, playerPerson);
+    public NumberedBallPlayer(InGamePlayer playerPerson) {
+        super(playerPerson);
     }
 
     @Override
-    protected void addScoreOfPotted(Collection<Ball> pottedBalls) {
+    protected void addScoreOfPotted(Collection<? extends Ball> pottedBalls) {
         score += pottedBalls.size();
     }
 
@@ -53,6 +54,14 @@ public abstract class NumberedBallPlayer extends Player {
 
     public boolean isBreakingPlayer() {
         return isBreakingPlayer;
+    }
+
+    public boolean isBreakSuccess() {
+        return breakSuccess;
+    }
+
+    public void setBreakSuccess() {
+        this.breakSuccess = true;
     }
 
     public int getPlayTimes() {

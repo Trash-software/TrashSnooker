@@ -1,0 +1,35 @@
+{
+  "p2Wins": 0,
+  "p1": {
+    "playerNumber": 1,
+    "handFeelEffort": 1,
+    "person": "Smart",
+    "playerType": "PLAYER",
+    "playCue": "stdPottsCue",
+    "breakCue": "stdBreakCue"
+  },
+  "p1Wins": 1,
+  "p2": {
+    "playerNumber": 2,
+    "handFeelEffort": 1,
+    "person": "custom_player_4",
+    "playerType": "COMPUTER",
+    "playCue": "stdSnookerCue",
+    "breakCue": "stdBreakCue"
+  },
+  "startTime": 1677592403243,
+  "gameValues": {
+    "ball": "POOL_BALL",
+    "gameRule": "CHINESE_EIGHT",
+    "table": {
+      "tableOrdinal": 1,
+      "holeSizeOrdinal": 1
+    }
+  },
+  "totalFrames": 1,
+  "cloth": {
+    "smoothness": "NORMAL",
+    "goodness": "GOOD"
+  },
+  "p1Breaks": true
+}

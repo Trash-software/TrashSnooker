@@ -37,6 +37,10 @@
     <Slider fx:id="precisionSlider" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
     <Label fx:id="precisionLabel" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
 
-    <Button text="保存" onAction="#saveAction" GridPane.rowIndex="4"/>
+    <Label text="走位" GridPane.rowIndex="4"/>
+    <Slider fx:id="positionSlider" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    <Label fx:id="positionLabel" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+
+    <Button text="保存" onAction="#saveAction" GridPane.rowIndex="5"/>
 
 </GridPane>

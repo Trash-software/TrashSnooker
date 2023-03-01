@@ -7,7 +7,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.util.Recorder;
+import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
+import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,9 +18,9 @@ public class AddPlayerView implements Initializable {
     @FXML
     TextField nameField;
     @FXML
-    Slider powerSlider, spinSlider, precisionSlider;
+    Slider powerSlider, spinSlider, precisionSlider, positionSlider;
     @FXML
-    Label powerLabel, spinLabel, precisionLabel;
+    Label powerLabel, spinLabel, precisionLabel, positionLabel;
 
     private Stage stage;
     private MainView parent;
@@ -32,10 +33,13 @@ public class AddPlayerView implements Initializable {
                 spinLabel.setText(String.valueOf(Math.round(newValue.doubleValue())))));
         precisionSlider.valueProperty().addListener(((observable, oldValue, newValue) ->
                 precisionLabel.setText(String.valueOf(Math.round(newValue.doubleValue())))));
+        positionSlider.valueProperty().addListener(((observable, oldValue, newValue) ->
+                positionLabel.setText(String.valueOf(Math.round(newValue.doubleValue())))));
 
         powerSlider.setValue(80.0);
         spinSlider.setValue(80.0);
         precisionSlider.setValue(80.0);
+        positionSlider.setValue(80.0);
     }
 
     public void setStage(Stage stage, MainView parent) {
@@ -52,17 +56,38 @@ public class AddPlayerView implements Initializable {
         }
 
         PlayerPerson playerPerson = new PlayerPerson(
+                DataLoader.getInstance().getNextCustomPlayerId(),
                 name,
                 powerSlider.getValue(),
-                powerSlider.getValue() * 0.85,
+                powerSlider.getValue() * 0.88,
                 spinSlider.getValue(),
                 precisionSlider.getValue(),
-                precisionSlider.getValue(),
-                precisionSlider.getValue()
+                precisionSlider.getValue(),  // todo
+                1.0,
+                1.0,
+                positionSlider.getValue(),
+                positionSlider.getValue(),
+                new AiPlayStyle(
+                        Math.min(99.5, precisionSlider.getValue() * 1.1),
+                        Math.min(99.5, precisionSlider.getValue()),
+                        Math.min(99.5, positionSlider.getValue() * 1.1),
+                        Math.min(99.5, positionSlider.getValue() * 1.1),
+                        Math.min(100, precisionSlider.getValue()),
+                        50,
+                        "right",
+                        powerSlider.getValue() * 0.88 < 80.0,  // 不化简是为了易读
+                        2
+                ),
+                true,
+                null
         );
-        Recorder.addPlayerPerson(playerPerson);
+        DataLoader.getInstance().addPlayerPerson(playerPerson);
         parent.reloadPlayerList();
 
         stage.close();
+    }
+    
+    private String generatePlayerId(String name) {
+        return name.replace(" ", "_");
     }
 }

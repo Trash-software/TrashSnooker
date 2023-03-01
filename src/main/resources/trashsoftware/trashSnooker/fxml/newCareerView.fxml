@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="trashsoftware.trashSnooker.fxml.NewCareerView"
+          fx:id="basePane"
+          prefHeight="400.0" prefWidth="600.0" vgap="10.0" hgap="10.0" alignment="CENTER">
+
+    <columnConstraints>
+        <ColumnConstraints halignment="CENTER"/>
+        <ColumnConstraints halignment="LEFT"/>
+        <ColumnConstraints halignment="CENTER"/>
+        <ColumnConstraints halignment="CENTER"/>
+        <ColumnConstraints halignment="LEFT"/>
+    </columnConstraints>
+
+    <Label text="新建球员" GridPane.columnSpan="2"/>
+
+    <Label text="玩家名" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <TextField fx:id="nameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+    <Label text="惯用手" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="handBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+    <Button text="创建玩家" onAction="#createPlayer" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+    
+    <Separator orientation="VERTICAL" GridPane.columnIndex="2" GridPane.rowSpan="4"/>
+
+    <Label text="已有球员" GridPane.columnIndex="3" GridPane.columnSpan="2"/>
+
+    <Button text="(i)" fx:id="playerInfoBtn" onAction="#playerInfoAction" disable="true" 
+            GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+    <ComboBox fx:id="existingPlayersBox" GridPane.rowIndex="1" GridPane.columnIndex="4"/>
+    
+    <Label text="使用已有球员将禁用加点系统" 
+           GridPane.rowIndex="2" GridPane.columnIndex="3" GridPane.columnSpan="2"/>
+
+    <Button text="使用球员" fx:id="usePlayerButton" onAction="#usePlayerAction"
+            disable="true"
+            GridPane.rowIndex="3" GridPane.columnIndex="3" GridPane.columnSpan="2"/>
+    
+    <Label fx:id="promptLabel" GridPane.rowIndex="4" GridPane.columnSpan="5"/>
+
+</GridPane>
