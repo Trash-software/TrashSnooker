@@ -68,8 +68,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected GameRecorder recorder;
     protected Map<Integer, B> numberBallMap;
     private boolean ended;
-    private B[] randomOrderBallPool1;
-    private B[] randomOrderBallPool2;
+    protected B[] allBalls;
+
     private PhysicsCalculator physicsCalculator;
     
     protected Table table;
@@ -117,9 +117,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Game<B, P> clone() {
         try {
-            return (Game<B, P>) super.clone();
+            Game<B, P> copy = (Game<B, P>) super.clone();
+            
+            B[] allBallsCopy = (B[]) new Ball[allBalls.length];
+            for (int i = 0; i < allBalls.length; i++) {
+                allBallsCopy[i] = (B) allBalls[i].clone();
+            }
+            copy.allBalls = allBallsCopy;
+            copy.numberBallMap = null;
+            return copy;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
@@ -299,17 +308,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     protected abstract boolean canPlaceWhiteInTable(double x, double y);
 
-    public abstract B[] getAllBalls();
-
-    private void reorderRandomPool() {
-        if (randomOrderBallPool1 == null) {
-            B[] allBalls = getAllBalls();
-            randomOrderBallPool1 = Arrays.copyOf(allBalls, allBalls.length);
-            randomOrderBallPool2 = Arrays.copyOf(allBalls, allBalls.length);
-        }
-//        Util.reverseArray(randomArrangedBalls);
-        Util.shuffleArray(randomOrderBallPool1);
-        Util.shuffleArray(randomOrderBallPool2);
+    public final B[] getAllBalls() {
+        return allBalls;
     }
 
     /**
@@ -1082,6 +1082,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private double cumulatedPhysicalTime = 0.0;
         private boolean notTerminated = true;
 
+        private B[] randomOrderBallPool1;
+        private B[] randomOrderBallPool2;
+
         PhysicsCalculator(Phy phy) {
             this.phy = phy;
         }
@@ -1110,6 +1113,17 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             System.out.println("Frames: " + movement.getMovementMap().get(cueBall).size());
 
             return movement;
+        }
+
+        private void reorderRandomPool() {
+            if (randomOrderBallPool1 == null) {
+                B[] allBalls = getAllBalls();
+                randomOrderBallPool1 = Arrays.copyOf(allBalls, allBalls.length);
+                randomOrderBallPool2 = Arrays.copyOf(allBalls, allBalls.length);
+            }
+//        Util.reverseArray(randomArrangedBalls);
+            Util.shuffleArray(randomOrderBallPool1);
+            Util.shuffleArray(randomOrderBallPool2);
         }
 
         private boolean oneRun() {

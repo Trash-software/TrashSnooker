@@ -15,7 +15,7 @@ public class SnookerGame extends AbstractSnookerGame {
 
     @Override
     public AbstractSnookerTable getTable() {
-        return (AbstractSnookerTable) super.getTable();
+        return super.getTable();
     }
 
     @Override
