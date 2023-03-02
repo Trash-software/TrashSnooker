@@ -5,12 +5,18 @@ import trashsoftware.trashSnooker.core.Values;
 
 import java.io.*;
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.Random;
 
 public class Util {
 
     public static <T> boolean arrayContains(T[] array, T value) {
         for (T ele : array) if (ele == value) return true;
+        return false;
+    }
+
+    public static <T> boolean arrayContainsEqual(T[] array, T value) {
+        for (T ele : array) if (Objects.equals(ele, value)) return true;
         return false;
     }
 

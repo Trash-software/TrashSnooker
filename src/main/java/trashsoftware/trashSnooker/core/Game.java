@@ -701,6 +701,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public void setBallInHand() {
         ballInHand = true;
+        cueBall.pot();
     }
     
     public boolean isSnookered() {
@@ -849,7 +850,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return lastCueFoul;
     }
 
-    protected void switchPlayer() {
+    public void switchPlayer() {
 //        parent.notifyPlayerWillSwitch(currentPlayer);
         currentPlayer.clearSinglePole();
         currentPlayer = getAnotherPlayer();

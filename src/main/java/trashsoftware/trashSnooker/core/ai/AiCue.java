@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.ai;
 
 import org.jetbrains.annotations.NotNull;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -336,6 +337,12 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
                 List<Ball> nextStepLegalBalls =
                         game.getAllLegalBalls(nextTargetIfThisSuccess,
                                 false);  // 这颗进了下一颗怎么可能是自由球
+                
+                if (game.getGameType() == GameRule.CHINESE_EIGHT) {
+                    // 避免AI打自己较自己的可能（并不确定会发生）
+                    nextStepLegalBalls.remove(choice.ball);
+                }
+                    
                 IntegratedAttackChoice iac = attack(choice, nextTargetIfThisSuccess, nextStepLegalBalls, phy, attackThreshold);
                 if (iac != null && iac.price > bestPrice) {
                     best = iac;
@@ -1060,7 +1067,6 @@ public abstract class AiCue<G extends Game<? extends Ball, P>, P extends Player>
 
         @Override
         public void run() {
-
             //        System.out.print(selectedPower);
             double actualFbSpin = CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin,
                     aiPlayer.getInGamePlayer(),

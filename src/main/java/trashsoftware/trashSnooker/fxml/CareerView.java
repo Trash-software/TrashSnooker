@@ -21,6 +21,7 @@ import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
 import java.net.URL;
@@ -66,6 +67,8 @@ public class CareerView implements Initializable {
     Pane champInProgBox, nextChampInfoBox;
     @FXML
     LabelTable<PlayerAward> selectedPlayerInfoTable;
+    @FXML
+    Label selectedPlayerAchievements;
 
     CareerManager careerManager;
     private PerkManager perkManager;
@@ -101,28 +104,84 @@ public class CareerView implements Initializable {
         }
     }
     
+    private void showHideSelectedPanel(boolean show) {
+        selectedPlayerInfoTable.setVisible(show);
+        selectedPlayerInfoTable.setManaged(show);
+        selectedPlayerAchievements.setVisible(show);
+        selectedPlayerAchievements.setManaged(show);
+    }
+
     private void refreshSelectedPlayerTable(CareerRank selected) {
         selectedPlayerInfoTable.clearItems();
-        
+
         boolean currentlyVisible = selectedPlayerInfoTable.isVisible();
-        
+
         if (selected == null) {
-            selectedPlayerInfoTable.setVisible(false);
-            selectedPlayerInfoTable.setManaged(false);
+            showHideSelectedPanel(false);
         } else {
-            selectedPlayerInfoTable.setVisible(true);
-            selectedPlayerInfoTable.setManaged(true);
+            showHideSelectedPanel(true);
             List<ChampionshipScore> cs = new ArrayList<>(selected.getCareer().getChampionshipScores());
             Collections.reverse(cs);
+            
             for (ChampionshipScore score : cs) {
                 selectedPlayerInfoTable.addItem(new PlayerAward(score));
             }
+            
+            selectedPlayerAchievements.setText(getAchievements(cs, rankTypeBox.getValue()));
 
             if (selfStage != null && (currentlyVisible != selectedPlayerInfoTable.isVisible()))
                 selfStage.sizeToScene();
         }
     }
     
+    private String getAchievements(List<ChampionshipScore> csList, GameRule gameRule) {
+        int rankedChampions = 0;
+
+        ChampionshipScore.Rank bestRankedRank = null;
+        for (ChampionshipScore cs : csList) {
+            if (cs.data.getType() == gameRule && cs.data.isRanked()) {
+                if (Util.arrayContains(cs.ranks, ChampionshipScore.Rank.CHAMPION)) {
+                    rankedChampions++;
+                }
+                for (ChampionshipScore.Rank r : cs.ranks) {
+                    if (bestRankedRank == null || r.ordinal() < bestRankedRank.ordinal()) {
+                        bestRankedRank = r;
+                    }
+                }
+            }
+        }
+        
+        StringBuilder builder = new StringBuilder();
+        builder.append(gameRule.toString()).append('\n');
+        builder.append("排名赛最佳成绩: ")
+                .append(bestRankedRank == null ? "无" : bestRankedRank.getShown())
+                .append('\n');
+        builder.append("排名赛冠军数: ").append(rankedChampions);
+        
+        switch (gameRule) {
+            case SNOOKER:
+                List<ChampionshipData> threeBigData = ChampDataManager.getInstance().getSnookerThreeBig();
+                Map<ChampionshipData, Integer> threeBigAch = new HashMap<>();
+                for (ChampionshipScore cs : csList) {
+                    if (threeBigData.contains(cs.data)) {
+                        if (Util.arrayContains(cs.ranks, ChampionshipScore.Rank.CHAMPION)) {
+                            threeBigAch.merge(cs.data, 1, Integer::sum);
+                        }
+                    }
+                }
+                builder.append("\n三大赛冠军数:\n");
+                for (ChampionshipData cd : threeBigData) {
+                    builder.append(cd.getName())
+                            .append(": ")
+                            .append(threeBigAch.getOrDefault(cd, 0))
+                            .append('\n');
+                }
+                break;
+        }
+        
+        return builder.toString();
+    }
+
     private void setupAwdTable(LabelTable<PlayerAward> table) {
         LabelTableColumn<PlayerAward, String> champCol =
                 new LabelTableColumn<>(table, "赛事", param ->
@@ -151,7 +210,7 @@ public class CareerView implements Initializable {
         // 玩家自己的奖金表
         setupAwdTable(allAwardsTable);
         refreshPersonalAwardsTable();
-        
+
         // 点选的球员的奖金表
         setupAwdTable(selectedPlayerInfoTable);
         refreshSelectedPlayerTable(null);
@@ -194,7 +253,7 @@ public class CareerView implements Initializable {
                 new ReadOnlyStringWrapper(param.getValue().career.getPlayerPerson().getName()));
         rankedAwardCol.setCellValueFactory(new PropertyValueFactory<>("shownAwards"));
         totalAwardCol.setCellValueFactory(new PropertyValueFactory<>("totalAwards"));
-        
+
         rankingTable.getSelectionModel().selectedItemProperty()
                 .addListener(((observable, oldValue, newValue) -> refreshSelectedPlayerTable(newValue)));
     }
@@ -255,7 +314,7 @@ public class CareerView implements Initializable {
         for (ChampionshipScore.Rank rank : ranks) {
             champAwardsTable.addItem(new AwardItem(data, rank));
         }
-        
+
         // 更新加点界面
         perkManager.synchronizePerks();
         notifyPerksChanged();

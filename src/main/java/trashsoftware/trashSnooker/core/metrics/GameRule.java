@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.metrics;
 
+import trashsoftware.trashSnooker.core.Cue;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.Game;
 
@@ -15,19 +16,25 @@ import trashsoftware.trashSnooker.core.Game;
  * @see Game 一局游戏的实例
  */
 public enum GameRule {
-    SNOOKER(true, 22, "Snooker"),
-    MINI_SNOOKER(true, 13, "MiniSnooker"),
-    CHINESE_EIGHT(false, 16, "ChineseEight"),
-    SIDE_POCKET(false, 10, "SidePocket");
+    SNOOKER(true, 22, "Snooker", 
+            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL}),
+    MINI_SNOOKER(true, 13, "MiniSnooker",
+            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL}),
+    CHINESE_EIGHT(false, 16, "ChineseEight",
+            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG}),
+    SIDE_POCKET(false, 10, "SidePocket",
+            new Cue.Size[]{Cue.Size.BIG, Cue.Size.MEDIUM});
 
     public final boolean snookerLike;
     public final String sqlKey;
     public final int nBalls;
+    public final Cue.Size[] suggestedCues;
 
-    GameRule(boolean snookerLike, int nBalls, String sqlKey) {
+    GameRule(boolean snookerLike, int nBalls, String sqlKey, Cue.Size[] suggestedCues) {
         this.snookerLike = snookerLike;
         this.nBalls = nBalls;
         this.sqlKey = sqlKey;
+        this.suggestedCues = suggestedCues;
     }
 
     public static GameRule fromSqlKey(String sqlKey) {

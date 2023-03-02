@@ -595,7 +595,7 @@
       }
     },
     "Selby": {
-      "spin": 91.0,
+      "spin": 92.0,
       "precision": 87.0,
       "anglePrecision": 1.2,
       "longPrecision": 0.8,
@@ -865,6 +865,98 @@
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 2
+      }
+    },
+    "Zhao Xintong": {
+      "spin": 96,
+      "precision": 96,
+      "anglePrecision": 1.00,
+      "longPrecision": 1.10,
+      "name": "赵心童",
+      "maxPower": 89,
+      "controllablePower": 79,
+      "solving": 75,
+      "pullDt": [
+        50.0,
+        200.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
+      "cueSwingMag": 3,
+      "cuePointMuSigma": [
+        0,
+        2,
+        0,
+        5.5
+      ],
+      "powerControl": 95,
+      "privateCues": [
+      ],
+      "category": "Professional",
+      "psy": 75,
+      "height": 178,
+      "width": 1.0,
+      "hand": {
+        "left": 100,
+        "right": 70,
+        "rest": 83
+      },
+      "ai": {
+        "precision": 94,
+        "stable": 85,
+        "position": 86,
+        "defense": 84,
+        "attackPri": 92,
+        "likeShow": 70,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "Yan Bingtao": {
+      "spin": 91,
+      "precision": 90,
+      "anglePrecision": 1.00,
+      "longPrecision": 1.00,
+      "name": "颜丙涛",
+      "maxPower": 92,
+      "controllablePower": 80,
+      "solving": 85,
+      "pullDt": [
+        50.0,
+        210.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
+      "cueSwingMag": 3,
+      "cuePointMuSigma": [
+        0,
+        2.5,
+        0,
+        4.5
+      ],
+      "powerControl": 93,
+      "privateCues": [
+      ],
+      "category": "Professional",
+      "psy": 80,
+      "height": 181,
+      "width": 1.15,
+      "hand": {
+        "left": 75,
+        "right": 100,
+        "rest": 85
+      },
+      "ai": {
+        "precision": 92,
+        "stable": 92,
+        "position": 82,
+        "defense": 97,
+        "attackPri": 60,
+        "likeShow": 50,
+        "snookerBreak": "left",
+        "cebSideBreak": false,
+        "withdrawAfter": 3
       }
     }
   }

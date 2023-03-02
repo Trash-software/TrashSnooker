@@ -30,6 +30,7 @@ public class Cue {
     public final boolean privacy;
     
     public Arrow arrow;
+    public final Size tipSize;
     
     private CueModel cueModel;
 
@@ -67,6 +68,11 @@ public class Cue {
         this.spinMultiplier = spinMultiplier;
         this.accuracyMultiplier = accuracyMultiplier;
         this.privacy = privacy;
+        
+        if (cueTipWidth <= 9.8) tipSize = Size.VERY_SMALL;
+        else if (cueTipWidth < 11.0) tipSize = Size.SMALL;
+        else if (cueTipWidth < 12.5) tipSize = Size.MEDIUM;
+        else tipSize = Size.BIG;
     }
 
     public CueModel getCueModel(Pane parent) {
@@ -197,5 +203,12 @@ public class Cue {
         public int getNArrows() {
             return arrowScales.length;
         }
+    }
+    
+    public enum Size {
+        VERY_SMALL,
+        SMALL,
+        MEDIUM,
+        BIG
     }
 }

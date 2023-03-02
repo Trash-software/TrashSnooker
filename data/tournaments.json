@@ -54,31 +54,31 @@
       }
     },
     {
-      "id": "challenger_open",
-      "name": "斯诺克挑战者公开赛",
+      "id": "fresh_hand_open",
+      "name": "斯诺克新手公开赛",
       "type": "snooker",
-      "seeds": 4,
-      "places": 8,
+      "seeds": 0,
+      "places": 16,
       "pre_matches": [
-        0, 8, 16
+        32
       ],
       "frames": [
-        5, 3, 3, 3, 3, 3
+        5, 3, 3, 3, 3
       ],
       "awards": [
-        150000, 60000, 35000, 15000
+        50000, 20000, 12000, 6000
       ],
       "exp": [
-        1000, 600, 480, 350, 250, 160, 75
+        600, 400, 300, 200, 100
       ],
-      "best_single": 15000,
-      "ranked": false,
+      "best_single": 10000,
+      "ranked": true,
       "professional": false,
       "date": "01/25",
       "table": {
         "goodness": "good",
-        "smoothness": "fast",
-        "hole_size": "small"
+        "smoothness": "normal",
+        "hole_size": "mid"
       }
     },
     {
@@ -356,6 +356,34 @@
         "goodness": "good",
         "smoothness": "normal",
         "hole_size": "mid"
+      }
+    },
+    {
+      "id": "challenger_open",
+      "name": "斯诺克挑战者公开赛",
+      "type": "snooker",
+      "seeds": 4,
+      "places": 8,
+      "pre_matches": [
+        0, 8, 16
+      ],
+      "frames": [
+        5, 3, 3, 3, 3, 3
+      ],
+      "awards": [
+        150000, 60000, 35000, 15000
+      ],
+      "exp": [
+        1000, 600, 480, 350, 250, 160, 75
+      ],
+      "best_single": 15000,
+      "ranked": false,
+      "professional": false,
+      "date": "09/25",
+      "table": {
+        "goodness": "good",
+        "smoothness": "fast",
+        "hole_size": "small"
       }
     },
     {

@@ -5,7 +5,10 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
+import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
 
@@ -250,6 +253,30 @@ public class PlayerPerson {
         obj.put("hand", handObj);
 
         return obj;
+    }
+    
+    public Cue getPreferredCue(GameRule gameRule) {
+        Cue.Size[] suggested = gameRule.suggestedCues;
+        
+        // 先看私杆
+        for (Cue.Size size : suggested) {
+            // size是按照推荐顺序排的
+            for (Cue cue : getPrivateCues()) {
+                if (cue.tipSize == size) return cue;
+            }
+        }
+
+        Collection<Cue> publicCues = DataLoader.getInstance().getPublicCues().values();
+        // 再看公杆
+        for (Cue.Size size : suggested) {
+            // size是按照推荐顺序排的
+            for (Cue cue : publicCues) {
+                if (cue.tipSize == size) return cue;
+            }
+        }
+
+        System.err.println("Using break cue to play");
+        return DataLoader.getInstance().getStdBreakCue();  // 不会运行到这一步的
     }
 
     public double getSolving() {
