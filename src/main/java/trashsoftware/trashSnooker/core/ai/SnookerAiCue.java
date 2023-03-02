@@ -216,7 +216,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             power = random.nextDouble() * interval + powerLow;
         }
 
-        return createIntAttackChoices(
+        AttackThread at = new AttackThread(
                 power,
                 spin[0],
                 spin[1],
@@ -229,6 +229,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 GamePlayStage.NO_PRESSURE,
                 ATTACK_DIFFICULTY_THRESHOLD
         );
+        at.run();
+        return at.result;
     }
 
 }

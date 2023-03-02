@@ -22,7 +22,7 @@ import trashsoftware.trashSnooker.util.Util;
 import java.io.IOException;
 import java.util.*;
 
-public abstract class Game<B extends Ball, P extends Player> implements GameHolder {
+public abstract class Game<B extends Ball, P extends Player> implements GameHolder, Cloneable {
     public static final int END_REP = 31;
     //    public static final double calculateMs = 1.0;
 //    public static final double calculationsPerSec = 1000.0 / calculateMs;
@@ -114,6 +114,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
 
         return game;
+    }
+
+    @Override
+    protected Game<B, P> clone() {
+        try {
+            return (Game<B, P>) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public EntireGame getEntireGame() {
@@ -214,15 +223,17 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                         boolean recordTargetPos,
                                         boolean wipe) {
         if (cueBall.isPotted()) return null;
-        cueBall.setVx(params.vx / phy.calculationsPerSec);
-        cueBall.setVy(params.vy / phy.calculationsPerSec);
+        
+        Ball cueBallClone = cueBall.clone();
+        cueBallClone.setVx(params.vx / phy.calculationsPerSec);
+        cueBallClone.setVy(params.vy / phy.calculationsPerSec);
         params.xSpin = params.xSpin == 0.0d ? params.vx / 1000.0 : params.xSpin;  // 避免完全无旋转造成的NaN
         params.ySpin = params.ySpin == 0.0d ? params.vy / 1000.0 : params.ySpin;
-        cueBall.setSpin(
+        cueBallClone.setSpin(
                 params.xSpin / phy.calculationsPerSec,
                 params.ySpin / phy.calculationsPerSec,
                 params.sideSpin / phy.calculationsPerSec);
-        WhitePredictor whitePredictor = new WhitePredictor();
+        WhitePredictor whitePredictor = new WhitePredictor(cueBallClone);
 //        long st = System.currentTimeMillis();
         WhitePrediction prediction =
                 whitePredictor.predict(phy, lengthAfterWall, checkCollisionAfterFirst, recordTargetPos);
@@ -879,6 +890,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private boolean checkCollisionAfterFirst;
         private boolean recordTargetPos;
         private Phy phy;
+        
+        private final Ball cueBallClone;
+
+        WhitePredictor(Ball cueBallClone) {
+            this.cueBallClone = cueBallClone;
+        }
 
         WhitePrediction predict(Phy phy,
                                 double lenAfterWall,
@@ -888,7 +905,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             this.lenAfterWall = lenAfterWall;
             this.checkCollisionAfterFirst = checkCollisionAfterFirst;
             this.recordTargetPos = recordTargetPos;
-            prediction = new WhitePrediction(cueBall);
+            
+//            cueBallClone = cueBall.clone();
+            
+            prediction = new WhitePrediction(cueBallClone);
 
             while (!oneRun() && notTerminated) {
                 if (cumulatedPhysicalTime >= 30000) {
@@ -944,24 +964,24 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
 
         private boolean oneRunWhite() {
-            prediction.addPointInPath(new double[]{cueBall.x, cueBall.y});
-            cueBall.prepareMove(phy);
+            prediction.addPointInPath(new double[]{cueBallClone.x, cueBallClone.y});
+            cueBallClone.prepareMove(phy);
 
-            if (cueBall.isLikelyStopped(phy)) return true;
-            if (cueBall.willPot(phy)) {
+            if (cueBallClone.isLikelyStopped(phy)) return true;
+            if (cueBallClone.willPot(phy)) {
                 prediction.potCueBall();
                 return true;
             }
 
             if (prediction.getFirstCollide() == null &&
                     dtWhenHitFirstWall >= 0.0 &&
-                    cueBall.getDistanceMoved() - dtWhenHitFirstWall > lenAfterWall) {
+                    cueBallClone.getDistanceMoved() - dtWhenHitFirstWall > lenAfterWall) {
                 // 解斯诺克不能太容易了
                 prediction.whiteHitCushion();
                 return true;
             }
 
-            int holeAreaResult = cueBall.tryHitHoleArea(phy);
+            int holeAreaResult = cueBallClone.tryHitHoleArea(phy);
             if (holeAreaResult != 0) {
                 // 袋口区域
                 if (prediction.getFirstCollide() == null) {
@@ -971,7 +991,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 }
                 if (holeAreaResult == 2) {
                     if (!hitWall) {
-                        dtWhenHitFirstWall = cueBall.getDistanceMoved();
+                        dtWhenHitFirstWall = cueBallClone.getDistanceMoved();
                     }
                     hitWall = true;
                     prediction.whiteCollidesHoleArcs();
@@ -979,10 +999,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 }
                 return false;
             }
-            if (cueBall.tryHitWall(phy)) {
+            if (cueBallClone.tryHitWall(phy)) {
                 // 库边
                 if (!hitWall) {
-                    dtWhenHitFirstWall = cueBall.getDistanceMoved();
+                    dtWhenHitFirstWall = cueBallClone.getDistanceMoved();
                 }
                 hitWall = true;
                 prediction.whiteHitCushion();
@@ -990,23 +1010,23 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
             if (prediction.getFirstCollide() == null) {
                 if (tryWhiteHitBall()) {
-                    cueBall.normalMove(phy);
+                    cueBallClone.normalMove(phy);
                     return false;
                 }
             } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                 tryPassSecondBall();
             }
-            cueBall.normalMove(phy);
+            cueBallClone.normalMove(phy);
             return false;
         }
 
         private void tryPassSecondBall() {
             for (Ball ball : getAllBalls()) {
                 if (!ball.isWhite() && !ball.isPotted()) {
-                    if (cueBall.predictedDtToPoint(ball.x, ball.y) <
+                    if (cueBallClone.predictedDtToPoint(ball.x, ball.y) <
                             gameValues.ball.ballDiameter) {
                         prediction.setSecondCollide(ball,
-                                Math.hypot(cueBall.vx, cueBall.vy) * phy.calculationsPerSec);
+                                Math.hypot(cueBallClone.vx, cueBallClone.vy) * phy.calculationsPerSec);
                     }
                 }
             }
@@ -1026,11 +1046,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private boolean tryWhiteHitBall() {
             for (Ball ball : getAllBalls()) {
                 if (!ball.isWhite() && !ball.isPotted()) {
-                    if (cueBall.predictedDtToPoint(ball.x, ball.y) <
+                    if (cueBallClone.predictedDtToPoint(ball.x, ball.y) <
                             gameValues.ball.ballDiameter) {
-                        double whiteVx = cueBall.vx;
-                        double whiteVy = cueBall.vy;
-                        cueBall.twoMovingBallsHitCore(ball, phy);
+                        double whiteVx = cueBallClone.vx;
+                        double whiteVy = cueBallClone.vy;
+                        cueBallClone.twoMovingBallsHitCore(ball, phy);
                         double[] ballDirectionUnitVec = Algebra.unitVector(ball.vx, ball.vy);
                         double[] whiteDirectionUnitVec = Algebra.unitVector(whiteVx, whiteVy);
                         double ballInitVMmPerS = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
@@ -1038,11 +1058,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             ball.vx = 0;
                             ball.vy = 0;
                         }
-                        prediction.setFirstCollide(ball, hitWall,
+                        prediction.setFirstCollide(ball, 
+                                hitWall,
                                 ballDirectionUnitVec[0], ballDirectionUnitVec[1],
                                 ballInitVMmPerS,
                                 whiteDirectionUnitVec[0], whiteDirectionUnitVec[1],
-                                cueBall.x, cueBall.y);
+                                cueBallClone.x, cueBallClone.y);
                         return false;
                     }
                 }

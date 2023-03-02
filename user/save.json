@@ -3,26 +3,26 @@
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "Smart",
+    "person": "Brown",
     "playerType": "PLAYER",
-    "playCue": "stdPottsCue",
-    "breakCue": "stdBreakCue"
+    "playCue": "stdSnookerCue",
+    "breakCue": "stdSnookerCue"
   },
   "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "custom_player_4",
+    "person": "Selby",
     "playerType": "COMPUTER",
     "playCue": "stdSnookerCue",
-    "breakCue": "stdBreakCue"
+    "breakCue": "stdSnookerCue"
   },
-  "startTime": 1677592403243,
+  "startTime": 1677689366274,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
     "table": {
-      "tableOrdinal": 1,
+      "tableOrdinal": 0,
       "holeSizeOrdinal": 1
     }
   },

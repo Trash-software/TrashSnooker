@@ -8,7 +8,7 @@ import trashsoftware.trashSnooker.fxml.drawing.BallModel;
 import java.util.Arrays;
 import java.util.Random;
 
-public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
+public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cloneable {
     public static final double MAX_GEAR_EFFECT = 0.1;  // 齿轮效应造成的最严重分离角损耗
     private static final Random ERROR_GENERATOR = new Random();
     private static final Random randomGenerator = new Random();
@@ -67,6 +67,16 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
 //        };
 //        LinearGradient gradient = new LinearGradient()
 //    }
+
+
+    @Override
+    public Ball clone() {
+        try {
+            return (Ball) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static Color snookerColor(int value) {
         switch (value) {
