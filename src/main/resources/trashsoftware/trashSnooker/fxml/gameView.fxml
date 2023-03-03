@@ -27,10 +27,12 @@
             <Menu text="游戏">
                 <MenuItem text="设置" onAction="#settingsAction"/>
                 <SeparatorMenuItem/>
-<!--                <MenuItem fx:id="saveGameMenu" text="保存" onAction="#saveGameAction"/>-->
+                <!--                <MenuItem fx:id="saveGameMenu" text="保存" onAction="#saveGameAction"/>-->
                 <MenuItem text="认输" onAction="#withdrawAction" fx:id="withdrawMenu"/>
-                <MenuItem text="重新放置手中球" fx:id="replaceBallInHandMenu" disable="true"/>
-                <MenuItem text="让杆" fx:id="letOtherPlayMenu" disable="true"/>
+                <MenuItem text="重新放置手中球" onAction="#replaceBallInHandAction"
+                          fx:id="replaceBallInHandMenu" disable="true"/>
+                <MenuItem text="让杆" onAction="#letOtherPlayAction" fx:id="letOtherPlayMenu"
+                          disable="true"/>
             </Menu>
             <Menu text="播放">
                 <fx:define>

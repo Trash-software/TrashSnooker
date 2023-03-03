@@ -22,6 +22,16 @@ public class AlgebraTest {
     }
     
     @Test
+    public void thetaTest() {
+        double[] u = new double[]{1, 1, 0, -1, -1, -1, 0, 1,};
+        double[] v = new double[]{0, 1, 1, 1, 0, -1, -1, -1};
+        
+        for (int i = 0; i < u.length; i++) {
+            System.out.println(Math.toDegrees(Algebra.thetaOf(u[i], v[i])));
+        }
+    }
+    
+    @Test
     public void crossProduct() {
         double[] a = {1, 1};
         double[] b = {1, 0.9};

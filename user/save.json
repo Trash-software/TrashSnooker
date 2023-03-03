@@ -1,28 +1,28 @@
 {
-  "p2Wins": 0,
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "Smart",
+    "person": "Yan Bingtao",
     "playerType": "PLAYER",
-    "playCue": "stdPottsCue",
-    "breakCue": "stdBreakCue"
+    "playCue": "stdSnookerCue",
+    "breakCue": "stdSnookerCue"
   },
-  "p1Wins": 1,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "custom_player_4",
+    "person": "Summer Brave",
     "playerType": "COMPUTER",
     "playCue": "stdSnookerCue",
-    "breakCue": "stdBreakCue"
+    "breakCue": "stdSnookerCue"
   },
-  "startTime": 1677592403243,
+  "startTime": 1677820787704,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
     "table": {
-      "tableOrdinal": 1,
+      "tableOrdinal": 0,
       "holeSizeOrdinal": 1
     }
   },

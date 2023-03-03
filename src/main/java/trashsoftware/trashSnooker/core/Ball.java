@@ -8,15 +8,16 @@ import trashsoftware.trashSnooker.fxml.drawing.BallModel;
 import java.util.Arrays;
 import java.util.Random;
 
-public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
+public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cloneable {
     public static final double MAX_GEAR_EFFECT = 0.1;  // 齿轮效应造成的最严重分离角损耗
     private static final Random ERROR_GENERATOR = new Random();
     private static final Random randomGenerator = new Random();
     private static final double[] SIDE_CUSHION_VEC = {1.0, 0.0};
     private static final double[] TOP_BOT_CUSHION_VEC = {0.0, 1.0};
+    private static int idCounter = 0;
     public final BallModel model;
-    private final GameValues values;
     protected final int value;
+    private final GameValues values;
     private final Color color;
     private final Color colorWithOpa;
     private final Color colorTransparent;
@@ -31,10 +32,13 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
     private Ball justHit;
     private double currentXError;
     private double currentYError;
+    private int identifier;  // 即使是分值一样的球identifier也不一样，但是clone之后identifier保持不变
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ball.ballRadius);
-        
+
+        identifier = idCounter++;
+
         this.value = value;
         this.values = values;
         this.color = generateColor(value);
@@ -129,6 +133,15 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         return 1.2 - (speed / Values.MAX_POWER_SPEED) * 0.6;
     }
 
+    @Override
+    public Ball clone() {
+        try {
+            return (Ball) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     protected abstract Color generateColor(int value);
 
     public boolean isPotted() {
@@ -174,7 +187,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         this.ySpin = ySpin;
         this.sideSpin = sideSpin;
     }
-    
+
     public boolean isNotMoving(Phy phy) {
         return getSpeed() < phy.speedReducer;
     }
@@ -212,7 +225,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         axisZ = -ss;
 
         frameDegChange =
-                Math.sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ) 
+                Math.sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ)
                         * phy.calculationsPerSec * animationFrameMs / 800.0;
 
 //        rotation.setAxis(new Point3D(axisX, axisY, axisZ));
@@ -393,7 +406,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         sideSpin -= effectiveSideSpin;
         sideSpin *= table.wallSpinPreserveRatio;
 //        sideSpin *= table.wallSpinPreserveRatio / sideSpinEffectMul;
-        
+
         // todo: 吃库之后侧旋
     }
 
@@ -571,10 +584,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
             double powerGear = Math.min(1.0, totalSpeed / 0.35 / Values.MAX_POWER_SPEED * values.ball.ballWeightRatio);  // 35的力就没有效应了(高低杆要打出35的球速，起码要50的力)
             double gearRemain = (1 - powerGear) * MAX_GEAR_EFFECT;
             double gearEffect = 1 - gearRemain;
-            
-            double spinProj = Algebra.projectionLengthOn(thisV, 
+
+            double spinProj = Algebra.projectionLengthOn(thisV,
                     new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
-            
+
             gearRemain *= spinProj;
 
 //            System.out.println("Gear " + gearRemain + " " + spinProj);
@@ -610,7 +623,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
         nextY = y + vy;
         ball.nextX = ball.x + ball.vx;
         ball.nextY = ball.y + ball.vy;
-        
+
         // todo: 齿轮效应带来的侧旋转
     }
 
@@ -712,14 +725,14 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball> {
 
     @Override
     public boolean equals(Object o) {
-        return this == o;
+        return this == o || (o instanceof Ball && this.identifier == ((Ball) o).identifier);
     }
 
     /**
-     * @return ball实例的原生hashcode。注意不要用value来生成hashcode，因为斯诺克有15颗value一样的红球
+     * @return ball实例的hashcode，clone之后应保持相同。注意不要用value来生成hashcode，因为斯诺克有15颗value一样的红球
      */
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return identifier;
     }
 }

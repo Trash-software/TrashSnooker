@@ -90,4 +90,9 @@
     <LabelTable fx:id="selectedPlayerInfoTable" GridPane.rowIndex="1" GridPane.columnIndex="2"
                 visible="false" managed="false" prefWidth="360.0" prefHeight="360.0"/>
 
+    <Label fx:id="selectedPlayerAchievements"
+           alignment="TOP_LEFT"
+           visible="false" managed="false" GridPane.rowIndex="2" GridPane.columnIndex="2"
+           GridPane.rowSpan="5"/>
+
 </GridPane>

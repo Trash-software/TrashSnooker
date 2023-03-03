@@ -28,15 +28,12 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     private static final int[] FULL_BALL_SLOTS = {0, 2, 3, 7, 9, 10, 12};
     private static final int[] HALF_BALL_SLOTS = {1, 5, 6, 7, 11, 13, 14};
-    private final PoolBall eightBall;
-    private final PoolBall[] allBalls = new PoolBall[16];
     private ChineseEightBallPlayer winingPlayer;
     private ChineseEightScoreResult curResult;
 
     public ChineseEightBallGame(EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
         super(entireGame, gameSettings, new ChineseEightTable(entireGame.gameValues.table), frameIndex);
-
-        eightBall = new PoolBall(8, false, gameValues);
+        
         initBalls();
     }
 
@@ -50,8 +47,14 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         winingPlayer = getAnotherPlayer((ChineseEightBallPlayer) player);
         super.withdraw(player);
     }
+    
+    private PoolBall getEightBall() {
+        return allBalls[8];
+    }
 
     private void initBalls() {
+        allBalls = new PoolBall[16];
+        
         List<PoolBall> fullBalls = new ArrayList<>();
         List<PoolBall> halfBalls = new ArrayList<>();
         for (int i = 0; i < 7; ++i) {
@@ -65,6 +68,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         for (int i = 0; i < 7; ++i) {
             allBalls[i + 1] = fullBalls.get(i);
         }
+        PoolBall eightBall = new PoolBall(8, false, gameValues);
         allBalls[8] = eightBall;
         for (int i = 0; i < 7; ++i) {
             allBalls[i + 9] = halfBalls.get(i);
@@ -224,11 +228,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         }
     }
 
-    @Override
-    public PoolBall[] getAllBalls() {
-        return allBalls;
-    }
-
     private boolean isTargetSelected() {
         return player1.getBallRange() != 0;
     }
@@ -347,9 +346,10 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         double y = gameValues.table.midY;
         for (double x = eightBallPosX; x < gameValues.table.rightX - gameValues.ball.ballRadius; x += 1.0) {
             if (!isOccupied(x, y)) {
-                eightBall.setX(x);
-                eightBall.setY(y);
-                eightBall.pickup();
+                Ball eight = getEightBall();
+                eight.setX(x);
+                eight.setY(y);
+                eight.pickup();
                 return;
             }
         }
@@ -371,7 +371,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         }
 
         if (cueBall.isPotted()) {
-            if (eightBall.isPotted()) {  // 白球黑八一起进
+            if (getEightBall().isPotted()) {  // 白球黑八一起进
                 end();
                 winingPlayer = getAnotherPlayer();
                 return;
@@ -408,7 +408,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             }
         }
 
-        if (foul && !eightBall.isPotted()) {
+        if (foul && !getEightBall().isPotted()) {
             lastCueFoul = true;
             cueBall.pot();
             ballInHand = true;
@@ -419,7 +419,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         }
 
         if (!pottedBalls.isEmpty()) {
-            if (pottedBalls.contains(eightBall)) {
+            if (pottedBalls.contains(getEightBall())) {
                 if (currentTarget == 8) {
                     winingPlayer = currentPlayer;
                     end();

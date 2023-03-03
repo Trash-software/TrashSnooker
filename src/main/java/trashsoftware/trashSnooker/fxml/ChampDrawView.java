@@ -15,10 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import trashsoftware.trashSnooker.core.Cue;
-import trashsoftware.trashSnooker.core.EntireGame;
-import trashsoftware.trashSnooker.core.InGamePlayer;
-import trashsoftware.trashSnooker.core.PlayerType;
+import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
@@ -85,7 +82,8 @@ public class ChampDrawView implements Initializable {
     
     private void refreshCueBox() {
         cueBox.getItems().clear();
-        for (Cue cue : CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson().getPrivateCues()) {
+        PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();
+        for (Cue cue : human.getPrivateCues()) {
             cueBox.getItems().add(new MainView.CueItem(cue, cue.getName()));
         }
         for (Cue cue : DataLoader.getInstance().getCues().values()) {
@@ -93,6 +91,16 @@ public class ChampDrawView implements Initializable {
                 cueBox.getItems().add(new MainView.CueItem(cue, cue.getName()));
             }
         }
+        
+        Cue humanSuggestedCue = human.getPreferredCue(championship.getData().getType());
+        for (MainView.CueItem cueItem : cueBox.getItems()) {
+            if (cueItem.cue == humanSuggestedCue) {
+                cueBox.getSelectionModel().select(cueItem);
+                return;
+            }
+        }
+
+        System.err.println("Why suggested cue not in list");
         cueBox.getSelectionModel().select(0);
     }
 
@@ -189,24 +197,16 @@ public class ChampDrawView implements Initializable {
 
                     PlayerType p1t = match.p1.isHumanPlayer() ? PlayerType.PLAYER : PlayerType.COMPUTER;
                     PlayerType p2t = p1t == PlayerType.PLAYER ? PlayerType.COMPUTER : PlayerType.PLAYER;
+                    
+                    PlayerPerson aiPerson = p1t == PlayerType.COMPUTER ? 
+                            match.p1.getPlayerPerson() : match.p2.getPlayerPerson();
+                    
                     double p1HandFeelEffort = match.p1.isHumanPlayer() ?
                             1.0 : match.p1.getHandFeelEffort(championship.getData().getType());
                     double p2HandFeelEffort = match.p2.isHumanPlayer() ?
                             1.0 : match.p2.getHandFeelEffort(championship.getData().getType());
 
-                    Cue aiCue;  // todo: AI球员的私杆
-                    switch (values.rule) {
-                        case SNOOKER:
-                        case MINI_SNOOKER:
-                            aiCue = DataLoader.getInstance().getCues().get("stdSnookerCue");
-                            break;
-                        case CHINESE_EIGHT:
-                            aiCue = DataLoader.getInstance().getCues().get("stdPottsCue");
-                            break;
-                        default:
-                            aiCue = DataLoader.getInstance().getCues().get("stdPoolCue");
-                            break;
-                    }
+                    Cue aiCue = aiPerson.getPreferredCue(championship.getData().getType());
                     Cue playerCue = cueBox.getValue().cue;
 
                     Cue p1Cue;

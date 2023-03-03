@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.career;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,12 +12,16 @@ import java.util.List;
 public class ChampDataManager {
 
     public static final String DATA_FILE = "data/tournaments.json";
+    private static final String[] SNOOKER_THREE_BIG_IDS = {
+            "world_champ", "masters", "united_kingdom_champ"
+    };
     private static ChampDataManager instance;
-
     /**
      * 一年内的所有赛事，按时间排序
      */
     private final List<ChampionshipData> championshipData = new ArrayList<>();
+
+    private final List<ChampionshipData> snookerThreeBig = new ArrayList<>();
 
     public static ChampDataManager getInstance() {
         if (instance == null) {
@@ -27,6 +32,10 @@ public class ChampDataManager {
                 JSONObject champObj = array.getJSONObject(i);
                 ChampionshipData data = ChampionshipData.fromJsonObject(champObj);
                 instance.championshipData.add(data);
+
+                if (Util.arrayContainsEqual(SNOOKER_THREE_BIG_IDS, data.id)) {
+                    instance.snookerThreeBig.add(data);
+                }
             }
             instance.championshipData.sort(Comparator.comparingInt((ChampionshipData o) -> o.month).thenComparingInt(o -> o.day));
         }
@@ -35,6 +44,10 @@ public class ChampDataManager {
 
     public List<ChampionshipData> getChampionshipData() {
         return championshipData;
+    }
+
+    public List<ChampionshipData> getSnookerThreeBig() {
+        return snookerThreeBig;
     }
 
     public ChampionshipData.WithYear getNextChampionship(int year, int month, int day) {

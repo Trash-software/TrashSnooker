@@ -18,14 +18,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public static final int RAW_COLORED_REP = 0;  // 代表任意彩球
     public final double redRowOccupyX;
     public final double redGapDt;
-    private final SnookerBall yellowBall;
-    private final SnookerBall greenBall;
-    private final SnookerBall brownBall;
-    private final SnookerBall blueBall;
-    private final SnookerBall pinkBall;
-    private final SnookerBall blackBall;
     private final SnookerBall[] redBalls = new SnookerBall[numRedBalls()];
-    private final SnookerBall[] allBalls;
     private final SnookerBall[] coloredBalls = new SnookerBall[6];
     private boolean doingFreeBall = false;  // 正在击打自由球
     private boolean blackBattle = false;
@@ -48,12 +41,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
         currentTarget = 1;
 
-        yellowBall = new SnookerBall(2, getTable().yellowBallPos(), gameValues);
-        greenBall = new SnookerBall(3, getTable().greenBallPos(), gameValues);
-        brownBall = new SnookerBall(4, getTable().brownBallPos(), gameValues);
-        blueBall = new SnookerBall(5, getTable().blueBallPos(), gameValues);
-        pinkBall = new SnookerBall(6, getTable().pinkBallPos(), gameValues);
-        blackBall = new SnookerBall(7, getTable().blackBallPos(), gameValues);
+        SnookerBall yellowBall = new SnookerBall(2, getTable().yellowBallPos(), gameValues);
+        SnookerBall greenBall = new SnookerBall(3, getTable().greenBallPos(), gameValues);
+        SnookerBall brownBall = new SnookerBall(4, getTable().brownBallPos(), gameValues);
+        SnookerBall blueBall = new SnookerBall(5, getTable().blueBallPos(), gameValues);
+        SnookerBall pinkBall = new SnookerBall(6, getTable().pinkBallPos(), gameValues);
+        SnookerBall blackBall = new SnookerBall(7, getTable().blackBallPos(), gameValues);
 
         initRedBalls();
 
@@ -111,27 +104,22 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return new SnookerBall(0, gameValues);
     }
 
-    @Override
-    public SnookerBall[] getAllBalls() {
-        return allBalls;
-    }
-
     public SnookerBall getBallOfValue(int score) {
         switch (score) {
             case 1:
                 return redBalls[0];
             case 2:
-                return yellowBall;
+                return allBalls[numRedBalls()];
             case 3:
-                return greenBall;
+                return allBalls[numRedBalls() + 1];
             case 4:
-                return brownBall;
+                return allBalls[numRedBalls() + 2];
             case 5:
-                return blueBall;
+                return allBalls[numRedBalls() + 3];
             case 6:
-                return pinkBall;
+                return allBalls[numRedBalls() + 4];
             case 7:
-                return blackBall;
+                return allBalls[numRedBalls() + 5];
             default:
                 throw new RuntimeException("没有这种彩球。");
         }
@@ -217,7 +205,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 blackBattle = true;
                 cueBall.pot();
                 currentTarget = 7;
-                pickupColorBall(blackBall);
+                pickupColorBall(getBallOfValue(7));
                 System.out.println("Black battle!");
                 ballInHand = true;
                 if (Math.random() < 0.5) {
@@ -415,12 +403,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     public void tieTest() {
         for (Ball ball : redBalls) ball.pot();
-        yellowBall.pot();
-        greenBall.pot();
-        brownBall.pot();
-        blueBall.pot();
-        pinkBall.pot();
-        blackBall.pickup();
+        
+        for (Ball ball : coloredBalls) {
+            ball.pot();
+        }
+        pickupColorBall(getBallOfValue(7));
+        
         player2.addScore(-player2.getScore() + 7);
         player1.addScore(-player1.getScore());
         currentPlayer = player1;

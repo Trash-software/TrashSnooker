@@ -15,8 +15,7 @@ import java.util.List;
 
 public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
         implements NeedBigBreak {
-
-    private final PoolBall[] allBalls = new PoolBall[10];
+    
     private boolean isBreaking = true;
     private String foulReason;
 
@@ -122,11 +121,6 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
         } else {
             return !isOccupied(x, y);
         }
-    }
-
-    @Override
-    public PoolBall[] getAllBalls() {
-        return allBalls;
     }
 
     @Override
