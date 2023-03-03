@@ -51,9 +51,10 @@ public class DBAccess {
     public static void main(String[] args) {
         System.out.println(new Timestamp(System.currentTimeMillis()));
         DBAccess db = getInstance();
+        System.out.println(db.listAllPlayerIds());
 //        db.printQuery("SELECT * FROM SnookerRecord;");
 //        System.out.println("========");
-        db.printQuery("SELECT * FROM GeneralRecord WHERE PlayerName = 'John Wizard';");
+//        db.printQuery("SELECT * FROM GeneralRecord WHERE PlayerName = 'John Wizard';");
 //        System.out.println("========");
 //        db.printQuery("SELECT * FROM SnookerRecord;");
 
@@ -91,7 +92,7 @@ public class DBAccess {
         // rest attempts, rest success
         // solves, solve successes
         int[] data = new int[12];
-        System.out.println(player.getPlayerPerson().getName() + ": " + player.getAttempts().size());
+        System.out.println(player.getPlayerPerson().getPlayerId() + ": " + player.getAttempts().size());
         for (PotAttempt attempt : player.getAttempts()) {
             data[0]++;
             if (attempt.isSuccess()) data[1]++;
@@ -128,7 +129,7 @@ public class DBAccess {
         }
 
         String queryWhere = getFrameQueryWhere(entireGame, frame,
-                player.getPlayerPerson().getName(), 
+                player.getPlayerPerson().getPlayerId(), 
                 player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER, 
                 true);
         String query =
@@ -204,7 +205,7 @@ public class DBAccess {
                         resultSet.getInt("Player2IsAI") == 1,
                         resultSet.getInt("TotalFrames")
                 );
-                if (isValidPlayer(egr.player1Name) && isValidPlayer(egr.player2Name)) {
+                if (isValidPlayer(egr.player1Id) && isValidPlayer(egr.player2Id)) {
                     rtn.add(egr);
                 }
             }
@@ -370,7 +371,7 @@ public class DBAccess {
                     continue;
                 }
                 int playerIndex = result.getString("PlayerName")
-                        .equals(title.player1Name) ? 0 : 1;
+                        .equals(title.player1Id) ? 0 : 1;
                 int[][] playerArray = framesPotMap.computeIfAbsent(index, k -> new int[2][]);
                 playerArray[playerIndex] = array;
                 framesWinnerMap.put(index, frameWinner);
@@ -386,7 +387,7 @@ public class DBAccess {
                 while (snRes.next()) {
                     int index = snRes.getInt("FrameIndex");
                     int playerIndex = snRes.getString("PlayerName")
-                            .equals(title.player1Name) ? 0 : 1;
+                            .equals(title.player1Id) ? 0 : 1;
                     int[] scores = new int[5];  // total score, highest, breaks50, breaks100, 147
                     scores[0] = snRes.getInt("TotalScore");
                     scores[1] = snRes.getInt("Highest");
@@ -420,7 +421,7 @@ public class DBAccess {
                 while (numRs.next()) {
                     int index = numRs.getInt("FrameIndex");
                     int playerIndex = numRs.getString("PlayerName")
-                            .equals(title.player1Name) ? 0 : 1;
+                            .equals(title.player1Id) ? 0 : 1;
                     int[] scores = new int[5];  // breaks, break successes, break clear, continue clear, highest
                     scores[0] = numRs.getInt("Breaks");
                     scores[1] = numRs.getInt("BreakPots");
@@ -494,7 +495,7 @@ public class DBAccess {
         String query = "INSERT INTO " + tableName + " VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
                 frame.frameIndex + ", " +
-                "'" + player.getPlayerPerson().getName() + "', " +
+                "'" + player.getPlayerPerson().getPlayerId() + "', " +
                 (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) + ", " +
                 (breaks ? 1 : 0) + ", " + (breakPot ? 1 : 0) + ", " +
                 breakClear + ", " + continueClear + ", " + highest + ");";
@@ -517,7 +518,7 @@ public class DBAccess {
         String query = "INSERT INTO SnookerRecord VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
                 frame.frameIndex + ", " +
-                "'" + player.getPlayerPerson().getName() + "', " +
+                "'" + player.getPlayerPerson().getPlayerId() + "', " +
                 (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) + ", " +
                 player.getScore() + ", " +
                 breaks50 + ", " +
@@ -530,7 +531,7 @@ public class DBAccess {
         }
     }
 
-    public List<String> listAllPlayerNames() {
+    public List<String> listAllPlayerIds() {
         List<String> list = new ArrayList<>();
         String cmd = "SELECT Name FROM Player;";
         try {
@@ -550,6 +551,7 @@ public class DBAccess {
     }
 
     private void executeStatement(String cmd) throws SQLException {
+        System.out.println(cmd);
         Statement statement = connection.createStatement();
         statement.execute(cmd);
         statement.close();
@@ -574,11 +576,11 @@ public class DBAccess {
         return false;
     }
 
-    public void insertPlayerIfNotExists(String playerName) {
-        if (playerExistsInSql(playerName)) return;
+    public void insertPlayerIfNotExists(String playerId) {
+        if (playerExistsInSql(playerId)) return;
         String[] commands =
                 new String[]{
-                        "INSERT INTO Player VALUES ('" + playerName + "')"
+                        "INSERT INTO Player VALUES ('" + playerId + "')"
                 };
         try {
             for (String cmd : commands) {
@@ -591,13 +593,13 @@ public class DBAccess {
         }
     }
 
-    private void createRecordForFrame(EntireGame entireGame, Game game, String playerName, boolean playerIsAi)
+    private void createRecordForFrame(EntireGame entireGame, Game game, String playerId, boolean playerIsAi)
             throws SQLException {
         int aiRep = playerIsAi ? 1 : 0;
         String command1 = "INSERT INTO GeneralRecord VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
                 game.frameIndex + ", " +
-                "'" + playerName + "', " +
+                "'" + playerId + "', " +
                 aiRep + ", " +
                 "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0" +
                 ");";
@@ -608,12 +610,16 @@ public class DBAccess {
         String typeStr = "'" + entireGame.gameValues.rule.toSqlKey() + "'";
         int p1t = entireGame.getPlayer1().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
         int p2t = entireGame.getPlayer2().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
+        
+        insertPlayerIfNotExists(entireGame.getPlayer1().getPlayerPerson().getPlayerId());
+        insertPlayerIfNotExists(entireGame.getPlayer2().getPlayerPerson().getPlayerId());
+        
         String command =
                 "INSERT INTO EntireGame VALUES (" +
                         entireGame.getStartTimeSqlString() + ", " +
                         typeStr + ", " +
-                        "'" + entireGame.getPlayer1().getPlayerPerson().getName() + "', " +
-                        "'" + entireGame.getPlayer2().getPlayerPerson().getName() + "', " +
+                        "'" + entireGame.getPlayer1().getPlayerPerson().getPlayerId() + "', " +
+                        "'" + entireGame.getPlayer2().getPlayerPerson().getPlayerId() + "', " +
                         p1t + ", " + 
                         p2t + ", " +
                         entireGame.getTotalFrames() + ");";
@@ -632,10 +638,10 @@ public class DBAccess {
         try {
             executeStatement(generalCmd);
             createRecordForFrame(entireGame, game,
-                    entireGame.getPlayer1().getPlayerPerson().getName(),
+                    entireGame.getPlayer1().getPlayerPerson().getPlayerId(),
                     entireGame.getPlayer1().getPlayerType() == PlayerType.COMPUTER);
             createRecordForFrame(entireGame, game,
-                    entireGame.getPlayer2().getPlayerPerson().getName(),
+                    entireGame.getPlayer2().getPlayerPerson().getPlayerId(),
                     entireGame.getPlayer2().getPlayerType() == PlayerType.COMPUTER);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -645,7 +651,7 @@ public class DBAccess {
     public void recordAFrameEnds(EntireGame entireGame, Game<?, ?> game, PlayerPerson winner) {
         long duration = (System.currentTimeMillis() - game.frameStartTime) / 1000 + 1;
         String generalCmd = "UPDATE Game SET DurationSeconds = " + duration + ", " +
-                "WinnerName = '" + winner.getName() + "' " +
+                "WinnerName = '" + winner.getPlayerId() + "' " +
                 "WHERE (EntireBeginTime = " + entireGame.getStartTimeSqlString() + " AND " +
                 "FrameIndex = " + game.frameIndex + ");";
         try {

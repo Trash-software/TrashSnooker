@@ -51,7 +51,7 @@ public abstract class EntireGameRecord {
     public int[] getP1P2WinsCount() {
         int[] res = new int[2];
         for (PlayerFrameRecord[] twoFrames : frameRecords.values()) {
-            if (twoFrames[0].winnerName.equals(title.player1Name)) {
+            if (twoFrames[0].winnerName.equals(title.player1Id)) {
                 res[0]++;
             } else {
                 res[1]++;

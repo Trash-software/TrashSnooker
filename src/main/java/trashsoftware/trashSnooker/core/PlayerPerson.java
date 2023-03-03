@@ -342,7 +342,7 @@ public class PlayerPerson {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(playerId);
     }
 
     public String getName() {

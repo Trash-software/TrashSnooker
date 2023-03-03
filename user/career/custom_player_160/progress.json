@@ -1,10 +1,11 @@
 {
-  "stageIndex": 3,
+  "stageIndex": 2,
   "championshipId": "world_champ",
   "matchTree": {"root": {
     "p1": {
       "p1": {
         "p1": {
+          "p1wins": 2,
           "p1": {
             "p1wins": 3,
             "p1": {"winner": "Matthew Stevens"},
@@ -91,9 +92,12 @@
             "stage": "ROUND_1",
             "p2wins": 0
           },
-          "stage": "ROUND_2"
+          "winner": "Ding Junhui",
+          "stage": "ROUND_2",
+          "p2wins": 3
         },
         "p2": {
+          "p1wins": 3,
           "p1": {
             "p1wins": 3,
             "p1": {"winner": "Trump"},
@@ -180,12 +184,15 @@
             "stage": "ROUND_1",
             "p2wins": 0
           },
-          "stage": "ROUND_2"
+          "winner": "Trump",
+          "stage": "ROUND_2",
+          "p2wins": 0
         },
         "stage": "QUARTER_FINAL"
       },
       "p2": {
         "p1": {
+          "p1wins": 3,
           "p1": {
             "p1wins": 3,
             "p1": {"winner": "Glass Heart"},
@@ -272,9 +279,12 @@
             "stage": "ROUND_1",
             "p2wins": 2
           },
-          "stage": "ROUND_2"
+          "winner": "Glass Heart",
+          "stage": "ROUND_2",
+          "p2wins": 0
         },
         "p2": {
+          "p1wins": 0,
           "p1": {
             "p1wins": 2,
             "p1": {"winner": "Murphy"},
@@ -361,7 +371,9 @@
             "stage": "ROUND_1",
             "p2wins": 0
           },
-          "stage": "ROUND_2"
+          "winner": "custom_player_160",
+          "stage": "ROUND_2",
+          "p2wins": 3
         },
         "stage": "QUARTER_FINAL"
       },
@@ -370,6 +382,7 @@
     "p2": {
       "p1": {
         "p1": {
+          "p1wins": 1,
           "p1": {
             "p1wins": 3,
             "p1": {"winner": "Mark Williams"},
@@ -456,9 +469,12 @@
             "stage": "ROUND_1",
             "p2wins": 0
           },
-          "stage": "ROUND_2"
+          "winner": "Selby",
+          "stage": "ROUND_2",
+          "p2wins": 3
         },
         "p2": {
+          "p1wins": 3,
           "p1": {
             "p1wins": 3,
             "p1": {"winner": "O'Sullivan"},
@@ -545,12 +561,15 @@
             "stage": "ROUND_1",
             "p2wins": 0
           },
-          "stage": "ROUND_2"
+          "winner": "O'Sullivan",
+          "stage": "ROUND_2",
+          "p2wins": 0
         },
         "stage": "QUARTER_FINAL"
       },
       "p2": {
         "p1": {
+          "p1wins": 1,
           "p1": {
             "p1wins": 3,
             "p1": {"winner": "John Wizard"},
@@ -637,9 +656,12 @@
             "stage": "ROUND_1",
             "p2wins": 0
           },
-          "stage": "ROUND_2"
+          "winner": "Smart",
+          "stage": "ROUND_2",
+          "p2wins": 3
         },
         "p2": {
+          "p1wins": 2,
           "p1": {
             "p1wins": 3,
             "p1": {"winner": "Neil Robertson"},
@@ -726,7 +748,9 @@
             "stage": "ROUND_1",
             "p2wins": 1
           },
-          "stage": "ROUND_2"
+          "winner": "Mark Allen",
+          "stage": "ROUND_2",
+          "p2wins": 3
         },
         "stage": "QUARTER_FINAL"
       },

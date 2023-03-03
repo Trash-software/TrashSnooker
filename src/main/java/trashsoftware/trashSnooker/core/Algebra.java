@@ -78,23 +78,9 @@ public class Algebra {
      * @return 夹角
      */
     public static double thetaOf(double x, double y) {
-        double atan = Math.atan(y / x);
-        if (x < 0.0) {
-            return Math.PI + atan;
-        } else {
-            return realMod(atan, Math.PI * 2);
-        }
-    }
-
-    /**
-     * 返回向量与X轴正半轴的夹角，范围 [-PI~PI)
-     *
-     * @param x 向量的x
-     * @param y 向量的y
-     * @return 夹角
-     */
-    public static double thetaOfNeg(double x, double y) {
-        return Math.atan(y / x);
+        double a = Math.atan2(y, x);
+        if (a < 0.0) a += TWO_PI;
+        return a;
     }
 
     public static double thetaOf(double[] vec) {

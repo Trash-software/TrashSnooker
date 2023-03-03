@@ -60,6 +60,7 @@ import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.recorder.TargetRecord;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.IOException;
 import java.net.URL;
@@ -356,6 +357,8 @@ public class GameView implements Initializable {
         this.stage = stage;
 
         this.basePane = (Pane) stage.getScene().getRoot();
+        
+        setKeyboardActions();
 
 //        game = new EntireGame(entireGame.getPlayer1(), entireGame.getPlayer2(),
 //                entireGame.gameValues, entireGame.totalFrames, entireGame.cloth);
@@ -436,6 +439,63 @@ public class GameView implements Initializable {
         this.enableDebug = false;
 
         setup(stage, careerMatch.getGame());
+    }
+    
+    private void setKeyboardActions() {
+        powerSlider.setBlockIncrement(1.0);
+        
+        basePane.setOnKeyPressed(e -> {
+            if (replay != null || aiCalculating || playingMovement || cueAnimationPlayer != null) {
+                return;
+            }
+            switch (e.getCode()) {
+                case SPACE:
+                    if (!cueButton.isDisabled()) {
+                        cueButton.fire();
+                    }
+                    break;
+                case LEFT:
+                    turnDirectionDeg(-0.5);
+                    break;
+                case RIGHT:
+                    turnDirectionDeg(0.5);
+                    break;
+                case COMMA:
+                    turnDirectionDeg(-0.01);
+                    break;
+                case PERIOD:
+                    turnDirectionDeg(0.01);
+                    break;
+                case A:
+                    setCuePoint(cuePointX - 1, cuePointY);
+                    break;
+                case D:
+                    setCuePoint(cuePointX + 1, cuePointY);
+                    break;
+                case W:
+                    setCuePoint(cuePointX, cuePointY - 1);
+                    break;
+                case S:
+                    setCuePoint(cuePointX, cuePointY + 1);
+                    break;
+                case Q:
+                    setCueAngleDeg(cueAngleDeg + 1);
+                    break;
+                case E:
+                    setCueAngleDeg(cueAngleDeg - 1);
+                    break;
+            }
+        });
+    }
+    
+    private void turnDirectionDeg(double deg) {
+        double rad = Math.toRadians(deg);
+        double cur = Algebra.thetaOf(cursorDirectionUnitX, cursorDirectionUnitY);
+        cur += rad;
+        double[] nd = Algebra.unitVectorOfAngle(cur);
+        cursorDirectionUnitX = nd[0];
+        cursorDirectionUnitY = nd[1];
+        recalculateUiRestrictions();
     }
 
     private void setOnHidden() {
@@ -582,14 +642,30 @@ public class GameView implements Initializable {
             }
         }
     }
+    
+    private void autoAimEasiestNextBall(Player nextCuePlayer) {
+        Ball tgt = game.getGame().getEasiestTarget(nextCuePlayer);
+        if (tgt == null) return;
+        
+        double dx = tgt.getX() - game.getGame().getCueBall().getX();
+        double dy = tgt.getY() - game.getGame().getCueBall().getY();
+        
+        double[] unit = Algebra.unitVector(dx, dy);
+        cursorDirectionUnitX = unit[0];
+        cursorDirectionUnitY = unit[1];
+        recalculateUiRestrictions();
+    }
 
     private void finishCueNextStep(Player nextCuePlayer) {
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
+            boolean autoAim = true;
             if ((game.getGame() instanceof AbstractSnookerGame)) {
                 if (((AbstractSnookerGame) game.getGame()).canReposition()) {
+                    autoAim = false;  // 把autoAim交给askReposition的不复位分支
                     askReposition();
                 }
             }
+            if (autoAim) autoAimEasiestNextBall(nextCuePlayer);
         } else {
             if (!game.isFinished() &&
                     aiAutoPlay) {
@@ -605,8 +681,6 @@ public class GameView implements Initializable {
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
 
         game.getGame().getRecorder().stopRecording(true);
-//        game.getPlayer1().getPersonRecord().writeToFile();
-//        game.getPlayer2().getPersonRecord().writeToFile();
 
         if (careerMatch != null) {
             careerMatch.saveMatch();
@@ -713,6 +787,7 @@ public class GameView implements Initializable {
         asg.notReposition();
         
         letOtherPlayMenu.setDisable(false);
+        autoAimEasiestNextBall(game.getGame().getCuingPlayer());
     }
 
     private void onCanvasClicked(MouseEvent mouseEvent) {
@@ -766,7 +841,11 @@ public class GameView implements Initializable {
         double relY = cueAngleCanvas.getHeight() - cueAngleBaseVer - y;
         double rad = Math.atan2(relY, relX);
         double deg = Math.toDegrees(rad);
-        cueAngleDeg = Math.min(MAX_CUE_ANGLE, Math.max(0, deg));
+        setCueAngleDeg(deg);
+    }
+    
+    private void setCueAngleDeg(double newDeg) {
+        cueAngleDeg = Math.min(MAX_CUE_ANGLE, Math.max(0, newDeg));
         recalculateUiRestrictions();
         setCueAngleLabel();
     }
@@ -2862,13 +2941,6 @@ public class GameView implements Initializable {
 
         double correctedTipX = touchXY[0] - pointingUnitX * realDistance * scale;
         double correctedTipY = touchXY[1] - pointingUnitY * realDistance * scale;
-//        double correctedEndX = correctedTipX - pointingUnitX *
-//                cue.getTotalLength() * scale;
-//        double correctedEndY = correctedTipY - pointingUnitY *
-//                cue.getTotalLength() * scale;
-
-//        drawCueEssential(correctedTipX, correctedTipY, correctedEndX, correctedEndY,
-//                pointingUnitX, pointingUnitY, cue, isRest);
 
         Bounds ballPanePos = ballPane.localToScene(ballPane.getBoundsInLocal());
         cue.getCueModel(basePane).show(

@@ -39,7 +39,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public final long frameStartTime = System.currentTimeMillis();
     public final int frameIndex;
     protected final Set<B> newPotted = new HashSet<>();
-//    protected final GameView parent;
+    //    protected final GameView parent;
     protected final EntireGame entireGame;
     protected final Map<B, double[]> recordedPositions = new HashMap<>();  // 记录上一杆时球的位置，复位用
     protected final B cueBall;
@@ -67,12 +67,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected long cueStartTime;
     protected GameRecorder recorder;
     protected Map<Integer, B> numberBallMap;
-    private boolean ended;
     protected B[] allBalls;
-
-    private PhysicsCalculator physicsCalculator;
-    
     protected Table table;
+    private boolean ended;
+    private PhysicsCalculator physicsCalculator;
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
@@ -101,7 +99,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         } else if (gameValues.rule == GameRule.MINI_SNOOKER) {
             game = new MiniSnookerGame(entireGame, gameSettings, frameIndex);
         } else if (gameValues.rule == GameRule.CHINESE_EIGHT) {
-            game = new ChineseEightBallGame( entireGame, gameSettings, frameIndex);
+            game = new ChineseEightBallGame(entireGame, gameSettings, frameIndex);
         } else if (gameValues.rule == GameRule.SIDE_POCKET) {
             game = new SidePocketGame(entireGame, gameSettings, frameIndex);
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
@@ -118,10 +116,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     @Override
     @SuppressWarnings("unchecked")
-    protected Game<B, P> clone() {
+    public Game<B, P> clone() {
         try {
             Game<B, P> copy = (Game<B, P>) super.clone();
-            
+
             B[] allBallsCopy = (B[]) new Ball[allBalls.length];
             for (int i = 0; i < allBalls.length; i++) {
                 allBallsCopy[i] = (B) allBalls[i].clone();
@@ -232,7 +230,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                         boolean recordTargetPos,
                                         boolean wipe) {
         if (cueBall.isPotted()) return null;
-        
+
         Ball cueBallClone = cueBall.clone();
         cueBallClone.setVx(params.vx / phy.calculationsPerSec);
         cueBallClone.setVy(params.vy / phy.calculationsPerSec);
@@ -482,12 +480,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     }
 
+    public SeeAble countSeeAbleTargetBalls(double whiteX, double whiteY,
+                                           Collection<Ball> legalBalls, int situation) {
+        return getAllSeeAbleBalls(whiteX, whiteY, legalBalls, situation, null);
+    }
+
     /**
      * @param situation 1:薄边 2:全球 3:缝隙能过全球（斯诺克自由球那种）
      * @return 能看到的目标球数量
      */
-    public SeeAble countSeeAbleTargetBalls(double whiteX, double whiteY,
-                                           Collection<Ball> legalBalls, int situation) {
+    public SeeAble getAllSeeAbleBalls(double whiteX, double whiteY,
+                                      Collection<Ball> legalBalls, int situation,
+                                      List<Ball> listToPut) {
         if (situation != 1 && situation != 2 && situation != 3) {
             throw new RuntimeException("Unknown situation " + situation);
         }
@@ -574,9 +578,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
                 }
             }
-            if (canSee) result++;
+            if (canSee) {
+                if (listToPut != null) listToPut.add(target);
+                result++;
+            }
         }
-        return new SeeAble(result, sumTargetDt / legalBalls.size(), maxShadowAngle);
+        return new SeeAble(
+                result,
+                sumTargetDt / legalBalls.size(),
+                maxShadowAngle);
     }
 
 //    public boolean canSeeBall(double p1x, double p1y, double p2x, double p2y,
@@ -703,19 +713,19 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         ballInHand = true;
         cueBall.pot();
     }
-    
+
     public boolean isSnookered() {
         return isSnookered(cueBall.x, cueBall.y, getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll()));
     }
-    
+
     public boolean isSnookered(double whiteX, double whiteY, List<Ball> legalBalls) {
         return countSeeAbleTargetBalls(whiteX, whiteY, legalBalls, 1).seeAbleTargets == 0;
     }
-    
+
     public boolean isAnyFullBallVisible() {
         return countSeeAbleTargetBalls(
-                cueBall.x, cueBall.y, 
-                getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll()), 
+                cueBall.x, cueBall.y,
+                getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll()),
                 2)
                 .seeAbleTargets != 0;
     }
@@ -787,6 +797,68 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public void withdraw(Player player) {
         player.withdraw();
         end();
+    }
+
+    public Ball getEasiestTarget(Player player) {
+        int target = getCurrentTarget();
+        List<Ball> targets = getAllLegalBalls(target, isDoingSnookerFreeBll());
+        
+        if (targets.isEmpty()) return null;
+        
+        double[] whitePos = new double[]{cueBall.x, cueBall.y};
+        
+        List<AiCue.AttackChoice> attackChoices = new ArrayList<>();
+
+        for (Ball ball : targets) {
+            List<double[][]> dirHoles = directionsToAccessibleHoles(ball);
+
+            for (double[][] dirHole : dirHoles) {
+                double collisionPointX = dirHole[2][0];
+                double collisionPointY = dirHole[2][1];
+
+                if (pointToPointCanPassBall(whitePos[0], whitePos[1],
+                        collisionPointX, collisionPointY, getCueBall(), ball, true,
+                        true)) {
+                    // 从白球处看得到进球点
+                    AiCue.AttackChoice attackChoice = AiCue.AttackChoice.createChoice(
+                            this,
+                            player,
+                            whitePos,
+                            ball,
+                            null,
+                            target,
+                            false,
+                            collisionPointX,
+                            collisionPointY,
+                            dirHole
+                    );
+                    if (attackChoice != null) {
+                        attackChoices.add(attackChoice);
+                    }
+                }
+            }
+        }
+        if (!attackChoices.isEmpty()) {
+            // 如果有进攻机会，就返回最简单的那颗球
+            Collections.sort(attackChoices);
+            return attackChoices.get(0).getBall();
+        }
+
+        // 如果没有，就找出最近的能看见的球
+        List<Ball> seeAbleBalls = new ArrayList<>();
+        getAllSeeAbleBalls(cueBall.x, cueBall.y,
+                targets, 2, seeAbleBalls);
+        
+        Ball closet = null;
+        double closetDt = Double.MAX_VALUE;
+        for (Ball sb : seeAbleBalls) {
+            double dt = Math.hypot(whitePos[0] - sb.x, whitePos[1] - sb.y);
+            if (dt < closetDt) {
+                closetDt = dt;
+                closet = sb;
+            }
+        }
+        return closet;
     }
 
     private void whiteCollide(Ball ball) {
@@ -881,6 +953,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public class WhitePredictor {
+        private final Ball cueBallClone;
         private double lenAfterWall;
         private WhitePrediction prediction;
         private double cumulatedPhysicalTime = 0.0;
@@ -891,8 +964,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private boolean checkCollisionAfterFirst;
         private boolean recordTargetPos;
         private Phy phy;
-        
-        private final Ball cueBallClone;
 
         WhitePredictor(Ball cueBallClone) {
             this.cueBallClone = cueBallClone;
@@ -906,9 +977,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             this.lenAfterWall = lenAfterWall;
             this.checkCollisionAfterFirst = checkCollisionAfterFirst;
             this.recordTargetPos = recordTargetPos;
-            
+
 //            cueBallClone = cueBall.clone();
-            
+
             prediction = new WhitePrediction(cueBallClone);
 
             while (!oneRun() && notTerminated) {
@@ -1059,7 +1130,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             ball.vx = 0;
                             ball.vy = 0;
                         }
-                        prediction.setFirstCollide(ball, 
+                        prediction.setFirstCollide(ball,
                                 hitWall,
                                 ballDirectionUnitVec[0], ballDirectionUnitVec[1],
                                 ballInitVMmPerS,
@@ -1174,16 +1245,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
 //                    ball.normalMove();
 //                    if (noHit) ball.normalMove();
-                } 
-                else {
+                } else {
                     if (!ball.sideSpinAtPosition(phy)) {
-                        
+
                     }
                 }
             }
             double lastPhysicalTime = cumulatedPhysicalTime;
             cumulatedPhysicalTime += phy.calculateMs;
-            
+
             if (noBallMoving) {
                 for (Ball ball : getAllBalls()) {
                     ball.clearMovement();
@@ -1197,8 +1267,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     B ball = allBalls[i];
                     ball.calculateAxis(phy, GameView.frameTimeMs);
                     movement.addFrame(ball,
-                            new MovementFrame(ball.x, ball.y, 
-                                    ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(), 
+                            new MovementFrame(ball.x, ball.y,
+                                    ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(),
                                     ball.isPotted(),
                                     movementTypes[i], movementValues[i]));
                     movementTypes[i] = MovementFrame.NORMAL;

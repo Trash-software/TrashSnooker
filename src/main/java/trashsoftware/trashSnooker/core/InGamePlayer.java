@@ -2,12 +2,11 @@ package trashsoftware.trashSnooker.core;
 
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.util.DataLoader;
-import trashsoftware.trashSnooker.util.PersonRecord;
 
 public class InGamePlayer {
 
     private final PlayerPerson playerPerson;
-//    private final PersonRecord personRecord;
+    //    private final PersonRecord personRecord;
     private final Cue breakCue;
     private final Cue playCue;
     private final PlayerType playerType;
@@ -33,7 +32,7 @@ public class InGamePlayer {
                         double handFeelEffort) {
         this(playerPerson, cue, cue, playerType, playerNumber, handFeelEffort);
     }
-    
+
     public static InGamePlayer fromJson(JSONObject jsonObject) {
         DataLoader loader = DataLoader.getInstance();
         PlayerPerson person = loader.getPlayerPerson(jsonObject.getString("person"));
@@ -42,7 +41,7 @@ public class InGamePlayer {
         PlayerType playerType = PlayerType.valueOf(jsonObject.getString("playerType"));
         int number = jsonObject.getInt("playerNumber");
         double handFeelEffort = jsonObject.getDouble("handFeelEffort");
-        
+
         return new InGamePlayer(
                 person,
                 breakCue,
@@ -52,17 +51,17 @@ public class InGamePlayer {
                 handFeelEffort
         );
     }
-    
+
     public JSONObject toJson() {
         JSONObject object = new JSONObject();
-        
+
         object.put("person", playerPerson.getPlayerId());
         object.put("breakCue", breakCue.getCueId());
         object.put("playCue", playCue.getCueId());
         object.put("playerType", playerType.name());
         object.put("playerNumber", playerNumber);
         object.put("handFeelEffort", handFeelEffort);
-        
+
         return object;
     }
 
