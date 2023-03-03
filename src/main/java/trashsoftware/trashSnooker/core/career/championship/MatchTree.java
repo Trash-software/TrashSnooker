@@ -78,6 +78,10 @@ public class MatchTree {
 
         return saved;
     }
+    
+    public boolean isHumanAlive() {
+        return root.isHumanAlive();
+    }
 
     public void distributeAwards(ChampionshipData data, Calendar timestamp) {
 //        root.distributeAwards(data, timestamp.get(Calendar.YEAR), 0);

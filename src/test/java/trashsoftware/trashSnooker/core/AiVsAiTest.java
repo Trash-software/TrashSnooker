@@ -68,7 +68,7 @@ public class AiVsAiTest {
 
     @Test
     public void testCareer() {
-        CareerManager.createNew(DataLoader.getInstance().getPlayerPerson("Jack Lisowski"));
+//        CareerManager.createNew(DataLoader.getInstance().getPlayerPerson("Jack Lisowski"));
 //        CareerManager.setCurrentSave(new CareerSave(new File("user/career/Jack Lisowski")));
 //        CareerManager.getInstance().simulateMatchesInPastTwoYears();
 

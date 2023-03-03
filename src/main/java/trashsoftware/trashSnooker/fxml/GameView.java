@@ -30,6 +30,7 @@ import trashsoftware.trashSnooker.audio.GameAudio;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
+import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.championship.PlayerVsAiMatch;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
@@ -183,7 +184,7 @@ public class GameView implements Initializable {
     private boolean isDragging;
     private double lastDragAngle;
     private Timeline timeline;
-    private double predictionMultiplier = 2000.0;
+//    private double predictionMultiplier = 2000.0;
     private double maxRealPredictLength = defaultMaxPredictLength;
     private boolean enablePsy = true;  // 由游戏决定心理影响
     private boolean aiCalculating;
@@ -439,6 +440,9 @@ public class GameView implements Initializable {
         this.enableDebug = false;
 
         setup(stage, careerMatch.getGame());
+        
+        double playerGoodness = CareerManager.getInstance().getPlayerGoodness();
+        maxRealPredictLength = defaultMaxPredictLength * playerGoodness;
     }
     
     private void setKeyboardActions() {
@@ -1641,16 +1645,7 @@ public class GameView implements Initializable {
     }
 
     void setDifficulty(SettingsView.Difficulty difficulty) {
-        if (difficulty == SettingsView.Difficulty.EASY) {
-//            minRealPredictLength = 600.0;
-            maxRealPredictLength = defaultMaxPredictLength * 1.5;
-        } else if (difficulty == SettingsView.Difficulty.MEDIUM) {
-//            minRealPredictLength = 300.0;
-            maxRealPredictLength = defaultMaxPredictLength;
-        } else if (difficulty == SettingsView.Difficulty.HARD) {
-//            minRealPredictLength = 150.0;
-            maxRealPredictLength = defaultMaxPredictLength * 0.5;
-        }
+
     }
 
     private void setButtonsCueStart() {

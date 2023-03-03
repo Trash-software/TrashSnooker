@@ -4,6 +4,7 @@
   "matchTree": {"root": {
     "p1": {
       "p1": {
+        "p1wins": 4,
         "p1": {
           "p1wins": 2,
           "p1": {
@@ -188,7 +189,9 @@
           "stage": "ROUND_2",
           "p2wins": 0
         },
-        "stage": "QUARTER_FINAL"
+        "winner": "Ding Junhui",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 1
       },
       "p2": {
         "p1": {
@@ -381,6 +384,7 @@
     },
     "p2": {
       "p1": {
+        "p1wins": 1,
         "p1": {
           "p1wins": 1,
           "p1": {
@@ -565,9 +569,12 @@
           "stage": "ROUND_2",
           "p2wins": 0
         },
-        "stage": "QUARTER_FINAL"
+        "winner": "O'Sullivan",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 4
       },
       "p2": {
+        "p1wins": 0,
         "p1": {
           "p1wins": 1,
           "p1": {
@@ -752,7 +759,9 @@
           "stage": "ROUND_2",
           "p2wins": 3
         },
-        "stage": "QUARTER_FINAL"
+        "winner": "Mark Allen",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 4
       },
       "stage": "SEMI_FINAL"
     },

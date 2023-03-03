@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.career.aiMatch;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.career.Career;
+import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
 
 import java.util.Random;
@@ -49,7 +50,8 @@ public abstract class AiVsAi {
         double pocketSize = tableSpec.tableMetrics.cornerHoleDiameter;
         double ratio = 1 - (pocketSize - ballSize) / ballSize;
         // 用平方
-        return ratio * tableSpec.tableMetrics.maxLength * tableSpec.tableMetrics.maxLength / 6070364;
+        return ratio * tableSpec.tableMetrics.maxLength * tableSpec.tableMetrics.maxLength / 
+                6070364 / CareerManager.getInstance().getAiGoodness();
     }
 
     public static double playerSimpleWinningScore(PlayerPerson playerPerson,

@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.numberedGames;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.GameView;
 
@@ -11,6 +12,15 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
                                Table table,
                                int frameIndex) {
         super(entireGame, gameSettings, entireGame.gameValues, table, frameIndex);
+    }
+
+    @Override
+    protected void cloneBalls(PoolBall[] allBalls) {
+        PoolBall[] allBallsCopy = new PoolBall[allBalls.length];
+        for (int i = 0; i < allBalls.length; i++) {
+            allBallsCopy[i] = (PoolBall) allBalls[i].clone();
+        }
+        this.allBalls = allBallsCopy;
     }
 
     @Override

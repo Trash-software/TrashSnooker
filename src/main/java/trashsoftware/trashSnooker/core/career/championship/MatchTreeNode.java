@@ -208,4 +208,14 @@ public class MatchTreeNode {
     public boolean isLeaf() {
         return player1Position == null && player2Position == null;  // 同时也意味着stage == null
     }
+    
+    public boolean isHumanAlive() {
+        if (winner == null) {
+            if (player1Position.isHumanAlive()) return true;
+            if (player2Position.isHumanAlive()) return true;
+            return false;
+        } else {
+            return winner.isHumanPlayer();
+        }
+    }
 }

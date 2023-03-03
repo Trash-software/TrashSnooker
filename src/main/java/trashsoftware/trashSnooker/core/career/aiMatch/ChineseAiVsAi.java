@@ -23,6 +23,15 @@ public class ChineseAiVsAi extends AiVsAi {
 
         SimPlayer sp1 = new SimPlayer(p1, ability1, ballTypeBadness);
         SimPlayer sp2 = new SimPlayer(p2, ability2, ballTypeBadness);
+        
+        // 让球安排起
+        if (p1.getPlayerPerson().getSex() != p2.getPlayerPerson().getSex()) {
+            if (p1.getPlayerPerson().getSex() == PlayerPerson.Sex.F) {
+                sp1.remCount--;
+            } else {
+                sp2.remCount--;
+            }
+        }
 
         SimPlayer playing = p1break ? sp1 : sp2;
         
@@ -117,7 +126,9 @@ public class ChineseAiVsAi extends AiVsAi {
         } else if (sp2.remCount == 0) {
             p2WinFrames++;
         } else {
-            throw new RuntimeException("Why two people finished");
+            // 死活打不完那种
+            if (random.nextDouble() < 0.5) p1WinFrames++;
+            else p2WinFrames++;
         }
     }
 

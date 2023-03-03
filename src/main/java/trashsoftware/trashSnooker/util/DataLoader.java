@@ -111,6 +111,10 @@ public class DataLoader {
                         for (int i = 0; i < 4; ++i) {
                             muSigma[i] = muSigmaArray.getDouble(i);
                         }
+                        
+                        PlayerPerson.Sex sex = personObj.has("sex") ?
+                                PlayerPerson.Sex.valueOf(personObj.getString("sex")) :
+                                PlayerPerson.Sex.M;
 
                         playerPerson = new PlayerPerson(
                                 key,
@@ -132,7 +136,8 @@ public class DataLoader {
                                 personObj.getDouble("psy"),
                                 cuePlayType,
                                 aiPlayStyle,
-                                handBody
+                                handBody,
+                                sex
                         );
 
                         if (personObj.has("privateCues")) {

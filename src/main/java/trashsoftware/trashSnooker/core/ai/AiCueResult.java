@@ -14,7 +14,8 @@ public class AiCueResult {
     private final double[][] targetDirHole;
     private final Ball targetBall;
     private final PlayerPerson.HandSkill handSkill;
-    public double aiPrecisionFactor = 10500.0;  // 越大，大家越准
+    public static final double DEFAULT_AI_PRECISION = 10500.0;
+    private static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
     private double unitX, unitY;
 
     public AiCueResult(InGamePlayer inGamePlayer,
@@ -41,6 +42,10 @@ public class AiCueResult {
         this.handSkill = handSkill;
 
         applyRandomError(inGamePlayer, gamePlayStage);
+    }
+    
+    public static void setAiPrecisionFactor(double aiGoodness) {
+        aiPrecisionFactor = DEFAULT_AI_PRECISION * aiGoodness;
     }
 
     public Ball getTargetBall() {

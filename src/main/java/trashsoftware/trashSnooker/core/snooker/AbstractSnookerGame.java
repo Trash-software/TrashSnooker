@@ -23,14 +23,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private boolean doingFreeBall = false;  // 正在击打自由球
     private boolean blackBattle = false;
     private int lastFoulPoints = 0;
-    
+
     private int repositionCount;
     private boolean willLoseBecauseThisFoul;
-    
+
     private int actualTarget;  // todo: 斯诺克规定，哪怕是打彩球时，也必须指定是打的哪颗球
 
     AbstractSnookerGame(EntireGame entireGame,
-                        GameSettings gameSettings, 
+                        GameSettings gameSettings,
                         Table table,
                         int frameIndex) {
         super(entireGame, gameSettings, entireGame.gameValues, table, frameIndex);
@@ -92,6 +92,15 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     protected abstract int numRedBalls();
+
+    @Override
+    protected void cloneBalls(SnookerBall[] allBalls) {
+        SnookerBall[] allBallsCopy = new SnookerBall[allBalls.length];
+        for (int i = 0; i < allBalls.length; i++) {
+            allBallsCopy[i] = (SnookerBall) allBalls[i].clone();
+        }
+        this.allBalls = allBallsCopy;
+    }
 
     @Override
     protected void initPlayers() {
@@ -348,7 +357,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 end();
                 return;
             }
-            
+
             if (blackBattle) {
                 // 抢黑时犯规就直接判负
                 getAnotherPlayer().addScore(foul);
@@ -403,12 +412,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     public void tieTest() {
         for (Ball ball : redBalls) ball.pot();
-        
+
         for (Ball ball : coloredBalls) {
             ball.pot();
         }
         pickupColorBall(getBallOfValue(7));
-        
+
         player2.addScore(-player2.getScore() + 7);
         player1.addScore(-player1.getScore());
         currentPlayer = player1;
@@ -421,7 +430,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             redBalls[i].pot();
         }
     }
-    
+
     public void notReposition() {
         repositionCount = 0;
         willLoseBecauseThisFoul = false;

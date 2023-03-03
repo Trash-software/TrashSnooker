@@ -52,8 +52,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         this.nThreads = Math.max(1,
                 Math.min(32,
                         ConfigLoader.getInstance().getInt("nThreads", 4)));
-        // 1到32个线程
-        System.out.println("AI threads: " + nThreads);
     }
 
     public static <G extends Game<?, ?>> List<AttackChoice> getAttackChoices(

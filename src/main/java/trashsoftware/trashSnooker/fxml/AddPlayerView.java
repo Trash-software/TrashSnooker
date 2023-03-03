@@ -79,7 +79,8 @@ public class AddPlayerView implements Initializable {
                         2
                 ),
                 true,
-                null
+                null,
+                PlayerPerson.Sex.M
         );
         DataLoader.getInstance().addPlayerPerson(playerPerson);
         parent.reloadPlayerList();

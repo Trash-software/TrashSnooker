@@ -39,6 +39,10 @@ public class NewCareerView implements Initializable {
     Button usePlayerButton, playerInfoBtn;
     @FXML
     Label promptLabel;
+    @FXML ComboBox<PlayerPerson.Sex> sexBox;
+    @FXML ComboBox<Double> heightBox;
+    @FXML ComboBox<Difficulty> aiGoodnessBox;
+    @FXML ComboBox<Difficulty> playerGoodnessBox;
 
     private EntryView entryView;
     private Stage owner, thisStage;
@@ -70,6 +74,41 @@ public class NewCareerView implements Initializable {
             usePlayerButton.setDisable(newValue == null);
             playerInfoBtn.setDisable(newValue == null);
         }));
+        
+        sexBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                heightValues(newValue.minHeight, newValue.maxHeight, newValue.stdHeight);
+            }
+        }));
+        sexBox.getItems().addAll(PlayerPerson.Sex.values());
+        sexBox.getSelectionModel().select(0);
+        
+        playerGoodnessBox.getItems().addAll(
+                new Difficulty("最易", 3.0),
+                new Difficulty("简单", 1.5),
+                new Difficulty("中等", 1.0),
+                new Difficulty("难", 0.75)
+        );
+        playerGoodnessBox.getSelectionModel().select(2);
+        
+        aiGoodnessBox.getItems().addAll(
+                new Difficulty("菜", 0.15),
+                new Difficulty("较差", 0.4),
+                new Difficulty("正常", 1.0),
+                new Difficulty("较强", 2.0),
+                new Difficulty("极强", 10.0)
+        );
+        
+        aiGoodnessBox.getSelectionModel().select(2);
+    }
+    
+    private void heightValues(double from, double to, double select) {
+        heightBox.getItems().clear();
+        for (double i = from; i <= to; i += 1) {
+            heightBox.getItems().add(i);
+        }
+        
+        heightBox.getSelectionModel().select(select);
     }
 
     @FXML
@@ -85,7 +124,9 @@ public class NewCareerView implements Initializable {
                 leftHanded,
                 70.0,
                 80.0,
-                true
+                true,
+                heightBox.getValue(),
+                sexBox.getValue()
         );
 
         DataLoader.getInstance().addPlayerPerson(playerPerson);
@@ -135,8 +176,10 @@ public class NewCareerView implements Initializable {
                 return new Task<>() {
                     @Override
                     protected Void call() {
-                        CareerManager.createNew(person);
-                        System.out.println("Start simulaing");
+                        CareerManager.createNew(person, 
+                                playerGoodnessBox.getValue().multiplier, 
+                                aiGoodnessBox.getValue().multiplier);
+                        System.out.println("Start simulating");
                         long st = System.currentTimeMillis();
                         CareerManager.getInstance().simulateMatchesInPastTwoYears();
                         System.out.println("Simulation ends in " + (System.currentTimeMillis() - st) + " ms");
@@ -161,6 +204,21 @@ public class NewCareerView implements Initializable {
         private final String shown;
 
         Hand(String shown) {
+            this.shown = shown;
+        }
+
+        @Override
+        public String toString() {
+            return shown;
+        }
+    }
+    
+    static class Difficulty {
+        double multiplier;
+        String shown;
+        
+        Difficulty(String shown, double multiplier) {
+            this.multiplier = multiplier;
             this.shown = shown;
         }
 

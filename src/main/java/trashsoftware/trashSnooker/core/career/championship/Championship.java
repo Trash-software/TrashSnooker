@@ -79,6 +79,10 @@ public abstract class Championship {
         return matchTree;
     }
     
+    public boolean isHumanAlive() {
+        return matchTree.isHumanAlive();
+    }
+    
     private void saveProgressToJson() {
         saveProgressToJson(CareerManager.getChampionshipProgressFile());
     }

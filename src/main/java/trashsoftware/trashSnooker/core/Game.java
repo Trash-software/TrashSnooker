@@ -113,18 +113,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         return game;
     }
+    
+    protected abstract void cloneBalls(B[] allBalls);
 
     @Override
-    @SuppressWarnings("unchecked")
     public Game<B, P> clone() {
         try {
             Game<B, P> copy = (Game<B, P>) super.clone();
 
-            B[] allBallsCopy = (B[]) new Ball[allBalls.length];
-            for (int i = 0; i < allBalls.length; i++) {
-                allBallsCopy[i] = (B) allBalls[i].clone();
-            }
-            copy.allBalls = allBallsCopy;
+            copy.cloneBalls(allBalls);
             copy.numberBallMap = null;
             return copy;
         } catch (CloneNotSupportedException e) {

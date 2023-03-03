@@ -40,6 +40,7 @@ public class PlayerPerson {
     private final double cueSwingMag;
     private final CuePlayType cuePlayType;
     private final AiPlayStyle aiPlayStyle;
+    private final Sex sex;
     private boolean isCustom;
     public final boolean isRandom;
 
@@ -62,7 +63,8 @@ public class PlayerPerson {
                         double psy,
                         CuePlayType cuePlayType,
                         @Nullable AiPlayStyle aiPlayStyle,
-                        HandBody handBody) {
+                        HandBody handBody,
+                        Sex sex) {
         this.playerId = playerId;
         this.name = name;
         this.category = category;
@@ -83,6 +85,7 @@ public class PlayerPerson {
         this.cuePlayType = cuePlayType;
         this.aiPlayStyle = aiPlayStyle == null ? deriveAiStyle() : aiPlayStyle;
         this.handBody = handBody;
+        this.sex = sex;
         
         this.isRandom = this.playerId.startsWith("random_");
     }
@@ -100,7 +103,8 @@ public class PlayerPerson {
                         double spinControl,  // 出杆挑不挑
                         AiPlayStyle aiPlayStyle,
                         boolean isCustom,
-                        HandBody handBody) {
+                        HandBody handBody,
+                        Sex sex) {
         this(
                 playerId,
                 name,
@@ -121,7 +125,8 @@ public class PlayerPerson {
                 90,
                 CuePlayType.DEFAULT_PERFECT,
                 aiPlayStyle,
-                handBody == null ? HandBody.DEFAULT : handBody
+                handBody == null ? HandBody.DEFAULT : handBody,
+                sex
         );
 
         setCustom(isCustom);
@@ -136,7 +141,9 @@ public class PlayerPerson {
                 Math.random() < 0.4,
                 abilityLow,
                 abilityHigh,
-                false);
+                false,
+                180.0,
+                Sex.M);
     }
 
     public static PlayerPerson randomPlayer(String id,
@@ -144,7 +151,9 @@ public class PlayerPerson {
                                             boolean leftHanded,
                                             double abilityLow,
                                             double abilityHigh,
-                                            boolean isCustom) {
+                                            boolean isCustom,
+                                            double height,
+                                            Sex sex) {
         Random random = new Random();
         double left = leftHanded ?
                 100.0 : 50.0;
@@ -152,6 +161,13 @@ public class PlayerPerson {
                 50.0 : 100.0;
 
         double power = generateDouble(random, abilityLow, Math.min(abilityHigh + 5.0, 99.5));
+        if (sex == Sex.F) {
+            power *= 0.85;
+        }
+        
+        double heightPercentage = (height - sex.minHeight) / (sex.maxHeight - sex.minHeight);
+        double restMul = (2 - heightPercentage) / 1.6;
+        
         return new PlayerPerson(
                 id,
                 name,
@@ -167,12 +183,13 @@ public class PlayerPerson {
                 null,
                 isCustom,
                 new PlayerPerson.HandBody(
-                        180.0,
+                        height,
                         1.0,
                         left,
                         right,
-                        generateDouble(random, abilityLow, abilityHigh)
-                )
+                        Math.max(10, Math.min(90, generateDouble(random, abilityLow * restMul, abilityHigh * restMul)))
+                ),
+                sex
         );
     }
 
@@ -251,6 +268,7 @@ public class PlayerPerson {
         obj.put("height", handBody.height);
         obj.put("width", handBody.bodyWidth);
         obj.put("hand", handObj);
+        obj.put("sex", sex.name());
 
         return obj;
     }
@@ -381,6 +399,10 @@ public class PlayerPerson {
         return powerControl;
     }
 
+    public Sex getSex() {
+        return sex;
+    }
+
     public enum Hand {
         LEFT(1.0),
         RIGHT(1.0),
@@ -405,6 +427,7 @@ public class PlayerPerson {
         private String playerId;
         private String name;
         private HandBody handBody;
+        private Sex sex;
         
         public static ReadableAbility fromPlayerPerson(PlayerPerson playerPerson) {
             return fromPlayerPerson(playerPerson, 1.0);
@@ -430,7 +453,12 @@ public class PlayerPerson {
                             playerPerson.getCuePointMuSigmaXY()[3]) * CUE_PRECISION_FACTOR) * handFeelEffort;
 
             ra.handBody = playerPerson.handBody;
+            ra.sex = playerPerson.sex;
             return ra;
+        }
+
+        public Sex getSex() {
+            return sex;
         }
 
         public String getName() {
@@ -524,7 +552,8 @@ public class PlayerPerson {
                     spinControl,
                     null,
                     true,
-                    handBody
+                    handBody,
+                    sex
             );
         }
 
@@ -648,6 +677,28 @@ public class PlayerPerson {
                 if (handSkill.hand == hand) return handSkill;
             }
             throw new RuntimeException("No such hand");
+        }
+    }
+    
+    public enum Sex {
+        M("男", 155,205, 180),
+        F("女", 145, 190, 168);
+        
+        public final String shown;
+        public final double minHeight;
+        public final double maxHeight;
+        public final double stdHeight;
+        
+        Sex(String shown, double minHeight, double maxHeight, double stdHeight) {
+            this.shown = shown;
+            this.minHeight = minHeight;
+            this.maxHeight = maxHeight;
+            this.stdHeight = stdHeight;
+        }
+
+        @Override
+        public String toString() {
+            return shown;
         }
     }
 }

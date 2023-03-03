@@ -155,16 +155,24 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             else if (isHalfBall(pottingBall)) return HALF_BALL_REP;
             else return 0;
         }
-        if (player.getBallRange() == FULL_BALL_REP) {
-            if (getRemFullBallOnTable() > 1) return FULL_BALL_REP;
+        if (player.getBallRange() == FULL_BALL_REP || player.getBallRange() == HALF_BALL_REP) {
+            int backLet = player.getLettedBalls().get(LetBall.BACK);
+            
+            if (getRemRangedBallOnTable(player.getBallRange()) > backLet + 1) return player.getBallRange();
             else if (pottingBall.getValue() == 8) return END_REP;
             else return 8;
         }
-        if (player.getBallRange() == HALF_BALL_REP) {
-            if (getRemHalfBallOnTable() > 1) return HALF_BALL_REP;
-            else if (pottingBall.getValue() == 8) return END_REP;
-            else return 8;
-        }
+        
+//        if (player.getBallRange() == FULL_BALL_REP) {
+//            if (getRemFullBallOnTable() > 1) return FULL_BALL_REP;
+//            else if (pottingBall.getValue() == 8) return END_REP;
+//            else return 8;
+//        }
+//        if (player.getBallRange() == HALF_BALL_REP) {
+//            if (getRemHalfBallOnTable() > 1) return HALF_BALL_REP;
+//            else if (pottingBall.getValue() == 8) return END_REP;
+//            else return 8;
+//        }
         throw new RuntimeException("不可能");
     }
 
@@ -215,8 +223,25 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     protected void initPlayers() {
-        player1 = new ChineseEightBallPlayer(gameSettings.getPlayer1());
-        player2 = new ChineseEightBallPlayer(gameSettings.getPlayer2());
+        Map<LetBall, Integer> p1Letted = new HashMap<>();
+        Map<LetBall, Integer> p2Letted = new HashMap<>();
+        
+        InGamePlayer p1 = gameSettings.getPlayer1();
+        InGamePlayer p2 = gameSettings.getPlayer2();
+        
+        if (p1.getPlayerPerson().getSex() != p2.getPlayerPerson().getSex()) {
+            if (p1.getPlayerPerson().getSex() == PlayerPerson.Sex.F) {
+                p1Letted.put(LetBall.BACK, 1);
+            } else {
+                p2Letted.put(LetBall.BACK, 1);
+            }
+        }
+
+        System.out.println("P1 letted balls: " + p1Letted);
+        System.out.println("P2 letted balls: " + p2Letted);
+        
+        player1 = new ChineseEightBallPlayer(p1, p1Letted);
+        player2 = new ChineseEightBallPlayer(p2, p2Letted);
     }
 
     @Override
@@ -234,6 +259,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     protected void endMoveAndUpdate() {
+        backLet(player1);  // 让前和让中未实装
+        backLet(player2);
         updateScore(newPotted);
     }
 
@@ -263,10 +290,16 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     private boolean isHalfBall(Ball ball) {
         return ball.getValue() >= 9 && ball.getValue() <= 15;
     }
+    
+    private int getRemRangedBallOnTable(int ballRange) {
+        if (ballRange == FULL_BALL_REP) return getRemFullBallOnTable();
+        else if (ballRange == HALF_BALL_REP) return getRemHalfBallOnTable();
+        else return 1;
+    }
 
     private int getRemFullBallOnTable() {
         int count = 0;
-        for (PoolBall ball : allBalls) {
+        for (Ball ball : getAllBalls()) {
             if (!ball.isPotted() && isFullBall(ball)) count++;
         }
         return count;
@@ -274,7 +307,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     private int getRemHalfBallOnTable() {
         int count = 0;
-        for (PoolBall ball : allBalls) {
+        for (Ball ball : getAllBalls()) {
             if (!ball.isPotted() && isHalfBall(ball)) count++;
         }
         return count;
@@ -354,6 +387,30 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             }
         }
         throw new RuntimeException("Cannot place eight ball");
+    }
+    
+    private void backLet(ChineseEightBallPlayer player) {
+        if (player.getBallRange() == NOT_SELECTED_REP) return;
+        
+        int backLet = player.getLettedBalls().get(LetBall.BACK);
+        int remBalls = getRemRangedBallOnTable(player.getBallRange());
+        
+        if (backLet >= remBalls) {
+            if (player.getBallRange() == FULL_BALL_REP) {
+                for (Ball ball : getAllBalls()) {
+                    if (!ball.isPotted() && isFullBall(ball)) {
+                        ball.pot();
+                    }
+                }
+            }
+            else if (player.getBallRange() == HALF_BALL_REP) {
+                for (Ball ball : getAllBalls()) {
+                    if (!ball.isPotted() && isHalfBall(ball)) {
+                        ball.pot();
+                    }
+                }
+            }
+        }
     }
 
     private void updateScore(Set<PoolBall> pottedBalls) {

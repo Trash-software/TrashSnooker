@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
@@ -135,7 +136,11 @@ public class ChampDrawView implements Initializable {
                 savedRoundLabel.setText(eg.getP1Wins() + " (" + eg.getTotalFrames() + ") " + eg.getP2Wins());
                 savedRoundLabel.setManaged(true);
             } else {
-                nextRoundButton.setText("开始下一轮");
+                if (championship.isHumanAlive()) {
+                    nextRoundButton.setText("开始下一轮");
+                } else {
+                    nextRoundButton.setText("进行所有比赛");
+                }
                 savedRoundLabel.setText("");
                 savedRoundLabel.setManaged(false);
             }
@@ -185,6 +190,9 @@ public class ChampDrawView implements Initializable {
             } else {
                 match = championship.startNextRound();
                 if (match == null) {
+                    if (!championship.isFinished()) {
+                        nextRound();
+                    }
                     updateGui();
                     return;
                 } else {
@@ -268,6 +276,8 @@ public class ChampDrawView implements Initializable {
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
+
+            AiCueResult.setAiPrecisionFactor(CareerManager.getInstance().getAiGoodness());
 
             GameView gameView = loader.getController();
             gameView.setupCareerMatch(stage, match);

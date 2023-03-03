@@ -11,6 +11,7 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
@@ -307,6 +308,8 @@ public class MainView implements Initializable {
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
+
+            AiCueResult.setAiPrecisionFactor(1.0);
 
             GameView gameView = loader.getController();
             gameView.setup(stage, entireGame);

@@ -41,6 +41,9 @@ public class CareerManager {
     private final List<Career.CareerWithAwards> chineseEightRanking = new ArrayList<>();
     private Career humanPlayerCareer;  // 玩家的career
     private Championship inProgress;
+    
+    private double playerGoodness;
+    private double aiGoodness;
 
     private CareerManager(CareerSave save) {
         this.careerSave = save;
@@ -130,7 +133,7 @@ public class CareerManager {
         }
     }
 
-    public static CareerSave createNew(PlayerPerson playerPlayer) {
+    public static CareerSave createNew(PlayerPerson playerPlayer, double playerGoodness, double aiGoodness) {
 //        if (getInstance() != null) throw new RuntimeException("Shouldn't be");
         CareerSave save = new CareerSave(new File(CAREER_DIR, playerPlayer.getPlayerId()));
         try {
@@ -141,6 +144,8 @@ public class CareerManager {
 
         setCurrentSave(save);
         CareerManager cm = new CareerManager(save);
+        cm.playerGoodness = playerGoodness;
+        cm.aiGoodness = aiGoodness;
         for (PlayerPerson person : DataLoader.getInstance().getAllPlayers()) {
             Career career;
             if (person.getPlayerId().equals(playerPlayer.getPlayerId())) {
@@ -181,6 +186,20 @@ public class CareerManager {
         String time = jsonObject.getString("timestamp");
 
         CareerManager careerManager = new CareerManager(careerSave, stringToCalendar(time));
+        
+        boolean saveNow = false;
+        if (jsonObject.has("playerGoodness")) {
+            careerManager.playerGoodness = jsonObject.getDouble("playerGoodness");
+        } else {
+            careerManager.playerGoodness = 1.0;
+            saveNow = true;
+        }
+        if (jsonObject.has("aiGoodness")) {
+            careerManager.aiGoodness = jsonObject.getDouble("aiGoodness");
+        } else {
+            careerManager.aiGoodness = 1.0;
+            saveNow = true;
+        }
 
         Map<String, PlayerPerson> newPlayers = DataLoader.getInstance().getPlayerPeopleCopy();
 
@@ -211,6 +230,11 @@ public class CareerManager {
         }
 
         careerManager.updateRanking();
+        
+        if (saveNow) {
+            careerManager.saveToDisk();
+        }
+        
         return careerManager;
     }
 
@@ -595,6 +619,9 @@ public class CareerManager {
         JSONObject root = new JSONObject();
         root.put("timestamp", calendarToString(timestamp));
         root.put("humanPlayer", humanPlayerCareer.getPlayerPerson().getPlayerId());
+        
+        root.put("playerGoodness", playerGoodness);
+        root.put("aiGoodness", aiGoodness);
 
         JSONArray rootArr = new JSONArray();
 
@@ -612,5 +639,13 @@ public class CareerManager {
         } catch (IOException e) {
             EventLogger.log(e);
         }
+    }
+    
+    public double getAiGoodness() {
+        return aiGoodness;
+    }
+
+    public double getPlayerGoodness() {
+        return playerGoodness;
     }
 }
