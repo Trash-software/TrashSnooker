@@ -1,16 +1,16 @@
 {
-  "p1": "Glass Heart",
+  "p1": "Ding Junhui",
   "game": {
-    "p2Wins": 2,
+    "p2Wins": 1,
     "p1": {
       "playerNumber": 1,
-      "handFeelEffort": 0.9199039857999128,
-      "person": "Glass Heart",
+      "handFeelEffort": 0.9820678205159591,
+      "person": "Ding Junhui",
       "playerType": "COMPUTER",
       "playCue": "stdSnookerCue",
       "breakCue": "stdSnookerCue"
     },
-    "p1Wins": 2,
+    "p1Wins": 0,
     "p2": {
       "playerNumber": 2,
       "handFeelEffort": 1,
@@ -19,7 +19,7 @@
       "playCue": "stdSnookerCue",
       "breakCue": "stdSnookerCue"
     },
-    "startTime": 1677829274840,
+    "startTime": 1677929182140,
     "gameValues": {
       "ball": "SNOOKER_BALL",
       "gameRule": "SNOOKER",
@@ -28,13 +28,13 @@
         "holeSizeOrdinal": 1
       }
     },
-    "totalFrames": 7,
+    "totalFrames": 9,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
-    "p1Breaks": false
+    "p1Breaks": true
   },
   "p2": "custom_player_160",
-  "stage": "QUARTER_FINAL"
+  "stage": "SEMI_FINAL"
 }

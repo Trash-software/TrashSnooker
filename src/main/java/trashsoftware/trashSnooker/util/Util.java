@@ -43,6 +43,38 @@ public class Util {
             return String.format("%d:%s", sec / 3600, secondsToString(sec % 3600));
         }
     }
+    
+    public static boolean deleteFile(File file) {
+        if (file == null || !file.exists()) return true;
+        if (file.isDirectory()) {
+            File[] children = file.listFiles();
+            if (children == null) return true;
+            boolean suc = true;
+            for (File c : children) {
+                if (!deleteFile(c)) suc = false;
+            }
+            return file.delete() && suc;
+        } else {
+            return file.delete();
+        }
+    }
+    
+    public static String decimalToHex(int dec, int digits) {
+        int max = (1 << (digits << 2));
+        if (dec >= max) throw new ArithmeticException("Too big to convert to hex");
+        
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < digits; i++) {
+            int d = dec & 15;
+            char c;
+            if (d < 10) c = (char) ('0' + d);
+            else c = (char) ('A' + (d - 10));
+            builder.append(c);
+            dec >>= 4;
+        }
+        builder.reverse();
+        return builder.toString();
+    }
 
     private static <T> void swap(T[] array, int i, int j) {
         T temp = array[i];

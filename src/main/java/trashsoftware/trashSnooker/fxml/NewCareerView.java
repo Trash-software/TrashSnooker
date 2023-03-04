@@ -23,6 +23,7 @@ import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -115,11 +116,19 @@ public class NewCareerView implements Initializable {
     public void createPlayer() {
         String name = nameField.getText();
         if (name.isBlank()) return;
+        
+        String generatedId = DataLoader.generateIdByName(name);
+        if (DataLoader.getInstance().hasPlayer(generatedId)) {
+            promptLabel.setText("已存在该球员");
+            return;
+        } else {
+            promptLabel.setText("");
+        }
 
         boolean leftHanded = handBox.getValue() == Hand.LEFT;
 
         PlayerPerson playerPerson = PlayerPerson.randomPlayer(
-                DataLoader.getInstance().getNextCustomPlayerId(),
+                generatedId,
                 name,
                 leftHanded,
                 70.0,

@@ -3,8 +3,10 @@ package trashsoftware.trashSnooker.fxml.alert;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -16,6 +18,8 @@ public class Alert implements Initializable {
     Label headerText, contentText;
     @FXML
     Button yesButton, noButton;
+    @FXML
+    VBox additionalPane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -31,6 +35,10 @@ public class Alert implements Initializable {
         this.noButton.setVisible(false);
         this.noButton.setManaged(false);
         this.yesButton.setOnAction(e -> stage.close());
+    }
+    
+    public void setupAdditional(Node additionalContent) {
+        this.additionalPane.getChildren().add(additionalContent);
     }
 
     public void setupConfirm(Stage stage, String header, String content,

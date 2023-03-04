@@ -1,5 +1,5 @@
 {
-  "stageIndex": 2,
+  "stageIndex": 1,
   "championshipId": "world_champ",
   "matchTree": {"root": {
     "p1": {
@@ -194,6 +194,7 @@
         "p2wins": 1
       },
       "p2": {
+        "p1wins": 3,
         "p1": {
           "p1wins": 3,
           "p1": {
@@ -378,11 +379,14 @@
           "stage": "ROUND_2",
           "p2wins": 3
         },
-        "stage": "QUARTER_FINAL"
+        "winner": "custom_player_160",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 4
       },
       "stage": "SEMI_FINAL"
     },
     "p2": {
+      "p1wins": 5,
       "p1": {
         "p1wins": 1,
         "p1": {
@@ -763,7 +767,9 @@
         "stage": "QUARTER_FINAL",
         "p2wins": 4
       },
-      "stage": "SEMI_FINAL"
+      "winner": "O'Sullivan",
+      "stage": "SEMI_FINAL",
+      "p2wins": 1
     },
     "stage": "FINAL"
   }},

@@ -21,8 +21,7 @@
         <padding>
             <Insets topRightBottomLeft="10.0"/>
         </padding>
-
-
+        
         <Label text="Trash snooker">
             <font>
                 <Font size="18"/>
@@ -39,6 +38,7 @@
         <HBox spacing="10.0" alignment="CENTER">
             <Button text="继续游戏" onAction="#continueCareer" fx:id="continueCareerBtn"
                     disable="true"/>
+            <Button text="删除存档" fx:id="deleteCareerBtn" onAction="#deleteCareer" disable="true"/>
             <Button text="开始新游戏" onAction="#newCareer"/>
         </HBox>
 

@@ -9,6 +9,7 @@ import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -98,6 +99,18 @@ public class CareerManager {
             }
         }
         return careerSaves;
+    }
+    
+    public static void deleteCareer(CareerSave toDelete) {
+        if (!Util.deleteFile(toDelete.getDir())) {
+            EventLogger.log("Cannot delete " + toDelete.getDir().getAbsolutePath());
+        }
+        if (toDelete == currentSave) {
+            currentSave = null;
+        }
+        if (instance != null && instance.careerSave == toDelete) {
+            instance = null;
+        }
     }
 
     public static CareerManager getInstance() {

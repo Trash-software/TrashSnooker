@@ -111,7 +111,7 @@ public class DataLoader {
                         for (int i = 0; i < 4; ++i) {
                             muSigma[i] = muSigmaArray.getDouble(i);
                         }
-                        
+
                         PlayerPerson.Sex sex = personObj.has("sex") ?
                                 PlayerPerson.Sex.valueOf(personObj.getString("sex")) :
                                 PlayerPerson.Sex.M;
@@ -213,6 +213,15 @@ public class DataLoader {
                 System.out.println("Cannot create record directory.");
             }
         }
+    }
+
+    public static String generateIdByName(String name) {
+        byte[] bytes = name.getBytes(StandardCharsets.UTF_8);
+        StringBuilder builder = new StringBuilder();
+        for (byte b : bytes) {
+            builder.append(Util.decimalToHex(b & 0xff, 2));
+        }
+        return "custom_" + builder;
     }
 
     private Map<String, PlayerPerson> generateAndSaveRandomPlayers(int nRandomPlayers) {
@@ -325,6 +334,13 @@ public class DataLoader {
 
     public PlayerPerson getPlayerPerson(String playerId) {
         return playerPeople.get(playerId);
+    }
+
+    public void deletePlayer(String playerId) {
+        playerPeople.remove(playerId);
+        actualPlayers.remove(playerId);
+
+        saveToDisk(makeCustomJson(), CUSTOM_PLAYER_LIST_FILE);
     }
 
     public boolean hasActualPlayer(String playerId) {

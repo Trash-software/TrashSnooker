@@ -69,6 +69,8 @@ public class CareerView implements Initializable {
     LabelTable<PlayerAward> selectedPlayerInfoTable;
     @FXML
     Label selectedPlayerAchievements;
+    @FXML
+    Button skipChampBtn;
 
     CareerManager careerManager;
     private PerkManager perkManager;
@@ -83,6 +85,9 @@ public class CareerView implements Initializable {
                 careerManager.getHumanPlayerCareer().getAvailablePerks(),
                 PlayerPerson.ReadableAbility.fromPlayerPerson(pp));
         abilityShower.setup(perkManager, pp.isCustom());
+
+        joinChampBox.selectedProperty().addListener(((observable, oldValue, newValue) -> 
+                skipChampBtn.setDisable(newValue)));
 
         initTypeBox();
         initTable();
@@ -103,7 +108,7 @@ public class CareerView implements Initializable {
             allAwardsTable.addItem(new PlayerAward(score));
         }
     }
-    
+
     private void showHideSelectedPanel(boolean show) {
         selectedPlayerInfoTable.setVisible(show);
         selectedPlayerInfoTable.setManaged(show);
@@ -122,18 +127,18 @@ public class CareerView implements Initializable {
             showHideSelectedPanel(true);
             List<ChampionshipScore> cs = new ArrayList<>(selected.getCareer().getChampionshipScores());
             Collections.reverse(cs);
-            
+
             for (ChampionshipScore score : cs) {
                 selectedPlayerInfoTable.addItem(new PlayerAward(score));
             }
-            
+
             selectedPlayerAchievements.setText(getAchievements(cs, rankTypeBox.getValue()));
 
             if (selfStage != null && (currentlyVisible != selectedPlayerInfoTable.isVisible()))
                 selfStage.sizeToScene();
         }
     }
-    
+
     private String getAchievements(List<ChampionshipScore> csList, GameRule gameRule) {
         int rankedChampions = 0;
 
@@ -150,14 +155,14 @@ public class CareerView implements Initializable {
                 }
             }
         }
-        
+
         StringBuilder builder = new StringBuilder();
         builder.append(gameRule.toString()).append('\n');
         builder.append("排名赛最佳成绩: ")
                 .append(bestRankedRank == null ? "无" : bestRankedRank.getShown())
                 .append('\n');
         builder.append("排名赛冠军数: ").append(rankedChampions);
-        
+
         switch (gameRule) {
             case SNOOKER:
                 List<ChampionshipData> threeBigData = ChampDataManager.getInstance().getSnookerThreeBig();
@@ -178,7 +183,7 @@ public class CareerView implements Initializable {
                 }
                 break;
         }
-        
+
         return builder.toString();
     }
 
@@ -365,6 +370,20 @@ public class CareerView implements Initializable {
         refreshGui();
 
         showChampDrawView();
+    }
+
+    @FXML
+    public void skipNextChamp() {
+        if (!joinChampBox.isSelected()) {
+            Championship championship = careerManager.startNextChampionship();
+            championship.startChampionship(false);
+            
+            while (!championship.isFinished()) {
+                championship.startNextRound();
+            }
+            
+            refreshGui();
+        }
     }
 
     @FXML

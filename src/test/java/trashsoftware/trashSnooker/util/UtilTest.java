@@ -19,4 +19,9 @@ public class UtilTest {
         String s = new String(buf);
         System.out.println(s);
     }
+    
+    @Test
+    public void testHex() {
+        System.out.println(Util.decimalToHex(16, 2));
+    }
 }

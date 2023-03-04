@@ -8,12 +8,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerSave;
+import trashsoftware.trashSnooker.fxml.alert.AlertShower;
+import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 
@@ -29,7 +33,7 @@ public class EntryView implements Initializable {
     TableColumn<CareerSave, String> playerColumn;
 
     @FXML
-    Button continueCareerBtn;
+    Button continueCareerBtn, deleteCareerBtn;
 
     private Stage selfStage;
 
@@ -65,6 +69,7 @@ public class EntryView implements Initializable {
         playerColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getPlayerName()));
         careersTable.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             continueCareerBtn.setDisable(newValue == null);
+            deleteCareerBtn.setDisable(newValue == null);
         }));
     }
     
@@ -155,7 +160,7 @@ public class EntryView implements Initializable {
     }
 
     @FXML
-    void continueCareer() throws IOException {
+    void continueCareer() {
         CareerSave selected = careersTable.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
@@ -163,6 +168,35 @@ public class EntryView implements Initializable {
 
         Stage stage = new Stage();
         startCareerView(selfStage, stage);
+    }
+    
+    @FXML
+    void deleteCareer() {
+        CareerSave selected = careersTable.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        CheckBox deletePerson = new CheckBox("同时删除此球员");
+        PlayerPerson person = DataLoader.getInstance().getPlayerPerson(selected.getPlayerId());
+        if (!person.isCustom()) deletePerson.setDisable(true);
+        
+        AlertShower.askConfirmation(
+                selfStage,
+                "确认要删除\"" + selected.getPlayerName() + "\"?",
+                "请确认",
+                "确认",
+                "取消",
+                () -> {
+                    String playerId = selected.getPlayerId();
+                    CareerManager.deleteCareer(selected);
+                    if (deletePerson.isSelected()) {
+                        DataLoader.getInstance().deletePlayer(playerId);
+                    }
+                    
+                    refreshGui();
+                },
+                null,
+                deletePerson
+        );
     }
 
     @FXML

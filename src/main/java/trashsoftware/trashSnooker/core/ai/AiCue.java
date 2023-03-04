@@ -277,7 +277,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 iac.selectedFrontBackSpin,
                 iac.selectedSideSpin,
                 iac.selectedPower,
-                iac.attackChoice.handSkill);
+                iac.attackChoice.handSkill,
+                game.isFinalFrame());
     }
 
     protected AiCueResult makeDefenseCue(DefenseChoice choice, AiCueResult.CueType cueType) {
@@ -292,7 +293,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 0.0,  // todo
                 choice.selectedSideSpin,
                 choice.selectedPower,
-                choice.handSkill);
+                choice.handSkill,
+                game.isFinalFrame());
     }
 
     protected AiCueResult regularCueDecision(Phy phy) {
@@ -390,7 +392,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 0.0,
                 0.0,
                 power,
-                handSkill
+                handSkill,
+                game.isFinalFrame()
         );
     }
 

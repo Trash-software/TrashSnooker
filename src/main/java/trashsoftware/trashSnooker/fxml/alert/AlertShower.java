@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.fxml.alert;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -43,6 +44,13 @@ public class AlertShower {
     public static void askConfirmation(Window owner, String content, String header,
                                        String positiveText, String negativeText,
                                        Runnable positiveCallback, Runnable negativeCallback) {
+        askConfirmation(owner, content, header, positiveText, negativeText, positiveCallback, negativeCallback, null);
+    }
+
+    public static void askConfirmation(Window owner, String content, String header,
+                                       String positiveText, String negativeText,
+                                       Runnable positiveCallback, Runnable negativeCallback,
+                                       Node additionalContent) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     Alert.class.getResource("alert.fxml")
@@ -60,6 +68,10 @@ public class AlertShower {
             view.setupConfirm(newStage, header, content,
                     positiveText, negativeText,
                     positiveCallback, negativeCallback);
+            
+            if (additionalContent != null) {
+                view.setupAdditional(additionalContent);
+            }
 
             newStage.showAndWait();
         } catch (IOException e) {

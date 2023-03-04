@@ -485,7 +485,7 @@ public class PlayerPerson {
                 case PerkManager.CUE_PRECISION:
                     return (100 - cuePrecision) * 0.04 * perks;
                 case PerkManager.POWER:
-                    return (100 - normalPower) * 0.04 * perks;
+                    return (sex == Sex.M ? 100 : 90 - normalPower) * 0.04 * perks;
                 case PerkManager.POWER_CONTROL:
                     return (100 - powerControl) * 0.04 * perks;
                 case PerkManager.SPIN:

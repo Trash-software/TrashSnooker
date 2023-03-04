@@ -761,6 +761,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public boolean isEnded() {
         return ended;
     }
+    
+    public boolean isFinalFrame() {
+        return entireGame.getP1Wins() == entireGame.getTotalFrames() / 2 &&
+                entireGame.getP2Wins() == entireGame.getTotalFrames() / 2;
+    }
 
     public abstract Player getWiningPlayer();
 

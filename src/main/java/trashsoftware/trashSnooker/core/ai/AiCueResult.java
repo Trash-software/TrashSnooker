@@ -17,6 +17,7 @@ public class AiCueResult {
     public static final double DEFAULT_AI_PRECISION = 10500.0;
     private static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
     private double unitX, unitY;
+    private final boolean isFinalFrame;
 
     public AiCueResult(InGamePlayer inGamePlayer,
                        GamePlayStage gamePlayStage,
@@ -29,7 +30,8 @@ public class AiCueResult {
                        double selectedFrontBackSpin,
                        double selectedSideSpin,
                        double selectedPower,
-                       PlayerPerson.HandSkill handSkill) {
+                       PlayerPerson.HandSkill handSkill,
+                       boolean isFinalFrame) {
         this.unitX = unitX;
         this.unitY = unitY;
         this.selectedFrontBackSpin = selectedFrontBackSpin;
@@ -40,6 +42,7 @@ public class AiCueResult {
         this.targetDirHole = targetDirHole;
         this.targetBall = targetBall;
         this.handSkill = handSkill;
+        this.isFinalFrame = isFinalFrame;
 
         applyRandomError(inGamePlayer, gamePlayStage);
     }
@@ -86,6 +89,10 @@ public class AiCueResult {
         } else if (gamePlayStage == GamePlayStage.BREAK) {
             precisionFactor *= 5.0;
         }
+        
+        if (isFinalFrame && person.psy < 75) {
+            precisionFactor *= (person.psy / 75) * 0.4 + 0.6;  // [0.6, 1]之间
+        }
 
         double mistake = random.nextDouble() * 100;
         double mistakeFactor = 1.0;
@@ -104,7 +111,7 @@ public class AiCueResult {
             sd = (100 - Math.max(person.getAiPlayStyle().precision,
                     person.getAiPlayStyle().defense)) / precisionFactor;
         } else if (cueType == CueType.SOLVE) {
-            sd = (100 - person.getSolving()) / precisionFactor * 10.0;
+            sd = (100 - person.getSolving()) / precisionFactor * 8.0;
 //            System.out.println("Solving sd: " + sd);
         } else {
             sd = (100 - person.getAiPlayStyle().defense) / precisionFactor;

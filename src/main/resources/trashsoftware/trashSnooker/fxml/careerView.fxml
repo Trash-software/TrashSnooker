@@ -80,6 +80,7 @@
             <Label fx:id="nextChampionshipLabel"/>
             <CheckBox fx:id="joinChampBox" text="报名"/>
             <Button text="开始" onAction="#nextChamp"/>
+            <Button fx:id="skipChampBtn" text="跳过" onAction="#skipNextChamp"/>
         </HBox>
     </VBox>
 
