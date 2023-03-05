@@ -648,6 +648,7 @@ public class GameView implements Initializable {
     }
     
     private void autoAimEasiestNextBall(Player nextCuePlayer) {
+        if (game.getGame().getCueBall().isPotted()) return;
         Ball tgt = game.getGame().getEasiestTarget(nextCuePlayer);
         if (tgt == null) return;
         
@@ -2531,6 +2532,7 @@ public class GameView implements Initializable {
         if (isPlayingMovement()) return;
         if (movement != null) return;
         if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
+        if (game.getGame().getCueBall().isPotted()) return;
 
         if (drawStandingPos) drawStandingPos();
 
@@ -2542,7 +2544,10 @@ public class GameView implements Initializable {
                 possibles[0],
                 game.whitePhy,
                 WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
-                false, false, true);
+                false, 
+                false, 
+                true, 
+                false);
         if (center == null) return;
 
         for (int i = 1; i < possibles.length; i++) {
@@ -2552,7 +2557,8 @@ public class GameView implements Initializable {
                     WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
                     false,
                     false,
-                    true
+                    true,
+                    false
             );
         }
 

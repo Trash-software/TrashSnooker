@@ -8,18 +8,18 @@ import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
 import trashsoftware.trashSnooker.util.DataLoader;
-import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
 
 public class PlayerPerson {
-    
+
     // 出杆准确度转化为的readable的multiplier。同样的打点标准差，这个值越大，readable的值越好
     private static final double CUE_PRECISION_FACTOR = 3.0;
 
     public final String category;
     public final HandBody handBody;
     public final double psy;
+    public final boolean isRandom;
     private final String playerId;
     private final String name;
     private final double maxPowerPercentage;
@@ -42,7 +42,6 @@ public class PlayerPerson {
     private final AiPlayStyle aiPlayStyle;
     private final Sex sex;
     private boolean isCustom;
-    public final boolean isRandom;
 
     public PlayerPerson(String playerId,
                         String name,
@@ -65,7 +64,7 @@ public class PlayerPerson {
                         @Nullable AiPlayStyle aiPlayStyle,
                         HandBody handBody,
                         Sex sex) {
-        this.playerId = playerId;
+        this.playerId = playerId.replace('\'', '_');
         this.name = name;
         this.category = category;
         this.maxPowerPercentage = maxPowerPercentage;
@@ -86,7 +85,7 @@ public class PlayerPerson {
         this.aiPlayStyle = aiPlayStyle == null ? deriveAiStyle() : aiPlayStyle;
         this.handBody = handBody;
         this.sex = sex;
-        
+
         this.isRandom = this.playerId.startsWith("random_");
     }
 
@@ -161,17 +160,15 @@ public class PlayerPerson {
                 50.0 : 100.0;
 
         double power = generateDouble(random, abilityLow, Math.min(abilityHigh + 5.0, 99.5));
-        if (sex == Sex.F) {
-            power *= 0.85;
-        }
-        
+        power *= sex.powerMul;
+
         double heightPercentage = (height - sex.minHeight) / (sex.maxHeight - sex.minHeight);
         double restMul = (2 - heightPercentage) / 1.6;
-        
+
         return new PlayerPerson(
                 id,
                 name,
-                Math.min(power / 0.9, 100),
+                Math.min(power / 0.9, 100 * sex.powerMul),
                 power,
                 generateDouble(random, abilityLow, abilityHigh),
                 generateDouble(random, abilityLow, abilityHigh),
@@ -272,10 +269,10 @@ public class PlayerPerson {
 
         return obj;
     }
-    
+
     public Cue getPreferredCue(GameRule gameRule) {
         Cue.Size[] suggested = gameRule.suggestedCues;
-        
+
         // 先看私杆
         for (Cue.Size size : suggested) {
             // size是按照推荐顺序排的
@@ -415,6 +412,30 @@ public class PlayerPerson {
         }
     }
 
+    public enum Sex {
+        M("男", 155, 205, 180, 1.0),
+        F("女", 145, 190, 168, 0.85);
+
+        public final String shown;
+        public final double minHeight;
+        public final double maxHeight;
+        public final double stdHeight;
+        public final double powerMul;
+
+        Sex(String shown, double minHeight, double maxHeight, double stdHeight, double powerMul) {
+            this.shown = shown;
+            this.minHeight = minHeight;
+            this.maxHeight = maxHeight;
+            this.stdHeight = stdHeight;
+            this.powerMul = powerMul;
+        }
+
+        @Override
+        public String toString() {
+            return shown;
+        }
+    }
+
     public static class ReadableAbility implements Cloneable {
         public String category;
         public double aiming;
@@ -428,12 +449,12 @@ public class PlayerPerson {
         private String name;
         private HandBody handBody;
         private Sex sex;
-        
+
         public static ReadableAbility fromPlayerPerson(PlayerPerson playerPerson) {
             return fromPlayerPerson(playerPerson, 1.0);
         }
 
-        public static ReadableAbility fromPlayerPerson(PlayerPerson playerPerson, 
+        public static ReadableAbility fromPlayerPerson(PlayerPerson playerPerson,
                                                        double handFeelEffort) {
             ReadableAbility ra = new ReadableAbility();
             ra.playerId = playerPerson.playerId;
@@ -478,62 +499,81 @@ public class PlayerPerson {
                     handBody.getSecondary().skill : handBody.getThird().skill;
         }
 
-        public double addPerksHowMany(int addWhat, int perks) {
+        public double addPerksHowMany(int addWhat) {
+            double unit;
+            double minimum = 0.2;
+
             switch (addWhat) {
                 case PerkManager.AIMING:
-                    return (100 - aiming) * 0.04 * perks;
+                    unit = (100 - aiming) * 0.05;
+                    break;
                 case PerkManager.CUE_PRECISION:
-                    return (100 - cuePrecision) * 0.04 * perks;
+                    unit = (100 - cuePrecision) * 0.05;
+                    break;
                 case PerkManager.POWER:
-                    return (sex == Sex.M ? 100 : 90 - normalPower) * 0.04 * perks;
+                    double sexPowerMax = 100 * sex.powerMul;
+                    unit = (sexPowerMax - normalPower) * 0.05;
+                    break;
                 case PerkManager.POWER_CONTROL:
-                    return (100 - powerControl) * 0.04 * perks;
+                    unit = (100 - powerControl) * 0.05;
+                    break;
                 case PerkManager.SPIN:
-                    return (100 - spin) * 0.04 * perks;
+                    unit = (100 - spin) * 0.05;
+                    break;
                 case PerkManager.SPIN_CONTROL:
-                    return (100 - spinControl) * 0.04 * perks;
+                    unit = (100 - spinControl) * 0.05;
+                    break;
                 case PerkManager.ANTI_HAND:
-                    return (100 - handBody.getAntiHand().skill) * 0.04 * perks;
+                    unit = (100 - handBody.getAntiHand().skill) * 0.05;
+                    break;
                 case PerkManager.REST:
-                    return (100 - handBody.getRest().skill) * 0.06 * perks;
+                    unit = (100 - handBody.getRest().skill) * 0.075;
+                    minimum = 0.3;
+                    break;
                 default:
                     throw new RuntimeException("Unknown type " + addWhat);
             }
+            return Math.max(unit, minimum);
         }
 
         public void addPerks(int addWhat, int perks) {
+            if (perks == 0) return;
             System.out.println("Add " + addWhat + " " + perks);
-            double many = addPerksHowMany(addWhat, perks);
-            switch (addWhat) {
-                case PerkManager.AIMING:
-                    aiming += many;
-                    break;
-                case PerkManager.CUE_PRECISION:
-                    cuePrecision += many;
-                    break;
-                case PerkManager.POWER:
-                    normalPower += many;
-                    maxPower += many / 0.9;
-                    maxPower = Math.min(maxPower, 100.0);
-                    break;
-                case PerkManager.POWER_CONTROL:
-                    powerControl += many;
-                    break;
-                case PerkManager.SPIN:
-                    spin += many;
-                    break;
-                case PerkManager.SPIN_CONTROL:
-                    spinControl += many;
-                    break;
-                case PerkManager.ANTI_HAND:
-                    handBody.getAntiHand().skill += many;
-                    break;
-                case PerkManager.REST:
-                    handBody.getRest().skill += many;
+
+            while (perks > 0) {
+                perks--;
+                double many = addPerksHowMany(addWhat);
+                switch (addWhat) {
+                    case PerkManager.AIMING:
+                        aiming += many;
+                        break;
+                    case PerkManager.CUE_PRECISION:
+                        cuePrecision += many;
+                        break;
+                    case PerkManager.POWER:
+                        normalPower += many;
+                        maxPower += many / 0.9;
+                        maxPower = Math.min(maxPower, 100.0 * sex.powerMul);
+                        break;
+                    case PerkManager.POWER_CONTROL:
+                        powerControl += many;
+                        break;
+                    case PerkManager.SPIN:
+                        spin += many;
+                        break;
+                    case PerkManager.SPIN_CONTROL:
+                        spinControl += many;
+                        break;
+                    case PerkManager.ANTI_HAND:
+                        handBody.getAntiHand().skill += many;
+                        break;
+                    case PerkManager.REST:
+                        handBody.getRest().skill += many;
 //                    handBody.restPot += many;
-                    break;
-                default:
-                    throw new RuntimeException("Unknown type " + addWhat);
+                        break;
+                    default:
+                        throw new RuntimeException("Unknown type " + addWhat);
+                }
             }
         }
 
@@ -659,12 +699,12 @@ public class PlayerPerson {
         public boolean isLeftHandRest() {
             return leftHandRest;
         }
-        
+
         public HandSkill getAntiHand() {
             HandSkill sec = getSecondary();
             return sec.hand == Hand.REST ? getThird() : sec;
         }
-        
+
         public HandSkill getRest() {
             for (HandSkill hs : precedence) {
                 if (hs.hand == Hand.REST) return hs;
@@ -677,28 +717,6 @@ public class PlayerPerson {
                 if (handSkill.hand == hand) return handSkill;
             }
             throw new RuntimeException("No such hand");
-        }
-    }
-    
-    public enum Sex {
-        M("男", 155,205, 180),
-        F("女", 145, 190, 168);
-        
-        public final String shown;
-        public final double minHeight;
-        public final double maxHeight;
-        public final double stdHeight;
-        
-        Sex(String shown, double minHeight, double maxHeight, double stdHeight) {
-            this.shown = shown;
-            this.minHeight = minHeight;
-            this.maxHeight = maxHeight;
-            this.stdHeight = stdHeight;
-        }
-
-        @Override
-        public String toString() {
-            return shown;
         }
     }
 }

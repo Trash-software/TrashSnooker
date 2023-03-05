@@ -1,25 +1,25 @@
 {
-  "p1": "Ding Junhui",
+  "p1": "custom_player_160",
   "game": {
     "p2Wins": 1,
     "p1": {
       "playerNumber": 1,
-      "handFeelEffort": 0.9820678205159591,
-      "person": "Ding Junhui",
-      "playerType": "COMPUTER",
-      "playCue": "stdSnookerCue",
-      "breakCue": "stdSnookerCue"
-    },
-    "p1Wins": 0,
-    "p2": {
-      "playerNumber": 2,
       "handFeelEffort": 1,
       "person": "custom_player_160",
       "playerType": "PLAYER",
       "playCue": "stdSnookerCue",
       "breakCue": "stdSnookerCue"
     },
-    "startTime": 1677929182140,
+    "p1Wins": 0,
+    "p2": {
+      "playerNumber": 2,
+      "handFeelEffort": 0.8585529677315683,
+      "person": "O_Sullivan",
+      "playerType": "COMPUTER",
+      "playCue": "stdSnookerCue",
+      "breakCue": "stdSnookerCue"
+    },
+    "startTime": 1677988457492,
     "gameValues": {
       "ball": "SNOOKER_BALL",
       "gameRule": "SNOOKER",
@@ -28,13 +28,13 @@
         "holeSizeOrdinal": 1
       }
     },
-    "totalFrames": 9,
+    "totalFrames": 11,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
     "p1Breaks": true
   },
-  "p2": "custom_player_160",
-  "stage": "SEMI_FINAL"
+  "p2": "O_Sullivan",
+  "stage": "FINAL"
 }

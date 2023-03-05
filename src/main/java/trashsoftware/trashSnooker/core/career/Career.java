@@ -160,7 +160,7 @@ public class Career {
         int expNeed;
         while (expInThisLevel >= (expNeed = manager.getExpNeededToLevelUp(level))) {
             level++;
-            availPerks += CareerManager.PERKS_PER_LEVEL;
+            availPerks += CareerManager.perksOfLevelUp(level);
             expInThisLevel -= expNeed;
         }
     }

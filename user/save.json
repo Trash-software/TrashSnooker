@@ -3,26 +3,26 @@
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "Mark Allen",
+    "person": "custom_player_3",
     "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
-    "breakCue": "stdBreakCue"
+    "breakCue": "stdSnookerCue"
   },
   "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "Summer Brave",
-    "playerType": "COMPUTER",
+    "person": "custom_player_2",
+    "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
-    "breakCue": "stdBreakCue"
+    "breakCue": "stdSnookerCue"
   },
-  "startTime": 1677860475198,
+  "startTime": 1677987987050,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
     "table": {
-      "tableOrdinal": 1,
+      "tableOrdinal": 0,
       "holeSizeOrdinal": 1
     }
   },

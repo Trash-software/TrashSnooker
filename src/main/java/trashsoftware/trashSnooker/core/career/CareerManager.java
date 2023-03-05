@@ -29,7 +29,7 @@ public class CareerManager {
     public static final String HISTORY_DIR = "history";
     //    public static final int PROFESSIONAL_LIMIT = 32;
     public static final int INIT_PERKS = 6;
-    public static final int PERKS_PER_LEVEL = 2;
+    public static final int BASE_LEVEL_PERK = 2;
     private static final int[] EXP_REQUIRED_LEVEL_UP = readExpLevelUp();
     private static CareerManager instance;
     private static CareerSave currentSave;
@@ -272,6 +272,14 @@ public class CareerManager {
         return EXP_REQUIRED_LEVEL_UP;
     }
 
+    /**
+     * @param newLevel 升到的级数
+     * @return 升到这一级加几点。个位数级+2，从10级开始+3，20级+4，等等
+     */
+    public static int perksOfLevelUp(int newLevel) {
+        return BASE_LEVEL_PERK + newLevel / 10;
+    }
+
     public void simulateMatchesInPastTwoYears() {
         updateRanking();  // 按照能力初始化排名
 
@@ -318,6 +326,7 @@ public class CareerManager {
     }
 
     public Career findCareerByPlayerId(String playerId) {
+        playerId = playerId.replace('\'', '_');
         for (Career career : playerCareers) {
             if (career.getPlayerPerson().getPlayerId().equals(playerId)) {
                 return career;

@@ -703,13 +703,18 @@ public class StatsView implements Initializable {
             int rowIndex = 0;
             String[] winLost;
             int[] p1p2Wins = matchRec.getP1P2WinsCount();
-            if (p1p2Wins[0] > p1p2Wins[1]) {
-                winLost = new String[]{"WIN", "LOST"};
+            if (p1p2Wins[0] < egt.totalFrames / 2 + 1 && p1p2Wins[1] < egt.totalFrames / 2 + 1) {
+                winLost = new String[]{"", "IN PROGRESS", ""};
             } else {
-                winLost = new String[]{"LOST", "WIN"};
+                if (p1p2Wins[0] > p1p2Wins[1]) {
+                    winLost = new String[]{"WIN", "", "LOST"};
+                } else {
+                    winLost = new String[]{"LOST", "", "WIN"};
+                }
             }
             page.add(new Label(winLost[0]), 1, rowIndex);
-            page.add(new Label(winLost[1]), 5, rowIndex);
+            page.add(new Label(winLost[1]), 3, rowIndex);
+            page.add(new Label(winLost[2]), 5, rowIndex);
             rowIndex++;
 
             String p1Ai = egt.player1isAi ? "电脑" : "玩家";

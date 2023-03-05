@@ -42,7 +42,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     //    protected final GameView parent;
     protected final EntireGame entireGame;
     protected final Map<B, double[]> recordedPositions = new HashMap<>();  // 记录上一杆时球的位置，复位用
-    protected final B cueBall;
+    protected B cueBall;
     protected final GameSettings gameSettings;
     protected P player1;
     protected P player2;
@@ -122,6 +122,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             Game<B, P> copy = (Game<B, P>) super.clone();
 
             copy.cloneBalls(allBalls);
+            
+            for (B ball : copy.getAllBalls()) {
+                if (ball.isWhite()) {
+                    copy.cueBall = ball;
+                    break;
+                }
+            }
+            
             copy.numberBallMap = null;
             return copy;
         } catch (CloneNotSupportedException e) {
@@ -219,16 +227,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
      * @param checkCollisionAfterFirst 是否检查白球打到目标球后是否碰到下一颗球
      * @param recordTargetPos          是否记录第一颗碰撞球的信息
      * @param wipe                     是否还原预测前的状态
+     * @param useClone                 是否使用拷贝的白球，仅为多线程服务
      */
     public WhitePrediction predictWhite(CuePlayParams params,
                                         Phy phy,
                                         double lengthAfterWall,
                                         boolean checkCollisionAfterFirst,
                                         boolean recordTargetPos,
-                                        boolean wipe) {
+                                        boolean wipe,
+                                        boolean useClone) {
         if (cueBall.isPotted()) return null;
 
-        Ball cueBallClone = cueBall.clone();
+        Ball cueBallClone = useClone ? cueBall.clone() : cueBall;
         cueBallClone.setVx(params.vx / phy.calculationsPerSec);
         cueBallClone.setVy(params.vy / phy.calculationsPerSec);
         params.xSpin = params.xSpin == 0.0d ? params.vx / 1000.0 : params.xSpin;  // 避免完全无旋转造成的NaN
@@ -761,10 +771,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public boolean isEnded() {
         return ended;
     }
-    
+
+    /**
+     * @return 此局是否为>=三局两胜的决胜局
+     */
     public boolean isFinalFrame() {
-        return entireGame.getP1Wins() == entireGame.getTotalFrames() / 2 &&
-                entireGame.getP2Wins() == entireGame.getTotalFrames() / 2;
+        int tf = entireGame.getTotalFrames();
+        return tf > 1 && 
+                entireGame.getP1Wins() == tf / 2 &&
+                entireGame.getP2Wins() == tf / 2;
     }
 
     public abstract Player getWiningPlayer();

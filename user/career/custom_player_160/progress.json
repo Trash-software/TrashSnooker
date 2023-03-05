@@ -1,8 +1,9 @@
 {
-  "stageIndex": 1,
+  "stageIndex": 0,
   "championshipId": "world_champ",
   "matchTree": {"root": {
     "p1": {
+      "p1wins": 2,
       "p1": {
         "p1wins": 4,
         "p1": {
@@ -383,7 +384,9 @@
         "stage": "QUARTER_FINAL",
         "p2wins": 4
       },
-      "stage": "SEMI_FINAL"
+      "winner": "custom_player_160",
+      "stage": "SEMI_FINAL",
+      "p2wins": 5
     },
     "p2": {
       "p1wins": 5,
@@ -485,7 +488,7 @@
           "p1wins": 3,
           "p1": {
             "p1wins": 3,
-            "p1": {"winner": "O'Sullivan"},
+            "p1": {"winner": "O_Sullivan"},
             "p2": {
               "p1wins": 3,
               "p1": {
@@ -522,7 +525,7 @@
               "stage": "PRE_ROUND_3",
               "p2wins": 2
             },
-            "winner": "O'Sullivan",
+            "winner": "O_Sullivan",
             "stage": "ROUND_1",
             "p2wins": 0
           },
@@ -569,11 +572,11 @@
             "stage": "ROUND_1",
             "p2wins": 0
           },
-          "winner": "O'Sullivan",
+          "winner": "O_Sullivan",
           "stage": "ROUND_2",
           "p2wins": 0
         },
-        "winner": "O'Sullivan",
+        "winner": "O_Sullivan",
         "stage": "QUARTER_FINAL",
         "p2wins": 4
       },
@@ -767,7 +770,7 @@
         "stage": "QUARTER_FINAL",
         "p2wins": 4
       },
-      "winner": "O'Sullivan",
+      "winner": "O_Sullivan",
       "stage": "SEMI_FINAL",
       "p2wins": 1
     },

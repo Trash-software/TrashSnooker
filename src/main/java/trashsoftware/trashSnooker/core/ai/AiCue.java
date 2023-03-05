@@ -1046,7 +1046,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             );
             // 直接能打到的球，必不会在打到目标球之前碰库
             WhitePrediction wp = game.predictWhite(params, phy, 0.0,
-                    true, false, true);
+                    true, false, true, true);
             if (wp.getFirstCollide() == null) {
                 // 连球都碰不到，没吃饭？
 //            System.out.println("too less");
@@ -1148,7 +1148,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     selectedPowerToActualPower(selectedPower, 0, 0, handSkill)
             );
             WhitePrediction wp = copy.predictWhite(cpp, phy, 10000000.0,
-                    true, true, false);
+                    true, true, false, 
+                    false);  // 这里不用clone，因为整个game都是clone的
             double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
             Ball firstCollide = wp.getFirstCollide();
             if (firstCollide != null && legalSet.contains(firstCollide)) {
