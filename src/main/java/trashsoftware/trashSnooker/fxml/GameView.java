@@ -61,7 +61,6 @@ import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.recorder.TargetRecord;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
-import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.IOException;
 import java.net.URL;
@@ -184,7 +183,7 @@ public class GameView implements Initializable {
     private boolean isDragging;
     private double lastDragAngle;
     private Timeline timeline;
-//    private double predictionMultiplier = 2000.0;
+    //    private double predictionMultiplier = 2000.0;
     private double maxRealPredictLength = defaultMaxPredictLength;
     private boolean enablePsy = true;  // 由游戏决定心理影响
     private boolean aiCalculating;
@@ -358,7 +357,7 @@ public class GameView implements Initializable {
         this.stage = stage;
 
         this.basePane = (Pane) stage.getScene().getRoot();
-        
+
         setKeyboardActions();
 
 //        game = new EntireGame(entireGame.getPlayer1(), entireGame.getPlayer2(),
@@ -440,14 +439,14 @@ public class GameView implements Initializable {
         this.enableDebug = false;
 
         setup(stage, careerMatch.getGame());
-        
+
         double playerGoodness = CareerManager.getInstance().getPlayerGoodness();
         maxRealPredictLength = defaultMaxPredictLength * playerGoodness;
     }
-    
+
     private void setKeyboardActions() {
         powerSlider.setBlockIncrement(1.0);
-        
+
         basePane.setOnKeyPressed(e -> {
             if (replay != null || aiCalculating || playingMovement || cueAnimationPlayer != null) {
                 return;
@@ -491,7 +490,7 @@ public class GameView implements Initializable {
             }
         });
     }
-    
+
     private void turnDirectionDeg(double deg) {
         double rad = Math.toRadians(deg);
         double cur = Algebra.thetaOf(cursorDirectionUnitX, cursorDirectionUnitY);
@@ -549,21 +548,30 @@ public class GameView implements Initializable {
     }
 
     private void setUiFrameStart() {
-        PlayerPerson playerPerson;
+        InGamePlayer igp;
         if (replay != null) {
             if (replay.getCueRecord() != null) {
-                playerPerson = replay.getCueRecord().cuePlayer.getPlayerPerson();
+                igp = replay.getCueRecord().cuePlayer;
             } else {
                 return;
             }
         } else {
-            playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
+            igp = game.getGame().getCuingPlayer().getInGamePlayer();
         }
 
+        PlayerPerson playerPerson = igp.getPlayerPerson();
+        
         powerSlider.setMajorTickUnit(
                 playerPerson.getControllablePowerPercentage()
         );
-        if (replay == null) cueButton.setDisable(false);
+        if (replay == null) {
+            cueButton.setDisable(false);
+            if (igp.getPlayerType() == PlayerType.COMPUTER) {
+                cueButton.setText("电脑击球");
+            } else {
+                cueButton.setText("击球");
+            }
+        }
         updateScoreDiffLabels();
     }
 
@@ -600,7 +608,7 @@ public class GameView implements Initializable {
             System.out.println("Replay finished!");
         }
     }
-    
+
     private void updatePowerSlider(Player cuingPlayer) {
         powerSlider.setValue(DEFAULT_POWER);
         powerSlider.setMajorTickUnit(
@@ -646,15 +654,15 @@ public class GameView implements Initializable {
             }
         }
     }
-    
+
     private void autoAimEasiestNextBall(Player nextCuePlayer) {
         if (game.getGame().getCueBall().isPotted()) return;
         Ball tgt = game.getGame().getEasiestTarget(nextCuePlayer);
         if (tgt == null) return;
-        
+
         double dx = tgt.getX() - game.getGame().getCueBall().getX();
         double dy = tgt.getY() - game.getGame().getCueBall().getY();
-        
+
         double[] unit = Algebra.unitVector(dx, dy);
         cursorDirectionUnitX = unit[0];
         cursorDirectionUnitY = unit[1];
@@ -786,11 +794,11 @@ public class GameView implements Initializable {
                             }
                         }, this::notReposition));
     }
-    
+
     private void notReposition() {
         AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
         asg.notReposition();
-        
+
         letOtherPlayMenu.setDisable(false);
         autoAimEasiestNextBall(game.getGame().getCuingPlayer());
     }
@@ -848,7 +856,7 @@ public class GameView implements Initializable {
         double deg = Math.toDegrees(rad);
         setCueAngleDeg(deg);
     }
-    
+
     private void setCueAngleDeg(double newDeg) {
         cueAngleDeg = Math.min(MAX_CUE_ANGLE, Math.max(0, newDeg));
         recalculateUiRestrictions();
@@ -1113,7 +1121,7 @@ public class GameView implements Initializable {
         restoreCueAngle();
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
-        
+
         game.getGame().switchPlayer();
 
         Player willPlayPlayer = game.getGame().getCuingPlayer();
@@ -1122,7 +1130,7 @@ public class GameView implements Initializable {
         drawScoreBoard(willPlayPlayer, true);
         drawTargetBoard(true);
         updateScoreDiffLabels();
-        
+
         if (aiAutoPlay && willPlayPlayer.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
             aiCue(willPlayPlayer, false);  // 老子给你让杆，你复位？豁哥哥
         }
@@ -1400,7 +1408,7 @@ public class GameView implements Initializable {
 
         beginCueAnimationOfHumanPlayer(whiteStartingX, whiteStartingY);
     }
-    
+
     private void aiCue(Player player) {
         aiCue(player, true);
     }
@@ -2544,9 +2552,9 @@ public class GameView implements Initializable {
                 possibles[0],
                 game.whitePhy,
                 WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
-                false, 
-                false, 
-                true, 
+                false,
+                false,
+                true,
                 false);
         if (center == null) return;
 
