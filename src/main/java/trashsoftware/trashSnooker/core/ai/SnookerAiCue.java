@@ -172,7 +172,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
         AttackChoice choice = choiceList.get(0);
         for (AttackChoice ac : choiceList.subList(1, choiceList.size())) {
-            if (ac.price > choice.price) {
+            if (ac.defaultRef.price > choice.defaultRef.price) {
                 choice = ac;
             }
         }
@@ -216,12 +216,16 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             power = random.nextDouble() * interval + powerLow;
         }
 
-        AttackThread at = new AttackThread(
+        AttackChoiceWithParam attackChoiceWithParam = new AttackChoiceWithParam(
+                choice,
+                game,
+                aiPlayer,
                 power,
                 spin[0],
-                spin[1],
-                choice,
-                1.0,
+                spin[1]
+        );
+        AttackThread at = new AttackThread(
+                attackChoiceWithParam,
                 game.getGameValues(),
                 AbstractSnookerGame.END_REP,
                 new ArrayList<>(),

@@ -10,6 +10,7 @@ module TrashSnooker {
     requires org.xerial.sqlitejdbc;
     requires org.tukaani.xz;
     requires java.desktop;
+    requires commons.math3;
 
     exports trashsoftware.trashSnooker;
     exports trashsoftware.trashSnooker.core;

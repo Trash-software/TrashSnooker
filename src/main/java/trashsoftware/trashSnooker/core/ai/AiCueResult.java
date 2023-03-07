@@ -15,7 +15,7 @@ public class AiCueResult {
     private final Ball targetBall;
     private final PlayerPerson.HandSkill handSkill;
     public static final double DEFAULT_AI_PRECISION = 10500.0;
-    private static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
+    protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
     private double unitX, unitY;
     private final boolean isFinalFrame;
 

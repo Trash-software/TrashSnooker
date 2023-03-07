@@ -1191,6 +1191,7 @@ public class GameView implements Initializable {
         double handSdMul = PlayerPerson.HandBody.getSdOfHand(handSkill);
         frontBackSpinFactor *= handSdMul;
         sideSpinFactor *= handSdMul;
+        powerFactor *= handSdMul;
 
         double pMaxActualPower = getActualPowerPercentage(playerPerson.getMaxPowerPercentage(),
                 getUnitSideSpin(intentCuePointX),
@@ -1203,7 +1204,7 @@ public class GameView implements Initializable {
         // 因为力量控制导致的力量偏差
         powerFactor = powerFactor * (100.0 - playerPerson.getPowerControl()) / 100.0;
         powerFactor *= cue.powerMultiplier;  // 发力范围越大的杆控力越粗糙
-        powerFactor *= selPower / 60;  // 用力越大误差越大
+        powerFactor *= playerPerson.getErrorMultiplierOfPower(selPower);  // 用力越大误差越大
         if (enablePsy) {
             double psyPowerMul = getPsyControlMultiplier(playerPerson);
             powerFactor /= psyPowerMul;
@@ -1232,7 +1233,7 @@ public class GameView implements Initializable {
             double xSig = muSigXy[1];
             double ySig = -muSigXy[3];
 
-            double mulWithPower = getErrorMultiplierOfPower(playerPerson, selPower);
+            double mulWithPower = playerPerson.getErrorMultiplierOfPower(selPower);
 
             xError = xError * xSig + muSigXy[0];
             yError = yError * ySig + muSigXy[2];
@@ -2761,18 +2762,6 @@ public class GameView implements Initializable {
         playingMovement = true;
     }
 
-    private double getErrorMultiplierOfPower(PlayerPerson playerPerson, double selectedPower) {
-        double ctrlAblePwr = playerPerson.getControllablePowerPercentage();
-        double mul = 1;
-        if (selectedPower > ctrlAblePwr) {
-            // 超过正常发力范围，打点准确度大幅下降
-            // 一般来说，球手的最大力量大于可控力量15%左右
-            // 打点准确度最大应下降5倍
-            mul += (selectedPower - ctrlAblePwr) / 3;
-        }
-        return mul * selectedPower / ctrlAblePwr;
-    }
-
     private void beginCueAnimationOfHumanPlayer(double whiteStartingX, double whiteStartingY) {
         beginCueAnimation(game.getGame().getCuingPlayer().getInGamePlayer(),
                 whiteStartingX, whiteStartingY, getSelectedPower(),
@@ -2783,7 +2772,7 @@ public class GameView implements Initializable {
                                    double selectedPower, double directionX, double directionY) {
         PlayerPerson playerPerson = cuingPlayer.getPlayerPerson();
         double personPower = getPersonPower(playerPerson);  // 球手的用力程度
-        double errMulWithPower = getErrorMultiplierOfPower(playerPerson, selectedPower);
+        double errMulWithPower = playerPerson.getErrorMultiplierOfPower(selectedPower);
         double maxPullDt = pullDtOf(playerPerson, personPower);
         double handDt = maxPullDt + HAND_DT_TO_MAX_PULL;
         double[] handXY = handPosition(handDt, whiteStartingX, whiteStartingY, directionX, directionY);

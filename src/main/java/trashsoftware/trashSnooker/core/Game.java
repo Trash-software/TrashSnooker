@@ -945,7 +945,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         currentPlayer = getAnotherPlayer();
     }
 
-    public P getAnotherPlayer(P player) {
+    public P getAnotherPlayer(Player player) {
         return player == player1 ? player2 : player1;
     }
 
@@ -1142,6 +1142,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         cueBallClone.twoMovingBallsHitCore(ball, phy);
                         double[] ballDirectionUnitVec = Algebra.unitVector(ball.vx, ball.vy);
                         double[] whiteDirectionUnitVec = Algebra.unitVector(whiteVx, whiteVy);
+                        
+                        // todo: 确认是否考虑了齿轮效应
                         double ballInitVMmPerS = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         if (!recordTargetPos) {
                             ball.vx = 0;

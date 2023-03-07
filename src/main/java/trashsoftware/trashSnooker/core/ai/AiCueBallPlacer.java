@@ -66,8 +66,8 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
                     AiCue.ATTACK_DIFFICULTY_THRESHOLD
             );
             for (AiCue.AttackChoice choice : attackChoices) {
-                if (choice.price > maxPrice) {
-                    maxPrice = choice.price;
+                if (choice.defaultRef.price > maxPrice) {
+                    maxPrice = choice.defaultRef.price;
                     bestPos = pos;
                 }
             }

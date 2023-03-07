@@ -400,6 +400,18 @@ public class PlayerPerson {
         return sex;
     }
 
+    public double getErrorMultiplierOfPower(double selectedPower) {
+        double ctrlAblePwr = getControllablePowerPercentage();
+        double mul = 1;
+        if (selectedPower > ctrlAblePwr) {
+            // 超过正常发力范围，打点准确度大幅下降
+            // 一般来说，球手的最大力量大于可控力量15%左右
+            // 打点准确度最大应下降5倍
+            mul += (selectedPower - ctrlAblePwr) / 3;
+        }
+        return mul * selectedPower / ctrlAblePwr;
+    }
+
     public enum Hand {
         LEFT(1.0),
         RIGHT(1.0),
