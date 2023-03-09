@@ -16,6 +16,11 @@ public class SidePocketAiCue extends AiCue<SidePocketGame, SidePocketPlayer> {
     }
 
     @Override
+    protected boolean supportAttackWithDefense(int targetRep) {
+        return true;
+    }
+
+    @Override
     protected DefenseChoice standardDefense() {
         return null;
     }

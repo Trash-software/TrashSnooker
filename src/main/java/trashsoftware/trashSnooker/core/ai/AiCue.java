@@ -279,6 +279,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     protected abstract DefenseChoice breakCue(Phy phy);
 
     protected abstract DefenseChoice standardDefense();
+    
+    protected abstract boolean supportAttackWithDefense(int targetRep);
 
     protected double ballAlivePrice(Ball ball) {
         List<double[][]> dirHolePoints = game.directionsToAccessibleHoles(ball);
@@ -449,7 +451,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //            return iac;  // 这是最烂的结果
         }
 
-        if (defensiveAttacks.isEmpty()) return null;
+        if (defensiveAttacks.isEmpty() || !supportAttackWithDefense(choice.attackTarget)) return null;
 
         // 研究连打带跑
         List<DefensiveAttackThread> defensiveThreads = new ArrayList<>();

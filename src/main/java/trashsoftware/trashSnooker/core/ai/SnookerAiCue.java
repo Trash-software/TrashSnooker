@@ -23,7 +23,12 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         
         makeAliveMap();
     }
-    
+
+    @Override
+    protected boolean supportAttackWithDefense(int targetRep) {
+        return targetRep != AbstractSnookerGame.RAW_COLORED_REP;
+    }
+
     private void makeAliveMap() {
         for (Ball ball : game.getAllBalls()) {
             if (ball.isRed() && !ball.isPotted()) {
