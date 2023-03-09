@@ -32,7 +32,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private Ball justHit;
     private double currentXError;
     private double currentYError;
-    private int identifier;  // 即使是分值一样的球identifier也不一样，但是clone之后identifier保持不变
+    private final int identifier;  // 即使是分值一样的球identifier也不一样，但是clone之后identifier保持不变
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ball.ballRadius);
@@ -171,10 +171,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
     public boolean isRed() {
         return value == 1;
-    }
-
-    public boolean isColored() {
-        return value > 1 && value <= 7;
     }
 
     public boolean isWhite() {

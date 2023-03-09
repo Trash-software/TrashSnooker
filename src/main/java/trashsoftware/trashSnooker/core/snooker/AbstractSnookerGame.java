@@ -586,7 +586,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall) {
         if (!ball.isPotted() && !ball.isWhite()) {
             if (targetRep == RAW_COLORED_REP) {
-                return ball.isColored();
+                return ball.getValue() > 1 && ball.getValue() <= 7;
             } else {
                 if (isSnookerFreeBall) {
                     return true;

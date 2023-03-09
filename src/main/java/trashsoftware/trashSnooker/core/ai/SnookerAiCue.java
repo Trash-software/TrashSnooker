@@ -216,7 +216,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             power = random.nextDouble() * interval + powerLow;
         }
 
-        AttackChoiceWithParam attackChoiceWithParam = new AttackChoiceWithParam(
+        AttackParam attackParam = new AttackParam(
                 choice,
                 game,
                 aiPlayer,
@@ -225,7 +225,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 spin[1]
         );
         AttackThread at = new AttackThread(
-                attackChoiceWithParam,
+                attackParam,
                 game.getGameValues(),
                 AbstractSnookerGame.END_REP,
                 new ArrayList<>(),

@@ -1,28 +1,28 @@
 {
-  "p2Wins": 0,
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "custom_player_4",
-    "playerType": "COMPUTER",
+    "person": "Mark Allen",
+    "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
-    "breakCue": "stdBreakCue"
+    "breakCue": "stdSnookerCue"
   },
-  "p1Wins": 1,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "Trump",
-    "playerType": "PLAYER",
-    "playCue": "TrumpCue",
-    "breakCue": "stdBreakCue"
+    "person": "Neil Robertson",
+    "playerType": "COMPUTER",
+    "playCue": "stdSnookerCue",
+    "breakCue": "stdSnookerCue"
   },
-  "startTime": 1678207152783,
+  "startTime": 1678376114662,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
     "table": {
-      "tableOrdinal": 1,
+      "tableOrdinal": 0,
       "holeSizeOrdinal": 1
     }
   },
