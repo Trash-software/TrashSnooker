@@ -174,7 +174,8 @@ public class PinyinDict {
             String format(String last, List<String> first) {
                 if (first.isEmpty()) return firstUpper(last);
                 StringBuilder builder = new StringBuilder();
-                builder.append(last).append(' ');
+                builder.append(firstUpper(last))
+                        .append(' ');
                 for (String f : first) {
                     builder.append(Character.toUpperCase(f.charAt(0))).append('.');
                 }

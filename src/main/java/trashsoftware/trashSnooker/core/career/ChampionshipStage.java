@@ -1,30 +1,31 @@
 package trashsoftware.trashSnooker.core.career;
 
-public enum ChampionshipStage {
-    FINAL("决赛", true),
-    SEMI_FINAL("半决赛", true),
-    QUARTER_FINAL("四分之一决赛", true),
-    ROUND_3("第三轮", true),
-    ROUND_2("第二轮", true),
-    ROUND_1("第一轮", true),
-    PRE_ROUND_4("预选赛第四轮", false),
-    PRE_ROUND_3("预选赛第三轮", false),
-    PRE_ROUND_2("预选赛第二轮", false),
-    PRE_ROUND_1("预选赛第一轮", false);
+import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.Util;
 
-    public final String shown;
+public enum ChampionshipStage {
+    FINAL(true),
+    SEMI_FINAL(true),
+    QUARTER_FINAL(true),
+    ROUND_3(true),
+    ROUND_2(true),
+    ROUND_1(true),
+    PRE_ROUND_4(false),
+    PRE_ROUND_3(false),
+    PRE_ROUND_2(false),
+    PRE_ROUND_1(false);
+
     public final boolean isMain;  // 是否为正赛
 
-    ChampionshipStage(String shown, boolean isMain) {
-        this.shown = shown;
+    ChampionshipStage(boolean isMain) {
         this.isMain = isMain;
     }
-    
+
     public static ChampionshipStage[] getSequence(int mainRounds, int preRounds) {
         int rounds = mainRounds + preRounds;
         int mainSkip = ROUND_1.ordinal() - mainRounds + 1;
         int preSkip = PRE_ROUND_1.ordinal() - preRounds + 1;
-        
+
         ChampionshipStage[] res = new ChampionshipStage[mainRounds + preRounds];
         for (int i = 0; i < rounds; i++) {
             if (i <= 2) {
@@ -39,7 +40,7 @@ public enum ChampionshipStage {
     }
 
     public String getShown() {
-        return shown;
+        return App.getStrings().getString(Util.toLowerCamelCase(name()));
     }
 
     //        @Override

@@ -31,7 +31,7 @@
         <TableView fx:id="careersTable">
             <columns>
                 <TableColumn text="%career" fx:id="playerColumn"/>
-                <!--            <TableColumn text="比赛"/>-->
+                <TableColumn text="%level" fx:id="levelColumn"/>
             </columns>
         </TableView>
 

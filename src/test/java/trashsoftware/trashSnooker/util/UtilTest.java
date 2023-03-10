@@ -1,6 +1,8 @@
 package trashsoftware.trashSnooker.util;
 
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Assert.*;
 
 public class UtilTest {
     
@@ -23,5 +25,40 @@ public class UtilTest {
     @Test
     public void testHex() {
         System.out.println(Util.decimalToHex(16, 2));
+    }
+    
+    @Test
+    public void testCamelSingle() {
+        Assert.assertEquals("test", Util.toLowerCamelCase("test"));
+    }
+
+    @Test
+    public void testCamelUpper() {
+        Assert.assertEquals("testString", Util.toLowerCamelCase("TestString"));
+    }
+    
+    @Test
+    public void testCamelAllCaps() {
+        Assert.assertEquals("testStringTwo", Util.toLowerCamelCase("TEST_STRING_TWO"));
+    }
+
+    @Test
+    public void testCamelAllCapsWithNumber() {
+        Assert.assertEquals("test10StringTwo", Util.toLowerCamelCase("TEST_10_STRING_TWO"));
+    }
+
+    @Test
+    public void testCamelAllCapsWithNumberTail() {
+        Assert.assertEquals("test10StringTwo3", Util.toLowerCamelCase("TEST_10_STRING_TWO_3"));
+    }
+
+    @Test
+    public void testCamelUpperWithNumber() {
+        Assert.assertEquals("test10StringTwo", Util.toLowerCamelCase("Test10StringTwo"));
+    }
+
+    @Test
+    public void testCamelUpperWithNumberTail() {
+        Assert.assertEquals("test10StringTwo3", Util.toLowerCamelCase("Test10StringTwo3"));
     }
 }

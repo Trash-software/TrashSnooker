@@ -61,9 +61,7 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
                     null,
                     legalBalls,
                     pos,
-                    false,
-                    false,
-                    AiCue.ATTACK_DIFFICULTY_THRESHOLD
+                    false
             );
             for (AiCue.AttackChoice choice : attackChoices) {
                 if (choice.defaultRef.price > maxPrice) {

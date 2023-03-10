@@ -223,8 +223,6 @@ public class Util {
     public static String toLowerCamelCase(String s) {
         String[] words;
         
-        // assert no numbers or strange chars in s
-        
         if (s.contains("_")) {
             words = s.split("_");
         } else if (s.contains(" ")) {
@@ -240,6 +238,21 @@ public class Util {
                     if (wordBuilder.length() > 0) {
                         strings.add(wordBuilder.toString());
                         wordBuilder.setLength(0);
+                    }
+                } else if (Character.isDigit(c)) {
+                    if (wordBuilder.length() > 0) {
+                        if (!Character.isDigit(wordBuilder.charAt(0))) {
+                            strings.add(wordBuilder.toString());
+                            wordBuilder.setLength(0);
+                        }
+                    }
+                } else {
+                    // 是小写字母
+                    if (wordBuilder.length() > 0) {
+                        if (Character.isDigit(wordBuilder.charAt(0))) {
+                            strings.add(wordBuilder.toString());
+                            wordBuilder.setLength(0);
+                        }
                     }
                 }
                 wordBuilder.append(c);

@@ -67,6 +67,7 @@ public class AddPlayerView implements Initializable {
                 1.0,
                 positionSlider.getValue(),
                 positionSlider.getValue(),
+                90.0,
                 new AiPlayStyle(
                         Math.min(99.5, precisionSlider.getValue() * 1.1),
                         Math.min(99.5, precisionSlider.getValue()),

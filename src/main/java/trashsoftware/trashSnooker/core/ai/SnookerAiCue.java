@@ -116,8 +116,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                                       PotAttempt opponentAttempt) {
         if (opponentAttempt != null) return false;  // 对手都在进攻，你还敢复位？
         
-        IntegratedAttackChoice attackChoice = standardAttack(phy, ATTACK_DIFFICULTY_THRESHOLD / 2);
-        return attackChoice == null;  // 先就这样吧，暂时不考虑更好的防一杆
+        IntegratedAttackChoice attackChoice = standardAttack(phy);
+        return attackChoice == null || !attackChoice.isPureAttack;  // 先就这样吧，暂时不考虑更好的防一杆
     }
 
     @Override
@@ -168,7 +168,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     }
 
     private IntegratedAttackChoice lastExhibitionShot(Phy phy) {
-        List<AttackChoice> choiceList = getCurrentAttackChoices(99999999);
+        List<AttackChoice> choiceList = getCurrentAttackChoices();
         if (choiceList.isEmpty()) {
             System.out.println("Cannot exhibit!");
             return null;
@@ -235,8 +235,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 AbstractSnookerGame.END_REP,
                 new ArrayList<>(),
                 phy,
-                GamePlayStage.NO_PRESSURE,
-                ATTACK_DIFFICULTY_THRESHOLD
+                GamePlayStage.NO_PRESSURE
         );
         at.run();
         return at.result;

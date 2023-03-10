@@ -31,6 +31,8 @@ public class EntryView implements Initializable {
     TableView<CareerSave> careersTable;
     @FXML
     TableColumn<CareerSave, String> playerColumn;
+    @FXML
+    TableColumn<CareerSave, String> levelColumn;
 
     @FXML
     Button continueCareerBtn, deleteCareerBtn;
@@ -71,6 +73,7 @@ public class EntryView implements Initializable {
         this.strings = resourceBundle;
 
         playerColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getPlayerName()));
+        levelColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getLevel()));
         careersTable.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             continueCareerBtn.setDisable(newValue == null);
             deleteCareerBtn.setDisable(newValue == null);

@@ -77,9 +77,6 @@ public class DataLoader {
     private static Map<String, PlayerPerson> loadPlayers(JSONObject root,
                                                          Map<String, Cue> cues,
                                                          boolean isCustomPlayer) {
-        boolean needTranslate = !Objects.equals(
-                ConfigLoader.getInstance().getLocale().getLanguage().toLowerCase(Locale.ROOT),
-                "zh");
         if (root.has("players")) {
             JSONObject array = root.getJSONObject("players");
             Map<String, PlayerPerson> result = new HashMap<>();
@@ -94,9 +91,6 @@ public class DataLoader {
                             continue;
                         }
                         String name = personObj.getString("name");
-                        if (needTranslate && PinyinDict.getInstance().needTranslate(name)) {
-                            name = PinyinDict.getInstance().translateChineseName(name);
-                        }
                         
                         AiPlayStyle aiPlayStyle;
                         if (personObj.has("ai")) {

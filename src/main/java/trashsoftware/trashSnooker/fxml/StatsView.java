@@ -31,18 +31,22 @@ public class StatsView implements Initializable {
 
     @FXML
     VBox rightPane;
+    
+    private ResourceBundle strings;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.strings = resources;
+        
         initTree();
     }
 
     private void initTree() {
-        TreeItem<RecordTree> root = new TreeItem<>(new RecordTree("记录"));
+        TreeItem<RecordTree> root = new TreeItem<>(new RecordTree(strings.getString("recordMenu"), strings));
         DBAccess db = DBAccess.getInstance();
 
-        TreeItem<RecordTree> humanRoot = new TreeItem<>(new PlayerTypeTree(false));
-        TreeItem<RecordTree> aiRoot = new TreeItem<>(new PlayerTypeTree(true));
+        TreeItem<RecordTree> humanRoot = new TreeItem<>(new PlayerTypeTree(false, strings));
+        TreeItem<RecordTree> aiRoot = new TreeItem<>(new PlayerTypeTree(true, strings));
         root.getChildren().add(humanRoot);
         root.getChildren().add(aiRoot);
 
@@ -50,18 +54,18 @@ public class StatsView implements Initializable {
         for (String name : names) {
             PlayerAi paiHuman = new PlayerAi(name, false);
             PlayerAi paiAi = new PlayerAi(name, true);
-            humanRoot.getChildren().add(new PersonTreeItem(paiHuman));
-            aiRoot.getChildren().add(new PersonTreeItem(paiAi));
+            humanRoot.getChildren().add(new PersonTreeItem(paiHuman, strings));
+            aiRoot.getChildren().add(new PersonTreeItem(paiAi, strings));
         }
         
-        TreeItem<RecordTree> matchesRoot = new TreeItem<>(new RecordTree("比赛"));
+        TreeItem<RecordTree> matchesRoot = new TreeItem<>(new RecordTree(strings.getString("statsMatches"), strings));
         
         for (GameRule gameRule : GameRule.values()) {
             List<EntireGameTitle> matchesOfType = db.getAllMatches(gameRule);
-            TreeItem<RecordTree> typeRoot = new TreeItem<>(new AllMatchesTree(gameRule));
+            TreeItem<RecordTree> typeRoot = new TreeItem<>(new AllMatchesTree(gameRule, strings));
             
             for (EntireGameTitle egt : matchesOfType) {
-                MatchRecord mr = new MatchRecord(egt);
+                MatchRecord mr = new MatchRecord(egt, strings);
                 typeRoot.getChildren().add(new TreeItem<>(mr));
             }
             
@@ -83,19 +87,21 @@ public class StatsView implements Initializable {
     public static class PersonTreeItem extends TreeItem<RecordTree> {
         private final PlayerAi playerAi;
         private boolean firstTimeChildren = true;
+        private final ResourceBundle strings;
 
-        PersonTreeItem(PlayerAi playerAi) {
+        PersonTreeItem(PlayerAi playerAi, ResourceBundle strings) {
             this.playerAi = playerAi;
+            this.strings = strings;
 
-            setValue(new RecordTree(this.playerAi.toString()));
+            setValue(new RecordTree(this.playerAi.toString(), strings));
         }
 
-        private static ObservableList<TreeItem<RecordTree>> buildChildren(PlayerAi playerAi) {
+        private static ObservableList<TreeItem<RecordTree>> buildChildren(PlayerAi playerAi, ResourceBundle strings) {
             ObservableList<TreeItem<RecordTree>> children = FXCollections.observableArrayList();
             for (GameRule gameRule : GameRule.values()) {
-                TreeItem<RecordTree> typeItem = new TreeItem<>(new GameTypeTree(playerAi, gameRule));
-                typeItem.getChildren().add(new RecordSorting(gameRule, playerAi, "time"));
-                typeItem.getChildren().add(new RecordSorting(gameRule, playerAi, "opponent"));
+                TreeItem<RecordTree> typeItem = new TreeItem<>(new GameTypeTree(playerAi, gameRule, strings));
+                typeItem.getChildren().add(new RecordSorting(gameRule, playerAi, "time", strings));
+                typeItem.getChildren().add(new RecordSorting(gameRule, playerAi, "opponent", strings));
                 children.add(typeItem);
             }
             return children;
@@ -105,7 +111,7 @@ public class StatsView implements Initializable {
         public ObservableList<TreeItem<RecordTree>> getChildren() {
             if (firstTimeChildren) {
                 firstTimeChildren = false;
-                super.getChildren().setAll(buildChildren(playerAi));
+                super.getChildren().setAll(buildChildren(playerAi, strings));
             }
             return super.getChildren();
         }
@@ -125,8 +131,8 @@ public class StatsView implements Initializable {
         private final PlayerAi pai;
         private final GameRule gameRule;
 
-        GameTypeTree(PlayerAi pai, GameRule gameRule) {
-            super(GameRule.toReadable(gameRule));
+        GameTypeTree(PlayerAi pai, GameRule gameRule, ResourceBundle strings) {
+            super(GameRule.toReadable(gameRule), strings);
             this.pai = pai;
             this.gameRule = gameRule;
         }
@@ -147,9 +153,9 @@ public class StatsView implements Initializable {
 
             int potAttempts = potRecords[0];
             int potSuccesses = potRecords[1];
-            resultPane.add(new Label("进攻次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsAttacks")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(potAttempts)), 1, rowIndex++);
-            resultPane.add(new Label("进攻成功次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsAttacksSuc")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(potSuccesses)), 1, rowIndex);
 //            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
             resultPane.add(new Label(
@@ -158,9 +164,9 @@ public class StatsView implements Initializable {
 
             int longPotAttempts = potRecords[2];
             int longPotSuccesses = potRecords[3];
-            resultPane.add(new Label("长台进攻次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsLongAttacks")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(longPotAttempts)), 1, rowIndex++);
-            resultPane.add(new Label("长台进攻成功次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsLongAttacksSuc")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(longPotSuccesses)), 1, rowIndex);
 //            resultPane.add(new Label("长台进攻成功率"), 0, rowIndex);
             resultPane.add(new Label(
@@ -170,9 +176,9 @@ public class StatsView implements Initializable {
 
             int restAttempts = potRecords[8];
             int restSuccesses = potRecords[9];
-            resultPane.add(new Label("架杆进攻次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsRestAttacks")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(restAttempts)), 1, rowIndex++);
-            resultPane.add(new Label("架杆成功次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsRestAttacksSuc")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(restSuccesses)), 1, rowIndex);
 //            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
             resultPane.add(new Label(
@@ -181,9 +187,9 @@ public class StatsView implements Initializable {
 
             int positionAttempts = potRecords[6];
             int positionSuccesses = potRecords[7];
-            resultPane.add(new Label("走位次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsPositions")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(positionAttempts)), 1, rowIndex++);
-            resultPane.add(new Label("走位成功次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsPositionsSuc")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(positionSuccesses)), 1, rowIndex);
 //            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
             resultPane.add(new Label(
@@ -192,9 +198,9 @@ public class StatsView implements Initializable {
 
             int defAttempts = potRecords[4];
             int defSuccesses = potRecords[5];
-            resultPane.add(new Label("防守次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsDefenses")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(defAttempts)), 1, rowIndex++);
-            resultPane.add(new Label("防守成功次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsDefensesSuc")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(defSuccesses)), 1, rowIndex);
 //            resultPane.add(new Label("防守成功率"), 0, rowIndex);
             resultPane.add(new Label(
@@ -204,9 +210,9 @@ public class StatsView implements Initializable {
 
             int solves = potRecords[10];
             int solveSuccesses = potRecords[11];
-            resultPane.add(new Label("解球次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsEscapes")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(solves)), 1, rowIndex++);
-            resultPane.add(new Label("解球成功次数"), 0, rowIndex);
+            resultPane.add(new Label(strings.getString("statsEscapesSuc")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(solveSuccesses)), 1, rowIndex);
 //            resultPane.add(new Label("防守成功率"), 0, rowIndex);
             resultPane.add(new Label(
@@ -216,35 +222,35 @@ public class StatsView implements Initializable {
 
             if (gameRule.snookerLike) {
                 int[] breaksScores = db.getSnookerBreaksTotal(gameRule, pai.playerId, pai.isAi);
-                resultPane.add(new Label("总得分"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("totalPoints")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
-                resultPane.add(new Label("最高单杆"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("bestSinglePoints")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[1])), 1, rowIndex++);
-                resultPane.add(new Label("单杆50+"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("single50")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[2])), 1, rowIndex++);
-                resultPane.add(new Label("单杆100+"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("single100")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[3])), 1, rowIndex++);
-                resultPane.add(new Label("单杆147"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("single147")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
             } else if (gameRule == GameRule.CHINESE_EIGHT || gameRule == GameRule.SIDE_POCKET) {
                 int[] breaksScores = db.getNumberedBallGamesTotal(gameRule, pai.playerId, pai.isAi);
-                resultPane.add(new Label("开球次数"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("numBreaks")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
-                resultPane.add(new Label("开球进球次数"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("numBreaksSuc")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[1])), 1, rowIndex++);
-                resultPane.add(new Label("开球成功率"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("breaksSucRatio")), 0, rowIndex);
                 resultPane.add(new Label(String.format("%.1f%%",
                         breaksScores[1] * 100.0 / breaksScores[0])), 
                         1, rowIndex++);
-                resultPane.add(new Label("炸清"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("breakClears")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[2])), 1, rowIndex++);
-                resultPane.add(new Label("接清"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("continueClears")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[3])), 1, rowIndex++);
-                resultPane.add(new Label("最高单杆球数"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("highestSingleBalls")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
             }
             resultPane.add(new Separator(), 0, rowIndex++, 3, 1);
-            final Button gameStatsButton = new Button("对局统计");
+            final Button gameStatsButton = new Button(strings.getString("matchStats"));
             resultPane.add(gameStatsButton, 0, rowIndex++);
 
             final int lastNormalRowIndex = rowIndex;
@@ -312,10 +318,10 @@ public class StatsView implements Initializable {
 
                 int rowIndex = startRowIndex;
 
-                resultPane.add(new Label("总场次"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("totalMatches")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(allMatches.size())), 1, rowIndex++);
 
-                resultPane.add(new Label("总胜场"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("totalMatchesWin")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(thisWinMatchesFinal)), 1, rowIndex);
 
                 resultPane.add(new Label(
@@ -323,10 +329,10 @@ public class StatsView implements Initializable {
                                         (double) thisWinMatchesFinal / allMatches.size() * 100)),
                         2, rowIndex++);
 
-                resultPane.add(new Label("总局数"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("totalFramesLife")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(totalFramesFinal)), 1, rowIndex++);
 
-                resultPane.add(new Label("总胜局数"), 0, rowIndex);
+                resultPane.add(new Label(strings.getString("totalFramesLifeWin")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(thisWinFramesFinal)), 1, rowIndex);
 
                 resultPane.add(new Label(
@@ -342,10 +348,10 @@ public class StatsView implements Initializable {
                     int total = entry.getValue()[1];
                     double pRate = (double) pWins / total * 100;
                     resultPane.add(
-                            new Label(String.format("%d局%d胜制",
+                            new Label(String.format(strings.getString("bestOfNFrames"),
                                     entry.getKey(), entry.getKey() / 2 + 1)),
                             0, rowIndex);
-                    resultPane.add(new Label(String.format("%d场%d胜", total, pWins)), 1, rowIndex);
+                    resultPane.add(new Label(String.format(strings.getString("boNStats"), total, pWins)), 1, rowIndex);
                     resultPane.add(new Label(String.format("%.1f%%", pRate)), 2, rowIndex);
                     rowIndex++;
                 }
@@ -354,10 +360,12 @@ public class StatsView implements Initializable {
     }
 
     public static class RecordTree {
+        protected final ResourceBundle strings;
         protected final String shown;
 
-        RecordTree(String shown) {
+        RecordTree(String shown, ResourceBundle strings) {
             this.shown = shown;
+            this.strings = strings;
         }
 
         void setRightPane(Pane rightPane) {
@@ -372,8 +380,8 @@ public class StatsView implements Initializable {
     
     public static class AllMatchesTree extends RecordTree {
 
-        AllMatchesTree(GameRule gameRule) {
-            super(GameRule.toReadable(gameRule));
+        AllMatchesTree(GameRule gameRule, ResourceBundle strings) {
+            super(GameRule.toReadable(gameRule), strings);
         }
 
         @Override
@@ -387,8 +395,8 @@ public class StatsView implements Initializable {
         final boolean isAi;
         boolean expand = false;
 
-        PlayerTypeTree(boolean isAi) {
-            super(isAi ? "电脑" : "玩家");
+        PlayerTypeTree(boolean isAi, ResourceBundle strings) {
+            super(isAi ? strings.getString("typeComputer") : strings.getString("typePlayer"), strings);
 
             this.isAi = isAi;
         }
@@ -398,7 +406,7 @@ public class StatsView implements Initializable {
             rightPane.getChildren().clear();
             if (!expand) {
                 VBox vBox = new VBox();
-                Button button = new Button("查询记录");
+                Button button = new Button(strings.getString("queryRecords"));
                 button.setOnAction(event -> {
                     expand = true;
                     setRightPane(rightPane);
@@ -514,24 +522,26 @@ public class StatsView implements Initializable {
         private final PlayerAi playerAi;
         private final GameRule gameRule;
         private boolean firstTimeChildren = true;
+        private final ResourceBundle strings;
 
-        RecordSorting(GameRule gameRule, PlayerAi playerAi, String shown) {
+        RecordSorting(GameRule gameRule, PlayerAi playerAi, String shown, ResourceBundle strings) {
+            this.strings = strings;
             this.shown = shown;
             this.playerAi = playerAi;
             this.gameRule = gameRule;
 
-            setValue(new RecordTree(getShowingStr()));
+            setValue(new RecordTree(getShowingStr(), strings));
         }
 
         private static ObservableList<TreeItem<RecordTree>> buildChildren(
-                GameRule gameRule, PlayerAi playerAi, String type) {
+                GameRule gameRule, PlayerAi playerAi, String type, ResourceBundle strings) {
             ObservableList<TreeItem<RecordTree>> children = FXCollections.observableArrayList();
             DBAccess dbAccess = DBAccess.getInstance();
             List<EntireGameTitle> gameRecords = dbAccess.getAllPveMatches(gameRule, playerAi.playerId, playerAi.isAi);
             if ("time".equals(type)) {
                 // 按照比赛
                 for (EntireGameTitle egt : gameRecords) {
-                    children.add(new TreeItem<>(new MatchRecord(egt)));
+                    children.add(new TreeItem<>(new MatchRecord(egt, strings)));
                 }
             } else {
                 // 按照对手
@@ -550,7 +560,7 @@ public class StatsView implements Initializable {
                         list = new ArrayList<>();
                         opponentMap.put(oppo, list);
                         children.add(new TreeItem<>(
-                                new OpponentRecord(playerAi, oppo, list)));
+                                new OpponentRecord(playerAi, oppo, list, strings)));
                     }
                     list.add(egt);
                 }
@@ -562,7 +572,7 @@ public class StatsView implements Initializable {
         public ObservableList<TreeItem<RecordTree>> getChildren() {
             if (firstTimeChildren) {
                 firstTimeChildren = false;
-                super.getChildren().setAll(buildChildren(gameRule, playerAi, shown));
+                super.getChildren().setAll(buildChildren(gameRule, playerAi, shown, strings));
             }
             return super.getChildren();
         }
@@ -586,8 +596,8 @@ public class StatsView implements Initializable {
         final PlayerAi thisPlayer;
         final List<EntireGameTitle> egtList;
 
-        OpponentRecord(PlayerAi thisPlayer, PlayerAi opponent, List<EntireGameTitle> egtList) {
-            super(opponent.toString());
+        OpponentRecord(PlayerAi thisPlayer, PlayerAi opponent, List<EntireGameTitle> egtList, ResourceBundle strings) {
+            super(opponent.toString(), strings);
             this.thisPlayer = thisPlayer;
             this.egtList = egtList;
         }
@@ -688,8 +698,8 @@ public class StatsView implements Initializable {
     public static class MatchRecord extends RecordTree {
         final EntireGameTitle egt;
 
-        MatchRecord(EntireGameTitle egt) {
-            super(egt.toString());
+        MatchRecord(EntireGameTitle egt, ResourceBundle strings) {
+            super(egt.toString(), strings);
             this.egt = egt;
         }
 

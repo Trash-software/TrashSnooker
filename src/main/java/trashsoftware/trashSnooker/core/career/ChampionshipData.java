@@ -10,6 +10,7 @@ import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
 
@@ -334,19 +335,13 @@ public class ChampionshipData {
     }
 
     public enum Selection {
-        REGULAR("常规"),
-        SINGLE_SEASON("单赛季"),
-        ALL_CHAMP("冠军");
-
-        final String shown;
-
-        Selection(String shown) {
-            this.shown = shown;
-        }
+        REGULAR,
+        SINGLE_SEASON,
+        ALL_CHAMP;
 
         @Override
         public String toString() {
-            return shown;
+            return App.getStrings().getString(Util.toLowerCamelCase("SEL_" + name()));
         }
     }
 

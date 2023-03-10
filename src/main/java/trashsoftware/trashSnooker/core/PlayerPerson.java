@@ -8,7 +8,9 @@ import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
+import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.PinyinDict;
 
 import java.util.*;
 
@@ -23,6 +25,7 @@ public class PlayerPerson {
     public final boolean isRandom;
     private final String playerId;
     private final String name;
+    private transient final String shownName;
     private final double maxPowerPercentage;
     private final double controllablePowerPercentage;
     private final double maxSpinPercentage;
@@ -65,8 +68,15 @@ public class PlayerPerson {
                         @Nullable AiPlayStyle aiPlayStyle,
                         HandBody handBody,
                         Sex sex) {
+
+        boolean needTranslate = !Objects.equals(
+                ConfigLoader.getInstance().getLocale().getLanguage().toLowerCase(Locale.ROOT),
+                "zh");
+        
         this.playerId = playerId.replace('\'', '_');
         this.name = name;
+        this.shownName = (needTranslate && PinyinDict.getInstance().needTranslate(name)) ?
+                PinyinDict.getInstance().translateChineseName(name) : name; 
         this.category = category;
         this.maxPowerPercentage = maxPowerPercentage;
         this.controllablePowerPercentage = controllablePowerPercentage;
@@ -101,6 +111,7 @@ public class PlayerPerson {
                         double longPrecision,
                         double powerControl,
                         double spinControl,  // 出杆挑不挑
+                        double psy,
                         AiPlayStyle aiPlayStyle,
                         boolean isCustom,
                         HandBody handBody,
@@ -122,7 +133,7 @@ public class PlayerPerson {
                 0.0,
                 estimateCuePoint(cuePrecision, spinControl),
                 powerControl,
-                90,
+                psy,
                 CuePlayType.DEFAULT_PERFECT,
                 aiPlayStyle,
                 handBody == null ? HandBody.DEFAULT : handBody,
@@ -178,6 +189,7 @@ public class PlayerPerson {
                 1.0,
                 generateDouble(random, abilityLow, abilityHigh),
                 generateDouble(random, abilityLow, abilityHigh),
+                sex == Sex.M ? 90.0 : 75.0,
                 null,
                 isCustom,
                 new PlayerPerson.HandBody(
@@ -231,7 +243,7 @@ public class PlayerPerson {
         obj.put("precision", getPrecisionPercentage());
         obj.put("anglePrecision", getAnglePrecision());
         obj.put("longPrecision", getLongPrecision());
-        obj.put("name", getName());
+        obj.put("name", name);
 
         obj.put("maxPower", getMaxPowerPercentage());
         obj.put("controllablePower", getControllablePowerPercentage());
@@ -362,7 +374,7 @@ public class PlayerPerson {
     }
 
     public String getName() {
-        return name;
+        return shownName;
     }
 
     public String getPlayerId() {
@@ -460,6 +472,7 @@ public class PlayerPerson {
         public double spinControl;  // 范围0-100
         private String playerId;
         private String name;
+        private String shownName;
         private HandBody handBody;
         private Sex sex;
 
@@ -472,6 +485,7 @@ public class PlayerPerson {
             ReadableAbility ra = new ReadableAbility();
             ra.playerId = playerPerson.playerId;
             ra.name = playerPerson.name;
+            ra.shownName = playerPerson.shownName;
             ra.category = playerPerson.category;
             ra.aiming = playerPerson.getPrecisionPercentage();
             ra.cuePrecision =
@@ -603,6 +617,7 @@ public class PlayerPerson {
                     1.0,
                     powerControl,
                     spinControl,
+                    sex == Sex.M ? 90.0 : 75.0,
                     null,
                     true,
                     handBody,

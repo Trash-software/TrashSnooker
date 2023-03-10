@@ -72,9 +72,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             Ball lastPottingBall,
             List<Ball> legalBalls,
             double[] whitePos,
-            boolean countLowChoices,  // 是否添加优先级很低的
-            boolean isPositioning,
-            double attackThreshold
+            boolean isPositioning
     ) {
         List<AttackChoice> attackChoices = new ArrayList<>();
         for (Ball ball : legalBalls) {
@@ -210,9 +208,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                         null,
                         opponentBalls,
                         whiteStopPos,
-                        true,
-                        false,
-                        ATTACK_DIFFICULTY_THRESHOLD
+                        false
                 );
 
                 for (AttackChoice ac : attackChoices) {
@@ -271,6 +267,10 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return null;
     }
 
+    protected static double selectedSideSpinToActual(double selectedSideSpin, Cue cue) {
+        return CuePlayParams.unitSideSpin(selectedSideSpin, cue);
+    }
+
     public abstract AiCueResult makeCue(Phy phy);
 
     /**
@@ -279,7 +279,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     protected abstract DefenseChoice breakCue(Phy phy);
 
     protected abstract DefenseChoice standardDefense();
-    
+
     protected abstract boolean supportAttackWithDefense(int targetRep);
 
     protected double ballAlivePrice(Ball ball) {
@@ -353,15 +353,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     }
 
     protected double selectedSideSpinToActual(double selectedSideSpin) {
-        return CuePlayParams.unitSideSpin(selectedSideSpin,
+        return selectedSideSpinToActual(selectedSideSpin,
                 game.getCuingPlayer().getInGamePlayer().getCurrentCue(game));
     }
 
     private IntegratedAttackChoice attack(AttackChoice choice,
                                           int nextTarget,
                                           List<Ball> nextStepLegalBalls,
-                                          Phy phy,
-                                          double attackThreshold) {
+                                          Phy phy) {
         double powerLimit = aiPlayer.getPlayerPerson().getControllablePowerPercentage();
         final double tick = 300.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().position;
 
@@ -408,8 +407,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     nextTarget,
                     nextStepLegalBalls,
                     phy,
-                    stage,
-                    attackThreshold  // 只是为了走位预测下一步
+                    stage
             );
             attackThreads.add(thread);
         }
@@ -444,14 +442,15 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
             IntegratedAttackChoice iac = choiceList.get(0);
             if (iac.nextStepTarget == Game.END_REP) return iac;
-            
+
 //            if (iac.nextStepTarget != Game.END_REP && iac.whitePrediction.getSecondCollide() == null)
 //                return null;  // 打进了没位，打什么打
 //
 //            return iac;  // 这是最烂的结果
         }
 
-        if (defensiveAttacks.isEmpty() || !supportAttackWithDefense(choice.attackTarget)) return null;
+        if (defensiveAttacks.isEmpty() || !supportAttackWithDefense(choice.attackTarget))
+            return null;
 
         // 研究连打带跑
         List<DefensiveAttackThread> defensiveThreads = new ArrayList<>();
@@ -562,7 +561,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
 
         if (!aiOnlyDefense) {
-            IntegratedAttackChoice attackChoice = standardAttack(phy, ATTACK_DIFFICULTY_THRESHOLD);
+            IntegratedAttackChoice attackChoice = standardAttack(phy);
             if (attackChoice != null) {
                 return makeAttackCue(attackChoice);
             }
@@ -582,16 +581,15 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return randomAngryCue();
     }
 
-    protected IntegratedAttackChoice standardAttack(Phy phy, double attackThreshold) {
+    protected IntegratedAttackChoice standardAttack(Phy phy) {
         List<AttackChoice> attackChoices =
                 (aiOnlyDefense && game.getCurrentTarget() != 1) ?
-                        new ArrayList<>() : getCurrentAttackChoices(attackThreshold);
-        return attackGivenChoices(attackChoices, phy, attackThreshold);
+                        new ArrayList<>() : getCurrentAttackChoices();
+        return attackGivenChoices(attackChoices, phy);
     }
 
     protected IntegratedAttackChoice attackGivenChoices(List<AttackChoice> attackChoices,
-                                                        Phy phy,
-                                                        double attackThreshold) {
+                                                        Phy phy) {
         System.out.println("Simple attack choices:" + attackChoices.size());
 //        System.out.println(attackAttackChoices);
         if (!attackChoices.isEmpty()) {
@@ -609,7 +607,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     nextStepLegalBalls.remove(choice.ball);
                 }
 
-                IntegratedAttackChoice iac = attack(choice, nextTargetIfThisSuccess, nextStepLegalBalls, phy, attackThreshold);
+                IntegratedAttackChoice iac = attack(choice, nextTargetIfThisSuccess, nextStepLegalBalls, phy);
                 if (best == null || iac != null) {
                     if (best == null) {
                         best = iac;
@@ -677,29 +675,23 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                                 Ball lastPottingBall,
                                                 boolean isSnookerFreeBall,
                                                 double[] whitePos,
-                                                boolean countLowChoices,
-                                                boolean isPositioning,
-                                                double attackThreshold) {
+                                                boolean isPositioning) {
         return getAttackChoices(game,
                 attackTarget,
                 aiPlayer,
                 lastPottingBall,
                 game.getAllLegalBalls(attackTarget, isSnookerFreeBall),
                 whitePos,
-                countLowChoices,
-                isPositioning,
-                attackThreshold
+                isPositioning
         );
     }
 
-    protected List<AttackChoice> getCurrentAttackChoices(double attackThreshold) {
+    protected List<AttackChoice> getCurrentAttackChoices() {
         return getAttackChoices(game.getCurrentTarget(),
                 null,
                 game.isDoingSnookerFreeBll(),
                 new double[]{game.getCueBall().getX(), game.getCueBall().getY()},
-                false,
-                false,
-                attackThreshold);
+                false);
     }
 
     private DefenseChoice directDefense(List<Ball> legalBalls,
@@ -1274,22 +1266,27 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     selectedFrontBackSpin,
                     attackChoice.handSkill);
 
-            double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
-            double cueSd = muSigXy[1];  // 左右打点的标准差，mm
-            double unitCueSd = cueSd / gameValues.ball.ballRadius;
+            // 不考虑出杆: 球员决定进不进攻的时候肯定不会想自己出杆会歪
+//            double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
+//            double cueSd = muSigXy[1];  // 左右打点的标准差，mm
+//            double unitCueSd = cueSd / gameValues.ball.ballRadius;
 
-            double sideSpinWithMaxError = selectedSideSpin >= 0 ?
-                    selectedSideSpin + unitCueSd :
-                    selectedSideSpin - unitCueSd;
+//            double sideSpinWithMaxError = selectedSideSpin >= 0 ?
+//                    selectedSideSpin + unitCueSd :
+//                    selectedSideSpin - unitCueSd;
+
+            // 和杆还是有关系的，拿着大头杆打斯诺克就不会去想很难的球
+            double actualSideSpin = selectedSideSpinToActual(selectedSideSpin, 
+                    aiPlayer.getInGamePlayer().getPlayCue());
 
             // dev=deviation, 由于力量加上塞造成的1倍标准差偏差角，应为小于PI的正数
-            double[] devOfLowPower = CuePlayParams.unitXYWithSpins(sideSpinWithMaxError,
+            double[] devOfLowPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
                     actualPower * (1 - powerSd), 1, 0);
             double radDevOfLowPower = Algebra.thetaOf(devOfLowPower);
             if (radDevOfLowPower > Math.PI)
                 radDevOfLowPower = Algebra.TWO_PI - radDevOfLowPower;
 
-            double[] devOfHighPower = CuePlayParams.unitXYWithSpins(sideSpinWithMaxError,
+            double[] devOfHighPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
                     actualPower * (1 + powerSd), 1, 0);
             double radDevOfHighPower = Algebra.thetaOf(devOfHighPower);
             if (radDevOfHighPower > Math.PI)
@@ -1471,7 +1468,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         List<Ball> nextStepLegalBalls;
         Phy phy;
         GamePlayStage stage;
-        double attackThreshold;
 
         IntegratedAttackChoice result;
 
@@ -1480,15 +1476,13 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                int nextTarget,
                                List<Ball> nextStepLegalBalls,
                                Phy phy,
-                               GamePlayStage stage,
-                               double attackThreshold) {
+                               GamePlayStage stage) {
             this.attackParams = attackParams;
             this.values = values;
             this.nextTarget = nextTarget;
             this.nextStepLegalBalls = nextStepLegalBalls;
             this.phy = phy;
             this.stage = stage;
-            this.attackThreshold = attackThreshold;
         }
 
         @Override
@@ -1555,9 +1549,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                             wp.getFirstCollide(),
                             nextStepLegalBalls,
                             whiteStopPos,
-                            false,
-                            true,
-                            attackThreshold);
+                            true);
             AttackParam correctedParams = attackParams.copyWithCorrectedChoice(
                     correctedChoice
             );
