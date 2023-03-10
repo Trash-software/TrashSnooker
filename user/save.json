@@ -1,28 +1,28 @@
 {
-  "p2Wins": 1,
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "custom_player_3",
+    "person": "custom_player_1",
     "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
+    "breakCue": "stdBreakCue"
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "custom_player_2",
-    "playerType": "PLAYER",
+    "person": "Lao Youtiao",
+    "playerType": "COMPUTER",
     "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
+    "breakCue": "stdBreakCue"
   },
-  "startTime": 1677987987050,
+  "startTime": 1678436882376,
   "gameValues": {
-    "ball": "SNOOKER_BALL",
-    "gameRule": "SNOOKER",
+    "ball": "POOL_BALL",
+    "gameRule": "CHINESE_EIGHT",
     "table": {
-      "tableOrdinal": 0,
+      "tableOrdinal": 1,
       "holeSizeOrdinal": 1
     }
   },

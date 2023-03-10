@@ -68,9 +68,12 @@ public class ChampDrawView implements Initializable {
 
     CareerView parent;
     Stage selfStage;
+    private ResourceBundle strings;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.strings = resourceBundle;
+        
         championship = CareerManager.getInstance().getChampionshipInProgress();
         assert championship != null;
 
@@ -107,10 +110,10 @@ public class ChampDrawView implements Initializable {
 
     private void initTable() {
         LabelTableColumn<MatchResItem, String> rankCol =
-                new LabelTableColumn<>(matchResTable, "头衔", param ->
+                new LabelTableColumn<>(matchResTable, strings.getString("rankTitle"), param ->
                         new ReadOnlyStringWrapper(param.rank.getShown()));
         LabelTableColumn<MatchResItem, Integer> awardCol =
-                new LabelTableColumn<>(matchResTable, "奖金", param ->
+                new LabelTableColumn<>(matchResTable, strings.getString("awards"), param ->
                         new ReadOnlyObjectWrapper<>(championship.getData().getAwardByRank(param.rank)));
         LabelTableColumn<MatchResItem, String> peopleCol =
                 new LabelTableColumn<>(matchResTable, "", param ->
@@ -126,20 +129,20 @@ public class ChampDrawView implements Initializable {
 
     private void updateGui() {
         if (championship.isFinished()) {
-            nextRoundButton.setText("关闭");
+            nextRoundButton.setText(strings.getString("close"));
             savedRoundLabel.setText("");
             savedRoundLabel.setManaged(false);
         } else {
             if (championship.hasSavedRound()) {
-                nextRoundButton.setText("继续比赛");
+                nextRoundButton.setText(strings.getString("continueMatch"));
                 EntireGame eg = championship.getSavedRound().getGame();
                 savedRoundLabel.setText(eg.getP1Wins() + " (" + eg.getTotalFrames() + ") " + eg.getP2Wins());
                 savedRoundLabel.setManaged(true);
             } else {
                 if (championship.isHumanAlive()) {
-                    nextRoundButton.setText("开始下一轮");
+                    nextRoundButton.setText(strings.getString("startNextRound"));
                 } else {
-                    nextRoundButton.setText("进行所有比赛");
+                    nextRoundButton.setText(strings.getString("performAllMatches"));
                 }
                 savedRoundLabel.setText("");
                 savedRoundLabel.setManaged(false);
@@ -150,7 +153,7 @@ public class ChampDrawView implements Initializable {
         if (championship.isFinished()) {
             currentStageLabel.setText("");
         } else {
-            currentStageLabel.setText(championship.getCurrentStage().shown);
+            currentStageLabel.setText(championship.getCurrentStage().getShown());
         }
         showResults();
         buildTreeGraph();
@@ -262,7 +265,8 @@ public class ChampDrawView implements Initializable {
     private void startGame(PlayerVsAiMatch match) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("gameView.fxml")
+                    getClass().getResource("gameView.fxml"),
+                    strings
             );
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
@@ -318,7 +322,7 @@ public class ChampDrawView implements Initializable {
             ChampionshipStage stage = championship.getData().getStages()[i];
             int totalFrames = championship.getData().getNFramesOfStage(stage);
             int winFrames = totalFrames / 2 + 1;
-            String text = stage.shown + " " + totalFrames + "/" + winFrames;
+            String text = stage.getShown() + " " + totalFrames + "/" + winFrames;
             gc2d.fillText(text, x, nodeHeight / 2);
         }
     }
@@ -351,7 +355,7 @@ public class ChampDrawView implements Initializable {
         if (node.node.isFinished()) {
             gc2d.fillText(node.node.getWinner().getPlayerPerson().getName(), x + 3, y + 3);
         } else {
-            gc2d.fillText("待定", x + 2, y + 2);
+            gc2d.fillText(strings.getString("undetermined"), x + 2, y + 2);
         }
 
         if (node.left != null && node.right != null) {

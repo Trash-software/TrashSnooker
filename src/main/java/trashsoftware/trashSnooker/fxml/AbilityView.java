@@ -16,10 +16,12 @@ public class AbilityView implements Initializable {
     
     @FXML
     AbilityShower abilityContainer;
+    
+    private ResourceBundle strings;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        this.strings = resourceBundle;
     }
 
     public void setup(Scene scene, PlayerPerson pp) {

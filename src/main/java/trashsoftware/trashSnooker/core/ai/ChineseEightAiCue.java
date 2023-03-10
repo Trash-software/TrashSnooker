@@ -4,7 +4,6 @@ import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.Values;
-import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -46,6 +45,11 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     @Override
     protected DefenseChoice standardDefense() {
         return null;
+    }
+
+    @Override
+    protected boolean supportAttackWithDefense(int targetRep) {
+        return true;
     }
 
     @Override
@@ -126,9 +130,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 null,
                 fullBalls,
                 whitePos,
-                false,
-                false,
-                ATTACK_DIFFICULTY_THRESHOLD
+                false
         );
         List<AttackChoice> halfChoices = getAttackChoices(
                 game,
@@ -137,13 +139,11 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 null,
                 halfBalls,
                 whitePos,
-                false,
-                false,
-                ATTACK_DIFFICULTY_THRESHOLD
+                false
         );
         
-        IntegratedAttackChoice fullAttack = attackGivenChoices(fullChoices, phy, ATTACK_DIFFICULTY_THRESHOLD);
-        IntegratedAttackChoice halfAttack = attackGivenChoices(halfChoices, phy, ATTACK_DIFFICULTY_THRESHOLD);
+        IntegratedAttackChoice fullAttack = attackGivenChoices(fullChoices, phy);
+        IntegratedAttackChoice halfAttack = attackGivenChoices(halfChoices, phy);
         
         if (fullAttack == null) {
             if (halfAttack != null) {

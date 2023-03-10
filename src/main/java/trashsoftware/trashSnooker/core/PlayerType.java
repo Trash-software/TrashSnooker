@@ -1,17 +1,14 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.Util;
+
 public enum PlayerType {
-    PLAYER("玩家"),
-    COMPUTER("电脑");
-
-    private final String shown;
-
-    PlayerType(String shown) {
-        this.shown = shown;
-    }
+    PLAYER,
+    COMPUTER;
 
     @Override
     public String toString() {
-        return shown;
+        return App.getStrings().getString(Util.toLowerCamelCase("TYPE_" + name()));
     }
 }

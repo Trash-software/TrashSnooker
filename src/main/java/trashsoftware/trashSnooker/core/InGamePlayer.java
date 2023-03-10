@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
+import javafx.scene.layout.Pane;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.util.DataLoader;
 
@@ -64,8 +65,13 @@ public class InGamePlayer {
 
         return object;
     }
+    
+    public void hideAllCues(Pane pane) {
+        playCue.getCueModel(pane).hide();
+        breakCue.getCueModel(pane).hide();
+    }
 
-    public Cue getCurrentCue(Game game) {
+    public Cue getCurrentCue(Game<?, ?> game) {
         if (game instanceof NeedBigBreak) {
             if (((NeedBigBreak) game).isBreaking()) {
                 return breakCue;

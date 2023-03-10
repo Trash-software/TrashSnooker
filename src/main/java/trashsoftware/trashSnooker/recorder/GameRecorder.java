@@ -2,7 +2,6 @@ package trashsoftware.trashSnooker.recorder;
 
 import org.tukaani.xz.LZMA2Options;
 import org.tukaani.xz.XZOutputStream;
-import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.Player;
 import trashsoftware.trashSnooker.core.PlayerType;

@@ -424,7 +424,7 @@
       "controllablePower": 87,
       "solving": 92,
       "pullDt": [
-        50.0,
+        100.0,
         200.0
       ],
       "aimingOffset": 0.05,
@@ -957,6 +957,141 @@
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 3
+      }
+    },
+    "Luca Brecel": {
+      "spin": 98,
+      "precision": 89,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "Luca Brecel",
+      "maxPower": 95,
+      "controllablePower": 85,
+      "solving": 77,
+      "pullDt": [
+        70.0,
+        200.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1,h800,e500;r,l,l,l,l,l,l,l",
+      "cueSwingMag": 6.5,
+      "cuePointMuSigma": [
+        0,
+        2,
+        0,
+        6.5
+      ],
+      "powerControl": 94.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 60,
+      "height": 164,
+      "width": 1.15,
+      "hand": {
+        "left": 70,
+        "right": 100,
+        "rest": 84
+      },
+      "ai": {
+        "precision": 92,
+        "stable": 88,
+        "position": 88,
+        "defense": 82,
+        "attackPri": 85,
+        "likeShow": 70,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "Stephen Maguire": {
+      "spin": 95,
+      "precision": 87,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "Stephen Maguire",
+      "maxPower": 99,
+      "controllablePower": 92,
+      "solving": 80,
+      "pullDt": [
+        70.0,
+        220.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1,h800,e500;l,l,r,r,l,l,r,r",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        2.5,
+        0,
+        6
+      ],
+      "powerControl": 94.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 75,
+      "height": 183,
+      "width": 1.2,
+      "hand": {
+        "left": 70,
+        "right": 100,
+        "rest": 82
+      },
+      "ai": {
+        "precision": 90,
+        "stable": 87,
+        "position": 90,
+        "defense": 83,
+        "attackPri": 85,
+        "likeShow": 75,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
+    },
+    "Karen Wilson": {
+      "spin": 93,
+      "precision": 90,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "Karen Wilson",
+      "maxPower": 94,
+      "controllablePower": 82,
+      "solving": 89,
+      "pullDt": [
+        160.0,
+        220.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
+      "cueSwingMag": 2.0,
+      "cuePointMuSigma": [
+        0,
+        2,
+        0,
+        3
+      ],
+      "powerControl": 97.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 75,
+      "height": 183,
+      "width": 1.0,
+      "hand": {
+        "left": 65,
+        "right": 100,
+        "rest": 95
+      },
+      "ai": {
+        "precision": 92,
+        "stable": 93,
+        "position": 93,
+        "defense": 86,
+        "attackPri": 75,
+        "likeShow": 60,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
       }
     }
   }

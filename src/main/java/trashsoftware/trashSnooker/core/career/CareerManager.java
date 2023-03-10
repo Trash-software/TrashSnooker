@@ -13,10 +13,7 @@ import trashsoftware.trashSnooker.util.Util;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CareerManager {
 
@@ -246,6 +243,8 @@ public class CareerManager {
         
         if (saveNow) {
             careerManager.saveToDisk();
+        } else {
+            careerManager.saveCacheInfo();
         }
         
         return careerManager;
@@ -278,6 +277,38 @@ public class CareerManager {
      */
     public static int perksOfLevelUp(int newLevel) {
         return BASE_LEVEL_PERK + newLevel / 10;
+    }
+    
+    public static Map<String, String> readCacheInfo(File infoFile) {
+        Map<String, String> res = new HashMap<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(infoFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] spl = line.split("=");
+                if (spl.length == 2) {
+                    res.put(spl[0].strip(), spl[1].strip());
+                }
+            }
+        } catch (FileNotFoundException e) {
+            // do nothing
+        } catch (IOException e) {
+            EventLogger.log(e);
+        }
+        return res;
+    }
+    
+    private void saveCacheInfo() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(careerSave.getInfoFile()))) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("level=").append(humanPlayerCareer.getLevel()).append('\n');
+            builder.append("lastModified=").append(System.currentTimeMillis()).append('\n');
+            
+            bw.write(builder.toString());
+            bw.newLine();
+        } catch (IOException e) {
+            EventLogger.log(e);
+        }
+        careerSave.updateCacheInfo();
     }
 
     public void simulateMatchesInPastTwoYears() {
@@ -631,6 +662,8 @@ public class CareerManager {
     }
 
     public void saveToDisk() {
+        saveCacheInfo();
+        
         File file = new File(careerSave.getDir(), CAREER_JSON);
         File dir = file.getParentFile();
         if (!dir.exists()) {

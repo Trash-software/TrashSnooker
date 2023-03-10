@@ -22,17 +22,17 @@
         </font>
     </Label>
 
-    <Label fx:id="categoryLabel" text="职业选手" GridPane.rowIndex="1"/>
+    <Label fx:id="categoryLabel" text="%catProf" GridPane.rowIndex="1"/>
 
-    <Label text="瞄准" GridPane.rowIndex="2"/>
+    <Label text="%aiming" GridPane.rowIndex="2"/>
     <ProgressBar fx:id="aimingBar" prefWidth="240.0"
                  GridPane.rowIndex="2" GridPane.columnIndex="1"/>
     <Label fx:id="aimingLabel" text="99" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
     <Button fx:id="aimingBtn" onAction="#addPerk" text="+" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
 
-    <Label text="出杆准确度" GridPane.rowIndex="3">
+    <Label text="%cuePrecision" GridPane.rowIndex="3">
         <tooltip>
-            <Tooltip text="出杆准确度较低的选手可能无法打中瞄准的方向"/>
+            <Tooltip text="%cuePrecisionTooltip"/>
         </tooltip>
     </Label>
     <ProgressBar fx:id="cuePrecisionBar" prefWidth="240.0"
@@ -40,9 +40,9 @@
     <Label fx:id="cuePrecisionLabel" text="99" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
     <Button fx:id="cuePrecisionBtn" onAction="#addPerk" text="+" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
 
-    <Label text="力量/最大力量" GridPane.rowIndex="4">
+    <Label text="%powerAndMaxPower" GridPane.rowIndex="4">
         <tooltip>
-            <Tooltip text="使用过大的力量可能导致准确度大幅下降，甚至呲杆"/>
+            <Tooltip text="%powerTooltip"/>
         </tooltip>
     </Label>
     <ProgressBar fx:id="powerBar" prefWidth="240.0"
@@ -50,9 +50,9 @@
     <Label fx:id="powerLabel" text="99/99" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
     <Button fx:id="powerBtn" onAction="#addPerk" text="+" GridPane.rowIndex="4" GridPane.columnIndex="3"/>
 
-    <Label text="力量控制" GridPane.rowIndex="5">
+    <Label text="%powerControl" GridPane.rowIndex="5">
         <tooltip>
-            <Tooltip text="选手精确打出指定力量的能力"/>
+            <Tooltip text="%powerControlTooltip"/>
         </tooltip>
     </Label>
     <ProgressBar fx:id="powerControlBar" prefWidth="240.0"
@@ -60,25 +60,25 @@
     <Label fx:id="powerControlLabel" text="99" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
     <Button fx:id="powerControlBtn" onAction="#addPerk" text="+" GridPane.rowIndex="5" GridPane.columnIndex="3"/>
 
-    <Label text="杆法" GridPane.rowIndex="6"/>
+    <Label text="%spinText" GridPane.rowIndex="6"/>
     <ProgressBar fx:id="spinBar" prefWidth="240.0"
                  GridPane.rowIndex="6" GridPane.columnIndex="1"/>
     <Label fx:id="spinLabel" text="99" GridPane.rowIndex="6" GridPane.columnIndex="2"/>
     <Button fx:id="spinBtn" onAction="#addPerk" text="+" GridPane.rowIndex="6" GridPane.columnIndex="3"/>
 
-    <Label text="杆法控制" GridPane.rowIndex="7"/>
+    <Label text="%spinControlText" GridPane.rowIndex="7"/>
     <ProgressBar fx:id="spinControlBar" prefWidth="240.0"
                  GridPane.rowIndex="7" GridPane.columnIndex="1"/>
     <Label fx:id="spinControlLabel" text="99" GridPane.rowIndex="7" GridPane.columnIndex="2"/>
     <Button fx:id="spinControlBtn" onAction="#addPerk" text="+" GridPane.rowIndex="7" GridPane.columnIndex="3"/>
 
-    <Label text="非惯用手" GridPane.rowIndex="8"/>
+    <Label text="%offHand" GridPane.rowIndex="8"/>
     <ProgressBar fx:id="notGoodHandBar" prefWidth="240.0"
                  GridPane.rowIndex="8" GridPane.columnIndex="1"/>
     <Label fx:id="notGoodHandLabel" text="99" GridPane.rowIndex="8" GridPane.columnIndex="2"/>
     <Button fx:id="notGoodHandBtn" onAction="#addPerk" text="+" GridPane.rowIndex="8" GridPane.columnIndex="3"/>
 
-    <Label text="架杆" GridPane.rowIndex="9"/>
+    <Label text="%restHand" GridPane.rowIndex="9"/>
     <ProgressBar fx:id="restBar" prefWidth="240.0"
                  GridPane.rowIndex="9" GridPane.columnIndex="1"/>
     <Label fx:id="restLabel" text="99" GridPane.rowIndex="9" GridPane.columnIndex="2"/>

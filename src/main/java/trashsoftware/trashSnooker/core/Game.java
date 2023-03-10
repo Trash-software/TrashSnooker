@@ -14,6 +14,7 @@ import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.core.table.Table;
+import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.recorder.GameRecorder;
 import trashsoftware.trashSnooker.recorder.NaiveGameRecorder;
@@ -71,6 +72,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected Table table;
     private boolean ended;
     private PhysicsCalculator physicsCalculator;
+    
+    protected final ResourceBundle strings = App.getStrings();
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
@@ -945,7 +948,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         currentPlayer = getAnotherPlayer();
     }
 
-    public P getAnotherPlayer(P player) {
+    public P getAnotherPlayer(Player player) {
         return player == player1 ? player2 : player1;
     }
 
@@ -1142,6 +1145,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         cueBallClone.twoMovingBallsHitCore(ball, phy);
                         double[] ballDirectionUnitVec = Algebra.unitVector(ball.vx, ball.vy);
                         double[] whiteDirectionUnitVec = Algebra.unitVector(whiteVx, whiteVy);
+                        
+                        // todo: 确认是否考虑了齿轮效应
                         double ballInitVMmPerS = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         if (!recordTargetPos) {
                             ball.vx = 0;

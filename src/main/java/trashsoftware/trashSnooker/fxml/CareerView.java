@@ -75,9 +75,12 @@ public class CareerView implements Initializable {
     CareerManager careerManager;
     private PerkManager perkManager;
     private Stage selfStage;
+    private ResourceBundle strings;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.strings = resourceBundle;
+        
         careerManager = CareerManager.getInstance();
 
         PlayerPerson pp = careerManager.getHumanPlayerCareer().getPlayerPerson();
@@ -158,10 +161,10 @@ public class CareerView implements Initializable {
 
         StringBuilder builder = new StringBuilder();
         builder.append(gameRule.toString()).append('\n');
-        builder.append("排名赛最佳成绩: ")
-                .append(bestRankedRank == null ? "无" : bestRankedRank.getShown())
+        builder.append(strings.getString("bestRankedScore"))
+                .append(bestRankedRank == null ? strings.getString("none") : bestRankedRank.getShown())
                 .append('\n');
-        builder.append("排名赛冠军数: ").append(rankedChampions);
+        builder.append(strings.getString("numRankedChamps")).append(rankedChampions);
 
         switch (gameRule) {
             case SNOOKER:
@@ -174,7 +177,9 @@ public class CareerView implements Initializable {
                         }
                     }
                 }
-                builder.append("\n三大赛冠军数:\n");
+                builder.append("\n")
+                        .append(strings.getString("numSnookerThreeChamps"))
+                        .append("\n");
                 for (ChampionshipData cd : threeBigData) {
                     builder.append(cd.getName())
                             .append(": ")
@@ -189,10 +194,10 @@ public class CareerView implements Initializable {
 
     private void setupAwdTable(LabelTable<PlayerAward> table) {
         LabelTableColumn<PlayerAward, String> champCol =
-                new LabelTableColumn<>(table, "赛事", param ->
+                new LabelTableColumn<>(table, strings.getString("gameEvent"), param ->
                         new ReadOnlyObjectWrapper<>(param.score.getYear() + " " + param.score.data.getName()));
         LabelTableColumn<PlayerAward, String> scoreCol =
-                new LabelTableColumn<>(table, "成绩", param -> {
+                new LabelTableColumn<>(table, strings.getString("achievement"), param -> {
                     StringBuilder builder = new StringBuilder();
                     for (ChampionshipScore.Rank rank : param.score.ranks) {
                         builder.append(rank.getShown()).append(' ');
@@ -200,7 +205,7 @@ public class CareerView implements Initializable {
                     return new ReadOnlyStringWrapper(builder.toString());
                 });
         LabelTableColumn<PlayerAward, Integer> awardMoneyCol =
-                new LabelTableColumn<>(table, "奖金", param -> {
+                new LabelTableColumn<>(table, strings.getString("awards"), param -> {
                     int money = 0;
                     for (ChampionshipScore.Rank rank : param.score.ranks) {
                         money += param.score.data.getAwardByRank(rank);
@@ -225,7 +230,7 @@ public class CareerView implements Initializable {
                 new LabelTableColumn<>(champAwardsTable, "", param ->
                         new ReadOnlyStringWrapper(param.rank.getShown()));
         LabelTableColumn<AwardItem, Integer> awardCol =
-                new LabelTableColumn<>(champAwardsTable, "奖金", param ->
+                new LabelTableColumn<>(champAwardsTable, strings.getString("awards"), param ->
                         new ReadOnlyObjectWrapper<>(param.data.getAwardByRank(param.rank)));
         LabelTableColumn<AwardItem, Integer> perkCol =
                 new LabelTableColumn<>(champAwardsTable, "exp", param ->
@@ -306,14 +311,16 @@ public class CareerView implements Initializable {
             nextChampInfoBox.setManaged(false);
 
             champInProgLabel.setText(inProgress.fullName());
-            champInProgStageLabel.setText(inProgress.getCurrentStage().shown);
+            champInProgStageLabel.setText(inProgress.getCurrentStage().getShown());
 
             data = inProgress.getData();
         }
 
         // 更新赛事奖金表
         champAwardsTable.clearItems();
-        champAwardsTable.getColumns().get(0).setTitle(data.isRanked() ? "排名赛" : "非排名赛");
+        champAwardsTable.getColumns().get(0).setTitle(data.isRanked() ? 
+                strings.getString("rankedGame") : 
+                strings.getString("nonRankedGame"));
         ChampionshipScore.Rank[] ranks = data.getRanksOfLosers();
         champAwardsTable.addItem(new AwardItem(data, ChampionshipScore.Rank.CHAMPION));
         for (ChampionshipScore.Rank rank : ranks) {
@@ -400,7 +407,8 @@ public class CareerView implements Initializable {
             stage.setTitle(CareerManager.getInstance().getChampionshipInProgress().fullName());
 
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("champDrawView.fxml")
+                    getClass().getResource("champDrawView.fxml"),
+                    strings
             );
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
@@ -426,18 +434,18 @@ public class CareerView implements Initializable {
     }
 
     public enum CareerAwardTime {
-        RANKED("排名"),
-        TOTAL("生涯总奖金");
+        RANKED("rankRank"),
+        TOTAL("rankTotalAwards");
 
-        private final String shown;
+        private final String key;
 
-        CareerAwardTime(String shown) {
-            this.shown = shown;
+        CareerAwardTime(String key) {
+            this.key = key;
         }
 
         @Override
         public String toString() {
-            return shown;
+            return App.getStrings().getString(key);
         }
     }
 

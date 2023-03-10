@@ -25,9 +25,9 @@
     </ScrollPane>
 
     <HBox spacing="10.0">
-        <VBox minWidth="100.0" spacing="10.0">
+        <VBox minWidth="100.0" prefWidth="160" spacing="10.0">
             <Label fx:id="currentStageLabel"/>
-            <Button fx:id="nextRoundButton" onAction="#nextRound" text="开始下一轮"/>
+            <Button fx:id="nextRoundButton" onAction="#nextRound" text="%startNextRound"/>
             <Label fx:id="savedRoundLabel"/>
             <ComboBox fx:id="cueBox"/>
         </VBox>

@@ -16,19 +16,19 @@
         <Insets topRightBottomLeft="10.0"/>
     </padding>
     
-    <Label fx:id="headerText">
+    <Label fx:id="headerText" wrapText="true">
         <font>
             <Font size="18.0"/>
         </font>
     </Label>
-    <Label fx:id="contentText"/>
+    <Label fx:id="contentText" wrapText="true"/>
     
     <VBox fx:id="additionalPane">
     </VBox>
     
     <HBox spacing="10.0" alignment="BOTTOM_RIGHT" VBox.vgrow="ALWAYS">
-        <Button fx:id="yesButton" text="是" minWidth="50.0"/>
-        <Button fx:id="noButton" text="否" minWidth="50.0"/>
+        <Button fx:id="yesButton" text="%yes" minWidth="50.0"/>
+        <Button fx:id="noButton" text="%no" minWidth="50.0"/>
     </HBox>
     
 </VBox>

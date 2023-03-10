@@ -44,7 +44,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     public void withdraw(Player player) {
-        winingPlayer = getAnotherPlayer((ChineseEightBallPlayer) player);
+        winingPlayer = getAnotherPlayer(player);
         super.withdraw(player);
     }
     
@@ -417,13 +417,13 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         boolean foul = false;
         if (!collidesWall && pottedBalls.isEmpty()) {
             foul = true;
-            foulReason = "没有任何球接触库边或落袋";
+            foulReason = strings.getString("noBallHitCushion");
         }
         if (lastCueFoul && isJustAfterBreak()) {
             // 开球后直接造成的自由球
             if (lastCueVx < 0) {
                 foul = true;
-                foulReason = "开球直接造成的自由球必须向前击打";
+                foulReason = strings.getString("breakFreeMustOut");
             }
         }
 
@@ -434,33 +434,33 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                 return;
             }
             foul = true;
-            foulReason = "白球落袋";
+            foulReason = strings.getString("cueBallPot");
         }
 
         if (whiteFirstCollide == null) {
             foul = true;
-            foulReason = "空杆";
+            foulReason = strings.getString("emptyCue");
         } else {
             if (currentTarget == FULL_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
                     foul = true;
-                    foulReason = "目标球为全色球，但击打了黑球";
+                    foulReason = strings.getString("targetFullHitBlack");
                 } else if (!isFullBall(whiteFirstCollide)) {
                     foul = true;
-                    foulReason = "目标球为全色球，但击打了半色球";
+                    foulReason = strings.getString("targetFullHitHalf");
                 }
             } else if (currentTarget == HALF_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
                     foul = true;
-                    foulReason = "目标球为半色球，但击打了黑球";
+                    foulReason = strings.getString("targetHalfHitBlack");;
                 } else if (!isHalfBall(whiteFirstCollide)) {
                     foul = true;
-                    foulReason = "目标球为半色球，但击打了全色球";
+                    foulReason = strings.getString("targetHalfHitFull");;
                 }
             } else if (currentTarget == 8) {
                 if (whiteFirstCollide.getValue() != 8) {
                     foul = true;
-                    foulReason = "目标球为黑球，但击打了其他球";
+                    foulReason = strings.getString("targetBlackHitOther");
                 }
             }
         }

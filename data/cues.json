@@ -1,7 +1,10 @@
 {
   "cues": {
     "stdSnookerCue": {
-      "name": "斯诺克杆",
+      "names": {
+        "zh": "斯诺克杆",
+        "en": "Snooker Cue"
+      },
       "frontLength": 1072.0,
       "midLength": 5.0,
       "backLength": 365.0,
@@ -28,7 +31,10 @@
       }
     },
     "stdPottsCue": {
-      "name": "波茨杆",
+      "names": {
+        "zh": "波茨杆",
+        "en": "Potts Cue"
+      },
       "frontLength": 1072.0,
       "midLength": 5.0,
       "backLength": 365.0,
@@ -55,7 +61,10 @@
       }
     },
     "stdPoolCue": {
-      "name": "九球杆",
+      "names": {
+        "zh": "九球杆",
+        "en": "Pool Cue"
+      },
       "frontLength": 700.0,
       "midLength": 450.0,
       "backLength": 300.0,
@@ -73,7 +82,10 @@
       "privacy": false
     },
     "restCue": {
-      "name": "架杆",
+      "names": {
+        "zh": "架杆",
+        "en": "Rest Cue"
+      },
       "frontLength": 1072.0,
       "midLength": 5.0,
       "backLength": 365.0,
@@ -91,7 +103,10 @@
       "privacy": true
     },
     "stdBreakCue": {
-      "name": "开球杆",
+      "names": {
+        "zh": "开球杆",
+        "en": "Break Cue"
+      },
       "frontLength": 1400.0,
       "midLength": 0.0,
       "backLength": 0.0,
@@ -109,7 +124,10 @@
       "privacy": false
     },
     "GirlCue": {
-      "name": "Girl's cue",
+      "names": {
+        "zh": "Girl's Cue",
+        "en": "Girl's Cue"
+      },
       "frontLength": 1065.0,
       "midLength": 5.0,
       "backLength": 365.0,
@@ -136,7 +154,10 @@
       }
     },
     "GirlPoolCue": {
-      "name": "Girl's pool cue",
+      "names": {
+        "zh": "Girl's Pool Cue",
+        "en": "Girl's Pool Cue"
+      },
       "frontLength": 700.0,
       "midLength": 450.0,
       "backLength": 300.0,
@@ -154,7 +175,10 @@
       "privacy": true
     },
     "MasterCue": {
-      "name": "Master的杆",
+      "names": {
+        "zh": "Master的杆",
+        "en": "Master's Cue"
+      },
       "frontLength": 1080.0,
       "midLength": 4.0,
       "backLength": 370.0,
@@ -172,7 +196,10 @@
       "privacy": true
     },
     "AccurateGodCue": {
-      "name": "准神杆",
+      "names": {
+        "zh": "准神杆",
+        "en": "Accuracy God's Cue"
+      },
       "frontLength": 1080.0,
       "midLength": 5.0,
       "backLength": 380.0,
@@ -190,7 +217,10 @@
       "privacy": true
     },
     "MangCue": {
-      "name": "莽杆",
+      "names": {
+        "zh": "莽杆",
+        "en": "Mang's Cue"
+      },
       "frontLength": 1000.0,
       "midLength": 10.0,
       "backLength": 440.0,
@@ -208,7 +238,10 @@
       "privacy": true
     },
     "TrumpCue": {
-      "name": "Trump's cue",
+      "names": {
+        "zh": "Trump's Cue",
+        "en": "Trump's Cue"
+      },
       "frontLength": 1072.0,
       "midLength": 5.0,
       "backLength": 365.0,
@@ -235,7 +268,10 @@
       }
     },
     "KidCue": {
-      "name": "Kid's cue",
+      "names": {
+        "zh": "Kid's Cue",
+        "en": "Kid's Cue"
+      },
       "frontLength": 1000.0,
       "midLength": 4.0,
       "backLength": 300.0,

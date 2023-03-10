@@ -6,9 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 //import trashsoftware.configLoader.ConfigLoader;
+import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.File;
+import java.util.ResourceBundle;
 
 public class App extends Application {
     
@@ -18,6 +20,8 @@ public class App extends Application {
     public static final String FONT_STYLE = "";
 //    public static final String FONT_STYLE = "-fx-font-family: 'serif'";
     
+    private static ResourceBundle strings;
+    
     public static void startApp() {
         launch();
     }
@@ -25,9 +29,15 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
+            strings = ResourceBundle.getBundle(
+                    "trashsoftware.trashSnooker.bundles.Strings", 
+                    ConfigLoader.getInstance().getLocale());
+            
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("entryView.fxml")
+                    getClass().getResource("entryView.fxml"),
+                    strings
             );
+            primaryStage.setTitle(strings.getString("appName"));
             Parent parent = loader.load();
             
             EntryView entryView = loader.getController();
@@ -37,9 +47,12 @@ public class App extends Application {
             primaryStage.setScene(scene);
             
             primaryStage.show();
-            
         } catch (Exception e) {
             EventLogger.log(e);
         }
+    }
+
+    public static ResourceBundle getStrings() {
+        return strings;
     }
 }
