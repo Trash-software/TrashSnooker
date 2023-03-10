@@ -7,6 +7,9 @@ import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
+import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.ConfigLoader;
+import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.util.*;
 
@@ -43,7 +46,8 @@ public class ChampionshipData {
         ChampionshipData data = new ChampionshipData();
 
         data.id = jsonObject.getString("id");
-        data.name = jsonObject.getString("name");
+        data.name = DataLoader.getNameOfLocale(jsonObject.get("names"));
+        
         data.type = GameRule.valueOf(jsonObject.getString("type").toUpperCase(Locale.ROOT));
         data.seedPlaces = jsonObject.getInt("seeds");
         data.mainPlaces = jsonObject.getInt("places");

@@ -24,17 +24,17 @@
         </rowConstraints>
 
         <MenuBar GridPane.columnSpan="2">
-            <Menu text="游戏">
-                <MenuItem text="设置" onAction="#settingsAction"/>
+            <Menu text="%gameMenu">
+                <MenuItem text="%settingsMenu" onAction="#settingsAction"/>
                 <SeparatorMenuItem/>
                 <!--                <MenuItem fx:id="saveGameMenu" text="保存" onAction="#saveGameAction"/>-->
-                <MenuItem text="认输" onAction="#withdrawAction" fx:id="withdrawMenu"/>
-                <MenuItem text="重新放置手中球" onAction="#replaceBallInHandAction"
+                <MenuItem text="%withdraw" onAction="#withdrawAction" fx:id="withdrawMenu"/>
+                <MenuItem text="%replaceBallInHand" onAction="#replaceBallInHandAction"
                           fx:id="replaceBallInHandMenu" disable="true"/>
-                <MenuItem text="让杆" onAction="#letOtherPlayAction" fx:id="letOtherPlayMenu"
+                <MenuItem text="%letOpponentPlay" onAction="#letOtherPlayAction" fx:id="letOtherPlayMenu"
                           disable="true"/>
             </Menu>
-            <Menu text="播放">
+            <Menu text="%playMenu">
                 <fx:define>
                     <ToggleGroup fx:id="animationPlaySpeedToggle"/>
                 </fx:define>
@@ -63,13 +63,13 @@
             <Slider fx:id="powerSlider" prefHeight="320.0" orientation="VERTICAL"/>
             <Label fx:id="powerLabel"/>
             <VBox fx:id="gameButtonBox" alignment="CENTER">
-                <Button fx:id="cueButton" text="击球" onAction="#cueAction"/>
+                <Button fx:id="cueButton" text="%cueText" onAction="#cueAction"/>
             </VBox>
             <VBox fx:id="replayButtonBox" spacing="10.0" alignment="CENTER">
-                <Button fx:id="replayLastCueButton" text="上一杆" onAction="#replayLastCueAction"/>
-                <Button fx:id="replayNextCueButton" text="下一杆" onAction="#replayNextCueAction"/>
-                <Button text="快进" onAction="#replayFastForwardAction"/>
-                <CheckBox fx:id="replayAutoPlayBox" text="自动播放"/>
+                <Button fx:id="replayLastCueButton" text="%replayLastCue" onAction="#replayLastCueAction"/>
+                <Button fx:id="replayNextCueButton" text="%replayNextCue" onAction="#replayNextCueAction"/>
+                <Button text="%replayFastForward" onAction="#replayFastForwardAction"/>
+                <CheckBox fx:id="replayAutoPlayBox" text="%replayAutoPlay"/>
             </VBox>
         </VBox>
 

@@ -5,7 +5,7 @@ import java.util.*;
 public abstract class Player {
 
 //    protected final int number;
-    protected final InGamePlayer playerPerson;
+    protected final InGamePlayer inGamePlayer;
     protected final TreeMap<Ball, Integer> singlePole = new TreeMap<>();
     protected final List<PotAttempt> attempts = new ArrayList<>();
     protected final List<DefenseAttempt> defenseAttempts = new ArrayList<>();
@@ -13,19 +13,19 @@ public abstract class Player {
     protected int lastAddedScore;
     private boolean withdrawn = false;
 
-    public Player(InGamePlayer playerPerson) {
+    public Player(InGamePlayer inGamePlayer) {
 //        this.number = number;
-        this.playerPerson = playerPerson;
+        this.inGamePlayer = inGamePlayer;
     }
     
     protected abstract void addScoreOfPotted(Collection<? extends Ball> pottedBalls);
 
     public PlayerPerson getPlayerPerson() {
-        return playerPerson.getPlayerPerson();
+        return inGamePlayer.getPlayerPerson();
     }
 
     public InGamePlayer getInGamePlayer() {
-        return playerPerson;
+        return inGamePlayer;
     }
     
     public void addAttempt(PotAttempt potAttempt) {

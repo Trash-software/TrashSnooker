@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.fxml.alert;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -13,9 +14,14 @@ import java.io.IOException;
 public class AlertShower {
 
     public static void showInfo(Window owner, String content, String header) {
+        showInfo(owner, content, header, -1);
+    }
+
+    public static void showInfo(Window owner, String content, String header, long autoCloseMs) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    Alert.class.getResource("alert.fxml")
+                    Alert.class.getResource("alert.fxml"),
+                    App.getStrings()
             );
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
@@ -28,7 +34,24 @@ public class AlertShower {
 
             Alert view = loader.getController();
             view.setupInfo(newStage, header, content);
-
+            
+            if (autoCloseMs > 0) {
+                Thread autoClose = new Thread(() -> {
+                    try {
+                        Thread.sleep(autoCloseMs);
+                        Platform.runLater(() -> {
+                            if (view.isActive()) {  // 确保它不会被手动关了之后又自动关了，虽然daemon好像已经有这个作用了
+                                view.yesButton.fire();
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
+                autoClose.setDaemon(true);
+                autoClose.start();
+            }
+            
             newStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,7 +76,8 @@ public class AlertShower {
                                        Node additionalContent) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    Alert.class.getResource("alert.fxml")
+                    Alert.class.getResource("alert.fxml"),
+                    App.getStrings()
             );
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);

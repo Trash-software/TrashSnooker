@@ -23,40 +23,40 @@
         <ComboBox fx:id="player2Box" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
         <ComboBox fx:id="player2CueBox" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
         <ComboBox fx:id="player2Player" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
-        <Button text="添加球员" onAction="#addPlayerAction"
-                GridPane.rowIndex="3" GridPane.columnSpan="4"/>
+<!--        <Button text="添加球员" onAction="#addPlayerAction"-->
+<!--                GridPane.rowIndex="3" GridPane.columnSpan="4"/>-->
     </GridPane>
 
     <Separator/>
     
     <HBox spacing="10.0" alignment="CENTER">
-        <Label text="规则/球桌/球"/>
+        <Label text="%ruleTableBall"/>
         <ComboBox fx:id="gameRuleBox"/>
         <ComboBox fx:id="tableMetricsBox"/>
         <ComboBox fx:id="ballMetricsBox"/>
     </HBox>
 
     <HBox spacing="10.0" alignment="CENTER">
-        <Label text="总局数"/>
+        <Label text="%totalFrames"/>
         <ComboBox fx:id="totalFramesBox">
         </ComboBox>
     </HBox>
     
     <HBox spacing="10.0" alignment="CENTER">
-        <Label text="台泥/桌布"/>
+        <Label text="%nylonCloth"/>
         <ComboBox fx:id="clothSmoothBox"/>
         <ComboBox fx:id="clothGoodBox"/>
     </HBox>
 
     <HBox spacing="10.0" alignment="CENTER">
-        <Label text="洞口"/>
+        <Label text="%holes"/>
         <ComboBox fx:id="holeSizeBox"/>
     </HBox>
 
-    <Button text="开始游戏" onAction="#startGameAction"/>
+    <Button text="%startGame" onAction="#startGameAction"/>
 
     <Separator/>
 
-    <Button fx:id="resumeButton" text="恢复上次游戏" onAction="#resumeAction"/>
+    <Button fx:id="resumeButton" text="%resumeLastGame" onAction="#resumeAction"/>
 
 </VBox>

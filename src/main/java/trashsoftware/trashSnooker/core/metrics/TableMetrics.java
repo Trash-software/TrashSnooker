@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.metrics;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.fxml.App;
 
 public class TableMetrics {
 
@@ -8,17 +9,17 @@ public class TableMetrics {
     public static final String CHINESE_EIGHT = "CHINESE_EIGHT";
     public static final String SIDE_POCKET = "SIDE_POCKET";
     public static final HoleSize[] SNOOKER_HOLES = {
-            new HoleSize("加大", 89, 98),
-            new HoleSize("标准", 85, 92),
-            new HoleSize("小", 78, 85)
+            new HoleSize("pocketLarge", 89, 98),
+            new HoleSize("pocketStd", 85, 92),
+            new HoleSize("pocketSmall", 78, 85)
     };
     public static final HoleSize[] CHINESE_EIGHT_HOLES = {
-            new HoleSize("加大", 89, 98),
-            new HoleSize("标准", 85, 92),
-            new HoleSize("小", 78, 85)
+            new HoleSize("pocketLarge", 89, 98),
+            new HoleSize("pocketStd", 85, 92),
+            new HoleSize("pocketSmall", 78, 85)
     };
     public static final HoleSize[] SIDE_POCKET_HOLES = {
-            new HoleSize("标准", 105, 105),
+            new HoleSize("pocketStd", 105, 105),
     };
     private static final String[] NAMES = {SNOOKER, CHINESE_EIGHT, SIDE_POCKET};
     public final String tableName;
@@ -296,7 +297,7 @@ public class TableMetrics {
     }
 
     public enum TableBuilderFactory {
-        SNOOKER("斯诺克台", SNOOKER_HOLES) {
+        SNOOKER("snookerTable", SNOOKER_HOLES) {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.SNOOKER)
@@ -309,7 +310,7 @@ public class TableMetrics {
                         .resistanceAndCushionBounce(1.0, 0.92, 0.8);
             }
         },
-        CHINESE_EIGHT("中式八球台", CHINESE_EIGHT_HOLES) {
+        CHINESE_EIGHT("chineseEightTable", CHINESE_EIGHT_HOLES) {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.CHINESE_EIGHT)
@@ -322,7 +323,7 @@ public class TableMetrics {
                         .resistanceAndCushionBounce(1.05, 0.92, 0.8);
             }
         },
-        SIDE_POCKET("美式九球台", SIDE_POCKET_HOLES) {
+        SIDE_POCKET("sidePocketTable", SIDE_POCKET_HOLES) {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.SIDE_POCKET)
@@ -336,11 +337,11 @@ public class TableMetrics {
             }
         };
 
-        public final String name;
+        public final String key;
         public final HoleSize[] supportedHoles;
 
         TableBuilderFactory(String name, HoleSize[] supportedHoles) {
-            this.name = name;
+            this.key = name;
             this.supportedHoles = supportedHoles;
         }
         
@@ -350,7 +351,7 @@ public class TableMetrics {
 
         @Override
         public String toString() {
-            return name;
+            return App.getStrings().getString(key);
         }
 
         public abstract Builder create();
@@ -486,19 +487,19 @@ public class TableMetrics {
 
     public static class HoleSize {
 
-        public final String name;
+        public final String key;
         public final double cornerHoleDiameter;
         public final double midHoleDiameter;
 
         public HoleSize(String name, double cornerHoleDiameter, double midHoleDiameter) {
-            this.name = name;
+            this.key = name;
             this.cornerHoleDiameter = cornerHoleDiameter;
             this.midHoleDiameter = midHoleDiameter;
         }
 
         @Override
         public String toString() {
-            return String.format("%s (%d mm)", name, (int) cornerHoleDiameter);
+            return String.format("%s (%d mm)", App.getStrings().getString(key), (int) cornerHoleDiameter);
         }
     }
 }

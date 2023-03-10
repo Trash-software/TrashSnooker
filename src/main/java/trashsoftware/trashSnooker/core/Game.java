@@ -14,6 +14,7 @@ import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.core.table.Table;
+import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.recorder.GameRecorder;
 import trashsoftware.trashSnooker.recorder.NaiveGameRecorder;
@@ -71,6 +72,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected Table table;
     private boolean ended;
     private PhysicsCalculator physicsCalculator;
+    
+    protected final ResourceBundle strings = App.getStrings();
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,

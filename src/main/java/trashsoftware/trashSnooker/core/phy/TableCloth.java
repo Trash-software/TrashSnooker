@@ -1,6 +1,8 @@
 package trashsoftware.trashSnooker.core.phy;
 
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.Util;
 
 public class TableCloth {
 
@@ -36,49 +38,44 @@ public class TableCloth {
                 '}';
     }
     public enum Goodness {
-        EXCELLENT("极佳", 0.0, 0.0),
-        GOOD("优质", 0.07, 0.15),
-        NORMAL("一般", 0.18, 0.1),
-        BAD("劣质", 0.35, 0.1),
-        TERRIBLE("垃圾", 0.8, 0.0);
+        EXCELLENT(0.0, 0.0),
+        GOOD(0.07, 0.15),
+        NORMAL(0.18, 0.1),
+        BAD(0.35, 0.1),
+        TERRIBLE( 0.8, 0.0);
 
         public final double errorFactor;
         public final double fixedErrorFactor;
-        private final String shown;
 
-        Goodness(String shown, double errorFactor, double fixedErrorFactor) {
-            this.shown = shown;
+        Goodness(double errorFactor, double fixedErrorFactor) {
             this.errorFactor = errorFactor;
             this.fixedErrorFactor = fixedErrorFactor;
         }
 
         @Override
         public String toString() {
-            return shown;
+            String key = Util.toLowerCamelCase("CLOTH_GOODNESS_" + name());
+            return App.getStrings().getString(key);
         }
     }
 
     public enum Smoothness {
-        FAST("全新",
-                1.0,
+        FAST(1.0,
                 1.0,
                 1.0,
                 0.75,
                 1.0),
-        NORMAL("专业",
-                1.12,
+        NORMAL(1.12,
                 1.12,
                 1.12,
                 0.65,
                 0.98),
-        MEDIUM("普通",
-                1.35,
+        MEDIUM(1.35,
                 1.3,
                 1.25,
                 0.4,
                 0.9),
-        SLOW("旧",
-                1.67,
+        SLOW(1.67,
                 1.5,
                 1.35,
                 0.1,
@@ -89,15 +86,12 @@ public class TableCloth {
         public final double spinEffectFactor;  // 数值越小影响越大
         public final double tailSpeedFactor;  // 尾速相关
         public final double cushionBounceFactor;
-        private final String shown;
 
-        Smoothness(String shown,
-                   double speedReduceFactor,
+        Smoothness(double speedReduceFactor,
                    double spinReduceFactor,
                    double spinEffectFactor,
                    double tailSpeedFactor,
                    double cushionBounceFactor) {
-            this.shown = shown;
             this.speedReduceFactor = baseSpeedReducer * speedReduceFactor;
             this.spinReduceFactor = baseSpinReducer * spinReduceFactor;
             this.spinEffectFactor = baseSpinEffect / spinEffectFactor;
@@ -107,7 +101,8 @@ public class TableCloth {
 
         @Override
         public String toString() {
-            return shown;
+            String key = Util.toLowerCamelCase("CLOTH_SMOOTHNESS_" + name());
+            return App.getStrings().getString(key);
         }
     }
 }

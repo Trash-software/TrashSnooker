@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.metrics;
 import trashsoftware.trashSnooker.core.Cue;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.Util;
 
 /**
  * 一个比赛类型。
@@ -45,17 +47,8 @@ public enum GameRule {
     }
 
     public static String toReadable(GameRule gameRule) {
-        if (gameRule == GameRule.SNOOKER) {
-            return "斯诺克";
-        } else if (gameRule == GameRule.MINI_SNOOKER) {
-            return "小斯诺克";
-        } else if (gameRule == GameRule.CHINESE_EIGHT) {
-            return "中式八球";
-        } else if (gameRule == GameRule.SIDE_POCKET) {
-            return "美式九球";
-        } else {
-            return "";
-        }
+        String key = Util.toLowerCamelCase(gameRule.sqlKey);
+        return App.getStrings().getString(key);
     }
 
     @Override

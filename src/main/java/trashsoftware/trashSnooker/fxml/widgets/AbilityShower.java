@@ -9,10 +9,12 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.fxml.App;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class AbilityShower extends GridPane {
     private final Map<Button, Combo> btnMap = new HashMap<>();
@@ -29,15 +31,23 @@ public class AbilityShower extends GridPane {
             spinControlBtn, notGoodHandBtn, restBtn;
     @FXML
     ColumnConstraints buttonsCol;
-    private Button[] buttons;
+    private final Button[] buttons;
 //    private PlayerPerson.ReadableAbility ability;
     private PerkManager perkManager;
-
+    
+    private ResourceBundle strings;
+    
     public AbilityShower() {
+        this(App.getStrings());
+    }
+
+    public AbilityShower(ResourceBundle strings) {
         super();
+        
+        this.strings = strings;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-                "abilityShower.fxml"));
+                "abilityShower.fxml"), strings);
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -101,13 +111,13 @@ public class AbilityShower extends GridPane {
         nameLabel.setText(realAbility.getName());
 
         if ("Professional".equals(realAbility.category)) {
-            categoryLabel.setText("职业选手");
+            categoryLabel.setText(strings.getString("catProf"));
         } else if ("Amateur".equals(realAbility.category)) {
-            categoryLabel.setText("业余选手");
+            categoryLabel.setText(strings.getString("catAmateur"));
         } else if ("Noob".equals(realAbility.category)) {
-            categoryLabel.setText("菜鸡");
+            categoryLabel.setText(strings.getString("catNoob"));
         } else if ("God".equals(realAbility.category)) {
-            categoryLabel.setText("神");
+            categoryLabel.setText(strings.getString("catGod"));
         }
         
         String aiming = numToString(realAbility.aiming);

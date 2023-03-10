@@ -11,6 +11,7 @@ import trashsoftware.trashSnooker.core.table.Table;
 
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlayer> {
@@ -63,24 +64,24 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         System.arraycopy(allBalls, redBalls.length, coloredBalls, 0, 6);
     }
 
-    public static String ballValueToColorName(int ballValue) {
+    public static String ballValueToColorName(int ballValue, ResourceBundle strings) {
         switch (ballValue) {
             case 1:
-                return "红球";
+                return strings.getString("redBall");
             case 2:
-                return "黄球";
+                return strings.getString("yellowBall");
             case 3:
-                return "绿球";
+                return strings.getString("greenBall");
             case 4:
-                return "咖啡球";
+                return strings.getString("brownBall");
             case 5:
-                return "蓝球";
+                return strings.getString("blueBall");
             case 6:
-                return "粉球";
+                return strings.getString("pinkBall");
             case 7:
-                return "黑球";
+                return strings.getString("blackBall");
             case 0:
-                return "彩球";
+                return strings.getString("coloredBall");
             default:
                 throw new RuntimeException();
         }
@@ -286,18 +287,18 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         int foul = 0;
         if (whiteFirstCollide == null) {
             foul = getDefaultFoulValue();  // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
-            foulReason = "空杆";
+            foulReason = strings.getString("emptyCue");
             if (cueBall.isPotted()) ballInHand = true;
         } else if (cueBall.isPotted()) {
             foul = getFoulScore(pottedBalls);
-            foulReason = "白球落袋";
+            foulReason = strings.getString("cueBallPot");
             ballInHand = true;
         } else if (isFreeBall) {
             int[] scoreFoul = scoreFoulOfFreeBall(pottedBalls);
             score = scoreFoul[0];
             foul = scoreFoul[1];
             if (foul > 0) {
-                foulReason = "击打了错误的自由球";
+                foulReason = strings.getString("wrongFreeBall");
             }
         } else if (currentTarget == 1) {
             if (whiteFirstCollide.isRed()) {
@@ -306,21 +307,23 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         score++;  // 进了颗红球
                     } else {
                         foul = getFoulScore(pottedBalls);  // 进了颗彩球
-                        foulReason = "目标球为红球，但有彩球落袋";
+                        foulReason = strings.getString("targetRedColorPots");
                     }
                 }
             } else {  // 该打红球时打了彩球
                 foul = Math.max(4, whiteFirstCollide.getValue());
-                foulReason = "目标球为红球，但击打了彩球";
+                foulReason = strings.getString("targetRedColorPots");
             }
         } else {
             if (whiteFirstCollide.getValue() == 1) {  // 该打彩球时打了红球
                 foul = Math.max(4, getFoulScore(pottedBalls));
-                foulReason = "目标球为" + ballValueToColorName(currentTarget) + "，但击打了红球";
+                foulReason = String.format(strings.getString("targetXRedHit"),
+                        ballValueToColorName(currentTarget, strings));
             } else {
                 if (currentTarget != 0 && whiteFirstCollide.getValue() != currentTarget) {  // 打了非目标球的彩球
                     foul = Math.max(4, Math.max(whiteFirstCollide.getValue(), currentTarget));
-                    foulReason = "目标球为" + ballValueToColorName(currentTarget) + "，但击打了其他球";
+                    foulReason = String.format(strings.getString("targetXOtherHit"),
+                            ballValueToColorName(currentTarget, strings));
                 }
                 if (pottedBalls.size() == 1) {
                     if (currentTarget == RAW_COLORED_REP) {  // 任意彩球
@@ -328,7 +331,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                             if (onlyBall == whiteFirstCollide) score = onlyBall.getValue();
                             else {
                                 foul = Math.max(4, onlyBall.getValue());
-                                foulReason = "目标球为彩球，但击打了红球";
+                                foulReason = strings.getString("targetColorRedHit");
                             }
                         }
                     } else {  // 非任意彩球
@@ -337,14 +340,15 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                                 score = currentTarget;
                             } else {
                                 foul = Math.max(foul, getFoulScore(pottedBalls));
-                                foulReason = "目标球为" + ballValueToColorName(currentTarget) +
-                                        "，但击打了" + ballValueToColorName(onlyBall.getValue());
+                                foulReason = String.format(strings.getString("targetXHitY"),
+                                        ballValueToColorName(currentTarget, strings),
+                                        ballValueToColorName(onlyBall.getValue(), strings));
                             }
                         }
                     }
                 } else if (!pottedBalls.isEmpty()) {
                     foul = getFoulScore(pottedBalls);
-                    foulReason = "击打彩球时有非目标球落袋";
+                    foulReason = strings.getString("targetColorOtherPot");
                 }
             }
         }
@@ -752,6 +756,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     @Override
     public String getFoulReason() {
-        return foulReason == null ? null : (foulReason + "，罚" + lastFoulPoints + "分");
+        return foulReason == null ?
+                null :
+                String.format(strings.getString("foulReasonFormat"),
+                        foulReason, lastFoulPoints);
     }
 }

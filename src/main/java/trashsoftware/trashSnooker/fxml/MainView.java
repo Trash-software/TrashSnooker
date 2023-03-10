@@ -66,9 +66,12 @@ public class MainView implements Initializable {
     ComboBox<PlayerType> player1Player, player2Player;
 
     private Stage stage;
+    private ResourceBundle strings;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.strings = resources;
+        
         initGameTypeBox();
         initTotalFramesBox();
         initClothBox();
@@ -183,7 +186,8 @@ public class MainView implements Initializable {
     void addPlayerAction() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("addPlayerView.fxml")
+                    getClass().getResource("addPlayerView.fxml"),
+                    strings
             );
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
@@ -216,7 +220,8 @@ public class MainView implements Initializable {
         if (person != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("abilityView.fxml")
+                        getClass().getResource("abilityView.fxml"),
+                        strings
                 );
                 Parent root = loader.load();
                 root.setStyle(App.FONT_STYLE);
@@ -271,7 +276,7 @@ public class MainView implements Initializable {
         PlayerPerson p1 = player1Box.getValue();
         PlayerPerson p2 = player2Box.getValue();
         if (p1 == null || p2 == null) {
-            System.out.println("没有足够的球员");
+            System.out.println("No enough players");
             return;
         }
 
@@ -297,7 +302,8 @@ public class MainView implements Initializable {
     private void startGame(EntireGame entireGame) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("gameView.fxml")
+                    getClass().getResource("gameView.fxml"),
+                    strings
             );
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);

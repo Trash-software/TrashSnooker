@@ -36,13 +36,15 @@ public class EntryView implements Initializable {
     Button continueCareerBtn, deleteCareerBtn;
 
     private Stage selfStage;
+    private ResourceBundle strings;
 
     void startCareerView(Stage owner, Stage stage) {
         stage.initOwner(owner);
         stage.initModality(Modality.WINDOW_MODAL);
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("careerView.fxml")
+                getClass().getResource("careerView.fxml"),
+                strings
         );
         Parent root;
         try {
@@ -66,13 +68,15 @@ public class EntryView implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.strings = resourceBundle;
+
         playerColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getPlayerName()));
         careersTable.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             continueCareerBtn.setDisable(newValue == null);
             deleteCareerBtn.setDisable(newValue == null);
         }));
     }
-    
+
     public void refreshGui() {
         refreshTable();
     }
@@ -95,7 +99,8 @@ public class EntryView implements Initializable {
     void recordsAction() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("statsView.fxml")
+                    getClass().getResource("statsView.fxml"),
+                    strings
             );
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
@@ -117,7 +122,8 @@ public class EntryView implements Initializable {
     void replayAction() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("replayView.fxml")
+                    getClass().getResource("replayView.fxml"),
+                    strings
             );
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
@@ -142,7 +148,8 @@ public class EntryView implements Initializable {
         stage.initOwner(selfStage);
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("newCareerView.fxml")
+                getClass().getResource("newCareerView.fxml"),
+                strings
         );
         Parent root = loader.load();
         root.setStyle(App.FONT_STYLE);
@@ -169,29 +176,29 @@ public class EntryView implements Initializable {
         Stage stage = new Stage();
         startCareerView(selfStage, stage);
     }
-    
+
     @FXML
     void deleteCareer() {
         CareerSave selected = careersTable.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
-        CheckBox deletePerson = new CheckBox("同时删除此球员");
+        CheckBox deletePerson = new CheckBox(strings.getString("deletePlayerWithCareer"));
         PlayerPerson person = DataLoader.getInstance().getPlayerPerson(selected.getPlayerId());
         if (!person.isCustom()) deletePerson.setDisable(true);
-        
+
         AlertShower.askConfirmation(
                 selfStage,
-                "确认要删除\"" + selected.getPlayerName() + "\"?",
-                "请确认",
-                "确认",
-                "取消",
+                String.format(strings.getString("confirmDeleteCareer"), selected.getPlayerName()),
+                strings.getString("pleaseConfirm"),
+                strings.getString("confirm"),
+                strings.getString("cancel"),
                 () -> {
                     String playerId = selected.getPlayerId();
                     CareerManager.deleteCareer(selected);
                     if (deletePerson.isSelected()) {
                         DataLoader.getInstance().deletePlayer(playerId);
                     }
-                    
+
                     refreshGui();
                 },
                 null,
@@ -207,7 +214,8 @@ public class EntryView implements Initializable {
         stage.initModality(Modality.WINDOW_MODAL);
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("mainView.fxml")
+                getClass().getResource("mainView.fxml"),
+                strings
         );
         Parent root = loader.load();
         root.setStyle(App.FONT_STYLE);

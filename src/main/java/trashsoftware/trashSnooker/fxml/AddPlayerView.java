@@ -87,8 +87,4 @@ public class AddPlayerView implements Initializable {
 
         stage.close();
     }
-    
-    private String generatePlayerId(String name) {
-        return name.replace(" ", "_");
-    }
 }

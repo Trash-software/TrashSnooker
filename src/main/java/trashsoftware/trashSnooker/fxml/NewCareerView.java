@@ -20,10 +20,12 @@ import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.core.career.ChampDataManager;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -47,14 +49,12 @@ public class NewCareerView implements Initializable {
 
     private EntryView entryView;
     private Stage owner, thisStage;
-
-    private static double generateDouble(Random random, double origin, double bound) {
-        double d = random.nextDouble();
-        return origin + d * (bound - origin);
-    }
+    private ResourceBundle strings;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.strings = resourceBundle;
+        
         handBox.getItems().addAll(Hand.values());
         handBox.getSelectionModel().select(1);
 
@@ -85,19 +85,19 @@ public class NewCareerView implements Initializable {
         sexBox.getSelectionModel().select(0);
         
         playerGoodnessBox.getItems().addAll(
-                new Difficulty("最易", 3.0),
-                new Difficulty("简单", 1.5),
-                new Difficulty("中等", 1.0),
-                new Difficulty("难", 0.75)
+                new Difficulty("difEasiest", 3.0),
+                new Difficulty("difEasy", 1.5),
+                new Difficulty("difMedium", 1.0),
+                new Difficulty("difHard", 0.75)
         );
         playerGoodnessBox.getSelectionModel().select(2);
         
         aiGoodnessBox.getItems().addAll(
-                new Difficulty("菜", 0.15),
-                new Difficulty("较差", 0.4),
-                new Difficulty("正常", 1.0),
-                new Difficulty("较强", 2.0),
-                new Difficulty("极强", 10.0)
+                new Difficulty("aiGoodNoob", 0.15),
+                new Difficulty("aiGoodBad", 0.4),
+                new Difficulty("aiGoodNormal", 1.0),
+                new Difficulty("aiGoodGood", 2.0),
+                new Difficulty("aiGoodExtreme", 10.0)
         );
         
         aiGoodnessBox.getSelectionModel().select(2);
@@ -119,7 +119,7 @@ public class NewCareerView implements Initializable {
         
         String generatedId = DataLoader.generateIdByName(name);
         if (DataLoader.getInstance().hasPlayer(generatedId)) {
-            promptLabel.setText("已存在该球员");
+            promptLabel.setText(strings.getString("playerPersonAlreadyExists"));
             return;
         } else {
             promptLabel.setText("");
@@ -151,7 +151,8 @@ public class NewCareerView implements Initializable {
     public void playerInfoAction() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("abilityView.fxml")
+                    getClass().getResource("abilityView.fxml"),
+                    strings
             );
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
@@ -201,39 +202,33 @@ public class NewCareerView implements Initializable {
         service.setOnFailed(event -> EventLogger.log(event.getSource().getException()));
 
         basePane.setDisable(true);
-        promptLabel.setText("正在初始化存档...");
+        promptLabel.setText(strings.getString("initializingCareer"));
 
         service.start();
     }
 
     public enum Hand {
-        LEFT("左"),
-        RIGHT("右");
-
-        private final String shown;
-
-        Hand(String shown) {
-            this.shown = shown;
-        }
+        LEFT,
+        RIGHT;
 
         @Override
         public String toString() {
-            return shown;
+            return App.getStrings().getString(Util.toLowerCamelCase(name()));
         }
     }
     
-    static class Difficulty {
+    class Difficulty {
         double multiplier;
-        String shown;
+        String key;
         
         Difficulty(String shown, double multiplier) {
             this.multiplier = multiplier;
-            this.shown = shown;
+            this.key = shown;
         }
 
         @Override
         public String toString() {
-            return shown;
+            return strings.getString(key);
         }
     }
 }

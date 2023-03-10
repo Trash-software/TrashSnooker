@@ -2,14 +2,18 @@ package trashsoftware.trashSnooker.util;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class ConfigLoader {
     
     public static final String PATH = "user/config.cfg";
+    private static final Locale DEFAULT_LOCALE = new Locale("zh", "CN");
     
     private static ConfigLoader instance;
     private final Map<String, String> keyValues = new HashMap<>();
+    
+    private Locale locale;
 
     public static ConfigLoader getInstance() {
         if (instance == null) {
@@ -53,9 +57,27 @@ public class ConfigLoader {
         String s = getString(key);
         return s == null ? defaultValue : Integer.parseInt(s);
     }
-    
+
+    public Locale getLocale() {
+        if (locale == null) {
+            String locCode = getString("locale");
+            if (locCode != null) {
+                String[] sp = locCode.split("_");
+                try {
+                    locale = new Locale(sp[0], sp[1]);
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            if (locale == null) locale = DEFAULT_LOCALE;
+        }
+        return locale;
+    }
+
     private void initConfig() {
         put("nThreads", 8);
+        put("locale", "zh_CN");
     }
     
     private void writeConfig() {

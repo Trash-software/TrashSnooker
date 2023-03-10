@@ -198,6 +198,8 @@ public class GameView implements Initializable {
     private boolean drawTargetRefLine = false;
     private PlayerPerson.HandSkill currentHand;
     private PlayerVsAiMatch careerMatch;
+    
+    private ResourceBundle strings;
 
     private int aiAnimationSpeed = 1;
 
@@ -238,6 +240,8 @@ public class GameView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.strings = resources;
+        
         animationPlaySpeedToggle.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 aiAnimationSpeed = Integer.parseInt(newValue.getUserData().toString());
@@ -406,8 +410,8 @@ public class GameView implements Initializable {
                 e.consume();
 
                 AlertShower.askConfirmation(stage,
-                        "游戏未结束，是否退出？",
-                        "请确认",
+                        strings.getString("notEndExitWarning"),
+                        strings.getString("pleaseConfirm"),
                         () -> {
                             game.quitGame();
                             timeline.stop();
@@ -567,9 +571,9 @@ public class GameView implements Initializable {
         if (replay == null) {
             cueButton.setDisable(false);
             if (igp.getPlayerType() == PlayerType.COMPUTER) {
-                cueButton.setText("电脑击球");
+                cueButton.setText(strings.getString("aiCueText"));
             } else {
-                cueButton.setText("击球");
+                cueButton.setText(strings.getString("cueText"));
             }
         }
         updateScoreDiffLabels();
@@ -581,8 +585,8 @@ public class GameView implements Initializable {
 
             } else {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
-                snookerScoreDiffLabel.setText("分差 " + asg.getScoreDiff());
-                snookerScoreRemainingLabel.setText("台面剩余 " + asg.getRemainingScore());
+                snookerScoreDiffLabel.setText(String.format(strings.getString("scoreDiff"), asg.getScoreDiff()));
+                snookerScoreRemainingLabel.setText(String.format(strings.getString("scoreRem"), asg.getRemainingScore()));
             }
         }
     }
@@ -645,7 +649,8 @@ public class GameView implements Initializable {
                     AlertShower.showInfo(
                             stage,
                             foulReason,
-                            "犯规"
+                            strings.getString("foul"),
+                            3000
                     );
                     finishCueNextStep(nextCuePlayer);
                 });
@@ -689,6 +694,7 @@ public class GameView implements Initializable {
     }
 
     private void endFrame() {
+        hideCue();
         Player wonPlayer = game.getGame().getWiningPlayer();
 
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
@@ -710,7 +716,8 @@ public class GameView implements Initializable {
                             game.getP2Wins(),
                             game.getGame().getPlayer2().getScore(),
                             game.getPlayer2().getPlayerPerson().getName()),
-                    String.format("%s 赢得一局。", wonPlayer.getPlayerPerson().getName()));
+                    String.format(strings.getString("winsAFrame"), wonPlayer.getPlayerPerson().getName()),
+                    3000);
 
             if (entireGameEnd) {
                 if (careerMatch != null) {
@@ -723,14 +730,14 @@ public class GameView implements Initializable {
                                 game.getP1Wins(),
                                 game.getP2Wins(),
                                 game.getPlayer2().getPlayerPerson().getName()),
-                        String.format("%s 胜利。", wonPlayer.getPlayerPerson().getName()));
+                        String.format(strings.getString("winsAMatch"), wonPlayer.getPlayerPerson().getName()));
             } else {
                 AlertShower.askConfirmation(
                         stage,
-                        "是否开始下一局？",
-                        "开始下一局？",
-                        "是",
-                        "保存并退出",
+                        strings.getString("ifStartNextFrameContent"),
+                        strings.getString("ifStartNextFrame"),
+                        strings.getString("yes"),
+                        strings.getString("saveAndExit"),
                         () -> {
                             game.startNextFrame();
                             setupBalls();
@@ -778,7 +785,9 @@ public class GameView implements Initializable {
     private void askReposition() {
         AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
         Platform.runLater(() ->
-                AlertShower.askConfirmation(stage, "是否复位？", "对方犯规",
+                AlertShower.askConfirmation(stage, 
+                        strings.getString("ifReposition"), 
+                        strings.getString("oppoFoul"),
                         () -> {
                             asg.reposition();
                             drawScoreBoard(game.getGame().getCuingPlayer(), true);
@@ -1060,12 +1069,12 @@ public class GameView implements Initializable {
         if (game.getGame() instanceof AbstractSnookerGame) {
             Player curPlayer = game.getGame().getCuingPlayer();
             int diff = ((AbstractSnookerGame) game.getGame()).getScoreDiff((SnookerPlayer) curPlayer);
-            String behindText = diff <= 0 ? "落后" : "领先";
+            String behindText = diff <= 0 ? strings.getString("scoreBehind") : strings.getString("scoreAhead");
             AlertShower.askConfirmation(
                     stage,
-                    String.format("%s%d分，台面剩余%d分，真的要认输吗？", behindText, Math.abs(diff),
+                    String.format(strings.getString("confirmWithdrawContent"), behindText, Math.abs(diff),
                             ((AbstractSnookerGame) game.getGame()).getRemainingScore()),
-                    String.format("%s, 确认要认输吗？", curPlayer.getPlayerPerson().getName()),
+                    String.format(strings.getString("confirmWithdraw"), curPlayer.getPlayerPerson().getName()),
                     () -> withdraw(curPlayer),
                     null
             );
@@ -1074,7 +1083,7 @@ public class GameView implements Initializable {
             AlertShower.askConfirmation(
                     stage,
                     "......",
-                    String.format("%s, 确认要认输吗？", curPlayer.getPlayerPerson().getName()),
+                    String.format(strings.getString("confirmWithdraw"), curPlayer.getPlayerPerson().getName()),
                     () -> withdraw(curPlayer),
                     null
             );
@@ -1142,6 +1151,7 @@ public class GameView implements Initializable {
         restoreCueAngle();
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
+        hideCue();
         game.getGame().setBallInHand();
     }
 
@@ -1274,7 +1284,7 @@ public class GameView implements Initializable {
                     > cueAreaRadius - cueRadius) {
 //                power /= 4;
 //                unitSideSpin *= 10;
-                System.out.println("滑杆了！");
+                System.out.println("Miscued!");
                 slidedCue = true;
             }
         }
@@ -1415,7 +1425,7 @@ public class GameView implements Initializable {
     }
 
     private void aiCue(Player player, boolean aiHasRightToReposition) {
-        cueButton.setText("正在思考");
+        cueButton.setText(strings.getString("aiThinking"));
         cueButton.setDisable(true);
         aiCalculating = true;
         Thread aiCalculation = new Thread(() -> {
@@ -1436,10 +1446,11 @@ public class GameView implements Initializable {
                         Platform.runLater(() -> {
                             AlertShower.showInfo(
                                     stage,
-                                    "AI要求复位。",
-                                    "复位"
+                                    strings.getString("aiAskReposition"),
+                                    strings.getString("reposition"),
+                                    3000
                             );
-                            cueButton.setText("击球");
+                            cueButton.setText(strings.getString("cueText"));
                             aiCalculating = false;
                             asg.reposition();
                             drawScoreBoard(game.getGame().getCuingPlayer(), true);
@@ -1467,7 +1478,7 @@ public class GameView implements Initializable {
                 return;
             }
             Platform.runLater(() -> {
-                cueButton.setText("正在击球");
+                cueButton.setText(strings.getString("isCuing"));
                 cursorDirectionUnitX = cueResult.getUnitX();
                 cursorDirectionUnitY = cueResult.getUnitY();
                 System.out.printf("Ai direction: %f, %f\n", cursorDirectionUnitX, cursorDirectionUnitY);
@@ -1586,8 +1597,8 @@ public class GameView implements Initializable {
     private void showThreeNoHitWarning() {
         AlertShower.showInfo(
                 stage,
-                "有目标球可见，但已经两次未击中，如再不击中就直接判负",
-                "警告"
+                strings.getString("snookerThreeWarning"),
+                strings.getString("warning")
         );
     }
 
@@ -1667,10 +1678,10 @@ public class GameView implements Initializable {
         cueButton.setDisable(false);
 
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
-            cueButton.setText("击球");
+            cueButton.setText(strings.getString("cueText"));
             withdrawMenu.setDisable(false);
         } else {
-            cueButton.setText("电脑击球");
+            cueButton.setText(strings.getString("aiCueText"));
             withdrawMenu.setDisable(true);
         }
     }
@@ -2836,7 +2847,9 @@ public class GameView implements Initializable {
 
             if (replay != null) return;
             if (movement != null) return;
-            if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
+            if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) {
+                return;
+            }
 
             if (cueBall.isPotted()) return;
 
@@ -2856,7 +2869,7 @@ public class GameView implements Initializable {
                     cursorDirectionUnitX, cursorDirectionUnitY);
 
             if (currentHand != null && currentHand.hand == PlayerPerson.Hand.REST) {
-                // 画架杆，要在画杆之前
+                // 画架杆，要在画杆之前，让杆覆盖在架杆之上
                 double restCueAngleOffset = person.handBody.isLeftHandRest() ? -0.1 : 0.1;
                 double restAngleWithOffset = trueAimingAngle - restCueAngleOffset;
                 double[] restCuePointing = Algebra.unitVectorOfAngle(restAngleWithOffset);
@@ -2883,7 +2896,7 @@ public class GameView implements Initializable {
         } else {
 //            System.out.println("Drawing!");
             if (currentHand != null && currentHand.hand == PlayerPerson.Hand.REST) {
-                // 画架杆，要在画杆之前
+                // 画架杆，要在画杆之前，让杆覆盖在架杆之上
                 Cue restCue = DataLoader.getInstance().getRestCue();
                 drawCueWithDtToHand(
                         cueAnimationPlayer.handX,
@@ -2925,6 +2938,11 @@ public class GameView implements Initializable {
                 originalTouchX + sideXOffset,
                 originalTouchY + sideYOffset
         };
+    }
+    
+    private void hideCue() {
+        game.getGame().getPlayer1().getInGamePlayer().hideAllCues(ballPane);
+        game.getGame().getPlayer2().getInGamePlayer().hideAllCues(ballPane);
     }
 
     private void drawCueWithDtToHand(double handX,

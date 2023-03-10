@@ -183,7 +183,7 @@ public class EntireGame {
                         getGame(),
                         numberedBallPlayer,
                         winingPlayer.getPlayerPerson().equals(
-                                framePlayer.playerPerson.getPlayerPerson()),
+                                framePlayer.inGamePlayer.getPlayerPerson()),
                         numberedBallPlayer.getContinuousPots());
         }
     }

@@ -2,7 +2,10 @@
   "tournaments": [
     {
       "id": "masters",
-      "name": "斯诺克大师赛",
+      "names": {
+        "zh": "斯诺克大师赛",
+        "en": "Snooker Masters"
+      },
       "type": "snooker",
       "seeds": 16,
       "places": 16,
@@ -29,7 +32,10 @@
     },
     {
       "id": "eight_red_pocket_open",
-      "name": "中式八球红包公开赛",
+      "names": {
+        "zh": "黑八红包公开赛",
+        "en": "Black Eight Red Pocket Open"
+      },
       "type": "chinese_eight",
       "seeds": 0,
       "places": 32,
@@ -55,7 +61,10 @@
     },
     {
       "id": "fresh_hand_open",
-      "name": "斯诺克新手公开赛",
+      "names": {
+        "zh": "斯诺克新手公开赛",
+        "en": "Snooker Noobs Open"
+      },
       "type": "snooker",
       "seeds": 0,
       "places": 16,
@@ -83,7 +92,10 @@
     },
     {
       "id": "eight_northeast_open",
-      "name": "中式八球东北公开赛",
+      "names": {
+        "zh": "中式八球东北杯",
+        "en": "Chinese Eight-Ball Northeast Cup"
+      },
       "type": "chinese_eight",
       "seeds": 16,
       "places": 32,
@@ -110,7 +122,10 @@
     },
     {
       "id": "professional_champ",
-      "name": "斯诺克球员锦标赛",
+      "names": {
+        "zh": "斯诺克球员锦标赛",
+        "en": "Snooker Professional Championship"
+      },
       "type": "snooker",
       "seeds": 16,
       "places": 16,
@@ -138,7 +153,10 @@
     },
     {
       "id": "dog_give_power_open",
-      "name": "斯诺克狗给力公开赛",
+      "names": {
+        "zh": "斯诺克狗给力公开赛",
+        "en": "Snooker Dog Give Power Open"
+      },
       "type": "snooker",
       "seeds": 0,
       "places": 32,
@@ -166,7 +184,10 @@
     },
     {
       "id": "cat_give_power_champ",
-      "name": "斯诺克猫给力锦标赛",
+      "names": {
+        "zh": "斯诺克猫给力锦标赛",
+        "en": "Snooker Cat Give Power Championship"
+      },
       "type": "snooker",
       "seeds": 8,
       "places": 16,
@@ -194,7 +215,10 @@
     },
     {
       "id": "china_open",
-      "name": "斯诺克中国公开赛",
+      "names": {
+        "zh": "斯诺克中国公开赛",
+        "en": "Snooker China Open"
+      },
       "type": "snooker",
       "seeds": 16,
       "places": 32,
@@ -222,7 +246,10 @@
     },
     {
       "id": "eight_spadina_open",
-      "name": "中式八球Spadina公开赛",
+      "names": {
+        "zh": "中式八球Spadina公开赛",
+        "en": "Chinese Eight-Ball Spadina Open"
+      },
       "type": "chinese_eight",
       "seeds": 0,
       "places": 32,
@@ -249,7 +276,10 @@
     },
     {
       "id": "world_champ",
-      "name": "斯诺克世界锦标赛",
+      "names": {
+        "zh": "斯诺克世界锦标赛",
+        "en": "Snooker World Championship"
+      },
       "type": "snooker",
       "seeds": 16,
       "places": 32,
@@ -278,7 +308,10 @@
     },
     {
       "id": "space_grand_prix",
-      "name": "斯诺克太空国大奖赛",
+      "names": {
+        "zh": "斯诺克太空国大奖赛",
+        "en": "Snooker Space Grand Prix"
+      },
       "type": "snooker",
       "seeds": 16,
       "places": 32,
@@ -306,7 +339,10 @@
     },
     {
       "id": "chongqing_open",
-      "name": "斯诺克重庆公开赛",
+      "names": {
+        "zh": "斯诺克重庆公开赛",
+        "en": "Snooker Chongqing Open"
+      },
       "type": "snooker",
       "seeds": 0,
       "places": 32,
@@ -334,7 +370,10 @@
     },
     {
       "id": "eight_master",
-      "name": "中式八球大师赛",
+      "names": {
+        "zh": "中式八球大师赛",
+        "en": "Chinese Eight-Ball Masters"
+      },
       "type": "chinese_eight",
       "seeds": 16,
       "places": 16,
@@ -360,7 +399,10 @@
     },
     {
       "id": "challenger_open",
-      "name": "斯诺克挑战者公开赛",
+      "names": {
+        "zh": "斯诺克挑战者公开赛",
+        "en": "Snooker Challenger Open"
+      },
       "type": "snooker",
       "seeds": 4,
       "places": 8,
@@ -388,7 +430,10 @@
     },
     {
       "id": "united_kingdom_champ",
-      "name": "斯诺克英国锦标赛",
+      "names": {
+        "zh": "斯诺克英国锦标赛",
+        "en": "Snooker United Kingdom Championship"
+      },
       "type": "snooker",
       "seeds": 16,
       "places": 32,
@@ -416,7 +461,10 @@
     },
     {
       "id": "eight_weilin_open",
-      "name": "黑八大学城伟林杯",
+      "names": {
+        "zh": "黑八大学城伟林杯",
+        "en": "Black Eight BSC Weilin Cup"
+      },
       "type": "chinese_eight",
       "seeds": 0,
       "places": 32,

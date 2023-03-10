@@ -11,9 +11,7 @@ import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class DataLoader {
 
@@ -57,10 +55,31 @@ public class DataLoader {
         for (int i = 0; i < darkerCount; ++i) color = color.darker();
         return color;
     }
+    
+    public static String getNameOfLocale(Object probNames) {
+        if (probNames instanceof JSONObject) {
+            JSONObject names = (JSONObject) probNames;
+            String currentLang = ConfigLoader.getInstance().getLocale().getLanguage();
+            if (names.has(currentLang)) {
+                return names.getString(currentLang);
+            } else {
+                // 随便返回一个
+                for (String key : names.keySet()) {
+                    return names.getString(key);
+                }
+            }
+        } else if (probNames instanceof String) {
+            return (String) probNames;
+        }
+        throw new RuntimeException("Cannot find name: " + probNames);
+    }
 
     private static Map<String, PlayerPerson> loadPlayers(JSONObject root,
                                                          Map<String, Cue> cues,
                                                          boolean isCustomPlayer) {
+        boolean needTranslate = !Objects.equals(
+                ConfigLoader.getInstance().getLocale().getLanguage().toLowerCase(Locale.ROOT),
+                "zh");
         if (root.has("players")) {
             JSONObject array = root.getJSONObject("players");
             Map<String, PlayerPerson> result = new HashMap<>();
@@ -75,6 +94,10 @@ public class DataLoader {
                             continue;
                         }
                         String name = personObj.getString("name");
+                        if (needTranslate && PinyinDict.getInstance().needTranslate(name)) {
+                            name = PinyinDict.getInstance().translateChineseName(name);
+                        }
+                        
                         AiPlayStyle aiPlayStyle;
                         if (personObj.has("ai")) {
                             JSONObject aiObject = personObj.getJSONObject("ai");
@@ -285,9 +308,11 @@ public class DataLoader {
             for (String key : object.keySet()) {
                 try {
                     JSONObject cueObject = object.getJSONObject(key);
+                    String name = getNameOfLocale(cueObject.get("names"));
+                    
                     Cue cue = new Cue(
                             key,
-                            cueObject.getString("name"),
+                            name,
                             cueObject.getDouble("frontLength"),
                             cueObject.getDouble("midLength"),
                             cueObject.getDouble("backLength"),

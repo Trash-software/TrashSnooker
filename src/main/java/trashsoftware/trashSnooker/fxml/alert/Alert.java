@@ -20,15 +20,20 @@ public class Alert implements Initializable {
     Button yesButton, noButton;
     @FXML
     VBox additionalPane;
+    private boolean active = true;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+    }
+    
+    private void setOnClose(Stage stage) {
+        stage.setOnCloseRequest(e -> active = false);
     }
 
     public void setupInfo(Stage stage,
                           String header, String content) {
         this.stage = stage;
+        setOnClose(stage);
 
         this.headerText.setText(header);
         this.contentText.setText(content);
@@ -45,6 +50,7 @@ public class Alert implements Initializable {
                              String yesText, String noText,
                              Runnable yes, Runnable no) {
         this.stage = stage;
+        setOnClose(stage);
 
         this.headerText.setText(header);
         this.contentText.setText(content);
@@ -58,5 +64,9 @@ public class Alert implements Initializable {
             stage.close();
             if (no != null) Platform.runLater(no);
         });
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

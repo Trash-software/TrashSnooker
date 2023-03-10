@@ -5,8 +5,7 @@ import trashsoftware.trashSnooker.core.Values;
 
 import java.io.*;
 import java.sql.Timestamp;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class Util {
 
@@ -43,7 +42,7 @@ public class Util {
             return String.format("%d:%s", sec / 3600, secondsToString(sec % 3600));
         }
     }
-    
+
     public static boolean deleteFile(File file) {
         if (file == null || !file.exists()) return true;
         if (file.isDirectory()) {
@@ -58,11 +57,11 @@ public class Util {
             return file.delete();
         }
     }
-    
+
     public static String decimalToHex(int dec, int digits) {
         int max = (1 << (digits << 2));
         if (dec >= max) throw new ArithmeticException("Too big to convert to hex");
-        
+
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < digits; i++) {
             int d = dec & 15;
@@ -97,6 +96,15 @@ public class Util {
             array[i] = array[array.length - i - 1];
             array[array.length - i - 1] = temp;
         }
+    }
+
+    @SafeVarargs
+    public static <K, V> Map<K, V> mergeMaps(Map<K, V>... maps) {
+        Map<K, V> res = new HashMap<>();
+        for (Map<K, V> map : maps) {
+            res.putAll(map);
+        }
+        return res;
     }
 
     public static void intToBytesN(long num, byte[] arr, int index, int nBytes) {
@@ -203,5 +211,53 @@ public class Util {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    public static boolean isAllCap(String s) {
+        for (char c : s.toCharArray()) {
+            if (!Character.isUpperCase(c)) return false;
+        }
+        return true;
+    }
+
+    public static String toLowerCamelCase(String s) {
+        String[] words;
+        
+        // assert no numbers or strange chars in s
+        
+        if (s.contains("_")) {
+            words = s.split("_");
+        } else if (s.contains(" ")) {
+            words = s.split(" ");
+        } else if (isAllCap(s)) {
+            words = new String[]{s};
+        } else {
+            // probably upper camel, or a single word
+            List<String> strings = new ArrayList<>();
+            StringBuilder wordBuilder = new StringBuilder();
+            for (char c : s.toCharArray()) {
+                if (Character.isUpperCase(c)) {
+                    if (wordBuilder.length() > 0) {
+                        strings.add(wordBuilder.toString());
+                        wordBuilder.setLength(0);
+                    }
+                }
+                wordBuilder.append(c);
+            }
+            if (wordBuilder.length() > 0) {
+                strings.add(wordBuilder.toString());
+            }
+            words = strings.toArray(new String[0]);
+        }
+
+        StringBuilder builder = new StringBuilder()
+                .append(words[0].toLowerCase(Locale.ROOT));
+        for (int i = 1; i < words.length; i++) {
+            char first = Character.toUpperCase(words[i].charAt(0));
+            String rest = words[i].substring(1);
+            builder.append(first)
+                    .append(rest.toLowerCase(Locale.ROOT));
+        }
+        return builder.toString();
     }
 }

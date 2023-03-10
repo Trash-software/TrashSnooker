@@ -11,9 +11,9 @@
       prefHeight="400.0" prefWidth="300.0">
 
     <MenuBar>
-        <Menu text="文件">
-            <MenuItem text="纪录" onAction="#recordsAction"/>
-            <MenuItem text="回放" onAction="#replayAction"/>
+        <Menu text="%fileMenu">
+            <MenuItem text="%recordMenu" onAction="#recordsAction"/>
+            <MenuItem text="%replayMenu" onAction="#replayAction"/>
         </Menu>
     </MenuBar>
 
@@ -21,7 +21,7 @@
         <padding>
             <Insets topRightBottomLeft="10.0"/>
         </padding>
-        
+
         <Label text="Trash snooker">
             <font>
                 <Font size="18"/>
@@ -30,18 +30,19 @@
 
         <TableView fx:id="careersTable">
             <columns>
-                <TableColumn text="玩家" fx:id="playerColumn"/>
+                <TableColumn text="%career" fx:id="playerColumn"/>
                 <!--            <TableColumn text="比赛"/>-->
             </columns>
         </TableView>
 
         <HBox spacing="10.0" alignment="CENTER">
-            <Button text="继续游戏" onAction="#continueCareer" fx:id="continueCareerBtn"
+            <Button text="%continueCareer" onAction="#continueCareer" fx:id="continueCareerBtn"
                     disable="true"/>
-            <Button text="删除存档" fx:id="deleteCareerBtn" onAction="#deleteCareer" disable="true"/>
-            <Button text="开始新游戏" onAction="#newCareer"/>
+            <Button text="%deleteCareer" fx:id="deleteCareerBtn" onAction="#deleteCareer"
+                    disable="true"/>
+            <Button text="%createCareer" onAction="#newCareer"/>
         </HBox>
 
-        <Button text="快速游戏" onAction="#fastGame"/>
+        <Button text="%fastGame" onAction="#fastGame"/>
     </VBox>
 </VBox>

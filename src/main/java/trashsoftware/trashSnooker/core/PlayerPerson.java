@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
 import trashsoftware.trashSnooker.util.DataLoader;
 
@@ -425,17 +426,17 @@ public class PlayerPerson {
     }
 
     public enum Sex {
-        M("男", 155, 205, 180, 1.0),
-        F("女", 145, 190, 168, 0.85);
+        M("sexM", 155, 205, 180, 1.0),
+        F("sexF", 145, 190, 168, 0.85);
 
-        public final String shown;
+        public final String key;
         public final double minHeight;
         public final double maxHeight;
         public final double stdHeight;
         public final double powerMul;
 
-        Sex(String shown, double minHeight, double maxHeight, double stdHeight, double powerMul) {
-            this.shown = shown;
+        Sex(String key, double minHeight, double maxHeight, double stdHeight, double powerMul) {
+            this.key = key;
             this.minHeight = minHeight;
             this.maxHeight = maxHeight;
             this.stdHeight = stdHeight;
@@ -444,7 +445,7 @@ public class PlayerPerson {
 
         @Override
         public String toString() {
-            return shown;
+            return App.getStrings().getString(key);
         }
     }
 
