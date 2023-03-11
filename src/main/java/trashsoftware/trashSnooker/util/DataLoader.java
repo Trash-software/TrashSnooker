@@ -56,7 +56,7 @@ public class DataLoader {
         return color;
     }
     
-    public static String getNameOfLocale(Object probNames) {
+    public static String getStringOfLocale(Object probNames) {
         if (probNames instanceof JSONObject) {
             JSONObject names = (JSONObject) probNames;
             String currentLang = ConfigLoader.getInstance().getLocale().getLanguage();
@@ -302,7 +302,7 @@ public class DataLoader {
             for (String key : object.keySet()) {
                 try {
                     JSONObject cueObject = object.getJSONObject(key);
-                    String name = getNameOfLocale(cueObject.get("names"));
+                    String name = getStringOfLocale(cueObject.get("names"));
                     
                     Cue cue = new Cue(
                             key,

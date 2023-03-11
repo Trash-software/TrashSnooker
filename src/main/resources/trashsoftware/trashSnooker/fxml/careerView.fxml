@@ -36,9 +36,11 @@
         </HBox>
     </VBox>
 
-    <VBox GridPane.rowIndex="2" spacing="10.0">
-        <!--        荣誉-->
-    </VBox>
+<!--    <VBox GridPane.rowIndex="2" spacing="10.0">-->
+<!--        &lt;!&ndash;        荣誉&ndash;&gt;-->
+<!--    </VBox>-->
+    
+    <Button text="%seeToursList" onAction="#seeToursListAction" GridPane.rowIndex="5"/>
 
     <LabelTable fx:id="allAwardsTable" GridPane.rowIndex="6"/>
 

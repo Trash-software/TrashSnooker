@@ -660,6 +660,20 @@ public class CareerManager {
             return inProgress.isFinished() ? null : inProgress;
         }
     }
+    
+    public NavigableMap<Integer, Career> historicalChampions(ChampionshipData data) {
+        NavigableMap<Integer, Career> result = new TreeMap<>();
+        for (Career career : playerCareers) {
+            for (ChampionshipScore score : career.getChampionshipScores()) {
+                if (score.data == data) {
+                    if (Util.arrayContains(score.ranks, ChampionshipScore.Rank.CHAMPION)) {
+                        result.put(score.getYear(), career);
+                    }
+                }
+            }
+        }
+        return result;
+    }
 
     public void saveToDisk() {
         saveCacheInfo();

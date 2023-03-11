@@ -76,6 +76,8 @@ public class CareerView implements Initializable {
     private PerkManager perkManager;
     private Stage selfStage;
     private ResourceBundle strings;
+    
+    private ChampionshipData activeOrNext;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -315,6 +317,7 @@ public class CareerView implements Initializable {
 
             data = inProgress.getData();
         }
+        activeOrNext = data;
 
         // 更新赛事奖金表
         champAwardsTable.clearItems();
@@ -322,9 +325,11 @@ public class CareerView implements Initializable {
                 strings.getString("rankedGame") : 
                 strings.getString("nonRankedGame"));
         ChampionshipScore.Rank[] ranks = data.getRanksOfLosers();
-        champAwardsTable.addItem(new AwardItem(data, ChampionshipScore.Rank.CHAMPION));
-        for (ChampionshipScore.Rank rank : ranks) {
-            champAwardsTable.addItem(new AwardItem(data, rank));
+        champAwardsTable.addItem(new AwardItem(data, ChampionshipScore.Rank.CHAMPION, ChampionshipStage.FINAL));
+        for (int i = 0; i < ranks.length; i++) {
+            ChampionshipScore.Rank rank = ranks[i];
+            ChampionshipStage stage = i == ranks.length - 1 ? null : data.getStages()[i + 1];
+            champAwardsTable.addItem(new AwardItem(data, rank, stage));
         }
 
         // 更新加点界面
@@ -367,6 +372,35 @@ public class CareerView implements Initializable {
         notifyPerksChanged();
 
         abilityShower.notifyPerksReset();
+    }
+    
+    @FXML
+    public void seeToursListAction() {
+        try {
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(selfStage);
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("tournamentsViewer.fxml"),
+                    strings
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Scene scene = new Scene(root);
+
+//            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
+//            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
+            stage.setScene(scene);
+            
+            TournamentsViewer viewer = loader.getController();
+            viewer.initialSelection(activeOrNext);
+
+            stage.show();
+        } catch (IOException e) {
+            EventLogger.log(e);
+        }
     }
 
     @FXML
@@ -458,12 +492,14 @@ public class CareerView implements Initializable {
     }
 
     public static class AwardItem {
-        final ChampionshipData data;
-        final ChampionshipScore.Rank rank;
+        public final ChampionshipData data;
+        public final ChampionshipScore.Rank rank;
+        public final ChampionshipStage winnerStage;
 
-        AwardItem(ChampionshipData data, ChampionshipScore.Rank rank) {
+        public AwardItem(ChampionshipData data, ChampionshipScore.Rank rank, ChampionshipStage winnerStage) {
             this.data = data;
             this.rank = rank;
+            this.winnerStage = winnerStage;
         }
     }
 }

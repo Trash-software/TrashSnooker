@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
+<?import trashsoftware.trashSnooker.fxml.widgets.TournamentItemView?>
+<?import javafx.scene.layout.GridPane?>
+<fx:root type="trashsoftware.trashSnooker.fxml.widgets.TournamentItemView"
+         xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" 
+         style="-fx-padding: 0;">
+    
+    <GridPane fx:id="rootPane" vgap="15.0" hgap="10.0" prefWidth="400"/>
+
+</fx:root>
