@@ -119,6 +119,24 @@ public class MainView implements Initializable {
                 BallMetrics.POOL_BALL
         );
         
+        gameRuleBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            switch (newValue) {
+                case SNOOKER:
+                case MINI_SNOOKER:
+                    tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.SNOOKER);
+                    ballMetricsBox.getSelectionModel().select(BallMetrics.SNOOKER_BALL);
+                    break;
+                case CHINESE_EIGHT:
+                    tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.CHINESE_EIGHT);
+                    ballMetricsBox.getSelectionModel().select(BallMetrics.POOL_BALL);
+                    break;
+                case SIDE_POCKET:
+                    tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.SIDE_POCKET);
+                    ballMetricsBox.getSelectionModel().select(BallMetrics.POOL_BALL);
+                    break;
+            }
+        }));
+        
         tableMetricsBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 holeSizeBox.getItems().clear();

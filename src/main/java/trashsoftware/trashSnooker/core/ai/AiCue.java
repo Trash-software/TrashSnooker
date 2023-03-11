@@ -304,7 +304,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     dirHolePoint[1][0] == game.getGameValues().table.midX,
                     dirHolePoint[0]
             ) * Math.hypot(ball.getX() - dirHolePoint[1][0], ball.getY() - dirHolePoint[1][1]);
-            price += 10000.0 / potDifficulty;
+            price += 20000.0 / potDifficulty;
         }
         return price;
     }
@@ -701,7 +701,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 game.isDoingSnookerFreeBll(),
                 new double[]{game.getCueBall().getX(), game.getCueBall().getY()},
                 false,
-                game.isInLineHandBall());
+                game.isInLineHandBallForAi());
     }
 
     private DefenseChoice directDefense(List<Ball> legalBalls,
@@ -879,7 +879,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
         List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
                 isSnookerFreeBall,
-                game.isInLineHandBall());
+                game.isInLineHandBallForAi());
 
         AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
         double degreesTick = 100.0 / 2 / aps.defense;
@@ -1008,24 +1008,42 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 return holeMax * Math.cos(angleTo45);
             }
         }
+        
+        protected static double allowedDeviationOfHole(GameValues values,
+                                                       boolean isMidHole,
+                                                       double[] targetHoleVec) {
+            double holeWidth = AttackChoice.holeProjWidth(values,
+                    isMidHole,
+                    targetHoleVec);
+            // 从这个角度看袋允许的偏差
+            return holeWidth - values.ball.ballDiameter * 0.95;  // 0.95是随手写的
+        }
 
         protected static double holeDifficulty(Game<?, ?> game,
                                                boolean isMidHole,
                                                double[] targetHoleVec) {
+            
+            double allowedDev = allowedDeviationOfHole(game.getGameValues(), isMidHole, targetHoleVec);
             if (isMidHole) {
-//                double midHoleOffset = Math.abs(targetHoleVec[1]);  // 单位向量的y值绝对值越大，这球越简单
-//                return 1 / Math.pow(midHoleOffset, 1.4);  // 次幂可以调，越小，ai越愿意打中袋
-                // 基本上就是往中袋的投影占比
-                double holeProjWidth = Math.abs(targetHoleVec[1]) * game.getGameValues().table.midHoleDiameter;
-                double errorToleranceWidth = holeProjWidth - game.getGameValues().ball.ballRadius;
-                errorToleranceWidth = Math.max(errorToleranceWidth, 0.00001);
-                return game.getGameValues().midHoleBestAngleWidth / errorToleranceWidth;
+                return game.getGameValues().midHoleBestAngleWidth / allowedDev;
             } else {
-                // 底袋，45度时难度系数为1，0度或90度时难度系数最大，为 sqrt(2)/2 * 袋直径 - 球半径 的倒数
-                double easy = 1 - Math.abs(Math.abs(targetHoleVec[0]) - Math.abs(targetHoleVec[1]));  // [0,1]
-                double range = 1 - game.getGameValues().cornerHoleAngleRatio;
-                return 1 / (easy * range + game.getGameValues().cornerHoleAngleRatio);
+                return game.getGameValues().cornerHoldBestAngleWidth / allowedDev;
             }
+            
+//            if (isMidHole) {
+////                double midHoleOffset = Math.abs(targetHoleVec[1]);  // 单位向量的y值绝对值越大，这球越简单
+////                return 1 / Math.pow(midHoleOffset, 1.4);  // 次幂可以调，越小，ai越愿意打中袋
+//                // 基本上就是往中袋的投影占比
+//                double holeProjWidth = Math.abs(targetHoleVec[1]) * game.getGameValues().table.midHoleDiameter;
+//                double errorToleranceWidth = holeProjWidth - game.getGameValues().ball.ballRadius;
+//                errorToleranceWidth = Math.max(errorToleranceWidth, 0.00001);
+//                return game.getGameValues().midHoleBestAngleWidth / errorToleranceWidth;
+//            } else {
+//                // 底袋，45度时难度系数为1，0度或90度时难度系数最大，为 sqrt(2)/2 * 袋直径 - 球半径 的倒数
+//                double easy = 1 - Math.abs(Math.abs(targetHoleVec[0]) - Math.abs(targetHoleVec[1]));  // [0,1]
+//                double range = 1 - game.getGameValues().cornerHoleAngleRatio;
+//                return 1 / (easy * range + game.getGameValues().cornerHoleAngleRatio);
+//            }
         }
 
         public Ball getBall() {
@@ -1296,12 +1314,13 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
             tarDevHoleSdMm += targetDifficultyMm;
 //            tarDevHoleSdMm *= targetDifficulty;
-
-            double holeWidth = AttackChoice.holeProjWidth(gameValues,
-                    attackChoice.isMidHole(),
-                    attackChoice.targetHoleVec);
+            
             // 从这个角度看袋允许的偏差
-            double allowedDev = holeWidth - gameValues.ball.ballDiameter * 0.95;  // 0.95是随手写的
+            double allowedDev = AttackChoice.allowedDeviationOfHole(
+                    gameValues,
+                    attackChoice.isMidHole(),
+                    attackChoice.targetHoleVec
+            );
             NormalDistribution nd = new NormalDistribution(0.0, Math.max(tarDevHoleSdMm * 2, 0.00001));
 
             potProb = nd.cumulativeProbability(allowedDev) - nd.cumulativeProbability(-allowedDev);

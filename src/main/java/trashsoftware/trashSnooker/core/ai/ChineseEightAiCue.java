@@ -123,6 +123,18 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
         double fullPrice = priceOfSet(fullBalls);
         double halfPrice = priceOfSet(halfBalls);
         System.out.printf("Selecting ball. Full price: %f, half price: %f\n", fullPrice, halfPrice);
+
+        boolean isInLineHandBall = game.isInLineHandBallForAi();
+        System.out.println("Is ai in line: " + isInLineHandBall);
+        List<Ball> fullLegals;
+        List<Ball> halfLegals;
+        if (isInLineHandBall) {
+            fullLegals = game.getAllLegalBalls(ChineseEightBallGame.FULL_BALL_REP, false, true);
+            halfLegals = game.getAllLegalBalls(ChineseEightBallGame.HALF_BALL_REP, false, true);
+        } else {
+            fullLegals = fullBalls;
+            halfLegals = halfBalls;
+        }
         
         double[] whitePos = new double[]{game.getCueBall().getX(), game.getCueBall().getY()};
         List<AttackChoice> fullChoices = getAttackChoices(
@@ -130,7 +142,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 ChineseEightBallGame.FULL_BALL_REP,
                 aiPlayer,
                 null,
-                fullBalls,
+                fullLegals,
                 whitePos,
                 false
         );
@@ -139,7 +151,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 ChineseEightBallGame.HALF_BALL_REP,
                 aiPlayer,
                 null,
-                halfBalls,
+                halfLegals,
                 whitePos,
                 false
         );

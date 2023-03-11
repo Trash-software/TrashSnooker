@@ -756,6 +756,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public boolean isInLineHandBall() {
         return false;
     }
+    
+    public boolean isInLineHandBallForAi() {
+        return false;
+    }
 
     public void withdraw(Player player) {
         player.withdraw();

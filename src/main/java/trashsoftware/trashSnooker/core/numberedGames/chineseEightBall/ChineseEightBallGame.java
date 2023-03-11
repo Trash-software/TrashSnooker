@@ -134,7 +134,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall, boolean isInLineHandBall) {
         if (!ball.isPotted() && !ball.isWhite()) {
             if (isInLineHandBall) {
-                if (ball.getX() - gameValues.ball.ballRadius <= getTable().breakLineX()) {
+                if (ball.getX() <= getTable().breakLineX()) {
                     return false;
                 }
             }
@@ -374,7 +374,12 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 //        System.out.println(isJustAfterBreak() + " " + lastCueFoul);
         return isJustAfterBreak() && lastCueFoul;
     }
-    
+
+    @Override
+    public boolean isInLineHandBallForAi() {
+        return isJustAfterBreak() && thisCueFoul;  // 主要区别就是，ai计算的时候是在lastCueFoul=thisCueFoul之前
+    }
+
     private void pickupBlackBall() {
         double y = gameValues.table.midY;
         for (double x = eightBallPosX; x < gameValues.table.rightX - gameValues.ball.ballRadius; x += 1.0) {
@@ -440,8 +445,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                 System.out.println("In line hand ball");
                 // 开球后直接造成的自由球
                 double[] origPos = recordedPositions.get((PoolBall) whiteFirstCollide);
-                if (origPos[0] - gameValues.ball.ballRadius <= getTable().breakLineX()) {
-                    // 不能压线
+                if (origPos[0] <= getTable().breakLineX()) {
+                    // 可以压线
                     System.out.println(Arrays.toString(origPos));
                     foul = true;
                     foulReason = strings.getString("breakFreeMustOut");
