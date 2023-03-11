@@ -58,6 +58,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected Ball whiteFirstCollide;  // 这一杆白球碰到的第一颗球
     protected boolean collidesWall;
     protected boolean ballInHand = true;
+    protected boolean thisCueFoul = false;
     protected boolean lastCueFoul = false;
     protected boolean lastPotSuccess;
     protected boolean isBreaking = true;
@@ -164,15 +165,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     /**
      * 返回所有能打的球
      */
-    public List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall) {
+    public List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall, boolean isLineInFreeBall) {
         List<Ball> balls = new ArrayList<>();
         for (Ball ball : getAllBalls()) {
-            if (isLegalBall(ball, targetRep, isSnookerFreeBall)) balls.add(ball);
+            if (isLegalBall(ball, targetRep, isSnookerFreeBall, isLineInFreeBall)) balls.add(ball);
         }
         return balls;
     }
 
-    public abstract boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall);
+    public abstract boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall, boolean isInLineHandBall);
 
     /**
      * 返回目标的价值，前提条件：ball是有效目标
@@ -201,7 +202,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         whiteFirstCollide = null;
         collidesWall = false;
         lastPotSuccess = false;
-        lastCueFoul = false;
+        lastCueFoul = thisCueFoul;
+        thisCueFoul = false;
         newPotted.clear();
         recordPositions();
         recordedTarget = currentTarget;
@@ -598,76 +600,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 sumTargetDt / legalBalls.size(),
                 maxShadowAngle);
     }
-
-//    public boolean canSeeBall(double p1x, double p1y, double p2x, double p2y,
-//                              Ball selfBall1, Ball selfBall2) {
-//        Ball obs = getFirstObstacleBall(p1x, p1y, p2x, p2y, selfBall1, selfBall2);
-//        return obs == null;
-//    }
-
-//    public Ball getFirstObstacleBall(double p1x, double p1y, double p2x, double p2y,
-//                                     Ball selfBall1, Ball selfBall2) {
-////        double simulateBallDiameter = gameValues.ballDiameter - Values.PREDICTION_INTERVAL;
-//        double circle = Math.PI * 2;
-//
-//        double xDiff0 = p2x - p1x;
-//        double yDiff0 = p2y - p1y;
-//        double pointsDt = Math.hypot(xDiff0, yDiff0);
-//        double angle = Algebra.thetaOf(xDiff0, yDiff0);
-////        System.out.printf("%f %f %f %f\n", p1x, p1y, p2x, p2y);
-//
-//        for (Ball ball : getAllBalls()) {
-//            if (ball != selfBall1 && ball != selfBall2 && !ball.isPotted()) {
-//                // 计算这个球遮住的角度范围
-//                double xDiff = ball.getX() - p1x;
-//                double yDiff = ball.getY() - p1y;
-//                double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
-//                if (dt > pointsDt + gameValues.ballDiameter) {
-//                    continue;  // 障碍球比目标远，不可能挡
-//                }
-//                double connectionAngle = Algebra.thetaOf(xDiff, yDiff);  // 连线的绝对角度
-//
-//                double ballRadiusAngle = Math.asin(gameValues.ballRadius / dt);  // 从selfBall看ball占的的角
-//                double left = connectionAngle + ballRadiusAngle;
-//                double right = connectionAngle - ballRadiusAngle;
-////                System.out.println(angle + " " + left + " " + right);
-//
-//                if (left > circle) {  // 连线中心小于360，左侧大于360
-//                    if (angle >= right) {
-//                        return ball;  // angle在right与x正轴之间，挡住
-//                    }
-//                } else if (right <= 0) {  // 连线右侧小于0
-//                    if (angle > circle + right) {
-//                        return ball;  // angle在right以上x正轴之下，挡住
-//                    }
-//                }
-//                if (left >= angle && right <= angle) {
-//                    return ball;
-//                }
-//            }
-//        }
-//        return null;
-
-    // 两球连线、预测的最薄击球点构成两个直角三角形，斜边为连线，其中一个直角边为球直的径（理想状况下）
-//        double xDiff = p2x - p1x;
-//        double yDiff = p2y - p1y;
-//        double[] vec = new double[]{xDiff, yDiff};
-//        double[] unitVec = Algebra.unitVector(vec);
-//        double dt = Math.hypot(xDiff, yDiff);  // 两球球心距离
-//        double theta = Math.asin(simulateBallDiameter / dt);  // 连线与预测线的夹角
-//        double alpha = Algebra.thetaOf(unitVec);  // 两球连线与X轴的夹角
-//
-//        for (double d = -1.0; d <= 1.0; d += 0.25) {
-//            double ang = Algebra.normalizeAngle(alpha + theta * d);
-//            double[] angUnitVec = Algebra.unitVectorOfAngle(ang);
-////            System.out.println(ang + " orig ang: " + alpha);
-//
-//            PredictedPos pp = getPredictedHitBall(p1x, p1y, angUnitVec[0], angUnitVec[1]);
-////            System.out.println(pp);
-//            if (pp != null && pp.getTargetBall().getValue() == selfBall2.getValue()) return true;
-//        }
-//        return false;
-//    }
+    
+    public int getPlayerNum(P player) {
+        return player == player1 ? 1 : 2;
+    }
 
     /**
      * 返回
@@ -725,7 +661,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public boolean isSnookered() {
-        return isSnookered(cueBall.x, cueBall.y, getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll()));
+        return isSnookered(cueBall.x, cueBall.y, 
+                getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll(), 
+                        isInLineHandBall()));
     }
 
     public boolean isSnookered(double whiteX, double whiteY, List<Ball> legalBalls) {
@@ -735,7 +673,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public boolean isAnyFullBallVisible() {
         return countSeeAbleTargetBalls(
                 cueBall.x, cueBall.y,
-                getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll()),
+                getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll(),
+                        isInLineHandBall()),
                 2)
                 .seeAbleTargets != 0;
     }
@@ -814,6 +753,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public abstract int getTargetAfterPotFailed();
 
+    public boolean isInLineHandBall() {
+        return false;
+    }
+
     public void withdraw(Player player) {
         player.withdraw();
         end();
@@ -821,7 +764,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public Ball getEasiestTarget(Player player) {
         int target = getCurrentTarget();
-        List<Ball> targets = getAllLegalBalls(target, isDoingSnookerFreeBll());
+        List<Ball> targets = getAllLegalBalls(target, 
+                isDoingSnookerFreeBll(), 
+                isInLineHandBall());
         
         if (targets.isEmpty()) return null;
         
@@ -938,8 +883,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return foulReason;
     }
 
-    public boolean isLastCueFoul() {
-        return lastCueFoul;
+    public boolean isThisCueFoul() {
+        return thisCueFoul;
     }
 
     public void switchPlayer() {

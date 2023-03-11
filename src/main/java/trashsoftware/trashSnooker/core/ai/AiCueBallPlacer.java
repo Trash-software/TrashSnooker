@@ -47,9 +47,17 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
             if (breakPos != null) return breakPos;
         }
         
+        boolean justAfterBreak = false;
+        if (game instanceof ChineseEightBallGame) {
+            justAfterBreak = ((ChineseEightBallGame) game).isJustAfterBreak();
+        }
+        
         List<double[]> legalPositions = legalPositions();
         int target = game.getCurrentTarget();
-        List<Ball> legalBalls = game.getAllLegalBalls(target, false);  // 手中球怎么可能是自由球
+        List<Ball> legalBalls = 
+                game.getAllLegalBalls(target, 
+                        false,  // 手中球怎么可能是斯诺克自由球
+                        justAfterBreak);  // 摆球说明上一杆犯规了，是黑八的线内自由
 
         double[] bestPos = null;
         double maxPrice = 0;

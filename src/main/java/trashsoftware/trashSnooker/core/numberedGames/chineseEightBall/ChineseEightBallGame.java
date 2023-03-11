@@ -11,7 +11,6 @@ import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.table.ChineseEightTable;
-import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
@@ -132,8 +131,14 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     @Override
-    public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall) {
+    public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall, boolean isInLineHandBall) {
         if (!ball.isPotted() && !ball.isWhite()) {
+            if (isInLineHandBall) {
+                if (ball.getX() - gameValues.ball.ballRadius <= getTable().breakLineX()) {
+                    return false;
+                }
+            }
+            
             if (targetRep == NOT_SELECTED_REP) {
                 return ball.getValue() != 8;
             } else if (targetRep == FULL_BALL_REP) {
@@ -162,17 +167,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             else if (pottingBall.getValue() == 8) return END_REP;
             else return 8;
         }
-        
-//        if (player.getBallRange() == FULL_BALL_REP) {
-//            if (getRemFullBallOnTable() > 1) return FULL_BALL_REP;
-//            else if (pottingBall.getValue() == 8) return END_REP;
-//            else return 8;
-//        }
-//        if (player.getBallRange() == HALF_BALL_REP) {
-//            if (getRemHalfBallOnTable() > 1) return HALF_BALL_REP;
-//            else if (pottingBall.getValue() == 8) return END_REP;
-//            else return 8;
-//        }
         throw new RuntimeException("不可能");
     }
 
@@ -375,6 +369,12 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         return finishedCuesCount == 1;
     }
     
+    @Override
+    public boolean isInLineHandBall() {
+//        System.out.println(isJustAfterBreak() + " " + lastCueFoul);
+        return isJustAfterBreak() && lastCueFoul;
+    }
+    
     private void pickupBlackBall() {
         double y = gameValues.table.midY;
         for (double x = eightBallPosX; x < gameValues.table.rightX - gameValues.ball.ballRadius; x += 1.0) {
@@ -419,13 +419,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             foul = true;
             foulReason = strings.getString("noBallHitCushion");
         }
-        if (lastCueFoul && isJustAfterBreak()) {
-            // 开球后直接造成的自由球
-            if (lastCueVx < 0) {
-                foul = true;
-                foulReason = strings.getString("breakFreeMustOut");
-            }
-        }
+
+//        System.out.println("fcc " + finishedCuesCount + " " + lastCueFoul);
 
         if (cueBall.isPotted()) {
             if (getEightBall().isPotted()) {  // 白球黑八一起进
@@ -441,6 +436,18 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             foul = true;
             foulReason = strings.getString("emptyCue");
         } else {
+            if (isInLineHandBall()) {
+                System.out.println("In line hand ball");
+                // 开球后直接造成的自由球
+                double[] origPos = recordedPositions.get((PoolBall) whiteFirstCollide);
+                if (origPos[0] - gameValues.ball.ballRadius <= getTable().breakLineX()) {
+                    // 不能压线
+                    System.out.println(Arrays.toString(origPos));
+                    foul = true;
+                    foulReason = strings.getString("breakFreeMustOut");
+                }
+            }
+            
             if (currentTarget == FULL_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
                     foul = true;
@@ -466,7 +473,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         }
 
         if (foul && !getEightBall().isPotted()) {
-            lastCueFoul = true;
+            thisCueFoul = true;
             cueBall.pot();
             ballInHand = true;
             switchPlayer();
@@ -484,7 +491,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                     if (isBreaking) {
                         pickupBlackBall();
                         if (foul) {
-                            lastCueFoul = true;
+                            thisCueFoul = true;
                             cueBall.pot();
                             ballInHand = true;
                             switchPlayer();

@@ -21,8 +21,8 @@ public class ChineseAiVsAi extends AiVsAi {
     private void roughSimulateWholeGame(boolean isFinalFrame) {
         double ballTypeBadness = (random.nextDouble() + 1) / 2;  // 球形好不好，越小越好
 
-        SimPlayer sp1 = new SimPlayer(p1, ability1, ballTypeBadness);
-        SimPlayer sp2 = new SimPlayer(p2, ability2, ballTypeBadness);
+        SimPlayer sp1 = new SimPlayer(p1, ability1, 1, ballTypeBadness);
+        SimPlayer sp2 = new SimPlayer(p2, ability2, 2, ballTypeBadness);
         
         // 让球安排起
         if (p1.getPlayerPerson().getSex() != p2.getPlayerPerson().getSex()) {
@@ -102,6 +102,7 @@ public class ChineseAiVsAi extends AiVsAi {
                 playing.totalAttacks++;
                 boolean attackSuc = randomAttackSuccess(
                         playing.career.getPlayerPerson(),
+                        playing.playerNum,
                         playing.ra,
                         goodPos,
                         isFinalFrame,
@@ -122,13 +123,13 @@ public class ChineseAiVsAi extends AiVsAi {
         }
         
         if (sp1.remCount == 0) {
-            p1WinFrames++;
+            p1WinsAFrame();
         } else if (sp2.remCount == 0) {
-            p2WinFrames++;
+            p2WinsAFrame();
         } else {
             // 死活打不完那种
-            if (random.nextDouble() < 0.5) p1WinFrames++;
-            else p2WinFrames++;
+            if (random.nextDouble() < 0.5) p1WinsAFrame();
+            else p2WinsAFrame();
         }
     }
 
@@ -138,12 +139,14 @@ public class ChineseAiVsAi extends AiVsAi {
         final AiPlayStyle aiPlayStyle;
         final double goodPosition;
         final double position;
+        final int playerNum;
         int remCount = 8;
         int totalAttacks;
         int sucAttacks;
 
-        SimPlayer(Career career, PlayerPerson.ReadableAbility ra, double ballBadness) {
+        SimPlayer(Career career, PlayerPerson.ReadableAbility ra, int playerNum, double ballBadness) {
             this.career = career;
+            this.playerNum = playerNum;
             this.ra = ra;
             this.aiPlayStyle = career.getPlayerPerson().getAiPlayStyle();
             double posDif = 100 - (aiPlayStyle.position * (ra.spinControl + ra.powerControl) / 200);

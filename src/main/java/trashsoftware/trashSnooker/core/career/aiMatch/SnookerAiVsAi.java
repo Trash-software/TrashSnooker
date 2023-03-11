@@ -38,8 +38,8 @@ public class SnookerAiVsAi extends AiVsAi {
         
         double ballTypeBadness = (random.nextDouble() + 1) / 2;  // 球形好不好，越小越好
         
-        SimPlayer sp1 = new SimPlayer(p1, ability1, ballTypeBadness);
-        SimPlayer sp2 = new SimPlayer(p2, ability2, ballTypeBadness);
+        SimPlayer sp1 = new SimPlayer(p1, ability1, 1, ballTypeBadness);
+        SimPlayer sp2 = new SimPlayer(p2, ability2, 2, ballTypeBadness);
         
         SimPlayer playing = sp1;
         
@@ -100,6 +100,7 @@ public class SnookerAiVsAi extends AiVsAi {
                 playing.totalAttacks++;
                 boolean attackSuc = randomAttackSuccess(
                         playing.career.getPlayerPerson(), 
+                        playing.playerNum,
                         playing.ra, 
                         goodPos, 
                         isFinalFrame,
@@ -138,19 +139,19 @@ public class SnookerAiVsAi extends AiVsAi {
             cuesCount++;
         }
         if (sp1.score > sp2.score) {
-            p1WinFrames++;
+            p1WinsAFrame();
         } else if (sp1.score < sp2.score) {
-            p2WinFrames++;
+            p2WinsAFrame();
         } else {
             // 延分争黑
             double total = sp1.career.getPlayerPerson().psy + sp2.career.getPlayerPerson().psy;
             double p1psy = sp1.career.getPlayerPerson().psy / total;
             if (random.nextDouble() < p1psy) {
                 sp1.score += 7;
-                p1WinFrames++;
+                p1WinsAFrame();
             } else {
                 sp2.score += 7;
-                p2WinFrames++;
+                p2WinsAFrame();
             }
         }
         frameScores.add(new int[]{sp1.score, sp2.score});
@@ -172,13 +173,15 @@ public class SnookerAiVsAi extends AiVsAi {
         final AiPlayStyle aiPlayStyle;
         final double goodPosition;
         final double position;
+        final int playerNum;
         int score;
         int totalAttacks;
         int sucAttacks;
         int maxSinglePole;
         
-        SimPlayer(Career career, PlayerPerson.ReadableAbility ra, double ballBadness) {
+        SimPlayer(Career career, PlayerPerson.ReadableAbility ra, int playerNum, double ballBadness) {
             this.career = career;
+            this.playerNum = playerNum;
             this.ra = ra;
             this.aiPlayStyle = career.getPlayerPerson().getAiPlayStyle();
             double posDif = 100 - (aiPlayStyle.position * (ra.spinControl + ra.powerControl) / 200);

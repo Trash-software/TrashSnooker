@@ -419,8 +419,8 @@ public class PlayerPerson {
         if (selectedPower > ctrlAblePwr) {
             // 超过正常发力范围，打点准确度大幅下降
             // 一般来说，球手的最大力量大于可控力量15%左右
-            // 打点准确度最大应下降5倍
-            mul += (selectedPower - ctrlAblePwr) / 3;
+            // 打点准确度最大应下降3倍
+            mul += (selectedPower - ctrlAblePwr) / 5;
         }
         return mul * selectedPower / ctrlAblePwr;
     }

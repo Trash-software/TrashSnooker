@@ -18,6 +18,7 @@ public class AiCueResult {
     protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
     private double unitX, unitY;
     private final boolean isFinalFrame;
+    private final boolean rua;
 
     public AiCueResult(InGamePlayer inGamePlayer,
                        GamePlayStage gamePlayStage,
@@ -31,7 +32,8 @@ public class AiCueResult {
                        double selectedSideSpin,
                        double selectedPower,
                        PlayerPerson.HandSkill handSkill,
-                       boolean isFinalFrame) {
+                       boolean isFinalFrame,                       
+                       boolean rua) {
         this.unitX = unitX;
         this.unitY = unitY;
         this.selectedFrontBackSpin = selectedFrontBackSpin;
@@ -43,6 +45,7 @@ public class AiCueResult {
         this.targetBall = targetBall;
         this.handSkill = handSkill;
         this.isFinalFrame = isFinalFrame;
+        this.rua = rua;
 
         applyRandomError(inGamePlayer, gamePlayStage);
     }
@@ -88,6 +91,12 @@ public class AiCueResult {
             System.out.println(gamePlayStage + ", precision: " + precisionFactor);
         } else if (gamePlayStage == GamePlayStage.BREAK) {
             precisionFactor *= 5.0;
+        }
+        
+        if (rua) {
+            // 打rua了，精度进一步降低
+            System.out.println("Ai player ruaed!");
+            precisionFactor *= (person.psy / 100);
         }
         
         if (isFinalFrame && person.psy < 75) {

@@ -79,7 +79,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
     }
 
     @Override
-    public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall) {
+    public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall, boolean isInLineHandBall) {
         return false;
     }
 

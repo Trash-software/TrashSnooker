@@ -15,6 +15,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -633,7 +634,7 @@ public class GameView implements Initializable {
         printPlayStage = true;
 
         if (curDefAttempt != null && curDefAttempt.isSolvingSnooker()) {
-            curDefAttempt.setSolveSuccess(!game.getGame().isLastCueFoul());
+            curDefAttempt.setSolveSuccess(!game.getGame().isThisCueFoul());
         }
 
         game.getGame().getRecorder().recordScore(game.getGame().makeScoreResult(justCuedPlayer));
@@ -643,7 +644,7 @@ public class GameView implements Initializable {
         if (game.getGame().isEnded()) {
             endFrame();
         } else {
-            if (game.getGame().isLastCueFoul()) {
+            if (game.getGame().isThisCueFoul()) {
                 String foulReason = game.getGame().getFoulReason();
                 Platform.runLater(() -> {
                     AlertShower.showInfo(
@@ -1219,7 +1220,15 @@ public class GameView implements Initializable {
             double psyPowerMul = getPsyControlMultiplier(playerPerson);
             powerFactor /= psyPowerMul;
         }
-        power += power * powerFactor;
+        double powerMul = 1 + powerFactor;
+        double maxDev = 1.5;
+        if (powerMul > maxDev) {
+            powerMul = maxDev;
+        } else if (powerMul < 1 / maxDev) {
+            powerMul = 1 / maxDev;
+        }
+        
+        power *= powerMul;
 
         if (power > pMaxActualPower) power = pMaxActualPower;  // 控不了力也不可能打出怪力吧
         if (mutate) System.out.println("Want power: " + wantPower + ", actual power: " + power);
@@ -1315,8 +1324,61 @@ public class GameView implements Initializable {
                 game.getGame().getCurrentTarget(),
                 game.getGame().isDoingSnookerFreeBll());
     }
-
+    
     private void playerCue(Player player) {
+        if (game.gameValues.rule.snookerLike) {
+            AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+            System.out.println(asg.getCurrentTarget() + " " + predictedTargetBall);
+            if (asg.getCurrentTarget() == 0) {
+                // 判断斯诺克打彩球时的实际目标球
+                GridPane container = new GridPane();
+                container.setHgap(10.0);
+                container.setVgap(10.0);
+                ToggleGroup toggleGroup = new ToggleGroup();
+                Map<RadioButton, Integer> buttonVal = new HashMap<>();
+                
+                for (int i = 2; i <= 7; i++) {
+                    RadioButton rb = new RadioButton(AbstractSnookerGame.ballValueToColorName(i, strings));
+                    toggleGroup.getToggles().add(rb);
+                    
+                    Canvas tarCan = new Canvas();
+                    tarCan.setHeight(ballDiameter * 1.2);
+                    tarCan.setWidth(ballDiameter * 1.2);
+                    drawSnookerTargetBall(tarCan, i, false);
+                    
+                    container.add(tarCan, 0, i - 2);
+                    container.add(rb, 1, i - 2);
+                    
+                    buttonVal.put(rb, i);
+                    
+                    if (i == 7) toggleGroup.selectToggle(rb);
+                }
+
+                if (predictedTargetBall == null) {
+                    AlertShower.askConfirmation(
+                            stage,
+                            "",
+                            strings.getString("askSnookerTarget"),
+                            strings.getString("confirm"),
+                            strings.getString("cancel"),
+                            () -> {
+                                RadioButton selected = (RadioButton) toggleGroup.getSelectedToggle();
+                                asg.setIndicatedTarget(buttonVal.get(selected));
+                                playerCueEssential(player);
+                            },
+                            null,
+                            container
+                    );
+                    return;
+                } else {
+                    asg.setIndicatedTarget(predictedTargetBall.getValue());
+                }
+            }
+        }
+        playerCueEssential(player);
+    }
+
+    private void playerCueEssential(Player player) {
         // 判断是否为进攻杆
         PlayerPerson.HandSkill usedHand = currentHand;
         PotAttempt currentAttempt = null;
@@ -1381,7 +1443,7 @@ public class GameView implements Initializable {
         game.getGame().getRecorder().recordMovement(movement);
 
         if (currentAttempt != null) {
-            boolean success = currentAttempt.getTargetBall().isPotted() && !game.getGame().isLastCueFoul();
+            boolean success = currentAttempt.getTargetBall().isPotted() && !game.getGame().isThisCueFoul();
             if (curDefAttempt != null && curDefAttempt.defensePlayer != player) {
                 // 如进攻成功，则上一杆防守失败了
                 curDefAttempt.setSuccess(!success);
@@ -1477,6 +1539,17 @@ public class GameView implements Initializable {
                 withdraw(player);
                 return;
             }
+            if (game.gameValues.rule.snookerLike) {
+                AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+                if (cueResult.getTargetBall() != null) {
+                    asg.setIndicatedTarget(cueResult.getTargetBall().getValue());
+                } else {
+                    // ai在乱打
+                    System.out.println("AI angry cues");
+                    asg.setIndicatedTarget(2);
+                }
+            }
+            
             Platform.runLater(() -> {
                 cueButton.setText(strings.getString("isCuing"));
                 cursorDirectionUnitX = cueResult.getUnitX();
@@ -2568,7 +2641,10 @@ public class GameView implements Initializable {
                 false,
                 true,
                 false);
-        if (center == null) return;
+        if (center == null) {
+            predictedTargetBall = null;
+            return;
+        }
 
         for (int i = 1; i < possibles.length; i++) {
             clockwise[i - 1] = game.getGame().predictWhite(
@@ -2601,7 +2677,9 @@ public class GameView implements Initializable {
 //            graphicsContext.setStroke(Color.GRAY);
 //        }
 //        graphicsContext.setStroke(WHITE);
-        if (center.getFirstCollide() != null) {
+        if (center.getFirstCollide() == null) {
+            predictedTargetBall = null;
+        } else {
             graphicsContext.strokeOval(
                     canvasX(center.getWhiteCollisionX()) - ballRadius,
                     canvasY(center.getWhiteCollisionY()) - ballRadius,
@@ -2609,7 +2687,9 @@ public class GameView implements Initializable {
                     ballDiameter);  // 绘制预测撞击点的白球
 
             // 弹库的球就不给预测线了
-            if (!center.isHitWallBeforeHitBall()) {
+            if (center.isHitWallBeforeHitBall()) {
+                predictedTargetBall = null;
+            } else {
                 predictedTargetBall = center.getFirstCollide();
                 double potDt = Algebra.distanceToPoint(
                         center.getWhiteCollisionX(), center.getWhiteCollisionY(),
@@ -2684,38 +2764,7 @@ public class GameView implements Initializable {
                     ey = targetPredictionUnitY;
                 }
 
-//                if (targetPredictionUnitX < 0) {
-//                    if (targetPredictionUnitY < 0) {
-//                        // 第三象限
-//                    } else {
-//                        // 第二象限
-//                        sx = -targetPredictionUnitX;
-//                        ex = 0;
-//                        sy = 0;
-//                        ey = 
-//                    }
-//                } else {
-//                    if (targetPredictionUnitY < 0) {
-//                        // 第四象限
-//                        sx = 0;
-//                        ex = targetPredictionUnitX;
-//                        sy = -targetPredictionUnitY;
-//                        ey = 0;
-//                    } else {
-//                        // 第一象限
-//                        sx = 0;
-//                        ex = targetPredictionUnitX;
-//                        sy = 0;
-//                        ey = targetPredictionUnitY;
-//                    }
-//                }
-
                 LinearGradient fill = new LinearGradient(
-//                        canvasX(tarX) - ballPanePos.getMinX(), 
-//                        canvasY(tarY) - ballPanePos.getMinY(),
-//                        canvasX(tarX) - ballPanePos.getMinX() + lineX * scale, 
-//                        canvasY(tarY) - ballPanePos.getMinY() + lineY * scale,
-//                        0,0,targetPredictionUnitX,targetPredictionUnitY,
                         sx, sy, ex, ey,
                         true,
                         CycleMethod.NO_CYCLE,

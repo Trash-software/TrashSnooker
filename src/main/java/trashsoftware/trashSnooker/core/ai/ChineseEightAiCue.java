@@ -26,7 +26,9 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     private void makeAlivePriceMap() {
         int range = aiPlayer.getBallRange();
         if (range == ChineseEightBallGame.NOT_SELECTED_REP) return;
-        for (Ball ball : game.getAllLegalBalls(range, false)) {
+        for (Ball ball : game.getAllLegalBalls(range, false, 
+                false  // 是不是死球和线不线内无关
+        )) {
             selfBallAlivePrices.put(ball, ballAlivePrice(ball));
         }
         Ball eight = game.getBallByValue(8);
@@ -116,8 +118,8 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
     
     private AiCueResult selectBallCue(Phy phy) {
-        List<Ball> fullBalls = game.getAllLegalBalls(ChineseEightBallGame.FULL_BALL_REP, false);
-        List<Ball> halfBalls = game.getAllLegalBalls(ChineseEightBallGame.HALF_BALL_REP, false);
+        List<Ball> fullBalls = game.getAllLegalBalls(ChineseEightBallGame.FULL_BALL_REP, false, false);
+        List<Ball> halfBalls = game.getAllLegalBalls(ChineseEightBallGame.HALF_BALL_REP, false, false);
         double fullPrice = priceOfSet(fullBalls);
         double halfPrice = priceOfSet(halfBalls);
         System.out.printf("Selecting ball. Full price: %f, half price: %f\n", fullPrice, halfPrice);

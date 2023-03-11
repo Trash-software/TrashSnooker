@@ -9,7 +9,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cloneable {
-    public static final double MAX_GEAR_EFFECT = 0.1;  // 齿轮效应造成的最严重分离角损耗
+    public static final double MAX_GEAR_EFFECT = 0.2;  // 齿轮效应造成的最严重分离角损耗
+    public static final double MAX_GEAR_ANGULAR = 0.5;
     private static final Random ERROR_GENERATOR = new Random();
     private static final Random randomGenerator = new Random();
     private static final double[] SIDE_CUSHION_VEC = {1.0, 0.0};

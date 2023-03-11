@@ -12,6 +12,9 @@ import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.File;
 import java.sql.Timestamp;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class EntireGame {
 
@@ -28,6 +31,7 @@ public class EntireGame {
     private int p1Wins;
     private int p2Wins;
     private boolean p1Breaks;
+    private final SortedMap<Integer, Integer> winRecords = new TreeMap<>();
 
     public EntireGame(InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
                       int totalFrames, TableCloth cloth) {
@@ -35,7 +39,7 @@ public class EntireGame {
     }
 
     private EntireGame(InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
-                      int totalFrames, TableCloth cloth, boolean isNewCreate) {
+                       int totalFrames, TableCloth cloth, boolean isNewCreate) {
         this.p1 = p1;
         this.p2 = p2;
         if (totalFrames % 2 != 1) {
@@ -77,6 +81,24 @@ public class EntireGame {
         entireGame.p2Wins = jsonObject.getInt("p2Wins");
         entireGame.p1Breaks = jsonObject.getBoolean("p1Breaks");
         entireGame.startTime = new Timestamp(jsonObject.getLong("startTime"));
+
+        JSONObject wr;
+        if (jsonObject.has("winRecords")) {
+            wr = jsonObject.getJSONObject("winRecords");
+        } else {
+            wr = new JSONObject();
+            for (int i = 1; i < entireGame.p1Wins + entireGame.p2Wins + 1; i++) {
+                if (i <= entireGame.p1Wins) {
+                    wr.put(String.valueOf(i), 1);
+                } else {
+                    wr.put(String.valueOf(i), 2);
+                }
+            }
+        }
+        for (String frameIndex : wr.keySet()) {
+            entireGame.winRecords.put(Integer.parseInt(frameIndex), wr.getInt(frameIndex));
+        }
+
         return entireGame;
     }
 
@@ -105,6 +127,8 @@ public class EntireGame {
         object.put("p1", p1.toJson());
         object.put("p2", p2.toJson());
 
+        object.put("winRecords", winRecords);
+
         return object;
     }
 
@@ -114,6 +138,27 @@ public class EntireGame {
 
     public Game<? extends Ball, ? extends Player> getGame() {
         return game;
+    }
+    
+    public int playerContinuousLoses(int playerNum) {
+        if (p1Wins + p2Wins == 0) return 0;
+        int count = 0;
+        for (int i = p1Wins + p2Wins; i >= 1; i--) {
+            int frameWinner = winRecords.get(i);
+            if (frameWinner == playerNum) {
+                break;
+            }
+            count++;
+        }
+        return count;
+    }
+    
+    /**
+     * 这个球员是否被打rua了
+     */
+    public boolean rua(InGamePlayer igp) {
+        int playerNum = igp == p1 ? 1 : 2;
+        return playerContinuousLoses(playerNum) >= 3;  // 连输3局，rua了
     }
 
     public int getP1Wins() {
@@ -140,9 +185,12 @@ public class EntireGame {
         updateFrameRecords(game.getPlayer1(), player);
         updateFrameRecords(game.getPlayer2(), player);
 
+        int frameIndex = p1Wins + p2Wins + 1;
         if (player.getPlayerPerson().equals(p1.getPlayerPerson())) {
+            winRecords.put(frameIndex, 1);
             return p1WinsAFrame();
         } else {
+            winRecords.put(frameIndex, 2);
             return p2WinsAFrame();
         }
     }
@@ -209,9 +257,23 @@ public class EntireGame {
     public long getBeginTime() {
         return startTime.getTime();
     }
+    
+    private boolean nextFrameP1Breaks() {
+        if (gameValues.rule.breakRule == BreakRule.ALTERNATE) {
+            return !p1Breaks;
+        } else {
+            if (p1Wins + p2Wins == 0) return true;
+            int lastWinner = winRecords.get(p1Wins + p2Wins);
+            if (gameValues.rule.breakRule == BreakRule.WINNER) {
+                return lastWinner == 1;
+            } else {
+                return lastWinner != 1;
+            }
+        }
+    }
 
     private void createNextFrame() {
-        p1Breaks = !p1Breaks;
+        p1Breaks = nextFrameP1Breaks();
         GameSettings gameSettings = new GameSettings.Builder()
                 .player1Breaks(p1Breaks)
                 .players(p1, p2)

@@ -6,7 +6,10 @@ import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
 
+import java.util.Map;
 import java.util.Random;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public abstract class AiVsAi {
 
@@ -19,10 +22,11 @@ public abstract class AiVsAi {
     protected PlayerPerson.ReadableAbility ability1;
     protected AiPlayStyle aps2;
     protected PlayerPerson.ReadableAbility ability2;
-    protected int p1WinFrames;
-    protected int p2WinFrames;
+    private int p1WinFrames;
+    private int p2WinFrames;
     protected Career winner;
     protected Random random = new Random();
+    protected final SortedMap<Integer, Integer> winRecords = new TreeMap<>();
 
     public AiVsAi(Career p1, Career p2, ChampionshipData data, int totalFrames) {
         this.p1 = p1;
@@ -80,15 +84,46 @@ public abstract class AiVsAi {
         double gau = random.nextGaussian();
 
         if (gau < p1WinLimit) {
-            p1WinFrames++;
+            p1WinsAFrame();
         } else {
-            p2WinFrames++;
+            p2WinsAFrame();
         }
+    }
+    
+    protected void p1WinsAFrame() {
+        p1WinFrames++;
+        winRecords.put(p1WinFrames + p2WinFrames, 1);
+    }
+
+    protected void p2WinsAFrame() {
+        p2WinFrames++;
+        winRecords.put(p1WinFrames + p2WinFrames, 2);
+    }
+
+    public int playerContinuousLoses(int playerNum) {
+        if (p1WinFrames + p2WinFrames == 0) return 0;
+        int count = 0;
+        for (int i = p1WinFrames + p2WinFrames; i >= 1; i--) {
+            int frameWinner = winRecords.get(i);
+            if (frameWinner == playerNum) {
+                break;
+            }
+            count++;
+        }
+        return count;
+    }
+
+    /**
+     * 这个球员是否被打rua了
+     */
+    public boolean rua(int playerNum, PlayerPerson person) {
+        return playerContinuousLoses(playerNum) >= 3;  // 连输3局，rua了
     }
 
     protected abstract void simulateOneFrame(boolean isFinalFrame);
 
     protected boolean randomAttackSuccess(PlayerPerson person,
+                                          int playerNum,
                                           PlayerPerson.ReadableAbility ra,
                                           boolean goodPosition,
                                           boolean isFinalFrame,
@@ -100,6 +135,9 @@ public abstract class AiVsAi {
         }
         if (isFinalFrame) {
             psyFactor *= (200 + person.psy) / 300;
+        }
+        if (rua(playerNum, person)) {
+            psyFactor *= person.psy / 100;
         }
         double difficulty = potDifficulty * (goodPosition ? 1 : 3);
         double failRatio = 10000 - ra.aiming * ra.cuePrecision * psyFactor;

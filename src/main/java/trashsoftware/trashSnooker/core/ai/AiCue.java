@@ -6,6 +6,7 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.util.ConfigLoader;
@@ -175,7 +176,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             }
 
             int opponentTarget = copy.getTargetAfterPotFailed();
-            List<Ball> opponentBalls = copy.getAllLegalBalls(opponentTarget, false);
+            List<Ball> opponentBalls = copy.getAllLegalBalls(opponentTarget, false,
+                    copy.isInLineHandBall());
 
             Game.SeeAble seeAble = copy.countSeeAbleTargetBalls(
                     whiteStopPos[0], whiteStopPos[1],
@@ -311,7 +313,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         int curTarget = game.getCurrentTarget();
         boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
         List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
-                isSnookerFreeBall);
+                isSnookerFreeBall, 
+                false);  // 不可能，没有谁会给自己摆杆斯诺克
 
         PlayerPerson aps = aiPlayer.getPlayerPerson();
         double degreesTick = 100.0 / 2 / aps.getSolving();
@@ -460,7 +463,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
 
         List<Ball> legalBalls = game.getAllLegalBalls(game.getCurrentTarget(),
-                game.isDoingSnookerFreeBll());
+                game.isDoingSnookerFreeBll(),
+                game.isInLineHandBall());
         Set<Ball> legalSet = new HashSet<>(legalBalls);
 
         for (AttackParam choiceWithParam : defensiveAttacks) {
@@ -535,7 +539,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 attackParam.selectedSideSpin,
                 attackParam.selectedPower,
                 attackChoice.handSkill,
-                game.isFinalFrame());
+                game.isFinalFrame(),
+                game.getEntireGame().rua(aiPlayer.getInGamePlayer()));
     }
 
     protected AiCueResult makeDefenseCue(DefenseChoice choice, AiCueResult.CueType cueType) {
@@ -551,7 +556,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 choice.selectedSideSpin,
                 choice.selectedPower,
                 choice.handSkill,
-                game.isFinalFrame());
+                game.isFinalFrame(),
+                game.getEntireGame().rua(aiPlayer.getInGamePlayer()));
     }
 
     protected AiCueResult regularCueDecision(Phy phy) {
@@ -600,7 +606,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                         game.isDoingSnookerFreeBll());
                 List<Ball> nextStepLegalBalls =
                         game.getAllLegalBalls(nextTargetIfThisSuccess,
-                                false);  // 这颗进了下一颗怎么可能是自由球
+                                false,
+                                false);  // 这颗进了下一颗怎么可能是自由球/手中球
 
                 if (game.getGameType() == GameRule.CHINESE_EIGHT) {
                     // 避免AI打自己较自己的可能（并不确定会发生）
@@ -667,7 +674,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 0.0,
                 power,
                 handSkill,
-                game.isFinalFrame()
+                game.isFinalFrame(),
+                game.getEntireGame().rua(aiPlayer.getInGamePlayer())
         );
     }
 
@@ -675,12 +683,13 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                                 Ball lastPottingBall,
                                                 boolean isSnookerFreeBall,
                                                 double[] whitePos,
-                                                boolean isPositioning) {
+                                                boolean isPositioning,
+                                                boolean isLineInHandBall) {
         return getAttackChoices(game,
                 attackTarget,
                 aiPlayer,
                 lastPottingBall,
-                game.getAllLegalBalls(attackTarget, isSnookerFreeBall),
+                game.getAllLegalBalls(attackTarget, isSnookerFreeBall, isLineInHandBall),
                 whitePos,
                 isPositioning
         );
@@ -691,7 +700,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 null,
                 game.isDoingSnookerFreeBll(),
                 new double[]{game.getCueBall().getX(), game.getCueBall().getY()},
-                false);
+                false,
+                game.isInLineHandBall());
     }
 
     private DefenseChoice directDefense(List<Ball> legalBalls,
@@ -868,7 +878,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         int curTarget = game.getCurrentTarget();
         boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
         List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
-                isSnookerFreeBall);
+                isSnookerFreeBall,
+                game.isInLineHandBall());
 
         AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
         double degreesTick = 100.0 / 2 / aps.defense;
@@ -974,11 +985,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     0.0
             );
 
-//            attackChoice.price = 10000.0 / attackChoice.difficulty *
-//                    game.priceOfTarget(attackTarget, ball, attackingPlayer, lastAiPottedBall);
-
-//            System.out.println(attackChoice.price + " " + attackChoice.difficulty);
-
             return attackChoice;
         }
 
@@ -1049,35 +1055,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             copied.defaultRef = defaultRef;
 
             return copied;
-        }
-
-        private void calculateDifficulty() {
-            /* 难度分4部分: 
-               1. 目标球的角度在目视方向的投影长度
-               2. 白球与目标球间的距离
-               3. 总行程
-               4. 袋的进球角度
-             */
-
-            // 就是说从白球处看击打点，需要偏多少距离才是袋，300毫米是保底: 偏30厘米以内一般不影响瞄准
-            double targetDifficulty =
-                    Math.cos(Math.PI / 2 - angleRad) * targetHoleDistance;
-            targetDifficulty = Math.max(targetDifficulty, 300);
-
-            double baseDifficulty = (whiteCollisionDistance + 300) * targetDifficulty / 100;
-            double totalDtDifficulty = whiteCollisionDistance + targetHoleDistance;
-
-            double holeDifficulty = holeDifficulty(game, isMidHole(), targetHoleVec);
-
-            double penalty = 1.0;
-            if (isPositioning) {
-                double dtLow = game.getGameValues().ball.ballDiameter * 5;
-                if (whiteCollisionDistance < dtLow) {
-                    penalty *= dtLow / whiteCollisionDistance;
-                }
-            }
-
-//            difficulty = (baseDifficulty * holeDifficulty + totalDtDifficulty) * penalty;
         }
 
         private boolean isMidHole() {
@@ -1195,11 +1172,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         @Override
         public int compareTo(@NotNull AiCue.DefenseChoice o) {
-//            if (this.collideOtherBall && !o.collideOtherBall) {
-//                return 1;
-//            } else if (!this.collideOtherBall && o.collideOtherBall) {
-//                return -1;
-//            }
             return -Double.compare(this.price, o.price);
         }
 
@@ -1329,7 +1301,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     attackChoice.isMidHole(),
                     attackChoice.targetHoleVec);
             // 从这个角度看袋允许的偏差
-            double allowedDev = holeWidth - gameValues.ball.ballDiameter;  // 1.0是随手写的
+            double allowedDev = holeWidth - gameValues.ball.ballDiameter * 0.95;  // 0.95是随手写的
             NormalDistribution nd = new NormalDistribution(0.0, Math.max(tarDevHoleSdMm * 2, 0.00001));
 
             potProb = nd.cumulativeProbability(allowedDev) - nd.cumulativeProbability(-allowedDev);
@@ -1409,29 +1381,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         int normalCompareTo(IntegratedAttackChoice o2) {
             return -Double.compare(this.price, o2.price);
         }
-
-//        int compareToWhenNoAvailNextBall(IntegratedAttackChoice o2) {
-//            return -Double.compare(this.priceWhenNoAvailNextBall(), o2.priceWhenNoAvailNextBall());
-//        }
-//
-//        double priceWhenNoAvailNextBall() {
-////            System.out.println(whiteSecondCollide);
-//            if (whitePrediction.getSecondCollide() == null)
-//                return attackChoice.price * 0.1;  // k不到球，相当于没走位
-//
-//            double targetMultiplier;
-//            if (game.isLegalBall(whitePrediction.getSecondCollide(), nextStepTarget, false))
-//                targetMultiplier = 1.0 / KICK_USELESS_BALL_MUL;  // k到目标球优先
-//            else targetMultiplier = 1.0;  // k到其他球也还将就
-//
-//            double speedThreshold = Values.MAX_POWER_SPEED / 8.0;
-//            double price = this.price * targetMultiplier;  // this.price本身已有k球惩罚，需补偿
-//            if (whitePrediction.getWhiteSpeedWhenHitSecondBall() < speedThreshold) {
-//                price *= whitePrediction.getWhiteSpeedWhenHitSecondBall() / speedThreshold;
-//            }
-//            if (whitePrediction.isWhiteCollidesHoleArcs()) price *= WHITE_HIT_CORNER_PENALTY;
-//            return price;
-//        }
 
         private void generatePrice() {
             price = attackParams.price;  // 这颗球本身的价值
