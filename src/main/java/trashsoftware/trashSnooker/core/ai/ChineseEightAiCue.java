@@ -88,7 +88,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
         Double alivePrice = selfBallAlivePrices.get(kickedBall);
         if (alivePrice == null) return KICK_USELESS_BALL_MUL;
 
-        double speedThreshold = Values.MAX_POWER_SPEED / 8.0;
+        double speedThreshold = Values.BEST_KICK_SPEED;
         double speedMul;
         if (kickSpeed > speedThreshold * 2) speedMul = 1.5;
         else if (kickSpeed > speedThreshold) speedMul = 1.0;

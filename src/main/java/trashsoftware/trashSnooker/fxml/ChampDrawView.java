@@ -63,7 +63,7 @@ public class ChampDrawView implements Initializable {
     double nodeVGap = 24;
     double nodeWidth = 120.0;
     double nodeBlockWidth = 20.0;
-    double nodeHGap = 200.0;
+    double nodeHGap = nodeWidth + nodeBlockWidth + 20.0;
     double width;
 
     CareerView parent;
@@ -330,6 +330,28 @@ public class ChampDrawView implements Initializable {
     private double getX(int depth) {
         return width - (depth + 1) * nodeHGap;
     }
+    
+    private void connectLineTo(double x1, double y1, double x2, double y2) {
+        if (x1 > x2) {  // 让线都从左到右连
+            double tempX = x1;
+            double tempY = y1;
+            x1 = x2;
+            x2 = tempX;
+            y1 = y2;
+            y2 = tempY;
+        }
+        double parentY;
+        if (y1 > y2) {
+            parentY = y2 + 2.0;
+        } else {
+            parentY = y2 - 2.0;
+        }
+        double leftX = x1 + nodeWidth + nodeBlockWidth;
+        double midX = (leftX + x2) / 2;
+        gc2d.strokeLine(leftX, y1, midX, y1);
+        gc2d.strokeLine(midX, y1, midX, parentY);
+        gc2d.strokeLine(midX, parentY, x2, parentY);
+    }
 
     private void drawTreeToGraph(Node node, boolean isAlive, Node parent) {
         double x = node.x;
@@ -343,7 +365,8 @@ public class ChampDrawView implements Initializable {
         gc2d.strokeRect(x, y1, nodeWidth + nodeBlockWidth, nodeHeight);
         gc2d.strokeLine(x + nodeWidth, y1, x + nodeWidth, y1 + nodeHeight);
         if (parent != null) {
-            gc2d.strokeLine(x + nodeWidth + nodeBlockWidth, y, parent.x, parent.y);
+//            gc2d.strokeLine(x + nodeWidth + nodeBlockWidth, y, parent.x, parent.y);
+            connectLineTo(x, y, parent.x, parent.y);
             boolean completed = parent.node.isFinished();
             if (completed) {
                 boolean isLeftChild = parent.left == node;

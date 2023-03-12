@@ -319,7 +319,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 }
             } else {  // 该打红球时打了彩球
                 foul = Math.max(4, whiteFirstCollide.getValue());
-                foulReason = strings.getString("targetRedColorPots");
+                foulReason = String.format(strings.getString("targetRedHitX"), 
+                        ballValueToColorName(whiteFirstCollide.getValue(), strings));
             }
         } else {
             int realTarget = whiteFirstCollide.getValue();

@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.CareerView;
@@ -59,13 +60,39 @@ public class TournamentItemView extends ScrollPane {
 
         int row = 0;
         rootPane.add(new Label(data.getName()), 0, row++);
-        rootPane.add(new Label(data.isRanked() ?
-                strings.getString("rankedGame") :
-                strings.getString("nonRankedGame")), 0, row++);
+
+        HBox tourTypeBox = new HBox();
+        tourTypeBox.setSpacing(10.0);
+        tourTypeBox.getChildren().add(new Label(data.isRanked() ?
+                        strings.getString("rankedGame") :
+                        strings.getString("nonRankedGame")));
+        tourTypeBox.getChildren().add(new Label(data.isProfessionalOnly() ? 
+                strings.getString("closedTour") : 
+                strings.getString("openTour")));
+
+        rootPane.add(tourTypeBox, 0, row++);
+
+        if (data.getDescription().length() > 0) {
+            Label des = new Label(data.getDescription());
+            des.setWrapText(true);
+            rootPane.add(des, 0, row++);
+        }
         
-        Label des = new Label(data.getDescription());
-        des.setWrapText(true);
-        rootPane.add(des, 0, row++);
+        LabelTable<ChampionshipData> positionsTable = new LabelTable<>();
+        LabelTableColumn<ChampionshipData, Integer> col1 = 
+                new LabelTableColumn<>(positionsTable, strings.getString("mainPlaces"), 
+                        params -> new ReadOnlyObjectWrapper<>(params.getMainPlaces()));
+        LabelTableColumn<ChampionshipData, Integer> col2 =
+                new LabelTableColumn<>(positionsTable, strings.getString("seedPlaces"),
+                        params -> new ReadOnlyObjectWrapper<>(params.getSeedPlaces()));
+        LabelTableColumn<ChampionshipData, Integer> col3 =
+                new LabelTableColumn<>(positionsTable, strings.getString("preMatchPlaces"),
+                        params -> new ReadOnlyObjectWrapper<>(Arrays.stream(params.getPreMatchNewAdded()).sum()));
+        
+        positionsTable.addColumns(col1, col2, col3);
+        positionsTable.addItem(data);
+
+        rootPane.add(positionsTable, 0, row++);
         
         rootPane.add(awardPerkTable, 0, row++);
         rootPane.add(champsTable, 0, row++);
