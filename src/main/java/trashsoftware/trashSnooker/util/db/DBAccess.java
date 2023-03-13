@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    private static final boolean SAVE = false;
+    private static final boolean SAVE = true;
     private static DBAccess database;
 
     private Connection connection;
@@ -529,6 +529,38 @@ public class DBAccess {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    
+    public List<String>[] listPlayerIdsHumanComputer() {
+        Set<String> humanIds = new TreeSet<>();
+        Set<String> computerIds = new TreeSet<>();
+        
+        String query = "SELECT * FROM EntireGame";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(query);
+            while (result.next()) {
+                boolean p1Ai = result.getInt("Player1IsAI") != 0;
+                boolean p2Ai = result.getInt("Player2IsAI") != 0;
+                String p1 = result.getString("Player1Name");
+                String p2 = result.getString("Player2Name");
+                
+                if (p1Ai) {
+                    if (isValidPlayer(p1)) computerIds.add(p1);
+                } else {
+                    if (isValidPlayer(p1)) humanIds.add(p1);
+                }
+                if (p2Ai) {
+                    if (isValidPlayer(p2)) computerIds.add(p2);
+                } else {
+                    if (isValidPlayer(p2)) humanIds.add(p2);
+                }
+            }
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new List[]{new ArrayList<>(humanIds), new ArrayList<>(computerIds)};
     }
 
     public List<String> listAllPlayerIds() {

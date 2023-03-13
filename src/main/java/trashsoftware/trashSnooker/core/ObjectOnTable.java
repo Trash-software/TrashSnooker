@@ -141,7 +141,7 @@ public abstract class ObjectOnTable {
         double dt = Math.hypot(xDiff, yDiff);
         
         double holeRadius = isMidHole ? table.midHoleRadius : table.cornerHoleRadius;
-        double holeAndSlopeRadius = holeRadius + table.holeExtraSlopeWidth;
+        double holeAndSlopeRadius = holeRadius + table.holeGravityAreaWidth;
         
         if (dt < holeAndSlopeRadius) {
             // dt应该不会小于 holeRadius - ballRadius 太多
@@ -149,7 +149,7 @@ public abstract class ObjectOnTable {
             if (dt < holeRadius) {
                 accMag = 1;
             } else {
-                accMag = (table.holeExtraSlopeWidth - dt + holeRadius) / table.holeExtraSlopeWidth;
+                accMag = (table.holeGravityAreaWidth - dt + holeRadius) / table.holeGravityAreaWidth;
             }
             
             accMag *= 4500;

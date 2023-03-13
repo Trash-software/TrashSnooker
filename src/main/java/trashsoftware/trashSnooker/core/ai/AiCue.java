@@ -1196,7 +1196,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         private void generatePrice() {
             this.price = snookerPrice / penalty - opponentAttackPrice * penalty;
 
-            if (wp.isHitWallBeforeHitBall()) {
+            if (wp != null && wp.isHitWallBeforeHitBall()) {
                 // 应该是在解斯诺克
                 this.price /= (wp.getDistanceTravelledBeforeCollision() / 1000);  // 不希望白球跑太远
             }
@@ -1298,6 +1298,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 radDevOfHighPower = Algebra.TWO_PI - radDevOfHighPower;
 
             double sideDevRad = (radDevOfHighPower - radDevOfLowPower) / 2;
+            
+            // 太小的力有惩罚
+            if (actualPower < 15.0) {
+                double penalty = Algebra.shiftRange(0, 15, 2, 1, actualPower);
+                sideDevRad *= penalty;
+            }
 
             // 瞄准的1倍标准差偏差角
             double aimingSd = (100 - aps.precision) * handSdMul /

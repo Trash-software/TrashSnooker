@@ -38,18 +38,20 @@ public class TableCloth {
                 '}';
     }
     public enum Goodness {
-        EXCELLENT(0.0, 0.0),
-        GOOD(0.07, 0.15),
-        NORMAL(0.18, 0.1),
-        BAD(0.35, 0.1),
-        TERRIBLE( 0.8, 0.0);
+        EXCELLENT(0.0, 0.0, 0.8),
+        GOOD(0.07, 0.12, 1.0),
+        NORMAL(0.18, 0.1, 1.2),
+        BAD(0.35, 0.06, 1.8),
+        TERRIBLE( 0.8, 0.0, 2.4);
 
         public final double errorFactor;
         public final double fixedErrorFactor;
+        public final double holeExtraGravityWidthMul;  // 以1为基准，因为不同的桌子可能范围天生不一样
 
-        Goodness(double errorFactor, double fixedErrorFactor) {
+        Goodness(double errorFactor, double fixedErrorFactor, double holeExtraGravityWidthMul) {
             this.errorFactor = errorFactor;
             this.fixedErrorFactor = fixedErrorFactor;
+            this.holeExtraGravityWidthMul = holeExtraGravityWidthMul;
         }
 
         @Override

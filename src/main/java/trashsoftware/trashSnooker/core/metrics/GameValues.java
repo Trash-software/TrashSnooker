@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.metrics;
 
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.core.phy.TableCloth;
 
 import java.util.Arrays;
 
@@ -33,7 +34,7 @@ public class GameValues {
         build();
     }
     
-    public static GameValues fromJson(JSONObject jsonObject) {
+    public static GameValues fromJson(JSONObject jsonObject, TableCloth cloth) {
         GameRule rule = GameRule.valueOf(jsonObject.getString("gameRule"));
         BallMetrics ballMetrics = BallMetrics.valueOf(jsonObject.getString("ball"));
 
@@ -41,7 +42,11 @@ public class GameValues {
         TableMetrics.TableBuilderFactory factory = 
                 TableMetrics.fromOrdinal(tableObj.getInt("tableOrdinal"));
         TableMetrics.HoleSize holeSize = factory.supportedHoles[tableObj.getInt("holeSizeOrdinal")];
-        TableMetrics tableMetrics = factory.create().holeSize(holeSize).build();
+        TableMetrics tableMetrics = factory
+                .create()
+                .holeSize(holeSize)
+                .pocketGravityMultiplier(cloth.goodness.holeExtraGravityWidthMul)
+                .build();
         
         return new GameValues(rule, tableMetrics, ballMetrics);
     }

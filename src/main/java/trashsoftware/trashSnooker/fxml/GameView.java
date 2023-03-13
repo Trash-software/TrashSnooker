@@ -928,13 +928,7 @@ public class GameView implements Initializable {
         if (game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() ==
                 PlayerType.COMPUTER) return;
 
-        if (game.getGame().getCueBall().isPotted()) {
-            game.getGame().placeWhiteBall(realX(mouseEvent.getX()), realY(mouseEvent.getY()));
-            game.getGame().getRecorder().writeBallInHandPlacement();
-
-            replaceBallInHandMenu.setDisable(false);
-
-        } else if (debugMode) {
+        if (debugMode) {
             double realX = realX(mouseEvent.getX());
             double realY = realY(mouseEvent.getY());
             if (debuggingBall == null) {
@@ -955,6 +949,12 @@ public class GameView implements Initializable {
                     debuggingBall = null;
                 }
             }
+        } else if (game.getGame().getCueBall().isPotted()) {
+            game.getGame().placeWhiteBall(realX(mouseEvent.getX()), realY(mouseEvent.getY()));
+            game.getGame().getRecorder().writeBallInHandPlacement();
+
+            replaceBallInHandMenu.setDisable(false);
+
         } else if (!game.getGame().isCalculating() && movement == null) {
             Ball whiteBall = game.getGame().getCueBall();
             double[] unit = Algebra.unitVector(

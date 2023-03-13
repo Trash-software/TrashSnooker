@@ -155,6 +155,7 @@ public class ChampionshipData {
             metrics = factory
                     .create()
                     .holeSize(holeSize(table.getString("hole_size"), factory.supportedHoles))
+                    .pocketGravityMultiplier(cloth.goodness.holeExtraGravityWidthMul)
                     .build();
         } else {
             cloth = new TableCloth(
@@ -164,6 +165,7 @@ public class ChampionshipData {
             metrics = factory
                     .create()
                     .holeSize(factory.defaultHole())
+                    .pocketGravityMultiplier(cloth.goodness.holeExtraGravityWidthMul)
                     .build();
         }
 

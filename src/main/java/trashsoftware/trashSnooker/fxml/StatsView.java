@@ -50,11 +50,21 @@ public class StatsView implements Initializable {
         root.getChildren().add(humanRoot);
         root.getChildren().add(aiRoot);
 
-        List<String> names = db.listAllPlayerIds();
-        for (String name : names) {
-            PlayerAi paiHuman = new PlayerAi(name, false);
-            PlayerAi paiAi = new PlayerAi(name, true);
+//        List<String> names = db.listAllPlayerIds();
+//        for (String name : names) {
+//            PlayerAi paiHuman = new PlayerAi(name, false);
+//            PlayerAi paiAi = new PlayerAi(name, true);
+//            humanRoot.getChildren().add(new PersonTreeItem(paiHuman, strings));
+//            aiRoot.getChildren().add(new PersonTreeItem(paiAi, strings));
+//        }
+        
+        List[] humanComputerIds = db.listPlayerIdsHumanComputer();
+        for (Object s : humanComputerIds[0]) {
+            PlayerAi paiHuman = new PlayerAi((String) s, false);
             humanRoot.getChildren().add(new PersonTreeItem(paiHuman, strings));
+        }
+        for (Object s : humanComputerIds[1]) {
+            PlayerAi paiAi = new PlayerAi((String) s, true);
             aiRoot.getChildren().add(new PersonTreeItem(paiAi, strings));
         }
         

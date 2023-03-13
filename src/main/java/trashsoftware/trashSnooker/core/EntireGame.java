@@ -60,10 +60,10 @@ public class EntireGame {
 
     public static EntireGame fromJson(JSONObject jsonObject) {
         int frames = jsonObject.getInt("totalFrames");
-        GameValues gameValues = GameValues.fromJson(jsonObject.getJSONObject("gameValues"));
-
         JSONObject clothObj = jsonObject.getJSONObject("cloth");
         TableCloth cloth = TableCloth.fromJson(clothObj);
+        
+        GameValues gameValues = GameValues.fromJson(jsonObject.getJSONObject("gameValues"), cloth);
 
         InGamePlayer p1 = InGamePlayer.fromJson(jsonObject.getJSONObject("p1"));
         InGamePlayer p2 = InGamePlayer.fromJson(jsonObject.getJSONObject("p2"));

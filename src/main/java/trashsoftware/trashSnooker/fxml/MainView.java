@@ -273,11 +273,14 @@ public class MainView implements Initializable {
 
     @FXML
     void startGameAction() {
+        TableCloth cloth = new TableCloth(clothGoodBox.getValue(), clothSmoothBox.getValue());
+        
         TableMetrics.TableBuilderFactory tableMetricsFactory = 
                 tableMetricsBox.getValue();
         TableMetrics tableMetrics = tableMetricsFactory
                 .create()
                 .holeSize(holeSizeBox.getValue())
+                .pocketGravityMultiplier(cloth.goodness.holeExtraGravityWidthMul)
                 .build();
         
         GameRule rule = gameRuleBox.getValue();
@@ -287,10 +290,10 @@ public class MainView implements Initializable {
         
         GameValues values = new GameValues(rule, tableMetrics, ballMetrics);
         
-        showGame(values);
+        showGame(values, cloth);
     }
 
-    private void showGame(GameValues gameValues) {
+    private void showGame(GameValues gameValues, TableCloth cloth) {
         PlayerPerson p1 = player1Box.getValue();
         PlayerPerson p2 = player2Box.getValue();
         if (p1 == null || p2 == null) {
@@ -310,8 +313,6 @@ public class MainView implements Initializable {
             igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue(), 1, 1.0);
             igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue(), 2, 1.0);
         }
-        
-        TableCloth cloth = new TableCloth(clothGoodBox.getValue(), clothSmoothBox.getValue());
 
         EntireGame game = new EntireGame(igp1, igp2, gameValues, totalFramesBox.getValue(), cloth);
         startGame(game);

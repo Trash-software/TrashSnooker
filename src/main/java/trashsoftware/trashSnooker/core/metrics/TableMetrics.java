@@ -12,7 +12,8 @@ public class TableMetrics {
             new HoleSize("pocketLarge", 89, 97),
             new HoleSize("pocketStd", 85, 92),
             new HoleSize("pocketSmall", 82, 88),
-            new HoleSize("pocketLittle", 78, 85)
+            new HoleSize("pocketLittle", 78, 85),
+            new HoleSize("pocketTiny", 72, 78)
     };
     public static final HoleSize[] CHINESE_EIGHT_HOLES = {
             new HoleSize("pocketHuge", 93, 103),
@@ -27,7 +28,7 @@ public class TableMetrics {
     private static final String[] NAMES = {SNOOKER, CHINESE_EIGHT, SIDE_POCKET};
     public final String tableName;
     public final TableBuilderFactory factory;
-    private HoleSize holeSize;
+//    private HoleSize holeSize;
 
     public Color tableColor;
     public Color gravityAreaColor;
@@ -46,7 +47,7 @@ public class TableMetrics {
 //    public double ballRadius;
     public double cornerHoleDiameter, cornerHoleRadius;
     public double midHoleDiameter, midHoleRadius;
-    public double holeExtraSlopeWidth;  // 袋口处的坡宽度。球进入这个区域后会开始有往袋里掉的意思
+    public double holeGravityAreaWidth;  // 袋口处的坡宽度。球进入这个区域后会开始有往袋里掉的意思
 
     public double midArcRadius;
 
@@ -399,16 +400,33 @@ public class TableMetrics {
             values.maxLength = Math.hypot(outerHeight, outerWidth);
             return this;
         }
+        
+        public Builder pocketGravityMultiplier(double multiplier) {
+            if (values.holeGravityAreaWidth == 0) {
+                values.holeGravityAreaWidth = multiplier;
+            } else {
+                values.holeGravityAreaWidth *= multiplier;
+            }
+            return this;
+        }
 
         Builder curvedHole(double extraSlopeWidth) {
             values.straightHole = false;
-            values.holeExtraSlopeWidth = extraSlopeWidth;
+            if (values.holeGravityAreaWidth == 0) {
+                values.holeGravityAreaWidth = extraSlopeWidth;
+            } else {
+                values.holeGravityAreaWidth *= extraSlopeWidth;
+            }
             return this;
         }
 
         Builder straightHole(double extraSlopeWidth, double cornerHoleOpenAngle, double midHoleOpenAngle) {
             values.straightHole = true;
-            values.holeExtraSlopeWidth = extraSlopeWidth;
+            if (values.holeGravityAreaWidth == 0) {
+                values.holeGravityAreaWidth = extraSlopeWidth;
+            } else {
+                values.holeGravityAreaWidth *= extraSlopeWidth;
+            }
             this.cornerHoleOpenAngle = cornerHoleOpenAngle;
             this.midHoleOpenAngle = midHoleOpenAngle;
             return this;
@@ -434,7 +452,7 @@ public class TableMetrics {
         }
 
         public Builder holeSize(HoleSize holeSize) {
-            values.holeSize = holeSize;
+//            values.holeSize = holeSize;
             if (values.straightHole) {
                 return holeSizeStraight(holeSize.cornerHoleDiameter, holeSize.midHoleDiameter);
             } else {
