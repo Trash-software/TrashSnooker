@@ -120,22 +120,20 @@ public abstract class AiVsAi {
         return playerContinuousLoses(playerNum) >= 3;  // 连输3局，rua了
     }
 
-    protected abstract void simulateOneFrame(boolean isFinalFrame);
+    protected abstract void simulateOneFrame();
 
     protected boolean randomAttackSuccess(PlayerPerson person,
                                           int playerNum,
                                           PlayerPerson.ReadableAbility ra,
                                           boolean goodPosition,
-                                          boolean isFinalFrame,
+                                          double framePsyDivisor,
                                           boolean isKeyBall) {
 
         double psyFactor = 1.0;
         if (isKeyBall) {
             psyFactor = person.psy / 100;
         }
-        if (isFinalFrame) {
-            psyFactor *= (200 + person.psy) / 300;
-        }
+        psyFactor /= framePsyDivisor;
         if (rua(playerNum, person)) {
             psyFactor *= person.psy / 100;
         }
@@ -155,7 +153,7 @@ public abstract class AiVsAi {
     public void simulate() {
         int half = totalFrames / 2 + 1;
         for (int i = 0; i < totalFrames; i++) {
-            simulateOneFrame(p1WinFrames == half - 1 && p2WinFrames == half - 1);
+            simulateOneFrame();
 
             if (p1WinFrames >= half) {
                 winner = p1;

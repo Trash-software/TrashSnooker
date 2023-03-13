@@ -72,4 +72,9 @@ public class AlgebraTest {
                 {642.0195132182149, 388.973111323249}
         };
     }
+    
+    @Test
+    public void negativeShift() {
+        System.out.println(Algebra.shiftRange(0, 100, 2, 0, 1));
+    }
 }

@@ -539,7 +539,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double dy1 = vy / Values.DETAILED_PHYSICAL;
 
         double x2 = ball.x;
-        ;
         double y2 = ball.y;
         double dx2 = ball.vx / Values.DETAILED_PHYSICAL;
         double dy2 = ball.vy / Values.DETAILED_PHYSICAL;
@@ -578,7 +577,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double ballOutVer = thisVerV;
         if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
             double totalSpeed = (Math.hypot(this.vx, this.vy) + Math.hypot(ball.vx, ball.vy)) * phy.calculationsPerSec;
-            double powerGear = Math.min(1.0, totalSpeed / 0.35 / Values.MAX_POWER_SPEED * values.ball.ballWeightRatio);  // 35的力就没有效应了(高低杆要打出35的球速，起码要50的力)
+            double powerGear = Math.min(1.0, totalSpeed / 0.30 / Values.MAX_POWER_SPEED * values.ball.ballWeightRatio);  // 30的力就没有效应了(高低杆要打出30的球速，起码要45的力)
             double gearRemain = (1 - powerGear) * MAX_GEAR_EFFECT;
             double gearEffect = 1 - gearRemain;
 

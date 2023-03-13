@@ -539,7 +539,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 attackParam.selectedSideSpin,
                 attackParam.selectedPower,
                 attackChoice.handSkill,
-                game.isFinalFrame(),
+                game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()),
                 game.getEntireGame().rua(aiPlayer.getInGamePlayer()));
     }
 
@@ -556,7 +556,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 choice.selectedSideSpin,
                 choice.selectedPower,
                 choice.handSkill,
-                game.isFinalFrame(),
+                game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()),
                 game.getEntireGame().rua(aiPlayer.getInGamePlayer()));
     }
 
@@ -674,7 +674,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 0.0,
                 power,
                 handSkill,
-                game.isFinalFrame(),
+                game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()),
                 game.getEntireGame().rua(aiPlayer.getInGamePlayer())
         );
     }
@@ -814,7 +814,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     private DefenseChoice solveSnookerDefense(List<Ball> legalBalls,
                                               double degreesTick, double powerTick, Phy phy) {
         Set<Ball> legalSet = new HashSet<>(legalBalls);
-        DefenseChoice best = null;
+//        DefenseChoice best = null;
 
         Ball cueBall = game.getCueBall();
         double[] whitePos = new double[]{cueBall.getX(), cueBall.getY()};
@@ -850,18 +850,27 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             throw new RuntimeException(e);
         }
 
+        List<DefenseChoice> legalChoices = new ArrayList<>();
         for (DefenseThread thread : defenseThreads) {
             if (thread.result != null && notViolateCushionRule(thread.result)) {
-                if (best == null || thread.result.compareTo(best) < 0) {
-                    best = thread.result;
-                }
+                legalChoices.add(thread.result);
+//                if (best == null || thread.result.compareTo(best) < 0) {
+//                    best = thread.result;
+//                }
             }
         }
-        if (best != null) {
-            System.out.println("Solver: " + best);
-        }
-
-        return best;
+        if (legalChoices.isEmpty()) return null;
+        Collections.sort(legalChoices);
+        Collections.reverse(legalChoices);
+        
+        if (legalChoices.size() == 1) return legalChoices.get(0);
+        else if (legalChoices.size() == 2) return Math.random() > 0.3 ? legalChoices.get(0) : legalChoices.get(1);
+        
+        List<DefenseChoice> bests = legalChoices.subList(0, Math.min(3, legalChoices.size()));
+        double rnd = Math.random();
+        if (rnd > 0.4) return bests.get(0);
+        else if (rnd > 0.1) return bests.get(1);
+        else return bests.get(2);
     }
 
     protected DefenseChoice getBestDefenseChoice(Phy phy) {
@@ -1186,6 +1195,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         private void generatePrice() {
             this.price = snookerPrice / penalty - opponentAttackPrice * penalty;
+
+            if (wp.isHitWallBeforeHitBall()) {
+                // 应该是在解斯诺克
+                this.price /= (wp.getDistanceTravelledBeforeCollision() / 1000);  // 不希望白球跑太远
+            }
+
         }
 
         @Override

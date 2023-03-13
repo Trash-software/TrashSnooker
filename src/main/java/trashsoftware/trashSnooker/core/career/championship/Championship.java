@@ -1,7 +1,6 @@
 package trashsoftware.trashSnooker.core.career.championship;
 
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.util.EventLogger;
 
@@ -13,6 +12,7 @@ public abstract class Championship {
     protected final Calendar timestamp;
     protected final ChampionshipData data;
 
+    protected final Map<String, Integer> careerSeedMap = new HashMap<>();
     protected MatchTree matchTree;
     protected int currentStageIndex;
     protected boolean finished = false;
@@ -39,6 +39,14 @@ public abstract class Championship {
             default:
                 throw new RuntimeException("Currently unsupported");
         }
+        
+        if (jsonObject.has("seedRanks")) {
+            JSONObject sr = jsonObject.getJSONObject("seedRanks");
+            for (String pid : sr.keySet()) {
+                championship.careerSeedMap.put(pid, sr.getInt(pid));
+            }
+        }
+        
         championship.currentStageIndex = jsonObject.getInt("stageIndex");
 //        ChampionshipStage curStage = 
         championship.matchTree = MatchTree.fromJson(jsonObject.getJSONObject("matchTree"));
@@ -82,7 +90,11 @@ public abstract class Championship {
     public boolean isHumanAlive() {
         return matchTree.isHumanAlive();
     }
-    
+
+    public Map<String, Integer> getCareerSeedMap() {
+        return careerSeedMap;
+    }
+
     private void saveProgressToJson() {
         saveProgressToJson(CareerManager.getChampionshipProgressFile());
     }
@@ -101,6 +113,12 @@ public abstract class Championship {
         saved.put("stageIndex", currentStageIndex);
         saved.put("matchTree", matchTree.saveProgressToJson());
         saved.put("finished", isFinished());
+        
+        JSONObject seeds = new JSONObject();
+        for (Map.Entry<String, Integer> carSeed : careerSeedMap.entrySet()) {
+            seeds.put(carSeed.getKey(), carSeed.getValue());
+        }
+        saved.put("seedRanks", seeds);
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             bw.write(saved.toString(2));
@@ -109,7 +127,7 @@ public abstract class Championship {
         }
     }
 
-    protected abstract List<Career> getParticipantsByRank(boolean playerJoin);
+    protected abstract List<TourCareer> getParticipantsByRank(boolean playerJoin);
 
     public boolean isStarted() {
         return matchTree != null;
@@ -132,10 +150,17 @@ public abstract class Championship {
         CareerManager.getInstance().saveToDisk();
         
         System.out.println("Starting " + data.getId());
-        List<Career> careers = getParticipantsByRank(playerJoin);
+        List<TourCareer> careers = getParticipantsByRank(playerJoin);
+        
+        careerSeedMap.clear();
+        List<Career> pureList = new ArrayList<>();
+        for (TourCareer tc : careers) {
+            pureList.add(tc.career);
+            careerSeedMap.put(tc.career.getPlayerPerson().getPlayerId(), tc.seedNum);
+        }
 
-        List<Career> seeds = new ArrayList<>(careers.subList(0, data.getSeedPlaces()));
-        List<Career> nonSeeds = new ArrayList<>(careers.subList(data.getSeedPlaces(), data.getTotalPlaces()));
+        List<Career> seeds = new ArrayList<>(pureList.subList(0, data.getSeedPlaces()));
+        List<Career> nonSeeds = new ArrayList<>(pureList.subList(data.getSeedPlaces(), data.getTotalPlaces()));
 
         matchTree = new MatchTree(data, seeds, nonSeeds);
         currentStageIndex = data.getStages().length - 1;

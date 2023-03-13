@@ -1,9 +1,12 @@
 package trashsoftware.trashSnooker.core.career.aiMatch;
 
+import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 
 public class ChineseAiVsAi extends AiVsAi {
     boolean p1break = true;
@@ -13,16 +16,24 @@ public class ChineseAiVsAi extends AiVsAi {
     }
 
     @Override
-    protected void simulateOneFrame(boolean isFinalFrame) {
+    protected void simulateOneFrame() {
 //        gaussianRandom(isFinalFrame);
-        roughSimulateWholeGame(isFinalFrame);
+        roughSimulateWholeGame();
     }
 
-    private void roughSimulateWholeGame(boolean isFinalFrame) {
+    private void roughSimulateWholeGame() {
         double ballTypeBadness = (random.nextDouble() + 1) / 2;  // 球形好不好，越小越好
 
-        SimPlayer sp1 = new SimPlayer(p1, ability1, 1, ballTypeBadness);
-        SimPlayer sp2 = new SimPlayer(p2, ability2, 2, ballTypeBadness);
+        SimPlayer sp1 = new SimPlayer(p1, ability1, 1, ballTypeBadness,
+                AiCueResult.calculateFramePsyDivisor(
+                        Game.frameImportance(1, totalFrames, getP1WinFrames(), getP2WinFrames(), GameRule.SNOOKER),
+                        p1.getPlayerPerson().psy
+                ));
+        SimPlayer sp2 = new SimPlayer(p2, ability2, 2, ballTypeBadness,
+                AiCueResult.calculateFramePsyDivisor(
+                        Game.frameImportance(2, totalFrames, getP1WinFrames(), getP2WinFrames(), GameRule.SNOOKER),
+                        p2.getPlayerPerson().psy
+                ));
         
         // 让球安排起
         if (p1.getPlayerPerson().getSex() != p2.getPlayerPerson().getSex()) {
@@ -105,7 +116,7 @@ public class ChineseAiVsAi extends AiVsAi {
                         playing.playerNum,
                         playing.ra,
                         goodPos,
-                        isFinalFrame,
+                        playing.framePsyDivisor,
                         playing.remCount == 1);
 
 //                System.out.println(playing.career.getPlayerPerson().getPlayerId() + " " + target + " " + redRem + " " + attackSuc);
@@ -140,11 +151,13 @@ public class ChineseAiVsAi extends AiVsAi {
         final double goodPosition;
         final double position;
         final int playerNum;
+        final double framePsyDivisor;
         int remCount = 8;
         int totalAttacks;
         int sucAttacks;
 
-        SimPlayer(Career career, PlayerPerson.ReadableAbility ra, int playerNum, double ballBadness) {
+        SimPlayer(Career career, PlayerPerson.ReadableAbility ra, int playerNum, double ballBadness,
+                  double framePsyDivisor) {
             this.career = career;
             this.playerNum = playerNum;
             this.ra = ra;
@@ -152,6 +165,7 @@ public class ChineseAiVsAi extends AiVsAi {
             double posDif = 100 - (aiPlayStyle.position * (ra.spinControl + ra.powerControl) / 200);
             this.goodPosition = 100 - posDif * ballBadness;
             this.position = 100 - (100 - goodPosition) / 3;
+            this.framePsyDivisor = framePsyDivisor;
         }
 
         @Override

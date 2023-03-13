@@ -264,4 +264,15 @@ public class Algebra {
         }
         return count;
     }
+
+    /**
+     * 把值从domain映射到range里
+     */
+    public static double shiftRange(double domainLow, double domainHigh,
+                                    double rangeLow, double rangeHigh,
+                                    double value) {
+        if (value < domainLow || value > domainHigh) throw new ArithmeticException();
+        double ratio = (value - domainLow) / (domainHigh - domainLow);
+        return rangeLow + (rangeHigh - rangeLow) * ratio;
+    }
 }

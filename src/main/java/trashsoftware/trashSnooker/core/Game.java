@@ -43,8 +43,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     //    protected final GameView parent;
     protected final EntireGame entireGame;
     protected final Map<B, double[]> recordedPositions = new HashMap<>();  // 记录上一杆时球的位置，复位用
-    protected B cueBall;
     protected final GameSettings gameSettings;
+    protected final ResourceBundle strings = App.getStrings();
+    protected B cueBall;
     protected P player1;
     protected P player2;
     protected int recordedTarget;  // 记录上一杆时的目标球，复位用
@@ -73,8 +74,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected Table table;
     private boolean ended;
     private PhysicsCalculator physicsCalculator;
-    
-    protected final ResourceBundle strings = App.getStrings();
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
@@ -117,7 +116,41 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         return game;
     }
-    
+
+    public static double frameImportance(int playerNum, int totalFrames,
+                                         int p1Wins, int p2Wins, GameRule gameRule) {
+        if (totalFrames < 3) return 0;
+        double divisor;
+        if (gameRule == GameRule.SNOOKER) {
+            divisor = 11.0;
+        } else {
+            divisor = 17.0;
+        }
+        
+        double tfPrice = Algebra.shiftRange(
+                0, 1,
+                0.3, 1,
+                Math.min(1, totalFrames / divisor)
+        );
+        int half = totalFrames / 2;
+        if (p1Wins == half) {
+            if (p2Wins == half) {
+                // 决胜局
+                return tfPrice;
+            } else if (playerNum == 1) {
+                // 赛点局
+                return tfPrice / 2;
+            }
+        }
+        if (p2Wins == half) {
+            if (playerNum == 2) {
+                // 赛点局
+                return tfPrice / 2;
+            }
+        }
+        return 0;
+    }
+
     protected abstract void cloneBalls(B[] allBalls);
 
     @Override
@@ -126,14 +159,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             Game<B, P> copy = (Game<B, P>) super.clone();
 
             copy.cloneBalls(allBalls);
-            
+
             for (B ball : copy.getAllBalls()) {
                 if (ball.isWhite()) {
                     copy.cueBall = ball;
                     break;
                 }
             }
-            
+
             copy.numberBallMap = null;
             return copy;
         } catch (CloneNotSupportedException e) {
@@ -600,7 +633,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 sumTargetDt / legalBalls.size(),
                 maxShadowAngle);
     }
-    
+
     public int getPlayerNum(P player) {
         return player == player1 ? 1 : 2;
     }
@@ -661,8 +694,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public boolean isSnookered() {
-        return isSnookered(cueBall.x, cueBall.y, 
-                getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll(), 
+        return isSnookered(cueBall.x, cueBall.y,
+                getAllLegalBalls(getCurrentTarget(), isDoingSnookerFreeBll(),
                         isInLineHandBall()));
     }
 
@@ -680,23 +713,24 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public Movement collisionTest() {
-        Ball ball1 = getAllBalls()[0];
+        Ball ball1 = getCueBall();
         Ball ball2 = getAllBalls()[1];
 
         ball1.pickup();
         ball2.pickup();
 
-        ball1.setX(800);
+        ball1.setX(1800);
         ball1.setY(800);
 
-        ball1.setVx(6);
-        ball1.setVy(0.0);
+        ball1.setVx(-0.8);
+        ball1.setVy(-1.0);
+//        ball1.setSpin(-10, -1, 0);
 
-        ball2.setX(2000);
-        ball2.setY(800);
+        ball2.setX(1600);
+        ball2.setY(590);
 
-        ball2.setVx(1);
-        ball2.setVy(0.0);
+        ball2.setVx(-0.4);
+        ball2.setVy(-0.5);
 
         return physicalCalculate(entireGame.playPhy);
     }
@@ -715,11 +749,22 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     /**
+     * 返回这局球的重要性，0为不重要，1为极重要（如世锦赛决赛决胜局）
+     */
+    public double frameImportance(int playerNum) {
+        return frameImportance(playerNum,
+                entireGame.getTotalFrames(),
+                entireGame.getP1Wins(),
+                entireGame.getP2Wins(),
+                gameValues.rule);
+    }
+
+    /**
      * @return 此局是否为>=三局两胜的决胜局
      */
     public boolean isFinalFrame() {
         int tf = entireGame.getTotalFrames();
-        return tf > 1 && 
+        return tf > 1 &&
                 entireGame.getP1Wins() == tf / 2 &&
                 entireGame.getP2Wins() == tf / 2;
     }
@@ -756,7 +801,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public boolean isInLineHandBall() {
         return false;
     }
-    
+
     public boolean isInLineHandBallForAi() {
         return false;
     }
@@ -768,14 +813,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public Ball getEasiestTarget(Player player) {
         int target = getCurrentTarget();
-        List<Ball> targets = getAllLegalBalls(target, 
-                isDoingSnookerFreeBll(), 
+        List<Ball> targets = getAllLegalBalls(target,
+                isDoingSnookerFreeBll(),
                 isInLineHandBall());
-        
+
         if (targets.isEmpty()) return null;
-        
+
         double[] whitePos = new double[]{cueBall.x, cueBall.y};
-        
+
         List<AiCue.AttackChoice> attackChoices = new ArrayList<>();
 
         for (Ball ball : targets) {
@@ -817,7 +862,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         List<Ball> seeAbleBalls = new ArrayList<>();
         getAllSeeAbleBalls(cueBall.x, cueBall.y,
                 targets, 2, seeAbleBalls);
-        
+
         Ball closet = null;
         double closetDt = Double.MAX_VALUE;
         for (Ball sb : seeAbleBalls) {
@@ -1094,7 +1139,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         cueBallClone.twoMovingBallsHitCore(ball, phy);
                         double[] ballDirectionUnitVec = Algebra.unitVector(ball.vx, ball.vy);
                         double[] whiteDirectionUnitVec = Algebra.unitVector(whiteVx, whiteVy);
-                        
+
                         // todo: 确认是否考虑了齿轮效应
                         double ballInitVMmPerS = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         if (!recordTargetPos) {

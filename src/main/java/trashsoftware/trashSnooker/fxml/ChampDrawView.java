@@ -62,8 +62,9 @@ public class ChampDrawView implements Initializable {
     double nodeHeight = 20;
     double nodeVGap = 24;
     double nodeWidth = 120.0;
-    double nodeBlockWidth = 20.0;
-    double nodeHGap = nodeWidth + nodeBlockWidth + 20.0;
+    double leftBlockWidth = 20.0;
+    double rightBlockWidth = 20.0;
+    double nodeHGap = nodeWidth + leftBlockWidth + rightBlockWidth + 20.0;
     double width;
 
     CareerView parent;
@@ -125,6 +126,8 @@ public class ChampDrawView implements Initializable {
     public void setup(CareerView parent, Stage selfStage) {
         this.parent = parent;
         this.selfStage = selfStage;
+        
+        this.selfStage.setOnHidden(event -> parent.refreshGui());
     }
 
     private void updateGui() {
@@ -159,16 +162,6 @@ public class ChampDrawView implements Initializable {
         buildTreeGraph();
     }
 
-    private void showAwards() {
-//        String awards = championship.getData().awardsString();
-//        matchResLabel.setText(awards);
-        matchResTable.clearItems();
-        matchResTable.addItem(new MatchResItem(ChampionshipScore.Rank.CHAMPION));
-        for (ChampionshipScore.Rank rank : championship.getData().getRanksOfLosers()) {
-            matchResTable.addItem(new MatchResItem(rank));
-        }
-    }
-
     private void showResults() {
         SortedMap<ChampionshipScore.Rank, List<Career>> matchRes = championship.getResults();
 
@@ -183,7 +176,6 @@ public class ChampDrawView implements Initializable {
     @FXML
     public void nextRound() {
         if (championship.isFinished()) {
-            parent.refreshGui();
             selfStage.close();
         } else {
             nextRoundButton.setDisable(true);
@@ -346,7 +338,7 @@ public class ChampDrawView implements Initializable {
         } else {
             parentY = y2 - 2.0;
         }
-        double leftX = x1 + nodeWidth + nodeBlockWidth;
+        double leftX = x1 + nodeWidth + leftBlockWidth + rightBlockWidth;
         double midX = (leftX + x2) / 2;
         gc2d.strokeLine(leftX, y1, midX, y1);
         gc2d.strokeLine(midX, y1, midX, parentY);
@@ -362,8 +354,9 @@ public class ChampDrawView implements Initializable {
         gc2d.setStroke(color);
 
         double y1 = y - nodeHeight / 2;
-        gc2d.strokeRect(x, y1, nodeWidth + nodeBlockWidth, nodeHeight);
-        gc2d.strokeLine(x + nodeWidth, y1, x + nodeWidth, y1 + nodeHeight);
+        gc2d.strokeRect(x, y1, nodeWidth + leftBlockWidth + rightBlockWidth, nodeHeight);
+        gc2d.strokeLine(x + leftBlockWidth, y1, x + leftBlockWidth, y1 + nodeHeight);
+        gc2d.strokeLine(x + leftBlockWidth + nodeWidth, y1, x + leftBlockWidth + nodeWidth, y1 + nodeHeight);
         if (parent != null) {
 //            gc2d.strokeLine(x + nodeWidth + nodeBlockWidth, y, parent.x, parent.y);
             connectLineTo(x, y, parent.x, parent.y);
@@ -371,14 +364,19 @@ public class ChampDrawView implements Initializable {
             if (completed) {
                 boolean isLeftChild = parent.left == node;
                 int winFrames = isLeftChild ? parent.node.getP1Wins() : parent.node.getP2Wins();
-                gc2d.fillText(String.valueOf(winFrames), x + nodeWidth + 3, y + 3);
+                gc2d.fillText(String.valueOf(winFrames), x + leftBlockWidth + nodeWidth + 3, y + 3);
             }
         }
 
         if (node.node.isFinished()) {
-            gc2d.fillText(node.node.getWinner().getPlayerPerson().getName(), x + 3, y + 3);
+            PlayerPerson person = node.node.getWinner().getPlayerPerson();
+            gc2d.fillText(person.getName(), x + leftBlockWidth + 3, y + 3);
+            Integer rankSeed = championship.getCareerSeedMap().get(person.getPlayerId());
+            if (rankSeed != null) {
+                gc2d.fillText(String.valueOf(rankSeed), x + 3, y + 3);
+            }
         } else {
-            gc2d.fillText(strings.getString("undetermined"), x + 2, y + 2);
+            gc2d.fillText(strings.getString("undetermined"), x + leftBlockWidth + 3, y + 3);
         }
 
         if (node.left != null && node.right != null) {

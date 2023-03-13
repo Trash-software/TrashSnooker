@@ -39,6 +39,7 @@ public class WhitePrediction {
     private double whiteSpeedWhenHitSecondBall;
     private boolean whiteCollidesHoleArcs = false;  // 是否碰撞了袋角
     private double pathLength;
+    private double distanceTravelledBeforeCollision;  // 白球在碰目标球之前跑了多远
 
     public WhitePrediction(Ball whiteBall) {
         this.cueBall = whiteBall;
@@ -77,13 +78,21 @@ public class WhitePrediction {
     public void addPointInPath(double[] point) {
         if (!whitePath.isEmpty()) {
             double[] lastPoint = whitePath.get(whitePath.size() - 1);
-            pathLength += Algebra.distanceToPoint(point[0], point[1], lastPoint[0], lastPoint[1]);
+            double dt = Algebra.distanceToPoint(point[0], point[1], lastPoint[0], lastPoint[1]);
+            pathLength += dt;
+            if (firstCollide == null) {
+                distanceTravelledBeforeCollision += dt;
+            }
         }
         whitePath.add(point);
     }
 
     public double getPathLength() {
         return pathLength;
+    }
+
+    public double getDistanceTravelledBeforeCollision() {
+        return distanceTravelledBeforeCollision;
     }
 
     public void setFirstCollide(Ball firstCollide, boolean hitWallBeforeHitBall,

@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import trashsoftware.trashSnooker.fxml.App;
@@ -28,6 +29,7 @@ public class AlertShower {
 
             Stage newStage = new Stage();
             newStage.initOwner(owner);
+            newStage.initModality(Modality.WINDOW_MODAL);
 
             Scene scene = new Scene(root);
             newStage.setScene(scene);
@@ -84,6 +86,7 @@ public class AlertShower {
 
             Stage newStage = new Stage();
             newStage.initOwner(owner);
+            newStage.initModality(Modality.WINDOW_MODAL);
 
             Scene scene = new Scene(root);
             newStage.setScene(scene);

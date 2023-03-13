@@ -39,7 +39,7 @@ public class CareerManager {
     private final List<Career.CareerWithAwards> chineseEightRanking = new ArrayList<>();
     private Career humanPlayerCareer;  // 玩家的career
     private Championship inProgress;
-    
+
     private double playerGoodness;
     private double aiGoodness;
 
@@ -97,7 +97,7 @@ public class CareerManager {
         }
         return careerSaves;
     }
-    
+
     public static void deleteCareer(CareerSave toDelete) {
         if (!Util.deleteFile(toDelete.getDir())) {
             EventLogger.log("Cannot delete " + toDelete.getDir().getAbsolutePath());
@@ -196,7 +196,7 @@ public class CareerManager {
         String time = jsonObject.getString("timestamp");
 
         CareerManager careerManager = new CareerManager(careerSave, stringToCalendar(time));
-        
+
         boolean saveNow = false;
         if (jsonObject.has("playerGoodness")) {
             careerManager.playerGoodness = jsonObject.getDouble("playerGoodness");
@@ -240,13 +240,13 @@ public class CareerManager {
         }
 
         careerManager.updateRanking();
-        
+
         if (saveNow) {
             careerManager.saveToDisk();
         } else {
             careerManager.saveCacheInfo();
         }
-        
+
         return careerManager;
     }
 
@@ -278,7 +278,7 @@ public class CareerManager {
     public static int perksOfLevelUp(int newLevel) {
         return BASE_LEVEL_PERK + newLevel / 10;
     }
-    
+
     public static Map<String, String> readCacheInfo(File infoFile) {
         Map<String, String> res = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new FileReader(infoFile))) {
@@ -296,13 +296,13 @@ public class CareerManager {
         }
         return res;
     }
-    
+
     private void saveCacheInfo() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(careerSave.getInfoFile()))) {
             StringBuilder builder = new StringBuilder();
             builder.append("level=").append(humanPlayerCareer.getLevel()).append('\n');
             builder.append("lastModified=").append(System.currentTimeMillis()).append('\n');
-            
+
             bw.write(builder.toString());
             bw.newLine();
         } catch (IOException e) {
@@ -402,8 +402,8 @@ public class CareerManager {
     /**
      * 前提条件是球员已经有资格参赛了
      */
-    public List<Career> participants(ChampionshipData data,
-                                     boolean humanJoin) {
+    public List<TourCareer> participants(ChampionshipData data,
+                                         boolean humanJoin) {
         if (data.professionalOnly) {
             return professionalParticipants(data, data.getTotalPlaces(), humanJoin, data.getType(), data.getSelection());
         } else {
@@ -428,40 +428,48 @@ public class CareerManager {
         }
     }
 
-    public List<Career> professionalParticipants(ChampionshipData data,
-                                                 int n,
-                                                 boolean humanJoin,
-                                                 GameRule type,
-                                                 ChampionshipData.Selection selection) {
-        List<Career> result = new ArrayList<>();
+    public List<TourCareer> professionalParticipants(ChampionshipData data,
+                                                     int n,
+                                                     boolean humanJoin,
+                                                     GameRule type,
+                                                     ChampionshipData.Selection selection) {
+        List<TourCareer> result = new ArrayList<>();
 
         List<Career.CareerWithAwards> ranking = getRankingPrivate(type, selection);
+        Career defendingChamp = getDefendingChampion(data);
+        TourCareer seed1 = new TourCareer(defendingChamp, 1);
+        result.add(seed1);
         for (int i = 0; i < ranking.size(); i++) {
             Career.CareerWithAwards cwa = ranking.get(i);
             if (cwa.career.isHumanPlayer() && !humanJoin) continue;
+            if (cwa.career == defendingChamp) continue;
             if (cwa.willJoinMatch(data,
                     i,
                     i == 0 ? null : ranking.get(i - 1),
                     i == ranking.size() - 1 ? null : ranking.get(i + 1))) {
-                result.add(cwa.career);
+                result.add(new TourCareer(cwa.career, result.size() + 1));
                 if (result.size() == n) break;
             }
         }
         return result;
     }
 
-    public List<Career> openParticipants(ChampionshipData data,
-                                         int n,
-                                         boolean humanJoin,
-                                         GameRule type,
-                                         ChampionshipData.Selection selection) {
-        List<Career> result = new ArrayList<>();
+    public List<TourCareer> openParticipants(ChampionshipData data,
+                                             int n,
+                                             boolean humanJoin,
+                                             GameRule type,
+                                             ChampionshipData.Selection selection) {
+        List<TourCareer> result = new ArrayList<>();
 
         boolean humanAlreadyJoin = false;
         List<Career.CareerWithAwards> rankings = getRankingPrivate(type, selection);
+        Career defendingChamp = getDefendingChampion(data);
+        TourCareer seed1 = new TourCareer(defendingChamp, 1);
+        result.add(seed1);
 
         for (int i = 0; i < rankings.size(); i++) {
             Career.CareerWithAwards cwa = rankings.get(i);
+            if (cwa.career == defendingChamp) continue;
             if (!cwa.career.getPlayerPerson().isRandom && !cwa.career.getPlayerPerson().category.equals("God")) {
                 if (cwa.career.isHumanPlayer()) {
                     if (humanJoin) {
@@ -474,7 +482,7 @@ public class CareerManager {
                         i,
                         i == 0 ? null : rankings.get(i - 1),
                         i == rankings.size() - 1 ? null : rankings.get(i + 1)))
-                    result.add(cwa.career);
+                    result.add(new TourCareer(cwa.career, result.size() + 1));
 
                 if (result.size() == n) {
                     break;
@@ -485,6 +493,7 @@ public class CareerManager {
         if (result.size() < n) {
             for (int i = 0; i < rankings.size(); i++) {
                 Career.CareerWithAwards cwa = rankings.get(i);
+                if (cwa.career == defendingChamp) continue;
                 if (cwa.career.getPlayerPerson().isRandom || cwa.career.getPlayerPerson().category.equals("God")) {
                     if (cwa.career.isHumanPlayer()) {
                         if (!humanJoin) continue;
@@ -494,9 +503,9 @@ public class CareerManager {
                             i,
                             i == 0 ? null : rankings.get(i - 1),
                             i == rankings.size() - 1 ? null : rankings.get(i + 1))) {
-                        result.add(cwa.career);
+                        result.add(new TourCareer(cwa.career, result.size() + 1));
                         if (result.size() == n) {
-                            break; 
+                            break;
                         }
                     }
                 }
@@ -504,7 +513,7 @@ public class CareerManager {
         }
         if (humanJoin && !humanAlreadyJoin) {
             result.remove(result.size() - 1);
-            result.add(humanPlayerCareer);
+            result.add(new TourCareer(humanPlayerCareer, result.size() + 1));
         }
         return result;
     }
@@ -660,7 +669,7 @@ public class CareerManager {
             return inProgress.isFinished() ? null : inProgress;
         }
     }
-    
+
     public NavigableMap<Integer, Career> historicalChampions(ChampionshipData data) {
         NavigableMap<Integer, Career> result = new TreeMap<>();
         for (Career career : playerCareers) {
@@ -675,9 +684,15 @@ public class CareerManager {
         return result;
     }
 
+    public Career getDefendingChampion(ChampionshipData data) {
+        NavigableMap<Integer, Career> result = historicalChampions(data);
+        if (result.isEmpty()) return null;
+        return result.lastEntry().getValue();
+    }
+
     public void saveToDisk() {
         saveCacheInfo();
-        
+
         File file = new File(careerSave.getDir(), CAREER_JSON);
         File dir = file.getParentFile();
         if (!dir.exists()) {
@@ -688,7 +703,7 @@ public class CareerManager {
         JSONObject root = new JSONObject();
         root.put("timestamp", calendarToString(timestamp));
         root.put("humanPlayer", humanPlayerCareer.getPlayerPerson().getPlayerId());
-        
+
         root.put("playerGoodness", playerGoodness);
         root.put("aiGoodness", aiGoodness);
 
@@ -709,7 +724,7 @@ public class CareerManager {
             EventLogger.log(e);
         }
     }
-    
+
     public double getAiGoodness() {
         return aiGoodness;
     }

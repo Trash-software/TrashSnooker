@@ -3,16 +3,15 @@ package trashsoftware.trashSnooker.core.snooker;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SnookerAiCue;
+import trashsoftware.trashSnooker.core.movement.Movement;
+import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
 import trashsoftware.trashSnooker.core.table.Table;
 
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlayer> {
 
@@ -27,6 +26,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     private int repositionCount;
     private boolean willLoseBecauseThisFoul;
+    private boolean isSolvable;  // 球形是否有解
 
     private int indicatedTarget;  // todo: 斯诺克规定，哪怕是打彩球时，也必须指定是打的哪颗球
 
@@ -211,6 +211,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (hasRed()) return 1;  // 剩余红球在台面时，无论打的是红还是彩，打不进之后都应该打红
         else if (currentTarget == RAW_COLORED_REP) return 2;  // 最后一颗红球附带的彩球进攻失败
         else return currentTarget;  // 其他情况目标球不变
+    }
+
+    @Override
+    public Movement cue(CuePlayParams params, Phy phy) {
+        isSolvable = isSolvable();
+        return super.cue(params, phy);
     }
 
     protected void updateTargetPotSuccess(boolean isFreeBall) {
@@ -460,8 +466,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         willLoseBecauseThisFoul = false;
     }
 
-    public void reposition() {
-        System.out.println("Reposition!");
+    public void reposition()  {
+        reposition(false);
+    }
+
+    private void reposition(boolean isSimulate) {
+        if (!isSimulate) System.out.println("Reposition!");
         thisCueFoul = false;
         ballInHand = false;
         doingFreeBall = false;
@@ -473,7 +483,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
         switchPlayer();
         currentTarget = recordedTarget;
-        repositionCount++;
+        if (!isSimulate) repositionCount++;
     }
 
     /**
@@ -482,6 +492,52 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public boolean isNoHitThreeWarning() {
         willLoseBecauseThisFoul = isAnyFullBallVisible() && repositionCount == 2;
         return willLoseBecauseThisFoul;
+    }
+    
+    private boolean isSolvable() {
+        long st = System.currentTimeMillis();
+        List<Ball> legals = getAllLegalBalls(currentTarget, isDoingSnookerFreeBll(), false);
+        Set<Ball> legalSet = new HashSet<>(legals);
+        double degTick = 0.5;
+        for (double deg = 0.0; deg < 360.0; deg += degTick) {
+            double[] unitXy = Algebra.unitVectorOfAngle(Math.toRadians(deg));
+            CuePlayParams cpp = CuePlayParams.makeIdealParams(
+                    unitXy[0],
+                    unitXy[1],
+                    0, 0, 0,
+                    50.0
+            );
+            WhitePrediction wp = predictWhite(cpp, entireGame.predictPhy, 0.0, false,
+                    false, true, false);
+            if (legalSet.contains(wp.getFirstCollide())) {
+                System.out.println("Solvable! Check foul and miss in " + (System.currentTimeMillis() - st) + " ms, " +
+                        "solve angle: " + deg);
+                return true;
+            }
+        }
+        System.out.println("Unsolvable! Check foul and miss in " + (System.currentTimeMillis() - st) + " ms");
+        return false;
+    }
+
+    /**
+     * 是不是无意识救球，前提是已经犯规
+     */
+    public boolean isFoulAndMiss() {
+        return isSolvable;
+//        long st = System.currentTimeMillis();
+//        AbstractSnookerGame copy = (AbstractSnookerGame) clone();
+//        
+//        // clone这个
+//        for (SnookerBall ball : getAllBalls()) {
+//            double[] pos = copy.recordedPositions.get(ball);
+//            if (pos != null) {
+//                copy.recordedPositions.put(ball, pos);
+//            }
+//        }
+//        
+//        copy.reposition(true);
+//        
+//        
     }
 
     public int remainingRedCount() {

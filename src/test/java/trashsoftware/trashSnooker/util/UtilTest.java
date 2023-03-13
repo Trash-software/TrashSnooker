@@ -1,8 +1,10 @@
 package trashsoftware.trashSnooker.util;
 
+import javafx.fxml.FXML;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Assert.*;
+import trashsoftware.trashSnooker.core.Algebra;
 
 public class UtilTest {
     

@@ -645,7 +645,15 @@ public class GameView implements Initializable {
             endFrame();
         } else {
             if (game.getGame().isThisCueFoul()) {
-                String foulReason = game.getGame().getFoulReason();
+                String foulReason0 = game.getGame().getFoulReason();
+                if (game.getGame() instanceof AbstractSnookerGame) {
+                    AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+                    if (asg.isFoulAndMiss()) {
+                        foulReason0 = strings.getString("foulAndMiss") + foulReason0;
+                    }
+                }
+                String foulReason = foulReason0;
+                
                 Platform.runLater(() -> {
                     AlertShower.showInfo(
                             stage,
@@ -679,9 +687,16 @@ public class GameView implements Initializable {
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
             boolean autoAim = true;
             if ((game.getGame() instanceof AbstractSnookerGame)) {
-                if (((AbstractSnookerGame) game.getGame()).canReposition()) {
-                    autoAim = false;  // 把autoAim交给askReposition的不复位分支
-                    askReposition();
+                AbstractSnookerGame asg = ((AbstractSnookerGame) game.getGame());
+                if (asg.canReposition()) {
+                    if (asg.isFoulAndMiss()) {
+                        System.out.println("Solvable snooker");
+                        autoAim = false;  // 把autoAim交给askReposition的不复位分支
+                        askReposition();
+                    } else {
+                        System.out.println("Unsolvable snooker");
+                        letOtherPlayMenu.setDisable(false);
+                    }
                 }
             }
             if (autoAim) autoAimEasiestNextBall(nextCuePlayer);
@@ -1503,7 +1518,7 @@ public class GameView implements Initializable {
             }
             if (gameValues.rule.snookerLike) {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
-                if (aiHasRightToReposition && asg.canReposition()) {
+                if (aiHasRightToReposition && asg.canReposition() && asg.isFoulAndMiss()) {
                     if (asg.aiConsiderReposition(game.predictPhy, lastPotAttempt)) {
                         Platform.runLater(() -> {
                             AlertShower.showInfo(

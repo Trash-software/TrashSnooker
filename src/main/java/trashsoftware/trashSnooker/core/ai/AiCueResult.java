@@ -6,6 +6,8 @@ import java.util.Random;
 
 public class AiCueResult {
 
+    public static final double DEFAULT_AI_PRECISION = 10500.0;
+    protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
     private final double selectedFrontBackSpin;  // 球手想要的高低杆，范围(-1.0, 1.0)，高杆正低杆负
     private final double selectedSideSpin;
     private final double selectedPower;
@@ -14,11 +16,9 @@ public class AiCueResult {
     private final double[][] targetDirHole;
     private final Ball targetBall;
     private final PlayerPerson.HandSkill handSkill;
-    public static final double DEFAULT_AI_PRECISION = 10500.0;
-    protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
-    private double unitX, unitY;
-    private final boolean isFinalFrame;
+    private final double frameImportance;
     private final boolean rua;
+    private double unitX, unitY;
 
     public AiCueResult(InGamePlayer inGamePlayer,
                        GamePlayStage gamePlayStage,
@@ -32,7 +32,7 @@ public class AiCueResult {
                        double selectedSideSpin,
                        double selectedPower,
                        PlayerPerson.HandSkill handSkill,
-                       boolean isFinalFrame,                       
+                       double frameImportance,
                        boolean rua) {
         this.unitX = unitX;
         this.unitY = unitY;
@@ -44,14 +44,26 @@ public class AiCueResult {
         this.targetDirHole = targetDirHole;
         this.targetBall = targetBall;
         this.handSkill = handSkill;
-        this.isFinalFrame = isFinalFrame;
+        this.frameImportance = frameImportance;
         this.rua = rua;
 
         applyRandomError(inGamePlayer, gamePlayStage);
     }
-    
+
     public static void setAiPrecisionFactor(double aiGoodness) {
         aiPrecisionFactor = DEFAULT_AI_PRECISION * aiGoodness;
+    }
+
+    /**
+     * 返回这一整局球员的心理因子，是除数。1为无影响，数值越大，影响越大。
+     */
+    public static double calculateFramePsyDivisor(double frameImportance,
+                                                  double psy) {
+        if (psy >= 90) return 1.0;
+        return 1 + Algebra.shiftRange(
+                0, 100,
+                0, 1.8,
+                frameImportance * (90 - psy));
     }
 
     public Ball getTargetBall() {
@@ -81,7 +93,7 @@ public class AiCueResult {
     private void applyRandomError(InGamePlayer igp, GamePlayStage gamePlayStage) {
         Random random = new Random();
         double rad = Algebra.thetaOf(unitX, unitY);
-        
+
         PlayerPerson person = igp.getPlayerPerson();
 
         double precisionFactor = aiPrecisionFactor;
@@ -92,16 +104,14 @@ public class AiCueResult {
         } else if (gamePlayStage == GamePlayStage.BREAK) {
             precisionFactor *= 5.0;
         }
-        
+
         if (rua) {
             // 打rua了，精度进一步降低
             System.out.println("Ai player ruaed!");
             precisionFactor *= (person.psy / 100);
         }
-        
-        if (isFinalFrame && person.psy < 75) {
-            precisionFactor *= (person.psy / 75) * 0.4 + 0.6;  // [0.6, 1]之间
-        }
+
+        precisionFactor /= calculateFramePsyDivisor(frameImportance, person.psy);
 
         double mistake = random.nextDouble() * 100;
         double mistakeFactor = 1.0;
@@ -128,7 +138,7 @@ public class AiCueResult {
 
         double handSdMul = PlayerPerson.HandBody.getSdOfHand(handSkill);
         sd *= handSdMul;
-        
+
         // 手感差时偏差大
         double handFeelMul = 1.0 / igp.getHandFeelEffort();
         sd *= handFeelMul;
