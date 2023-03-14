@@ -10,6 +10,7 @@ import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
 import trashsoftware.trashSnooker.core.table.Table;
+import trashsoftware.trashSnooker.util.ConfigLoader;
 
 import java.util.*;
 
@@ -215,7 +216,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     @Override
     public Movement cue(CuePlayParams params, Phy phy) {
-        isSolvable = isSolvable();
+        isSolvable = isSolvable(params);
         return super.cue(params, phy);
     }
 
@@ -494,25 +495,37 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return willLoseBecauseThisFoul;
     }
     
-    private boolean isSolvable() {
+    private boolean isSolvable(CuePlayParams aimingParam) {
         long st = System.currentTimeMillis();
         List<Ball> legals = getAllLegalBalls(currentTarget, isDoingSnookerFreeBll(), false);
         Set<Ball> legalSet = new HashSet<>(legals);
-        double degTick = 0.5;
-        for (double deg = 0.0; deg < 360.0; deg += degTick) {
-            double[] unitXy = Algebra.unitVectorOfAngle(Math.toRadians(deg));
-            CuePlayParams cpp = CuePlayParams.makeIdealParams(
-                    unitXy[0],
-                    unitXy[1],
-                    0, 0, 0,
-                    50.0
-            );
-            WhitePrediction wp = predictWhite(cpp, entireGame.predictPhy, 0.0, false,
-                    false, true, false);
-            if (legalSet.contains(wp.getFirstCollide())) {
-                System.out.println("Solvable! Check foul and miss in " + (System.currentTimeMillis() - st) + " ms, " +
-                        "solve angle: " + deg);
-                return true;
+        
+        // 从出杆的方向开始算，希望更早遇到能碰到的角度，相当于优化。但对真的解不到的球没有帮助。
+        double aimingDeg = Math.toDegrees(Algebra.thetaOf(aimingParam.vx, aimingParam.vy));
+        
+        double degTick = 1.0;
+        for (double t = 0.0; t < 180.0; t += degTick) {
+            for (int i = -1; i <= 1; i += 2) {
+                if (t == 0.0 && i == -1) continue;  // 0度不要检查两次
+                // 左一下右一下
+                double deg = aimingDeg + t * i;
+                if (deg < 0) deg += 360.0;
+                else if (deg >= 360) deg -= 360.0;
+                
+                double[] unitXy = Algebra.unitVectorOfAngle(Math.toRadians(deg));
+                CuePlayParams cpp = CuePlayParams.makeIdealParams(
+                        unitXy[0],
+                        unitXy[1],
+                        0, 0, 0,
+                        50.0
+                );
+                WhitePrediction wp = predictWhite(cpp, entireGame.predictPhy, 10000.0, false,
+                        false, true, false);
+                if (legalSet.contains(wp.getFirstCollide())) {
+                    System.out.println("Solvable! Check foul and miss in " + (System.currentTimeMillis() - st) + " ms, " +
+                            "solve angle: " + deg);
+                    return true;
+                }
             }
         }
         System.out.println("Unsolvable! Check foul and miss in " + (System.currentTimeMillis() - st) + " ms");

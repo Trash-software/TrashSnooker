@@ -242,11 +242,11 @@
       "controllablePower": 80,
       "solving": 85,
       "pullDt": [
-        150.0,
+        140.0,
         200.0
       ],
       "aimingOffset": 0,
-      "cuePlayType": "p1.5,h200,e500;s",
+      "cuePlayType": "p1.4,h300,e500;s",
       "cueSwingMag": 5,
       "cuePointMuSigma": [
         0,
@@ -280,7 +280,7 @@
         "doubleCueAction": {
           "minPower": 5.0,
           "maxPower": 40.0,
-          "minDt": 40.0,
+          "minDt": 60.0,
           "maxDt": 120.0,
           "holdMs": 500,
           "speed": 1.0
@@ -471,7 +471,7 @@
     },
     "Smart": {
       "spin": 97,
-      "precision": 99,
+      "precision": 98,
       "anglePrecision": 1.2,
       "longPrecision": 1.25,
       "name": "Smart",

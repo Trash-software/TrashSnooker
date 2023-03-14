@@ -260,6 +260,7 @@ public class Career {
                                      CareerWithAwards front, CareerWithAwards back) {
             if ("God".equals(career.getPlayerPerson().category)) return false;  // Master别出来打比赛
 
+            if (career.isHumanPlayer) return true;  // 我们无权替真人玩家决定
             if (selfRanking < 16) {
                 int champAwd = data.getAwardByRank(ChampionshipScore.Rank.CHAMPION);
 

@@ -146,16 +146,26 @@ public class CareerView implements Initializable {
 
     private String getAchievements(List<ChampionshipScore> csList, GameRule gameRule) {
         int rankedChampions = 0;
+        int totalChampions = 0;
 
+        ChampionshipScore.Rank bestAnyRank = null;
         ChampionshipScore.Rank bestRankedRank = null;
         for (ChampionshipScore cs : csList) {
-            if (cs.data.getType() == gameRule && cs.data.isRanked()) {
+            if (cs.data.getType() == gameRule) {
                 if (Util.arrayContains(cs.ranks, ChampionshipScore.Rank.CHAMPION)) {
-                    rankedChampions++;
+                    totalChampions++;
+                    if (cs.data.isRanked()) {
+                        rankedChampions++;
+                    }
                 }
                 for (ChampionshipScore.Rank r : cs.ranks) {
-                    if (bestRankedRank == null || r.ordinal() < bestRankedRank.ordinal()) {
-                        bestRankedRank = r;
+                    if (bestAnyRank == null || r.ordinal() < bestAnyRank.ordinal()) {
+                        bestAnyRank = r;
+                    }
+                    if (cs.data.isRanked()) {
+                        if (bestRankedRank == null || r.ordinal() < bestRankedRank.ordinal()) {
+                            bestRankedRank = r;
+                        }
                     }
                 }
             }
@@ -163,9 +173,13 @@ public class CareerView implements Initializable {
 
         StringBuilder builder = new StringBuilder();
         builder.append(gameRule.toString()).append('\n');
+        builder.append(strings.getString("bestAnyScore"))
+                .append(bestAnyRank == null ? strings.getString("none") : bestAnyRank.getShown())
+                .append('\n');
         builder.append(strings.getString("bestRankedScore"))
                 .append(bestRankedRank == null ? strings.getString("none") : bestRankedRank.getShown())
                 .append('\n');
+        builder.append(strings.getString("numAnyChamps")).append(totalChampions).append('\n');
         builder.append(strings.getString("numRankedChamps")).append(rankedChampions);
 
         switch (gameRule) {

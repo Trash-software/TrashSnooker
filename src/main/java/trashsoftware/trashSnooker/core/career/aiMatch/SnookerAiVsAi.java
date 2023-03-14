@@ -10,17 +10,15 @@ import trashsoftware.trashSnooker.core.metrics.GameRule;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class SnookerAiVsAi extends AiVsAi {
 
-    private final List<Integer> p1SinglePoles = new ArrayList<>();
-    private final List<Integer> p2SinglePoles = new ArrayList<>();
-    private final List<int[]> frameScores = new ArrayList<>();
-    
     private static final int[] COLORED_BALL_POOL = {
             2, 3, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7, 7
     };
+    private final List<Integer> p1SinglePoles = new ArrayList<>();
+    private final List<Integer> p2SinglePoles = new ArrayList<>();
+    private final List<int[]> frameScores = new ArrayList<>();
 
     public SnookerAiVsAi(Career p1, Career p2, ChampionshipData data, int totalFrames) {
         super(p1, p2, data, totalFrames);
@@ -30,17 +28,17 @@ public class SnookerAiVsAi extends AiVsAi {
     protected void simulateOneFrame() {
         roughSimulateWholeGame();
     }
-    
+
     private int randomColorBall() {
         return COLORED_BALL_POOL[random.nextInt(COLORED_BALL_POOL.length)];
     }
-    
+
     private void roughSimulateWholeGame() {
         int redRem = 15;
         int singlePoleScore = 0;
-        
+
         double ballTypeBadness = (random.nextDouble() + 1) / 2;  // 球形好不好，越小越好
-        
+
         SimPlayer sp1 = new SimPlayer(p1, ability1, 1, ballTypeBadness,
                 AiCueResult.calculateFramePsyDivisor(
                         Game.frameImportance(1, totalFrames, getP1WinFrames(), getP2WinFrames(), GameRule.SNOOKER),
@@ -51,9 +49,9 @@ public class SnookerAiVsAi extends AiVsAi {
                         Game.frameImportance(2, totalFrames, getP1WinFrames(), getP2WinFrames(), GameRule.SNOOKER),
                         p2.getPlayerPerson().psy
                 ));
-        
+
         SimPlayer playing = sp1;
-        
+
         int target = 1;
 //        boolean redTarget = true;
         boolean lastIsAttack = false;
@@ -105,18 +103,18 @@ public class SnookerAiVsAi extends AiVsAi {
                     }
                 }
             }
-            
+
             if (attack) {
 //                System.out.println(goodPos);
                 playing.totalAttacks++;
                 boolean attackSuc = randomAttackSuccess(
-                        playing.career.getPlayerPerson(), 
+                        playing.career.getPlayerPerson(),
                         playing.playerNum,
-                        playing.ra, 
-                        goodPos, 
+                        playing.ra,
+                        goodPos,
                         playing.framePsyDivisor,
                         (redRem - 1) * 8 + 27 < playing.score - oppo.score &&
-                        redRem * 8 + 27 >= playing.score - oppo.score);
+                                redRem * 8 + 27 >= playing.score - oppo.score);
 
 //                System.out.println(playing.career.getPlayerPerson().getPlayerId() + " " + target + " " + redRem + " " + attackSuc);
                 if (attackSuc) {
@@ -166,8 +164,10 @@ public class SnookerAiVsAi extends AiVsAi {
             }
         }
         frameScores.add(new int[]{sp1.score, sp2.score});
-//        System.out.println(sp1);
-//        System.out.println(sp2);
+        if (printDebug) {
+            System.out.println(sp1);
+            System.out.println(sp2);
+        }
     }
 
     private int getP1Score() {
@@ -177,7 +177,7 @@ public class SnookerAiVsAi extends AiVsAi {
     private int getP2Score() {
         return p2SinglePoles.stream().reduce(0, Integer::sum);
     }
-    
+
     private static class SimPlayer {
         final Career career;
         final PlayerPerson.ReadableAbility ra;
@@ -190,7 +190,7 @@ public class SnookerAiVsAi extends AiVsAi {
         int totalAttacks;
         int sucAttacks;
         int maxSinglePole;
-        
+
         SimPlayer(Career career, PlayerPerson.ReadableAbility ra, int playerNum, double ballBadness,
                   double framePsyDivisor) {
             this.career = career;
@@ -202,7 +202,7 @@ public class SnookerAiVsAi extends AiVsAi {
             this.position = 100 - (100 - goodPosition) / 3;
             this.framePsyDivisor = framePsyDivisor;
         }
-        
+
         void updateMaxSingle(int single) {
             if (single > maxSinglePole) {
                 maxSinglePole = single;
@@ -212,7 +212,7 @@ public class SnookerAiVsAi extends AiVsAi {
         @Override
         public String toString() {
             return "SimPlayer{" +
-                    career.getPlayerPerson().getName() +
+                    career.getPlayerPerson().getPlayerId() +
                     ", goodPosition=" + goodPosition +
                     ", position=" + position +
                     ", score=" + score +

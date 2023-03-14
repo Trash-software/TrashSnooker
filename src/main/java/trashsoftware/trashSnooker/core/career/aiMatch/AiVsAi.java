@@ -13,6 +13,7 @@ import java.util.TreeMap;
 
 public abstract class AiVsAi {
 
+    public static boolean printDebug;
     protected final int totalFrames;
     protected final ChampionshipData data;
     protected final Career p1;
@@ -140,7 +141,7 @@ public abstract class AiVsAi {
         double difficulty = potDifficulty * (goodPosition ? 1 : 3);
         double failRatio = 10000 - ra.aiming * ra.cuePrecision * psyFactor;
         failRatio /= 10000;
-        failRatio *= 0.25;
+        failRatio *= 0.18;
         failRatio *= difficulty;
         if (random.nextDouble() * 100 > person.getAiPlayStyle().stability) {
             // 失误

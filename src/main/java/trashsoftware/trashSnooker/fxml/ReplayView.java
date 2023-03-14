@@ -32,8 +32,13 @@ public class ReplayView implements Initializable {
             nCuesCol, resultCol;
     TreeItem<Item> root;
 
+    private Stage stage;
+    private ResourceBundle strings;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.strings = resourceBundle;
+
         root = new TreeItem<>(new RootItem());
         replayTable.setRoot(root);
 
@@ -57,6 +62,10 @@ public class ReplayView implements Initializable {
         clickListener();
         fill();
 //        naiveFill();
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     private void clickListener() {
@@ -85,13 +94,14 @@ public class ReplayView implements Initializable {
                 GameReplay replay = GameReplay.loadReplay(item.getValue());
 
                 FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("gameView.fxml")
+                        getClass().getResource("gameView.fxml"),
+                        strings
                 );
                 Parent root = loader.load();
                 root.setStyle(App.FONT_STYLE);
 
                 Stage stage = new Stage();
-//            stage.initOwner(this.stage);
+                stage.initOwner(this.stage);
                 stage.initModality(Modality.WINDOW_MODAL);
 
                 Scene scene = new Scene(root);

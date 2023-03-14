@@ -134,6 +134,9 @@ public class EntryView implements Initializable {
             Stage stage = new Stage();
             stage.initOwner(this.selfStage);
             stage.initModality(Modality.WINDOW_MODAL);
+            
+            ReplayView view = loader.getController();
+            view.setStage(stage);
 
             Scene scene = new Scene(root);
             stage.setScene(scene);

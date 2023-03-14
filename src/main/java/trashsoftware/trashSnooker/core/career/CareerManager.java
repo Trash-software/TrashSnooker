@@ -319,11 +319,16 @@ public class CareerManager {
         pastTime.set(Calendar.YEAR, pastTime.get(Calendar.YEAR) - 2);
 
         while (pastTime.before(timestamp)) {
-            Championship nextChamp = nextChampionship(pastTime);
-            System.out.println("Simulating " + nextChamp.fullName());
-            nextChamp.startChampionship(false, false);
-            while (nextChamp.hasNextRound()) {
-                nextChamp.startNextRound(false);
+            try {
+                Championship nextChamp = nextChampionship(pastTime);
+                System.out.println("Simulating " + nextChamp.fullName());
+                nextChamp.startChampionship(false, false);
+                while (nextChamp.hasNextRound()) {
+                    nextChamp.startNextRound(false);
+                }
+            } catch (Exception e) {
+                System.err.println("Failed to simulate one");
+                e.printStackTrace();
             }
         }
         updateRanking();  // 比赛完了最后排下名
@@ -437,8 +442,11 @@ public class CareerManager {
 
         List<Career.CareerWithAwards> ranking = getRankingPrivate(type, selection);
         Career defendingChamp = getDefendingChampion(data);
-        TourCareer seed1 = new TourCareer(defendingChamp, 1);
-        result.add(seed1);  // 我们认为卫冕冠军一定会参加
+        if (defendingChamp != null) {
+            TourCareer seed1 = new TourCareer(defendingChamp, 1);
+            result.add(seed1);  // 我们认为卫冕冠军一定会参加
+        }
+        
         for (int i = 0; i < ranking.size(); i++) {
             Career.CareerWithAwards cwa = ranking.get(i);
             if (cwa.career.isHumanPlayer() && !humanJoin) continue;
@@ -464,9 +472,11 @@ public class CareerManager {
         boolean humanAlreadyJoin = false;
         List<Career.CareerWithAwards> rankings = getRankingPrivate(type, selection);
         Career defendingChamp = getDefendingChampion(data);
-        TourCareer seed1 = new TourCareer(defendingChamp, 1);
-        result.add(seed1);  // 我们认为卫冕冠军一定会参加
-        if (seed1.career.isHumanPlayer()) humanAlreadyJoin = true;
+        if (defendingChamp != null) {
+            TourCareer seed1 = new TourCareer(defendingChamp, 1);
+            result.add(seed1);  // 我们认为卫冕冠军一定会参加
+            if (seed1.career.isHumanPlayer()) humanAlreadyJoin = true;
+        }
 
         for (int i = 0; i < rankings.size(); i++) {
             Career.CareerWithAwards cwa = rankings.get(i);

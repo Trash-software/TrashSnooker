@@ -1,0 +1,130 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 9,
+    "Liu Mang": 8,
+    "Kid": 1,
+    "Ding Junhui": 10,
+    "custom_player_3": 14,
+    "Smart": 2,
+    "Jack Lisowski": 4,
+    "Glass Heart": 16,
+    "Trump": 6,
+    "Mark Allen": 3,
+    "O_Sullivan": 11,
+    "Zhao Xintong": 12,
+    "Neil Robertson": 5,
+    "Stephen Maguire": 15,
+    "Murphy": 13,
+    "John Wizard": 7
+  },
+  "championshipId": "professional_champ",
+  "matchTree": {"root": {
+    "p1wins": 4,
+    "p1": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Smart"},
+          "p2": {"winner": "Stuart Bingham"},
+          "winner": "Smart",
+          "stage": "ROUND_1",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "Glass Heart"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "p2wins": 1
+        },
+        "winner": "Smart",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 1,
+          "p1": {"winner": "Jack Lisowski"},
+          "p2": {"winner": "Stephen Maguire"},
+          "winner": "Stephen Maguire",
+          "stage": "ROUND_1",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "custom_player_3"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "p2wins": 1
+        },
+        "winner": "John Wizard",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 2
+      },
+      "winner": "Smart",
+      "stage": "SEMI_FINAL",
+      "p2wins": 0
+    },
+    "p2": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Liu Mang"},
+          "p2": {"winner": "O_Sullivan"},
+          "winner": "Liu Mang",
+          "stage": "ROUND_1",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {"winner": "Zhao Xintong"},
+          "winner": "Mark Allen",
+          "stage": "ROUND_1",
+          "p2wins": 1
+        },
+        "winner": "Liu Mang",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Trump"},
+          "p2": {"winner": "Ding Junhui"},
+          "winner": "Trump",
+          "stage": "ROUND_1",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Kid"},
+          "p2": {"winner": "Murphy"},
+          "winner": "Kid",
+          "stage": "ROUND_1",
+          "p2wins": 0
+        },
+        "winner": "Kid",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 2
+      },
+      "winner": "Kid",
+      "stage": "SEMI_FINAL",
+      "p2wins": 3
+    },
+    "winner": "Smart",
+    "stage": "FINAL",
+    "p2wins": 0
+  }},
+  "finished": true,
+  "timestamp": "2023/2/22"
+}

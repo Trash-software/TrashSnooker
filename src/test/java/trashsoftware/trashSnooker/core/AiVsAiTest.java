@@ -4,6 +4,7 @@ import org.junit.Test;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.core.career.ChampDataManager;
+import trashsoftware.trashSnooker.core.career.aiMatch.AiVsAi;
 import trashsoftware.trashSnooker.core.career.aiMatch.SnookerAiVsAi;
 import trashsoftware.trashSnooker.util.DataLoader;
 
@@ -54,9 +55,10 @@ public class AiVsAiTest {
         CareerManager.setCurrentSave(new CareerSave(new File("user/career/Jack Lisowski")));
         int p1Wins = 0;
         for (int i = 0; i < 100; i++) {
+            AiVsAi.printDebug = true;
             SnookerAiVsAi aiVsAi = new SnookerAiVsAi(
                     CareerManager.getInstance().findCareerByPlayerId("Trump"),
-                    CareerManager.getInstance().findCareerByPlayerId("Mou Moumou"),
+                    CareerManager.getInstance().findCareerByPlayerId("O_Sullivan"),
                     ChampDataManager.getInstance().findDataById("masters"),
                     9);
             aiVsAi.simulate();

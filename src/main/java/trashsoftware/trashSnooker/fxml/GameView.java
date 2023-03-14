@@ -193,7 +193,8 @@ public class GameView implements Initializable {
     private Ball debuggingBall;
 
     private long replayStopTime;
-    private long replayGap = 1000;
+    private static final long DEFAULT_REPLAY_GAP = 1000;
+    private long replayGap = DEFAULT_REPLAY_GAP;
 
     private boolean drawStandingPos = true;
     private boolean drawTargetRefLine = false;
@@ -246,6 +247,7 @@ public class GameView implements Initializable {
         animationPlaySpeedToggle.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 aiAnimationSpeed = Integer.parseInt(newValue.getUserData().toString());
+                replayGap = DEFAULT_REPLAY_GAP / aiAnimationSpeed;
                 System.out.println("New speed " + aiAnimationSpeed);
             }
         }));
@@ -3238,7 +3240,7 @@ public class GameView implements Initializable {
 
             this.cue = cue;
             this.igp = igp;
-            this.playSpeedMultiplier = igp.getPlayerType() == PlayerType.COMPUTER ?
+            this.playSpeedMultiplier = (igp.getPlayerType() == PlayerType.COMPUTER || replay != null) ?
                     aiAnimationSpeed : 1;
             
             this.holdMs = cuePlayType.getPullHoldMs();

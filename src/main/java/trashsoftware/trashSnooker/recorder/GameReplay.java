@@ -39,6 +39,7 @@ public abstract class GameReplay implements GameHolder {
 //    protected HashMap<Ball, double[]> lastPositions = new HashMap<>();
     protected Ball cueBall;
     protected int stepIndex = 0;
+    protected boolean everFinished = false;
     
     protected List<CueStep> historySteps = new ArrayList<>();
 
@@ -143,11 +144,22 @@ public abstract class GameReplay implements GameHolder {
             }
             stepIndex++;
             return true;
+        } else if (everFinished) {
+            currentFlag = GameRecorder.FLAG_TERMINATE;
+            return false;
         } else {
             try {
-                if (inputStream.read(buffer1) != buffer1.length) return false;
+                if (inputStream.read(buffer1) != buffer1.length) {
+                    everFinished = true;
+                    return false;
+                }
                 currentFlag = buffer1[0] & 0xff;
                 System.out.println("Flag: " + currentFlag);
+                
+                if (currentFlag == GameRecorder.FLAG_TERMINATE) {
+                    everFinished = true;
+                    return false;
+                }
                 readNext();
                 stepIndex++;
             } catch (IOException e) {
@@ -198,7 +210,7 @@ public abstract class GameReplay implements GameHolder {
             loadNextRecordAndMovement();
             loadNextScoreResult();
             loadBallPositions();
-            System.out.println("Next: " + currentCueRecord.cuePlayer.getPlayerPerson().getName());
+            System.out.println("Next: " + currentCueRecord.cuePlayer.getPlayerPerson().getPlayerId());
             ActualStep actualStep = new ActualStep(
                     currentCueRecord,
                     currentMovement,
