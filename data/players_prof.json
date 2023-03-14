@@ -242,11 +242,11 @@
       "controllablePower": 80,
       "solving": 85,
       "pullDt": [
-        40.0,
-        180.0
+        150.0,
+        200.0
       ],
       "aimingOffset": 0,
-      "cuePlayType": "p1,h400,e500;s",
+      "cuePlayType": "p1.5,h200,e500;s",
       "cueSwingMag": 5,
       "cuePointMuSigma": [
         0,
@@ -275,6 +275,16 @@
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
+      },
+      "specialAction": {
+        "doubleCueAction": {
+          "minPower": 5.0,
+          "maxPower": 40.0,
+          "minDt": 40.0,
+          "maxDt": 120.0,
+          "holdMs": 500,
+          "speed": 1.0
+        }
       }
     },
     "John Wizard": {
@@ -1092,6 +1102,16 @@
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
+      },
+      "specialAction": {
+        "doubleCueAction": {
+          "minPower": 5.0,
+          "maxPower": 40.0,
+          "minDt": 60.0,
+          "maxDt": 120.0,
+          "holdMs": 300,
+          "speed": 0.7
+        }
       }
     }
   }

@@ -43,7 +43,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         this.value = value;
         this.values = values;
         this.color = generateColor(value);
-        this.colorWithOpa = this.color.deriveColor(0, 1, 2, 0.5);
+        this.colorWithOpa = this.color.deriveColor(0, 1, 1.6, 0.5);
         this.colorTransparent = colorWithOpa.deriveColor(0, 1, 1, 0);
 
 //        this.axisX = randomGenerator.nextDouble();

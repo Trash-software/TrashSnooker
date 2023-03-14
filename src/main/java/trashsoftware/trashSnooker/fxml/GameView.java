@@ -3164,7 +3164,8 @@ public class GameView implements Initializable {
         private final long holdMs;  // 拉至满弓的停顿时间
         private final long endHoldMs;  // 出杆完成后的停顿时间
         private final double initDistance, maxPullDistance;
-        private final double cueMoveSpeed;  // 杆每毫秒运动的距离，毫米
+        private final double cueBeforeSpeed;  // 出杆前半段的速度，毫米/ms
+        private final double cueMaxSpeed;  // 杆速最快时每毫秒运动的距离，毫米/ms
         //        private final double
         private final double maxExtension;  // 杆的最大延伸距离，始终为负
         //        private final double cueBallX, cueBallY;
@@ -3182,6 +3183,9 @@ public class GameView implements Initializable {
         private boolean reachedMaxPull;
         private double pointingAngle;
         private boolean ended = false;
+        private CuePlayType.DoubleAction doubleAction;
+        private double doubleStopDt;  // 如果二段出杆，在哪里停（离白球的距离）
+        private double doubleHoldMs;  // 二段出杆停的计时器
 
         CueAnimationPlayer(double initDistance,
                            double maxPullDt,
@@ -3199,15 +3203,26 @@ public class GameView implements Initializable {
             if (selectedPower < Values.MIN_SELECTED_POWER)
                 selectedPower = Values.MIN_SELECTED_POWER;
 
+            CuePlayType cuePlayType = playerPerson.getCuePlayType();
+            if (cuePlayType.willApplySpecial(selectedPower, handSkill.hand)) {
+                CuePlayType.SpecialAction sa = cuePlayType.getSpecialAction();
+                if (sa instanceof CuePlayType.DoubleAction) {
+                    doubleAction = (CuePlayType.DoubleAction) sa;
+                    doubleStopDt = doubleAction.stoppingDtToWhite(selectedPower);
+                }
+            }
+
             this.initDistance = Math.min(initDistance, maxPullDt);
             this.maxPullDistance = maxPullDt;
             this.cueDtToWhite = this.initDistance;
             this.maxExtension = -maxPullDistance *
-                    (playerPerson.getMaxSpinPercentage() * 0.75 / 100);  // 杆法好的人延伸长
+                    (playerPerson.getMaxSpinPercentage() * 0.75 / 100);  // 杆法好的人延伸长，但是 /todo: 要改
 
-            this.cueMoveSpeed = selectedPower *
+            this.cueMaxSpeed = selectedPower *
                     PlayerPerson.HandBody.getPowerMulOfHand(handSkill) *
                     Values.MAX_POWER_SPEED / 100_000.0;
+            this.cueBeforeSpeed = cueMaxSpeed * 
+                    playerPerson.getMaxSpinPercentage() / 200.0;  // 杆法差的人白用功比较多（无用的杆速快）
 
             this.errMulWithPower = errMulWithPower;
 
@@ -3219,15 +3234,15 @@ public class GameView implements Initializable {
             this.handY = handY;
             this.restCuePointing = restCuePointing;
 
-            System.out.println(cueDtToWhite + ", " + this.cueMoveSpeed + ", " + maxExtension);
+            System.out.println(cueDtToWhite + ", " + this.cueMaxSpeed + ", " + maxExtension);
 
             this.cue = cue;
             this.igp = igp;
             this.playSpeedMultiplier = igp.getPlayerType() == PlayerType.COMPUTER ?
                     aiAnimationSpeed : 1;
-
-            this.holdMs = playerPerson.getCuePlayType().getPullHoldMs();
-            this.endHoldMs = playerPerson.getCuePlayType().getEndHoldMs();
+            
+            this.holdMs = cuePlayType.getPullHoldMs();
+            this.endHoldMs = cuePlayType.getEndHoldMs();
         }
 
         void nextFrame() {
@@ -3248,11 +3263,32 @@ public class GameView implements Initializable {
                 }
             } else if (reachedMaxPull) {
                 double lastCueDtToWhite = cueDtToWhite;
+                
+                if (doubleAction != null) {
+                    double deltaD = frameTimeMs * doubleAction.speedMul / 2.5;
+                    double nextTickDt = cueDtToWhite - deltaD;
+                    if (cueDtToWhite > doubleStopDt) {
+                        if (nextTickDt <= doubleStopDt) {
+                            // 就是这一帧停
+                            doubleHoldMs += frameTimeMs;
+                            if (doubleHoldMs >= doubleAction.holdMs) {
+                                // 中停结束了，但是为了代码简单我们还是让它多停一帧
+                                doubleAction = null;
+                            }
+                        } else {
+                            // 还没到
+                            cueDtToWhite = nextTickDt;
+                        }
+                        return;
+                    } else {
+                        System.err.println("Wired. Why there is double cue action but never reached");
+                    }
+                }
                 // 正常出杆
-                if (cueDtToWhite > maxPullDistance / 2) {
-                    cueDtToWhite -= cueMoveSpeed * frameTimeMs / 2;
+                if (cueDtToWhite > maxPullDistance * 0.4) {
+                    cueDtToWhite -= cueBeforeSpeed * frameTimeMs;
                 } else {
-                    cueDtToWhite -= cueMoveSpeed * frameTimeMs;
+                    cueDtToWhite -= cueMaxSpeed * frameTimeMs;
                 }
                 double wholeDtPercentage = 1 - (cueDtToWhite - maxExtension) /
                         (maxPullDistance - maxExtension);  // 出杆完成的百分比
@@ -3280,7 +3316,7 @@ public class GameView implements Initializable {
 
                 if (cueDtToWhite <= maxExtension) {  // 出杆结束了
                     endHeldMs += frameTimeMs;
-                } else if (Math.abs(cueDtToWhite) < cueMoveSpeed * frameTimeMs) {
+                } else if (Math.abs(cueDtToWhite) < cueMaxSpeed * frameTimeMs) {
                     if (!touched) {
                         touched = true;
 //                        System.out.println("+++++++++++++++ Touched! +++++++++++++++");

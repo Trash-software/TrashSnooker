@@ -123,6 +123,11 @@ public class DataLoader {
                         double cueSwingMag = personObj.getDouble("cueSwingMag");
                         String cuePlayTypeStr = personObj.getString("cuePlayType");
                         CuePlayType cuePlayType = parseCuePlayType(cuePlayTypeStr);
+                        
+                        if (personObj.has("specialAction")) {
+                            cuePlayType.setSpecialAction(parseSpecialAction(personObj.getJSONObject("specialAction")));
+                        }
+                        
                         JSONArray muSigmaArray = personObj.getJSONArray("cuePointMuSigma");
                         double[] muSigma = new double[4];
                         for (int i = 0; i < 4; ++i) {
@@ -185,6 +190,21 @@ public class DataLoader {
 
     private static CuePlayType parseCuePlayType(String s) {
         return new CuePlayType(s);
+    }
+    
+    private static CuePlayType.SpecialAction parseSpecialAction(JSONObject special) {
+        if (special.has("doubleCueAction")) {
+            JSONObject object = special.getJSONObject("doubleCueAction");
+            return new CuePlayType.DoubleAction(
+                    object.getDouble("minPower"),
+                    object.getDouble("maxPower"),
+                    object.getDouble("minDt"),
+                    object.getDouble("maxDt"),
+                    object.getInt("holdMs"),
+                    object.getDouble("speed")
+            );
+        }
+        return null;
     }
 
     public static void saveToDisk(JSONObject object, String fileName) {

@@ -12,6 +12,7 @@ public class CuePlayType {
     private long pullHoldMs = 800;
     private long endHoldMs = 500;
     private final List<Double> sequence = new ArrayList<>();
+    private SpecialAction specialAction;  // 暂定就0到1个
 
     public CuePlayType(String s) {
         String[] arr = s.split(";");
@@ -43,6 +44,21 @@ public class CuePlayType {
         }
     }
 
+    public void setSpecialAction(SpecialAction specialAction) {
+        this.specialAction = specialAction;
+    }
+    
+    public boolean willApplySpecial(double selectedPower, PlayerPerson.Hand hand) {
+        return specialAction != null && specialAction.willApply(selectedPower, hand);
+    }
+
+    /**
+     * 在 {@link CuePlayType#willApplySpecial(double, PlayerPerson.Hand)} 返回true之后调用
+     */
+    public SpecialAction getSpecialAction() {
+        return specialAction;
+    }
+
     public double getPullSpeedMul() {
         return pullSpeedMul;
     }
@@ -72,5 +88,41 @@ public class CuePlayType {
             }
         }
         return builder.toString();
+    }
+    
+    public static abstract class SpecialAction {
+        abstract boolean willApply(double selectedPower, PlayerPerson.Hand hand);
+    }
+
+    /**
+     * 二段出杆动作
+     */
+    public static class DoubleAction extends SpecialAction {
+        private final double minPower;  // 在这两个力之间会有
+        private final double maxPower;
+        public final double minDt;  // 余下的正常出杆最短行程
+        public final double maxDt;
+        public final int holdMs;
+        public final double speedMul;  // 前段的速度
+        
+        public DoubleAction(double minPower, double maxPower, double minDt, double maxDt, 
+                            int holdMs, double speedMul) {
+            this.minPower = minPower;
+            this.maxPower = maxPower;
+            this.holdMs = holdMs;
+            this.minDt = minDt;
+            this.maxDt = maxDt;
+            this.speedMul = speedMul;
+        }
+
+        @Override
+        boolean willApply(double selectedPower, PlayerPerson.Hand hand) {
+            return (hand == PlayerPerson.Hand.LEFT || hand == PlayerPerson.Hand.RIGHT) && 
+                    (selectedPower >= minPower && selectedPower <= maxPower);
+        }
+        
+        public double stoppingDtToWhite(double selectedPower) {
+            return Algebra.shiftRange(minPower, maxPower, minDt, maxDt, selectedPower);
+        }
     }
 }

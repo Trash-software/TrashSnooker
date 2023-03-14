@@ -439,12 +439,21 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             choiceList.sort(IntegratedAttackChoice::normalCompareTo);
             for (IntegratedAttackChoice iac : choiceList) {
                 if (!iac.nextStepAttackChoices.isEmpty()) {
-                    return choiceList.get(0);
+                    return choiceList.get(0);  // 没问题
                 }
             }
 
             IntegratedAttackChoice iac = choiceList.get(0);
             if (iac.nextStepTarget == Game.END_REP) return iac;
+            
+            if (iac.priceOfKick >= 1.0) {  // 能K正确的球
+                if (Math.random() < 0.5 + (iac.priceOfKick - 1) * 0.25) {
+                    // priceOfKick是1，概率为0.5
+                    // priceOfKick是2，概率为0.75
+                    // 大于等于3，必定k
+                    return iac;
+                }
+            }
 
 //            if (iac.nextStepTarget != Game.END_REP && iac.whitePrediction.getSecondCollide() == null)
 //                return null;  // 打进了没位，打什么打
@@ -1377,6 +1386,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         protected double price;
         int nextStepTarget;
         CuePlayParams params;
+        double priceOfKick = 0.0;
 
         protected IntegratedAttackChoice(
 //                AttackChoice attackChoice,
@@ -1433,7 +1443,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             }
 //            if (whitePrediction.getSecondCollide() != null) price *= kickBallMul;
             if (whitePrediction.getSecondCollide() != null) {
-                double priceOfKick = priceOfKick(whitePrediction.getSecondCollide(),
+                priceOfKick = priceOfKick(whitePrediction.getSecondCollide(),
                         whitePrediction.getWhiteSpeedWhenHitSecondBall());
                 price *= priceOfKick;
             }
@@ -1442,9 +1452,15 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
             if (stage != GamePlayStage.NO_PRESSURE) {
                 // 正常情况下少走点库
-                int cushions = whitePrediction.getWhiteCushionCountAfter();
-                double cushionDiv = Math.max(2, cushions) / 4.0 + 0.5;  // Math.max(x, cushions) / y + (1 - x / y)
-                price /= cushionDiv;
+//                int cushions = whitePrediction.getWhiteCushionCountAfter();
+//                double cushionDiv = Math.max(2, cushions) / 4.0 + 0.5;  // Math.max(x, cushions) / y + (1 - x / y)
+//                price /= cushionDiv;
+                // 正常情况下少跑点
+                AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
+                double divider = aps.likeShow * 50.0;
+                double dtTravel = whitePrediction.getDistanceTravelledAfterCollision();
+                double penalty = dtTravel < 1000 ? 0 : (dtTravel - 1000) / divider;
+                price /= 1 + penalty;
             }
         }
     }

@@ -17,7 +17,7 @@
       "awards": [
         250000, 100000, 60000, 30000, 15000
       ],
-      "frameExp": 75,
+      "frameExp": 90,
       "best_single": 15000,
       "ranked": false,
       "professional": true,
@@ -171,6 +171,34 @@
       }
     },
     {
+      "id": "eight_bsc_heiba_open",
+      "names": {
+        "zh": "黑八大学城黑八杯",
+        "en": "Black Eight BSC Heiba Cup"
+      },
+      "type": "chinese_eight",
+      "seeds": 0,
+      "places": 8,
+      "pre_matches": [
+        16, 32
+      ],
+      "frames": [
+        9, 7, 5, 3, 3
+      ],
+      "awards": [
+        5000, 2000, 1200, 600, 300, 150
+      ],
+      "frameExp": 10,
+      "ranked": false,
+      "professional": false,
+      "date": "03/02",
+      "table": {
+        "goodness": "normal",
+        "smoothness": "medium",
+        "hole_size": "large"
+      }
+    },
+    {
       "id": "cat_give_power_champ",
       "names": {
         "zh": "斯诺克猫给力锦标赛",
@@ -192,7 +220,7 @@
       "best_single": 15000,
       "ranked": true,
       "professional": true,
-      "date": "03/05",
+      "date": "03/10",
       "table": {
         "goodness": "good",
         "smoothness": "normal",
@@ -217,7 +245,7 @@
       "awards": [
         80000, 35000, 20000, 10000, 5000, 2500
       ],
-      "frameExp": 50,
+      "frameExp": 45,
       "best_single": 5000,
       "ranked": true,
       "professional": false,
@@ -451,7 +479,7 @@
       "awards": [
         50000, 20000, 12000, 6000, 3000, 1500
       ],
-      "frameExp": 18,
+      "frameExp": 15,
       "ranked": true,
       "professional": false,
       "date": "12/10",
