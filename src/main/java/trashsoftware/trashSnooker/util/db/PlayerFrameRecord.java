@@ -38,7 +38,7 @@ public abstract class PlayerFrameRecord implements Comparable<PlayerFrameRecord>
 
     public static class Numbered extends PlayerFrameRecord {
 
-        public final int[] clears;  // break-clear, continue-clear, highest
+        public final int[] clears;  // breaks, break-pots, break-clear, continue-clear, highest
 
         Numbered(int frameIndex, int[] basicPots, String winnerName, int[] clears) {
             super(frameIndex, basicPots, winnerName);

@@ -712,7 +712,7 @@ public class GameView implements Initializable {
     }
 
     private void endFrame() {
-        hideCue();
+//        hideCue();
         Player wonPlayer = game.getGame().getWiningPlayer();
 
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
@@ -1169,7 +1169,7 @@ public class GameView implements Initializable {
         restoreCueAngle();
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
-        hideCue();
+//        hideCue();
         game.getGame().setBallInHand();
     }
 

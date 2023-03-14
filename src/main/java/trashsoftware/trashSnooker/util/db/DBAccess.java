@@ -162,7 +162,7 @@ public class DBAccess {
     }
     
     public List<EntireGameTitle> getAllMatches(GameRule gameRule) {
-        String query = "SELECT * FROM EntireGame;";
+        String query = "SELECT * FROM EntireGame WHERE GameType = '" + gameRule.toSqlKey() + "';";
         return getMatchesBy(gameRule, query);
     }
     
