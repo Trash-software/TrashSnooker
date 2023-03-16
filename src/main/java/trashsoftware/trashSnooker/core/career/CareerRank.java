@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 
 public class CareerRank {
     
-    public final int rank;
+    public final int rank;  // rank from 0
     public final Career career;
     private final int shownAwards;
     private final int totalAwards;

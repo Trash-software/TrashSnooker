@@ -73,7 +73,7 @@ public class ReplayView implements Initializable {
             TreeTableRow<Item> row = new TreeTableRow<>();
             row.setOnMouseClicked(mouseEvent -> {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
-                    playReplay(row.getItem());
+                    playReplay(row.getItem(), 1);
                 }
             });
             return row;
@@ -84,33 +84,46 @@ public class ReplayView implements Initializable {
     void playAction() {
         Item selected = replayTable.getSelectionModel().getSelectedItem().getValue();
         if (selected != null) {
-            playReplay(selected);
+            playReplay(selected, 1);
         }
     }
+    
+    private Stage playReplay(GameReplay replay) throws IOException {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("gameView.fxml"),
+                strings
+        );
+        Parent root = loader.load();
+        root.setStyle(App.FONT_STYLE);
 
-    private void playReplay(Item item) {
+        Stage stage = new Stage();
+        stage.initOwner(this.stage);
+        stage.initModality(Modality.WINDOW_MODAL);
+
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+
+        GameView gameView = loader.getController();
+        gameView.setupReplay(stage, replay);
+
+        stage.show();
+        return stage;
+    }
+
+    private void playReplay(Item item, int count) {
         if (item instanceof FrameItem) {
             try {
+                // fixme: 这真是个无法理解的神奇bug
+                // fixme: stage和replay就是非要都第二次加载时才显球，哪个少加载一次都不行
                 GameReplay replay = GameReplay.loadReplay(item.getValue());
 
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("gameView.fxml"),
-                        strings
-                );
-                Parent root = loader.load();
-                root.setStyle(App.FONT_STYLE);
-
-                Stage stage = new Stage();
-                stage.initOwner(this.stage);
-                stage.initModality(Modality.WINDOW_MODAL);
-
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-
-                GameView gameView = loader.getController();
-                gameView.setupReplay(stage, replay);
-
-                stage.show();
+                Stage stage = playReplay(replay);
+                while (count > 0) {
+                    stage.close();
+                    replay = GameReplay.loadReplay(item.getValue());
+                    stage = playReplay(replay);
+                    count--;
+                }
             } catch (VersionException ve) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("不能播放旧版本的录像");

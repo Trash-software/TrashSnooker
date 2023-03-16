@@ -1113,6 +1113,51 @@
           "speed": 0.7
         }
       }
+    },
+    "Fat Guy": {
+      "spin": 98,
+      "precision": 85,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "胖娃",
+      "maxPower": 99,
+      "controllablePower": 90,
+      "solving": 80,
+      "pullDt": [
+        120.0,
+        240.0
+      ],
+      "aimingOffset": 0.05,
+      "cuePlayType": "p1,h800,e500;l,l,l,l,r,r,r,r",
+      "cueSwingMag": 10,
+      "cuePointMuSigma": [
+        0,
+        2.5,
+        0,
+        3.5
+      ],
+      "powerControl": 95.0,
+      "privateCues": [],
+      "category": "Professional",
+      "psy": 70,
+      "height": 181,
+      "width": 1.35,
+      "hand": {
+        "left": 60,
+        "right": 100,
+        "rest": 86
+      },
+      "ai": {
+        "precision": 88,
+        "stable": 92,
+        "position": 92,
+        "defense": 84,
+        "attackPri": 85,
+        "likeShow": 80,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      }
     }
   }
 }

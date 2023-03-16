@@ -62,7 +62,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                         ConfigLoader.getInstance().getInt("nThreads", 4)));
 
         P opponent = game.getAnotherPlayer(aiPlayer);
-        opponentPureAtkProb = attackProbThreshold(0.4, opponent.getPlayerPerson().getAiPlayStyle());  // todo
+        opponentPureAtkProb = attackProbThreshold(0.4, opponent.getPlayerPerson().getAiPlayStyle());
         opponentDefAtkProb = defensiveAttackProbThreshold(opponent.getPlayerPerson().getAiPlayStyle());
     }
 
@@ -125,13 +125,18 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             double room = 1.0 - base;
             double playerNotWantAttack = 1 - aps.attackPrivilege / 100;
             playerNotWantAttack = Math.pow(playerNotWantAttack, 0.75);  // 无奈之举。次幂越小，进攻权重低的球手越不进攻
-            return base + playerNotWantAttack * room;
+            double realAttackProb = base + playerNotWantAttack * room;
+            double mul = Math.pow(aps.precision / 100.0, 1.5);  // 补偿由于AI打不准造成的进球概率低，进而不进攻的问题
+            return realAttackProb * mul;  // 这里不像下面用了Math.max。原因：太菜的选手只会无脑进攻，哈哈哈
         }
     }
 
     private static double defensiveAttackProbThreshold(AiPlayStyle aps) {
         double room = 1 - DEFENSIVE_ATTACK_PROB;
-        return DEFENSIVE_ATTACK_PROB + (1 - aps.attackPrivilege / 100) * room;
+        double realProb = DEFENSIVE_ATTACK_PROB + (1 - aps.attackPrivilege / 100) * room;
+        double mul = Math.pow(aps.precision / 100.0, 1.5);  // 补偿由于AI打不准造成的进球概率低，进而不进攻的问题
+        double res = realProb * mul;
+        return Math.max(DEFENSIVE_ATTACK_PROB / 5, res);
     }
 
     protected static double selectedPowerToActualPower(Game<?, ?> game,
@@ -385,11 +390,13 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         List<AttackParam> pureAttacks = new ArrayList<>();
         List<AttackParam> defensiveAttacks = new ArrayList<>();  // 连打带防
 
+        double easiest = 0.0;
         for (double selectedPower = tick; selectedPower <= powerLimit; selectedPower += tick) {
             for (double[] spins : SPIN_POINTS) {
                 AttackParam acp = new AttackParam(
                         choice, game, aiPlayer, selectedPower, spins[0], spins[1]
                 );
+                if (acp.potProb > easiest) easiest = acp.potProb;
                 if (acp.potProb > pureAttackThreshold) {
                     pureAttacks.add(acp);
                 } else if (acp.potProb > defensiveAttackThreshold) {
@@ -401,6 +408,11 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         long t1 = System.currentTimeMillis();
         System.out.println("Ai list attack params in " + (t1 - t0) + " ms, " +
                 pureAttacks.size() + " pure, " + defensiveAttacks.size() + " defensive.");
+        
+        if (pureAttacks.isEmpty() && defensiveAttacks.isEmpty()) {
+            System.out.println("Not attack because the highest prob is " + easiest);
+            return null;
+        }
 
         List<AttackThread> attackThreads = new ArrayList<>();
         for (AttackParam pureAttack : pureAttacks) {
@@ -1047,21 +1059,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             } else {
                 return game.getGameValues().cornerHoldBestAngleWidth / allowedDev;
             }
-            
-//            if (isMidHole) {
-////                double midHoleOffset = Math.abs(targetHoleVec[1]);  // 单位向量的y值绝对值越大，这球越简单
-////                return 1 / Math.pow(midHoleOffset, 1.4);  // 次幂可以调，越小，ai越愿意打中袋
-//                // 基本上就是往中袋的投影占比
-//                double holeProjWidth = Math.abs(targetHoleVec[1]) * game.getGameValues().table.midHoleDiameter;
-//                double errorToleranceWidth = holeProjWidth - game.getGameValues().ball.ballRadius;
-//                errorToleranceWidth = Math.max(errorToleranceWidth, 0.00001);
-//                return game.getGameValues().midHoleBestAngleWidth / errorToleranceWidth;
-//            } else {
-//                // 底袋，45度时难度系数为1，0度或90度时难度系数最大，为 sqrt(2)/2 * 袋直径 - 球半径 的倒数
-//                double easy = 1 - Math.abs(Math.abs(targetHoleVec[0]) - Math.abs(targetHoleVec[1]));  // [0,1]
-//                double range = 1 - game.getGameValues().cornerHoleAngleRatio;
-//                return 1 / (easy * range + game.getGameValues().cornerHoleAngleRatio);
-//            }
         }
 
         public Ball getBall() {

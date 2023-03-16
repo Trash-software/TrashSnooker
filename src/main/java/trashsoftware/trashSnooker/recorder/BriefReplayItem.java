@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.recorder;
 
 import javafx.fxml.FXML;
+import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
@@ -35,6 +36,8 @@ public class BriefReplayItem {
 //    private final int durationSec;
     private final InGamePlayer p1;
     private final InGamePlayer p2;
+    
+    private long personObjLength = 0;
 
     protected static DateFormat showingDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     
@@ -54,7 +57,7 @@ public class BriefReplayItem {
             
             primaryVersion = (int) Util.bytesToIntN(header, 6, 2);
             secondaryVersion = (int) Util.bytesToIntN(header, 8, 2);
-            if (primaryVersion != GameRecorder.RECORD_PRIMARY_VERSION) {
+            if (!GameRecorder.isPrimaryCompatible(primaryVersion)) {
                 throw new VersionException(primaryVersion, secondaryVersion);
             }
 
@@ -95,18 +98,45 @@ public class BriefReplayItem {
         String breakCueId = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
 
         PlayerPerson playerPerson = null;
-        for (PlayerPerson person : DataLoader.getInstance().getAllPlayers()) {
-            if (person.getPlayerId().equals(pid)) {
-                playerPerson = person;
-                break;
+        if (primaryVersion == 11) {
+            for (PlayerPerson person : DataLoader.getInstance().getAllPlayers()) {
+                if (person.getPlayerId().equals(pid)) {
+                    playerPerson = person;
+                    break;
+                }
             }
+            if (playerPerson == null)
+                throw new RecordException("Player " + pid + " does not exist in current database");
+        } else {
+            playerPerson = readPlayerPerson(pid, raf);
         }
-        if (playerPerson == null) throw new RecordException("Player " + pid + " does not exist in current database");
 
         Cue playCue = Objects.requireNonNull(DataLoader.getInstance().getCues().get(playCueId));
         Cue breakCue = Objects.requireNonNull(DataLoader.getInstance().getCues().get(breakCueId));
 
         return new InGamePlayer(playerPerson, breakCue, playCue, type, num, 1.0);
+    }
+    
+    private PlayerPerson readPlayerPerson(String pid, RandomAccessFile raf) throws IOException {
+        byte[] lenBuf = new byte[4];
+        if (raf.read(lenBuf) != lenBuf.length) {
+            throw new IOException();
+        }
+        int byteLen = Util.bytesToInt32(lenBuf, 0);
+        byte[] strBuf = new byte[byteLen];
+        if (raf.read(strBuf) != strBuf.length) {
+            throw new IOException();
+        }
+        personObjLength += strBuf.length + lenBuf.length;
+        String str = new String(strBuf);
+        JSONObject jsonObject = new JSONObject(str);
+        return PlayerPerson.fromJson(
+                pid, jsonObject
+        );
+    }
+    
+    public long headerLength() {
+        return GameRecorder.TOTAL_HEADER_LENGTH + personObjLength;
     }
 
     public InGamePlayer getP1() {

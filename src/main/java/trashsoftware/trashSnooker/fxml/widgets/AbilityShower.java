@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 public class AbilityShower extends GridPane {
     private final Map<Button, Combo> btnMap = new HashMap<>();
     @FXML
-    Label nameLabel, categoryLabel;
+    Label nameLabel, categoryLabel, sexLabel, heightLabel;
     @FXML
     Label aimingLabel, cuePrecisionLabel, powerLabel, spinLabel, powerControlLabel,
             spinControlLabel, notGoodHandLabel, restLabel;
@@ -119,6 +119,9 @@ public class AbilityShower extends GridPane {
         } else if ("God".equals(realAbility.category)) {
             categoryLabel.setText(strings.getString("catGod"));
         }
+        
+        sexLabel.setText(realAbility.getSex().toString());
+        heightLabel.setText(String.format("%.0f cm", realAbility.getHandBody().height));
         
         String aiming = numToString(realAbility.aiming);
         if (preview.aiming != realAbility.aiming) {

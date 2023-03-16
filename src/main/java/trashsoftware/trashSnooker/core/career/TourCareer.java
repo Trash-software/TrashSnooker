@@ -9,4 +9,9 @@ public class TourCareer {
         this.career = career;
         this.seedNum = seedNum;
     }
+
+    @Override
+    public String toString() {
+        return "[" + seedNum + "]:" + career.getPlayerPerson().getPlayerId();
+    }
 }

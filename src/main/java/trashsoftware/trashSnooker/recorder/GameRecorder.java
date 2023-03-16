@@ -1,10 +1,9 @@
 package trashsoftware.trashSnooker.recorder;
 
+import org.json.JSONObject;
 import org.tukaani.xz.LZMA2Options;
 import org.tukaani.xz.XZOutputStream;
-import trashsoftware.trashSnooker.core.Game;
-import trashsoftware.trashSnooker.core.Player;
-import trashsoftware.trashSnooker.core.PlayerType;
+import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.util.Util;
@@ -18,7 +17,7 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
 public abstract class GameRecorder {
-    public static final int RECORD_PRIMARY_VERSION = 11;
+    public static final int RECORD_PRIMARY_VERSION = 12;
     public static final int RECORD_SECONDARY_VERSION = 7;
     public static final int HEADER_LENGTH = 50;
     public static final int PLAYER_HEADER_LENGTH = 98;
@@ -64,6 +63,14 @@ public abstract class GameRecorder {
 
         outFile = new File(String.format("%s%sreplay_%s.replay",
                 RECORD_DIR, File.separator, dateFormat.format(new Date())));
+    }
+    
+    public static boolean isPrimaryCompatible(int replayPrimary) {
+        return replayPrimary == GameRecorder.RECORD_PRIMARY_VERSION || replayPrimary == 11;
+    }
+
+    public static boolean isSecondaryCompatible(int replaySecondary) {
+        return replaySecondary == GameRecorder.RECORD_SECONDARY_VERSION;
     }
     
     public void setCompression(int compression) {
@@ -142,8 +149,8 @@ public abstract class GameRecorder {
 
         byte[] header = new byte[HEADER_LENGTH];
 
-        Player p1 = game.getPlayer1();
-        Player p2 = game.getPlayer2();
+        InGamePlayer p1 = game.getPlayer1().getInGamePlayer();
+        InGamePlayer p2 = game.getPlayer2().getInGamePlayer();
 
         byte[] signature = SIGNATURE.getBytes(StandardCharsets.UTF_8);
         System.arraycopy(signature, 0, header, 0, 4);
@@ -192,8 +199,11 @@ public abstract class GameRecorder {
 
         wrapperStream.write(header);
 
+        // Version 12之后为了standalone新加的功能
         writeOnePlayer(p1);
+        writePlayerJson(p1);
         writeOnePlayer(p2);
+        writePlayerJson(p2);
 
 //        outputStream = new BufferedOutputStream(wrapperStream);
         createStream();
@@ -220,19 +230,31 @@ public abstract class GameRecorder {
         }
     }
 
-    private void writeOnePlayer(Player player) throws IOException {
+    private void writeOnePlayer(InGamePlayer player) throws IOException {
         byte[] buffer = new byte[PLAYER_HEADER_LENGTH];
-        buffer[0] = (byte) (player.getInGamePlayer().getPlayerType() == PlayerType.PLAYER ? 0 : 1);
+        buffer[0] = (byte) (player.getPlayerType() == PlayerType.PLAYER ? 0 : 1);
 
         byte[] id = player.getPlayerPerson().getPlayerId().getBytes(StandardCharsets.UTF_8);
         System.arraycopy(id, 0, buffer, 2, id.length);
 
-        byte[] playCueId = player.getInGamePlayer().getPlayCue().cueId.getBytes(StandardCharsets.UTF_8);
+        byte[] playCueId = player.getPlayCue().cueId.getBytes(StandardCharsets.UTF_8);
         System.arraycopy(playCueId, 0, buffer, 34, playCueId.length);
-        byte[] breakCueId = player.getInGamePlayer().getBreakCue().cueId.getBytes(StandardCharsets.UTF_8);
+        byte[] breakCueId = player.getBreakCue().cueId.getBytes(StandardCharsets.UTF_8);
         System.arraycopy(breakCueId, 0, buffer, 66, breakCueId.length);
 
         wrapperStream.write(buffer);
+    }
+    
+    private void writePlayerJson(InGamePlayer player) throws IOException {
+        PlayerPerson person = player.getPlayerPerson();
+        JSONObject personJson = person.toJsonObject();
+        // todo: 由于cue没有toJson,暂不考虑自己的杆
+        String str = personJson.toString(0);
+        byte[] byteStr = str.getBytes(StandardCharsets.UTF_8);
+        byte[] lenBuf = new byte[4];
+        Util.int32ToBytes(byteStr.length, lenBuf, 0);
+        wrapperStream.write(lenBuf);
+        wrapperStream.write(byteStr);
     }
 
     public boolean isFinished() {

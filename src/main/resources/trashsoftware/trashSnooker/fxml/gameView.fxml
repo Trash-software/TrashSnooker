@@ -28,10 +28,12 @@
                 <MenuItem text="%settingsMenu" onAction="#settingsAction"/>
                 <SeparatorMenuItem/>
                 <!--                <MenuItem fx:id="saveGameMenu" text="保存" onAction="#saveGameAction"/>-->
-                <MenuItem text="%withdraw" onAction="#withdrawAction" fx:id="withdrawMenu"/>
+                <MenuItem text="%withdraw" onAction="#withdrawAction" fx:id="withdrawMenu"
+                          disable="true"/>
                 <MenuItem text="%replaceBallInHand" onAction="#replaceBallInHandAction"
                           fx:id="replaceBallInHandMenu" disable="true"/>
-                <MenuItem text="%letOpponentPlay" onAction="#letOtherPlayAction" fx:id="letOtherPlayMenu"
+                <MenuItem text="%letOpponentPlay" onAction="#letOtherPlayAction"
+                          fx:id="letOtherPlayMenu"
                           disable="true"/>
             </Menu>
             <Menu text="%playMenu">
@@ -66,8 +68,10 @@
                 <Button fx:id="cueButton" text="%cueText" onAction="#cueAction"/>
             </VBox>
             <VBox fx:id="replayButtonBox" spacing="10.0" alignment="CENTER">
-                <Button fx:id="replayLastCueButton" text="%replayLastCue" onAction="#replayLastCueAction"/>
-                <Button fx:id="replayNextCueButton" text="%replayNextCue" onAction="#replayNextCueAction"/>
+                <Button fx:id="replayLastCueButton" text="%replayLastCue"
+                        onAction="#replayLastCueAction"/>
+                <Button fx:id="replayNextCueButton" text="%replayNextCue"
+                        onAction="#replayNextCueAction"/>
                 <Button text="%replayFastForward" onAction="#replayFastForwardAction"/>
                 <CheckBox fx:id="replayAutoPlayBox" text="%replayAutoPlay"/>
             </VBox>

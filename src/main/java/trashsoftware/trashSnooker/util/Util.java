@@ -273,4 +273,14 @@ public class Util {
         }
         return builder.toString();
     }
+
+    /**
+     * 高级点的替换，可以把"{xxx}"替换为map内的key"xxx"对应的值
+     */
+    public static String formatSentence(String sen, Map<String, String> replacements) {
+        for (Map.Entry<String, String> rep : replacements.entrySet()) {
+            sen = sen.replace('{' + rep.getKey() + '}', rep.getValue());
+        }
+        return sen;
+    }
 }

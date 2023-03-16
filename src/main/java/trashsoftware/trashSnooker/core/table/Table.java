@@ -136,9 +136,6 @@ public abstract class Table {
                 ay = ball.getAxisY();
                 az = ball.getAxisZ();
                 degChange = ball.getFrameDegChange();
-//                xa = ball.getXAngle();
-//                ya = ball.getYAngle();
-//                za = ball.getZAngle();
             } else {
                 double[] xyp = positionsPot.get(ball);
                 pot = xyp[6] == 1;

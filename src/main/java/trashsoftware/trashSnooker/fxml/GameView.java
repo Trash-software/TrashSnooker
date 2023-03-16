@@ -318,13 +318,15 @@ public class GameView implements Initializable {
     }
 
     public void setupReplay(Stage stage, GameReplay replay) {
-        this.enableDebug = false;
-        this.stage = stage;
-        this.basePane = (Pane) stage.getScene().getRoot();
         this.replay = replay;
         this.gameValues = replay.gameValues;
+        this.enableDebug = false;
+        this.stage = stage;
+        
         this.player1 = replay.getP1();
         this.player2 = replay.getP2();
+        
+        this.basePane = (Pane) stage.getScene().getRoot();
 
         gameButtonBox.setVisible(false);
         gameButtonBox.setManaged(false);
@@ -367,9 +369,6 @@ public class GameView implements Initializable {
 
         setKeyboardActions();
 
-//        game = new EntireGame(entireGame.getPlayer1(), entireGame.getPlayer2(),
-//                entireGame.gameValues, entireGame.totalFrames, entireGame.cloth);
-
         generateScales(entireGame.gameValues);
         setupCanvas();
         startAnimation();
@@ -378,15 +377,6 @@ public class GameView implements Initializable {
         game.startNextFrame();  // fixme: 问题 game.game不是null的时候就渲染不出球
         drawScoreBoard(game.getGame().getCuingPlayer(), true);
 
-//        this.game = entireGame;
-
-//        game = new EntireGame(entireGame.getPlayer1(), entireGame.getPlayer2(),
-//                entireGame.gameValues, entireGame.totalFrames, entireGame.cloth);
-//        setupCanvas();
-//        startAnimation();
-
-//        startGame(game.totalFrames, game.cloth);
-
         replayButtonBox.setVisible(false);
         replayButtonBox.setManaged(false);
 
@@ -394,10 +384,6 @@ public class GameView implements Initializable {
         player2Label.setText(player2.getPlayerPerson().getName());
         totalFramesLabel.setText(String.format("(%d)", entireGame.totalFrames));
 
-//        startGame(game.totalFrames, game.cloth);
-//        game = new EntireGame(entireGame.getPlayer1(), entireGame.getPlayer2(), 
-//                entireGame.gameValues, entireGame.totalFrames, entireGame.cloth);
-//        game = entireGame;
         powerSlider.setMajorTickUnit(
                 game.getGame().getCuingPlayer().getPlayerPerson().getControllablePowerPercentage());
         updatePlayStage();

@@ -27,6 +27,7 @@ public class ChampionshipData {
     int mainPlaces;  // 正赛参赛人数
     int mainRounds;
     int[] preMatchNewAdded;  // 预赛每一轮新加的选手
+    Map<ChampionshipStage, Integer> stageNewAdd;  // 每一轮新加的选手的数量
     boolean professionalOnly;  // 是否仅允许职业选手参加
     boolean ranked;  // 是否为排名赛
     int month;  // 真实的month，从1开始的，注意和calendar转化
@@ -89,7 +90,6 @@ public class ChampionshipData {
     
 //            int exp = i < expList.length() ? expList.getInt(i) : 0;
             data.awards.put(rank, awd);
-
         }
 
         int cumulativeTotalFrames = 0;
@@ -118,6 +118,8 @@ public class ChampionshipData {
         if (jsonObject.has("147")) {
             data.awards.put(ChampionshipScore.Rank.MAXIMUM, jsonObject.getInt("147"));
         }
+//        
+//        for ()
 
         System.out.println(data.id);
         System.out.println(Arrays.toString(data.stages));
@@ -223,7 +225,7 @@ public class ChampionshipData {
 //        if (stages.size() != frames.length()) throw new RuntimeException();
     }
 
-    public int getAwardByRank(ChampionshipScore.Rank rank) {
+    public Integer getAwardByRank(ChampionshipScore.Rank rank) {
         return awards.get(rank);
     }
 
@@ -258,9 +260,17 @@ public class ChampionshipData {
     public int[] getPreMatchNewAdded() {
         return preMatchNewAdded;
     }
+    
+    public Map<ChampionshipStage, Integer> getStageNewAdd() {
+        return stageNewAdd;
+    }
 
     public int getTotalPlaces() {
-        return mainPlaces + Arrays.stream(preMatchNewAdded).sum();
+        if (preMatchNewAdded.length == 0) {
+            return mainPlaces;
+        } else {
+            return seedPlaces + Arrays.stream(preMatchNewAdded).sum();
+        }
     }
 
     public boolean isProfessionalOnly() {

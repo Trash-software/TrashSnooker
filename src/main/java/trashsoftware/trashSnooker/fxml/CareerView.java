@@ -311,7 +311,7 @@ public class CareerView implements Initializable {
             ChampionshipData.WithYear nextData = careerManager.nextChampionshipData();
             data = nextData.data;
 
-            if (careerManager.humanPlayerQualifiedToJoinSnooker(data, data.getSelection())) {
+            if (careerManager.humanPlayerQualifiedToJoin(data, data.getSelection())) {
                 joinChampBox.setDisable(false);
                 joinChampBox.setSelected(true);
             } else {

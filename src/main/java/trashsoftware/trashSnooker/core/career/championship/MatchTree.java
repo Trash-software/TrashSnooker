@@ -24,7 +24,7 @@ public class MatchTree {
                     (seedPlayers.size() + nonSeedPlayers.size()));
         }
 
-        List<List<Career>> players = new ArrayList<>();
+        List<List<Career>> players = new ArrayList<>();  // 每一轮新加的球员，null表示待定。
         if (!seedPlayers.isEmpty()) {
             // 分上下半区
             List<Career> goodSeeds = new ArrayList<>(seedPlayers.subList(0, seedPlayers.size() / 2));
@@ -112,6 +112,7 @@ public class MatchTree {
     }
 
     private void build(ChampionshipData data, List<List<Career>> players) {
+        // players里是某个阶段新加的球员，越靠前的越靠前
         ChampionshipStage[] stages = data.getStages();
 
         List<MatchTreeNode> nodes = new ArrayList<>();

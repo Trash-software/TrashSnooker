@@ -874,18 +874,18 @@
     }
   },
   "custom_player_160": {
-    "solving": 83.74794458574063,
+    "solving": 84.71825086231999,
     "aimingOffset": 0,
-    "powerControl": 88.47417385640024,
-    "precision": 80.09628150606446,
+    "powerControl": 90.11804481013115,
+    "precision": 82.03689405922319,
     "sex": "M",
     "longPrecision": 1,
     "ai": {
-      "defense": 88.47417385640024,
-      "stable": 80.09628150606446,
-      "precision": 88.10590965667092,
-      "position": 88.47417385640024,
-      "attackPri": 80.09628150606446,
+      "defense": 90.11804481013115,
+      "stable": 82.03689405922319,
+      "precision": 90.24058346514552,
+      "position": 90.11804481013115,
+      "attackPri": 82.03689405922319,
       "snookerBreak": "RIGHT",
       "withdrawAfter": 2,
       "likeShow": 50,
@@ -1009,6 +1009,52 @@
       "rest": 90.20288249872759,
       "left": 57.532672000000005,
       "right": 100
+    }
+  },
+  "custom_E5B08FE4BB99E5A5B3": {
+    "solving": 76.57974791394315,
+    "aimingOffset": 0,
+    "powerControl": 75.30742744219191,
+    "precision": 76.5718715858666,
+    "sex": "F",
+    "longPrecision": 1,
+    "ai": {
+      "defense": 75.30742744219191,
+      "stable": 76.5718715858666,
+      "precision": 84.22905874445327,
+      "position": 75.30742744219191,
+      "attackPri": 76.5718715858666,
+      "snookerBreak": "RIGHT",
+      "withdrawAfter": 2,
+      "likeShow": 50,
+      "cebSideBreak": true
+    },
+    "cuePointMuSigma": [
+      0,
+      6.401372867753878,
+      0,
+      7.8041252526600955
+    ],
+    "cuePlayType": "p1.000000,h800,e500;s",
+    "spin": 74.00634331212983,
+    "pullDt": [
+      50,
+      200
+    ],
+    "psy": 75,
+    "name": "小仙女",
+    "width": 1,
+    "controllablePower": 59.92380141440885,
+    "anglePrecision": 1,
+    "cueSwingMag": 0,
+    "maxPower": 66.58200157156539,
+    "category": "Amateur",
+    "privateCues": [],
+    "height": 158,
+    "hand": {
+      "rest": 80.83438982027992,
+      "left": 100,
+      "right": 50
     }
   }
 }}

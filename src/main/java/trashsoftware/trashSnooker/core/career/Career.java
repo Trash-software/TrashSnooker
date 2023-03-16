@@ -303,7 +303,9 @@ public class Career {
                 int awards = 0;
                 if (score.data.type == type) {
                     for (ChampionshipScore.Rank rank : score.ranks) {
-                        awards += score.data.getAwardByRank(rank);
+                        Integer awd = score.data.getAwardByRank(rank);
+                        if (awd == null) System.err.println("Maybe tournaments.json has changed?");
+                        else awards += awd;
                     }
                     totalAwards += awards;
                     if (score.data.ranked) {

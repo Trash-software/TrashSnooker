@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.*;
@@ -29,10 +30,7 @@ import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.SortedMap;
+import java.util.*;
 
 public class ChampDrawView implements Initializable {
 
@@ -97,15 +95,23 @@ public class ChampDrawView implements Initializable {
             }
         }
         
+        selectSuggestedCue(human);
+    }
+    
+    private void selectSuggestedCue(PlayerPerson human) {
         Cue humanSuggestedCue = human.getPreferredCue(championship.getData().getType());
+        selectCue(humanSuggestedCue);
+    }
+    
+    private void selectCue(Cue cue) {
         for (MainView.CueItem cueItem : cueBox.getItems()) {
-            if (cueItem.cue == humanSuggestedCue) {
+            if (cueItem.cue == cue) {
                 cueBox.getSelectionModel().select(cueItem);
                 return;
             }
         }
 
-        System.err.println("Why suggested cue not in list");
+        System.err.println("Cue '" + cue.getCueId() + "' not in list");
         cueBox.getSelectionModel().select(0);
     }
 
@@ -141,8 +147,16 @@ public class ChampDrawView implements Initializable {
                 EntireGame eg = championship.getSavedRound().getGame();
                 savedRoundLabel.setText(eg.getP1Wins() + " (" + eg.getTotalFrames() + ") " + eg.getP2Wins());
                 savedRoundLabel.setManaged(true);
+                
+                InGamePlayer humanIgp = eg.getPlayer1().getPlayerType() == PlayerType.PLAYER ?
+                        eg.getPlayer1() : 
+                        eg.getPlayer2();
+                selectCue(humanIgp.getPlayCue());
+                cueBox.setDisable(true);
             } else {
                 if (championship.isHumanAlive()) {
+                    cueBox.setDisable(false);
+                    
                     nextRoundButton.setText(strings.getString("startNextRound"));
                 } else {
                     nextRoundButton.setText(strings.getString("performAllMatches"));
@@ -172,6 +186,51 @@ public class ChampDrawView implements Initializable {
             matchResTable.addItem(new MatchResItem(rank).ranks(matchRes.get(rank)));
         }
     }
+    
+    private void showCongratulation() {
+        SortedMap<ChampionshipScore.Rank, List<Career>> matchRes = championship.getResults();
+
+        ChampionshipScore.Rank humanRank = null;
+        Career humanCareer = null;
+        
+        OUT_LOOP:
+        for (Map.Entry<ChampionshipScore.Rank, List<Career>> entry : matchRes.entrySet()) {
+            for (Career career : entry.getValue()) {
+                if (career.isHumanPlayer()) {
+                    humanRank = entry.getKey();
+                    humanCareer = career;
+                    break OUT_LOOP;
+                }
+            }
+        }
+        
+        if (humanCareer != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("congratView.fxml"),
+                        strings
+                );
+                Parent root = loader.load();
+                root.setStyle(App.FONT_STYLE);
+
+                Stage stage = new Stage();
+
+                stage.initOwner(this.selfStage);
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initStyle(StageStyle.UTILITY);
+
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+
+                CongratView view = loader.getController();
+                view.setup(humanRank, humanCareer, championship);
+
+                stage.show();
+            } catch (Exception e) {
+                EventLogger.log(e);
+            }
+        }
+    }
 
     @FXML
     public void nextRound() {
@@ -187,6 +246,8 @@ public class ChampDrawView implements Initializable {
                 if (match == null) {
                     if (!championship.isFinished()) {
                         nextRound();
+                    } else {
+                        showCongratulation();
                     }
                     updateGui();
                     return;
@@ -296,7 +357,7 @@ public class ChampDrawView implements Initializable {
 
         Node rootNode = buildNodeTree(championship.getMatchTree().getRoot(), 0);
         double maxY = assignYVal(rootNode, nodeVGap + nodeHeight);
-        System.out.println(rootNode);
+//        System.out.println(rootNode);
         treeCanvas.setHeight(maxY + nodeVGap * 2);
 
         gc2d.setFill(Color.WHITE);

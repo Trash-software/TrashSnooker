@@ -142,6 +142,82 @@ public class PlayerPerson {
 
         setCustom(isCustom);
     }
+    
+    public static PlayerPerson fromJson(String playerId, JSONObject personObj) {
+        String name = personObj.getString("name");
+
+        AiPlayStyle aiPlayStyle;
+        if (personObj.has("ai")) {
+            JSONObject aiObject = personObj.getJSONObject("ai");
+            aiPlayStyle = AiPlayStyle.fromJson(aiObject);
+        } else {
+            aiPlayStyle = null;
+        }
+
+        PlayerPerson.HandBody handBody;
+        if (personObj.has("hand")) {
+            JSONObject handObj = personObj.getJSONObject("hand");
+            handBody = new PlayerPerson.HandBody(
+                    personObj.getDouble("height"),
+                    personObj.getDouble("width"),
+                    handObj.getDouble("left"),
+                    handObj.getDouble("right"),
+                    handObj.getDouble("rest")
+            );
+        } else {
+            handBody = PlayerPerson.HandBody.DEFAULT;
+        }
+
+        PlayerPerson playerPerson;
+
+        JSONArray pullDt = personObj.getJSONArray("pullDt");
+        double minPullDt = pullDt.getDouble(0);
+        double maxPullDt = pullDt.getDouble(1);
+        double aimingOffset = personObj.getDouble("aimingOffset");
+        double cueSwingMag = personObj.getDouble("cueSwingMag");
+        String cuePlayTypeStr = personObj.getString("cuePlayType");
+        CuePlayType cuePlayType = parseCuePlayType(cuePlayTypeStr);
+
+        if (personObj.has("specialAction")) {
+            cuePlayType.setSpecialAction(parseSpecialAction(personObj.getJSONObject("specialAction")));
+        }
+
+        JSONArray muSigmaArray = personObj.getJSONArray("cuePointMuSigma");
+        double[] muSigma = new double[4];
+        for (int i = 0; i < 4; ++i) {
+            muSigma[i] = muSigmaArray.getDouble(i);
+        }
+
+        PlayerPerson.Sex sex = personObj.has("sex") ?
+                PlayerPerson.Sex.valueOf(personObj.getString("sex")) :
+                PlayerPerson.Sex.M;
+
+        playerPerson = new PlayerPerson(
+                playerId,
+                name,
+                personObj.getString("category"),
+                personObj.getDouble("maxPower"),
+                personObj.getDouble("controllablePower"),
+                personObj.getDouble("spin"),
+                personObj.getDouble("precision"),
+                personObj.getDouble("anglePrecision"),
+                personObj.getDouble("longPrecision"),
+                personObj.getDouble("solving"),
+                minPullDt,
+                maxPullDt,
+                aimingOffset,
+                cueSwingMag,
+                muSigma,
+                personObj.getDouble("powerControl"),
+                personObj.getDouble("psy"),
+                cuePlayType,
+                aiPlayStyle,
+                handBody,
+                sex
+        );
+
+        return playerPerson;
+    }
 
     public static PlayerPerson randomPlayer(String id,
                                             String name,
@@ -213,6 +289,25 @@ public class PlayerPerson {
         double avg = (precisionPercentage + control1 + control2) / 3;
         return avg > 80.0 ? "Professional" :
                 (avg > 50.0 ? "Amateur" : " Noob");
+    }
+
+    private static CuePlayType parseCuePlayType(String s) {
+        return new CuePlayType(s);
+    }
+
+    private static CuePlayType.SpecialAction parseSpecialAction(JSONObject special) {
+        if (special.has("doubleCueAction")) {
+            JSONObject object = special.getJSONObject("doubleCueAction");
+            return new CuePlayType.DoubleAction(
+                    object.getDouble("minPower"),
+                    object.getDouble("maxPower"),
+                    object.getDouble("minDt"),
+                    object.getDouble("maxDt"),
+                    object.getInt("holdMs"),
+                    object.getDouble("speed")
+            );
+        }
+        return null;
     }
 
     private static double[] estimateCuePoint(double cuePrecision, double spinControl) {
@@ -507,6 +602,10 @@ public class PlayerPerson {
 
         public Sex getSex() {
             return sex;
+        }
+
+        public HandBody getHandBody() {
+            return handBody;
         }
 
         public String getName() {

@@ -151,6 +151,8 @@ public abstract class Championship {
         
         System.out.println("Starting " + data.getId());
         List<TourCareer> careers = getParticipantsByRank(playerJoin);
+
+        System.out.println("Participants: " + careers);
         
         careerSeedMap.clear();
         List<Career> pureList = new ArrayList<>();

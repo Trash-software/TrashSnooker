@@ -36,7 +36,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
     
     public static boolean isCenterBreak(ChineseEightBallPlayer player) {
-        return player.getPlayerPerson().getAiPlayStyle().cebSideBreak;
+        return !player.getPlayerPerson().getAiPlayStyle().cebSideBreak;
     }
 
     @Override

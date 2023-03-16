@@ -17,7 +17,7 @@ import java.util.*;
 
 public class CareerManager {
 
-    public static final boolean LOG = true;
+    public static final boolean LOG = false;
 
     public static final String LEVEL_INFO = "data/level.dat";
     public static final String CAREER_DIR = "user/career/";
@@ -374,21 +374,12 @@ public class CareerManager {
     /**
      * @return 玩家当前有没有资格参加
      */
-    public boolean humanPlayerQualifiedToJoinSnooker(ChampionshipData championshipData,
-                                                     ChampionshipData.Selection selection) {
+    public boolean humanPlayerQualifiedToJoin(ChampionshipData championshipData,
+                                              ChampionshipData.Selection selection) {
+        if (!championshipData.isProfessionalOnly()) return true;  // 公开赛，游戏设定让玩家参加
+        
         int humanRank = humanPlayerRanking(championshipData.type, selection).rank;
-//        if (championshipData.professionalOnly) {
-//            if (humanRank >= PROFESSIONAL_LIMIT) return false;
-//        }
-        if (championshipData.preMatchNewAdded.length == 0) {
-            // 没有资格赛
-            if (humanRank >= championshipData.mainPlaces) return false;
-        }
-        if (championshipData.mainPlaces == championshipData.seedPlaces) {
-            // 正赛只有种子选手（大师赛）
-            if (humanRank >= championshipData.seedPlaces) return false;
-        }
-        return true;
+        return humanRank < championshipData.getTotalPlaces();
     }
 
     /**
@@ -506,10 +497,6 @@ public class CareerManager {
                 Career.CareerWithAwards cwa = rankings.get(i);
                 if (cwa.career == defendingChamp) continue;
                 if (cwa.career.getPlayerPerson().isRandom || cwa.career.getPlayerPerson().category.equals("God")) {
-                    if (cwa.career.isHumanPlayer()) {
-                        if (!humanJoin) continue;
-                        humanAlreadyJoin = true;
-                    }
                     if (cwa.willJoinMatch(data,
                             i,
                             i == 0 ? null : rankings.get(i - 1),
