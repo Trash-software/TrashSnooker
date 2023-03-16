@@ -253,7 +253,7 @@ public class PlayerPerson {
         double heightPercentage = (height - sex.minHeight) / (sex.maxHeight - sex.minHeight);
         double restMul = (2 - heightPercentage) / 1.6;
 
-        return new PlayerPerson(
+        PlayerPerson person = new PlayerPerson(
                 id,
                 name,
                 Math.min(power / 0.9, 100 * sex.powerMul),
@@ -277,6 +277,12 @@ public class PlayerPerson {
                 ),
                 sex
         );
+        
+        if (sex == Sex.F) {
+            person.privateCues.add(DataLoader.getInstance().getCueById("GirlCue"));
+            person.privateCues.add(DataLoader.getInstance().getCueById("GirlPoolCue"));
+        }
+        return person;
     }
 
     private static double generateDouble(Random random, double origin, double bound) {

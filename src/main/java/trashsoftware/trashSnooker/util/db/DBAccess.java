@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    private static final boolean SAVE = true;
+    private static final boolean SAVE = false;
     private static DBAccess database;
 
     private Connection connection;
