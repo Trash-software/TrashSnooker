@@ -70,6 +70,7 @@ public abstract class GameReplay implements GameHolder {
                 scoreFactory = new SnookerScoreFactory();
                 break;
             case CHINESE_EIGHT:
+            case LIS_EIGHT:
                 table = new ChineseEightTable(gameValues.table);
                 scoreFactory = new ChineseEightScoreFactory();
                 break;

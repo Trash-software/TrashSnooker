@@ -13,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerSave;
@@ -96,6 +97,31 @@ public class EntryView implements Initializable {
     private void refreshTable() {
         careersTable.getItems().clear();
         careersTable.getItems().addAll(CareerManager.careerLists());
+    }
+    
+    @FXML
+    void aboutAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("aboutView.fxml"),
+                    strings
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Stage stage = new Stage();
+            stage.setTitle(strings.getString("appName"));
+            stage.initOwner(this.selfStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+
+            stage.show();
+        } catch (IOException e) {
+            EventLogger.log(e);
+        }
     }
 
     @FXML

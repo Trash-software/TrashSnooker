@@ -95,6 +95,7 @@ public class GameValues {
         return (rule == GameRule.SNOOKER && TableMetrics.SNOOKER.equals(table.tableName) && ball == BallMetrics.SNOOKER_BALL) ||
                 (rule == GameRule.MINI_SNOOKER && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.SNOOKER_BALL) ||
                 (rule == GameRule.CHINESE_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
+                (rule == GameRule.LIS_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
                 (rule == GameRule.SIDE_POCKET && table.tableName.equals(TableMetrics.SIDE_POCKET) && ball == BallMetrics.POOL_BALL);
     }
 

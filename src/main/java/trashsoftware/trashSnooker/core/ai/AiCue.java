@@ -630,7 +630,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                 false,
                                 false);  // 这颗进了下一颗怎么可能是自由球/手中球
 
-                if (game.getGameType() == GameRule.CHINESE_EIGHT) {
+                if (game.getGameType() == GameRule.CHINESE_EIGHT || game.getGameType() == GameRule.LIS_EIGHT) {
                     // 避免AI打自己较自己的可能（并不确定会发生）
                     nextStepLegalBalls.remove(choice.ball);
                 }

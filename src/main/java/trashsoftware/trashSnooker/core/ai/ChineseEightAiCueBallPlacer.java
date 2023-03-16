@@ -26,15 +26,26 @@ public class ChineseEightAiCueBallPlacer extends
 
     @Override
     protected List<double[]> legalPositions() {
+        List<double[]> legalPos;
+        double sep = 24;
+        do {
+            legalPos = legalPositions(sep);
+            sep *= 1.5;
+        } while (legalPos.isEmpty() && sep < 1000);
+        
+        return legalPos;
+    }
+
+    private List<double[]> legalPositions(double smallSep) {
         GameValues values = game.getGameValues();
         double xLimit = values.table.rightX - values.ball.ballRadius;
         if (game.isBreaking() || game.isJustAfterBreak()) {
             xLimit = game.getTable().breakLineX();
         }
-        
+
         List<double[]> posList = new ArrayList<>();
-        double xTick = (values.table.innerWidth - values.ball.ballDiameter) / 48.0;
-        double yTick = (values.table.innerHeight - values.ball.ballDiameter) / 24.0;
+        double xTick = (values.table.innerWidth - values.ball.ballDiameter) / smallSep / 2;
+        double yTick = (values.table.innerHeight - values.ball.ballDiameter) / smallSep;
         for (double x = values.table.leftX + values.ball.ballRadius; x <= xLimit; x += xTick) {
             for (double y = values.table.topY + values.ball.ballRadius; y < values.table.botY ; y += yTick) {
                 if (game.canPlaceWhite(x, y)) {

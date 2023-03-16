@@ -81,11 +81,13 @@ public class CuePlayType {
         if (sequence.isEmpty()) {
             builder.append("s");
         } else {
-            for (double d : getSequence()) {
+            for (double d : sequence) {
                 if (d == 0.0) builder.append("s");
                 else if (d == 1.0) builder.append("r");
                 else if (d == -1.0) builder.append("l");
+                builder.append(',');
             }
+            builder.setLength(builder.length() - 1);
         }
         return builder.toString();
     }

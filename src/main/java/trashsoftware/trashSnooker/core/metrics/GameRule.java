@@ -25,6 +25,8 @@ public enum GameRule {
             new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL}, BreakRule.ALTERNATE),
     CHINESE_EIGHT(false, 16, "ChineseEight",
             new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG}, BreakRule.WINNER),
+    LIS_EIGHT(false, 16, "LisEight",
+            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG}, BreakRule.WINNER),
     SIDE_POCKET(false, 10, "SidePocket",
             new Cue.Size[]{Cue.Size.BIG, Cue.Size.MEDIUM}, BreakRule.WINNER);
 

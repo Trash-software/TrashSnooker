@@ -359,11 +359,15 @@ public class CareerView implements Initializable {
         rankingTable.getItems().addAll(careerManager.getRanking(rankTypeBox.getValue(), rankMethodBox.getValue()));
 
         CareerRank myRank = careerManager.humanPlayerRanking(rankTypeBox.getValue(), rankMethodBox.getValue());
-        myRankLabel.setText(String.format("%d  %s  %d  %d",
-                myRank.getRankFrom1(),
-                myRank.career.getPlayerPerson().getName(),
-                myRank.getShownAwards(),
-                myRank.getTotalAwards()));
+        if (myRank == null) {
+            myRankLabel.setText("");
+        } else {
+            myRankLabel.setText(String.format("%d  %s  %d  %d",
+                    myRank.getRankFrom1(),
+                    myRank.career.getPlayerPerson().getName(),
+                    myRank.getShownAwards(),
+                    myRank.getTotalAwards()));
+        }
     }
 
     @FXML
