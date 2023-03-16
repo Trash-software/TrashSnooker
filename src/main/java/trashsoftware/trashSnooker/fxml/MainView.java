@@ -127,6 +127,7 @@ public class MainView implements Initializable {
                     ballMetricsBox.getSelectionModel().select(BallMetrics.SNOOKER_BALL);
                     break;
                 case CHINESE_EIGHT:
+                case LIS_EIGHT:
                     tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.CHINESE_EIGHT);
                     ballMetricsBox.getSelectionModel().select(BallMetrics.POOL_BALL);
                     break;

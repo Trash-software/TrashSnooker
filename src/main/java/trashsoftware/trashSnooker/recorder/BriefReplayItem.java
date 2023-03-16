@@ -109,6 +109,7 @@ public class BriefReplayItem {
                 throw new RecordException("Player " + pid + " does not exist in current database");
         } else {
             playerPerson = readPlayerPerson(pid, raf);
+//            System.out.println(playerPerson.getPlayerId() + playerPerson.getCuePlayType().toString());
         }
 
         Cue playCue = Objects.requireNonNull(DataLoader.getInstance().getCues().get(playCueId));

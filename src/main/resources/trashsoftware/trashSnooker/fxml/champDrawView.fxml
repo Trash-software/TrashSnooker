@@ -25,7 +25,7 @@
     </ScrollPane>
 
     <HBox spacing="10.0">
-        <VBox minWidth="100.0" prefWidth="160" spacing="10.0">
+        <VBox minWidth="160.0" prefWidth="240" spacing="10.0">
             <Label fx:id="currentStageLabel"/>
             <Button fx:id="nextRoundButton" onAction="#nextRound" text="%startNextRound"/>
             <Label fx:id="savedRoundLabel"/>

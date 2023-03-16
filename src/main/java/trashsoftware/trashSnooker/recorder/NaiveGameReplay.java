@@ -30,6 +30,7 @@ public class NaiveGameReplay extends GameReplay {
         if (b == null) {
             switch (gameValues.rule) {
                 case CHINESE_EIGHT:
+                case LIS_EIGHT:
                 case SIDE_POCKET:
                     b = new PoolBall(val, potted, gameValues);
                     b.setX(x);

@@ -8,6 +8,7 @@ import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LisEightGame;
 import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
@@ -103,6 +104,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             game = new MiniSnookerGame(entireGame, gameSettings, frameIndex);
         } else if (gameValues.rule == GameRule.CHINESE_EIGHT) {
             game = new ChineseEightBallGame(entireGame, gameSettings, frameIndex);
+        } else if (gameValues.rule == GameRule.LIS_EIGHT) {
+            game = new LisEightGame(entireGame, gameSettings, frameIndex);
         } else if (gameValues.rule == GameRule.SIDE_POCKET) {
             game = new SidePocketGame(entireGame, gameSettings, frameIndex);
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
@@ -198,7 +201,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     /**
      * 返回所有能打的球
      */
-    public List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall, boolean isLineInFreeBall) {
+    public final List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall, boolean isLineInFreeBall) {
         List<Ball> balls = new ArrayList<>();
         for (Ball ball : getAllBalls()) {
             if (isLegalBall(ball, targetRep, isSnookerFreeBall, isLineInFreeBall)) balls.add(ball);

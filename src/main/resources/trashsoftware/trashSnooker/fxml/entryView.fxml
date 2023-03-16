@@ -15,6 +15,9 @@
             <MenuItem text="%recordMenu" onAction="#recordsAction"/>
             <MenuItem text="%replayMenu" onAction="#replayAction"/>
         </Menu>
+        <Menu text="%helpMenu">
+            <MenuItem text="%aboutMenu" onAction="#aboutAction"/>
+        </Menu>
     </MenuBar>
 
     <VBox spacing="10.0" alignment="CENTER">

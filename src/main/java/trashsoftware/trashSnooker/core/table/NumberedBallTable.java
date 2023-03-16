@@ -45,7 +45,7 @@ public abstract class NumberedBallTable extends Table {
                 canvasY + textDown);
     }
 
-    public double breakPointX() {
+    public double firstBallPlacementX() {
         return tableMetrics.leftX + (tableMetrics.innerWidth * 0.75);
     }
 

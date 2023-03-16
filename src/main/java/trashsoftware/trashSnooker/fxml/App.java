@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 
 public class App extends Application {
     
+    public static final String VERSION_NAME = "0.1";
     public static final int VERSION = 12;
 
     private static final String CONFIG = "user" + File.separator + "config.cfg";

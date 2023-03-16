@@ -178,6 +178,7 @@ public class ChampionshipData {
                 ballMetrics = BallMetrics.SNOOKER_BALL;
                 break;
             case CHINESE_EIGHT:
+            case LIS_EIGHT:
             case SIDE_POCKET:
                 ballMetrics = BallMetrics.POOL_BALL;
                 break;

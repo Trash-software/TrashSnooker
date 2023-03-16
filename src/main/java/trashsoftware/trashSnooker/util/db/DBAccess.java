@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    private static final boolean SAVE = false;
+    private static final boolean SAVE = true;
     private static DBAccess database;
 
     private Connection connection;
@@ -411,7 +411,8 @@ public class DBAccess {
 
                 return new EntireGameRecord.Snooker(title, records, durations);
             } else if (title.gameRule == GameRule.CHINESE_EIGHT ||
-                    title.gameRule == GameRule.SIDE_POCKET) {
+                    title.gameRule == GameRule.SIDE_POCKET || 
+                    title.gameRule == GameRule.LIS_EIGHT) {
                 String tableName = title.gameRule.toSqlKey() + "Record";
                 String numQuery = "SELECT * FROM " + tableName + " " +
                         "WHERE EntireBeginTime = " + Util.timeStampFmt(title.startTime) +
@@ -438,7 +439,7 @@ public class DBAccess {
                 }
                 numStatement.close();
 
-                if (title.gameRule == GameRule.CHINESE_EIGHT) {
+                if (title.gameRule == GameRule.CHINESE_EIGHT || title.gameRule == GameRule.LIS_EIGHT) {
                     return new EntireGameRecord.ChineseEight(title, records, durations);
                 } else {
                     return new EntireGameRecord.SidePocket(title, records, durations);

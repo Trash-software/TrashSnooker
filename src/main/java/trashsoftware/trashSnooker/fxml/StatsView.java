@@ -424,6 +424,7 @@ public class StatsView implements Initializable {
                 appendToPane(GameRule.SNOOKER, gridPane);
                 appendToPane(GameRule.MINI_SNOOKER, gridPane);
                 appendToPane(GameRule.CHINESE_EIGHT, gridPane);
+                appendToPane(GameRule.LIS_EIGHT, gridPane);
                 appendToPane(GameRule.SIDE_POCKET, gridPane);
 
                 rightPane.getChildren().add(gridPane);

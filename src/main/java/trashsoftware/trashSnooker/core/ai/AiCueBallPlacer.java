@@ -53,6 +53,8 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
         }
         
         List<double[]> legalPositions = legalPositions();
+        if (legalPositions.isEmpty()) return null;
+        
         int target = game.getCurrentTarget();
         List<Ball> legalBalls = 
                 game.getAllLegalBalls(target, 

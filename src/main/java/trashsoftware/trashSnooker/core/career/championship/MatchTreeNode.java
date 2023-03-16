@@ -157,6 +157,8 @@ public class MatchTreeNode {
                         data.getNFramesOfStage(stage)
                 );
                 break;
+            case LIS_EIGHT:
+            case MINI_SNOOKER:
             case SIDE_POCKET:
             default:
                 throw new UnsupportedOperationException();

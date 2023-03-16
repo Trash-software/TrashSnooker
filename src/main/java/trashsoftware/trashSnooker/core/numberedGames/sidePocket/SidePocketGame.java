@@ -6,9 +6,7 @@ import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
-import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.table.SidePocketTable;
-import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +48,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
             }
         }
 
-        double curX = getTable().breakPointX();
+        double curX = getTable().firstBallPlacementX();
         double rowOccupyX = gameValues.ball.ballDiameter * Math.sin(Math.toRadians(60.0))
                 + Game.MIN_PLACE_DISTANCE * 0.6;
 

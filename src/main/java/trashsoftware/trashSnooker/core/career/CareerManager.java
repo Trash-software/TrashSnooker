@@ -378,7 +378,9 @@ public class CareerManager {
                                               ChampionshipData.Selection selection) {
         if (!championshipData.isProfessionalOnly()) return true;  // 公开赛，游戏设定让玩家参加
         
-        int humanRank = humanPlayerRanking(championshipData.type, selection).rank;
+        CareerRank human = humanPlayerRanking(championshipData.type, selection);
+        if (human == null) return false;
+        int humanRank = human.rank;
         return humanRank < championshipData.getTotalPlaces();
     }
 
@@ -392,7 +394,7 @@ public class CareerManager {
             if (cr.getCareer().isHumanPlayer())
                 return cr;
         }
-        throw new RuntimeException("No human player");
+        return null;
     }
 
     /**
@@ -417,6 +419,7 @@ public class CareerManager {
                     return snookerRankingSingleSeason;
             case CHINESE_EIGHT:
                 return chineseEightRanking;
+            case LIS_EIGHT:
             case MINI_SNOOKER:
             case SIDE_POCKET:
             default:
@@ -561,6 +564,7 @@ public class CareerManager {
                 championship = new ChineseEightChampionship(nextData, timestamp);
                 break;
             case SIDE_POCKET:
+            case LIS_EIGHT:
             case MINI_SNOOKER:
             default:
                 throw new UnsupportedOperationException();

@@ -23,12 +23,12 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     public static final int FULL_BALL_REP = 16;
     public static final int HALF_BALL_REP = 17;
     
-    private double eightBallPosX;
+    protected double eightBallPosX;
 
     private static final int[] FULL_BALL_SLOTS = {0, 2, 3, 7, 9, 10, 12};
     private static final int[] HALF_BALL_SLOTS = {1, 5, 6, 7, 11, 13, 14};
-    private ChineseEightBallPlayer winingPlayer;
-    private ChineseEightScoreResult curResult;
+    protected ChineseEightBallPlayer winingPlayer;
+    protected ChineseEightScoreResult curResult;
 
     public ChineseEightBallGame(EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
         super(entireGame, gameSettings, new ChineseEightTable(entireGame.gameValues.table), frameIndex);
@@ -47,7 +47,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         super.withdraw(player);
     }
     
-    private PoolBall getEightBall() {
+    protected PoolBall getEightBall() {
         return allBalls[8];
     }
 
@@ -76,7 +76,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         Collections.shuffle(fullBalls);
         Collections.shuffle(halfBalls);
 
-        double curX = getTable().breakPointX();
+        double curX = getTable().firstBallPlacementX();
         double rowStartY = gameValues.table.midY;
         double rowOccupyX = gameValues.ball.ballDiameter * Math.sin(Math.toRadians(60.0))
                 + Game.MIN_PLACE_DISTANCE * 0.6;
@@ -277,15 +277,15 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         return GamePlayStage.NORMAL;
     }
 
-    private boolean isFullBall(Ball ball) {
+    protected boolean isFullBall(Ball ball) {
         return ball.getValue() >= 1 && ball.getValue() <= 7;
     }
 
-    private boolean isHalfBall(Ball ball) {
+    protected boolean isHalfBall(Ball ball) {
         return ball.getValue() >= 9 && ball.getValue() <= 15;
     }
     
-    private int getRemRangedBallOnTable(int ballRange) {
+    protected int getRemRangedBallOnTable(int ballRange) {
         if (ballRange == FULL_BALL_REP) return getRemFullBallOnTable();
         else if (ballRange == HALF_BALL_REP) return getRemHalfBallOnTable();
         else return 1;
@@ -315,43 +315,43 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         return getRemHalfBallOnTable() > 0;
     }
 
-    private boolean allFullBalls(Set<PoolBall> balls) {
+    protected boolean allFullBalls(Set<PoolBall> balls) {
         for (PoolBall ball : balls) {
             if (isHalfBall(ball)) return false;
         }
         return true;
     }
 
-    private boolean allHalfBalls(Set<PoolBall> balls) {
+    protected boolean allHalfBalls(Set<PoolBall> balls) {
         for (PoolBall ball : balls) {
             if (isFullBall(ball)) return false;
         }
         return true;
     }
 
-    private Collection<PoolBall> fullBallsOf(Set<PoolBall> balls) {
+    protected Collection<PoolBall> fullBallsOf(Set<PoolBall> balls) {
         return balls.stream().filter(this::isFullBall).collect(Collectors.toSet());
     }
 
-    private Collection<PoolBall> halfBallsOf(Set<PoolBall> balls) {
+    protected Collection<PoolBall> halfBallsOf(Set<PoolBall> balls) {
         return balls.stream().filter(this::isHalfBall).collect(Collectors.toSet());
     }
 
-    private boolean hasFullBalls(Set<PoolBall> balls) {
+    protected boolean hasFullBalls(Set<PoolBall> balls) {
         for (PoolBall ball : balls) {
             if (isFullBall(ball)) return true;
         }
         return false;
     }
 
-    private boolean hasHalfBalls(Set<PoolBall> balls) {
+    protected boolean hasHalfBalls(Set<PoolBall> balls) {
         for (PoolBall ball : balls) {
             if (isHalfBall(ball)) return true;
         }
         return false;
     }
 
-    private int getTargetOfPlayer(Player playerX) {
+    protected int getTargetOfPlayer(Player playerX) {
         ChineseEightBallPlayer player = (ChineseEightBallPlayer) playerX;
         if (player.getBallRange() == NOT_SELECTED_REP) return NOT_SELECTED_REP;
         if (player.getBallRange() == FULL_BALL_REP) {
@@ -380,7 +380,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         return isJustAfterBreak() && thisCueFoul;  // 主要区别就是，ai计算的时候是在lastCueFoul=thisCueFoul之前
     }
 
-    private void pickupBlackBall() {
+    protected void pickupBlackBall() {
         double y = gameValues.table.midY;
         for (double x = eightBallPosX; x < gameValues.table.rightX - gameValues.ball.ballRadius; x += 1.0) {
             if (!isOccupied(x, y)) {
