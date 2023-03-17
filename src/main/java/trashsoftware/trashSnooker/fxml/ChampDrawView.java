@@ -135,6 +135,14 @@ public class ChampDrawView implements Initializable {
         
         this.selfStage.setOnHidden(event -> parent.refreshGui());
     }
+    
+    private void pveMatchFinish() {
+        updateGui();
+        
+        if (championship.isFinished() || !championship.isHumanAlive()) {
+            showCongratulation();
+        }
+    }
 
     private void updateGui() {
         if (championship.isFinished()) {
@@ -246,8 +254,6 @@ public class ChampDrawView implements Initializable {
                 if (match == null) {
                     if (!championship.isFinished()) {
                         nextRound();
-                    } else {
-                        showCongratulation();
                     }
                     updateGui();
                     return;
@@ -310,7 +316,7 @@ public class ChampDrawView implements Initializable {
                     match.setGame(newGame);
                 }
             }
-            match.setGuiCallback(this::updateGui, this::updateGui);
+            match.setGuiCallback(this::pveMatchFinish, this::pveMatchFinish);
             startGame(match);
         }
     }

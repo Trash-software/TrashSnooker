@@ -204,7 +204,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public final List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall, boolean isLineInFreeBall) {
         List<Ball> balls = new ArrayList<>();
         for (Ball ball : getAllBalls()) {
-            if (isLegalBall(ball, targetRep, isSnookerFreeBall, isLineInFreeBall)) balls.add(ball);
+            if (!ball.isPotted() && 
+                    !ball.isWhite() &&
+                    isLegalBall(ball, targetRep, isSnookerFreeBall, isLineInFreeBall)) 
+                balls.add(ball);
         }
         return balls;
     }
@@ -839,6 +842,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     // 从白球处看得到进球点
                     AiCue.AttackChoice attackChoice = AiCue.AttackChoice.createChoice(
                             this,
+                            entireGame.predictPhy, 
                             player,
                             whitePos,
                             ball,

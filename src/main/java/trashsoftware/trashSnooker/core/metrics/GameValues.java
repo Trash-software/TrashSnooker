@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.metrics;
 
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 
@@ -23,6 +24,8 @@ public class GameValues {
     public double midHoleBestAngleWidth;  // 中袋对正的容错空间
     public double cornerHoldBestAngleWidth;  // 底袋对正的容错空间
     double ballHoleRatio;
+    
+    private double maxPowerMoveDistance;
 
     public GameValues(GameRule rule,
                       TableMetrics tableMetrics,
@@ -111,6 +114,13 @@ public class GameValues {
         double acceleration = speedReducerPerInterval(phy) * phy.calculationsPerSecSqr;
         double t = speed / acceleration;  // 加速时间，秒
         return acceleration / 2 * t * t;  // S = 1/2at^2
+    }
+    
+    public double estimateMaxPowerMoveDistance(Phy phy) {
+        if (maxPowerMoveDistance == 0) {
+            maxPowerMoveDistance = estimatedMoveDistance(phy, Values.MAX_POWER_SPEED);
+        }
+        return maxPowerMoveDistance;
     }
 
     public double estimateSpeedNeeded(Phy phy, double distance) {

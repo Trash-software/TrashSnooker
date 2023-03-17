@@ -224,6 +224,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         AttackParam attackParam = new AttackParam(
                 choice,
                 game,
+                phy,
                 aiPlayer,
                 power,
                 spin[0],

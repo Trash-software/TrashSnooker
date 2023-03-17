@@ -92,6 +92,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     // 从白球处看得到进球点
                     AttackChoice attackChoice = AttackChoice.createChoice(
                             game,
+                            game.getEntireGame().predictPhy,
                             attackingPlayer,
                             whitePos,
                             ball,
@@ -278,6 +279,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return CuePlayParams.unitSideSpin(selectedSideSpin, cue);
     }
 
+    protected static double selectedFrontBackSpinToActual(double selectedFrontBackSpin,
+                                                          Game<?, ?> game,
+                                                          InGamePlayer aiIgp) {
+        return CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin,
+                aiIgp.getPlayerPerson(),
+                aiIgp.getCurrentCue(game));
+    }
+
     public abstract AiCueResult makeCue(Phy phy);
 
     /**
@@ -318,7 +327,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         int curTarget = game.getCurrentTarget();
         boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
         List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
-                isSnookerFreeBall, 
+                isSnookerFreeBall,
                 false);  // 不可能，没有谁会给自己摆杆斯诺克
 
         PlayerPerson aps = aiPlayer.getPlayerPerson();
@@ -356,7 +365,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
     protected double selectedFrontBackSpinToActual(double selectedFrontBackSpin) {
         return CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin,
-                aiPlayer.getInGamePlayer(),
+                aiPlayer.getPlayerPerson(),
                 game.getCuingPlayer().getInGamePlayer().getCurrentCue(game));
     }
 
@@ -371,11 +380,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                           Phy phy) {
         double powerLimit = aiPlayer.getPlayerPerson().getControllablePowerPercentage();
         final double tick = 300.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().position;
-
-//        GameValues values = game.getGameValues();
-
-//        double comfortablePower = powerLimit * 0.35;
-//        int maxIterations = (int) Math.round((powerLimit - comfortablePower) / tick) * 2;  // 注：仅适用于倍数<=0.5的情况
 
         List<IntegratedAttackChoice> choiceList = new ArrayList<>();
         AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
@@ -394,7 +398,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         for (double selectedPower = tick; selectedPower <= powerLimit; selectedPower += tick) {
             for (double[] spins : SPIN_POINTS) {
                 AttackParam acp = new AttackParam(
-                        choice, game, aiPlayer, selectedPower, spins[0], spins[1]
+                        choice, game, phy, aiPlayer, selectedPower, spins[0], spins[1]
                 );
                 if (acp.potProb > easiest) easiest = acp.potProb;
                 if (acp.potProb > pureAttackThreshold) {
@@ -408,7 +412,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         long t1 = System.currentTimeMillis();
         System.out.println("Ai list attack params in " + (t1 - t0) + " ms, " +
                 pureAttacks.size() + " pure, " + defensiveAttacks.size() + " defensive.");
-        
+
         if (pureAttacks.isEmpty() && defensiveAttacks.isEmpty()) {
             System.out.println("Not attack because the highest prob is " + easiest);
             return null;
@@ -448,16 +452,21 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
 
         if (!choiceList.isEmpty()) {
+            double pureAttackThresh = attackProbThreshold(PURE_ATTACK_PROB, aps);
+
             choiceList.sort(IntegratedAttackChoice::normalCompareTo);
             for (IntegratedAttackChoice iac : choiceList) {
                 if (!iac.nextStepAttackChoices.isEmpty()) {
-                    return choiceList.get(0);  // 没问题
+                    AttackChoice bestNextStep = iac.nextStepAttackChoices.get(0);
+                    if (bestNextStep.defaultRef.potProb >= pureAttackThresh) {
+                        return iac;  // 我纯进攻下一杆也得走个纯进攻的位撒
+                    }
                 }
             }
 
             IntegratedAttackChoice iac = choiceList.get(0);
             if (iac.nextStepTarget == Game.END_REP) return iac;
-            
+
             if (iac.priceOfKick >= 1.0) {  // 能K正确的球
                 if (Math.random() < 0.5 + (iac.priceOfKick - 1) * 0.25) {
                     // priceOfKick是1，概率为0.5
@@ -883,10 +892,11 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         if (legalChoices.isEmpty()) return null;
         Collections.sort(legalChoices);
         Collections.reverse(legalChoices);
-        
+
         if (legalChoices.size() == 1) return legalChoices.get(0);
-        else if (legalChoices.size() == 2) return Math.random() > 0.3 ? legalChoices.get(0) : legalChoices.get(1);
-        
+        else if (legalChoices.size() == 2)
+            return Math.random() > 0.3 ? legalChoices.get(0) : legalChoices.get(1);
+
         List<DefenseChoice> bests = legalChoices.subList(0, Math.min(3, legalChoices.size()));
         double rnd = Math.random();
         if (rnd > 0.4) return bests.get(0);
@@ -947,6 +957,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
          * @param lastAiPottedBall 如果这杆为走位预测，则该值为AI第一步想打的球。如这杆就是第一杆，则为null
          */
         public static AttackChoice createChoice(Game<?, ?> game,
+                                                Phy phy,
                                                 Player attackingPlayer,
                                                 double[] whitePos,
                                                 Ball ball,
@@ -1009,6 +1020,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             attackChoice.defaultRef = new AttackParam(
                     attackChoice,
                     game,
+                    phy,
                     attackingPlayer,
                     30.0,
                     0.0,
@@ -1023,11 +1035,29 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             return 10000.0 / difficulty;  // Refer to the class's constructor
         }
 
+        /**
+         * @param remDtOfBall 球到达袋口时的速度还能让它跑多远，大概
+         */
         protected static double holeProjWidth(GameValues values,
                                               boolean isMidHole,
-                                              double[] targetHoleVec) {
+                                              double[] targetHoleVec,
+                                              double remDtOfBall) {
             if (isMidHole) {
-                return Math.abs(targetHoleVec[1]) * values.table.midHoleDiameter;
+                // 大力灌袋时，必须很准才能进。小力轻推时比较容易因为重力跑进去
+                // 最大力时必须整颗球都在袋内侧
+                // 最小力时只要球心在袋+重力范围内就可以了
+                // mul范围在0-1之间
+                // 这个应该和逃逸速度/俘获类似
+                // 质量不变，速度与半径应为二次方关系
+                // 但我们这里的参数是剩余运行距离，和速度也是二次方关系
+                // 怼了，成线性的了
+                double effectiveSlopeMul = Math.max(0, 1 - remDtOfBall / 48000);
+                // 我们认为到达时35以上的力就不能往里滚了。根据计算，35的力能打差不多48000远。
+                // 这里有一个问题，就是其实应该用speed，因为慢的桌子distance会很小
+//                System.out.println(remDtOfBall + " " + effectiveSlopeMul);
+
+                return Math.abs(targetHoleVec[1]) * values.table.midHoleDiameter
+                        + (values.table.holeGravityAreaWidth + values.ball.ballRadius) * effectiveSlopeMul;
             } else {
                 double holeMax = values.table.cornerHoleDiameter;
                 // 要的只是个0-90之间的角度（弧度），与45度对称即可（15===75），都转到第一象限来
@@ -1038,13 +1068,15 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 return holeMax * Math.cos(angleTo45);
             }
         }
-        
+
         protected static double allowedDeviationOfHole(GameValues values,
                                                        boolean isMidHole,
-                                                       double[] targetHoleVec) {
+                                                       double[] targetHoleVec,
+                                                       double remDtOfBall) {
             double holeWidth = AttackChoice.holeProjWidth(values,
                     isMidHole,
-                    targetHoleVec);
+                    targetHoleVec,
+                    remDtOfBall);
             // 从这个角度看袋允许的偏差
             return holeWidth - values.ball.ballDiameter * 0.95;  // 0.95是随手写的
         }
@@ -1052,8 +1084,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         protected static double holeDifficulty(Game<?, ?> game,
                                                boolean isMidHole,
                                                double[] targetHoleVec) {
-            
-            double allowedDev = allowedDeviationOfHole(game.getGameValues(), isMidHole, targetHoleVec);
+
+            double allowedDev = allowedDeviationOfHole(
+                    game.getGameValues(),
+                    isMidHole,
+                    targetHoleVec,
+                    10);  // 接近最容易进的，毕竟是评估球形难度，只能轻推中袋的球也还算行
             if (isMidHole) {
                 return game.getGameValues().midHoleBestAngleWidth / allowedDev;
             } else {
@@ -1247,6 +1283,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         protected AttackParam(AttackChoice attackChoice,
                               Game<?, ?> game,
+                              Phy phy,
                               Player aiPlayer,
                               double selectedPower,
                               double selectedFrontBackSpin,
@@ -1287,7 +1324,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //                    selectedSideSpin - unitCueSd;
 
             // 和杆还是有关系的，拿着大头杆打斯诺克就不会去想很难的球
-            double actualSideSpin = selectedSideSpinToActual(selectedSideSpin, 
+            double actualSideSpin = selectedSideSpinToActual(selectedSideSpin,
                     aiPlayer.getInGamePlayer().getPlayCue());
 
             // dev=deviation, 由于力量加上塞造成的1倍标准差偏差角，应为小于PI的正数
@@ -1304,7 +1341,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 radDevOfHighPower = Algebra.TWO_PI - radDevOfHighPower;
 
             double sideDevRad = (radDevOfHighPower - radDevOfLowPower) / 2;
-            
+
             // 太小的力有惩罚
             if (actualPower < 15.0) {
                 double penalty = Algebra.shiftRange(0, 15, 2, 1, actualPower);
@@ -1341,12 +1378,16 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
             tarDevHoleSdMm += targetDifficultyMm;
 //            tarDevHoleSdMm *= targetDifficulty;
-            
+
+            double totalDt = attackChoice.targetHoleDistance + attackChoice.whiteCollisionDistance;
+            double totalMove = gameValues.estimatedMoveDistance(phy, CuePlayParams.getSpeedOfPower(actualPower, 0));
+
             // 从这个角度看袋允许的偏差
             double allowedDev = AttackChoice.allowedDeviationOfHole(
                     gameValues,
                     attackChoice.isMidHole(),
-                    attackChoice.targetHoleVec
+                    attackChoice.targetHoleVec,
+                    totalMove - totalDt  // 真就大概了，意思也就是不鼓励AI低搓去沙中袋
             );
             NormalDistribution nd = new NormalDistribution(0.0, Math.max(tarDevHoleSdMm * 2, 0.00001));
 
@@ -1377,7 +1418,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         public final boolean isPureAttack;
         final AttackParam attackParams;
-        final List<AttackChoice> nextStepAttackChoices;
+        final List<AttackChoice> nextStepAttackChoices;  // Sorted from good to bad
         private final WhitePrediction whitePrediction;
         private final GamePlayStage stage;
         protected double price;
@@ -1406,7 +1447,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
 
         /**
-         * 由defense转来的，连攻带防，但不能与纯进攻的一起比较
+         * 由defense转来的，连攻带防，但不能与纯进攻的一起比较，因为price完全是防守的price
          */
         protected IntegratedAttackChoice(AttackParam attackParams,
                                          int nextStepTarget,
@@ -1456,7 +1497,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
                 double divider = aps.likeShow * 50.0;
                 double dtTravel = whitePrediction.getDistanceTravelledAfterCollision();
-                double penalty = dtTravel < 1000 ? 0 : (dtTravel - 1000) / divider;
+                double penalty = dtTravel < 1500 ? 0 : (dtTravel - 1500) / divider;
                 price /= 1 + penalty;
             }
         }
@@ -1643,6 +1684,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         GameValues values;
 
         DefenseChoice result;
+        double targetCanMove;
 
         protected DefensiveAttackThread(
                 AttackParam attackParam,

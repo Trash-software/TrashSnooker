@@ -69,23 +69,28 @@ public class CuePlayParams {
 
         double[] unitXYWithSpin = unitXYWithSpins(directionalSideSpin, directionalPower, directionX, directionY);
 
-        double vx = unitXYWithSpin[0] * actualPower * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
-        double vy = unitXYWithSpin[1] * actualPower * Values.MAX_POWER_SPEED / 100.0;
+        double speed = getSpeedOfPower(actualPower, cueAngleDeg);
+        double vx = unitXYWithSpin[0] * speed;
+        double vy = unitXYWithSpin[1] * speed;
 
         // 重新计算，因为unitSideSpin有呲杆补偿
         double[] spins = calculateSpins(vx, vy, actualFrontBackSpin, actualSideSpin, cueAngleDeg);
-        if (cueAngleDeg > 5) {
-            // 出杆越陡，球速越慢
-            vx *= (95 - cueAngleDeg) / 90.0;
-            vy *= (95 - cueAngleDeg) / 90.0;
-        }
         return new CuePlayParams(vx, vy, spins[0], spins[1], spins[2], actualPower);
     }
+    
+    public static double getSpeedOfPower(double actualPower, double cueAngleDeg) {
+        double speed = actualPower * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
+        if (cueAngleDeg > 5) {
+            // 出杆越陡，球速越慢
+            speed *= (95 - cueAngleDeg) / 90.0;
+        }
+        return speed;
+    }
 
-    public static double unitFrontBackSpin(double unitCuePoint, InGamePlayer inGamePlayer,
+    public static double unitFrontBackSpin(double unitCuePoint, PlayerPerson playerPerson,
                                            Cue cue) {
         return unitCuePoint * cue.spinMultiplier *
-                inGamePlayer.getPlayerPerson().getMaxSpinPercentage() / 100.0;
+                playerPerson.getMaxSpinPercentage() / 100.0;
     }
 
     public static double getSelectedSideSpin(double actualSideSpin, Cue cue) {

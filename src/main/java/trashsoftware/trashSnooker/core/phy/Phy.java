@@ -31,17 +31,17 @@ public class Phy {
     
     public static class Factory {
         public static Phy createPlayPhy(TableCloth cloth) {
-            System.out.println("Play " + cloth);
+//            System.out.println("Play " + cloth);
             return new Phy(PLAY_MS, cloth, false);
         }
 
         public static Phy createWhitePredictPhy(TableCloth cloth) {
-            System.out.println("Predict " + cloth);
+//            System.out.println("Predict " + cloth);
             return new Phy(WHITE_PREDICT_MS, cloth, true);
         }
 
         public static Phy createAiPredictPhy(TableCloth cloth) {
-            System.out.println("Predict " + cloth);
+//            System.out.println("Predict " + cloth);
             return new Phy(AI_PREDICT_MS, cloth, true);
         }
     }

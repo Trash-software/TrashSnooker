@@ -95,7 +95,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
         else speedMul = 0.5;
         
         if (alivePrice == 0) return 2.0 * speedMul;
-        double kickPriority = 20.0 / alivePrice;
+        double kickPriority = 20.0 / alivePrice;  // alive price 本身大，那就不k最好
         
         return Math.max(0.5, speedMul * Math.min(2.0, kickPriority));
     }

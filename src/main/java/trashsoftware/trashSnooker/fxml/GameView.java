@@ -1783,7 +1783,7 @@ public class GameView implements Initializable {
             cue = game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame());
         }
         return CuePlayParams.unitFrontBackSpin((cueCanvasWH / 2 - cpy) / cueAreaRadius,
-                game.getGame().getCuingPlayer().getInGamePlayer(),
+                game.getGame().getCuingPlayer().getPlayerPerson(),
                 cue
         );
     }

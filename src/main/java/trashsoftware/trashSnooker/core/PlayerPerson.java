@@ -576,6 +576,7 @@ public class PlayerPerson {
         private String shownName;
         private HandBody handBody;
         private Sex sex;
+        private List<Cue> privateCues;
 
         public static ReadableAbility fromPlayerPerson(PlayerPerson playerPerson) {
             return fromPlayerPerson(playerPerson, 1.0);
@@ -603,6 +604,7 @@ public class PlayerPerson {
 
             ra.handBody = playerPerson.handBody;
             ra.sex = playerPerson.sex;
+            ra.privateCues = playerPerson.privateCues;
             return ra;
         }
 
@@ -710,7 +712,7 @@ public class PlayerPerson {
         }
 
         public PlayerPerson toPlayerPerson() {
-            return new PlayerPerson(
+            PlayerPerson person = new PlayerPerson(
                     playerId,
                     name,
                     maxPower,
@@ -728,6 +730,8 @@ public class PlayerPerson {
                     handBody,
                     sex
             );
+            person.privateCues.addAll(privateCues);
+            return person;
         }
 
         @Override

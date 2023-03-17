@@ -268,10 +268,10 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         if (isBreaking()) return GamePlayStage.BREAK;
         int rems = getRemainingBallsOfPlayer(getCuingPlayer());
         if (rems == 1) {
-            if (printPlayStage) System.out.println("打进就赢！");
+            if (printPlayStage) System.out.println("This ball win!");
             return GamePlayStage.THIS_BALL_WIN;
         } else if (rems == 2) {
-            if (printPlayStage) System.out.println("下一颗赢！");
+            if (printPlayStage) System.out.println("Next ball win!");
             return GamePlayStage.NEXT_BALL_WIN;
         }
         return GamePlayStage.NORMAL;

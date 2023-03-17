@@ -752,12 +752,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         int singlePoleScore = getCuingPlayer().getSinglePoleScore();
         if (singlePoleScore >= 140 && targetValue == 7) {
             // 打进黑球就是147
-            if (printPlayStage) System.out.println("打进就是147！");
+            if (printPlayStage) System.out.println("This ball 147!");
             return GamePlayStage.THIS_BALL_WIN;
         }
         if (singlePoleScore >= 134 && targetValue == 6) {
             // 打进粉球再打进黑球就是147
-            if (printPlayStage) System.out.println("冲击147！");
+            if (printPlayStage) System.out.println("Going 147!");
             return GamePlayStage.NEXT_BALL_WIN;
         }
 
@@ -798,26 +798,29 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
         if (ahead < remaining && aheadAfter >= remainingAfter) {
             // 打进目标球超分或延分
-            if (printPlayStage) System.out.println("打进超分！");
+            if (printPlayStage) System.out.println("This ball over score!");
             return GamePlayStage.THIS_BALL_WIN;
         }
         if (targetValue != 7 &&
                 aheadAfter < remainingAfter &&
                 aheadAfter2 >= remainingAfter2) {
-            if (printPlayStage) System.out.println("准备超分！");
+            if (printPlayStage) System.out.println("Prepared to over score!");
             return GamePlayStage.NEXT_BALL_WIN;
         }
         if (ahead >= remaining && ahead - remaining <= 8) {
-            if (printPlayStage) System.out.println("接近锁定胜局！");
+            if (printPlayStage) System.out.println("Close to win!");
             return GamePlayStage.ENHANCE_WIN;
+        } else if (ahead > remaining && ahead - remaining < 15) {
+            if (printPlayStage) System.out.println("Won, but opponent may stand again");
+            return GamePlayStage.NORMAL;
         } else if (ahead > remaining) {
             // todo: 需检查
             if (singlePoleScore + remaining >= 147) {
-                if (printPlayStage) System.out.println("147路上");
+                if (printPlayStage) System.out.println("Way on 147");
                 return GamePlayStage.NORMAL;
             }
 
-            if (printPlayStage) System.out.println("超分了，瞎JB打都行");
+            if (printPlayStage) System.out.println("Overed score, blind chicken eight play");
             return GamePlayStage.NO_PRESSURE;
         }
         return GamePlayStage.NORMAL;

@@ -2,6 +2,8 @@ package trashsoftware.trashSnooker.core.movement;
 
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.phy.Phy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,13 @@ public class WhitePrediction {
             firstCollide.setY(firstBallY);
             firstCollide.pickup();
         }
+    }
+    
+    public double estimateTargetMoveDt(GameValues values, Phy phy) {
+        if (firstCollide != null) {
+            return values.estimatedMoveDistance(phy, getBallInitSpeed());
+        }
+        return -1;
     }
 
     public List<double[]> getWhitePath() {

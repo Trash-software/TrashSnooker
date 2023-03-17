@@ -970,29 +970,31 @@ public class StatsView implements Initializable {
                         p2SinglePole.setText(String.format("(%d)", p2sr.snookerScores[1]));
                         page.add(p2SinglePole, 6, rowIndex);
                     }
-                } else if (egt.gameRule == GameRule.CHINESE_EIGHT || egt.gameRule == GameRule.SIDE_POCKET) {
+                } else if (egt.gameRule == GameRule.CHINESE_EIGHT || 
+                        egt.gameRule == GameRule.LIS_EIGHT || 
+                        egt.gameRule == GameRule.SIDE_POCKET) {
                     // 炸清，接清
                     PlayerFrameRecord.Numbered p1nr = (PlayerFrameRecord.Numbered) p1r;
                     PlayerFrameRecord.Numbered p2nr = (PlayerFrameRecord.Numbered) p2r;
 
-                    String breakClear = egt.gameRule == GameRule.CHINESE_EIGHT ?
+                    String breakClear = egt.gameRule == GameRule.CHINESE_EIGHT || egt.gameRule == GameRule.LIS_EIGHT ?
                             strings.getString("breakClears") :
                             strings.getString("bigGolds");
-                    String continueClear = egt.gameRule == GameRule.CHINESE_EIGHT ?
+                    String continueClear = egt.gameRule == GameRule.CHINESE_EIGHT || egt.gameRule == GameRule.LIS_EIGHT ?
                             strings.getString("continueClears") :
                             strings.getString("smallGolds");
                     
                     if (p1nr.clears[2] > 0) {
                         Label p1Extra = new Label(breakClear);
-                        page.add(p1Extra, 0, rowIndex);
+                        page.add(p1Extra, 1, rowIndex);
                     }
                     if (p1nr.clears[3] > 0) {
                         Label p1Extra = new Label(continueClear);
-                        page.add(p1Extra, 6, rowIndex);
+                        page.add(p1Extra, 1, rowIndex);
                     }
                     if (p2nr.clears[2] > 0) {
                         Label p2Extra = new Label(breakClear);
-                        page.add(p2Extra, 6, rowIndex);
+                        page.add(p2Extra, 5, rowIndex);
                     }
                     if (p2nr.clears[3] > 0) {
                         Label p2Extra = new Label(continueClear);
