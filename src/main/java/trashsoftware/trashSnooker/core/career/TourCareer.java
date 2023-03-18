@@ -3,7 +3,7 @@ package trashsoftware.trashSnooker.core.career;
 public class TourCareer {
     
     public final Career career;
-    public final int seedNum;  // 几号种子
+    public final int seedNum;  // 几号种子，从1开始
     
     TourCareer(Career career, int seedNum) {
         this.career = career;

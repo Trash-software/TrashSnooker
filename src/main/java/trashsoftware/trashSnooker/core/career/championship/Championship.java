@@ -127,7 +127,7 @@ public abstract class Championship {
         }
     }
 
-    protected abstract List<TourCareer> getParticipantsByRank(boolean playerJoin);
+    protected abstract List<TourCareer> getParticipantsByRank(boolean playerJoin, boolean humanQualified);
 
     public boolean isStarted() {
         return matchTree != null;
@@ -141,16 +141,16 @@ public abstract class Championship {
         return data.getStages()[currentStageIndex];
     }
 
-    public void startChampionship(boolean playerJoin) {
-        startChampionship(playerJoin, true);
+    public void startChampionship(boolean humanJoin, boolean humanQualified) {
+        startChampionship(humanJoin, humanQualified, true);
     }
 
-    public void startChampionship(boolean playerJoin, boolean save) {
+    public void startChampionship(boolean humanJoin, boolean humanQualified, boolean save) {
         // precondition: player有资格参加，应在manager内检查
         CareerManager.getInstance().saveToDisk();
         
         System.out.println("Starting " + data.getId());
-        List<TourCareer> careers = getParticipantsByRank(playerJoin);
+        List<TourCareer> careers = getParticipantsByRank(humanJoin, humanQualified);
 
         System.out.println("Participants: " + careers);
         

@@ -258,13 +258,18 @@ public class Career {
          */
         public boolean willJoinMatch(ChampionshipData data, int selfRanking,
                                      CareerWithAwards front, CareerWithAwards back) {
-            if ("God".equals(career.getPlayerPerson().category)) return false;  // Master别出来打比赛
-
+            
             if (career.isHumanPlayer) return true;  // 我们无权替真人玩家决定
+            
+            if ("God".equals(career.getPlayerPerson().category)) return false;  // Master别出来打比赛
+            if (!career.getPlayerPerson().isPlayerOf(data.type)) return false;  // 不是玩这个的
+            
             if (selfRanking < 16) {
                 int champAwd = data.getAwardByRank(ChampionshipScore.Rank.CHAMPION);
 
                 int selfAwd = getEffectiveAward(data.getSelection());
+                
+                if (data.getClassLevel() <= 2) return true;  // 重要比赛，要去
 
                 double mustJoinRatio = selfAwd * 0.2;
                 if (champAwd >= mustJoinRatio) return true;  // 大比赛，要去

@@ -198,6 +198,7 @@ public class GameView implements Initializable {
 
     private boolean drawStandingPos = true;
     private boolean drawTargetRefLine = false;
+    private boolean miscued = false;
     private PlayerPerson.HandSkill currentHand;
     private PlayerVsAiMatch careerMatch;
 
@@ -255,11 +256,19 @@ public class GameView implements Initializable {
         animationPlaySpeedToggle.selectToggle(animationPlaySpeedToggle.getToggles().get(0));
 
         graphicsContext = gameCanvas.getGraphicsContext2D();
-        ballCanvasGc = ballCanvas.getGraphicsContext2D();
-        cueAngleCanvasGc = cueAngleCanvas.getGraphicsContext2D();
-
         graphicsContext.setTextAlign(TextAlignment.CENTER);
-
+        graphicsContext.setFont(App.FONT);
+        
+        ballCanvasGc = ballCanvas.getGraphicsContext2D();
+        ballCanvasGc.setTextAlign(TextAlignment.CENTER);
+        ballCanvasGc.setFont(App.FONT);
+        
+        cueAngleCanvasGc = cueAngleCanvas.getGraphicsContext2D();
+        
+        // todo: 喊mac用户来测试
+//        player1TarCanvas.getGraphicsContext2D().setFont(App.FONT);
+//        player2TarCanvas.getGraphicsContext2D().setFont(App.FONT);
+        
         addListeners();
         restoreCuePoint();
         restoreCueAngle();
@@ -674,6 +683,7 @@ public class GameView implements Initializable {
     }
 
     private void finishCueNextStep(Player nextCuePlayer) {
+        miscued = false;
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
             boolean autoAim = true;
             if ((game.getGame() instanceof AbstractSnookerGame)) {
@@ -1301,6 +1311,7 @@ public class GameView implements Initializable {
                 System.out.println("Miscued!");
                 slidedCue = true;
             }
+            miscued = slidedCue;
         }
 
 //        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
@@ -3139,6 +3150,11 @@ public class GameView implements Initializable {
 
         ballCanvasGc.setFill(CUE_POINT);
         ballCanvasGc.fillOval(cuePointX - cueRadius, cuePointY - cueRadius, cueRadius * 2, cueRadius * 2);
+        
+        if (miscued) {
+            ballCanvasGc.setFill(BLACK);
+            ballCanvasGc.fillText(strings.getString("miscued"), cueCanvasWH / 2, cueCanvasWH / 2);
+        }
     }
 
     private double getPersonPower(PlayerPerson person) {
@@ -3220,7 +3236,8 @@ public class GameView implements Initializable {
                     PlayerPerson.HandBody.getPowerMulOfHand(handSkill) *
                     Values.MAX_POWER_SPEED / 100_000.0;
             this.cueBeforeSpeed = cueMaxSpeed *
-                    playerPerson.getMaxSpinPercentage() / 200.0;  // 杆法差的人白用功比较多（无用的杆速快）
+                    Algebra.shiftRange(0, 100, 1, 0.5, 
+                            playerPerson.getMaxSpinPercentage());  // 杆法差的人白用功比较多（无用的杆速快）
 
             this.errMulWithPower = errMulWithPower;
 

@@ -1,30 +1,30 @@
 {
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "Master",
+    "person": "Give Emperor",
     "playerType": "PLAYER",
-    "playCue": "MasterCue",
-    "breakCue": "stdBreakCue"
+    "playCue": "stdSnookerCue",
+    "breakCue": "stdSnookerCue"
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "Master2",
+    "person": "Baggage Brother",
     "playerType": "COMPUTER",
-    "playCue": "MasterCue",
-    "breakCue": "stdBreakCue"
+    "playCue": "stdSnookerCue",
+    "breakCue": "stdSnookerCue"
   },
-  "startTime": 1679072601443,
+  "startTime": 1679126174846,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
     "table": {
-      "tableOrdinal": 1,
-      "holeSizeOrdinal": 2
+      "tableOrdinal": 0,
+      "holeSizeOrdinal": 0
     }
   },
   "totalFrames": 1,

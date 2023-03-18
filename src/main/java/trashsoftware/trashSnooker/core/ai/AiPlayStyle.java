@@ -30,7 +30,7 @@ public class AiPlayStyle {
         this.stability = stability;
         this.position = position;
         this.defense = defense;
-        this.attackPrivilege = attackPrivilege == 100 ? Double.POSITIVE_INFINITY : attackPrivilege;  // 权重100的选手只要有下就会进攻
+        this.attackPrivilege = attackPrivilege;  // 权重100的选手只要有下就会进攻
         this.likeShow = likeShow;
         this.snookerBreakMethod = SnookerBreakMethod.valueOf(snookerBreakMethod.toUpperCase(Locale.ROOT));
         this.cebSideBreak = cebSideBreak;

@@ -23,6 +23,7 @@ public class ChampionshipData {
     String name;
     String description;
     GameRule type;
+    int classLevel = 5;
     int seedPlaces;  // 直接进正赛的种子选手数
     int mainPlaces;  // 正赛参赛人数
     int mainRounds;
@@ -72,6 +73,11 @@ public class ChampionshipData {
 
         data.ranked = jsonObject.getBoolean("ranked");
         data.professionalOnly = jsonObject.getBoolean("professional");
+        if (jsonObject.has("class")) {
+            data.classLevel = jsonObject.getInt("class");
+        } else {
+            data.classLevel = 5;
+        }
 
         String[] date = jsonObject.getString("date").split("/");
         data.month = Integer.parseInt(date[0]);
@@ -264,6 +270,10 @@ public class ChampionshipData {
     
     public Map<ChampionshipStage, Integer> getStageNewAdd() {
         return stageNewAdd;
+    }
+
+    public int getClassLevel() {
+        return classLevel;
     }
 
     public int getTotalPlaces() {

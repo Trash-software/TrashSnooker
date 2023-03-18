@@ -11,6 +11,7 @@ import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
 import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.PinyinDict;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
 
@@ -46,6 +47,7 @@ public class PlayerPerson {
     private final AiPlayStyle aiPlayStyle;
     private final Sex sex;
     private boolean isCustom;
+    private final List<GameRule> participates;
 
     public PlayerPerson(String playerId,
                         String name,
@@ -67,7 +69,8 @@ public class PlayerPerson {
                         CuePlayType cuePlayType,
                         @Nullable AiPlayStyle aiPlayStyle,
                         HandBody handBody,
-                        Sex sex) {
+                        Sex sex,
+                        List<GameRule> participates) {
 
         boolean needTranslate = !Objects.equals(
                 ConfigLoader.getInstance().getLocale().getLanguage().toLowerCase(Locale.ROOT),
@@ -98,6 +101,7 @@ public class PlayerPerson {
         this.sex = sex;
 
         this.isRandom = this.playerId.startsWith("random_");
+        this.participates = participates;
     }
 
     public PlayerPerson(String playerId,
@@ -137,7 +141,8 @@ public class PlayerPerson {
                 CuePlayType.DEFAULT_PERFECT,
                 aiPlayStyle,
                 handBody == null ? HandBody.DEFAULT : handBody,
-                sex
+                sex,
+                parseParticipates(null)
         );
 
         setCustom(isCustom);
@@ -213,10 +218,31 @@ public class PlayerPerson {
                 cuePlayType,
                 aiPlayStyle,
                 handBody,
-                sex
+                sex,
+                parseParticipates(personObj.has("games") ? personObj.getJSONArray("games") : null)
         );
 
         return playerPerson;
+    }
+    
+    public static List<GameRule> parseParticipates(JSONArray array) {
+        if (array == null) {
+            // 没有专门声明，就是全都参加
+            return List.of(GameRule.values());
+        }
+        List<GameRule> result = new ArrayList<>();
+        for (Object key : array) {
+            String s = String.valueOf(key);
+            if ("all".equals(s)) return List.of(GameRule.values());
+            
+            String enumName = Util.toAllCapsUnderscoreCase(s);
+            try {
+                result.add(GameRule.valueOf(enumName));
+            } catch (IllegalArgumentException e) {
+                System.err.println("Unknown game '" + enumName + "'");
+            }
+        }
+        return result;
     }
 
     public static PlayerPerson randomPlayer(String id,
@@ -362,7 +388,7 @@ public class PlayerPerson {
 
         JSONArray privateCues = new JSONArray();
         for (Cue cue : getPrivateCues()) {
-            privateCues.put(cue.getName());
+            privateCues.put(cue.getCueId());
         }
 
         obj.put("privateCues", privateCues);
@@ -514,6 +540,14 @@ public class PlayerPerson {
         return sex;
     }
 
+    public List<GameRule> getParticipateGames() {
+        return participates;
+    }
+    
+    public boolean isPlayerOf(GameRule gameRule) {
+        return participates.contains(gameRule);
+    }
+
     public double getErrorMultiplierOfPower(double selectedPower) {
         double ctrlAblePwr = getControllablePowerPercentage();
         double mul = 1;
@@ -575,8 +609,7 @@ public class PlayerPerson {
         private String name;
         private String shownName;
         private HandBody handBody;
-        private Sex sex;
-        private List<Cue> privateCues;
+        private PlayerPerson originalPerson;  // 记录与复现用，不参与数值计算
 
         public static ReadableAbility fromPlayerPerson(PlayerPerson playerPerson) {
             return fromPlayerPerson(playerPerson, 1.0);
@@ -603,13 +636,12 @@ public class PlayerPerson {
                             playerPerson.getCuePointMuSigmaXY()[3]) * CUE_PRECISION_FACTOR) * handFeelEffort;
 
             ra.handBody = playerPerson.handBody;
-            ra.sex = playerPerson.sex;
-            ra.privateCues = playerPerson.privateCues;
+            ra.originalPerson = playerPerson;
             return ra;
         }
 
         public Sex getSex() {
-            return sex;
+            return originalPerson.sex;
         }
 
         public HandBody getHandBody() {
@@ -645,7 +677,7 @@ public class PlayerPerson {
                     unit = (100 - cuePrecision) * 0.05;
                     break;
                 case PerkManager.POWER:
-                    double sexPowerMax = 100 * sex.powerMul;
+                    double sexPowerMax = 100 * getSex().powerMul;
                     unit = (sexPowerMax - normalPower) * 0.05;
                     break;
                 case PerkManager.POWER_CONTROL:
@@ -687,7 +719,7 @@ public class PlayerPerson {
                     case PerkManager.POWER:
                         normalPower += many;
                         maxPower += many / 0.9;
-                        maxPower = Math.min(maxPower, 100.0 * sex.powerMul);
+                        maxPower = Math.min(maxPower, 100.0 * getSex().powerMul);
                         break;
                     case PerkManager.POWER_CONTROL:
                         powerControl += many;
@@ -724,13 +756,15 @@ public class PlayerPerson {
                     1.0,
                     powerControl,
                     spinControl,
-                    sex == Sex.M ? 90.0 : 75.0,
+                    getSex() == Sex.M ? 90.0 : 75.0,
                     null,
                     true,
                     handBody,
-                    sex
+                    getSex()
             );
-            person.privateCues.addAll(privateCues);
+            person.privateCues.addAll(originalPerson.privateCues);
+            person.participates.clear();
+            person.participates.addAll(originalPerson.participates);
             return person;
         }
 

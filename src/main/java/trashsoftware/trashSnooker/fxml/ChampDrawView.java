@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -77,6 +78,7 @@ public class ChampDrawView implements Initializable {
         assert championship != null;
 
         gc2d = treeCanvas.getGraphicsContext2D();
+        gc2d.setFont(App.FONT);
 
         refreshCueBox();
         initTable();

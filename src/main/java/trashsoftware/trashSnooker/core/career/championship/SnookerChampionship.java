@@ -14,10 +14,11 @@ public class SnookerChampionship extends Championship {
     }
 
     @Override
-    protected List<TourCareer> getParticipantsByRank(boolean playerJoin) {
+    protected List<TourCareer> getParticipantsByRank(boolean playerJoin, boolean humanQualified) {
         return CareerManager.getInstance().participants(
                 data,
-                playerJoin
+                playerJoin,
+                humanQualified
         );
     }
 }

@@ -219,10 +219,10 @@ public class Util {
         }
         return true;
     }
-
-    public static String toLowerCamelCase(String s) {
+    
+    private static String[] separateWords(String s) {
         String[] words;
-        
+
         if (s.contains("_")) {
             words = s.split("_");
         } else if (s.contains(" ")) {
@@ -262,6 +262,22 @@ public class Util {
             }
             words = strings.toArray(new String[0]);
         }
+        return words;
+    }
+    
+    public static String toAllCapsUnderscoreCase(String s) {
+        String[] words = separateWords(s);
+
+        String[] upper = new String[words.length];
+        for (int i = 0 ; i < words.length; i++) {
+            upper[i] = words[i].toUpperCase();
+        }
+        
+        return String.join("_", upper);
+    }
+
+    public static String toLowerCamelCase(String s) {
+        String[] words = separateWords(s);
 
         StringBuilder builder = new StringBuilder()
                 .append(words[0].toLowerCase(Locale.ROOT));

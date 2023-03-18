@@ -14,6 +14,6 @@ public class AboutView implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        versionLabel.setText(App.VERSION_NAME);
+        versionLabel.setText(String.format("%s-%s", App.VERSION_NAME, App.CLASSIFIER));
     }
 }

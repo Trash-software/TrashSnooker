@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.PlayerPerson;
@@ -26,6 +27,7 @@ import trashsoftware.trashSnooker.util.Util;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CareerView implements Initializable {
 
@@ -68,7 +70,9 @@ public class CareerView implements Initializable {
     @FXML
     LabelTable<PlayerAward> selectedPlayerInfoTable;
     @FXML
-    Label selectedPlayerAchievements;
+    VBox selectedPlayerAchBox;
+    @FXML
+    Label selectedPlayerAchievements, selectedPlayerGameTypesLabel;
     @FXML
     Button skipChampBtn;
 
@@ -76,13 +80,13 @@ public class CareerView implements Initializable {
     private PerkManager perkManager;
     private Stage selfStage;
     private ResourceBundle strings;
-    
+
     private ChampionshipData activeOrNext;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.strings = resourceBundle;
-        
+
         careerManager = CareerManager.getInstance();
 
         PlayerPerson pp = careerManager.getHumanPlayerCareer().getPlayerPerson();
@@ -91,7 +95,7 @@ public class CareerView implements Initializable {
                 PlayerPerson.ReadableAbility.fromPlayerPerson(pp));
         abilityShower.setup(perkManager, pp.isCustom());
 
-        joinChampBox.selectedProperty().addListener(((observable, oldValue, newValue) -> 
+        joinChampBox.selectedProperty().addListener(((observable, oldValue, newValue) ->
                 skipChampBtn.setDisable(newValue)));
 
         initTypeBox();
@@ -117,8 +121,8 @@ public class CareerView implements Initializable {
     private void showHideSelectedPanel(boolean show) {
         selectedPlayerInfoTable.setVisible(show);
         selectedPlayerInfoTable.setManaged(show);
-        selectedPlayerAchievements.setVisible(show);
-        selectedPlayerAchievements.setManaged(show);
+        selectedPlayerAchBox.setVisible(show);
+        selectedPlayerAchBox.setManaged(show);
     }
 
     private void refreshSelectedPlayerTable(CareerRank selected) {
@@ -137,7 +141,16 @@ public class CareerView implements Initializable {
                 selectedPlayerInfoTable.addItem(new PlayerAward(score));
             }
 
-            selectedPlayerAchievements.setText(getAchievements(cs, rankTypeBox.getValue()));
+            selectedPlayerGameTypesLabel.setText(
+                    selected.getCareer().getPlayerPerson()
+                            .getParticipateGames()
+                            .stream()
+                            .map(GameRule::toString)
+                            .collect(Collectors.joining(", "))
+            );
+
+            selectedPlayerAchievements.setText(
+                    getAchievements(cs, rankTypeBox.getValue()));
 
             if (selfStage != null && (currentlyVisible != selectedPlayerInfoTable.isVisible()))
                 selfStage.sizeToScene();
@@ -172,7 +185,9 @@ public class CareerView implements Initializable {
         }
 
         StringBuilder builder = new StringBuilder();
-        builder.append(gameRule.toString()).append('\n');
+
+        builder.append(String.format(strings.getString("achievementsOf"), gameRule.toString()))
+                .append('\n');
         builder.append(strings.getString("bestAnyScore"))
                 .append(bestAnyRank == null ? strings.getString("none") : bestAnyRank.getShown())
                 .append('\n');
@@ -262,11 +277,19 @@ public class CareerView implements Initializable {
         rankTypeBox.getItems().addAll(GameRule.values());
 
         rankMethodBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue == ChampionshipData.Selection.ALL_CHAMP) {
+                rankedAwardCol.setText(strings.getString("rankNBigChamps"));
+                totalAwardCol.setText(strings.getString("rankNChamps"));
+            } else {
+                rankedAwardCol.setText(strings.getString("rankAwards"));
+                totalAwardCol.setText(strings.getString("rankTotalAwards"));
+            }
             refreshRanks();
         }));
         rankMethodBox.getItems().addAll(
                 ChampionshipData.Selection.REGULAR,
-                ChampionshipData.Selection.SINGLE_SEASON
+                ChampionshipData.Selection.SINGLE_SEASON,
+                ChampionshipData.Selection.ALL_CHAMP
         );
 
         rankMethodBox.getSelectionModel().select(ChampionshipData.Selection.REGULAR);
@@ -335,8 +358,8 @@ public class CareerView implements Initializable {
 
         // 更新赛事奖金表
         champAwardsTable.clearItems();
-        champAwardsTable.getColumns().get(0).setTitle(data.isRanked() ? 
-                strings.getString("rankedGame") : 
+        champAwardsTable.getColumns().get(0).setTitle(data.isRanked() ?
+                strings.getString("rankedGame") :
                 strings.getString("nonRankedGame"));
         ChampionshipScore.Rank[] ranks = data.getRanksOfLosers();
         champAwardsTable.addItem(new AwardItem(data, ChampionshipScore.Rank.CHAMPION, ChampionshipStage.FINAL));
@@ -391,7 +414,7 @@ public class CareerView implements Initializable {
 
         abilityShower.notifyPerksReset();
     }
-    
+
     @FXML
     public void seeToursListAction() {
         try {
@@ -411,7 +434,7 @@ public class CareerView implements Initializable {
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
             stage.setScene(scene);
-            
+
             TournamentsViewer viewer = loader.getController();
             viewer.initialSelection(activeOrNext);
 
@@ -424,7 +447,7 @@ public class CareerView implements Initializable {
     @FXML
     public void nextChamp() {
         Championship championship = careerManager.startNextChampionship();
-        championship.startChampionship(joinChampBox.isSelected());
+        championship.startChampionship(joinChampBox.isSelected(), !joinChampBox.isDisabled());
 
         refreshGui();
 
@@ -435,12 +458,12 @@ public class CareerView implements Initializable {
     public void skipNextChamp() {
         if (!joinChampBox.isSelected()) {
             Championship championship = careerManager.startNextChampionship();
-            championship.startChampionship(false);
-            
+            championship.startChampionship(false, !joinChampBox.isDisabled());
+
             while (!championship.isFinished()) {
                 championship.startNextRound();
             }
-            
+
             refreshGui();
         }
     }
