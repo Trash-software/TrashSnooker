@@ -274,7 +274,7 @@ public class Career {
                 double mustJoinRatio = selfAwd * 0.2;
                 if (champAwd >= mustJoinRatio) return true;  // 大比赛，要去
 
-                if (!data.isRanked()) return false;  // 小的非排名赛，算了吧
+                if (!data.isRanked() && data.getClassLevel() >= 4) return false;  // 小的非排名赛，算了吧
                 
                 int frontAwd = front == null ? Integer.MAX_VALUE : front.getEffectiveAward(data.getSelection());
                 int backAwd = back == null ? 0 : back.getEffectiveAward(data.getSelection());

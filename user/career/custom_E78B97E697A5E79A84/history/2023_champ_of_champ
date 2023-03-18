@@ -1,0 +1,130 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 14,
+    "Yan Bingtao": 15,
+    "Matthew Stevens": 12,
+    "Fat Guy": 8,
+    "Ding Junhui": 3,
+    "Jack Lisowski": 9,
+    "Smart": 11,
+    "Glass Heart": 1,
+    "Trump": 5,
+    "Selby": 4,
+    "Mark Williams": 7,
+    "O_Sullivan": 2,
+    "Zhao Xintong": 13,
+    "Neil Robertson": 16,
+    "Murphy": 10,
+    "John Wizard": 6
+  },
+  "championshipId": "champ_of_champ",
+  "matchTree": {"root": {
+    "p1wins": 4,
+    "p1": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Fat Guy"},
+          "p2": {"winner": "Smart"},
+          "winner": "Fat Guy",
+          "stage": "ROUND_1",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "Jack Lisowski"},
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "p2wins": 0
+        },
+        "winner": "O_Sullivan",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 3
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Glass Heart"},
+          "p2": {"winner": "Murphy"},
+          "winner": "Glass Heart",
+          "stage": "ROUND_1",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 1,
+          "p1": {"winner": "Trump"},
+          "p2": {"winner": "Neil Robertson"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "p2wins": 2
+        },
+        "winner": "Neil Robertson",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 3
+      },
+      "winner": "O_Sullivan",
+      "stage": "SEMI_FINAL",
+      "p2wins": 1
+    },
+    "p2": {
+      "p1wins": 1,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Ding Junhui"},
+          "p2": {"winner": "Zhao Xintong"},
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Williams"},
+          "p2": {"winner": "Yan Bingtao"},
+          "winner": "Mark Williams",
+          "stage": "ROUND_1",
+          "p2wins": 1
+        },
+        "winner": "Ding Junhui",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "Selby"},
+          "p2": {"winner": "Stuart Bingham"},
+          "winner": "Stuart Bingham",
+          "stage": "ROUND_1",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Matthew Stevens"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "p2wins": 0
+        },
+        "winner": "Stuart Bingham",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 0
+      },
+      "winner": "Stuart Bingham",
+      "stage": "SEMI_FINAL",
+      "p2wins": 3
+    },
+    "winner": "O_Sullivan",
+    "stage": "FINAL",
+    "p2wins": 0
+  }},
+  "finished": true,
+  "timestamp": "2023/10/29"
+}

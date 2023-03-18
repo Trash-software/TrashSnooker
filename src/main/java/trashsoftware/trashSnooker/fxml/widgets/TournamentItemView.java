@@ -63,12 +63,12 @@ public class TournamentItemView extends ScrollPane {
 
         HBox tourTypeBox = new HBox();
         tourTypeBox.setSpacing(10.0);
-        tourTypeBox.getChildren().add(new Label(data.isRanked() ?
-                        strings.getString("rankedGame") :
-                        strings.getString("nonRankedGame")));
-        tourTypeBox.getChildren().add(new Label(data.isProfessionalOnly() ? 
-                strings.getString("closedTour") : 
-                strings.getString("openTour")));
+        tourTypeBox.getChildren().add(new Label(strings.getString("isRanked") + (data.isRanked() ?
+                        strings.getString("yes") :
+                        strings.getString("no"))));
+        tourTypeBox.getChildren().add(new Label(strings.getString("isProfessional") + (data.isProfessionalOnly() ? 
+                strings.getString("yes") : 
+                strings.getString("no"))));
 
         rootPane.add(tourTypeBox, 0, row++);
 
@@ -76,6 +76,11 @@ public class TournamentItemView extends ScrollPane {
             Label des = new Label(data.getDescription());
             des.setWrapText(true);
             rootPane.add(des, 0, row++);
+        }
+        if (data.getSponsor().length() > 0) {
+            Label sponsor = new Label(strings.getString("sponsor") + ": " + data.getSponsor());
+            sponsor.setWrapText(true);
+            rootPane.add(sponsor, 0, row++);
         }
         
         LabelTable<ChampionshipData> positionsTable = new LabelTable<>();

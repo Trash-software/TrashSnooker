@@ -8,9 +8,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class AddPlayerView implements Initializable {
@@ -81,7 +83,8 @@ public class AddPlayerView implements Initializable {
                 ),
                 true,
                 null,
-                PlayerPerson.Sex.M
+                PlayerPerson.Sex.M,
+                List.of(GameRule.values())
         );
         DataLoader.getInstance().addPlayerPerson(playerPerson);
         parent.reloadPlayerList();

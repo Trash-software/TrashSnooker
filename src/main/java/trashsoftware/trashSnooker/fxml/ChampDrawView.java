@@ -76,6 +76,9 @@ public class ChampDrawView implements Initializable {
         
         championship = CareerManager.getInstance().getChampionshipInProgress();
         assert championship != null;
+        
+        leftBlockWidth = championship.getData().getTotalPlaces() >= 100 ? 28 : 20;
+        nodeHGap = nodeWidth + leftBlockWidth + rightBlockWidth + 20.0;  // recalculate
 
         gc2d = treeCanvas.getGraphicsContext2D();
         gc2d.setFont(App.FONT);

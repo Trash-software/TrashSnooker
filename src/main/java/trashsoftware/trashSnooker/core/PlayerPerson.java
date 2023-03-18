@@ -119,7 +119,8 @@ public class PlayerPerson {
                         AiPlayStyle aiPlayStyle,
                         boolean isCustom,
                         HandBody handBody,
-                        Sex sex) {
+                        Sex sex,
+                        List<GameRule> participateGames) {
         this(
                 playerId,
                 name,
@@ -142,7 +143,7 @@ public class PlayerPerson {
                 aiPlayStyle,
                 handBody == null ? HandBody.DEFAULT : handBody,
                 sex,
-                parseParticipates(null)
+                List.of(GameRule.values())
         );
 
         setCustom(isCustom);
@@ -301,7 +302,8 @@ public class PlayerPerson {
                         right,
                         Math.max(10, Math.min(90, generateDouble(random, abilityLow * restMul, abilityHigh * restMul)))
                 ),
-                sex
+                sex,
+                List.of(GameRule.values())
         );
         
         if (sex == Sex.F) {
@@ -760,11 +762,10 @@ public class PlayerPerson {
                     null,
                     true,
                     handBody,
-                    getSex()
+                    getSex(),
+                    originalPerson.participates
             );
             person.privateCues.addAll(originalPerson.privateCues);
-            person.participates.clear();
-            person.participates.addAll(originalPerson.participates);
             return person;
         }
 

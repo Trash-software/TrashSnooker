@@ -21,7 +21,8 @@ public class ChampionshipData {
 
     String id;
     String name;
-    String description;
+    private String description;
+    private String sponsor;
     GameRule type;
     int classLevel = 5;
     int seedPlaces;  // 直接进正赛的种子选手数
@@ -55,6 +56,12 @@ public class ChampionshipData {
             data.description = DataLoader.getStringOfLocale(jsonObject.get("description"));
         } else {
             data.description = "";
+        }
+
+        if (jsonObject.has("sponsor")) {
+            data.sponsor = DataLoader.getStringOfLocale(jsonObject.get("sponsor"));
+        } else {
+            data.sponsor = "";
         }
         
         data.type = GameRule.valueOf(jsonObject.getString("type").toUpperCase(Locale.ROOT));
@@ -385,6 +392,10 @@ public class ChampionshipData {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getSponsor() {
+        return sponsor;
     }
 
     public enum Selection {

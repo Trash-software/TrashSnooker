@@ -9,7 +9,7 @@
 <?import javafx.geometry.Insets?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="trashsoftware.trashSnooker.fxml.StatsView"
+      fx:controller="trashsoftware.trashSnooker.fxml.statsViews.StatsView"
       prefHeight="720.0" prefWidth="960.0">
 
     <TreeView fx:id="treeView" prefWidth="400.0">
