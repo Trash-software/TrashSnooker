@@ -1310,8 +1310,7 @@ public class GameView implements Initializable {
 
         boolean slidedCue = false;
         if (mutate) {
-            if (Algebra.distanceToPoint(cuePointX, cuePointY, cueCanvasWH / 2, cueCanvasWH / 2)
-                    > cueAreaRadius - cueRadius) {
+            if (isMiscue()) {
 //                power /= 4;
 //                unitSideSpin *= 10;
                 System.out.println("Miscued!");
@@ -1323,6 +1322,11 @@ public class GameView implements Initializable {
 //        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
 
         return generateCueParams(power, getUnitFrontBackSpin(cpy), unitSideSpin, cueAngleDeg, slidedCue);
+    }
+    
+    private boolean isMiscue() {
+        return Algebra.distanceToPoint(cuePointX, cuePointY, cueCanvasWH / 2, cueCanvasWH / 2)
+                > cueAreaRadius - cueRadius;
     }
 
     private CueRecord makeCueRecord(Player cuePlayer, CuePlayParams paramsWithError) {
@@ -1679,6 +1683,8 @@ public class GameView implements Initializable {
             cuePointY = getCuePointCanvasY(cueRecord.actualVerPoint);
             cueAngleDeg = cueRecord.cueAngle;
             currentHand = cueRecord.cuePlayer.getPlayerPerson().handBody.getHandSkillByHand(cueRecord.hand);
+            
+            miscued = isMiscue();
 
             powerSlider.setValue(cueRecord.actualPower);
             Platform.runLater(() -> powerSlider.setMajorTickUnit(

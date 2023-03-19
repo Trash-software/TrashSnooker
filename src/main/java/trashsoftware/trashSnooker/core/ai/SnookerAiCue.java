@@ -113,8 +113,13 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
     public boolean considerReposition(Phy phy, 
                                       Map<SnookerBall, double[]> lastPositions, 
-                                      PotAttempt opponentAttempt) {
-        if (opponentAttempt != null) return false;  // 对手都在进攻，你还敢复位？
+                                      PotAttempt opponentAttempt,
+                                      boolean isFreeBall) {
+        if (opponentAttempt != null && !isFreeBall) {
+            // 对手都在进攻，你还敢复位？
+            // 例外: 如果AI要打自由球，那就不直接放弃复位，因为我们无法避免AI打自由球直接贴球防守这种犯规打法
+            return false;
+        }
         
         IntegratedAttackChoice attackChoice = standardAttack(phy);
         return attackChoice == null || !attackChoice.isPureAttack;  // 先就这样吧，暂时不考虑更好的防一杆

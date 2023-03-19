@@ -50,6 +50,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected P player1;
     protected P player2;
     protected int recordedTarget;  // 记录上一杆时的目标球，复位用
+    protected boolean wasDoingFreeBall;  // 记录上一杆是不是自由球，复位用
     protected int finishedCuesCount = 0;  // 击球的计数器
     protected double lastCueVx;
     protected P currentPlayer;
@@ -246,6 +247,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         newPotted.clear();
         recordPositions();
         recordedTarget = currentTarget;
+        wasDoingFreeBall = isDoingSnookerFreeBll();
 
         lastCueVx = params.vx;
         cueBall.setVx(params.vx / phy.calculationsPerSec);
@@ -536,13 +538,21 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return getAllSeeAbleBalls(whiteX, whiteY, legalBalls, situation, null);
     }
 
+    public SeeAble getAllSeeAbleBalls(double whiteX, double whiteY,
+                                      Collection<Ball> legalBalls, int situation,
+                                      List<Ball> listToPut) {
+        return getAllSeeAbleBalls(whiteX, whiteY, legalBalls, situation, listToPut, getAllBalls());
+    }
+
     /**
      * @param situation 1:薄边 2:全球 3:缝隙能过全球（斯诺克自由球那种）
+     * @param obstaclesInConsideration 参与考虑的可能障碍球。只有这里面的球会被考虑为障碍
      * @return 能看到的目标球数量
      */
     public SeeAble getAllSeeAbleBalls(double whiteX, double whiteY,
                                       Collection<Ball> legalBalls, int situation,
-                                      List<Ball> listToPut) {
+                                      List<Ball> listToPut, 
+                                      Ball[] obstaclesInConsideration) {
         if (situation != 1 && situation != 2 && situation != 3) {
             throw new RuntimeException("Unknown situation " + situation);
         }
@@ -552,10 +562,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         } else {
             legalSet = new HashSet<>(legalBalls);
         }
-        double shadowRadius = situation == 3 ? gameValues.ball.ballRadius : gameValues.ball.ballDiameter;
+        double shadowRadius = situation == 3 ? 
+                gameValues.ball.ballRadius : 
+                gameValues.ball.ballDiameter;
         int result = 0;
-
-        double circle = Math.PI * 2;
+        
         double maxShadowAngle = 0.0;
         double sumTargetDt = 0.0;
 
@@ -577,7 +588,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
             boolean canSee = true;
 
-            for (Ball ball : getAllBalls()) {
+            for (Ball ball : obstaclesInConsideration) {
                 if (!ball.isWhite() && !ball.isPotted() && !legalSet.contains(ball)) {
                     // 是障碍球
                     double xDiff = ball.x - whiteX;
@@ -601,16 +612,16 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     double right = connectionAngle - selfPassAngle - ballShadowAngle - extraShadowAngle;
 //                    System.out.printf("%f, Ball %s, %f %f %f\n", angle, ball, left, connectionAngle, right);
 
-                    if (left > circle) {  // 连线中心小于360，左侧大于360
+                    if (left > Algebra.TWO_PI) {  // 连线中心小于360，左侧大于360
                         if (angle >= right) {
                             canSee = false;  // angle在right与x正轴之间，挡住
 //                            System.out.println(ball + " obstacle 1");
-                        } else if (angle <= left - circle) {
+                        } else if (angle <= left - Algebra.TWO_PI) {
                             canSee = false;  // angle在x正轴与left之间，挡住
 //                            System.out.println(ball + " obstacle 1.1");
                         }
                     } else if (right < 0) {  // 连线右侧小于0
-                        if (angle >= circle + right) {
+                        if (angle >= Algebra.TWO_PI + right) {
                             canSee = false;  // angle在right以上x正轴之下，挡住
 //                            System.out.println(ball + " obstacle 2");
                         } else if (angle <= left) {

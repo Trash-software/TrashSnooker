@@ -313,6 +313,19 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             foul = scoreFoul[1];
             if (foul > 0) {
                 foulReason = strings.getString("wrongFreeBall");
+            } else if (score == 0) {
+                // 没犯规也没进球，检查是不是直接用自由球做障碍了
+                int opponentTarget = getTargetAfterPotFailed();
+                List<Ball> oppoBalls = getAllLegalBalls(opponentTarget, false, false);
+                
+                Ball[] freeBall = new Ball[]{whiteFirstCollide};
+                SeeAble seeAble = getAllSeeAbleBalls(cueBall.getX(), 
+                        cueBall.getY(),
+                        oppoBalls, 1, null, freeBall);
+                if (seeAble.seeAbleTargets == 0) {
+                    foul = Math.max(4, currentTarget);  // 除非是在清彩阶段大于咖啡球的自由球，否则都是4分
+                    foulReason = strings.getString("freeBallCannotSnooker");
+                }
             }
         } else if (currentTarget == 1) {
             if (whiteFirstCollide.isRed()) {
@@ -438,7 +451,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     public boolean aiConsiderReposition(Phy phy, PotAttempt lastPotAttempt) {
         SnookerAiCue sac = new SnookerAiCue(this, getCuingPlayer());
-        return sac.considerReposition(phy, recordedPositions, lastPotAttempt);
+        return sac.considerReposition(phy, recordedPositions, lastPotAttempt, isDoingFreeBall());
     }
 
     public void tieTest() {
@@ -484,6 +497,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
         switchPlayer();
         currentTarget = recordedTarget;
+        doingFreeBall = wasDoingFreeBall;
         if (!isSimulate) repositionCount++;
     }
 
