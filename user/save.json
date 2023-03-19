@@ -1,30 +1,30 @@
 {
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "Give Emperor",
+    "person": "custom_player_4",
+    "playerType": "PLAYER",
+    "playCue": "GirlCue",
+    "breakCue": "GirlCue"
+  },
+  "p1Wins": 0,
+  "p2": {
+    "playerNumber": 2,
+    "handFeelEffort": 1,
+    "person": "Lao Youtiao",
     "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
     "breakCue": "stdSnookerCue"
   },
-  "p1Wins": 1,
-  "p2": {
-    "playerNumber": 2,
-    "handFeelEffort": 1,
-    "person": "Baggage Brother",
-    "playerType": "COMPUTER",
-    "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
-  },
-  "startTime": 1679126174846,
+  "startTime": 1679232218557,
   "gameValues": {
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
     "table": {
       "tableOrdinal": 0,
-      "holeSizeOrdinal": 0
+      "holeSizeOrdinal": 2
     }
   },
   "totalFrames": 1,

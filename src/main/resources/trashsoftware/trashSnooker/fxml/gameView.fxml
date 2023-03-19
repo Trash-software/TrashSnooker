@@ -40,6 +40,8 @@
                 <fx:define>
                     <ToggleGroup fx:id="animationPlaySpeedToggle"/>
                 </fx:define>
+                <RadioMenuItem text="0.25x" toggleGroup="$animationPlaySpeedToggle" userData="0.25"/>
+                <RadioMenuItem text="0.5x" toggleGroup="$animationPlaySpeedToggle" userData="0.5"/>
                 <RadioMenuItem text="1x" toggleGroup="$animationPlaySpeedToggle" userData="1"/>
                 <RadioMenuItem text="2x" toggleGroup="$animationPlaySpeedToggle" userData="2"/>
                 <RadioMenuItem text="4x" toggleGroup="$animationPlaySpeedToggle" userData="4"/>
@@ -72,7 +74,7 @@
                         onAction="#replayLastCueAction"/>
                 <Button fx:id="replayNextCueButton" text="%replayNextCue"
                         onAction="#replayNextCueAction"/>
-                <Button text="%replayFastForward" onAction="#replayFastForwardAction"/>
+<!--                <Button text="%replayFastForward" onAction="#replayFastForwardAction"/>-->
                 <CheckBox fx:id="replayAutoPlayBox" text="%replayAutoPlay"/>
             </VBox>
         </VBox>

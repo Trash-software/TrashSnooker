@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.fxml;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -69,6 +70,7 @@ import java.net.URL;
 import java.util.*;
 
 public class GameView implements Initializable {
+    public static final Color LINE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color HOLE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color WHITE = Color.WHITE;
     public static final Color BLACK = Color.BLACK;
@@ -204,7 +206,7 @@ public class GameView implements Initializable {
 
     private ResourceBundle strings;
 
-    private int aiAnimationSpeed = 1;
+    private double aiAnimationSpeed = 1;
 
     public static double canvasX(double realX) {
         return realX * scale;
@@ -247,13 +249,13 @@ public class GameView implements Initializable {
 
         animationPlaySpeedToggle.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                aiAnimationSpeed = Integer.parseInt(newValue.getUserData().toString());
-                replayGap = DEFAULT_REPLAY_GAP / aiAnimationSpeed;
+                aiAnimationSpeed = Double.parseDouble(newValue.getUserData().toString());
+                replayGap = (long) (DEFAULT_REPLAY_GAP / aiAnimationSpeed);
                 System.out.println("New speed " + aiAnimationSpeed);
             }
         }));
 
-        animationPlaySpeedToggle.selectToggle(animationPlaySpeedToggle.getToggles().get(0));
+        animationPlaySpeedToggle.selectToggle(animationPlaySpeedToggle.getToggles().get(2));
 
         graphicsContext = gameCanvas.getGraphicsContext2D();
         graphicsContext.setTextAlign(TextAlignment.CENTER);
@@ -598,7 +600,9 @@ public class GameView implements Initializable {
         restoreCueAngle();
         updateScoreDiffLabels();
 
-        replayNextCueButton.setDisable(false);
+//        replayNextCueButton.setDisable(false);
+        replayNextCueButton.setText(strings.getString("replayNextCue"));
+        replayNextCueButton.setOnAction(this::replayNextCueAction);
         replayLastCueButton.setDisable(false);
     }
 
@@ -1112,17 +1116,19 @@ public class GameView implements Initializable {
     }
 
     @FXML
-    void replayFastForwardAction() {
+    void replayFastForwardAction(ActionEvent event) {
         playingMovement = false;
         movement = null;
         cueAnimationPlayer = null;
 
+        replayNextCueButton.setText(strings.getString("replayNextCue"));
+        replayNextCueButton.setOnAction(this::replayNextCueAction);
         replayNextCueButton.setDisable(false);
         replayLastCueButton.setDisable(false);
     }
 
     @FXML
-    void replayNextCueAction() {
+    void replayNextCueAction(ActionEvent event) {
         replayLoadNext();
     }
 
@@ -1656,7 +1662,9 @@ public class GameView implements Initializable {
             CueRecord cueRecord = replay.getCueRecord();
             if (cueRecord == null) return;
 
-            replayNextCueButton.setDisable(true);
+//            replayNextCueButton.setDisable(true);
+            replayNextCueButton.setText(strings.getString("replayFastForward"));
+            replayNextCueButton.setOnAction(this::replayFastForwardAction);
             replayLastCueButton.setDisable(true);
 
             movement = replay.getMovement();
@@ -2003,7 +2011,7 @@ public class GameView implements Initializable {
 //        drawHole(values.topMidHoleXY, values.midHoleRadius + values.holeExtraSlopeWidth);
 //        drawHole(values.botMidHoleXY, values.midHoleRadius + values.holeExtraSlopeWidth);
 
-        graphicsContext.setStroke(BLACK);
+        graphicsContext.setStroke(LINE_PAINT);
         graphicsContext.setLineWidth(1.0);
 
 //        Color cushion = values.tableColor.darker();
@@ -2041,7 +2049,7 @@ public class GameView implements Initializable {
                 canvasY(values.botCornerHoleAreaUpY));
 
         // 袋口
-        graphicsContext.setStroke(BLACK);
+        graphicsContext.setStroke(LINE_PAINT);
         drawMidHoleLinesArcs(values);
         drawCornerHoleLinesArcs(values);
 
@@ -2053,12 +2061,12 @@ public class GameView implements Initializable {
         drawHole(values.topMidHoleXY, values.midHoleRadius);
         drawHole(values.botMidHoleXY, values.midHoleRadius);
 
-        drawHoleOutLine(values.topLeftHoleXY, values.cornerHoleRadius, 45.0);
-        drawHoleOutLine(values.botLeftHoleXY, values.cornerHoleRadius, 135.0);
-        drawHoleOutLine(values.topRightHoleXY, values.cornerHoleRadius, -45.0);
-        drawHoleOutLine(values.botRightHoleXY, values.cornerHoleRadius, -135.0);
-        drawHoleOutLine(values.topMidHoleXY, values.midHoleRadius, 0.0);
-        drawHoleOutLine(values.botMidHoleXY, values.midHoleRadius, 180.0);
+//        drawHoleOutLine(values.topLeftHoleXY, values.cornerHoleShownRadius + 10, 45.0 - values.cornerHoleOpenAngle);
+//        drawHoleOutLine(values.botLeftHoleXY, values.cornerHoleShownRadius, 135.0);
+//        drawHoleOutLine(values.topRightHoleXY, values.cornerHoleShownRadius, -45.0);
+//        drawHoleOutLine(values.botRightHoleXY, values.cornerHoleShownRadius, -135.0);
+//        drawHoleOutLine(values.topMidHoleXY, values.midHoleRadius, 0.0);
+//        drawHoleOutLine(values.botMidHoleXY, values.midHoleRadius, 180.0);
 
         graphicsContext.setLineWidth(1.0);
         if (replay != null) {
@@ -2089,19 +2097,19 @@ public class GameView implements Initializable {
 
     private void drawCornerHoleLinesArcs(TableMetrics values) {
         // 左上底袋
-        drawCornerHoleArc(values.topLeftHoleSideArcXy, 225, values);
+        drawCornerHoleArc(values.topLeftHoleSideArcXy, 225 + values.cornerHoleOpenAngle, values);
         drawCornerHoleArc(values.topLeftHoleEndArcXy, 0, values);
 
         // 左下底袋
         drawCornerHoleArc(values.botLeftHoleSideArcXy, 90, values);
-        drawCornerHoleArc(values.botLeftHoleEndArcXy, 315, values);
+        drawCornerHoleArc(values.botLeftHoleEndArcXy, 315 + values.cornerHoleOpenAngle, values);
 
         // 右上底袋
         drawCornerHoleArc(values.topRightHoleSideArcXy, 270, values);
-        drawCornerHoleArc(values.topRightHoleEndArcXy, 135, values);
+        drawCornerHoleArc(values.topRightHoleEndArcXy, 135 + values.cornerHoleOpenAngle, values);
 
         // 右下底袋
-        drawCornerHoleArc(values.botRightHoleSideArcXy, 45, values);
+        drawCornerHoleArc(values.botRightHoleSideArcXy, 45 + values.cornerHoleOpenAngle, values);
         drawCornerHoleArc(values.botRightHoleEndArcXy, 180, values);
 
         // 袋内直线
@@ -2126,7 +2134,7 @@ public class GameView implements Initializable {
                 cornerArcDiameter,
                 cornerArcDiameter,
                 startAngle,
-                45,
+                45 - values.cornerHoleOpenAngle,
                 ArcType.OPEN);
     }
 
@@ -2173,12 +2181,14 @@ public class GameView implements Initializable {
                     if (replay != null) {
                         replay.table.forceDrawBall(this, entry.getKey(),
                                 frame.x, frame.y,
-                                frame.xAxis, frame.yAxis, frame.zAxis, frame.frameDegChange,
+                                frame.xAxis, frame.yAxis, frame.zAxis, 
+                                frame.frameDegChange * getCurPlaySpeedMultiplier(),
                                 graphicsContext, scale);
                     } else {
                         game.getGame().getTable().forceDrawBall(this, entry.getKey(),
                                 frame.x, frame.y,
-                                frame.xAxis, frame.yAxis, frame.zAxis, frame.frameDegChange,
+                                frame.xAxis, frame.yAxis, frame.zAxis, 
+                                frame.frameDegChange * getCurPlaySpeedMultiplier(),
                                 graphicsContext, scale);
                     }
                 } else {
@@ -2211,7 +2221,7 @@ public class GameView implements Initializable {
                     if (!replay.finished() &&
                             System.currentTimeMillis() - replayStopTime > replayGap &&
                             replayAutoPlayBox.isSelected()) {
-                        replayNextCueAction();
+                        replayNextCueAction(null);
                     }
                 } else {
                     game.getGame().getTable().drawStoppedBalls(this, game.getGame().getAllBalls(),
@@ -2226,12 +2236,14 @@ public class GameView implements Initializable {
                         if (replay != null)
                             replay.getTable().forceDrawBall(this, entry.getKey(),
                                     frame.x, frame.y,
-                                    frame.xAxis, frame.yAxis, frame.zAxis, frame.frameDegChange,
+                                    frame.xAxis, frame.yAxis, frame.zAxis, 
+                                    frame.frameDegChange * getCurPlaySpeedMultiplier(),
                                     graphicsContext, scale);
                         else
                             game.getGame().getTable().forceDrawBall(this, entry.getKey(),
                                     frame.x, frame.y,
-                                    frame.xAxis, frame.yAxis, frame.zAxis, frame.frameDegChange,
+                                    frame.xAxis, frame.yAxis, frame.zAxis, 
+                                    frame.frameDegChange * getCurPlaySpeedMultiplier(),
                                     graphicsContext, scale);
                     } else {
                         entry.getKey().model.sphere.setVisible(false);
@@ -2445,6 +2457,11 @@ public class GameView implements Initializable {
             gc.fillArc(x, y, ballDiameter, ballDiameter, deg, 60.0, ArcType.ROUND);
             deg += 60.0;
         }
+    }
+    
+    private double getCurPlaySpeedMultiplier() {
+        return (replay != null || game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) ?
+                aiAnimationSpeed : 1;
     }
 
     private double getPredictionLineTotalLength(
@@ -3189,7 +3206,7 @@ public class GameView implements Initializable {
         private final Cue cue;
         private final InGamePlayer igp;
         private final PlayerPerson playerPerson;
-        private final int playSpeedMultiplier;
+        private final double playSpeedMultiplier;
         private long heldMs = 0;
         private long endHeldMs = 0;
         private double cueDtToWhite;  // 杆的动画离白球的真实距离，未接触前为正
@@ -3200,6 +3217,8 @@ public class GameView implements Initializable {
         private CuePlayType.DoubleAction doubleAction;
         private double doubleStopDt;  // 如果二段出杆，在哪里停（离白球的距离）
         private double doubleHoldMs;  // 二段出杆停的计时器
+        
+        private double framesPlayed = 0;
 
         CueAnimationPlayer(double initDistance,
                            double maxPullDt,
@@ -3239,6 +3258,8 @@ public class GameView implements Initializable {
                     Algebra.shiftRange(0, 100, 1, 0.5, 
                             playerPerson.getMaxSpinPercentage());  // 杆法差的人白用功比较多（无用的杆速快）
 
+            System.out.println("Animation max speed: " + cueMaxSpeed + ", before speed: " + cueBeforeSpeed);
+
             this.errMulWithPower = errMulWithPower;
 
             this.aimingOffset = aimingOffsetOfPlayer(playerPerson, selectedPower);
@@ -3262,9 +3283,12 @@ public class GameView implements Initializable {
 
         void nextFrame() {
             for (int i = 0; i < playSpeedMultiplier; i++) {
-                if (ended) break;
-                calculateOneFrame();
+                if (framesPlayed % 1.0 == 0.0) {
+                    if (ended) return;
+                    calculateOneFrame();
+                }
             }
+            framesPlayed += playSpeedMultiplier;
         }
 
         private void calculateOneFrame() {
@@ -3302,8 +3326,10 @@ public class GameView implements Initializable {
                 // 正常出杆
                 if (cueDtToWhite > maxPullDistance * 0.4) {
                     cueDtToWhite -= cueBeforeSpeed * frameTimeMs;
-                } else {
+                } else if (!touched) {
                     cueDtToWhite -= cueMaxSpeed * frameTimeMs;
+                } else {
+                    cueDtToWhite -= cueBeforeSpeed * frameTimeMs;
                 }
                 double wholeDtPercentage = 1 - (cueDtToWhite - maxExtension) /
                         (maxPullDistance - maxExtension);  // 出杆完成的百分比
