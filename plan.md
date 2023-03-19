@@ -79,3 +79,4 @@
 * ~~Standalone回放：包含playerPerson和cue~~ Cue没做
 * ~~AI的小力中袋补偿~~
 * 解球始终有点怪
+* AI斯诺克超分的那一球，应加大进攻的权重

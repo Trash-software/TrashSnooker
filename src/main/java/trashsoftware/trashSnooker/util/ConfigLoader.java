@@ -76,12 +76,20 @@ public class ConfigLoader {
     }
 
     private void initConfig() {
-        put("nThreads", 8);
+        put("nThreads", 4);
         put("locale", "zh_CN");
     }
     
     private void writeConfig() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(PATH))) {
+        File pathFile = new File(PATH);
+        File dir = pathFile.getParentFile();
+        if (!dir.exists()) {
+            if (!dir.mkdirs()) {
+                EventLogger.log("Cannot create user directory!");
+            }
+        }
+        
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(pathFile))) {
             for (Map.Entry<String, String> entry : keyValues.entrySet()) {
                 bw.write(entry.getKey() + "=" + entry.getValue() + '\n');
             }
