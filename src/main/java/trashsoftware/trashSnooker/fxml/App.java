@@ -16,8 +16,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
     
-    public static final String VERSION_NAME = "0.1.0.1";
-    public static final int VERSION_CODE = 14;
+    public static final String VERSION_NAME = "0.1.1";
+    public static final int VERSION_CODE = 15;
 
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     public static final String CLASSIFIER = "win";
@@ -36,6 +36,12 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        ConfigLoader cl = ConfigLoader.getInstance();
+        if (cl.getLastVersion() != VERSION_CODE) {
+            System.out.println("Just updated from version " + cl.getLastVersion() + "!");
+            cl.save();
+        }
+        
         try {
             strings = ResourceBundle.getBundle(
                     "trashsoftware.trashSnooker.bundles.Strings", 
