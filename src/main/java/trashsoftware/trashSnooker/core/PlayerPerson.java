@@ -332,14 +332,7 @@ public class PlayerPerson {
     private static CuePlayType.SpecialAction parseSpecialAction(JSONObject special) {
         if (special.has("doubleCueAction")) {
             JSONObject object = special.getJSONObject("doubleCueAction");
-            return new CuePlayType.DoubleAction(
-                    object.getDouble("minPower"),
-                    object.getDouble("maxPower"),
-                    object.getDouble("minDt"),
-                    object.getDouble("maxDt"),
-                    object.getInt("holdMs"),
-                    object.getDouble("speed")
-            );
+            return CuePlayType.DoubleAction.fromJson(object);
         }
         return null;
     }
@@ -408,6 +401,17 @@ public class PlayerPerson {
         obj.put("width", handBody.bodyWidth);
         obj.put("hand", handObj);
         obj.put("sex", sex.name());
+        
+        JSONArray games = new JSONArray();
+        for (GameRule gameRule : participates) {
+            games.put(Util.toLowerCamelCase(gameRule.name()));
+        }
+        obj.put("games", games);
+        
+        if (cuePlayType.hasAnySpecialAction()) {
+            JSONObject spe = cuePlayType.specialActionsJson();
+            obj.put("specialAction", spe);
+        }
 
         return obj;
     }

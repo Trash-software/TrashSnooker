@@ -30,6 +30,8 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
     }
 
     private void initBalls() {
+        allBalls = new PoolBall[10];
+        
         allBalls[0] = cueBall;
         for (int i = 1; i < 10; ++i) {
             allBalls[i] = new PoolBall(i, false, gameValues);

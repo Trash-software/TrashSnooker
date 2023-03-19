@@ -9,7 +9,7 @@ public class Movement {
     private final Map<Ball, List<MovementFrame>> movementMap = new HashMap<>();  // 必须是hashmap，详见ball.compareTo()
 //    private final Map<Ball, Deque<MovementFrame>> immutableMap = new HashMap<>();
     private final Map<Ball, MovementFrame> startingPositions = new HashMap<>();
-    private int iterationIndex = 0;
+    private double iterationIndex = 0;
     private final Ball anyBall;
 
     public Movement(Ball[] allBalls) {
@@ -34,11 +34,11 @@ public class Movement {
     }
     
     public int incrementIndex() {
-        return iterationIndex++;
+        return (int) iterationIndex++;
     }
     
-    public int incrementIndex(int nFrames) {
-        int cur  = iterationIndex;
+    public int incrementIndex(double nFrames) {
+        int cur = (int) iterationIndex;
         iterationIndex = Math.min(iterationIndex + nFrames, movementMap.get(anyBall).size());
         return cur;
     }

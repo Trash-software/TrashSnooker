@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +60,18 @@ public class CuePlayType {
     public SpecialAction getSpecialAction() {
         return specialAction;
     }
+    
+    public boolean hasAnySpecialAction() {
+        return specialAction != null;
+    }
+    
+    public JSONObject specialActionsJson() {
+        JSONObject object = new JSONObject();
+        if (specialAction instanceof DoubleAction) {
+            object.put("doubleCueAction", specialAction.toJson());
+        }
+        return object;
+    }
 
     public double getPullSpeedMul() {
         return pullSpeedMul;
@@ -94,6 +108,8 @@ public class CuePlayType {
     
     public static abstract class SpecialAction {
         abstract boolean willApply(double selectedPower, PlayerPerson.Hand hand);
+        
+        abstract JSONObject toJson();
     }
 
     /**
@@ -107,7 +123,7 @@ public class CuePlayType {
         public final int holdMs;
         public final double speedMul;  // 前段的速度
         
-        public DoubleAction(double minPower, double maxPower, double minDt, double maxDt, 
+        DoubleAction(double minPower, double maxPower, double minDt, double maxDt, 
                             int holdMs, double speedMul) {
             this.minPower = minPower;
             this.maxPower = maxPower;
@@ -115,6 +131,29 @@ public class CuePlayType {
             this.minDt = minDt;
             this.maxDt = maxDt;
             this.speedMul = speedMul;
+        }
+        
+        public static DoubleAction fromJson(JSONObject object) {
+            return new CuePlayType.DoubleAction(
+                    object.getDouble("minPower"),
+                    object.getDouble("maxPower"),
+                    object.getDouble("minDt"),
+                    object.getDouble("maxDt"),
+                    object.getInt("holdMs"),
+                    object.getDouble("speed")
+            );
+        }
+
+        @Override
+        JSONObject toJson() {
+            JSONObject json = new JSONObject();
+            json.put("minPower", minPower);
+            json.put("maxPower", maxPower);
+            json.put("minDt", minDt);
+            json.put("maxDt", maxDt);
+            json.put("holdMs", holdMs);
+            json.put("speed", speedMul);
+            return json;
         }
 
         @Override
