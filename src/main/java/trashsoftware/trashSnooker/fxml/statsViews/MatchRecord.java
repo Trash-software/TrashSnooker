@@ -208,7 +208,7 @@ public class MatchRecord extends RecordTree {
         
         page.add(new Separator(), 0, rowIndex++, 8, 1);
 
-        if (egt.gameRule.snookerLike) {
+        if (egt.gameRule.snookerLike()) {
             int[][] totalSnookerScores = ((EntireGameRecord.Snooker) matchRec).totalScores();
             page.add(new Label(strings.getString("totalPoints")), 0, rowIndex);
             page.add(new Label(String.valueOf(totalSnookerScores[0][0])), 2, rowIndex);
@@ -284,7 +284,7 @@ public class MatchRecord extends RecordTree {
 
             Label p1ScoreLabel = new Label();
             Label p2ScoreLabel = new Label();
-            if (egt.gameRule.snookerLike) {
+            if (egt.gameRule.snookerLike()) {
                 PlayerFrameRecord.Snooker p1sr = (PlayerFrameRecord.Snooker) p1r;
                 PlayerFrameRecord.Snooker p2sr = (PlayerFrameRecord.Snooker) p2r;
                 p1ScoreLabel.setText(String.valueOf(p1sr.snookerScores[0]));

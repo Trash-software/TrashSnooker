@@ -317,7 +317,7 @@ public class TableMetrics {
                         .tableDimension(3820.0, 3569.0,
                                 2035.0, 1788.0,
                                 33.34)
-                        .curvedHole(10.0, 6, 0.0)
+                        .curvedHole(10.0, 5.0, 0.0)
 //                        .supportedHoles(SNOOKER_HOLES)
                         .resistanceAndCushionBounce(1.0, 0.92, 0.8);
             }
@@ -331,7 +331,7 @@ public class TableMetrics {
                                 1550.0, 1270.0,
                                 42.0)
 //                        .supportedHoles(CHINESE_EIGHT_HOLES)
-                        .curvedHole(10.0, 6, 0.0)
+                        .curvedHole(10.0, 5.0, 0.0)
                         .resistanceAndCushionBounce(1.05, 0.92, 0.8);
             }
         },

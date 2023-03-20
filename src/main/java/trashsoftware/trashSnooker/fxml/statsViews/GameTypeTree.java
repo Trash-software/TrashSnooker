@@ -19,6 +19,11 @@ public class GameTypeTree extends RecordTree {
     private final StatsView.PlayerAi pai;
     private final GameRule gameRule;
 
+    private int breaksFiftyRow;
+    private int breaksCenturyRow;
+    private int breaks147Row;
+    private int[] breaksScores;
+
     GameTypeTree(StatsView.PlayerAi pai, GameRule gameRule, ResourceBundle strings) {
         super(GameRule.toReadable(gameRule), strings);
         this.pai = pai;
@@ -38,7 +43,7 @@ public class GameTypeTree extends RecordTree {
         int[] potRecords = db.getBasicPotStatusAll(gameRule, pai.playerId, pai.isAi);
 
         int rowIndex = 0;
-        
+
         resultPane.add(new Label(strings.getString("statsAttempts")), 1, rowIndex);
         resultPane.add(new Label(strings.getString("statsSuccess")), 2, rowIndex);
         resultPane.add(new Label(strings.getString("statsSuccessRate")), 3, rowIndex++);
@@ -111,23 +116,29 @@ public class GameTypeTree extends RecordTree {
                 solves == 0 ? "0%" :
                         String.format("%.1f%%",
                                 solveSuccesses * 100.0 / solves)), 3, rowIndex++);
-        
+
         resultPane.add(new Separator(), 0, rowIndex++, 4, 1);
 
-        if (gameRule.snookerLike) {
-            int[] breaksScores = db.getSnookerBreaksTotal(gameRule, pai.playerId, pai.isAi);
+        if (gameRule.snookerLike()) {
+            breaksScores = db.getSnookerBreaksTotal(gameRule, pai.playerId, pai.isAi);
             resultPane.add(new Label(strings.getString("totalPoints")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
             resultPane.add(new Label(strings.getString("highestBreak")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(breaksScores[1])), 1, rowIndex++);
+
             resultPane.add(new Label(strings.getString("single50")), 0, rowIndex);
+            breaksFiftyRow = rowIndex;
             resultPane.add(new Label(String.valueOf(breaksScores[2])), 1, rowIndex++);
+
             resultPane.add(new Label(strings.getString("single100")), 0, rowIndex);
+            breaksCenturyRow = rowIndex;
             resultPane.add(new Label(String.valueOf(breaksScores[3])), 1, rowIndex++);
+
             resultPane.add(new Label(strings.getString("single147")), 0, rowIndex);
+            breaks147Row = rowIndex;
             resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
         } else if (gameRule == GameRule.CHINESE_EIGHT || gameRule == GameRule.SIDE_POCKET) {
-            int[] breaksScores = db.getNumberedBallGamesTotal(gameRule, pai.playerId, pai.isAi);
+            breaksScores = db.getNumberedBallGamesTotal(gameRule, pai.playerId, pai.isAi);
             resultPane.add(new Label(strings.getString("numBreaks")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
             resultPane.add(new Label(strings.getString("numBreaksSuc")), 0, rowIndex);
@@ -143,7 +154,7 @@ public class GameTypeTree extends RecordTree {
             resultPane.add(new Label(strings.getString("highestSingleBalls")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
         }
-        resultPane.add(new Separator(), 0, rowIndex++, 3, 1);
+        resultPane.add(new Separator(), 0, rowIndex++, 4, 1);
         final Button gameStatsButton = new Button(strings.getString("matchStats"));
         resultPane.add(gameStatsButton, 0, rowIndex++);
 
@@ -175,6 +186,8 @@ public class GameTypeTree extends RecordTree {
         int thisWinFrames = 0;
         int totalFrames = 0;
         int thisWinMatches = 0;
+        int finalFrames = 0;  // 决胜局
+        int finalFrameWins = 0;
         for (EntireGameRecord egr : entireRecords) {
             boolean thisIsP1 = egr.getTitle().player1Id.equals(pai.playerId);
             int[] playerWinsInThisMatchSize =
@@ -183,16 +196,24 @@ public class GameTypeTree extends RecordTree {
             playerWinsInThisMatchSize[1]++;
             int[] p1p2wins = egr.getP1P2WinsCount();
             totalFrames += egr.getTitle().totalFrames;
+            boolean isFinal = false;
+            if (egr.getTitle().totalFrames >= 3 && p1p2wins[0] + p1p2wins[1] == egr.getTitle().totalFrames) {
+                finalFrames++;
+                isFinal = true;
+            }
+
             if (thisIsP1) {
                 if (p1p2wins[0] > p1p2wins[1]) {
                     thisWinMatches++;
                     playerWinsInThisMatchSize[0]++;
+                    if (isFinal) finalFrameWins++;
                 }
                 thisWinFrames += p1p2wins[0];
             } else {
                 if (p1p2wins[1] > p1p2wins[0]) {
                     thisWinMatches++;
                     playerWinsInThisMatchSize[0]++;
+                    if (isFinal) finalFrameWins++;
                 }
                 thisWinFrames += p1p2wins[1];
             }
@@ -201,6 +222,8 @@ public class GameTypeTree extends RecordTree {
         final int thisWinFramesFinal = thisWinFrames;
         final int totalFramesFinal = totalFrames;
         final int thisWinMatchesFinal = thisWinMatches;
+        final int finalFrames1 = finalFrames;
+        final int finalFrameWins1 = finalFrameWins;
 
         System.out.println("db time: " + (System.currentTimeMillis() - st));
 
@@ -212,29 +235,50 @@ public class GameTypeTree extends RecordTree {
 
             int rowIndex = startRowIndex;
 
+            resultPane.add(new Label(strings.getString("statsMatchesTitle")), 1, rowIndex);
+            resultPane.add(new Label(strings.getString("statsMatchesWinTitle")), 2, rowIndex);
+            resultPane.add(new Label(strings.getString("statsWinRate")), 3, rowIndex++);
+
             resultPane.add(new Label(strings.getString("totalMatches")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(allMatches.size())), 1, rowIndex++);
-
-            resultPane.add(new Label(strings.getString("totalMatchesWin")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(thisWinMatchesFinal)), 1, rowIndex);
-
+            resultPane.add(new Label(String.valueOf(allMatches.size())), 1, rowIndex);
+            resultPane.add(new Label(String.valueOf(thisWinMatchesFinal)), 2, rowIndex);
             resultPane.add(new Label(
                             String.format("%.1f%%",
                                     (double) thisWinMatchesFinal / allMatches.size() * 100)),
-                    2, rowIndex++);
+                    3, rowIndex++);
 
             resultPane.add(new Label(strings.getString("totalFramesLife")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(totalFramesFinal)), 1, rowIndex++);
-
-            resultPane.add(new Label(strings.getString("totalFramesLifeWin")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(thisWinFramesFinal)), 1, rowIndex);
-
+            resultPane.add(new Label(String.valueOf(totalFramesFinal)), 1, rowIndex);
+            resultPane.add(new Label(String.valueOf(thisWinFramesFinal)), 2, rowIndex);
             resultPane.add(new Label(
                             String.format("%.1f%%",
                                     (double) thisWinFramesFinal / totalFramesFinal * 100)),
-                    2, rowIndex++);
+                    3, rowIndex++);
 
-            resultPane.add(new Separator(), 0, rowIndex++, 3, 1);
+            resultPane.add(new Label(strings.getString("statsFinalsOver3")), 0, rowIndex);
+            resultPane.add(new Label(String.valueOf(finalFrames1)), 1, rowIndex);
+            resultPane.add(new Label(String.valueOf(finalFrameWins1)), 2, rowIndex);
+            resultPane.add(new Label(
+                            finalFrames1 == 0 ?
+                                    "--" :
+                                    String.format("%.1f%%",
+                                            (double) finalFrameWins1 / finalFrames1 * 100)),
+                    3, rowIndex++);
+
+            resultPane.add(new Separator(), 0, rowIndex++, 4, 1);
+
+            // 更新各种率
+            if (gameRule.snookerLike()) {
+                // 50+
+                resultPane.add(new Label(String.format("%.2f%%", breaksScores[2] * 100.0 / totalFramesFinal)),
+                        2, breaksFiftyRow);
+                // 100+
+                resultPane.add(new Label(String.format("%.2f%%", breaksScores[3] * 100.0 / totalFramesFinal)),
+                        2, breaksCenturyRow);
+                // 147
+                resultPane.add(new Label(String.format("%.2f‱", breaksScores[4] * 10000.0 / totalFramesFinal)),
+                        2, breaks147Row);
+            }
 
             // 每种局长的胜率
             for (Map.Entry<Integer, int[]> entry : playerWinsByTotalFrames.entrySet()) {

@@ -378,7 +378,7 @@ public class DBAccess {
             }
             general.close();
 
-            if (title.gameRule.snookerLike) {
+            if (title.gameRule.snookerLike()) {
                 String snookerQuery = "SELECT * FROM SnookerRecord " +
                         "WHERE EntireBeginTime = " + Util.timeStampFmt(title.startTime) +
                         ";";

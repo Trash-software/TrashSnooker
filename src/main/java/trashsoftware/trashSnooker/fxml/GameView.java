@@ -303,7 +303,7 @@ public class GameView implements Initializable {
         player2TarCanvas.setHeight(ballDiameter * 1.2);
         player2TarCanvas.setWidth(ballDiameter * 1.2);
         singlePoleCanvas.setHeight(ballDiameter * 1.2);
-        if (gameValues.rule.snookerLike)
+        if (gameValues.rule.snookerLike())
             singlePoleCanvas.setWidth(ballDiameter * 7 * 1.2);
         else if (gameValues.rule == GameRule.CHINESE_EIGHT || gameValues.rule == GameRule.LIS_EIGHT)
             singlePoleCanvas.setWidth(ballDiameter * 8 * 1.2);
@@ -580,7 +580,7 @@ public class GameView implements Initializable {
     }
 
     private void updateScoreDiffLabels() {
-        if (gameValues.rule.snookerLike) {
+        if (gameValues.rule.snookerLike()) {
             if (replay != null) {
 
             } else {
@@ -1352,7 +1352,7 @@ public class GameView implements Initializable {
     }
 
     private void playerCue(Player player) {
-        if (game.gameValues.rule.snookerLike) {
+        if (game.gameValues.rule.snookerLike()) {
             AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
             System.out.println(asg.getCurrentTarget() + " " + predictedTargetBall);
             if (asg.getCurrentTarget() == 0) {
@@ -1534,7 +1534,7 @@ public class GameView implements Initializable {
                 game.getGame().getRecorder().writeBallInHandPlacement();
                 Platform.runLater(this::draw);
             }
-            if (gameValues.rule.snookerLike) {
+            if (gameValues.rule.snookerLike()) {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
                 if (aiHasRightToReposition && asg.canReposition() && asg.isFoulAndMiss()) {
                     if (asg.aiConsiderReposition(game.predictPhy, lastPotAttempt)) {
@@ -1572,7 +1572,7 @@ public class GameView implements Initializable {
                 withdraw(player);
                 return;
             }
-            if (game.gameValues.rule.snookerLike) {
+            if (game.gameValues.rule.snookerLike()) {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
                 if (cueResult.getTargetBall() != null) {
                     asg.setIndicatedTarget(cueResult.getTargetBall().getValue());
@@ -2270,7 +2270,7 @@ public class GameView implements Initializable {
                 singlePoleCanvas.getGraphicsContext2D().fillRect(0, 0,
                         singlePoleCanvas.getWidth(), singlePoleCanvas.getHeight());
 
-                if (gameValues.rule.snookerLike) {
+                if (gameValues.rule.snookerLike()) {
                     SnookerScoreResult ssr = (SnookerScoreResult) replay.getScoreResult();
                     player1ScoreLabel.setText(String.valueOf(ssr.getP1TotalScore()));
                     player2ScoreLabel.setText(String.valueOf(ssr.getP2TotalScore()));
@@ -2296,7 +2296,7 @@ public class GameView implements Initializable {
                 singlePoleCanvas.getGraphicsContext2D().fillRect(0, 0,
                         singlePoleCanvas.getWidth(), singlePoleCanvas.getHeight());
 
-                if (gameValues.rule.snookerLike) {
+                if (gameValues.rule.snookerLike()) {
                     drawSnookerSinglePoles(cuePlayer.getSinglePole());
                     singlePoleLabel.setText(String.valueOf(cuePlayer.getSinglePoleScore()));
                 } else if (gameValues.rule == GameRule.CHINESE_EIGHT ||
@@ -2318,7 +2318,7 @@ public class GameView implements Initializable {
 
     private void drawTargetBoard(boolean showNextTarget) {
         Platform.runLater(() -> {
-            if (gameValues.rule.snookerLike)
+            if (gameValues.rule.snookerLike())
                 drawSnookerTargetBoard(showNextTarget);
             else if (gameValues.rule == GameRule.CHINESE_EIGHT || gameValues.rule == GameRule.LIS_EIGHT)
                 drawPoolTargetBoard(showNextTarget);

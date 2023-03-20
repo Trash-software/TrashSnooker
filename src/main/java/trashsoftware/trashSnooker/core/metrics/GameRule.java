@@ -19,30 +19,73 @@ import trashsoftware.trashSnooker.util.Util;
  * @see Game 一局游戏的实例
  */
 public enum GameRule {
-    SNOOKER(true, 22, "Snooker", 
-            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL}, BreakRule.ALTERNATE),
-    MINI_SNOOKER(true, 13, "MiniSnooker",
-            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL}, BreakRule.ALTERNATE),
-    CHINESE_EIGHT(false, 16, "ChineseEight",
-            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG}, BreakRule.WINNER),
-    LIS_EIGHT(false, 16, "LisEight",
-            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG}, BreakRule.WINNER),
-    SIDE_POCKET(false, 10, "SidePocket",
-            new Cue.Size[]{Cue.Size.BIG, Cue.Size.MEDIUM}, BreakRule.WINNER);
-
-    public final boolean snookerLike;
+    SNOOKER(22, "Snooker", 
+            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL}, BreakRule.ALTERNATE) {
+        @Override
+        public boolean snookerLike() {
+            return true;
+        }
+    },
+    MINI_SNOOKER(13, "MiniSnooker",
+            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL}, BreakRule.ALTERNATE) {
+        @Override
+        public boolean snookerLike() {
+            return true;
+        }
+    },
+    CHINESE_EIGHT(16, "ChineseEight",
+            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG}, BreakRule.WINNER) {
+        @Override
+        public boolean poolLike() {
+            return true;
+        }
+        @Override
+        public boolean eightBallLike() {
+            return true;
+        }
+    },
+    LIS_EIGHT(16, "LisEight",
+            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG}, BreakRule.WINNER) {
+        @Override
+        public boolean poolLike() {
+            return true;
+        }
+        @Override
+        public boolean eightBallLike() {
+            return true;
+        }
+    },
+    SIDE_POCKET(10, "SidePocket",
+            new Cue.Size[]{Cue.Size.BIG, Cue.Size.MEDIUM}, BreakRule.WINNER) {
+        @Override
+        public boolean poolLike() {
+            return true;
+        }
+    };
+    
     public final String sqlKey;
     public final int nBalls;
     public final Cue.Size[] suggestedCues;
     public final BreakRule breakRule;
 
-    GameRule(boolean snookerLike, int nBalls, String sqlKey, Cue.Size[] suggestedCues, 
+    GameRule(int nBalls, String sqlKey, Cue.Size[] suggestedCues, 
              BreakRule breakRule) {
-        this.snookerLike = snookerLike;
         this.nBalls = nBalls;
         this.sqlKey = sqlKey;
         this.suggestedCues = suggestedCues;
         this.breakRule = breakRule;
+    }
+    
+    public boolean snookerLike() {
+        return false;
+    }
+    
+    public boolean poolLike() {
+        return false;
+    }
+    
+    public boolean eightBallLike() {
+        return false;
     }
 
     public static GameRule fromSqlKey(String sqlKey) {
