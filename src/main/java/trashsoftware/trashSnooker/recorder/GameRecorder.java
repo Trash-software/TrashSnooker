@@ -6,6 +6,7 @@ import org.tukaani.xz.XZOutputStream;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
+import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.*;
@@ -13,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -28,19 +30,19 @@ public abstract class GameRecorder {
     public static final int FLAG_TERMINATE = 0;
     public static final int FLAG_CUE = 1;
     public static final int FLAG_HANDBALL = 2;
-    public static final int FLAT_REPOSITION = 3;
+    public static final int FLAG_REPOSITION = 3;
 
     public static final int NO_COMPRESSION = 0;
     public static final int DEFLATE_COMPRESSION = 1;
     public static final int GZ_COMPRESSION = 2;
     public static final int XZ_COMPRESSION = 3;
     protected static final String RECORD_DIR = "user" + File.separator + "replays";
-    protected int compression = 0;
+    protected int compression = NO_COMPRESSION;
     protected File outFile;
     protected OutputStream outputStream;
     private OutputStream wrapperStream;
 
-    protected Game game;
+    protected Game<?, ?> game;
     protected static DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 
     protected CueRecord cueRecord;
@@ -54,12 +56,12 @@ public abstract class GameRecorder {
     protected int nCues = 0;  // 只计击打，不计放置等
     protected long recordBeginTime;
 
-    public GameRecorder(Game game) {
+    public GameRecorder(Game<?, ?> game) {
         this.game = game;
         
         createDirIfNotExist();
         
-        setCompression(XZ_COMPRESSION);
+        setCompression(ConfigLoader.getInstance().getString("recordCompression", "xz"));
 
         outFile = new File(String.format("%s%sreplay_%s.replay",
                 RECORD_DIR, File.separator, dateFormat.format(new Date())));
@@ -71,6 +73,25 @@ public abstract class GameRecorder {
 
     public static boolean isSecondaryCompatible(int replaySecondary) {
         return replaySecondary == GameRecorder.RECORD_SECONDARY_VERSION;
+    }
+    
+    public void setCompression(String compression) {
+        switch (compression.toLowerCase(Locale.ROOT)) {
+            case "deflate":
+                setCompression(DEFLATE_COMPRESSION);
+                break;
+            case "gz":
+                setCompression(GZ_COMPRESSION);
+                break;
+            case "xz":
+                setCompression(XZ_COMPRESSION);
+                break;
+            case "none":
+            case "":
+            default:
+                setCompression(NO_COMPRESSION);
+                break;
+        }
     }
     
     public void setCompression(int compression) {

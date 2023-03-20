@@ -4,27 +4,27 @@
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "Murphy",
+    "person": "custom_player_2",
     "playerType": "PLAYER",
-    "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
+    "playCue": "GirlCue",
+    "breakCue": "GirlCue"
   },
   "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "John Wizard",
-    "playerType": "PLAYER",
+    "person": "Murphy",
+    "playerType": "COMPUTER",
     "playCue": "stdSnookerCue",
     "breakCue": "stdSnookerCue"
   },
-  "startTime": 1679239127637,
+  "startTime": 1679307829433,
   "gameValues": {
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
     "table": {
       "tableOrdinal": 0,
-      "holeSizeOrdinal": 2
+      "holeSizeOrdinal": 1
     }
   },
   "totalFrames": 1,

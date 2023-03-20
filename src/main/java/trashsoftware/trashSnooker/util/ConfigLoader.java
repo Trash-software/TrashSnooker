@@ -57,6 +57,10 @@ public class ConfigLoader {
         return keyValues.get(key);
     }
 
+    public String getString(String key, String defaultValue) {
+        return keyValues.getOrDefault(key, defaultValue);
+    }
+
     public int getInt(String key) {
         return Integer.parseInt(keyValues.get(key));
     }
@@ -98,6 +102,7 @@ public class ConfigLoader {
     private void initConfig() {
         put("nThreads", 4);
         put("locale", "zh_CN");
+        put("recordCompression", "xz");
     }
 
     private void writeConfig() {

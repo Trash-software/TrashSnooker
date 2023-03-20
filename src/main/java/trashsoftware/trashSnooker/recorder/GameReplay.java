@@ -8,6 +8,7 @@ import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.scoreResult.*;
 import trashsoftware.trashSnooker.core.table.*;
+import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -96,6 +97,16 @@ public abstract class GameReplay implements GameHolder {
     public static File[] listReplays() {
         File dir = new File(GameRecorder.RECORD_DIR);
         return dir.listFiles();
+    }
+    
+    public static File getRecordDir() {
+        File f = new File(GameRecorder.RECORD_DIR);
+        if (!f.exists()) {
+            if (!f.mkdirs()) {
+                EventLogger.log("Record directory is not available");
+            }
+        }
+        return f;
     }
 
     private void createInputStream(int compression) throws IOException {

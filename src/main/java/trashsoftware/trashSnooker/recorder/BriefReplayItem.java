@@ -31,7 +31,7 @@ public class BriefReplayItem {
     public final int nCues;
     public final int totalFrames;
     public final int p1Wins;
-    public final int p2Wins;
+    public final int p2Wins;  // 应该是在这局之前P1和P2各赢了几局
     public final int frameWinnerNumber;
 //    private final int durationSec;
     private final InGamePlayer p1;
