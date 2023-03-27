@@ -103,7 +103,7 @@ public abstract class GameReplay implements GameHolder {
         File f = new File(GameRecorder.RECORD_DIR);
         if (!f.exists()) {
             if (!f.mkdirs()) {
-                EventLogger.log("Record directory is not available");
+                EventLogger.error("Record directory is not available");
             }
         }
         return f;

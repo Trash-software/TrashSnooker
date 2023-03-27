@@ -1,97 +1,490 @@
 {
-  "stageIndex": 5,
+  "stageIndex": 3,
   "seedRanks": {
-    "Brown": 22,
-    "Yan Bingtao": 16,
-    "Liu Mang": 24,
-    "custom_player_1": 21,
-    "custom_player_3": 26,
-    "custom_player_2": 25,
-    "Jack Lisowski": 6,
-    "custom_player_4": 20,
-    "Glass Heart": 7,
-    "Mark Allen": 5,
-    "Selby": 8,
-    "Karen Wilson": 13,
-    "Zhao Xintong": 14,
-    "Neil Robertson": 3,
-    "Stephen Maguire": 17,
+    "random_player_86": 110,
+    "random_player_88": 61,
+    "custom_player_1": 25,
+    "random_player_0": 18,
+    "custom_player_3": 35,
+    "custom_player_2": 29,
+    "custom_player_4": 26,
+    "Mark Allen": 11,
+    "random_player_9": 44,
+    "random_player_8": 55,
+    "random_player_6": 53,
+    "random_player_2": 64,
+    "Neil Robertson": 2,
+    "random_player_93": 75,
+    "random_player_92": 31,
+    "Stuart Bingham": 16,
+    "Mou Moumou": 60,
+    "random_player_75": 78,
+    "random_player_77": 92,
+    "O_Sullivan": 3,
+    "Wang Xu": 38,
+    "random_player_84": 65,
+    "random_player_81": 91,
+    "random_player_80": 50,
+    "random_player_24": 85,
+    "random_player_27": 30,
+    "random_player_23": 66,
+    "custom_player_169": 80,
+    "custom_player_166": 72,
+    "custom_player_165": 71,
+    "custom_player_168": 69,
+    "custom_player_167": 73,
+    "custom_player_173": 67,
+    "custom_player_172": 54,
+    "Noob": 104,
+    "custom_player_174": 97,
+    "custom_player_171": 101,
+    "custom_player_170": 79,
+    "random_player_30": 46,
+    "random_player_14": 57,
+    "random_player_16": 45,
+    "random_player_12": 68,
+    "custom_E8BDBBE69DBEE58FB7": 96,
+    "random_player_99": 90,
+    "Fat Guy": 33,
+    "custom_player_159": 81,
+    "Ding Junhui": 4,
+    "random_player_18": 48,
+    "Smart": 5,
+    "random_player_17": 108,
+    "random_player_19": 109,
+    "Give Emperor": 40,
+    "custom_E78B97E697A5E79A84": 94,
+    "custom_player_160": 23,
+    "Worst Professional": 22,
+    "custom_E9B8ADE584BF": 100,
+    "random_player_47": 37,
+    "random_player_107": 93,
+    "random_player_46": 62,
+    "random_player_108": 86,
+    "random_player_49": 70,
+    "random_player_48": 88,
+    "random_player_103": 21,
+    "random_player_43": 59,
+    "random_player_44": 42,
+    "Summer Brave": 51,
+    "Lao Youtiao": 95,
     "Murphy": 10,
-    "John Wizard": 2,
-    "Stuart Bingham": 12,
-    "Kid": 23,
-    "Smart": 9,
-    "Trump": 11,
-    "Mark Williams": 1,
-    "O_Sullivan": 4,
-    "Luca Brecel": 15,
-    "custom_player_160": 18,
-    "custom_player_181": 27,
-    "Worst Professional": 19,
-    "custom_E5B08FE4BB99E5A5B3": 28
+    "John Wizard": 9,
+    "random_player_118": 56,
+    "random_player_117": 107,
+    "random_player_37": 111,
+    "random_player_32": 105,
+    "random_player_31": 36,
+    "random_player_115": 77,
+    "Kid": 34,
+    "random_player_33": 47,
+    "random_player_113": 76,
+    "custom_player_177": 74,
+    "random_player_39": 58,
+    "Trump": 13,
+    "custom_player_178": 52,
+    "High Stick": 63,
+    "Mark Williams": 8,
+    "custom_player_180": 98,
+    "Luca Brecel": 19,
+    "custom_player_181": 32,
+    "random_player_110": 89,
+    "custom_E5B08FE4BB99E5A5B3": 39,
+    "Brown": 27,
+    "random_player_68": 83,
+    "Yan Bingtao": 20,
+    "random_player_127": 84,
+    "Liu Mang": 24,
+    "random_player_64": 87,
+    "random_player_124": 49,
+    "random_player_66": 106,
+    "Jack Lisowski": 7,
+    "Glass Heart": 12,
+    "Selby": 6,
+    "Karen Wilson": 15,
+    "Zhao Xintong": 14,
+    "Mang Dali": 99,
+    "random_player_122": 41,
+    "Stephen Maguire": 17,
+    "Mang Zi": 102,
+    "Matthew Stevens": 1,
+    "random_player_53": 112,
+    "random_player_60": 82,
+    "random_player_63": 28,
+    "random_player_62": 43,
+    "Baggage Brother": 103
   },
-  "championshipId": "challenger_open",
+  "championshipId": "world_champ",
   "matchTree": {"root": {
     "p1": {
       "p1": {
-        "p1": {"winner": "John Wizard"},
-        "p2": {
+        "p1": {
           "p1": {
-            "p1": {"winner": "Trump"},
+            "p1wins": 3,
+            "p1": {"winner": "Smart"},
             "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "custom_player_3"},
-              "p2": {"winner": "Karen Wilson"},
-              "winner": "Karen Wilson",
-              "stage": "PRE_ROUND_1",
-              "p2wins": 2
+              "p1wins": 3,
+              "p1": {
+                "p1wins": 0,
+                "p1": {"winner": "Brown"},
+                "p2": {
+                  "p1wins": 2,
+                  "p1": {"winner": "random_player_88"},
+                  "p2": {"winner": "Mou Moumou"},
+                  "winner": "random_player_88",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 1
+                },
+                "winner": "random_player_88",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 2
+              },
+              "p2": {
+                "p1wins": 0,
+                "p1": {"winner": "custom_player_4"},
+                "p2": {
+                  "p1wins": 2,
+                  "p1": {"winner": "random_player_23"},
+                  "p2": {"winner": "custom_player_165"},
+                  "winner": "random_player_23",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 0
+                },
+                "winner": "random_player_23",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 2
+              },
+              "winner": "random_player_88",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 0
             },
-            "stage": "PRE_ROUND_2"
+            "winner": "Smart",
+            "stage": "ROUND_1",
+            "p2wins": 0
           },
           "p2": {
-            "p1": {"winner": "Glass Heart"},
+            "p1wins": 1,
+            "p1": {"winner": "John Wizard"},
             "p2": {
-              "p1wins": 2,
-              "p1": {"winner": "custom_player_1"},
-              "p2": {"winner": "custom_player_181"},
-              "winner": "custom_player_1",
-              "stage": "PRE_ROUND_1",
-              "p2wins": 1
+              "p1wins": 0,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "Fat Guy"},
+                "p2": {
+                  "p1wins": 2,
+                  "p1": {"winner": "random_player_37"},
+                  "p2": {"winner": "random_player_113"},
+                  "winner": "random_player_37",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 0
+                },
+                "winner": "Fat Guy",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 1
+              },
+              "p2": {
+                "p1wins": 2,
+                "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "custom_player_178"},
+                  "p2": {"winner": "random_player_93"},
+                  "winner": "random_player_93",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "custom_E5B08FE4BB99E5A5B3",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "winner": "custom_E5B08FE4BB99E5A5B3",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 3
             },
-            "stage": "PRE_ROUND_2"
+            "winner": "custom_E5B08FE4BB99E5A5B3",
+            "stage": "ROUND_1",
+            "p2wins": 3
           },
-          "stage": "PRE_ROUND_3"
+          "stage": "ROUND_2"
+        },
+        "p2": {
+          "p1wins": 3,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "Selby"},
+            "p2": {
+              "p1wins": 3,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "Stephen Maguire"},
+                "p2": {
+                  "p1wins": 1,
+                  "p1": {"winner": "custom_player_169"},
+                  "p2": {"winner": "custom_player_168"},
+                  "winner": "custom_player_168",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "Stephen Maguire",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "custom_player_1"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "random_player_66"},
+                  "p2": {"winner": "custom_player_159"},
+                  "winner": "custom_player_159",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "custom_player_159",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 2
+              },
+              "winner": "Stephen Maguire",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 0
+            },
+            "winner": "Stephen Maguire",
+            "stage": "ROUND_1",
+            "p2wins": 3
+          },
+          "p2": {
+            "p1wins": 3,
+            "p1": {"winner": "Stuart Bingham"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {
+                "p1wins": 1,
+                "p1": {"winner": "Wang Xu"},
+                "p2": {
+                  "p1wins": 1,
+                  "p1": {"winner": "Summer Brave"},
+                  "p2": {"winner": "custom_E78B97E697A5E79A84"},
+                  "winner": "custom_E78B97E697A5E79A84",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "custom_E78B97E697A5E79A84",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 2
+              },
+              "p2": {
+                "p1wins": 2,
+                "p1": {"winner": "custom_player_181"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "random_player_86"},
+                  "p2": {"winner": "High Stick"},
+                  "winner": "High Stick",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "custom_player_181",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "winner": "custom_player_181",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 3
+            },
+            "winner": "Stuart Bingham",
+            "stage": "ROUND_1",
+            "p2wins": 0
+          },
+          "winner": "Stephen Maguire",
+          "stage": "ROUND_2",
+          "p2wins": 0
         },
         "stage": "QUARTER_FINAL"
       },
       "p2": {
-        "p1": {"winner": "Neil Robertson"},
-        "p2": {
+        "p1": {
+          "p1wins": 3,
           "p1": {
-            "p1": {"winner": "Stuart Bingham"},
+            "p1wins": 3,
+            "p1": {"winner": "Mark Williams"},
             "p2": {
-              "p1wins": 2,
-              "p1": {"winner": "Yan Bingtao"},
-              "p2": {"winner": "Brown"},
-              "winner": "Yan Bingtao",
-              "stage": "PRE_ROUND_1",
-              "p2wins": 0
+              "p1wins": 3,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_33"},
+                "p2": {
+                  "p1wins": 1,
+                  "p1": {"winner": "random_player_43"},
+                  "p2": {"winner": "random_player_80"},
+                  "winner": "random_player_80",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_33",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 1
+              },
+              "p2": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_18"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "Mang Zi"},
+                  "p2": {"winner": "random_player_68"},
+                  "winner": "random_player_68",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_18",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 1
+              },
+              "winner": "random_player_33",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 2
             },
-            "stage": "PRE_ROUND_2"
+            "winner": "Mark Williams",
+            "stage": "ROUND_1",
+            "p2wins": 1
           },
           "p2": {
-            "p1": {"winner": "Selby"},
+            "p1wins": 3,
+            "p1": {"winner": "Mark Allen"},
             "p2": {
-              "p1wins": 2,
-              "p1": {"winner": "Liu Mang"},
-              "p2": {"winner": "custom_player_2"},
-              "winner": "Liu Mang",
-              "stage": "PRE_ROUND_1",
-              "p2wins": 0
+              "p1wins": 1,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_27"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "random_player_108"},
+                  "p2": {"winner": "custom_player_166"},
+                  "winner": "custom_player_166",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_27",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "p2": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_122"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "Baggage Brother"},
+                  "p2": {"winner": "custom_player_173"},
+                  "winner": "custom_player_173",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_122",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "winner": "random_player_122",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 3
             },
-            "stage": "PRE_ROUND_2"
+            "winner": "Mark Allen",
+            "stage": "ROUND_1",
+            "p2wins": 1
           },
-          "stage": "PRE_ROUND_3"
+          "winner": "Mark Williams",
+          "stage": "ROUND_2",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 3,
+            "p1": {"winner": "Neil Robertson"},
+            "p2": {
+              "p1wins": 3,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_9"},
+                "p2": {
+                  "p1wins": 1,
+                  "p1": {"winner": "random_player_99"},
+                  "p2": {"winner": "random_player_49"},
+                  "winner": "random_player_49",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_9",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "p2": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_44"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "custom_player_172"},
+                  "p2": {"winner": "random_player_48"},
+                  "winner": "random_player_48",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_44",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "winner": "random_player_9",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 2
+            },
+            "winner": "Neil Robertson",
+            "stage": "ROUND_1",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 3,
+            "p1": {"winner": "Murphy"},
+            "p2": {
+              "p1wins": 3,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "Kid"},
+                "p2": {
+                  "p1wins": 2,
+                  "p1": {"winner": "random_player_53"},
+                  "p2": {"winner": "random_player_107"},
+                  "winner": "random_player_53",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 1
+                },
+                "winner": "Kid",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "p2": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_63"},
+                "p2": {
+                  "p1wins": 1,
+                  "p1": {"winner": "custom_player_174"},
+                  "p2": {"winner": "random_player_32"},
+                  "winner": "random_player_32",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_63",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 1
+              },
+              "winner": "Kid",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 2
+            },
+            "winner": "Murphy",
+            "stage": "ROUND_1",
+            "p2wins": 0
+          },
+          "winner": "Murphy",
+          "stage": "ROUND_2",
+          "p2wins": 3
         },
         "stage": "QUARTER_FINAL"
       },
@@ -99,61 +492,376 @@
     },
     "p2": {
       "p1": {
-        "p1": {"winner": "Mark Williams"},
-        "p2": {
+        "p1": {
+          "p1wins": 3,
           "p1": {
-            "p1": {"winner": "Jack Lisowski"},
+            "p1wins": 3,
+            "p1": {"winner": "O_Sullivan"},
             "p2": {
-              "p1": {"winner": "custom_player_4"},
-              "p2": {"winner": "custom_E5B08FE4BB99E5A5B3"},
-              "stage": "PRE_ROUND_1"
+              "p1wins": 1,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_62"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "custom_player_167"},
+                  "p2": {"winner": "random_player_81"},
+                  "winner": "random_player_81",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_62",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 1
+              },
+              "p2": {
+                "p1wins": 2,
+                "p1": {"winner": "custom_player_160"},
+                "p2": {
+                  "p1wins": 1,
+                  "p1": {"winner": "random_player_115"},
+                  "p2": {"winner": "random_player_19"},
+                  "winner": "random_player_19",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "custom_player_160",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 1
+              },
+              "winner": "custom_player_160",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 3
             },
-            "stage": "PRE_ROUND_2"
+            "winner": "O_Sullivan",
+            "stage": "ROUND_1",
+            "p2wins": 1
           },
           "p2": {
-            "p1": {"winner": "Mark Allen"},
+            "p1wins": 3,
+            "p1": {"winner": "Zhao Xintong"},
             "p2": {
-              "p1wins": 2,
-              "p1": {"winner": "Luca Brecel"},
-              "p2": {"winner": "custom_player_160"},
-              "winner": "Luca Brecel",
-              "stage": "PRE_ROUND_1",
+              "p1wins": 3,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "Liu Mang"},
+                "p2": {
+                  "p1wins": 2,
+                  "p1": {"winner": "custom_player_177"},
+                  "p2": {"winner": "random_player_17"},
+                  "winner": "custom_player_177",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 0
+                },
+                "winner": "Liu Mang",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 1
+              },
+              "p2": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_0"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "custom_player_171"},
+                  "p2": {"winner": "random_player_8"},
+                  "winner": "random_player_8",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_0",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "winner": "Liu Mang",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 1
+            },
+            "winner": "Zhao Xintong",
+            "stage": "ROUND_1",
+            "p2wins": 0
+          },
+          "winner": "O_Sullivan",
+          "stage": "ROUND_2",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 3,
+            "p1": {"winner": "Jack Lisowski"},
+            "p2": {
+              "p1wins": 3,
+              "p1": {
+                "p1wins": 1,
+                "p1": {"winner": "random_player_30"},
+                "p2": {
+                  "p1wins": 2,
+                  "p1": {"winner": "random_player_110"},
+                  "p2": {"winner": "random_player_24"},
+                  "winner": "random_player_110",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 0
+                },
+                "winner": "random_player_110",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 2
+              },
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "random_player_16"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "custom_E8BDBBE69DBEE58FB7"},
+                  "p2": {"winner": "random_player_64"},
+                  "winner": "random_player_64",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_64",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 2
+              },
+              "winner": "random_player_110",
+              "stage": "PRE_ROUND_3",
               "p2wins": 0
             },
-            "stage": "PRE_ROUND_2"
+            "winner": "Jack Lisowski",
+            "stage": "ROUND_1",
+            "p2wins": 1
           },
-          "stage": "PRE_ROUND_3"
+          "p2": {
+            "p1wins": 3,
+            "p1": {"winner": "Karen Wilson"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "Give Emperor"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "Lao Youtiao"},
+                  "p2": {"winner": "random_player_117"},
+                  "winner": "random_player_117",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "Give Emperor",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "p2": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_31"},
+                "p2": {
+                  "p1wins": 2,
+                  "p1": {"winner": "random_player_124"},
+                  "p2": {"winner": "random_player_60"},
+                  "winner": "random_player_124",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 0
+                },
+                "winner": "random_player_31",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 1
+              },
+              "winner": "random_player_31",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 3
+            },
+            "winner": "Karen Wilson",
+            "stage": "ROUND_1",
+            "p2wins": 0
+          },
+          "winner": "Karen Wilson",
+          "stage": "ROUND_2",
+          "p2wins": 3
         },
         "stage": "QUARTER_FINAL"
       },
       "p2": {
-        "p1": {"winner": "O_Sullivan"},
-        "p2": {
+        "p1": {
+          "p1wins": 1,
           "p1": {
-            "p1": {"winner": "Smart"},
+            "p1wins": 0,
+            "p1": {"winner": "Matthew Stevens"},
             "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Kid"},
-              "p2": {"winner": "Stephen Maguire"},
-              "winner": "Stephen Maguire",
-              "stage": "PRE_ROUND_1",
+              "p1wins": 3,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "Luca Brecel"},
+                "p2": {
+                  "p1wins": 2,
+                  "p1": {"winner": "random_player_46"},
+                  "p2": {"winner": "custom_player_180"},
+                  "winner": "random_player_46",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 0
+                },
+                "winner": "Luca Brecel",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "custom_player_2"},
+                "p2": {
+                  "p1wins": 2,
+                  "p1": {"winner": "random_player_14"},
+                  "p2": {"winner": "random_player_77"},
+                  "winner": "random_player_14",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 0
+                },
+                "winner": "random_player_14",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 2
+              },
+              "winner": "Luca Brecel",
+              "stage": "PRE_ROUND_3",
               "p2wins": 2
             },
-            "stage": "PRE_ROUND_2"
+            "winner": "Luca Brecel",
+            "stage": "ROUND_1",
+            "p2wins": 3
           },
           "p2": {
-            "p1": {"winner": "Murphy"},
+            "p1wins": 2,
+            "p1": {"winner": "Glass Heart"},
             "p2": {
-              "p1wins": 2,
-              "p1": {"winner": "Worst Professional"},
-              "p2": {"winner": "Zhao Xintong"},
-              "winner": "Worst Professional",
-              "stage": "PRE_ROUND_1",
+              "p1wins": 3,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "Yan Bingtao"},
+                "p2": {
+                  "p1wins": 2,
+                  "p1": {"winner": "random_player_118"},
+                  "p2": {"winner": "random_player_39"},
+                  "winner": "random_player_118",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 1
+                },
+                "winner": "Yan Bingtao",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "custom_player_3"},
+                "p2": {
+                  "p1wins": 1,
+                  "p1": {"winner": "random_player_12"},
+                  "p2": {"winner": "random_player_6"},
+                  "winner": "random_player_6",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_6",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 2
+              },
+              "winner": "Yan Bingtao",
+              "stage": "PRE_ROUND_3",
               "p2wins": 1
             },
-            "stage": "PRE_ROUND_2"
+            "winner": "Yan Bingtao",
+            "stage": "ROUND_1",
+            "p2wins": 3
           },
-          "stage": "PRE_ROUND_3"
+          "winner": "Yan Bingtao",
+          "stage": "ROUND_2",
+          "p2wins": 3
+        },
+        "p2": {
+          "p1wins": 3,
+          "p1": {
+            "p1wins": 3,
+            "p1": {"winner": "Ding Junhui"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_103"},
+                "p2": {
+                  "p1wins": 2,
+                  "p1": {"winner": "Mang Dali"},
+                  "p2": {"winner": "Noob"},
+                  "winner": "Mang Dali",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 0
+                },
+                "winner": "random_player_103",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "p2": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_92"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "custom_player_170"},
+                  "p2": {"winner": "random_player_84"},
+                  "winner": "random_player_84",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_92",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "winner": "random_player_92",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 3
+            },
+            "winner": "Ding Junhui",
+            "stage": "ROUND_1",
+            "p2wins": 1
+          },
+          "p2": {
+            "p1wins": 3,
+            "p1": {"winner": "Trump"},
+            "p2": {
+              "p1wins": 3,
+              "p1": {
+                "p1wins": 2,
+                "p1": {"winner": "random_player_47"},
+                "p2": {
+                  "p1wins": 1,
+                  "p1": {"winner": "random_player_2"},
+                  "p2": {"winner": "random_player_75"},
+                  "winner": "random_player_75",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "random_player_47",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 0
+              },
+              "p2": {
+                "p1wins": 2,
+                "p1": {"winner": "Worst Professional"},
+                "p2": {
+                  "p1wins": 0,
+                  "p1": {"winner": "custom_E9B8ADE584BF"},
+                  "p2": {"winner": "random_player_127"},
+                  "winner": "random_player_127",
+                  "stage": "PRE_ROUND_1",
+                  "p2wins": 2
+                },
+                "winner": "Worst Professional",
+                "stage": "PRE_ROUND_2",
+                "p2wins": 1
+              },
+              "winner": "random_player_47",
+              "stage": "PRE_ROUND_3",
+              "p2wins": 2
+            },
+            "winner": "Trump",
+            "stage": "ROUND_1",
+            "p2wins": 2
+          },
+          "winner": "Ding Junhui",
+          "stage": "ROUND_2",
+          "p2wins": 1
         },
         "stage": "QUARTER_FINAL"
       },
@@ -162,5 +870,5 @@
     "stage": "FINAL"
   }},
   "finished": false,
-  "timestamp": "2023/9/25"
+  "timestamp": "2024/4/17"
 }

@@ -57,24 +57,26 @@ public class ChampionshipScore {
     }
 
     public enum Rank implements Comparable<Rank> {
-        CHAMPION(true),
-        SECOND_PLACE(true),
-        TOP_4(true),
-        TOP_8(true),
-        TOP_16(true),
-        TOP_32(true),
-        TOP_64(true),
-        PRE_GAMES_4(false),
-        PRE_GAMES_3(false),
-        PRE_GAMES_2(false),
-        PRE_GAMES_1(false),
-        BEST_SINGLE(false),
-        MAXIMUM(false);
+        CHAMPION(true, true),
+        SECOND_PLACE(true, true),
+        TOP_4(true, true),
+        TOP_8(true, true),
+        TOP_16(true, true),
+        TOP_32(true, true),
+        TOP_64(true, true),
+        PRE_GAMES_4(false, true),
+        PRE_GAMES_3(false, true),
+        PRE_GAMES_2(false, true),
+        PRE_GAMES_1(false, true),
+        BEST_SINGLE(false, false),
+        MAXIMUM(false, false);
 
         public final boolean isMain;
+        public final boolean ranked;  // 是否计入排名
 
-        Rank(boolean isMain) {
+        Rank(boolean isMain, boolean ranked) {
             this.isMain = isMain;
+            this.ranked = ranked;
         }
 
         public static Rank[] getSequenceOfLosers(int mainRounds, int preRounds) {

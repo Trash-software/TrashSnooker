@@ -101,7 +101,7 @@ public class CareerManager {
 
     public static void deleteCareer(CareerSave toDelete) {
         if (!Util.deleteFile(toDelete.getDir())) {
-            EventLogger.log("Cannot delete " + toDelete.getDir().getAbsolutePath());
+            EventLogger.error("Cannot delete " + toDelete.getDir().getAbsolutePath());
         }
         if (toDelete == currentSave) {
             currentSave = null;
@@ -293,7 +293,7 @@ public class CareerManager {
         } catch (FileNotFoundException e) {
             // do nothing
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
         return res;
     }
@@ -307,7 +307,7 @@ public class CareerManager {
             bw.write(builder.toString());
             bw.newLine();
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
         careerSave.updateCacheInfo();
     }
@@ -597,8 +597,10 @@ public class CareerManager {
         List<Career.CareerWithAwards> ranking = getRankingPrivate(type, selection);
         Career defendingChamp = getDefendingChampion(data);
         if (defendingChamp != null) {
-            TourCareer seed1 = new TourCareer(defendingChamp, 1);
-            result.add(seed1);  // 我们认为卫冕冠军一定会参加
+            if (!defendingChamp.isHumanPlayer() || humanJoin) {
+                TourCareer seed1 = new TourCareer(defendingChamp, 1);
+                result.add(seed1);  // 我们认为卫冕冠军一定会参加
+            }
         }
 
         for (int i = 0; i < ranking.size(); i++) {
@@ -627,9 +629,11 @@ public class CareerManager {
         List<Career.CareerWithAwards> rankings = getRankingPrivate(type, selection);
         Career defendingChamp = getDefendingChampion(data);
         if (defendingChamp != null) {
-            TourCareer seed1 = new TourCareer(defendingChamp, 1);
-            result.add(seed1);  // 我们认为卫冕冠军一定会参加
-            if (seed1.career.isHumanPlayer()) humanAlreadyJoin = true;
+            if (!defendingChamp.isHumanPlayer() || humanJoin) {
+                TourCareer seed1 = new TourCareer(defendingChamp, 1);
+                result.add(seed1);  // 我们认为AI卫冕冠军一定会参加
+                if (seed1.career.isHumanPlayer()) humanAlreadyJoin = true;
+            }
         }
 
         for (int i = 0; i < rankings.size(); i++) {
@@ -887,7 +891,7 @@ public class CareerManager {
                 new FileWriter(file, StandardCharsets.UTF_8))) {
             bw.write(str);
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 

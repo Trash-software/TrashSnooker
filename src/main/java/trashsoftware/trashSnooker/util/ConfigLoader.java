@@ -38,7 +38,7 @@ public class ConfigLoader {
         } catch (FileNotFoundException e) {
             writeConfig();
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 
@@ -110,7 +110,7 @@ public class ConfigLoader {
         File dir = pathFile.getParentFile();
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
-                EventLogger.log("Cannot create user directory!");
+                EventLogger.error("Cannot create user directory!");
             }
         }
 
@@ -119,7 +119,7 @@ public class ConfigLoader {
                 bw.write(entry.getKey() + "=" + entry.getValue() + '\n');
             }
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 }

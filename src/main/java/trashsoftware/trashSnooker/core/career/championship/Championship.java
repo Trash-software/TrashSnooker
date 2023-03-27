@@ -60,6 +60,7 @@ public abstract class Championship {
         if (!championship.isFinished()) {
             championship.loadMatchInProgress();
         }
+        championship.loadExtraInfo(jsonObject);
 
         return championship;
     }
@@ -79,8 +80,11 @@ public abstract class Championship {
         }
     }
     
+    protected void loadExtraInfo(JSONObject root) {
+    }
+    
     private void loadMatchInProgress() {
-        activeMatch = PlayerVsAiMatch.loadSaved(matchTree.getRoot(), data);  // 可以是null
+        activeMatch = PlayerVsAiMatch.loadSaved(matchTree.getRoot(), this);  // 可以是null
     }
 
     public MatchTree getMatchTree() {
@@ -104,8 +108,8 @@ public abstract class Championship {
                 timestamp.get(Calendar.YEAR) + "_" + data.getId());
         saveProgressToJson(file);
     }
-
-    private void saveProgressToJson(File file) {
+    
+    protected JSONObject toJson() {
         // 必须在started之后才能保存
         JSONObject saved = new JSONObject();
         saved.put("timestamp", CareerManager.calendarToString(timestamp));
@@ -113,28 +117,49 @@ public abstract class Championship {
         saved.put("stageIndex", currentStageIndex);
         saved.put("matchTree", matchTree.saveProgressToJson());
         saved.put("finished", isFinished());
-        
+
         JSONObject seeds = new JSONObject();
         for (Map.Entry<String, Integer> carSeed : careerSeedMap.entrySet()) {
             seeds.put(carSeed.getKey(), carSeed.getValue());
         }
         saved.put("seedRanks", seeds);
+        
+        return saved;
+    }
+
+    private void saveProgressToJson(File file) {
+        JSONObject saved = toJson();
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             bw.write(saved.toString(2));
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 
     protected abstract List<TourCareer> getParticipantsByRank(boolean playerJoin, boolean humanQualified);
+    
+    protected Map<ChampionshipScore.Rank, List<String>> extraAwardsMap() {
+        return new HashMap<>();
+    }
 
     public boolean isStarted() {
         return matchTree != null;
     }
+    
+    public int getYear() {
+        return timestamp.get(Calendar.YEAR);
+    }
 
     public String fullName() {
-        return timestamp.get(Calendar.YEAR) + " " + data.getName();
+        return getYear() + " " + data.getName();
+    }
+    
+    public String uniqueId() {
+        return String.format("%s_%d_%s", 
+                CareerManager.getInstance().getCareerSave().getPlayerId(),
+                getYear(),
+                data.getId());
     }
 
     public ChampionshipStage getCurrentStage() {
@@ -148,6 +173,8 @@ public abstract class Championship {
     public void startChampionship(boolean humanJoin, boolean humanQualified, boolean save) {
         // precondition: player有资格参加，应在manager内检查
         CareerManager.getInstance().saveToDisk();
+        
+        MatchTreeNode.restoreIdCounter();  // 每个赛事都从0计
         
         System.out.println("Starting " + data.getId());
         List<TourCareer> careers = getParticipantsByRank(humanJoin, humanQualified);
@@ -164,7 +191,7 @@ public abstract class Championship {
         List<Career> seeds = new ArrayList<>(pureList.subList(0, data.getSeedPlaces()));
         List<Career> nonSeeds = new ArrayList<>(pureList.subList(data.getSeedPlaces(), data.getTotalPlaces()));
 
-        matchTree = new MatchTree(data, seeds, nonSeeds);
+        matchTree = new MatchTree(this, seeds, nonSeeds);
         currentStageIndex = data.getStages().length - 1;
 
         if (save) {
@@ -210,7 +237,7 @@ public abstract class Championship {
         System.out.println(data.getId() + stage);
 //        saveProgressToJson();
 
-        PlayerVsAiMatch playerVsAiMatch = matchTree.holdOneRoundMatches(data, stage);
+        PlayerVsAiMatch playerVsAiMatch = matchTree.holdOneRoundMatches(this, stage);
         activeMatch = playerVsAiMatch;
         if (playerVsAiMatch == null) {
             currentStageIndex--;
@@ -262,7 +289,9 @@ public abstract class Championship {
 
     private void distributeAwards() {
         System.out.println("Award distributed!");
-        matchTree.distributeAwards(data, timestamp);
+        Map<ChampionshipScore.Rank, List<String>> extra = extraAwardsMap();
+        
+        matchTree.distributeAwards(data, timestamp, extra);
         CareerManager.getInstance().updateRanking();
         CareerManager.getInstance().saveToDisk();
     }

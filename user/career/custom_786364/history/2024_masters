@@ -1,0 +1,299 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 5,
+    "Fat Guy": 4,
+    "Ding Junhui": 1,
+    "Smart": 11,
+    "Jack Lisowski": 14,
+    "Glass Heart": 6,
+    "Mark Allen": 7,
+    "Selby": 10,
+    "Mark Williams": 12,
+    "O_Sullivan": 2,
+    "Zhao Xintong": 9,
+    "custom_player_160": 16,
+    "Neil Robertson": 8,
+    "Stephen Maguire": 15,
+    "Murphy": 3,
+    "John Wizard": 13
+  },
+  "championshipId": "masters",
+  "matchTree": {"root": {
+    "p1wins": 4,
+    "p1": {
+      "p1wins": 1,
+      "p1": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "Zhao Xintong"},
+          "winner": "Zhao Xintong",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_masters_0",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Ding Junhui"},
+          "p2": {"winner": "Jack Lisowski"},
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_masters_1",
+          "p2wins": 0
+        },
+        "winner": "Ding Junhui",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2024_masters_8",
+        "p2wins": 3
+      },
+      "p2": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "custom_player_160"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_masters_2",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Glass Heart"},
+          "p2": {"winner": "John Wizard"},
+          "winner": "Glass Heart",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_masters_3",
+          "p2wins": 0
+        },
+        "winner": "Glass Heart",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2024_masters_9",
+        "p2wins": 3
+      },
+      "winner": "Glass Heart",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_786364_2024_masters_12",
+      "p2wins": 3
+    },
+    "p2": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 1,
+          "p1": {"winner": "Stuart Bingham"},
+          "p2": {"winner": "Selby"},
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_masters_4",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Fat Guy"},
+          "p2": {"winner": "Stephen Maguire"},
+          "winner": "Fat Guy",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_masters_5",
+          "p2wins": 0
+        },
+        "winner": "Selby",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2024_masters_10",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Murphy"},
+          "p2": {"winner": "Mark Williams"},
+          "winner": "Murphy",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_masters_6",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 1,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {"winner": "Smart"},
+          "winner": "Smart",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_masters_7",
+          "p2wins": 2
+        },
+        "winner": "Murphy",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2024_masters_11",
+        "p2wins": 0
+      },
+      "winner": "Selby",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_786364_2024_masters_13",
+      "p2wins": 2
+    },
+    "winner": "Glass Heart",
+    "stage": "FINAL",
+    "matchId": "custom_786364_2024_masters_14",
+    "p2wins": 0
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 115,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_masters_2",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 103,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_786364_2024_masters_9",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 90,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_786364_2024_masters_12",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 89,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_masters_3",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 84,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_masters_4",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 80,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_masters_11",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 78,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_masters_4",
+      "playerId": "Selby"
+    },
+    {
+      "score": 74,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_masters_8",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 72,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_masters_14",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 66,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_masters_12",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 65,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_masters_0",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 62,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_masters_3",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 60,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_masters_6",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 59,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_786364_2024_masters_7",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 58,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_masters_5",
+      "playerId": "Fat Guy"
+    },
+    {
+      "score": 57,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_786364_2024_masters_10",
+      "playerId": "Selby"
+    },
+    {
+      "score": 56,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_masters_0",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 53,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_masters_10",
+      "playerId": "Selby"
+    },
+    {
+      "score": 51,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_786364_2024_masters_11",
+      "playerId": "Murphy"
+    }
+  ],
+  "timestamp": "2024/1/15"
+}

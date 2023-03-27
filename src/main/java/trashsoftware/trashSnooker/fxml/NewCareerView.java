@@ -16,7 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.CareerManager;
-import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.core.career.ChampDataManager;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -24,9 +23,6 @@ import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 public class NewCareerView implements Initializable {
@@ -169,7 +165,7 @@ public class NewCareerView implements Initializable {
             AbilityView controller = loader.getController();
             controller.setup(scene, existingPlayersBox.getValue());
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 
@@ -199,7 +195,7 @@ public class NewCareerView implements Initializable {
             }
         };
         service.setOnSucceeded(event -> launchNext());
-        service.setOnFailed(event -> EventLogger.log(event.getSource().getException()));
+        service.setOnFailed(event -> EventLogger.error(event.getSource().getException()));
 
         basePane.setDisable(true);
         promptLabel.setText(strings.getString("initializingCareer"));

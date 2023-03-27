@@ -158,7 +158,7 @@ public class EntireGame {
      */
     public boolean rua(InGamePlayer igp) {
         int playerNum = igp == p1 ? 1 : 2;
-        return playerContinuousLoses(playerNum) >= 3;  // 连输3局，rua了
+        return playerContinuousLoses(playerNum) >= 3;  // 连输3局以上，rua了
     }
 
     public int getP1Wins() {

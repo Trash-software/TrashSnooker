@@ -28,12 +28,15 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 import trashsoftware.trashSnooker.audio.GameAudio;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.CareerManager;
+import trashsoftware.trashSnooker.core.career.ChampionshipStage;
 import trashsoftware.trashSnooker.core.career.championship.PlayerVsAiMatch;
+import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
@@ -206,7 +209,7 @@ public class GameView implements Initializable {
 
     private ResourceBundle strings;
 
-    private double aiAnimationSpeed = 1;
+    private double aiAnimationSpeed = 1.0;
 
     public static double canvasX(double realX) {
         return realX * scale;
@@ -254,8 +257,8 @@ public class GameView implements Initializable {
                 System.out.println("New speed " + aiAnimationSpeed);
             }
         }));
-
-        animationPlaySpeedToggle.selectToggle(animationPlaySpeedToggle.getToggles().get(2));
+        
+        animationPlaySpeedToggle.selectToggle(animationPlaySpeedToggle.getToggles().get(3));
 
         graphicsContext = gameCanvas.getGraphicsContext2D();
         graphicsContext.setTextAlign(TextAlignment.CENTER);
@@ -342,8 +345,7 @@ public class GameView implements Initializable {
         gameButtonBox.setVisible(false);
         gameButtonBox.setManaged(false);
 
-        player1Label.setText(player1.getPlayerPerson().getName());
-        player2Label.setText(player2.getPlayerPerson().getName());
+        setupNameLabels(player1.getPlayerPerson(), player2.getPlayerPerson());
         totalFramesLabel.setText(String.format("(%d)", replay.getItem().totalFrames));
 
         generateScales(replay.gameValues);
@@ -391,15 +393,14 @@ public class GameView implements Initializable {
         replayButtonBox.setVisible(false);
         replayButtonBox.setManaged(false);
 
-        player1Label.setText(player1.getPlayerPerson().getName());
-        player2Label.setText(player2.getPlayerPerson().getName());
+        setupNameLabels(player1.getPlayerPerson(), player2.getPlayerPerson());
         totalFramesLabel.setText(String.format("(%d)", entireGame.totalFrames));
-
-        powerSlider.setMajorTickUnit(
-                game.getGame().getCuingPlayer().getPlayerPerson().getControllablePowerPercentage());
+        
         updatePlayStage();
 
         setupPowerSlider();
+        updatePowerSlider(game.getGame().getCuingPlayer().getPlayerPerson());
+        
         setUiFrameStart();
         setupDebug();
 
@@ -435,6 +436,19 @@ public class GameView implements Initializable {
         EntireGame entireGame = new EntireGame(player1, player2, gameValues,
                 totalFrames, cloth);
         setup(stage, entireGame);
+    }
+    
+    private void setupNameLabels(PlayerPerson p1, PlayerPerson p2) {
+        String p1n = p1.getName();
+        String p2n = p2.getName();
+        
+        if (careerMatch != null) {
+            p1n += " (" + careerMatch.getChampionship().getCareerSeedMap().get(p1.getPlayerId()) + ")";
+            p2n += " (" + careerMatch.getChampionship().getCareerSeedMap().get(p2.getPlayerId()) + ")";
+        }
+        
+        player1Label.setText(p1n);
+        player2Label.setText(p2n);
     }
 
     public void setupCareerMatch(Stage stage,
@@ -564,10 +578,8 @@ public class GameView implements Initializable {
         }
 
         PlayerPerson playerPerson = igp.getPlayerPerson();
-
-        powerSlider.setMajorTickUnit(
-                playerPerson.getControllablePowerPercentage()
-        );
+        
+        updatePowerSlider(playerPerson);
         if (replay == null) {
             cueButton.setDisable(false);
             if (igp.getPlayerType() == PlayerType.COMPUTER) {
@@ -585,8 +597,10 @@ public class GameView implements Initializable {
 
             } else {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
-                snookerScoreDiffLabel.setText(String.format(strings.getString("scoreDiff"), asg.getScoreDiff()));
-                snookerScoreRemainingLabel.setText(String.format(strings.getString("scoreRem"), asg.getRemainingScore()));
+                snookerScoreDiffLabel.setText(String.format(strings.getString("scoreDiff"), 
+                        asg.getScoreDiff()));
+                snookerScoreRemainingLabel.setText(String.format(strings.getString("scoreRem"), 
+                        asg.getRemainingScore(asg.isDoingSnookerFreeBll())));
             }
         }
     }
@@ -615,10 +629,10 @@ public class GameView implements Initializable {
         }
     }
 
-    private void updatePowerSlider(Player cuingPlayer) {
+    private void updatePowerSlider(PlayerPerson cuingPlayer) {
         powerSlider.setValue(DEFAULT_POWER);
         powerSlider.setMajorTickUnit(
-                cuingPlayer.getPlayerPerson().getControllablePowerPercentage());
+                cuingPlayer.getControllablePowerPercentage());
     }
 
     public void finishCue(Player justCuedPlayer, Player nextCuePlayer) {
@@ -629,7 +643,7 @@ public class GameView implements Initializable {
         restoreCuePoint();
         restoreCueAngle();
         updateScoreDiffLabels();
-        Platform.runLater(() -> updatePowerSlider(nextCuePlayer));
+        Platform.runLater(() -> updatePowerSlider(nextCuePlayer.getPlayerPerson()));
         setButtonsCueEnd(nextCuePlayer);
         obstacleProjection = null;
         printPlayStage = true;
@@ -712,16 +726,36 @@ public class GameView implements Initializable {
         }
         updatePlayStage();
     }
+    
+    private void updateChampionshipBreaks(SnookerChampionship sc, 
+                                          ChampionshipStage cs, 
+                                          SnookerPlayer player,
+                                          int nFrameFrom1) {
+        for (Integer breakScore : player.getSinglePolesInThisGame()) {
+            sc.updateBreakScore(player.getPlayerPerson().getPlayerId(), cs, breakScore, false,
+                    careerMatch.matchId, nFrameFrom1);
+        }
+    }
 
     private void endFrame() {
 //        hideCue();
         Player wonPlayer = game.getGame().getWiningPlayer();
 
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
-
+        drawScoreBoard(game.getGame().getCuingPlayer(), false);
+        
         game.getGame().getRecorder().stopRecording(true);
+        
+        int frameNFrom1 = game.getP1Wins() + game.getP2Wins();  // 上面已经更新了
 
         if (careerMatch != null) {
+            if (gameValues.rule.snookerLike()) {
+                SnookerChampionship sc = (SnookerChampionship) careerMatch.getChampionship();
+                SnookerPlayer sp1 = (SnookerPlayer) game.getGame().getPlayer1();
+                SnookerPlayer sp2 = (SnookerPlayer) game.getGame().getPlayer2();
+                updateChampionshipBreaks(sc, careerMatch.stage, sp1, frameNFrom1);
+                updateChampionshipBreaks(sc, careerMatch.stage, sp2, frameNFrom1);
+            }
             careerMatch.saveMatch();
         } else {
             game.generalSave();
@@ -928,7 +962,9 @@ public class GameView implements Initializable {
     private void onSingleClick(MouseEvent mouseEvent) {
         System.out.println("Clicked!");
         if (replay != null) return;
+        if (playingMovement) return;
         if (aiCalculating) return;
+        if (cueAnimationPlayer != null) return;
         if (game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() ==
                 PlayerType.COMPUTER) return;
 
@@ -979,6 +1015,13 @@ public class GameView implements Initializable {
     }
 
     private void onDragStarted(MouseEvent mouseEvent) {
+        if (playingMovement) return;
+        if (replay != null) return;
+        if (aiCalculating) return;
+        if (cueAnimationPlayer != null) return;
+        if (game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() ==
+                PlayerType.COMPUTER) return;
+        
         Ball white = game.getGame().getCueBall();
         if (white.isPotted()) return;
         isDragging = true;
@@ -1023,18 +1066,6 @@ public class GameView implements Initializable {
         isDragging = false;
         lastDragAngle = 0.0;
         stage.getScene().setCursor(Cursor.DEFAULT);
-    }
-
-    private void startGame(int totalFrames, TableCloth cloth) {
-        game = new EntireGame(player1, player2, gameValues, totalFrames, cloth);
-//        powerSlider.setMajorTickUnit(
-//                game.getGame().getCuingPlayer().getPlayerPerson().getControllablePowerPercentage());
-//        updatePlayStage();
-    }
-
-    @FXML
-    void saveGameAction() {
-        game.generalSave();
     }
 
     @FXML
@@ -1087,13 +1118,14 @@ public class GameView implements Initializable {
     @FXML
     void withdrawAction() {
         if (game.getGame() instanceof AbstractSnookerGame) {
-            Player curPlayer = game.getGame().getCuingPlayer();
-            int diff = ((AbstractSnookerGame) game.getGame()).getScoreDiff((SnookerPlayer) curPlayer);
+            AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+            SnookerPlayer curPlayer = asg.getCuingPlayer();
+            int diff = asg.getScoreDiff(curPlayer);
             String behindText = diff <= 0 ? strings.getString("scoreBehind") : strings.getString("scoreAhead");
             AlertShower.askConfirmation(
                     stage,
                     String.format(strings.getString("confirmWithdrawContent"), behindText, Math.abs(diff),
-                            ((AbstractSnookerGame) game.getGame()).getRemainingScore()),
+                            asg.getRemainingScore(asg.isDoingSnookerFreeBll())),
                     String.format(strings.getString("confirmWithdraw"), curPlayer.getPlayerPerson().getName()),
                     () -> withdraw(curPlayer),
                     null
@@ -1120,11 +1152,7 @@ public class GameView implements Initializable {
         playingMovement = false;
         movement = null;
         cueAnimationPlayer = null;
-
-        replayNextCueButton.setText(strings.getString("replayNextCue"));
-        replayNextCueButton.setOnAction(this::replayNextCueAction);
-        replayNextCueButton.setDisable(false);
-        replayLastCueButton.setDisable(false);
+        finishCueReplay();
     }
 
     @FXML
@@ -1156,7 +1184,7 @@ public class GameView implements Initializable {
         game.getGame().switchPlayer();
 
         Player willPlayPlayer = game.getGame().getCuingPlayer();
-        updatePowerSlider(willPlayPlayer);
+        updatePowerSlider(willPlayPlayer.getPlayerPerson());
         setButtonsCueEnd(willPlayPlayer);
         drawScoreBoard(willPlayPlayer, true);
         drawTargetBoard(true);
@@ -1223,7 +1251,7 @@ public class GameView implements Initializable {
         double handSdMul = PlayerPerson.HandBody.getSdOfHand(handSkill);
         frontBackSpinFactor *= handSdMul;
         sideSpinFactor *= handSdMul;
-        powerFactor *= handSdMul;
+        // power的包含在下面了
 
         double pMaxActualPower = getActualPowerPercentage(playerPerson.getMaxPowerPercentage(),
                 getUnitSideSpin(intentCuePointX),
@@ -1234,9 +1262,8 @@ public class GameView implements Initializable {
         double power = getActualPowerPercentage();
         final double wantPower = power;
         // 因为力量控制导致的力量偏差
-        powerFactor = powerFactor * (100.0 - playerPerson.getPowerControl()) / 100.0;
+        powerFactor = powerFactor * playerPerson.getPowerSd(selPower, handSkill);  // 用力越大误差越大
         powerFactor *= cue.powerMultiplier;  // 发力范围越大的杆控力越粗糙
-        powerFactor *= playerPerson.getErrorMultiplierOfPower(selPower);  // 用力越大误差越大
         if (enablePsy) {
             double psyPowerMul = getPsyControlMultiplier(playerPerson);
             powerFactor /= psyPowerMul;
@@ -1687,8 +1714,7 @@ public class GameView implements Initializable {
             miscued = isMiscue();
 
             powerSlider.setValue(cueRecord.actualPower);
-            Platform.runLater(() -> powerSlider.setMajorTickUnit(
-                    cueRecord.cuePlayer.getPlayerPerson().getControllablePowerPercentage()));
+            Platform.runLater(() -> updatePowerSlider(cueRecord.cuePlayer.getPlayerPerson()));
 
             Ball cueBall = replay.getCueBall();
             MovementFrame cueBallPos = movement.getStartingPositions().get(cueBall);
@@ -1858,48 +1884,6 @@ public class GameView implements Initializable {
                         game.getGame()).powerMultiplier;
     }
 
-    private double[] calculateSpins(double vx, double vy) {
-        double speed = Math.hypot(vx, vy);
-
-        double frontBackSpin = getUnitFrontBackSpin();  // 高杆正，低杆负
-        double leftRightSpin = getUnitSideSpin();  // 右塞正（顶视逆时针），左塞负
-        if (frontBackSpin > 0) {
-            // 高杆补偿
-            frontBackSpin *= Values.FRONT_SPIN_FACTOR;
-        }
-
-        // 小力高低杆补偿
-        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.45);
-        double sideSpinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.75);
-
-        double side = sideSpinRatio * leftRightSpin * Values.MAX_SIDE_SPIN_SPEED;
-        // 旋转产生的总目标速度
-        double spinSpeed = spinRatio * frontBackSpin * Values.MAX_SPIN_SPEED;
-
-        // (spinX, spinY)是一个向量，指向球因为旋转想去的方向
-        double spinX = vx * (spinSpeed / speed);
-        double spinY = vy * (spinSpeed / speed);
-//        System.out.printf("x %f, y %f, total %f, side %f\n", spinX, spinY, spinSpeed, side);
-
-        double mbummeMag = cueAngleDeg / 90.0 / 1000;  // 扎杆强度
-        double[] norm = Algebra.normalVector(vx, vy);  // 法线，扎杆就在这个方向
-        double mbummeX = side * -norm[0] * mbummeMag;
-        double mbummeY = side * -norm[1] * mbummeMag;
-
-        if (cueAngleDeg > 5) {
-            // 扎杆在一定程度上减弱其他杆法
-            double mul = (95 - cueAngleDeg) / 90.0;
-            side *= mul;
-            spinX *= mul;
-            spinY *= mul;
-        }
-
-//        System.out.printf("spin x: %f, spin y: %f, mx: %f, my: %f\n",
-//                spinX, spinY, mbummeX, mbummeY);
-
-        return new double[]{spinX + mbummeX, spinY + mbummeY, side};
-    }
-
     private void restoreCuePoint() {
         cuePointX = cueCanvasWH / 2;
         cuePointY = cueCanvasWH / 2;
@@ -1939,8 +1923,19 @@ public class GameView implements Initializable {
                     return;
                 }
             }
-            powerLabel.setText(String.valueOf(Math.round(newValue.doubleValue())));
+            powerLabel.setText(String.format("%.1f", newValue.doubleValue()));
         }));
+        powerSlider.setLabelFormatter(new StringConverter<>() {
+            @Override
+            public String toString(Double aDouble) {
+                return String.format("%.1f", aDouble);
+            }
+
+            @Override
+            public Double fromString(String s) {
+                return Double.parseDouble(s);
+            }
+        });
 
         powerSlider.setValue(DEFAULT_POWER);
     }
@@ -3365,7 +3360,7 @@ public class GameView implements Initializable {
 
                 if (cueDtToWhite <= maxExtension) {  // 出杆结束了
                     endHeldMs += frameTimeMs;
-                } else if (Math.abs(cueDtToWhite) < cueMaxSpeed * frameTimeMs) {
+                } else if (cueDtToWhite <= 0) {
                     if (!touched) {
                         touched = true;
 //                        System.out.println("+++++++++++++++ Touched! +++++++++++++++");

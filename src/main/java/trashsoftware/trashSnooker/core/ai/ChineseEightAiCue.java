@@ -156,8 +156,8 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 false
         );
         
-        IntegratedAttackChoice fullAttack = attackGivenChoices(fullChoices, phy);
-        IntegratedAttackChoice halfAttack = attackGivenChoices(halfChoices, phy);
+        IntegratedAttackChoice fullAttack = attackGivenChoices(fullChoices, phy, false);
+        IntegratedAttackChoice halfAttack = attackGivenChoices(halfChoices, phy, false);
         
         if (fullAttack == null) {
             if (halfAttack != null) {

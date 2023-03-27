@@ -7,24 +7,24 @@
     "person": "custom_player_2",
     "playerType": "PLAYER",
     "playCue": "GirlCue",
-    "breakCue": "GirlCue"
+    "breakCue": "stdBreakCue"
   },
   "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "Murphy",
+    "person": "Wang Xu",
     "playerType": "COMPUTER",
-    "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
+    "playCue": "XuBrotherCue",
+    "breakCue": "stdBreakCue"
   },
-  "startTime": 1679307829433,
+  "startTime": 1679498841224,
   "gameValues": {
-    "ball": "SNOOKER_BALL",
-    "gameRule": "SNOOKER",
+    "ball": "POOL_BALL",
+    "gameRule": "LIS_EIGHT",
     "table": {
-      "tableOrdinal": 0,
-      "holeSizeOrdinal": 1
+      "tableOrdinal": 1,
+      "holeSizeOrdinal": 2
     }
   },
   "totalFrames": 1,

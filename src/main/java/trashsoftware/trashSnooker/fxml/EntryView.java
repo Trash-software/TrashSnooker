@@ -120,7 +120,7 @@ public class EntryView implements Initializable {
 
             stage.show();
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 
@@ -143,7 +143,7 @@ public class EntryView implements Initializable {
 
             stage.show();
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 
@@ -169,7 +169,7 @@ public class EntryView implements Initializable {
 
             stage.show();
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 

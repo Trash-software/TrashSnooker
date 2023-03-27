@@ -1,0 +1,367 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Brown": 28,
+    "Yan Bingtao": 21,
+    "Liu Mang": 24,
+    "custom_player_1": 17,
+    "custom_player_3": 25,
+    "custom_player_2": 22,
+    "Jack Lisowski": 1,
+    "custom_player_4": 19,
+    "Glass Heart": 4,
+    "Mark Allen": 7,
+    "Selby": 13,
+    "Karen Wilson": 16,
+    "Zhao Xintong": 8,
+    "Neil Robertson": 9,
+    "Stephen Maguire": 10,
+    "Murphy": 5,
+    "John Wizard": 3,
+    "Stuart Bingham": 6,
+    "Matthew Stevens": 20,
+    "Kid": 27,
+    "Fat Guy": 2,
+    "Smart": 11,
+    "Trump": 15,
+    "High Stick": 26,
+    "Mark Williams": 12,
+    "Luca Brecel": 18,
+    "custom_player_160": 14,
+    "Worst Professional": 23
+  },
+  "championshipId": "challenger_open",
+  "matchTree": {"root": {
+    "p1wins": 3,
+    "p1": {
+      "p1wins": 1,
+      "p1": {
+        "p1wins": 2,
+        "p1": {"winner": "Fat Guy"},
+        "p2": {
+          "p1wins": 1,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "Stuart Bingham"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Karen Wilson"},
+              "p2": {"winner": "Worst Professional"},
+              "winner": "Karen Wilson",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_786364_2023_challenger_open_0",
+              "p2wins": 0
+            },
+            "winner": "Stuart Bingham",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_786364_2023_challenger_open_8",
+            "p2wins": 1
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Stephen Maguire"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Luca Brecel"},
+              "p2": {"winner": "custom_player_1"},
+              "winner": "Luca Brecel",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_786364_2023_challenger_open_1",
+              "p2wins": 0
+            },
+            "winner": "Stephen Maguire",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_786364_2023_challenger_open_9",
+            "p2wins": 0
+          },
+          "winner": "Stephen Maguire",
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_786364_2023_challenger_open_16",
+          "p2wins": 2
+        },
+        "winner": "Fat Guy",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2023_challenger_open_20",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {"winner": "John Wizard"},
+        "p2": {
+          "p1wins": 0,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "Mark Allen"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Matthew Stevens"},
+              "p2": {"winner": "Kid"},
+              "winner": "Matthew Stevens",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_786364_2023_challenger_open_2",
+              "p2wins": 0
+            },
+            "winner": "Mark Allen",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_786364_2023_challenger_open_10",
+            "p2wins": 1
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Neil Robertson"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "custom_player_2"},
+              "p2": {"winner": "High Stick"},
+              "winner": "custom_player_2",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_786364_2023_challenger_open_3",
+              "p2wins": 0
+            },
+            "winner": "Neil Robertson",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_786364_2023_challenger_open_11",
+            "p2wins": 0
+          },
+          "winner": "Neil Robertson",
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_786364_2023_challenger_open_17",
+          "p2wins": 2
+        },
+        "winner": "Neil Robertson",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2023_challenger_open_21",
+        "p2wins": 2
+      },
+      "winner": "Neil Robertson",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_786364_2023_challenger_open_24",
+      "p2wins": 2
+    },
+    "p2": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 0,
+        "p1": {"winner": "Jack Lisowski"},
+        "p2": {
+          "p1wins": 0,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "Smart"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Yan Bingtao"},
+              "p2": {"winner": "custom_player_3"},
+              "winner": "Yan Bingtao",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_786364_2023_challenger_open_4",
+              "p2wins": 1
+            },
+            "winner": "Smart",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_786364_2023_challenger_open_12",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Murphy"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "custom_player_4"},
+              "p2": {"winner": "Liu Mang"},
+              "winner": "Liu Mang",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_786364_2023_challenger_open_5",
+              "p2wins": 2
+            },
+            "winner": "Murphy",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_786364_2023_challenger_open_13",
+            "p2wins": 0
+          },
+          "winner": "Murphy",
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_786364_2023_challenger_open_18",
+          "p2wins": 2
+        },
+        "winner": "Murphy",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2023_challenger_open_22",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {"winner": "Glass Heart"},
+        "p2": {
+          "p1wins": 0,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "Mark Williams"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "custom_player_160"},
+              "p2": {"winner": "Trump"},
+              "winner": "Trump",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_786364_2023_challenger_open_6",
+              "p2wins": 2
+            },
+            "winner": "Mark Williams",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_786364_2023_challenger_open_14",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "Zhao Xintong"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Selby"},
+              "p2": {"winner": "Brown"},
+              "winner": "Selby",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_786364_2023_challenger_open_7",
+              "p2wins": 0
+            },
+            "winner": "Selby",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_786364_2023_challenger_open_15",
+            "p2wins": 2
+          },
+          "winner": "Selby",
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_786364_2023_challenger_open_19",
+          "p2wins": 2
+        },
+        "winner": "Glass Heart",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2023_challenger_open_23",
+        "p2wins": 0
+      },
+      "winner": "Glass Heart",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_786364_2023_challenger_open_25",
+      "p2wins": 2
+    },
+    "winner": "Neil Robertson",
+    "stage": "FINAL",
+    "matchId": "custom_786364_2023_challenger_open_26",
+    "p2wins": 2
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 95,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2023_challenger_open_15",
+      "playerId": "Selby"
+    },
+    {
+      "score": 87,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2023_challenger_open_25",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 74,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2023_challenger_open_13",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 72,
+      "stage": "PRE_ROUND_3",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2023_challenger_open_19",
+      "playerId": "Selby"
+    },
+    {
+      "score": 65,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2023_challenger_open_25",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 62,
+      "stage": "PRE_ROUND_3",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2023_challenger_open_18",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 61,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2023_challenger_open_10",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 59,
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2023_challenger_open_2",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 58,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2023_challenger_open_24",
+      "playerId": "Fat Guy"
+    },
+    {
+      "score": 56,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_786364_2023_challenger_open_10",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 54,
+      "stage": "PRE_ROUND_3",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2023_challenger_open_16",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 52,
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2023_challenger_open_7",
+      "playerId": "Selby"
+    },
+    {
+      "score": 51,
+      "stage": "PRE_ROUND_3",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2023_challenger_open_19",
+      "playerId": "Selby"
+    },
+    {
+      "score": 50,
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2023_challenger_open_3",
+      "playerId": "custom_player_2"
+    }
+  ],
+  "timestamp": "2023/9/25"
+}

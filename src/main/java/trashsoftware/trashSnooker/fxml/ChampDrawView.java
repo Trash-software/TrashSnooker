@@ -13,16 +13,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.*;
-import trashsoftware.trashSnooker.core.career.championship.Championship;
-import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
-import trashsoftware.trashSnooker.core.career.championship.PlayerVsAiMatch;
+import trashsoftware.trashSnooker.core.career.championship.*;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
@@ -49,6 +46,8 @@ public class ChampDrawView implements Initializable {
     ComboBox<MainView.CueItem> cueBox;
     @FXML
     LabelTable<MatchResItem> matchResTable;
+    @FXML
+    Label extraInfoLabel;
     @FXML
     Button nextRoundButton;
 
@@ -198,6 +197,37 @@ public class ChampDrawView implements Initializable {
         for (ChampionshipScore.Rank rank : championship.getData().getRanksOfLosers()) {
             matchResTable.addItem(new MatchResItem(rank).ranks(matchRes.get(rank)));
         }
+        
+        if (championship instanceof SnookerChampionship) {
+            showSnookerBreakScores((SnookerChampionship) championship);
+        }
+    }
+    
+    private void showSnookerBreakScores(SnookerChampionship sc) {
+        List<SnookerBreakScore> breakScores = sc.getTopNBreaks(5);
+        
+        StringBuilder builder = new StringBuilder()
+                .append(strings.getString("highestBreaks"))
+                .append(" ");
+        
+        int ranking = 1;
+        SnookerBreakScore last = null;
+        for (int i = 0; i < breakScores.size(); i++) {
+            SnookerBreakScore sbs = breakScores.get(i);
+            if (last == null || last.score != sbs.score) {
+                ranking = i + 1;
+            }
+            builder.append(ranking)
+                    .append(". ")
+                    .append(DataLoader.getInstance().getPlayerPerson(sbs.playerId).getName())
+                    .append(" (")
+                    .append(sbs.score)
+                    .append(')')
+                    .append("  ");
+
+            last = sbs;
+        }
+        extraInfoLabel.setText(builder.toString());
     }
     
     private void showCongratulation() {
@@ -240,7 +270,7 @@ public class ChampDrawView implements Initializable {
 
                 stage.show();
             } catch (Exception e) {
-                EventLogger.log(e);
+                EventLogger.error(e);
             }
         }
     }
@@ -263,9 +293,9 @@ public class ChampDrawView implements Initializable {
                     updateGui();
                     return;
                 } else {
-                    ChampionshipData.TableSpec tableSpec = match.data.getTableSpec();
+                    ChampionshipData.TableSpec tableSpec = match.getChampionship().getData().getTableSpec();
 
-                    GameValues values = new GameValues(match.data.getType(), tableSpec.tableMetrics, tableSpec.ballMetrics);
+                    GameValues values = new GameValues(match.getChampionship().getData().getType(), tableSpec.tableMetrics, tableSpec.ballMetrics);
 
                     InGamePlayer igp1;
                     InGamePlayer igp2;
@@ -314,7 +344,7 @@ public class ChampDrawView implements Initializable {
                             igp1,
                             igp2,
                             values,
-                            match.data.getNFramesOfStage(match.getStage()),
+                            match.getChampionship().getData().getNFramesOfStage(match.getStage()),
                             tableSpec.tableCloth
                     );
 
@@ -352,7 +382,7 @@ public class ChampDrawView implements Initializable {
 
             stage.show();
         } catch (Exception e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 
@@ -382,7 +412,7 @@ public class ChampDrawView implements Initializable {
         gc2d.setFill(Color.BLACK);
         gc2d.setStroke(Color.BLACK);
         for (int i = 0; i < totalRounds; i++) {
-            double x = getX(i + 1) + nodeWidth;
+            double x = getX(i + 1) + nodeWidth + leftBlockWidth;
             ChampionshipStage stage = championship.getData().getStages()[i];
             int totalFrames = championship.getData().getNFramesOfStage(stage);
             int winFrames = totalFrames / 2 + 1;
@@ -493,7 +523,7 @@ public class ChampDrawView implements Initializable {
             node.y = (currentMax + rightY) / 2;
             return rightY;
         } else {
-            throw new RuntimeException("Incomplete binary tree");
+            throw new RuntimeException("Unexpected: incomplete binary tree");
         }
     }
 

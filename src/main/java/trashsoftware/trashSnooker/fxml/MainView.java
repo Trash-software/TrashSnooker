@@ -223,7 +223,7 @@ public class MainView implements Initializable {
 
             stage.show();
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
     
@@ -257,7 +257,7 @@ public class MainView implements Initializable {
                 AbilityView controller = loader.getController();
                 controller.setup(scene, person);
             } catch (IOException e) {
-                EventLogger.log(e);
+                EventLogger.error(e);
             }
         }
     }
@@ -342,7 +342,7 @@ public class MainView implements Initializable {
 
             stage.show();
         } catch (Exception e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 

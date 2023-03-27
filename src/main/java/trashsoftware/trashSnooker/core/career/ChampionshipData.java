@@ -239,12 +239,14 @@ public class ChampionshipData {
 //        if (stages.size() != frames.length()) throw new RuntimeException();
     }
 
-    public Integer getAwardByRank(ChampionshipScore.Rank rank) {
-        return awards.get(rank);
+    public int getAwardByRank(ChampionshipScore.Rank rank) {
+        Integer awd = awards.get(rank);
+        return awd == null ? 0 :awd;
     }
 
     public int getExpByRank(ChampionshipScore.Rank rank) {
-        return expMap.get(rank);
+        Integer ex = expMap.get(rank);
+        return ex == null ? 0 : ex;
     }
 
     public Selection getSelection() {

@@ -6,13 +6,14 @@ import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
+import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 
 public class ChineseAiVsAi extends AiVsAi {
     boolean p1break = true;
     
-    public ChineseAiVsAi(Career p1, Career p2, ChampionshipData data, int totalFrames) {
-        super(p1, p2, data, totalFrames);
+    public ChineseAiVsAi(Career p1, Career p2, Championship championship, String matchId, int totalFrames) {
+        super(p1, p2, championship, matchId, totalFrames);
     }
 
     @Override

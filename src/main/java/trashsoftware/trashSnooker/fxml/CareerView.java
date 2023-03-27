@@ -440,7 +440,7 @@ public class CareerView implements Initializable {
 
             stage.show();
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 
@@ -500,7 +500,7 @@ public class CareerView implements Initializable {
 
             stage.show();
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 

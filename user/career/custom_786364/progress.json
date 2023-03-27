@@ -1,0 +1,363 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 14,
+    "Matthew Stevens": 16,
+    "Fat Guy": 4,
+    "Ding Junhui": 2,
+    "Smart": 10,
+    "Jack Lisowski": 13,
+    "Glass Heart": 9,
+    "Mark Allen": 5,
+    "Selby": 7,
+    "Mark Williams": 8,
+    "O_Sullivan": 1,
+    "Zhao Xintong": 6,
+    "custom_player_160": 15,
+    "Neil Robertson": 11,
+    "Murphy": 3,
+    "John Wizard": 12
+  },
+  "championshipId": "professional_champ",
+  "matchTree": {"root": {
+    "p1wins": 0,
+    "p1": {
+      "p1wins": 2,
+      "p1": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {"winner": "Matthew Stevens"},
+          "winner": "Matthew Stevens",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_professional_champ_0",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Zhao Xintong"},
+          "p2": {"winner": "Jack Lisowski"},
+          "winner": "Zhao Xintong",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_professional_champ_1",
+          "p2wins": 1
+        },
+        "winner": "Zhao Xintong",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2024_professional_champ_8",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Fat Guy"},
+          "p2": {"winner": "custom_player_160"},
+          "winner": "Fat Guy",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_professional_champ_2",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Selby"},
+          "p2": {"winner": "Neil Robertson"},
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_professional_champ_3",
+          "p2wins": 0
+        },
+        "winner": "Selby",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2024_professional_champ_9",
+        "p2wins": 2
+      },
+      "winner": "Selby",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_786364_2024_professional_champ_12",
+      "p2wins": 3
+    },
+    "p2": {
+      "p1wins": 1,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "Ding Junhui"},
+          "p2": {"winner": "John Wizard"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_professional_champ_4",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Williams"},
+          "p2": {"winner": "Smart"},
+          "winner": "Mark Williams",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_professional_champ_5",
+          "p2wins": 0
+        },
+        "winner": "John Wizard",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2024_professional_champ_10",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Murphy"},
+          "p2": {"winner": "Glass Heart"},
+          "winner": "Murphy",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_professional_champ_6",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "Stuart Bingham"},
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "matchId": "custom_786364_2024_professional_champ_7",
+          "p2wins": 0
+        },
+        "winner": "O_Sullivan",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_786364_2024_professional_champ_11",
+        "p2wins": 2
+      },
+      "winner": "O_Sullivan",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_786364_2024_professional_champ_13",
+      "p2wins": 3
+    },
+    "winner": "O_Sullivan",
+    "stage": "FINAL",
+    "matchId": "custom_786364_2024_professional_champ_14",
+    "p2wins": 4
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 129,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_professional_champ_7",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 128,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_professional_champ_11",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 124,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_professional_champ_7",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 122,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_professional_champ_14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 111,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_professional_champ_3",
+      "playerId": "Selby"
+    },
+    {
+      "score": 108,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_professional_champ_1",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 103,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_professional_champ_9",
+      "playerId": "Selby"
+    },
+    {
+      "score": 102,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_professional_champ_13",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 93,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_professional_champ_6",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 86,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_786364_2024_professional_champ_12",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 84,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_786364_2024_professional_champ_14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 81,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_professional_champ_8",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 77,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_professional_champ_10",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 76,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_professional_champ_14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 75,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_professional_champ_11",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 73,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_professional_champ_12",
+      "playerId": "Selby"
+    },
+    {
+      "score": 72,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_professional_champ_0",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 69,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_786364_2024_professional_champ_2",
+      "playerId": "Fat Guy"
+    },
+    {
+      "score": 68,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_professional_champ_13",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 67,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_professional_champ_8",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 64,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_professional_champ_12",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 63,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_professional_champ_0",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 59,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_786364_2024_professional_champ_9",
+      "playerId": "Selby"
+    },
+    {
+      "score": 57,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_786364_2024_professional_champ_14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 53,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_786364_2024_professional_champ_4",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 52,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_786364_2024_professional_champ_13",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 51,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_786364_2024_professional_champ_10",
+      "playerId": "John Wizard"
+    }
+  ],
+  "timestamp": "2024/2/22"
+}

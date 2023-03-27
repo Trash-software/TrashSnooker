@@ -554,6 +554,14 @@ public class PlayerPerson {
         return participates.contains(gameRule);
     }
 
+    /**
+     * 返回该球员在选定的发力下，控制力量的标准差
+     */
+    public double getPowerSd(double selectedPower, HandSkill handSkill) {
+        double sd = (100.0 - getPowerControl()) / 100.0;
+        return sd * getErrorMultiplierOfPower(selectedPower) * HandBody.getSdOfHand(handSkill);
+    }
+
     public double getErrorMultiplierOfPower(double selectedPower) {
         double ctrlAblePwr = getControllablePowerPercentage();
         double mul = 1;
