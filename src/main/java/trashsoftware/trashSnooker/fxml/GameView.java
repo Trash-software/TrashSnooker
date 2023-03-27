@@ -3360,7 +3360,7 @@ public class GameView implements Initializable {
 
                 if (cueDtToWhite <= maxExtension) {  // 出杆结束了
                     endHeldMs += frameTimeMs;
-                } else if (cueDtToWhite <= 0) {
+                } else if (Math.abs(cueDtToWhite) < cueMaxSpeed * frameTimeMs) {
                     if (!touched) {
                         touched = true;
 //                        System.out.println("+++++++++++++++ Touched! +++++++++++++++");
