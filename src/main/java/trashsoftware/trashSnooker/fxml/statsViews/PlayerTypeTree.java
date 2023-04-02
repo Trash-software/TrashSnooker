@@ -104,22 +104,22 @@ public class PlayerTypeTree extends RecordTree {
                 2, rowIndex);
         rowIndex++;
 
-        double matchWinRate = (double) thisWinMatches / egtList.size() * 100;
+        double matchWinRate = (double) thisWinMatches / egtList.size();
         gridPane.add(new Label("胜利"), 2, rowIndex);
         gridPane.add(new Label(String.valueOf(thisWinMatches)), 0, rowIndex);
-        gridPane.add(new Label(String.format("%.1f%%", matchWinRate)), 1, rowIndex);
+        gridPane.add(new Label(showPercent(matchWinRate)), 1, rowIndex);
         gridPane.add(new Label(String.valueOf(egtList.size() - thisWinMatches)),
                 4, rowIndex);
-        gridPane.add(new Label(String.format("%.1f%%", 100 - matchWinRate)), 3, rowIndex);
+        gridPane.add(new Label(showPercent(100 - matchWinRate)), 3, rowIndex);
         rowIndex++;
 
-        double frameWinRate = (double) thisWinFrames / (thisWinFrames + oppoWinFrames) * 100;
+        double frameWinRate = (double) thisWinFrames / (thisWinFrames + oppoWinFrames);
         gridPane.add(new Label("总胜局数"), 2, rowIndex);
         gridPane.add(new Label(String.valueOf(thisWinFrames)), 0, rowIndex);
-        gridPane.add(new Label(String.format("%.1f%%", frameWinRate)), 1, rowIndex);
+        gridPane.add(new Label(showPercent(frameWinRate)), 1, rowIndex);
         gridPane.add(new Label(String.valueOf(oppoWinFrames)),
                 4, rowIndex);
-        gridPane.add(new Label(String.format("%.1f%%", 100 - frameWinRate)), 3, rowIndex);
+        gridPane.add(new Label(showPercent(100 - frameWinRate)), 3, rowIndex);
         rowIndex++;
 
         gridPane.add(new Separator(), 0, rowIndex++, 5, 1);

@@ -2,10 +2,11 @@ package trashsoftware.trashSnooker.core.career;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
 
-import java.util.Calendar;
+import java.util.*;
 
 /**
  * 一个人一次赛事的成绩
@@ -15,12 +16,21 @@ public class ChampionshipScore {
     public final ChampionshipData data;
     public final Calendar timestamp;
     public final Rank[] ranks;  // 一般也就一个，两个的时候是额外的奖，比如单杆最高
+    private SnookerBreakScore bestBreak;
 
     public ChampionshipScore(String championshipId,
                              int year,
                              Rank[] ranks) {
+        this(championshipId, year, ranks, null);
+    }
+
+    public ChampionshipScore(String championshipId,
+                             int year,
+                             Rank[] ranks,
+                             SnookerBreakScore bestBreak) {
         this.data = ChampDataManager.getInstance().findDataById(championshipId);
         this.ranks = ranks;
+        this.bestBreak = bestBreak;
 
         this.timestamp = data.toCalendar(year);
     }
@@ -31,10 +41,18 @@ public class ChampionshipScore {
         for (int i = 0; i < ranks.length; i++) {
             ranks[i] = Rank.valueOf(ranksArr.getString(i));
         }
+
+        SnookerBreakScore best = null;
+        if (jsonObject.has("highestBreak")) {
+            JSONObject bbo = jsonObject.getJSONObject("highestBreak");
+            best = SnookerBreakScore.fromJson(bbo);
+        }
+        
         return new ChampionshipScore(
                 jsonObject.getString("id"),
                 jsonObject.getInt("year"),
-                ranks
+                ranks,
+                best
         );
     }
 
@@ -48,12 +66,20 @@ public class ChampionshipScore {
             ranksArr.put(rank.name());
         }
         out.put("ranks", ranksArr);
+        
+        if (bestBreak != null) {
+            out.put("highestBreak", bestBreak.toJson());
+        }
 
         return out;
     }
 
     public int getYear() {
         return timestamp.get(Calendar.YEAR);
+    }
+    
+    public SnookerBreakScore getHighestBreak() {
+        return bestBreak;
     }
 
     public enum Rank implements Comparable<Rank> {

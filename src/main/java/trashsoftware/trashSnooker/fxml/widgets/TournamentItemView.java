@@ -9,8 +9,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import trashsoftware.trashSnooker.core.career.*;
+import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.CareerView;
+import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.io.IOException;
 import java.util.*;
@@ -138,10 +140,35 @@ public class TournamentItemView extends ScrollPane {
 
         champsTable.addColumns(yearCol, personCol);
         
-        NavigableMap<Integer, Career> historyChamps = CareerManager.getInstance().historicalChampions(data);
+        TournamentStats stats = CareerManager.getInstance().tournamentHistory(data);
+
+        NavigableMap<Integer, Career> historyChamps = stats.getHistoricalChampions();
         
         for (int year : historyChamps.descendingKeySet()) {
             champsTable.addItem(new HistoryChamp(year, historyChamps.get(year)));
+        }
+        
+        if (data.getType().snookerLike()) {
+            LabelTable<SnookerBreakScore> sbsTable = new LabelTable<>();
+            Set<SnookerBreakScore> bestBreaks = stats.getHighestBreak();
+            if (bestBreaks == null || bestBreaks.isEmpty()) {
+                sbsTable.addColumn(
+                        new LabelTableColumn<>(sbsTable, strings.getString("tournamentHighest"),
+                                param -> new ReadOnlyStringWrapper("--"))
+                );
+                sbsTable.addItem(null);
+            } else {
+                sbsTable.addColumns(
+                        new LabelTableColumn<>(sbsTable, strings.getString("tournamentHighest"), 
+                                param -> new ReadOnlyStringWrapper(DataLoader.getInstance().getPlayerPerson(param.playerId).getName())),
+                        new LabelTableColumn<>(sbsTable, null,
+                                param -> new ReadOnlyObjectWrapper<>(param.score)),
+                        new LabelTableColumn<>(sbsTable, null,
+                                param -> new ReadOnlyStringWrapper(param.getYearElseEmpty() + param.stage.getShown()))
+                );
+                sbsTable.addItems(bestBreaks);
+            }
+            rootPane.add(sbsTable, 0, row++);
         }
     }
     

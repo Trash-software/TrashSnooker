@@ -10,6 +10,7 @@ import java.util.*;
 public class SnookerChampionship extends Championship {
     
     protected final NavigableSet<SnookerBreakScore> breaksOver50 = new TreeSet<>();
+    protected final Map<String, SnookerBreakScore> personalHighest = new HashMap<>();
 
     public SnookerChampionship(ChampionshipData data, Calendar timestamp) {
         super(data, timestamp);
@@ -49,12 +50,18 @@ public class SnookerChampionship extends Championship {
                                  String matchId,
                                  int numFrame) {
         if (score >= 50) {
-            breaksOver50.add(new SnookerBreakScore(playerId, 
-                    score, 
-                    matchStage, 
+            SnookerBreakScore sbs = new SnookerBreakScore(playerId,
+                    score,
+                    matchStage,
                     isSim,
                     matchId,
-                    numFrame));
+                    numFrame);
+            breaksOver50.add(sbs);
+            
+            SnookerBreakScore personPrev = personalHighest.get(playerId);
+            if (personPrev == null || sbs.compareTo(personPrev) < 0) {
+                personalHighest.put(playerId, sbs);
+            }
         }
     }
 

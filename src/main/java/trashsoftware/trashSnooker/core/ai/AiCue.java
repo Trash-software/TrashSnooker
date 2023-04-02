@@ -1614,8 +1614,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     attackParams.attackChoice.handSkill) * 1.96;
             double estBallSpeedLow = estBallSpeed * (1 - errorLow);  //  95%置信区间下界，没有考虑旋转这些
             
-            double targetCanMove = values.estimatedMoveDistance(phy, estBallSpeedLow);
-            if (targetCanMove - values.ball.ballDiameter * 1.5 <= correctedChoice.targetHoleDistance) {
+            double targetCanMove = values.estimatedMoveDistance(phy, estBallSpeedLow) * 0.95;  // 补偿：球的初始旋转是0，一开始的滑动摩擦会让目标球比预期的少跑一点
+            if (targetCanMove - values.ball.ballDiameter * 2.0 <= correctedChoice.targetHoleDistance) {
                 // 确保球不会停在袋口
                 // 如果小于，说明力量太轻或低杆太多，打不到
 //            System.out.println("little less " + targetCanMove + ", " + attackChoice.targetHoleDistance);

@@ -10,6 +10,7 @@ import java.util.*;
 
 public class MatchTree {
 
+    private Championship championship;
     private MatchTreeNode root;  // 相当于根是决赛
 
 //    private final List<List<Career>> players = new ArrayList<>();  // 越前面的list排名越高，资格赛轮数越少
@@ -19,6 +20,7 @@ public class MatchTree {
      * @param nonSeedPlayers 非种子选手，按排名排序
      */
     public MatchTree(Championship championship, List<Career> seedPlayers, List<Career> nonSeedPlayers) {
+        this.championship = championship;
         ChampionshipData data = championship.getData();
         if (seedPlayers.size() + nonSeedPlayers.size() != data.getTotalPlaces()) {
             throw new RuntimeException("Expected " + data.getTotalPlaces() + " players, got " +
@@ -62,14 +64,15 @@ public class MatchTree {
         build(championship, players);
     }
 
-    private MatchTree(MatchTreeNode root) {
+    private MatchTree(MatchTreeNode root, Championship championship) {
         this.root = root;
+        this.championship = championship;
     }
 
-    public static MatchTree fromJson(JSONObject jsonObject) {
+    public static MatchTree fromJson(JSONObject jsonObject, Championship championship) {
         JSONObject rootObj = jsonObject.getJSONObject("root");
         MatchTreeNode root = MatchTreeNode.fromJsonObject(rootObj);
-        return new MatchTree(root);
+        return new MatchTree(root, championship);
     }
 
     public JSONObject saveProgressToJson() {
@@ -107,10 +110,19 @@ public class MatchTree {
                     }
                 }
                 
+                SnookerBreakScore highestBreak = null;
+                if (championship instanceof SnookerChampionship) {
+                    SnookerChampionship sc = (SnookerChampionship) championship;
+                    
+                    // 依旧可以是null
+                    highestBreak = sc.personalHighest.get(career.getPlayerPerson().getPlayerId());
+                }
+                
                 ChampionshipScore score = new ChampionshipScore(
                         data.getId(),
                         year,
-                        playerRanks.toArray(new ChampionshipScore.Rank[0])
+                        playerRanks.toArray(new ChampionshipScore.Rank[0]),
+                        highestBreak
                 );
                 career.addChampionshipScore(score);
             }

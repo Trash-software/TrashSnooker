@@ -49,7 +49,7 @@ public abstract class Championship {
         
         championship.currentStageIndex = jsonObject.getInt("stageIndex");
 //        ChampionshipStage curStage = 
-        championship.matchTree = MatchTree.fromJson(jsonObject.getJSONObject("matchTree"));
+        championship.matchTree = MatchTree.fromJson(jsonObject.getJSONObject("matchTree"), championship);
 //        championship.matchTree.getRoot().slCheck();
         championship.checkFinish();
 
@@ -156,7 +156,7 @@ public abstract class Championship {
     }
     
     public String uniqueId() {
-        return String.format("%s_%d_%s", 
+        return String.format("%s+%d+%s", 
                 CareerManager.getInstance().getCareerSave().getPlayerId(),
                 getYear(),
                 data.getId());

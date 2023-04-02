@@ -736,18 +736,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         ball1.pickup();
         ball2.pickup();
 
-        ball1.setX(1800);
-        ball1.setY(800);
+        ball1.setX(2200);
+        ball1.setY(1500);
 
-        ball1.setVx(-0.8);
-        ball1.setVy(-1.0);
+        ball1.setVx(0.5);
+        ball1.setVy(0.05);
 //        ball1.setSpin(-10, -1, 0);
 
-        ball2.setX(1600);
-        ball2.setY(590);
+        ball2.setX(2150);
+        ball2.setY(1350);
 
-        ball2.setVx(-0.4);
-        ball2.setVy(-0.5);
+        ball2.setVx(0.4);
+        ball2.setVy(0.3);
 
         return physicalCalculate(entireGame.playPhy);
     }

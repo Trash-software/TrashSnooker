@@ -47,7 +47,7 @@ public class MatchTreeNode {
     }
     
     static String generateId(Championship championship) {
-        return championship.uniqueId() + "_" + (matchIdCounter++);
+        return championship.uniqueId() + "-" + (matchIdCounter++);
     }
 
     public static MatchTreeNode fromJsonObject(JSONObject object) {

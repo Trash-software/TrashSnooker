@@ -11,7 +11,9 @@
       "solving": 100,
       "pullDt": [
         50.0,
-        200.0
+        200.0,
+        50,
+        150
       ],
       "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s",
@@ -59,7 +61,9 @@
       "solving": 100,
       "pullDt": [
         50.0,
-        200.0
+        200.0,        
+        50,
+        150
       ],
       "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s",
@@ -415,8 +419,10 @@
       "controllablePower": 92,
       "solving": 80,
       "pullDt": [
-        50.0,
-        220.0
+        60.0,
+        180.0,
+        60,
+        160
       ],
       "aimingOffset": -0.25,
       "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
@@ -432,7 +438,7 @@
         "TrumpCue"
       ],
       "category": "Professional",
-      "psy": 68,
+      "psy": 72,
       "height": 183,
       "width": 1.0,
       "hand": {
@@ -441,9 +447,9 @@
         "rest": 84
       },
       "ai": {
-        "precision": 96,
-        "stable": 85,
-        "position": 89,
+        "precision": 96.5,
+        "stable": 87,
+        "position": 90,
         "defense": 87,
         "attackPri": 90,
         "likeShow": 75,
@@ -767,7 +773,9 @@
       "solving": 82,
       "pullDt": [
         60.0,
-        240.0
+        240.0,
+        60,
+        80
       ],
       "aimingOffset": 0.0,
       "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",

@@ -231,6 +231,11 @@ public class GameView implements Initializable {
         return (person.getMaxPullDt() - person.getMinPullDt()) *
                 personPower + person.getMinPullDt();
     }
+    
+    private static double extensionDtOf(PlayerPerson person, double personPower) {
+        return (person.getMaxExtension() - person.getMinExtension()) *
+                personPower + person.getMinExtension();
+    }
 
     private static double[] handPosition(double handDt,
                                          double whiteX, double whiteY,
@@ -3175,8 +3180,12 @@ public class GameView implements Initializable {
         }
     }
 
+    private static double getPersonPower(double selectedPower, PlayerPerson person) {
+        return selectedPower / person.getMaxPowerPercentage();
+    }
+
     private double getPersonPower(PlayerPerson person) {
-        return getSelectedPower() / person.getMaxPowerPercentage();
+        return getPersonPower(getSelectedPower(), person);
     }
 
     private boolean isGameCalculating() {
@@ -3233,6 +3242,7 @@ public class GameView implements Initializable {
                            double[] restCuePointing) {
 
             playerPerson = igp.getPlayerPerson();
+            double personPower = getPersonPower(selectedPower, playerPerson);
 
             if (selectedPower < Values.MIN_SELECTED_POWER)
                 selectedPower = Values.MIN_SELECTED_POWER;
@@ -3249,8 +3259,7 @@ public class GameView implements Initializable {
             this.initDistance = Math.min(initDistance, maxPullDt);
             this.maxPullDistance = maxPullDt;
             this.cueDtToWhite = this.initDistance;
-            this.maxExtension = -maxPullDistance *
-                    (playerPerson.getMaxSpinPercentage() * 0.75 / 100);  // 杆法好的人延伸长，但是 /todo: 要改
+            this.maxExtension = -extensionDtOf(playerPerson, personPower);
 
             this.cueMaxSpeed = selectedPower *
                     PlayerPerson.HandBody.getPowerMulOfHand(handSkill) *

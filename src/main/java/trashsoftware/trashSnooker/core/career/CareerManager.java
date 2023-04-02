@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.career.championship.ChineseEightChampionship;
+import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
 import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.util.DataLoader;
@@ -840,22 +841,40 @@ public class CareerManager {
         }
     }
 
-    public NavigableMap<Integer, Career> historicalChampions(ChampionshipData data) {
+    public TournamentStats tournamentHistory(ChampionshipData data) {
         NavigableMap<Integer, Career> result = new TreeMap<>();
+        NavigableSet<SnookerBreakScore> bestBreaks = new TreeSet<>();  // 考虑两个单杆完全相同
         for (Career career : playerCareers) {
             for (ChampionshipScore score : career.getChampionshipScores()) {
                 if (score.data == data) {
                     if (Util.arrayContains(score.ranks, ChampionshipScore.Rank.CHAMPION)) {
                         result.put(score.getYear(), career);
                     }
+                    if (data.getType().snookerLike()) {
+                        SnookerBreakScore breakScore = score.getHighestBreak();
+                        if (breakScore != null) {
+                            if (bestBreaks.isEmpty()) {
+                                bestBreaks.add(breakScore);
+                            } else {
+                                SnookerBreakScore curBest = bestBreaks.first();
+                                int cmp = breakScore.compareTo(curBest);
+                                if (cmp < 0) {
+                                    bestBreaks.clear();
+                                    bestBreaks.add(breakScore);
+                                } else if (cmp == 0) {
+                                    bestBreaks.add(breakScore);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        return result;
+        return new TournamentStats(result, bestBreaks);
     }
 
     public Career getDefendingChampion(ChampionshipData data) {
-        NavigableMap<Integer, Career> result = historicalChampions(data);
+        NavigableMap<Integer, Career> result = tournamentHistory(data).getHistoricalChampions();
         if (result.isEmpty()) return null;
         return result.lastEntry().getValue();
     }

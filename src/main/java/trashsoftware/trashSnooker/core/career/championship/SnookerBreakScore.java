@@ -56,4 +56,20 @@ public class SnookerBreakScore implements Comparable<SnookerBreakScore> {
         if (!this.sim && o.sim) return -1;
         return 0;
     }
+    
+    public int getYear() {
+        if (matchId.contains("+")) {
+            String[] tokens = matchId.split("\\+");
+            if (tokens.length == 3) {
+                return Integer.parseInt(tokens[1]);
+            }
+        }
+        return -1;
+    }
+    
+    public String getYearElseEmpty() {
+        int year = getYear();
+        if (year == -1) return "";
+        return year + " ";
+    }
 }

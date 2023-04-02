@@ -64,12 +64,12 @@ public class ReplayView implements Initializable {
         }
         
         clickListener();
-        fill();
 //        naiveFill();
     }
 
     public void setStage(Stage stage) {
         this.stage = stage;
+        fill();
     }
 
     private void clickListener() {

@@ -80,7 +80,9 @@ public class Career {
 
         JSONArray scoreArr = new JSONArray();
         for (ChampionshipScore score : championshipScores) {
-            scoreArr.put(score.toJsonObject());
+            JSONObject scoreObj = score.toJsonObject();
+            // todo: breaks
+            scoreArr.put(scoreObj);
         }
 
         JSONObject effortsObj = new JSONObject();
