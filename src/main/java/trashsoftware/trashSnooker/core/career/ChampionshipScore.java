@@ -16,13 +16,7 @@ public class ChampionshipScore {
     public final ChampionshipData data;
     public final Calendar timestamp;
     public final Rank[] ranks;  // 一般也就一个，两个的时候是额外的奖，比如单杆最高
-    private SnookerBreakScore bestBreak;
-
-    public ChampionshipScore(String championshipId,
-                             int year,
-                             Rank[] ranks) {
-        this(championshipId, year, ranks, null);
-    }
+    private final SnookerBreakScore bestBreak;
 
     public ChampionshipScore(String championshipId,
                              int year,

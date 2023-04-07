@@ -50,7 +50,7 @@ public class SnookerBreakScore implements Comparable<SnookerBreakScore> {
         if (scoreCmp != 0) return -scoreCmp;  // 大的在前
         
         int stageCmp = Integer.compare(this.stage.ordinal(), o.stage.ordinal());
-        if (stageCmp != 0) return scoreCmp;  // ordinal小（接近决赛）的在前
+        if (stageCmp != 0) return stageCmp;  // ordinal小（接近决赛）的在前
         
         if (this.sim && !o.sim) return 1;  // 假的靠后
         if (!this.sim && o.sim) return -1;

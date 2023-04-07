@@ -118,6 +118,7 @@ public class MatchTree {
                     highestBreak = sc.personalHighest.get(career.getPlayerPerson().getPlayerId());
                 }
                 
+                // 这里是往career.json里写该球员在本届赛事的单杆最高分
                 ChampionshipScore score = new ChampionshipScore(
                         data.getId(),
                         year,

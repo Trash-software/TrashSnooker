@@ -851,6 +851,7 @@ public class GameView implements Initializable {
                             asg.reposition();
                             drawScoreBoard(game.getGame().getCuingPlayer(), true);
                             drawTargetBoard(true);
+                            updatePowerSlider(game.getGame().getCuingPlayer().getPlayerPerson());
                             draw();
                             if (asg.isNoHitThreeWarning()) {
                                 showThreeNoHitWarning();
@@ -3366,16 +3367,14 @@ public class GameView implements Initializable {
                     pointingAngle = pointingAngle - baseSwingMag *
                             errMulWithPower / 2000;
                 }
-
-                if (cueDtToWhite <= maxExtension) {  // 出杆结束了
-                    endHeldMs += frameTimeMs;
-                } else if (Math.abs(cueDtToWhite) < cueMaxSpeed * frameTimeMs) {
-                    if (!touched) {
+                
+                if (!touched) {
+                    if (cueDtToWhite < 0 && lastCueDtToWhite >= 0) {
                         touched = true;
-//                        System.out.println("+++++++++++++++ Touched! +++++++++++++++");
                         playMovement();
-//                        game.cue(cueVx, cueVy, xSpin, ySpin, sideSpin);
                     }
+                } else if (cueDtToWhite <= maxExtension) {
+                    endHeldMs += frameTimeMs;  // 出杆结束了
                 }
             } else {
                 cueDtToWhite += frameTimeMs / 3.0 *

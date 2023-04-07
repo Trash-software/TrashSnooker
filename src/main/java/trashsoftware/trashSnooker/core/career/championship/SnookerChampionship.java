@@ -57,11 +57,17 @@ public class SnookerChampionship extends Championship {
                     matchId,
                     numFrame);
             breaksOver50.add(sbs);
+//            System.out.print("Updated break: " + playerId + " " + score);
             
-            SnookerBreakScore personPrev = personalHighest.get(playerId);
-            if (personPrev == null || sbs.compareTo(personPrev) < 0) {
-                personalHighest.put(playerId, sbs);
-            }
+            updatePersonal(sbs);
+//            System.out.println(", Person high break: " + personalHighest.get(playerId));
+        }
+    }
+    
+    private void updatePersonal(SnookerBreakScore sbs) {
+        SnookerBreakScore personPrev = personalHighest.get(sbs.playerId);
+        if (personPrev == null || sbs.compareTo(personPrev) < 0) {
+            personalHighest.put(sbs.playerId, sbs);
         }
     }
 
@@ -70,7 +76,9 @@ public class SnookerChampionship extends Championship {
             JSONArray array = root.getJSONArray("snookerBreaks");
             for (Object obj : array) {
                 try {
-                    breaksOver50.add(SnookerBreakScore.fromJson((JSONObject) obj));
+                    SnookerBreakScore sbs = SnookerBreakScore.fromJson((JSONObject) obj);
+                    breaksOver50.add(sbs);
+                    updatePersonal(sbs);
                 } catch (ClassCastException cce) {
                     EventLogger.error(cce);
                 }

@@ -100,14 +100,6 @@ public abstract class ObjectOnTable {
     }
     
     protected boolean willPot(Phy phy) {
-//        double midHoleFactor = midHolePowerFactor(phy);
-//        return predictedDtToPoint(table.topLeftHoleXY) < table.cornerHoleRadius ||
-//                predictedDtToPoint(table.botLeftHoleXY) < table.cornerHoleRadius ||
-//                predictedDtToPoint(table.topRightHoleXY) < table.cornerHoleRadius ||
-//                predictedDtToPoint(table.botRightHoleXY) < table.cornerHoleRadius ||
-//                predictedDtToPoint(table.topMidHoleXY) < table.midHoleRadius * midHoleFactor ||
-//                predictedDtToPoint(table.botMidHoleXY) < table.midHoleRadius * midHoleFactor;
-
         double cornerRoom = table.cornerHoleRadius - gameValues.ball.ballRadius;
         double midRoom = table.midHoleRadius - gameValues.ball.ballRadius;
         

@@ -1,407 +1,124 @@
 {
-  "stageIndex": -1,
+  "stageIndex": 2,
   "seedRanks": {
-    "Brown": 27,
-    "Yan Bingtao": 12,
-    "Liu Mang": 22,
-    "custom_player_1": 24,
-    "custom_player_2": 28,
-    "Jack Lisowski": 7,
-    "custom_player_4": 20,
-    "Glass Heart": 15,
-    "Selby": 5,
-    "Mark Allen": 8,
-    "Karen Wilson": 14,
-    "Zhao Xintong": 10,
-    "Neil Robertson": 2,
-    "Stephen Maguire": 9,
-    "Murphy": 1,
-    "John Wizard": 4,
-    "Stuart Bingham": 13,
-    "Kid": 26,
-    "Fat Guy": 21,
-    "Ding Junhui": 16,
-    "Smart": 3,
-    "Trump": 11,
-    "Mark Williams": 6,
-    "Luca Brecel": 17,
-    "custom_player_160": 23,
-    "custom_player_181": 25,
-    "Worst Professional": 18,
-    "custom_E5B08FE4BB99E5A5B3": 19
+    "Yan Bingtao": 8,
+    "Fat Guy": 10,
+    "custom_player_1": 16,
+    "Ding Junhui": 5,
+    "custom_player_2": 11,
+    "custom_player_166": 13,
+    "custom_player_4": 14,
+    "Glass Heart": 1,
+    "High Stick": 12,
+    "Selby": 6,
+    "Zhao Xintong": 3,
+    "custom_player_160": 15,
+    "custom_player_181": 4,
+    "Worst Professional": 9,
+    "custom_E5B08FE4BB99E5A5B3": 7,
+    "John Wizard": 2
   },
-  "championshipId": "challenger_open",
+  "championshipId": "eight_master_tour_beijing",
   "matchTree": {"root": {
-    "p1wins": 3,
     "p1": {
-      "p1wins": 2,
       "p1": {
-        "p1wins": 1,
-        "p1": {"winner": "Neil Robertson"},
-        "p2": {
+        "p1": {
           "p1wins": 2,
-          "p1": {
-            "p1wins": 1,
-            "p1": {"winner": "Yan Bingtao"},
-            "p2": {
-              "p1wins": 2,
-              "p1": {"winner": "Luca Brecel"},
-              "p2": {"winner": "custom_player_1"},
-              "winner": "Luca Brecel",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_0",
-              "p2wins": 0
-            },
-            "winner": "Luca Brecel",
-            "stage": "PRE_ROUND_2",
-            "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_8",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Jack Lisowski"},
-            "p2": {
-              "p1wins": 2,
-              "p1": {"winner": "Fat Guy"},
-              "p2": {"winner": "custom_player_181"},
-              "winner": "Fat Guy",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_1",
-              "p2wins": 1
-            },
-            "winner": "Jack Lisowski",
-            "stage": "PRE_ROUND_2",
-            "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_9",
-            "p2wins": 1
-          },
-          "winner": "Luca Brecel",
-          "stage": "PRE_ROUND_3",
-          "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_16",
-          "p2wins": 1
+          "p1": {"winner": "Glass Heart"},
+          "p2": {"winner": "custom_player_1"},
+          "winner": "custom_player_1",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-0",
+          "p2wins": 3
         },
-        "winner": "Luca Brecel",
+        "p2": {
+          "p1wins": 3,
+          "p1": {"winner": "Selby"},
+          "p2": {"winner": "Fat Guy"},
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-1",
+          "p2wins": 0
+        },
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_20",
-        "p2wins": 2
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-8"
       },
       "p2": {
-        "p1wins": 2,
-        "p1": {"winner": "Smart"},
-        "p2": {
-          "p1wins": 0,
-          "p1": {
-            "p1wins": 2,
-            "p1": {"winner": "Mark Allen"},
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "Glass Heart"},
-              "p2": {"winner": "Karen Wilson"},
-              "winner": "Karen Wilson",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_2",
-              "p2wins": 2
-            },
-            "winner": "Mark Allen",
-            "stage": "PRE_ROUND_2",
-            "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_10",
-            "p2wins": 1
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Stephen Maguire"},
-            "p2": {
-              "p1wins": 2,
-              "p1": {"winner": "custom_player_160"},
-              "p2": {"winner": "Liu Mang"},
-              "winner": "custom_player_160",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_3",
-              "p2wins": 1
-            },
-            "winner": "Stephen Maguire",
-            "stage": "PRE_ROUND_2",
-            "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_11",
-            "p2wins": 0
-          },
-          "winner": "Stephen Maguire",
-          "stage": "PRE_ROUND_3",
-          "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_17",
-          "p2wins": 2
+        "p1": {
+          "p1wins": 3,
+          "p1": {"winner": "Zhao Xintong"},
+          "p2": {"winner": "custom_player_4"},
+          "winner": "Zhao Xintong",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-2",
+          "p2wins": 0
         },
-        "winner": "Smart",
+        "p2": {
+          "p1wins": 3,
+          "p1": {"winner": "Yan Bingtao"},
+          "p2": {"winner": "High Stick"},
+          "winner": "Yan Bingtao",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-3",
+          "p2wins": 0
+        },
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_21",
-        "p2wins": 0
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-9"
       },
-      "winner": "Luca Brecel",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_24",
-      "p2wins": 1
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-12"
     },
     "p2": {
-      "p1wins": 2,
       "p1": {
-        "p1wins": 2,
-        "p1": {"winner": "Murphy"},
-        "p2": {
-          "p1wins": 1,
-          "p1": {
-            "p1wins": 0,
-            "p1": {"winner": "Trump"},
-            "p2": {
-              "p1wins": 2,
-              "p1": {"winner": "Stuart Bingham"},
-              "p2": {"winner": "Brown"},
-              "winner": "Stuart Bingham",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_4",
-              "p2wins": 0
-            },
-            "winner": "Stuart Bingham",
-            "stage": "PRE_ROUND_2",
-            "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_12",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Selby"},
-            "p2": {
-              "p1wins": 2,
-              "p1": {"winner": "Worst Professional"},
-              "p2": {"winner": "Kid"},
-              "winner": "Worst Professional",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_5",
-              "p2wins": 1
-            },
-            "winner": "Selby",
-            "stage": "PRE_ROUND_2",
-            "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_13",
-            "p2wins": 0
-          },
-          "winner": "Selby",
-          "stage": "PRE_ROUND_3",
-          "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_18",
-          "p2wins": 2
-        },
-        "winner": "Murphy",
-        "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_22",
-        "p2wins": 1
-      },
-      "p2": {
-        "p1wins": 2,
-        "p1": {"winner": "John Wizard"},
-        "p2": {
-          "p1wins": 2,
-          "p1": {
-            "p1wins": 2,
-            "p1": {"winner": "Mark Williams"},
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_2"},
-              "p2": {"winner": "Ding Junhui"},
-              "winner": "Ding Junhui",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_6",
-              "p2wins": 2
-            },
-            "winner": "Mark Williams",
-            "stage": "PRE_ROUND_2",
-            "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_14",
-            "p2wins": 1
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Zhao Xintong"},
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "custom_player_4"},
-              "p2": {"winner": "custom_E5B08FE4BB99E5A5B3"},
-              "winner": "custom_E5B08FE4BB99E5A5B3",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_7",
-              "p2wins": 2
-            },
-            "winner": "Zhao Xintong",
-            "stage": "PRE_ROUND_2",
-            "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_15",
-            "p2wins": 1
-          },
-          "winner": "Mark Williams",
-          "stage": "PRE_ROUND_3",
-          "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_19",
+        "p1": {
+          "p1wins": 3,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Worst Professional"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-4",
           "p2wins": 1
         },
-        "winner": "John Wizard",
+        "p2": {
+          "p1wins": 3,
+          "p1": {"winner": "Ding Junhui"},
+          "p2": {"winner": "custom_player_160"},
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-5",
+          "p2wins": 1
+        },
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_23",
-        "p2wins": 0
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-10"
       },
-      "winner": "Murphy",
+      "p2": {
+        "p1": {
+          "p1wins": 3,
+          "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+          "p2": {"winner": "custom_player_2"},
+          "winner": "custom_E5B08FE4BB99E5A5B3",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-6",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 3,
+          "p1": {"winner": "custom_player_181"},
+          "p2": {"winner": "custom_player_166"},
+          "winner": "custom_player_181",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-7",
+          "p2wins": 0
+        },
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-11"
+      },
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_25",
-      "p2wins": 0
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-13"
     },
-    "winner": "Luca Brecel",
     "stage": "FINAL",
-    "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_26",
-    "p2wins": 0
+    "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_master_tour_beijing-14"
   }},
-  "finished": true,
-  "snookerBreaks": [
-    {
-      "score": 105,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_20",
-      "playerId": "Luca Brecel"
-    },
-    {
-      "score": 97,
-      "stage": "PRE_ROUND_3",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_19",
-      "playerId": "Mark Williams"
-    },
-    {
-      "score": 74,
-      "stage": "PRE_ROUND_2",
-      "sim": false,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_15",
-      "playerId": "Zhao Xintong"
-    },
-    {
-      "score": 73,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_23",
-      "playerId": "John Wizard"
-    },
-    {
-      "score": 72,
-      "stage": "PRE_ROUND_3",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_17",
-      "playerId": "Stephen Maguire"
-    },
-    {
-      "score": 69,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_21",
-      "playerId": "Smart"
-    },
-    {
-      "score": 68,
-      "stage": "PRE_ROUND_2",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_14",
-      "playerId": "Mark Williams"
-    },
-    {
-      "score": 65,
-      "stage": "PRE_ROUND_3",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_16",
-      "playerId": "Luca Brecel"
-    },
-    {
-      "score": 64,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_4",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 63,
-      "stage": "PRE_ROUND_2",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_12",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 62,
-      "stage": "FINAL",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_26",
-      "playerId": "Luca Brecel"
-    },
-    {
-      "score": 59,
-      "stage": "PRE_ROUND_2",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_9",
-      "playerId": "Jack Lisowski"
-    },
-    {
-      "score": 57,
-      "stage": "PRE_ROUND_3",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_18",
-      "playerId": "Selby"
-    },
-    {
-      "score": 56,
-      "stage": "PRE_ROUND_2",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_13",
-      "playerId": "Selby"
-    },
-    {
-      "score": 54,
-      "stage": "PRE_ROUND_1",
-      "sim": false,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_7",
-      "playerId": "custom_E5B08FE4BB99E5A5B3"
-    },
-    {
-      "score": 53,
-      "stage": "PRE_ROUND_3",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_18",
-      "playerId": "Selby"
-    },
-    {
-      "score": 52,
-      "stage": "PRE_ROUND_3",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_17",
-      "playerId": "Stephen Maguire"
-    },
-    {
-      "score": 51,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_4",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 50,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3_2024_challenger_open_3",
-      "playerId": "custom_player_160"
-    }
-  ],
-  "timestamp": "2024/9/25"
+  "finished": false,
+  "timestamp": "2025/3/18"
 }

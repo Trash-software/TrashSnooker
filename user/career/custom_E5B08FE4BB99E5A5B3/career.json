@@ -3,8 +3,8 @@
   "careers": [
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -13,15 +13,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9835367004343492,
+      "handFeel": 0.9820003551956057,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_87"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -101,20 +101,35 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 5,
-      "expInThisLevel": 64,
-      "availPerks": 14,
-      "handFeel": 0.9127721629573328,
+      "level": 6,
+      "expInThisLevel": 3,
+      "availPerks": 16,
+      "handFeel": 0.9563741849506316,
       "human": false,
-      "totalExp": 515,
+      "totalExp": 590,
       "playerId": "random_player_86"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -123,15 +138,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9518569638653321,
+      "handFeel": 0.9135790167151172,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_89"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -281,20 +296,40 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 17,
-      "expInThisLevel": 307,
-      "availPerks": 46,
-      "handFeel": 0.9264234972969273,
+      "level": 18,
+      "expInThisLevel": 104,
+      "availPerks": 49,
+      "handFeel": 0.8153329299875524,
       "human": false,
-      "totalExp": 3340,
+      "totalExp": 3480,
       "playerId": "random_player_88"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -604,20 +639,86 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 101,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-44",
+            "playerId": "custom_player_1"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 107,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-4",
+            "playerId": "custom_player_1"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 26,
-      "expInThisLevel": 553,
-      "availPerks": 80,
-      "handFeel": 0.8554736267536569,
+      "level": 29,
+      "expInThisLevel": 554,
+      "availPerks": 92,
+      "handFeel": 0.9013862483303611,
       "human": false,
-      "totalExp": 7865,
+      "totalExp": 10090,
       "playerId": "custom_player_1"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -626,15 +727,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9645609316082642,
+      "handFeel": 0.9733936610468049,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_1"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -804,20 +905,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 29,
-      "expInThisLevel": 409,
-      "availPerks": 92,
-      "handFeel": 0.8412828507893098,
+      "level": 30,
+      "expInThisLevel": 161,
+      "availPerks": 97,
+      "handFeel": 0.8737061895694608,
       "human": false,
-      "totalExp": 9945,
+      "totalExp": 10560,
       "playerId": "random_player_0"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -1127,20 +1258,65 @@
           "ranks": ["TOP_16"],
           "year": 2024,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 23,
-      "expInThisLevel": 298,
-      "availPerks": 68,
-      "handFeel": 0.9257143918419954,
+      "level": 24,
+      "expInThisLevel": 224,
+      "availPerks": 72,
+      "handFeel": 0.9965044793290332,
       "human": false,
-      "totalExp": 5845,
+      "totalExp": 6315,
       "playerId": "custom_player_3"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -1450,20 +1626,68 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 50,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+fresh_hand_open-12",
+            "playerId": "custom_player_2"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
         }
       ],
-      "level": 24,
-      "expInThisLevel": 484,
-      "availPerks": 72,
-      "handFeel": 0.8558436581204104,
+      "level": 26,
+      "expInThisLevel": 148,
+      "availPerks": 80,
+      "handFeel": 0.9189122471357556,
       "human": false,
-      "totalExp": 6575,
+      "totalExp": 7460,
       "playerId": "custom_player_2"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -1783,20 +2007,65 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 25,
-      "expInThisLevel": 247,
-      "availPerks": 76,
-      "handFeel": 0.9939084779689268,
+      "level": 26,
+      "expInThisLevel": 388,
+      "availPerks": 80,
+      "handFeel": 0.8228654550273916,
       "human": false,
-      "totalExp": 6925,
+      "totalExp": 7700,
       "playerId": "custom_player_4"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2084,20 +2353,95 @@
             "playerId": "Mark Allen"
           },
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 52,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 4,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-37",
+            "playerId": "Mark Allen"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 61,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+masters-0",
+            "playerId": "Mark Allen"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 54,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+fresh_hand_open-18",
+            "playerId": "Mark Allen"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 52,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-1",
+            "playerId": "Mark Allen"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 67,
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-15",
+            "playerId": "Mark Allen"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 36,
-      "expInThisLevel": 200,
-      "availPerks": 127,
-      "handFeel": 0.8684885161294464,
+      "level": 37,
+      "expInThisLevel": 816,
+      "availPerks": 132,
+      "handFeel": 0.8625588408246966,
       "human": false,
-      "totalExp": 17435,
+      "totalExp": 19530,
       "playerId": "Mark Allen"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2172,20 +2516,40 @@
           "ranks": ["TOP_16"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 17,
-      "expInThisLevel": 62,
-      "availPerks": 46,
-      "handFeel": 0.9500737515902822,
+      "level": 18,
+      "expInThisLevel": 174,
+      "availPerks": 49,
+      "handFeel": 0.9509068927296936,
       "human": false,
-      "totalExp": 3095,
+      "totalExp": 3550,
       "playerId": "random_player_9"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2235,20 +2599,30 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
-      "level": 11,
-      "expInThisLevel": 81,
-      "availPerks": 28,
-      "handFeel": 0.9368511147802273,
+      "level": 12,
+      "expInThisLevel": 60,
+      "availPerks": 31,
+      "handFeel": 0.977542016383003,
       "human": false,
-      "totalExp": 1530,
+      "totalExp": 1725,
       "playerId": "random_player_8"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2257,15 +2631,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 1,
+      "handFeel": 0.9371357864470775,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_7"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2405,20 +2779,35 @@
           "ranks": ["PRE_GAMES_3"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 17,
-      "expInThisLevel": 312,
-      "availPerks": 46,
-      "handFeel": 0.9038920295014672,
+      "level": 18,
+      "expInThisLevel": 149,
+      "availPerks": 49,
+      "handFeel": 0.8203695835139686,
       "human": false,
-      "totalExp": 3345,
+      "totalExp": 3525,
       "playerId": "random_player_6"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2427,15 +2816,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9511476257783961,
+      "handFeel": 0.9706204435418336,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_5"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2444,15 +2833,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9374219366362952,
+      "handFeel": 0.9356868970372885,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_4"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2461,15 +2850,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.842805205589768,
+      "handFeel": 0.8412991576440724,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_3"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2514,20 +2903,25 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 9,
       "expInThisLevel": 1,
       "availPerks": 22,
-      "handFeel": 0.8434432026803025,
+      "handFeel": 0.8785126614141299,
       "human": false,
       "totalExp": 1065,
       "playerId": "random_player_2"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2762,20 +3156,59 @@
           "ranks": ["TOP_8"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": [
+            "TOP_16",
+            "BEST_SINGLE"
+          ],
+          "year": 2024,
+          "highestBreak": {
+            "score": 124,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+champ_of_champ-2",
+            "playerId": "Neil Robertson"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 54,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-34",
+            "playerId": "Neil Robertson"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
       "level": 41,
-      "expInThisLevel": 869,
+      "expInThisLevel": 1729,
       "availPerks": 154,
-      "handFeel": 0.8448141342095581,
+      "handFeel": 0.8177629768660549,
       "human": false,
-      "totalExp": 26780,
+      "totalExp": 27640,
       "playerId": "Neil Robertson"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2800,20 +3233,25 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2023,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 3,
       "expInThisLevel": 17,
       "availPerks": 10,
-      "handFeel": 0.8694386668051138,
+      "handFeel": 0.8835400166370214,
       "human": false,
       "totalExp": 225,
       "playerId": "random_player_94"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2868,20 +3306,25 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 8,
-      "expInThisLevel": 92,
+      "expInThisLevel": 107,
       "availPerks": 20,
-      "handFeel": 1,
+      "handFeel": 0.9290332215256204,
       "human": false,
-      "totalExp": 985,
+      "totalExp": 1000,
       "playerId": "random_player_93"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2890,15 +3333,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9560975168030932,
+      "handFeel": 0.8241090648932778,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_96"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2907,15 +3350,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 1,
+      "handFeel": 0.8461239215159977,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_95"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -2924,15 +3367,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8640864018604065,
+      "handFeel": 0.9217048536339344,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_90"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -3097,20 +3540,58 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 55,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-41",
+            "playerId": "random_player_92"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 20,
-      "expInThisLevel": 144,
-      "availPerks": 56,
-      "handFeel": 1,
+      "level": 21,
+      "expInThisLevel": 417,
+      "availPerks": 60,
+      "handFeel": 0.9462882907454381,
       "human": false,
-      "totalExp": 4290,
+      "totalExp": 4995,
       "playerId": "random_player_92"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -3119,15 +3600,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8,
+      "handFeel": 0.9008879550488289,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_91"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -3433,20 +3914,103 @@
             "playerId": "Stuart Bingham"
           },
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 81,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+champ_of_champ-5",
+            "playerId": "Stuart Bingham"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 96,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-33",
+            "playerId": "Stuart Bingham"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 59,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+masters-3",
+            "playerId": "Stuart Bingham"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 106,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+fresh_hand_open-13",
+            "playerId": "Stuart Bingham"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 103,
+            "stage": "SEMI_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-13",
+            "playerId": "Stuart Bingham"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 84,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-20",
+            "playerId": "Stuart Bingham"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 34,
-      "expInThisLevel": 502,
-      "availPerks": 117,
-      "handFeel": 0.9242394542732739,
+      "level": 36,
+      "expInThisLevel": 535,
+      "availPerks": 127,
+      "handFeel": 0.9305601916398443,
       "human": false,
-      "totalExp": 15100,
+      "totalExp": 17770,
       "playerId": "Stuart Bingham"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -3641,20 +4205,60 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 11,
-      "expInThisLevel": 126,
-      "availPerks": 28,
-      "handFeel": 0.8350391217457043,
+      "level": 13,
+      "expInThisLevel": 242,
+      "availPerks": 34,
+      "handFeel": 0.9921463939005012,
       "human": false,
-      "totalExp": 1575,
+      "totalExp": 2140,
       "playerId": "Mou Moumou"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -3663,15 +4267,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8,
+      "handFeel": 0.8952090365315416,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_79"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -3680,15 +4284,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.925956684138667,
+      "handFeel": 0.9489486344062873,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_76"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -3718,20 +4322,25 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 8,
-      "expInThisLevel": 97,
+      "expInThisLevel": 127,
       "availPerks": 20,
-      "handFeel": 0.9811670145531616,
+      "handFeel": 0.8942952850436802,
       "human": false,
-      "totalExp": 990,
+      "totalExp": 1020,
       "playerId": "random_player_75"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -3740,15 +4349,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9160333025012631,
+      "handFeel": 0.9521977441238149,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_78"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -3778,15 +4387,15 @@
       "level": 6,
       "expInThisLevel": 13,
       "availPerks": 16,
-      "handFeel": 0.9536942117927303,
+      "handFeel": 0.8781612005830965,
       "human": false,
       "totalExp": 600,
       "playerId": "random_player_77"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4037,20 +4646,82 @@
           ],
           "year": 2024,
           "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 62,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-44",
+            "playerId": "O_Sullivan"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 95,
+            "stage": "FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+masters-14",
+            "playerId": "O_Sullivan"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 52,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-11",
+            "playerId": "O_Sullivan"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 92,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-20",
+            "playerId": "O_Sullivan"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 41,
-      "expInThisLevel": 1564,
-      "availPerks": 154,
-      "handFeel": 0.8364319681328624,
+      "level": 43,
+      "expInThisLevel": 466,
+      "availPerks": 166,
+      "handFeel": 0.8618718144118717,
       "human": false,
-      "totalExp": 27475,
+      "totalExp": 30895,
       "playerId": "O_Sullivan"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4059,15 +4730,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9651010984002587,
+      "handFeel": 0.842194181504256,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_83"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4076,15 +4747,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9958560158098333,
+      "handFeel": 0.9110748508996542,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_82"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4093,15 +4764,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8037111491458053,
+      "handFeel": 0.9591171505993279,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_85"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4356,20 +5027,60 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 19,
-      "expInThisLevel": 149,
+      "expInThisLevel": 284,
       "availPerks": 52,
-      "handFeel": 0.9251987805062973,
+      "handFeel": 0.8261329883595718,
       "human": false,
-      "totalExp": 3895,
+      "totalExp": 4030,
       "playerId": "Wang Xu"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4424,20 +5135,30 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
-      "level": 11,
-      "expInThisLevel": 51,
-      "availPerks": 28,
-      "handFeel": 0.845785406787177,
+      "level": 12,
+      "expInThisLevel": 30,
+      "availPerks": 31,
+      "handFeel": 0.8280208157354905,
       "human": false,
-      "totalExp": 1500,
+      "totalExp": 1695,
       "playerId": "random_player_84"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4482,20 +5203,35 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 7,
-      "expInThisLevel": 1,
+      "expInThisLevel": 26,
       "availPerks": 18,
-      "handFeel": 0.8,
+      "handFeel": 0.8112616541481726,
       "human": false,
-      "totalExp": 735,
+      "totalExp": 760,
       "playerId": "random_player_81"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4535,20 +5271,30 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 12,
-      "expInThisLevel": 75,
+      "expInThisLevel": 135,
       "availPerks": 31,
-      "handFeel": 0.868403946670883,
+      "handFeel": 0.9965488134756044,
       "human": false,
-      "totalExp": 1740,
+      "totalExp": 1800,
       "playerId": "random_player_80"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4557,15 +5303,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9913812346613977,
+      "handFeel": 0.9512052767013567,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_25"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4605,20 +5351,25 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 5,
       "expInThisLevel": 14,
       "availPerks": 14,
-      "handFeel": 0.8682076215074975,
+      "handFeel": 0.9181948674203075,
       "human": false,
       "totalExp": 465,
       "playerId": "random_player_24"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4713,20 +5464,35 @@
           "ranks": ["TOP_16"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
         }
       ],
       "level": 17,
-      "expInThisLevel": 77,
+      "expInThisLevel": 287,
       "availPerks": 46,
-      "handFeel": 0.8746832480073098,
+      "handFeel": 0.9714319418729132,
       "human": false,
-      "totalExp": 3110,
+      "totalExp": 3320,
       "playerId": "random_player_27"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4735,15 +5501,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8897863787855298,
+      "handFeel": 0.8944721487319932,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_26"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4752,15 +5518,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.810706309197691,
+      "handFeel": 0.8544418367553168,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_21"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4769,15 +5535,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 1,
+      "handFeel": 0.8949544849064015,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_20"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4822,20 +5588,30 @@
           "ranks": ["PRE_GAMES_3"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
-      "level": 10,
-      "expInThisLevel": 71,
-      "availPerks": 25,
-      "handFeel": 0.8642851915824427,
+      "level": 11,
+      "expInThisLevel": 51,
+      "availPerks": 28,
+      "handFeel": 0.8650225730084231,
       "human": false,
-      "totalExp": 1320,
+      "totalExp": 1500,
       "playerId": "random_player_23"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -4844,15 +5620,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8710054322694453,
+      "handFeel": 0.8879397737735659,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_22"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -5037,20 +5813,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 7,
-      "expInThisLevel": 26,
-      "availPerks": 18,
-      "handFeel": 0.9402843520167635,
+      "level": 8,
+      "expInThisLevel": 2,
+      "availPerks": 20,
+      "handFeel": 0.8770083548226695,
       "human": false,
-      "totalExp": 760,
+      "totalExp": 895,
       "playerId": "custom_player_169"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -5285,20 +6091,50 @@
           "ranks": ["TOP_16"],
           "year": 2024,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
         }
       ],
-      "level": 14,
-      "expInThisLevel": 60,
-      "availPerks": 37,
-      "handFeel": 0.9664448273123585,
+      "level": 15,
+      "expInThisLevel": 98,
+      "availPerks": 40,
+      "handFeel": 0.8609644370396707,
       "human": false,
-      "totalExp": 2210,
+      "totalExp": 2520,
       "playerId": "custom_player_166"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -5307,15 +6143,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.91116972302921,
+      "handFeel": 0.8046898562323721,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_29"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -5535,20 +6371,50 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 12,
-      "expInThisLevel": 10,
-      "availPerks": 31,
-      "handFeel": 0.9505060982538148,
+      "level": 13,
+      "expInThisLevel": 42,
+      "availPerks": 34,
+      "handFeel": 0.881858855354411,
       "human": false,
-      "totalExp": 1675,
+      "totalExp": 1940,
       "playerId": "custom_player_165"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -5557,15 +6423,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9754820999915561,
+      "handFeel": 0.9589175029018039,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_28"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -5765,20 +6631,55 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 11,
-      "expInThisLevel": 111,
-      "availPerks": 28,
-      "handFeel": 0.946573263442157,
+      "level": 13,
+      "expInThisLevel": 2,
+      "availPerks": 34,
+      "handFeel": 0.8752373584020113,
       "human": false,
-      "totalExp": 1560,
+      "totalExp": 1900,
       "playerId": "custom_player_168"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -5968,20 +6869,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 8,
-      "expInThisLevel": 167,
-      "availPerks": 20,
-      "handFeel": 0.8857323288596409,
+      "level": 9,
+      "expInThisLevel": 181,
+      "availPerks": 22,
+      "handFeel": 1,
       "human": false,
-      "totalExp": 1060,
+      "totalExp": 1245,
       "playerId": "custom_player_167"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -6171,20 +7102,60 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 9,
-      "expInThisLevel": 151,
-      "availPerks": 22,
-      "handFeel": 0.8442125137175047,
+      "level": 11,
+      "expInThisLevel": 26,
+      "availPerks": 28,
+      "handFeel": 0.8666340111618724,
       "human": false,
-      "totalExp": 1215,
+      "totalExp": 1475,
       "playerId": "custom_player_173"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -6339,20 +7310,40 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 3,
       "expInThisLevel": 92,
       "availPerks": 10,
-      "handFeel": 0.825666772890445,
+      "handFeel": 0.812574414876183,
       "human": false,
       "totalExp": 300,
       "playerId": "Noob"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -6577,20 +7568,60 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 13,
-      "expInThisLevel": 187,
-      "availPerks": 34,
-      "handFeel": 0.829785976361278,
+      "level": 14,
+      "expInThisLevel": 170,
+      "availPerks": 37,
+      "handFeel": 0.8482439189118768,
       "human": false,
-      "totalExp": 2085,
+      "totalExp": 2320,
       "playerId": "custom_player_172"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -6775,20 +7806,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 8,
-      "expInThisLevel": 22,
-      "availPerks": 20,
-      "handFeel": 0.9393387844532094,
+      "level": 9,
+      "expInThisLevel": 66,
+      "availPerks": 22,
+      "handFeel": 0.8622180729623952,
       "human": false,
-      "totalExp": 915,
+      "totalExp": 1130,
       "playerId": "custom_player_174"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -6963,20 +8024,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 7,
-      "expInThisLevel": 91,
+      "expInThisLevel": 111,
       "availPerks": 18,
-      "handFeel": 0.9124880931872847,
+      "handFeel": 0.8066057772141773,
       "human": false,
-      "totalExp": 825,
+      "totalExp": 845,
       "playerId": "custom_player_171"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7156,20 +8247,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 8,
-      "expInThisLevel": 47,
+      "expInThisLevel": 97,
       "availPerks": 20,
-      "handFeel": 0.8895118846767816,
+      "handFeel": 0.966326520896614,
       "human": false,
-      "totalExp": 940,
+      "totalExp": 990,
       "playerId": "custom_player_170"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7234,20 +8355,30 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 14,
-      "expInThisLevel": 50,
+      "expInThisLevel": 125,
       "availPerks": 37,
-      "handFeel": 0.8139455543228102,
+      "handFeel": 0.9571642251764614,
       "human": false,
-      "totalExp": 2200,
+      "totalExp": 2275,
       "playerId": "random_player_30"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7297,20 +8428,30 @@
           "ranks": ["PRE_GAMES_3"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
-      "level": 11,
-      "expInThisLevel": 156,
-      "availPerks": 28,
-      "handFeel": 0.8924652034956734,
+      "level": 12,
+      "expInThisLevel": 30,
+      "availPerks": 31,
+      "handFeel": 0.9511048887557401,
       "human": false,
-      "totalExp": 1605,
+      "totalExp": 1695,
       "playerId": "random_player_14"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7319,15 +8460,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9152895401728064,
+      "handFeel": 0.8241583230040709,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_13"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7377,20 +8518,30 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 12,
-      "expInThisLevel": 45,
+      "expInThisLevel": 105,
       "availPerks": 31,
-      "handFeel": 0.8578721950810629,
+      "handFeel": 0.855520005522994,
       "human": false,
-      "totalExp": 1710,
+      "totalExp": 1770,
       "playerId": "random_player_16"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7399,15 +8550,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8872653943206541,
+      "handFeel": 0.9416411845444368,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_15"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7416,15 +8567,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.92262579570379,
+      "handFeel": 0.952659433034116,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_10"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7433,15 +8584,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.926997693867991,
+      "handFeel": 0.9357091501623697,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_98"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7450,15 +8601,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9134089586629055,
+      "handFeel": 0.8057749920834514,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_97"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7638,20 +8789,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 9,
-      "expInThisLevel": 26,
-      "availPerks": 22,
-      "handFeel": 0.9772927296392228,
+      "level": 10,
+      "expInThisLevel": 126,
+      "availPerks": 25,
+      "handFeel": 1,
       "human": false,
-      "totalExp": 1090,
+      "totalExp": 1375,
       "playerId": "custom_E8BDBBE69DBEE58FB7"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7721,20 +8902,25 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 12,
       "expInThisLevel": 0,
       "availPerks": 31,
-      "handFeel": 0.8,
+      "handFeel": 0.8813647757342358,
       "human": false,
       "totalExp": 1665,
       "playerId": "random_player_12"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7743,15 +8929,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8125821186090538,
+      "handFeel": 0.943030165549999,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_11"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7781,20 +8967,25 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 4,
       "expInThisLevel": 125,
       "availPerks": 12,
-      "handFeel": 0.9406770975461165,
+      "handFeel": 0.8610009180305238,
       "human": false,
       "totalExp": 450,
       "playerId": "random_player_99"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -7999,20 +9190,60 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 11,
-      "expInThisLevel": 111,
-      "availPerks": 28,
-      "handFeel": 0.8,
+      "level": 12,
+      "expInThisLevel": 100,
+      "availPerks": 31,
+      "handFeel": 0.8288216606956684,
       "human": false,
-      "totalExp": 1560,
+      "totalExp": 1765,
       "playerId": "custom_player_159"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -8247,20 +9478,92 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 88,
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-53",
+            "playerId": "Ding Junhui"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 81,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+fresh_hand_open-26",
+            "playerId": "Ding Junhui"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 52,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-5",
+            "playerId": "Ding Junhui"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 79,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-1",
+            "playerId": "Ding Junhui"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 40,
-      "expInThisLevel": 1066,
-      "availPerks": 148,
-      "handFeel": 0.9194327171440602,
+      "level": 41,
+      "expInThisLevel": 1044,
+      "availPerks": 154,
+      "handFeel": 0.924694297896218,
       "human": false,
-      "totalExp": 24965,
+      "totalExp": 26955,
       "playerId": "Ding Junhui"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -8360,20 +9663,40 @@
           "ranks": ["PRE_GAMES_3"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 14,
-      "expInThisLevel": 60,
+      "expInThisLevel": 130,
       "availPerks": 37,
-      "handFeel": 0.9761715164164868,
+      "handFeel": 0.9540787437122672,
       "human": false,
-      "totalExp": 2210,
+      "totalExp": 2280,
       "playerId": "random_player_18"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -8681,20 +10004,77 @@
             "playerId": "Smart"
           },
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 96,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+champ_of_champ-6",
+            "playerId": "Smart"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 84,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-40",
+            "playerId": "Smart"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 83,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-1",
+            "playerId": "Smart"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 51,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-23",
+            "playerId": "Smart"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 36,
-      "expInThisLevel": 800,
-      "availPerks": 127,
-      "handFeel": 0.878915118825523,
+      "level": 37,
+      "expInThisLevel": 811,
+      "availPerks": 132,
+      "handFeel": 0.8671784660555776,
       "human": false,
-      "totalExp": 18035,
+      "totalExp": 19525,
       "playerId": "Smart"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -8749,20 +10129,35 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 4,
-      "expInThisLevel": 55,
+      "expInThisLevel": 80,
       "availPerks": 12,
-      "handFeel": 0.9472173008955738,
+      "handFeel": 0.9284607879199785,
       "human": false,
-      "totalExp": 380,
+      "totalExp": 405,
       "playerId": "random_player_17"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -8832,20 +10227,25 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 7,
       "expInThisLevel": 96,
       "availPerks": 18,
-      "handFeel": 0.8889660800326852,
+      "handFeel": 0.804358128960661,
       "human": false,
       "totalExp": 830,
       "playerId": "random_player_19"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -8854,15 +10254,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9987943175807621,
+      "handFeel": 0.9013660337333159,
       "human": false,
       "totalExp": 0,
       "playerId": "Master"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -9087,20 +10487,68 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 51,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+fresh_hand_open-1",
+            "playerId": "Give Emperor"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 18,
-      "expInThisLevel": 74,
-      "availPerks": 49,
-      "handFeel": 0.8,
+      "level": 19,
+      "expInThisLevel": 9,
+      "availPerks": 52,
+      "handFeel": 0.8921094960061019,
       "human": false,
-      "totalExp": 3450,
+      "totalExp": 3755,
       "playerId": "Give Emperor"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -9285,20 +10733,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 10,
-      "expInThisLevel": 166,
-      "availPerks": 25,
-      "handFeel": 0.978087002240022,
+      "level": 11,
+      "expInThisLevel": 146,
+      "availPerks": 28,
+      "handFeel": 0.926809112433333,
       "human": false,
-      "totalExp": 1415,
+      "totalExp": 1595,
       "playerId": "custom_E78B97E697A5E79A84"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -9613,20 +11091,65 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 29,
-      "expInThisLevel": 269,
-      "availPerks": 92,
-      "handFeel": 0.8474576415790614,
+      "level": 30,
+      "expInThisLevel": 616,
+      "availPerks": 97,
+      "handFeel": 0.8936478277719229,
       "human": false,
-      "totalExp": 9805,
+      "totalExp": 11015,
       "playerId": "custom_player_160"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -9941,20 +11464,73 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 79,
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-50",
+            "playerId": "Worst Professional"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 28,
-      "expInThisLevel": 503,
-      "availPerks": 88,
-      "handFeel": 0.8778980124999747,
+      "level": 30,
+      "expInThisLevel": 376,
+      "availPerks": 97,
+      "handFeel": 0.930968518591762,
       "human": false,
-      "totalExp": 9240,
+      "totalExp": 10775,
       "playerId": "Worst Professional"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10029,20 +11605,40 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 17,
-      "expInThisLevel": 232,
-      "availPerks": 46,
-      "handFeel": 0.858368527052433,
+      "level": 18,
+      "expInThisLevel": 204,
+      "availPerks": 49,
+      "handFeel": 0.950234366009831,
       "human": false,
-      "totalExp": 3265,
+      "totalExp": 3580,
       "playerId": "random_player_47"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10072,15 +11668,15 @@
       "level": 6,
       "expInThisLevel": 13,
       "availPerks": 16,
-      "handFeel": 0.8027057970656918,
+      "handFeel": 0.9188395005268518,
       "human": false,
       "totalExp": 600,
       "playerId": "random_player_107"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10160,20 +11756,30 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
-      "level": 12,
-      "expInThisLevel": 230,
-      "availPerks": 31,
-      "handFeel": 0.8,
+      "level": 13,
+      "expInThisLevel": 57,
+      "availPerks": 34,
+      "handFeel": 0.8020601282489177,
       "human": false,
-      "totalExp": 1895,
+      "totalExp": 1955,
       "playerId": "random_player_46"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10213,20 +11819,25 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 6,
-      "expInThisLevel": 28,
+      "expInThisLevel": 43,
       "availPerks": 16,
-      "handFeel": 0.8564231433227063,
+      "handFeel": 0.8830661281240851,
       "human": false,
-      "totalExp": 615,
+      "totalExp": 630,
       "playerId": "random_player_108"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10266,20 +11877,25 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 8,
-      "expInThisLevel": 37,
+      "expInThisLevel": 52,
       "availPerks": 20,
-      "handFeel": 0.9065231655953186,
+      "handFeel": 0.9795081575191861,
       "human": false,
-      "totalExp": 930,
+      "totalExp": 945,
       "playerId": "random_player_49"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10288,15 +11904,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9440655025446323,
+      "handFeel": 0.9453996682108962,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_105"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10326,20 +11942,25 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 6,
-      "expInThisLevel": 13,
+      "expInThisLevel": 28,
       "availPerks": 16,
-      "handFeel": 0.9820903230935104,
+      "handFeel": 0.9265456439230356,
       "human": false,
-      "totalExp": 600,
+      "totalExp": 615,
       "playerId": "random_player_48"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10348,15 +11969,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9813185596945481,
+      "handFeel": 0.9692715386938417,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_106"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10436,20 +12057,25 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
-      "level": 11,
-      "expInThisLevel": 206,
-      "availPerks": 28,
-      "handFeel": 0.9606363656117135,
+      "level": 12,
+      "expInThisLevel": 5,
+      "availPerks": 31,
+      "handFeel": 0.830648095152262,
       "human": false,
-      "totalExp": 1655,
+      "totalExp": 1670,
       "playerId": "random_player_43"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10619,20 +12245,50 @@
           "ranks": ["TOP_16"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
       "level": 24,
-      "expInThisLevel": 69,
+      "expInThisLevel": 544,
       "availPerks": 72,
-      "handFeel": 0.9042831502879443,
+      "handFeel": 0.8978177039409616,
       "human": false,
-      "totalExp": 6160,
+      "totalExp": 6635,
       "playerId": "random_player_103"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10641,15 +12297,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9572499634242032,
+      "handFeel": 0.913243393878556,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_42"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10658,15 +12314,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9160351935787432,
+      "handFeel": 0.8464578722861297,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_104"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10675,15 +12331,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9217048918856026,
+      "handFeel": 0.973315733486942,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_45"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10692,15 +12348,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9600549433926261,
+      "handFeel": 0.9282320269110366,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_101"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10765,20 +12421,48 @@
           "ranks": ["PRE_GAMES_3"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 56,
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-17",
+            "playerId": "random_player_44"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 15,
-      "expInThisLevel": 258,
-      "availPerks": 40,
-      "handFeel": 0.992375601315445,
+      "level": 17,
+      "expInThisLevel": 117,
+      "availPerks": 46,
+      "handFeel": 0.8951188575416285,
       "human": false,
-      "totalExp": 2680,
+      "totalExp": 3150,
       "playerId": "random_player_44"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10787,15 +12471,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.956186475057165,
+      "handFeel": 0.945586582655205,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_102"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10804,15 +12488,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8683638818848057,
+      "handFeel": 0.9922472389472184,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_109"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -10821,15 +12505,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9150207736321645,
+      "handFeel": 0.841712870910954,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_50"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -11089,20 +12773,55 @@
           "ranks": ["TOP_16"],
           "year": 2024,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 17,
-      "expInThisLevel": 32,
+      "expInThisLevel": 177,
       "availPerks": 46,
-      "handFeel": 0.8191004584053904,
+      "handFeel": 0.9033305684975286,
       "human": false,
-      "totalExp": 3065,
+      "totalExp": 3210,
       "playerId": "Summer Brave"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -11111,15 +12830,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 1,
+      "handFeel": 0.9221804882125071,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_100"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -11304,20 +13023,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 9,
-      "expInThisLevel": 86,
-      "availPerks": 22,
-      "handFeel": 0.811910473203534,
+      "level": 10,
+      "expInThisLevel": 76,
+      "availPerks": 25,
+      "handFeel": 0.8451566191602167,
       "human": false,
-      "totalExp": 1150,
+      "totalExp": 1325,
       "playerId": "Lao Youtiao"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -11337,15 +13086,15 @@
       "level": 2,
       "expInThisLevel": 50,
       "availPerks": 8,
-      "handFeel": 0.949857612829543,
+      "handFeel": 0.88871963213804,
       "human": false,
       "totalExp": 150,
       "playerId": "random_player_52"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -11354,15 +13103,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8852181982963602,
+      "handFeel": 0.8963839715752172,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_51"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -11655,20 +13404,91 @@
             "playerId": "Murphy"
           },
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 75,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 4,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+champ_of_champ-10",
+            "playerId": "Murphy"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 65,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-38",
+            "playerId": "Murphy"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": [
+            "TOP_16",
+            "BEST_SINGLE"
+          ],
+          "year": 2025,
+          "highestBreak": {
+            "score": 130,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+masters-2",
+            "playerId": "Murphy"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": [
+            "CHAMPION",
+            "BEST_SINGLE"
+          ],
+          "year": 2025,
+          "highestBreak": {
+            "score": 119,
+            "stage": "FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-14",
+            "playerId": "Murphy"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 90,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-25",
+            "playerId": "Murphy"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 38,
-      "expInThisLevel": 1184,
-      "availPerks": 137,
-      "handFeel": 0.8804496145136219,
+      "level": 40,
+      "expInThisLevel": 1306,
+      "availPerks": 148,
+      "handFeel": 0.9315614942407249,
       "human": false,
-      "totalExp": 21495,
+      "totalExp": 25205,
       "playerId": "Murphy"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -11991,20 +13811,84 @@
             "playerId": "John Wizard"
           },
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 115,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+champ_of_champ-9",
+            "playerId": "John Wizard"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 66,
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-50",
+            "playerId": "John Wizard"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 75,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+masters-4",
+            "playerId": "John Wizard"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 42,
-      "expInThisLevel": 2237,
-      "availPerks": 160,
-      "handFeel": 0.8926965623941772,
+      "level": 44,
+      "expInThisLevel": 347,
+      "availPerks": 172,
+      "handFeel": 0.8286805078318463,
       "human": false,
-      "totalExp": 30320,
+      "totalExp": 33310,
       "playerId": "John Wizard"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12013,15 +13897,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9533528740014424,
+      "handFeel": 0.8939525805232313,
       "human": false,
       "totalExp": 0,
       "playerId": "Master2"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12030,15 +13914,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9396493619281322,
+      "handFeel": 0.8555158057124634,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_36"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12073,20 +13957,30 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
-      "level": 11,
-      "expInThisLevel": 201,
-      "availPerks": 28,
-      "handFeel": 0.8416161903377588,
+      "level": 12,
+      "expInThisLevel": 180,
+      "availPerks": 31,
+      "handFeel": 0.8685235098386689,
       "human": false,
-      "totalExp": 1650,
+      "totalExp": 1845,
       "playerId": "random_player_118"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12095,15 +13989,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9737496524244929,
+      "handFeel": 0.9547926988151433,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_35"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12112,15 +14006,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9268739540510702,
+      "handFeel": 0.8690760756634712,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_119"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12129,15 +14023,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8198539734084672,
+      "handFeel": 0.864267890053422,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_38"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12146,15 +14040,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9346036484444005,
+      "handFeel": 0.861355535662178,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_116"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12199,20 +14093,25 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 8,
       "expInThisLevel": 142,
       "availPerks": 20,
-      "handFeel": 0.9588805940951571,
+      "handFeel": 0.9204935380877697,
       "human": false,
       "totalExp": 1035,
       "playerId": "random_player_37"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12252,20 +14151,25 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 5,
       "expInThisLevel": 29,
       "availPerks": 14,
-      "handFeel": 0.8376057412894612,
+      "handFeel": 0.8,
       "human": false,
       "totalExp": 480,
       "playerId": "random_player_117"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12350,20 +14254,35 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 5,
-      "expInThisLevel": 39,
-      "availPerks": 14,
-      "handFeel": 0.8317404539116526,
+      "level": 6,
+      "expInThisLevel": 38,
+      "availPerks": 16,
+      "handFeel": 0.8555573044038739,
       "human": false,
-      "totalExp": 490,
+      "totalExp": 625,
       "playerId": "random_player_32"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12372,15 +14291,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9518949939449857,
+      "handFeel": 0.9279352389030698,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_114"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12515,20 +14434,38 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 59,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-5",
+            "playerId": "random_player_31"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 21,
-      "expInThisLevel": 387,
+      "expInThisLevel": 462,
       "availPerks": 60,
-      "handFeel": 0.8628959355831466,
+      "handFeel": 0.8217779416535967,
       "human": false,
-      "totalExp": 4965,
+      "totalExp": 5040,
       "playerId": "random_player_31"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12593,20 +14530,35 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 9,
-      "expInThisLevel": 1,
+      "expInThisLevel": 26,
       "availPerks": 22,
-      "handFeel": 0.8890915257439924,
+      "handFeel": 0.9541384984722522,
       "human": false,
-      "totalExp": 1065,
+      "totalExp": 1090,
       "playerId": "random_player_115"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12615,15 +14567,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8533375293373747,
+      "handFeel": 0.8658317912711055,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_34"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12632,15 +14584,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9063714900887014,
+      "handFeel": 0.8262402359890016,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_112"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12915,20 +14867,60 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 22,
-      "expInThisLevel": 116,
-      "availPerks": 64,
-      "handFeel": 0.8189331583222894,
+      "level": 23,
+      "expInThisLevel": 258,
+      "availPerks": 68,
+      "handFeel": 0.8789438758258227,
       "human": false,
-      "totalExp": 5160,
+      "totalExp": 5805,
       "playerId": "Kid"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -12988,20 +14980,35 @@
           "ranks": ["TOP_8"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
         }
       ],
-      "level": 17,
-      "expInThisLevel": 202,
-      "availPerks": 46,
-      "handFeel": 0.9163955028414871,
+      "level": 18,
+      "expInThisLevel": 39,
+      "availPerks": 49,
+      "handFeel": 0.9911691646353213,
       "human": false,
-      "totalExp": 3235,
+      "totalExp": 3415,
       "playerId": "random_player_33"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -13041,20 +15048,25 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 6,
       "expInThisLevel": 103,
       "availPerks": 16,
-      "handFeel": 0.9154821022712037,
+      "handFeel": 0.8118829486193495,
       "human": false,
       "totalExp": 690,
       "playerId": "random_player_113"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -13249,20 +15261,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 10,
-      "expInThisLevel": 46,
+      "expInThisLevel": 101,
       "availPerks": 25,
-      "handFeel": 0.8555973113029128,
+      "handFeel": 0.8,
       "human": false,
-      "totalExp": 1295,
+      "totalExp": 1350,
       "playerId": "custom_player_177"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -13332,20 +15374,25 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 12,
       "expInThisLevel": 10,
       "availPerks": 31,
-      "handFeel": 0.8,
+      "handFeel": 0.8336916846956965,
       "human": false,
       "totalExp": 1675,
       "playerId": "random_player_39"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -13635,20 +15682,87 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 51,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+champ_of_champ-7",
+            "playerId": "Trump"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 106,
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-49",
+            "playerId": "Trump"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 62,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+fresh_hand_open-10",
+            "playerId": "Trump"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 66,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+dog_give_power_open-57",
+            "playerId": "Trump"
+          },
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 34,
-      "expInThisLevel": 542,
-      "availPerks": 117,
-      "handFeel": 0.8722146515993934,
+      "level": 36,
+      "expInThisLevel": 355,
+      "availPerks": 127,
+      "handFeel": 0.818733383144351,
       "human": false,
-      "totalExp": 15140,
+      "totalExp": 17590,
       "playerId": "Trump"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -13888,20 +16002,60 @@
           "ranks": ["TOP_16"],
           "year": 2024,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
         }
       ],
-      "level": 16,
-      "expInThisLevel": 84,
-      "availPerks": 43,
-      "handFeel": 0.9233547079398912,
+      "level": 18,
+      "expInThisLevel": 64,
+      "availPerks": 49,
+      "handFeel": 0.947490594646527,
       "human": false,
-      "totalExp": 2800,
+      "totalExp": 3440,
       "playerId": "High Stick"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -14116,20 +16270,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 13,
-      "expInThisLevel": 37,
+      "expInThisLevel": 127,
       "availPerks": 34,
-      "handFeel": 0.811157828987565,
+      "handFeel": 0.8141193151502701,
       "human": false,
-      "totalExp": 1935,
+      "totalExp": 2025,
       "playerId": "custom_player_178"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -14412,20 +16596,87 @@
             "playerId": "Mark Williams"
           },
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 71,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-46",
+            "playerId": "Mark Williams"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 65,
+            "stage": "SEMI_FINAL",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+masters-13",
+            "playerId": "Mark Williams"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 61,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-3",
+            "playerId": "Mark Williams"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 85,
+            "stage": "SEMI_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+dog_give_power_open-60",
+            "playerId": "Mark Williams"
+          },
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 41,
-      "expInThisLevel": 1209,
-      "availPerks": 154,
-      "handFeel": 0.8369989803174261,
+      "level": 43,
+      "expInThisLevel": 101,
+      "availPerks": 166,
+      "handFeel": 0.894532683776898,
       "human": false,
-      "totalExp": 27120,
+      "totalExp": 30530,
       "playerId": "Mark Williams"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -14590,20 +16841,50 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 5,
-      "expInThisLevel": 79,
+      "expInThisLevel": 134,
       "availPerks": 14,
-      "handFeel": 0.901583880205693,
+      "handFeel": 0.8,
       "human": false,
-      "totalExp": 530,
+      "totalExp": 585,
       "playerId": "custom_player_180"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -14879,20 +17160,72 @@
             "playerId": "Luca Brecel"
           },
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 56,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+champ_of_champ-6",
+            "playerId": "Luca Brecel"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 52,
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-29",
+            "playerId": "Luca Brecel"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": [
+            "TOP_8",
+            "BEST_SINGLE"
+          ],
+          "year": 2025,
+          "highestBreak": {
+            "score": 103,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+dog_give_power_open-40",
+            "playerId": "Luca Brecel"
+          },
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 31,
-      "expInThisLevel": 419,
-      "availPerks": 102,
-      "handFeel": 1,
+      "level": 32,
+      "expInThisLevel": 258,
+      "availPerks": 107,
+      "handFeel": 0.927944523012865,
       "human": false,
-      "totalExp": 11750,
+      "totalExp": 12595,
       "playerId": "Luca Brecel"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -15177,20 +17510,55 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 24,
-      "expInThisLevel": 294,
-      "availPerks": 72,
-      "handFeel": 0.9987974904263796,
+      "level": 25,
+      "expInThisLevel": 627,
+      "availPerks": 76,
+      "handFeel": 0.8999439209257774,
       "human": false,
-      "totalExp": 6385,
+      "totalExp": 7305,
       "playerId": "custom_player_181"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -15220,20 +17588,30 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
-      "level": 9,
-      "expInThisLevel": 151,
-      "availPerks": 22,
-      "handFeel": 0.9352801105475993,
+      "level": 10,
+      "expInThisLevel": 161,
+      "availPerks": 25,
+      "handFeel": 0.9666695753088419,
       "human": false,
-      "totalExp": 1215,
+      "totalExp": 1410,
       "playerId": "random_player_110"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -15242,15 +17620,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8933003288834367,
+      "handFeel": 0.8,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_111"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -15259,15 +17637,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9216666205185541,
+      "handFeel": 0.8921119770467087,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_41"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -15397,20 +17775,67 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 75,
+            "stage": "PRE_ROUND_2",
+            "sim": false,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-18",
+            "playerId": "custom_E5B08FE4BB99E5A5B3"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 62,
+            "stage": "QUARTER_FINAL",
+            "sim": false,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+dog_give_power_open-59",
+            "playerId": "custom_E5B08FE4BB99E5A5B3"
+          },
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": [
+            "PRE_GAMES_2",
+            "BEST_SINGLE"
+          ],
+          "year": 2025,
+          "highestBreak": {
+            "score": 138,
+            "stage": "PRE_ROUND_1",
+            "sim": false,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-6",
+            "playerId": "custom_E5B08FE4BB99E5A5B3"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 23,
-      "expInThisLevel": 303,
+      "level": 25,
+      "expInThisLevel": 37,
       "availPerks": 0,
-      "handFeel": 0.9980863562360637,
+      "handFeel": 0.8614964462019148,
       "human": true,
-      "totalExp": 5850,
+      "totalExp": 6715,
       "playerId": "custom_E5B08FE4BB99E5A5B3"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -15419,15 +17844,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9658045583856598,
+      "handFeel": 0.9857097285137706,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_40"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -15447,15 +17872,15 @@
       "level": 2,
       "expInThisLevel": 50,
       "availPerks": 8,
-      "handFeel": 0.8544932378852795,
+      "handFeel": 0.8348510514781776,
       "human": false,
       "totalExp": 150,
       "playerId": "random_player_69"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -15720,20 +18145,40 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 25,
-      "expInThisLevel": 352,
-      "availPerks": 76,
-      "handFeel": 0.846805551169571,
+      "level": 26,
+      "expInThisLevel": 473,
+      "availPerks": 80,
+      "handFeel": 0.8,
       "human": false,
-      "totalExp": 7030,
+      "totalExp": 7785,
       "playerId": "Brown"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -15773,20 +18218,35 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 6,
-      "expInThisLevel": 58,
-      "availPerks": 16,
-      "handFeel": 0.8673414599428654,
+      "level": 7,
+      "expInThisLevel": 61,
+      "availPerks": 18,
+      "handFeel": 0.9491275789182234,
       "human": false,
-      "totalExp": 645,
+      "totalExp": 795,
       "playerId": "random_player_68"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -16096,20 +18556,123 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 104,
+            "stage": "FINAL",
+            "sim": true,
+            "numFrame": 5,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+champ_of_champ-14",
+            "playerId": "Yan Bingtao"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 56,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-47",
+            "playerId": "Yan Bingtao"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 56,
+            "stage": "SEMI_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+masters-13",
+            "playerId": "Yan Bingtao"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 59,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+fresh_hand_open-0",
+            "playerId": "Yan Bingtao"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 72,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-6",
+            "playerId": "Yan Bingtao"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 57,
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-8",
+            "playerId": "Yan Bingtao"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 36,
-      "expInThisLevel": 705,
-      "availPerks": 127,
-      "handFeel": 0.9000585105998417,
+      "level": 39,
+      "expInThisLevel": 264,
+      "availPerks": 142,
+      "handFeel": 0.9370730706526377,
       "human": false,
-      "totalExp": 17940,
+      "totalExp": 22300,
       "playerId": "Yan Bingtao"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -16164,20 +18727,35 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 7,
-      "expInThisLevel": 46,
-      "availPerks": 18,
-      "handFeel": 0.9588602896207197,
+      "level": 9,
+      "expInThisLevel": 26,
+      "availPerks": 22,
+      "handFeel": 0.992021725477027,
       "human": false,
-      "totalExp": 780,
+      "totalExp": 1090,
       "playerId": "random_player_127"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -16472,20 +19050,65 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 25,
-      "expInThisLevel": 542,
-      "availPerks": 76,
-      "handFeel": 0.859738304478206,
+      "level": 27,
+      "expInThisLevel": 48,
+      "availPerks": 84,
+      "handFeel": 0.9801394926728394,
       "human": false,
-      "totalExp": 7220,
+      "totalExp": 8045,
       "playerId": "Liu Mang"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -16494,15 +19117,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9728810835454349,
+      "handFeel": 0.9792366210087882,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_65"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -16511,15 +19134,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9226318040405772,
+      "handFeel": 0.8559160898611531,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_125"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -16549,20 +19172,25 @@
           "ranks": ["PRE_GAMES_3"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 7,
       "expInThisLevel": 91,
       "availPerks": 18,
-      "handFeel": 0.8087030162993915,
+      "handFeel": 0.9513778192755818,
       "human": false,
       "totalExp": 825,
       "playerId": "random_player_64"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -16571,15 +19199,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9508949435418005,
+      "handFeel": 1,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_126"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -16588,15 +19216,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9515638137572905,
+      "handFeel": 0.8834926836141564,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_67"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -16605,15 +19233,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9159445419518806,
+      "handFeel": 0.8364460601284448,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_123"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -16668,20 +19296,35 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 5,
-      "expInThisLevel": 89,
-      "availPerks": 14,
-      "handFeel": 0.9000462961171585,
+      "level": 6,
+      "expInThisLevel": 28,
+      "availPerks": 16,
+      "handFeel": 1,
       "human": false,
-      "totalExp": 540,
+      "totalExp": 615,
       "playerId": "random_player_66"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -16806,20 +19449,48 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 54,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-14",
+            "playerId": "random_player_124"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 15,
-      "expInThisLevel": 63,
-      "availPerks": 40,
-      "handFeel": 0.8329235605150904,
+      "level": 16,
+      "expInThisLevel": 4,
+      "availPerks": 43,
+      "handFeel": 0.8523643918144636,
       "human": false,
-      "totalExp": 2485,
+      "totalExp": 2720,
       "playerId": "random_player_124"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -17117,20 +19788,82 @@
             "playerId": "Jack Lisowski"
           },
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": [
+            "CHAMPION",
+            "BEST_SINGLE"
+          ],
+          "year": 2024,
+          "highestBreak": {
+            "score": 124,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-39",
+            "playerId": "Jack Lisowski"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 62,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+masters-10",
+            "playerId": "Jack Lisowski"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 52,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+fresh_hand_open-21",
+            "playerId": "Jack Lisowski"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 35,
-      "expInThisLevel": 274,
-      "availPerks": 122,
-      "handFeel": 0.9268239562679272,
+      "level": 37,
+      "expInThisLevel": 496,
+      "availPerks": 132,
+      "handFeel": 0.8258006557186063,
       "human": false,
-      "totalExp": 16140,
+      "totalExp": 19210,
       "playerId": "Jack Lisowski"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -17485,20 +20218,74 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 97,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 4,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-35",
+            "playerId": "Glass Heart"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 66,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+fresh_hand_open-19",
+            "playerId": "Glass Heart"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 78,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-4",
+            "playerId": "Glass Heart"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 38,
-      "expInThisLevel": 1454,
-      "availPerks": 137,
-      "handFeel": 0.9655693459422989,
+      "level": 39,
+      "expInThisLevel": 1334,
+      "availPerks": 142,
+      "handFeel": 0.8707998030710769,
       "human": false,
-      "totalExp": 21765,
+      "totalExp": 23370,
       "playerId": "Glass Heart"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -17831,20 +20618,102 @@
             "playerId": "Selby"
           },
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 61,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+champ_of_champ-11",
+            "playerId": "Selby"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 121,
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-53",
+            "playerId": "Selby"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "masters"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 87,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-2",
+            "playerId": "Selby"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 99,
+            "stage": "SEMI_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-28",
+            "playerId": "Selby"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 37,
-      "expInThisLevel": 176,
-      "availPerks": 132,
-      "handFeel": 0.8749201904177641,
+      "level": 39,
+      "expInThisLevel": 1054,
+      "availPerks": 142,
+      "handFeel": 0.9410541036108901,
       "human": false,
-      "totalExp": 18890,
+      "totalExp": 23090,
       "playerId": "Selby"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -18144,20 +21013,74 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 58,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-43",
+            "playerId": "Karen Wilson"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 77,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-0",
+            "playerId": "Karen Wilson"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 63,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+dog_give_power_open-57",
+            "playerId": "Karen Wilson"
+          },
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 36,
-      "expInThisLevel": 655,
-      "availPerks": 127,
-      "handFeel": 0.8668779540552005,
+      "level": 37,
+      "expInThisLevel": 301,
+      "availPerks": 132,
+      "handFeel": 0.8210322331733015,
       "human": false,
-      "totalExp": 17890,
+      "totalExp": 19015,
       "playerId": "Karen Wilson"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -18510,20 +21433,86 @@
             "playerId": "Zhao Xintong"
           },
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 68,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-45",
+            "playerId": "Zhao Xintong"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 59,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-7",
+            "playerId": "Zhao Xintong"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 36,
-      "expInThisLevel": 1225,
-      "availPerks": 127,
-      "handFeel": 0.8584551382010981,
+      "level": 38,
+      "expInThisLevel": 639,
+      "availPerks": 137,
+      "handFeel": 0.8,
       "human": false,
-      "totalExp": 18460,
+      "totalExp": 20950,
       "playerId": "Zhao Xintong"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -18688,20 +21677,50 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 7,
-      "expInThisLevel": 26,
-      "availPerks": 18,
-      "handFeel": 0.9644901802340597,
+      "level": 8,
+      "expInThisLevel": 152,
+      "availPerks": 20,
+      "handFeel": 0.987779650598607,
       "human": false,
-      "totalExp": 760,
+      "totalExp": 1045,
       "playerId": "Mang Dali"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -18717,8 +21736,8 @@
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -18727,15 +21746,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9525831741364595,
+      "handFeel": 0.9608789689721928,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_121"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -18744,15 +21763,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9768119140472017,
+      "handFeel": 0.898400339412067,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_71"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -18807,20 +21826,38 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 54,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-7",
+            "playerId": "random_player_122"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
-      "level": 16,
-      "expInThisLevel": 184,
-      "availPerks": 43,
-      "handFeel": 0.895636726980838,
+      "level": 17,
+      "expInThisLevel": 227,
+      "availPerks": 46,
+      "handFeel": 0.8994319283083831,
       "human": false,
-      "totalExp": 2900,
+      "totalExp": 3260,
       "playerId": "random_player_122"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -18829,15 +21866,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8391889388317394,
+      "handFeel": 0.850224319498239,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_74"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19105,20 +22142,103 @@
             "playerId": "Stephen Maguire"
           },
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 68,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+champ_of_champ-2",
+            "playerId": "Stephen Maguire"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 75,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-41",
+            "playerId": "Stephen Maguire"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 70,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+masters-9",
+            "playerId": "Stephen Maguire"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 82,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+fresh_hand_open-14",
+            "playerId": "Stephen Maguire"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 76,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+professional_champ-9",
+            "playerId": "Stephen Maguire"
+          },
+          "id": "professional_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 55,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-18",
+            "playerId": "Stephen Maguire"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 32,
-      "expInThisLevel": 1058,
-      "availPerks": 107,
-      "handFeel": 0.9684261403256433,
+      "level": 34,
+      "expInThisLevel": 1232,
+      "availPerks": 117,
+      "handFeel": 0.8813529217909692,
       "human": false,
-      "totalExp": 13395,
+      "totalExp": 15830,
       "playerId": "Stephen Maguire"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19127,15 +22247,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8312302845210312,
+      "handFeel": 0.9639620173948513,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_73"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19144,15 +22264,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9867560414962533,
+      "handFeel": 0.817777675260435,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_120"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19161,15 +22281,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9280995348666996,
+      "handFeel": 0.8071304021197248,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_70"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19178,15 +22298,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8,
+      "handFeel": 0.826963948164856,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_58"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19346,20 +22466,40 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 3,
-      "expInThisLevel": 92,
-      "availPerks": 10,
-      "handFeel": 0.9295562216209152,
+      "level": 4,
+      "expInThisLevel": 35,
+      "availPerks": 12,
+      "handFeel": 0.8519428855071569,
       "human": false,
-      "totalExp": 300,
+      "totalExp": 360,
       "playerId": "Mang Zi"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19368,15 +22508,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.9489625323815463,
+      "handFeel": 0.8488707624054435,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_57"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19385,15 +22525,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8253730168222518,
+      "handFeel": 0.830655601654239,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_59"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19402,15 +22542,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8719685655470919,
+      "handFeel": 0.8395180718353412,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_54"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19665,20 +22805,69 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 68,
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+champ_of_champ-0",
+            "playerId": "Matthew Stevens"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 118,
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+masters-9",
+            "playerId": "Matthew Stevens"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 68,
+            "stage": "SEMI_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-29",
+            "playerId": "Matthew Stevens"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 33,
-      "expInThisLevel": 1051,
-      "availPerks": 112,
-      "handFeel": 0.9398917759260776,
+      "level": 35,
+      "expInThisLevel": 1054,
+      "availPerks": 122,
+      "handFeel": 0.9486715932842124,
       "human": false,
-      "totalExp": 14475,
+      "totalExp": 16920,
       "playerId": "Matthew Stevens"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19723,20 +22912,25 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
         }
       ],
       "level": 6,
-      "expInThisLevel": 43,
+      "expInThisLevel": 58,
       "availPerks": 16,
-      "handFeel": 1,
+      "handFeel": 0.9828297354247528,
       "human": false,
-      "totalExp": 630,
+      "totalExp": 645,
       "playerId": "random_player_53"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19745,15 +22939,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8,
+      "handFeel": 0.9990129318091255,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_56"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19762,15 +22956,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8683769338914551,
+      "handFeel": 0.9077289286877577,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_55"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19779,15 +22973,15 @@
       "level": 1,
       "expInThisLevel": 0,
       "availPerks": 6,
-      "handFeel": 0.8016351981290069,
+      "handFeel": 0.885202674208798,
       "human": false,
       "totalExp": 0,
       "playerId": "random_player_61"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19862,20 +23056,35 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 6,
-      "expInThisLevel": 8,
+      "expInThisLevel": 43,
       "availPerks": 16,
-      "handFeel": 0.9091824693164459,
+      "handFeel": 0.9734006201504545,
       "human": false,
-      "totalExp": 595,
+      "totalExp": 630,
       "playerId": "random_player_60"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -19990,20 +23199,35 @@
           "ranks": ["TOP_16"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "dog_give_power_open"
         }
       ],
-      "level": 19,
-      "expInThisLevel": 204,
-      "availPerks": 52,
-      "handFeel": 0.9187257787740218,
+      "level": 20,
+      "expInThisLevel": 79,
+      "availPerks": 56,
+      "handFeel": 0.9965235382368501,
       "human": false,
-      "totalExp": 3950,
+      "totalExp": 4225,
       "playerId": "random_player_63"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -20158,20 +23382,40 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
       "level": 3,
       "expInThisLevel": 92,
       "availPerks": 10,
-      "handFeel": 0.8746073847506407,
+      "handFeel": 0.8570526301460729,
       "human": false,
       "totalExp": 300,
       "playerId": "Baggage Brother"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -20336,20 +23580,53 @@
           "ranks": ["TOP_8"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 70,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-6",
+            "playerId": "random_player_62"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 19,
-      "expInThisLevel": 164,
-      "availPerks": 52,
-      "handFeel": 0.8829198730169943,
+      "level": 20,
+      "expInThisLevel": 9,
+      "availPerks": 56,
+      "handFeel": 0.8418203322036689,
       "human": false,
-      "totalExp": 3910,
+      "totalExp": 4155,
       "playerId": "random_player_62"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -20459,20 +23736,95 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2024,
+          "highestBreak": {
+            "score": 69,
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2024+united_kingdom_champ-24",
+            "playerId": "Fat Guy"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": [
+            "TOP_16",
+            "BEST_SINGLE"
+          ],
+          "year": 2025,
+          "highestBreak": {
+            "score": 108,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+fresh_hand_open-9",
+            "playerId": "Fat Guy"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 81,
+            "stage": "SEMI_FINAL",
+            "sim": false,
+            "numFrame": 2,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+dog_give_power_open-61",
+            "playerId": "Fat Guy"
+          },
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 73,
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2025+cat_give_power_champ-0",
+            "playerId": "Fat Guy"
+          },
+          "id": "cat_give_power_champ"
         }
       ],
-      "level": 16,
-      "expInThisLevel": 314,
-      "availPerks": 43,
-      "handFeel": 0.9558848322861085,
+      "level": 23,
+      "expInThisLevel": 213,
+      "availPerks": 68,
+      "handFeel": 0.8160134135480313,
       "human": false,
-      "totalExp": 3030,
+      "totalExp": 5760,
       "playerId": "Fat Guy"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
@@ -20517,52 +23869,97 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
         }
       ],
-      "level": 2,
-      "expInThisLevel": 85,
-      "availPerks": 8,
-      "handFeel": 0.9489035441820087,
+      "level": 3,
+      "expInThisLevel": 2,
+      "availPerks": 10,
+      "handFeel": 0.8816933729830871,
       "human": false,
-      "totalExp": 185,
+      "totalExp": 210,
       "playerId": "custom_E9B8ADE584BF"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
       },
-      "scores": [],
+      "scores": [{
+        "ranks": ["TOP_32"],
+        "year": 2025,
+        "id": "dog_give_power_open"
+      }],
       "level": 1,
-      "expInThisLevel": 0,
+      "expInThisLevel": 40,
       "availPerks": 6,
-      "handFeel": 0.963770572742184,
+      "handFeel": 0.9956545614935947,
       "human": false,
-      "totalExp": 0,
+      "totalExp": 40,
       "playerId": "Lolita"
     },
     {
       "efforts": {
-        "SNOOKER": 1,
         "LIS_EIGHT": 1,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
         "CHINESE_EIGHT": 1,
         "SIDE_POCKET": 1
       },
-      "scores": [],
-      "level": 1,
+      "scores": [
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2024,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_northeast_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "dog_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "eight_bsc_heiba_open"
+        }
+      ],
+      "level": 2,
       "expInThisLevel": 0,
-      "availPerks": 6,
-      "handFeel": 0.824623019135901,
+      "availPerks": 8,
+      "handFeel": 0.8744564192277913,
       "human": false,
-      "totalExp": 0,
+      "totalExp": 100,
       "playerId": "custom_656467"
     }
   ],
   "aiGoodness": 1,
   "playerGoodness": 1,
-  "timestamp": "2024/9/25"
+  "timestamp": "2025/3/18"
 }
