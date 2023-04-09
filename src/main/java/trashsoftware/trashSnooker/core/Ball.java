@@ -35,7 +35,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private double currentYError;
     private final int identifier;  // 即使是分值一样的球identifier也不一样，但是clone之后identifier保持不变
     
-//    protected double vSpeedWhenHitCushion;  // 冻结
+    protected double vSpeedWhenHitCushion;  // 冻结碰库时与库的垂直速度
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ball.ballRadius);
