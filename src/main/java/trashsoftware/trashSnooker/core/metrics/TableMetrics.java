@@ -109,6 +109,7 @@ public class TableMetrics {
     public double[][] botRightHoleEndLine;
 
     public double[][] allCornerArcs;
+    public double[][] allMidArcs;
 
     public double[][][] allCornerLines;
     public double[][][] allMidHoleLines;
@@ -269,6 +270,12 @@ public class TableMetrics {
                 botLeftHoleEndArcXy,
                 botRightHoleSideArcXy,
                 botRightHoleEndArcXy
+        };
+        allMidArcs = new double[][]{
+                topMidHoleLeftArcXy,
+                topMidHoleRightArcXy,
+                botMidHoleLeftArcXy,
+                botMidHoleRightArcXy
         };
 
         allCornerLines = new double[][][]{

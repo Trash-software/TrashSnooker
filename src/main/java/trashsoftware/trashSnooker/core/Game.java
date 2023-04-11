@@ -17,9 +17,12 @@ import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.recorder.ActualRecorder;
 import trashsoftware.trashSnooker.recorder.GameRecorder;
-import trashsoftware.trashSnooker.recorder.NaiveGameRecorder;
+import trashsoftware.trashSnooker.recorder.InvalidRecorder;
+import trashsoftware.trashSnooker.recorder.NaiveActualRecorder;
 import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.IOException;
 import java.util.*;
@@ -112,8 +115,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
 
         try {
-            game.recorder = new NaiveGameRecorder(game);
-            game.recorder.startRecoding();
+            if (DBAccess.SAVE) {
+                game.recorder = new NaiveActualRecorder(game);
+                game.recorder.startRecoding();
+            } else {
+                game.recorder = new InvalidRecorder();
+                game.recorder.startRecoding();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1049,6 +1057,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 prediction.potFirstBall();
                 return true;
             }
+            if (firstBall.currentBounce != null) {
+                firstBall.processBounce();
+                tryHitBallOther(firstBall);
+                firstBall.normalMove(phy);
+                return false;
+            }
 
             int holeAreaResult = firstBall.tryHitHoleArea(phy);
             if (holeAreaResult != 0) {
@@ -1083,6 +1097,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 // 解斯诺克不能太容易了
                 prediction.whiteHitCushion();
                 return true;
+            }
+            
+            if (cueBallClone.currentBounce != null) {
+                cueBallClone.processBounce();
+                tryWhiteHitBall();
+                cueBallClone.normalMove(phy);
+                return false;
             }
 
             int holeAreaResult = cueBallClone.tryHitHoleArea(phy);
@@ -1252,6 +1273,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         newPotted.add(ball);
                         continue;
                     }
+                    if (ball.currentBounce != null) {
+                        ball.processBounce();
+                        if (tryHitBall(ball)) {
+                            ball.normalMove(phy);
+                        }
+                        continue;
+                    }
+                    
                     int holeAreaResult = ball.tryHitHoleArea(phy);
                     if (holeAreaResult != 0) {
                         // 袋口区域

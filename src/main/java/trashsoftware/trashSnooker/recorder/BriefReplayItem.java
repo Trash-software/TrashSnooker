@@ -45,19 +45,19 @@ public class BriefReplayItem {
         this.file = file;
 
         try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
-            byte[] header = new byte[GameRecorder.HEADER_LENGTH];
+            byte[] header = new byte[ActualRecorder.HEADER_LENGTH];
             if (raf.read(header) != header.length)
                 throw new IOException();
 
             String sig = new String(header, 0, 4);
-            if (!GameRecorder.SIGNATURE.equals(sig)) throw new RecordException("Not a replay");
+            if (!ActualRecorder.SIGNATURE.equals(sig)) throw new RecordException("Not a replay");
 
             replayType = header[4] & 0xff;
             compression = header[5] & 0xff;
             
             primaryVersion = (int) Util.bytesToIntN(header, 6, 2);
             secondaryVersion = (int) Util.bytesToIntN(header, 8, 2);
-            if (!GameRecorder.isPrimaryCompatible(primaryVersion)) {
+            if (!ActualRecorder.isPrimaryCompatible(primaryVersion)) {
                 throw new VersionException(primaryVersion, secondaryVersion);
             }
 
@@ -137,7 +137,7 @@ public class BriefReplayItem {
     }
     
     public long headerLength() {
-        return GameRecorder.TOTAL_HEADER_LENGTH + personObjLength;
+        return ActualRecorder.TOTAL_HEADER_LENGTH + personObjLength;
     }
 
     public InGamePlayer getP1() {

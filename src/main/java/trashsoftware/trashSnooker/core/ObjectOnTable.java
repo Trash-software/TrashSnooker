@@ -5,7 +5,8 @@ import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 public abstract class ObjectOnTable {
-    protected final GameValues gameValues;
+    protected static final double GENERAL_BOUNCE_ACC = 0.2;
+    protected final GameValues values;
     protected final TableMetrics table;
     protected final double radius;
     protected double distance;
@@ -13,9 +14,11 @@ public abstract class ObjectOnTable {
     protected double nextX, nextY;
     protected double vx, vy;  // unit: mm/(sec/frameRate)
 
-    public ObjectOnTable(GameValues gameValues, double radius) {
-        this.gameValues = gameValues;
-        this.table = gameValues.table;
+    protected Bounce currentBounce;
+
+    public ObjectOnTable(GameValues values, double radius) {
+        this.values = values;
+        this.table = values.table;
         this.radius = radius;
     }
 
@@ -99,9 +102,18 @@ public abstract class ObjectOnTable {
         return 1;
     }
     
+    protected void processBounce() {
+        currentBounce.oneFrame();
+
+        if (currentBounce.isLeaving(x + vx, y + vy)) {
+//                System.out.println("Bounce lasts for " + currentBounce.framesCount + " frames");
+            currentBounce = null;
+        }
+    }
+    
     protected boolean willPot(Phy phy) {
-        double cornerRoom = table.cornerHoleRadius - gameValues.ball.ballRadius;
-        double midRoom = table.midHoleRadius - gameValues.ball.ballRadius;
+        double cornerRoom = table.cornerHoleRadius - values.ball.ballRadius;
+        double midRoom = table.midHoleRadius - values.ball.ballRadius;
         
         return predictedDtToPoint(table.topLeftHoleXY) < cornerRoom ||
                 predictedDtToPoint(table.botLeftHoleXY) < cornerRoom ||
@@ -111,20 +123,45 @@ public abstract class ObjectOnTable {
                 predictedDtToPoint(table.botMidHoleXY) < midRoom;
     }
 
-    protected double[] hitHoleArcArea(double[] arcXY, Phy phy) {
+    protected double[] hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
         double axisX = arcXY[0] - x;  // 切线的法向量
         double axisY = arcXY[1] - y;
-        double[] reflect = Algebra.symmetricVector(vx, vy, axisX, axisY);
-        vx = -reflect[0];
-        vy = -reflect[1];
+//        double[] reflect = Algebra.symmetricVector(vx, vy, axisX, axisY);
+//        vx = -reflect[0];
+//        vy = -reflect[1];
+        if (currentBounce != null) {
+            System.err.println("Current is bouncing!");
+        }
+        
+        double[] normal = new double[]{axisX, axisY};
+        double[] unitNormal = Algebra.unitVector(normal);
+        double verticalSpeed = Algebra.projectionLengthOn(normal, new double[]{vx, vy});
+        
+        currentBounce = new Bounce(
+                -unitNormal[0] * verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
+                -unitNormal[1] * verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC);
+        if (!phy.isPrediction) {
+            System.out.println("Acc: " + currentBounce.accX + " " + currentBounce.accY);
+        }
         
         return new double[]{axisX, axisY};  // 返回切线的法向量
     }
 
     protected void hitHoleLineArea(double[] lineNormalVec, Phy phy) {
-        double[] reflect = Algebra.symmetricVector(vx, vy, lineNormalVec[0], lineNormalVec[1]);
-        vx = -reflect[0];
-        vy = -reflect[1];
+//        double[] reflect = Algebra.symmetricVector(vx, vy, lineNormalVec[0], lineNormalVec[1]);
+//        vx = -reflect[0];
+//        vy = -reflect[1];
+        
+        double[] unitNormal = Algebra.unitVector(lineNormalVec);
+        double verticalSpeed = Algebra.projectionLengthOn(unitNormal, new double[]{vx, vy});
+
+        currentBounce = new Bounce(
+                -unitNormal[0] * verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
+                -unitNormal[1] * verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC
+        );
+        if (!phy.isPrediction) {
+            System.out.println("Acc: " + currentBounce.accX + " " + currentBounce.accY);
+        }
     }
     
     protected void tryEnterGravityArea(Phy phy, double[] holeXy, boolean isMidHole) {
@@ -157,20 +194,31 @@ public abstract class ObjectOnTable {
     }
 
     /**
-     * 检测是否撞击袋角或进入袋角区域。如果撞击袋角，返回{@code 2}且处理撞击。如果进入袋角区域但未发生撞击，返回{@code 1}。如未进入，返回{@code 0}
+     * 检测是否撞击袋角或进入袋角区域。
+     * 如果处于弹性中，返回{@code 3}。
+     * 如果撞击袋角，返回{@code 2}且处理撞击。
+     * 如果进入袋角区域但未发生撞击，返回{@code 1}。
+     * 如未进入，返回{@code 0}
      */
     protected int tryHitHoleArea(Phy phy) {
+//        if (currentBounce != null && currentBounce.isHoleArea()) {
+//            processBounce();
+//            normalMove(phy);
+//            prepareMove(phy);
+//            return 3;
+//        }
+        
         if (nextY < radius + table.topY) {
             if (nextX < table.midHoleAreaRightX && nextX >= table.midHoleAreaLeftX) {
                 // 上方中袋在袋角范围内
                 if (predictedDtToPoint(table.topMidHoleLeftArcXy) < table.midArcRadius + radius &&
                         currentDtToPoint(table.topMidHoleLeftArcXy) >= table.midArcRadius + radius) {
                     // 击中上方中袋左侧
-                    hitHoleArcArea(table.topMidHoleLeftArcXy, phy);
+                    hitHoleArcArea(table.topMidHoleLeftArcXy, phy, table.midArcRadius);
                 } else if (predictedDtToPoint(table.topMidHoleRightArcXy) < table.midArcRadius + radius &&
                         currentDtToPoint(table.topMidHoleRightArcXy) >= table.midArcRadius + radius) {
                     // 击中上方中袋右侧
-                    hitHoleArcArea(table.topMidHoleRightArcXy, phy);
+                    hitHoleArcArea(table.topMidHoleRightArcXy, phy, table.midArcRadius);
                 } else if (table.isStraightHole() &&
                         nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
                     // 疑似上方中袋直线
@@ -210,11 +258,11 @@ public abstract class ObjectOnTable {
                 if (predictedDtToPoint(table.botMidHoleLeftArcXy) < table.midArcRadius + radius &&
                         currentDtToPoint(table.botMidHoleLeftArcXy) >= table.midArcRadius + radius) {
                     // 击中下方中袋左侧
-                    hitHoleArcArea(table.botMidHoleLeftArcXy, phy);
+                    hitHoleArcArea(table.botMidHoleLeftArcXy, phy, table.midArcRadius);
                 } else if (predictedDtToPoint(table.botMidHoleRightArcXy) < table.midArcRadius + radius &&
                         currentDtToPoint(table.botMidHoleRightArcXy) >= table.midArcRadius + radius) {
                     // 击中下方中袋右侧
-                    hitHoleArcArea(table.botMidHoleRightArcXy, phy);
+                    hitHoleArcArea(table.botMidHoleRightArcXy, phy, table.midArcRadius);
                 } else if (table.isStraightHole() &&
                         nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
                     // 疑似下方中袋直线
@@ -249,6 +297,8 @@ public abstract class ObjectOnTable {
                 return 2;
             }
         }
+        
+        // 底袋
         double[] probHole = null;
         if (nextY < table.topCornerHoleAreaDownY) {
             if (nextX < table.leftCornerHoleAreaRightX) probHole = table.topLeftHoleXY;  // 左上底袋
@@ -273,7 +323,7 @@ public abstract class ObjectOnTable {
                 for (double[] cornerArc : table.allCornerArcs) {
                     if (predictedDtToPoint(cornerArc) < table.cornerArcRadius + radius &&
                             currentDtToPoint(cornerArc) >= table.cornerArcRadius + radius) {
-                        hitHoleArcArea(cornerArc, phy);
+                        hitHoleArcArea(cornerArc, phy, table.cornerArcRadius);
                         return 2;
                     }
                 }
@@ -285,5 +335,75 @@ public abstract class ObjectOnTable {
             return 1;
         }
         return 0;
+    }
+
+
+    class Bounce {
+        double accX, accY;  // 反弹力的加速度
+//        /*
+//        1: 上边库 
+//        2: 下边库 
+//        3: 左底库 
+//        4: 右底库 
+//        5: 袋角弧线 
+//        6: 袋角直线
+//        */
+//        int scenario;
+//
+//        // 仅有情况5时需要
+//        double[] holeArcCenter;
+//        double holeArcRadius;
+
+        int framesCount = 0;
+
+//        Bounce(double accX, double accY, int scenario, double[] holeArcCenter, double holeArcRadius) {
+//            this.accX = accX;
+//            this.accY = accY;
+//            this.scenario = scenario;
+//            this.holeArcCenter = holeArcCenter;
+//            this.holeArcRadius = holeArcRadius;
+//        }
+
+        Bounce(double accX, double accY) {
+//            this(accX, accY, scenario);
+
+                        this.accX = accX;
+            this.accY = accY;
+        }
+        
+        void oneFrame() {
+            vx += accX;
+            vy += accY;
+            
+            currentBounce.framesCount++;
+        }
+        
+//        boolean isHoleArea() {
+//            return scenario == 5 || scenario == 6;
+//        }
+
+        boolean isLeaving(double nextX, double nextY) {
+            return values.isInTable(nextX, nextY, values.ball.ballRadius);
+//            double ballRadius = values.ball.ballRadius;
+//            switch (scenario) {
+//                case 1:
+//                    return nextY >= values.table.topY + ballRadius;
+//                case 2:
+//                    return nextY < values.table.botY - ballRadius;
+//                case 3:
+//                    return nextX >= values.table.leftX + ballRadius;
+//                case 4:
+//                    return nextX < values.table.rightX - ballRadius;
+//                case 5:
+//                    return Algebra.distanceToPoint(
+//                            nextX, 
+//                            nextY, 
+//                            holeArcCenter[0], 
+//                            holeArcCenter[1]) >= holeArcRadius + ballRadius;
+//                case 6:
+//                default:
+//                    throw new RuntimeException();
+//            }
+        }
     }
 }

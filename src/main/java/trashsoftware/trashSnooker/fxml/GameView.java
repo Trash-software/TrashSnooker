@@ -62,7 +62,7 @@ import trashsoftware.trashSnooker.fxml.projection.BallProjection;
 import trashsoftware.trashSnooker.fxml.projection.CushionProjection;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 import trashsoftware.trashSnooker.recorder.CueRecord;
-import trashsoftware.trashSnooker.recorder.GameRecorder;
+import trashsoftware.trashSnooker.recorder.ActualRecorder;
 import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.recorder.TargetRecord;
 import trashsoftware.trashSnooker.util.DataLoader;
@@ -1695,7 +1695,7 @@ public class GameView implements Initializable {
     }
 
     private void replayCue() {
-        if (replay.getCurrentFlag() == GameRecorder.FLAG_CUE) {
+        if (replay.getCurrentFlag() == ActualRecorder.FLAG_CUE) {
             CueRecord cueRecord = replay.getCueRecord();
             if (cueRecord == null) return;
 
@@ -1726,7 +1726,7 @@ public class GameView implements Initializable {
             MovementFrame cueBallPos = movement.getStartingPositions().get(cueBall);
             beginCueAnimation(cueRecord.cuePlayer, cueBallPos.x, cueBallPos.y,
                     cueRecord.selectedPower, cueRecord.aimUnitX, cueRecord.aimUnitY);
-        } else if (replay.getCurrentFlag() == GameRecorder.FLAG_HANDBALL) {
+        } else if (replay.getCurrentFlag() == ActualRecorder.FLAG_HANDBALL) {
             System.out.println("Ball in hand!");
 //            drawScoreBoard(null);
             drawTargetBoard(true);

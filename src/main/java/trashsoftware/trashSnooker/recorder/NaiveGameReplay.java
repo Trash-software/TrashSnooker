@@ -129,7 +129,7 @@ public class NaiveGameReplay extends GameReplay {
 
     private void readCueRecordAndTargets() {
         try {
-            byte[] buf = new byte[NaiveGameRecorder.CUE_RECORD_LENGTH];
+            byte[] buf = new byte[NaiveActualRecorder.CUE_RECORD_LENGTH];
             if (inputStream.read(buf) != buf.length) throw new IOException();
 
             currentCueRecord = new CueRecord(
