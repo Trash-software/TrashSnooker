@@ -286,4 +286,18 @@ public abstract class ObjectOnTable {
         }
         return 0;
     }
+    
+    class BouncePos {
+        double depthX;  // 最深处停留的位置
+        double depthY;
+        double leaveX;  // 如果没有和其他球碰撞，将会从什么地方弹出来
+        double leaveY;
+        double totalFrames;  // 会在库里待几个物理帧
+        double curFramesCount;
+        
+        boolean oneFrame() {
+            curFramesCount++;
+            return curFramesCount >= totalFrames;
+        }
+    }
 }
