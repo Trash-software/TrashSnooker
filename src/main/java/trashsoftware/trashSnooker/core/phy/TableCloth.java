@@ -87,7 +87,7 @@ public class TableCloth {
         public final double spinReduceFactor;  // 数值越大，旋转衰减越大
         public final double spinEffectFactor;  // 数值越小影响越大
         public final double tailSpeedFactor;  // 尾速相关
-        public final double cushionBounceFactor;
+        public final double cushionBounceFactor;  // 库的硬度
 
         Smoothness(double speedReduceFactor,
                    double spinReduceFactor,

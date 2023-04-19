@@ -380,17 +380,17 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         // todo: 真的算，而不是用if。目前没考虑袋角
         if (Arrays.equals(cushionNormalVec, SIDE_CUSHION_VEC)) {
             if (vx < 0) {
-                vy += effectiveSideSpin;
-            } else {
                 vy -= effectiveSideSpin;
+            } else {
+                vy += effectiveSideSpin;
             }
             xSpin *= (table.wallSpinPreserveRatio * 0.8);
             ySpin *= table.wallSpinPreserveRatio;
         } else if (Arrays.equals(cushionNormalVec, TOP_BOT_CUSHION_VEC)) {
             if (vy < 0) {
-                vx -= effectiveSideSpin;
-            } else {
                 vx += effectiveSideSpin;
+            } else {
+                vx -= effectiveSideSpin;
             }
             xSpin *= table.wallSpinPreserveRatio;
             ySpin *= (table.wallSpinPreserveRatio * 0.8);
@@ -423,13 +423,19 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             // 先减速，算是对时间复杂度的一种妥协
             vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+            applySpinsWhenHitCushion(phy, SIDE_CUSHION_VEC);
 
-            currentBounce = new Bounce(
-                    -vx * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
+            double effectiveAcc = -vx * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC;
+            double nFrames = vx / -effectiveAcc * 2;
+            if (!phy.isPrediction) System.out.println("predict " + nFrames);
+            currentBounce = new CushionBounce(
+                    effectiveAcc,
                     0);
+            double leaveY = y + nFrames * vy;
+            ((CushionBounce) currentBounce).setDesiredLeavePos(x, leaveY, -vx, vy);
 
             // todo: 以后这个可以集成到bounce里，甚至还更真实
-            applySpinsWhenHitCushion(phy, SIDE_CUSHION_VEC);
+//            applySpinsWhenHitCushion(phy, SIDE_CUSHION_VEC);
 //            rotateDeg = 0.0;
             return true;
         }
@@ -438,15 +444,20 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             // 边库
             vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+            applySpinsWhenHitCushion(phy, TOP_BOT_CUSHION_VEC);
 
-            currentBounce = new Bounce(
+            double effectiveAcc = -vy * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC;
+            double nFrames = vy / -effectiveAcc * 2;
+            currentBounce = new CushionBounce(
                     0,
-                    -vy * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC);
+                    effectiveAcc);
+            double leaveX = x + nFrames * vx;
+            ((CushionBounce) currentBounce).setDesiredLeavePos(leaveX, y, vx, -vy);
 //            if (!phy.isPrediction) {
 //                System.out.println(currentBounce.accX + " " + currentBounce.accY);
 //            }
 
-            applySpinsWhenHitCushion(phy, TOP_BOT_CUSHION_VEC);
+            
 //            System.out.println("Hit wall!======================");
 //            rotateDeg = 0.0;
             return true;
@@ -520,6 +531,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     void twoMovingBallsHitCore(Ball ball, Phy phy) {
+        // 离岸位置发生改变，又懒得重新算了
+        clearBounceDesiredLeavePos();
+        ball.clearBounceDesiredLeavePos();
+        
         // 提高精确度
         double x1 = x;
         double y1 = y;

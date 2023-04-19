@@ -1058,7 +1058,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 return true;
             }
             if (firstBall.currentBounce != null) {
-                firstBall.processBounce();
+                firstBall.processBounce(false);
                 tryHitBallOther(firstBall);
                 firstBall.normalMove(phy);
                 return false;
@@ -1100,7 +1100,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
             
             if (cueBallClone.currentBounce != null) {
-                cueBallClone.processBounce();
+                cueBallClone.processBounce(false);
                 tryWhiteHitBall();
                 cueBallClone.normalMove(phy);
                 return false;
@@ -1274,7 +1274,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         continue;
                     }
                     if (ball.currentBounce != null) {
-                        ball.processBounce();
+                        ball.processBounce(App.PRINT_DEBUG);
                         if (tryHitBall(ball)) {
                             ball.normalMove(phy);
                         }

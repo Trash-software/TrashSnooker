@@ -29,6 +29,7 @@ public class App extends Application {
             null;
     
     private static ResourceBundle strings;
+    public static final boolean PRINT_DEBUG = true;
     
     public static void startApp() {
         launch();

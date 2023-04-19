@@ -39,6 +39,7 @@ public class TableMetrics {
     public double innerWidth;
     public double innerHeight;
     public double leftX, rightX, topY, botY, midX, midY;
+    public double leftClothX, rightClothX, topClothY, botClothY;  // 绿色部分的最大
     public double maxLength;  // 对角线长度
     public double cushionHeight;
     public double speedReduceMultiplier = 1.0;  // 台泥的阻力系数，值越大阻力越大
@@ -163,6 +164,11 @@ public class TableMetrics {
                 {midX, topY - midHoleRadius};
         botMidHoleXY = new double[]
                 {midX, botY + midHoleRadius};
+        
+        leftClothX = leftX - cornerHoleTan;
+        rightClothX = rightX + cornerHoleTan;
+        topClothY = topY - cornerHoleTan;
+        botClothY = botY + cornerHoleTan;
 
         allHoles = new double[][]{
                 topLeftHoleXY,
