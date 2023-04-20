@@ -8,6 +8,9 @@ public class Algebra {
     public static final double TWO_PI = Math.PI * 2;
     public static final double HALF_PI = Math.PI / 2;  // 90度
     public static final double QUARTER_PI = Math.PI / 4;  // 45度
+    
+    public static final double[] X_AXIS = {1, 0};
+    public static final double[] Y_AXIS = {0, 1};
 
     public static double[] symmetricVector(double vx, double vy, double axisVX, double axisVY) {
         double scalar = 2 * vectorDot(vx, vy, axisVX, axisVY) / vectorDot(axisVX, axisVY, axisVX, axisVY);

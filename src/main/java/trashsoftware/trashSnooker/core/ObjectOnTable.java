@@ -4,8 +4,8 @@ import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
-public abstract class ObjectOnTable {
-    protected static final double GENERAL_BOUNCE_ACC = 0.2;
+public abstract class ObjectOnTable implements Cloneable {
+    protected static final double GENERAL_BOUNCE_ACC = 0.25;
     protected final GameValues values;
     protected final TableMetrics table;
     protected final double radius;
@@ -20,6 +20,15 @@ public abstract class ObjectOnTable {
         this.values = values;
         this.table = values.table;
         this.radius = radius;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        ObjectOnTable oot = (ObjectOnTable) super.clone();
+        if (currentBounce != null) {
+            oot.currentBounce = (Bounce) currentBounce.clone();
+        }
+        return oot;
     }
 
     public double getRadius() {
@@ -102,6 +111,13 @@ public abstract class ObjectOnTable {
         return 1;
     }
 
+    public void clearMovement() {
+        vx = 0.0;
+        vy = 0.0;
+        distance = 0.0;
+        currentBounce = null;
+    }
+
     protected void clearBounceDesiredLeavePos() {
         if (currentBounce != null) {
             System.out.println("Cleared!");
@@ -110,11 +126,11 @@ public abstract class ObjectOnTable {
     }
 
     protected void processBounce(boolean print) {
-        currentBounce.oneFrame();
+        boolean notDestroy = currentBounce.oneFrame();
 
-        if (currentBounce.isLeaving(x, y)) {
+        if (!notDestroy) {
             if (print)
-                System.out.println("Bounce lasts for " + currentBounce.framesCount + " frames");
+                System.out.println(print + " Bounce lasts for " + currentBounce.framesCount + " frames");
             currentBounce.leave();
             currentBounce = null;
         }
@@ -140,36 +156,20 @@ public abstract class ObjectOnTable {
                 predictedDtToPoint(table.botMidHoleXY) < midRoom;
     }
 
-    protected double[] hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
-        double axisX = arcXY[0] - x;  // 切线的法向量
-        double axisY = arcXY[1] - y;
-//        double[] reflect = Algebra.symmetricVector(vx, vy, axisX, axisY);
-//        vx = -reflect[0];
-//        vy = -reflect[1];
+    protected void hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
+        x += vx;
+        y += vy;
+        
         if (currentBounce != null) {
             System.err.println("Current is bouncing!");
         }
-
-//        double[] normal = new double[]{axisX, axisY};
-//        double[] unitNormal = Algebra.unitVector(normal);
-//        double verticalSpeed = Algebra.projectionLengthOn(normal, new double[]{vx, vy});
-
-//        double nFrames = 2.0 / GENERAL_BOUNCE_ACC / phy.cloth.smoothness.cushionBounceFactor;
 
         double speed = Math.hypot(vx, vy);
         currentBounce = new ArcBounce(
                 arcXY, 
                 speed * GENERAL_BOUNCE_ACC * phy.cloth.smoothness.cushionBounceFactor,
-                speed * table.wallBounceRatio
+                speed * table.wallBounceRatio * 0.9
         );
-//        currentBounce = new Bounce(
-//                -unitNormal[0] * verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
-//                -unitNormal[1] * verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC);
-//        if (!phy.isPrediction) {
-//            System.out.println("Acc: " + currentBounce.accX + " " + currentBounce.accY);
-//        }
-
-        return new double[]{axisX, axisY};  // 返回切线的法向量
     }
 
     protected void hitHoleLineArea(double[] lineNormalVec, Phy phy) {
@@ -187,7 +187,7 @@ public abstract class ObjectOnTable {
         currentBounce = new LineBounce(
                 -unitNormal[0] * verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
                 -unitNormal[1] * verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
-                Math.hypot(vx, vy) * table.wallBounceRatio
+                Math.hypot(vx, vy) * table.wallBounceRatio * 0.9
         );
 //        if (!phy.isPrediction) {
 //            System.out.println("Acc: " + currentBounce.accX + " " + currentBounce.accY);
@@ -231,13 +231,6 @@ public abstract class ObjectOnTable {
      * 如未进入，返回{@code 0}
      */
     protected int tryHitHoleArea(Phy phy) {
-//        if (currentBounce != null && currentBounce.isHoleArea()) {
-//            processBounce();
-//            normalMove(phy);
-//            prepareMove(phy);
-//            return 3;
-//        }
-
         if (nextY < radius + table.topY) {
             if (nextX < table.midHoleAreaRightX && nextX >= table.midHoleAreaLeftX) {
                 // 上方中袋在袋角范围内
@@ -245,10 +238,12 @@ public abstract class ObjectOnTable {
                         currentDtToPoint(table.topMidHoleLeftArcXy) >= table.midArcRadius + radius) {
                     // 击中上方中袋左侧
                     hitHoleArcArea(table.topMidHoleLeftArcXy, phy, table.midArcRadius);
+                    return 2;
                 } else if (predictedDtToPoint(table.topMidHoleRightArcXy) < table.midArcRadius + radius &&
                         currentDtToPoint(table.topMidHoleRightArcXy) >= table.midArcRadius + radius) {
                     // 击中上方中袋右侧
                     hitHoleArcArea(table.topMidHoleRightArcXy, phy, table.midArcRadius);
+                    return 2;
                 } else if (table.isStraightHole() &&
                         nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
                     // 疑似上方中袋直线
@@ -280,7 +275,6 @@ public abstract class ObjectOnTable {
                     prepareMove(phy);
                     return 1;
                 }
-                return 2;
             }
         } else if (nextY >= table.botY - radius) {
             if (nextX < table.midHoleAreaRightX && nextX >= table.midHoleAreaLeftX) {
@@ -289,10 +283,12 @@ public abstract class ObjectOnTable {
                         currentDtToPoint(table.botMidHoleLeftArcXy) >= table.midArcRadius + radius) {
                     // 击中下方中袋左侧
                     hitHoleArcArea(table.botMidHoleLeftArcXy, phy, table.midArcRadius);
+                    return 2;
                 } else if (predictedDtToPoint(table.botMidHoleRightArcXy) < table.midArcRadius + radius &&
                         currentDtToPoint(table.botMidHoleRightArcXy) >= table.midArcRadius + radius) {
                     // 击中下方中袋右侧
                     hitHoleArcArea(table.botMidHoleRightArcXy, phy, table.midArcRadius);
+                    return 2;
                 } else if (table.isStraightHole() &&
                         nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
                     // 疑似下方中袋直线
@@ -324,7 +320,6 @@ public abstract class ObjectOnTable {
                     prepareMove(phy);
                     return 1;
                 }
-                return 2;
             }
         }
 
@@ -369,7 +364,7 @@ public abstract class ObjectOnTable {
         return 0;
     }
 
-    abstract class Bounce {
+    abstract class Bounce implements Cloneable {
 
 //        /*
 //        1: 上边库 
@@ -385,37 +380,52 @@ public abstract class ObjectOnTable {
 
 //        double holeArcRadius;
 
+        boolean everEnter = false;  // 是否进入过库边区域
         int framesCount = 0;
 
-        abstract void oneFrame();
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
+
+        abstract void processOneFrame();
+
+        /**
+         * @return 如果还在bounce过程则true。如返回false，则销毁该bounce
+         */
+        final boolean oneFrame() {
+            if (framesCount > 30) {
+                System.out.println("Bounce alive for frames " + framesCount);
+            }
+            if (!everEnter) {
+                if (!values.isInTable(x, y, values.ball.ballRadius)) {
+                    everEnter = true;
+                }
+            }
+            
+            if (everEnter) {
+                processOneFrame();
+                framesCount++;
+                return !isLeaving(x, y);
+            } else {
+                framesCount++;
+                if (framesCount > 3) {
+                    System.out.println("Frame " + framesCount + " not entered");
+                    return false;
+                }
+                
+                return true;
+            }
+        }
 
 //        boolean isHoleArea() {
 //            return scenario == 5 || scenario == 6;
 //        }
 
         boolean isLeaving(double curX, double curY) {
-            return framesCount > 30 || !values.isInTable(curX, curY, values.ball.ballRadius) &&
-                    values.isInTable(curX + vx, curY + vy, values.ball.ballRadius);
-//            double ballRadius = values.ball.ballRadius;
-//            switch (scenario) {
-//                case 1:
-//                    return nextY >= values.table.topY + ballRadius;
-//                case 2:
-//                    return nextY < values.table.botY - ballRadius;
-//                case 3:
-//                    return nextX >= values.table.leftX + ballRadius;
-//                case 4:
-//                    return nextX < values.table.rightX - ballRadius;
-//                case 5:
-//                    return Algebra.distanceToPoint(
-//                            nextX, 
-//                            nextY, 
-//                            holeArcCenter[0], 
-//                            holeArcCenter[1]) >= holeArcRadius + ballRadius;
-//                case 6:
-//                default:
-//                    throw new RuntimeException();
-//            }
+//            return framesCount > 30 || !values.isInTable(curX, curY, values.ball.ballRadius) &&
+//                    values.isInTable(curX + vx, curY + vy, values.ball.ballRadius);
+            return everEnter && values.isInTable(curX + vx, curY + vy, values.ball.ballRadius);
         }
 
         abstract void leave();
@@ -438,11 +448,9 @@ public abstract class ObjectOnTable {
         }
 
         @Override
-        void oneFrame() {
+        void processOneFrame() {
             vx += accX;
             vy += accY;
-
-            currentBounce.framesCount++;
         }
 
         @Override
@@ -507,7 +515,7 @@ public abstract class ObjectOnTable {
         }
 
         @Override
-        void oneFrame() {
+        void processOneFrame() {
             // 每一帧都得更新加速方向
             // 加速方向是球当前位置与圆心的连线
             // 此处假设球永远砸不到圆的半径那么深
@@ -517,8 +525,6 @@ public abstract class ObjectOnTable {
             double accY = unitAcc[1] * verticalSpeed;
             vx += accX;
             vy += accY;
-            
-            framesCount++;
         }
 
         @Override

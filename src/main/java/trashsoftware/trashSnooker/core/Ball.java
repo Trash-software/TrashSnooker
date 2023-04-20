@@ -157,18 +157,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         clearMovement();
     }
 
-//    public double getXAngle() {
-//        return xAngle;
-//    }
-//
-//    public double getYAngle() {
-//        return yAngle;
-//    }
-//
-//    public double getZAngle() {
-//        return zAngle;
-//    }
-
     public boolean isRed() {
         return value == 1;
     }
@@ -341,21 +329,23 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return midHolePowerFactor(getSpeed() * phy.calculationsPerSec);
     }
 
-    protected double[] hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
-        double[] normalVec = super.hitHoleArcArea(arcXY, phy, arcRadius);  // 碰撞点切线的法向量
+    protected void hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
+        
         // 一般来说袋角的弹性没库边好
 //        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
 //        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
-        applySpinsWhenHitCushion(phy, normalVec);
 
-        return normalVec;
+        double[] collisionNormal = new double[]{arcXY[0] - x, arcXY[1] - y};  // 切线的法向量
+        applySpinsWhenHitCushion(phy, collisionNormal);
+        super.hitHoleArcArea(arcXY, phy, arcRadius);
     }
 
     protected void hitHoleLineArea(double[] lineNormalVec, Phy phy) {
+        applySpinsWhenHitCushion(phy, lineNormalVec);
         super.hitHoleLineArea(lineNormalVec, phy);
 //        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
 //        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
-        applySpinsWhenHitCushion(phy, lineNormalVec);
+        
     }
 
     /**
@@ -369,13 +359,26 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
      * @param cushionNormalVec 撞的库的法向量。比如说边库应是(1,0)或(-1,0)
      */
     private void applySpinsWhenHitCushion(Phy phy, double[] cushionNormalVec) {
+        double[] vec = new double[]{vx, vy};
         // 库的切线方向的投影长度，意思是砸的深度，越深效果越强
-        double mag = Math.abs(Algebra.projectionLengthOn(cushionNormalVec, new double[]{vx, vy})) *
+        double vertical = Algebra.projectionLengthOn(cushionNormalVec, vec);
+        double mag = Math.abs(vertical) *
                 phy.calculationsPerSec;
 
         double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.67);
 //        System.out.println(mag + " " + sideSpinEffectMul);
         double effectiveSideSpin = sideSpin * sideSpinEffectMul;
+
+        // todo: 暂时修不好，大概还是因为左手/右手定理的问题
+//        double[] cushionVec = Algebra.normalVector(cushionNormalVec);
+//        double horizontal = Algebra.projectionLengthOn(cushionVec, vec);
+//        
+//        double[] afterSpin = new double[]{horizontal + effectiveSideSpin, vertical};
+//        double newVx = Algebra.projectionLengthOn(Algebra.X_AXIS, afterSpin);
+//        double newVy = Algebra.projectionLengthOn(Algebra.Y_AXIS, afterSpin);
+//        
+//        vx = newVx;
+//        vy = newVy;
 
         // todo: 真的算，而不是用if。目前没考虑袋角
         if (Arrays.equals(cushionNormalVec, SIDE_CUSHION_VEC)) {
@@ -662,13 +665,12 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return false;
     }
 
+    @Override
     public void clearMovement() {
-        vx = 0.0;
-        vy = 0.0;
+        super.clearMovement();
         xSpin = 0.0;
         ySpin = 0.0;
         sideSpin = 0.0;
-        distance = 0.0;
         justHit = null;
         frameDegChange = 0.0;
     }

@@ -1101,7 +1101,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             
             if (cueBallClone.currentBounce != null) {
                 cueBallClone.processBounce(false);
-                tryWhiteHitBall();
+                if (prediction.getFirstCollide() == null) {
+                    tryWhiteHitBall();
+                } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
+                    tryPassSecondBall();
+                }
                 cueBallClone.normalMove(phy);
                 return false;
             }
