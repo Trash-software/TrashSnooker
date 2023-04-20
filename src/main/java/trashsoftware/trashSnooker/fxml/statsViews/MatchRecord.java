@@ -6,6 +6,9 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
+import trashsoftware.trashSnooker.core.career.championship.Championship;
+import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
+import trashsoftware.trashSnooker.core.career.championship.RecordedMatchedInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.widgets.MatchRecordPage;
 import trashsoftware.trashSnooker.util.Util;
@@ -30,9 +33,19 @@ public class MatchRecord extends RecordTree {
         rightPane.getChildren().clear();
 
         EntireGameRecord matchRec = DBAccess.getInstance().getMatchDetail(egt);
+        RecordedMatchedInfo careerMatchInfo = MatchTreeNode.analyzeMatchId(egt.matchId);
+        
         MatchRecordPage page = new MatchRecordPage();
 
         int rowIndex = 0;
+        
+        if (careerMatchInfo != null) {
+            page.add(new Label(String.valueOf(careerMatchInfo.year)), 3, rowIndex);
+            page.add(new Label(careerMatchInfo.data.getName()), 4, rowIndex);
+            page.add(new Label(careerMatchInfo.stage.getShown()), 5, rowIndex);
+            rowIndex++;
+        }
+        
         String[] winLost;
         int[] p1p2Wins = matchRec.getP1P2WinsCount();
         if (p1p2Wins[0] < egt.totalFrames / 2 + 1 && p1p2Wins[1] < egt.totalFrames / 2 + 1) {
@@ -51,19 +64,19 @@ public class MatchRecord extends RecordTree {
 
         String p1Ai = egt.player1isAi ? strings.getString("typeComputer") : strings.getString("typePlayer");
         String p2Ai = egt.player2isAi ? strings.getString("typeComputer") : strings.getString("typePlayer");
-        page.add(new Label(egt.getP1Name() + "\n" + p1Ai), 1, rowIndex, 2, 1);
+        
+        Label p1NameLabel = new Label(egt.getP1Name() + "\n" + p1Ai);
+        p1NameLabel.setWrapText(true);
+        page.add(p1NameLabel, 1, rowIndex, 2, 1);
+        
         page.add(new Label(String.valueOf(p1p2Wins[0])), 3, rowIndex);
         page.add(new Label(String.format("(%d)", egt.totalFrames)), 4, rowIndex);
         page.add(new Label(String.valueOf(p1p2Wins[1])), 5, rowIndex);
-
-        HBox p2Box = new HBox();
-        p2Box.setAlignment(Pos.TOP_RIGHT);
+        
         Label p2NameLabel = new Label(egt.getP2Name() + "\n" + p2Ai);
-        p2NameLabel.setTextAlignment(TextAlignment.RIGHT);
         p2NameLabel.setWrapText(true);
-        p2Box.getChildren().add(p2NameLabel);
+        page.add(p2NameLabel, 6, rowIndex, 2, 1);
 
-        page.add(p2Box, 6, rowIndex, 2, 1);
         rowIndex++;
 
         int[][] playersTotalBasics = matchRec.totalBasicStats();

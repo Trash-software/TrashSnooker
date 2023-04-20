@@ -32,14 +32,17 @@ public class EntireGame {
     private int p2Wins;
     private boolean p1Breaks;
     private final SortedMap<Integer, Integer> winRecords = new TreeMap<>();
+    private final String matchId;  // nullable
 
     public EntireGame(InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
-                      int totalFrames, TableCloth cloth) {
-        this(p1, p2, gameValues, totalFrames, cloth, true);
+                      int totalFrames, TableCloth cloth,
+                      String matchId) {
+        this(p1, p2, gameValues, totalFrames, cloth, true, matchId);
     }
 
     private EntireGame(InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
-                       int totalFrames, TableCloth cloth, boolean isNewCreate) {
+                       int totalFrames, TableCloth cloth, boolean isNewCreate,
+                       String matchId) {
         this.p1 = p1;
         this.p2 = p2;
         if (totalFrames % 2 != 1) {
@@ -51,9 +54,10 @@ public class EntireGame {
         this.playPhy = Phy.Factory.createPlayPhy(cloth);
         this.predictPhy = Phy.Factory.createAiPredictPhy(cloth);
         this.whitePhy = Phy.Factory.createWhitePredictPhy(cloth);
+        this.matchId = matchId;
 
         if (isNewCreate && gameValues.isStandard())
-            DBAccess.getInstance().recordAnEntireGameStarts(this);
+            DBAccess.getInstance().recordAnEntireGameStarts(this, matchId);
 
 //        createNextFrame();
     }
@@ -74,7 +78,8 @@ public class EntireGame {
                 gameValues,
                 frames,
                 cloth,
-                false
+                false,
+                jsonObject.has("matchId") ? jsonObject.getString("matchId") : null
         );
 
         entireGame.p1Wins = jsonObject.getInt("p1Wins");
@@ -128,6 +133,7 @@ public class EntireGame {
         object.put("p2", p2.toJson());
 
         object.put("winRecords", winRecords);
+        object.put("matchId", matchId);
 
         return object;
     }

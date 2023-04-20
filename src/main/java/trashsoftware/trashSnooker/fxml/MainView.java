@@ -315,7 +315,7 @@ public class MainView implements Initializable {
             igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue(), 2, 1.0);
         }
 
-        EntireGame game = new EntireGame(igp1, igp2, gameValues, totalFramesBox.getValue(), cloth);
+        EntireGame game = new EntireGame(igp1, igp2, gameValues, totalFramesBox.getValue(), cloth, null);
         startGame(game);
     }
     

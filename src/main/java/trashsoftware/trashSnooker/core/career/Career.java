@@ -122,8 +122,8 @@ public class Career {
     public void updateHandFeel() {
         double handFeelChange = (Math.random() - 0.5) * 0.05;
         this.handFeel += handFeelChange;
-        if (this.handFeel > 1.0) this.handFeel = 1.0;
-        else if (this.handFeel < 0.8) this.handFeel = 0.8;
+        if (this.handFeel > 1.15) this.handFeel = 1.15;
+        else if (this.handFeel < 0.85) this.handFeel = 0.85;
 
         if (CareerManager.LOG) {
             System.out.println("Hand feel: " + playerPerson.getPlayerId() + " " + handFeel);

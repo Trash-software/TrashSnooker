@@ -345,7 +345,8 @@ public class ChampDrawView implements Initializable {
                             igp2,
                             values,
                             match.getChampionship().getData().getNFramesOfStage(match.getStage()),
-                            tableSpec.tableCloth
+                            tableSpec.tableCloth,
+                            match.matchId
                     );
 
                     match.setGame(newGame);

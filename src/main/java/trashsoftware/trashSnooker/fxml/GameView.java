@@ -439,7 +439,7 @@ public class GameView implements Initializable {
                       InGamePlayer player1, InGamePlayer player2,
                       TableCloth cloth) {
         EntireGame entireGame = new EntireGame(player1, player2, gameValues,
-                totalFrames, cloth);
+                totalFrames, cloth, null);
         setup(stage, entireGame);
     }
     

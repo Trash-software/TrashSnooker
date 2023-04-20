@@ -1,41 +1,42 @@
 {
-  "p1": "custom_656467",
+  "p1": "custom_player_170",
   "game": {
     "winRecords": {"1": 1},
     "p2Wins": 0,
     "p1": {
       "playerNumber": 1,
-      "handFeelEffort": 1,
-      "person": "custom_656467",
-      "playerType": "PLAYER",
-      "playCue": "stdSnookerCue",
-      "breakCue": "stdSnookerCue"
+      "handFeelEffort": 0.9318367826804664,
+      "person": "custom_player_170",
+      "playerType": "COMPUTER",
+      "playCue": "stdPottsCue",
+      "breakCue": "stdBreakCue"
     },
     "p1Wins": 1,
     "p2": {
       "playerNumber": 2,
-      "handFeelEffort": 0.8040155605266438,
-      "person": "High Stick",
-      "playerType": "COMPUTER",
-      "playCue": "stdSnookerCue",
-      "breakCue": "stdSnookerCue"
+      "handFeelEffort": 1,
+      "person": "custom_656467",
+      "playerType": "PLAYER",
+      "playCue": "stdPottsCue",
+      "breakCue": "stdBreakCue"
     },
-    "startTime": 1680684092920,
+    "startTime": 1682005563343,
     "gameValues": {
-      "ball": "SNOOKER_BALL",
-      "gameRule": "SNOOKER",
+      "ball": "POOL_BALL",
+      "gameRule": "CHINESE_EIGHT",
       "table": {
-        "tableOrdinal": 0,
+        "tableOrdinal": 1,
         "holeSizeOrdinal": 1
       }
     },
+    "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-ROUND_1-20",
     "totalFrames": 3,
     "cloth": {
-      "smoothness": "NORMAL",
-      "goodness": "GOOD"
+      "smoothness": "MEDIUM",
+      "goodness": "NORMAL"
     },
     "p1Breaks": true
   },
-  "p2": "High Stick",
-  "stage": "PRE_ROUND_1"
+  "p2": "custom_656467",
+  "stage": "ROUND_1"
 }

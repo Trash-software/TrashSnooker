@@ -1,299 +1,265 @@
 {
-  "stageIndex": 4,
+  "stageIndex": 3,
   "seedRanks": {
-    "Brown": 15,
-    "Liu Mang": 25,
-    "custom_player_1": 23,
+    "Liu Mang": 16,
+    "custom_player_169": 30,
     "custom_656467": 32,
-    "custom_player_3": 16,
-    "custom_player_2": 22,
-    "Jack Lisowski": 7,
-    "custom_player_4": 19,
-    "Glass Heart": 9,
-    "custom_player_168": 31,
-    "Selby": 2,
-    "Mark Allen": 3,
-    "Karen Wilson": 14,
-    "Zhao Xintong": 13,
-    "Stephen Maguire": 20,
-    "Murphy": 6,
-    "Stuart Bingham": 8,
-    "Mou Moumou": 27,
-    "Matthew Stevens": 21,
-    "Kid": 18,
-    "Fat Guy": 4,
-    "custom_player_159": 30,
-    "Ding Junhui": 5,
-    "Smart": 17,
-    "High Stick": 24,
-    "Mark Williams": 1,
-    "Lolita": 12,
-    "Luca Brecel": 11,
-    "custom_player_160": 10,
-    "custom_player_181": 28,
-    "Worst Professional": 26,
-    "custom_E5B08FE4BB99E5A5B3": 29
+    "custom_player_3": 19,
+    "custom_player_2": 3,
+    "custom_player_166": 7,
+    "custom_player_165": 8,
+    "custom_player_168": 21,
+    "custom_player_167": 24,
+    "custom_player_173": 23,
+    "custom_player_172": 20,
+    "custom_player_174": 22,
+    "Zhao Xintong": 1,
+    "Mang Dali": 26,
+    "custom_player_170": 28,
+    "Summer Brave": 27,
+    "Lao Youtiao": 25,
+    "John Wizard": 2,
+    "Mou Moumou": 5,
+    "Mang Zi": 31,
+    "custom_E8BDBBE69DBEE58FB7": 29,
+    "Kid": 9,
+    "custom_player_159": 12,
+    "custom_player_177": 18,
+    "High Stick": 11,
+    "custom_player_178": 17,
+    "custom_E78B97E697A5E79A84": 15,
+    "custom_player_160": 4,
+    "custom_player_181": 10,
+    "Worst Professional": 13,
+    "custom_E5B08FE4BB99E5A5B3": 6,
+    "Wang Xu": 14
   },
-  "championshipId": "fresh_hand_open",
+  "championshipId": "eight_yangjiaping_mid_cup",
   "matchTree": {"root": {
     "p1": {
       "p1": {
         "p1": {
+          "p1wins": 0,
           "p1": {
-            "p1": {"winner": "custom_656467"},
-            "p2": {"winner": "High Stick"},
+            "p1wins": 1,
+            "p1": {"winner": "custom_player_3"},
+            "p2": {"winner": "Summer Brave"},
+            "winner": "custom_player_3",
             "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-0"
-          },
-          "p2": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_player_168"},
-            "p2": {"winner": "Jack Lisowski"},
-            "winner": "Jack Lisowski",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-1",
-            "p2wins": 2
-          },
-          "stage": "ROUND_1",
-          "matchId": "custom_656467+2023+fresh_hand_open-16"
-        },
-        "p2": {
-          "p1": {
-            "p1wins": 0,
-            "p1": {"winner": "Kid"},
-            "p2": {"winner": "Smart"},
-            "winner": "Smart",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-2",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Luca Brecel"},
-            "p2": {"winner": "custom_player_2"},
-            "winner": "Luca Brecel",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-3",
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-0",
             "p2wins": 0
           },
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "custom_player_169"},
+            "p2": {"winner": "John Wizard"},
+            "winner": "John Wizard",
+            "stage": "PRE_ROUND_1",
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-1",
+            "p2wins": 1
+          },
+          "winner": "John Wizard",
           "stage": "ROUND_1",
-          "matchId": "custom_656467+2023+fresh_hand_open-17"
+          "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-ROUND_1-16",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "custom_player_166"},
+            "p2": {"winner": "custom_E78B97E697A5E79A84"},
+            "winner": "custom_player_166",
+            "stage": "PRE_ROUND_1",
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-2",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "High Stick"},
+            "p2": {"winner": "custom_player_172"},
+            "winner": "custom_player_172",
+            "stage": "PRE_ROUND_1",
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-3",
+            "p2wins": 1
+          },
+          "winner": "custom_player_166",
+          "stage": "ROUND_1",
+          "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-ROUND_1-17",
+          "p2wins": 0
         },
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_656467+2023+fresh_hand_open-24"
+        "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-QUARTER_FINAL-24"
       },
       "p2": {
         "p1": {
+          "p1wins": 0,
           "p1": {
-            "p1wins": 2,
-            "p1": {"winner": "Glass Heart"},
-            "p2": {"winner": "custom_player_3"},
-            "winner": "Glass Heart",
+            "p1wins": 1,
+            "p1": {"winner": "Mang Zi"},
+            "p2": {"winner": "custom_player_174"},
+            "winner": "Mang Zi",
             "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-4",
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-4",
             "p2wins": 0
           },
           "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Ding Junhui"},
-            "p2": {"winner": "Liu Mang"},
-            "winner": "Ding Junhui",
+            "p1wins": 1,
+            "p1": {"winner": "custom_player_173"},
+            "p2": {"winner": "custom_player_168"},
+            "winner": "custom_player_173",
             "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-5",
-            "p2wins": 1
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-5",
+            "p2wins": 0
           },
+          "winner": "custom_player_173",
           "stage": "ROUND_1",
-          "matchId": "custom_656467+2023+fresh_hand_open-18"
+          "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-ROUND_1-18",
+          "p2wins": 2
         },
         "p2": {
+          "p1wins": 1,
           "p1": {
-            "p1wins": 1,
-            "p1": {"winner": "custom_player_159"},
-            "p2": {"winner": "Brown"},
-            "winner": "Brown",
+            "p1wins": 0,
+            "p1": {"winner": "Mang Dali"},
+            "p2": {"winner": "custom_player_2"},
+            "winner": "custom_player_2",
             "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-6",
-            "p2wins": 2
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-6",
+            "p2wins": 1
           },
           "p2": {
             "p1wins": 0,
-            "p1": {"winner": "custom_player_4"},
-            "p2": {"winner": "Stuart Bingham"},
-            "winner": "Stuart Bingham",
+            "p1": {"winner": "custom_player_181"},
+            "p2": {"winner": "Liu Mang"},
+            "winner": "Liu Mang",
             "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-7",
-            "p2wins": 2
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-7",
+            "p2wins": 1
           },
+          "winner": "Liu Mang",
           "stage": "ROUND_1",
-          "matchId": "custom_656467+2023+fresh_hand_open-19"
+          "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-ROUND_1-19",
+          "p2wins": 2
         },
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_656467+2023+fresh_hand_open-25"
+        "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-QUARTER_FINAL-25"
       },
       "stage": "SEMI_FINAL",
-      "matchId": "custom_656467+2023+fresh_hand_open-28"
+      "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-SEMI_FINAL-28"
     },
     "p2": {
       "p1": {
         "p1": {
           "p1": {
-            "p1wins": 1,
-            "p1": {"winner": "custom_player_1"},
-            "p2": {"winner": "custom_player_181"},
-            "winner": "custom_player_181",
+            "p1wins": 0,
+            "p1": {"winner": "custom_E8BDBBE69DBEE58FB7"},
+            "p2": {"winner": "custom_player_170"},
+            "winner": "custom_player_170",
             "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-8",
-            "p2wins": 2
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-8",
+            "p2wins": 1
           },
           "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Mark Allen"},
-            "p2": {"winner": "Mou Moumou"},
-            "winner": "Mark Allen",
+            "p1wins": 0,
+            "p1": {"winner": "Wang Xu"},
+            "p2": {"winner": "custom_656467"},
+            "winner": "custom_656467",
             "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-9",
-            "p2wins": 0
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-9",
+            "p2wins": 1
           },
           "stage": "ROUND_1",
-          "matchId": "custom_656467+2023+fresh_hand_open-20"
+          "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-ROUND_1-20"
         },
         "p2": {
+          "p1wins": 0,
           "p1": {
-            "p1wins": 0,
-            "p1": {"winner": "Karen Wilson"},
-            "p2": {"winner": "Matthew Stevens"},
-            "winner": "Matthew Stevens",
+            "p1wins": 1,
+            "p1": {"winner": "Kid"},
+            "p2": {"winner": "custom_player_178"},
+            "winner": "Kid",
             "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-10",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Fat Guy"},
-            "p2": {"winner": "custom_player_160"},
-            "winner": "Fat Guy",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-11",
-            "p2wins": 1
-          },
-          "stage": "ROUND_1",
-          "matchId": "custom_656467+2023+fresh_hand_open-21"
-        },
-        "stage": "QUARTER_FINAL",
-        "matchId": "custom_656467+2023+fresh_hand_open-26"
-      },
-      "p2": {
-        "p1": {
-          "p1": {
-            "p1wins": 2,
-            "p1": {"winner": "Lolita"},
-            "p2": {"winner": "custom_E5B08FE4BB99E5A5B3"},
-            "winner": "Lolita",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-12",
-            "p2wins": 1
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-10",
+            "p2wins": 0
           },
           "p2": {
             "p1wins": 0,
-            "p1": {"winner": "Murphy"},
+            "p1": {"winner": "custom_player_159"},
             "p2": {"winner": "Zhao Xintong"},
             "winner": "Zhao Xintong",
             "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-13",
-            "p2wins": 2
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-11",
+            "p2wins": 1
           },
+          "winner": "Zhao Xintong",
           "stage": "ROUND_1",
-          "matchId": "custom_656467+2023+fresh_hand_open-22"
+          "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-ROUND_1-21",
+          "p2wins": 2
         },
-        "p2": {
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-QUARTER_FINAL-26"
+      },
+      "p2": {
+        "p1": {
+          "p1wins": 1,
           "p1": {
-            "p1wins": 2,
-            "p1": {"winner": "Stephen Maguire"},
+            "p1wins": 0,
+            "p1": {"winner": "custom_player_160"},
             "p2": {"winner": "Worst Professional"},
-            "winner": "Stephen Maguire",
+            "winner": "Worst Professional",
             "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-14",
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-12",
             "p2wins": 1
           },
           "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Selby"},
-            "p2": {"winner": "Mark Williams"},
-            "winner": "Selby",
+            "p1wins": 1,
+            "p1": {"winner": "custom_player_165"},
+            "p2": {"winner": "Mou Moumou"},
+            "winner": "custom_player_165",
             "stage": "PRE_ROUND_1",
-            "matchId": "custom_656467+2023+fresh_hand_open-15",
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-13",
+            "p2wins": 0
+          },
+          "winner": "custom_player_165",
+          "stage": "ROUND_1",
+          "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-ROUND_1-22",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 0,
+            "p1": {"winner": "custom_player_167"},
+            "p2": {"winner": "Lao Youtiao"},
+            "winner": "Lao Youtiao",
+            "stage": "PRE_ROUND_1",
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-14",
             "p2wins": 1
           },
+          "p2": {
+            "p1wins": 1,
+            "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+            "p2": {"winner": "custom_player_177"},
+            "winner": "custom_E5B08FE4BB99E5A5B3",
+            "stage": "PRE_ROUND_1",
+            "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-PRE_ROUND_1-15",
+            "p2wins": 0
+          },
+          "winner": "Lao Youtiao",
           "stage": "ROUND_1",
-          "matchId": "custom_656467+2023+fresh_hand_open-23"
+          "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-ROUND_1-23",
+          "p2wins": 0
         },
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_656467+2023+fresh_hand_open-27"
+        "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-QUARTER_FINAL-27"
       },
       "stage": "SEMI_FINAL",
-      "matchId": "custom_656467+2023+fresh_hand_open-29"
+      "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-SEMI_FINAL-29"
     },
     "stage": "FINAL",
-    "matchId": "custom_656467+2023+fresh_hand_open-30"
+    "matchId": "custom_656467+2023+eight_yangjiaping_mid_cup-FINAL-30"
   }},
   "finished": false,
-  "snookerBreaks": [
-    {
-      "score": 85,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_656467+2023+fresh_hand_open-6",
-      "playerId": "Brown"
-    },
-    {
-      "score": 79,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_656467+2023+fresh_hand_open-10",
-      "playerId": "Matthew Stevens"
-    },
-    {
-      "score": 73,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_656467+2023+fresh_hand_open-3",
-      "playerId": "Luca Brecel"
-    },
-    {
-      "score": 66,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_656467+2023+fresh_hand_open-11",
-      "playerId": "Fat Guy"
-    },
-    {
-      "score": 63,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_656467+2023+fresh_hand_open-7",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 51,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_656467+2023+fresh_hand_open-11",
-      "playerId": "custom_player_160"
-    },
-    {
-      "score": 50,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_656467+2023+fresh_hand_open-4",
-      "playerId": "Glass Heart"
-    }
-  ],
-  "timestamp": "2023/1/25"
+  "timestamp": "2023/2/1"
 }

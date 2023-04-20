@@ -167,7 +167,7 @@ public abstract class ObjectOnTable implements Cloneable {
         double speed = Math.hypot(vx, vy);
         currentBounce = new ArcBounce(
                 arcXY, 
-                speed * GENERAL_BOUNCE_ACC * phy.cloth.smoothness.cushionBounceFactor,
+                bounceAcc(phy, speed),
                 speed * table.wallBounceRatio * 0.9
         );
     }
@@ -221,6 +221,10 @@ public abstract class ObjectOnTable implements Cloneable {
             vx += accVec[0];
             vy += accVec[1];
         }
+    }
+    
+    protected double bounceAcc(Phy phy, double verticalSpeed) {
+        return verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC;
     }
 
     /**
@@ -463,6 +467,13 @@ public abstract class ObjectOnTable implements Cloneable {
             }
         }
 
+        /**
+         * 如果在弹库的过程中又被其他球撞了，更新加速度
+         */
+        void updateAcceleration() {
+            // todo: 实现这个，虽然说影响应该不大
+        }
+
         @Override
         void clearDesireLeavePos() {
             setDesiredLeavePos(0, 0, 0, 0);
@@ -505,12 +516,12 @@ public abstract class ObjectOnTable implements Cloneable {
 
     class ArcBounce extends Bounce {
         double[] holeArcCenter;
-        double verticalSpeed;
+        double verticalAcc;
         double desiredLeaveSpeed;
 
-        ArcBounce(double[] arcCenter, double verticalSpeed, double desiredLeaveSpeed) {
+        ArcBounce(double[] arcCenter, double verticalAcc, double desiredLeaveSpeed) {
             this.holeArcCenter = arcCenter;
-            this.verticalSpeed = verticalSpeed;
+            this.verticalAcc = verticalAcc;
             this.desiredLeaveSpeed = desiredLeaveSpeed;
         }
 
@@ -521,8 +532,8 @@ public abstract class ObjectOnTable implements Cloneable {
             // 此处假设球永远砸不到圆的半径那么深
             double[] unitAcc = Algebra.unitVector(x - holeArcCenter[0], y - holeArcCenter[1]);
             
-            double accX = unitAcc[0] * verticalSpeed;
-            double accY = unitAcc[1] * verticalSpeed;
+            double accX = unitAcc[0] * verticalAcc;
+            double accY = unitAcc[1] * verticalAcc;
             vx += accX;
             vy += accY;
         }

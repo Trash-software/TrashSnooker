@@ -39,15 +39,40 @@ public class MatchTreeNode {
                          MatchTreeNode player2Position,
                          ChampionshipStage stage,
                          Championship championship) {
-        this(player1Position, player2Position, stage, generateId(championship));
+        this(player1Position, player2Position, stage, generateId(championship, stage));
     }
     
     static void restoreIdCounter() {
         matchIdCounter = 0;
     }
     
-    static String generateId(Championship championship) {
-        return championship.uniqueId() + "-" + (matchIdCounter++);
+    static String generateId(Championship championship, ChampionshipStage stage) {
+        return championship.uniqueId() + "-" + stage.name() + "-" + (matchIdCounter++);
+    }
+
+
+    /**
+     * @see Championship#uniqueId()
+     * @see MatchTreeNode#generateId(Championship, ChampionshipStage) 
+     */
+    public static RecordedMatchedInfo analyzeMatchId(String matchId) {
+        if (matchId == null) return null;
+
+        try {
+            String[] parts = matchId.split("-");
+            String[] champInfo = parts[0].split("\\+");
+            
+            int year = Integer.parseInt(champInfo[1]);
+            String dataId = champInfo[2];
+            ChampionshipData data = ChampDataManager.getInstance().findDataById(dataId);
+
+            return new RecordedMatchedInfo(champInfo[0], year, data, 
+                    ChampionshipStage.valueOf(parts[1]),
+                    Integer.parseInt(parts[2]));
+        } catch (RuntimeException e) {
+            System.err.println("Outdated match id format");
+            return null;
+        }
     }
 
     public static MatchTreeNode fromJsonObject(JSONObject object) {

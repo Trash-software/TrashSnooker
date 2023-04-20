@@ -413,12 +413,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
      * 该方法不检测袋口
      */
     protected boolean tryHitWall(Phy phy) {
-//        if (currentBounce != null) {
-//            processBounce();
-//
-//            return false;  // 只有在从没撞到撞的那一帧才return true
-//        }
-
         if (nextX < values.ball.ballRadius + table.leftX ||
                 nextX >= table.rightX - values.ball.ballRadius) {
             // 顶库
@@ -428,7 +422,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             applySpinsWhenHitCushion(phy, SIDE_CUSHION_VEC);
 
-            double effectiveAcc = -vx * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC;
+            double effectiveAcc = -bounceAcc(phy, vx);
             double nFrames = vx / -effectiveAcc * 2;
             if (!phy.isPrediction) System.out.println("predict " + nFrames);
             currentBounce = new CushionBounce(
@@ -449,7 +443,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             applySpinsWhenHitCushion(phy, TOP_BOT_CUSHION_VEC);
 
-            double effectiveAcc = -vy * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC;
+            double effectiveAcc = -bounceAcc(phy, vy);
             double nFrames = vy / -effectiveAcc * 2;
             currentBounce = new CushionBounce(
                     0,
