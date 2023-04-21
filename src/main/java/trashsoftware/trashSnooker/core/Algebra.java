@@ -8,6 +8,9 @@ public class Algebra {
     public static final double TWO_PI = Math.PI * 2;
     public static final double HALF_PI = Math.PI / 2;  // 90度
     public static final double QUARTER_PI = Math.PI / 4;  // 45度
+    
+    public static final double[] X_AXIS = {1, 0};
+    public static final double[] Y_AXIS = {0, 1};
 
     public static double[] symmetricVector(double vx, double vy, double axisVX, double axisVY) {
         double scalar = 2 * vectorDot(vx, vy, axisVX, axisVY) / vectorDot(axisVX, axisVY, axisVX, axisVY);
@@ -149,6 +152,10 @@ public class Algebra {
         return Math.hypot(x1 - x2, y1 - y2);
     }
 
+    public static double distanceToPoint(double[] v1, double[] v2) {
+        return distanceToPoint(v1[0], v1[1], v2[0], v2[1]);
+    }
+
     public static double[] unitVector(double[] vec) {
         return unitVector(vec[0], vec[1]);
     }
@@ -165,6 +172,10 @@ public class Algebra {
                 x * cosA - y * sinA,
                 x * sinA + y * cosA
         };
+    }
+
+    public static double distanceToLine(double[] pos, double[][] line) {
+        return distanceToLine(pos[0], pos[1], line[0], line[1]);
     }
 
     public static double distanceToLine(double x, double y, double[] lineStartXY, double[] lineEndXY) {
@@ -238,7 +249,7 @@ public class Algebra {
         stack.add(otherPoints[0]);
         
         int i = 1;
-        while (i < otherPoints.length) {
+        while (i < otherPoints.length && stack.size() >= 2) {
             double[] point = otherPoints[i];
             double[] peek = stack.get(stack.size() - 1);
             double[] older = stack.get(stack.size() - 2);

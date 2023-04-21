@@ -17,8 +17,9 @@ public class PlayerVsAiMatch {
     
     public final Career p1;
     public final Career p2;
-    public final ChampionshipData data;
+    public final MetaMatchInfo metaMatchInfo;
     public final ChampionshipStage stage;
+    private final Championship championship;
     private final MatchTreeNode resultNode;
     private PvEMatchEndCallback callback;
     private Runnable guiFinishCallback;
@@ -27,13 +28,14 @@ public class PlayerVsAiMatch {
 
     public PlayerVsAiMatch(Career p1,
                            Career p2,
-                           ChampionshipData data,
+                           Championship championship,
                            ChampionshipStage stage,
                            MatchTreeNode resultNode) {
         this.p1 = p1;
         this.p2 = p2;
-        this.data = data;
+        this.championship = championship;
         this.stage = stage;
+        this.metaMatchInfo = resultNode.getMetaMatchInfo();
         this.resultNode = resultNode;
     }
     
@@ -41,15 +43,15 @@ public class PlayerVsAiMatch {
         return new File(CareerManager.getInstance().getCareerSave().getDir(), ACTIVE_MATCH_SAVE);
     }
     
-    public static PlayerVsAiMatch loadSaved(MatchTreeNode root, ChampionshipData data) {
+    public static PlayerVsAiMatch loadSaved(MatchTreeNode root, Championship championship) {
         JSONObject load = Util.readJson(getMatchSave());
         if (load == null) return null;
-        PlayerVsAiMatch match = fromJson(load, root, data);
+        PlayerVsAiMatch match = fromJson(load, root, championship);
         if (match.game.isFinished()) return null;
         return match;
     }
     
-    private static PlayerVsAiMatch fromJson(JSONObject jsonObject, MatchTreeNode root, ChampionshipData data) {
+    private static PlayerVsAiMatch fromJson(JSONObject jsonObject, MatchTreeNode root, Championship championship) {
         String p1 = jsonObject.getString("p1");
         String p2 = jsonObject.getString("p2");
         MatchTreeNode resultNode = root.findNodeByPlayers(p1, p2);
@@ -62,7 +64,7 @@ public class PlayerVsAiMatch {
         PlayerVsAiMatch res = new PlayerVsAiMatch(
                 CareerManager.getInstance().findCareerByPlayerId(p1),
                 CareerManager.getInstance().findCareerByPlayerId(p2),
-                data,
+                championship,
                 stage,
                 resultNode
         );
@@ -81,7 +83,11 @@ public class PlayerVsAiMatch {
         
         return match;
     }
-    
+
+    public Championship getChampionship() {
+        return championship;
+    }
+
     public void saveMatch() {
         Util.writeJson(toJson(), getMatchSave());
     }

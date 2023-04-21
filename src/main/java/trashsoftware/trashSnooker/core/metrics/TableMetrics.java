@@ -9,18 +9,18 @@ public class TableMetrics {
     public static final String CHINESE_EIGHT = "CHINESE_EIGHT";
     public static final String SIDE_POCKET = "SIDE_POCKET";
     public static final HoleSize[] SNOOKER_HOLES = {
-            new HoleSize("pocketLarge", 89, 97),
-            new HoleSize("pocketStd", 85, 92),
-            new HoleSize("pocketSmall", 82, 88),
-            new HoleSize("pocketLittle", 78, 85),
+            new HoleSize("pocketLarge", 89, 95),
+            new HoleSize("pocketStd", 85, 89),
+            new HoleSize("pocketSmall", 82, 87),
+            new HoleSize("pocketLittle", 78, 84),
             new HoleSize("pocketTiny", 72, 78)
     };
     public static final HoleSize[] CHINESE_EIGHT_HOLES = {
-            new HoleSize("pocketHuge", 93, 103),
-            new HoleSize("pocketLarge", 89, 97),
-            new HoleSize("pocketStd", 85, 92),
-            new HoleSize("pocketSmall", 82, 88),
-            new HoleSize("pocketLittle", 78, 85)
+            new HoleSize("pocketHuge", 93, 98),
+            new HoleSize("pocketLarge", 89, 95),
+            new HoleSize("pocketStd", 85, 89),
+            new HoleSize("pocketSmall", 82, 85),
+            new HoleSize("pocketLittle", 78, 82)
     };
     public static final HoleSize[] SIDE_POCKET_HOLES = {
             new HoleSize("pocketStd", 105, 105),
@@ -39,6 +39,7 @@ public class TableMetrics {
     public double innerWidth;
     public double innerHeight;
     public double leftX, rightX, topY, botY, midX, midY;
+    public double leftClothX, rightClothX, topClothY, botClothY;  // 绿色部分的最大
     public double maxLength;  // 对角线长度
     public double cushionHeight;
     public double speedReduceMultiplier = 1.0;  // 台泥的阻力系数，值越大阻力越大
@@ -109,6 +110,7 @@ public class TableMetrics {
     public double[][] botRightHoleEndLine;
 
     public double[][] allCornerArcs;
+    public double[][] allMidArcs;
 
     public double[][][] allCornerLines;
     public double[][][] allMidHoleLines;
@@ -162,6 +164,11 @@ public class TableMetrics {
                 {midX, topY - midHoleRadius};
         botMidHoleXY = new double[]
                 {midX, botY + midHoleRadius};
+        
+        leftClothX = leftX - cornerHoleTan;
+        rightClothX = rightX + cornerHoleTan;
+        topClothY = topY - cornerHoleTan;
+        botClothY = botY + cornerHoleTan;
 
         allHoles = new double[][]{
                 topLeftHoleXY,
@@ -270,6 +277,12 @@ public class TableMetrics {
                 botRightHoleSideArcXy,
                 botRightHoleEndArcXy
         };
+        allMidArcs = new double[][]{
+                topMidHoleLeftArcXy,
+                topMidHoleRightArcXy,
+                botMidHoleLeftArcXy,
+                botMidHoleRightArcXy
+        };
 
         allCornerLines = new double[][][]{
                 topLeftHoleSideLine,  // "\"
@@ -317,7 +330,7 @@ public class TableMetrics {
                         .tableDimension(3820.0, 3569.0,
                                 2035.0, 1788.0,
                                 33.34)
-                        .curvedHole(10.0, 5.0, 0.0)
+                        .curvedHole(10.0, 4.0, 0.0)
 //                        .supportedHoles(SNOOKER_HOLES)
                         .resistanceAndCushionBounce(1.0, 0.92, 0.8);
             }
@@ -331,7 +344,7 @@ public class TableMetrics {
                                 1550.0, 1270.0,
                                 42.0)
 //                        .supportedHoles(CHINESE_EIGHT_HOLES)
-                        .curvedHole(10.0, 5.0, 0.0)
+                        .curvedHole(10.0, 4.0, 0.0)
                         .resistanceAndCushionBounce(1.05, 0.92, 0.8);
             }
         },

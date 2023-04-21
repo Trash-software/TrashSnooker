@@ -1,8 +1,8 @@
 package trashsoftware.trashSnooker.recorder;
 
 import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.util.Util;
@@ -10,16 +10,16 @@ import trashsoftware.trashSnooker.util.Util;
 import java.io.IOException;
 import java.util.List;
 
-public class NaiveGameRecorder extends GameRecorder {
+public class NaiveActualRecorder extends ActualRecorder {
     
     public static final int CUE_RECORD_LENGTH = 84;
 
-    public NaiveGameRecorder(Game game) {
-        super(game);
+    public NaiveActualRecorder(Game<?, ?> game, MetaMatchInfo metaMatchInfo) {
+        super(game, metaMatchInfo);
     }
 
     @Override
-    protected void writeCue(CueRecord cueRecord, 
+    public void writeCue(CueRecord cueRecord, 
                             Movement movement,
                             TargetRecord thisTarget,
                             TargetRecord nextTarget) throws IOException {
@@ -28,7 +28,7 @@ public class NaiveGameRecorder extends GameRecorder {
     }
 
     @Override
-    protected void writeBallInHand() throws IOException {
+    public void writeBallInHand() throws IOException {
         recordOneBallPos(game.getCueBall());
     }
 

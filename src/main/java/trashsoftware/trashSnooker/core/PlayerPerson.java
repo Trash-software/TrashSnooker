@@ -35,8 +35,10 @@ public class PlayerPerson {
     private final double longPrecision;
     private final List<Cue> privateCues = new ArrayList<>();
     private final double solving;
-    private final double minPullDt;
+    private final double minPullDt;  // 最小力时的拉杆长度
     private final double maxPullDt;
+    private final double minExtension;  // 最小力时的延伸长度
+    private final double maxExtension;
     private final double aimingOffset;  // 瞄和打的偏差，正值向右偏
     private final double powerControl;
     // 横向的mu，横向的sigma，纵向的mu，纵向的sigma
@@ -59,8 +61,7 @@ public class PlayerPerson {
                         double anglePrecision,
                         double longPrecision,
                         double solving,
-                        double minPullDt,
-                        double maxPullDt,
+                        double[] pullDtExtensionDt,
                         double aimingOffset,
                         double cueSwingMag,
                         double[] cuePointMuSigmaXY,
@@ -88,8 +89,10 @@ public class PlayerPerson {
         this.anglePrecision = anglePrecision;
         this.longPrecision = longPrecision;
         this.solving = solving;
-        this.minPullDt = minPullDt;
-        this.maxPullDt = maxPullDt;
+        this.minPullDt = pullDtExtensionDt[0];
+        this.maxPullDt = pullDtExtensionDt[1];
+        this.minExtension = pullDtExtensionDt[2];
+        this.maxExtension = pullDtExtensionDt[3];
         this.aimingOffset = aimingOffset;
         this.cueSwingMag = cueSwingMag;
         this.cuePointMuSigmaXY = cuePointMuSigmaXY;
@@ -132,8 +135,7 @@ public class PlayerPerson {
                 anglePrecision,
                 longPrecision,
                 (aimingPercentage + spinControl) / 2,
-                50.0,
-                200.0,
+                new double[]{50, 200, 50, 150},
                 0.0,
                 0.0,
                 estimateCuePoint(cuePrecision, spinControl),
@@ -177,8 +179,19 @@ public class PlayerPerson {
         PlayerPerson playerPerson;
 
         JSONArray pullDt = personObj.getJSONArray("pullDt");
-        double minPullDt = pullDt.getDouble(0);
-        double maxPullDt = pullDt.getDouble(1);
+        double[] pullDtExtensionDt;
+        if (pullDt.length() == 2) {
+            pullDtExtensionDt = new double[]{pullDt.getDouble(0), pullDt.getDouble(1), 50, 150};
+        } else if (pullDt.length() == 4) {
+            pullDtExtensionDt = new double[]{pullDt.getDouble(0), 
+                    pullDt.getDouble(1),
+                    pullDt.getDouble(2),
+                    pullDt.getDouble(3)};
+        } else {
+            System.err.println("Player " + playerId + " has wrong pull dt");
+            pullDtExtensionDt = new double[]{50, 200, 50, 150};
+        }
+        
         double aimingOffset = personObj.getDouble("aimingOffset");
         double cueSwingMag = personObj.getDouble("cueSwingMag");
         String cuePlayTypeStr = personObj.getString("cuePlayType");
@@ -209,8 +222,7 @@ public class PlayerPerson {
                 personObj.getDouble("anglePrecision"),
                 personObj.getDouble("longPrecision"),
                 personObj.getDouble("solving"),
-                minPullDt,
-                maxPullDt,
+                pullDtExtensionDt,
                 aimingOffset,
                 cueSwingMag,
                 muSigma,
@@ -371,7 +383,7 @@ public class PlayerPerson {
         obj.put("controllablePower", getControllablePowerPercentage());
         obj.put("solving", getSolving());
 
-        JSONArray cueAction = new JSONArray(List.of(getMinPullDt(), getMaxPullDt()));
+        JSONArray cueAction = new JSONArray(List.of(getMinPullDt(), getMaxPullDt(), getMinExtension(), getMaxExtension()));
         obj.put("pullDt", cueAction);
         obj.put("cuePlayType", getCuePlayType().toString());
         obj.put("aimingOffset", getAimingOffset());
@@ -480,6 +492,14 @@ public class PlayerPerson {
         return minPullDt;
     }
 
+    public double getMinExtension() {
+        return minExtension;
+    }
+
+    public double getMaxExtension() {
+        return maxExtension;
+    }
+
     public void addPrivateCue(Cue privateCue) {
         privateCues.add(privateCue);
     }
@@ -552,6 +572,14 @@ public class PlayerPerson {
     
     public boolean isPlayerOf(GameRule gameRule) {
         return participates.contains(gameRule);
+    }
+
+    /**
+     * 返回该球员在选定的发力下，控制力量的标准差
+     */
+    public double getPowerSd(double selectedPower, HandSkill handSkill) {
+        double sd = (100.0 - getPowerControl()) / 100.0;
+        return sd * getErrorMultiplierOfPower(selectedPower) * HandBody.getSdOfHand(handSkill);
     }
 
     public double getErrorMultiplierOfPower(double selectedPower) {

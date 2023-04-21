@@ -5,7 +5,8 @@ import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.career.Career;
-import trashsoftware.trashSnooker.core.career.ChampionshipData;
+import trashsoftware.trashSnooker.core.career.championship.Championship;
+import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 
 import java.util.ArrayList;
@@ -20,8 +21,8 @@ public class SnookerAiVsAi extends AiVsAi {
     private final List<Integer> p2SinglePoles = new ArrayList<>();
     private final List<int[]> frameScores = new ArrayList<>();
 
-    public SnookerAiVsAi(Career p1, Career p2, ChampionshipData data, int totalFrames) {
-        super(p1, p2, data, totalFrames);
+    public SnookerAiVsAi(Career p1, Career p2, Championship championship, String matchId, int totalFrames) {
+        super(p1, p2, championship, matchId, totalFrames);
     }
 
     @Override
@@ -168,6 +169,20 @@ public class SnookerAiVsAi extends AiVsAi {
             System.out.println(sp1);
             System.out.println(sp2);
         }
+
+        SnookerChampionship sc = (SnookerChampionship) championship;
+        sc.updateBreakScore(sp1.career.getPlayerPerson().getPlayerId(),
+                championship.getCurrentStage(),
+                sp1.maxSinglePole,
+                true,
+                matchId,
+                currentFrameNumberFrom1() - 1);  // 因为上面已经更新了
+        sc.updateBreakScore(sp2.career.getPlayerPerson().getPlayerId(),
+                championship.getCurrentStage(),
+                sp2.maxSinglePole,
+                true,
+                matchId,
+                currentFrameNumberFrom1() - 1);
     }
 
     private int getP1Score() {

@@ -11,7 +11,9 @@
       "solving": 100,
       "pullDt": [
         50.0,
-        200.0
+        200.0,
+        50,
+        150
       ],
       "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s",
@@ -59,7 +61,9 @@
       "solving": 100,
       "pullDt": [
         50.0,
-        200.0
+        200.0,        
+        50,
+        150
       ],
       "aimingOffset": 0,
       "cuePlayType": "p1,h800,e500;s",
@@ -359,7 +363,7 @@
     },
     "Matthew Stevens": {
       "spin": 94.0,
-      "precision": 94.0,
+      "precision": 93.0,
       "anglePrecision": 1.0,
       "longPrecision": 1.0,
       "name": "Matthew Stevens",
@@ -391,9 +395,9 @@
         "rest": 86
       },
       "ai": {
-        "precision": 93,
-        "stable": 85,
-        "position": 96,
+        "precision": 92,
+        "stable": 84,
+        "position": 93,
         "defense": 82,
         "attackPri": 90,
         "likeShow": 65,
@@ -413,10 +417,12 @@
       "name": "Judd Trump",
       "maxPower": 99,
       "controllablePower": 92,
-      "solving": 80,
+      "solving": 83,
       "pullDt": [
-        50.0,
-        220.0
+        60.0,
+        180.0,
+        60,
+        160
       ],
       "aimingOffset": -0.25,
       "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
@@ -432,7 +438,7 @@
         "TrumpCue"
       ],
       "category": "Professional",
-      "psy": 65,
+      "psy": 72,
       "height": 183,
       "width": 1.0,
       "hand": {
@@ -441,9 +447,9 @@
         "rest": 84
       },
       "ai": {
-        "precision": 95.5,
-        "stable": 85,
-        "position": 89,
+        "precision": 96.5,
+        "stable": 88,
+        "position": 90,
         "defense": 87,
         "attackPri": 90,
         "likeShow": 75,
@@ -767,7 +773,9 @@
       "solving": 82,
       "pullDt": [
         60.0,
-        240.0
+        240.0,
+        60,
+        80
       ],
       "aimingOffset": 0.0,
       "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
@@ -1244,12 +1252,12 @@
         "precision": 88,
         "stable": 92,
         "position": 92,
-        "defense": 84,
+        "defense": 88,
         "attackPri": 85,
         "likeShow": 80,
         "snookerBreak": "right",
         "cebSideBreak": false,
-        "withdrawAfter": 2
+        "withdrawAfter": 3
       },
       "games": [
         "snooker",

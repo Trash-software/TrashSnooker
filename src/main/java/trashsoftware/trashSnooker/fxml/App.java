@@ -16,8 +16,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
     
-    public static final String VERSION_NAME = "0.1.1";
-    public static final int VERSION_CODE = 15;
+    public static final String VERSION_NAME = "0.1.6";
+    public static final int VERSION_CODE = 19;
 
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     public static final String CLASSIFIER = "win";
@@ -29,6 +29,7 @@ public class App extends Application {
             null;
     
     private static ResourceBundle strings;
+    public static final boolean PRINT_DEBUG = true;
     
     public static void startApp() {
         launch();
@@ -64,7 +65,7 @@ public class App extends Application {
             
             primaryStage.show();
         } catch (Exception e) {
-            EventLogger.log(e);
+            EventLogger.crash(e);
         }
     }
 

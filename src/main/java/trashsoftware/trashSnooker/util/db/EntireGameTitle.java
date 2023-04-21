@@ -19,11 +19,12 @@ public class EntireGameTitle {
     public final boolean player1isAi;
     public final boolean player2isAi;
     public final int totalFrames;
+    public final String matchId;  // 在生涯模式中这场比赛的唯一ID；为null in快速游戏
     
     EntireGameTitle(Timestamp startTime, GameRule gameRule,
                     String player1Id, String player2Id,
                     boolean player1isAi, boolean player2isAi,
-                    int totalFrames) {
+                    int totalFrames, String matchId) {
         this.startTime = startTime;
         this.gameRule = gameRule;
         this.player1Id = player1Id;
@@ -31,6 +32,7 @@ public class EntireGameTitle {
         this.player1isAi = player1isAi;
         this.player2isAi = player2isAi;
         this.totalFrames = totalFrames;
+        this.matchId = matchId;
     }
 
     @Override

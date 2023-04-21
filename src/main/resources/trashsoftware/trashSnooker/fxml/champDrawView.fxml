@@ -32,6 +32,9 @@
             <ComboBox fx:id="cueBox"/>
         </VBox>
 
-        <LabelTable fx:id="matchResTable" HBox.hgrow="ALWAYS"/>
+        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+            <LabelTable fx:id="matchResTable"/>
+            <Label fx:id="extraInfoLabel"/>
+        </VBox>
     </HBox>
 </VBox>

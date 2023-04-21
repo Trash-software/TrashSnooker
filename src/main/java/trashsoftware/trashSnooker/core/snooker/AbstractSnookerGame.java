@@ -160,7 +160,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     /**
      * 返回当前的台面剩余，非负
      */
-    public int getRemainingScore() {
+    public int getRemainingScore(boolean isSnookerFreeBall) {
+        // fixme: 考虑斯诺克自由球
         if (currentTarget == 1) {
             return remainingRedCount() * 8 + 27;
         } else if (currentTarget == RAW_COLORED_REP) {
@@ -414,6 +415,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             switchPlayer();
             thisCueFoul = true;
             if (!cueBall.isPotted() && hasFreeBall()) {
+                // todo: 要在pickup colored之后检查
                 doingFreeBall = true;
                 System.out.println("Free ball!");
             }
@@ -443,7 +445,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (thisCueFoul) {
             int minScore = Math.min(player1.getScore(), player2.getScore());
             int maxScore = Math.max(player1.getScore(), player2.getScore());
-            return minScore + getRemainingScore() > maxScore;  // 超分或延分不能复位
+            return minScore + getRemainingScore(false) > maxScore;  // 超分或延分不能复位
         } else {
             return false;
         }
@@ -776,7 +778,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
 
         int ahead = getScoreDiff(getCuingPlayer());
-        int remaining = getRemainingScore();
+        int remaining = getRemainingScore(isDoingSnookerFreeBll());
         int aheadAfter;  // 打进后的领先
         int remainingAfter;  // 打进后的剩余
         int aheadAfter2;  // 打进再下一颗球后的领先

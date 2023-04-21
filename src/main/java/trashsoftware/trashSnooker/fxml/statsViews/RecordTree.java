@@ -21,4 +21,14 @@ public class RecordTree {
     public String toString() {
         return shown;
     }
+    
+    public static String showPercent(double num, double denom) {
+        if (denom == 0) return "--";
+        return String.format("%.1f%%", num / denom * 100.0);
+    }
+
+    public static String showPercent(double fraction) {
+        if (Double.isNaN(fraction)) return "--";
+        return String.format("%.1f%%", fraction * 100.0);
+    }
 }

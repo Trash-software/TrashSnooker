@@ -2,10 +2,11 @@ package trashsoftware.trashSnooker.core.career;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
 
-import java.util.Calendar;
+import java.util.*;
 
 /**
  * 一个人一次赛事的成绩
@@ -15,12 +16,15 @@ public class ChampionshipScore {
     public final ChampionshipData data;
     public final Calendar timestamp;
     public final Rank[] ranks;  // 一般也就一个，两个的时候是额外的奖，比如单杆最高
+    private final SnookerBreakScore bestBreak;
 
     public ChampionshipScore(String championshipId,
                              int year,
-                             Rank[] ranks) {
+                             Rank[] ranks,
+                             SnookerBreakScore bestBreak) {
         this.data = ChampDataManager.getInstance().findDataById(championshipId);
         this.ranks = ranks;
+        this.bestBreak = bestBreak;
 
         this.timestamp = data.toCalendar(year);
     }
@@ -31,10 +35,18 @@ public class ChampionshipScore {
         for (int i = 0; i < ranks.length; i++) {
             ranks[i] = Rank.valueOf(ranksArr.getString(i));
         }
+
+        SnookerBreakScore best = null;
+        if (jsonObject.has("highestBreak")) {
+            JSONObject bbo = jsonObject.getJSONObject("highestBreak");
+            best = SnookerBreakScore.fromJson(bbo);
+        }
+        
         return new ChampionshipScore(
                 jsonObject.getString("id"),
                 jsonObject.getInt("year"),
-                ranks
+                ranks,
+                best
         );
     }
 
@@ -48,6 +60,10 @@ public class ChampionshipScore {
             ranksArr.put(rank.name());
         }
         out.put("ranks", ranksArr);
+        
+        if (bestBreak != null) {
+            out.put("highestBreak", bestBreak.toJson());
+        }
 
         return out;
     }
@@ -55,26 +71,32 @@ public class ChampionshipScore {
     public int getYear() {
         return timestamp.get(Calendar.YEAR);
     }
+    
+    public SnookerBreakScore getHighestBreak() {
+        return bestBreak;
+    }
 
     public enum Rank implements Comparable<Rank> {
-        CHAMPION(true),
-        SECOND_PLACE(true),
-        TOP_4(true),
-        TOP_8(true),
-        TOP_16(true),
-        TOP_32(true),
-        TOP_64(true),
-        PRE_GAMES_4(false),
-        PRE_GAMES_3(false),
-        PRE_GAMES_2(false),
-        PRE_GAMES_1(false),
-        BEST_SINGLE(false),
-        MAXIMUM(false);
+        CHAMPION(true, true),
+        SECOND_PLACE(true, true),
+        TOP_4(true, true),
+        TOP_8(true, true),
+        TOP_16(true, true),
+        TOP_32(true, true),
+        TOP_64(true, true),
+        PRE_GAMES_4(false, true),
+        PRE_GAMES_3(false, true),
+        PRE_GAMES_2(false, true),
+        PRE_GAMES_1(false, true),
+        BEST_SINGLE(false, false),
+        MAXIMUM(false, false);
 
         public final boolean isMain;
+        public final boolean ranked;  // 是否计入排名
 
-        Rank(boolean isMain) {
+        Rank(boolean isMain, boolean ranked) {
             this.isMain = isMain;
+            this.ranked = ranked;
         }
 
         public static Rank[] getSequenceOfLosers(int mainRounds, int preRounds) {

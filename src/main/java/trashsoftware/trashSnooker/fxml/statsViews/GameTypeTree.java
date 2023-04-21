@@ -56,8 +56,7 @@ public class GameTypeTree extends RecordTree {
         resultPane.add(new Label(String.valueOf(potSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
         resultPane.add(new Label(
-                potAttempts == 0 ? "0%" :
-                        String.format("%.1f%%", potSuccesses * 100.0 / potAttempts)), 3, rowIndex++);
+                showPercent(potSuccesses, potAttempts)), 3, rowIndex++);
 
         int longPotAttempts = potRecords[2];
         int longPotSuccesses = potRecords[3];
@@ -67,9 +66,7 @@ public class GameTypeTree extends RecordTree {
         resultPane.add(new Label(String.valueOf(longPotSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("长台进攻成功率"), 0, rowIndex);
         resultPane.add(new Label(
-                longPotAttempts == 0 ? "0%" :
-                        String.format("%.1f%%",
-                                longPotSuccesses * 100.0 / longPotAttempts)), 3, rowIndex++);
+                showPercent(longPotSuccesses, longPotAttempts)), 3, rowIndex++);
 
         int restAttempts = potRecords[8];
         int restSuccesses = potRecords[9];
@@ -79,8 +76,7 @@ public class GameTypeTree extends RecordTree {
         resultPane.add(new Label(String.valueOf(restSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
         resultPane.add(new Label(
-                restAttempts == 0 ? "0%" :
-                        String.format("%.1f%%", restSuccesses * 100.0 / restAttempts)), 3, rowIndex++);
+                showPercent(restSuccesses, restAttempts)), 3, rowIndex++);
 
         int positionAttempts = potRecords[6];
         int positionSuccesses = potRecords[7];
@@ -90,8 +86,7 @@ public class GameTypeTree extends RecordTree {
         resultPane.add(new Label(String.valueOf(positionSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
         resultPane.add(new Label(
-                positionAttempts == 0 ? "0%" :
-                        String.format("%.1f%%", positionSuccesses * 100.0 / positionAttempts)), 3, rowIndex++);
+                showPercent(positionSuccesses, positionAttempts)), 3, rowIndex++);
 
         int defAttempts = potRecords[4];
         int defSuccesses = potRecords[5];
@@ -101,9 +96,7 @@ public class GameTypeTree extends RecordTree {
         resultPane.add(new Label(String.valueOf(defSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("防守成功率"), 0, rowIndex);
         resultPane.add(new Label(
-                defAttempts == 0 ? "0%" :
-                        String.format("%.1f%%",
-                                defSuccesses * 100.0 / defAttempts)), 3, rowIndex++);
+                showPercent(defSuccesses, defAttempts)), 3, rowIndex++);
 
         int solves = potRecords[10];
         int solveSuccesses = potRecords[11];
@@ -113,9 +106,7 @@ public class GameTypeTree extends RecordTree {
         resultPane.add(new Label(String.valueOf(solveSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("防守成功率"), 0, rowIndex);
         resultPane.add(new Label(
-                solves == 0 ? "0%" :
-                        String.format("%.1f%%",
-                                solveSuccesses * 100.0 / solves)), 3, rowIndex++);
+               showPercent(solveSuccesses, solves)), 3, rowIndex++);
 
         resultPane.add(new Separator(), 0, rowIndex++, 4, 1);
 

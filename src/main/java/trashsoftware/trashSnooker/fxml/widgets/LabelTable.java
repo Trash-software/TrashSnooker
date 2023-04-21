@@ -9,12 +9,14 @@ import javafx.scene.layout.GridPane;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class LabelTable<S> extends ScrollPane {
 
     private final List<S> items = new ArrayList<>();
     private final List<LabelTableColumn<S, ?>> columns = new ArrayList<>();
+    private boolean showTitle = true;
     @FXML
     GridPane content;
 
@@ -34,6 +36,14 @@ public class LabelTable<S> extends ScrollPane {
     public void addItem(S item) {
         items.add(item);
         addItemToView(item);
+    }
+    
+    public void addItems(S... items) {
+        for (S s : items) addItem(s);
+    }
+    
+    public void addItems(Collection<S> items) {
+        for (S s : items) addItem(s);
     }
 
     public List<LabelTableColumn<S, ?>> getColumns() {
@@ -71,11 +81,19 @@ public class LabelTable<S> extends ScrollPane {
         refresh();
     }
 
+    public void showTitle(boolean showTitle) {
+        boolean change = showTitle != this.showTitle;
+        this.showTitle = showTitle;
+        if (change) refresh();
+    }
+
     void refresh() {
         content.getChildren().clear();  // todo
 
-        for (int i = 0; i < columns.size(); i++) {
-            content.add(columns.get(i).getTitleLabel(), i, 0);
+        if (showTitle) {
+            for (int i = 0; i < columns.size(); i++) {
+                content.add(columns.get(i).getTitleLabel(), i, 0);
+            }
         }
 
         for (S item : items) {

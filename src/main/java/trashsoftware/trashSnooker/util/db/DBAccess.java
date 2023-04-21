@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
@@ -15,7 +16,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    private static final boolean SAVE = true;
+    public static final boolean SAVE = true;
     private static DBAccess database;
 
     private Connection connection;
@@ -29,6 +30,7 @@ public class DBAccess {
             }
             connection.setAutoCommit(true);
             createTablesIfNotExists();
+            updateDbStructure();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
@@ -66,6 +68,15 @@ public class DBAccess {
 
 
         closeDB();
+    }
+    
+    private void updateDbStructure() {
+        try (Statement stmt = connection.createStatement()) {
+            String query = "ALTER TABLE EntireGame ADD COLUMN MatchID TEXT default null;";
+            stmt.execute(query);
+        } catch (SQLException ex) {
+            System.out.println("Not add column");
+        }
     }
 
     public void printAllPlayers() {
@@ -203,7 +214,8 @@ public class DBAccess {
                         resultSet.getString("Player2Name"),
                         resultSet.getInt("Player1IsAI") == 1,
                         resultSet.getInt("Player2IsAI") == 1,
-                        resultSet.getInt("TotalFrames")
+                        resultSet.getInt("TotalFrames"),
+                        resultSet.getString("MatchID")
                 );
                 if (isValidPlayer(egr.player1Id) && isValidPlayer(egr.player2Id)) {
                     rtn.add(egr);
@@ -639,7 +651,7 @@ public class DBAccess {
         executeStatement(command1);
     }
 
-    public void recordAnEntireGameStarts(EntireGame entireGame) {
+    public void recordAnEntireGameStarts(EntireGame entireGame, MetaMatchInfo metaMatchInfo) {
         String typeStr = "'" + entireGame.gameValues.rule.toSqlKey() + "'";
         int p1t = entireGame.getPlayer1().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
         int p2t = entireGame.getPlayer2().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
@@ -655,7 +667,9 @@ public class DBAccess {
                         "'" + entireGame.getPlayer2().getPlayerPerson().getPlayerId() + "', " +
                         p1t + ", " + 
                         p2t + ", " +
-                        entireGame.getTotalFrames() + ");";
+                        entireGame.getTotalFrames() + ", " +
+                        "'" + metaMatchInfo.toString() + "'" +
+                        ");";
         try {
             executeStatement(command);
         } catch (SQLException e) {

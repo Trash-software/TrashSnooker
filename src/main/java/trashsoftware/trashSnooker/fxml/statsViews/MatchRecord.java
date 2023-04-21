@@ -1,11 +1,10 @@
 package trashsoftware.trashSnooker.fxml.statsViews;
 
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.TextAlignment;
+import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
+import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.widgets.MatchRecordPage;
 import trashsoftware.trashSnooker.util.Util;
@@ -30,9 +29,19 @@ public class MatchRecord extends RecordTree {
         rightPane.getChildren().clear();
 
         EntireGameRecord matchRec = DBAccess.getInstance().getMatchDetail(egt);
+        MetaMatchInfo careerMatchInfo = MatchTreeNode.analyzeMatchId(egt.matchId);
+        
         MatchRecordPage page = new MatchRecordPage();
 
         int rowIndex = 0;
+        
+        if (careerMatchInfo != null) {
+            page.add(new Label(String.valueOf(careerMatchInfo.year)), 3, rowIndex);
+            page.add(new Label(careerMatchInfo.data.getName()), 4, rowIndex);
+            page.add(new Label(careerMatchInfo.stage.getShown()), 5, rowIndex);
+            rowIndex++;
+        }
+        
         String[] winLost;
         int[] p1p2Wins = matchRec.getP1P2WinsCount();
         if (p1p2Wins[0] < egt.totalFrames / 2 + 1 && p1p2Wins[1] < egt.totalFrames / 2 + 1) {
@@ -51,19 +60,19 @@ public class MatchRecord extends RecordTree {
 
         String p1Ai = egt.player1isAi ? strings.getString("typeComputer") : strings.getString("typePlayer");
         String p2Ai = egt.player2isAi ? strings.getString("typeComputer") : strings.getString("typePlayer");
-        page.add(new Label(egt.getP1Name() + "\n" + p1Ai), 1, rowIndex, 2, 1);
+        
+        Label p1NameLabel = new Label(egt.getP1Name() + "\n" + p1Ai);
+        p1NameLabel.setWrapText(true);
+        page.add(p1NameLabel, 1, rowIndex, 2, 1);
+        
         page.add(new Label(String.valueOf(p1p2Wins[0])), 3, rowIndex);
         page.add(new Label(String.format("(%d)", egt.totalFrames)), 4, rowIndex);
         page.add(new Label(String.valueOf(p1p2Wins[1])), 5, rowIndex);
-
-        HBox p2Box = new HBox();
-        p2Box.setAlignment(Pos.TOP_RIGHT);
-        Label p2NameLabel = new Label(egt.getP2Name() + "\n" + p2Ai);
-        p2NameLabel.setTextAlignment(TextAlignment.RIGHT);
-        p2NameLabel.setWrapText(true);
-        p2Box.getChildren().add(p2NameLabel);
         
-        page.add(p2Box, 6, rowIndex, 2, 1);
+        Label p2NameLabel = new Label(egt.getP2Name() + "\n" + p2Ai);
+        p2NameLabel.setWrapText(true);
+        page.add(p2NameLabel, 6, rowIndex, 2, 1);
+
         rowIndex++;
 
         int[][] playersTotalBasics = matchRec.totalBasicStats();
@@ -78,16 +87,10 @@ public class MatchRecord extends RecordTree {
         page.add(new Label(String.valueOf(playersTotalBasics[1][1])), 6, rowIndex);
 
         page.add(new Label(
-                        playersTotalBasics[0][1] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[0][1] * 100.0 /
-                                                playersTotalBasics[0][0])),
+                        showPercent(playersTotalBasics[0][1], playersTotalBasics[0][0])),
                 3, rowIndex);
         page.add(new Label(
-                        playersTotalBasics[1][1] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[1][1] * 100.0 /
-                                                playersTotalBasics[1][0])),
+                        showPercent(playersTotalBasics[1][1], playersTotalBasics[1][0])),
                 5, rowIndex);
         rowIndex++;
 
@@ -101,16 +104,10 @@ public class MatchRecord extends RecordTree {
         page.add(new Label(String.valueOf(playersTotalBasics[1][3])), 6, rowIndex);
 
         page.add(new Label(
-                        playersTotalBasics[0][3] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[0][3] * 100.0 /
-                                                playersTotalBasics[0][2])),
+                        showPercent(playersTotalBasics[0][3], playersTotalBasics[0][2])),
                 3, rowIndex);
         page.add(new Label(
-                        playersTotalBasics[1][3] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[1][3] * 100.0 /
-                                                playersTotalBasics[1][2])),
+                        showPercent(playersTotalBasics[1][3], playersTotalBasics[1][2])),
                 5, rowIndex);
         rowIndex++;
 
@@ -124,16 +121,10 @@ public class MatchRecord extends RecordTree {
         page.add(new Label(String.valueOf(playersTotalBasics[1][9])), 6, rowIndex);
 
         page.add(new Label(
-                        playersTotalBasics[0][9] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[0][9] * 100.0 /
-                                                playersTotalBasics[0][8])),
+                        showPercent(playersTotalBasics[0][9], playersTotalBasics[0][8])),
                 3, rowIndex);
         page.add(new Label(
-                        playersTotalBasics[1][9] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[1][9] * 100.0 /
-                                                playersTotalBasics[1][8])),
+                        showPercent(playersTotalBasics[1][9], playersTotalBasics[1][8])),
                 5, rowIndex);
         rowIndex++;
 
@@ -147,16 +138,10 @@ public class MatchRecord extends RecordTree {
         page.add(new Label(String.valueOf(playersTotalBasics[1][7])), 6, rowIndex);
 
         page.add(new Label(
-                        playersTotalBasics[0][7] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[0][7] * 100.0 /
-                                                playersTotalBasics[0][6])),
+                        showPercent(playersTotalBasics[0][7], playersTotalBasics[0][6])),
                 3, rowIndex);
         page.add(new Label(
-                        playersTotalBasics[1][7] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[1][7] * 100.0 /
-                                                playersTotalBasics[1][6])),
+                        showPercent(playersTotalBasics[1][7], playersTotalBasics[1][6])),
                 5, rowIndex);
         rowIndex++;
 
@@ -170,16 +155,10 @@ public class MatchRecord extends RecordTree {
         page.add(new Label(String.valueOf(playersTotalBasics[1][5])), 6, rowIndex);
 
         page.add(new Label(
-                        playersTotalBasics[0][5] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[0][5] * 100.0 /
-                                                playersTotalBasics[0][4])),
+                        showPercent(playersTotalBasics[0][5], playersTotalBasics[0][4])),
                 3, rowIndex);
         page.add(new Label(
-                        playersTotalBasics[1][5] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[1][5] * 100.0 /
-                                                playersTotalBasics[1][4])),
+                        showPercent(playersTotalBasics[1][5], playersTotalBasics[1][4])),
                 5, rowIndex);
         rowIndex++;
 
@@ -193,19 +172,13 @@ public class MatchRecord extends RecordTree {
         page.add(new Label(String.valueOf(playersTotalBasics[1][11])), 6, rowIndex);
 
         page.add(new Label(
-                        playersTotalBasics[0][11] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[0][11] * 100.0 /
-                                                playersTotalBasics[0][10])),
+                        showPercent(playersTotalBasics[0][11], playersTotalBasics[0][10])),
                 3, rowIndex);
         page.add(new Label(
-                        playersTotalBasics[1][11] == 0 ? "0%" :
-                                String.format("%.1f%%",
-                                        playersTotalBasics[1][11] * 100.0 /
-                                                playersTotalBasics[1][10])),
+                        showPercent(playersTotalBasics[1][11], playersTotalBasics[1][10])),
                 5, rowIndex);
         rowIndex++;
-        
+
         page.add(new Separator(), 0, rowIndex++, 8, 1);
 
         if (egt.gameRule.snookerLike()) {

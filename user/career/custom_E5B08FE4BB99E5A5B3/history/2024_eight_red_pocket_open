@@ -1,0 +1,258 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Yan Bingtao": 8,
+    "Liu Mang": 15,
+    "custom_player_1": 11,
+    "custom_player_169": 30,
+    "custom_player_3": 12,
+    "custom_player_2": 10,
+    "custom_player_166": 17,
+    "custom_player_4": 14,
+    "custom_player_165": 16,
+    "Glass Heart": 6,
+    "custom_player_168": 27,
+    "custom_player_167": 29,
+    "Selby": 5,
+    "custom_player_173": 21,
+    "custom_player_172": 20,
+    "custom_player_174": 31,
+    "Zhao Xintong": 4,
+    "custom_player_170": 25,
+    "Summer Brave": 13,
+    "custom_E8BDBBE69DBEE58FB7": 24,
+    "Kid": 26,
+    "Fat Guy": 19,
+    "custom_player_159": 28,
+    "custom_player_177": 32,
+    "High Stick": 18,
+    "Mark Williams": 1,
+    "Give Emperor": 22,
+    "custom_player_160": 9,
+    "custom_player_181": 2,
+    "Worst Professional": 7,
+    "custom_E5B08FE4BB99E5A5B3": 3,
+    "Wang Xu": 23
+  },
+  "championshipId": "eight_red_pocket_open",
+  "matchTree": {"root": {
+    "p1wins": 5,
+    "p1": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "High Stick"},
+            "p2": {"winner": "Liu Mang"},
+            "winner": "High Stick",
+            "stage": "ROUND_1",
+            "p2wins": 1
+          },
+          "p2": {
+            "p1wins": 1,
+            "p1": {"winner": "Summer Brave"},
+            "p2": {"winner": "custom_player_160"},
+            "winner": "custom_player_160",
+            "stage": "ROUND_1",
+            "p2wins": 2
+          },
+          "winner": "High Stick",
+          "stage": "ROUND_2",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "Glass Heart"},
+            "p2": {"winner": "custom_player_177"},
+            "winner": "Glass Heart",
+            "stage": "ROUND_1",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 1,
+            "p1": {"winner": "custom_player_165"},
+            "p2": {"winner": "custom_player_168"},
+            "winner": "custom_player_168",
+            "stage": "ROUND_1",
+            "p2wins": 2
+          },
+          "winner": "Glass Heart",
+          "stage": "ROUND_2",
+          "p2wins": 0
+        },
+        "winner": "High Stick",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 1,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "custom_player_166"},
+            "p2": {"winner": "Zhao Xintong"},
+            "winner": "Zhao Xintong",
+            "stage": "ROUND_1",
+            "p2wins": 2
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_E8BDBBE69DBEE58FB7"},
+            "p2": {"winner": "custom_player_172"},
+            "winner": "custom_E8BDBBE69DBEE58FB7",
+            "stage": "ROUND_1",
+            "p2wins": 1
+          },
+          "winner": "custom_E8BDBBE69DBEE58FB7",
+          "stage": "ROUND_2",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_player_170"},
+            "p2": {"winner": "Worst Professional"},
+            "winner": "custom_player_170",
+            "stage": "ROUND_1",
+            "p2wins": 1
+          },
+          "p2": {
+            "p1wins": 1,
+            "p1": {"winner": "Wang Xu"},
+            "p2": {"winner": "Kid"},
+            "winner": "Kid",
+            "stage": "ROUND_1",
+            "p2wins": 2
+          },
+          "winner": "custom_player_170",
+          "stage": "ROUND_2",
+          "p2wins": 0
+        },
+        "winner": "custom_E8BDBBE69DBEE58FB7",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 2
+      },
+      "winner": "High Stick",
+      "stage": "SEMI_FINAL",
+      "p2wins": 0
+    },
+    "p2": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "custom_player_4"},
+            "p2": {"winner": "Yan Bingtao"},
+            "winner": "Yan Bingtao",
+            "stage": "ROUND_1",
+            "p2wins": 2
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_player_173"},
+            "p2": {"winner": "custom_player_174"},
+            "winner": "custom_player_173",
+            "stage": "ROUND_1",
+            "p2wins": 0
+          },
+          "winner": "Yan Bingtao",
+          "stage": "ROUND_2",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 0,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_player_169"},
+            "p2": {"winner": "custom_player_1"},
+            "winner": "custom_player_169",
+            "stage": "ROUND_1",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+            "p2": {"winner": "custom_player_167"},
+            "winner": "custom_E5B08FE4BB99E5A5B3",
+            "stage": "ROUND_1",
+            "p2wins": 0
+          },
+          "winner": "custom_E5B08FE4BB99E5A5B3",
+          "stage": "ROUND_2",
+          "p2wins": 2
+        },
+        "winner": "Yan Bingtao",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 0,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "Fat Guy"},
+            "p2": {"winner": "custom_player_159"},
+            "winner": "Fat Guy",
+            "stage": "ROUND_1",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "custom_player_3"},
+            "p2": {"winner": "Mark Williams"},
+            "winner": "Mark Williams",
+            "stage": "ROUND_1",
+            "p2wins": 2
+          },
+          "winner": "Mark Williams",
+          "stage": "ROUND_2",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_player_2"},
+            "p2": {"winner": "Give Emperor"},
+            "winner": "custom_player_2",
+            "stage": "ROUND_1",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Selby"},
+            "p2": {"winner": "custom_player_181"},
+            "winner": "Selby",
+            "stage": "ROUND_1",
+            "p2wins": 1
+          },
+          "winner": "custom_player_2",
+          "stage": "ROUND_2",
+          "p2wins": 1
+        },
+        "winner": "Mark Williams",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 0
+      },
+      "winner": "Yan Bingtao",
+      "stage": "SEMI_FINAL",
+      "p2wins": 1
+    },
+    "winner": "High Stick",
+    "stage": "FINAL",
+    "p2wins": 3
+  }},
+  "finished": true,
+  "timestamp": "2024/1/22"
+}

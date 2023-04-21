@@ -10,30 +10,57 @@ import java.util.Date;
 public class EventLogger {
 
     private static final String LOG_DIR = "logs";
-    private static final String LOG_BASE_NAME = LOG_DIR + File.separator + "error-";
+    private static final String CRASH = "crash";
+    private static final String ERROR = "error";
+    private static final String DEBUG = "debug";
+    //    private static final String LOG_BASE_NAME = LOG_DIR + File.separator + "error-";
     private static final String DATE_FMT = "yyyy-MM-dd HH-mm-ss";
+
+    private static String baseName(String level) {
+        return LOG_DIR + File.separator + level + "-";
+    }
+
+    /**
+     * Logs an error that causes the App to crash
+     *
+     * @param throwable the error
+     */
+    public static void crash(Throwable throwable) {
+        log(throwable, CRASH, true);
+    }
 
     /**
      * Logs and prints complete error message and stack trace to a new log file.
      *
      * @param throwable error
      */
-    public static void log(Throwable throwable) {
-        log(throwable, true);
+    public static void error(Throwable throwable) {
+        error(throwable, true);
     }
 
     /**
      * Logs complete error message and stack trace to a new log file.
      *
      * @param throwable error
-     * @param print whether to print stack trace to stderr
+     * @param print     whether to print stack trace to stderr
      */
-    public static void log(Throwable throwable, boolean print) {
+    public static void error(Throwable throwable, boolean print) {
+        log(throwable, ERROR, print);
+    }
+
+    /**
+     * Logs complete error message and stack trace to a new log file.
+     *
+     * @param throwable error
+     * @param level     the level of this exception
+     * @param print     whether to print stack trace to stderr
+     */
+    public static void log(Throwable throwable, String level, boolean print) {
         if (print) throwable.printStackTrace();
 
         createLogDirIfNone();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FMT);
-        String realName = LOG_BASE_NAME + sdf.format(new Date()) + ".log";
+        String realName = baseName(level) + sdf.format(new Date()) + ".log";
         try (PrintWriter pw = new PrintWriter(new FileWriter(realName))) {
             throwable.printStackTrace(pw);
 
@@ -48,8 +75,8 @@ public class EventLogger {
      *
      * @param message text message
      */
-    public static void log(String message) {
-        log(message, true);
+    public static void error(String message) {
+        error(message, true);
     }
 
     /**
@@ -58,11 +85,22 @@ public class EventLogger {
      * @param message text message
      * @param print   whether to also print message in console
      */
-    public static void log(String message, boolean print) {
+    public static void error(String message, boolean print) {
+        log(message, ERROR, print);
+    }
+
+    /**
+     * Logs text error message to a new log file.
+     *
+     * @param message text message
+     * @param level   the level of this exception
+     * @param print   whether to also print message in console
+     */
+    public static void log(String message, String level, boolean print) {
         if (print) System.err.println(message);
         createLogDirIfNone();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FMT);
-        String realName = LOG_BASE_NAME + sdf.format(new Date()) + ".log";
+        String realName = baseName(level) + sdf.format(new Date()) + ".log";
         try (FileWriter fileWriter = new FileWriter(realName)) {
             fileWriter.write(message);
 

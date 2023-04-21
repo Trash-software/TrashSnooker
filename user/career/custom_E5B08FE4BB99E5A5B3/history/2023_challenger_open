@@ -1,0 +1,226 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Brown": 22,
+    "Yan Bingtao": 16,
+    "Liu Mang": 24,
+    "custom_player_1": 21,
+    "custom_player_3": 26,
+    "custom_player_2": 25,
+    "Jack Lisowski": 6,
+    "custom_player_4": 20,
+    "Glass Heart": 7,
+    "Mark Allen": 5,
+    "Selby": 8,
+    "Karen Wilson": 13,
+    "Zhao Xintong": 14,
+    "Neil Robertson": 3,
+    "Stephen Maguire": 17,
+    "Murphy": 10,
+    "John Wizard": 2,
+    "Stuart Bingham": 12,
+    "Kid": 23,
+    "Smart": 9,
+    "Trump": 11,
+    "Mark Williams": 1,
+    "O_Sullivan": 4,
+    "Luca Brecel": 15,
+    "custom_player_160": 18,
+    "custom_player_181": 27,
+    "Worst Professional": 19,
+    "custom_E5B08FE4BB99E5A5B3": 28
+  },
+  "championshipId": "challenger_open",
+  "matchTree": {"root": {
+    "p1wins": 0,
+    "p1": {
+      "p1wins": 2,
+      "p1": {
+        "p1wins": 2,
+        "p1": {"winner": "John Wizard"},
+        "p2": {
+          "p1wins": 1,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "Trump"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "custom_player_3"},
+              "p2": {"winner": "Karen Wilson"},
+              "winner": "Karen Wilson",
+              "stage": "PRE_ROUND_1",
+              "p2wins": 2
+            },
+            "winner": "Trump",
+            "stage": "PRE_ROUND_2",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Glass Heart"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "custom_player_1"},
+              "p2": {"winner": "custom_player_181"},
+              "winner": "custom_player_1",
+              "stage": "PRE_ROUND_1",
+              "p2wins": 1
+            },
+            "winner": "Glass Heart",
+            "stage": "PRE_ROUND_2",
+            "p2wins": 0
+          },
+          "winner": "Glass Heart",
+          "stage": "PRE_ROUND_3",
+          "p2wins": 2
+        },
+        "winner": "John Wizard",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {"winner": "Neil Robertson"},
+        "p2": {
+          "p1wins": 0,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "Stuart Bingham"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Yan Bingtao"},
+              "p2": {"winner": "Brown"},
+              "winner": "Yan Bingtao",
+              "stage": "PRE_ROUND_1",
+              "p2wins": 0
+            },
+            "winner": "Stuart Bingham",
+            "stage": "PRE_ROUND_2",
+            "p2wins": 1
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Selby"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Liu Mang"},
+              "p2": {"winner": "custom_player_2"},
+              "winner": "Liu Mang",
+              "stage": "PRE_ROUND_1",
+              "p2wins": 0
+            },
+            "winner": "Selby",
+            "stage": "PRE_ROUND_2",
+            "p2wins": 0
+          },
+          "winner": "Selby",
+          "stage": "PRE_ROUND_3",
+          "p2wins": 2
+        },
+        "winner": "Neil Robertson",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 0
+      },
+      "winner": "John Wizard",
+      "stage": "SEMI_FINAL",
+      "p2wins": 0
+    },
+    "p2": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 2,
+        "p1": {"winner": "Mark Williams"},
+        "p2": {
+          "p1wins": 0,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "Jack Lisowski"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "custom_player_4"},
+              "p2": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+              "winner": "custom_E5B08FE4BB99E5A5B3",
+              "stage": "PRE_ROUND_1",
+              "p2wins": 2
+            },
+            "winner": "custom_E5B08FE4BB99E5A5B3",
+            "stage": "PRE_ROUND_2",
+            "p2wins": 2
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Mark Allen"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Luca Brecel"},
+              "p2": {"winner": "custom_player_160"},
+              "winner": "Luca Brecel",
+              "stage": "PRE_ROUND_1",
+              "p2wins": 0
+            },
+            "winner": "Mark Allen",
+            "stage": "PRE_ROUND_2",
+            "p2wins": 0
+          },
+          "winner": "Mark Allen",
+          "stage": "PRE_ROUND_3",
+          "p2wins": 2
+        },
+        "winner": "Mark Williams",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {"winner": "O_Sullivan"},
+        "p2": {
+          "p1wins": 0,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "Smart"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "Kid"},
+              "p2": {"winner": "Stephen Maguire"},
+              "winner": "Stephen Maguire",
+              "stage": "PRE_ROUND_1",
+              "p2wins": 2
+            },
+            "winner": "Smart",
+            "stage": "PRE_ROUND_2",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Murphy"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Worst Professional"},
+              "p2": {"winner": "Zhao Xintong"},
+              "winner": "Worst Professional",
+              "stage": "PRE_ROUND_1",
+              "p2wins": 1
+            },
+            "winner": "Murphy",
+            "stage": "PRE_ROUND_2",
+            "p2wins": 0
+          },
+          "winner": "Murphy",
+          "stage": "PRE_ROUND_3",
+          "p2wins": 2
+        },
+        "winner": "Murphy",
+        "stage": "QUARTER_FINAL",
+        "p2wins": 2
+      },
+      "winner": "Murphy",
+      "stage": "SEMI_FINAL",
+      "p2wins": 2
+    },
+    "winner": "Murphy",
+    "stage": "FINAL",
+    "p2wins": 3
+  }},
+  "finished": true,
+  "timestamp": "2023/9/25"
+}

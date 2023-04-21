@@ -164,7 +164,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             double selectedPower,
             double selectedFrontBackSpin,
             double selectedSideSpin,
-            boolean attackAble  // 可不可以进
+            boolean attackAble,  // 可不可以进
+            double nativePrice
     ) {
         WhitePrediction wp = copy.predictWhite(cpp, phy, 10000000.0,
                 true, true, false,
@@ -256,6 +257,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //            System.out.printf("%f %f %f %f\n", snookerPrice, opponentAttackPrice, opponentAttackPrice2, penalty);
             return new DefenseChoice(
                     firstCollide,
+                    nativePrice,
                     snookerPrice,
                     opponentAttackPrice,
                     penalty,
@@ -377,7 +379,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     private IntegratedAttackChoice attack(AttackChoice choice,
                                           int nextTarget,
                                           List<Ball> nextStepLegalBalls,
-                                          Phy phy) {
+                                          Phy phy,
+                                          boolean mustAttack) {
         double powerLimit = aiPlayer.getPlayerPerson().getControllablePowerPercentage();
         final double tick = 300.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().position;
 
@@ -401,7 +404,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                         choice, game, phy, aiPlayer, selectedPower, spins[0], spins[1]
                 );
                 if (acp.potProb > easiest) easiest = acp.potProb;
-                if (acp.potProb > pureAttackThreshold) {
+                if (mustAttack || acp.potProb > pureAttackThreshold) {
                     pureAttacks.add(acp);
                 } else if (acp.potProb > defensiveAttackThreshold) {
                     defensiveAttacks.add(acp);
@@ -465,7 +468,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             }
 
             IntegratedAttackChoice iac = choiceList.get(0);
-            if (iac.nextStepTarget == Game.END_REP) return iac;
+            if (iac.nextStepTarget == Game.END_REP || mustAttack) return iac;
 
             if (iac.priceOfKick >= 1.0) {  // 能K正确的球
                 if (Math.random() < 0.5 + (iac.priceOfKick - 1) * 0.25) {
@@ -597,7 +600,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
 
         if (!aiOnlyDefense) {
-            IntegratedAttackChoice attackChoice = standardAttack(phy);
+            IntegratedAttackChoice attackChoice = standardAttack(phy, false);
             if (attackChoice != null) {
                 return makeAttackCue(attackChoice);
             }
@@ -617,15 +620,15 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return randomAngryCue();
     }
 
-    protected IntegratedAttackChoice standardAttack(Phy phy) {
+    protected IntegratedAttackChoice standardAttack(Phy phy, boolean mustAttack) {
         List<AttackChoice> attackChoices =
                 (aiOnlyDefense && game.getCurrentTarget() != 1) ?
                         new ArrayList<>() : getCurrentAttackChoices();
-        return attackGivenChoices(attackChoices, phy);
+        return attackGivenChoices(attackChoices, phy, mustAttack);
     }
 
     protected IntegratedAttackChoice attackGivenChoices(List<AttackChoice> attackChoices,
-                                                        Phy phy) {
+                                                        Phy phy, boolean mustAttack) {
         System.out.println("Simple attack choices:" + attackChoices.size());
 //        System.out.println(attackAttackChoices);
         if (!attackChoices.isEmpty()) {
@@ -644,7 +647,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     nextStepLegalBalls.remove(choice.ball);
                 }
 
-                IntegratedAttackChoice iac = attack(choice, nextTargetIfThisSuccess, nextStepLegalBalls, phy);
+                IntegratedAttackChoice iac = attack(choice, nextTargetIfThisSuccess, nextStepLegalBalls, phy, mustAttack);
                 if (best == null || iac != null) {
                     if (best == null) {
                         best = iac;
@@ -744,7 +747,23 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         double realRadTick = Math.toRadians(origDegreesTick);
         Ball cueBall = game.getCueBall();
         double[] whitePos = new double[]{cueBall.getX(), cueBall.getY()};
-        NavigableSet<Double> availableRads = new TreeSet<>();
+        
+        class DefenseAngle implements Comparable<DefenseAngle> {
+            final double rad;
+            double price;
+            
+            DefenseAngle(double rad, double price) {
+                this.rad = rad;
+                this.price = price;
+            }
+            
+            @Override
+            public int compareTo(@NotNull DefenseAngle o) {
+                return Double.compare(this.rad, o.rad);
+            }
+        }
+        
+        NavigableSet<DefenseAngle> availableRads = new TreeSet<>();
         for (Ball ball : legalBalls) {
             double[] directionVec = new double[]{ball.getX() - whitePos[0], ball.getY() - whitePos[1]};
             double distance = Math.hypot(directionVec[0], directionVec[1]);
@@ -757,7 +776,11 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             double halfOfTick = realRadTick / 2;
 
             for (int i = -offsetTicks; i <= offsetTicks; i++) {
+                boolean isThin = i == -offsetTicks || i == offsetTicks;  // 是否为最薄边
+                double price = isThin ? 0.7 : 1.0;  // 尽量不要擦最薄边去防守，容易空杆
+                
                 double angle = Algebra.normalizeAngle(alpha + i * realRadTick);
+                DefenseAngle da = new DefenseAngle(angle, price);
                 double[] vec = Algebra.unitVectorOfAngle(angle);
                 PredictedPos leftPP = game.getPredictedHitBall(
                         cueBall.getX(), cueBall.getY(),
@@ -765,11 +788,19 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 if (leftPP == null || leftPP.getTargetBall() == null ||
                         leftPP.getTargetBall() == ball) {
                     // 如果与已有的角度太接近就不考虑了
-                    Double floorRad = availableRads.floor(angle);
-                    Double ceilRad = availableRads.ceiling(angle);
-                    if (floorRad != null && angle - floorRad < halfOfTick) continue;
-                    if (ceilRad != null && ceilRad - angle < halfOfTick) continue;
-                    availableRads.add(angle);
+                    DefenseAngle floorRad = availableRads.floor(da);
+                    DefenseAngle ceilRad = availableRads.ceiling(da);
+                    if ((floorRad != null && angle - floorRad.rad < halfOfTick) || 
+                            (ceilRad != null && ceilRad.rad - angle < halfOfTick)) {
+                        if (floorRad != null) {
+                            floorRad.price = Math.max(price, floorRad.price);
+                        }
+                        if (ceilRad != null) {
+                            ceilRad.price = Math.max(price, ceilRad.price);
+                        }
+                        continue;
+                    }
+                    availableRads.add(da);
                 }
             }
         }
@@ -790,9 +821,9 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
              selectedPower < selPowHigh;
              selectedPower += realPowerTick) {
 
-            for (Double rad : availableRads) {
+            for (DefenseAngle da : availableRads) {
                 DefenseThread thread = new DefenseThread(
-                        rad, whitePos, selectedPower, legalSet, phy, gameClonesPool
+                        da.rad, da.price, whitePos, selectedPower, legalSet, phy, gameClonesPool
                 );
                 defenseThreads.add(thread);
             }
@@ -860,7 +891,13 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
              selectedPower += powerTick) {
             for (double deg = 0.0; deg < 360; deg += degreesTick) {
                 DefenseThread thread = new DefenseThread(
-                        Math.toRadians(deg), whitePos, selectedPower, legalSet, phy, gameClonesPool
+                        Math.toRadians(deg), 
+                        1.0,  // 这里我们根本无法判断，只能给1.0了
+                        whitePos, 
+                        selectedPower, 
+                        legalSet, 
+                        phy, 
+                        gameClonesPool
                 );
                 defenseThreads.add(thread);
             }
@@ -1178,6 +1215,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         boolean targetCollidesOther;
 
         protected DefenseChoice(Ball ball,
+                                double nativePrice,
                                 double snookerPrice,
                                 double opponentAttackPrice,
                                 double penalty,
@@ -1209,7 +1247,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             this.whiteCollidesOther = whiteCollidesOther;
             this.targetCollidesOther = targetCollidesOther;
 
-            generatePrice();
+            generatePrice(nativePrice);
         }
 
         /**
@@ -1220,6 +1258,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                 double selectedSideSpin,
                                 CuePlayParams cuePlayParams, PlayerPerson.HandSkill handSkill) {
             this(null,
+                    1.0,
                     0.0,
                     0.0,
                     0.0,
@@ -1235,8 +1274,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     true);
         }
 
-        private void generatePrice() {
-            this.price = snookerPrice / penalty - opponentAttackPrice * penalty;
+        private void generatePrice(double nativePrice) {
+            this.price = snookerPrice / penalty - opponentAttackPrice * penalty / nativePrice;
 
             if (wp != null && wp.isHitWallBeforeHitBall()) {
                 // 应该是在解斯诺克
@@ -1569,8 +1608,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //                return;
 //            }
 
-            double targetCanMove = values.estimatedMoveDistance(phy, wp.getBallInitSpeed());
-            if (targetCanMove - values.ball.ballDiameter * 1.5 <= correctedChoice.targetHoleDistance) {
+            double estBallSpeed = wp.getBallInitSpeed();
+            double errorLow = aiPlayer.getPlayerPerson().getPowerSd(
+                    attackParams.selectedPower, 
+                    attackParams.attackChoice.handSkill) * 1.96;
+            double estBallSpeedLow = estBallSpeed * (1 - errorLow);  //  95%置信区间下界，没有考虑旋转这些
+            
+            double targetCanMove = values.estimatedMoveDistance(phy, estBallSpeedLow) * 0.95;  // 补偿：球的初始旋转是0，一开始的滑动摩擦会让目标球比预期的少跑一点
+            if (targetCanMove - values.ball.ballDiameter * 2.0 <= correctedChoice.targetHoleDistance) {
                 // 确保球不会停在袋口
                 // 如果小于，说明力量太轻或低杆太多，打不到
 //            System.out.println("little less " + targetCanMove + ", " + attackChoice.targetHoleDistance);
@@ -1610,6 +1655,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     protected class DefenseThread implements Runnable {
 
         double rad;
+        double nativePrice;
         double[] whitePos;
         double selectedPower;
         Set<Ball> legalSet;
@@ -1619,12 +1665,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         DefenseChoice result;
 
         protected DefenseThread(double rad,
+                                double nativePrice,  
                                 double[] whitePos,
                                 double selectedPower,
                                 Set<Ball> legalSet,
                                 Phy phy,
                                 Game[] gameClonesPool) {
             this.rad = rad;
+            this.nativePrice = nativePrice;
             this.whitePos = whitePos;
             this.selectedPower = selectedPower;
             this.legalSet = legalSet;
@@ -1668,7 +1716,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     selectedPower,
                     0.0,
                     0.0,
-                    false
+                    false,
+                    nativePrice
             );
         }
     }
@@ -1745,7 +1794,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     attackParam.selectedPower,
                     attackParam.selectedFrontBackSpin,
                     attackParam.selectedSideSpin,
-                    true
+                    true,
+                    1.0  // 进攻杆，AI应该不会吃屎去擦最薄边
             );
 
             if (result != null) {

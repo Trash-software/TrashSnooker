@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.career.championship.ChineseEightChampionship;
+import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
 import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.util.DataLoader;
@@ -101,7 +102,7 @@ public class CareerManager {
 
     public static void deleteCareer(CareerSave toDelete) {
         if (!Util.deleteFile(toDelete.getDir())) {
-            EventLogger.log("Cannot delete " + toDelete.getDir().getAbsolutePath());
+            EventLogger.error("Cannot delete " + toDelete.getDir().getAbsolutePath());
         }
         if (toDelete == currentSave) {
             currentSave = null;
@@ -293,7 +294,7 @@ public class CareerManager {
         } catch (FileNotFoundException e) {
             // do nothing
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
         return res;
     }
@@ -307,7 +308,7 @@ public class CareerManager {
             bw.write(builder.toString());
             bw.newLine();
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
         careerSave.updateCacheInfo();
     }
@@ -597,8 +598,10 @@ public class CareerManager {
         List<Career.CareerWithAwards> ranking = getRankingPrivate(type, selection);
         Career defendingChamp = getDefendingChampion(data);
         if (defendingChamp != null) {
-            TourCareer seed1 = new TourCareer(defendingChamp, 1);
-            result.add(seed1);  // 我们认为卫冕冠军一定会参加
+            if (!defendingChamp.isHumanPlayer() || humanJoin) {
+                TourCareer seed1 = new TourCareer(defendingChamp, 1);
+                result.add(seed1);  // 我们认为卫冕冠军一定会参加
+            }
         }
 
         for (int i = 0; i < ranking.size(); i++) {
@@ -627,9 +630,11 @@ public class CareerManager {
         List<Career.CareerWithAwards> rankings = getRankingPrivate(type, selection);
         Career defendingChamp = getDefendingChampion(data);
         if (defendingChamp != null) {
-            TourCareer seed1 = new TourCareer(defendingChamp, 1);
-            result.add(seed1);  // 我们认为卫冕冠军一定会参加
-            if (seed1.career.isHumanPlayer()) humanAlreadyJoin = true;
+            if (!defendingChamp.isHumanPlayer() || humanJoin) {
+                TourCareer seed1 = new TourCareer(defendingChamp, 1);
+                result.add(seed1);  // 我们认为AI卫冕冠军一定会参加
+                if (seed1.career.isHumanPlayer()) humanAlreadyJoin = true;
+            }
         }
 
         for (int i = 0; i < rankings.size(); i++) {
@@ -836,22 +841,40 @@ public class CareerManager {
         }
     }
 
-    public NavigableMap<Integer, Career> historicalChampions(ChampionshipData data) {
+    public TournamentStats tournamentHistory(ChampionshipData data) {
         NavigableMap<Integer, Career> result = new TreeMap<>();
+        NavigableSet<SnookerBreakScore> bestBreaks = new TreeSet<>();  // 考虑两个单杆完全相同
         for (Career career : playerCareers) {
             for (ChampionshipScore score : career.getChampionshipScores()) {
                 if (score.data == data) {
                     if (Util.arrayContains(score.ranks, ChampionshipScore.Rank.CHAMPION)) {
                         result.put(score.getYear(), career);
                     }
+                    if (data.getType().snookerLike()) {
+                        SnookerBreakScore breakScore = score.getHighestBreak();
+                        if (breakScore != null) {
+                            if (bestBreaks.isEmpty()) {
+                                bestBreaks.add(breakScore);
+                            } else {
+                                SnookerBreakScore curBest = bestBreaks.first();
+                                int cmp = breakScore.compareTo(curBest);
+                                if (cmp < 0) {
+                                    bestBreaks.clear();
+                                    bestBreaks.add(breakScore);
+                                } else if (cmp == 0) {
+                                    bestBreaks.add(breakScore);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        return result;
+        return new TournamentStats(result, bestBreaks);
     }
 
     public Career getDefendingChampion(ChampionshipData data) {
-        NavigableMap<Integer, Career> result = historicalChampions(data);
+        NavigableMap<Integer, Career> result = tournamentHistory(data).getHistoricalChampions();
         if (result.isEmpty()) return null;
         return result.lastEntry().getValue();
     }
@@ -887,7 +910,7 @@ public class CareerManager {
                 new FileWriter(file, StandardCharsets.UTF_8))) {
             bw.write(str);
         } catch (IOException e) {
-            EventLogger.log(e);
+            EventLogger.error(e);
         }
     }
 

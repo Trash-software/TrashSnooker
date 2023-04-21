@@ -40,6 +40,7 @@
                 <fx:define>
                     <ToggleGroup fx:id="animationPlaySpeedToggle"/>
                 </fx:define>
+                <RadioMenuItem text="0.125x" toggleGroup="$animationPlaySpeedToggle" userData="0.125"/>
                 <RadioMenuItem text="0.25x" toggleGroup="$animationPlaySpeedToggle" userData="0.25"/>
                 <RadioMenuItem text="0.5x" toggleGroup="$animationPlaySpeedToggle" userData="0.5"/>
                 <RadioMenuItem text="1x" toggleGroup="$animationPlaySpeedToggle" userData="1"/>

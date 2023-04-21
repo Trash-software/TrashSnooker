@@ -17,9 +17,12 @@ import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.recorder.ActualRecorder;
 import trashsoftware.trashSnooker.recorder.GameRecorder;
-import trashsoftware.trashSnooker.recorder.NaiveGameRecorder;
+import trashsoftware.trashSnooker.recorder.InvalidRecorder;
+import trashsoftware.trashSnooker.recorder.NaiveActualRecorder;
 import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.IOException;
 import java.util.*;
@@ -112,8 +115,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
 
         try {
-            game.recorder = new NaiveGameRecorder(game);
-            game.recorder.startRecoding();
+            if (DBAccess.SAVE) {
+                game.recorder = new NaiveActualRecorder(game, entireGame.getMetaMatchInfo());
+                game.recorder.startRecoding();
+            } else {
+                game.recorder = new InvalidRecorder();
+                game.recorder.startRecoding();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -736,18 +744,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         ball1.pickup();
         ball2.pickup();
 
-        ball1.setX(1800);
-        ball1.setY(800);
+        ball1.setX(2200);
+        ball1.setY(1500);
 
-        ball1.setVx(-0.8);
-        ball1.setVy(-1.0);
+        ball1.setVx(0.5);
+        ball1.setVy(0.05);
 //        ball1.setSpin(-10, -1, 0);
 
-        ball2.setX(1600);
-        ball2.setY(590);
+        ball2.setX(2150);
+        ball2.setY(1350);
 
-        ball2.setVx(-0.4);
-        ball2.setVy(-0.5);
+        ball2.setVx(0.4);
+        ball2.setVy(0.3);
 
         return physicalCalculate(entireGame.playPhy);
     }
@@ -1049,6 +1057,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 prediction.potFirstBall();
                 return true;
             }
+            if (firstBall.currentBounce != null) {
+                firstBall.processBounce(false);
+                tryHitBallOther(firstBall);
+                firstBall.normalMove(phy);
+                return false;
+            }
 
             int holeAreaResult = firstBall.tryHitHoleArea(phy);
             if (holeAreaResult != 0) {
@@ -1083,6 +1097,17 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 // 解斯诺克不能太容易了
                 prediction.whiteHitCushion();
                 return true;
+            }
+            
+            if (cueBallClone.currentBounce != null) {
+                cueBallClone.processBounce(false);
+                if (prediction.getFirstCollide() == null) {
+                    tryWhiteHitBall();
+                } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
+                    tryPassSecondBall();
+                }
+                cueBallClone.normalMove(phy);
+                return false;
             }
 
             int holeAreaResult = cueBallClone.tryHitHoleArea(phy);
@@ -1252,6 +1277,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         newPotted.add(ball);
                         continue;
                     }
+                    if (ball.currentBounce != null) {
+                        ball.processBounce(App.PRINT_DEBUG);
+                        if (tryHitBall(ball)) {
+                            ball.normalMove(phy);
+                        }
+                        continue;
+                    }
+                    
                     int holeAreaResult = ball.tryHitHoleArea(phy);
                     if (holeAreaResult != 0) {
                         // 袋口区域

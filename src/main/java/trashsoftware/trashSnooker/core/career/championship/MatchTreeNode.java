@@ -12,6 +12,8 @@ import java.util.SortedMap;
 
 public class MatchTreeNode {
 
+    private static int matchIdCounter = 0;
+    private MetaMatchInfo metaMatchInfo;
     private MatchTreeNode player1Position;
     private MatchTreeNode player2Position;
     private ChampionshipStage stage;
@@ -23,12 +25,37 @@ public class MatchTreeNode {
         this.winner = winner;
     }
 
-    public MatchTreeNode(MatchTreeNode player1Position,
+    private MatchTreeNode(MatchTreeNode player1Position,
                          MatchTreeNode player2Position,
-                         ChampionshipStage stage) {
+                         ChampionshipStage stage,
+                         MetaMatchInfo metaMatchInfo) {
         this.player1Position = player1Position;
         this.player2Position = player2Position;
         this.stage = stage;
+        this.metaMatchInfo = metaMatchInfo;
+    }
+
+    public MatchTreeNode(MatchTreeNode player1Position,
+                         MatchTreeNode player2Position,
+                         ChampionshipStage stage,
+                         Championship championship) {
+        this(player1Position, player2Position, stage, MetaMatchInfo.fromString(generateId(championship, stage)));
+    }
+    
+    static void restoreIdCounter() {
+        matchIdCounter = 0;
+    }
+    
+    static String generateId(Championship championship, ChampionshipStage stage) {
+        return championship.uniqueId() + "-" + stage.name() + "-" + (matchIdCounter++);
+    }
+    
+    /**
+     * @see Championship#uniqueId()
+     * @see MatchTreeNode#generateId(Championship, ChampionshipStage) 
+     */
+    public static MetaMatchInfo analyzeMatchId(String matchId) {
+        return MetaMatchInfo.fromString(matchId);
     }
 
     public static MatchTreeNode fromJsonObject(JSONObject object) {
@@ -37,7 +64,15 @@ public class MatchTreeNode {
             MatchTreeNode p1 = MatchTreeNode.fromJsonObject(object.getJSONObject("p1"));
             MatchTreeNode p2 = MatchTreeNode.fromJsonObject(object.getJSONObject("p2"));
 
-            MatchTreeNode rtn = new MatchTreeNode(p1, p2, stage);
+            String matchId;
+            if (object.has("matchId")) {
+                // 这里用if是为了向下兼容，本来每个有stage的都是比赛，都应该有matchId
+                matchId = object.getString("matchId");
+            } else {
+                matchId = "generated_" + (matchIdCounter++);
+            }
+            
+            MatchTreeNode rtn = new MatchTreeNode(p1, p2, stage, MetaMatchInfo.fromString(matchId));
 
             if (object.has("winner")) {
                 rtn.winner = CareerManager.getInstance().findCareerByPlayerId(object.getString("winner"));
@@ -64,6 +99,7 @@ public class MatchTreeNode {
             object.put("stage", stage.name());
             object.put("p1", player1Position.saveToJson());
             object.put("p2", player2Position.saveToJson());
+            object.put("matchId", metaMatchInfo.toString());
 
             if (winner != null) {
                 object.put("winner", winner.getPlayerPerson().getPlayerId());
@@ -78,7 +114,15 @@ public class MatchTreeNode {
     void slCheck(ChampionshipStage currentStage) {
 
     }
-    
+
+    public MetaMatchInfo getMetaMatchInfo() {
+        return metaMatchInfo;
+    }
+
+//    public String getMatchId() {
+//        return matchId;
+//    }
+
     public MatchTreeNode findNodeByPlayers(String p1Id, String p2Id) {
         if (isLeaf()) return null;
         
@@ -114,7 +158,7 @@ public class MatchTreeNode {
         return p2Wins;
     }
 
-    PlayerVsAiMatch performMatches(ChampionshipData data, ChampionshipStage stage) {
+    PlayerVsAiMatch performMatches(Championship championship, ChampionshipStage stage) {
         if (stage == this.stage) {
             if (player1Position == null || player2Position == null ||
                     !player1Position.isFinished() || !player2Position.isFinished()) {
@@ -123,37 +167,40 @@ public class MatchTreeNode {
             Career c1 = player1Position.winner;
             Career c2 = player2Position.winner;
             if (c1.isHumanPlayer() || c2.isHumanPlayer()) {
-                return new PlayerVsAiMatch(c1, c2, data, stage, this);
+                return new PlayerVsAiMatch(c1, c2, championship, stage, this);
             }
 
-            performAiVsAiMatch(data, stage);
+            performAiVsAiMatch(championship, stage);
             return null;
         } else if (this.winner != null) {
             return null;  // 这属于守株待兔的选手
         } else if (this.stage == null) {
             throw new RuntimeException("Tree does not have stage " + stage);
         } else {
-            var up = player1Position.performMatches(data, stage);
-            var down = player2Position.performMatches(data, stage);
+            var up = player1Position.performMatches(championship, stage);
+            var down = player2Position.performMatches(championship, stage);
             return up == null ? down : up;
         }
     }
 
-    private void performAiVsAiMatch(ChampionshipData data, ChampionshipStage stage) {
+    private void performAiVsAiMatch(Championship championship, ChampionshipStage stage) {
+        ChampionshipData data = championship.getData();
         AiVsAi aiVsAi;
-        switch (data.getType()) {
+        switch (championship.getData().getType()) {
             case SNOOKER:
                 aiVsAi = new SnookerAiVsAi(
                         player1Position.winner,
                         player2Position.winner,
-                        data,
+                        championship,
+                        metaMatchInfo.toString(),
                         data.getNFramesOfStage(stage));
                 break;
             case CHINESE_EIGHT:
                 aiVsAi = new ChineseAiVsAi(
                         player1Position.winner,
                         player2Position.winner,
-                        data,
+                        championship,
+                        metaMatchInfo.toString(),
                         data.getNFramesOfStage(stage)
                 );
                 break;

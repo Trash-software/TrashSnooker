@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.metrics;
 
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
@@ -100,6 +101,113 @@ public class GameValues {
                 (rule == GameRule.CHINESE_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
                 (rule == GameRule.LIS_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
                 (rule == GameRule.SIDE_POCKET && table.tableName.equals(TableMetrics.SIDE_POCKET) && ball == BallMetrics.POOL_BALL);
+    }
+    
+    public boolean isInTable(double x, double y, double r) {
+        if (x >= table.leftX + r && 
+                x < table.rightX - r && 
+                y >= table.topY + r && 
+                y < table.botY - r) {
+            return true;
+        }
+        
+        double[] pos = new double[]{x, y};
+
+        if (y < r + table.topY) {
+            if (x < table.midHoleAreaRightX && x >= table.midHoleAreaLeftX) {
+                // 上方中袋在袋角范围内
+                if (Algebra.distanceToPoint(pos, table.topMidHoleLeftArcXy) < table.midArcRadius + r) {
+                    // 击中上方中袋左侧
+                    return false;
+                } else if (Algebra.distanceToPoint(pos, table.topMidHoleRightArcXy) < table.midArcRadius + r) {
+                    // 击中上方中袋右侧
+                    return false;
+                } else if (table.isStraightHole() &&
+                        x >= table.midHoleLineLeftX && x < table.midHoleLineRightX) {
+                    // 疑似上方中袋直线
+                    double[][] line = table.topMidHoleLeftLine;
+                    if (Algebra.distanceToLine(pos, line) < r) {
+                        return false;
+                    }
+                    line = table.topMidHoleRightLine;
+                    if (Algebra.distanceToLine(pos, line) < r) {
+                        return false;
+                    }
+                    return true;
+                } else {
+                    return true;
+                }
+            }
+        } else if (y >= table.botY - r) {
+            if (x < table.midHoleAreaRightX && x >= table.midHoleAreaLeftX) {
+                // 下方中袋袋角范围内
+                if (Algebra.distanceToPoint(pos, table.botMidHoleLeftArcXy) < table.midArcRadius + r) {
+                    // 击中下方中袋左侧
+                    return false;
+                } else if (Algebra.distanceToPoint(pos, table.botMidHoleRightArcXy) < table.midArcRadius + r) {
+                    // 击中下方中袋右侧
+                    return false;
+                } else if (table.isStraightHole() &&
+                        x >= table.midHoleLineLeftX && x < table.midHoleLineRightX) {
+                    // 疑似下方中袋直线
+                    double[][] line = table.botMidHoleLeftLine;
+                    if (Algebra.distanceToLine(pos, line) < r) {
+                        return false;
+                    }
+                    line = table.botMidHoleRightLine;
+                    if (Algebra.distanceToLine(pos, line) < r) {
+                        return false;
+                    }
+                    return true;
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        double[] probHole = null;
+        if (y < table.topCornerHoleAreaDownY) {
+            if (x < table.leftCornerHoleAreaRightX) probHole = table.topLeftHoleXY;  // 左上底袋
+            else if (x >= table.rightCornerHoleAreaLeftX) probHole = table.topRightHoleXY;  // 右上底袋
+        } else if (y >= table.botCornerHoleAreaUpY) {
+            if (x < table.leftCornerHoleAreaRightX) probHole = table.botLeftHoleXY;  // 左下底袋
+            else if (x >= table.rightCornerHoleAreaLeftX) probHole = table.botRightHoleXY;  // 右下底袋
+        }
+
+        if (probHole != null) {
+            for (int i = 0; i < table.allCornerLines.length; ++i) {
+                double[][] line = table.allCornerLines[i];
+
+                if (Algebra.distanceToLine(pos, line) < r) {
+                    return false;
+                }
+            }
+            if (!table.isStraightHole()) {
+                for (double[] cornerArc : table.allCornerArcs) {
+                    if (Algebra.distanceToPoint(pos, cornerArc) < table.cornerArcRadius + r) {
+                        return false;
+                    }
+                }
+            }
+            
+            return true;
+        }
+        
+//        // 检测袋角弧线
+//        for (double[] cornerArc : table.allCornerArcs) {
+//            if (Algebra.distanceToPoint(x, y, cornerArc[0], cornerArc[1]) < table.cornerArcRadius + r) {
+//                return false;
+//            }
+//        }
+//        for (double[] midArc : table.allMidArcs) {
+//            if (Algebra.distanceToPoint(x, y, midArc[0], midArc[1]) < table.midArcRadius + r) {
+//                return false;
+//            }
+//        }
+//        
+//        // 检测袋角直线
+        
+        return false;
     }
 
     public double speedReducerPerInterval(Phy phy) {

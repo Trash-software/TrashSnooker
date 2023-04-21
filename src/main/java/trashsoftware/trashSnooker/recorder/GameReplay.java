@@ -8,6 +8,7 @@ import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.scoreResult.*;
 import trashsoftware.trashSnooker.core.table.*;
+import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public abstract class GameReplay implements GameHolder {
     protected ScoreResult currentScoreResult;
     protected TargetRecord thisTarget;
     protected TargetRecord nextTarget;
-    protected int currentFlag = GameRecorder.FLAG_NOT_BEGUN;
+    protected int currentFlag = ActualRecorder.FLAG_NOT_BEGUN;
     protected Ball[] balls;
     protected HashMap<Integer, Ball> valueBallMap = new HashMap<>();
 //    protected HashMap<Ball, double[]> lastPositions = new HashMap<>();
@@ -44,7 +45,7 @@ public abstract class GameReplay implements GameHolder {
     protected List<CueStep> historySteps = new ArrayList<>();
 
     protected GameReplay(BriefReplayItem item) throws IOException, VersionException {
-        if (!GameRecorder.isSecondaryCompatible(item.secondaryVersion)) 
+        if (!ActualRecorder.isSecondaryCompatible(item.primaryVersion, item.secondaryVersion)) 
             throw new VersionException(item.primaryVersion, item.secondaryVersion);
 
         this.item = item;
@@ -55,6 +56,9 @@ public abstract class GameReplay implements GameHolder {
 
         this.wrapperStream = new FileInputStream(item.getFile());
         if (wrapperStream.skip(item.headerLength()) != item.headerLength()) {
+            throw new IOException();
+        }
+        if (wrapperStream.skip(item.getExtraLength()) != item.getExtraLength()) {
             throw new IOException();
         }
         System.out.println(wrapperStream.available());
@@ -94,19 +98,29 @@ public abstract class GameReplay implements GameHolder {
     }
 
     public static File[] listReplays() {
-        File dir = new File(GameRecorder.RECORD_DIR);
+        File dir = new File(ActualRecorder.RECORD_DIR);
         return dir.listFiles();
+    }
+    
+    public static File getRecordDir() {
+        File f = new File(ActualRecorder.RECORD_DIR);
+        if (!f.exists()) {
+            if (!f.mkdirs()) {
+                EventLogger.error("Record directory is not available");
+            }
+        }
+        return f;
     }
 
     private void createInputStream(int compression) throws IOException {
         switch (compression) {
-            case GameRecorder.NO_COMPRESSION:
+            case ActualRecorder.NO_COMPRESSION:
                 inputStream = new BufferedInputStream(wrapperStream);
                 break;
-            case GameRecorder.GZ_COMPRESSION:
+            case ActualRecorder.GZ_COMPRESSION:
                 inputStream = new GZIPInputStream(wrapperStream);
                 break;
-            case GameRecorder.XZ_COMPRESSION:
+            case ActualRecorder.XZ_COMPRESSION:
                 inputStream = new XZInputStream(wrapperStream);
                 break;
             default:
@@ -132,7 +146,7 @@ public abstract class GameReplay implements GameHolder {
     protected abstract void loadBallPositions() throws IOException;
 
     public boolean finished() {
-        return currentFlag == GameRecorder.FLAG_TERMINATE;
+        return currentFlag == ActualRecorder.FLAG_TERMINATE;
     }
 
     public boolean loadNext() {
@@ -149,7 +163,7 @@ public abstract class GameReplay implements GameHolder {
             stepIndex++;
             return true;
         } else if (everFinished) {
-            currentFlag = GameRecorder.FLAG_TERMINATE;
+            currentFlag = ActualRecorder.FLAG_TERMINATE;
             return false;
         } else {
             try {
@@ -160,7 +174,7 @@ public abstract class GameReplay implements GameHolder {
                 currentFlag = buffer1[0] & 0xff;
                 System.out.println("Flag: " + currentFlag);
                 
-                if (currentFlag == GameRecorder.FLAG_TERMINATE) {
+                if (currentFlag == ActualRecorder.FLAG_TERMINATE) {
                     everFinished = true;
                     return false;
                 }
@@ -169,7 +183,7 @@ public abstract class GameReplay implements GameHolder {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            return currentFlag != GameRecorder.FLAG_TERMINATE;
+            return currentFlag != ActualRecorder.FLAG_TERMINATE;
         }
     }
     
@@ -183,7 +197,7 @@ public abstract class GameReplay implements GameHolder {
             currentScoreResult = actualStep.scoreResult;
             thisTarget = actualStep.thisTarget;
             nextTarget = actualStep.nextTarget;
-            currentFlag = GameRecorder.FLAG_CUE;
+            currentFlag = ActualRecorder.FLAG_CUE;
 
             Map<Ball, MovementFrame> sps = currentMovement.getStartingPositions();
             for (Ball ball : getAllBalls()) {
@@ -193,7 +207,7 @@ public abstract class GameReplay implements GameHolder {
                 ball.setY(sp.y);
             }
         } else if (step instanceof BallInHandStep) {
-            currentFlag = GameRecorder.FLAG_HANDBALL;
+            currentFlag = ActualRecorder.FLAG_HANDBALL;
         }
     }
     
@@ -209,7 +223,7 @@ public abstract class GameReplay implements GameHolder {
     }
 
     protected synchronized void readNext() throws IOException {
-        if (currentFlag == GameRecorder.FLAG_CUE) {
+        if (currentFlag == ActualRecorder.FLAG_CUE) {
 //            storeLastPositions();
             loadNextRecordAndMovement();
             loadNextScoreResult();
@@ -223,12 +237,12 @@ public abstract class GameReplay implements GameHolder {
                     nextTarget
             );
             historySteps.add(actualStep);
-        } else if (currentFlag == GameRecorder.FLAG_HANDBALL) {
+        } else if (currentFlag == ActualRecorder.FLAG_HANDBALL) {
 //            storeLastPositions();
             loadBallInHand();
             BallInHandStep step = new BallInHandStep();
             historySteps.add(step);
-        } else if (currentFlag == GameRecorder.FLAG_TERMINATE) {
+        } else if (currentFlag == ActualRecorder.FLAG_TERMINATE) {
 //            storeLastPositions();
         }
     }

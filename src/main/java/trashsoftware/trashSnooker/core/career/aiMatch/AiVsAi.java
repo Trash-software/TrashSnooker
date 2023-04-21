@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
+import trashsoftware.trashSnooker.core.career.championship.Championship;
 
 import java.util.Map;
 import java.util.Random;
@@ -15,7 +16,9 @@ public abstract class AiVsAi {
 
     public static boolean printDebug;
     protected final int totalFrames;
+    protected final Championship championship;
     protected final ChampionshipData data;
+    protected final String matchId;
     protected final Career p1;
     protected final Career p2;
     protected final double potDifficulty;
@@ -29,7 +32,11 @@ public abstract class AiVsAi {
     protected Random random = new Random();
     protected final SortedMap<Integer, Integer> winRecords = new TreeMap<>();
 
-    public AiVsAi(Career p1, Career p2, ChampionshipData data, int totalFrames) {
+    public AiVsAi(Career p1, Career p2, Championship championship, String matchId, int totalFrames) {
+        this.championship = championship;
+        this.data = championship.getData();
+        this.matchId = matchId;
+        
         this.p1 = p1;
         this.p2 = p2;
         this.aps1 = p1.getPlayerPerson().getAiPlayStyle();
@@ -41,8 +48,6 @@ public abstract class AiVsAi {
         this.ability2 = PlayerPerson.ReadableAbility.fromPlayerPerson(
                 p2.getPlayerPerson(),
                 p2.getHandFeelEffort(data.getType()));
-
-        this.data = data;
 
         this.potDifficulty = calculatePotDifficulty(data);
 
@@ -100,6 +105,10 @@ public abstract class AiVsAi {
         p2WinFrames++;
         winRecords.put(p1WinFrames + p2WinFrames, 2);
     }
+    
+    protected int currentFrameNumberFrom1() {
+        return p1WinFrames + p2WinFrames + 1;
+    }
 
     public int playerContinuousLoses(int playerNum) {
         if (p1WinFrames + p2WinFrames == 0) return 0;
@@ -141,7 +150,7 @@ public abstract class AiVsAi {
         double difficulty = potDifficulty * (goodPosition ? 1 : 3);
         double failRatio = 10000 - ra.aiming * ra.cuePrecision * psyFactor;
         failRatio /= 10000;
-        failRatio *= 0.18;
+        failRatio *= 0.15;
         failRatio *= difficulty;
         if (random.nextDouble() * 100 > person.getAiPlayStyle().stability) {
             // 失误

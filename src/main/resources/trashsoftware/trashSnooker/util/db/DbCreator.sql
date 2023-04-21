@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS EntireGame (
     Player2Name VARCHAR(32) REFERENCES Player ON DELETE CASCADE,
     Player1IsAI INTEGER,
     Player2IsAI INTEGER,
-    TotalFrames INTEGER DEFAULT 1
+    TotalFrames INTEGER DEFAULT 1,
+    MatchID TEXT DEFAULT NULL
 );
 
 -- Actually a 'Frame'

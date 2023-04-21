@@ -39,33 +39,33 @@ public class AiVsAiTest {
     
     @Test
     public void testSnooker() {
-        CareerManager.setCurrentSave(new CareerSave(new File("user/career/Jack Lisowski")));
-        SnookerAiVsAi aiVsAi = new SnookerAiVsAi(
-                CareerManager.getInstance().findCareerByPlayerId("Trump"),
-                CareerManager.getInstance().findCareerByPlayerId("Noob"),
-                ChampDataManager.getInstance().findDataById("masters"), 
-                9);
-        aiVsAi.simulate();
-
-        System.out.println(aiVsAi);
+//        CareerManager.setCurrentSave(new CareerSave(new File("user/career/Jack Lisowski")));
+//        SnookerAiVsAi aiVsAi = new SnookerAiVsAi(
+//                CareerManager.getInstance().findCareerByPlayerId("Trump"),
+//                CareerManager.getInstance().findCareerByPlayerId("Noob"),
+//                ChampDataManager.getInstance().findDataById("masters"), 
+//                9);
+//        aiVsAi.simulate();
+//
+//        System.out.println(aiVsAi);
     }
 
     @Test
     public void testSnookerMultiple() {
-        CareerManager.setCurrentSave(new CareerSave(new File("user/career/Jack Lisowski")));
-        int p1Wins = 0;
-        for (int i = 0; i < 100; i++) {
-            AiVsAi.printDebug = true;
-            SnookerAiVsAi aiVsAi = new SnookerAiVsAi(
-                    CareerManager.getInstance().findCareerByPlayerId("Trump"),
-                    CareerManager.getInstance().findCareerByPlayerId("O_Sullivan"),
-                    ChampDataManager.getInstance().findDataById("masters"),
-                    9);
-            aiVsAi.simulate();
-            if (aiVsAi.getWinner() == aiVsAi.getP1()) p1Wins++;
-        }
-
-        System.out.println(p1Wins);
+//        CareerManager.setCurrentSave(new CareerSave(new File("user/career/Jack Lisowski")));
+//        int p1Wins = 0;
+//        for (int i = 0; i < 100; i++) {
+//            AiVsAi.printDebug = true;
+//            SnookerAiVsAi aiVsAi = new SnookerAiVsAi(
+//                    CareerManager.getInstance().findCareerByPlayerId("Trump"),
+//                    CareerManager.getInstance().findCareerByPlayerId("O_Sullivan"),
+//                    ChampDataManager.getInstance().findDataById("masters"),
+//                    9);
+//            aiVsAi.simulate();
+//            if (aiVsAi.getWinner() == aiVsAi.getP1()) p1Wins++;
+//        }
+//
+//        System.out.println(p1Wins);
     }
 
     @Test

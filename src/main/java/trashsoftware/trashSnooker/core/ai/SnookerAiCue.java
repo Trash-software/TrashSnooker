@@ -121,7 +121,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             return false;
         }
         
-        IntegratedAttackChoice attackChoice = standardAttack(phy);
+        IntegratedAttackChoice attackChoice = standardAttack(phy, false);
         return attackChoice == null || !attackChoice.isPureAttack;  // 先就这样吧，暂时不考虑更好的防一杆
     }
 
@@ -138,7 +138,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     @Override
     public AiCueResult makeCue(Phy phy) {
         int behind = -game.getScoreDiff(aiPlayer);
-        int rem = game.getRemainingScore();
+        int rem = game.getRemainingScore(game.isDoingSnookerFreeBll());
         int currentTarget = game.getCurrentTarget();
         if (behind > rem) {  // 被超分
             int defaultFoul = game.getDefaultFoulValue();
@@ -157,10 +157,22 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                     DefenseChoice def = getBestDefenseChoice(phy);
                     if (def != null) return makeDefenseCue(def, AiCueResult.CueType.DEFENSE);
                 }
-            } else if (game.getCurrentTarget() != AbstractSnookerGame.RAW_COLORED_REP) {
+            } else if (currentTarget != AbstractSnookerGame.RAW_COLORED_REP) {
                 System.out.println("Ordered colors, make snooker");
                 DefenseChoice def = getBestDefenseChoice(phy);
                 if (def != null) return makeDefenseCue(def, AiCueResult.CueType.DEFENSE);
+            } else {
+                System.out.println("Being over score and target is colored, must attack");
+                IntegratedAttackChoice iac = standardAttack(phy, true);
+                if (iac != null) {
+                    return makeAttackCue(iac);
+                }
+            }
+        } else if (currentTarget == AbstractSnookerGame.RAW_COLORED_REP && rem - 7 <= behind) {
+            System.out.println("Near being over score and target is colored, must attack");
+            IntegratedAttackChoice iac = standardAttack(phy, true);
+            if (iac != null) {
+                return makeAttackCue(iac);
             }
         }
         if (-behind > rem + 7 && currentTarget == 7) {

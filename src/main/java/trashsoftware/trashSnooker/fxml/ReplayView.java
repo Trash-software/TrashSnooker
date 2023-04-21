@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.fxml;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -13,22 +14,26 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
+import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.recorder.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.TreeMap;
 
 public class ReplayView implements Initializable {
 
     private final Map<Long, TreeItem<Item>> entireGameItems = new TreeMap<>();
-    private final List<BriefReplayItem> replayList = new ArrayList<>();
     @FXML
     TreeTableView<Item> replayTable;
     @FXML
-    TreeTableColumn<Item, String> replayCol, typeCol, p1Col, p2Col, beginTimeCol, durationCol,
+    TreeTableColumn<Item, String> replayCol, eventCol, typeCol, p1Col, p2Col, beginTimeCol, durationCol,
             nCuesCol, resultCol;
     TreeItem<Item> root;
 
@@ -44,6 +49,8 @@ public class ReplayView implements Initializable {
 
         replayCol.setCellValueFactory(p ->
                 new ReadOnlyStringWrapper(p.getValue().getValue().title()));
+        eventCol.setCellValueFactory(p ->
+                new ReadOnlyStringWrapper(p.getValue().getValue().eventString()));
         typeCol.setCellValueFactory(p ->
                 new ReadOnlyStringWrapper(p.getValue().getValue().typeString()));
         p1Col.setCellValueFactory(p ->
@@ -59,8 +66,11 @@ public class ReplayView implements Initializable {
         resultCol.setCellValueFactory(p ->
                 new ReadOnlyStringWrapper(p.getValue().getValue().result()));
 
+        for (TreeTableColumn<Item, ?> col : replayTable.getColumns()) {
+            col.setSortable(false);
+        }
+
         clickListener();
-        fill();
 //        naiveFill();
     }
 
@@ -87,7 +97,7 @@ public class ReplayView implements Initializable {
             playReplay(selected, 1);
         }
     }
-    
+
     private Stage playReplay(GameReplay replay) throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("gameView.fxml"),
@@ -129,8 +139,8 @@ public class ReplayView implements Initializable {
                 alert.setHeaderText("不能播放旧版本的录像");
                 alert.setContentText(String.format(
                         "当前游戏版本: %d.%d, 录像版本: %d.%d",
-                        GameRecorder.RECORD_PRIMARY_VERSION,
-                        GameRecorder.RECORD_SECONDARY_VERSION,
+                        ActualRecorder.RECORD_PRIMARY_VERSION,
+                        ActualRecorder.RECORD_SECONDARY_VERSION,
                         item.getValue().primaryVersion,
                         item.getValue().secondaryVersion));
                 alert.show();
@@ -140,23 +150,14 @@ public class ReplayView implements Initializable {
         }
     }
 
-    private void fill() {
-        replayList.clear();
+    public void fill() {
+        root.getChildren().clear();
+
+        long begin = System.currentTimeMillis();
         FillReplayService service = new FillReplayService();
 
         service.setOnSucceeded(e -> {
-            for (BriefReplayItem item : replayList) {
-                long time = item.gameBeginTime;
-                TreeItem<Item> gameItemWrapper = entireGameItems.get(time);
-                if (gameItemWrapper == null) {
-                    gameItemWrapper = new TreeItem<>(new GameItem(time, item));
-                    ((GameItem) gameItemWrapper.getValue()).setChildrenList(gameItemWrapper.getChildren());
-                    entireGameItems.put(time, gameItemWrapper);
-                    root.getChildren().add(gameItemWrapper);
-                }
-                gameItemWrapper.getChildren().add(new TreeItem<>(new FrameItem(item)));
-            }
-            root.setExpanded(true);
+            System.out.println("Records listed in " + (System.currentTimeMillis() - begin) + " ms");
         });
         service.setOnFailed(e -> {
             e.getSource().getException().printStackTrace();
@@ -165,7 +166,7 @@ public class ReplayView implements Initializable {
         service.start();
     }
 
-    public abstract static class Item {
+    public abstract static class Item implements Comparable<Item> {
         Item() {
         }
 
@@ -175,6 +176,10 @@ public class ReplayView implements Initializable {
 
         public BriefReplayItem getValue() {
             return null;
+        }
+
+        public String eventString() {
+            return "";
         }
 
         public String typeString() {
@@ -218,15 +223,20 @@ public class ReplayView implements Initializable {
         public String title() {
             return "回放";
         }
+
+        @Override
+        public int compareTo(@NotNull ReplayView.Item o) {
+            return 0;
+        }
     }
 
-    public static class GameItem extends Item {
+    public static class MatchItem extends Item {
         final long gameBeginTime;
         final BriefReplayItem value;
         ObservableList<TreeItem<Item>> childrenList;
 
-        GameItem(long gameBeginTime,
-                 BriefReplayItem value  // value.value这一场中的某一局，一般是第一局
+        MatchItem(long gameBeginTime,
+                  BriefReplayItem value  // value.value这一场中的某一局，一般是第一局
         ) {
             super();
             this.gameBeginTime = gameBeginTime;
@@ -239,6 +249,22 @@ public class ReplayView implements Initializable {
 
         public BriefReplayItem getValue() {
             return value;
+        }
+
+        @Override
+        public String eventString() {
+            MetaMatchInfo metaMatchInfo = value.getMetaMatchInfo();
+            if (metaMatchInfo != null) {
+                return metaMatchInfo.normalReadable();
+            }
+            return "";
+        }
+
+        @Override
+        public int compareTo(@NotNull ReplayView.Item o) {
+            if (o instanceof MatchItem) {
+                return -Long.compare(this.gameBeginTime, ((MatchItem) o).gameBeginTime);
+            } else return 0;
         }
 
         @Override
@@ -264,12 +290,13 @@ public class ReplayView implements Initializable {
 
         @Override
         public String result() {
-            FrameItem last = (FrameItem) childrenList.get(childrenList.size() - 1).getValue();
-            BriefReplayItem brief = last.getValue();
-            int p1w = brief.p1Wins;
-            int p2w = brief.p2Wins;
-            if (brief.frameWinnerNumber == 1) p1w++;
-            else if (brief.frameWinnerNumber == 2) p2w++;
+            int p1w = 0;
+            int p2w = 0;
+            for (TreeItem<Item> item : childrenList) {
+                FrameItem frameItem = (FrameItem) item.getValue();
+                if (frameItem.getValue().frameWinnerNumber == 1) p1w++;
+                else p2w++;
+            }
             return String.format("%s %d : %d %s",
                     p1Name(), p1w, p2w, p2Name());
         }
@@ -293,6 +320,13 @@ public class ReplayView implements Initializable {
 
         public BriefReplayItem getValue() {
             return value;
+        }
+
+        @Override
+        public int compareTo(@NotNull ReplayView.Item o) {
+            if (o instanceof FrameItem) {
+                return -Long.compare(this.value.frameBeginTime, ((FrameItem) o).value.frameBeginTime);
+            } else return 0;
         }
 
         @Override
@@ -335,21 +369,38 @@ public class ReplayView implements Initializable {
         protected Task<Void> createTask() {
             return new Task<>() {
                 @Override
-                protected Void call() throws Exception {
+                protected Void call() {
                     File[] replays = GameReplay.listReplays();
                     if (replays != null) {
                         for (int i = replays.length - 1; i >= 0; i--) {
                             File f = replays[i];
                             try {
                                 BriefReplayItem item = new BriefReplayItem(f);
-                                replayList.add(item);
+
+                                long time = item.gameBeginTime;
+                                TreeItem<Item> gameItemWrapper = entireGameItems.get(time);
+                                if (gameItemWrapper == null) {
+                                    gameItemWrapper = new TreeItem<>(new MatchItem(time, item));
+                                    ((MatchItem) gameItemWrapper.getValue()).setChildrenList(gameItemWrapper.getChildren());
+                                    
+                                    entireGameItems.put(time, gameItemWrapper);
+                                    root.getChildren().add(gameItemWrapper);
+                                    root.getChildren().sort(Comparator.comparing(TreeItem::getValue));
+                                    
+                                    if (root.getChildren().size() == 1) {
+                                        root.setExpanded(true);
+                                    }
+                                }
+                                gameItemWrapper.getChildren().add(new TreeItem<>(new FrameItem(item)));
+                                gameItemWrapper.getChildren().sort(Comparator.comparing(TreeItem::getValue));
+                                replayTable.refresh();  // 这里是为了让match的比分刷新
+                                
+//                                replayList.add(item);
                             } catch (VersionException ve) {
                                 System.err.printf("Record version: %d.%d\n",
                                         ve.recordPrimaryVersion, ve.recordSecondaryVersion);
-                            } catch (RecordException re) {
+                            } catch (RecordException | IOException re) {
                                 System.err.println(re.getMessage());
-                            } catch (IOException e) {
-                                e.printStackTrace();
                             }
                         }
                     }

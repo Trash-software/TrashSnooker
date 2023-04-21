@@ -18,14 +18,15 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private static int idCounter = 0;
     public final BallModel model;
     protected final int value;
-    private final GameValues values;
     private final Color color;
     private final Color colorWithOpa;
     private final Color colorTransparent;
+    private final int identifier;  // 即使是分值一样的球identifier也不一样，但是clone之后identifier保持不变
     protected double xSpin, ySpin;
     protected double sideSpin;
     protected double axisX, axisY, axisZ,
             frameDegChange;  // 全部都是针对一个动画帧
+    protected double vSpeedWhenHitCushion;  // 冻结碰库时与库的垂直速度
     //    protected Rotate rotation = new Rotate();
 //    protected double xAngle, yAngle, zAngle;
     private boolean potted;
@@ -33,7 +34,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private Ball justHit;
     private double currentXError;
     private double currentYError;
-    private final int identifier;  // 即使是分值一样的球identifier也不一样，但是clone之后identifier保持不变
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ball.ballRadius);
@@ -41,7 +41,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         identifier = idCounter++;
 
         this.value = value;
-        this.values = values;
         this.color = generateColor(value);
         this.colorWithOpa = this.color.deriveColor(0, 1, 1.6, 0.5);
         this.colorTransparent = colorWithOpa.deriveColor(0, 1, 1, 0);
@@ -157,18 +156,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         setPotted(false);
         clearMovement();
     }
-
-//    public double getXAngle() {
-//        return xAngle;
-//    }
-//
-//    public double getYAngle() {
-//        return yAngle;
-//    }
-//
-//    public double getZAngle() {
-//        return zAngle;
-//    }
 
     public boolean isRed() {
         return value == 1;
@@ -342,21 +329,23 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return midHolePowerFactor(getSpeed() * phy.calculationsPerSec);
     }
 
-    protected double[] hitHoleArcArea(double[] arcXY, Phy phy) {
-        double[] normalVec = super.hitHoleArcArea(arcXY, phy);  // 碰撞点切线的法向量
+    protected void hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
+        
         // 一般来说袋角的弹性没库边好
-        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
-        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
-        applySpinsWhenHitCushion(phy, normalVec);
+//        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
+//        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
 
-        return normalVec;
+        double[] collisionNormal = new double[]{arcXY[0] - x, arcXY[1] - y};  // 切线的法向量
+        applySpinsWhenHitCushion(phy, collisionNormal);
+        super.hitHoleArcArea(arcXY, phy, arcRadius);
     }
 
     protected void hitHoleLineArea(double[] lineNormalVec, Phy phy) {
-        super.hitHoleLineArea(lineNormalVec, phy);
-        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
-        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
         applySpinsWhenHitCushion(phy, lineNormalVec);
+        super.hitHoleLineArea(lineNormalVec, phy);
+//        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
+//        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
+        
     }
 
     /**
@@ -370,28 +359,41 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
      * @param cushionNormalVec 撞的库的法向量。比如说边库应是(1,0)或(-1,0)
      */
     private void applySpinsWhenHitCushion(Phy phy, double[] cushionNormalVec) {
+        double[] vec = new double[]{vx, vy};
         // 库的切线方向的投影长度，意思是砸的深度，越深效果越强
-        double mag = Math.abs(Algebra.projectionLengthOn(cushionNormalVec, new double[]{vx, vy})) *
+        double vertical = Algebra.projectionLengthOn(cushionNormalVec, vec);
+        double mag = Math.abs(vertical) *
                 phy.calculationsPerSec;
 
         double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.67);
 //        System.out.println(mag + " " + sideSpinEffectMul);
         double effectiveSideSpin = sideSpin * sideSpinEffectMul;
 
+        // todo: 暂时修不好，大概还是因为左手/右手定理的问题
+//        double[] cushionVec = Algebra.normalVector(cushionNormalVec);
+//        double horizontal = Algebra.projectionLengthOn(cushionVec, vec);
+//        
+//        double[] afterSpin = new double[]{horizontal + effectiveSideSpin, vertical};
+//        double newVx = Algebra.projectionLengthOn(Algebra.X_AXIS, afterSpin);
+//        double newVy = Algebra.projectionLengthOn(Algebra.Y_AXIS, afterSpin);
+//        
+//        vx = newVx;
+//        vy = newVy;
+
         // todo: 真的算，而不是用if。目前没考虑袋角
         if (Arrays.equals(cushionNormalVec, SIDE_CUSHION_VEC)) {
             if (vx < 0) {
-                vy += effectiveSideSpin;
-            } else {
                 vy -= effectiveSideSpin;
+            } else {
+                vy += effectiveSideSpin;
             }
             xSpin *= (table.wallSpinPreserveRatio * 0.8);
             ySpin *= table.wallSpinPreserveRatio;
         } else if (Arrays.equals(cushionNormalVec, TOP_BOT_CUSHION_VEC)) {
             if (vy < 0) {
-                vx -= effectiveSideSpin;
-            } else {
                 vx += effectiveSideSpin;
+            } else {
+                vx -= effectiveSideSpin;
             }
             xSpin *= table.wallSpinPreserveRatio;
             ySpin *= (table.wallSpinPreserveRatio * 0.8);
@@ -414,10 +416,23 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         if (nextX < values.ball.ballRadius + table.leftX ||
                 nextX >= table.rightX - values.ball.ballRadius) {
             // 顶库
-            vx = -vx * table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
-            vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
 
+            // 先减速，算是对时间复杂度的一种妥协
+            vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+            vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             applySpinsWhenHitCushion(phy, SIDE_CUSHION_VEC);
+
+            double effectiveAcc = -bounceAcc(phy, vx);
+            double nFrames = vx / -effectiveAcc * 2;
+            if (!phy.isPrediction) System.out.println("predict " + nFrames);
+            currentBounce = new CushionBounce(
+                    effectiveAcc,
+                    0);
+            double leaveY = y + nFrames * vy;
+            ((CushionBounce) currentBounce).setDesiredLeavePos(x, leaveY, -vx, vy);
+
+            // todo: 以后这个可以集成到bounce里，甚至还更真实
+//            applySpinsWhenHitCushion(phy, SIDE_CUSHION_VEC);
 //            rotateDeg = 0.0;
             return true;
         }
@@ -425,9 +440,21 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 nextY >= table.botY - values.ball.ballRadius) {
             // 边库
             vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
-            vy = -vy * table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
-
+            vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             applySpinsWhenHitCushion(phy, TOP_BOT_CUSHION_VEC);
+
+            double effectiveAcc = -bounceAcc(phy, vy);
+            double nFrames = vy / -effectiveAcc * 2;
+            currentBounce = new CushionBounce(
+                    0,
+                    effectiveAcc);
+            double leaveX = x + nFrames * vx;
+            ((CushionBounce) currentBounce).setDesiredLeavePos(leaveX, y, vx, -vy);
+//            if (!phy.isPrediction) {
+//                System.out.println(currentBounce.accX + " " + currentBounce.accY);
+//            }
+
+            
 //            System.out.println("Hit wall!======================");
 //            rotateDeg = 0.0;
             return true;
@@ -500,38 +527,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return tryHitBall(ball, true, phy);
     }
 
-    void hitStaticBallCore(Ball ball) {
-        double xPos = x;
-        double yPos = y;
-        double dx = vx / Values.DETAILED_PHYSICAL;
-        double dy = vy / Values.DETAILED_PHYSICAL;
-
-        for (int i = 0; i < Values.DETAILED_PHYSICAL; ++i) {
-            if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball.x, ball.y) < values.ball.ballDiameter) {
-                break;
-            }
-            xPos += dx;
-            yPos += dy;
-        }
-
-        double ang = (xPos - ball.x) / (yPos - ball.y);
-
-        double ballVY = (ang * this.vx + this.vy) / (ang * ang + 1);
-        double ballVX = ang * ballVY;
-
-        ball.vy = ballVY * values.ball.ballBounceRatio;
-        ball.vx = ballVX * values.ball.ballBounceRatio;
-
-        this.vx = (this.vx - ballVX) * values.ball.ballBounceRatio;
-        this.vy = (this.vy - ballVY) * values.ball.ballBounceRatio;
-
-        nextX = x + vx;
-        nextY = y + vy;
-        ball.nextX = ball.x + ball.vx;
-        ball.nextY = ball.y + ball.vy;
-    }
-
     void twoMovingBallsHitCore(Ball ball, Phy phy) {
+        // 离岸位置发生改变，又懒得重新算了
+        clearBounceDesiredLeavePos();
+        ball.clearBounceDesiredLeavePos();
+        
         // 提高精确度
         double x1 = x;
         double y1 = y;
@@ -659,13 +659,12 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return false;
     }
 
+    @Override
     public void clearMovement() {
-        vx = 0.0;
-        vy = 0.0;
+        super.clearMovement();
         xSpin = 0.0;
         ySpin = 0.0;
         sideSpin = 0.0;
-        distance = 0.0;
         justHit = null;
         frameDegChange = 0.0;
     }

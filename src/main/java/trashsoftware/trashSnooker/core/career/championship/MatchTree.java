@@ -10,6 +10,7 @@ import java.util.*;
 
 public class MatchTree {
 
+    private Championship championship;
     private MatchTreeNode root;  // 相当于根是决赛
 
 //    private final List<List<Career>> players = new ArrayList<>();  // 越前面的list排名越高，资格赛轮数越少
@@ -18,7 +19,9 @@ public class MatchTree {
      * @param seedPlayers    种子选手，按排名排序
      * @param nonSeedPlayers 非种子选手，按排名排序
      */
-    public MatchTree(ChampionshipData data, List<Career> seedPlayers, List<Career> nonSeedPlayers) {
+    public MatchTree(Championship championship, List<Career> seedPlayers, List<Career> nonSeedPlayers) {
+        this.championship = championship;
+        ChampionshipData data = championship.getData();
         if (seedPlayers.size() + nonSeedPlayers.size() != data.getTotalPlaces()) {
             throw new RuntimeException("Expected " + data.getTotalPlaces() + " players, got " +
                     (seedPlayers.size() + nonSeedPlayers.size()));
@@ -37,10 +40,10 @@ public class MatchTree {
                 seedSeq.add(goodSeeds.get(i));
                 seedSeq.add(badSeeds.get(i));
             }
-            
+
             players.add(seedSeq);
         }
-        
+
         // fixme: 不对
 
         // 非种子选手进正赛的名额
@@ -58,17 +61,18 @@ public class MatchTree {
             players.add(nonSeedPlayers);
         }
 
-        build(data, players);
+        build(championship, players);
     }
 
-    private MatchTree(MatchTreeNode root) {
+    private MatchTree(MatchTreeNode root, Championship championship) {
         this.root = root;
+        this.championship = championship;
     }
 
-    public static MatchTree fromJson(JSONObject jsonObject) {
+    public static MatchTree fromJson(JSONObject jsonObject, Championship championship) {
         JSONObject rootObj = jsonObject.getJSONObject("root");
         MatchTreeNode root = MatchTreeNode.fromJsonObject(rootObj);
-        return new MatchTree(root);
+        return new MatchTree(root, championship);
     }
 
     public JSONObject saveProgressToJson() {
@@ -78,12 +82,14 @@ public class MatchTree {
 
         return saved;
     }
-    
+
     public boolean isHumanAlive() {
         return root.isHumanAlive();
     }
 
-    public void distributeAwards(ChampionshipData data, Calendar timestamp) {
+    public void distributeAwards(ChampionshipData data, 
+                                 Calendar timestamp, 
+                                 Map<ChampionshipScore.Rank, List<String>> extra) {
 //        root.distributeAwards(data, timestamp.get(Calendar.YEAR), 0);
         int year = timestamp.get(Calendar.YEAR);
 
@@ -93,10 +99,31 @@ public class MatchTree {
         for (Map.Entry<ChampionshipScore.Rank, List<Career>> entry : result.entrySet()) {
             ChampionshipScore.Rank rank = entry.getKey();
             for (Career career : entry.getValue()) {
+                List<ChampionshipScore.Rank> playerRanks = new ArrayList<>();
+                playerRanks.add(rank);
+                
+                for (Map.Entry<ChampionshipScore.Rank, List<String>> extraRank : extra.entrySet()) {
+                    for (String pid : extraRank.getValue()) {
+                        if (career.getPlayerPerson().getPlayerId().equals(pid)) {
+                            playerRanks.add(extraRank.getKey());
+                        }
+                    }
+                }
+                
+                SnookerBreakScore highestBreak = null;
+                if (championship instanceof SnookerChampionship) {
+                    SnookerChampionship sc = (SnookerChampionship) championship;
+                    
+                    // 依旧可以是null
+                    highestBreak = sc.personalHighest.get(career.getPlayerPerson().getPlayerId());
+                }
+                
+                // 这里是往career.json里写该球员在本届赛事的单杆最高分
                 ChampionshipScore score = new ChampionshipScore(
                         data.getId(),
                         year,
-                        new ChampionshipScore.Rank[]{rank}
+                        playerRanks.toArray(new ChampionshipScore.Rank[0]),
+                        highestBreak
                 );
                 career.addChampionshipScore(score);
             }
@@ -106,12 +133,14 @@ public class MatchTree {
     /**
      * 进行一轮的所有AiVsAi比赛，然后返回玩家参与的那一场，或null如果玩家没参赛或者已被淘汰
      */
-    PlayerVsAiMatch holdOneRoundMatches(ChampionshipData data,
+    PlayerVsAiMatch holdOneRoundMatches(Championship championship,
                                         ChampionshipStage stage) {
-        return root.performMatches(data, stage);
+        return root.performMatches(championship, stage);
     }
 
-    private void build(ChampionshipData data, List<List<Career>> players) {
+    private void build(Championship championship, List<List<Career>> players) {
+        ChampionshipData data = championship.getData();
+
         // players里是某个阶段新加的球员，越靠前的越靠前
         ChampionshipStage[] stages = data.getStages();
 
@@ -121,7 +150,10 @@ public class MatchTree {
         for (int i = 0; i < firstRound.size(); i += 2) {
             MatchTreeNode p1 = new MatchTreeNode(firstRound.get(i));
             MatchTreeNode p2 = new MatchTreeNode(firstRound.get(i + 1));
-            nodes.add(new MatchTreeNode(p1, p2, stages[roundIndex]));
+            nodes.add(new MatchTreeNode(p1,
+                    p2,
+                    stages[roundIndex],
+                    championship));
         }
         roundIndex--;
 
@@ -135,7 +167,8 @@ public class MatchTree {
                         MatchTreeNode node = new MatchTreeNode(
                                 nodes.get(i),
                                 nodes.get(i + 1),
-                                stages[roundIndex]);
+                                stages[roundIndex],
+                                championship);
                         roundNodes.add(node);
                     }
                 } else if (newAdd == nodes.size()) {
@@ -144,7 +177,8 @@ public class MatchTree {
                         MatchTreeNode node = new MatchTreeNode(
                                 newPlayerNode,
                                 nodes.get(i),
-                                stages[roundIndex]
+                                stages[roundIndex],
+                                championship
                         );
                         roundNodes.add(node);
                     }
@@ -160,7 +194,10 @@ public class MatchTree {
         while (nodes.size() > 1) {
             List<MatchTreeNode> roundMatch = new ArrayList<>();
             for (int i = 0; i < nodes.size(); i += 2) {
-                roundMatch.add(new MatchTreeNode(nodes.get(i), nodes.get(i + 1), stages[roundIndex]));
+                roundMatch.add(new MatchTreeNode(nodes.get(i),
+                        nodes.get(i + 1),
+                        stages[roundIndex],
+                        championship));
             }
             nodes = roundMatch;
             roundIndex--;
