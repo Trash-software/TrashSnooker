@@ -116,7 +116,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         try {
             if (DBAccess.SAVE) {
-                game.recorder = new NaiveActualRecorder(game);
+                game.recorder = new NaiveActualRecorder(game, entireGame.getMetaMatchInfo());
                 game.recorder.startRecoding();
             } else {
                 game.recorder = new InvalidRecorder();

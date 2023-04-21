@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.fxml;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -14,13 +15,17 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
+import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.recorder.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.TreeMap;
 
 public class ReplayView implements Initializable {
 
@@ -28,7 +33,7 @@ public class ReplayView implements Initializable {
     @FXML
     TreeTableView<Item> replayTable;
     @FXML
-    TreeTableColumn<Item, String> replayCol, typeCol, p1Col, p2Col, beginTimeCol, durationCol,
+    TreeTableColumn<Item, String> replayCol, eventCol, typeCol, p1Col, p2Col, beginTimeCol, durationCol,
             nCuesCol, resultCol;
     TreeItem<Item> root;
 
@@ -44,6 +49,8 @@ public class ReplayView implements Initializable {
 
         replayCol.setCellValueFactory(p ->
                 new ReadOnlyStringWrapper(p.getValue().getValue().title()));
+        eventCol.setCellValueFactory(p ->
+                new ReadOnlyStringWrapper(p.getValue().getValue().eventString()));
         typeCol.setCellValueFactory(p ->
                 new ReadOnlyStringWrapper(p.getValue().getValue().typeString()));
         p1Col.setCellValueFactory(p ->
@@ -58,18 +65,17 @@ public class ReplayView implements Initializable {
                 new ReadOnlyStringWrapper(p.getValue().getValue().nCues()));
         resultCol.setCellValueFactory(p ->
                 new ReadOnlyStringWrapper(p.getValue().getValue().result()));
-        
+
         for (TreeTableColumn<Item, ?> col : replayTable.getColumns()) {
             col.setSortable(false);
         }
-        
+
         clickListener();
 //        naiveFill();
     }
 
     public void setStage(Stage stage) {
         this.stage = stage;
-        fill();
     }
 
     private void clickListener() {
@@ -91,7 +97,7 @@ public class ReplayView implements Initializable {
             playReplay(selected, 1);
         }
     }
-    
+
     private Stage playReplay(GameReplay replay) throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("gameView.fxml"),
@@ -144,9 +150,9 @@ public class ReplayView implements Initializable {
         }
     }
 
-    private void fill() {
+    public void fill() {
         root.getChildren().clear();
-        
+
         long begin = System.currentTimeMillis();
         FillReplayService service = new FillReplayService();
 
@@ -170,6 +176,10 @@ public class ReplayView implements Initializable {
 
         public BriefReplayItem getValue() {
             return null;
+        }
+
+        public String eventString() {
+            return "";
         }
 
         public String typeString() {
@@ -239,6 +249,15 @@ public class ReplayView implements Initializable {
 
         public BriefReplayItem getValue() {
             return value;
+        }
+
+        @Override
+        public String eventString() {
+            MetaMatchInfo metaMatchInfo = value.getMetaMatchInfo();
+            if (metaMatchInfo != null) {
+                return metaMatchInfo.normalReadable();
+            }
+            return "";
         }
 
         @Override
@@ -380,10 +399,8 @@ public class ReplayView implements Initializable {
                             } catch (VersionException ve) {
                                 System.err.printf("Record version: %d.%d\n",
                                         ve.recordPrimaryVersion, ve.recordSecondaryVersion);
-                            } catch (RecordException re) {
+                            } catch (RecordException | IOException re) {
                                 System.err.println(re.getMessage());
-                            } catch (IOException e) {
-                                e.printStackTrace();
                             }
                         }
                     }

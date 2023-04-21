@@ -17,7 +17,7 @@ public class PlayerVsAiMatch {
     
     public final Career p1;
     public final Career p2;
-    public final String matchId;
+    public final MetaMatchInfo metaMatchInfo;
     public final ChampionshipStage stage;
     private final Championship championship;
     private final MatchTreeNode resultNode;
@@ -35,7 +35,7 @@ public class PlayerVsAiMatch {
         this.p2 = p2;
         this.championship = championship;
         this.stage = stage;
-        this.matchId = resultNode.getMatchId();
+        this.metaMatchInfo = resultNode.getMetaMatchInfo();
         this.resultNode = resultNode;
     }
     

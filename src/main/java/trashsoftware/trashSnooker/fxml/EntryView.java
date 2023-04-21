@@ -163,13 +163,18 @@ public class EntryView implements Initializable {
             
             ReplayView view = loader.getController();
             view.setStage(stage);
+            view.fill();
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
 
+            Thread.sleep(100);  // 成熟的程序员应该一眼就能看出这种垃圾代码是为了什么
+            
             stage.show();
         } catch (IOException e) {
             EventLogger.error(e);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

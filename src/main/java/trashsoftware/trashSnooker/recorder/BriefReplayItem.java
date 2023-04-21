@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.recorder;
 import javafx.fxml.FXML;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
@@ -14,6 +15,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class BriefReplayItem {
@@ -36,6 +39,9 @@ public class BriefReplayItem {
 //    private final int durationSec;
     private final InGamePlayer p1;
     private final InGamePlayer p2;
+    
+    private int extraLength;
+    private List<ExtraBlock> extraBlocks = new ArrayList<>();
     
     private long personObjLength = 0;
 
@@ -60,6 +66,7 @@ public class BriefReplayItem {
             if (!ActualRecorder.isPrimaryCompatible(primaryVersion)) {
                 throw new VersionException(primaryVersion, secondaryVersion);
             }
+//            System.out.println("Replay version: " + primaryVersion + "." + secondaryVersion);
 
             GameRule gameRule = GameRule.values()[header[10] & 0xff];
             TableMetrics.TableBuilderFactory factory = TableMetrics.TableBuilderFactory.values()[header[11] & 0xff];
@@ -80,6 +87,23 @@ public class BriefReplayItem {
             
             p1 = readOnePlayer(raf, 1);
             p2 = readOnePlayer(raf, 2);
+            
+            if (primaryVersion > 12 || 
+                    (primaryVersion == 12 && secondaryVersion >= 8)) {
+                byte[] extraLenBytes = new byte[4];
+                if (raf.read(extraLenBytes) != extraLenBytes.length)
+                    throw new IOException();
+
+                extraLength = Util.bytesToInt32(extraLenBytes, 0);
+
+                byte[] extra = new byte[extraLength - 4];
+                if (raf.read(extra) != extra.length)
+                    throw new IOException();
+
+                readExtraBlocks(extra);
+            } else {
+                extraLength = 0;
+            }
         }
     }
 
@@ -136,6 +160,37 @@ public class BriefReplayItem {
         );
     }
     
+    private void readExtraBlocks(byte[] pureExtra) {
+        int index = 0;
+        while (index < pureExtra.length) {
+            int nextBlockType = pureExtra[index] & 0xff;
+            int nextBlockLen = Util.bytesToInt32(pureExtra, index + 1);
+            
+            if (nextBlockType == ExtraBlock.TYPE_META_MATCH) {
+                byte[] matchIdBuf = new byte[256];
+                System.arraycopy(pureExtra, 5, matchIdBuf, 0, 256);
+                String matchId = new String(matchIdBuf, 0, Util.indexOf((byte) 0, matchIdBuf), StandardCharsets.UTF_8);
+                MetaMatchInfo mmi = MetaMatchInfo.fromString(matchId);
+                extraBlocks.add(new ExtraBlock(nextBlockType, mmi));
+            }
+            
+            index += nextBlockLen;
+        }
+    }
+    
+    public MetaMatchInfo getMetaMatchInfo() {
+        for (ExtraBlock eb : extraBlocks) {
+            if (eb.blockType == ExtraBlock.TYPE_META_MATCH) {
+                return (MetaMatchInfo) eb.blockContent;
+            }
+        }
+        return null;
+    }
+
+    public int getExtraLength() {
+        return extraLength;
+    }
+
     public long headerLength() {
         return ActualRecorder.TOTAL_HEADER_LENGTH + personObjLength;
     }

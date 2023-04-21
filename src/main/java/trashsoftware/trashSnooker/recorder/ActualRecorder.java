@@ -3,7 +3,11 @@ package trashsoftware.trashSnooker.recorder;
 import org.json.JSONObject;
 import org.tukaani.xz.LZMA2Options;
 import org.tukaani.xz.XZOutputStream;
-import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.InGamePlayer;
+import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.PlayerType;
+import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.util.ConfigLoader;
@@ -13,14 +17,16 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
 public abstract class ActualRecorder implements GameRecorder {
     public static final int RECORD_PRIMARY_VERSION = 12;
-    public static final int RECORD_SECONDARY_VERSION = 7;
+    public static final int RECORD_SECONDARY_VERSION = 8;
     public static final int HEADER_LENGTH = 50;
     public static final int PLAYER_HEADER_LENGTH = 98;
     public static final int TOTAL_HEADER_LENGTH = HEADER_LENGTH + PLAYER_HEADER_LENGTH * 2;
@@ -37,44 +43,53 @@ public abstract class ActualRecorder implements GameRecorder {
     public static final int GZ_COMPRESSION = 2;
     public static final int XZ_COMPRESSION = 3;
     protected static final String RECORD_DIR = "user" + File.separator + "replays";
+    protected static DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
     protected int compression = NO_COMPRESSION;
     protected File outFile;
     protected OutputStream outputStream;
-    private OutputStream wrapperStream;
-
     protected Game<?, ?> game;
-    protected static DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-
     protected CueRecord cueRecord;
     protected Movement movement;
     protected ScoreResult scoreResult;
-    
     protected TargetRecord thisTarget;
     // 这玩意一定和下一杆的thisTarget一样，但是为了方便所以记录，反正3字节的事
     protected TargetRecord nextTarget;
     protected boolean finished = false;
     protected int nCues = 0;  // 只计击打，不计放置等
     protected long recordBeginTime;
+    protected List<ExtraBlock> extraBlocks = new ArrayList<>();
+    private OutputStream wrapperStream;
 
-    public ActualRecorder(Game<?, ?> game) {
+    public ActualRecorder(Game<?, ?> game, MetaMatchInfo metaMatchInfo) {
         this.game = game;
+        if (metaMatchInfo != null) {
+            this.extraBlocks.add(new ExtraBlock(ExtraBlock.TYPE_META_MATCH, metaMatchInfo));
+        }
         
         createDirIfNotExist();
-        
+
         setCompression(ConfigLoader.getInstance().getString("recordCompression", "xz"));
 
         outFile = new File(String.format("%s%sreplay_%s.replay",
                 RECORD_DIR, File.separator, dateFormat.format(new Date())));
     }
-    
+
     public static boolean isPrimaryCompatible(int replayPrimary) {
         return replayPrimary == ActualRecorder.RECORD_PRIMARY_VERSION || replayPrimary == 11;
     }
 
-    public static boolean isSecondaryCompatible(int replaySecondary) {
-        return replaySecondary == ActualRecorder.RECORD_SECONDARY_VERSION;
+    public static boolean isSecondaryCompatible(int replayPrimary, int replaySecondary) {
+        if (replaySecondary == ActualRecorder.RECORD_SECONDARY_VERSION) return true;
+        
+        if (ActualRecorder.RECORD_PRIMARY_VERSION == 12 && replayPrimary == 12) {
+            if (ActualRecorder.RECORD_SECONDARY_VERSION == 8 && replaySecondary == 7) {
+                return true;
+            }
+        }
+        
+        return false;
     }
-    
+
     public void setCompression(String compression) {
         switch (compression.toLowerCase(Locale.ROOT)) {
             case "deflate":
@@ -93,7 +108,7 @@ public abstract class ActualRecorder implements GameRecorder {
                 break;
         }
     }
-    
+
     public void setCompression(int compression) {
         this.compression = compression;
     }
@@ -103,7 +118,7 @@ public abstract class ActualRecorder implements GameRecorder {
     public abstract void recordPositions() throws IOException;
 
     public final void recordCue(CueRecord cueRecord, TargetRecord thisTarget) {
-        if (this.cueRecord != null || this.thisTarget != null) 
+        if (this.cueRecord != null || this.thisTarget != null)
             throw new RuntimeException("Repeated recording");
         this.cueRecord = cueRecord;
         this.thisTarget = thisTarget;
@@ -120,7 +135,7 @@ public abstract class ActualRecorder implements GameRecorder {
         if (this.scoreResult != null) throw new RuntimeException("Repeated recording");
         this.scoreResult = scoreResult;
     }
-    
+
     public final void recordNextTarget(TargetRecord nextTarget) {
         if (this.nextTarget != null) throw new RuntimeException("Repeated recording");
         this.nextTarget = nextTarget;
@@ -159,9 +174,9 @@ public abstract class ActualRecorder implements GameRecorder {
     }
 
     public abstract void writeCue(CueRecord cueRecord,
-                                     Movement movement,
-                                     TargetRecord thisTarget,
-                                     TargetRecord nextTarget) throws IOException;
+                                  Movement movement,
+                                  TargetRecord thisTarget,
+                                  TargetRecord nextTarget) throws IOException;
 
     public abstract void writeBallInHand() throws IOException;
 
@@ -181,12 +196,12 @@ public abstract class ActualRecorder implements GameRecorder {
 
         Util.intToBytesN(RECORD_PRIMARY_VERSION, header, 6, 2);
         Util.intToBytesN(RECORD_SECONDARY_VERSION, header, 8, 2);
-        
+
         header[10] = (byte) game.getGameValues().rule.ordinal();
         header[11] = (byte) game.getGameValues().table.getOrdinal();
         header[12] = (byte) game.getGameValues().table.getHoleSizeOrdinal();
         header[13] = (byte) game.getGameValues().ball.ordinal();
-        
+
         header[20] = (byte) game.getEntireGame().getTotalFrames();  // todo
         header[21] = (byte) game.getEntireGame().getP1Wins();
         header[22] = (byte) game.getEntireGame().getP2Wins();
@@ -226,12 +241,53 @@ public abstract class ActualRecorder implements GameRecorder {
         writeOnePlayer(p2);
         writePlayerJson(p2);
 
+        // Version 12.8 之后的extra field
+        // 前4位是总长度（包含记录长度的这4字节）
+        byte[] extraLength = new byte[4];
+        byte[] extra = createExtras();
+
+        Util.int32ToBytes(extra.length + 4, extraLength, 0);
+        wrapperStream.write(extraLength);
+        wrapperStream.write(extra);
+
 //        outputStream = new BufferedOutputStream(wrapperStream);
         createStream();
 
         recordPositions();
     }
-    
+
+    protected byte[] createExtras() {
+        List<byte[]> contents = new ArrayList<>();
+        for (ExtraBlock block : extraBlocks) {
+            /*
+             每个block结构：
+             0: type
+             1-5: 本block长度，包含0位的type
+             5: 内容
+             */
+
+            if (block.blockType == ExtraBlock.TYPE_META_MATCH) {
+                byte[] blockContent = new byte[261];  // 我们认为matchId最多256字节
+                blockContent[0] = (byte) block.blockType;
+                Util.int32ToBytes(blockContent.length, blockContent, 1);
+                byte[] bid = block.blockContent.toString().getBytes(StandardCharsets.UTF_8);
+                System.arraycopy(bid, 0, blockContent, 5, bid.length);
+                contents.add(blockContent);
+            }
+        }
+
+        int totalLen = 0;
+        for (byte[] bb : contents) totalLen += bb.length;
+
+        byte[] res = new byte[totalLen];
+        int index = 0;
+        for (byte[] bb : contents) {
+            System.arraycopy(bb, 0, res, index, bb.length);
+            index += bb.length;
+        }
+        return res;
+    }
+
     private void createStream() throws IOException {
         switch (compression) {
             case NO_COMPRESSION:
@@ -265,7 +321,7 @@ public abstract class ActualRecorder implements GameRecorder {
 
         wrapperStream.write(buffer);
     }
-    
+
     private void writePlayerJson(InGamePlayer player) throws IOException {
         PlayerPerson person = player.getPlayerPerson();
         JSONObject personJson = person.toJsonObject();
@@ -288,34 +344,34 @@ public abstract class ActualRecorder implements GameRecorder {
             try {
                 outputStream.write(FLAG_TERMINATE);
                 outputStream.flush();
-                
+
                 if (outputStream instanceof GZIPOutputStream) {
                     ((GZIPOutputStream) outputStream).finish();
                 } else if (outputStream instanceof XZOutputStream) {
                     ((XZOutputStream) outputStream).finish();
                 }
-                
+
                 outputStream.close();
                 wrapperStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
             }
-            
+
             try (RandomAccessFile raf = new RandomAccessFile(outFile, "rw")) {
                 long duration = System.currentTimeMillis() - recordBeginTime;
                 byte[] buffer4 = new byte[4];
-                
+
                 raf.seek(40);
                 Util.int32ToBytes((int) duration, buffer4, 0);
                 raf.write(buffer4);
-                
+
                 Util.int32ToBytes(nCues, buffer4, 0);
                 raf.write(buffer4);
-                
+
                 if (normalFinish)
                     raf.write(game.getWiningPlayer().getInGamePlayer().getPlayerNumber());
-                else 
+                else
                     raf.write(0);
             } catch (IOException e) {
                 e.printStackTrace();

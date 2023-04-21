@@ -13,7 +13,7 @@ import java.util.SortedMap;
 public class MatchTreeNode {
 
     private static int matchIdCounter = 0;
-    private String matchId;
+    private MetaMatchInfo metaMatchInfo;
     private MatchTreeNode player1Position;
     private MatchTreeNode player2Position;
     private ChampionshipStage stage;
@@ -28,18 +28,18 @@ public class MatchTreeNode {
     private MatchTreeNode(MatchTreeNode player1Position,
                          MatchTreeNode player2Position,
                          ChampionshipStage stage,
-                         String matchId) {
+                         MetaMatchInfo metaMatchInfo) {
         this.player1Position = player1Position;
         this.player2Position = player2Position;
         this.stage = stage;
-        this.matchId = matchId;
+        this.metaMatchInfo = metaMatchInfo;
     }
 
     public MatchTreeNode(MatchTreeNode player1Position,
                          MatchTreeNode player2Position,
                          ChampionshipStage stage,
                          Championship championship) {
-        this(player1Position, player2Position, stage, generateId(championship, stage));
+        this(player1Position, player2Position, stage, MetaMatchInfo.fromString(generateId(championship, stage)));
     }
     
     static void restoreIdCounter() {
@@ -49,30 +49,13 @@ public class MatchTreeNode {
     static String generateId(Championship championship, ChampionshipStage stage) {
         return championship.uniqueId() + "-" + stage.name() + "-" + (matchIdCounter++);
     }
-
-
+    
     /**
      * @see Championship#uniqueId()
      * @see MatchTreeNode#generateId(Championship, ChampionshipStage) 
      */
-    public static RecordedMatchedInfo analyzeMatchId(String matchId) {
-        if (matchId == null) return null;
-
-        try {
-            String[] parts = matchId.split("-");
-            String[] champInfo = parts[0].split("\\+");
-            
-            int year = Integer.parseInt(champInfo[1]);
-            String dataId = champInfo[2];
-            ChampionshipData data = ChampDataManager.getInstance().findDataById(dataId);
-
-            return new RecordedMatchedInfo(champInfo[0], year, data, 
-                    ChampionshipStage.valueOf(parts[1]),
-                    Integer.parseInt(parts[2]));
-        } catch (RuntimeException e) {
-            System.err.println("Outdated match id format");
-            return null;
-        }
+    public static MetaMatchInfo analyzeMatchId(String matchId) {
+        return MetaMatchInfo.fromString(matchId);
     }
 
     public static MatchTreeNode fromJsonObject(JSONObject object) {
@@ -89,7 +72,7 @@ public class MatchTreeNode {
                 matchId = "generated_" + (matchIdCounter++);
             }
             
-            MatchTreeNode rtn = new MatchTreeNode(p1, p2, stage, matchId);
+            MatchTreeNode rtn = new MatchTreeNode(p1, p2, stage, MetaMatchInfo.fromString(matchId));
 
             if (object.has("winner")) {
                 rtn.winner = CareerManager.getInstance().findCareerByPlayerId(object.getString("winner"));
@@ -116,7 +99,7 @@ public class MatchTreeNode {
             object.put("stage", stage.name());
             object.put("p1", player1Position.saveToJson());
             object.put("p2", player2Position.saveToJson());
-            object.put("matchId", matchId);
+            object.put("matchId", metaMatchInfo.toString());
 
             if (winner != null) {
                 object.put("winner", winner.getPlayerPerson().getPlayerId());
@@ -132,9 +115,13 @@ public class MatchTreeNode {
 
     }
 
-    public String getMatchId() {
-        return matchId;
+    public MetaMatchInfo getMetaMatchInfo() {
+        return metaMatchInfo;
     }
+
+//    public String getMatchId() {
+//        return matchId;
+//    }
 
     public MatchTreeNode findNodeByPlayers(String p1Id, String p2Id) {
         if (isLeaf()) return null;
@@ -205,7 +192,7 @@ public class MatchTreeNode {
                         player1Position.winner,
                         player2Position.winner,
                         championship,
-                        matchId,
+                        metaMatchInfo.toString(),
                         data.getNFramesOfStage(stage));
                 break;
             case CHINESE_EIGHT:
@@ -213,7 +200,7 @@ public class MatchTreeNode {
                         player1Position.winner,
                         player2Position.winner,
                         championship,
-                        matchId,
+                        metaMatchInfo.toString(),
                         data.getNFramesOfStage(stage)
                 );
                 break;

@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.recorder;
 
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.util.Util;
@@ -13,8 +14,8 @@ public class NaiveActualRecorder extends ActualRecorder {
     
     public static final int CUE_RECORD_LENGTH = 84;
 
-    public NaiveActualRecorder(Game<?, ?> game) {
-        super(game);
+    public NaiveActualRecorder(Game<?, ?> game, MetaMatchInfo metaMatchInfo) {
+        super(game, metaMatchInfo);
     }
 
     @Override

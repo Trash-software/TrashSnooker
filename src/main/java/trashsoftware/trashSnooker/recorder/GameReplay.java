@@ -45,7 +45,7 @@ public abstract class GameReplay implements GameHolder {
     protected List<CueStep> historySteps = new ArrayList<>();
 
     protected GameReplay(BriefReplayItem item) throws IOException, VersionException {
-        if (!ActualRecorder.isSecondaryCompatible(item.secondaryVersion)) 
+        if (!ActualRecorder.isSecondaryCompatible(item.primaryVersion, item.secondaryVersion)) 
             throw new VersionException(item.primaryVersion, item.secondaryVersion);
 
         this.item = item;
@@ -56,6 +56,9 @@ public abstract class GameReplay implements GameHolder {
 
         this.wrapperStream = new FileInputStream(item.getFile());
         if (wrapperStream.skip(item.headerLength()) != item.headerLength()) {
+            throw new IOException();
+        }
+        if (wrapperStream.skip(item.getExtraLength()) != item.getExtraLength()) {
             throw new IOException();
         }
         System.out.println(wrapperStream.available());

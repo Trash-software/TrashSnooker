@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
@@ -650,7 +651,7 @@ public class DBAccess {
         executeStatement(command1);
     }
 
-    public void recordAnEntireGameStarts(EntireGame entireGame, String matchId) {
+    public void recordAnEntireGameStarts(EntireGame entireGame, MetaMatchInfo metaMatchInfo) {
         String typeStr = "'" + entireGame.gameValues.rule.toSqlKey() + "'";
         int p1t = entireGame.getPlayer1().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
         int p2t = entireGame.getPlayer2().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
@@ -667,7 +668,7 @@ public class DBAccess {
                         p1t + ", " + 
                         p2t + ", " +
                         entireGame.getTotalFrames() + ", " +
-                        "'" + matchId + "'" +
+                        "'" + metaMatchInfo.toString() + "'" +
                         ");";
         try {
             executeStatement(command);

@@ -738,7 +738,7 @@ public class GameView implements Initializable {
                                           int nFrameFrom1) {
         for (Integer breakScore : player.getSinglePolesInThisGame()) {
             sc.updateBreakScore(player.getPlayerPerson().getPlayerId(), cs, breakScore, false,
-                    careerMatch.matchId, nFrameFrom1);
+                    careerMatch.metaMatchInfo.toString(), nFrameFrom1);
         }
     }
 

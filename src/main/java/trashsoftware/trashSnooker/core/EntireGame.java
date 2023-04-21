@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -12,7 +13,6 @@ import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.File;
 import java.sql.Timestamp;
-import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -26,23 +26,23 @@ public class EntireGame {
     public final Phy whitePhy;
     final InGamePlayer p1;
     final InGamePlayer p2;
+    private final SortedMap<Integer, Integer> winRecords = new TreeMap<>();
+    private final MetaMatchInfo metaMatchInfo;  // nullable
     Game<? extends Ball, ? extends Player> game;
     private Timestamp startTime = new Timestamp(System.currentTimeMillis());
     private int p1Wins;
     private int p2Wins;
     private boolean p1Breaks;
-    private final SortedMap<Integer, Integer> winRecords = new TreeMap<>();
-    private final String matchId;  // nullable
 
     public EntireGame(InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
                       int totalFrames, TableCloth cloth,
-                      String matchId) {
-        this(p1, p2, gameValues, totalFrames, cloth, true, matchId);
+                      MetaMatchInfo metaMatchInfo) {
+        this(p1, p2, gameValues, totalFrames, cloth, true, metaMatchInfo);
     }
 
     private EntireGame(InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
                        int totalFrames, TableCloth cloth, boolean isNewCreate,
-                       String matchId) {
+                       MetaMatchInfo metaMatchInfo) {
         this.p1 = p1;
         this.p2 = p2;
         if (totalFrames % 2 != 1) {
@@ -54,10 +54,10 @@ public class EntireGame {
         this.playPhy = Phy.Factory.createPlayPhy(cloth);
         this.predictPhy = Phy.Factory.createAiPredictPhy(cloth);
         this.whitePhy = Phy.Factory.createWhitePredictPhy(cloth);
-        this.matchId = matchId;
+        this.metaMatchInfo = metaMatchInfo;
 
         if (isNewCreate && gameValues.isStandard())
-            DBAccess.getInstance().recordAnEntireGameStarts(this, matchId);
+            DBAccess.getInstance().recordAnEntireGameStarts(this, metaMatchInfo);
 
 //        createNextFrame();
     }
@@ -66,7 +66,7 @@ public class EntireGame {
         int frames = jsonObject.getInt("totalFrames");
         JSONObject clothObj = jsonObject.getJSONObject("cloth");
         TableCloth cloth = TableCloth.fromJson(clothObj);
-        
+
         GameValues gameValues = GameValues.fromJson(jsonObject.getJSONObject("gameValues"), cloth);
 
         InGamePlayer p1 = InGamePlayer.fromJson(jsonObject.getJSONObject("p1"));
@@ -79,7 +79,9 @@ public class EntireGame {
                 frames,
                 cloth,
                 false,
-                jsonObject.has("matchId") ? jsonObject.getString("matchId") : null
+                jsonObject.has("matchId") ?
+                        MetaMatchInfo.fromString(jsonObject.getString("matchId")) :
+                        null
         );
 
         entireGame.p1Wins = jsonObject.getInt("p1Wins");
@@ -133,7 +135,7 @@ public class EntireGame {
         object.put("p2", p2.toJson());
 
         object.put("winRecords", winRecords);
-        object.put("matchId", matchId);
+        object.put("matchId", metaMatchInfo == null ? null : metaMatchInfo.toString());
 
         return object;
     }
@@ -145,7 +147,7 @@ public class EntireGame {
     public Game<? extends Ball, ? extends Player> getGame() {
         return game;
     }
-    
+
     public int playerContinuousLoses(int playerNum) {
         if (p1Wins + p2Wins == 0) return 0;
         int count = 0;
@@ -158,13 +160,17 @@ public class EntireGame {
         }
         return count;
     }
-    
+
     /**
      * 这个球员是否被打rua了
      */
     public boolean rua(InGamePlayer igp) {
         int playerNum = igp == p1 ? 1 : 2;
         return playerContinuousLoses(playerNum) >= 3;  // 连输3局以上，rua了
+    }
+
+    public MetaMatchInfo getMetaMatchInfo() {
+        return metaMatchInfo;
     }
 
     public int getP1Wins() {
@@ -263,7 +269,7 @@ public class EntireGame {
     public long getBeginTime() {
         return startTime.getTime();
     }
-    
+
     private boolean nextFrameP1Breaks() {
         if (gameValues.rule.breakRule == BreakRule.ALTERNATE) {
             return !p1Breaks;

@@ -1,14 +1,10 @@
 package trashsoftware.trashSnooker.fxml.statsViews;
 
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.TextAlignment;
-import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
-import trashsoftware.trashSnooker.core.career.championship.RecordedMatchedInfo;
+import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.widgets.MatchRecordPage;
 import trashsoftware.trashSnooker.util.Util;
@@ -33,7 +29,7 @@ public class MatchRecord extends RecordTree {
         rightPane.getChildren().clear();
 
         EntireGameRecord matchRec = DBAccess.getInstance().getMatchDetail(egt);
-        RecordedMatchedInfo careerMatchInfo = MatchTreeNode.analyzeMatchId(egt.matchId);
+        MetaMatchInfo careerMatchInfo = MatchTreeNode.analyzeMatchId(egt.matchId);
         
         MatchRecordPage page = new MatchRecordPage();
 
