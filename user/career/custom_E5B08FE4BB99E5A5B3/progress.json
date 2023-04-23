@@ -1,5 +1,5 @@
 {
-  "stageIndex": 1,
+  "stageIndex": 0,
   "seedRanks": {
     "random_player_86": 108,
     "random_player_88": 48,
@@ -117,6 +117,7 @@
   "championshipId": "world_champ",
   "matchTree": {"root": {
     "p1": {
+      "p1wins": 2,
       "p1": {
         "p1wins": 1,
         "p1": {
@@ -551,10 +552,13 @@
         "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-105",
         "p2wins": 4
       },
+      "winner": "Neil Robertson",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-108"
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-108",
+      "p2wins": 5
     },
     "p2": {
+      "p1wins": 3,
       "p1": {
         "p1wins": 1,
         "p1": {
@@ -989,8 +993,10 @@
         "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-107",
         "p2wins": 4
       },
+      "winner": "custom_E5B08FE4BB99E5A5B3",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-109"
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-109",
+      "p2wins": 5
     },
     "stage": "FINAL",
     "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-110"
@@ -1020,6 +1026,14 @@
       "numFrame": 3,
       "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-94",
       "playerId": "custom_E5B08FE4BB99E5A5B3"
+    },
+    {
+      "score": 104,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 7,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-108",
+      "playerId": "Neil Robertson"
     },
     {
       "score": 94,
@@ -1068,6 +1082,14 @@
       "numFrame": 3,
       "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-100",
       "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 77,
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 6,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-109",
+      "playerId": "custom_E5B08FE4BB99E5A5B3"
     },
     {
       "score": 76,
@@ -1238,6 +1260,14 @@
       "playerId": "Trump"
     },
     {
+      "score": 65,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 6,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-108",
+      "playerId": "Neil Robertson"
+    },
+    {
       "score": 64,
       "stage": "PRE_ROUND_2",
       "sim": true,
@@ -1268,6 +1298,14 @@
       "numFrame": 3,
       "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-81",
       "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 62,
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 8,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-109",
+      "playerId": "custom_E5B08FE4BB99E5A5B3"
     },
     {
       "score": 61,
@@ -1388,6 +1426,14 @@
       "numFrame": 1,
       "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-26",
       "playerId": "random_player_99"
+    },
+    {
+      "score": 55,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-108",
+      "playerId": "O_Sullivan"
     },
     {
       "score": 55,

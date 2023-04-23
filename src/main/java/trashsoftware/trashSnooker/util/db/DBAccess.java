@@ -95,7 +95,7 @@ public class DBAccess {
         return String.format("'%s_%s'", playerName, gameRule.toSqlKey());
     }
 
-    private void storeAttemptsForOnePlayer(EntireGame entireGame, Game frame, Player player) {
+    private void storeAttemptsForOnePlayer(EntireGame entireGame, Game<?, ?> frame, Player player) {
         // attempts, successes, 
         // long attempts, long successes, 
         // defenses, defense successes,
@@ -165,7 +165,7 @@ public class DBAccess {
         }
     }
 
-    public void storeAttempts(EntireGame entireGame, Game frame) {
+    public void storeAttempts(EntireGame entireGame, Game<?, ?> frame) {
         storeAttemptsForOnePlayer(entireGame, frame,
                 frame.getPlayer1());
         storeAttemptsForOnePlayer(entireGame, frame,
@@ -471,7 +471,7 @@ public class DBAccess {
                 "PlayerName = '" + playerName + "')" + (endLine ? ";" : "");
     }
 
-    private String getFrameQueryWhere(EntireGame entireGame, Game game, String playerName,
+    private String getFrameQueryWhere(EntireGame entireGame, Game<?, ?> game, String playerName,
                                       boolean playerIsAi,
                                       boolean endLine) {
         int aiRep = playerIsAi ? 1 : 0;
@@ -482,7 +482,7 @@ public class DBAccess {
                 (endLine ? ";" : "");
     }
 
-    public void recordNumberedBallResult(EntireGame entireGame, Game frame,
+    public void recordNumberedBallResult(EntireGame entireGame, Game<?, ?> frame,
                                          NumberedBallPlayer player, boolean wins,
                                          List<Integer> continuousPots) {
         String tableName = entireGame.gameValues.rule.toSqlKey() + "Record";
@@ -638,7 +638,7 @@ public class DBAccess {
         }
     }
 
-    private void createRecordForFrame(EntireGame entireGame, Game game, String playerId, boolean playerIsAi)
+    private void createRecordForFrame(EntireGame entireGame, Game<?, ?> game, String playerId, boolean playerIsAi)
             throws SQLException {
         int aiRep = playerIsAi ? 1 : 0;
         String command1 = "INSERT INTO GeneralRecord VALUES (" +
@@ -668,7 +668,7 @@ public class DBAccess {
                         p1t + ", " + 
                         p2t + ", " +
                         entireGame.getTotalFrames() + ", " +
-                        "'" + metaMatchInfo.toString() + "'" +
+                        (metaMatchInfo == null ? null : ("'" + metaMatchInfo + "'")) +
                         ");";
         try {
             executeStatement(command);

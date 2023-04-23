@@ -72,7 +72,9 @@ public class MatchTreeNode {
                 matchId = "generated_" + (matchIdCounter++);
             }
             
-            MatchTreeNode rtn = new MatchTreeNode(p1, p2, stage, MetaMatchInfo.fromString(matchId));
+            MetaMatchInfo metaMatchInfo = MetaMatchInfo.fromString(matchId, stage);
+            
+            MatchTreeNode rtn = new MatchTreeNode(p1, p2, stage, metaMatchInfo);
 
             if (object.has("winner")) {
                 rtn.winner = CareerManager.getInstance().findCareerByPlayerId(object.getString("winner"));

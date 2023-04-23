@@ -23,6 +23,10 @@ public class MetaMatchInfo {
     }
     
     public static MetaMatchInfo fromString(String matchId) {
+        return fromString(matchId, ChampionshipStage.PRE_ROUND_1);
+    }
+    
+    public static MetaMatchInfo fromString(String matchId, ChampionshipStage defaultStage) {
         if (matchId == null) return null;
 
         try {
@@ -35,7 +39,7 @@ public class MetaMatchInfo {
             
             if (parts.length == 2) {
                 return new MetaMatchInfo(champInfo[0], year, data,
-                        ChampionshipStage.PRE_ROUND_1,  // 将就
+                        defaultStage,
                         Integer.parseInt(parts[1]));
             }
 
