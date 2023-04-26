@@ -74,10 +74,11 @@ public class LisEightGame extends ChineseEightBallGame {
     }
 
     private void updateScore(Set<PoolBall> pottedBalls) {
-        boolean foul = false;
+//        boolean foul = false;
         if (!collidesWall && pottedBalls.isEmpty()) {
-            foul = true;
-            foulReason = strings.getString("noBallHitCushion");
+//            foul = true;
+//            foulReason = strings.getString("noBallHitCushion");
+            thisCueFoul.addFoul(strings.getString("noBallHitCushion"));
         }
 
 //        System.out.println("fcc " + finishedCuesCount + " " + lastCueFoul);
@@ -88,47 +89,54 @@ public class LisEightGame extends ChineseEightBallGame {
                 winingPlayer = getAnotherPlayer();
                 return;
             }
-            foul = true;
+//            foul = true;
             ballInHand = true;
-            foulReason = strings.getString("cueBallPot");
+//            foulReason = strings.getString("cueBallPot");
+            thisCueFoul.addFoul(strings.getString("cueBallPot"));
         }
 
         if (whiteFirstCollide == null) {
-            foul = true;
-            foulReason = strings.getString("emptyCue");
+//            foul = true;
+//            foulReason = strings.getString("emptyCue");
+            thisCueFoul.addFoul(strings.getString("emptyCue"), true);
         } else {
             if (currentTarget == FULL_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
-                    foul = true;
-                    foulReason = strings.getString("targetFullHitBlack");
+//                    foul = true;
+//                    foulReason = strings.getString("targetFullHitBlack");
+                    thisCueFoul.addFoul(strings.getString("targetFullHitBlack"), true);
                 } else if (!isFullBall(whiteFirstCollide)) {
-                    foul = true;
-                    foulReason = strings.getString("targetFullHitHalf");
+//                    foul = true;
+//                    foulReason = strings.getString("targetFullHitHalf");
+                    thisCueFoul.addFoul(strings.getString("targetFullHitHalf"), true);
                 }
             } else if (currentTarget == HALF_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
-                    foul = true;
-                    foulReason = strings.getString("targetHalfHitBlack");;
+//                    foul = true;
+//                    foulReason = strings.getString("targetHalfHitBlack");;
+                    thisCueFoul.addFoul(strings.getString("targetHalfHitBlack"), true);
                 } else if (!isHalfBall(whiteFirstCollide)) {
-                    foul = true;
-                    foulReason = strings.getString("targetHalfHitFull");;
+//                    foul = true;
+//                    foulReason = strings.getString("targetHalfHitFull");;
+                    thisCueFoul.addFoul(strings.getString("targetHalfHitFull"), true);
                 }
             } else if (currentTarget == 8) {
                 if (whiteFirstCollide.getValue() != 8) {
-                    foul = true;
-                    foulReason = strings.getString("targetBlackHitOther");
+//                    foul = true;
+//                    foulReason = strings.getString("targetBlackHitOther");
+                    thisCueFoul.addFoul(strings.getString("targetBlackHitOther"), true);
                 }
             }
         }
 
-        if (foul && !getEightBall().isPotted()) {
-            thisCueFoul = true;
+        if (thisCueFoul.isFoul() && !getEightBall().isPotted()) {
+//            thisCueFoul = true;
 //            cueBall.pot();
 //            ballInHand = true;
             switchPlayer();
             
             currentTarget = getTargetOfPlayer(currentPlayer);  // 在switchPlayer之后
-            System.out.println(foulReason);
+            System.out.println(thisCueFoul.getAllReasons());
             
             return;
         }
@@ -141,19 +149,19 @@ public class LisEightGame extends ChineseEightBallGame {
                 } else if (currentTarget == NOT_SELECTED_REP) {
                     if (isBreaking) {
                         pickupBlackBall();
-                        if (foul) {
-                            thisCueFoul = true;
+                        if (thisCueFoul.isFoul()) {
+//                            thisCueFoul = true;
 //                            cueBall.pot();
 //                            ballInHand = true;
                             switchPlayer();
-                            System.out.println(foulReason);
+                            System.out.println(thisCueFoul.getAllReasons());
                         } else {
                             currentPlayer.setBreakSuccess();
                             System.out.println("开球黑八不选球");
                         }
                     } else {
                         pickupBlackBall();
-                        thisCueFoul = true;
+//                        thisCueFoul = true;
                         switchPlayer();
 //                        switchPlayer();
 //                        winingPlayer = getAnotherPlayer();
@@ -161,7 +169,7 @@ public class LisEightGame extends ChineseEightBallGame {
                     }
                 } else {  // 误进黑八
                     pickupBlackBall();
-                    thisCueFoul = true;
+//                    thisCueFoul = true;
                     switchPlayer();
 //                    winingPlayer = getAnotherPlayer();
 //                    end();

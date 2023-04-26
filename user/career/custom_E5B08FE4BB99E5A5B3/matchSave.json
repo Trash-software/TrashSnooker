@@ -1,23 +1,17 @@
 {
-  "p1": "Neil Robertson",
+  "p1": "John Wizard",
   "game": {
-    "winRecords": {
-      "1": 1,
-      "2": 2,
-      "3": 2,
-      "4": 1,
-      "5": 1
-    },
-    "p2Wins": 2,
+    "winRecords": {"1": 2},
+    "p2Wins": 1,
     "p1": {
       "playerNumber": 1,
-      "handFeelEffort": 0.9022802873586574,
-      "person": "Neil Robertson",
+      "handFeelEffort": 0.8563837814905838,
+      "person": "John Wizard",
       "playerType": "COMPUTER",
       "playCue": "stdSnookerCue",
       "breakCue": "stdSnookerCue"
     },
-    "p1Wins": 3,
+    "p1Wins": 0,
     "p2": {
       "playerNumber": 2,
       "handFeelEffort": 1,
@@ -26,7 +20,7 @@
       "playCue": "GirlCue",
       "breakCue": "GirlCue"
     },
-    "startTime": 1682266008609,
+    "startTime": 1682523749945,
     "gameValues": {
       "ball": "SNOOKER_BALL",
       "gameRule": "SNOOKER",
@@ -35,8 +29,8 @@
         "holeSizeOrdinal": 1
       }
     },
-    "matchId": "custom_E5B08FE4BB99E5A5B3+2025+world_champ-PRE_ROUND_1-110",
-    "totalFrames": 11,
+    "matchId": "custom_E5B08FE4BB99E5A5B3+2025+space_grand_prix-QUARTER_FINAL-43",
+    "totalFrames": 3,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "GOOD"
@@ -44,5 +38,5 @@
     "p1Breaks": true
   },
   "p2": "custom_E5B08FE4BB99E5A5B3",
-  "stage": "FINAL"
+  "stage": "QUARTER_FINAL"
 }

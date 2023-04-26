@@ -23,9 +23,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private final SnookerBall[] coloredBalls = new SnookerBall[6];
     private boolean doingFreeBall = false;  // 正在击打自由球
     private boolean blackBattle = false;
-    private int lastFoulPoints = 0;
+//    private int lastFoulPoints = 0;
 
     private int repositionCount;
+    private int continuousFoulAndMiss;
     private boolean willLoseBecauseThisFoul;
     private boolean isSolvable;  // 球形是否有解
 
@@ -176,7 +177,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     public boolean hasFreeBall() {
-        if (thisCueFoul) {
+        if (thisCueFoul.isFoul()) {
             // 当从白球处无法看到任何一颗目标球的最薄边时
             List<Ball> currentTarBalls = getAllLegalBalls(currentTarget, false, false);
             int canSeeBallCount = countSeeAbleTargetBalls(cueBall.getX(), cueBall.getY(),
@@ -299,21 +300,24 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     protected void updateScoreAndTarget(Set<SnookerBall> pottedBalls, boolean isFreeBall) {
         int score = 0;
-        int foul = 0;
+//        int foul = 0;
         if (whiteFirstCollide == null) {
-            foul = getDefaultFoulValue();  // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
-            foulReason = strings.getString("emptyCue");
+//            foul = getDefaultFoulValue();  // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
+//            foulReason = strings.getString("emptyCue");
+            thisCueFoul.addFoul(strings.getString("emptyCue"), getDefaultFoulValue(), true);
             if (cueBall.isPotted()) ballInHand = true;
         } else if (cueBall.isPotted()) {
-            foul = getFoulScore(pottedBalls);
-            foulReason = strings.getString("cueBallPot");
+//            foul = getFoulScore(pottedBalls);
+//            foulReason = strings.getString("cueBallPot");
+            thisCueFoul.addFoul(strings.getString("cueBallPot"), getFoulScore(pottedBalls), false);
             ballInHand = true;
         } else if (isFreeBall) {
             int[] scoreFoul = scoreFoulOfFreeBall(pottedBalls);
             score = scoreFoul[0];
-            foul = scoreFoul[1];
+            int foul = scoreFoul[1];
             if (foul > 0) {
-                foulReason = strings.getString("wrongFreeBall");
+//                foulReason = strings.getString("wrongFreeBall");
+                thisCueFoul.addFoul(strings.getString("wrongFreeBall"), foul, true);
             } else if (score == 0) {
                 // 没犯规也没进球，检查是不是直接用自由球做障碍了
                 int opponentTarget = getTargetAfterPotFailed();
@@ -325,7 +329,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         oppoBalls, 1, null, freeBall);
                 if (seeAble.seeAbleTargets == 0) {
                     foul = Math.max(4, currentTarget);  // 除非是在清彩阶段大于咖啡球的自由球，否则都是4分
-                    foulReason = strings.getString("freeBallCannotSnooker");
+//                    foulReason = strings.getString("freeBallCannotSnooker");
+                    thisCueFoul.addFoul(strings.getString("freeBallCannotSnooker"), foul, false);
                 }
             }
         } else if (currentTarget == 1) {
@@ -334,45 +339,67 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                     if (ball.isRed()) {
                         score++;  // 进了颗红球
                     } else {
-                        foul = getFoulScore(pottedBalls);  // 进了颗彩球
-                        foulReason = strings.getString("targetRedColorPots");
+//                        foul = getFoulScore(pottedBalls);  // 进了颗彩球
+//                        foulReason = strings.getString("targetRedColorPots");
+                        thisCueFoul.addFoul(strings.getString("targetRedColorPots"), 
+                                getFoulScore(pottedBalls), false);
                     }
                 }
             } else {  // 该打红球时打了彩球
-                foul = Math.max(4, whiteFirstCollide.getValue());
-                foulReason = String.format(strings.getString("targetRedHitX"), 
-                        ballValueToColorName(whiteFirstCollide.getValue(), strings));
+                int foul = Math.max(4, whiteFirstCollide.getValue());
+//                foulReason = String.format(strings.getString("targetRedHitX"), 
+//                        ballValueToColorName(whiteFirstCollide.getValue(), strings));
+                thisCueFoul.addFoul(String.format(strings.getString("targetRedHitX"),
+                        ballValueToColorName(whiteFirstCollide.getValue(), strings)),
+                        foul, 
+                        true);
             }
         } else {
             int realTarget = whiteFirstCollide.getValue();
             if (realTarget == 1) {  // 该打彩球时打了红球
-                foul = Math.max(4, getFoulScore(pottedBalls));
-                foulReason = String.format(strings.getString("targetXRedHit"),
-                        ballValueToColorName(currentTarget, strings));
+                int foul = Math.max(4, getFoulScore(pottedBalls));
+//                foulReason = String.format(strings.getString("targetXRedHit"),
+//                        ballValueToColorName(currentTarget, strings));
+                thisCueFoul.addFoul(String.format(strings.getString("targetXRedHit"),
+                        ballValueToColorName(currentTarget, strings)),
+                        foul, 
+                        true);
             } else {
                 if (currentTarget == 0) {
                     // 任意彩球
                     if (indicatedTarget == 0) {
                         System.err.println("Program error");
                     } else if (indicatedTarget != realTarget) {
-                        foul = Math.max(4, Math.max(realTarget, indicatedTarget));
-                        foulReason = String.format(strings.getString("indicateXHitY"),
+                        int foul = Math.max(4, Math.max(realTarget, indicatedTarget));
+//                        foulReason = String.format(strings.getString("indicateXHitY"),
+//                                ballValueToColorName(indicatedTarget, strings),
+//                                ballValueToColorName(realTarget, strings));
+                        thisCueFoul.addFoul(String.format(strings.getString("indicateXHitY"),
                                 ballValueToColorName(indicatedTarget, strings),
-                                ballValueToColorName(realTarget, strings));
+                                ballValueToColorName(realTarget, strings)),
+                                foul,
+                                true);
                     }
                 }
                 if (currentTarget != 0 && realTarget != currentTarget) {  // 打了非目标球的彩球
-                    foul = Math.max(foul, Math.max(4, Math.max(realTarget, currentTarget)));
-                    foulReason = String.format(strings.getString("targetXOtherHit"),
-                            ballValueToColorName(currentTarget, strings));
+                    int foul = Math.max(4, Math.max(realTarget, currentTarget));
+//                    foulReason = String.format(strings.getString("targetXOtherHit"),
+//                            ballValueToColorName(currentTarget, strings));
+                    thisCueFoul.addFoul(String.format(strings.getString("targetXOtherHit"),
+                                    ballValueToColorName(currentTarget, strings)),
+                            foul,
+                            true);
                 }
                 if (pottedBalls.size() == 1) {
                     if (currentTarget == RAW_COLORED_REP) {  // 任意彩球
                         for (Ball onlyBall : pottedBalls) {
                             if (onlyBall == whiteFirstCollide) score = onlyBall.getValue();
                             else {
-                                foul = Math.max(foul, Math.max(4, onlyBall.getValue()));
-                                foulReason = strings.getString("targetColorRedHit");
+                                int foul = Math.max(4, onlyBall.getValue());
+//                                foulReason = strings.getString("targetColorRedHit");
+                                thisCueFoul.addFoul(strings.getString("targetColorRedHit"),
+                                        foul,
+                                        true);
                             }
                         }
                     } else {  // 非任意彩球
@@ -380,24 +407,43 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                             if (onlyBall.getValue() == currentTarget) {
                                 score = currentTarget;
                             } else {
-                                foul = Math.max(foul, getFoulScore(pottedBalls));
-                                foulReason = String.format(strings.getString("targetXHitY"),
-                                        ballValueToColorName(currentTarget, strings),
-                                        ballValueToColorName(onlyBall.getValue(), strings));
+//                                foul = Math.max(foul, getFoulScore(pottedBalls));
+//                                foulReason = String.format(strings.getString("targetXHitY"),
+//                                        ballValueToColorName(currentTarget, strings),
+//                                        ballValueToColorName(onlyBall.getValue(), strings));
+                                thisCueFoul.addFoul(
+                                        String.format(strings.getString("targetXPotY"),
+                                                ballValueToColorName(currentTarget, strings),
+                                                ballValueToColorName(onlyBall.getValue(), strings)),
+                                        getFoulScore(pottedBalls),
+                                        false
+                                );
                             }
                         }
                     }
                 } else if (!pottedBalls.isEmpty()) {
-                    foul = Math.max(foul, getFoulScore(pottedBalls));
-                    foulReason = strings.getString("targetColorOtherPot");
+//                    foul = Math.max(foul, getFoulScore(pottedBalls));
+//                    foulReason = strings.getString("targetColorOtherPot");
+                    thisCueFoul.addFoul(
+                            strings.getString("targetColorOtherPot"),
+                            getFoulScore(pottedBalls),
+                            false
+                    );
                 }
             }
         }
-        lastFoulPoints = foul;
-        if (foul > 0) {
+//        lastFoulPoints = foul;
+        if (thisCueFoul.isFoul()) {
+            if (thisCueFoul.isMiss()) {
+                continuousFoulAndMiss++;
+            } else {
+                continuousFoulAndMiss = 0;
+                willLoseBecauseThisFoul = false;
+            }
+            
             if (willLoseBecauseThisFoul) {
                 // 三次瞎打判负
-                getAnotherPlayer().addScore(foul);
+                getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
                 getCuingPlayer().withdraw();
                 end();
                 return;
@@ -405,15 +451,15 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
             if (blackBattle) {
                 // 抢黑时犯规就直接判负
-                getAnotherPlayer().addScore(foul);
+                getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
                 end();
                 return;
             }
 
-            getAnotherPlayer().addScore(foul);
+            getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
             updateTargetPotFailed();
             switchPlayer();
-            thisCueFoul = true;
+//            thisCueFoul = true;
             if (!cueBall.isPotted() && hasFreeBall()) {
                 // todo: 要在pickup colored之后检查
                 doingFreeBall = true;
@@ -431,8 +477,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 switchPlayer();
             }
             repositionCount = 0;
+            continuousFoulAndMiss = 0;
             willLoseBecauseThisFoul = false;
-            thisCueFoul = false;
+//            thisCueFoul = false;
         }
 //        System.out.println("Potted: " + pottedBalls + ", first: " + whiteFirstCollide + " score: " + score + ", foul: " + foul);
     }
@@ -442,7 +489,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     public boolean canReposition() {
-        if (thisCueFoul) {
+        if (thisCueFoul.isFoul() && thisCueFoul.isMiss()) {
             int minScore = Math.min(player1.getScore(), player2.getScore());
             int maxScore = Math.max(player1.getScore(), player2.getScore());
             return minScore + getRemainingScore(false) > maxScore;  // 超分或延分不能复位
@@ -479,7 +526,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     public void notReposition() {
         repositionCount = 0;
-        willLoseBecauseThisFoul = false;
+//        willLoseBecauseThisFoul = false;
     }
 
     public void reposition()  {
@@ -488,7 +535,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     private void reposition(boolean isSimulate) {
         if (!isSimulate) System.out.println("Reposition!");
-        thisCueFoul = false;
+        thisCueFoul = new FoulInfo();
         ballInHand = false;
         doingFreeBall = false;
         for (Map.Entry<SnookerBall, double[]> entry : recordedPositions.entrySet()) {
@@ -507,10 +554,23 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
      * 在复位之后再call这个。
      */
     public boolean isNoHitThreeWarning() {
-        willLoseBecauseThisFoul = isAnyFullBallVisible() && repositionCount == 2;
+//        willLoseBecauseThisFoul = isAnyFullBallVisible() && repositionCount == 2;
+//        return willLoseBecauseThisFoul;
+        return willLoseBecauseThisFoul();
+    }
+
+    /**
+     * 在复位之后再call这个。
+     */
+    public boolean willLoseBecauseThisFoul() {
+        willLoseBecauseThisFoul = loseBecauseFoulAndMiss(repositionCount, continuousFoulAndMiss + 1);
         return willLoseBecauseThisFoul;
     }
     
+    private boolean loseBecauseFoulAndMiss(int repCount, int contFMCount) {
+        return isAnyFullBallVisible() && (repCount >= 2) && (contFMCount >= 3);
+    }
+
     private boolean isSolvable(CuePlayParams aimingParam) {
         long st = System.currentTimeMillis();
         List<Ball> legals = getAllLegalBalls(currentTarget, isDoingSnookerFreeBll(), false);
@@ -549,9 +609,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     /**
-     * 是不是无意识救球，前提是已经犯规
+     * 是不是无意识救球，前提是已经犯规且没有击中目标球
      */
-    public boolean isFoulAndMiss() {
+    public boolean isSolvable() {
         return isSolvable;
 //        long st = System.currentTimeMillis();
 //        AbstractSnookerGame copy = (AbstractSnookerGame) clone();
@@ -865,9 +925,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     @Override
     public String getFoulReason() {
-        return foulReason == null ?
-                null :
+        return thisCueFoul.isFoul() ?
                 String.format(strings.getString("foulReasonFormat"),
-                        foulReason, lastFoulPoints);
+                        thisCueFoul.getAllReasons(), thisCueFoul.getFoulScore()) :
+                null;
     }
 }

@@ -64,12 +64,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected Ball whiteFirstCollide;  // 这一杆白球碰到的第一颗球
     protected boolean collidesWall;
     protected boolean ballInHand = true;
-    protected boolean thisCueFoul = false;
-    protected boolean lastCueFoul = false;
+//    protected boolean thisCueFoul = false;
+//    protected boolean lastCueFoul = false;
+    protected FoulInfo thisCueFoul = new FoulInfo();
+    protected FoulInfo lastCueFoul;
     protected boolean lastPotSuccess;
     protected boolean isBreaking = true;
     protected GameValues gameValues;
-    protected String foulReason;
+//    protected String foulReason;
     protected int thinkTime;
     protected long cueFinishTime;
     protected long cueStartTime;
@@ -251,7 +253,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         collidesWall = false;
         lastPotSuccess = false;
         lastCueFoul = thisCueFoul;
-        thisCueFoul = false;
+        thisCueFoul = new FoulInfo();
         newPotted.clear();
         recordPositions();
         recordedTarget = currentTarget;
@@ -955,10 +957,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public abstract GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage);
 
     public String getFoulReason() {
-        return foulReason;
+        return thisCueFoul.getAllReasons();
     }
 
     public boolean isThisCueFoul() {
+        return thisCueFoul.isFoul();
+    }
+
+    public FoulInfo getThisCueFoul() {
         return thisCueFoul;
     }
 

@@ -671,11 +671,12 @@ public class GameView implements Initializable {
         if (game.getGame().isEnded()) {
             endFrame();
         } else {
-            if (game.getGame().isThisCueFoul()) {
+            FoulInfo foulInfo = game.getGame().getThisCueFoul();
+            if (foulInfo.isFoul()) {
                 String foulReason0 = game.getGame().getFoulReason();
                 if (game.getGame() instanceof AbstractSnookerGame) {
                     AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
-                    if (asg.isFoulAndMiss()) {
+                    if (foulInfo.isMiss() && asg.isSolvable()) {
                         foulReason0 = strings.getString("foulAndMiss") + foulReason0;
                     }
                 } else if (game.getGame() instanceof LisEightGame) {
@@ -719,7 +720,7 @@ public class GameView implements Initializable {
             if ((game.getGame() instanceof AbstractSnookerGame)) {
                 AbstractSnookerGame asg = ((AbstractSnookerGame) game.getGame());
                 if (asg.canReposition()) {
-                    if (asg.isFoulAndMiss()) {
+                    if (asg.isSolvable()) {
                         System.out.println("Solvable snooker");
                         autoAim = false;  // 把autoAim交给askReposition的不复位分支
                         askReposition();
@@ -1576,7 +1577,7 @@ public class GameView implements Initializable {
             }
             if (gameValues.rule.snookerLike()) {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
-                if (aiHasRightToReposition && asg.canReposition() && asg.isFoulAndMiss()) {
+                if (aiHasRightToReposition && asg.canReposition() && asg.isSolvable()) {
                     if (asg.aiConsiderReposition(game.predictPhy, lastPotAttempt)) {
                         Platform.runLater(() -> {
                             AlertShower.showInfo(

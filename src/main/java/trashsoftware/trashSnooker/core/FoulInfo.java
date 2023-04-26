@@ -13,6 +13,14 @@ public class FoulInfo {
         this.miss |= miss;
     }
 
+    public void addFoul(String reason, boolean miss) {
+        addFoul(reason, 1, miss);
+    }
+
+    public void addFoul(String reason) {
+        addFoul(reason, 1, false);
+    }
+
     public boolean isFoul() {
         return foul;
     }
