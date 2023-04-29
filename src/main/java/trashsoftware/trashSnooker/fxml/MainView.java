@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -64,6 +65,9 @@ public class MainView implements Initializable {
 
     @FXML
     ComboBox<PlayerType> player1Player, player2Player;
+    
+    @FXML
+    CheckBox devModeBox;
 
     private Stage stage;
     private ResourceBundle strings;
@@ -266,7 +270,7 @@ public class MainView implements Initializable {
     void resumeAction() {
         EntireGame game = GeneralSaveManager.getInstance().getSave();
         if (game != null) {
-            startGame(game);
+            startGame(game, devModeBox.isSelected());
         } else {
             throw new RuntimeException("???");
         }
@@ -316,10 +320,10 @@ public class MainView implements Initializable {
         }
 
         EntireGame game = new EntireGame(igp1, igp2, gameValues, totalFramesBox.getValue(), cloth, null);
-        startGame(game);
+        startGame(game, devModeBox.isSelected());
     }
     
-    private void startGame(EntireGame entireGame) {
+    private void startGame(EntireGame entireGame, boolean devMode) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("gameView.fxml"),
@@ -338,7 +342,7 @@ public class MainView implements Initializable {
             AiCueResult.setAiPrecisionFactor(1.0);
 
             GameView gameView = loader.getController();
-            gameView.setup(stage, entireGame);
+            gameView.setup(stage, entireGame, devMode);
 
             stage.show();
         } catch (Exception e) {

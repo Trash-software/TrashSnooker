@@ -52,6 +52,8 @@
         <Label text="%holes"/>
         <ComboBox fx:id="holeSizeBox"/>
     </HBox>
+    
+    <CheckBox text="%devMode" fx:id="devModeBox"/>
 
     <Button text="%startGame" onAction="#startGameAction"/>
 

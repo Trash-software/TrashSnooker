@@ -493,7 +493,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //        System.out.printf("%f %f %f %f\n", p1x, p1y, p2x, p2y);
 
         for (Ball ball : getAllBalls()) {
-            if (ball != selfBall1 && ball != selfBall2 && !ball.isPotted()) {
+            if (!ball.equals(selfBall1) && !ball.equals(selfBall2) && !ball.isPotted()) {
                 if (checkPotPoint) {
                     // 障碍球占用了目标点
                     double ballTargetDt = Math.hypot(ball.x - p2x, ball.y - p2y);
@@ -883,7 +883,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         if (!attackChoices.isEmpty()) {
             // 如果有进攻机会，就返回最简单的那颗球
             Collections.sort(attackChoices);
-            return attackChoices.get(0).getBall();
+            AiCue.AttackChoice easiest = attackChoices.get(0);
+//            double[] tole = easiest.leftRightTolerance();
+//            System.out.println("Tolerance: left " + tole[0] + ", right " + tole[1]);
+            return easiest.getBall();
         }
 
         // 如果没有，就找出最近的能看见的球
@@ -955,6 +958,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected abstract void updateTargetPotFailed();
 
     public abstract GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage);
+    
+    public int getContinuousFoulAndMiss() {
+        return 0;
+    }
 
     public String getFoulReason() {
         return thisCueFoul.getAllReasons();
@@ -1196,6 +1203,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             ball.vy = 0;
                         }
                         prediction.setFirstCollide(ball,
+                                Math.hypot(whiteVx, whiteVy) * phy.calculationsPerSec,
                                 hitWall,
                                 ballDirectionUnitVec[0], ballDirectionUnitVec[1],
                                 ballInitVMmPerS,

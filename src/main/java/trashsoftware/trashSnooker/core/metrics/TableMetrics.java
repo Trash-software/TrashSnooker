@@ -327,7 +327,7 @@ public class TableMetrics {
             public Builder create() {
                 return new Builder(this, TableMetrics.SNOOKER)
                         .tableColor(Color.GREEN, Color.SADDLEBROWN)
-                        .tableDimension(3820.0, 3569.0,
+                        .tableDimension(3820.0, 3568.7,
                                 2035.0, 1788.0,
                                 33.34)
                         .curvedHole(10.0, 4.0, 0.0)

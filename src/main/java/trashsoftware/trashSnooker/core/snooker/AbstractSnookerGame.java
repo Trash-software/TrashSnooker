@@ -333,6 +333,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                     thisCueFoul.addFoul(strings.getString("freeBallCannotSnooker"), foul, false);
                 }
             }
+            if (cueBall.isPotted()) {
+                thisCueFoul.addFoul(strings.getString("cueBallPot"), getFoulScore(pottedBalls), false);
+                ballInHand = true;
+            }
         } else if (currentTarget == 1) {
             if (whiteFirstCollide.isRed()) {
                 for (SnookerBall ball : pottedBalls) {
@@ -353,6 +357,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         ballValueToColorName(whiteFirstCollide.getValue(), strings)),
                         foul, 
                         true);
+            }
+            if (cueBall.isPotted()) {
+                thisCueFoul.addFoul(strings.getString("cueBallPot"), getFoulScore(pottedBalls), false);
+                ballInHand = true;
             }
         } else {
             int realTarget = whiteFirstCollide.getValue();
@@ -430,6 +438,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                             false
                     );
                 }
+            }
+            if (cueBall.isPotted()) {
+                thisCueFoul.addFoul(strings.getString("cueBallPot"), getFoulScore(pottedBalls), false);
+                ballInHand = true;
             }
         }
 //        lastFoulPoints = foul;
@@ -627,6 +639,11 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 //        copy.reposition(true);
 //        
 //        
+    }
+
+    @Override
+    public int getContinuousFoulAndMiss() {
+        return continuousFoulAndMiss;
     }
 
     public int remainingRedCount() {

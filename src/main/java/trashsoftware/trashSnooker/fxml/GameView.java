@@ -84,12 +84,9 @@ public class GameView implements Initializable {
     public static final Color CUE_TIP_COLOR = Color.LIGHTSEAGREEN;
     public static final Color REST_METAL_COLOR = Color.GOLDENROD;
     public static final Color WHITE_PREDICTION_COLOR = new Color(1.0, 1.0, 1.0, 0.5);
-
     public static final Font POOL_NUMBER_FONT = new Font(8.0);
-
     public static final double HAND_DT_TO_MAX_PULL = 30.0;
     public static final double MIN_CUE_BALL_DT = 30.0;  // 运杆时杆头离白球的最小距离
-
     public static final double MAX_CUE_ANGLE = 60;
     public static final double BIG_TABLE_SCALE = 0.32;
     public static final double MID_TABLE_SCALE = 0.45;
@@ -100,6 +97,7 @@ public class GameView implements Initializable {
     public static double frameTimeMs = 20.0;
     //    private double minRealPredictLength = 300.0;
     private static double defaultMaxPredictLength = 1200;
+    private final CurvedPolygonDrawer curvedPolygonDrawer = new CurvedPolygonDrawer(0.667);  // 弯的程度
     public double frameRate = 1000.0 / frameTimeMs;
     @FXML
     Canvas gameCanvas;
@@ -144,8 +142,8 @@ public class GameView implements Initializable {
     //            , saveGameMenu, newGameMenu;
     @FXML
     ToggleGroup animationPlaySpeedToggle;
-    boolean enableDebug = true;
     boolean debugMode = false;
+    boolean devMode = true;
     private double minPredictLengthPotDt = 2000;
     private double maxPredictLengthPotDt = 100;
     private double canvasWidth;
@@ -190,7 +188,6 @@ public class GameView implements Initializable {
     private double cueAngleBaseVer = 10.0;
     private double cueAngleBaseHor = 10.0;
     private CueAnimationPlayer cueAnimationPlayer;
-    private final CurvedPolygonDrawer curvedPolygonDrawer = new CurvedPolygonDrawer(0.667);  // 弯的程度
     private boolean isDragging;
     private double lastDragAngle;
     private Timeline timeline;
@@ -213,6 +210,8 @@ public class GameView implements Initializable {
     private ResourceBundle strings;
 
     private double aiAnimationSpeed = 1.0;
+
+    private List<double[]> aiWhitePath;  // todo: debug用的
 
     public static double canvasX(double realX) {
         return realX * scale;
@@ -339,14 +338,14 @@ public class GameView implements Initializable {
     }
 
     private void setupDebug() {
-        System.out.println("Debug: " + enableDebug);
-        debugMenu.setVisible(enableDebug);
+        System.out.println("Debug: " + devMode);
+        debugMenu.setVisible(devMode);
     }
 
     public void setupReplay(Stage stage, GameReplay replay) {
         this.replay = replay;
         this.gameValues = replay.gameValues;
-        this.enableDebug = false;
+        this.devMode = false;
         this.stage = stage;
 
         this.player1 = replay.getP1();
@@ -383,12 +382,14 @@ public class GameView implements Initializable {
 //        replayCue();
     }
 
-    public void setup(Stage stage, EntireGame entireGame) {
+    public void setup(Stage stage, EntireGame entireGame, boolean devMode) {
         this.game = entireGame;
         this.gameValues = entireGame.gameValues;
         this.player1 = entireGame.getPlayer1();
         this.player2 = entireGame.getPlayer2();
         this.stage = stage;
+        this.devMode = devMode;
+        this.aiAutoPlay = !devMode;
 
         this.basePane = (Pane) stage.getScene().getRoot();
 
@@ -444,10 +445,11 @@ public class GameView implements Initializable {
     public void setup(Stage stage,
                       GameValues gameValues, int totalFrames,
                       InGamePlayer player1, InGamePlayer player2,
-                      TableCloth cloth) {
+                      TableCloth cloth,
+                      boolean devMode) {
         EntireGame entireGame = new EntireGame(player1, player2, gameValues,
                 totalFrames, cloth, null);
-        setup(stage, entireGame);
+        setup(stage, entireGame, devMode);
     }
 
     private void setupNameLabels(PlayerPerson p1, PlayerPerson p2) {
@@ -466,9 +468,8 @@ public class GameView implements Initializable {
     public void setupCareerMatch(Stage stage,
                                  PlayerVsAiMatch careerMatch) {
         this.careerMatch = careerMatch;
-        this.enableDebug = false;
 
-        setup(stage, careerMatch.getGame());
+        setup(stage, careerMatch.getGame(), false);
 
         double playerGoodness = CareerManager.getInstance().getPlayerGoodness();
         maxRealPredictLength = defaultMaxPredictLength * playerGoodness;
@@ -714,6 +715,7 @@ public class GameView implements Initializable {
     }
 
     private void finishCueNextStep(Player nextCuePlayer) {
+        aiWhitePath = null;
         miscued = false;
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
             boolean autoAim = true;
@@ -1613,6 +1615,7 @@ public class GameView implements Initializable {
                 withdraw(player);
                 return;
             }
+            aiWhitePath = cueResult.getWhitePath();  // todo
             if (game.gameValues.rule.snookerLike()) {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
                 if (cueResult.getTargetBall() != null) {
@@ -2850,19 +2853,18 @@ public class GameView implements Initializable {
 
     private void drawWhiteStopArea(List<double[]> actualPoints, GraphicsContext gc) {
         gc.setStroke(WHITE.darker());
-        
+
         List<double[]> canvasPoints = actualPoints.stream()
                 .map(point -> new double[]{canvasX(point[0]), canvasY(point[1])})
                 .collect(Collectors.toList());
-        
+
         curvedPolygonDrawer.draw(canvasPoints, gc);
-        
+
 //        for (int i = 1; i < actualPoints.size(); i++) {
 //            connectEndPoint(actualPoints.get(i - 1), actualPoints.get(i), gc);
 //        }
 //        connectEndPoint(actualPoints.get(actualPoints.size() - 1), actualPoints.get(0), gc);
     }
-
 
 
     private double[] predictionWidthDeviation(WhitePrediction[] predictions) {
@@ -2885,9 +2887,21 @@ public class GameView implements Initializable {
 
     private void draw() {
         drawTable();
+        if (devMode) drawAiWhitePath();
         drawBalls();
         drawCursor();
         drawBallInHand();
+    }
+
+    private void drawAiWhitePath() {
+        if (aiWhitePath != null) {
+            double[] pos = aiWhitePath.get(0);
+            for (int i = 1; i < aiWhitePath.size(); i++) {
+                double[] dd = aiWhitePath.get(i);
+                graphicsContext.strokeLine(canvasX(pos[0]), canvasY(pos[1]), canvasX(dd[0]), canvasY(dd[1]));
+                pos = dd;
+            }
+        }
     }
 
     private void playMovement() {

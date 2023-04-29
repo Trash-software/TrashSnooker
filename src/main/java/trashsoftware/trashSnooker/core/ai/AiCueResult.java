@@ -1,7 +1,10 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class AiCueResult {
@@ -19,6 +22,7 @@ public class AiCueResult {
     private final double frameImportance;
     private final boolean rua;
     private double unitX, unitY;
+    private List<double[]> whitePath = new ArrayList<>();
 
     public AiCueResult(InGamePlayer inGamePlayer,
                        GamePlayStage gamePlayStage,
@@ -90,6 +94,14 @@ public class AiCueResult {
         return cueType;
     }
 
+    public List<double[]> getWhitePath() {
+        return whitePath;
+    }
+
+    public void setWhitePath(List<double[]> whitePath) {
+        this.whitePath = whitePath;
+    }
+
     private void applyRandomError(InGamePlayer igp, GamePlayStage gamePlayStage) {
         Random random = new Random();
         double rad = Algebra.thetaOf(unitX, unitY);
@@ -130,7 +142,7 @@ public class AiCueResult {
             sd = (100 - Math.max(person.getAiPlayStyle().precision,
                     person.getAiPlayStyle().defense)) / precisionFactor;
         } else if (cueType == CueType.SOLVE) {
-            sd = (100 - person.getSolving()) / precisionFactor * 8.0;
+            sd = (100 - person.getSolving()) / precisionFactor * 6.0;
 //            System.out.println("Solving sd: " + sd);
         } else {
             sd = (100 - person.getAiPlayStyle().defense) / precisionFactor;
