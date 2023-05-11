@@ -5,7 +5,7 @@ import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 public abstract class ObjectOnTable implements Cloneable {
-    protected static final double GENERAL_BOUNCE_ACC = 0.25;
+    protected static final double GENERAL_BOUNCE_ACC = 0.5;
     protected final GameValues values;
     protected final TableMetrics table;
     protected final double radius;
@@ -157,19 +157,23 @@ public abstract class ObjectOnTable implements Cloneable {
     }
 
     protected void hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
-        x += vx;
-        y += vy;
-        
         if (currentBounce != null) {
             System.err.println("Current is bouncing!");
         }
 
         double speed = Math.hypot(vx, vy);
+        double ballAngle = Algebra.thetaOf(vx, vy);  // 入射角与垂线的夹角
+        double verticalAngle = Algebra.thetaOf(arcXY[0] - x, arcXY[1] - y);
+        double injectAngle = Algebra.normalizeAngle(ballAngle - verticalAngle);
         currentBounce = new ArcBounce(
                 arcXY, 
                 bounceAcc(phy, speed),
-                speed * table.wallBounceRatio * 0.9
+                speed * table.wallBounceRatio * 0.9,
+                injectAngle
         );
+
+        x += vx;
+        y += vy;
     }
 
     protected void hitHoleLineArea(double[] lineNormalVec, Phy phy) {
@@ -200,7 +204,12 @@ public abstract class ObjectOnTable implements Cloneable {
         double dt = Math.hypot(xDiff, yDiff);
 
         double holeRadius = isMidHole ? table.midHoleRadius : table.cornerHoleRadius;
-        double holeAndSlopeRadius = holeRadius + table.holeGravityAreaWidth;
+        double holeAndSlopeRadius = holeRadius +
+                (isMidHole ? 
+                        table.midPocketGravityRadius : 
+                        table.cornerPocketGravityRadius);
+        
+        double gravityRadius = isMidHole ? table.midPocketGravityRadius : table.cornerPocketGravityRadius;
 
         if (dt < holeAndSlopeRadius) {
             // dt应该不会小于 holeRadius - ballRadius 太多
@@ -208,7 +217,7 @@ public abstract class ObjectOnTable implements Cloneable {
             if (dt < holeRadius) {
                 accMag = 1;
             } else {
-                accMag = (table.holeGravityAreaWidth - dt + holeRadius) / table.holeGravityAreaWidth;
+                accMag = (gravityRadius - dt + holeRadius) / gravityRadius;
             }
 
             accMag *= 4800;
@@ -518,11 +527,15 @@ public abstract class ObjectOnTable implements Cloneable {
         double[] holeArcCenter;
         double verticalAcc;
         double desiredLeaveSpeed;
+        double injectAngle;
 
-        ArcBounce(double[] arcCenter, double verticalAcc, double desiredLeaveSpeed) {
+        ArcBounce(double[] arcCenter, double verticalAcc, double desiredLeaveSpeed, double injectAngle) {
             this.holeArcCenter = arcCenter;
             this.verticalAcc = verticalAcc;
             this.desiredLeaveSpeed = desiredLeaveSpeed;
+            this.injectAngle = injectAngle;
+
+//            System.out.println(Math.toDegrees(injectAngle));
         }
 
         @Override
@@ -542,16 +555,30 @@ public abstract class ObjectOnTable implements Cloneable {
         void leave() {
             if (desiredLeaveSpeed != 0) {
 //                System.out.println("speed ratio: " + Math.hypot(vx, vy) / desiredLeaveSpeed / table.wallBounceRatio);
-                double speed = Math.hypot(vx, vy);
-                double ratio = speed / desiredLeaveSpeed;
-                vx /= ratio;
-                vy /= ratio;
+//                double ejectAngle = Algebra.thetaOf(vx, vy);  // 入射角与垂线的夹角
+                double verticalAngle = Algebra.thetaOf(x - holeArcCenter[0], y - holeArcCenter[1]);
+                double ballAngle = Algebra.thetaOf(vx, vy);  // 当前球的射出角
+                double ejectAngle = verticalAngle - injectAngle;  // 根据当年入射角算出来的反射角
+                
+                // 取平均值，魔法
+                double realAngle = Algebra.angularBisector(ballAngle, ejectAngle);
+//                System.out.printf("%.2f, %.2f, %.2f\n%n", Math.toDegrees(ballAngle), Math.toDegrees(ejectAngle), Math.toDegrees(realAngle));
+                
+                double[] vecOfAngle = Algebra.unitVectorOfAngle(realAngle);
+                vx = vecOfAngle[0] * desiredLeaveSpeed;
+                vy = vecOfAngle[1] * desiredLeaveSpeed;
+                
+//                double speed = Math.hypot(vx, vy);
+//                double ratio = speed / desiredLeaveSpeed;
+//                vx /= ratio;
+//                vy /= ratio;
             }
         }
 
         @Override
         void clearDesireLeavePos() {
             this.desiredLeaveSpeed = 0.0;
+            this.injectAngle = 0.0;
         }
     }
 }

@@ -8,23 +8,7 @@ public class TableMetrics {
     public static final String SNOOKER = "SNOOKER";
     public static final String CHINESE_EIGHT = "CHINESE_EIGHT";
     public static final String SIDE_POCKET = "SIDE_POCKET";
-    public static final HoleSize[] SNOOKER_HOLES = {
-            new HoleSize("pocketLarge", 89, 95),
-            new HoleSize("pocketStd", 85, 89),
-            new HoleSize("pocketSmall", 82, 87),
-            new HoleSize("pocketLittle", 78, 84),
-            new HoleSize("pocketTiny", 72, 78)
-    };
-    public static final HoleSize[] CHINESE_EIGHT_HOLES = {
-            new HoleSize("pocketHuge", 93, 98),
-            new HoleSize("pocketLarge", 89, 95),
-            new HoleSize("pocketStd", 85, 89),
-            new HoleSize("pocketSmall", 82, 85),
-            new HoleSize("pocketLittle", 78, 82)
-    };
-    public static final HoleSize[] SIDE_POCKET_HOLES = {
-            new HoleSize("pocketStd", 105, 105),
-    };
+
     private static final String[] NAMES = {SNOOKER, CHINESE_EIGHT, SIDE_POCKET};
     public final String tableName;
     public final TableBuilderFactory factory;
@@ -47,7 +31,8 @@ public class TableMetrics {
     // 角袋入口处的宽度，因为袋的边可能有角度
     public double cornerHoleDiameter, cornerHoleRadius;
     public double midHoleDiameter, midHoleRadius;
-    public double holeGravityAreaWidth;  // 袋口处的坡宽度。球进入这个区域后会开始有往袋里掉的意思
+    public double cornerPocketGravityRadius;  // 袋口处的坡宽度。球进入这个区域后会开始有往袋里掉的意思
+    public double midPocketGravityRadius;
 
     public double midArcRadius;
 
@@ -139,8 +124,22 @@ public class TableMetrics {
 
     public int getHoleSizeOrdinal() {
         for (int i = 0; i < factory.supportedHoles.length; i++) {
-            HoleSize size = factory.supportedHoles[i];
+            PocketSize size = factory.supportedHoles[i];
             if (size.cornerHoleDiameter == cornerHoleDiameter && size.midHoleDiameter == midHoleDiameter) {
+                return i;
+            }
+        }
+        throw new RuntimeException("No matching holes");
+    }
+
+    public int getPocketDifficultyOrdinal() {
+        for (int i = 0; i < factory.supportedDifficulties.length; i++) {
+            PocketDifficulty difficulty = factory.supportedDifficulties[i];
+            if (difficulty.midPocketAngle == midHoleOpenAngle
+                    && difficulty.midPocketGravityZone == midPocketGravityRadius
+                    && difficulty.cornerPocketAngle == cornerHoleOpenAngle
+                    && difficulty.cornerPocketGravityZone == cornerPocketGravityRadius
+                    && difficulty.cornerPocketArcSize * cornerHoleRadius == cornerArcRadius) {
                 return i;
             }
         }
@@ -164,7 +163,7 @@ public class TableMetrics {
                 {midX, topY - midHoleRadius};
         botMidHoleXY = new double[]
                 {midX, botY + midHoleRadius};
-        
+
         leftClothX = leftX - cornerHoleTan;
         rightClothX = rightX + cornerHoleTan;
         topClothY = topY - cornerHoleTan;
@@ -248,23 +247,23 @@ public class TableMetrics {
                 new double[][]{{leftX - cornerHoleTan, topY - cornerHoleDrift},
                         {leftX - cornerArcHeight, topY + cornerLineLonger - cornerHoleDrift}};
         botLeftHoleSideLine =
-                new double[][]{{leftX - cornerHoleDrift, botY + cornerHoleTan}, 
+                new double[][]{{leftX - cornerHoleDrift, botY + cornerHoleTan},
                         {leftX + cornerLineLonger - cornerHoleDrift, botY + cornerArcHeight}};
         botLeftHoleEndLine =
-                new double[][]{{leftX - cornerHoleTan, botY + cornerHoleDrift}, 
+                new double[][]{{leftX - cornerHoleTan, botY + cornerHoleDrift},
                         {leftX - cornerArcHeight, botY - cornerLineLonger + cornerHoleDrift}};
 
         topRightHoleSideLine =
-                new double[][]{{rightX + cornerHoleDrift, topY - cornerHoleTan}, 
+                new double[][]{{rightX + cornerHoleDrift, topY - cornerHoleTan},
                         {rightX - cornerLineLonger + cornerHoleDrift, topY - cornerArcHeight}};
         topRightHoleEndLine =
-                new double[][]{{rightX + cornerHoleTan, topY - cornerHoleDrift}, 
+                new double[][]{{rightX + cornerHoleTan, topY - cornerHoleDrift},
                         {rightX + cornerArcHeight, topY + cornerLineLonger - cornerHoleDrift}};
         botRightHoleSideLine =
-                new double[][]{{rightX + cornerHoleDrift, botY + cornerHoleTan}, 
+                new double[][]{{rightX + cornerHoleDrift, botY + cornerHoleTan},
                         {rightX - cornerLineLonger + cornerHoleDrift, botY + cornerArcHeight}};
         botRightHoleEndLine =
-                new double[][]{{rightX + cornerHoleTan, botY + cornerHoleDrift}, 
+                new double[][]{{rightX + cornerHoleTan, botY + cornerHoleDrift},
                         {rightX + cornerArcHeight, botY - cornerLineLonger + cornerHoleDrift}};
 
         allCornerArcs = new double[][]{
@@ -322,7 +321,9 @@ public class TableMetrics {
     }
 
     public enum TableBuilderFactory {
-        SNOOKER("snookerTable", SNOOKER_HOLES) {
+        SNOOKER("snookerTable",
+                PocketSize.SNOOKER_HOLES,
+                PocketDifficulty.GREEN_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.SNOOKER)
@@ -330,12 +331,14 @@ public class TableMetrics {
                         .tableDimension(3820.0, 3568.7,
                                 2035.0, 1788.0,
                                 33.34)
-                        .curvedHole(10.0, 4.0, 0.0)
+                        .curvedHole()
 //                        .supportedHoles(SNOOKER_HOLES)
                         .resistanceAndCushionBounce(1.0, 0.92, 0.8);
             }
         },
-        CHINESE_EIGHT("chineseEightTable", CHINESE_EIGHT_HOLES) {
+        CHINESE_EIGHT("chineseEightTable",
+                PocketSize.CHINESE_EIGHT_HOLES,
+                PocketDifficulty.GREEN_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.CHINESE_EIGHT)
@@ -344,11 +347,13 @@ public class TableMetrics {
                                 1550.0, 1270.0,
                                 42.0)
 //                        .supportedHoles(CHINESE_EIGHT_HOLES)
-                        .curvedHole(10.0, 4.0, 0.0)
+                        .curvedHole()
                         .resistanceAndCushionBounce(1.05, 0.92, 0.8);
             }
         },
-        SIDE_POCKET("sidePocketTable", SIDE_POCKET_HOLES) {
+        SIDE_POCKET("sidePocketTable",
+                PocketSize.SIDE_POCKET_HOLES,
+                PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.SIDE_POCKET)
@@ -356,22 +361,28 @@ public class TableMetrics {
                         .tableDimension(2905.0, 2540.0,
                                 1635.0, 1270.0,
                                 42.0)
-                        .straightHole(7.0, 5.0, 20.0)
+                        .straightHole()
 //                        .supportedHoles(SIDE_POCKET_HOLES)
                         .resistanceAndCushionBounce(1.0, 0.85, 0.9);
             }
         };
 
         public final String key;
-        public final HoleSize[] supportedHoles;
+        public final PocketSize[] supportedHoles;
+        public final PocketDifficulty[] supportedDifficulties;
 
-        TableBuilderFactory(String name, HoleSize[] supportedHoles) {
+        TableBuilderFactory(String name, PocketSize[] supportedHoles, PocketDifficulty[] supportedDifficulties) {
             this.key = name;
             this.supportedHoles = supportedHoles;
+            this.supportedDifficulties = supportedDifficulties;
         }
 
-        public HoleSize defaultHole() {
+        public PocketSize defaultHole() {
             return supportedHoles[supportedHoles.length / 2];
+        }
+        
+        public PocketDifficulty defaultDifficulty() {
+            return supportedDifficulties[supportedDifficulties.length / 2];
         }
 
         @Override
@@ -388,9 +399,10 @@ public class TableMetrics {
     }
 
     public static class Builder {
-//        private String name = "Table";
-
         private final TableMetrics values;
+        //        private String name = "Table";
+        private double cornerHoleArcSizeMul;
+        private double midHoleArcSizeMul;
 
         public Builder(TableBuilderFactory factory, String tableName) {
             this.values = new TableMetrics(factory, tableName);
@@ -421,24 +433,36 @@ public class TableMetrics {
             return this;
         }
 
-        public Builder pocketGravityMultiplier(double multiplier) {
-            if (values.holeGravityAreaWidth == 0) {
-                values.holeGravityAreaWidth = multiplier;
-            } else {
-                values.holeGravityAreaWidth *= multiplier;
-            }
+        Builder curvedHole() {
+            values.straightHole = false;
             return this;
         }
 
-        Builder curvedHole(double extraSlopeWidth, double cornerHoleOpenAngle, double midHoleOpenAngle) {
-            values.straightHole = false;
-            if (values.holeGravityAreaWidth == 0) {
-                values.holeGravityAreaWidth = extraSlopeWidth;
-            } else {
-                values.holeGravityAreaWidth *= extraSlopeWidth;
+        public Builder pocketDifficulty(PocketDifficulty pocketDifficulty) {
+            return pocketDifficulty(
+                    pocketDifficulty.cornerPocketGravityZone,
+                    pocketDifficulty.cornerPocketArcSize,
+                    pocketDifficulty.cornerPocketAngle,
+                    pocketDifficulty.midPocketGravityZone,
+                    pocketDifficulty.midPocketArcSize,
+                    pocketDifficulty.midPocketAngle
+            );
+        }
+
+        Builder pocketDifficulty(double cornerPocketGravityZone,
+                                 double cornerPocketArcSize,
+                                 double cornerPocketAngle,
+                                 double midPocketGravityZone,
+                                 double midPocketArcSize,
+                                 double midPocketAngle) {
+            values.cornerPocketGravityRadius = cornerPocketGravityZone;
+            values.cornerHoleOpenAngle = cornerPocketAngle;
+            values.midPocketGravityRadius = midPocketGravityZone;
+            values.midHoleOpenAngle = midPocketAngle;
+            if (!values.straightHole) {
+                this.cornerHoleArcSizeMul = cornerPocketArcSize;
+                this.midHoleArcSizeMul = midPocketArcSize;
             }
-            values.cornerHoleOpenAngle = cornerHoleOpenAngle;
-            values.midHoleOpenAngle = midHoleOpenAngle;
             return this;
         }
 
@@ -448,6 +472,10 @@ public class TableMetrics {
          * @return Builder
          */
         private Builder holeSizeCurved(double cornerHoleDiameter, double midHoleDiameter) {
+            if (cornerHoleArcSizeMul == 0) {
+                throw new RuntimeException("Method 'pocketDifficulty' must be called prior to this method");
+            }
+
             values.straightHole = false;
 
             double cornerHoleRadius = cornerHoleDiameter / 2;
@@ -462,8 +490,10 @@ public class TableMetrics {
             values.cornerHoleTan = cornerHoleRadius * Math.sqrt(2);
 
             values.midArcRadius = values.midHoleRadius;
-            values.cornerArcRadius = cornerHoleRadius * 1.35;
+            values.cornerArcRadius = cornerHoleRadius * cornerHoleArcSizeMul;
             values.cornerArcDiameter = values.cornerArcRadius * 2;
+
+//            System.out.println("Arc radius: " + values.cornerArcRadius);
 
             double arcDegrees = 45 - values.cornerHoleOpenAngle;
             values.cornerArcWidth = values.cornerArcRadius * Math.sin(Math.toRadians(arcDegrees));
@@ -492,15 +522,8 @@ public class TableMetrics {
             return this;
         }
 
-        Builder straightHole(double extraSlopeWidth, double cornerHoleOpenAngle, double midHoleOpenAngle) {
+        Builder straightHole() {
             values.straightHole = true;
-            if (values.holeGravityAreaWidth == 0) {
-                values.holeGravityAreaWidth = extraSlopeWidth;
-            } else {
-                values.holeGravityAreaWidth *= extraSlopeWidth;
-            }
-            values.cornerHoleOpenAngle = cornerHoleOpenAngle;
-            values.midHoleOpenAngle = midHoleOpenAngle;
             return this;
         }
 
@@ -523,12 +546,12 @@ public class TableMetrics {
             return this;
         }
 
-        public Builder holeSize(HoleSize holeSize) {
+        public Builder holeSize(PocketSize pocketSize) {
 //            values.holeSize = holeSize;
             if (values.straightHole) {
-                return holeSizeStraight(holeSize.cornerHoleDiameter, holeSize.midHoleDiameter);
+                return holeSizeStraight(pocketSize.cornerHoleDiameter, pocketSize.midHoleDiameter);
             } else {
-                return holeSizeCurved(holeSize.cornerHoleDiameter, holeSize.midHoleDiameter);
+                return holeSizeCurved(pocketSize.cornerHoleDiameter, pocketSize.midHoleDiameter);
             }
         }
 
@@ -549,24 +572,6 @@ public class TableMetrics {
         public TableMetrics build() {
             values.build();
             return values;
-        }
-    }
-
-    public static class HoleSize {
-
-        public final String key;
-        public final double cornerHoleDiameter;
-        public final double midHoleDiameter;
-
-        public HoleSize(String name, double cornerHoleDiameter, double midHoleDiameter) {
-            this.key = name;
-            this.cornerHoleDiameter = cornerHoleDiameter;
-            this.midHoleDiameter = midHoleDiameter;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("%s (%d mm)", App.getStrings().getString(key), (int) cornerHoleDiameter);
         }
     }
 }

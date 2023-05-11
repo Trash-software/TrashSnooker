@@ -45,11 +45,18 @@ public class GameValues {
         JSONObject tableObj = jsonObject.getJSONObject("table");
         TableMetrics.TableBuilderFactory factory = 
                 TableMetrics.fromOrdinal(tableObj.getInt("tableOrdinal"));
-        TableMetrics.HoleSize holeSize = factory.supportedHoles[tableObj.getInt("holeSizeOrdinal")];
+        PocketSize pocketSize = factory.supportedHoles[tableObj.getInt("holeSizeOrdinal")];
+        
+        int diffOrd = factory.supportedDifficulties.length / 2;
+        if (tableObj.has("pocketDifficultyOrdinal")) {
+            diffOrd = tableObj.getInt("pocketDifficultyOrdinal");
+        }
+        
+        PocketDifficulty pocketDifficulty = factory.supportedDifficulties[diffOrd];
         TableMetrics tableMetrics = factory
                 .create()
-                .holeSize(holeSize)
-                .pocketGravityMultiplier(cloth.goodness.holeExtraGravityWidthMul)
+                .pocketDifficulty(pocketDifficulty)
+                .holeSize(pocketSize)
                 .build();
         
         return new GameValues(rule, tableMetrics, ballMetrics);
@@ -64,6 +71,7 @@ public class GameValues {
         JSONObject tableObj = new JSONObject();
         tableObj.put("tableOrdinal", table.getOrdinal());
         tableObj.put("holeSizeOrdinal", table.getHoleSizeOrdinal());
+        tableObj.put("pocketDifficultyOrdinal", table.getPocketDifficultyOrdinal());
         jsonObject.put("table", tableObj);
         
         return jsonObject;

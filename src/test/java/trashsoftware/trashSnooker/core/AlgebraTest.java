@@ -40,6 +40,51 @@ public class AlgebraTest {
     }
     
     @Test
+    public void testAngleNormalization() {
+        double[] anglesDeg = {
+                0, 1, 45, 89, 91, 136, 179, 181, 269, 271, 359, 360
+        };
+        double[] result = new double[anglesDeg.length];
+        for (int i = 0; i < anglesDeg.length; i++) {
+            double normalized = Algebra.normalizeAngle(Math.toRadians(anglesDeg[i]));
+            result[i] = Math.toDegrees(normalized);
+        }
+        System.out.println(Arrays.toString(result));
+    }
+    
+    @Test
+    public void testUnitVectorOfAngle() {
+        double[] anglesDeg = {
+                0, 1, 45, 89, 91, 136, 179, 181, 269, 271, 359, 360
+        };
+        double[][] result1 = new double[anglesDeg.length][];
+        double[][] result2 = new double[anglesDeg.length][];
+        for (int i = 0; i < anglesDeg.length; i++) {
+            double rad = Algebra.normalizeAngle(Math.toRadians(anglesDeg[i]));
+            double[] a = Algebra.unitVectorOfAngle(rad);
+            double[] b = Algebra.angleToUnitVector(rad);
+            System.out.println(Math.toDegrees(rad) + ": " + Arrays.toString(a) + ", " + Arrays.toString(b));
+        }
+        System.out.println(Arrays.toString(Algebra.unitVectorOfAngle(Math.toRadians(361))));
+    }
+    
+    @Test
+    public void testAverageAngle() {
+        double degA = 170;
+        double degB = -160;
+        double radA = Math.toRadians(degA);
+        double radB = Math.toRadians(degB);
+        System.out.println(Arrays.toString(Algebra.unitVectorOfAngle(radA)));
+        System.out.println(Arrays.toString(Algebra.unitVectorOfAngle(radB)));
+        System.out.println(Arrays.toString(Algebra.unitVectorOfAngle(Algebra.angularBisector(radA, radB))));
+    }
+    
+    @Test
+    public void testAngleBetween() {
+        
+    }
+    
+    @Test
     public void grahamTest() {
         double[][] points = {
                 {0, 0},

@@ -31,7 +31,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //    protected double xAngle, yAngle, zAngle;
     private boolean potted;
     private long msSinceCue;
-    private Ball justHit;
+    //    private Ball justHit;
     private double currentXError;
     private double currentYError;
 
@@ -330,7 +330,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     protected void hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
-        
+
         // 一般来说袋角的弹性没库边好
 //        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
 //        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
@@ -345,7 +345,18 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         super.hitHoleLineArea(lineNormalVec, phy);
 //        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
 //        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
-        
+
+    }
+    
+    private double calculateEffectiveSideSpin(Phy phy, double[] cushionNormalVec) {
+        double[] vec = new double[]{vx, vy};
+        // 库的切线方向的投影长度，意思是砸的深度，越深效果越强
+        double vertical = Algebra.projectionLengthOn(cushionNormalVec, vec);
+        double mag = Math.abs(vertical) * phy.calculationsPerSec;
+
+        double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.67);
+//        System.out.println(mag + " " + sideSpinEffectMul);
+        return sideSpin * sideSpinEffectMul;
     }
 
     /**
@@ -359,15 +370,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
      * @param cushionNormalVec 撞的库的法向量。比如说边库应是(1,0)或(-1,0)
      */
     private void applySpinsWhenHitCushion(Phy phy, double[] cushionNormalVec) {
-        double[] vec = new double[]{vx, vy};
-        // 库的切线方向的投影长度，意思是砸的深度，越深效果越强
-        double vertical = Algebra.projectionLengthOn(cushionNormalVec, vec);
-        double mag = Math.abs(vertical) *
-                phy.calculationsPerSec;
-
-        double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.67);
-//        System.out.println(mag + " " + sideSpinEffectMul);
-        double effectiveSideSpin = sideSpin * sideSpinEffectMul;
+        double effectiveSideSpin = calculateEffectiveSideSpin(phy, cushionNormalVec);
 
         // todo: 暂时修不好，大概还是因为左手/右手定理的问题
 //        double[] cushionVec = Algebra.normalVector(cushionNormalVec);
@@ -454,7 +457,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //                System.out.println(currentBounce.accX + " " + currentBounce.accY);
 //            }
 
-            
+
 //            System.out.println("Hit wall!======================");
 //            rotateDeg = 0.0;
             return true;
@@ -480,11 +483,12 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         } else {
             if (ball1.isNotMoving() && ball2.isNotMoving()) {
                 // this 去撞另外两颗
-                double dt1, dt2, dt12;
-                if (((dt1 = predictedDtTo(ball1)) < values.ball.ballDiameter && currentDtTo(ball1) > dt1 &&
-                        justHit != ball1 && ball1.justHit != this) &&
-                        ((dt2 = predictedDtTo(ball2)) < values.ball.ballDiameter && currentDtTo(ball2) > dt2 &&
-                                justHit != ball2 && ball2.justHit != this)) {
+                double dt1, dt2;
+                if (((dt1 = predictedDtTo(ball1)) < values.ball.ballDiameter && currentDtTo(ball1) > dt1
+//                        && justHit != ball1 && ball1.justHit != this) 
+                ) && ((dt2 = predictedDtTo(ball2)) < values.ball.ballDiameter && currentDtTo(ball2) > dt2
+//                        && justHit != ball2 && ball2.justHit != this
+                )) {
                     System.out.println("Hit two static balls!=====================");
                     double xPos = x;
                     double yPos = y;
@@ -531,7 +535,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         // 离岸位置发生改变，又懒得重新算了
         clearBounceDesiredLeavePos();
         ball.clearBounceDesiredLeavePos();
-        
+
         // 提高精确度
         double x1 = x;
         double y1 = y;
@@ -627,7 +631,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double dt = predictedDtTo(ball);
         if (dt < values.ball.ballDiameter
                 && currentDtTo(ball) > dt
-                && justHit != ball && ball.justHit != this) {
+//                && justHit != ball && ball.justHit != this
+        ) {
 
             if (this.isNotMoving()) {
                 if (ball.isNotMoving()) {
@@ -641,19 +646,13 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     return ball.tryHitBall(this, phy);
                 }
             }
-            if (ball.isNotMoving()) {
-//                if (checkMovingBall) System.out.println("Hit static ball!=====================");4
-                twoMovingBallsHitCore(ball, phy);
-//                hitStaticBallCore(ball);
-            } else {
+            if (!ball.isNotMoving()) {
                 if (!checkMovingBall) return false;
-//                System.out.println("Hit moving ball!=====================");
-
-                twoMovingBallsHitCore(ball, phy);
             }
+            twoMovingBallsHitCore(ball, phy);
 
-            justHit = ball;
-            ball.justHit = this;
+//            justHit = ball;
+//            ball.justHit = this;
             return true;
         }
         return false;
@@ -665,13 +664,13 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         xSpin = 0.0;
         ySpin = 0.0;
         sideSpin = 0.0;
-        justHit = null;
+//        justHit = null;
         frameDegChange = 0.0;
     }
 
     protected void prepareMove(Phy phy) {
         super.prepareMove(phy);
-        justHit = null;
+//        justHit = null;
         currentXError = phy.cloth.goodness.fixedErrorFactor * phy.calculationsPerSec;
         currentYError = 0.0;
     }

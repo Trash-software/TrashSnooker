@@ -1,12 +1,8 @@
 package trashsoftware.trashSnooker.core;
 
 import org.junit.Test;
-import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
-import trashsoftware.trashSnooker.core.metrics.BallMetrics;
-import trashsoftware.trashSnooker.core.metrics.GameRule;
-import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.util.DataLoader;
@@ -38,7 +34,7 @@ public class AiTest {
     @Test
     public void testDistanceEstimation() {
         GameValues values = new GameValues(GameRule.SNOOKER, 
-                TableMetrics.TableBuilderFactory.SNOOKER.create().holeSize(new TableMetrics.HoleSize("mid", 85, 92)).build(), 
+                TableMetrics.TableBuilderFactory.SNOOKER.create().holeSize(new PocketSize("mid", 85, 92)).build(), 
                 BallMetrics.SNOOKER_BALL);
         Phy phy = Phy.Factory.createPlayPhy(new TableCloth(TableCloth.Goodness.GOOD, TableCloth.Smoothness.NORMAL));
         System.out.println(values.estimatedMoveDistance(phy, CuePlayParams.getSpeedOfPower(35, 0)));

@@ -1133,7 +1133,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //                System.out.println(remDtOfBall + " " + effectiveSlopeMul);
 
                 return Math.abs(targetHoleVec[1]) * values.table.midHoleDiameter
-                        + (values.table.holeGravityAreaWidth + values.ball.ballRadius) * effectiveSlopeMul;
+                        + (values.table.midPocketGravityRadius + values.ball.ballRadius) * effectiveSlopeMul;
             } else {
                 double holeMax = values.table.cornerHoleDiameter;
                 // 要的只是个0-90之间的角度（弧度），与45度对称即可（15===75），都转到第一象限来

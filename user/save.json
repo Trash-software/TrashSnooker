@@ -13,18 +13,19 @@
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "Mark Allen",
+    "person": "Trump",
     "playerType": "COMPUTER",
-    "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
+    "playCue": "TrumpCue",
+    "breakCue": "TrumpCue"
   },
-  "startTime": 1682786412933,
+  "startTime": 1683307942280,
   "gameValues": {
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
     "table": {
       "tableOrdinal": 0,
-      "holeSizeOrdinal": 2
+      "pocketDifficultyOrdinal": 1,
+      "holeSizeOrdinal": 0
     }
   },
   "totalFrames": 1,

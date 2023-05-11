@@ -103,7 +103,21 @@ public class Algebra {
         double t1 = thetaOf(v1x, v1y);
         double t2 = thetaOf(v2x, v2y);
         
-        double theta = Math.abs(t1 - t2);
+//        double theta = Math.abs(t1 - t2);
+//        if (theta > Math.PI) {
+//            theta = Math.PI * 2 - theta;
+//        }
+//        return theta;
+        return angleBetweenTwoAngles(t1, t2);
+    }
+
+    /**
+     * @param radA 方位角A，非负
+     * @param radB 方位角B，非负
+     * @return 夹角，非负
+     */
+    public static double angleBetweenTwoAngles(double radA, double radB) {
+        double theta = Math.abs(radA - radB);
         if (theta > Math.PI) {
             theta = Math.PI * 2 - theta;
         }
@@ -129,9 +143,19 @@ public class Algebra {
         return x < 0 ? x % mod + mod : x % mod;
     }
 
+    /**
+     * 把一个角转化为[-PI, PI)内
+     */
     public static double normalizeAngle(double angleRad) {
-        double ang = realMod(angleRad, Math.PI * 2);
-        return ang > Math.PI ? ang - Math.PI * 2 : ang;
+        double ang = realMod(angleRad, TWO_PI);
+        return ang > Math.PI ? ang - TWO_PI : ang;
+    }
+
+    /**
+     * 把一个角转化为[0, 2PI)内
+     */
+    public static double normalizeAnglePositive(double angleRad) {
+        return realMod(angleRad, TWO_PI);
     }
 
     // 这两个到底是怎么在混用，没看懂
@@ -139,6 +163,7 @@ public class Algebra {
         return new double[]{Math.cos(angleRad), Math.sin(angleRad)};
     }
 
+    @Deprecated
     public static double[] angleToUnitVector(double angle) {
         double tan = Math.tan(angle);
         if (angle > Math.PI / 2 && angle <= Math.PI * 1.5) {
@@ -147,6 +172,27 @@ public class Algebra {
             return unitVector(1.0, tan);
         }
     }
+
+    /**
+     * 返回角平分线的弧度值，在[0, 2PI)之间
+     */
+    public static double angularBisector(double radA, double radB) {
+        radA = normalizeAnglePositive(radA);
+        radB = normalizeAnglePositive(radB);
+        
+        // 这里需要处理内角外角的问题
+        double res = normalizeAnglePositive((radA + radB) / 2);
+        if (angleBetweenTwoAngles(res, radA) > HALF_PI) {
+            // 内角平分线和两个边的夹角必定小于等于90度
+            return normalizeAnglePositive(res + Math.PI);
+        } else {
+            return res;
+        }
+    }
+    
+//    public static double[] angularBisector(double[] angleA, double[] angleB) {
+//        
+//    }
 
     public static double distanceToPoint(double x1, double y1, double x2, double y2) {
         return Math.hypot(x1 - x2, y1 - y2);

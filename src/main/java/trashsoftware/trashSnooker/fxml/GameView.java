@@ -142,6 +142,8 @@ public class GameView implements Initializable {
     //            , saveGameMenu, newGameMenu;
     @FXML
     ToggleGroup animationPlaySpeedToggle;
+    @FXML
+    CheckMenuItem aiAutoPlayMenuItem;
     boolean debugMode = false;
     boolean devMode = true;
     private double minPredictLengthPotDt = 2000;
@@ -340,6 +342,9 @@ public class GameView implements Initializable {
     private void setupDebug() {
         System.out.println("Debug: " + devMode);
         debugMenu.setVisible(devMode);
+        
+        aiAutoPlayMenuItem.selectedProperty().addListener(((observableValue, aBoolean, t1) -> aiAutoPlay = t1));
+        aiAutoPlayMenuItem.setSelected(aiAutoPlay);
     }
 
     public void setupReplay(Stage stage, GameReplay replay) {
@@ -1070,7 +1075,7 @@ public class GameView implements Initializable {
 
         double aimingAngle = Algebra.thetaOf(new double[]{cursorDirectionUnitX, cursorDirectionUnitY});
         double resultAngle = aimingAngle + changedAngle;
-        double[] newUnitVector = Algebra.angleToUnitVector(resultAngle);
+        double[] newUnitVector = Algebra.unitVectorOfAngle(resultAngle);
         cursorDirectionUnitX = newUnitVector[0];
         cursorDirectionUnitY = newUnitVector[1];
         recalculateUiRestrictions();

@@ -47,7 +47,7 @@ public class SnookerAiCueBallPlacer extends AiCueBallPlacer<AbstractSnookerGame,
             double eachRad = Math.PI / thisRadiusCapacity;
             for (int n = 0; n < thisRadiusCapacity; n++) {
                 double theta = n * eachRad;
-                double[] xy = Algebra.angleToUnitVector(theta + Math.PI / 2);
+                double[] xy = Algebra.unitVectorOfAngle(theta + Math.PI / 2);
                 xy[0] = breakLineX + xy[0] * radius;
                 xy[1] = centerY - xy[1] * radius;
 //                System.out.println(xy[0] + ", " + xy[1]);

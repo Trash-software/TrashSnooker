@@ -3,9 +3,7 @@ package trashsoftware.trashSnooker.core.career;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
-import trashsoftware.trashSnooker.core.metrics.BallMetrics;
-import trashsoftware.trashSnooker.core.metrics.GameRule;
-import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.DataLoader;
@@ -169,8 +167,8 @@ public class ChampionshipData {
             );
             metrics = factory
                     .create()
+                    .pocketDifficulty(pocketDifficulty(table.getString("hole_difficulty"), factory.supportedDifficulties))
                     .holeSize(holeSize(table.getString("hole_size"), factory.supportedHoles))
-                    .pocketGravityMultiplier(cloth.goodness.holeExtraGravityWidthMul)
                     .build();
         } else {
             cloth = new TableCloth(
@@ -179,8 +177,8 @@ public class ChampionshipData {
             );
             metrics = factory
                     .create()
+                    .pocketDifficulty(factory.defaultDifficulty())
                     .holeSize(factory.defaultHole())
-                    .pocketGravityMultiplier(cloth.goodness.holeExtraGravityWidthMul)
                     .build();
         }
 
@@ -334,12 +332,20 @@ public class ChampionshipData {
         }
     }
 
-    private TableMetrics.HoleSize holeSize(String jsonString, TableMetrics.HoleSize[] supported) {
+    private PocketSize holeSize(String jsonString, PocketSize[] supported) {
         String camelString = Util.toLowerCamelCase("POCKET_" + jsonString);
-        for (TableMetrics.HoleSize holeSize : supported) {
-            if (holeSize.key.equals(camelString)) return holeSize;
+        for (PocketSize pocketSize : supported) {
+            if (pocketSize.key.equals(camelString)) return pocketSize;
         }
         throw new RuntimeException("Unknown hole size " + jsonString);
+    }
+    
+    private PocketDifficulty pocketDifficulty(String jsonString, PocketDifficulty[] supported) {
+        String camelString = Util.toLowerCamelCase(jsonString);
+        for (PocketDifficulty pd : supported) {
+            if (pd.key.equals(camelString)) return pd;
+        }
+        throw new RuntimeException("Unknown pocket difficulty " + jsonString);
     }
 
     public Calendar toCalendar(int year) {
