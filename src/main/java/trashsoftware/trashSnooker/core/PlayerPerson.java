@@ -48,8 +48,8 @@ public class PlayerPerson {
     private final CuePlayType cuePlayType;
     private final AiPlayStyle aiPlayStyle;
     private final Sex sex;
-    private boolean isCustom;
     private final List<GameRule> participates;
+    private boolean isCustom;
 
     public PlayerPerson(String playerId,
                         String name,
@@ -76,11 +76,11 @@ public class PlayerPerson {
         boolean needTranslate = !Objects.equals(
                 ConfigLoader.getInstance().getLocale().getLanguage().toLowerCase(Locale.ROOT),
                 "zh");
-        
+
         this.playerId = playerId.replace('\'', '_');
         this.name = name;
         this.shownName = (needTranslate && PinyinDict.getInstance().needTranslate(name)) ?
-                PinyinDict.getInstance().translateChineseName(name) : name; 
+                PinyinDict.getInstance().translateChineseName(name) : name;
         this.category = category;
         this.maxPowerPercentage = maxPowerPercentage;
         this.controllablePowerPercentage = controllablePowerPercentage;
@@ -150,7 +150,7 @@ public class PlayerPerson {
 
         setCustom(isCustom);
     }
-    
+
     public static PlayerPerson fromJson(String playerId, JSONObject personObj) {
         String name = personObj.getString("name");
 
@@ -183,7 +183,7 @@ public class PlayerPerson {
         if (pullDt.length() == 2) {
             pullDtExtensionDt = new double[]{pullDt.getDouble(0), pullDt.getDouble(1), 50, 150};
         } else if (pullDt.length() == 4) {
-            pullDtExtensionDt = new double[]{pullDt.getDouble(0), 
+            pullDtExtensionDt = new double[]{pullDt.getDouble(0),
                     pullDt.getDouble(1),
                     pullDt.getDouble(2),
                     pullDt.getDouble(3)};
@@ -191,7 +191,7 @@ public class PlayerPerson {
             System.err.println("Player " + playerId + " has wrong pull dt");
             pullDtExtensionDt = new double[]{50, 200, 50, 150};
         }
-        
+
         double aimingOffset = personObj.getDouble("aimingOffset");
         double cueSwingMag = personObj.getDouble("cueSwingMag");
         String cuePlayTypeStr = personObj.getString("cuePlayType");
@@ -237,7 +237,7 @@ public class PlayerPerson {
 
         return playerPerson;
     }
-    
+
     public static List<GameRule> parseParticipates(JSONArray array) {
         if (array == null) {
             // 没有专门声明，就是全都参加
@@ -247,7 +247,7 @@ public class PlayerPerson {
         for (Object key : array) {
             String s = String.valueOf(key);
             if ("all".equals(s)) return List.of(GameRule.values());
-            
+
             String enumName = Util.toAllCapsUnderscoreCase(s);
             try {
                 result.add(GameRule.valueOf(enumName));
@@ -317,7 +317,7 @@ public class PlayerPerson {
                 sex,
                 List.of(GameRule.values())
         );
-        
+
         if (sex == Sex.F) {
             person.privateCues.add(DataLoader.getInstance().getCueById("GirlCue"));
             person.privateCues.add(DataLoader.getInstance().getCueById("GirlPoolCue"));
@@ -413,13 +413,13 @@ public class PlayerPerson {
         obj.put("width", handBody.bodyWidth);
         obj.put("hand", handObj);
         obj.put("sex", sex.name());
-        
+
         JSONArray games = new JSONArray();
         for (GameRule gameRule : participates) {
             games.put(Util.toLowerCamelCase(gameRule.name()));
         }
         obj.put("games", games);
-        
+
         if (cuePlayType.hasAnySpecialAction()) {
             JSONObject spe = cuePlayType.specialActionsJson();
             obj.put("specialAction", spe);
@@ -569,7 +569,7 @@ public class PlayerPerson {
     public List<GameRule> getParticipateGames() {
         return participates;
     }
-    
+
     public boolean isPlayerOf(GameRule gameRule) {
         return participates.contains(gameRule);
     }
@@ -876,6 +876,13 @@ public class PlayerPerson {
 
         public static double getSdOfHand(@Nullable HandSkill handSkill) {
             return handSkill == null ? 1.0 : (100.0 / handSkill.skill);
+        }
+
+        public int precedenceOfHand(Hand hand) {
+            for (int i = 0; i < precedence.length; i++) {
+                if (precedence[i].hand == hand) return i;
+            }
+            throw new IndexOutOfBoundsException();
         }
 
         @Override

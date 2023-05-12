@@ -147,6 +147,13 @@ public class GameView implements Initializable {
     @FXML
     CheckMenuItem drawAiPathItem;
     CheckMenuItem predictPlayerPathItem = new CheckMenuItem();
+    @FXML
+    VBox handSelectionBox;
+    @FXML
+    ToggleGroup handSelectionToggleGroup;
+    @FXML
+    RadioButton handSelectionLeft, handSelectionRight, handSelectionRest;
+
     boolean debugMode = false;
     boolean devMode = true;
     private double minPredictLengthPotDt = 2000;
@@ -404,6 +411,7 @@ public class GameView implements Initializable {
         setupPowerSlider();
         setUiFrameStart();
         setupDebug();
+        setupHandSelection();
 
         setupBalls();
 
@@ -453,6 +461,7 @@ public class GameView implements Initializable {
 
         setUiFrameStart();
         setupDebug();
+        setupHandSelection();
 
         setupBalls();
 
@@ -487,6 +496,56 @@ public class GameView implements Initializable {
         EntireGame entireGame = new EntireGame(player1, player2, gameValues,
                 totalFrames, cloth, null);
         setup(stage, entireGame, devMode);
+    }
+
+    private void setupHandSelection() {
+        if (replay != null) {
+            handSelectionBox.setVisible(false);
+            handSelectionBox.setManaged(false);
+        } else {
+            handSelectionToggleGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
+                PlayerPerson.Hand selected = PlayerPerson.Hand.valueOf(String.valueOf(t1.getUserData()));
+                PlayerPerson person = game.getGame().getCuingPlayer().getPlayerPerson();
+                currentHand = person.handBody.getHandSkillByHand(selected);
+            });
+            
+            handSelectionToggleGroup.selectToggle(handSelectionRight);
+        }
+    }
+
+    private void updateHandSelection() {
+        Ball cueBall = game.getGame().getCueBall();
+        InGamePlayer igp = game.getGame().getCuingPlayer().getInGamePlayer();
+        if (igp.getPlayerType() == PlayerType.COMPUTER) return;
+        PlayerPerson playingPerson = igp.getPlayerPerson();
+        
+        List<PlayerPerson.Hand> playAbles = CuePlayParams.getPlayableHands(
+                cueBall.getX(), cueBall.getY(),
+                cursorDirectionUnitX, cursorDirectionUnitY,
+                gameValues.table,
+                playingPerson
+        );
+        
+        handSelectionLeft.setDisable(!playAbles.contains(PlayerPerson.Hand.LEFT));
+        handSelectionRight.setDisable(!playAbles.contains(PlayerPerson.Hand.RIGHT));
+        handSelectionRest.setDisable(!playAbles.contains(PlayerPerson.Hand.REST));  // 事实上架杆永远可用
+        
+        handSelectionToggleGroup.selectToggle(
+                handButtonOfHand(playAbles.get(0))
+        );
+    }
+    
+    private RadioButton handButtonOfHand(PlayerPerson.Hand hand) {
+        switch (hand) {
+            case LEFT:
+                return handSelectionLeft;
+            case RIGHT:
+                return handSelectionRight;
+            case REST:
+                return handSelectionRest;
+            default:
+                throw new RuntimeException("If this happens then go fuck the developer");
+        }
     }
 
     private void setupNameLabels(PlayerPerson p1, PlayerPerson p2) {
@@ -799,6 +858,7 @@ public class GameView implements Initializable {
             }
         }
         updatePlayStage();
+        recalculateUiRestrictions();
     }
 
     private void updateChampionshipBreaks(SnookerChampionship sc,
@@ -3197,14 +3257,19 @@ public class GameView implements Initializable {
         } else {
             obstacleProjection = null;
         }
-        Ball cueBall = game.getGame().getCueBall();
-        PlayerPerson playingPerson = game.getGame().getCuingPlayer().getPlayerPerson();
-        currentHand = CuePlayParams.getPlayableHand(
-                cueBall.getX(), cueBall.getY(),
-                cursorDirectionUnitX, cursorDirectionUnitY,
-                gameValues.table,
-                playingPerson
-        );
+
+        // 启用/禁用手
+        updateHandSelection();
+        
+//        Ball cueBall = game.getGame().getCueBall();
+//        PlayerPerson playingPerson = game.getGame().getCuingPlayer().getPlayerPerson();
+//        currentHand = CuePlayParams.getPlayableHand(
+//                cueBall.getX(), cueBall.getY(),
+//                cursorDirectionUnitX, cursorDirectionUnitY,
+//                gameValues.table,
+//                playingPerson
+//        );
+//        currentHand = playingPerson
 
         // 如果打点不可能，把出杆键禁用了
         // 自动调整打点太麻烦了

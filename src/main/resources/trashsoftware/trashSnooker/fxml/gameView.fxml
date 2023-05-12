@@ -38,15 +38,17 @@
             </Menu>
             <Menu text="%playMenu">
                 <CheckMenuItem fx:id="aiAutoPlayMenuItem" text="%aiAutoPlay"/>
-                <SeparatorMenuItem />
+                <SeparatorMenuItem/>
                 <CheckMenuItem fx:id="drawAiPathItem" text="%drawPredictionLineAi"/>
-<!--                <CheckMenuItem fx:id="predictPlayerPathItem" text="%drawPredictionLinePlayer"/>-->
+                <!--                <CheckMenuItem fx:id="predictPlayerPathItem" text="%drawPredictionLinePlayer"/>-->
                 <SeparatorMenuItem/>
                 <fx:define>
                     <ToggleGroup fx:id="animationPlaySpeedToggle"/>
                 </fx:define>
-                <RadioMenuItem text="0.125x" toggleGroup="$animationPlaySpeedToggle" userData="0.125"/>
-                <RadioMenuItem text="0.25x" toggleGroup="$animationPlaySpeedToggle" userData="0.25"/>
+                <RadioMenuItem text="0.125x" toggleGroup="$animationPlaySpeedToggle"
+                               userData="0.125"/>
+                <RadioMenuItem text="0.25x" toggleGroup="$animationPlaySpeedToggle"
+                               userData="0.25"/>
                 <RadioMenuItem text="0.5x" toggleGroup="$animationPlaySpeedToggle" userData="0.5"/>
                 <RadioMenuItem text="1x" toggleGroup="$animationPlaySpeedToggle" userData="1"/>
                 <RadioMenuItem text="2x" toggleGroup="$animationPlaySpeedToggle" userData="2"/>
@@ -75,12 +77,23 @@
             <VBox fx:id="gameButtonBox" alignment="CENTER">
                 <Button fx:id="cueButton" text="%cueText" onAction="#cueAction"/>
             </VBox>
+            <VBox fx:id="handSelectionBox" spacing="10.0" alignment="CENTER">
+                <fx:define>
+                    <ToggleGroup fx:id="handSelectionToggleGroup"/>
+                </fx:define>
+                <RadioButton fx:id="handSelectionLeft" text="%leftHand"
+                             toggleGroup="$handSelectionToggleGroup" userData="LEFT"/>
+                <RadioButton fx:id="handSelectionRight" text="%rightHand"
+                             toggleGroup="$handSelectionToggleGroup" userData="RIGHT"/>
+                <RadioButton fx:id="handSelectionRest" text="%restHand"
+                             toggleGroup="$handSelectionToggleGroup" userData="REST"/>
+            </VBox>
             <VBox fx:id="replayButtonBox" spacing="10.0" alignment="CENTER">
                 <Button fx:id="replayLastCueButton" text="%replayLastCue"
                         onAction="#replayLastCueAction"/>
                 <Button fx:id="replayNextCueButton" text="%replayNextCue"
                         onAction="#replayNextCueAction"/>
-<!--                <Button text="%replayFastForward" onAction="#replayFastForwardAction"/>-->
+                <!--                <Button text="%replayFastForward" onAction="#replayFastForwardAction"/>-->
                 <CheckBox fx:id="replayAutoPlayBox" text="%replayAutoPlay"/>
             </VBox>
         </VBox>

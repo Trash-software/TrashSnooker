@@ -588,7 +588,16 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 attackChoice.handSkill,
                 game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()),
                 game.getEntireGame().rua(aiPlayer.getInGamePlayer()));
-        acr.setWhitePath(iac.whitePrediction != null ? iac.whitePrediction.getWhitePath() : null);
+        List<double[]> whitePath;
+        if (iac.whitePrediction != null) {
+            whitePath = iac.whitePrediction.getWhitePath();
+        } else {
+            WhitePrediction wp = game.predictWhite(iac.params, game.getEntireGame().predictPhy, 0.0,
+                    true, false, true, true);
+            whitePath = wp.getWhitePath();
+        }
+        
+        acr.setWhitePath(whitePath);
         return acr;
     }
 
@@ -1655,7 +1664,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                          double price) {
             this.attackParams = attackParams;
             this.nextStepAttackChoices = new ArrayList<>();
-            this.whitePrediction = null;
+            this.whitePrediction = null;  // fixme: 可以有
             this.params = params;
             this.nextStepTarget = nextStepTarget;
             this.stage = stage;

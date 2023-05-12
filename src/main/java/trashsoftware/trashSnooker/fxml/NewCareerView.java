@@ -203,7 +203,7 @@ public class NewCareerView implements Initializable {
         service.start();
     }
 
-    public enum Hand {
+    enum Hand {
         LEFT,
         RIGHT;
 
