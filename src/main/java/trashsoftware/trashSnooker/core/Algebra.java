@@ -177,11 +177,34 @@ public class Algebra {
      * 返回角平分线的弧度值，在[0, 2PI)之间
      */
     public static double angularBisector(double radA, double radB) {
+//        return angularSector(radA, radB, 0.5);
         radA = normalizeAnglePositive(radA);
         radB = normalizeAnglePositive(radB);
-        
+
         // 这里需要处理内角外角的问题
         double res = normalizeAnglePositive((radA + radB) / 2);
+        if (angleBetweenTwoAngles(res, radA) > HALF_PI) {
+            // 内角平分线和两个边的夹角必定小于等于90度
+            return normalizeAnglePositive(res + Math.PI);
+        } else {
+            return res;
+        }
+    }
+
+    /**
+     * 返回从角a走到角b，走ratio那么多的比例时走到的角的弧度值，在[0, 2PI)之间
+     */
+    public static double angularSector(double radA, double radB, double ratio) {
+        radA = normalizeAnglePositive(radA);
+        radB = normalizeAnglePositive(radB);
+        if (radA > radB) {
+            double tmp = radA;
+            radA = radB;
+            radB = tmp;
+        }
+
+        // 这里需要处理内角外角的问题
+        double res = normalizeAnglePositive(radA + (radB - radA) * ratio);
         if (angleBetweenTwoAngles(res, radA) > HALF_PI) {
             // 内角平分线和两个边的夹角必定小于等于90度
             return normalizeAnglePositive(res + Math.PI);

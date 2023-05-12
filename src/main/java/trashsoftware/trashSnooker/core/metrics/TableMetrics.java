@@ -39,8 +39,11 @@ public class TableMetrics {
     public double cornerHoleDt, cornerHoleTan, cornerArcHeight, cornerArcWidth, cornerArcRadius, cornerArcDiameter,
             cornerLineLonger, cornerLineShorter,  // 底袋角直线的占地长宽
             midLineWidth, midLineHeight;  // 中袋角直线占地长宽
+    
+    public double cornetHoleGraphicalDt;
 
     public double cornerHoleDrift;  // 对于有角度的袋，这个值是袋角伸进洞里多远
+    public double arcBounceAngleRate;  // 袋角弧线的反射角系数，[0-1]之间，越接近1，越平坦
 
     public double[] topLeftHoleXY;
     public double[] botLeftHoleXY;
@@ -48,6 +51,11 @@ public class TableMetrics {
     public double[] botRightHoleXY;
     public double[] topMidHoleXY;
     public double[] botMidHoleXY;
+
+    public double[] topLeftHoleGraXY;
+    public double[] botLeftHoleGraXY;
+    public double[] topRightHoleGraXY;
+    public double[] botRightHoleGraXY;
 
     public double[][] allHoles;
 
@@ -163,6 +171,16 @@ public class TableMetrics {
                 {midX, topY - midHoleRadius};
         botMidHoleXY = new double[]
                 {midX, botY + midHoleRadius};
+
+        // 仅为了让袋口看起来好看一点用
+        topLeftHoleGraXY = new double[]
+                {leftX - cornetHoleGraphicalDt, topY - cornetHoleGraphicalDt};
+        botLeftHoleGraXY = new double[]
+                {leftX - cornetHoleGraphicalDt, botY + cornetHoleGraphicalDt};
+        topRightHoleGraXY = new double[]
+                {rightX + cornetHoleGraphicalDt, topY - cornetHoleGraphicalDt};
+        botRightHoleGraXY = new double[]
+                {rightX + cornetHoleGraphicalDt, botY + cornetHoleGraphicalDt};
 
         leftClothX = leftX - cornerHoleTan;
         rightClothX = rightX + cornerHoleTan;
@@ -403,6 +421,7 @@ public class TableMetrics {
         //        private String name = "Table";
         private double cornerHoleArcSizeMul;
         private double midHoleArcSizeMul;
+        private double cornerPocketOut;
 
         public Builder(TableBuilderFactory factory, String tableName) {
             this.values = new TableMetrics(factory, tableName);
@@ -443,6 +462,7 @@ public class TableMetrics {
                     pocketDifficulty.cornerPocketGravityZone,
                     pocketDifficulty.cornerPocketArcSize,
                     pocketDifficulty.cornerPocketAngle,
+                    pocketDifficulty.cornetPocketOut,
                     pocketDifficulty.midPocketGravityZone,
                     pocketDifficulty.midPocketArcSize,
                     pocketDifficulty.midPocketAngle
@@ -452,6 +472,7 @@ public class TableMetrics {
         Builder pocketDifficulty(double cornerPocketGravityZone,
                                  double cornerPocketArcSize,
                                  double cornerPocketAngle,
+                                 double cornerPocketOut,
                                  double midPocketGravityZone,
                                  double midPocketArcSize,
                                  double midPocketAngle) {
@@ -462,6 +483,7 @@ public class TableMetrics {
             if (!values.straightHole) {
                 this.cornerHoleArcSizeMul = cornerPocketArcSize;
                 this.midHoleArcSizeMul = midPocketArcSize;
+                this.cornerPocketOut = cornerPocketOut;
             }
             return this;
         }
@@ -486,7 +508,9 @@ public class TableMetrics {
             values.midHoleDiameter = midHoleDiameter;
             values.midHoleRadius = midHoleDiameter / 2;
 
-            values.cornerHoleDt = cornerHoleRadius / Math.sqrt(2);
+            double holeDtOrig = cornerHoleRadius / Math.sqrt(2);
+            values.cornetHoleGraphicalDt = holeDtOrig;
+            values.cornerHoleDt = holeDtOrig * (1 - cornerPocketOut);
             values.cornerHoleTan = cornerHoleRadius * Math.sqrt(2);
 
             values.midArcRadius = values.midHoleRadius;
@@ -514,7 +538,8 @@ public class TableMetrics {
             * * * * * *......
                          x
              */
-            values.cornerHoleDrift = values.cornerLineLonger - values.cornerLineShorter;
+            values.cornerHoleDrift = (values.cornerLineLonger - values.cornerLineShorter) * (1 - cornerPocketOut);
+//            values.cornerHoleDrift = 0.0;
 
             double midLineTan = Math.tan(Math.toRadians(values.midHoleOpenAngle));
             values.midLineHeight = values.midHoleRadius;

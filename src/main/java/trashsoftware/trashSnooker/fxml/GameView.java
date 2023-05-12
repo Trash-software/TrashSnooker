@@ -83,7 +83,7 @@ public class GameView implements Initializable {
     public static final Color INTENT_CUE_POINT = Color.NAVY;
     public static final Color CUE_TIP_COLOR = Color.LIGHTSEAGREEN;
     public static final Color REST_METAL_COLOR = Color.GOLDENROD;
-    public static final Color WHITE_PREDICTION_COLOR = new Color(1.0, 1.0, 1.0, 0.5);
+    public static final Color WHITE_PREDICTION_COLOR = Color.LIGHTGREY;
     public static final Font POOL_NUMBER_FONT = new Font(8.0);
     public static final double HAND_DT_TO_MAX_PULL = 30.0;
     public static final double MIN_CUE_BALL_DT = 30.0;  // 运杆时杆头离白球的最小距离
@@ -144,6 +144,9 @@ public class GameView implements Initializable {
     ToggleGroup animationPlaySpeedToggle;
     @FXML
     CheckMenuItem aiAutoPlayMenuItem;
+    @FXML
+    CheckMenuItem drawAiPathItem;
+    CheckMenuItem predictPlayerPathItem = new CheckMenuItem();
     boolean debugMode = false;
     boolean devMode = true;
     private double minPredictLengthPotDt = 2000;
@@ -214,6 +217,7 @@ public class GameView implements Initializable {
     private double aiAnimationSpeed = 1.0;
 
     private List<double[]> aiWhitePath;  // todo: debug用的
+    private List<double[]> suggestedPlayerWhitePath;
 
     public static double canvasX(double realX) {
         return realX * scale;
@@ -342,9 +346,37 @@ public class GameView implements Initializable {
     private void setupDebug() {
         System.out.println("Debug: " + devMode);
         debugMenu.setVisible(devMode);
-        
-        aiAutoPlayMenuItem.selectedProperty().addListener(((observableValue, aBoolean, t1) -> aiAutoPlay = t1));
+
+        if (devMode) {
+            drawAiPathItem.setSelected(true);
+        }
+
+        setupCheckMenus();
+    }
+
+    private void setupCheckMenus() {
+        aiAutoPlayMenuItem.selectedProperty().addListener((observableValue, aBoolean, t1) -> aiAutoPlay = t1);
         aiAutoPlayMenuItem.setSelected(aiAutoPlay);
+
+        predictPlayerPathItem.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (t1) {
+                if (game.getGame().isEnded()
+                        || cueAnimationPlayer != null || playingMovement || aiCalculating) return;
+                Player currentPlayer = game.getGame().getCuingPlayer();
+                if (currentPlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
+                    predictPlayerPath(currentPlayer);
+                }
+            } else {
+                suggestedPlayerWhitePath = null;
+            }
+        });
+
+        if (replay != null) {
+            // disable all
+            aiAutoPlayMenuItem.setVisible(false);
+            drawAiPathItem.setVisible(false);
+            predictPlayerPathItem.setVisible(false);
+        }
     }
 
     public void setupReplay(Stage stage, GameReplay replay) {
@@ -719,6 +751,25 @@ public class GameView implements Initializable {
         recalculateUiRestrictions();
     }
 
+    @Deprecated
+    private void predictPlayerPath(Player humanPlayer) {
+        Thread thread = new Thread(() -> {
+            System.out.println("ai predicting human player path");
+            long st = System.currentTimeMillis();
+            if (game.getGame().isBallInHand()) {
+                return;
+            }
+            AiCueResult cueResult = game.getGame().aiCue(humanPlayer, game.predictPhy);
+            System.out.println("ai predicting human player path in " + (System.currentTimeMillis() - st) +
+                    " ms, result: " + cueResult);
+            if (cueResult != null) {
+                suggestedPlayerWhitePath = cueResult.getWhitePath();
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+    }
+
     private void finishCueNextStep(Player nextCuePlayer) {
         aiWhitePath = null;
         miscued = false;
@@ -738,6 +789,9 @@ public class GameView implements Initializable {
                 }
             }
             if (autoAim) autoAimEasiestNextBall(nextCuePlayer);
+            if (predictPlayerPathItem.isSelected()) {
+                predictPlayerPath(nextCuePlayer);
+            }
         } else {
             if (!game.isFinished() &&
                     aiAutoPlay) {
@@ -1233,6 +1287,8 @@ public class GameView implements Initializable {
         if (replay != null) {
             return;
         }
+
+        suggestedPlayerWhitePath = null;
 
         replaceBallInHandMenu.setDisable(true);
         letOtherPlayMenu.setDisable(true);
@@ -2018,6 +2074,8 @@ public class GameView implements Initializable {
 
         graphicsContext.setFill(values.tableBorderColor);
         graphicsContext.fillRoundRect(0, 0, canvasWidth, canvasHeight, 20.0, 20.0);
+
+
         graphicsContext.setFill(values.tableColor);  // 台泥/台布
         graphicsContext.fillRect(
                 canvasX(values.leftX - values.cornerHoleTan),
@@ -2083,6 +2141,11 @@ public class GameView implements Initializable {
         drawHole(values.botRightHoleXY, values.cornerHoleRadius);
         drawHole(values.topMidHoleXY, values.midHoleRadius);
         drawHole(values.botMidHoleXY, values.midHoleRadius);
+
+        drawHole(values.topLeftHoleGraXY, values.cornerHoleRadius * 1.02);
+        drawHole(values.botLeftHoleGraXY, values.cornerHoleRadius * 1.02);
+        drawHole(values.topRightHoleGraXY, values.cornerHoleRadius * 1.02);
+        drawHole(values.botRightHoleGraXY, values.cornerHoleRadius * 1.02);
 
 //        drawHoleOutLine(values.topLeftHoleXY, values.cornerHoleShownRadius + 10, 45.0 - values.cornerHoleOpenAngle);
 //        drawHoleOutLine(values.botLeftHoleXY, values.cornerHoleShownRadius, 135.0);
@@ -2892,17 +2955,19 @@ public class GameView implements Initializable {
 
     private void draw() {
         drawTable();
-        if (devMode) drawAiWhitePath();
+        if (drawAiPathItem.isSelected()) drawPredictedWhitePath(aiWhitePath);
+        if (predictPlayerPathItem.isSelected()) drawPredictedWhitePath(suggestedPlayerWhitePath);
         drawBalls();
         drawCursor();
         drawBallInHand();
     }
 
-    private void drawAiWhitePath() {
-        if (aiWhitePath != null) {
-            double[] pos = aiWhitePath.get(0);
-            for (int i = 1; i < aiWhitePath.size(); i++) {
-                double[] dd = aiWhitePath.get(i);
+    private void drawPredictedWhitePath(List<double[]> path) {
+        if (path != null) {
+            graphicsContext.setStroke(WHITE_PREDICTION_COLOR);
+            double[] pos = path.get(0);
+            for (int i = 1; i < path.size(); i++) {
+                double[] dd = path.get(i);
                 graphicsContext.strokeLine(canvasX(pos[0]), canvasY(pos[1]), canvasX(dd[0]), canvasY(dd[1]));
                 pos = dd;
             }

@@ -6,24 +6,30 @@ import trashsoftware.trashSnooker.util.Util;
 public class PocketDifficulty {
     public static PocketDifficulty[] GREEN_TABLE_DIFFICULTIES = {
             new PocketDifficulty("veryLoose",
-                    25.0, 3.0, 1.0,
+                    20.0, 1.5, 8.0,
+                    0.5, 1.0,
                     15.0, 1.0, 0.0),
             new PocketDifficulty("loose",
-                    20.0, 1.8, 2.0,
+                    16.0, 1.5, 6.0,
+                    0.4, 0.75,
                     13.5, 1.0, 0.0),
             new PocketDifficulty("normal",
-                    16.0, 1.5, 4.0,
+                    14.0, 1.5, 5.0,
+                    0.35, 0.5,
                     12.0, 1.0, 0.0),
             new PocketDifficulty("tight",
-                    14.0, 1.35, 5.0,
+                    12.0, 1.5, 4.0,
+                    0.2, 0.25,
                     10.0, 1.0, 0.0),
             new PocketDifficulty("veryTight",
-                    14.0, 1.25, 6.0,
+                    10.0, 1.5, 4.0,
+                    0.0, 0.0,
                     10.0, 1.0, 0.0)
     };
     public static PocketDifficulty[] BLUE_TABLE_DIFFICULTIES = {
             new PocketDifficulty("normal",
                     15.0, 0.0, 7.0,
+                    0.65, 0.5,
                     10.0, 0.0, 20.0)
     };
 
@@ -31,6 +37,8 @@ public class PocketDifficulty {
     public final double cornerPocketGravityZone;
     public final double cornerPocketArcSize;  // currently useless
     public final double cornerPocketAngle;
+    public final double cornetPocketOut;
+    public final double arcBounceAngleRate;
     public final double midPocketGravityZone;
     public final double midPocketArcSize;
     public final double midPocketAngle;
@@ -39,6 +47,8 @@ public class PocketDifficulty {
                             double cornerPocketGravityZone,
                             double cornerPocketArcSize,
                             double cornerPocketAngle,
+                            double cornetPocketOut,
+                            double arcBounceAngleRate,
                             double midPocketGravityZone,
                             double midPocketArcSize,
                             double midPocketAngle) {
@@ -46,6 +56,8 @@ public class PocketDifficulty {
         this.cornerPocketGravityZone = cornerPocketGravityZone;
         this.cornerPocketArcSize = cornerPocketArcSize;
         this.cornerPocketAngle = cornerPocketAngle;
+        this.cornetPocketOut = cornetPocketOut;
+        this.arcBounceAngleRate = arcBounceAngleRate;
 
         this.midPocketGravityZone = midPocketGravityZone;
         this.midPocketArcSize = midPocketArcSize;

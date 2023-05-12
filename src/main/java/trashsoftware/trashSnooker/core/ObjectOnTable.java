@@ -161,6 +161,7 @@ public abstract class ObjectOnTable implements Cloneable {
             System.err.println("Current is bouncing!");
         }
 
+        // todo: 把难的袋口硬度加大，使大力更不容易zang进
         double speed = Math.hypot(vx, vy);
         double ballAngle = Algebra.thetaOf(vx, vy);  // 入射角与垂线的夹角
         double verticalAngle = Algebra.thetaOf(arcXY[0] - x, arcXY[1] - y);

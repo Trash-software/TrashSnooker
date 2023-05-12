@@ -37,7 +37,10 @@
                           disable="true"/>
             </Menu>
             <Menu text="%playMenu">
-                <CheckMenuItem fx:id="aiAutoPlayMenuItem" text="ai auto play"/>
+                <CheckMenuItem fx:id="aiAutoPlayMenuItem" text="%aiAutoPlay"/>
+                <SeparatorMenuItem />
+                <CheckMenuItem fx:id="drawAiPathItem" text="%drawPredictionLineAi"/>
+<!--                <CheckMenuItem fx:id="predictPlayerPathItem" text="%drawPredictionLinePlayer"/>-->
                 <SeparatorMenuItem/>
                 <fx:define>
                     <ToggleGroup fx:id="animationPlaySpeedToggle"/>
