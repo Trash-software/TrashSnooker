@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.metrics;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.fxml.App;
 
 public class TableMetrics {
@@ -39,7 +40,7 @@ public class TableMetrics {
     public double cornerHoleDt, cornerHoleTan, cornerArcHeight, cornerArcWidth, cornerArcRadius, cornerArcDiameter,
             cornerLineLonger, cornerLineShorter,  // 底袋角直线的占地长宽
             midLineWidth, midLineHeight;  // 中袋角直线占地长宽
-    
+
     public double cornetHoleGraphicalDt;
 
     public double cornerHoleDrift;  // 对于有角度的袋，这个值是袋角伸进洞里多远
@@ -398,7 +399,7 @@ public class TableMetrics {
         public PocketSize defaultHole() {
             return supportedHoles[supportedHoles.length / 2];
         }
-        
+
         public PocketDifficulty defaultDifficulty() {
             return supportedDifficulties[supportedDifficulties.length / 2];
         }
@@ -538,7 +539,8 @@ public class TableMetrics {
             * * * * * *......
                          x
              */
-            values.cornerHoleDrift = (values.cornerLineLonger - values.cornerLineShorter) * (1 - cornerPocketOut);
+            values.cornerHoleDrift = (values.cornerLineLonger - values.cornerLineShorter)
+                    * (1 - cornerPocketOut);
 //            values.cornerHoleDrift = 0.0;
 
             double midLineTan = Math.tan(Math.toRadians(values.midHoleOpenAngle));

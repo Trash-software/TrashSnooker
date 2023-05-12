@@ -14,17 +14,17 @@ public class PocketDifficulty {
                     0.4, 0.75,
                     13.5, 1.0, 0.0),
             new PocketDifficulty("normal",
-                    14.0, 1.5, 5.0,
+                    12.0, 1.5, 5.0,
                     0.35, 0.5,
                     12.0, 1.0, 0.0),
             new PocketDifficulty("tight",
-                    12.0, 1.5, 4.0,
-                    0.2, 0.25,
-                    10.0, 1.0, 0.0),
-            new PocketDifficulty("veryTight",
                     10.0, 1.5, 4.0,
+                    0.2, 0.25,
+                    9.0, 1.0, 0.0),
+            new PocketDifficulty("veryTight",
+                    7.0, 1.5, 4.0,
                     0.0, 0.0,
-                    10.0, 1.0, 0.0)
+                    7.0, 1.0, 0.0)
     };
     public static PocketDifficulty[] BLUE_TABLE_DIFFICULTIES = {
             new PocketDifficulty("normal",
