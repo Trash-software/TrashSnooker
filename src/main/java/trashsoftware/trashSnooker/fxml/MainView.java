@@ -7,15 +7,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
-import trashsoftware.trashSnooker.core.metrics.BallMetrics;
-import trashsoftware.trashSnooker.core.metrics.GameRule;
-import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.DataLoader;
@@ -54,7 +52,10 @@ public class MainView implements Initializable {
     ComboBox<TableCloth.Goodness> clothGoodBox;
     
     @FXML
-    ComboBox<TableMetrics.HoleSize> holeSizeBox;
+    ComboBox<PocketSize> holeSizeBox;
+    
+    @FXML
+    ComboBox<PocketDifficulty> pocketDifficultyBox;
 
     @FXML
     ComboBox<PlayerPerson> player1Box, player2Box;
@@ -64,6 +65,9 @@ public class MainView implements Initializable {
 
     @FXML
     ComboBox<PlayerType> player1Player, player2Player;
+    
+    @FXML
+    CheckBox devModeBox;
 
     private Stage stage;
     private ResourceBundle strings;
@@ -143,6 +147,10 @@ public class MainView implements Initializable {
                 holeSizeBox.getItems().clear();
                 holeSizeBox.getItems().addAll(newValue.supportedHoles);
                 holeSizeBox.getSelectionModel().select(newValue.supportedHoles.length / 2);
+                
+                pocketDifficultyBox.getItems().clear();
+                pocketDifficultyBox.getItems().addAll(newValue.supportedDifficulties);
+                pocketDifficultyBox.getSelectionModel().select(newValue.supportedDifficulties.length / 2);
             }
         });
     }
@@ -200,32 +208,6 @@ public class MainView implements Initializable {
                     }
                 }));
     }
-
-    @FXML
-    void addPlayerAction() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("addPlayerView.fxml"),
-                    strings
-            );
-            Parent root = loader.load();
-            root.setStyle(App.FONT_STYLE);
-
-            Stage stage = new Stage();
-            stage.initOwner(this.stage);
-            stage.initModality(Modality.WINDOW_MODAL);
-
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-
-            AddPlayerView view = loader.getController();
-            view.setStage(stage, this);
-
-            stage.show();
-        } catch (IOException e) {
-            EventLogger.error(e);
-        }
-    }
     
     @FXML
     void playerInfoAction(ActionEvent event) {
@@ -266,7 +248,7 @@ public class MainView implements Initializable {
     void resumeAction() {
         EntireGame game = GeneralSaveManager.getInstance().getSave();
         if (game != null) {
-            startGame(game);
+            startGame(game, devModeBox.isSelected());
         } else {
             throw new RuntimeException("???");
         }
@@ -280,8 +262,8 @@ public class MainView implements Initializable {
                 tableMetricsBox.getValue();
         TableMetrics tableMetrics = tableMetricsFactory
                 .create()
+                .pocketDifficulty(pocketDifficultyBox.getValue())
                 .holeSize(holeSizeBox.getValue())
-                .pocketGravityMultiplier(cloth.goodness.holeExtraGravityWidthMul)
                 .build();
         
         GameRule rule = gameRuleBox.getValue();
@@ -316,10 +298,10 @@ public class MainView implements Initializable {
         }
 
         EntireGame game = new EntireGame(igp1, igp2, gameValues, totalFramesBox.getValue(), cloth, null);
-        startGame(game);
+        startGame(game, devModeBox.isSelected());
     }
     
-    private void startGame(EntireGame entireGame) {
+    private void startGame(EntireGame entireGame, boolean devMode) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("gameView.fxml"),
@@ -338,7 +320,7 @@ public class MainView implements Initializable {
             AiCueResult.setAiPrecisionFactor(1.0);
 
             GameView gameView = loader.getController();
-            gameView.setup(stage, entireGame);
+            gameView.setup(stage, entireGame, devMode);
 
             stage.show();
         } catch (Exception e) {

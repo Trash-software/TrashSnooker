@@ -16,8 +16,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
     
-    public static final String VERSION_NAME = "0.1.8";
-    public static final int VERSION_CODE = 21;
+    public static final String VERSION_NAME = "0.2.1";
+    public static final int VERSION_CODE = 24;
 
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     public static final String CLASSIFIER = "win";

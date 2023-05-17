@@ -83,13 +83,10 @@ public class GameView implements Initializable {
     public static final Color INTENT_CUE_POINT = Color.NAVY;
     public static final Color CUE_TIP_COLOR = Color.LIGHTSEAGREEN;
     public static final Color REST_METAL_COLOR = Color.GOLDENROD;
-    public static final Color WHITE_PREDICTION_COLOR = new Color(1.0, 1.0, 1.0, 0.5);
-
+    public static final Color WHITE_PREDICTION_COLOR = Color.LIGHTGREY;
     public static final Font POOL_NUMBER_FONT = new Font(8.0);
-
     public static final double HAND_DT_TO_MAX_PULL = 30.0;
     public static final double MIN_CUE_BALL_DT = 30.0;  // 运杆时杆头离白球的最小距离
-
     public static final double MAX_CUE_ANGLE = 60;
     public static final double BIG_TABLE_SCALE = 0.32;
     public static final double MID_TABLE_SCALE = 0.45;
@@ -100,6 +97,7 @@ public class GameView implements Initializable {
     public static double frameTimeMs = 20.0;
     //    private double minRealPredictLength = 300.0;
     private static double defaultMaxPredictLength = 1200;
+    private final CurvedPolygonDrawer curvedPolygonDrawer = new CurvedPolygonDrawer(0.667);  // 弯的程度
     public double frameRate = 1000.0 / frameTimeMs;
     @FXML
     Canvas gameCanvas;
@@ -144,8 +142,20 @@ public class GameView implements Initializable {
     //            , saveGameMenu, newGameMenu;
     @FXML
     ToggleGroup animationPlaySpeedToggle;
-    boolean enableDebug = true;
+    @FXML
+    CheckMenuItem aiAutoPlayMenuItem;
+    @FXML
+    CheckMenuItem drawAiPathItem;
+    CheckMenuItem predictPlayerPathItem = new CheckMenuItem();
+    @FXML
+    VBox handSelectionBox;
+    @FXML
+    ToggleGroup handSelectionToggleGroup;
+    @FXML
+    RadioButton handSelectionLeft, handSelectionRight, handSelectionRest;
+
     boolean debugMode = false;
+    boolean devMode = true;
     private double minPredictLengthPotDt = 2000;
     private double maxPredictLengthPotDt = 100;
     private double canvasWidth;
@@ -190,7 +200,6 @@ public class GameView implements Initializable {
     private double cueAngleBaseVer = 10.0;
     private double cueAngleBaseHor = 10.0;
     private CueAnimationPlayer cueAnimationPlayer;
-    private final CurvedPolygonDrawer curvedPolygonDrawer = new CurvedPolygonDrawer(0.667);  // 弯的程度
     private boolean isDragging;
     private double lastDragAngle;
     private Timeline timeline;
@@ -213,6 +222,9 @@ public class GameView implements Initializable {
     private ResourceBundle strings;
 
     private double aiAnimationSpeed = 1.0;
+
+    private List<double[]> aiWhitePath;  // todo: debug用的
+    private List<double[]> suggestedPlayerWhitePath;
 
     public static double canvasX(double realX) {
         return realX * scale;
@@ -339,14 +351,45 @@ public class GameView implements Initializable {
     }
 
     private void setupDebug() {
-        System.out.println("Debug: " + enableDebug);
-        debugMenu.setVisible(enableDebug);
+        System.out.println("Debug: " + devMode);
+        debugMenu.setVisible(devMode);
+
+        if (devMode) {
+            drawAiPathItem.setSelected(true);
+        }
+
+        setupCheckMenus();
+    }
+
+    private void setupCheckMenus() {
+        aiAutoPlayMenuItem.selectedProperty().addListener((observableValue, aBoolean, t1) -> aiAutoPlay = t1);
+        aiAutoPlayMenuItem.setSelected(aiAutoPlay);
+
+        predictPlayerPathItem.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (t1) {
+                if (game.getGame().isEnded()
+                        || cueAnimationPlayer != null || playingMovement || aiCalculating) return;
+                Player currentPlayer = game.getGame().getCuingPlayer();
+                if (currentPlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
+                    predictPlayerPath(currentPlayer);
+                }
+            } else {
+                suggestedPlayerWhitePath = null;
+            }
+        });
+
+        if (replay != null) {
+            // disable all
+            aiAutoPlayMenuItem.setVisible(false);
+            drawAiPathItem.setVisible(false);
+            predictPlayerPathItem.setVisible(false);
+        }
     }
 
     public void setupReplay(Stage stage, GameReplay replay) {
         this.replay = replay;
         this.gameValues = replay.gameValues;
-        this.enableDebug = false;
+        this.devMode = false;
         this.stage = stage;
 
         this.player1 = replay.getP1();
@@ -368,6 +411,7 @@ public class GameView implements Initializable {
         setupPowerSlider();
         setUiFrameStart();
         setupDebug();
+        setupHandSelection();
 
         setupBalls();
 
@@ -383,12 +427,14 @@ public class GameView implements Initializable {
 //        replayCue();
     }
 
-    public void setup(Stage stage, EntireGame entireGame) {
+    public void setup(Stage stage, EntireGame entireGame, boolean devMode) {
         this.game = entireGame;
         this.gameValues = entireGame.gameValues;
         this.player1 = entireGame.getPlayer1();
         this.player2 = entireGame.getPlayer2();
         this.stage = stage;
+        this.devMode = devMode;
+        this.aiAutoPlay = !devMode;
 
         this.basePane = (Pane) stage.getScene().getRoot();
 
@@ -415,6 +461,7 @@ public class GameView implements Initializable {
 
         setUiFrameStart();
         setupDebug();
+        setupHandSelection();
 
         setupBalls();
 
@@ -444,10 +491,61 @@ public class GameView implements Initializable {
     public void setup(Stage stage,
                       GameValues gameValues, int totalFrames,
                       InGamePlayer player1, InGamePlayer player2,
-                      TableCloth cloth) {
+                      TableCloth cloth,
+                      boolean devMode) {
         EntireGame entireGame = new EntireGame(player1, player2, gameValues,
                 totalFrames, cloth, null);
-        setup(stage, entireGame);
+        setup(stage, entireGame, devMode);
+    }
+
+    private void setupHandSelection() {
+        if (replay != null) {
+            handSelectionBox.setVisible(false);
+            handSelectionBox.setManaged(false);
+        } else {
+            handSelectionToggleGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
+                PlayerPerson.Hand selected = PlayerPerson.Hand.valueOf(String.valueOf(t1.getUserData()));
+                PlayerPerson person = game.getGame().getCuingPlayer().getPlayerPerson();
+                currentHand = person.handBody.getHandSkillByHand(selected);
+            });
+            
+            handSelectionToggleGroup.selectToggle(handSelectionRight);
+        }
+    }
+
+    private void updateHandSelection() {
+        Ball cueBall = game.getGame().getCueBall();
+        InGamePlayer igp = game.getGame().getCuingPlayer().getInGamePlayer();
+        if (igp.getPlayerType() == PlayerType.COMPUTER) return;
+        PlayerPerson playingPerson = igp.getPlayerPerson();
+        
+        List<PlayerPerson.Hand> playAbles = CuePlayParams.getPlayableHands(
+                cueBall.getX(), cueBall.getY(),
+                cursorDirectionUnitX, cursorDirectionUnitY,
+                gameValues.table,
+                playingPerson
+        );
+        
+        handSelectionLeft.setDisable(!playAbles.contains(PlayerPerson.Hand.LEFT));
+        handSelectionRight.setDisable(!playAbles.contains(PlayerPerson.Hand.RIGHT));
+        handSelectionRest.setDisable(!playAbles.contains(PlayerPerson.Hand.REST));  // 事实上架杆永远可用
+        
+        handSelectionToggleGroup.selectToggle(
+                handButtonOfHand(playAbles.get(0))
+        );
+    }
+    
+    private RadioButton handButtonOfHand(PlayerPerson.Hand hand) {
+        switch (hand) {
+            case LEFT:
+                return handSelectionLeft;
+            case RIGHT:
+                return handSelectionRight;
+            case REST:
+                return handSelectionRest;
+            default:
+                throw new RuntimeException("If this happens then go fuck the developer");
+        }
     }
 
     private void setupNameLabels(PlayerPerson p1, PlayerPerson p2) {
@@ -466,9 +564,8 @@ public class GameView implements Initializable {
     public void setupCareerMatch(Stage stage,
                                  PlayerVsAiMatch careerMatch) {
         this.careerMatch = careerMatch;
-        this.enableDebug = false;
 
-        setup(stage, careerMatch.getGame());
+        setup(stage, careerMatch.getGame(), false);
 
         double playerGoodness = CareerManager.getInstance().getPlayerGoodness();
         maxRealPredictLength = defaultMaxPredictLength * playerGoodness;
@@ -713,7 +810,27 @@ public class GameView implements Initializable {
         recalculateUiRestrictions();
     }
 
+    @Deprecated
+    private void predictPlayerPath(Player humanPlayer) {
+        Thread thread = new Thread(() -> {
+            System.out.println("ai predicting human player path");
+            long st = System.currentTimeMillis();
+            if (game.getGame().isBallInHand()) {
+                return;
+            }
+            AiCueResult cueResult = game.getGame().aiCue(humanPlayer, game.predictPhy);
+            System.out.println("ai predicting human player path in " + (System.currentTimeMillis() - st) +
+                    " ms, result: " + cueResult);
+            if (cueResult != null) {
+                suggestedPlayerWhitePath = cueResult.getWhitePath();
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+    }
+
     private void finishCueNextStep(Player nextCuePlayer) {
+        aiWhitePath = null;
         miscued = false;
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
             boolean autoAim = true;
@@ -731,6 +848,9 @@ public class GameView implements Initializable {
                 }
             }
             if (autoAim) autoAimEasiestNextBall(nextCuePlayer);
+            if (predictPlayerPathItem.isSelected()) {
+                predictPlayerPath(nextCuePlayer);
+            }
         } else {
             if (!game.isFinished() &&
                     aiAutoPlay) {
@@ -738,6 +858,7 @@ public class GameView implements Initializable {
             }
         }
         updatePlayStage();
+        recalculateUiRestrictions();
     }
 
     private void updateChampionshipBreaks(SnookerChampionship sc,
@@ -1068,7 +1189,7 @@ public class GameView implements Initializable {
 
         double aimingAngle = Algebra.thetaOf(new double[]{cursorDirectionUnitX, cursorDirectionUnitY});
         double resultAngle = aimingAngle + changedAngle;
-        double[] newUnitVector = Algebra.angleToUnitVector(resultAngle);
+        double[] newUnitVector = Algebra.unitVectorOfAngle(resultAngle);
         cursorDirectionUnitX = newUnitVector[0];
         cursorDirectionUnitY = newUnitVector[1];
         recalculateUiRestrictions();
@@ -1226,6 +1347,8 @@ public class GameView implements Initializable {
         if (replay != null) {
             return;
         }
+
+        suggestedPlayerWhitePath = null;
 
         replaceBallInHandMenu.setDisable(true);
         letOtherPlayMenu.setDisable(true);
@@ -1613,6 +1736,7 @@ public class GameView implements Initializable {
                 withdraw(player);
                 return;
             }
+            aiWhitePath = cueResult.getWhitePath();  // todo
             if (game.gameValues.rule.snookerLike()) {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
                 if (cueResult.getTargetBall() != null) {
@@ -2010,6 +2134,8 @@ public class GameView implements Initializable {
 
         graphicsContext.setFill(values.tableBorderColor);
         graphicsContext.fillRoundRect(0, 0, canvasWidth, canvasHeight, 20.0, 20.0);
+
+
         graphicsContext.setFill(values.tableColor);  // 台泥/台布
         graphicsContext.fillRect(
                 canvasX(values.leftX - values.cornerHoleTan),
@@ -2073,8 +2199,14 @@ public class GameView implements Initializable {
         drawHole(values.botLeftHoleXY, values.cornerHoleRadius);
         drawHole(values.topRightHoleXY, values.cornerHoleRadius);
         drawHole(values.botRightHoleXY, values.cornerHoleRadius);
+        
         drawHole(values.topMidHoleXY, values.midHoleRadius);
         drawHole(values.botMidHoleXY, values.midHoleRadius);
+
+        drawHole(values.topLeftHoleGraXY, values.cornerHoleRadius * 1.02);
+        drawHole(values.botLeftHoleGraXY, values.cornerHoleRadius * 1.02);
+        drawHole(values.topRightHoleGraXY, values.cornerHoleRadius * 1.02);
+        drawHole(values.botRightHoleGraXY, values.cornerHoleRadius * 1.02);
 
 //        drawHoleOutLine(values.topLeftHoleXY, values.cornerHoleShownRadius + 10, 45.0 - values.cornerHoleOpenAngle);
 //        drawHoleOutLine(values.botLeftHoleXY, values.cornerHoleShownRadius, 135.0);
@@ -2155,21 +2287,23 @@ public class GameView implements Initializable {
 
     private void drawMidHoleLinesArcs(TableMetrics values) {
         double arcDiameter = values.midArcRadius * 2 * scale;
-        double x1 = canvasX(values.topMidHoleXY[0] - values.midArcRadius * 2 - values.midHoleRadius);
-        double x2 = canvasX(values.botMidHoleXY[0] + values.midArcRadius);
-        double y1 = canvasY(values.topMidHoleXY[1] - values.midArcRadius);
-        double y2 = canvasY(values.botMidHoleXY[1] - values.midArcRadius);
-        graphicsContext.strokeArc(x1, y1, arcDiameter, arcDiameter, 270, 90, ArcType.OPEN);
-        graphicsContext.strokeArc(x2, y1, arcDiameter, arcDiameter, 180, 90, ArcType.OPEN);
-        graphicsContext.strokeArc(x1, y2, arcDiameter, arcDiameter, 0, 90, ArcType.OPEN);
-        graphicsContext.strokeArc(x2, y2, arcDiameter, arcDiameter, 90, 90, ArcType.OPEN);
+        double x1 = canvasX(values.topMidHoleLeftArcXy[0] - values.midArcRadius);
+        double x2 = canvasX(values.topMidHoleRightArcXy[0] - values.midArcRadius);
+        double y1 = canvasY(values.topMidHoleLeftArcXy[1] - values.midArcRadius);
+        double y2 = canvasY(values.botMidHoleLeftArcXy[1] - values.midArcRadius);
+        
+        double arcExtent = 90 - values.midHoleOpenAngle;
+        graphicsContext.strokeArc(x1, y1, arcDiameter, arcDiameter, 270, arcExtent, ArcType.OPEN);
+        graphicsContext.strokeArc(x2, y1, arcDiameter, arcDiameter, 180 + values.midHoleOpenAngle, arcExtent, ArcType.OPEN);
+        graphicsContext.strokeArc(x1, y2, arcDiameter, arcDiameter, 0 + values.midHoleOpenAngle, arcExtent, ArcType.OPEN);
+        graphicsContext.strokeArc(x2, y2, arcDiameter, arcDiameter, 90, arcExtent, ArcType.OPEN);
 
         // 袋内直线
-        if (values.isStraightHole()) {
-            for (double[][] line : values.allMidHoleLines) {
-                drawHoleLine(line);
-            }
+//        if (values.isStraightHole()) {
+        for (double[][] line : values.allMidHoleLines) {
+            drawHoleLine(line);
         }
+//        }
     }
 
     private void drawBalls() {
@@ -2850,19 +2984,18 @@ public class GameView implements Initializable {
 
     private void drawWhiteStopArea(List<double[]> actualPoints, GraphicsContext gc) {
         gc.setStroke(WHITE.darker());
-        
+
         List<double[]> canvasPoints = actualPoints.stream()
                 .map(point -> new double[]{canvasX(point[0]), canvasY(point[1])})
                 .collect(Collectors.toList());
-        
+
         curvedPolygonDrawer.draw(canvasPoints, gc);
-        
+
 //        for (int i = 1; i < actualPoints.size(); i++) {
 //            connectEndPoint(actualPoints.get(i - 1), actualPoints.get(i), gc);
 //        }
 //        connectEndPoint(actualPoints.get(actualPoints.size() - 1), actualPoints.get(0), gc);
     }
-
 
 
     private double[] predictionWidthDeviation(WhitePrediction[] predictions) {
@@ -2885,9 +3018,23 @@ public class GameView implements Initializable {
 
     private void draw() {
         drawTable();
+        if (drawAiPathItem.isSelected()) drawPredictedWhitePath(aiWhitePath);
+        if (predictPlayerPathItem.isSelected()) drawPredictedWhitePath(suggestedPlayerWhitePath);
         drawBalls();
         drawCursor();
         drawBallInHand();
+    }
+
+    private void drawPredictedWhitePath(List<double[]> path) {
+        if (path != null) {
+            graphicsContext.setStroke(WHITE_PREDICTION_COLOR);
+            double[] pos = path.get(0);
+            for (int i = 1; i < path.size(); i++) {
+                double[] dd = path.get(i);
+                graphicsContext.strokeLine(canvasX(pos[0]), canvasY(pos[1]), canvasX(dd[0]), canvasY(dd[1]));
+                pos = dd;
+            }
+        }
     }
 
     private void playMovement() {
@@ -3113,14 +3260,19 @@ public class GameView implements Initializable {
         } else {
             obstacleProjection = null;
         }
-        Ball cueBall = game.getGame().getCueBall();
-        PlayerPerson playingPerson = game.getGame().getCuingPlayer().getPlayerPerson();
-        currentHand = CuePlayParams.getPlayableHand(
-                cueBall.getX(), cueBall.getY(),
-                cursorDirectionUnitX, cursorDirectionUnitY,
-                gameValues.table,
-                playingPerson
-        );
+
+        // 启用/禁用手
+        updateHandSelection();
+        
+//        Ball cueBall = game.getGame().getCueBall();
+//        PlayerPerson playingPerson = game.getGame().getCuingPlayer().getPlayerPerson();
+//        currentHand = CuePlayParams.getPlayableHand(
+//                cueBall.getX(), cueBall.getY(),
+//                cursorDirectionUnitX, cursorDirectionUnitY,
+//                gameValues.table,
+//                playingPerson
+//        );
+//        currentHand = playingPerson
 
         // 如果打点不可能，把出杆键禁用了
         // 自动调整打点太麻烦了

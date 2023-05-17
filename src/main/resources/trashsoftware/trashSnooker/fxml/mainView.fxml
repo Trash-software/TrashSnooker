@@ -51,7 +51,10 @@
     <HBox spacing="10.0" alignment="CENTER">
         <Label text="%holes"/>
         <ComboBox fx:id="holeSizeBox"/>
+        <ComboBox fx:id="pocketDifficultyBox"/>
     </HBox>
+    
+    <CheckBox text="%devMode" fx:id="devModeBox"/>
 
     <Button text="%startGame" onAction="#startGameAction"/>
 

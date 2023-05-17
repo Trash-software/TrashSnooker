@@ -6,10 +6,37 @@ import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.fxml.GameView;
 
+import java.util.Arrays;
+import java.util.List;
+
 public abstract class NumberedBallTable extends Table {
 
     protected NumberedBallTable(TableMetrics tableMetrics) {
         super(tableMetrics);
+    }
+
+    @Override
+    public void drawTableMarks(GameView view, GraphicsContext graphicsContext, double scale) {
+        // 开球线
+        double breakLineX = GameView.canvasX(breakLineX());
+        graphicsContext.setStroke(GameView.WHITE);
+        graphicsContext.strokeLine(
+                breakLineX,
+                GameView.canvasY(tableMetrics.topY),
+                breakLineX,
+                GameView.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
+
+        // 颗星标记
+        List<double[]> stars = tableMetrics.tableStars;
+        graphicsContext.setFill(GameView.WHITE);
+
+        for (double[] star : stars) {
+            graphicsContext.fillOval(
+                    GameView.canvasX(star[0]) - 2,
+                    GameView.canvasY(star[1]) - 2,
+                    5,
+                    5);
+        }
     }
 
     public static void drawPoolBallEssential(

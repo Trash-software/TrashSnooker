@@ -201,6 +201,7 @@ public abstract class ActualRecorder implements GameRecorder {
         header[11] = (byte) game.getGameValues().table.getOrdinal();
         header[12] = (byte) game.getGameValues().table.getHoleSizeOrdinal();
         header[13] = (byte) game.getGameValues().ball.ordinal();
+        header[14] = (byte) game.getGameValues().table.getPocketDifficultyOrdinal(); 
 
         header[20] = (byte) game.getEntireGame().getTotalFrames();  // todo
         header[21] = (byte) game.getEntireGame().getP1Wins();
@@ -222,6 +223,7 @@ public abstract class ActualRecorder implements GameRecorder {
         TableTypeIndex   11     1      
         HoleSizeIndex    12     1
         BallTypeIndex    13     1
+        PocketDiffIndex  14     1
         Reserved
         TotalFrames      20     1
         P1Wins           21     1       都不包含当前这一局

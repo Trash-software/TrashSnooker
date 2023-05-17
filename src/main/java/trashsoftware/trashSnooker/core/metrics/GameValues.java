@@ -45,11 +45,18 @@ public class GameValues {
         JSONObject tableObj = jsonObject.getJSONObject("table");
         TableMetrics.TableBuilderFactory factory = 
                 TableMetrics.fromOrdinal(tableObj.getInt("tableOrdinal"));
-        TableMetrics.HoleSize holeSize = factory.supportedHoles[tableObj.getInt("holeSizeOrdinal")];
+        PocketSize pocketSize = factory.supportedHoles[tableObj.getInt("holeSizeOrdinal")];
+        
+        int diffOrd = factory.supportedDifficulties.length / 2;
+        if (tableObj.has("pocketDifficultyOrdinal")) {
+            diffOrd = tableObj.getInt("pocketDifficultyOrdinal");
+        }
+        
+        PocketDifficulty pocketDifficulty = factory.supportedDifficulties[diffOrd];
         TableMetrics tableMetrics = factory
                 .create()
-                .holeSize(holeSize)
-                .pocketGravityMultiplier(cloth.goodness.holeExtraGravityWidthMul)
+                .pocketDifficulty(pocketDifficulty)
+                .holeSize(pocketSize)
                 .build();
         
         return new GameValues(rule, tableMetrics, ballMetrics);
@@ -64,6 +71,7 @@ public class GameValues {
         JSONObject tableObj = new JSONObject();
         tableObj.put("tableOrdinal", table.getOrdinal());
         tableObj.put("holeSizeOrdinal", table.getHoleSizeOrdinal());
+        tableObj.put("pocketDifficultyOrdinal", table.getPocketDifficultyOrdinal());
         jsonObject.put("table", tableObj);
         
         return jsonObject;
@@ -122,8 +130,7 @@ public class GameValues {
                 } else if (Algebra.distanceToPoint(pos, table.topMidHoleRightArcXy) < table.midArcRadius + r) {
                     // 击中上方中袋右侧
                     return false;
-                } else if (table.isStraightHole() &&
-                        x >= table.midHoleLineLeftX && x < table.midHoleLineRightX) {
+                } else if (x >= table.midHoleLineLeftX && x < table.midHoleLineRightX) {
                     // 疑似上方中袋直线
                     double[][] line = table.topMidHoleLeftLine;
                     if (Algebra.distanceToLine(pos, line) < r) {
@@ -147,8 +154,7 @@ public class GameValues {
                 } else if (Algebra.distanceToPoint(pos, table.botMidHoleRightArcXy) < table.midArcRadius + r) {
                     // 击中下方中袋右侧
                     return false;
-                } else if (table.isStraightHole() &&
-                        x >= table.midHoleLineLeftX && x < table.midHoleLineRightX) {
+                } else if (x >= table.midHoleLineLeftX && x < table.midHoleLineRightX) {
                     // 疑似下方中袋直线
                     double[][] line = table.botMidHoleLeftLine;
                     if (Algebra.distanceToLine(pos, line) < r) {
@@ -182,13 +188,13 @@ public class GameValues {
                     return false;
                 }
             }
-            if (!table.isStraightHole()) {
+//            if (!table.isStraightHole()) {
                 for (double[] cornerArc : table.allCornerArcs) {
                     if (Algebra.distanceToPoint(pos, cornerArc) < table.cornerArcRadius + r) {
                         return false;
                     }
                 }
-            }
+//            }
             
             return true;
         }

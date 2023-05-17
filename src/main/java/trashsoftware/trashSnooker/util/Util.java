@@ -171,6 +171,11 @@ public class Util {
         return -1;
     }
 
+    public static <T> int indexOf(T c, T[] arr) {
+        for (int i = 0; i < arr.length; i++) if (Objects.equals(c, arr[i])) return i;
+        return -1;
+    }
+
     public static String timeToReadable(long ms) {
         long s = Math.round(ms / 1000.0);
         if (s < 60) {

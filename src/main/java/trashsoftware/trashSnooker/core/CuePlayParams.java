@@ -1,6 +1,9 @@
 package trashsoftware.trashSnooker.core;
 
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.util.Util;
+
+import java.util.*;
 
 public class CuePlayParams {
 
@@ -113,6 +116,39 @@ public class CuePlayParams {
         return Algebra.rotateVector(cueDirX, cueDirY, -offsetAngleRad);
     }
 
+    /**
+     * 返回这个位置可用的所有手，以优先级排序
+     */
+    public static List<PlayerPerson.Hand> getPlayableHands(double whiteX, double whiteY,
+                                                          double aimingX, double aimingY,
+                                                          TableMetrics tableMetrics,
+                                                          PlayerPerson person) {
+        List<PlayerPerson.Hand> result = new ArrayList<>();
+        result.add(PlayerPerson.Hand.REST);
+
+        double[][] standingPosLeft = personStandingPosition(whiteX, whiteY,
+                aimingX, aimingY,
+                person, PlayerPerson.Hand.LEFT);
+
+        if (!tableMetrics.isInOuterTable(standingPosLeft[0][0], standingPosLeft[0][1]) ||
+                !tableMetrics.isInOuterTable(standingPosLeft[1][0], standingPosLeft[1][1])) {
+            result.add(PlayerPerson.Hand.LEFT);
+        }
+
+        double[][] standingPosRight = personStandingPosition(whiteX, whiteY,
+                aimingX, aimingY,
+                person, PlayerPerson.Hand.RIGHT);
+
+        if (!tableMetrics.isInOuterTable(standingPosRight[0][0], standingPosRight[0][1]) ||
+                !tableMetrics.isInOuterTable(standingPosRight[1][0], standingPosRight[1][1])) {
+            result.add(PlayerPerson.Hand.RIGHT);
+        }
+        
+        result.sort(Comparator.comparingInt(person.handBody::precedenceOfHand));
+        
+        return result;
+    }
+
     public static PlayerPerson.HandSkill getPlayableHand(double whiteX, double whiteY,
                                                          double aimingX, double aimingY,
                                                          TableMetrics tableMetrics,
@@ -194,8 +230,8 @@ public class CuePlayParams {
             frontBackSpin *= Values.FRONT_SPIN_FACTOR;
         }
 
-        // 小力高低杆补偿
-        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.35);
+        // 小力高低杆补偿，pow越小，补偿越多
+        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.4);
         double sideSpinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.75);
 
         double side = sideSpinRatio * sideSpin * Values.MAX_SIDE_SPIN_SPEED;

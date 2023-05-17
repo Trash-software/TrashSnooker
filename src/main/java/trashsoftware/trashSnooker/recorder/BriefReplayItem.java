@@ -4,10 +4,7 @@ import javafx.fxml.FXML;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
-import trashsoftware.trashSnooker.core.metrics.BallMetrics;
-import trashsoftware.trashSnooker.core.metrics.GameRule;
-import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -70,9 +67,13 @@ public class BriefReplayItem {
 
             GameRule gameRule = GameRule.values()[header[10] & 0xff];
             TableMetrics.TableBuilderFactory factory = TableMetrics.TableBuilderFactory.values()[header[11] & 0xff];
-            TableMetrics.HoleSize holeSize = factory.supportedHoles[header[12] & 0xff];
+            PocketSize pocketSize = factory.supportedHoles[header[12] & 0xff];
+            PocketDifficulty pocketDifficulty = factory.supportedDifficulties[header[14] & 0xff];
             BallMetrics ballMetrics = BallMetrics.values()[header[13] & 0xff];
-            TableMetrics tableMetrics = factory.create().holeSize(holeSize).build();
+            TableMetrics tableMetrics = factory.create()
+                    .pocketDifficulty(pocketDifficulty)
+                    .holeSize(pocketSize)
+                    .build();
             gameValues = new GameValues(gameRule, tableMetrics, ballMetrics);
             
             totalFrames = header[20] & 0xff;

@@ -38,8 +38,9 @@ public class WhitePrediction {
     
     // 非必选项
     private Ball whiteSecondCollide;
+    private double whiteSpeedWhenHitFirstBall;
     private double whiteSpeedWhenHitSecondBall;
-    private boolean whiteCollidesHoleArcs = false;  // 是否碰撞了袋角
+    private boolean whiteHitsHoleArcs = false;  // 是否碰撞了袋角
     private double pathLength;
     private double distanceTravelledBeforeCollision;  // 白球在碰目标球之前跑了多远
     private double distanceTravelledAfterCollision;
@@ -111,13 +112,17 @@ public class WhitePrediction {
         return distanceTravelledAfterCollision;
     }
 
-    public void setFirstCollide(Ball firstCollide, boolean hitWallBeforeHitBall,
+    public void setFirstCollide(Ball firstCollide, 
+                                double whiteSpeedWhenHit,
+                                boolean hitWallBeforeHitBall,
                                 double ballDirectionX, double ballDirectionY,
                                 double ballInitSpeed,
                                 double whiteDirectionXBeforeCollision,
                                 double whiteDirectionYBeforeCollision,
-                                double whiteCollisionX, double whiteCollisionY) {
+                                double whiteCollisionX, 
+                                double whiteCollisionY) {
         this.firstCollide = firstCollide;
+        this.whiteSpeedWhenHitFirstBall = whiteSpeedWhenHit;
         this.hitWallBeforeHitBall = hitWallBeforeHitBall;
         this.ballDirectionX = ballDirectionX;
         this.ballDirectionY = ballDirectionY;
@@ -195,15 +200,19 @@ public class WhitePrediction {
     }
 
     public void whiteCollidesHoleArcs() {
-        this.whiteCollidesHoleArcs = true;
+        this.whiteHitsHoleArcs = true;
     }
 
-    public boolean isWhiteCollidesHoleArcs() {
-        return whiteCollidesHoleArcs;
+    public boolean isWhiteHitsHoleArcs() {
+        return whiteHitsHoleArcs;
     }
 
     public double getWhiteSpeedWhenHitSecondBall() {
         return whiteSpeedWhenHitSecondBall;
+    }
+
+    public double getWhiteSpeedWhenHitFirstBall() {
+        return whiteSpeedWhenHitFirstBall;
     }
 
     public Ball getSecondCollide() {
