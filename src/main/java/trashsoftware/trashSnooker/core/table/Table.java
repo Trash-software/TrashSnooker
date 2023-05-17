@@ -4,12 +4,18 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 import java.util.HashMap;
 
+/**
+ * 重要！！！
+ * 
+ * 这个Table和真实的table尺寸布局这些没什么关系，只是一个游戏的载体
+ */
 public abstract class Table {
 
     protected TableMetrics tableMetrics;

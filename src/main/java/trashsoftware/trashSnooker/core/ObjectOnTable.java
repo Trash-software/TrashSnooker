@@ -258,8 +258,7 @@ public abstract class ObjectOnTable implements Cloneable {
                     // 击中上方中袋右侧
                     hitHoleArcArea(table.topMidHoleRightArcXy, phy, table.midArcRadius);
                     return 2;
-                } else if (table.isStraightHole() &&
-                        nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
+                } else if (nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
                     // 疑似上方中袋直线
                     double[][] line = table.topMidHoleLeftLine;
                     if (predictedDtToLine(line) < radius &&
@@ -303,8 +302,7 @@ public abstract class ObjectOnTable implements Cloneable {
                     // 击中下方中袋右侧
                     hitHoleArcArea(table.botMidHoleRightArcXy, phy, table.midArcRadius);
                     return 2;
-                } else if (table.isStraightHole() &&
-                        nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
+                } else if (nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
                     // 疑似下方中袋直线
                     double[][] line = table.botMidHoleLeftLine;
                     if (predictedDtToLine(line) < radius &&
@@ -360,7 +358,7 @@ public abstract class ObjectOnTable implements Cloneable {
                     return 2;
                 }
             }
-            if (!table.isStraightHole()) {
+//            if (!table.isStraightHole()) {
                 for (double[] cornerArc : table.allCornerArcs) {
                     if (predictedDtToPoint(cornerArc) < table.cornerArcRadius + radius &&
                             currentDtToPoint(cornerArc) >= table.cornerArcRadius + radius) {
@@ -368,7 +366,7 @@ public abstract class ObjectOnTable implements Cloneable {
                         return 2;
                     }
                 }
-            }
+//            }
 
             tryEnterGravityArea(phy, probHole, false);
             normalMove(phy);

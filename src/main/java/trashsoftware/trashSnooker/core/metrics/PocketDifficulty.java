@@ -6,21 +6,21 @@ import trashsoftware.trashSnooker.util.Util;
 public class PocketDifficulty {
     public static PocketDifficulty[] GREEN_TABLE_DIFFICULTIES = {
             new PocketDifficulty("veryLoose",
-                    20.0, 1.5, 8.0,
-                    0.5, 1.0,
-                    15.0, 1.0, 0.0),
+                    16.0, 1.5, 8.0,
+                    0.6, 1.0,
+                    15.0, 0.8, 0.0),
             new PocketDifficulty("loose",
-                    16.0, 1.5, 6.0,
-                    0.4, 0.75,
-                    13.5, 1.0, 0.0),
+                    12.5, 1.5, 6.0,
+                    0.45, 0.75,
+                    12.5, 1.0, 0.0),
             new PocketDifficulty("normal",
-                    12.0, 1.5, 5.0,
-                    0.35, 0.5,
-                    12.0, 1.0, 0.0),
+                    10.0, 1.5, 5.0,
+                    0.3, 0.5,
+                    10.0, 1.0, 0.0),
             new PocketDifficulty("tight",
-                    10.0, 1.5, 4.0,
-                    0.2, 0.25,
-                    9.0, 1.0, 0.0),
+                    8.5, 1.5, 4.0,
+                    0.15, 0.25,
+                    8.5, 1.0, 0.0),
             new PocketDifficulty("veryTight",
                     7.0, 1.5, 4.0,
                     0.0, 0.0,
@@ -28,9 +28,9 @@ public class PocketDifficulty {
     };
     public static PocketDifficulty[] BLUE_TABLE_DIFFICULTIES = {
             new PocketDifficulty("normal",
-                    15.0, 0.0, 7.0,
-                    0.65, 0.5,
-                    10.0, 0.0, 20.0)
+                    15.0, 0.5, 7.0,
+                    0.5, 0.5,
+                    10.0, 0.2, 12.5)
     };
 
     public final String key;

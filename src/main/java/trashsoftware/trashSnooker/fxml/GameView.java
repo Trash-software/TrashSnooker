@@ -2199,6 +2199,7 @@ public class GameView implements Initializable {
         drawHole(values.botLeftHoleXY, values.cornerHoleRadius);
         drawHole(values.topRightHoleXY, values.cornerHoleRadius);
         drawHole(values.botRightHoleXY, values.cornerHoleRadius);
+        
         drawHole(values.topMidHoleXY, values.midHoleRadius);
         drawHole(values.botMidHoleXY, values.midHoleRadius);
 
@@ -2286,21 +2287,23 @@ public class GameView implements Initializable {
 
     private void drawMidHoleLinesArcs(TableMetrics values) {
         double arcDiameter = values.midArcRadius * 2 * scale;
-        double x1 = canvasX(values.topMidHoleXY[0] - values.midArcRadius * 2 - values.midHoleRadius);
-        double x2 = canvasX(values.botMidHoleXY[0] + values.midArcRadius);
-        double y1 = canvasY(values.topMidHoleXY[1] - values.midArcRadius);
-        double y2 = canvasY(values.botMidHoleXY[1] - values.midArcRadius);
-        graphicsContext.strokeArc(x1, y1, arcDiameter, arcDiameter, 270, 90, ArcType.OPEN);
-        graphicsContext.strokeArc(x2, y1, arcDiameter, arcDiameter, 180, 90, ArcType.OPEN);
-        graphicsContext.strokeArc(x1, y2, arcDiameter, arcDiameter, 0, 90, ArcType.OPEN);
-        graphicsContext.strokeArc(x2, y2, arcDiameter, arcDiameter, 90, 90, ArcType.OPEN);
+        double x1 = canvasX(values.topMidHoleLeftArcXy[0] - values.midArcRadius);
+        double x2 = canvasX(values.topMidHoleRightArcXy[0] - values.midArcRadius);
+        double y1 = canvasY(values.topMidHoleLeftArcXy[1] - values.midArcRadius);
+        double y2 = canvasY(values.botMidHoleLeftArcXy[1] - values.midArcRadius);
+        
+        double arcExtent = 90 - values.midHoleOpenAngle;
+        graphicsContext.strokeArc(x1, y1, arcDiameter, arcDiameter, 270, arcExtent, ArcType.OPEN);
+        graphicsContext.strokeArc(x2, y1, arcDiameter, arcDiameter, 180 + values.midHoleOpenAngle, arcExtent, ArcType.OPEN);
+        graphicsContext.strokeArc(x1, y2, arcDiameter, arcDiameter, 0 + values.midHoleOpenAngle, arcExtent, ArcType.OPEN);
+        graphicsContext.strokeArc(x2, y2, arcDiameter, arcDiameter, 90, arcExtent, ArcType.OPEN);
 
         // 袋内直线
-        if (values.isStraightHole()) {
-            for (double[][] line : values.allMidHoleLines) {
-                drawHoleLine(line);
-            }
+//        if (values.isStraightHole()) {
+        for (double[][] line : values.allMidHoleLines) {
+            drawHoleLine(line);
         }
+//        }
     }
 
     private void drawBalls() {

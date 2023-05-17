@@ -354,7 +354,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double vertical = Algebra.projectionLengthOn(cushionNormalVec, vec);
         double mag = Math.abs(vertical) * phy.calculationsPerSec;
 
-        double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.67);
+        double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.7);
 //        System.out.println(mag + " " + sideSpinEffectMul);
         return sideSpin * sideSpinEffectMul;
     }
@@ -370,7 +370,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
      * @param cushionNormalVec 撞的库的法向量。比如说边库应是(1,0)或(-1,0)
      */
     private void applySpinsWhenHitCushion(Phy phy, double[] cushionNormalVec) {
-        double effectiveSideSpin = calculateEffectiveSideSpin(phy, cushionNormalVec);
+        double sideSpinStrength = calculateEffectiveSideSpin(phy, cushionNormalVec);
+        double effectiveSideSpin = sideSpinStrength * table.wallSpinEffectRatio;
 
         // todo: 暂时修不好，大概还是因为左手/右手定理的问题
 //        double[] cushionVec = Algebra.normalVector(cushionNormalVec);
