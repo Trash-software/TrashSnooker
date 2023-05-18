@@ -352,6 +352,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             cueBall.setY(realY);
             cueBall.pickup();
             ballInHand = false;
+        } else {
+            System.out.printf("Position %f, %f cannot place cue ball \n", realX, realY);
         }
     }
 

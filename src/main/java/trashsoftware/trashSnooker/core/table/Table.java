@@ -29,7 +29,7 @@ public abstract class Table {
                                     double ballCanvasDiameter,
                                     Color color,
                                     GraphicsContext graphicsContext) {
-        drawBallBase(canvasX, canvasY, ballCanvasDiameter, color, graphicsContext, false);
+        drawBallBase(canvasX, canvasY, ballCanvasDiameter, color, Values.BALL_CONTOUR, graphicsContext, false);
     }
 
     protected static void drawBallBase(
@@ -37,10 +37,11 @@ public abstract class Table {
             double canvasY,
             double canvasBallDiameter,
             Color color,
+            Color contourColor,
             GraphicsContext graphicsContext,
             boolean drawWhiteBorder) {
         double ballRadius = canvasBallDiameter / 2;
-        graphicsContext.setStroke(Values.BALL_CONTOUR);
+        graphicsContext.setStroke(contourColor);
         graphicsContext.strokeOval(
                 canvasX - ballRadius,
                 canvasY - ballRadius,

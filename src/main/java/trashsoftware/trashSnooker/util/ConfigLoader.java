@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.util;
 
 import trashsoftware.trashSnooker.fxml.App;
 
+import java.awt.*;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Locale;
@@ -58,7 +59,7 @@ public class ConfigLoader {
     }
 
     public String getString(String key, String defaultValue) {
-        return keyValues.getOrDefault(key, defaultValue);
+        return keyValues.computeIfAbsent(key, v -> defaultValue);
     }
 
     public int getInt(String key) {
@@ -76,6 +77,37 @@ public class ConfigLoader {
 
     public int getLastVersion() {
         return lastVersion;
+    }
+
+    /**
+     * @return {屏幕宽, 屏幕高, 缩放}
+     */
+    public double[] getResolution() {
+        String res = getString("resolution");
+        String zoom = getString("systemZoom");
+        
+        double[] result;
+        if (res == null || zoom == null) {
+            result = autoDetectScreenParams();
+            putScreenParams(result);
+        } else {
+            String[] widthHeight = res.split("x");
+            result = new double[]{Double.parseDouble(widthHeight[0]), Double.parseDouble(widthHeight[1]), Double.parseDouble(zoom)};
+        }
+        return result;
+    }
+    
+    private double[] autoDetectScreenParams() {
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        double windowsHeight = screen.getHeight();
+        DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice().getDisplayMode();
+        int hardwareWidth = mode.getWidth();
+        int hardwareHeight = mode.getHeight();
+
+        double zoomFactor = hardwareHeight / windowsHeight;
+
+        return new double[]{hardwareWidth, hardwareHeight, zoomFactor};
     }
 
     public Locale getLocale() {
@@ -103,6 +135,14 @@ public class ConfigLoader {
         put("nThreads", 4);
         put("locale", "zh_CN");
         put("recordCompression", "xz");
+        
+        double[] screenParams = autoDetectScreenParams();
+        putScreenParams(screenParams);
+    }
+    
+    private void putScreenParams(double[] screenParams) {
+        put("resolution", String.format("%dx%d", (int) screenParams[0], (int) screenParams[1]));
+        put("systemZoom", screenParams[2]);
     }
 
     private void writeConfig() {

@@ -80,7 +80,7 @@ public abstract class GameReplay implements GameHolder {
                 break;
             case SIDE_POCKET:
                 table = new SidePocketTable(gameValues.table);
-                scoreFactory = new SidePocketScoreFactory();
+                scoreFactory = new NineBallScoreResultFactory();
                 break;
             default:
                 throw new EnumConstantNotPresentException(GameRule.class, gameRule.name());

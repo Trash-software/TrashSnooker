@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChineseEightScoreFactory implements ScoreFactory {
+    
+    public ChineseEightScoreFactory() {
+        
+    }
+    
     @Override
     public int byteLength() {
         return ChineseEightScoreResult.BYTE_LENGTH;
@@ -17,7 +22,7 @@ public class ChineseEightScoreFactory implements ScoreFactory {
     @Override
     public ScoreResult fromBytes(GameReplay replay, byte[] bytes) {
         return new ChineseEightScoreResult(
-                Util.bytesToInt32(bytes, 4),
+                Util.bytesToInt32(bytes, 4),  // fixme: 显然不对
                 bytes[0] & 0xff,
                 readPlayerRems(replay, bytes, 4),
                 readPlayerRems(replay, bytes, 12)

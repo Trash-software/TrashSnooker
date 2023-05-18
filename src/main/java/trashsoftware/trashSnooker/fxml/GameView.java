@@ -49,8 +49,10 @@ import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LisEightGame;
+import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
+import trashsoftware.trashSnooker.core.scoreResult.NineBallScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
@@ -66,6 +68,7 @@ import trashsoftware.trashSnooker.recorder.ActualRecorder;
 import trashsoftware.trashSnooker.recorder.CueRecord;
 import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.recorder.TargetRecord;
+import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -88,8 +91,9 @@ public class GameView implements Initializable {
     public static final double HAND_DT_TO_MAX_PULL = 30.0;
     public static final double MIN_CUE_BALL_DT = 30.0;  // 运杆时杆头离白球的最小距离
     public static final double MAX_CUE_ANGLE = 60;
-    public static final double BIG_TABLE_SCALE = 0.32;
-    public static final double MID_TABLE_SCALE = 0.45;
+    public static final double SNOOKER_SCALE = 0.32;
+    public static final double MINI_SNOOKER_SCALE = 0.45;
+    public static final double AMERICAN_POOL_SCALE = 0.45;
     private static final double DEFAULT_POWER = 30.0;
     private static final double WHITE_PREDICT_LEN_AFTER_WALL = 1000.0;  // todo: 根据球员
     private static final long DEFAULT_REPLAY_GAP = 1000;
@@ -307,11 +311,15 @@ public class GameView implements Initializable {
 
     private void generateScales(GameValues gameValues) {
         TableMetrics values = gameValues.table;
-        if (gameValues.table.rightX > 3500) {
-            scale = BIG_TABLE_SCALE;
-        } else {
-            scale = MID_TABLE_SCALE;
-        }
+        
+        double[] screenParams = ConfigLoader.getInstance().getResolution();  // 宽，高，缩放
+        double graphWidth = screenParams[0] / screenParams[2] - 180;
+        double graphHeight = screenParams[1] / screenParams[2] - 180;
+        
+        double scaleW = graphWidth / values.outerWidth;
+        double scaleH = graphHeight / values.outerHeight;
+        scale = Math.min(scaleW, scaleH);
+        System.out.printf("Scales: w: %.2f, h: %.2f, global: %.2f \n", scaleW, scaleH, scale);
 
         canvasWidth = values.outerWidth * scale;
         canvasHeight = values.outerHeight * scale;
@@ -508,7 +516,7 @@ public class GameView implements Initializable {
                 PlayerPerson person = game.getGame().getCuingPlayer().getPlayerPerson();
                 currentHand = person.handBody.getHandSkillByHand(selected);
             });
-            
+
             handSelectionToggleGroup.selectToggle(handSelectionRight);
         }
     }
@@ -518,23 +526,23 @@ public class GameView implements Initializable {
         InGamePlayer igp = game.getGame().getCuingPlayer().getInGamePlayer();
         if (igp.getPlayerType() == PlayerType.COMPUTER) return;
         PlayerPerson playingPerson = igp.getPlayerPerson();
-        
+
         List<PlayerPerson.Hand> playAbles = CuePlayParams.getPlayableHands(
                 cueBall.getX(), cueBall.getY(),
                 cursorDirectionUnitX, cursorDirectionUnitY,
                 gameValues.table,
                 playingPerson
         );
-        
+
         handSelectionLeft.setDisable(!playAbles.contains(PlayerPerson.Hand.LEFT));
         handSelectionRight.setDisable(!playAbles.contains(PlayerPerson.Hand.RIGHT));
         handSelectionRest.setDisable(!playAbles.contains(PlayerPerson.Hand.REST));  // 事实上架杆永远可用
-        
+
         handSelectionToggleGroup.selectToggle(
                 handButtonOfHand(playAbles.get(0))
         );
     }
-    
+
     private RadioButton handButtonOfHand(PlayerPerson.Hand hand) {
         switch (hand) {
             case LEFT:
@@ -1693,6 +1701,7 @@ public class GameView implements Initializable {
                     withdraw(player);
                     return;
                 }
+                System.out.println("AI placed cue ball at " + Arrays.toString(pos));
 
                 game.getGame().placeWhiteBall(pos[0], pos[1]);
                 game.getGame().getRecorder().writeBallInHandPlacement();
@@ -2199,7 +2208,7 @@ public class GameView implements Initializable {
         drawHole(values.botLeftHoleXY, values.cornerHoleRadius);
         drawHole(values.topRightHoleXY, values.cornerHoleRadius);
         drawHole(values.botRightHoleXY, values.cornerHoleRadius);
-        
+
         drawHole(values.topMidHoleXY, values.midHoleRadius);
         drawHole(values.botMidHoleXY, values.midHoleRadius);
 
@@ -2291,7 +2300,7 @@ public class GameView implements Initializable {
         double x2 = canvasX(values.topMidHoleRightArcXy[0] - values.midArcRadius);
         double y1 = canvasY(values.topMidHoleLeftArcXy[1] - values.midArcRadius);
         double y2 = canvasY(values.botMidHoleLeftArcXy[1] - values.midArcRadius);
-        
+
         double arcExtent = 90 - values.midHoleOpenAngle;
         graphicsContext.strokeArc(x1, y1, arcDiameter, arcDiameter, 270, arcExtent, ArcType.OPEN);
         graphicsContext.strokeArc(x2, y1, arcDiameter, arcDiameter, 180 + values.midHoleOpenAngle, arcExtent, ArcType.OPEN);
@@ -2426,6 +2435,10 @@ public class GameView implements Initializable {
                             csr.getP1Rems() : csr.getP2Rems();
                     System.out.println(rems.size());
                     drawChineseEightAllTargets(rems);
+                } else if (gameValues.rule == GameRule.SIDE_POCKET) {
+                    NineBallScoreResult nsr = (NineBallScoreResult) replay.getScoreResult();
+                    Map<PoolBall, Boolean> rems = nsr.getRemBalls();
+                    drawPoolBallAllTargets(rems);
                 }
             });
         } else {
@@ -2442,16 +2455,14 @@ public class GameView implements Initializable {
                 if (gameValues.rule.snookerLike()) {
                     drawSnookerSinglePoles(cuePlayer.getSinglePole());
                     singlePoleLabel.setText(String.valueOf(cuePlayer.getSinglePoleScore()));
-                } else if (gameValues.rule == GameRule.CHINESE_EIGHT ||
-                        gameValues.rule == GameRule.LIS_EIGHT ||
-                        gameValues.rule == GameRule.SIDE_POCKET) {
+                } else if (gameValues.rule.poolLike()) {
                     if (cuePlayer == game.getGame().getCuingPlayer()) {
                         // 进攻成功了
-                        drawNumberedAllTargets((NumberedBallGame) game.getGame(),
+                        drawNumberedAllTargets((NumberedBallGame<?>) game.getGame(),
                                 (NumberedBallPlayer) cuePlayer);
                     } else {
                         // 进攻失败了
-                        drawNumberedAllTargets((NumberedBallGame) game.getGame(),
+                        drawNumberedAllTargets((NumberedBallGame<?>) game.getGame(),
                                 (NumberedBallPlayer) game.getGame().getCuingPlayer());
                     }
                 }
@@ -2463,7 +2474,7 @@ public class GameView implements Initializable {
         Platform.runLater(() -> {
             if (gameValues.rule.snookerLike())
                 drawSnookerTargetBoard(showNextTarget);
-            else if (gameValues.rule == GameRule.CHINESE_EIGHT || gameValues.rule == GameRule.LIS_EIGHT)
+            else if (gameValues.rule.poolLike())
                 drawPoolTargetBoard(showNextTarget);
         });
     }
@@ -2522,24 +2533,41 @@ public class GameView implements Initializable {
     private void drawChineseEightAllTargets(List<PoolBall> targets) {
         double x = ballDiameter * 0.6;
         double y = ballDiameter * 0.6;
-
-        if (gameValues.rule == GameRule.CHINESE_EIGHT || gameValues.rule == GameRule.LIS_EIGHT) {
-            for (PoolBall ball : targets) {
-                NumberedBallTable.drawPoolBallEssential(
-                        x, y, ballDiameter, ball.getColor(), ball.getValue(),
-                        singlePoleCanvas.getGraphicsContext2D());
-                x += ballDiameter * 1.2;
-            }
+        
+        for (PoolBall ball : targets) {
+            NumberedBallTable.drawPoolBallEssential(
+                    x, y, ballDiameter, ball.getColor(), ball.getValue(),
+                    singlePoleCanvas.getGraphicsContext2D());
+            x += ballDiameter * 1.2;
         }
     }
 
-    private void drawNumberedAllTargets(NumberedBallGame frame, NumberedBallPlayer player) {
-        if (frame instanceof ChineseEightBallGame) {
+    private void drawPoolBallAllTargets(Map<PoolBall, Boolean> balls) {
+        double x = ballDiameter * 0.6;
+        double y = ballDiameter * 0.6;
+
+        for (Map.Entry<PoolBall, Boolean> ballPot : balls.entrySet()) {
+            PoolBall ball = ballPot.getKey();
+            boolean greyOut = ballPot.getValue();
+            NumberedBallTable.drawPoolBallEssential(
+                    x, y, ballDiameter, ball.getColor(), ball.getValue(),
+                    singlePoleCanvas.getGraphicsContext2D(),
+                    greyOut);
+            x += ballDiameter * 1.2;
+        }
+    }
+
+    private void drawNumberedAllTargets(NumberedBallGame<?> frame, NumberedBallPlayer player) {
+        // 别想了，不会每一帧都画一遍，只有
+        if (frame instanceof ChineseEightBallGame) {  // 李式八球也instanceof中八
             int ballRange = ((ChineseEightBallPlayer) player).getBallRange();
             List<PoolBall> targets = ChineseEightTable.filterRemainingTargetOfPlayer(
                     ballRange, frame
             );
             drawChineseEightAllTargets(targets);
+        } else if (frame instanceof SidePocketGame) {
+            Map<PoolBall, Boolean> balls = ((SidePocketGame) frame).getBalls();
+            drawPoolBallAllTargets(balls);
         }
     }
 
@@ -3263,7 +3291,7 @@ public class GameView implements Initializable {
 
         // 启用/禁用手
         updateHandSelection();
-        
+
 //        Ball cueBall = game.getGame().getCueBall();
 //        PlayerPerson playingPerson = game.getGame().getCuingPlayer().getPlayerPerson();
 //        currentHand = CuePlayParams.getPlayableHand(

@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.numberedGames;
 
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
+import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.GameView;
 
@@ -39,5 +40,10 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
     @Override
     protected PoolBall createWhiteBall() {
         return new PoolBall(0, true, gameValues);
+    }
+
+    @Override
+    public NumberedBallTable getTable() {
+        return (NumberedBallTable) table;
     }
 }
