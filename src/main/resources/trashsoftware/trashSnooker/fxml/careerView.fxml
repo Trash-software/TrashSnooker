@@ -19,6 +19,10 @@
         <ColumnConstraints/>
     </columnConstraints>
 
+    <HBox>
+        <Button text="←" onAction="#backAction"/>
+    </HBox>
+
     <VBox GridPane.rowIndex="1" spacing="10.0">
         <HBox spacing="10.0">
             <Label fx:id="levelLabel"/>

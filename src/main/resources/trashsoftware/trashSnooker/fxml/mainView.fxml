@@ -2,10 +2,19 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.MainView"
       prefHeight="420.0" prefWidth="540.0" spacing="10.0" alignment="TOP_CENTER">
+
+    <padding>
+        <Insets topRightBottomLeft="10.0"/>
+    </padding>
+
+    <HBox>
+        <Button text="←" onAction="#backAction"/>
+    </HBox>
 
     <GridPane vgap="5.0" hgap="10.0" alignment="CENTER">
         <columnConstraints>
@@ -23,12 +32,12 @@
         <ComboBox fx:id="player2Box" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
         <ComboBox fx:id="player2CueBox" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
         <ComboBox fx:id="player2Player" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
-<!--        <Button text="添加球员" onAction="#addPlayerAction"-->
-<!--                GridPane.rowIndex="3" GridPane.columnSpan="4"/>-->
+        <!--        <Button text="添加球员" onAction="#addPlayerAction"-->
+        <!--                GridPane.rowIndex="3" GridPane.columnSpan="4"/>-->
     </GridPane>
 
     <Separator/>
-    
+
     <HBox spacing="10.0" alignment="CENTER">
         <Label text="%ruleTableBall"/>
         <ComboBox fx:id="gameRuleBox"/>
@@ -41,7 +50,7 @@
         <ComboBox fx:id="totalFramesBox">
         </ComboBox>
     </HBox>
-    
+
     <HBox spacing="10.0" alignment="CENTER">
         <Label text="%nylonCloth"/>
         <ComboBox fx:id="clothSmoothBox"/>
@@ -53,7 +62,7 @@
         <ComboBox fx:id="holeSizeBox"/>
         <ComboBox fx:id="pocketDifficultyBox"/>
     </HBox>
-    
+
     <CheckBox text="%devMode" fx:id="devModeBox"/>
 
     <Button text="%startGame" onAction="#startGameAction"/>

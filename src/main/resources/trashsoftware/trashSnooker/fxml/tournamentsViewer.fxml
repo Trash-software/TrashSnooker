@@ -3,21 +3,28 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.HBox?>
-<HBox xmlns="http://javafx.com/javafx"
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.TournamentsViewer"
-      prefHeight="600.0" prefWidth="720.0" spacing="20.0" fx:id="rootBox">
+      prefHeight="600.0" prefWidth="720.0" spacing="5.0">
 
     <padding>
         <Insets topRightBottomLeft="5.0"/>
     </padding>
 
-    <TableView fx:id="dataTable" prefWidth="300.0">
-        <columns>
-            <TableColumn text="%gameEvent" fx:id="champNameCol"/>
-            <TableColumn text="%eventTime" fx:id="champDateCol"/>
-            <TableColumn text="%eventRule" fx:id="champRuleCol"/>
-        </columns>
-    </TableView>
+    <HBox>
+        <Button text="←" onAction="#backAction"/>
+    </HBox>
 
-</HBox>
+    <HBox spacing="20.0" fx:id="rootBox" VBox.vgrow="ALWAYS">
+
+        <TableView fx:id="dataTable" prefWidth="300.0">
+            <columns>
+                <TableColumn text="%gameEvent" fx:id="champNameCol"/>
+                <TableColumn text="%eventTime" fx:id="champDateCol"/>
+                <TableColumn text="%eventRule" fx:id="champRuleCol"/>
+            </columns>
+        </TableView>
+    </HBox>
+</VBox>

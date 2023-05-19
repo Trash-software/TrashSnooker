@@ -1,6 +1,5 @@
 package trashsoftware.trashSnooker.fxml;
 
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -382,11 +381,11 @@ public class ReplayView implements Initializable {
                                 if (gameItemWrapper == null) {
                                     gameItemWrapper = new TreeItem<>(new MatchItem(time, item));
                                     ((MatchItem) gameItemWrapper.getValue()).setChildrenList(gameItemWrapper.getChildren());
-                                    
+
                                     entireGameItems.put(time, gameItemWrapper);
                                     root.getChildren().add(gameItemWrapper);
                                     root.getChildren().sort(Comparator.comparing(TreeItem::getValue));
-                                    
+
                                     if (root.getChildren().size() == 1) {
                                         root.setExpanded(true);
                                     }
@@ -394,7 +393,7 @@ public class ReplayView implements Initializable {
                                 gameItemWrapper.getChildren().add(new TreeItem<>(new FrameItem(item)));
                                 gameItemWrapper.getChildren().sort(Comparator.comparing(TreeItem::getValue));
                                 replayTable.refresh();  // 这里是为了让match的比分刷新
-                                
+
 //                                replayList.add(item);
                             } catch (VersionException ve) {
                                 System.err.printf("Record version: %d.%d\n",

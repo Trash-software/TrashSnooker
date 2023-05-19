@@ -7,27 +7,27 @@
     "person": "Neil Robertson",
     "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
-    "breakCue": "stdBreakCue"
+    "breakCue": "stdSnookerCue"
   },
   "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "Murphy",
+    "person": "Lao Youtiao",
     "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
-    "breakCue": "stdBreakCue"
+    "breakCue": "stdSnookerCue"
   },
-  "startTime": 1684507083701,
+  "startTime": 1684513219528,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "SIDE_POCKET",
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
     "table": {
-      "tableOrdinal": 2,
-      "pocketDifficultyOrdinal": 0,
-      "holeSizeOrdinal": 1
+      "tableOrdinal": 0,
+      "pocketDifficultyOrdinal": 2,
+      "holeSizeOrdinal": 2
     }
   },
   "totalFrames": 1,

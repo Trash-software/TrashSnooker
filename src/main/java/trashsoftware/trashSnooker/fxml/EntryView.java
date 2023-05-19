@@ -18,6 +18,7 @@ import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
+import trashsoftware.trashSnooker.fxml.statsViews.StatsView;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.db.DBAccess;
@@ -40,10 +41,11 @@ public class EntryView implements Initializable {
 
     private Stage selfStage;
     private ResourceBundle strings;
+    private Scene thisScene;
 
-    void startCareerView(Stage owner, Stage stage) {
-        stage.initOwner(owner);
-        stage.initModality(Modality.WINDOW_MODAL);
+    void startCareerView(Stage stage) {
+//        stage.initOwner(owner);
+//        stage.initModality(Modality.WINDOW_MODAL);
 
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("careerView.fxml"),
@@ -56,17 +58,17 @@ public class EntryView implements Initializable {
             throw new RuntimeException(e);
         }
         root.setStyle(App.FONT_STYLE);
-
-        Scene scene = new Scene(root);
-
+        
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
-        stage.setScene(scene);
 
         CareerView mainView = loader.getController();
+        mainView.setParent(thisScene);
         mainView.setSelfStage(stage);
 
-        stage.show();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.sizeToScene();
     }
 
     @Override
@@ -87,8 +89,15 @@ public class EntryView implements Initializable {
 
     public void setup(Stage selfStage) {
         this.selfStage = selfStage;
+        this.thisScene = selfStage.getScene();
 
         refreshGui();
+        
+        this.selfStage.setOnHidden(e -> {
+//                Recorder.save();
+//                ConfigLoader.stopLoader();
+            DBAccess.closeDB();
+        });
 
 //        CareerManager careerManager = CareerManager.getInstance();
 //        if (careerManager)
@@ -134,14 +143,13 @@ public class EntryView implements Initializable {
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
 
-            Stage stage = new Stage();
-            stage.initOwner(this.selfStage);
-            stage.initModality(Modality.WINDOW_MODAL);
+            StatsView view = loader.getController();
+            view.setParent(thisScene);
+            view.setStage(selfStage);
 
             Scene scene = new Scene(root);
-            stage.setScene(scene);
-
-            stage.show();
+            selfStage.setScene(scene);
+            selfStage.sizeToScene();
         } catch (IOException e) {
             EventLogger.error(e);
         }
@@ -180,10 +188,6 @@ public class EntryView implements Initializable {
 
     @FXML
     void newCareer() throws IOException {
-        Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(selfStage);
-
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("newCareerView.fxml"),
                 strings
@@ -191,16 +195,16 @@ public class EntryView implements Initializable {
         Parent root = loader.load();
         root.setStyle(App.FONT_STYLE);
 
-        NewCareerView mainView = loader.getController();
-        mainView.setup(this, selfStage, stage);
+        NewCareerView view = loader.getController();
+        view.setParent(thisScene);
+        view.setup(this, selfStage);
 
         Scene scene = new Scene(root);
 
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
-        stage.setScene(scene);
-
-        stage.show();
+        selfStage.setScene(scene);
+        selfStage.sizeToScene();
     }
 
     @FXML
@@ -209,9 +213,8 @@ public class EntryView implements Initializable {
         if (selected == null) return;
 
         CareerManager.setCurrentSave(selected);
-
-        Stage stage = new Stage();
-        startCareerView(selfStage, stage);
+        
+        startCareerView(selfStage);
     }
 
     @FXML
@@ -246,9 +249,9 @@ public class EntryView implements Initializable {
     @FXML
     void fastGame() throws IOException {
 //            ConfigLoader.startLoader(CONFIG);
-        Stage stage = new Stage();
-        stage.initOwner(selfStage);
-        stage.initModality(Modality.WINDOW_MODAL);
+//        Stage stage = new Stage();
+//        stage.initOwner(selfStage);
+//        stage.initModality(Modality.WINDOW_MODAL);
 
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("mainView.fxml"),
@@ -258,18 +261,14 @@ public class EntryView implements Initializable {
         root.setStyle(App.FONT_STYLE);
 
         MainView mainView = loader.getController();
-        mainView.setStage(stage);
+        mainView.setParent(thisScene);
+        mainView.setStage(selfStage);
 
         Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
-        stage.setScene(scene);
+        selfStage.setScene(scene);
+        selfStage.sizeToScene();
 
-        stage.setOnHidden(e -> {
-//                Recorder.save();
-//                ConfigLoader.stopLoader();
-            DBAccess.closeDB();
-        });
-
-        stage.show();
+//        stage.show();
     }
 }

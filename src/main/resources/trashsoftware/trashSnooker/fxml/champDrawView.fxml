@@ -18,6 +18,10 @@
         <Insets topRightBottomLeft="10.0"/>
     </padding>
 
+    <HBox>
+        <Button text="←" onAction="#backAction"/>
+    </HBox>
+
     <Label fx:id="champNameLabel"/>
 
     <ScrollPane prefHeight="540.0" prefWidth="1060.0" style="-fx-padding: 0;">

@@ -30,7 +30,7 @@ import trashsoftware.trashSnooker.util.EventLogger;
 import java.net.URL;
 import java.util.*;
 
-public class ChampDrawView implements Initializable {
+public class ChampDrawView extends ChildInitializable {
 
     private static final Color WINNER_COLOR = Color.BLACK;
     private static final Color LOSER_COLOR = Color.GRAY;
@@ -86,7 +86,12 @@ public class ChampDrawView implements Initializable {
         initTable();
         updateGui();
     }
-    
+
+    @Override
+    public Stage getStage() {
+        return selfStage;
+    }
+
     private void refreshCueBox() {
         cueBox.getItems().clear();
         PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();

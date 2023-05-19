@@ -16,8 +16,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
     
-    public static final String VERSION_NAME = "0.3.0";
-    public static final int VERSION_CODE = 25;
+    public static final String VERSION_NAME = "0.3.1";
+    public static final int VERSION_CODE = 26;
 
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     public static final String CLASSIFIER = "win";
@@ -56,12 +56,11 @@ public class App extends Application {
             Parent parent = loader.load();
             
             parent.setStyle(FONT_STYLE);
+            Scene scene = new Scene(parent);
+            primaryStage.setScene(scene);
             
             EntryView entryView = loader.getController();
             entryView.setup(primaryStage);
-            
-            Scene scene = new Scene(parent);
-            primaryStage.setScene(scene);
             
             primaryStage.show();
         } catch (Exception e) {
