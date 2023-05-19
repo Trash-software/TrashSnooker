@@ -20,6 +20,9 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
     private final LinkedHashMap<PoolBall, Boolean> pottedRecord = new LinkedHashMap<>();  // 缓存用，仅用于GameView画目标球
     protected SidePocketPlayer winingPlayer;
     protected NineBallScoreResult curResult;
+    
+    private boolean wasIllegalBreak;
+    protected boolean canPushOut = false;
 
     public SidePocketGame(EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
         super(entireGame, gameSettings, new SidePocketTable(entireGame.gameValues.table), frameIndex);
@@ -180,9 +183,31 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
                         true);
             }
         }
+        
+        if (isBreaking) {
+            updateBreakStats(newPotted);
+            if (isBreakFoul()) {
+                thisCueFoul.addFoul(String.format(
+                        strings.getString("breakFoulDes"),
+                        breakStats.nBallsHitCushion
+                ));
+            } else if (isIllegalBreak()) {
+                thisCueFoul.setHeaderReason(strings.getString("illegalBreak"));
+                thisCueFoul.addFoul(String.format(
+                        strings.getString("breakLoseChanceDes"),
+                        breakStats.nBallsPot,
+                        breakStats.nBallTimesEnterBreakArea
+                ));
+                switchPlayer();
+                forceUpdateTarget();
+                // 不是自由球
+                return;
+            }
+        }
 
         if (thisCueFoul.isFoul()) {
             if (nineBall.isPotted()) {
+                // 疑问：违例开球但是进了9号，怎么办
                 winingPlayer = getAnotherPlayer();
                 end();
                 return;
@@ -205,7 +230,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
             }
             if (pottedBalls.contains(nineBall)) {
                 if (isBreaking) {
-                    // todo: 记录黄金九
+                    currentPlayer.setGoldNine();
                 }
                 winingPlayer = currentPlayer;
                 end();
@@ -222,6 +247,18 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
 
     public PoolBall getNineBall() {
         return getBallByValue(9);
+    }
+    
+    private boolean isBreakFoul() {
+        // 开球犯规
+        if (breakStats.nBallsPot > 0) return false;
+        return breakStats.nBallsHitCushion < 4;
+    }
+    
+    private boolean isIllegalBreak() {
+        // 开球违例，同中八开球失机
+        wasIllegalBreak = breakStats.nBallsPot + breakStats.nBallTimesEnterBreakArea < 3;
+        return wasIllegalBreak;
     }
 
     @Override
@@ -255,5 +292,10 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
             if (!ball.isPotted()) return ball;
         }
         return null;
+    }
+
+    @Override
+    public boolean wasIllegalBreak() {
+        return wasIllegalBreak;
     }
 }

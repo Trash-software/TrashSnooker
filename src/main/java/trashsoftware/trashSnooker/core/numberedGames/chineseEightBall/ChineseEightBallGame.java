@@ -365,10 +365,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         throw new RuntimeException("不可能");
     }
 
-    public boolean isJustAfterBreak() {
-        return finishedCuesCount == 1;
-    }
-
     @Override
     public boolean isInLineHandBall() {
 //        System.out.println(isJustAfterBreak() + " " + lastCueFoul);
@@ -582,7 +578,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         return wasBreakLoseChance;
     }
 
-    public boolean wasBreakLoseChance() {
+    @Override
+    public boolean wasIllegalBreak() {
         return wasBreakLoseChance;
     }
 

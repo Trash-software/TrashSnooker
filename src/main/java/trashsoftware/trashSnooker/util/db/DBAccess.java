@@ -4,6 +4,8 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
+import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
+import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
@@ -71,12 +73,15 @@ public class DBAccess {
     }
     
     private void updateDbStructure() {
+        addDbColumn("ALTER TABLE EntireGame ADD COLUMN MatchID TEXT DEFAULT null;");
+        addDbColumn("ALTER TABLE SidePocketRecord ADD COLUMN GoldNine INTEGER DEFAULT 0;");
+    }
+    
+    private void addDbColumn(String query) {
         try (Statement stmt = connection.createStatement()) {
-            String query = "ALTER TABLE EntireGame ADD COLUMN MatchID TEXT DEFAULT null;";
-            // + ALTER TABLE SidePocketRecord ADD COLUMN GoldNine INTEGER DEFAULT 0;
             stmt.execute(query);
         } catch (SQLException ex) {
-            System.out.println("Not add column");
+            System.out.println("Not executed: " + query);
         }
     }
 
@@ -275,10 +280,10 @@ public class DBAccess {
     }
 
     /**
-     * 返回{炸请，接清}
+     * 返回{开球次数，开球进球次数，炸请，接清，单杆最高球数，黄金九（仅九球）}
      */
     public int[] getNumberedBallGamesTotal(GameRule gameRule, String playerName, boolean playerIsAi) {
-        int[] rtn = new int[5];
+        int[] rtn = new int[6];
         String pns = "'" + playerName + "'";
         String tableName = gameRule.toSqlKey() + "Record";
         String typeKey = "'" + gameRule.toSqlKey() + "'";
@@ -301,6 +306,9 @@ public class DBAccess {
                 rtn[3] += resultSet.getInt("ContinueClear");
                 if (highInResult > rtn[4]) {
                     rtn[4] = highInResult;
+                }
+                if (gameRule == GameRule.SIDE_POCKET) {
+                    rtn[5] += resultSet.getInt("GoldNine");
                 }
             }
             statement.close();
@@ -436,12 +444,15 @@ public class DBAccess {
                     int index = numRs.getInt("FrameIndex");
                     int playerIndex = numRs.getString("PlayerName")
                             .equals(title.player1Id) ? 0 : 1;
-                    int[] scores = new int[5];  // breaks, break successes, break clear, continue clear, highest
+                    int[] scores = new int[6];  // breaks, break successes, break clear, continue clear, highest, gold nines (nine ball only)
                     scores[0] = numRs.getInt("Breaks");
                     scores[1] = numRs.getInt("BreakPots");
                     scores[2] = numRs.getInt("BreakClear");
                     scores[3] = numRs.getInt("ContinueClear");
                     scores[4] = numRs.getInt("Highest");
+                    if (title.gameRule == GameRule.SIDE_POCKET) {
+                        scores[5] = numRs.getInt("GoldNine");
+                    }
                     PlayerFrameRecord.Numbered numbered = new PlayerFrameRecord.Numbered(
                             index, framesPotMap.get(index)[playerIndex],
                             framesWinnerMap.get(index), scores
@@ -483,9 +494,12 @@ public class DBAccess {
                 (endLine ? ";" : "");
     }
 
-    public void recordNumberedBallResult(EntireGame entireGame, Game<?, ?> frame,
-                                         NumberedBallPlayer player, boolean wins,
+    public void recordNumberedBallResult(EntireGame entireGame, 
+                                         Game<?, ?> frame,
+                                         NumberedBallPlayer player, 
+                                         boolean wins,
                                          List<Integer> continuousPots) {
+        GameRule gameRule = entireGame.gameValues.rule;
         String tableName = entireGame.gameValues.rule.toSqlKey() + "Record";
         int playTimes = player.getPlayTimes();
         boolean breaks = player.isBreakingPlayer();
@@ -506,13 +520,27 @@ public class DBAccess {
         for (Integer b : continuousPots) {
             if (b > highest) highest = b;
         }
+        int goldNine = 0;
+        if (player instanceof SidePocketPlayer) {
+            if (((SidePocketPlayer) player).isGoldNine()) {
+                // 黄金九。由于目前的检测方式有可能将黄金九识别为炸清，所以清空breakClear
+                goldNine = 1;
+                breakClear = 0;
+                continueClear = 0;
+            }
+        }
+        
         String query = "INSERT INTO " + tableName + " VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
                 frame.frameIndex + ", " +
                 "'" + player.getPlayerPerson().getPlayerId() + "', " +
                 (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) + ", " +
                 (breaks ? 1 : 0) + ", " + (breakPot ? 1 : 0) + ", " +
-                breakClear + ", " + continueClear + ", " + highest + ");";
+                breakClear + ", " + 
+                continueClear + ", " + 
+                highest +
+                (gameRule == GameRule.SIDE_POCKET ? (", " + goldNine + "") : "") +
+                ");";
         try {
             executeStatement(query);
         } catch (SQLException e) {

@@ -6,6 +6,7 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 public class SidePocketPlayer extends NumberedBallPlayer {
 
     private int target;
+    private boolean goldNine;
 
     public SidePocketPlayer(InGamePlayer playerPerson) {
         super(playerPerson);
@@ -17,5 +18,13 @@ public class SidePocketPlayer extends NumberedBallPlayer {
 
     public int getTarget() {
         return target;
+    }
+    
+    public void setGoldNine() {
+        this.goldNine = true;
+    }
+
+    public boolean isGoldNine() {
+        return goldNine;
     }
 }

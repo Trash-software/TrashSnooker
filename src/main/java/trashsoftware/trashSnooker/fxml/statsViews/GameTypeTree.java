@@ -144,6 +144,11 @@ public class GameTypeTree extends RecordTree {
             resultPane.add(new Label(String.valueOf(breaksScores[3])), 1, rowIndex++);
             resultPane.add(new Label(strings.getString("highestSingleBalls")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
+            
+            if (gameRule == GameRule.SIDE_POCKET) {
+                resultPane.add(new Label(strings.getString("goldNines")), 0, rowIndex);
+                resultPane.add(new Label(String.valueOf(breaksScores[5])), 1, rowIndex++);
+            }
         }
         resultPane.add(new Separator(), 0, rowIndex++, 4, 1);
         final Button gameStatsButton = new Button(strings.getString("matchStats"));

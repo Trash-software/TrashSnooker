@@ -93,5 +93,6 @@ CREATE TABLE IF NOT EXISTS SidePocketRecord (
     BreakClear INTEGER DEFAULT 0,
     ContinueClear INTEGER DEFAULT 0,
     Highest INTEGER DEFAULT 0,  -- 最多单杆连续进球
+    GoldNine INTEGER DEFAULT 0,
     PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName, PlayerIsAI)
 );

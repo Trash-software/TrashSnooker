@@ -118,7 +118,7 @@ public abstract class EntireGameRecord {
         }
         
         public int[][] totalScores() {
-            int[][] res = new int[2][5];
+            int[][] res = new int[2][6];
             for (PlayerFrameRecord[] records : getFrameRecords().values()) {
                 PlayerFrameRecord.Numbered p1r = (PlayerFrameRecord.Numbered) records[0];
                 PlayerFrameRecord.Numbered p2r = (PlayerFrameRecord.Numbered) records[1];
@@ -127,10 +127,12 @@ public abstract class EntireGameRecord {
                 res[0][1] += p1r.clears[1];
                 res[0][2] += p1r.clears[2];
                 res[0][3] += p1r.clears[3];
+                res[0][5] += p1r.clears[5];
                 res[1][0] += p2r.clears[0];
                 res[1][1] += p2r.clears[1];
                 res[1][2] += p2r.clears[2];
                 res[1][3] += p2r.clears[3];
+                res[1][5] += p1r.clears[5];
                 
                 if (res[0][4] < p1r.clears[4]) {
                     res[0][4] = p1r.clears[4];

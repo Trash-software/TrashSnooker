@@ -181,6 +181,9 @@ public class MatchRecord extends RecordTree {
 
         page.add(new Separator(), 0, rowIndex++, 8, 1);
 
+        boolean poolLike = egt.gameRule == GameRule.CHINESE_EIGHT ||
+                egt.gameRule == GameRule.LIS_EIGHT ||
+                egt.gameRule == GameRule.SIDE_POCKET;
         if (egt.gameRule.snookerLike()) {
             int[][] totalSnookerScores = ((EntireGameRecord.Snooker) matchRec).totalScores();
             page.add(new Label(strings.getString("totalPoints")), 0, rowIndex);
@@ -207,8 +210,7 @@ public class MatchRecord extends RecordTree {
             page.add(new Label(String.valueOf(totalSnookerScores[0][4])), 2, rowIndex);
             page.add(new Label(String.valueOf(totalSnookerScores[1][4])), 6, rowIndex);
             rowIndex++;
-        } else if (egt.gameRule == GameRule.CHINESE_EIGHT ||
-                egt.gameRule == GameRule.SIDE_POCKET) {
+        } else if (poolLike) {
             int[][] numberedBreaks = ((EntireGameRecord.NumberedBall) matchRec).totalScores();
             page.add(new Label("开球次数"), 0, rowIndex);
             page.add(new Label(String.valueOf(numberedBreaks[0][0])), 2, rowIndex);
@@ -241,6 +243,13 @@ public class MatchRecord extends RecordTree {
             page.add(new Label(String.valueOf(numberedBreaks[0][4])), 2, rowIndex);
             page.add(new Label(String.valueOf(numberedBreaks[1][4])), 6, rowIndex);
             rowIndex++;
+            
+            if (egt.gameRule == GameRule.SIDE_POCKET) {
+                page.add(new Label(strings.getString("goldNines")), 0, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[0][5])), 2, rowIndex);
+                page.add(new Label(String.valueOf(numberedBreaks[1][5])), 6, rowIndex);
+                rowIndex++;
+            }
         }
 
         page.add(new Separator(), 0, rowIndex, 8, 1);
@@ -272,9 +281,7 @@ public class MatchRecord extends RecordTree {
                     p2SinglePole.setText(String.format("(%d)", p2sr.snookerScores[1]));
                     page.add(p2SinglePole, 7, rowIndex);
                 }
-            } else if (egt.gameRule == GameRule.CHINESE_EIGHT ||
-                    egt.gameRule == GameRule.LIS_EIGHT ||
-                    egt.gameRule == GameRule.SIDE_POCKET) {
+            } else if (poolLike) {
                 // 炸清，接清
                 PlayerFrameRecord.Numbered p1nr = (PlayerFrameRecord.Numbered) p1r;
                 PlayerFrameRecord.Numbered p2nr = (PlayerFrameRecord.Numbered) p2r;
@@ -285,6 +292,7 @@ public class MatchRecord extends RecordTree {
                 String continueClear = egt.gameRule == GameRule.CHINESE_EIGHT || egt.gameRule == GameRule.LIS_EIGHT ?
                         strings.getString("continueClears") :
                         strings.getString("smallGolds");
+                String goldNone = strings.getString("goldNines");
 
                 if (p1nr.clears[2] > 0) {
                     Label p1Extra = new Label(breakClear);
@@ -300,6 +308,14 @@ public class MatchRecord extends RecordTree {
                 }
                 if (p2nr.clears[3] > 0) {
                     Label p2Extra = new Label(continueClear);
+                    page.add(p2Extra, 6, rowIndex);
+                }
+                if (p1nr.clears[5] > 0) {
+                    Label p1Extra = new Label(goldNone);
+                    page.add(p1Extra, 2, rowIndex);
+                }
+                if (p2nr.clears[5] > 0) {
+                    Label p2Extra = new Label(goldNone);
                     page.add(p2Extra, 6, rowIndex);
                 }
             }

@@ -860,9 +860,9 @@ public class GameView implements Initializable {
                     }
                 }
             } 
-            else if (game.getGame() instanceof ChineseEightBallGame) {
-                ChineseEightBallGame ceg = (ChineseEightBallGame) game.getGame();
-                if (ceg.isJustAfterBreak() && ceg.wasBreakLoseChance()) {
+            else if (game.getGame() instanceof NeedBigBreak) {
+                NeedBigBreak nbb = (NeedBigBreak) game.getGame();
+                if (nbb.isJustAfterBreak() && nbb.wasIllegalBreak()) {
 //                    autoAim = false;  // 把autoAim交给askAfterBreakLoseChance的不复位分支
 //                    askAfterBreakLoseChance();
                     letOtherPlayMenu.setDisable(false);

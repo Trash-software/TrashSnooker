@@ -71,4 +71,8 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
     public NumberedBallTable getTable() {
         return (NumberedBallTable) table;
     }
+
+    public boolean isJustAfterBreak() {
+        return finishedCuesCount == 1;
+    }
 }
