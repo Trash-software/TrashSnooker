@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -578,52 +579,59 @@ public class GameView implements Initializable {
         double playerGoodness = CareerManager.getInstance().getPlayerGoodness();
         maxRealPredictLength = defaultMaxPredictLength * playerGoodness;
     }
+    
+    private void keyboardAction(KeyEvent e) {
+        if (replay != null || aiCalculating || playingMovement || cueAnimationPlayer != null) {
+            return;
+        }
+        switch (e.getCode()) {
+            case SPACE:
+                if (!cueButton.isDisabled()) {
+                    cueButton.fire();
+                }
+                break;
+            case LEFT:
+                turnDirectionDeg(-0.5);
+                break;
+            case RIGHT:
+                turnDirectionDeg(0.5);
+                break;
+            case COMMA:
+                turnDirectionDeg(-0.01);
+                break;
+            case PERIOD:
+                turnDirectionDeg(0.01);
+                break;
+            case A:
+                setCuePoint(cuePointX - 1, cuePointY);
+                break;
+            case D:
+                setCuePoint(cuePointX + 1, cuePointY);
+                break;
+            case W:
+                setCuePoint(cuePointX, cuePointY - 1);
+                break;
+            case S:
+                setCuePoint(cuePointX, cuePointY + 1);
+                break;
+            case Q:
+                setCueAngleDeg(cueAngleDeg + 1);
+                break;
+            case E:
+                setCueAngleDeg(cueAngleDeg - 1);
+                break;
+        }
+    }
 
     private void setKeyboardActions() {
         powerSlider.setBlockIncrement(1.0);
 
-        basePane.setOnKeyPressed(e -> {
-            if (replay != null || aiCalculating || playingMovement || cueAnimationPlayer != null) {
-                return;
-            }
-            switch (e.getCode()) {
-                case SPACE:
-                    if (!cueButton.isDisabled()) {
-                        cueButton.fire();
-                    }
-                    break;
-                case LEFT:
-                    turnDirectionDeg(-0.5);
-                    break;
-                case RIGHT:
-                    turnDirectionDeg(0.5);
-                    break;
-                case COMMA:
-                    turnDirectionDeg(-0.01);
-                    break;
-                case PERIOD:
-                    turnDirectionDeg(0.01);
-                    break;
-                case A:
-                    setCuePoint(cuePointX - 1, cuePointY);
-                    break;
-                case D:
-                    setCuePoint(cuePointX + 1, cuePointY);
-                    break;
-                case W:
-                    setCuePoint(cuePointX, cuePointY - 1);
-                    break;
-                case S:
-                    setCuePoint(cuePointX, cuePointY + 1);
-                    break;
-                case Q:
-                    setCueAngleDeg(cueAngleDeg + 1);
-                    break;
-                case E:
-                    setCueAngleDeg(cueAngleDeg - 1);
-                    break;
-            }
-        });
+        basePane.setOnKeyPressed(this::keyboardAction);
+
+        for (Toggle toggle : handSelectionToggleGroup.getToggles()) {
+            RadioButton rb = (RadioButton) toggle;
+            rb.setOnKeyPressed(this::keyboardAction);
+        }
     }
 
     private void turnDirectionDeg(double deg) {
@@ -1339,8 +1347,17 @@ public class GameView implements Initializable {
         restoreCueAngle();
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
-
+        
+        for (CueModel cueModel : CueModel.getAllCueModels()) {
+            cueModel.hide();
+        }
+//        game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame()).
         game.getGame().switchPlayer();
+        
+        if (game.getGame() instanceof AbstractSnookerGame) {
+            AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+            asg.cancelFreeBall();  // 让杆了你还打自由球？
+        }
 
         Player willPlayPlayer = game.getGame().getCuingPlayer();
         updatePowerSlider(willPlayPlayer.getPlayerPerson());

@@ -18,11 +18,9 @@ public abstract class ChildInitializable implements Initializable {
     
     @FXML
     public void backAction() {
-        System.out.println("Back");
         Stage stage = getStage();
         stage.setTitle(App.getStrings().getString("appName"));
         stage.setScene(parentScene);
         stage.sizeToScene();
-        System.out.println(parentScene);
     }
 }

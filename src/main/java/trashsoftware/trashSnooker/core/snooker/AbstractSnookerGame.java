@@ -499,6 +499,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public boolean isDoingFreeBall() {
         return doingFreeBall;
     }
+    
+    public void cancelFreeBall() {
+        doingFreeBall = false;
+    }
 
     public boolean canReposition() {
         if (thisCueFoul.isFoul() && thisCueFoul.isMiss()) {
