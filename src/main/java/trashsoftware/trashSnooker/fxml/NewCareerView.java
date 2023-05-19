@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class NewCareerView implements Initializable {
+public class NewCareerView extends ChildInitializable {
     @FXML
     Pane basePane;
     @FXML
@@ -44,7 +44,7 @@ public class NewCareerView implements Initializable {
     @FXML ComboBox<Difficulty> playerGoodnessBox;
 
     private EntryView entryView;
-    private Stage owner, thisStage;
+    private Stage owner;
     private ResourceBundle strings;
 
     @Override
@@ -59,10 +59,14 @@ public class NewCareerView implements Initializable {
         ChampDataManager.getInstance();
     }
 
-    public void setup(EntryView entryView, Stage owner, Stage thisStage) {
+    @Override
+    public Stage getStage() {
+        return owner;
+    }
+
+    public void setup(EntryView entryView, Stage owner) {
         this.entryView = entryView;
         this.owner = owner;
-        this.thisStage = thisStage;
     }
 
     private void fillBox() {
@@ -153,8 +157,9 @@ public class NewCareerView implements Initializable {
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
 
+            // 这里还是让ability当弹窗
             Stage stage = new Stage();
-            stage.initOwner(thisStage);
+            stage.initOwner(owner);
             stage.initModality(Modality.WINDOW_MODAL);
 
             Scene scene = new Scene(root);
@@ -170,9 +175,9 @@ public class NewCareerView implements Initializable {
     }
 
     private void launchNext() {
-        thisStage.close();
+//        thisStage.close();
         entryView.refreshGui();
-        entryView.startCareerView(owner, new Stage());
+        entryView.startCareerView(owner);
     }
 
     private void createCareerInfo(PlayerPerson person) {

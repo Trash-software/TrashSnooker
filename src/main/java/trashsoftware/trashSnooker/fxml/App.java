@@ -56,12 +56,11 @@ public class App extends Application {
             Parent parent = loader.load();
             
             parent.setStyle(FONT_STYLE);
+            Scene scene = new Scene(parent);
+            primaryStage.setScene(scene);
             
             EntryView entryView = loader.getController();
             entryView.setup(primaryStage);
-            
-            Scene scene = new Scene(parent);
-            primaryStage.setScene(scene);
             
             primaryStage.show();
         } catch (Exception e) {

@@ -8,6 +8,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampDataManager;
@@ -17,7 +18,7 @@ import trashsoftware.trashSnooker.fxml.widgets.TournamentItemView;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class TournamentsViewer implements Initializable {
+public class TournamentsViewer extends ChildInitializable {
     
     @FXML
     HBox rootBox;
@@ -30,6 +31,7 @@ public class TournamentsViewer implements Initializable {
     
     private ResourceBundle strings;
     private ChampionshipData initSel;
+    private Stage stage;
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -40,7 +42,16 @@ public class TournamentsViewer implements Initializable {
         initTable();
         fillTable();
     }
-    
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    @Override
+    public Stage getStage() {
+        return stage;
+    }
+
     public void initialSelection(ChampionshipData initialSelection) {
         this.initSel = initialSelection;
         

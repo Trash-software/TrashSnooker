@@ -1,28 +1,24 @@
 package trashsoftware.trashSnooker.fxml.statsViews;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
-import trashsoftware.trashSnooker.fxml.widgets.MatchRecordPage;
+import trashsoftware.trashSnooker.fxml.ChildInitializable;
 import trashsoftware.trashSnooker.util.DataLoader;
-import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
-import trashsoftware.trashSnooker.util.db.EntireGameRecord;
 import trashsoftware.trashSnooker.util.db.EntireGameTitle;
-import trashsoftware.trashSnooker.util.db.PlayerFrameRecord;
 
 import java.net.URL;
 import java.util.*;
 
-public class StatsView implements Initializable {
+public class StatsView extends ChildInitializable {
     @FXML
     TreeView<RecordTree> treeView;
 
@@ -31,14 +27,24 @@ public class StatsView implements Initializable {
 
     @FXML
     VBox rightPane;
-    
+
     private ResourceBundle strings;
+    private Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.strings = resources;
-        
+
         initTree();
+    }
+
+    @Override
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     private void initTree() {
@@ -49,7 +55,7 @@ public class StatsView implements Initializable {
         TreeItem<RecordTree> aiRoot = new TreeItem<>(new PlayerTypeTree(true, strings));
         root.getChildren().add(humanRoot);
         root.getChildren().add(aiRoot);
-        
+
         List[] humanComputerIds = db.listPlayerIdsHumanComputer();
         for (Object s : humanComputerIds[0]) {
             PlayerAi paiHuman = new PlayerAi((String) s, false);
@@ -59,22 +65,22 @@ public class StatsView implements Initializable {
             PlayerAi paiAi = new PlayerAi((String) s, true);
             aiRoot.getChildren().add(new PersonTreeItem(paiAi, strings));
         }
-        
+
         TreeItem<RecordTree> matchesRoot = new TreeItem<>(new RecordTree(strings.getString("statsMatches"), strings));
-        
+
         for (GameRule gameRule : GameRule.values()) {
             List<EntireGameTitle> matchesOfType = db.getAllMatches(gameRule);
             TreeItem<RecordTree> typeRoot = new TreeItem<>(new AllMatchesTree(gameRule, strings));
-            
+
             for (EntireGameTitle egt : matchesOfType) {
                 MatchRecord mr = new MatchRecord(egt, strings);
                 typeRoot.getChildren().add(new TreeItem<>(mr));
             }
-            
+
             matchesRoot.getChildren().add(typeRoot);
         }
         root.getChildren().add(matchesRoot);
-        
+
         treeView.setRoot(root);
         treeView.getSelectionModel().selectedItemProperty()
                 .addListener(((observable, oldValue, newValue) -> {
@@ -88,8 +94,8 @@ public class StatsView implements Initializable {
 
     public static class PersonTreeItem extends TreeItem<RecordTree> {
         private final PlayerAi playerAi;
-        private boolean firstTimeChildren = true;
         private final ResourceBundle strings;
+        private boolean firstTimeChildren = true;
 
         PersonTreeItem(PlayerAi playerAi, ResourceBundle strings) {
             this.playerAi = playerAi;
@@ -128,7 +134,7 @@ public class StatsView implements Initializable {
             return playerAi.toString();
         }
     }
-    
+
     public static class AllMatchesTree extends RecordTree {
 
         AllMatchesTree(GameRule gameRule, ResourceBundle strings) {
@@ -145,8 +151,8 @@ public class StatsView implements Initializable {
         private final String shown;
         private final PlayerAi playerAi;
         private final GameRule gameRule;
-        private boolean firstTimeChildren = true;
         private final ResourceBundle strings;
+        private boolean firstTimeChildren = true;
 
         RecordSorting(GameRule gameRule, PlayerAi playerAi, String shown, ResourceBundle strings) {
             this.strings = strings;

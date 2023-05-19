@@ -29,7 +29,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CareerView implements Initializable {
+public class CareerView extends ChildInitializable {
 
     @FXML
     TableView<CareerRank> rankingTable;
@@ -103,6 +103,11 @@ public class CareerView implements Initializable {
         initAwardsTable();
 
         refreshGui();
+    }
+
+    @Override
+    public Stage getStage() {
+        return selfStage;
     }
 
     public void setSelfStage(Stage selfStage) {
@@ -418,9 +423,9 @@ public class CareerView implements Initializable {
     @FXML
     public void seeToursListAction() {
         try {
-            Stage stage = new Stage();
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(selfStage);
+//            Stage stage = new Stage();
+//            stage.initModality(Modality.WINDOW_MODAL);
+//            stage.initOwner(selfStage);
 
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("tournamentsViewer.fxml"),
@@ -433,12 +438,14 @@ public class CareerView implements Initializable {
 
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
-            stage.setScene(scene);
-
+            
             TournamentsViewer viewer = loader.getController();
+            viewer.setStage(selfStage);
+            viewer.setParent(selfStage.getScene());
             viewer.initialSelection(activeOrNext);
 
-            stage.show();
+            selfStage.setScene(scene);
+            selfStage.sizeToScene();
         } catch (IOException e) {
             EventLogger.error(e);
         }
@@ -475,11 +482,11 @@ public class CareerView implements Initializable {
 
     private void showChampDrawView() {
         try {
-            Stage stage = new Stage();
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(selfStage);
+//            Stage stage = new Stage();
+//            stage.initModality(Modality.WINDOW_MODAL);
+//            stage.initOwner(selfStage);
 
-            stage.setTitle(CareerManager.getInstance().getChampionshipInProgress().fullName());
+            selfStage.setTitle(CareerManager.getInstance().getChampionshipInProgress().fullName());
 
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("champDrawView.fxml"),
@@ -489,16 +496,17 @@ public class CareerView implements Initializable {
             root.setStyle(App.FONT_STYLE);
 
             ChampDrawView view = loader.getController();
-            view.setup(this, stage);
+            view.setup(this, selfStage);
+            view.setParent(selfStage.getScene());
 //            mainView.setup(parentStage, stage);
 
             Scene scene = new Scene(root);
 
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
-            stage.setScene(scene);
+            selfStage.setScene(scene);
 
-            stage.show();
+            selfStage.show();
         } catch (IOException e) {
             EventLogger.error(e);
         }

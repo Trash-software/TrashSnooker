@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class MainView implements Initializable {
+public class MainView extends ChildInitializable {
 
     @FXML
     Button resumeButton;
@@ -208,7 +208,12 @@ public class MainView implements Initializable {
                     }
                 }));
     }
-    
+
+    @Override
+    public Stage getStage() {
+        return stage;
+    }
+
     @FXML
     void playerInfoAction(ActionEvent event) {
         ComboBox<PlayerPerson> personBox;
