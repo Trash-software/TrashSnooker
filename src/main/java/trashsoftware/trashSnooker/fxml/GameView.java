@@ -773,31 +773,36 @@ public class GameView implements Initializable {
         game.getGame().getRecorder().recordNextTarget(makeTargetRecord(nextCuePlayer));
         game.getGame().getRecorder().writeCueToStream();
 
-        if (game.getGame().isEnded()) {
-            endFrame();
-        } else {
-            FoulInfo foulInfo = game.getGame().getThisCueFoul();
-            if (foulInfo.isFoul()) {
-                String foulReason0 = game.getGame().getFoulReason();
-                if (game.getGame() instanceof AbstractSnookerGame) {
-                    AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
-                    if (foulInfo.isMiss() && asg.isSolvable()) {
-                        foulReason0 = strings.getString("foulAndMiss") + foulReason0;
-                    }
-                } else if (game.getGame() instanceof LisEightGame) {
-                    letOtherPlayMenu.setDisable(false);
+        FoulInfo foulInfo = game.getGame().getThisCueFoul();
+        if (foulInfo.isFoul()) {
+            String foulReason0 = game.getGame().getFoulReason();
+            if (game.getGame() instanceof AbstractSnookerGame) {
+                AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+                if (foulInfo.isMiss() && asg.isSolvable()) {
+                    foulReason0 = strings.getString("foulAndMiss") + foulReason0;
                 }
-                String foulReason = foulReason0;
+            } else if (game.getGame() instanceof LisEightGame) {
+                letOtherPlayMenu.setDisable(false);
+            }
+            String foulReason = foulReason0;
+            String headerReason = foulInfo.getHeaderReason(strings);
 
-                Platform.runLater(() -> {
-                    AlertShower.showInfo(
-                            stage,
-                            foulReason,
-                            strings.getString("foul"),
-                            3000
-                    );
+            Platform.runLater(() -> {
+                AlertShower.showInfo(
+                        stage,
+                        foulReason,
+                        headerReason,
+                        3000
+                );
+                if (game.getGame().isEnded()) {
+                    endFrame();
+                } else {
                     finishCueNextStep(nextCuePlayer);
-                });
+                }
+            });
+        } else {
+            if (game.getGame().isEnded()) {
+                endFrame();
             } else {
                 finishCueNextStep(nextCuePlayer);
             }
@@ -854,7 +859,16 @@ public class GameView implements Initializable {
                         letOtherPlayMenu.setDisable(false);
                     }
                 }
+            } 
+            else if (game.getGame() instanceof ChineseEightBallGame) {
+                ChineseEightBallGame ceg = (ChineseEightBallGame) game.getGame();
+                if (ceg.isJustAfterBreak() && ceg.wasBreakLoseChance()) {
+//                    autoAim = false;  // 把autoAim交给askAfterBreakLoseChance的不复位分支
+//                    askAfterBreakLoseChance();
+                    letOtherPlayMenu.setDisable(false);
+                }
             }
+            
             if (autoAim) autoAimEasiestNextBall(nextCuePlayer);
             if (predictPlayerPathItem.isSelected()) {
                 predictPlayerPath(nextCuePlayer);
@@ -1216,7 +1230,8 @@ public class GameView implements Initializable {
         game.getGame().forcedTerminate();
         movement = null;
         playingMovement = false;
-        setButtonsCueEnd(game.getGame().getCuingPlayer());
+        finishCueNextStep(game.getGame().getCuingPlayer());
+//        setButtonsCueEnd(game.getGame().getCuingPlayer());
     }
 
     @FXML
@@ -1319,6 +1334,7 @@ public class GameView implements Initializable {
 
     @FXML
     void letOtherPlayAction() {
+        letOtherPlayMenu.setDisable(true);
         restoreCuePoint();
         restoreCueAngle();
         cursorDirectionUnitX = 0.0;
@@ -1366,7 +1382,6 @@ public class GameView implements Initializable {
             setButtonsCueStart();
             aiCue(player);
         } else {
-
             if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
             setButtonsCueStart();
             playerCue(player);

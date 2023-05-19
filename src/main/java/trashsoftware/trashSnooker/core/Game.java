@@ -81,6 +81,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected Table table;
     private boolean ended;
     private PhysicsCalculator physicsCalculator;
+    
+    private final Map<B, int[]> ballCushionCountAndCrossLine = new HashMap<>();  // 本杆的{库数, 过线次数}
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
@@ -254,6 +256,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         lastPotSuccess = false;
         lastCueFoul = thisCueFoul;
         thisCueFoul = new FoulInfo();
+        clearCushionAndAcrossLine();
         newPotted.clear();
         recordPositions();
         recordedTarget = currentTarget;
@@ -812,6 +815,24 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return player2;
     }
 
+    protected int[] computeCushionAndAcrossLineOfBall(B ball) {
+        return ballCushionCountAndCrossLine.computeIfAbsent(ball, b -> new int[2]);
+    }
+    
+    private void recordHitCushion(B ball) {
+        computeCushionAndAcrossLineOfBall(ball)[0]++;
+    }
+
+    private void recordCrossLine(B ball) {
+        computeCushionAndAcrossLineOfBall(ball)[1]++;
+    }
+
+    private void clearCushionAndAcrossLine() {
+        for (Map.Entry<B, int[]> entry : ballCushionCountAndCrossLine.entrySet()) {
+            Arrays.fill(entry.getValue(), 0);
+        }
+    }
+
     /**
      * 斯诺克：
      * 任意彩球=0，特定球=value
@@ -1041,6 +1062,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 if (cumulatedPhysicalTime >= 30000) {
                     // Must be something wrong
                     System.err.println("White prediction congestion");
+                    for (Ball ball : getAllBalls()) {
+                        ball.clearMovement();
+                    }
                     break;
                 }
             }
@@ -1241,6 +1265,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 if (cumulatedPhysicalTime > 50000) {
                     // Must be something wrong
                     System.err.println("Physical calculation congestion");
+                    for (Ball ball : getAllBalls()) {
+                        ball.clearMovement();
+                    }
                     break;
                 }
             }
@@ -1307,6 +1334,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         tryHitBall(ball);
                         if (holeAreaResult == 2) {
                             collidesWall = true;
+                            recordHitCushion(ball);
                             movementTypes[i] = MovementFrame.CUSHION;
                             movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         }
@@ -1315,6 +1343,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (ball.tryHitWall(phy)) {
                         // 库边
                         collidesWall = true;
+                        recordHitCushion(ball);
                         movementTypes[i] = MovementFrame.CUSHION;
                         movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         continue;
@@ -1323,6 +1352,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     boolean noHit = tryHitThreeBalls(ball);
                     if (noHit) {
                         if (tryHitBall(ball)) {
+                            if (ball.checkEnterBreakArea(getTable().breakLineX())) {
+                                // 一定在normal move之前
+                                recordCrossLine(ball);
+                            }
                             ball.normalMove(phy);
                         }
                     }

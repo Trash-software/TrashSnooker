@@ -16,7 +16,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    public static final boolean SAVE = true;
+    public static final boolean SAVE = false;
     private static DBAccess database;
 
     private Connection connection;
@@ -72,7 +72,8 @@ public class DBAccess {
     
     private void updateDbStructure() {
         try (Statement stmt = connection.createStatement()) {
-            String query = "ALTER TABLE EntireGame ADD COLUMN MatchID TEXT default null;";
+            String query = "ALTER TABLE EntireGame ADD COLUMN MatchID TEXT DEFAULT null;";
+            // + ALTER TABLE SidePocketRecord ADD COLUMN GoldNine INTEGER DEFAULT 0;
             stmt.execute(query);
         } catch (SQLException ex) {
             System.out.println("Not add column");

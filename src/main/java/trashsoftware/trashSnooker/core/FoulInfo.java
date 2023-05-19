@@ -5,6 +5,7 @@ import java.util.*;
 public class FoulInfo {
     private boolean foul = false;
     private boolean miss = false;
+    private String headerReason;  // 为null时应该就是“犯规”
     private final Map<String, Integer> foulReasonAndScore = new LinkedHashMap<>();
 
     public void addFoul(String reason, int score, boolean miss) {
@@ -19,6 +20,14 @@ public class FoulInfo {
 
     public void addFoul(String reason) {
         addFoul(reason, 1, false);
+    }
+
+    public void setHeaderReason(String headerReason) {
+        this.headerReason = headerReason;
+    }
+
+    public String getHeaderReason(ResourceBundle strings) {
+        return headerReason == null ? strings.getString("foul") : headerReason;
     }
 
     public boolean isFoul() {

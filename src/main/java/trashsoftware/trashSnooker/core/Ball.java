@@ -12,7 +12,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public static final double MAX_GEAR_EFFECT = 0.2;  // 齿轮效应造成的最严重分离角损耗
     public static final double MAX_GEAR_ANGULAR = 0.5;
     private static final Random ERROR_GENERATOR = new Random();
-    private static final Random randomGenerator = new Random();
     private static final double[] SIDE_CUSHION_VEC = {1.0, 0.0};
     private static final double[] TOP_BOT_CUSHION_VEC = {0.0, 1.0};
     private static int idCounter = 0;
@@ -31,9 +30,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //    protected double xAngle, yAngle, zAngle;
     private boolean potted;
     private long msSinceCue;
-    //    private Ball justHit;
-    private double currentXError;
-    private double currentYError;
+    
+//    protected int cushionCount;  // 这一杆这颗球吃库的次数
+//    protected int breakAreaEntranceCount;  // 这一杆从开球区外进入开球区的次数
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ball.ballRadius);
@@ -345,7 +344,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         super.hitHoleLineArea(lineNormalVec, phy);
 //        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
 //        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
-
     }
     
     private double calculateEffectiveSideSpin(Phy phy, double[] cushionNormalVec) {
@@ -457,8 +455,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //            if (!phy.isPrediction) {
 //                System.out.println(currentBounce.accX + " " + currentBounce.accY);
 //            }
-
-
 //            System.out.println("Hit wall!======================");
 //            rotateDeg = 0.0;
             return true;
@@ -667,13 +663,14 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         sideSpin = 0.0;
 //        justHit = null;
         frameDegChange = 0.0;
+//        breakAreaEntranceCount = 0;
+//        cushionCount = 0;
     }
 
     protected void prepareMove(Phy phy) {
         super.prepareMove(phy);
 //        justHit = null;
-        currentXError = phy.cloth.goodness.fixedErrorFactor * phy.calculationsPerSec;
-        currentYError = 0.0;
+        //    private Ball justHit;
     }
 
     public Color getColorTransparent() {
@@ -729,5 +726,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     @Override
     public int hashCode() {
         return identifier;
+    }
+    
+    public boolean checkEnterBreakArea(double breakLineX) {
+        return x >= breakLineX && nextX < breakLineX;
     }
 }

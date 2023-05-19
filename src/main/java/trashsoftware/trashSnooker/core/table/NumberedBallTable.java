@@ -74,6 +74,24 @@ public abstract class NumberedBallTable extends Table {
                 GameView.canvasY(tableMetrics.topY),
                 breakLineX,
                 GameView.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
+        
+        // 开球点位
+        double pointYGap = tableMetrics.innerHeight / 4;
+        double[][] points = new double[][]{
+                {breakLineX(), tableMetrics.topY + pointYGap},
+                {breakLineX(), tableMetrics.topY + pointYGap * 2},
+                {breakLineX(), tableMetrics.topY + pointYGap * 3},
+                {firstBallPlacementX(), tableMetrics.midY}
+        };
+        
+        graphicsContext.setFill(GameView.WHITE);
+        for (double[] point : points) {
+            graphicsContext.fillOval(
+                    GameView.canvasX(point[0]) - 1.5,
+                    GameView.canvasY(point[1]) - 1.5,
+                    3, 
+                    3);
+        }
 
         // 颗星标记
         List<double[]> stars = tableMetrics.tableStars;

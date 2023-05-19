@@ -27,7 +27,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
     public static final double NO_DIFFICULTY_ANGLE_RAD = 0.3;
     public static final double EACH_BALL_SEE_PRICE = 0.5;
-    public static final double WHITE_HIT_CORNER_PENALTY = 0.25;
+    public static final double WHITE_HIT_CORNER_PENALTY = 0.125;
     public static final double KICK_USELESS_BALL_MUL = 0.5;
     //    private static final double[] FRONT_BACK_SPIN_POINTS =
 //            {0.0, -0.27, 0.27, -0.54, 0.54, -0.81, 0.81};

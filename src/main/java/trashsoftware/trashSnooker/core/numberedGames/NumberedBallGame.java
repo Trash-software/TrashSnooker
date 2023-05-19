@@ -6,8 +6,13 @@ import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.GameView;
 
+import java.util.Map;
+import java.util.Set;
+
 public abstract class NumberedBallGame<P extends NumberedBallPlayer>
         extends Game<PoolBall, P> {
+    
+    protected BreakStats breakStats;
 
     protected NumberedBallGame(EntireGame entireGame, GameSettings gameSettings,
                                Table table,
@@ -22,6 +27,26 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
             allBallsCopy[i] = (PoolBall) allBalls[i].clone();
         }
         this.allBalls = allBallsCopy;
+    }
+    
+    protected void updateBreakStats(Set<PoolBall> newPotted) {
+        int uniqueBallsHitCushion = 0;
+        int acrossBreakLine = 0;
+        for (PoolBall ball : getAllBalls()) {
+            if (!ball.isWhite()) {
+                int[] stats = computeCushionAndAcrossLineOfBall(ball);
+                acrossBreakLine += stats[1];
+                if (stats[0] > 0) {
+                    uniqueBallsHitCushion++;
+                }
+            }
+        }
+        
+        breakStats = new BreakStats(newPotted.size(), uniqueBallsHitCushion, acrossBreakLine);
+    }
+
+    public BreakStats getBreakStats() {
+        return breakStats;
     }
 
     @Override

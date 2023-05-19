@@ -33,6 +33,9 @@ public class EntireGame {
     private int p1Wins;
     private int p2Wins;
     private boolean p1Breaks;
+    
+    private int p1BreakLoseChance;
+    private int p2BreakLoseChance;
 
     public EntireGame(InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
                       int totalFrames, TableCloth cloth,
@@ -88,6 +91,11 @@ public class EntireGame {
         entireGame.p2Wins = jsonObject.getInt("p2Wins");
         entireGame.p1Breaks = jsonObject.getBoolean("p1Breaks");
         entireGame.startTime = new Timestamp(jsonObject.getLong("startTime"));
+        
+        if (jsonObject.has("p1BreakLoseChance") && jsonObject.has("p2BreakLoseChance")) {
+            entireGame.p1BreakLoseChance = jsonObject.getInt("p1BreakLoseChance");
+            entireGame.p2BreakLoseChance = jsonObject.getInt("p2BreakLoseChance");
+        }
 
         JSONObject wr;
         if (jsonObject.has("winRecords")) {
@@ -136,6 +144,9 @@ public class EntireGame {
 
         object.put("winRecords", winRecords);
         object.put("matchId", metaMatchInfo == null ? null : metaMatchInfo.toString());
+        
+        object.put("p1BreakLoseChance", p1BreakLoseChance);
+        object.put("p2BreakLoseChance", p2BreakLoseChance);
 
         return object;
     }
@@ -294,5 +305,29 @@ public class EntireGame {
         if (gameValues.isStandard())
             DBAccess.getInstance().recordAFrameStarts(
                     this, game);
+    }
+    
+    public void addBreakLoseChance(int playerNum) {
+        if (playerNum == 2) {
+            p2BreakLoseChance++;
+        } else {
+            p1BreakLoseChance++;
+        }
+    }
+    
+    public void clearBreakLoseChance(int playerNum) {
+        if (playerNum == 2) {
+            p2BreakLoseChance = 0;
+        } else {
+            p1BreakLoseChance = 0;
+        }
+    }
+
+    public int getBreakLoseChance(int playerNum) {
+        if (playerNum == 2) {
+            return p2BreakLoseChance;
+        } else {
+            return p1BreakLoseChance;
+        }
     }
 }

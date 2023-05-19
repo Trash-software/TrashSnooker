@@ -22,17 +22,16 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     public static final int NOT_SELECTED_REP = 0;
     public static final int FULL_BALL_REP = 16;
     public static final int HALF_BALL_REP = 17;
-    
-    protected double eightBallPosX;
-
     private static final int[] FULL_BALL_SLOTS = {0, 2, 3, 7, 9, 10, 12};
     private static final int[] HALF_BALL_SLOTS = {1, 5, 6, 7, 11, 13, 14};
+    protected double eightBallPosX;
     protected ChineseEightBallPlayer winingPlayer;
     protected ChineseEightScoreResult curResult;
+    private boolean wasBreakLoseChance;
 
     public ChineseEightBallGame(EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
         super(entireGame, gameSettings, new ChineseEightTable(entireGame.gameValues.table), frameIndex);
-        
+
         initBalls();
     }
 
@@ -46,14 +45,14 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         winingPlayer = getAnotherPlayer(player);
         super.withdraw(player);
     }
-    
+
     protected PoolBall getEightBall() {
         return allBalls[8];
     }
 
     private void initBalls() {
         allBalls = new PoolBall[16];
-        
+
         List<PoolBall> fullBalls = new ArrayList<>();
         List<PoolBall> halfBalls = new ArrayList<>();
         for (int i = 0; i < 7; ++i) {
@@ -138,7 +137,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                     return false;
                 }
             }
-            
+
             if (targetRep == NOT_SELECTED_REP) {
                 return ball.getValue() != 8;
             } else if (targetRep == FULL_BALL_REP) {
@@ -162,8 +161,9 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         }
         if (player.getBallRange() == FULL_BALL_REP || player.getBallRange() == HALF_BALL_REP) {
             int backLet = player.getLettedBalls().get(LetBall.BACK);
-            
-            if (getRemRangedBallOnTable(player.getBallRange()) > backLet + 1) return player.getBallRange();
+
+            if (getRemRangedBallOnTable(player.getBallRange()) > backLet + 1)
+                return player.getBallRange();
             else if (pottingBall.getValue() == 8) return END_REP;
             else return 8;
         }
@@ -219,10 +219,10 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     protected void initPlayers() {
         Map<LetBall, Integer> p1Letted = new HashMap<>();
         Map<LetBall, Integer> p2Letted = new HashMap<>();
-        
+
         InGamePlayer p1 = gameSettings.getPlayer1();
         InGamePlayer p2 = gameSettings.getPlayer2();
-        
+
         if (p1.getPlayerPerson().getSex() != p2.getPlayerPerson().getSex()) {
             if (p1.getPlayerPerson().getSex() == PlayerPerson.Sex.F) {
                 p1Letted.put(LetBall.BACK, 1);
@@ -233,7 +233,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
         System.out.println("P1 letted balls: " + p1Letted);
         System.out.println("P2 letted balls: " + p2Letted);
-        
+
         player1 = new ChineseEightBallPlayer(p1, p1Letted);
         player2 = new ChineseEightBallPlayer(p2, p2Letted);
     }
@@ -284,7 +284,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     protected boolean isHalfBall(Ball ball) {
         return ball.getValue() >= 9 && ball.getValue() <= 15;
     }
-    
+
     protected int getRemRangedBallOnTable(int ballRange) {
         if (ballRange == FULL_BALL_REP) return getRemFullBallOnTable();
         else if (ballRange == HALF_BALL_REP) return getRemHalfBallOnTable();
@@ -368,7 +368,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     public boolean isJustAfterBreak() {
         return finishedCuesCount == 1;
     }
-    
+
     @Override
     public boolean isInLineHandBall() {
 //        System.out.println(isJustAfterBreak() + " " + lastCueFoul);
@@ -393,13 +393,13 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         }
         throw new RuntimeException("Cannot place eight ball");
     }
-    
+
     private void backLet(ChineseEightBallPlayer player) {
         if (player.getBallRange() == NOT_SELECTED_REP) return;
-        
+
         int backLet = player.getLettedBalls().get(LetBall.BACK);
         int remBalls = getRemRangedBallOnTable(player.getBallRange());
-        
+
         if (backLet >= remBalls) {
             if (player.getBallRange() == FULL_BALL_REP) {
                 for (Ball ball : getAllBalls()) {
@@ -407,8 +407,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                         ball.pot();
                     }
                 }
-            }
-            else if (player.getBallRange() == HALF_BALL_REP) {
+            } else if (player.getBallRange() == HALF_BALL_REP) {
                 for (Ball ball : getAllBalls()) {
                     if (!ball.isPotted() && isHalfBall(ball)) {
                         ball.pot();
@@ -419,10 +418,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     private void updateScore(Set<PoolBall> pottedBalls) {
-//        boolean foul = false;
         if (!collidesWall && pottedBalls.isEmpty()) {
-//            foul = true;
-//            foulReason = strings.getString("noBallHitCushion");
             thisCueFoul.addFoul(strings.getString("noBallHitCushion"));
         }
 
@@ -434,14 +430,10 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                 winingPlayer = getAnotherPlayer();
                 return;
             }
-//            foul = true;
-//            foulReason = strings.getString("cueBallPot");
             thisCueFoul.addFoul(strings.getString("cueBallPot"));
         }
 
         if (whiteFirstCollide == null) {
-//            foul = true;
-//            foulReason = strings.getString("emptyCue");
             thisCueFoul.addFoul(strings.getString("emptyCue"), 1, true);
         } else {
             if (isInLineHandBall()) {
@@ -451,49 +443,67 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                 if (origPos[0] <= getTable().breakLineX()) {
                     // 可以压线
                     System.out.println(Arrays.toString(origPos));
-//                    foul = true;
-//                    foulReason = strings.getString("breakFreeMustOut");
                     thisCueFoul.addFoul(strings.getString("breakFreeMustOut"));
                 }
             }
-            
+
             if (currentTarget == FULL_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
-//                    foul = true;
-//                    foulReason = strings.getString("targetFullHitBlack");
                     thisCueFoul.addFoul(strings.getString("targetFullHitBlack"), true);
                 } else if (!isFullBall(whiteFirstCollide)) {
-//                    foul = true;
-//                    foulReason = strings.getString("targetFullHitHalf");
                     thisCueFoul.addFoul(strings.getString("targetFullHitHalf"), true);
                 }
             } else if (currentTarget == HALF_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
-//                    foul = true;
-//                    foulReason = strings.getString("targetHalfHitBlack");;
                     thisCueFoul.addFoul(strings.getString("targetHalfHitBlack"), true);
                 } else if (!isHalfBall(whiteFirstCollide)) {
-//                    foul = true;
-//                    foulReason = strings.getString("targetHalfHitFull");;
                     thisCueFoul.addFoul(strings.getString("targetHalfHitFull"), true);
                 }
             } else if (currentTarget == 8) {
                 if (whiteFirstCollide.getValue() != 8) {
-//                    foul = true;
-//                    foulReason = strings.getString("targetBlackHitOther");
                     thisCueFoul.addFoul(strings.getString("targetBlackHitOther"), true);
                 }
             }
         }
 
         if (thisCueFoul.isFoul() && !getEightBall().isPotted()) {
-//            thisCueFoul = true;
             cueBall.pot();
             ballInHand = true;
             switchPlayer();
             currentTarget = getTargetOfPlayer(currentPlayer);  // 在switchPlayer之后
             System.out.println(thisCueFoul.getAllReasons());
             return;
+        }
+
+        if (isBreaking) {
+            updateBreakStats(newPotted);
+            int playerNum = getPlayerNum(currentPlayer);
+            if (isBreakLoseChance(currentPlayer.getPlayerPerson())) {
+                getEntireGame().addBreakLoseChance(playerNum);
+                
+                thisCueFoul.setHeaderReason(strings.getString("breakLoseChance"));
+                thisCueFoul.addFoul(String.format(
+                        strings.getString("breakLoseChanceDes"),
+                        getBreakStats().nBallsPot,
+                        getBreakStats().nBallTimesEnterBreakArea) + "\n" +
+                        String.format(
+                                strings.getString("cumulatedLoseChance"),
+                                getEntireGame().getBreakLoseChance(playerNum)
+                        ));
+                if (getEntireGame().getBreakLoseChance(playerNum) >= 3) {
+                    // 累计失机三次，判负一局
+                    getEntireGame().clearBreakLoseChance(playerNum);
+                    winingPlayer = getAnotherPlayer();
+                    end();
+                }
+
+                if (pottedBalls.contains(getEightBall())) {
+                    // 开球失机但进了黑八
+                    pickupBlackBall();
+                }
+                switchPlayer();
+                return;
+            }
         }
 
         if (!pottedBalls.isEmpty()) {
@@ -505,7 +515,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                     if (isBreaking) {
                         pickupBlackBall();
                         if (thisCueFoul.isFoul()) {
-//                            thisCueFoul = true;
                             cueBall.pot();
                             ballInHand = true;
                             switchPlayer();
@@ -515,7 +524,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                             System.out.println("开球黑八不选球");
                         }
                     } else {
-//                        switchPlayer();
                         winingPlayer = getAnotherPlayer();
                         end();
                     }
@@ -565,6 +573,17 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             switchPlayer();
         }
         currentTarget = getTargetOfPlayer(currentPlayer);  // 在switchPlayer之后
+    }
+
+    private boolean isBreakLoseChance(PlayerPerson breakPlayer) {
+        int limit = breakPlayer.getSex() == PlayerPerson.Sex.M ? 4 : 3;
+
+        wasBreakLoseChance = breakStats.nBallsPot + breakStats.nBallTimesEnterBreakArea < limit;
+        return wasBreakLoseChance;
+    }
+
+    public boolean wasBreakLoseChance() {
+        return wasBreakLoseChance;
     }
 
     @Override

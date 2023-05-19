@@ -160,4 +160,6 @@ public abstract class Table {
             }
         }
     }
+
+    public abstract double breakLineX();
 }

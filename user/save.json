@@ -4,9 +4,9 @@
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "Mark Allen",
-    "playerType": "COMPUTER",
-    "playCue": "stdPoolCue",
+    "person": "Neil Robertson",
+    "playerType": "PLAYER",
+    "playCue": "stdSnookerCue",
     "breakCue": "stdBreakCue"
   },
   "p1Wins": 1,
@@ -14,18 +14,20 @@
     "playerNumber": 2,
     "handFeelEffort": 1,
     "person": "Murphy",
-    "playerType": "COMPUTER",
-    "playCue": "stdPoolCue",
+    "playerType": "PLAYER",
+    "playCue": "stdSnookerCue",
     "breakCue": "stdBreakCue"
   },
-  "startTime": 1684430183467,
+  "startTime": 1684491575649,
+  "p2BreakLoseChance": 0,
+  "p1BreakLoseChance": 1,
   "gameValues": {
     "ball": "POOL_BALL",
-    "gameRule": "SIDE_POCKET",
+    "gameRule": "CHINESE_EIGHT",
     "table": {
-      "tableOrdinal": 2,
-      "pocketDifficultyOrdinal": 0,
-      "holeSizeOrdinal": 1
+      "tableOrdinal": 1,
+      "pocketDifficultyOrdinal": 2,
+      "holeSizeOrdinal": 2
     }
   },
   "totalFrames": 1,
