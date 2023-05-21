@@ -20,7 +20,7 @@
     </columnConstraints>
 
     <HBox>
-        <Button text="←" onAction="#backAction"/>
+        <Button text="%backIcon" onAction="#backAction"/>
     </HBox>
 
     <VBox GridPane.rowIndex="1" spacing="10.0">

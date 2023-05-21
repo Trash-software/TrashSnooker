@@ -35,7 +35,7 @@ public class AbilityShower extends GridPane {
 //    private PlayerPerson.ReadableAbility ability;
     private PerkManager perkManager;
     
-    private ResourceBundle strings;
+    private final ResourceBundle strings;
     
     public AbilityShower() {
         this(App.getStrings());
@@ -76,13 +76,6 @@ public class AbilityShower extends GridPane {
     public static String numToString(double d) {
         return d == (long) d ? String.format("%d", (long) d) : String.format("%.1f", d);
     }
-
-//    public void setPerkManager(PerkManager perkManager) {
-//        this.perkManager = perkManager;
-//        perkManager.setAbility(ability);
-//
-//        noticePerksReset();
-//    }
 
     public void setup(PerkManager perkManager, boolean showAddButtons) {
         this.perkManager = perkManager;
@@ -198,6 +191,9 @@ public class AbilityShower extends GridPane {
         int added = perkManager.addPerkTo(combo.cat);
         src.setText(added + "+");
         
+        double afterAdd = perkManager.getShownAbility().getAbilityByCat(combo.cat);
+        if (afterAdd >= 99.95) src.setDisable(true);
+        
         setupTexts();
         
 //        Label label = combo.label;
@@ -214,13 +210,14 @@ public class AbilityShower extends GridPane {
     public void notifyPerksReset() {
         if (perkManager.getAvailPerks() <= 0) {
             for (Button button : buttons) {
-                // todo: 加满了就不准加了
                 button.setDisable(true);
                 button.setText("+");
             }
         } else {
             for (Button button : buttons) {
-                button.setDisable(false);
+                Combo combo = btnMap.get(button);
+                double curPerk = perkManager.getShownAbility().getAbilityByCat(combo.cat);
+                button.setDisable(curPerk >= 99.95);
                 button.setText("+");
             }
         }

@@ -25,7 +25,7 @@ public class AddPlayerView implements Initializable {
     Label powerLabel, spinLabel, precisionLabel, positionLabel;
 
     private Stage stage;
-    private MainView parent;
+    private FastGameView parent;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -44,7 +44,7 @@ public class AddPlayerView implements Initializable {
         positionSlider.setValue(80.0);
     }
 
-    public void setStage(Stage stage, MainView parent) {
+    public void setStage(Stage stage, FastGameView parent) {
         this.stage = stage;
         this.parent = parent;
     }

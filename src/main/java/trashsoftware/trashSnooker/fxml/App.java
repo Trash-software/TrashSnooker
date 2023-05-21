@@ -11,13 +11,15 @@ import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.File;
+import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 @SuppressWarnings("all")
 public class App extends Application {
     
-    public static final String VERSION_NAME = "0.3.1";
-    public static final int VERSION_CODE = 26;
+    public static final String VERSION_NAME = "0.3.2";
+    public static final int VERSION_CODE = 27;
 
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     public static final String CLASSIFIER = "win";
@@ -34,6 +36,15 @@ public class App extends Application {
     public static void startApp() {
         launch();
     }
+    
+    public static List<Locale> getAllSupportedLocales() {
+//        for (Locale locale : Locale.getAvailableLocales()) {
+//            try {
+//                
+//            }
+//        }
+        return List.of(Locale.CHINA, Locale.US);
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -44,9 +55,7 @@ public class App extends Application {
         }
         
         try {
-            strings = ResourceBundle.getBundle(
-                    "trashsoftware.trashSnooker.bundles.Strings", 
-                    ConfigLoader.getInstance().getLocale());
+            reloadStrings();
             
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("entryView.fxml"),
@@ -70,5 +79,11 @@ public class App extends Application {
 
     public static ResourceBundle getStrings() {
         return strings;
+    }
+    
+    public static void reloadStrings() {
+        strings = ResourceBundle.getBundle(
+                "trashsoftware.trashSnooker.bundles.Strings",
+                ConfigLoader.getInstance().getLocale());
     }
 }

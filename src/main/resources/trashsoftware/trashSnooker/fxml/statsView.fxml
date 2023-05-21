@@ -15,7 +15,7 @@
     </padding>
 
     <HBox>
-        <Button text="←" onAction="#backAction"/>
+        <Button text="%backIcon" onAction="#backAction"/>
     </HBox>
 
     <HBox VBox.vgrow="ALWAYS">

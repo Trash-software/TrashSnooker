@@ -15,6 +15,7 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
+import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.GeneralSaveManager;
@@ -25,7 +26,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class MainView extends ChildInitializable {
+public class FastGameView extends ChildInitializable {
 
     @FXML
     Button resumeButton;
@@ -322,10 +323,11 @@ public class MainView extends ChildInitializable {
             Scene scene = new Scene(root);
             stage.setScene(scene);
 
-            AiCueResult.setAiPrecisionFactor(1.0);
+            AiCueResult.setAiPrecisionFactor(ConfigLoader.getInstance().getDouble("fastGameAiStrength", 1.0));
 
             GameView gameView = loader.getController();
             gameView.setup(stage, entireGame, devMode);
+            gameView.setAimingLengthFactor(ConfigLoader.getInstance().getDouble("fastGameAiming", 1.0));
 
             stage.show();
         } catch (Exception e) {

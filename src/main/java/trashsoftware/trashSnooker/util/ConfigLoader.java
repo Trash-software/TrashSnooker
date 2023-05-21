@@ -69,7 +69,24 @@ public class ConfigLoader {
     public int getInt(String key, int defaultValue) {
         String s = getString(key);
         try {
-            return s == null ? defaultValue : Integer.parseInt(s);
+            if (s == null) {
+                keyValues.put(key, String.valueOf(defaultValue));
+                return defaultValue;
+            }
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    public double getDouble(String key, double defaultValue) {
+        String s = getString(key);
+        try {
+            if (s == null) {
+                keyValues.put(key, String.valueOf(defaultValue));
+                return defaultValue;
+            }
+            return Double.parseDouble(s);
         } catch (NumberFormatException e) {
             return defaultValue;
         }

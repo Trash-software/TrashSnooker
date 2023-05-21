@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="trashsoftware.trashSnooker.fxml.MainView"
+      fx:controller="trashsoftware.trashSnooker.fxml.FastGameView"
       prefHeight="420.0" prefWidth="540.0" spacing="10.0" alignment="TOP_CENTER">
 
     <padding>
@@ -13,7 +13,7 @@
     </padding>
 
     <HBox>
-        <Button text="←" onAction="#backAction"/>
+        <Button text="%backIcon" onAction="#backAction"/>
     </HBox>
 
     <GridPane vgap="5.0" hgap="10.0" alignment="CENTER">

@@ -1,23 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="trashsoftware.trashSnooker.fxml.SettingsView"
-          prefHeight="400.0" prefWidth="600.0" vgap="20.0" hgap="20.0">
+<?import javafx.scene.text.Font?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.SettingsView" spacing="10.0"
+      prefWidth="400.0">
 
-    <rowConstraints>
-        <RowConstraints/>
-    </rowConstraints>
+    <padding>
+        <Insets topRightBottomLeft="10.0"/>
+    </padding>
 
-    <columnConstraints>
-        <ColumnConstraints halignment="RIGHT"/>
-        <ColumnConstraints halignment="LEFT"/>
-    </columnConstraints>
+    <Button text="%backIcon" onAction="#backAction"/>
 
-    <Label text="难度"/>
-    <ComboBox fx:id="difficultyBox" GridPane.columnIndex="1"/>
+    <GridPane vgap="10.0" hgap="20.0" VBox.vgrow="ALWAYS">
 
-</GridPane>
+        <rowConstraints>
+            <RowConstraints/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints halignment="LEFT"/>
+            <ColumnConstraints halignment="LEFT"/>
+            <ColumnConstraints halignment="LEFT"/>
+        </columnConstraints>
+
+        <Label text="%settingsGame" GridPane.rowIndex="1">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Label>
+        <Separator GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+        <Label text="%fastGameAimLineLength" GridPane.rowIndex="2"/>
+        <ComboBox fx:id="aimLingBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="%fastGameAiStrength" GridPane.rowIndex="3"/>
+        <ComboBox fx:id="aiStrengthBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="%settingsGeneral" GridPane.rowIndex="5">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Label>
+        <Separator GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+        <Label text="%language" GridPane.rowIndex="6"/>
+        <ComboBox fx:id="languageBox" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+        <Label text="%numAiThreads" GridPane.rowIndex="7"/>
+        <ComboBox fx:id="aiThreadNumBox" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+        <Label fx:id="cpuActualThreadNumLabel" GridPane.rowIndex="7" GridPane.columnIndex="2"/>
+
+        <Label text="%resolution" GridPane.rowIndex="8"/>
+        <ComboBox fx:id="resolutionComboBox" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+        <Label text="%systemZoom" GridPane.rowIndex="9"/>
+        <ComboBox fx:id="systemZoomComboBox" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+
+    </GridPane>
+
+    <HBox alignment="CENTER_RIGHT" spacing="10.0">
+        <Button fx:id="confirmBtn" text="%confirm" onAction="#confirmAction" disable="true"/>
+        <Button text="%cancel" onAction="#cancelAction"/>
+    </HBox>
+</VBox>

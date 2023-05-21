@@ -1,0 +1,379 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 14,
+    "Yan Bingtao": 1,
+    "Ding Junhui": 10,
+    "Jack Lisowski": 4,
+    "Smart": 11,
+    "Trump": 12,
+    "Selby": 5,
+    "Mark Williams": 8,
+    "Mark Allen": 9,
+    "O_Sullivan": 2,
+    "Zhao Xintong": 16,
+    "Neil Robertson": 3,
+    "custom_E5B08FE4BB99E5A5B3": 7,
+    "Stephen Maguire": 13,
+    "Murphy": 6,
+    "John Wizard": 15
+  },
+  "championshipId": "champ_of_champ",
+  "matchTree": {"root": {
+    "p1wins": 4,
+    "p1": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+          "p2": {"winner": "Zhao Xintong"},
+          "winner": "custom_E5B08FE4BB99E5A5B3",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-0",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 0,
+          "p1": {"winner": "Jack Lisowski"},
+          "p2": {"winner": "Mark Allen"},
+          "winner": "Mark Allen",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-1",
+          "p2wins": 2
+        },
+        "winner": "Mark Allen",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-8",
+        "p2wins": 3
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "Murphy"},
+          "p2": {"winner": "Ding Junhui"},
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-2",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 0,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "Stuart Bingham"},
+          "winner": "Stuart Bingham",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-3",
+          "p2wins": 2
+        },
+        "winner": "Stuart Bingham",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-9",
+        "p2wins": 3
+      },
+      "winner": "Mark Allen",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-SEMI_FINAL-12",
+      "p2wins": 0
+    },
+    "p2": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "Smart"},
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-4",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 0,
+          "p1": {"winner": "Yan Bingtao"},
+          "p2": {"winner": "John Wizard"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-5",
+          "p2wins": 2
+        },
+        "winner": "O_Sullivan",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-10",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Selby"},
+          "p2": {"winner": "Trump"},
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-6",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Williams"},
+          "p2": {"winner": "Stephen Maguire"},
+          "winner": "Mark Williams",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-7",
+          "p2wins": 0
+        },
+        "winner": "Selby",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-11",
+        "p2wins": 2
+      },
+      "winner": "O_Sullivan",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-SEMI_FINAL-13",
+      "p2wins": 0
+    },
+    "winner": "Mark Allen",
+    "stage": "FINAL",
+    "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-FINAL-14",
+    "p2wins": 3
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 125,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-FINAL-14",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 117,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-4",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 114,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-10",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 103,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-SEMI_FINAL-12",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 89,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-FINAL-14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 88,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-3",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 85,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-SEMI_FINAL-13",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 85,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-5",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 82,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-9",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 82,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-6",
+      "playerId": "Selby"
+    },
+    {
+      "score": 78,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-10",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 73,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-FINAL-14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 70,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 69,
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-0",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 66,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Selby"
+    },
+    {
+      "score": 63,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-2",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 62,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 62,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-2",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 58,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-SEMI_FINAL-13",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 58,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-1",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 56,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-FINAL-14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 56,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Selby"
+    },
+    {
+      "score": 55,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-9",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 53,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-FINAL-14",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 52,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-3",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 50,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 6,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-FINAL-14",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 50,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Selby"
+    },
+    {
+      "score": 50,
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-0",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 50,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+champ_of_champ-ROUND_1-4",
+      "playerId": "O_Sullivan"
+    }
+  ],
+  "timestamp": "2025/10/29"
+}

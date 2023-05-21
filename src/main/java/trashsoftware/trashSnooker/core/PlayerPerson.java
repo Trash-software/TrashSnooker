@@ -701,39 +701,62 @@ public class PlayerPerson {
 
         public double addPerksHowMany(int addWhat) {
             double unit;
-            double minimum = 0.2;
+            double minimum = 0.25;
 
             switch (addWhat) {
                 case PerkManager.AIMING:
-                    unit = (100 - aiming) * 0.05;
+                    unit = (105 - aiming) * 0.05;
                     break;
                 case PerkManager.CUE_PRECISION:
-                    unit = (100 - cuePrecision) * 0.05;
+                    unit = (105 - cuePrecision) * 0.05;
                     break;
                 case PerkManager.POWER:
-                    double sexPowerMax = 100 * getSex().powerMul;
+                    double sexPowerMax = 105 * getSex().powerMul;
                     unit = (sexPowerMax - normalPower) * 0.05;
                     break;
                 case PerkManager.POWER_CONTROL:
-                    unit = (100 - powerControl) * 0.05;
+                    unit = (105 - powerControl) * 0.05;
                     break;
                 case PerkManager.SPIN:
-                    unit = (100 - spin) * 0.05;
+                    unit = (105 - spin) * 0.05;
                     break;
                 case PerkManager.SPIN_CONTROL:
-                    unit = (100 - spinControl) * 0.05;
+                    unit = (105 - spinControl) * 0.05;
                     break;
                 case PerkManager.ANTI_HAND:
-                    unit = (100 - handBody.getAntiHand().skill) * 0.05;
+                    unit = (105 - handBody.getAntiHand().skill) * 0.05;
                     break;
                 case PerkManager.REST:
-                    unit = (100 - handBody.getRest().skill) * 0.075;
+                    unit = (105 - handBody.getRest().skill) * 0.075;
                     minimum = 0.3;
                     break;
                 default:
                     throw new RuntimeException("Unknown type " + addWhat);
             }
             return Math.max(unit, minimum);
+        }
+        
+        public double getAbilityByCat(int what) {
+            switch (what) {
+                case PerkManager.AIMING:
+                    return aiming;
+                case PerkManager.CUE_PRECISION:
+                    return cuePrecision;
+                case PerkManager.POWER:
+                    return normalPower;
+                case PerkManager.POWER_CONTROL:
+                    return powerControl;
+                case PerkManager.SPIN:
+                    return spin;
+                case PerkManager.SPIN_CONTROL:
+                    return spinControl;
+                case PerkManager.ANTI_HAND:
+                    return handBody.getAntiHand().skill;
+                case PerkManager.REST:
+                    return handBody.getRest().skill;
+                default:
+                    throw new RuntimeException("Unknown type " + what);
+            }
         }
 
         public void addPerks(int addWhat, int perks) {
@@ -746,30 +769,37 @@ public class PlayerPerson {
                 switch (addWhat) {
                     case PerkManager.AIMING:
                         aiming += many;
+                        aiming = Math.min(aiming, 100.0);
                         break;
                     case PerkManager.CUE_PRECISION:
                         cuePrecision += many;
+                        cuePrecision = Math.min(cuePrecision, 100.0);
                         break;
                     case PerkManager.POWER:
                         normalPower += many;
                         maxPower += many / 0.9;
                         maxPower = Math.min(maxPower, 100.0 * getSex().powerMul);
+                        normalPower = Math.min(normalPower, 100.0);
                         break;
                     case PerkManager.POWER_CONTROL:
                         powerControl += many;
+                        powerControl = Math.min(powerControl, 100.0);
                         break;
                     case PerkManager.SPIN:
                         spin += many;
+                        spin = Math.min(spin, 100.0);
                         break;
                     case PerkManager.SPIN_CONTROL:
                         spinControl += many;
+                        spinControl = Math.min(spinControl, 100.0);
                         break;
                     case PerkManager.ANTI_HAND:
                         handBody.getAntiHand().skill += many;
+                        handBody.getAntiHand().skill = Math.min(handBody.getAntiHand().skill, 100.0);
                         break;
                     case PerkManager.REST:
                         handBody.getRest().skill += many;
-//                    handBody.restPot += many;
+                        handBody.getRest().skill = Math.min(handBody.getRest().skill, 100.0);
                         break;
                     default:
                         throw new RuntimeException("Unknown type " + addWhat);

@@ -34,7 +34,9 @@ public class AiTest {
     @Test
     public void testDistanceEstimation() {
         GameValues values = new GameValues(GameRule.SNOOKER, 
-                TableMetrics.TableBuilderFactory.SNOOKER.create().holeSize(new PocketSize("mid", 85, 92)).build(), 
+                TableMetrics.TableBuilderFactory.SNOOKER.create()
+                        .pocketDifficulty(PocketDifficulty.GREEN_TABLE_DIFFICULTIES[2])
+                        .holeSize(new PocketSize("mid", 85, 92)).build(), 
                 BallMetrics.SNOOKER_BALL);
         Phy phy = Phy.Factory.createPlayPhy(new TableCloth(TableCloth.Goodness.GOOD, TableCloth.Smoothness.NORMAL));
         System.out.println(values.estimatedMoveDistance(phy, CuePlayParams.getSpeedOfPower(35, 0)));

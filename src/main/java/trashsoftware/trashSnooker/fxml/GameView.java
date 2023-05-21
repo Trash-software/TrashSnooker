@@ -577,7 +577,11 @@ public class GameView implements Initializable {
         setup(stage, careerMatch.getGame(), false);
 
         double playerGoodness = CareerManager.getInstance().getPlayerGoodness();
-        maxRealPredictLength = defaultMaxPredictLength * playerGoodness;
+        setAimingLengthFactor(playerGoodness);
+    }
+    
+    public void setAimingLengthFactor(double aimingLengthFactor) {
+        maxRealPredictLength = defaultMaxPredictLength * aimingLengthFactor;
     }
     
     private void keyboardAction(KeyEvent e) {
@@ -1358,6 +1362,11 @@ public class GameView implements Initializable {
             AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
             asg.cancelFreeBall();  // 让杆了你还打自由球？
         }
+        
+        if (game.getGame().isPlacedHandBallButNoHit()) {
+            // 哪有自己摆好球再让对手打的
+            game.getGame().setBallInHand();
+        }
 
         Player willPlayPlayer = game.getGame().getCuingPlayer();
         updatePowerSlider(willPlayPlayer.getPlayerPerson());
@@ -1864,6 +1873,7 @@ public class GameView implements Initializable {
                         cueResult.getUnitX(), cueResult.getUnitY());
             });
         });
+        aiCalculation.setDaemon(true);
         aiCalculation.start();
     }
 
@@ -1917,26 +1927,6 @@ public class GameView implements Initializable {
         );
     }
 
-    @FXML
-    void settingsAction() throws IOException {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("settingsView.fxml")
-        );
-        Parent root = loader.load();
-        root.setStyle(App.FONT_STYLE);
-
-        Stage newStage = new Stage();
-        newStage.initOwner(stage);
-
-        Scene scene = new Scene(root);
-        newStage.setScene(scene);
-
-        SettingsView view = loader.getController();
-        view.setup(newStage, this);
-
-        newStage.show();
-    }
-
     private CuePlayParams generateCueParams() {
         return generateCueParams(getActualPowerPercentage());
     }
@@ -1978,10 +1968,6 @@ public class GameView implements Initializable {
                 unitFrontBackSpin, unitSideSpin,
                 cueAngleDeg, power,
                 slideCue);
-    }
-
-    void setDifficulty(SettingsView.Difficulty difficulty) {
-
     }
 
     private void setButtonsCueStart() {

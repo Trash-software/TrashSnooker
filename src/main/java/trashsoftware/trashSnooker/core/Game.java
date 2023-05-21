@@ -70,6 +70,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected FoulInfo lastCueFoul;
     protected boolean lastPotSuccess;
     protected boolean isBreaking = true;
+    protected boolean placedHandBallButNoHit;
     protected GameValues gameValues;
 //    protected String foulReason;
     protected int thinkTime;
@@ -261,6 +262,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         recordPositions();
         recordedTarget = currentTarget;
         wasDoingFreeBall = isDoingSnookerFreeBll();
+        placedHandBallButNoHit = false;
 
         lastCueVx = params.vx;
         cueBall.setVx(params.vx / phy.calculationsPerSec);
@@ -355,6 +357,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             cueBall.setY(realY);
             cueBall.pickup();
             ballInHand = false;
+            placedHandBallButNoHit = true;
         } else {
             System.out.printf("Position %f, %f cannot place cue ball \n", realX, realY);
         }
@@ -799,6 +802,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return tf > 1 &&
                 entireGame.getP1Wins() == tf / 2 &&
                 entireGame.getP2Wins() == tf / 2;
+    }
+
+    /**
+     * @return 是否放置了手中球但是没打
+     */
+    public boolean isPlacedHandBallButNoHit() {
+        return placedHandBallButNoHit;
     }
 
     public abstract Player getWiningPlayer();

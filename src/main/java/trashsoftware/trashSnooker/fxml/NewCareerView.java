@@ -4,7 +4,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -38,19 +37,44 @@ public class NewCareerView extends ChildInitializable {
     Button usePlayerButton, playerInfoBtn;
     @FXML
     Label promptLabel;
-    @FXML ComboBox<PlayerPerson.Sex> sexBox;
-    @FXML ComboBox<Double> heightBox;
-    @FXML ComboBox<Difficulty> aiGoodnessBox;
-    @FXML ComboBox<Difficulty> playerGoodnessBox;
+    @FXML
+    ComboBox<PlayerPerson.Sex> sexBox;
+    @FXML
+    ComboBox<Double> heightBox;
+    @FXML
+    ComboBox<Difficulty> aiGoodnessBox;
+    @FXML
+    ComboBox<Difficulty> playerGoodnessBox;
 
     private EntryView entryView;
     private Stage owner;
     private ResourceBundle strings;
 
+    public static void fillPlayerDifficulty(ComboBox<Difficulty> comboBox) {
+        comboBox.getItems().addAll(
+                new Difficulty("difEasiest", 3.0),
+                new Difficulty("difEasy", 1.5),
+                new Difficulty("difMedium", 1.0),
+                new Difficulty("difHard", 0.75)
+        );
+        comboBox.getSelectionModel().select(2);
+    }
+
+    public static void fillAiDifficulty(ComboBox<Difficulty> comboBox) {
+        comboBox.getItems().addAll(
+                new Difficulty("aiGoodNoob", 0.15),
+                new Difficulty("aiGoodBad", 0.4),
+                new Difficulty("aiGoodNormal", 1.0),
+                new Difficulty("aiGoodGood", 2.0),
+                new Difficulty("aiGoodExtreme", 10.0)
+        );
+        comboBox.getSelectionModel().select(2);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.strings = resourceBundle;
-        
+
         handBox.getItems().addAll(Hand.values());
         handBox.getSelectionModel().select(1);
 
@@ -75,7 +99,7 @@ public class NewCareerView extends ChildInitializable {
             usePlayerButton.setDisable(newValue == null);
             playerInfoBtn.setDisable(newValue == null);
         }));
-        
+
         sexBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 heightValues(newValue.minHeight, newValue.maxHeight, newValue.stdHeight);
@@ -83,32 +107,17 @@ public class NewCareerView extends ChildInitializable {
         }));
         sexBox.getItems().addAll(PlayerPerson.Sex.values());
         sexBox.getSelectionModel().select(0);
-        
-        playerGoodnessBox.getItems().addAll(
-                new Difficulty("difEasiest", 3.0),
-                new Difficulty("difEasy", 1.5),
-                new Difficulty("difMedium", 1.0),
-                new Difficulty("difHard", 0.75)
-        );
-        playerGoodnessBox.getSelectionModel().select(2);
-        
-        aiGoodnessBox.getItems().addAll(
-                new Difficulty("aiGoodNoob", 0.15),
-                new Difficulty("aiGoodBad", 0.4),
-                new Difficulty("aiGoodNormal", 1.0),
-                new Difficulty("aiGoodGood", 2.0),
-                new Difficulty("aiGoodExtreme", 10.0)
-        );
-        
-        aiGoodnessBox.getSelectionModel().select(2);
+
+        fillPlayerDifficulty(playerGoodnessBox);
+        fillAiDifficulty(aiGoodnessBox);
     }
-    
+
     private void heightValues(double from, double to, double select) {
         heightBox.getItems().clear();
         for (double i = from; i <= to; i += 1) {
             heightBox.getItems().add(i);
         }
-        
+
         heightBox.getSelectionModel().select(select);
     }
 
@@ -116,7 +125,7 @@ public class NewCareerView extends ChildInitializable {
     public void createPlayer() {
         String name = nameField.getText();
         if (name.isBlank()) return;
-        
+
         String generatedId = DataLoader.generateIdByName(name);
         if (DataLoader.getInstance().hasPlayer(generatedId)) {
             promptLabel.setText(strings.getString("playerPersonAlreadyExists"));
@@ -187,8 +196,8 @@ public class NewCareerView extends ChildInitializable {
                 return new Task<>() {
                     @Override
                     protected Void call() {
-                        CareerManager.createNew(person, 
-                                playerGoodnessBox.getValue().multiplier, 
+                        CareerManager.createNew(person,
+                                playerGoodnessBox.getValue().multiplier,
                                 aiGoodnessBox.getValue().multiplier);
                         System.out.println("Start simulating");
                         long st = System.currentTimeMillis();
@@ -217,11 +226,11 @@ public class NewCareerView extends ChildInitializable {
             return App.getStrings().getString(Util.toLowerCamelCase(name()));
         }
     }
-    
-    class Difficulty {
+
+    public static class Difficulty {
         double multiplier;
         String key;
-        
+
         Difficulty(String shown, double multiplier) {
             this.multiplier = multiplier;
             this.key = shown;
@@ -229,7 +238,7 @@ public class NewCareerView extends ChildInitializable {
 
         @Override
         public String toString() {
-            return strings.getString(key);
+            return App.getStrings().getString(key);
         }
     }
 }

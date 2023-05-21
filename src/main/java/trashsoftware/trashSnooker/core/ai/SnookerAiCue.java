@@ -66,10 +66,13 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
         if (method == AiPlayStyle.SnookerBreakMethod.BACK) return backBreak(phy);
         boolean leftBreak = method == AiPlayStyle.SnookerBreakMethod.LEFT;
+        return predictiveRegularBreak(phy, leftBreak);
+    }
 
+    private DefenseChoice blindRegularBreak(Phy phy, boolean leftBreak) {
         double aimingPosX = game.firstRedX() +
                 game.getGameValues().ball.ballDiameter * game.redRowOccupyX * 4.0;
-        double yOffset = (game.getGameValues().ball.ballDiameter + game.redGapDt * 0.6) * 6.90;
+        double yOffset = (game.getGameValues().ball.ballDiameter + game.redGapDt * 0.6) * 6.75;
         if (leftBreak) yOffset = -yOffset;
         double aimingPosY = game.getGameValues().table.midY + yOffset;
 
@@ -105,6 +108,90 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 //        System.out.println(Arrays.toString(unitXY) + Arrays.toString(correctedXY));
         return new DefenseChoice(correctedXY, selectedPower, selectedSideSpin, cpp,
                 aiPlayer.getPlayerPerson().handBody.getPrimary());
+    }
+    
+    private DefenseChoice predictiveRegularBreak(Phy phy, boolean leftBreak) {
+        double sign = leftBreak ? -1 : 1;
+        
+        double whiteX = game.getCueBall().getX();
+        double whiteY = game.getCueBall().getY();
+        
+        double[] cornerBallPos = leftBreak ? game.getCornerRedBallPosGreenSide() : game.getCornerRedBallPosYellowSide();
+        double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 0.75;
+        double[] thinVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thinY - whiteY);
+        double thickY = cornerBallPos[1] - sign * game.getGameValues().ball.ballDiameter * 0.5;
+        double[] thickVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thickY - whiteY);
+        
+        double beginDeg = Math.toDegrees(Algebra.thetaOf(thinVec));
+        int nTicks = 20;
+        double totalAng = Math.toDegrees(Algebra.thetaBetweenVectors(thickVec, thinVec));
+        double tickDeg = totalAng / nTicks * -sign;
+        
+        double selectedSideSpin = 0.6 * sign;
+        double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
+                aiPlayer.getInGamePlayer().getCurrentCue(game));
+        
+        List<Ball> legalList = game.getAllLegalBalls(1, false, false);
+        Set<Ball> legalSet = new HashSet<>(legalList);
+        
+        double clothSlowFactor = phy.cloth.smoothness.speedReduceFactor / TableCloth.Smoothness.FAST.speedReduceFactor;
+        double selPowerLow = 25.0 * clothSlowFactor;
+        double selPowerHigh = selPowerLow * 1.2;
+        double selPowerTick = 1.0;
+        
+        Set<Ball> suggestedTarget = game.getSuggestedRegularBreakBalls();
+        PlayerPerson.HandSkill handSkill = aiPlayer.getPlayerPerson().handBody.getPrimary();
+        List<DefenseChoice> legalChoices = new ArrayList<>();
+        for (double deg = beginDeg, i = 0; i < nTicks; deg += tickDeg, i++) {
+            double rad = Math.toRadians(deg);
+            double[] unitXy = Algebra.unitVectorOfAngle(rad);
+            for (double selectedPower = selPowerLow; selectedPower <= selPowerHigh; selectedPower += selPowerTick) {
+                double actualPower = selectedPowerToActualPower(
+                        selectedPower,
+                        actualSideSpin,
+                        0.0,
+                        handSkill
+                );
+                CuePlayParams cpp = CuePlayParams.makeIdealParams(
+                        unitXy[0],
+                        unitXy[1],
+                        0,
+                        actualSideSpin,
+                        0,
+                        actualPower
+                );
+                DefenseChoice dc = analyseDefense(
+                        this,
+                        cpp,
+                        handSkill,
+                        phy,
+                        game,
+                        legalSet,
+                        aiPlayer,
+                        unitXy,
+                        selectedPower,
+                        0.0,
+                        selectedSideSpin,
+                        false,
+                        0.0
+                );
+                if (dc != null) {
+                    if (dc.wp.getWhiteCushionCountAfter() == 4
+                            && !dc.wp.isWhiteHitsHoleArcs()
+                            && !dc.wp.isHitWallBeforeHitBall()
+                            && dc.wp.getSecondCollide() == null 
+                            && suggestedTarget.contains(dc.wp.getFirstCollide())) {
+                        legalChoices.add(dc);
+                    }
+                }
+            }
+        }
+        if (legalChoices.isEmpty()) {
+            return null;
+        }
+        Collections.sort(legalChoices);
+        Collections.reverse(legalChoices);
+        return legalChoices.get(0);
     }
 
     private DefenseChoice backBreak(Phy phy) {

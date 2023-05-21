@@ -4,7 +4,6 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -43,7 +42,7 @@ public class ChampDrawView extends ChildInitializable {
     Label currentStageLabel, playerLabel, savedRoundLabel;
     //            matchResLabel;
     @FXML
-    ComboBox<MainView.CueItem> cueBox;
+    ComboBox<FastGameView.CueItem> cueBox;
     @FXML
     LabelTable<MatchResItem> matchResTable;
     @FXML
@@ -96,11 +95,11 @@ public class ChampDrawView extends ChildInitializable {
         cueBox.getItems().clear();
         PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();
         for (Cue cue : human.getPrivateCues()) {
-            cueBox.getItems().add(new MainView.CueItem(cue, cue.getName()));
+            cueBox.getItems().add(new FastGameView.CueItem(cue, cue.getName()));
         }
         for (Cue cue : DataLoader.getInstance().getCues().values()) {
             if (!cue.privacy) {
-                cueBox.getItems().add(new MainView.CueItem(cue, cue.getName()));
+                cueBox.getItems().add(new FastGameView.CueItem(cue, cue.getName()));
             }
         }
         
@@ -113,7 +112,7 @@ public class ChampDrawView extends ChildInitializable {
     }
     
     private void selectCue(Cue cue) {
-        for (MainView.CueItem cueItem : cueBox.getItems()) {
+        for (FastGameView.CueItem cueItem : cueBox.getItems()) {
             if (cueItem.cue == cue) {
                 cueBox.getSelectionModel().select(cueItem);
                 return;
@@ -283,7 +282,7 @@ public class ChampDrawView extends ChildInitializable {
     @FXML
     public void nextRound() {
         if (championship.isFinished()) {
-            selfStage.close();
+            backAction();
         } else {
             nextRoundButton.setDisable(true);
             PlayerVsAiMatch match;

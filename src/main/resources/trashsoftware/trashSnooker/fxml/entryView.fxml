@@ -14,6 +14,8 @@
         <Menu text="%fileMenu">
             <MenuItem text="%recordMenu" onAction="#recordsAction"/>
             <MenuItem text="%replayMenu" onAction="#replayAction"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="%settingsMenu" onAction="#settingsAction"/>
         </Menu>
         <Menu text="%helpMenu">
             <MenuItem text="%aboutMenu" onAction="#aboutAction"/>
