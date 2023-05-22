@@ -71,6 +71,7 @@ import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.recorder.TargetRecord;
 import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
@@ -217,6 +218,7 @@ public class GameView implements Initializable {
     private Ball debuggingBall;
     private long replayStopTime;
     private long replayGap = DEFAULT_REPLAY_GAP;
+    private final List<Control> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
 
     private boolean drawStandingPos = true;
     private boolean drawTargetRefLine = false;
@@ -306,6 +308,13 @@ public class GameView implements Initializable {
         addListeners();
         restoreCuePoint();
         restoreCueAngle();
+        
+        disableWhenCuing.addAll(List.of(
+                cueButton,
+                handSelectionLeft,
+                handSelectionRight,
+                handSelectionRest
+        ));
 
         powerSlider.setShowTickLabels(true);
     }
@@ -542,6 +551,8 @@ public class GameView implements Initializable {
         handSelectionToggleGroup.selectToggle(
                 handButtonOfHand(playAbles.get(0))
         );
+        
+        currentHand = playingPerson.handBody.getHandSkillByHand(playAbles.get(0));  // 防止由于toggle没变的原因导致不触发换手
     }
 
     private RadioButton handButtonOfHand(PlayerPerson.Hand hand) {
@@ -1563,6 +1574,12 @@ public class GameView implements Initializable {
                 game.getGame().getCurrentTarget(),
                 game.getGame().isDoingSnookerFreeBll());
     }
+    
+    private void disableUiWhenCuing() {
+        for (Control control : disableWhenCuing) {
+            control.setDisable(true);
+        }
+    }
 
     private void playerCue(Player player) {
         if (game.gameValues.rule.snookerLike()) {
@@ -1618,6 +1635,8 @@ public class GameView implements Initializable {
     }
 
     private void playerCueEssential(Player player) {
+        disableUiWhenCuing();
+        
         // 判断是否为进攻杆
         PlayerPerson.HandSkill usedHand = currentHand;
         PotAttempt currentAttempt = null;
@@ -1726,8 +1745,9 @@ public class GameView implements Initializable {
     }
 
     private void aiCue(Player player, boolean aiHasRightToReposition) {
+        disableUiWhenCuing();
         cueButton.setText(strings.getString("aiThinking"));
-        cueButton.setDisable(true);
+//        cueButton.setDisable(true);
         aiCalculating = true;
         Thread aiCalculation = new Thread(() -> {
             System.out.println("ai cue");
@@ -2159,9 +2179,10 @@ public class GameView implements Initializable {
     private void drawTable() {
         TableMetrics values = gameValues.table;
 
+        double cornerHoleVisualSize = 1.02;
+        double tableCorner = scale * values.cornerHoleDiameter * cornerHoleVisualSize;
         graphicsContext.setFill(values.tableBorderColor);
-        graphicsContext.fillRoundRect(0, 0, canvasWidth, canvasHeight, 20.0, 20.0);
-
+        graphicsContext.fillRoundRect(0, 0, canvasWidth, canvasHeight, tableCorner, tableCorner);
 
         graphicsContext.setFill(values.tableColor);  // 台泥/台布
         graphicsContext.fillRect(
@@ -2230,10 +2251,10 @@ public class GameView implements Initializable {
         drawHole(values.topMidHoleXY, values.midHoleRadius);
         drawHole(values.botMidHoleXY, values.midHoleRadius);
 
-        drawHole(values.topLeftHoleGraXY, values.cornerHoleRadius * 1.02);
-        drawHole(values.botLeftHoleGraXY, values.cornerHoleRadius * 1.02);
-        drawHole(values.topRightHoleGraXY, values.cornerHoleRadius * 1.02);
-        drawHole(values.botRightHoleGraXY, values.cornerHoleRadius * 1.02);
+        drawHole(values.topLeftHoleGraXY, values.cornerHoleRadius * cornerHoleVisualSize);
+        drawHole(values.botLeftHoleGraXY, values.cornerHoleRadius * cornerHoleVisualSize);
+        drawHole(values.topRightHoleGraXY, values.cornerHoleRadius * cornerHoleVisualSize);
+        drawHole(values.botRightHoleGraXY, values.cornerHoleRadius * cornerHoleVisualSize);
 
 //        drawHoleOutLine(values.topLeftHoleXY, values.cornerHoleShownRadius + 10, 45.0 - values.cornerHoleOpenAngle);
 //        drawHoleOutLine(values.botLeftHoleXY, values.cornerHoleShownRadius, 135.0);
@@ -3118,20 +3139,26 @@ public class GameView implements Initializable {
         }
 
         // 出杆速度与白球球速算法相同
-        cueAnimationPlayer = new CueAnimationPlayer(
-                MIN_CUE_BALL_DT,
-                maxPullDt,
-                selectedPower,
-                errMulWithPower,
-                handXY[0],
-                handXY[1],
-                directionX,
-                directionY,
-                cue,
-                cuingPlayer,
-                currentHand,
-                restCuePointing
-        );
+        try {
+            cueAnimationPlayer = new CueAnimationPlayer(
+                    MIN_CUE_BALL_DT,
+                    maxPullDt,
+                    selectedPower,
+                    errMulWithPower,
+                    handXY[0],
+                    handXY[1],
+                    directionX,
+                    directionY,
+                    cue,
+                    cuingPlayer,
+                    currentHand,
+                    restCuePointing
+            );
+        } catch (RuntimeException re) {
+            EventLogger.error(re);
+            endCueAnimation();
+            playMovement();
+        }
     }
 
     private void endCueAnimation() {
@@ -3511,13 +3538,20 @@ public class GameView implements Initializable {
         }
 
         void nextFrame() {
-            for (int i = 0; i < playSpeedMultiplier; i++) {
-                if (framesPlayed % 1.0 == 0.0) {
-                    if (ended) return;
-                    calculateOneFrame();
+            try {
+                for (int i = 0; i < playSpeedMultiplier; i++) {
+                    if (framesPlayed % 1.0 == 0.0) {
+                        if (ended) return;
+                        calculateOneFrame();
+                    }
                 }
+                framesPlayed += playSpeedMultiplier;
+            } catch (RuntimeException re) {
+                // 防止动画的问题导致游戏卡死
+                EventLogger.error(re);
+                endCueAnimation();
+                playMovement();
             }
-            framesPlayed += playSpeedMultiplier;
         }
 
         private void calculateOneFrame() {

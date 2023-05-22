@@ -4,29 +4,29 @@
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "custom_player_2",
+    "person": "Neil Robertson",
     "playerType": "PLAYER",
-    "playCue": "GirlCue",
-    "breakCue": "GirlCue"
+    "playCue": "stdPoolCue",
+    "breakCue": "stdBreakCue"
   },
   "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "Mark Allen",
+    "person": "John Wizard",
     "playerType": "PLAYER",
-    "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
+    "playCue": "stdPoolCue",
+    "breakCue": "stdBreakCue"
   },
-  "startTime": 1684669977548,
+  "startTime": 1684739782507,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "SNOOKER_BALL",
-    "gameRule": "SNOOKER",
+    "ball": "POOL_BALL",
+    "gameRule": "SIDE_POCKET",
     "table": {
-      "tableOrdinal": 0,
-      "pocketDifficultyOrdinal": 2,
+      "tableOrdinal": 2,
+      "pocketDifficultyOrdinal": 0,
       "holeSizeOrdinal": 2
     }
   },

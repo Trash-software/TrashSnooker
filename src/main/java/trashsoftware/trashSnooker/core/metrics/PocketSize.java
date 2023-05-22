@@ -18,9 +18,9 @@ public class PocketSize {
             new PocketSize("pocketLittle", 78, 82)
     };
     public static final PocketSize[] SIDE_POCKET_HOLES = {
-            new PocketSize("pocketLarge", 108, 133),
-            new PocketSize("pocketStd", 105, 130),  // 中袋是mouth的直径
-            new PocketSize("pocketSmall", 100, 127)
+            new PocketSize("pocketLarge", 112, 133),
+            new PocketSize("pocketStd", 105, 127),  // 中袋是mouth的直径
+            new PocketSize("pocketSmall", 98, 120)
     };
     
     public final String key;

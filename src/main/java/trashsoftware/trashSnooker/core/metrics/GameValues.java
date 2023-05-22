@@ -27,6 +27,7 @@ public class GameValues {
     double ballHoleRatio;
     
     private double maxPowerMoveDistance;
+    private boolean isPractice = false;
 
     public GameValues(GameRule rule,
                       TableMetrics tableMetrics,
@@ -103,8 +104,17 @@ public class GameValues {
         // open center 和 hole顺序必须一致
     }
 
+    public void setPractice(boolean practice) {
+        isPractice = practice;
+    }
+
+    public boolean isPractice() {
+        return isPractice;
+    }
+
     public boolean isStandard() {
-        return (rule == GameRule.SNOOKER && TableMetrics.SNOOKER.equals(table.tableName) && ball == BallMetrics.SNOOKER_BALL) ||
+        return !isPractice &&
+                (rule == GameRule.SNOOKER && TableMetrics.SNOOKER.equals(table.tableName) && ball == BallMetrics.SNOOKER_BALL) ||
                 (rule == GameRule.MINI_SNOOKER && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.SNOOKER_BALL) ||
                 (rule == GameRule.CHINESE_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
                 (rule == GameRule.LIS_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
