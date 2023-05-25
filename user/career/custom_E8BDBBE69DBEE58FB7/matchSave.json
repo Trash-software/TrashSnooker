@@ -1,22 +1,22 @@
 {
-  "p1": "custom_E5B08FE4BB99E5A5B3",
+  "p1": "Mark Allen",
   "game": {
     "p1": {
       "playerNumber": 1,
-      "handFeelEffort": 1,
-      "person": "custom_E5B08FE4BB99E5A5B3",
-      "playerType": "PLAYER",
-      "playCue": "GirlCue",
-      "breakCue": "GirlCue"
-    },
-    "p1Wins": 2,
-    "p2": {
-      "playerNumber": 2,
-      "handFeelEffort": 0.9704476227101504,
-      "person": "Stuart Bingham",
+      "handFeelEffort": 0.8574927930561664,
+      "person": "Mark Allen",
       "playerType": "COMPUTER",
       "playCue": "stdSnookerCue",
       "breakCue": "stdSnookerCue"
+    },
+    "p1Wins": 0,
+    "p2": {
+      "playerNumber": 2,
+      "handFeelEffort": 1,
+      "person": "custom_E8BDBBE69DBEE58FB7",
+      "playerType": "PLAYER",
+      "playCue": "GirlCue",
+      "breakCue": "GirlCue"
     },
     "p2BreakLoseChance": 0,
     "gameValues": {
@@ -28,22 +28,18 @@
         "holeSizeOrdinal": 1
       }
     },
-    "winRecords": {
-      "1": 1,
-      "2": 2,
-      "3": 1
-    },
+    "winRecords": {"1": 2},
     "p2Wins": 1,
-    "startTime": 1684732267922,
+    "startTime": 1685022250403,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_E5B08FE4BB99E5A5B3+2025+united_kingdom_champ-ROUND_2-55",
-    "totalFrames": 5,
+    "matchId": "custom_E8BDBBE69DBEE58FB7+2023+space_grand_prix-ROUND_2-35",
+    "totalFrames": 3,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
     "p1Breaks": true
   },
-  "p2": "Stuart Bingham",
+  "p2": "custom_E8BDBBE69DBEE58FB7",
   "stage": "ROUND_2"
 }

@@ -419,6 +419,29 @@ public class CareerView extends ChildInitializable {
 
         abilityShower.notifyPerksReset();
     }
+    
+    @FXML
+    public void trainingChallengeAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("careerTrainingView.fxml"),
+                    strings
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+            
+            Scene scene = new Scene(root);
+            
+            CareerTrainingView view = loader.getController();
+            view.setParent(selfStage.getScene());
+            view.setup(selfStage, careerManager.getHumanPlayerCareer(), this);
+
+            selfStage.setScene(scene);
+            selfStage.sizeToScene();
+        } catch (IOException e) {
+            EventLogger.error(e);
+        }
+    }
 
     @FXML
     public void seeToursListAction() {

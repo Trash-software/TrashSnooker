@@ -35,6 +35,7 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.CareerManager;
+import trashsoftware.trashSnooker.core.career.CareerMatch;
 import trashsoftware.trashSnooker.core.career.ChampionshipStage;
 import trashsoftware.trashSnooker.core.career.championship.PlayerVsAiMatch;
 import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
@@ -224,7 +225,7 @@ public class GameView implements Initializable {
     private boolean drawTargetRefLine = false;
     private boolean miscued = false;
     private PlayerPerson.HandSkill currentHand;
-    private PlayerVsAiMatch careerMatch;
+    private CareerMatch careerMatch;
 
     private ResourceBundle strings;
 
@@ -572,7 +573,7 @@ public class GameView implements Initializable {
         String p1n = p1.getName();
         String p2n = p2.getName();
 
-        if (careerMatch != null) {
+        if (careerMatch != null && careerMatch.getChampionship() != null) {
             p1n += " (" + careerMatch.getChampionship().getCareerSeedMap().get(p1.getPlayerId()) + ")";
             p2n += " (" + careerMatch.getChampionship().getCareerSeedMap().get(p2.getPlayerId()) + ")";
         }
@@ -582,7 +583,7 @@ public class GameView implements Initializable {
     }
 
     public void setupCareerMatch(Stage stage,
-                                 PlayerVsAiMatch careerMatch) {
+                                 CareerMatch careerMatch) {
         this.careerMatch = careerMatch;
 
         setup(stage, careerMatch.getGame(), false);
@@ -907,93 +908,108 @@ public class GameView implements Initializable {
     }
 
     private void updateChampionshipBreaks(SnookerChampionship sc,
-                                          ChampionshipStage cs,
+                                          PlayerVsAiMatch pva,
                                           SnookerPlayer player,
                                           int nFrameFrom1) {
         for (Integer breakScore : player.getSinglePolesInThisGame()) {
-            sc.updateBreakScore(player.getPlayerPerson().getPlayerId(), cs, breakScore, false,
-                    careerMatch.metaMatchInfo.toString(), nFrameFrom1);
+            sc.updateBreakScore(player.getPlayerPerson().getPlayerId(), pva.stage, breakScore, false,
+                    pva.metaMatchInfo.toString(), nFrameFrom1);
         }
     }
 
     private void endFrame() {
 //        hideCue();
         Player wonPlayer = game.getGame().getWiningPlayer();
-
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
         drawScoreBoard(game.getGame().getCuingPlayer(), false);
-
         game.getGame().getRecorder().stopRecording(true);
+        
+        if (gameValues.isTraining()) {
+            boolean success = wonPlayer.getInGamePlayer().getPlayerNumber() == 1;
+            String title = success ? strings.getString("challengeSuccess") : strings.getString("challengeFailed");
 
-        int frameNFrom1 = game.getP1Wins() + game.getP2Wins();  // 上面已经更新了
-
-        if (careerMatch != null) {
-            if (gameValues.rule.snookerLike()) {
-                SnookerChampionship sc = (SnookerChampionship) careerMatch.getChampionship();
-                SnookerPlayer sp1 = (SnookerPlayer) game.getGame().getPlayer1();
-                SnookerPlayer sp2 = (SnookerPlayer) game.getGame().getPlayer2();
-                updateChampionshipBreaks(sc, careerMatch.stage, sp1, frameNFrom1);
-                updateChampionshipBreaks(sc, careerMatch.stage, sp2, frameNFrom1);
+            if (careerMatch != null) {
+                careerMatch.finish(wonPlayer.getPlayerPerson(), game.getP1Wins(), game.getP2Wins());
             }
-            careerMatch.saveMatch();
-        } else {
-            game.generalSave();
-        }
-
-        Platform.runLater(() -> {
-            AlertShower.showInfo(stage,
-                    String.format("%s  %d (%d) : (%d) %d  %s",
-                            game.getPlayer1().getPlayerPerson().getName(),
-                            game.getGame().getPlayer1().getScore(),
-                            game.getP1Wins(),
-                            game.getP2Wins(),
-                            game.getGame().getPlayer2().getScore(),
-                            game.getPlayer2().getPlayerPerson().getName()),
-                    String.format(strings.getString("winsAFrame"), wonPlayer.getPlayerPerson().getName()),
-                    3000);
-
-            if (entireGameEnd) {
-                if (careerMatch != null) {
-                    careerMatch.finish(wonPlayer.getPlayerPerson(), game.getP1Wins(), game.getP2Wins());
-                }
-
+            Platform.runLater(() -> {
                 AlertShower.showInfo(stage,
-                        String.format("%s (%d) : (%d) %s",
+                        gameValues.getTrainType().toString(),
+                        title);
+            });
+        } else {
+            int frameNFrom1 = game.getP1Wins() + game.getP2Wins();  // 上面已经更新了
+
+            if (careerMatch != null) {
+                if (careerMatch instanceof PlayerVsAiMatch) {
+                    PlayerVsAiMatch pva = (PlayerVsAiMatch) careerMatch;
+                    if (gameValues.rule.snookerLike()) {
+                        SnookerChampionship sc = (SnookerChampionship) pva.getChampionship();
+                        SnookerPlayer sp1 = (SnookerPlayer) game.getGame().getPlayer1();
+                        SnookerPlayer sp2 = (SnookerPlayer) game.getGame().getPlayer2();
+                        updateChampionshipBreaks(sc, pva, sp1, frameNFrom1);
+                        updateChampionshipBreaks(sc, pva, sp2, frameNFrom1);
+                    }
+                }
+                careerMatch.saveMatch();
+            } else {
+                game.generalSave();
+            }
+
+            Platform.runLater(() -> {
+                AlertShower.showInfo(stage,
+                        String.format("%s  %d (%d) : (%d) %d  %s",
                                 game.getPlayer1().getPlayerPerson().getName(),
+                                game.getGame().getPlayer1().getScore(),
                                 game.getP1Wins(),
                                 game.getP2Wins(),
+                                game.getGame().getPlayer2().getScore(),
                                 game.getPlayer2().getPlayerPerson().getName()),
-                        String.format(strings.getString("winsAMatch"), wonPlayer.getPlayerPerson().getName()));
-            } else {
-                AlertShower.askConfirmation(
-                        stage,
-                        strings.getString("ifStartNextFrameContent"),
-                        strings.getString("ifStartNextFrame"),
-                        strings.getString("yes"),
-                        strings.getString("saveAndExit"),
-                        () -> {
-                            game.startNextFrame();
-                            setupBalls();
+                        String.format(strings.getString("winsAFrame"), wonPlayer.getPlayerPerson().getName()),
+                        3000);
 
-                            drawScoreBoard(game.getGame().getCuingPlayer(), true);
-                            drawTargetBoard(true);
-                            setUiFrameStart();
+                if (entireGameEnd) {
+                    if (careerMatch != null) {
+                        careerMatch.finish(wonPlayer.getPlayerPerson(), game.getP1Wins(), game.getP2Wins());
+                    }
+
+                    AlertShower.showInfo(stage,
+                            String.format("%s (%d) : (%d) %s",
+                                    game.getPlayer1().getPlayerPerson().getName(),
+                                    game.getP1Wins(),
+                                    game.getP2Wins(),
+                                    game.getPlayer2().getPlayerPerson().getName()),
+                            String.format(strings.getString("winsAMatch"), wonPlayer.getPlayerPerson().getName()));
+                } else {
+                    AlertShower.askConfirmation(
+                            stage,
+                            strings.getString("ifStartNextFrameContent"),
+                            strings.getString("ifStartNextFrame"),
+                            strings.getString("yes"),
+                            strings.getString("saveAndExit"),
+                            () -> {
+                                game.startNextFrame();
+                                setupBalls();
+
+                                drawScoreBoard(game.getGame().getCuingPlayer(), true);
+                                drawTargetBoard(true);
+                                setUiFrameStart();
 //                            if (game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
 //                                ss
 //                            }
-                        },
-                        () -> {
-                            if (careerMatch != null) {
-                                careerMatch.saveMatch();
-                                careerMatch.saveAndExit();
-                            } else {
-                                game.generalSave();
+                            },
+                            () -> {
+                                if (careerMatch != null) {
+                                    careerMatch.saveMatch();
+                                    careerMatch.saveAndExit();
+                                } else {
+                                    game.generalSave();
+                                }
+                                stage.hide();
                             }
-                            stage.hide();
-                        }
-                );
-            }
-        });
+                    );
+                }
+            });
+        }
     }
 
     private void setupBalls() {
@@ -1116,6 +1132,8 @@ public class GameView implements Initializable {
     }
 
     private void onCueBallCanvasClicked(MouseEvent mouseEvent) {
+        if (playingMovement || aiCalculating || cueAnimationPlayer != null) return;
+        
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             setCuePoint(mouseEvent.getX(), mouseEvent.getY());
         } else if (mouseEvent.getButton() == MouseButton.SECONDARY) {
@@ -1124,6 +1142,8 @@ public class GameView implements Initializable {
     }
 
     private void onCueBallCanvasDragged(MouseEvent mouseEvent) {
+        if (playingMovement || aiCalculating || cueAnimationPlayer != null) return;
+        
         setCuePoint(mouseEvent.getX(), mouseEvent.getY());
     }
 

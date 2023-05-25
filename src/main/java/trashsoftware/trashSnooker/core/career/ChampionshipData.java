@@ -167,8 +167,8 @@ public class ChampionshipData {
             );
             metrics = factory
                     .create()
-                    .pocketDifficulty(pocketDifficulty(table.getString("hole_difficulty"), factory.supportedDifficulties))
-                    .holeSize(holeSize(table.getString("hole_size"), factory.supportedHoles))
+                    .pocketDifficulty(PocketDifficulty.valueOf(factory, table.getString("hole_difficulty")))
+                    .holeSize(PocketSize.valueOf(factory, table.getString("hole_size")))
                     .build();
         } else {
             cloth = new TableCloth(
@@ -330,22 +330,6 @@ public class ChampionshipData {
             default:
                 throw new RuntimeException("Unknown game type " + type);
         }
-    }
-
-    private PocketSize holeSize(String jsonString, PocketSize[] supported) {
-        String camelString = Util.toLowerCamelCase("POCKET_" + jsonString);
-        for (PocketSize pocketSize : supported) {
-            if (pocketSize.key.equals(camelString)) return pocketSize;
-        }
-        throw new RuntimeException("Unknown hole size " + jsonString);
-    }
-    
-    private PocketDifficulty pocketDifficulty(String jsonString, PocketDifficulty[] supported) {
-        String camelString = Util.toLowerCamelCase(jsonString);
-        for (PocketDifficulty pd : supported) {
-            if (pd.key.equals(camelString)) return pd;
-        }
-        throw new RuntimeException("Unknown pocket difficulty " + jsonString);
     }
 
     public Calendar toCalendar(int year) {

@@ -90,8 +90,8 @@ public class ChampDrawView extends ChildInitializable {
     public Stage getStage() {
         return selfStage;
     }
-
-    private void refreshCueBox() {
+    
+    public static void refreshCueBox(ComboBox<FastGameView.CueItem> cueBox) {
         cueBox.getItems().clear();
         PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();
         for (Cue cue : human.getPrivateCues()) {
@@ -102,7 +102,11 @@ public class ChampDrawView extends ChildInitializable {
                 cueBox.getItems().add(new FastGameView.CueItem(cue, cue.getName()));
             }
         }
-        
+    }
+
+    private void refreshCueBox() {
+        refreshCueBox(cueBox);
+        PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();
         selectSuggestedCue(human);
     }
     

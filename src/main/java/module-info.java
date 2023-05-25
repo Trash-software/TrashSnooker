@@ -24,6 +24,7 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.fxml.widgets;
     exports trashsoftware.trashSnooker.core.career;
     exports trashsoftware.trashSnooker.core.career.championship;
+    exports trashsoftware.trashSnooker.core.training;
 
     opens trashsoftware.trashSnooker.fxml;
     opens trashsoftware.trashSnooker.fxml.alert;
@@ -41,4 +42,6 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.core.metrics;
     exports trashsoftware.trashSnooker.fxml.statsViews;
     opens trashsoftware.trashSnooker.fxml.statsViews;
+    opens trashsoftware.trashSnooker.core.career.challenge to javafx.base;
+    exports trashsoftware.trashSnooker.core.career.challenge;
 }

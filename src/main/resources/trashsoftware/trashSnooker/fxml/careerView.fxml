@@ -40,10 +40,7 @@
         </HBox>
     </VBox>
 
-    <!--    <VBox GridPane.rowIndex="2" spacing="10.0">-->
-    <!--        &lt;!&ndash;        荣誉&ndash;&gt;-->
-    <!--    </VBox>-->
-
+    <Button text="%careerChallenges" onAction="#trainingChallengeAction" GridPane.rowIndex="2"/>
     <Button text="%seeToursList" onAction="#seeToursListAction" GridPane.rowIndex="5"/>
 
     <LabelTable fx:id="allAwardsTable" GridPane.rowIndex="6"/>
@@ -97,8 +94,9 @@
     <LabelTable fx:id="selectedPlayerInfoTable" GridPane.rowIndex="1" GridPane.columnIndex="2"
                 visible="false" managed="false" prefWidth="360.0" prefHeight="360.0"/>
 
-    <VBox fx:id="selectedPlayerAchBox" GridPane.rowIndex="2" GridPane.columnIndex="2" GridPane.rowSpan="5"
-    visible="false" managed="false">
+    <VBox fx:id="selectedPlayerAchBox" GridPane.rowIndex="2" GridPane.columnIndex="2"
+          GridPane.rowSpan="5"
+          visible="false" managed="false">
         <Label text="%participateGames"/>
         <Label fx:id="selectedPlayerGameTypesLabel"/>
         <Separator>
@@ -109,6 +107,4 @@
         <Label fx:id="selectedPlayerAchievements"
                alignment="TOP_LEFT"/>
     </VBox>
-
-
 </GridPane>

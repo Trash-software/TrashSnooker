@@ -31,8 +31,13 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
         currentTarget = 1;
     }
 
+    @Override
+    public int getNumBallsTotal() {
+        return 10;
+    }
+
     public Map<PoolBall, Boolean> getBalls() {
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i < getNumBallsTotal(); i++) {
             pottedRecord.put(allBalls[i], allBalls[i].isPotted());
         }
         return pottedRecord;
@@ -49,10 +54,10 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
     }
 
     private void initBalls() {
-        allBalls = new PoolBall[10];
+        allBalls = new PoolBall[getNumBallsTotal()];
 
         allBalls[0] = cueBall;
-        for (int i = 1; i < 10; ++i) {
+        for (int i = 1; i < getNumBallsTotal(); ++i) {
             allBalls[i] = new PoolBall(i, false, gameValues);
             pottedRecord.put(allBalls[i], false);
         }

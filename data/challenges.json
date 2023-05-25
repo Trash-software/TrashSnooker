@@ -1,0 +1,43 @@
+{
+  "challenges": [
+    {
+      "id": "pool-half-regular",
+      "rule": "side_pocket",
+      "type": "snake_half",
+      "table": "side_pocket",
+      "pocketSize": "std",
+      "pocketDifficulty": "normal",
+      "exp": 25,
+      "name": {
+        "en": "Pool half table routine-regular",
+        "zh": "九球半台蛇彩-标准"
+      }
+    },
+    {
+      "id": "chinese-eight-half-regular",
+      "rule": "chinese_eight",
+      "type": "snake_half",
+      "table": "chinese_eight",
+      "pocketSize": "std",
+      "pocketDifficulty": "normal",
+      "exp": 40,
+      "name": {
+        "en": "Chinese eight half table routine-regular",
+        "zh": "中八半台蛇彩-标准"
+      }
+    },
+    {
+      "id": "snooker-snake-half-regular",
+      "rule": "snooker",
+      "type": "snake_half",
+      "table": "snooker",
+      "pocketSize": "std",
+      "pocketDifficulty": "normal",
+      "exp": 100,
+      "name": {
+        "en": "Snooker half table routine-regular",
+        "zh": "斯诺克半台蛇彩-标准"
+      }
+    }
+  ]
+}

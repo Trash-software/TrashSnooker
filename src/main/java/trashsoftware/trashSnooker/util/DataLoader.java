@@ -129,6 +129,14 @@ public class DataLoader {
             e.printStackTrace();
         }
     }
+    
+    public static JSONObject loadPlayerListFromDisk(String fileName) {
+        JSONObject object = loadFromDisk(fileName);
+        if (object.isEmpty()) {
+            object.put("players", new JSONObject());
+        }
+        return object;
+    }
 
     public static JSONObject loadFromDisk(String fileName) {
         try (BufferedReader br = new BufferedReader(
@@ -140,9 +148,7 @@ public class DataLoader {
             }
             return new JSONObject(builder.toString());
         } catch (FileNotFoundException e) {
-            JSONObject empty = new JSONObject();
-            empty.put("players", new JSONObject());
-            return empty;
+            return new JSONObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -203,20 +209,20 @@ public class DataLoader {
         actualPlayers.clear();
 
         for (String fileName : PLAYER_LIST_FILES) {
-            JSONObject playersRoot = loadFromDisk(fileName);
+            JSONObject playersRoot = loadPlayerListFromDisk(fileName);
             Map<String, PlayerPerson> people = loadPlayers(playersRoot, cues, false);
             playerPeople.putAll(people);
             actualPlayers.putAll(people);
         }
 
-        JSONObject customPlayersRoot = loadFromDisk(CUSTOM_PLAYER_LIST_FILE);
+        JSONObject customPlayersRoot = loadPlayerListFromDisk(CUSTOM_PLAYER_LIST_FILE);
         var customs = loadPlayers(customPlayersRoot, cues, true);
         playerPeople.putAll(customs);
         actualPlayers.putAll(customs);
 
         // 随机球员，填充位置用，以免人数凑不齐
         if (new File(RANDOM_PLAYERS_LIST_FILE).exists()) {
-            JSONObject randomPlayers = loadFromDisk(RANDOM_PLAYERS_LIST_FILE);
+            JSONObject randomPlayers = loadPlayerListFromDisk(RANDOM_PLAYERS_LIST_FILE);
             var randoms = loadPlayers(randomPlayers, cues, false);
             playerPeople.putAll(randoms);
         } else {

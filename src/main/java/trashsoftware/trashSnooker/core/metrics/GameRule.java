@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.core.BreakRule;
 import trashsoftware.trashSnooker.core.Cue;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.training.TrainType;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -19,73 +20,80 @@ import trashsoftware.trashSnooker.util.Util;
  * @see Game 一局游戏的实例
  */
 public enum GameRule {
-    SNOOKER(22, "Snooker", 
-            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL}, BreakRule.ALTERNATE) {
+    SNOOKER(22, "Snooker",
+            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL},
+            new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_FULL_DENSE,
+                    TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS, TrainType.SNAKE_X},
+            BreakRule.ALTERNATE) {
         @Override
         public boolean snookerLike() {
             return true;
         }
     },
     MINI_SNOOKER(13, "MiniSnooker",
-            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL}, BreakRule.ALTERNATE) {
+            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL},
+            new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS},
+            BreakRule.ALTERNATE) {
         @Override
         public boolean snookerLike() {
             return true;
         }
     },
     CHINESE_EIGHT(16, "ChineseEight",
-            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG}, BreakRule.WINNER) {
+            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG},
+            new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF,
+                    TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},
+            BreakRule.WINNER) {
         @Override
         public boolean poolLike() {
             return true;
         }
+
         @Override
         public boolean eightBallLike() {
             return true;
         }
     },
     LIS_EIGHT(16, "LisEight",
-            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG}, BreakRule.WINNER) {
+            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG},
+            new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF,
+                    TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},
+            BreakRule.WINNER) {
         @Override
         public boolean poolLike() {
             return true;
         }
+
         @Override
         public boolean eightBallLike() {
             return true;
         }
     },
     SIDE_POCKET(10, "SidePocket",
-            new Cue.Size[]{Cue.Size.BIG, Cue.Size.MEDIUM}, BreakRule.WINNER) {
+            new Cue.Size[]{Cue.Size.BIG, Cue.Size.MEDIUM},
+            new TrainType[]{TrainType.SNAKE_FULL,
+                    TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},
+            BreakRule.WINNER) {
         @Override
         public boolean poolLike() {
             return true;
         }
     };
-    
+
     public final String sqlKey;
     public final int nBalls;
     public final Cue.Size[] suggestedCues;
+    public final TrainType[] supportedTrainings;
     public final BreakRule breakRule;
 
-    GameRule(int nBalls, String sqlKey, Cue.Size[] suggestedCues, 
+    GameRule(int nBalls, String sqlKey, Cue.Size[] suggestedCues,
+             TrainType[] supportedTrainings,
              BreakRule breakRule) {
         this.nBalls = nBalls;
         this.sqlKey = sqlKey;
         this.suggestedCues = suggestedCues;
+        this.supportedTrainings = supportedTrainings;
         this.breakRule = breakRule;
-    }
-    
-    public boolean snookerLike() {
-        return false;
-    }
-    
-    public boolean poolLike() {
-        return false;
-    }
-    
-    public boolean eightBallLike() {
-        return false;
     }
 
     public static GameRule fromSqlKey(String sqlKey) {
@@ -98,6 +106,28 @@ public enum GameRule {
     public static String toReadable(GameRule gameRule) {
         String key = Util.toLowerCamelCase(gameRule.sqlKey);
         return App.getStrings().getString(key);
+    }
+    
+    public static BallMetrics getDefaultBall(GameRule rule) {
+        switch (rule) {
+            case SNOOKER:
+            case MINI_SNOOKER:
+                return BallMetrics.SNOOKER_BALL;
+            default:
+                return BallMetrics.POOL_BALL;
+        }
+    }
+
+    public boolean snookerLike() {
+        return false;
+    }
+
+    public boolean poolLike() {
+        return false;
+    }
+
+    public boolean eightBallLike() {
+        return false;
     }
 
     @Override

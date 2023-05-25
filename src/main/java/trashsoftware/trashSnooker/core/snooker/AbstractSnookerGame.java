@@ -18,8 +18,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public static final int RAW_COLORED_REP = 0;  // 代表任意彩球
     public final double redRowOccupyX;
     public final double redGapDt;
-    private final SnookerBall[] redBalls = new SnookerBall[numRedBalls()];
-    private final SnookerBall[] coloredBalls = new SnookerBall[6];
+    protected final SnookerBall[] redBalls = new SnookerBall[numRedBalls()];
+    protected final SnookerBall[] coloredBalls = new SnookerBall[6];
     private boolean doingFreeBall = false;  // 正在击打自由球
     private boolean blackBattle = false;
 //    private int lastFoulPoints = 0;
@@ -43,7 +43,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
      */
     protected final Set<Ball> suggestedRegularBreakBalls = new HashSet<>();
 
-    AbstractSnookerGame(EntireGame entireGame,
+    protected AbstractSnookerGame(EntireGame entireGame,
                         GameSettings gameSettings,
                         Table table,
                         int frameIndex) {
@@ -922,7 +922,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return GamePlayStage.NORMAL;
     }
 
-    private void initRedBalls() {
+    protected void initRedBalls() {
         double curX = firstRedX();
         double rowStartY = gameValues.table.midY;
         

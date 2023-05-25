@@ -15,9 +15,10 @@ import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.core.table.Table;
+import trashsoftware.trashSnooker.core.training.PoolTraining;
+import trashsoftware.trashSnooker.core.training.SnookerTraining;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.GameView;
-import trashsoftware.trashSnooker.recorder.ActualRecorder;
 import trashsoftware.trashSnooker.recorder.GameRecorder;
 import trashsoftware.trashSnooker.recorder.InvalidRecorder;
 import trashsoftware.trashSnooker.recorder.NaiveActualRecorder;
@@ -49,6 +50,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected final Map<B, double[]> recordedPositions = new HashMap<>();  // 记录上一杆时球的位置，复位用
     protected final GameSettings gameSettings;
     protected final ResourceBundle strings = App.getStrings();
+    private final Map<B, int[]> ballCushionCountAndCrossLine = new HashMap<>();  // 本杆的{库数, 过线次数}
     protected B cueBall;
     protected P player1;
     protected P player2;
@@ -64,7 +66,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected Ball whiteFirstCollide;  // 这一杆白球碰到的第一颗球
     protected boolean collidesWall;
     protected boolean ballInHand = true;
-//    protected boolean thisCueFoul = false;
+    //    protected boolean thisCueFoul = false;
 //    protected boolean lastCueFoul = false;
     protected FoulInfo thisCueFoul = new FoulInfo();
     protected FoulInfo lastCueFoul;
@@ -72,7 +74,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected boolean isBreaking = true;
     protected boolean placedHandBallButNoHit;
     protected GameValues gameValues;
-//    protected String foulReason;
+    //    protected String foulReason;
     protected int thinkTime;
     protected long cueFinishTime;
     protected long cueStartTime;
@@ -82,8 +84,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected Table table;
     private boolean ended;
     private PhysicsCalculator physicsCalculator;
-    
-    private final Map<B, int[]> ballCushionCountAndCrossLine = new HashMap<>();  // 本杆的{库数, 过线次数}
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
@@ -104,19 +104,40 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public static Game<? extends Ball, ? extends Player> createGame(
             GameSettings gameSettings,
-            GameValues gameValues, EntireGame entireGame) {
+            GameValues gameValues,
+            EntireGame entireGame) {
         int frameIndex = entireGame.getP1Wins() + entireGame.getP2Wins() + 1;
         Game<? extends Ball, ? extends Player> game;
         if (gameValues.rule == GameRule.SNOOKER) {
-            game = new SnookerGame(entireGame, gameSettings, frameIndex);
+            if (gameValues.isTraining()) {
+                game = new SnookerTraining(entireGame, gameSettings, gameValues.getTrainType(), gameValues.getTrainChallenge());
+            } else {
+                game = new SnookerGame(entireGame, gameSettings, frameIndex);
+            }
         } else if (gameValues.rule == GameRule.MINI_SNOOKER) {
-            game = new MiniSnookerGame(entireGame, gameSettings, frameIndex);
+            if (gameValues.isTraining()) {
+                throw new RuntimeException("Not implemented yet");
+            } else {
+                game = new MiniSnookerGame(entireGame, gameSettings, frameIndex);
+            }
         } else if (gameValues.rule == GameRule.CHINESE_EIGHT) {
-            game = new ChineseEightBallGame(entireGame, gameSettings, frameIndex);
+            if (gameValues.isTraining()) {
+                game = new PoolTraining(entireGame, gameSettings, gameValues.getTrainType(), gameValues.getTrainChallenge());
+            } else {
+                game = new ChineseEightBallGame(entireGame, gameSettings, frameIndex);
+            }
         } else if (gameValues.rule == GameRule.LIS_EIGHT) {
-            game = new LisEightGame(entireGame, gameSettings, frameIndex);
+            if (gameValues.isTraining()) {
+                game = new PoolTraining(entireGame, gameSettings, gameValues.getTrainType(), gameValues.getTrainChallenge());
+            } else {
+                game = new LisEightGame(entireGame, gameSettings, frameIndex);
+            }
         } else if (gameValues.rule == GameRule.SIDE_POCKET) {
-            game = new SidePocketGame(entireGame, gameSettings, frameIndex);
+            if (gameValues.isTraining()) {
+                game = new PoolTraining(entireGame, gameSettings, gameValues.getTrainType(), gameValues.getTrainChallenge());
+            } else {
+                game = new SidePocketGame(entireGame, gameSettings, frameIndex);
+            }
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
 
         try {
@@ -143,7 +164,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         } else {
             divisor = 17.0;
         }
-        
+
         double tfPrice = Algebra.shiftRange(
                 0, 1,
                 0.3, 1,
@@ -218,9 +239,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public final List<Ball> getAllLegalBalls(int targetRep, boolean isSnookerFreeBall, boolean isLineInFreeBall) {
         List<Ball> balls = new ArrayList<>();
         for (Ball ball : getAllBalls()) {
-            if (!ball.isPotted() && 
+            if (!ball.isPotted() &&
                     !ball.isWhite() &&
-                    isLegalBall(ball, targetRep, isSnookerFreeBall, isLineInFreeBall)) 
+                    isLegalBall(ball, targetRep, isSnookerFreeBall, isLineInFreeBall))
                 balls.add(ball);
         }
         return balls;
@@ -563,13 +584,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     /**
-     * @param situation 1:薄边 2:全球 3:缝隙能过全球（斯诺克自由球那种）
+     * @param situation                1:薄边 2:全球 3:缝隙能过全球（斯诺克自由球那种）
      * @param obstaclesInConsideration 参与考虑的可能障碍球。只有这里面的球会被考虑为障碍
      * @return 能看到的目标球数量
      */
     public SeeAble getAllSeeAbleBalls(double whiteX, double whiteY,
                                       Collection<Ball> legalBalls, int situation,
-                                      List<Ball> listToPut, 
+                                      List<Ball> listToPut,
                                       Ball[] obstaclesInConsideration) {
         if (situation != 1 && situation != 2 && situation != 3) {
             throw new RuntimeException("Unknown situation " + situation);
@@ -580,11 +601,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         } else {
             legalSet = new HashSet<>(legalBalls);
         }
-        double shadowRadius = situation == 3 ? 
-                gameValues.ball.ballRadius : 
+        double shadowRadius = situation == 3 ?
+                gameValues.ball.ballRadius :
                 gameValues.ball.ballDiameter;
         int result = 0;
-        
+
         double maxShadowAngle = 0.0;
         double sumTargetDt = 0.0;
 
@@ -828,7 +849,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected int[] computeCushionAndAcrossLineOfBall(B ball) {
         return ballCushionCountAndCrossLine.computeIfAbsent(ball, b -> new int[2]);
     }
-    
+
     private void recordHitCushion(B ball) {
         computeCushionAndAcrossLineOfBall(ball)[0]++;
     }
@@ -896,7 +917,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     // 从白球处看得到进球点
                     AiCue.AttackChoice attackChoice = AiCue.AttackChoice.createChoice(
                             this,
-                            entireGame.predictPhy, 
+                            entireGame.predictPhy,
                             player,
                             whitePos,
                             ball,
@@ -991,7 +1012,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected abstract void updateTargetPotFailed();
 
     public abstract GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage);
-    
+
     public int getContinuousFoulAndMiss() {
         return 0;
     }
@@ -1147,7 +1168,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 prediction.whiteHitCushion();
                 return true;
             }
-            
+
             if (cueBallClone.currentBounce != null) {
                 cueBallClone.processBounce(false);
                 if (prediction.getFirstCollide() == null) {
@@ -1337,7 +1358,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         }
                         continue;
                     }
-                    
+
                     int holeAreaResult = ball.tryHitHoleArea(phy);
                     if (holeAreaResult != 0) {
                         // 袋口区域

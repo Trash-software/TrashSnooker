@@ -23,19 +23,19 @@ public abstract class AbstractSnookerTable extends Table {
     @Override
     public void drawTableMarks(GameView view, GraphicsContext graphicsContext, double scale) {
         // 开球线
-        double breakLineX = view.canvasX(breakLineX());
+        double breakLineX = GameView.canvasX(breakLineX());
         graphicsContext.setStroke(GameView.WHITE);
         graphicsContext.strokeLine(
                 breakLineX,
-                view.canvasY(tableMetrics.topY),
+                GameView.canvasY(tableMetrics.topY),
                 breakLineX,
-                view.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
+                GameView.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
 
         // 开球半圆
         double breakArcRadius = breakArcRadius() * scale;
         graphicsContext.strokeArc(
                 breakLineX - breakArcRadius,
-                view.canvasY(tableMetrics.midY) - breakArcRadius,
+                GameView.canvasY(tableMetrics.midY) - breakArcRadius,
                 breakArcRadius * 2,
                 breakArcRadius * 2,
                 90.0,
@@ -51,27 +51,12 @@ public abstract class AbstractSnookerTable extends Table {
         double pointRadius = 2.0;
         double pointDiameter = pointRadius * 2;
         for (double[] xy : pointsRankHighToLow) {
-            graphicsContext.fillOval(view.canvasX(xy[0]) - pointRadius,
-                    view.canvasY(xy[1]) - pointRadius,
+            graphicsContext.fillOval(GameView.canvasX(xy[0]) - pointRadius,
+                    GameView.canvasY(xy[1]) - pointRadius,
                     pointDiameter,
                     pointDiameter);
         }
     }
-
-//    @Override
-//    public void forceDrawBall(GameView view,
-//                              Ball ball,
-//                              double absoluteX,
-//                              double absoluteY,
-//                              GraphicsContext graphicsContext,
-//                              double scale) {
-//        drawBallBase(
-//                view.canvasX(absoluteX),
-//                view.canvasY(absoluteY),
-//                gameValues.ballDiameter * scale,
-//                ball.getColor(),
-//                graphicsContext);
-//    }
     
     public abstract double breakLineX();
     
@@ -94,7 +79,7 @@ public abstract class AbstractSnookerTable extends Table {
     }
 
     public double[] pinkBallPos() {
-        return new double[]{(blackBallPos()[0] + blueBallPos()[0]) / 2, tableMetrics.midY};
+        return new double[]{tableMetrics.leftX + tableMetrics.innerWidth * 0.75, tableMetrics.midY};
     }
 
     public abstract double[] blackBallPos();

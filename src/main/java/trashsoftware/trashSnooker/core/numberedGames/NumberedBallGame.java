@@ -75,4 +75,6 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
     public boolean isJustAfterBreak() {
         return finishedCuesCount == 1;
     }
+    
+    public abstract int getNumBallsTotal();
 }

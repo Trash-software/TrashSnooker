@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.CareerTrainingView"
+      prefHeight="540.0" prefWidth="360.0" spacing="10.0">
+    
+    <padding>
+        <Insets topRightBottomLeft="10.0"/>
+    </padding>
+    
+    <Button text="%backIcon" onAction="#backAction"/>
+    
+    <TableView fx:id="challengeTable">
+        <columns>
+            <TableColumn text="%careerChallenge" fx:id="challengeTitleCol" prefWidth="220.0"/>
+            <TableColumn text="exp" fx:id="challengeExpCol" prefWidth="80.0"/>
+            <TableColumn fx:id="challengeCompletedCol" prefWidth="40.0"/>
+        </columns>
+    </TableView>
+    
+    <ComboBox fx:id="cueBox"/>
+    
+    <HBox alignment="CENTER_RIGHT">
+        <Button fx:id="startBtn" disable="true" text="%start" onAction="#startChallengeAction"/>
+    </HBox>
+
+</VBox>

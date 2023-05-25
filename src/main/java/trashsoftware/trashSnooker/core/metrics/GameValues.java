@@ -5,6 +5,8 @@ import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
+import trashsoftware.trashSnooker.core.training.Challenge;
+import trashsoftware.trashSnooker.core.training.TrainType;
 
 import java.util.Arrays;
 
@@ -27,7 +29,8 @@ public class GameValues {
     double ballHoleRatio;
     
     private double maxPowerMoveDistance;
-    private boolean isPractice = false;
+    private TrainType trainType;
+    private Challenge trainChallenge;
 
     public GameValues(GameRule rule,
                       TableMetrics tableMetrics,
@@ -104,21 +107,30 @@ public class GameValues {
         // open center 和 hole顺序必须一致
     }
 
-    public void setPractice(boolean practice) {
-        isPractice = practice;
+    public void setTrain(TrainType trainType, Challenge challenge) {
+        this.trainType = trainType;
+        this.trainChallenge = challenge;
     }
 
-    public boolean isPractice() {
-        return isPractice;
+    public boolean isTraining() {
+        return trainType != null;
+    }
+
+    public Challenge getTrainChallenge() {
+        return trainChallenge;
+    }
+
+    public TrainType getTrainType() {
+        return trainType;
     }
 
     public boolean isStandard() {
-        return !isPractice &&
-                (rule == GameRule.SNOOKER && TableMetrics.SNOOKER.equals(table.tableName) && ball == BallMetrics.SNOOKER_BALL) ||
+        return !isTraining() &&
+                ((rule == GameRule.SNOOKER && TableMetrics.SNOOKER.equals(table.tableName) && ball == BallMetrics.SNOOKER_BALL) ||
                 (rule == GameRule.MINI_SNOOKER && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.SNOOKER_BALL) ||
                 (rule == GameRule.CHINESE_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
                 (rule == GameRule.LIS_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
-                (rule == GameRule.SIDE_POCKET && table.tableName.equals(TableMetrics.SIDE_POCKET) && ball == BallMetrics.POOL_BALL);
+                (rule == GameRule.SIDE_POCKET && table.tableName.equals(TableMetrics.SIDE_POCKET) && ball == BallMetrics.POOL_BALL));
     }
     
     public boolean isInTable(double x, double y, double r) {

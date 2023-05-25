@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.metrics;
 
 import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.Util;
 
 public class PocketSize {
     public static final PocketSize[] SNOOKER_HOLES = {
@@ -31,6 +32,14 @@ public class PocketSize {
         this.key = name;
         this.cornerHoleDiameter = cornerHoleDiameter;
         this.midHoleDiameter = midHoleDiameter;
+    }
+
+    public static PocketSize valueOf(TableMetrics.TableBuilderFactory factory, String jsonString) {
+        String camelString = Util.toLowerCamelCase("POCKET_" + jsonString);
+        for (PocketSize pd : factory.supportedHoles) {
+            if (pd.key.equals(camelString) || pd.key.equals(jsonString)) return pd;
+        }
+        throw new RuntimeException("No match pocket size: " + jsonString);
     }
 
     @Override

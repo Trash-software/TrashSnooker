@@ -36,6 +36,11 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     @Override
+    public int getNumBallsTotal() {
+        return 16;
+    }
+
+    @Override
     public GameRule getGameType() {
         return GameRule.CHINESE_EIGHT;
     }

@@ -4,15 +4,12 @@ import javafx.application.Platform;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.core.career.Career;
-import trashsoftware.trashSnooker.core.career.CareerManager;
-import trashsoftware.trashSnooker.core.career.ChampionshipData;
-import trashsoftware.trashSnooker.core.career.ChampionshipStage;
+import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.File;
 
-public class PlayerVsAiMatch {
+public class PlayerVsAiMatch extends CareerMatch {
     public static final String ACTIVE_MATCH_SAVE = "matchSave.json";
     
     public final Career p1;
@@ -21,10 +18,7 @@ public class PlayerVsAiMatch {
     public final ChampionshipStage stage;
     private final Championship championship;
     private final MatchTreeNode resultNode;
-    private PvEMatchEndCallback callback;
-    private Runnable guiFinishCallback;
-    private Runnable guiAbortionCallback;
-    private EntireGame game;
+    protected PvEMatchEndCallback callback;
 
     public PlayerVsAiMatch(Career p1,
                            Career p2,
@@ -91,22 +85,9 @@ public class PlayerVsAiMatch {
     public void saveMatch() {
         Util.writeJson(toJson(), getMatchSave());
     }
-
-    public void setGame(EntireGame game) {
-        this.game = game;
-    }
-
-    public EntireGame getGame() {
-        return game;
-    }
-
+    
     public void setEndCallback(PvEMatchEndCallback callback) {
         this.callback = callback;
-    }
-
-    public void setGuiCallback(Runnable guiCallback, Runnable guiAbortionCallback) {
-        this.guiFinishCallback = guiCallback;
-        this.guiAbortionCallback = guiAbortionCallback;
     }
 
     public ChampionshipStage getStage() {

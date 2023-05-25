@@ -288,7 +288,7 @@ public class EntryView implements Initializable {
 //        stage.initModality(Modality.WINDOW_MODAL);
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("mainView.fxml"),
+                getClass().getResource("fastGameView.fxml"),
                 strings
         );
         Parent root = loader.load();

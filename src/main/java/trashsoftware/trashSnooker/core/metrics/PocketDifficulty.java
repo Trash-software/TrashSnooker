@@ -63,6 +63,14 @@ public class PocketDifficulty {
         this.midPocketArcSize = midPocketArcSize;
         this.midPocketAngle = midPocketAngle;
     }
+    
+    public static PocketDifficulty valueOf(TableMetrics.TableBuilderFactory factory, String jsonString) {
+        String camelString = Util.toLowerCamelCase(jsonString);
+        for (PocketDifficulty pd : factory.supportedDifficulties) {
+            if (pd.key.equals(camelString) || pd.key.equals(jsonString)) return pd;
+        }
+        throw new RuntimeException("No match pocket difficulty: " + jsonString);
+    }
 
     @Override
     public String toString() {
