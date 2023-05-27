@@ -8,6 +8,7 @@ import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 
 import java.util.HashMap;
 
@@ -81,25 +82,23 @@ public abstract class Table {
         }
     }
 
-    public abstract void drawTableMarks(GameView view, GraphicsContext graphicsContext, double scale);
+    public abstract void drawTableMarks(GamePane view, GraphicsContext graphicsContext, double scale);
 
     public abstract int nBalls();
 
     /**
      * 在指定的位置强行绘制一颗球，无论球是否已经落袋
      */
-    public void forceDrawBall(GameView view,
+    public void forceDrawBall(GamePane container,
                               Ball ball,
                               double absoluteX,
                               double absoluteY,
                               double xAxis,
                               double yAxis,
                               double zAxis,
-                              double frameDegChange,
-                              GraphicsContext graphicsContext,
-                              double scale) {
-        ball.model.setX(absoluteX);
-        ball.model.setY(absoluteY);
+                              double frameDegChange) {
+        ball.model.setX(container, absoluteX);
+        ball.model.setY(container, absoluteY);
         ball.model.rotateBy(
                 xAxis,
                 yAxis,
@@ -111,14 +110,12 @@ public abstract class Table {
 //        ball.model.rz.setAngle(Math.toDegrees(zAngle) / 10);
     }
 
-    public void forceDrawBallInHand(GameView view,
+    public void forceDrawBallInHand(GamePane container, 
                                     Ball ball,
                                     double realX,
-                                    double realY,
-                                    GraphicsContext graphicsContext,
-                                    double scale) {
+                                    double realY) {
         ball.model.sphere.setVisible(true);
-        forceDrawBall(view, ball, realX, realY, 0, 0, 0, 0, graphicsContext, scale);
+        forceDrawBall(container, ball, realX, realY, 0, 0, 0, 0);
 //        drawBallBase(
 //                view.canvasX(realX),
 //                view.canvasY(realY),
@@ -127,11 +124,9 @@ public abstract class Table {
 //                graphicsContext);
     }
 
-    public void drawStoppedBalls(GameView view,
+    public void drawStoppedBalls(GamePane container,
                                  Ball[] allBalls,
-                                 HashMap<Ball, double[]> positionsPot,
-                                 GraphicsContext graphicsContext,
-                                 double scale) {
+                                 HashMap<Ball, double[]> positionsPot) {
         for (Ball ball : allBalls) {
             boolean pot;
             double x, y, ax, ay, az, degChange;
@@ -156,7 +151,7 @@ public abstract class Table {
 //            System.out.println(pot + " " + x + ", " + y + ", " + ball.model.sphere.getMaterial() + " ");
             ball.model.sphere.setVisible(!pot);
             if (!pot) {
-                forceDrawBall(view, ball, x, y, ax, ay, az, degChange, graphicsContext, scale);
+                forceDrawBall(container, ball, x, y, ax, ay, az, degChange);
             }
         }
     }

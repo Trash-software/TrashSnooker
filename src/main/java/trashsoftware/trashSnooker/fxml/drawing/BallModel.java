@@ -8,6 +8,7 @@ import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 
 import java.util.Random;
 
@@ -19,11 +20,15 @@ public abstract class BallModel {
 //    public final Rotate rz = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
     
     protected BallModel(double physicalRadius) {
-        sphere = new Sphere(physicalRadius * GameView.scale);
+        sphere = new Sphere();
         
         sphere.getTransforms().add(randomRotate());
         
 //        sphere.getTransforms().addAll(rz, ry, rx);
+    }
+    
+    public void setVisualRadius(double visualRadius) {
+        sphere.setRadius(visualRadius);
     }
     
     private static Rotate randomRotate() {
@@ -53,11 +58,11 @@ public abstract class BallModel {
         sphere.getTransforms().add(tr);
     }
     
-    public void setX(double actualX) {
-        sphere.setTranslateX(GameView.canvasX(actualX));
+    public void setX(GamePane container, double actualX) {
+        sphere.setTranslateX(container.canvasX(actualX));
     }
     
-    public void setY(double actualY) {
-        sphere.setTranslateY(GameView.canvasY(actualY));
+    public void setY(GamePane container, double actualY) {
+        sphere.setTranslateY(container.canvasY(actualY));
     }
 }

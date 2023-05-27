@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.ArcType;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 
 public abstract class AbstractSnookerTable extends Table {
     
@@ -21,21 +22,21 @@ public abstract class AbstractSnookerTable extends Table {
     }
 
     @Override
-    public void drawTableMarks(GameView view, GraphicsContext graphicsContext, double scale) {
+    public void drawTableMarks(GamePane view, GraphicsContext graphicsContext, double scale) {
         // 开球线
-        double breakLineX = GameView.canvasX(breakLineX());
+        double breakLineX = view.canvasX(breakLineX());
         graphicsContext.setStroke(GameView.WHITE);
         graphicsContext.strokeLine(
                 breakLineX,
-                GameView.canvasY(tableMetrics.topY),
+                view.canvasY(tableMetrics.topY),
                 breakLineX,
-                GameView.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
+                view.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
 
         // 开球半圆
         double breakArcRadius = breakArcRadius() * scale;
         graphicsContext.strokeArc(
                 breakLineX - breakArcRadius,
-                GameView.canvasY(tableMetrics.midY) - breakArcRadius,
+                view.canvasY(tableMetrics.midY) - breakArcRadius,
                 breakArcRadius * 2,
                 breakArcRadius * 2,
                 90.0,
@@ -46,13 +47,13 @@ public abstract class AbstractSnookerTable extends Table {
         drawBallPoints(view, graphicsContext);
     }
 
-    private void drawBallPoints(GameView view, GraphicsContext graphicsContext) {
+    private void drawBallPoints(GamePane view, GraphicsContext graphicsContext) {
         graphicsContext.setFill(GameView.WHITE);
         double pointRadius = 2.0;
         double pointDiameter = pointRadius * 2;
         for (double[] xy : pointsRankHighToLow) {
-            graphicsContext.fillOval(GameView.canvasX(xy[0]) - pointRadius,
-                    GameView.canvasY(xy[1]) - pointRadius,
+            graphicsContext.fillOval(view.canvasX(xy[0]) - pointRadius,
+                    view.canvasY(xy[1]) - pointRadius,
                     pointDiameter,
                     pointDiameter);
         }
