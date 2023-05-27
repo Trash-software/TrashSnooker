@@ -23,7 +23,7 @@ public enum GameRule {
     SNOOKER(22, "Snooker",
             new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL},
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_FULL_DENSE,
-                    TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS, TrainType.SNAKE_X},
+                    TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS, TrainType.SNAKE_X, TrainType.CLEAR_COLOR},
             BreakRule.ALTERNATE) {
         @Override
         public boolean snookerLike() {
@@ -32,7 +32,7 @@ public enum GameRule {
     },
     MINI_SNOOKER(13, "MiniSnooker",
             new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL},
-            new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS},
+            new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS, TrainType.CLEAR_COLOR},
             BreakRule.ALTERNATE) {
         @Override
         public boolean snookerLike() {

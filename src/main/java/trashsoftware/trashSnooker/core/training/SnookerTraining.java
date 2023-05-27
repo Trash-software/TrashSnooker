@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.GamePlayStage;
 import trashsoftware.trashSnooker.core.GameSettings;
+import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 
 public class SnookerTraining extends SnookerGame implements Training {
@@ -39,6 +40,9 @@ public class SnookerTraining extends SnookerGame implements Training {
                 break;
             case SNAKE_X:
                 moveToXSnake();
+                break;
+            case CLEAR_COLOR:
+                moveToClearColor();
                 break;
         }
     }
@@ -87,7 +91,14 @@ public class SnookerTraining extends SnookerGame implements Training {
             redBalls[i + 11].setXY(pinkX, midY - (i + 2) * yGap);
         }
     }
-
+    
+    private void moveToClearColor() {
+        for (SnookerBall ball : redBalls) {
+            ball.pot();
+        }
+        currentTarget = 2;
+    }
+    
     private void moveToDenseSnake() {
         double y = gameValues.table.midY;
         double blackX = getTable().blackBallPos()[0];

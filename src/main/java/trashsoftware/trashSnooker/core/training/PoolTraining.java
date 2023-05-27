@@ -85,7 +85,7 @@ public class PoolTraining extends ChineseEightBallGame implements Training {
         } else {
             if (ordered && whiteFirstCollide.getValue() != currentTarget) {
                 thisCueFoul.addFoul(String.format(
-                                strings.getString("targetXHitYNumbered"), currentTarget, whiteFirstCollide),
+                                strings.getString("targetXHitYNumbered"), currentTarget, whiteFirstCollide.getValue()),
                         true);
             } else if (!thisCueFoul.isFoul() && newPotted.size() == 1) {
                 PoolBall onlyPot = null;

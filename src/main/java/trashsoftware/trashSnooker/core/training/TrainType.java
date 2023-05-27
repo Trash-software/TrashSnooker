@@ -10,7 +10,8 @@ public enum TrainType {
     SNAKE_CROSS,
     SNAKE_X,
     SNAKE_FULL_ORDERED,
-    SNAKE_HALF_ORDERED;
+    SNAKE_HALF_ORDERED,
+    CLEAR_COLOR;
 
     @Override
     public String toString() {

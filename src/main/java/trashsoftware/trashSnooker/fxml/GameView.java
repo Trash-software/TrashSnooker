@@ -37,6 +37,7 @@ import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerMatch;
 import trashsoftware.trashSnooker.core.career.ChampionshipStage;
+import trashsoftware.trashSnooker.core.career.challenge.ChallengeMatch;
 import trashsoftware.trashSnooker.core.career.championship.PlayerVsAiMatch;
 import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
@@ -690,9 +691,14 @@ public class GameView implements Initializable {
                     if (careerMatch != null) {
 //                        game.saveTo(PlayerVsAiMatch.getMatchSave());
                         if (matchFinish) {
-                            careerMatch.finish(winner.getPlayerPerson(),
-                                    game.getP1Wins(),
-                                    game.getP2Wins());  // 这里没用endFrame或者withdraw，因为不想影响数据库
+                            if (careerMatch instanceof ChallengeMatch) {
+                                careerMatch.finish(game.getGame().getPlayer2().getPlayerPerson(),
+                                        0, 1);
+                            } else {
+                                careerMatch.finish(winner.getPlayerPerson(),
+                                        game.getP1Wins(),
+                                        game.getP2Wins());  // 这里没用endFrame或者withdraw，因为不想影响数据库
+                            }
                         } else {
                             careerMatch.saveMatch();
                             careerMatch.saveAndExit();
@@ -929,7 +935,7 @@ public class GameView implements Initializable {
             String title = success ? strings.getString("challengeSuccess") : strings.getString("challengeFailed");
 
             if (careerMatch != null) {
-                careerMatch.finish(wonPlayer.getPlayerPerson(), game.getP1Wins(), game.getP2Wins());
+                careerMatch.finish(wonPlayer.getPlayerPerson(), success ? 1 : 0, success ? 0 : 1);
             }
             Platform.runLater(() -> {
                 AlertShower.showInfo(stage,
@@ -2198,6 +2204,9 @@ public class GameView implements Initializable {
 
     private void drawTable() {
         TableMetrics values = gameValues.table;
+
+        graphicsContext.setFill(WHITE);
+        graphicsContext.fillRect(0, 0, canvasWidth, canvasHeight);
 
         double cornerHoleVisualSize = 1.02;
         double tableCorner = scale * values.cornerHoleDiameter * cornerHoleVisualSize;

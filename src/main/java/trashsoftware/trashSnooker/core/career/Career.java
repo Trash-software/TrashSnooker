@@ -101,16 +101,19 @@ public class Career {
         out.put("efforts", effortsObj);
         out.put("scores", scoreArr);
         out.put("handFeel", handFeel);
-        out.put("availPerks", availPerks);
-        out.put("totalExp", totalExp);
-        out.put("level", level);
-        out.put("expInThisLevel", expInThisLevel);
         
-        JSONArray compCha = new JSONArray();
-        for (String challengeId : completedChallenges) {
-            compCha.put(challengeId);
+        if (isHumanPlayer) {
+            out.put("availPerks", availPerks);
+            out.put("totalExp", totalExp);
+            out.put("level", level);
+            out.put("expInThisLevel", expInThisLevel);
+            
+            JSONArray compCha = new JSONArray();
+            for (String challengeId : completedChallenges) {
+                compCha.put(challengeId);
+            }
+            out.put("completedChallenges", compCha);
         }
-        out.put("completedChallenges", compCha);
 
         return out;
     }

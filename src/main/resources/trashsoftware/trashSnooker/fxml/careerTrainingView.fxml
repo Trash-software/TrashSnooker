@@ -18,11 +18,11 @@
     
     <Button text="%backIcon" onAction="#backAction"/>
     
-    <TableView fx:id="challengeTable">
+    <TableView fx:id="challengeTable" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn text="%careerChallenge" fx:id="challengeTitleCol" prefWidth="220.0"/>
-            <TableColumn text="exp" fx:id="challengeExpCol" prefWidth="80.0"/>
-            <TableColumn fx:id="challengeCompletedCol" prefWidth="40.0"/>
+            <TableColumn text="%careerChallenge" fx:id="challengeTitleCol" prefWidth="240.0"/>
+            <TableColumn text="exp" fx:id="challengeExpCol" prefWidth="70.0"/>
+            <TableColumn fx:id="challengeCompletedCol" prefWidth="25.0"/>
         </columns>
     </TableView>
     

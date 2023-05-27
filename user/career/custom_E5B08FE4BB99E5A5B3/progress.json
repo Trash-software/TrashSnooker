@@ -1,5 +1,5 @@
 {
-  "stageIndex": 3,
+  "stageIndex": 2,
   "seedRanks": {
     "random_player_47": 38,
     "random_player_46": 55,
@@ -486,6 +486,7 @@
           "p2wins": 3
         },
         "p2": {
+          "p1wins": 3,
           "p1": {
             "p1wins": 3,
             "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
@@ -536,8 +537,10 @@
             "matchId": "custom_E5B08FE4BB99E5A5B3+2025+united_kingdom_champ-ROUND_1-47",
             "p2wins": 1
           },
+          "winner": "custom_E5B08FE4BB99E5A5B3",
           "stage": "ROUND_2",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+united_kingdom_champ-ROUND_2-55"
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2025+united_kingdom_champ-ROUND_2-55",
+          "p2wins": 1
         },
         "stage": "QUARTER_FINAL",
         "matchId": "custom_E5B08FE4BB99E5A5B3+2025+united_kingdom_champ-QUARTER_FINAL-59"
@@ -869,6 +872,14 @@
       "numFrame": 3,
       "matchId": "custom_E5B08FE4BB99E5A5B3+2025+united_kingdom_champ-ROUND_2-49",
       "playerId": "Mark Allen"
+    },
+    {
+      "score": 61,
+      "stage": "ROUND_2",
+      "sim": false,
+      "numFrame": 4,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2025+united_kingdom_champ-ROUND_2-55",
+      "playerId": "custom_E5B08FE4BB99E5A5B3"
     },
     {
       "score": 61,
