@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.geometry.Insets?>
+<?import trashsoftware.trashSnooker.fxml.widgets.GamePane?>
+<?import javafx.scene.image.ImageView?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
+      fx:id="outBox"
       fx:controller="trashsoftware.trashSnooker.fxml.CareerTrainingView"
       prefHeight="540.0" prefWidth="360.0" spacing="10.0">
-    
+
     <padding>
         <Insets topRightBottomLeft="10.0"/>
     </padding>
-    
+
     <Button text="%backIcon" onAction="#backAction"/>
-    
-    <TableView fx:id="challengeTable" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn text="%careerChallenge" fx:id="challengeTitleCol" prefWidth="240.0"/>
-            <TableColumn text="exp" fx:id="challengeExpCol" prefWidth="70.0"/>
-            <TableColumn fx:id="challengeCompletedCol" prefWidth="25.0"/>
-        </columns>
-    </TableView>
-    
+
+    <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+        <TableView fx:id="challengeTable" minWidth="345.0">
+            <columns>
+                <TableColumn text="%careerChallenge" fx:id="challengeTitleCol" prefWidth="240.0"/>
+                <TableColumn text="exp" fx:id="challengeExpCol" prefWidth="70.0"/>
+                <TableColumn fx:id="challengeCompletedCol" prefWidth="25.0"/>
+            </columns>
+        </TableView>
+        
+        <VBox>
+            <GamePane fx:id="previewPane" VBox.vgrow="NEVER"/>
+            <ImageView fx:id="previewImage" visible="false"/>
+        </VBox>
+    </HBox>
+
     <ComboBox fx:id="cueBox"/>
-    
-    <HBox alignment="CENTER_RIGHT">
+
+    <HBox>
         <Button fx:id="startBtn" disable="true" text="%start" onAction="#startChallengeAction"/>
     </HBox>
 

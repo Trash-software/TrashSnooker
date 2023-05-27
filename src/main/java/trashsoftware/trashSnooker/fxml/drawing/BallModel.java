@@ -8,32 +8,30 @@ import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 
 import java.util.Random;
 
 public abstract class BallModel {
     
     public final Sphere sphere;
-//    public final Rotate rx = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
-//    public final Rotate ry = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
-//    public final Rotate rz = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
     
-    protected BallModel(double physicalRadius) {
-        sphere = new Sphere(physicalRadius * GameView.scale);
+    protected BallModel() {
+        sphere = new Sphere();
         
-        sphere.getTransforms().add(randomRotate());
-        
-//        sphere.getTransforms().addAll(rz, ry, rx);
+        sphere.getTransforms().add(new Rotate());
     }
     
-    private static Rotate randomRotate() {
-        Random random = new Random();
-        return new Rotate(random.nextDouble() * 360, 
-                new Point3D(
-                        random.nextDouble(),
-                        random.nextDouble(),
-                        random.nextDouble()
-                ));
+    public void setVisualRadius(double visualRadius) {
+        sphere.setRadius(visualRadius);
+    }
+    
+    public void initRotation(boolean random) {
+        if (random) {
+            Random randomGen = new Random();
+            rotateBy(randomGen.nextDouble(), randomGen.nextDouble(), randomGen.nextDouble(), 
+                    randomGen.nextDouble() * 360);
+        }
     }
     
     public static BallModel createModel(Ball ball) {
@@ -53,11 +51,11 @@ public abstract class BallModel {
         sphere.getTransforms().add(tr);
     }
     
-    public void setX(double actualX) {
-        sphere.setTranslateX(GameView.canvasX(actualX));
+    public void setX(GamePane container, double actualX) {
+        sphere.setTranslateX(container.canvasX(actualX));
     }
     
-    public void setY(double actualY) {
-        sphere.setTranslateY(GameView.canvasY(actualY));
+    public void setY(GamePane container, double actualY) {
+        sphere.setTranslateY(container.canvasY(actualY));
     }
 }

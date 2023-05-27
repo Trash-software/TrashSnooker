@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.training;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
@@ -11,8 +12,8 @@ public class PoolTraining extends ChineseEightBallGame implements Training {
     protected boolean ordered;
     protected Challenge challenge;
 
-    public PoolTraining(EntireGame entireGame, GameSettings gameSettings, TrainType trainType, Challenge challenge) {
-        super(entireGame, gameSettings, 1);
+    public PoolTraining(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, TrainType trainType, Challenge challenge) {
+        super(entireGame, gameSettings, gameValues, 1);
 
         this.trainType = trainType;
         this.challenge = challenge;

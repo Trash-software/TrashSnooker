@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 import trashsoftware.trashSnooker.util.OpacityColor;
 
 import java.util.List;
@@ -65,15 +66,15 @@ public abstract class NumberedBallTable extends Table {
     }
 
     @Override
-    public void drawTableMarks(GameView view, GraphicsContext graphicsContext, double scale) {
+    public void drawTableMarks(GamePane view, GraphicsContext graphicsContext, double scale) {
         // 开球线
-        double breakLineX = GameView.canvasX(breakLineX());
+        double breakLineX = view.canvasX(breakLineX());
         graphicsContext.setStroke(GameView.WHITE);
         graphicsContext.strokeLine(
                 breakLineX,
-                GameView.canvasY(tableMetrics.topY),
+                view.canvasY(tableMetrics.topY),
                 breakLineX,
-                GameView.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
+                view.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
         
         // 开球点位
         double pointYGap = tableMetrics.innerHeight / 4;
@@ -87,8 +88,8 @@ public abstract class NumberedBallTable extends Table {
         graphicsContext.setFill(GameView.WHITE);
         for (double[] point : points) {
             graphicsContext.fillOval(
-                    GameView.canvasX(point[0]) - 1.5,
-                    GameView.canvasY(point[1]) - 1.5,
+                    view.canvasX(point[0]) - 1.5,
+                    view.canvasY(point[1]) - 1.5,
                     3, 
                     3);
         }
@@ -99,8 +100,8 @@ public abstract class NumberedBallTable extends Table {
 
         for (double[] star : stars) {
             graphicsContext.fillOval(
-                    GameView.canvasX(star[0]) - 2,
-                    GameView.canvasY(star[1]) - 2,
+                    view.canvasX(star[0]) - 2,
+                    view.canvasY(star[1]) - 2,
                     5,
                     5);
         }

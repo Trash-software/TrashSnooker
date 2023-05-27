@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
@@ -13,6 +14,7 @@ import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
+import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.core.training.PoolTraining;
@@ -27,6 +29,7 @@ import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Supplier;
 
 public abstract class Game<B extends Ball, P extends Player> implements GameHolder, Cloneable {
     public static final int END_REP = 31;
@@ -96,9 +99,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         this.frameIndex = frameIndex;
         this.table = table;
 
-        initPlayers();
-        currentPlayer = gameSettings.isPlayer1Breaks() ? player1 : player2;
-        setBreakingPlayer(currentPlayer);
+        if (gameSettings != null) {
+            initPlayers();
+            currentPlayer = gameSettings.isPlayer1Breaks() ? player1 : player2;
+            setBreakingPlayer(currentPlayer);
+        }
         cueBall = createWhiteBall();
     }
 
@@ -106,42 +111,46 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             GameSettings gameSettings,
             GameValues gameValues,
             EntireGame entireGame) {
-        int frameIndex = entireGame.getP1Wins() + entireGame.getP2Wins() + 1;
+        int frameIndex = entireGame == null ? 1 : (entireGame.getP1Wins() + entireGame.getP2Wins() + 1);
         Game<? extends Ball, ? extends Player> game;
         if (gameValues.rule == GameRule.SNOOKER) {
             if (gameValues.isTraining()) {
-                game = new SnookerTraining(entireGame, gameSettings, gameValues.getTrainType(), gameValues.getTrainChallenge());
+                game = new SnookerTraining(entireGame, gameSettings, gameValues,
+                        gameValues.getTrainType(),
+                        gameValues.getTrainChallenge());
             } else {
-                game = new SnookerGame(entireGame, gameSettings, frameIndex);
+                game = new SnookerGame(entireGame, gameSettings, gameValues, frameIndex);
             }
         } else if (gameValues.rule == GameRule.MINI_SNOOKER) {
             if (gameValues.isTraining()) {
-                throw new RuntimeException("Not implemented yet");
+                game = new SnookerTraining(entireGame, gameSettings, gameValues,
+                        gameValues.getTrainType(),
+                        gameValues.getTrainChallenge());
             } else {
-                game = new MiniSnookerGame(entireGame, gameSettings, frameIndex);
+                game = new MiniSnookerGame(entireGame, gameSettings, gameValues, frameIndex);
             }
         } else if (gameValues.rule == GameRule.CHINESE_EIGHT) {
             if (gameValues.isTraining()) {
-                game = new PoolTraining(entireGame, gameSettings, gameValues.getTrainType(), gameValues.getTrainChallenge());
+                game = new PoolTraining(entireGame, gameSettings, gameValues, gameValues.getTrainType(), gameValues.getTrainChallenge());
             } else {
-                game = new ChineseEightBallGame(entireGame, gameSettings, frameIndex);
+                game = new ChineseEightBallGame(entireGame, gameSettings, gameValues, frameIndex);
             }
         } else if (gameValues.rule == GameRule.LIS_EIGHT) {
             if (gameValues.isTraining()) {
-                game = new PoolTraining(entireGame, gameSettings, gameValues.getTrainType(), gameValues.getTrainChallenge());
+                game = new PoolTraining(entireGame, gameSettings, gameValues, gameValues.getTrainType(), gameValues.getTrainChallenge());
             } else {
-                game = new LisEightGame(entireGame, gameSettings, frameIndex);
+                game = new LisEightGame(entireGame, gameSettings, gameValues, frameIndex);
             }
         } else if (gameValues.rule == GameRule.SIDE_POCKET) {
             if (gameValues.isTraining()) {
-                game = new PoolTraining(entireGame, gameSettings, gameValues.getTrainType(), gameValues.getTrainChallenge());
+                game = new PoolTraining(entireGame, gameSettings, gameValues, gameValues.getTrainType(), gameValues.getTrainChallenge());
             } else {
-                game = new SidePocketGame(entireGame, gameSettings, frameIndex);
+                game = new SidePocketGame(entireGame, gameSettings, gameValues, frameIndex);
             }
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
 
         try {
-            if (DBAccess.SAVE) {
+            if (DBAccess.SAVE && entireGame != null) {
                 game.recorder = new NaiveActualRecorder(game, entireGame.getMetaMatchInfo());
                 game.recorder.startRecoding();
             } else {
@@ -862,6 +871,55 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         for (Map.Entry<B, int[]> entry : ballCushionCountAndCrossLine.entrySet()) {
             Arrays.fill(entry.getValue(), 0);
         }
+    }
+
+    public boolean canReposition() {
+        return gameValues.rule.hasRule(Rule.FOUL_AND_MISS) && thisCueFoul.isFoul() && thisCueFoul.isMiss();
+    }
+
+    public boolean isSolvable() {
+        return true;
+    }
+
+
+    public void notReposition() {
+    }
+
+    public void reposition() {
+        reposition(false);
+    }
+
+    protected void reposition(boolean isSimulate) {
+        if (!isSimulate) System.out.println("Reposition!");
+        thisCueFoul = new FoulInfo();
+        ballInHand = false;
+        for (Map.Entry<B, double[]> entry : recordedPositions.entrySet()) {
+            B ball = entry.getKey();
+            ball.setX(entry.getValue()[0]);
+            ball.setY(entry.getValue()[1]);
+            if (ball.isPotted()) ball.pickup();
+        }
+        switchPlayer();
+        currentTarget = recordedTarget;
+    }
+
+    protected boolean checkStandardFouls(Supplier<Integer> foulScoreCalculator) {
+        GameRule rule = gameValues.rule;
+        if (!rule.hasRule(Rule.CAN_EMPTY) && whiteFirstCollide == null) {
+            // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
+            thisCueFoul.addFoul(strings.getString("emptyCue"), foulScoreCalculator.get(), true);
+            if (cueBall.isPotted()) ballInHand = true;
+        }
+        if (cueBall.isPotted()) {
+            thisCueFoul.addFoul(strings.getString("cueBallPot"), foulScoreCalculator.get(), false);
+            ballInHand = true;
+        }
+        if (rule.hasRule(Rule.HIT_CUSHION)) {
+            if (newPotted.isEmpty() && !collidesWall) {
+                thisCueFoul.addFoul(strings.getString("noBallHitCushion"), foulScoreCalculator.get(), false);
+            }
+        }
+        return thisCueFoul.isFoul();
     }
 
     /**

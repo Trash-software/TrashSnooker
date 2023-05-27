@@ -4,21 +4,21 @@ import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.GameSettings;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 
-import java.util.Arrays;
 import java.util.Set;
 
 public class LisEightGame extends ChineseEightBallGame {
-    
+
     protected boolean swapped;
-    
-    public LisEightGame(EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
-        super(entireGame, gameSettings, frameIndex);
+
+    public LisEightGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
+        super(entireGame, gameSettings, gameValues, frameIndex);
     }
 
     @Override
-    public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall, 
+    public boolean isLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall,
                                boolean isInLineHandBall) {
         return super.isLegalBall(ball, targetRep, isSnookerFreeBall, isInLineHandBall);
     }
@@ -29,11 +29,12 @@ public class LisEightGame extends ChineseEightBallGame {
         if (player.getBallRange() == FULL_BALL_REP || player.getBallRange() == HALF_BALL_REP) {
             int currentRemBalls = getRemRangedBallOnTable(player.getBallRange());  // 还没打掉现在这颗
             if (currentRemBalls > 2) return player.getBallRange();
-            else if (currentRemBalls == 2 && !swapped) return getAnotherPlayer(player).getBallRange();
+            else if (currentRemBalls == 2 && !swapped)
+                return getAnotherPlayer(player).getBallRange();
             else if (pottingBall.getValue() == 8) return END_REP;
             else return 8;
         }
-        
+
         return super.getTargetAfterPotSuccess(pottingBall, isSnookerFreeBall);
     }
 
@@ -67,77 +68,47 @@ public class LisEightGame extends ChineseEightBallGame {
                 willSwitch = true;
             }
         }
-        
+
         if (willSwitch) {
             dealSwapTarget();
         }
     }
 
     private void updateScore(Set<PoolBall> pottedBalls) {
-//        boolean foul = false;
-        if (!collidesWall && pottedBalls.isEmpty()) {
-//            foul = true;
-//            foulReason = strings.getString("noBallHitCushion");
-            thisCueFoul.addFoul(strings.getString("noBallHitCushion"));
+        boolean baseFoul = checkStandardFouls(() -> 1);
+
+        if (baseFoul && getEightBall().isPotted()) {  // 白球黑八一起进
+            end();
+            winingPlayer = getAnotherPlayer();
+            return;
         }
 
-//        System.out.println("fcc " + finishedCuesCount + " " + lastCueFoul);
-
-        if (cueBall.isPotted()) {
-            if (getEightBall().isPotted()) {  // 白球黑八一起进
-                end();
-                winingPlayer = getAnotherPlayer();
-                return;
-            }
-//            foul = true;
-            ballInHand = true;
-//            foulReason = strings.getString("cueBallPot");
-            thisCueFoul.addFoul(strings.getString("cueBallPot"));
-        }
-
-        if (whiteFirstCollide == null) {
-//            foul = true;
-//            foulReason = strings.getString("emptyCue");
-            thisCueFoul.addFoul(strings.getString("emptyCue"), true);
-        } else {
+        if (!baseFoul) {
             if (currentTarget == FULL_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
-//                    foul = true;
-//                    foulReason = strings.getString("targetFullHitBlack");
                     thisCueFoul.addFoul(strings.getString("targetFullHitBlack"), true);
                 } else if (!isFullBall(whiteFirstCollide)) {
-//                    foul = true;
-//                    foulReason = strings.getString("targetFullHitHalf");
                     thisCueFoul.addFoul(strings.getString("targetFullHitHalf"), true);
                 }
             } else if (currentTarget == HALF_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
-//                    foul = true;
-//                    foulReason = strings.getString("targetHalfHitBlack");;
                     thisCueFoul.addFoul(strings.getString("targetHalfHitBlack"), true);
                 } else if (!isHalfBall(whiteFirstCollide)) {
-//                    foul = true;
-//                    foulReason = strings.getString("targetHalfHitFull");;
                     thisCueFoul.addFoul(strings.getString("targetHalfHitFull"), true);
                 }
             } else if (currentTarget == 8) {
                 if (whiteFirstCollide.getValue() != 8) {
-//                    foul = true;
-//                    foulReason = strings.getString("targetBlackHitOther");
                     thisCueFoul.addFoul(strings.getString("targetBlackHitOther"), true);
                 }
             }
         }
 
         if (thisCueFoul.isFoul() && !getEightBall().isPotted()) {
-//            thisCueFoul = true;
-//            cueBall.pot();
-//            ballInHand = true;
             switchPlayer();
-            
+
             currentTarget = getTargetOfPlayer(currentPlayer);  // 在switchPlayer之后
             System.out.println(thisCueFoul.getAllReasons());
-            
+
             return;
         }
 
@@ -150,9 +121,6 @@ public class LisEightGame extends ChineseEightBallGame {
                     if (isBreaking) {
                         pickupBlackBall();
                         if (thisCueFoul.isFoul()) {
-//                            thisCueFoul = true;
-//                            cueBall.pot();
-//                            ballInHand = true;
                             switchPlayer();
                             System.out.println(thisCueFoul.getAllReasons());
                         } else {
@@ -161,18 +129,11 @@ public class LisEightGame extends ChineseEightBallGame {
                         }
                     } else {
                         pickupBlackBall();
-//                        thisCueFoul = true;
                         switchPlayer();
-//                        switchPlayer();
-//                        winingPlayer = getAnotherPlayer();
-//                        end();
                     }
                 } else {  // 误进黑八
                     pickupBlackBall();
-//                    thisCueFoul = true;
                     switchPlayer();
-//                    winingPlayer = getAnotherPlayer();
-//                    end();
                 }
                 return;
             }
@@ -217,7 +178,7 @@ public class LisEightGame extends ChineseEightBallGame {
         }
         currentTarget = getTargetOfPlayer(currentPlayer);  // 在switchPlayer之后
     }
-    
+
     private void dealSwapTarget() {
         if (player1.getBallRange() == FULL_BALL_REP) {
             player1.setBallRange(HALF_BALL_REP);
@@ -235,7 +196,7 @@ public class LisEightGame extends ChineseEightBallGame {
     @Override
     public void switchPlayer() {
         super.switchPlayer();
-        
+
         currentTarget = getTargetOfPlayer(currentPlayer);
     }
 }

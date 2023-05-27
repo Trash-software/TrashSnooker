@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import trashsoftware.trashSnooker.fxml.widgets.GamePane?>
+<fx:root type="trashsoftware.trashSnooker.fxml.widgets.GamePane" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml">
+
+    <Canvas fx:id="gameCanvas"/>
+
+</fx:root>

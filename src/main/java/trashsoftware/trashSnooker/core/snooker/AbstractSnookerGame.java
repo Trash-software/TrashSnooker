@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.snooker;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SnookerAiCue;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -20,34 +22,31 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public final double redGapDt;
     protected final SnookerBall[] redBalls = new SnookerBall[numRedBalls()];
     protected final SnookerBall[] coloredBalls = new SnookerBall[6];
-    private boolean doingFreeBall = false;  // 正在击打自由球
-    private boolean blackBattle = false;
-//    private int lastFoulPoints = 0;
-
-    private int repositionCount;
-    private int continuousFoulAndMiss;
-    private boolean willLoseBecauseThisFoul;
-    private boolean isSolvable;  // 球形是否有解
-
-    private int indicatedTarget;
-
+    /*
+    球堆两侧的倒数第一二颗球
+     */
+    protected final Set<Ball> suggestedRegularBreakBalls = new HashSet<>();
     /*
      红球队最下方一排左右两侧红球球心的位置
      
      从黑球方向看，左边一颗在前，右边一颗在后
      */
     protected double[][] cornerRedBallPoses = new double[2][];
-    
-    /*
-    球堆两侧的倒数第一二颗球
-     */
-    protected final Set<Ball> suggestedRegularBreakBalls = new HashSet<>();
+//    private int lastFoulPoints = 0;
+    private boolean doingFreeBall = false;  // 正在击打自由球
+    private boolean blackBattle = false;
+    private int repositionCount;
+    private int continuousFoulAndMiss;
+    private boolean willLoseBecauseThisFoul;
+    private boolean isSolvable;  // 球形是否有解
+    private int indicatedTarget;
 
     protected AbstractSnookerGame(EntireGame entireGame,
-                        GameSettings gameSettings,
-                        Table table,
-                        int frameIndex) {
-        super(entireGame, gameSettings, entireGame.gameValues, table, frameIndex);
+                                  GameSettings gameSettings,
+                                  GameValues gameValues,
+                                  Table table,
+                                  int frameIndex) {
+        super(entireGame, gameSettings, gameValues, table, frameIndex);
 
         redRowOccupyX = gameValues.ball.ballDiameter * Math.sin(Math.toRadians(60.0)) +
                 Game.MIN_PLACE_DISTANCE * 0.8;
@@ -106,7 +105,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     protected abstract int numRedBalls();
-    
+
     protected int numRedRows() {
         int nRedBalls = numRedBalls();
         int cum = 0;
@@ -324,13 +323,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     protected void updateScoreAndTarget(Set<SnookerBall> pottedBalls, boolean isFreeBall) {
         int score = 0;
-        if (whiteFirstCollide == null) {
-            // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
-            thisCueFoul.addFoul(strings.getString("emptyCue"), getDefaultFoulValue(), true);
-            if (cueBall.isPotted()) ballInHand = true;
-        } else if (cueBall.isPotted()) {
-            thisCueFoul.addFoul(strings.getString("cueBallPot"), getFoulScore(pottedBalls), false);
-            ballInHand = true;
+        boolean baseFoul = checkStandardFouls(() -> getFoulScore(pottedBalls));
+        if (baseFoul) {
+            // do nothing, 只是为了后面不进分支
         } else if (isFreeBall) {
             int[] scoreFoul = scoreFoulOfFreeBall(pottedBalls);
             score = scoreFoul[0];
@@ -350,10 +345,6 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                     foul = Math.max(4, currentTarget);  // 除非是在清彩阶段大于咖啡球的自由球，否则都是4分
                     thisCueFoul.addFoul(strings.getString("freeBallCannotSnooker"), foul, false);
                 }
-            }
-            if (cueBall.isPotted()) {
-                thisCueFoul.addFoul(strings.getString("cueBallPot"), getFoulScore(pottedBalls), false);
-                ballInHand = true;
             }
         } else if (currentTarget == 1) {
             if (whiteFirstCollide.isRed()) {
@@ -471,7 +462,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
             updateTargetPotFailed();
             switchPlayer();
-            if (!cueBall.isPotted() && hasFreeBall()) {
+            if (gameValues.rule.hasRule(Rule.FOUL_BALL_IN_HAND)) {
+                cueBall.pot();
+                ballInHand = true;
+            } else if (!cueBall.isPotted() && hasFreeBall()) {
                 // todo: 要在pickup colored之后检查
                 doingFreeBall = true;
                 System.out.println("Free ball!");
@@ -503,14 +497,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         doingFreeBall = false;
     }
 
+    @Override
     public boolean canReposition() {
-        if (thisCueFoul.isFoul() && thisCueFoul.isMiss()) {
-            int minScore = Math.min(player1.getScore(), player2.getScore());
-            int maxScore = Math.max(player1.getScore(), player2.getScore());
-            return minScore + getRemainingScore(false) > maxScore;  // 超分或延分不能复位
-        } else {
-            return false;
-        }
+        int minScore = Math.min(player1.getScore(), player2.getScore());
+        int maxScore = Math.max(player1.getScore(), player2.getScore());
+        boolean notOverScore = minScore + getRemainingScore(false) > maxScore;  // 超分或延分不能复位
+        return notOverScore && super.canReposition();
     }
 
     public boolean aiConsiderReposition(Phy phy, PotAttempt lastPotAttempt) {
@@ -539,28 +531,17 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
     }
 
+    @Override
     public void notReposition() {
+        super.notReposition();
+
         repositionCount = 0;
-//        willLoseBecauseThisFoul = false;
     }
 
-    public void reposition() {
-        reposition(false);
-    }
+    @Override
+    public void reposition(boolean isSimulate) {
+        super.reposition(isSimulate);
 
-    private void reposition(boolean isSimulate) {
-        if (!isSimulate) System.out.println("Reposition!");
-        thisCueFoul = new FoulInfo();
-        ballInHand = false;
-        doingFreeBall = false;
-        for (Map.Entry<SnookerBall, double[]> entry : recordedPositions.entrySet()) {
-            SnookerBall ball = entry.getKey();
-            ball.setX(entry.getValue()[0]);
-            ball.setY(entry.getValue()[1]);
-            if (ball.isPotted()) ball.pickup();
-        }
-        switchPlayer();
-        currentTarget = recordedTarget;
         doingFreeBall = wasDoingFreeBall;
         if (!isSimulate) repositionCount++;
     }
@@ -626,22 +607,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     /**
      * 是不是无意识救球，前提是已经犯规且没有击中目标球
      */
+    @Override
     public boolean isSolvable() {
         return isSolvable;
-//        long st = System.currentTimeMillis();
-//        AbstractSnookerGame copy = (AbstractSnookerGame) clone();
-//        
-//        // clone这个
-//        for (SnookerBall ball : getAllBalls()) {
-//            double[] pos = copy.recordedPositions.get(ball);
-//            if (pos != null) {
-//                copy.recordedPositions.put(ball, pos);
-//            }
-//        }
-//        
-//        copy.reposition(true);
-//        
-//        
     }
 
     @Override
@@ -925,9 +893,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     protected void initRedBalls() {
         double curX = firstRedX();
         double rowStartY = gameValues.table.midY;
-        
+
         int nRows = numRedRows();
-        
+
         int index = 0;
         for (int row = 0; row < nRows; ++row) {
             int nCols = row + 1;
@@ -935,7 +903,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             for (int col = 0; col < nCols; ++col) {
                 SnookerBall ball = new SnookerBall(1, new double[]{curX, y}, gameValues);
                 redBalls[index++] = ball;
-                
+
                 if (col == 0) {
                     if (row >= nRows - 2) {
                         suggestedRegularBreakBalls.add(ball);

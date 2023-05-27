@@ -18,8 +18,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
     
-    public static final String VERSION_NAME = "0.3.2";
-    public static final int VERSION_CODE = 27;
+    public static final String VERSION_NAME = "0.3.4";
+    public static final int VERSION_CODE = 29;
 
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     public static final String CLASSIFIER = "win";

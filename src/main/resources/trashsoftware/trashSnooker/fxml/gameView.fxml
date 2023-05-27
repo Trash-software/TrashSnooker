@@ -3,6 +3,7 @@
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import trashsoftware.trashSnooker.fxml.widgets.GamePane?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.GameView">
@@ -97,9 +98,11 @@
         </VBox>
 
         <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="4">
-            <Pane fx:id="ballPane">
-                <Canvas fx:id="gameCanvas"/>
-            </Pane>
+<!--            <Pane fx:id="ballPane">-->
+<!--                <Canvas fx:id="gameCanvas"/>-->
+<!--            </Pane>-->
+            
+            <GamePane fx:id="gamePane"/>
 
             <GridPane>
                 <columnConstraints>

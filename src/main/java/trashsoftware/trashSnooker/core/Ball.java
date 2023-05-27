@@ -25,14 +25,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     protected double sideSpin;
     protected double axisX, axisY, axisZ,
             frameDegChange;  // 全部都是针对一个动画帧
-    protected double vSpeedWhenHitCushion;  // 冻结碰库时与库的垂直速度
-    //    protected Rotate rotation = new Rotate();
-//    protected double xAngle, yAngle, zAngle;
     private boolean potted;
     private long msSinceCue;
-    
-//    protected int cushionCount;  // 这一杆这颗球吃库的次数
-//    protected int breakAreaEntranceCount;  // 这一杆从开球区外进入开球区的次数
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ball.ballRadius);
@@ -43,11 +37,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         this.color = generateColor(value);
         this.colorWithOpa = this.color.deriveColor(0, 1, 1.6, 0.5);
         this.colorTransparent = colorWithOpa.deriveColor(0, 1, 1, 0);
-
-//        this.axisX = randomGenerator.nextDouble();
-//        this.axisY = randomGenerator.nextDouble();
-//        this.axisZ = randomGenerator.nextDouble();
-//        this.rotateDeg = randomGenerator.nextDouble() * 360.0 * 1000;
 
         model = BallModel.createModel(this);
         setPotted(initPotted);

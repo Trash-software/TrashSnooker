@@ -40,11 +40,6 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     @Override
-    protected boolean requireHitCushion() {
-        return true;
-    }
-
-    @Override
     protected DefenseChoice standardDefense() {
         return null;
     }

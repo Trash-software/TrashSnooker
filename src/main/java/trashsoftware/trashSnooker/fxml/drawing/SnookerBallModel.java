@@ -7,7 +7,7 @@ import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 public class SnookerBallModel extends BallModel {
     
     protected SnookerBallModel(int value) {
-        super(BallMetrics.SNOOKER_BALL.ballRadius);
+        super();
 
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseColor(Ball.snookerColor(value));

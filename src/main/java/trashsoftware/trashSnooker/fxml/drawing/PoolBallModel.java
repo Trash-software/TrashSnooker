@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class PoolBallModel extends BallModel {
     protected PoolBallModel(int number) {
-        super(BallMetrics.POOL_BALL.ballRadius);
+        super();
         
         String fileName = "/trashsoftware/trashSnooker/img/pool/pool" + number + ".png";
         Image img = new Image(Objects.requireNonNull(getClass().getResource(fileName)).toExternalForm());
