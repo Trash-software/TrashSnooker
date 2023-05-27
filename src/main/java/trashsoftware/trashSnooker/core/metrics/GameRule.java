@@ -8,6 +8,8 @@ import trashsoftware.trashSnooker.core.training.TrainType;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
 
+import java.util.Set;
+
 /**
  * 一个比赛类型。
  * <p>
@@ -24,7 +26,8 @@ public enum GameRule {
             new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL},
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_FULL_DENSE,
                     TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS, TrainType.SNAKE_X, TrainType.CLEAR_COLOR},
-            BreakRule.ALTERNATE) {
+            BreakRule.ALTERNATE,
+            Set.of(Rule.FOUL_AND_MISS)) {
         @Override
         public boolean snookerLike() {
             return true;
@@ -33,7 +36,8 @@ public enum GameRule {
     MINI_SNOOKER(13, "MiniSnooker",
             new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL},
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS, TrainType.CLEAR_COLOR},
-            BreakRule.ALTERNATE) {
+            BreakRule.ALTERNATE,
+            Set.of(Rule.HIT_CUSHION, Rule.FOUL_BALL_IN_HAND)) {
         @Override
         public boolean snookerLike() {
             return true;
@@ -43,7 +47,8 @@ public enum GameRule {
             new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG},
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF,
                     TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},
-            BreakRule.WINNER) {
+            BreakRule.WINNER,
+            Set.of(Rule.HIT_CUSHION, Rule.FOUL_BALL_IN_HAND)) {
         @Override
         public boolean poolLike() {
             return true;
@@ -58,7 +63,8 @@ public enum GameRule {
             new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG},
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF,
                     TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},
-            BreakRule.WINNER) {
+            BreakRule.WINNER,
+            Set.of(Rule.FOUL_AND_MISS)) {
         @Override
         public boolean poolLike() {
             return true;
@@ -73,7 +79,8 @@ public enum GameRule {
             new Cue.Size[]{Cue.Size.BIG, Cue.Size.MEDIUM},
             new TrainType[]{TrainType.SNAKE_FULL,
                     TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},
-            BreakRule.WINNER) {
+            BreakRule.WINNER,
+            Set.of(Rule.HIT_CUSHION, Rule.FOUL_BALL_IN_HAND, Rule.POCKET_INDICATION, Rule.CAN_EMPTY)) {
         @Override
         public boolean poolLike() {
             return true;
@@ -85,15 +92,20 @@ public enum GameRule {
     public final Cue.Size[] suggestedCues;
     public final TrainType[] supportedTrainings;
     public final BreakRule breakRule;
+    public final Set<Rule> ruleSet;
 
-    GameRule(int nBalls, String sqlKey, Cue.Size[] suggestedCues,
+    GameRule(int nBalls, 
+             String sqlKey, 
+             Cue.Size[] suggestedCues,
              TrainType[] supportedTrainings,
-             BreakRule breakRule) {
+             BreakRule breakRule,
+             Set<Rule> ruleSet) {
         this.nBalls = nBalls;
         this.sqlKey = sqlKey;
         this.suggestedCues = suggestedCues;
         this.supportedTrainings = supportedTrainings;
         this.breakRule = breakRule;
+        this.ruleSet = ruleSet;
     }
 
     public static GameRule fromSqlKey(String sqlKey) {
@@ -128,6 +140,10 @@ public enum GameRule {
 
     public boolean eightBallLike() {
         return false;
+    }
+    
+    public boolean hasRule(Rule rule) {
+        return ruleSet.contains(rule);
     }
 
     @Override

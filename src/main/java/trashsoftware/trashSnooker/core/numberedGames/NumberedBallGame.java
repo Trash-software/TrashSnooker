@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.numberedGames;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.core.table.Table;
@@ -15,9 +16,10 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
     protected BreakStats breakStats;
 
     protected NumberedBallGame(EntireGame entireGame, GameSettings gameSettings,
+                               GameValues gameValues,
                                Table table,
                                int frameIndex) {
-        super(entireGame, gameSettings, entireGame.gameValues, table, frameIndex);
+        super(entireGame, gameSettings, gameValues, table, frameIndex);
     }
 
     @Override

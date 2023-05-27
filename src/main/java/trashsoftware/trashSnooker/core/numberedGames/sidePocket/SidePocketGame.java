@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SidePocketAiCue;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
@@ -16,16 +17,15 @@ import java.util.*;
 
 public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
         implements NeedBigBreak {
-    
+
     private final LinkedHashMap<PoolBall, Boolean> pottedRecord = new LinkedHashMap<>();  // 缓存用，仅用于GameView画目标球
     protected SidePocketPlayer winingPlayer;
     protected NineBallScoreResult curResult;
-    
-    private boolean wasIllegalBreak;
     protected boolean canPushOut = false;
+    private boolean wasIllegalBreak;
 
-    public SidePocketGame(EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
-        super(entireGame, gameSettings, new SidePocketTable(entireGame.gameValues.table), frameIndex);
+    public SidePocketGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
+        super(entireGame, gameSettings, gameValues, new SidePocketTable(gameValues.table), frameIndex);
 
         initBalls();
         currentTarget = 1;
@@ -165,17 +165,13 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
     }
 
     private void updateScore(Set<PoolBall> pottedBalls) {
-        if (!collidesWall && pottedBalls.isEmpty()) {
-            thisCueFoul.addFoul(strings.getString("noBallHitCushion"));
-        }
+        boolean baseFoul = checkStandardFouls(() -> 1);
+
         PoolBall nineBall = getNineBall();
-        if (cueBall.isPotted()) {
-            if (nineBall.isPotted()) {  // 白球九号一起进
-                winingPlayer = getAnotherPlayer();
-                end();
-                return;
-            }
-            thisCueFoul.addFoul(strings.getString("cueBallPot"));
+        if (baseFoul && nineBall.isPotted()) {  // 白球九号一起进
+            winingPlayer = getAnotherPlayer();
+            end();
+            return;
         }
         // todo: 开球后的推球规则
         if (whiteFirstCollide == null) {
@@ -188,7 +184,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
                         true);
             }
         }
-        
+
         if (isBreaking) {
             updateBreakStats(newPotted);
             if (isBreakFoul()) {
@@ -253,13 +249,13 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
     public PoolBall getNineBall() {
         return getBallByValue(9);
     }
-    
+
     private boolean isBreakFoul() {
         // 开球犯规
         if (breakStats.nBallsPot > 0) return false;
         return breakStats.nBallsHitCushion < 4;
     }
-    
+
     private boolean isIllegalBreak() {
         // 开球违例，同中八开球失机
         wasIllegalBreak = breakStats.nBallsPot + breakStats.nBallTimesEnterBreakArea < 3;

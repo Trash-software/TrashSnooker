@@ -58,10 +58,19 @@ public abstract class AbstractSnookerTable extends Table {
                     pointDiameter);
         }
     }
+
+    @Override
+    public double breakLineX() {
+        return tableMetrics.leftX + tableMetrics.innerWidth * 0.2065;
+    }
     
-    public abstract double breakLineX();
+    public double breakArcRadius() {
+        return tableMetrics.tableName.equals(TableMetrics.SNOOKER) ? 292.0 : 219.0;
+    }
     
-    public abstract double breakArcRadius();
+    public double[] blackBallPos() {
+        return new double[]{tableMetrics.rightX - tableMetrics.innerWidth * 0.09078, tableMetrics.midY};
+    }
 
     public double[] yellowBallPos() {
         return new double[]{breakLineX(), tableMetrics.midY + breakArcRadius()};
@@ -82,6 +91,4 @@ public abstract class AbstractSnookerTable extends Table {
     public double[] pinkBallPos() {
         return new double[]{tableMetrics.leftX + tableMetrics.innerWidth * 0.75, tableMetrics.midY};
     }
-
-    public abstract double[] blackBallPos();
 }

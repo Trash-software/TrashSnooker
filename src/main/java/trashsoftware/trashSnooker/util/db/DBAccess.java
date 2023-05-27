@@ -18,7 +18,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    public static final boolean SAVE = false;
+    public static final boolean SAVE = true;
     private static DBAccess database;
 
     private Connection connection;
@@ -241,7 +241,7 @@ public class DBAccess {
     }
 
     /**
-     * 返回{totalScore, highest, 50+，100+，147}
+     * 返回{totalScore, highest, 50+，100+，maximum}
      */
     public int[] getSnookerBreaksTotal(GameRule gameRule, String playerName, boolean playerIsAi) {
         int[] rtn = new int[5];
@@ -268,7 +268,8 @@ public class DBAccess {
                 if (highInResult >= 100) {
                     rtn[3]++;
                 }
-                if (highInResult >= 147) {
+                if ((gameRule == GameRule.SNOOKER && highInResult >= 147) 
+                        || (gameRule == GameRule.MINI_SNOOKER && highInResult >= 75)) {
                     rtn[4]++;
                 }
             }
@@ -409,14 +410,15 @@ public class DBAccess {
                     int index = snRes.getInt("FrameIndex");
                     int playerIndex = snRes.getString("PlayerName")
                             .equals(title.player1Id) ? 0 : 1;
-                    int[] scores = new int[5];  // total score, highest, breaks50, breaks100, 147
+                    int[] scores = new int[5];  // total score, highest, breaks50, breaks100, maximum
                     scores[0] = snRes.getInt("TotalScore");
                     scores[1] = snRes.getInt("Highest");
                     scores[2] = snRes.getInt("Breaks50");
                     if (scores[1] >= 100) {
                         scores[3]++;
                     }
-                    if (scores[1] >= 147) {
+                    if ((title.gameRule == GameRule.SNOOKER && scores[1] >= 147)
+                            || (title.gameRule == GameRule.MINI_SNOOKER && scores[1] >= 75)) {
                         scores[4]++;
                     }
                     PlayerFrameRecord.Snooker snooker = new PlayerFrameRecord.Snooker(

@@ -17,6 +17,7 @@ import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.fxml.drawing.CurvedPolygonDrawer;
+import trashsoftware.trashSnooker.util.ConfigLoader;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -66,15 +67,29 @@ public class GamePane extends Pane {
         graphicsContext.setFont(App.FONT);
     }
 
-    public void setupPane(GameValues gameValues, double scale) {
-        this.scale = scale;
+    public void setupPane(GameValues gameValues, double scaleMul) {
         this.gameValues = gameValues;
         
-        generateScales();
+        generateScales(scaleMul);
+    }
+
+    public void setupPane(GameValues gameValues) {
+        setupPane(gameValues, 1.0);
     }
     
-    private void generateScales() {
+    private void generateScales(double scaleMul) {
         TableMetrics values = gameValues.table;
+        double[] screenParams = ConfigLoader.getInstance().getResolution();  // 宽，高，缩放
+        double graphWidth = screenParams[0] / screenParams[2] - 180;
+        double graphHeight = screenParams[1] / screenParams[2] - 180;
+
+        double scaleW = graphWidth / values.outerWidth;
+        double scaleH = graphHeight / values.outerHeight;
+
+        scale = Math.min(scaleW, scaleH) * scaleMul;
+
+        System.out.printf("Scales: w: %.2f, h: %.2f, global: %.2f \n", scaleW, scaleH, getScale());
+        
         canvasWidth = values.outerWidth * scale;
         canvasHeight = values.outerHeight * scale;
 //        innerHeight = values.innerHeight * scale;
@@ -90,15 +105,20 @@ public class GamePane extends Pane {
         return gameCanvas;
     }
 
-    public void setupBalls(GameHolder gameHolder) {
-        getChildren().clear();
-        getChildren().add(gameCanvas);
+    public void setupBalls(GameHolder gameHolder, boolean randomRotate) {
+        clear();
 
         for (Ball ball : gameHolder.getAllBalls()) {
             ball.model.setVisualRadius(gameValues.ball.ballRadius * scale);
+            ball.model.initRotation(randomRotate);
             getChildren().add(ball.model.sphere);
             ball.model.sphere.setMouseTransparent(true);
         }
+    }
+    
+    public void clear() {
+        getChildren().clear();
+        getChildren().add(gameCanvas);
     }
 
     public void drawBallInHandEssential(Ball ball, Table table, double mouseX, double mouseY) {

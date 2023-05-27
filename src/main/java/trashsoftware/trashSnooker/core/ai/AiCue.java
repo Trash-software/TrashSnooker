@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
@@ -349,11 +350,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             return solveSnookerDefense(legalBalls, degreesTick, powerTick, phy, false);
         }
     }
-
-    /**
-     * @return 是否需要有球碰库
-     */
-    protected abstract boolean requireHitCushion();
 
     protected abstract double priceOfKick(Ball kickedBall, double kickSpeed);
 
@@ -890,7 +886,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     }
 
     private boolean notViolateCushionRule(DefenseChoice choice) {
-        if (requireHitCushion()) {
+        if (game.getGameValues().rule.hasRule(Rule.HIT_CUSHION)) {
             if (choice.wp == null) return true;
             else return choice.wp.getWhiteCushionCountAfter() > 0 ||
                     choice.wp.getFirstBallCushionCount() > 0;

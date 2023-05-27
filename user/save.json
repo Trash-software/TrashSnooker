@@ -1,31 +1,31 @@
 {
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
+    "handFeelEffort": 1,
+    "person": "Neil Robertson",
+    "playerType": "PLAYER",
+    "playCue": "stdSnookerCue",
+    "breakCue": "stdBreakCue"
+  },
+  "p1Wins": 1,
+  "p2": {
+    "playerNumber": 2,
     "handFeelEffort": 1,
     "person": "custom_player_4",
     "playerType": "PLAYER",
     "playCue": "GirlCue",
-    "breakCue": "GirlCue"
+    "breakCue": "stdBreakCue"
   },
-  "p1Wins": 0,
-  "p2": {
-    "playerNumber": 2,
-    "handFeelEffort": 1,
-    "person": "Summer Brave",
-    "playerType": "PLAYER",
-    "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
-  },
-  "startTime": 1685173525323,
+  "startTime": 1685199539139,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "SNOOKER_BALL",
-    "gameRule": "SNOOKER",
+    "ball": "POOL_BALL",
+    "gameRule": "LIS_EIGHT",
     "table": {
-      "tableOrdinal": 0,
+      "tableOrdinal": 1,
       "pocketDifficultyOrdinal": 2,
       "holeSizeOrdinal": 2
     }

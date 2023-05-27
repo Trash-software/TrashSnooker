@@ -87,9 +87,6 @@ public class GameView implements Initializable {
     public static final double HAND_DT_TO_MAX_PULL = 30.0;
     public static final double MIN_CUE_BALL_DT = 30.0;  // 运杆时杆头离白球的最小距离
     public static final double MAX_CUE_ANGLE = 60;
-    public static final double SNOOKER_SCALE = 0.32;
-    public static final double MINI_SNOOKER_SCALE = 0.45;
-    public static final double AMERICAN_POOL_SCALE = 0.45;
     private static final double DEFAULT_POWER = 30.0;
     private static final double WHITE_PREDICT_LEN_AFTER_WALL = 1000.0;  // todo: 根据球员
     private static final long DEFAULT_REPLAY_GAP = 1000;
@@ -99,10 +96,6 @@ public class GameView implements Initializable {
     private static double defaultMaxPredictLength = 1200;
     private final List<Control> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
     public double frameRate = 1000.0 / frameTimeMs;
-    //    @FXML
-//    Canvas gameCanvas;
-//    @FXML
-//    Pane ballPane;
     @FXML
     GamePane gamePane;
     @FXML
@@ -159,17 +152,11 @@ public class GameView implements Initializable {
     boolean devMode = true;
     private double minPredictLengthPotDt = 2000;
     private double maxPredictLengthPotDt = 100;
-    //    private double canvasWidth;
-//    private double canvasHeight;
-//    private double innerHeight;
-//    private double topLeftY;
     private double ballDiameter;
     private double ballRadius;
-    //    private double cornerArcDiameter;
     private double cueCanvasWH = 80.0;
     private double cueAreaRadius = 36.0;
     private double cueRadius = 4.0;
-    //    private GraphicsContext graphicsContext;
     private GraphicsContext ballCanvasGc;
     private GraphicsContext cueAngleCanvasGc;
     private Pane basePane;  // 杆是画在这个pane上的
@@ -178,20 +165,16 @@ public class GameView implements Initializable {
     private InGamePlayer player2;
     private EntireGame game;
     private GameReplay replay;
-    //    private Game game;
     private GameValues gameValues;
-    //    private double cursorX, cursorY;
     private double cursorDirectionUnitX, cursorDirectionUnitY;
     private double targetPredictionUnitX, targetPredictionUnitY;
     private Ball predictedTargetBall;
-    //    private PotAttempt currentAttempt;
     private Movement movement;
     private boolean playingMovement = false;
     private GamePlayStage currentPlayStage;  // 只对game有效, 并且不要直接access这个变量, 请用getter
     private PotAttempt lastPotAttempt;
     private DefenseAttempt curDefAttempt;
     // 用于播放运杆动画时持续显示预测线（含出杆随机偏移）
-    private SavedPrediction predictionOfCue;
     private ObstacleProjection obstacleProjection;
     private double mouseX, mouseY;
     // 杆法的击球点。注意: cuePointY用在击球点的canvas上，值越大杆法越低，而unitFrontBackSpin相反
@@ -225,22 +208,6 @@ public class GameView implements Initializable {
 
     private List<double[]> aiWhitePath;  // todo: debug用的
     private List<double[]> suggestedPlayerWhitePath;
-
-//    public static double canvasX(double realX) {
-//        return realX * scale;
-//    }
-//
-//    public static double canvasY(double realY) {
-//        return realY * scale;
-//    }
-//
-//    public static double realX(double canvasX) {
-//        return canvasX / scale;
-//    }
-//
-//    public static double realY(double canvasY) {
-//        return canvasY / scale;
-//    }
 
     private static double pullDtOf(PlayerPerson person, double personPower) {
         return (person.getMaxPullDt() - person.getMinPullDt()) *
@@ -309,19 +276,8 @@ public class GameView implements Initializable {
     }
 
     private void generateScales(GameValues gameValues) {
-        TableMetrics values = gameValues.table;
-
-        double[] screenParams = ConfigLoader.getInstance().getResolution();  // 宽，高，缩放
-        double graphWidth = screenParams[0] / screenParams[2] - 180;
-        double graphHeight = screenParams[1] / screenParams[2] - 180;
-
-        double scaleW = graphWidth / values.outerWidth;
-        double scaleH = graphHeight / values.outerHeight;
-
-        double scale = Math.min(scaleW, scaleH);
-        gamePane.setupPane(gameValues, scale);
-//        scale = Math.min(scaleW, scaleH);
-        System.out.printf("Scales: w: %.2f, h: %.2f, global: %.2f \n", scaleW, scaleH, gamePane.getScale());
+        gamePane.setupPane(gameValues);
+        double scale = gamePane.getScale();
 
 //        double topLeftY = (canvasHeight - innerHeight) / 2;
         ballDiameter = gameValues.ball.ballDiameter * scale;
@@ -863,19 +819,18 @@ public class GameView implements Initializable {
         miscued = false;
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
             boolean autoAim = true;
-            if ((game.getGame() instanceof AbstractSnookerGame)) {
-                AbstractSnookerGame asg = ((AbstractSnookerGame) game.getGame());
-                if (asg.canReposition()) {
-                    if (asg.isSolvable()) {
-                        System.out.println("Solvable snooker");
-                        autoAim = false;  // 把autoAim交给askReposition的不复位分支
-                        askReposition();
-                    } else {
-                        System.out.println("Unsolvable snooker");
-                        letOtherPlayMenu.setDisable(false);
-                    }
+
+            if (game.getGame().canReposition()) {
+                if (game.getGame().isSolvable()) {
+                    System.out.println("Solvable snooker");
+                    autoAim = false;  // 把autoAim交给askReposition的不复位分支
+                    askReposition();
+                } else {
+                    System.out.println("Unsolvable snooker");
+                    letOtherPlayMenu.setDisable(false);
                 }
-            } else if (game.getGame() instanceof NeedBigBreak) {
+            }
+            if (game.getGame() instanceof NeedBigBreak) {
                 NeedBigBreak nbb = (NeedBigBreak) game.getGame();
                 if (nbb.isJustAfterBreak() && nbb.wasIllegalBreak()) {
 //                    autoAim = false;  // 把autoAim交给askAfterBreakLoseChance的不复位分支
@@ -1009,42 +964,26 @@ public class GameView implements Initializable {
     }
 
     private void setupBalls() {
-//        ballPane.getChildren().clear();
-//        ballPane.getChildren().add(gameCanvas);
-//        for (CueModel cueModel : CueModel.getAllCueModels()) {
-//            ballPane.getChildren().add(cueModel);
-//        }
-        GameHolder gameHolder;
-        if (replay != null) {
-            gameHolder = replay;
-//            for (Ball ball : replay.getAllBalls()) {
-//                ballPane.getChildren().add(ball.model.sphere);
-//                ball.model.sphere.setMouseTransparent(true);
-//            }
-        } else {
-            gameHolder = game.getGame();
-//            for (Ball ball : game.getGame().getAllBalls()) {
-//                ballPane.getChildren().add(ball.model.sphere);
-//                ball.model.sphere.setMouseTransparent(true);
-//            }
-        }
-        gamePane.setupBalls(gameHolder);
+        GameHolder gameHolder = getActiveHolder();
+        gamePane.setupBalls(gameHolder, true);
     }
 
     private void askReposition() {
-        AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
         Platform.runLater(() ->
                 AlertShower.askConfirmation(stage,
                         strings.getString("ifReposition"),
                         strings.getString("oppoFoul"),
                         () -> {
-                            asg.reposition();
+                            game.getGame().reposition();
                             drawScoreBoard(game.getGame().getCuingPlayer(), true);
                             drawTargetBoard(true);
                             updatePowerSlider(game.getGame().getCuingPlayer().getPlayerPerson());
                             draw();
-                            if (asg.isNoHitThreeWarning()) {
-                                showThreeNoHitWarning();
+                            if (game.getGame() instanceof AbstractSnookerGame) {
+                                AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+                                if (asg.isNoHitThreeWarning()) {
+                                    showThreeNoHitWarning();
+                                }
                             }
                             if (aiAutoPlay &&
                                     game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
@@ -1703,15 +1642,7 @@ public class GameView implements Initializable {
                 whiteStartingX, whiteStartingY,
                 unitXYWithSpin[0], unitXYWithSpin[1]);
         if (predictionWithRandom == null) {
-            predictionOfCue = new SavedPrediction(whiteStartingX, whiteStartingY,
-                    unitXYWithSpin[0], unitXYWithSpin[1]);
         } else {
-            predictionOfCue = new SavedPrediction(whiteStartingX, whiteStartingY,
-                    predictionWithRandom.getTargetBall(),
-                    predictionWithRandom.getTargetBall().getX(),
-                    predictionWithRandom.getTargetBall().getY(),
-                    predictionWithRandom.getPredictedWhitePos()[0],
-                    predictionWithRandom.getPredictedWhitePos()[1]);
         }
 
         movement = game.getGame().cue(params, game.playPhy);
@@ -2166,28 +2097,6 @@ public class GameView implements Initializable {
 
     private void drawBallInHandEssential(Ball ball) {
         gamePane.drawBallInHandEssential(ball, game.getGame().getTable(), mouseX, mouseY);
-//        TableMetrics values = gameValues.table;
-//
-//        double x = realX(mouseX);
-//        if (x < values.leftX + gameValues.ball.ballRadius)
-//            x = values.leftX + gameValues.ball.ballRadius;
-//        else if (x >= values.rightX - gameValues.ball.ballRadius)
-//            x = values.rightX - gameValues.ball.ballRadius;
-//
-//        double y = realY(mouseY);
-//        if (y < values.topY + gameValues.ball.ballRadius)
-//            y = values.topY + gameValues.ball.ballRadius;
-//        else if (y >= values.botY - gameValues.ball.ballRadius)
-//            y = values.botY - gameValues.ball.ballRadius;
-//
-//        game.getGame().getTable().forceDrawBallInHand(
-//                this,
-//                ball,
-//                x,
-//                y,
-//                graphicsContext,
-//                scale
-//        );
     }
 
     private void drawBalls() {
@@ -2250,8 +2159,6 @@ public class GameView implements Initializable {
         } else {
             if (movement == null) {
                 if (replay != null) {
-//                    replay.getTable().drawStoppedBalls(this, replay.getAllBalls(),
-//                            replay.getCurrentPositions(), graphicsContext, scale);
                     gamePane.drawStoppedBalls(replay.getTable(), replay.getAllBalls(), replay.getCurrentPositions());
 
                     if (!replay.finished() &&
@@ -2261,8 +2168,6 @@ public class GameView implements Initializable {
                     }
                 } else {
                     gamePane.drawStoppedBalls(game.getGame().getTable(), game.getGame().getAllBalls(), null);
-//                    game.getGame().getTable().drawStoppedBalls(this, game.getGame().getAllBalls(),
-//                            null, graphicsContext, scale);
                 }
             } else {
                 // 已经算出，但还在放运杆动画
@@ -2630,94 +2535,7 @@ public class GameView implements Initializable {
 
     private void drawWhitePathSingle(WhitePrediction prediction) {
         gamePane.drawWhitePathSingle(game.getGame().getCueBall(), prediction);
-//        graphicsContext.setStroke(WHITE);
-//        double lastX = canvasX(game.getGame().getCueBall().getX());
-//        double lastY = canvasY(game.getGame().getCueBall().getY());
-//        for (double[] pos : prediction.getWhitePath()) {
-//            double canvasX = canvasX(pos[0]);
-//            double canvasY = canvasY(pos[1]);
-//            graphicsContext.strokeLine(lastX, lastY, canvasX, canvasY);
-//            lastX = canvasX;
-//            lastY = canvasY;
-//        }
     }
-
-//    private void drawWhitePathDouble(WhitePrediction prediction) {
-////        graphicsContext.setFill(WHITE_PREDICTION_COLOR);
-//        graphicsContext.setStroke(WHITE);
-////        double lastX = canvasX(game.getGame().getCueBall().getX());
-////        double lastY = canvasY(game.getGame().getCueBall().getY());
-////        for (double[] pos : prediction.getWhitePath()) {
-////            double canvasX = canvasX(pos[0]);
-////            double canvasY = canvasY(pos[1]);
-////            graphicsContext.strokeLine(lastX, lastY, canvasX, canvasY);
-////            lastX = canvasX;
-////            lastY = canvasY;
-////        }
-//
-//        List<double[]> whitePath = prediction.getWhitePath();
-//        if (whitePath.size() < 3) return;
-//
-//        // 这里可以考虑用cueBall的位置，但是不清楚whitePath的第一个位置是cueBall的原位还是第一帧移动之后的位置，所以保险起见这样写的
-//        double[] initPos = whitePath.get(0);
-////        double[] secondPos = whitePath.get(1);
-//
-//        double lastX = initPos[0];
-//        double lastY = initPos[1];
-//
-//        double lastLeftX = 0.0;
-//        double lastLeftY = 0.0;
-//
-//        double lastRightX = 0.0;
-//        double lastRightY = 0.0;
-//
-//        double[] lastDirectionOrt = null;
-//
-//        for (int i = 1; i < whitePath.size(); i++) {
-//            double[] pos = whitePath.get(i);
-//            double[] directionVecOrt = Algebra.unitVector(
-//                    -pos[1] + lastY,
-//                    pos[0] - lastX);
-//            double leftX = canvasX(pos[0] - directionVecOrt[0] * gameValues.ball.ballRadius);
-//            double leftY = canvasY(pos[1] - directionVecOrt[1] * gameValues.ball.ballRadius);
-//
-//            double rightX = canvasX(pos[0] + directionVecOrt[0] * gameValues.ball.ballRadius);
-//            double rightY = canvasY(pos[1] + directionVecOrt[1] * gameValues.ball.ballRadius);
-//
-//            if (i > 1) {  // 第一下不画
-//                graphicsContext.strokeLine(lastLeftX, lastLeftY, leftX, leftY);
-//                graphicsContext.strokeLine(lastRightX, lastRightY, rightX, rightY);
-//
-////                graphicsContext.fillPolygon(
-////                        new double[]{lastLeftX, leftX, rightX, lastRightX},
-////                        new double[]{lastLeftY, leftY, rightY, lastRightY},
-////                        4
-////                );
-//
-//                // 不会是null
-//                double radChange = Algebra.thetaBetweenVectors(directionVecOrt, lastDirectionOrt);
-////                System.out.println(radChange);
-//                if (radChange > 0.1) {
-//                    // 吃库或者碰撞了
-//                    System.out.println(radChange);
-////                    graphicsContext.strokeText("xxx", canvasX(pos[0]), canvasY(pos[1]));
-//                    graphicsContext.strokeOval(
-//                            canvasX(pos[0]) - ballRadius,
-//                            canvasY(pos[1]) - ballRadius,
-//                            ballDiameter,
-//                            ballDiameter);  // 绘制预测撞击点的白球
-//                }
-//            }
-//
-//            lastX = pos[0];
-//            lastY = pos[1];
-//            lastDirectionOrt = directionVecOrt;
-//            lastLeftX = leftX;
-//            lastLeftY = leftY;
-//            lastRightX = rightX;
-//            lastRightY = rightY;
-//        }
-//    }
 
     private void drawCursor() {
         if (replay != null) return;

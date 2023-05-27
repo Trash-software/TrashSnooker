@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.ChineseEightAiCue;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
@@ -29,8 +30,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     protected ChineseEightScoreResult curResult;
     private boolean wasBreakLoseChance;
 
-    public ChineseEightBallGame(EntireGame entireGame, GameSettings gameSettings, int frameIndex) {
-        super(entireGame, gameSettings, new ChineseEightTable(entireGame.gameValues.table), frameIndex);
+    public ChineseEightBallGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
+        super(entireGame, gameSettings, gameValues, new ChineseEightTable(gameValues.table), frameIndex);
 
         initBalls();
     }
@@ -419,24 +420,15 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     private void updateScore(Set<PoolBall> pottedBalls) {
-        if (!collidesWall && pottedBalls.isEmpty()) {
-            thisCueFoul.addFoul(strings.getString("noBallHitCushion"));
+        boolean baseFoul = checkStandardFouls(() -> 1);
+
+        if (baseFoul && getEightBall().isPotted()) {  // 白球黑八一起进
+            end();
+            winingPlayer = getAnotherPlayer();
+            return;
         }
 
-//        System.out.println("fcc " + finishedCuesCount + " " + lastCueFoul);
-
-        if (cueBall.isPotted()) {
-            if (getEightBall().isPotted()) {  // 白球黑八一起进
-                end();
-                winingPlayer = getAnotherPlayer();
-                return;
-            }
-            thisCueFoul.addFoul(strings.getString("cueBallPot"));
-        }
-
-        if (whiteFirstCollide == null) {
-            thisCueFoul.addFoul(strings.getString("emptyCue"), 1, true);
-        } else {
+        if (!baseFoul) {
             if (isInLineHandBall()) {
                 System.out.println("In line hand ball");
                 // 开球后直接造成的自由球

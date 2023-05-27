@@ -213,11 +213,6 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     }
 
     @Override
-    protected boolean requireHitCushion() {
-        return false;
-    }
-
-    @Override
     protected DefenseChoice standardDefense() {
         return null;
     }
