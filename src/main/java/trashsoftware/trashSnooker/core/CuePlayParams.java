@@ -84,7 +84,7 @@ public class CuePlayParams {
     public static double getSpeedOfPower(double actualPower, double cueAngleDeg) {
         double speed = actualPower * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
         if (cueAngleDeg > 5) {
-            // 出杆越陡，球速越慢
+            // 出杆越陡，球速越慢。这里我们不用三角函数，因为这不是传力的问题，这是人发力的问题
             speed *= (95 - cueAngleDeg) / 90.0;
         }
         return speed;
@@ -243,14 +243,15 @@ public class CuePlayParams {
         double spinY = vy * (spinSpeed / speed);
 //        System.out.printf("x %f, y %f, total %f, side %f\n", spinX, spinY, spinSpeed, side);
 
-        double mbummeMag = cueAngleDeg / 90.0 / 1400;  // 扎杆强度
+        double mbummeMag = cueAngleDeg / 90.0 / 1600;  // 扎杆强度
         double[] norm = Algebra.normalVector(vx, vy);  // 法线，扎杆就在这个方向
         double mbummeX = side * -norm[0] * mbummeMag;
         double mbummeY = side * -norm[1] * mbummeMag;
 
         if (cueAngleDeg > 5) {
             // 扎杆在一定程度上减弱其他杆法
-            double mul = (95 - cueAngleDeg) / 90.0;
+//            double mul = (95 - cueAngleDeg) / 90.0;
+            double mul = Math.cos(Math.toRadians(cueAngleDeg - 5));
             side *= mul;
             spinX *= mul;
             spinY *= mul;

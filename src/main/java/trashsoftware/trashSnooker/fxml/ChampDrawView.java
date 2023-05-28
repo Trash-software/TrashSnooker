@@ -39,8 +39,7 @@ public class ChampDrawView extends ChildInitializable {
     @FXML
     Canvas treeCanvas;
     @FXML
-    Label currentStageLabel, playerLabel, savedRoundLabel;
-    //            matchResLabel;
+    Label currentStageLabel, savedRoundLabel;
     @FXML
     ComboBox<FastGameView.CueItem> cueBox;
     @FXML
@@ -281,6 +280,13 @@ public class ChampDrawView extends ChildInitializable {
                 EventLogger.error(e);
             }
         }
+    }
+
+    @Override
+    public void backAction() {
+        parent.refreshGui();
+        
+        super.backAction();
     }
 
     @FXML

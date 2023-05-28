@@ -479,9 +479,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 // this 去撞另外两颗
                 double dt1, dt2;
                 if (((dt1 = predictedDtTo(ball1)) < values.ball.ballDiameter && currentDtTo(ball1) > dt1
-//                        && justHit != ball1 && ball1.justHit != this) 
+                        && justHit != ball1 && ball1.justHit != this
                 ) && ((dt2 = predictedDtTo(ball2)) < values.ball.ballDiameter && currentDtTo(ball2) > dt2
-//                        && justHit != ball2 && ball2.justHit != this
+                        && justHit != ball2 && ball2.justHit != this
                 )) {
                     System.out.println("Hit two static balls!=====================");
                     double xPos = x;

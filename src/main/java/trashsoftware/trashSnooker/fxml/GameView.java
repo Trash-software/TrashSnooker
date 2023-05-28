@@ -86,7 +86,7 @@ public class GameView implements Initializable {
     public static final Font POOL_NUMBER_FONT = new Font(8.0);
     public static final double HAND_DT_TO_MAX_PULL = 30.0;
     public static final double MIN_CUE_BALL_DT = 30.0;  // 运杆时杆头离白球的最小距离
-    public static final double MAX_CUE_ANGLE = 60;
+    public static final double MAX_CUE_ANGLE = 75.0;
     private static final double DEFAULT_POWER = 30.0;
     private static final double WHITE_PREDICT_LEN_AFTER_WALL = 1000.0;  // todo: 根据球员
     private static final long DEFAULT_REPLAY_GAP = 1000;
@@ -1634,17 +1634,17 @@ public class GameView implements Initializable {
 
         CuePlayParams params = applyRandomCueError(player);
 
-        double[] unitXYWithSpin = getUnitXYWithSpins(params.sideSpin, params.power);  // todo: 检查actual
+//        double[] unitXYWithSpin = getUnitXYWithSpins(params.sideSpin, params.power);  // todo: 检查actual
 
         double whiteStartingX = game.getGame().getCueBall().getX();
         double whiteStartingY = game.getGame().getCueBall().getY();
 
-        PredictedPos predictionWithRandom = game.getGame().getPredictedHitBall(
-                whiteStartingX, whiteStartingY,
-                unitXYWithSpin[0], unitXYWithSpin[1]);
-        if (predictionWithRandom == null) {
-        } else {
-        }
+//        PredictedPos predictionWithRandom = game.getGame().getPredictedHitBall(
+//                whiteStartingX, whiteStartingY,
+//                unitXYWithSpin[0], unitXYWithSpin[1]);
+//        if (predictionWithRandom == null) {
+//        } else {
+//        }
 
         movement = game.getGame().cue(params, game.playPhy);
         CueRecord cueRecord = makeCueRecord(player, params);  // 必须在randomCueError之后

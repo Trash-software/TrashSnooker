@@ -41,7 +41,7 @@ public class SoundMixer {
             double endLength = smoothEnd ? (1000 / track.hz) : 0;
             int nFrames = (int) (track.lengthMs * SAMPLE_RATE / 1000);
             int endFrames = (int) (endLength * SAMPLE_RATE / 1000);
-            System.out.println(nFrames + ", " + endFrames);
+//            System.out.println(nFrames + ", " + endFrames);
             for (int i = 0; i < nFrames + endFrames; i++) {
                 double vol = track.volume * MAX_VOL;
                 if (track.volumeDecrease) {

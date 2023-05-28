@@ -135,9 +135,9 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         Set<Ball> legalSet = new HashSet<>(legalList);
         
         double clothSlowFactor = phy.cloth.smoothness.speedReduceFactor / TableCloth.Smoothness.FAST.speedReduceFactor;
-        double selPowerLow = 25.0 * clothSlowFactor;
-        double selPowerHigh = selPowerLow * 1.2;
-        double selPowerTick = 1.0;
+        double selPowerLow = 24.0 * clothSlowFactor;
+        double selPowerHigh = 42.0 * clothSlowFactor;
+        double selPowerTick = 2.0;
         
         Set<Ball> suggestedTarget = game.getSuggestedRegularBreakBalls();
         PlayerPerson.HandSkill handSkill = aiPlayer.getPlayerPerson().handBody.getPrimary();
@@ -187,10 +187,12 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             }
         }
         if (legalChoices.isEmpty()) {
+            System.out.println("Cannot find break");
             return null;
         }
         Collections.sort(legalChoices);
         Collections.reverse(legalChoices);
+        System.out.println("Break sel power " + legalChoices.get(0).selectedPower);
         return legalChoices.get(0);
     }
 
