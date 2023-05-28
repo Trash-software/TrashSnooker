@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.audio;
 
+import trashsoftware.trashSnooker.fxml.App;
+
 public class SoundPlayer {
 //    public static final SoundMixer POT_SOUND = new SoundMixer(
 //            true,
@@ -23,10 +25,10 @@ public class SoundPlayer {
     }
     
     static void playCushionSound(double vol) {
-        System.out.println("Cushion " + vol);
+        if (App.PRINT_DEBUG) System.out.println("Cushion " + vol);
     }
     
     static void playPotSound(double vol) {
-        System.out.println("Pot " + vol);
+        if (App.PRINT_DEBUG) System.out.println("Pot " + vol);
     }
 }

@@ -10,7 +10,7 @@ import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cloneable {
     public static final double MAX_GEAR_EFFECT = 0.2;  // 齿轮效应造成的最严重分离角损耗
-    public static final double MAX_GEAR_ANGULAR = 0.5;
+    private static boolean enableGearOffset = true;  // 齿轮效应造成的球线路偏差
     private static final Random ERROR_GENERATOR = new Random();
     private static final double[] SIDE_CUSHION_VEC = {1.0, 0.0};
     private static final double[] TOP_BOT_CUSHION_VEC = {0.0, 1.0};
@@ -27,6 +27,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             frameDegChange;  // 全部都是针对一个动画帧
     private boolean potted;
     private long msSinceCue;
+    private Ball justHit;
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ball.ballRadius);
@@ -451,11 +452,17 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return false;
     }
 
-    boolean tryHitTwoBalls(Ball ball1, Ball ball2, Phy phy) {
+    /**
+     * 返回:
+     * 0: 真的没有三颗球撞一起（包括没有球碰撞和纯二球碰撞）
+     * 1: 发生了可以处理的三球碰撞
+     * 2: 发生了无法处理的三球碰撞
+     */
+    int tryHitTwoBalls(Ball ball1, Ball ball2, Phy phy) {
         if (this.isNotMoving()) {
             if (ball1.isNotMoving()) {
                 if (ball2.isNotMoving()) {
-                    return false;  // 三颗球都没动
+                    return 0;  // 三颗球都没动
                 } else {
                     return ball2.tryHitTwoBalls(this, ball1, phy);
                 }
@@ -463,7 +470,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 if (ball2.isNotMoving()) {
                     return ball1.tryHitTwoBalls(this, ball2, phy);
                 } else {
-                    return false;  // ball1、ball2 都在动，无法处理
+//                    System.err.println("Both balls are moving");
+                    return 2;  // ball1、ball2 都在动，无法处理
                 }
             }
         } else {
@@ -496,28 +504,25 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     }
 
                     if (ball1First) {
-                        tryHitBall(ball1, false, phy);
-                        tryHitBall(ball2, false, phy);
+                        tryHitBall(ball1, false, false, phy);
+                        tryHitBall(ball2, false, false, phy);
                     } else {
-                        tryHitBall(ball2, false, phy);
-                        tryHitBall(ball1, false, phy);
+                        tryHitBall(ball2, false, false, phy);
+                        tryHitBall(ball1, false, false, phy);
                     }
 
-                    return true;
+                    return 1;
                 } else {
-                    return false;  // 这三颗球没有贴在一起
+                    return 0;  // 这三颗球没有贴在一起
                 }
             } else {
-                return false;  // this 和 ball1、ball2 中的至少一颗都在动，无法处理
+//                System.err.println("Both balls are moving");
+                return 2;  // this 和 ball1、ball2 中的至少一颗都在动，无法处理
             }
         }
     }
 
-    boolean tryHitBall(Ball ball, Phy phy) {
-        return tryHitBall(ball, true, phy);
-    }
-
-    void twoMovingBallsHitCore(Ball ball, Phy phy) {
+    void twoMovingBallsHitCore(Ball ball, Phy phy, boolean considerGearSpin) {
         // 离岸位置发生改变，又懒得重新算了
         clearBounceDesiredLeavePos();
         ball.clearBounceDesiredLeavePos();
@@ -548,6 +553,13 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
         double[] normVec = new double[]{x1 - x2, y1 - y2};  // 两球连线=法线
         double[] tangentVec = Algebra.normalVector(normVec);  // 切线
+        
+        // 为齿轮效应计算做准备
+        double collisionThickness = Algebra.thetaBetweenVectors(thisV, tangentVec);  // 90度是正撞，0度是球1擦球2的右边，180度是擦左边
+        collisionThickness -= Algebra.HALF_PI;  // 减去90度，正撞为0，擦右边为-90
+//        System.out.println("Thick: " + Math.toDegrees(collisionThickness));
+        double relSpeed = Math.hypot(this.vx - ball.vx, this.vy - ball.vy);
+        double totalSpeed = (Math.hypot(this.vx, this.vy) + Math.hypot(ball.vx, ball.vy)) * phy.calculationsPerSec;
 
         double thisVerV = Algebra.projectionLengthOn(normVec, thisV);  // 垂直于切线的速率
         double thisHorV = Algebra.projectionLengthOn(tangentVec, thisV);  // 平行于切线的速率
@@ -566,7 +578,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double ballOutHor = ballHorV;
         double ballOutVer = thisVerV;
         if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
-            double totalSpeed = (Math.hypot(this.vx, this.vy) + Math.hypot(ball.vx, ball.vy)) * phy.calculationsPerSec;
             double powerGear = Math.min(1.0, totalSpeed / 0.30 / Values.MAX_POWER_SPEED * values.ball.ballWeightRatio);  // 30的力就没有效应了(高低杆要打出30的球速，起码要45的力)
             double gearRemain = (1 - powerGear) * MAX_GEAR_EFFECT;
             double gearEffect = 1 - gearRemain;
@@ -576,22 +587,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
             gearRemain *= spinProj;
 
-//            System.out.println("Gear " + gearRemain + " " + spinProj);
-
             // todo: 1.还没考虑旋转 2.目标球的偏移由于AI算不了而取消了
 //            double transformed = thisOutHor * (1 - gearEffect);
 
             ballOutVer *= gearEffect;
             thisOutVer = thisVerV * gearRemain;
-
-//            thisOutVer = thisVerV * gearEffect;
-//            ballOutHor = thisHorV * gearEffect;
-
-            // 不要试图干这事
-//            ballOutVer = ballVerV * gearRemain;
-//            thisOutHor = ballHorV * gearRemain;
-
-//            System.out.printf("Gear %f, %f, %f, Out angle %f\n", gearEffect, thisVerV, thisHorV, Math.atan2(thisVerV, thisHorV));
         }
 
         // 碰撞后，两球平行于切线的速率不变，垂直于切线的速率互换
@@ -605,21 +605,51 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         ball.vx = ballOut[0] * values.ball.ballBounceRatio;
         ball.vy = ballOut[1] * values.ball.ballBounceRatio;
 
+        // 齿轮效应的旋转传递
+        double thisOutSpeed = Math.hypot(this.vx, this.vy);
+        double ballOutSpeed = Math.hypot(ball.vx, ball.vy);
+        if (considerGearSpin && relSpeed != 0.0 && (thisOutSpeed != 0.0 || ballOutSpeed != 0.0)) {
+            double gearPassFactor = 0.2;
+            double passRate = Math.cos(Math.abs(collisionThickness));  // 越厚传得越多。
+            double speedPassRate = Math.abs(this.sideSpin) / relSpeed;  // 球速越慢，塞越大，传得越多
+            double passed = this.sideSpin * gearPassFactor * passRate * speedPassRate;
+            this.sideSpin -= passed;  // 自己的塞会减少，动量守恒嘛
+            ball.sideSpin -= passed;  // 右塞传到球上就是左塞了
+
+            if (enableGearOffset) {
+                // 相当于整个坐标系往一个方向扭一点点
+                double angularRate = 0.18;
+                double thisOutAng = Algebra.thetaOf(this.vx, this.vy);
+                double[] thisOutGeared = Algebra.unitVectorOfAngle(thisOutAng - passed * angularRate / thisOutSpeed);
+                this.vx = thisOutSpeed * thisOutGeared[0];
+                this.vy = thisOutSpeed * thisOutGeared[1];
+                
+                double ballOutAng = Algebra.thetaOf(ball.vx, ball.vy);
+                double[] ballOutGeared = Algebra.unitVectorOfAngle(ballOutAng - passed * angularRate / ballOutSpeed);
+                ball.vx = ballOutSpeed * ballOutGeared[0];
+                ball.vy = ballOutSpeed * ballOutGeared[1];
+            }
+
+            // 薄边造成的旋转
+            double gearStrengthFactor = 0.15;
+            double spinChange = gearStrengthFactor * Math.cos(Algebra.HALF_PI - collisionThickness) * relSpeed;
+            this.sideSpin += spinChange;
+            ball.sideSpin -= spinChange;
+        }
+
+        // update
         nextX = x + vx;
         nextY = y + vy;
         ball.nextX = ball.x + ball.vx;
         ball.nextY = ball.y + ball.vy;
-
-        // todo: 齿轮效应带来的侧旋转
     }
 
-    boolean tryHitBall(Ball ball, boolean checkMovingBall, Phy phy) {
+    boolean tryHitBall(Ball ball, boolean checkMovingBall, boolean applyGearSpin, Phy phy) {
         double dt = predictedDtTo(ball);
         if (dt < values.ball.ballDiameter
                 && currentDtTo(ball) > dt
-//                && justHit != ball && ball.justHit != this
+                && justHit != ball && ball.justHit != this
         ) {
-
             if (this.isNotMoving()) {
                 if (ball.isNotMoving()) {
                     if (checkMovingBall) {
@@ -629,16 +659,16 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                         return false;
                     }
                 } else {
-                    return ball.tryHitBall(this, phy);
+                    return ball.tryHitBall(this, checkMovingBall, applyGearSpin, phy);
                 }
             }
             if (!ball.isNotMoving()) {
                 if (!checkMovingBall) return false;
             }
-            twoMovingBallsHitCore(ball, phy);
+            twoMovingBallsHitCore(ball, phy, applyGearSpin);
 
-//            justHit = ball;
-//            ball.justHit = this;
+            justHit = ball;
+            ball.justHit = this;
             return true;
         }
         return false;
@@ -650,16 +680,13 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         xSpin = 0.0;
         ySpin = 0.0;
         sideSpin = 0.0;
-//        justHit = null;
+        justHit = null;
         frameDegChange = 0.0;
-//        breakAreaEntranceCount = 0;
-//        cushionCount = 0;
     }
 
     protected void prepareMove(Phy phy) {
         super.prepareMove(phy);
-//        justHit = null;
-        //    private Ball justHit;
+        justHit = null;
     }
 
     public Color getColorTransparent() {
@@ -719,5 +746,17 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     
     public boolean checkEnterBreakArea(double breakLineX) {
         return x >= breakLineX && nextX < breakLineX;
+    }
+
+    public static boolean isEnableGearOffset() {
+        return enableGearOffset;
+    }
+    
+    public static void enableGearOffset() {
+        enableGearOffset = true;
+    }
+
+    public static void disableGearOffset() {
+        enableGearOffset = false;
     }
 }

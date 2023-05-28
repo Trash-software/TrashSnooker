@@ -1,6 +1,6 @@
 {
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
@@ -9,21 +9,21 @@
     "playCue": "stdSnookerCue",
     "breakCue": "stdBreakCue"
   },
-  "p1Wins": 1,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "custom_player_4",
-    "playerType": "PLAYER",
-    "playCue": "GirlCue",
+    "person": "Mark Allen",
+    "playerType": "COMPUTER",
+    "playCue": "stdSnookerCue",
     "breakCue": "stdBreakCue"
   },
-  "startTime": 1685199539139,
+  "startTime": 1685273796744,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
     "ball": "POOL_BALL",
-    "gameRule": "LIS_EIGHT",
+    "gameRule": "CHINESE_EIGHT",
     "table": {
       "tableOrdinal": 1,
       "pocketDifficultyOrdinal": 2,

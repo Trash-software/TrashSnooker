@@ -350,7 +350,7 @@ public class GamePane extends Pane {
     }
 
     public void drawPredictedWhitePath(List<double[]> path) {
-        if (path != null) {
+        if (path != null && !path.isEmpty()) {
             graphicsContext.setStroke(WHITE_PREDICTION_COLOR);
             double[] pos = path.get(0);
             for (int i = 1; i < path.size(); i++) {

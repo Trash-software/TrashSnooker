@@ -65,6 +65,8 @@ public class FastGameView extends ChildInitializable {
 
     @FXML
     ComboBox<PlayerType> player1Player, player2Player;
+    @FXML
+    ComboBox<CategoryItem> player1CatBox, player2CatBox;
 
     @FXML
     CheckBox devModeBox;
@@ -123,6 +125,7 @@ public class FastGameView extends ChildInitializable {
         player2Box.setVisible(!isTrain);
         player2Player.setVisible(!isTrain);
         player2CueBox.setVisible(!isTrain);
+        player2CatBox.setVisible(!isTrain);
     }
 
     private void reloadTrainingItemByGameType(GameRule rule) {
@@ -206,11 +209,17 @@ public class FastGameView extends ChildInitializable {
     }
 
     private void loadPlayerList() {
-        Collection<PlayerPerson> playerPeople = DataLoader.getInstance().getActualPlayers();
-        player1Box.getItems().clear();
-        player2Box.getItems().clear();
-        player1Box.getItems().addAll(playerPeople);
-        player2Box.getItems().addAll(playerPeople);
+        player1CatBox.getItems().addAll(CategoryItem.values());
+        player2CatBox.getItems().addAll(CategoryItem.values());
+        
+        addCatBoxProperty(player1CatBox, player1Box);
+        addCatBoxProperty(player2CatBox, player2Box);
+        
+//        Collection<PlayerPerson> playerPeople = DataLoader.getInstance().getActualPlayers();
+//        player1Box.getItems().clear();
+//        player2Box.getItems().clear();
+//        player1Box.getItems().addAll(playerPeople);
+//        player2Box.getItems().addAll(playerPeople);
 
         addPlayerBoxProperty(player1Box, player1CueBox, player1InfoButton);
         addPlayerBoxProperty(player2Box, player2CueBox, player2InfoButton);
@@ -219,6 +228,18 @@ public class FastGameView extends ChildInitializable {
         player2Player.getItems().addAll(PlayerType.PLAYER, PlayerType.COMPUTER);
         player1Player.getSelectionModel().select(0);
         player2Player.getSelectionModel().select(0);
+    }
+    
+    private void addCatBoxProperty(ComboBox<CategoryItem> catBox,
+                                   ComboBox<PlayerPerson> playerBox) {
+        catBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                playerBox.getItems().clear();
+                Collection<PlayerPerson> catPlayers = DataLoader.getInstance().filterActualPlayersByCategory(newValue.cat);
+                playerBox.getItems().addAll(catPlayers);
+            }
+        });
+        catBox.getSelectionModel().select(0);
     }
 
     private void addPlayerBoxProperty(ComboBox<PlayerPerson> playerBox,
@@ -411,6 +432,25 @@ public class FastGameView extends ChildInitializable {
         @Override
         public String toString() {
             return string;
+        }
+    }
+    
+    public enum CategoryItem {
+        ALL("All"),
+        PROFESSIONAL("Professional"),
+        AMATEUR("Amateur"),
+        NOOB("Noob"),
+        GOD("God");
+        
+        private final String cat;
+        
+        CategoryItem(String cat) {
+            this.cat = cat;
+        }
+
+        @Override
+        public String toString() {
+            return PlayerPerson.getPlayerCategoryShown(cat, App.getStrings());
         }
     }
 }

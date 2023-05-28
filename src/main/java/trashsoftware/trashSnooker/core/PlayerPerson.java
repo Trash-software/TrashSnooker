@@ -356,6 +356,23 @@ public class PlayerPerson {
                 (100 - spinControl) / CUE_PRECISION_FACTOR};
     }
 
+
+    public static String getPlayerCategoryShown(String category, ResourceBundle strings) {
+        if ("All".equals(category)) {
+            return strings.getString("catAll");
+        } else if ("Professional".equals(category)) {
+            return strings.getString("catProf");
+        } else if ("Amateur".equals(category)) {
+            return strings.getString("catAmateur");
+        } else if ("Noob".equals(category)) {
+            return strings.getString("catNoob");
+        } else if ("God".equals(category)) {
+            return strings.getString("catGod");
+        } else {
+            return strings.getString("catUnk");
+        }
+    }
+
     private AiPlayStyle deriveAiStyle() {
         double position = powerControl;
         return new AiPlayStyle(
@@ -735,7 +752,7 @@ public class PlayerPerson {
             }
             return Math.max(unit, minimum);
         }
-        
+
         public double getAbilityByCat(int what) {
             switch (what) {
                 case PerkManager.AIMING:
