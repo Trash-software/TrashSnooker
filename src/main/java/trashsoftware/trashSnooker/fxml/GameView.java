@@ -815,6 +815,7 @@ public class GameView implements Initializable {
     }
 
     private void finishCueNextStep(Player nextCuePlayer) {
+        Ball.enableGearOffset();
         aiWhitePath = null;
         miscued = false;
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
@@ -1697,6 +1698,7 @@ public class GameView implements Initializable {
 
     private void aiCue(Player player, boolean aiHasRightToReposition) {
         disableUiWhenCuing();
+        Ball.disableGearOffset();  // AI真不会这个，禁用了。在finishCueNextStep里重新启用
         cueButton.setText(strings.getString("aiThinking"));
 //        cueButton.setDisable(true);
         aiCalculating = true;

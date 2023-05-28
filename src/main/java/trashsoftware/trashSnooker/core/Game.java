@@ -1307,7 +1307,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             gameValues.ball.ballDiameter) {
                         double whiteVx = cueBallClone.vx;
                         double whiteVy = cueBallClone.vy;
-                        cueBallClone.twoMovingBallsHitCore(ball, phy);
+                        cueBallClone.twoMovingBallsHitCore(ball, phy, true);
                         double[] ballDirectionUnitVec = Algebra.unitVector(ball.vx, ball.vy);
                         double[] whiteDirectionUnitVec = Algebra.unitVector(whiteVx, whiteVy);
 
@@ -1411,7 +1411,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
                     if (ball.currentBounce != null) {
                         ball.processBounce(App.PRINT_DEBUG);
-                        if (tryHitBall(ball)) {
+                        if (tryHitBall(ball, true)) {
                             ball.normalMove(phy);
                         }
                         continue;
@@ -1420,7 +1420,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     int holeAreaResult = ball.tryHitHoleArea(phy);
                     if (holeAreaResult != 0) {
                         // 袋口区域
-                        tryHitBall(ball);
+                        tryHitBall(ball, true);
                         if (holeAreaResult == 2) {
                             collidesWall = true;
                             recordHitCushion(ball);
@@ -1438,9 +1438,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         continue;
                     }
 
-                    boolean noHit = tryHitThreeBalls(ball);
-                    if (noHit) {
-                        if (tryHitBall(ball)) {
+                    int threeHit = tryHitThreeBalls(ball);
+                    if (threeHit == 0 || threeHit == 2) {
+                        if (tryHitBall(ball, threeHit == 0)) {
                             if (ball.checkEnterBreakArea(getTable().breakLineX())) {
                                 // 一定在normal move之前
                                 recordCrossLine(ball);
@@ -1487,33 +1487,38 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //            System.out.print((System.nanoTime() - st) + " ");
         }
 
-        private boolean tryHitThreeBalls(B ball) {
+        private int tryHitThreeBalls(B ball) {
+            // 返回值参考 Ball.tryHitTwoBalls
             if (ball.isWhite()) {
-                return true;  // 略过白球同时碰到两颗球的情况：无法处理
+                return 0;  // 略过白球同时碰到两颗球的情况：无法处理
             }
 
-            boolean noHit = true;
+            int result = 0;
             for (B secondBall : randomOrderBallPool1) {
                 if (ball != secondBall) {
                     for (Ball thirdBall : randomOrderBallPool2) {
                         if (ball != thirdBall && secondBall != thirdBall) {
-                            if (ball.tryHitTwoBalls(secondBall, thirdBall, phy)) {
+                            int res = ball.tryHitTwoBalls(secondBall, thirdBall, phy);
+                            if (res == 1) {
                                 // 同时撞到两颗球
-                                noHit = false;
+                                result = 1;
+                                break;
+                            } else if (res == 2) {
+                                result = 2;
                                 break;
                             }
                         }
                     }
                 }
             }
-            return noHit;
+            return result;
         }
 
-        private boolean tryHitBall(B ball) {
+        private boolean tryHitBall(B ball, boolean applyComplexCal) {
             boolean noHit = true;
             for (B otherBall : randomOrderBallPool1) {
                 if (ball != otherBall) {
-                    if (ball.tryHitBall(otherBall, phy)) {
+                    if (ball.tryHitBall(otherBall, true, applyComplexCal, phy)) {
                         // hit ball
                         noHit = false;
                         if (ball.isWhite()) whiteCollide(otherBall);  // 记录白球撞到的球
