@@ -14,7 +14,6 @@ import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
-import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.core.training.PoolTraining;

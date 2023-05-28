@@ -10,7 +10,6 @@ import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cloneable {
     public static final double MAX_GEAR_EFFECT = 0.2;  // 齿轮效应造成的最严重分离角损耗
-    public static final double MAX_GEAR_ANGULAR = 0.5;
     private static boolean enableGearOffset = true;  // 齿轮效应造成的球线路偏差
     private static final Random ERROR_GENERATOR = new Random();
     private static final double[] SIDE_CUSHION_VEC = {1.0, 0.0};
@@ -633,7 +632,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
             // 薄边造成的旋转
             double gearStrengthFactor = 0.15;
-            double spinChange = gearStrengthFactor * Math.sin(collisionThickness) * relSpeed;
+            double spinChange = gearStrengthFactor * Math.cos(Algebra.HALF_PI - collisionThickness) * relSpeed;
             this.sideSpin += spinChange;
             ball.sideSpin -= spinChange;
         }

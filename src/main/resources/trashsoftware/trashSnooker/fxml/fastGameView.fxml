@@ -45,10 +45,12 @@
         <ComboBox fx:id="player2CueBox" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
         <ComboBox fx:id="player2Player" GridPane.rowIndex="2" GridPane.columnIndex="4"/>
 
-        <Label fx:id="trainingItemText" text="%trainingItem" GridPane.rowIndex="2" visible="false"/>
-        <ComboBox fx:id="trainingItemBox" GridPane.rowIndex="2" GridPane.columnIndex="1"
+        <Label fx:id="trainingItemText" text="%trainingItem" GridPane.rowIndex="2"
+               GridPane.columnIndex="1" visible="false"/>
+        <ComboBox fx:id="trainingItemBox" GridPane.rowIndex="2" GridPane.columnIndex="2"
                   visible="false"/>
-        <CheckBox text="%trainingChallenge" fx:id="trainChallengeBox" GridPane.rowIndex="2" GridPane.columnIndex="2"
+        <CheckBox text="%trainingChallenge" fx:id="trainChallengeBox" GridPane.rowIndex="2"
+                  GridPane.columnIndex="3"
                   visible="false"/>
     </GridPane>
 
