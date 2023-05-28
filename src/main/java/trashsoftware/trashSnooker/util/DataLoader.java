@@ -177,6 +177,19 @@ public class DataLoader {
         }
         return "custom_" + builder;
     }
+    
+    public List<PlayerPerson> filterActualPlayersByCategory(String category) {
+        Collection<PlayerPerson> actPlayers = getActualPlayers();
+        if ("All".equals(category)) {
+            return new ArrayList<>(actPlayers);
+        } else {
+            List<PlayerPerson> res = new ArrayList<>();
+            for (PlayerPerson p : actPlayers) {
+                if (p.category.equals(category)) res.add(p);
+            }
+            return res;
+        }
+    }
 
     private Map<String, PlayerPerson> generateAndSaveRandomPlayers(int nRandomPlayers) {
         JSONObject root = new JSONObject();

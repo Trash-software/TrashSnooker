@@ -102,16 +102,7 @@ public class AbilityShower extends GridPane {
         PlayerPerson.ReadableAbility preview = perkManager.getShownAbility();
         
         nameLabel.setText(realAbility.getName());
-
-        if ("Professional".equals(realAbility.category)) {
-            categoryLabel.setText(strings.getString("catProf"));
-        } else if ("Amateur".equals(realAbility.category)) {
-            categoryLabel.setText(strings.getString("catAmateur"));
-        } else if ("Noob".equals(realAbility.category)) {
-            categoryLabel.setText(strings.getString("catNoob"));
-        } else if ("God".equals(realAbility.category)) {
-            categoryLabel.setText(strings.getString("catGod"));
-        }
+        categoryLabel.setText(PlayerPerson.getPlayerCategoryShown(realAbility.category, strings));
         
         sexLabel.setText(realAbility.getSex().toString());
         heightLabel.setText(String.format("%.0f cm", realAbility.getHandBody().height));
