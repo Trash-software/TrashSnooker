@@ -98,10 +98,6 @@
         </VBox>
 
         <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="4">
-<!--            <Pane fx:id="ballPane">-->
-<!--                <Canvas fx:id="gameCanvas"/>-->
-<!--            </Pane>-->
-            
             <GamePane fx:id="gamePane"/>
 
             <GridPane>
@@ -139,6 +135,11 @@
                       GridPane.rowIndex="1">
                     <Label fx:id="snookerScoreDiffLabel"/>
                     <Label fx:id="snookerScoreRemainingLabel"/>
+                </HBox>
+                <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="2"
+                      GridPane.rowIndex="1">
+                    <Label text="FPS"/>
+                    <Label fx:id="fpsLabel" text="0"/>
                 </HBox>
             </GridPane>
         </VBox>

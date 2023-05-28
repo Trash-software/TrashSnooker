@@ -429,36 +429,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public PredictedPos getPredictedHitBall(double cueBallX, double cueBallY,
                                             double xUnitDirection, double yUnitDirection) {
 
-//        double high = gameValues.maxLength;
-//        double low = gameValues.ballRadius;
-//
-//        Ball obstacle = null;
-//        double collisionX = 0.0;
-//        double collisionY = 0.0;
-//        while (high - low > Values.PREDICTION_INTERVAL) {
-//            double mid = (high + low) / 2;
-//            double endX = xUnitDirection * mid + cueBallX;
-//            double endY = yUnitDirection * mid + cueBallY;
-//            Ball firstObs = pointToPointObstacleBall(
-//                    cueBallX, cueBallY,
-//                    endX, endY,
-//                    cueBall, null,
-//                    true, true
-//            );
-//            if (firstObs == null) {  // 太近了
-//                low = mid;
-//            } else {
-//                high = mid;
-//                obstacle = firstObs;
-//                collisionX = endX;
-//                collisionY = endY;
-//            }
-//        }
-//        if (obstacle == null) return null;
-
-
-//        return new PredictedPos(obstacle, new double[]{collisionX, collisionY});
-
         double dx = Values.PREDICTION_INTERVAL * xUnitDirection;
         double dy = Values.PREDICTION_INTERVAL * yUnitDirection;
 
@@ -1147,7 +1117,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             prediction = new WhitePrediction(cueBallClone);
 
             while (!oneRun() && notTerminated) {
-                if (cumulatedPhysicalTime >= 30000) {
+                if (cumulatedPhysicalTime >= 20000) {
                     // Must be something wrong
                     System.err.println("White prediction congestion");
                     for (Ball ball : getAllBalls()) {
@@ -1158,6 +1128,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
 
             notTerminated = false;
+//            System.out.println("Prediction physical " + cumulatedPhysicalTime);
             return prediction;
         }
 
@@ -1350,7 +1321,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         Movement calculate() {
             movement = new Movement(getAllBalls());
             while (!oneRun() && notTerminated) {
-                if (cumulatedPhysicalTime > 50000) {
+                if (cumulatedPhysicalTime > 30000) {
                     // Must be something wrong
                     System.err.println("Physical calculation congestion");
                     for (Ball ball : getAllBalls()) {
@@ -1361,6 +1332,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
 //            endMove();
             notTerminated = false;
+//            System.out.println("physical " + cumulatedPhysicalTime);
 
             for (Ball ball : getAllBalls()) {
                 if (!ball.isPotted()) {

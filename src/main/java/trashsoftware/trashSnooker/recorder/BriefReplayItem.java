@@ -36,6 +36,7 @@ public class BriefReplayItem {
 //    private final int durationSec;
     private final InGamePlayer p1;
     private final InGamePlayer p2;
+    protected int frameRate = 50;
     
     private int extraLength;
     private List<ExtraBlock> extraBlocks = new ArrayList<>();
@@ -75,6 +76,12 @@ public class BriefReplayItem {
                     .holeSize(pocketSize)
                     .build();
             gameValues = new GameValues(gameRule, tableMetrics, ballMetrics);
+            
+            if (primaryVersion == 12 && secondaryVersion <= 8) {
+                frameRate = 50;
+            } else {
+                frameRate = (int) Util.bytesToIntN(header, 15, 2);
+            }
             
             totalFrames = header[20] & 0xff;
             p1Wins = header[21] & 0xff;

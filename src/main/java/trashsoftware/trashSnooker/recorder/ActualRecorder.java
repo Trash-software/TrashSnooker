@@ -10,6 +10,7 @@ import trashsoftware.trashSnooker.core.PlayerType;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
+import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -26,7 +27,7 @@ import java.util.zip.GZIPOutputStream;
 
 public abstract class ActualRecorder implements GameRecorder {
     public static final int RECORD_PRIMARY_VERSION = 12;
-    public static final int RECORD_SECONDARY_VERSION = 8;
+    public static final int RECORD_SECONDARY_VERSION = 9;
     public static final int HEADER_LENGTH = 50;
     public static final int PLAYER_HEADER_LENGTH = 98;
     public static final int TOTAL_HEADER_LENGTH = HEADER_LENGTH + PLAYER_HEADER_LENGTH * 2;
@@ -82,7 +83,8 @@ public abstract class ActualRecorder implements GameRecorder {
         if (replaySecondary == ActualRecorder.RECORD_SECONDARY_VERSION) return true;
         
         if (ActualRecorder.RECORD_PRIMARY_VERSION == 12 && replayPrimary == 12) {
-            if (ActualRecorder.RECORD_SECONDARY_VERSION == 8 && replaySecondary == 7) {
+            if ((ActualRecorder.RECORD_SECONDARY_VERSION == 8 || ActualRecorder.RECORD_SECONDARY_VERSION == 9) 
+                    && (replaySecondary >= 7 && replaySecondary <= 9)) {
                 return true;
             }
         }
@@ -202,6 +204,8 @@ public abstract class ActualRecorder implements GameRecorder {
         header[12] = (byte) game.getGameValues().table.getHoleSizeOrdinal();
         header[13] = (byte) game.getGameValues().ball.ordinal();
         header[14] = (byte) game.getGameValues().table.getPocketDifficultyOrdinal(); 
+        
+        Util.intToBytesN(ConfigLoader.getInstance().getFrameRate(), header, 15, 2);
 
         header[20] = (byte) game.getEntireGame().getTotalFrames();  // todo
         header[21] = (byte) game.getEntireGame().getP1Wins();
@@ -224,6 +228,7 @@ public abstract class ActualRecorder implements GameRecorder {
         HoleSizeIndex    12     1
         BallTypeIndex    13     1
         PocketDiffIndex  14     1
+        FrameRate        15     2
         Reserved
         TotalFrames      20     1
         P1Wins           21     1       都不包含当前这一局

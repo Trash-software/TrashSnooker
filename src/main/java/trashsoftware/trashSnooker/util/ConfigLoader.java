@@ -95,6 +95,10 @@ public class ConfigLoader {
     public int getLastVersion() {
         return lastVersion;
     }
+    
+    public int getFrameRate() {
+        return getInt("frameRate", 50);
+    }
 
     /**
      * @return {屏幕宽, 屏幕高, 缩放}
@@ -152,6 +156,7 @@ public class ConfigLoader {
         put("nThreads", 4);
         put("locale", "zh_CN");
         put("recordCompression", "xz");
+        put("frameRate", 50);
         
         double[] screenParams = autoDetectScreenParams();
         putScreenParams(screenParams);

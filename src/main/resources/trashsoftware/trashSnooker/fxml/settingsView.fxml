@@ -49,16 +49,19 @@
 
         <Label text="%language" GridPane.rowIndex="6"/>
         <ComboBox fx:id="languageBox" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        
+        <Label text="%frameRate" GridPane.rowIndex="7"/>
+        <ComboBox fx:id="frameRateBox" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
-        <Label text="%numAiThreads" GridPane.rowIndex="7"/>
-        <ComboBox fx:id="aiThreadNumBox" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
-        <Label fx:id="cpuActualThreadNumLabel" GridPane.rowIndex="7" GridPane.columnIndex="2"/>
+        <Label text="%numAiThreads" GridPane.rowIndex="8"/>
+        <ComboBox fx:id="aiThreadNumBox" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+        <Label fx:id="cpuActualThreadNumLabel" GridPane.rowIndex="8" GridPane.columnIndex="2"/>
 
-        <Label text="%resolution" GridPane.rowIndex="8"/>
-        <ComboBox fx:id="resolutionComboBox" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+        <Label text="%resolution" GridPane.rowIndex="9"/>
+        <ComboBox fx:id="resolutionComboBox" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
 
-        <Label text="%systemZoom" GridPane.rowIndex="9"/>
-        <ComboBox fx:id="systemZoomComboBox" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+        <Label text="%systemZoom" GridPane.rowIndex="10"/>
+        <ComboBox fx:id="systemZoomComboBox" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
 
     </GridPane>
 

@@ -19,6 +19,8 @@ public class SettingsView extends ChildInitializable {
     @FXML
     ComboBox<LocaleName> languageBox;
     @FXML
+    ComboBox<Integer> frameRateBox;
+    @FXML
     ComboBox<Resolution> resolutionComboBox;
     @FXML
     ComboBox<SystemZoom> systemZoomComboBox;
@@ -38,6 +40,7 @@ public class SettingsView extends ChildInitializable {
 
         allBoxes.addAll(List.of(aimLingBox,
                 aiStrengthBox,
+                frameRateBox,
                 languageBox,
                 resolutionComboBox,
                 systemZoomComboBox,
@@ -66,6 +69,11 @@ public class SettingsView extends ChildInitializable {
         cpuActualThreadNumLabel.setText("/" + cpuThreads);
         int curThreads = configLoader.getInt("nThreads", cpuThreads / 4);
         aiThreadNumBox.getSelectionModel().select(Integer.valueOf(curThreads));
+        
+        frameRateBox.getItems().addAll(
+                20, 24, 30, 40, 50, 60, 90, 120, 144, 180, 240
+        );
+        frameRateBox.getSelectionModel().select(Integer.valueOf(configLoader.getFrameRate()));
     }
 
     private void setupDifficultyBox(ComboBox<Double> box) {
@@ -181,6 +189,10 @@ public class SettingsView extends ChildInitializable {
             if (zoom != null) {
                 configLoader.put("systemZoom", zoom.ratio);
             }
+        }
+        
+        if (hasChanged(frameRateBox)) {
+            configLoader.put("frameRate", frameRateBox.getValue());
         }
 
         if (hasChanged(aiThreadNumBox)) {

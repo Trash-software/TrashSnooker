@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.fxml;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -38,7 +39,6 @@ import trashsoftware.trashSnooker.core.career.championship.PlayerVsAiMatch;
 import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
@@ -59,6 +59,7 @@ import trashsoftware.trashSnooker.core.table.ChineseEightTable;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.drawing.CueModel;
+import trashsoftware.trashSnooker.fxml.drawing.AnimationFrame;
 import trashsoftware.trashSnooker.fxml.projection.BallProjection;
 import trashsoftware.trashSnooker.fxml.projection.CushionProjection;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
@@ -91,11 +92,10 @@ public class GameView implements Initializable {
     private static final double WHITE_PREDICT_LEN_AFTER_WALL = 1000.0;  // todo: 根据球员
     private static final long DEFAULT_REPLAY_GAP = 1000;
     //    public static double scale;
-    public static double frameTimeMs = 20.0;
+    public static double frameTimeMs = 10.0;
     //    private double minRealPredictLength = 300.0;
     private static double defaultMaxPredictLength = 1200;
     private final List<Control> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
-    public double frameRate = 1000.0 / frameTimeMs;
     @FXML
     GamePane gamePane;
     @FXML
@@ -127,6 +127,8 @@ public class GameView implements Initializable {
     @FXML
     Label snookerScoreDiffLabel, snookerScoreRemainingLabel;
     @FXML
+    Label fpsLabel;
+    @FXML
     Canvas player1TarCanvas, player2TarCanvas;
     @FXML
     MenuItem withdrawMenu, replaceBallInHandMenu, letOtherPlayMenu;
@@ -150,6 +152,7 @@ public class GameView implements Initializable {
     RadioButton handSelectionLeft, handSelectionRight, handSelectionRest;
     boolean debugMode = false;
     boolean devMode = true;
+    AnimationFrame frameAnimation;
     private double minPredictLengthPotDt = 2000;
     private double maxPredictLengthPotDt = 100;
     private double ballDiameter;
@@ -201,6 +204,7 @@ public class GameView implements Initializable {
     private boolean miscued = false;
     private PlayerPerson.HandSkill currentHand;
     private CareerMatch careerMatch;
+    private PredictionDrawing cursorDrawer;
 
     private ResourceBundle strings;
 
@@ -361,13 +365,14 @@ public class GameView implements Initializable {
 
         gameButtonBox.setVisible(false);
         gameButtonBox.setManaged(false);
+        
+        setFrameRate(replay.getFrameRate());
 
         setupNameLabels(player1.getPlayerPerson(), player2.getPlayerPerson());
         totalFramesLabel.setText(String.format("(%d)", replay.getItem().totalFrames));
 
         generateScales(replay.gameValues);
 //        setupCanvas();
-        startAnimation();
         drawTargetBoard(true);
 
         setupPowerSlider();
@@ -382,6 +387,8 @@ public class GameView implements Initializable {
         for (CueModel cueModel : CueModel.getAllCueModels()) {
             basePane.getChildren().add(cueModel);
         }
+
+        startAnimation();
 
 //        while (replay.loadNext() && replay.getCurrentFlag() == GameRecorder.FLAG_HANDBALL) {
 //            // do nothing
@@ -400,11 +407,11 @@ public class GameView implements Initializable {
 
         this.basePane = (Pane) stage.getScene().getRoot();
 
+        setFrameRate(ConfigLoader.getInstance().getFrameRate());
         setKeyboardActions();
 
         generateScales(entireGame.gameValues);
 //        setupCanvas();
-        startAnimation();
         drawTargetBoard(true);
 
         game.startNextFrame();  // fixme: 问题 game.game不是null的时候就渲染不出球
@@ -437,6 +444,7 @@ public class GameView implements Initializable {
                         () -> {
                             game.quitGame();
                             timeline.stop();
+//                            gameLoop.cancel();
                             stage.close();
                         },
                         null);
@@ -448,6 +456,8 @@ public class GameView implements Initializable {
         for (CueModel cueModel : CueModel.getAllCueModels()) {
             basePane.getChildren().add(cueModel);
         }
+
+        startAnimation();
     }
 
     public void setup(Stage stage,
@@ -469,6 +479,7 @@ public class GameView implements Initializable {
                 PlayerPerson.Hand selected = PlayerPerson.Hand.valueOf(String.valueOf(t1.getUserData()));
                 PlayerPerson person = game.getGame().getCuingPlayer().getPlayerPerson();
                 currentHand = person.handBody.getHandSkillByHand(selected);
+                createPathPrediction();
             });
 
             handSelectionToggleGroup.selectToggle(handSelectionRight);
@@ -537,6 +548,10 @@ public class GameView implements Initializable {
 
     public void setAimingLengthFactor(double aimingLengthFactor) {
         maxRealPredictLength = defaultMaxPredictLength * aimingLengthFactor;
+    }
+    
+    public void setFrameRate(int frameRate) {
+        frameTimeMs = 1000.0 / frameRate;
     }
 
     private void keyboardAction(KeyEvent e) {
@@ -651,6 +666,7 @@ public class GameView implements Initializable {
                 }
             }
             timeline.stop();
+//            gameLoop.cancel();
         });
     }
 
@@ -2031,18 +2047,25 @@ public class GameView implements Initializable {
 
     private void startAnimation() {
         timeline = new Timeline();
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        KeyFrame keyFrame = new KeyFrame(new Duration(frameTimeMs), e -> oneFrame());
+
+        timeline.setCycleCount(Animation.INDEFINITE);
+        frameAnimation = new AnimationFrame(this::oneFrame, frameTimeMs);
+        KeyFrame keyFrame = new KeyFrame(new Duration(2.0), e -> frameAnimation.run());
         timeline.getKeyFrames().add(keyFrame);
         timeline.play();
     }
 
     private void oneFrame() {
         if (aiCalculating) return;
+
+//        long st = System.currentTimeMillis();
         draw();
         drawCueBallCanvas();
         drawCueAngleCanvas();
         drawCue();
+        fpsLabel.setText(String.valueOf(frameAnimation.getCurrentFps()));
+//        long end = System.currentTimeMillis();
+//        System.out.println("Frame calculation in " + (end - st));
     }
 
     private void setupPowerSlider() {
@@ -2053,6 +2076,7 @@ public class GameView implements Initializable {
                     powerSlider.setValue(playerMaxPower);
                     return;
                 }
+                createPathPrediction();
             }
             powerLabel.setText(String.format("%.1f", newValue.doubleValue()));
         }));
@@ -2105,17 +2129,21 @@ public class GameView implements Initializable {
 //        System.out.println(playingMovement + " " + movement);
         if (playingMovement) {
             // 处理倍速
-            int index;
-            if (replay == null) {
-                Player player = game.getGame().getCuingPlayer();
-                if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
-                    index = movement.incrementIndex(aiAnimationSpeed);
+            int index = 0;
+//            System.out.println(frameAnimation.getSkippedFrames());
+//            for (int i = 0; i < frameAnimation.getSkippedFrames() + 1; i++) {
+                // 这个loop一定会执行
+                if (replay == null) {
+                    Player player = game.getGame().getCuingPlayer();
+                    if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
+                        index = movement.incrementIndex(aiAnimationSpeed);
+                    } else {
+                        index = movement.incrementIndex();
+                    }
                 } else {
-                    index = movement.incrementIndex();
+                    index = movement.incrementIndex(aiAnimationSpeed);
                 }
-            } else {
-                index = movement.incrementIndex(aiAnimationSpeed);
-            }
+//            }
 
             for (Map.Entry<Ball, List<MovementFrame>> entry :
                     movement.getMovementMap().entrySet()) {
@@ -2131,7 +2159,7 @@ public class GameView implements Initializable {
                                 frame.frameDegChange * getCurPlaySpeedMultiplier());
                     } else {
                         game.getGame().getTable().forceDrawBall(
-                                gamePane, 
+                                gamePane,
                                 entry.getKey(),
                                 frame.x, frame.y,
                                 frame.xAxis, frame.yAxis, frame.zAxis,
@@ -2548,35 +2576,39 @@ public class GameView implements Initializable {
         if (game.getGame().getCueBall().isPotted()) return;
 
         if (drawStandingPos) drawStandingPos();
+        if (cursorDrawer == null || cursorDrawer.center == null) return;
 
         PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
-//        long st = System.currentTimeMillis();
-        CuePlayParams[] possibles = generateCueParamsSd1();
-        WhitePrediction[] clockwise = new WhitePrediction[8];
-        WhitePrediction center = game.getGame().predictWhite(
-                possibles[0],
-                game.whitePhy,
-                WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
-                false,
-                false,
-                true,
-                false);
-        if (center == null) {
-            predictedTargetBall = null;
-            return;
-        }
-
-        for (int i = 1; i < possibles.length; i++) {
-            clockwise[i - 1] = game.getGame().predictWhite(
-                    possibles[i],
-                    game.whitePhy,
-                    WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
-                    false,
-                    false,
-                    true,
-                    false
-            );
-        }
+////        long st = System.currentTimeMillis();
+//        CuePlayParams[] possibles = generateCueParamsSd1();
+//        WhitePrediction[] clockwise = new WhitePrediction[8];
+//        WhitePrediction center = game.getGame().predictWhite(
+//                possibles[0],
+//                game.whitePhy,
+//                WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
+//                false,
+//                false,
+//                true,
+//                false);
+//        if (center == null) {
+//            predictedTargetBall = null;
+//            return;
+//        }
+//
+//        for (int i = 1; i < possibles.length; i++) {
+//            clockwise[i - 1] = game.getGame().predictWhite(
+//                    possibles[i],
+//                    game.whitePhy,
+//                    WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
+//                    false,
+//                    false,
+//                    true,
+//                    false
+//            );
+//        }
+        
+        WhitePrediction[] clockwise = cursorDrawer.clockwise;
+        WhitePrediction center = cursorDrawer.center;
 
         double[][] predictionStops = new double[clockwise.length + 1][];
         predictionStops[0] = center.stopPoint();
@@ -2591,11 +2623,7 @@ public class GameView implements Initializable {
         }
 
         // 画白球路线
-//        drawWhitePathDouble(center);
         drawWhitePathSingle(center);
-//            graphicsContext.setStroke(Color.GRAY);
-//        }
-//        graphicsContext.setStroke(WHITE);
         if (center.getFirstCollide() == null) {
             predictedTargetBall = null;
         } else {
@@ -2707,33 +2735,32 @@ public class GameView implements Initializable {
             }
         }
     }
-
-    private double[] predictionWidthDeviation(WhitePrediction[] predictions) {
-        WhitePrediction center = predictions[0];
-        double[] centerPos = center.stopPoint();
-        double[] unitVec = Algebra.unitVector(center.lastVector());
-        double[] normalVec = Algebra.normalVector(unitVec);
-        double min = gameValues.table.innerWidth / 2;
-        double max = -gameValues.table.innerWidth / 2;
-        for (int i = 1; i < predictions.length; i++) {
-            WhitePrediction wp = predictions[i];
-            double[] stopPoint = wp.stopPoint();
-            double[] connection = new double[]{centerPos[0] - stopPoint[0], centerPos[1] - stopPoint[1]};
-            double proj = Algebra.projectionLengthOn(connection, normalVec);
-            if (proj > max) max = proj;
-            if (proj < min) min = proj;
+    
+    private void createPathPrediction() {
+        if (isPlayingMovement() || aiCalculating || cueAnimationPlayer != null || isGameCalculating()) {
+            cursorDrawer = null;
+            return;
         }
-        return new double[]{min, max};
+        
+        PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
+        cursorDrawer = new PredictionDrawing(playerPerson);
     }
 
     private void draw() {
+//        long t0 = System.currentTimeMillis();
         gamePane.drawTable(getActiveHolder());
+//        long t1 = System.currentTimeMillis();
         if (drawAiPathItem.isSelected()) gamePane.drawPredictedWhitePath(aiWhitePath);
         if (predictPlayerPathItem.isSelected())
             gamePane.drawPredictedWhitePath(suggestedPlayerWhitePath);
+//        long t2 = System.currentTimeMillis();
         drawBalls();
+//        long t3 = System.currentTimeMillis();
         drawCursor();
+//        long t4 = System.currentTimeMillis();
         drawBallInHand();
+
+//        System.out.println((t1 - t0) + " " + (t2- t1) + " " + (t3 - t2) + " " + (t4 - t3));
     }
 
     private void playMovement() {
@@ -2969,19 +2996,11 @@ public class GameView implements Initializable {
         // 启用/禁用手
         updateHandSelection();
 
-//        Ball cueBall = game.getGame().getCueBall();
-//        PlayerPerson playingPerson = game.getGame().getCuingPlayer().getPlayerPerson();
-//        currentHand = CuePlayParams.getPlayableHand(
-//                cueBall.getX(), cueBall.getY(),
-//                cursorDirectionUnitX, cursorDirectionUnitY,
-//                gameValues.table,
-//                playingPerson
-//        );
-//        currentHand = playingPerson
-
         // 如果打点不可能，把出杆键禁用了
         // 自动调整打点太麻烦了
         setCueButtonForPoint();
+        
+        createPathPrediction();
     }
 
     private void setCueButtonForPoint() {
@@ -3188,9 +3207,9 @@ public class GameView implements Initializable {
 
         private void calculateOneFrame() {
             if (reachedMaxPull && heldMs < holdMs) {
-                heldMs += frameTimeMs;
+                heldMs += frameAnimation.lastAnimationFrameMs();
             } else if (endHeldMs > 0) {
-                endHeldMs += frameTimeMs;
+                endHeldMs += frameAnimation.lastAnimationFrameMs();
                 if (endHeldMs >= endHoldMs) {
                     ended = true;
                     endCueAnimation();
@@ -3199,12 +3218,12 @@ public class GameView implements Initializable {
                 double lastCueDtToWhite = cueDtToWhite;
 
                 if (doubleAction != null) {
-                    double deltaD = frameTimeMs * doubleAction.speedMul / 2.5;
+                    double deltaD = frameAnimation.lastAnimationFrameMs() * doubleAction.speedMul / 2.5;
                     double nextTickDt = cueDtToWhite - deltaD;
                     if (cueDtToWhite > doubleStopDt) {
                         if (nextTickDt <= doubleStopDt) {
                             // 就是这一帧停
-                            doubleHoldMs += frameTimeMs;
+                            doubleHoldMs += frameAnimation.lastAnimationFrameMs();
                             if (doubleHoldMs >= doubleAction.holdMs) {
                                 // 中停结束了，但是为了代码简单我们还是让它多停一帧
                                 doubleAction = null;
@@ -3220,11 +3239,11 @@ public class GameView implements Initializable {
                 }
                 // 正常出杆
                 if (cueDtToWhite > maxPullDistance * 0.4) {
-                    cueDtToWhite -= cueBeforeSpeed * frameTimeMs;
+                    cueDtToWhite -= cueBeforeSpeed * frameAnimation.lastAnimationFrameMs();
                 } else if (!touched) {
-                    cueDtToWhite -= cueMaxSpeed * frameTimeMs;
+                    cueDtToWhite -= cueMaxSpeed * frameAnimation.lastAnimationFrameMs();
                 } else {
-                    cueDtToWhite -= cueBeforeSpeed * frameTimeMs;
+                    cueDtToWhite -= cueBeforeSpeed * frameAnimation.lastAnimationFrameMs();
                 }
                 double wholeDtPercentage = 1 - (cueDtToWhite - maxExtension) /
                         (maxPullDistance - maxExtension);  // 出杆完成的百分比
@@ -3258,14 +3277,47 @@ public class GameView implements Initializable {
                         playMovement();
                     }
                 } else if (cueDtToWhite <= maxExtension) {
-                    endHeldMs += frameTimeMs;  // 出杆结束了
+                    endHeldMs += frameAnimation.lastAnimationFrameMs();  // 出杆结束了
                 }
             } else {
-                cueDtToWhite += frameTimeMs / 3.0 *
+                cueDtToWhite += frameAnimation.lastAnimationFrameMs() / 3.0 *
                         playerPerson.getCuePlayType().getPullSpeedMul();  // 往后拉
                 if (cueDtToWhite >= maxPullDistance) {
                     reachedMaxPull = true;
                 }
+            }
+        }
+    }
+    
+    private class PredictionDrawing {
+        WhitePrediction[] clockwise = new WhitePrediction[8];
+        WhitePrediction center;
+        
+        PredictionDrawing(PlayerPerson playerPerson) {
+            CuePlayParams[] possibles = generateCueParamsSd1();
+            center = game.getGame().predictWhite(
+                    possibles[0],
+                    game.whitePhy,
+                    WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
+                    false,
+                    false,
+                    true,
+                    false);
+            if (center == null) {
+                predictedTargetBall = null;
+                return;
+            }
+
+            for (int i = 1; i < possibles.length; i++) {
+                clockwise[i - 1] = game.getGame().predictWhite(
+                        possibles[i],
+                        game.whitePhy,
+                        WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
+                        false,
+                        false,
+                        true,
+                        false
+                );
             }
         }
     }

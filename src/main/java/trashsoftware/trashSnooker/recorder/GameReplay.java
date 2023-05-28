@@ -313,6 +313,10 @@ public abstract class GameReplay implements GameHolder {
         return p2;
     }
 
+    public int getFrameRate() {
+        return item.frameRate;
+    }
+
     public void close() throws IOException {
         inputStream.close();
         wrapperStream.close();
