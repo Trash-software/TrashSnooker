@@ -2,14 +2,15 @@ package trashsoftware.trashSnooker.fxml.drawing;
 
 import javafx.application.Platform;
 
-public class AnimationFrame {
+import java.util.TimerTask;
+
+public class AnimationFrame extends TimerTask {
 
     final double frameTimeMs;
     final Runnable frame;
     boolean frameAlive;
     long lastFrameTime;
     long thisFrameTime;
-    long beginTime;
 
     long cumulatedFrameCount;
     long lastSecondFrameCount;
@@ -21,8 +22,7 @@ public class AnimationFrame {
     public AnimationFrame(Runnable frame, double frameTimeMs) {
         this.frame = frame;
         this.frameTimeMs = frameTimeMs;
-        beginTime = System.currentTimeMillis();
-        lastFrameTime = beginTime;
+        lastFrameTime = System.currentTimeMillis();
     }
 
     public void beginNewAnimation() {
@@ -50,7 +50,6 @@ public class AnimationFrame {
                 Platform.runLater(() -> {
                     frame.run();
                     frameAlive = false;
-
                     lastFrameTime = t;
                 });
             }

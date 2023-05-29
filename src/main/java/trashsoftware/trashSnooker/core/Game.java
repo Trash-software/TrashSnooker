@@ -1287,13 +1287,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             ball.vx = 0;
                             ball.vy = 0;
                         }
+                        // 额外一帧应该还好
+                        prediction.addPointInPath(new double[]{cueBallClone.getLastCollisionX(), cueBallClone.getLastCollisionY()});
                         prediction.setFirstCollide(ball,
                                 Math.hypot(whiteVx, whiteVy) * phy.calculationsPerSec,
                                 hitWall,
                                 ballDirectionUnitVec[0], ballDirectionUnitVec[1],
                                 ballInitVMmPerS,
                                 whiteDirectionUnitVec[0], whiteDirectionUnitVec[1],
-                                cueBallClone.x, cueBallClone.y);
+                                cueBallClone.getLastCollisionX(), cueBallClone.getLastCollisionY());
                         return false;
                     }
                 }

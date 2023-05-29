@@ -29,6 +29,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private boolean potted;
     private long msSinceCue;
     private Ball justHit;
+    
+    private double lastCollisionX, lastCollisionY;  // 记录一下上次碰撞所在的位置
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ball.ballRadius);
@@ -536,6 +538,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             x2 += dx2;
             y2 += dy2;
         }
+        
+        this.lastCollisionX = x1;
+        this.lastCollisionY = y1;
+        ball.lastCollisionX = x2;
+        ball.lastCollisionY = y2;
 
         double[] thisV = new double[]{vx, vy};
         double[] ballV = new double[]{ball.vx, ball.vy};
@@ -627,10 +634,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         }
 
         // update
-        nextX = x + vx;
-        nextY = y + vy;
-        ball.nextX = ball.x + ball.vx;
-        ball.nextY = ball.y + ball.vy;
+        nextX = x1 + vx;
+        nextY = y1 + vy;
+        ball.nextX = x2 + ball.vx;
+        ball.nextY = y2 + ball.vy;
     }
 
     boolean tryHitBall(Ball ball, boolean checkMovingBall, boolean applyGearSpin, Phy phy) {
@@ -747,5 +754,13 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
     public static void disableGearOffset() {
         enableGearOffset = false;
+    }
+
+    public double getLastCollisionX() {
+        return lastCollisionX;
+    }
+
+    public double getLastCollisionY() {
+        return lastCollisionY;
     }
 }

@@ -1,8 +1,5 @@
 package trashsoftware.trashSnooker.fxml;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,7 +23,6 @@ import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.util.StringConverter;
 import trashsoftware.trashSnooker.audio.GameAudio;
 import trashsoftware.trashSnooker.core.*;
@@ -154,6 +150,8 @@ public class GameView implements Initializable {
     RadioButton handSelectionLeft, handSelectionRight, handSelectionRest;
     boolean debugMode = false;
     boolean devMode = true;
+    //    private Timeline timeline;
+    Timer gameLoop;
     AnimationFrame frameAnimation;
     private double minPredictLengthPotDt = 2000;
     private double maxPredictLengthPotDt = 100;
@@ -191,7 +189,6 @@ public class GameView implements Initializable {
     private CueAnimationPlayer cueAnimationPlayer;
     private boolean isDragging;
     private double lastDragAngle;
-    private Timeline timeline;
     //    private double predictionMultiplier = 2000.0;
     private double maxRealPredictLength = defaultMaxPredictLength;
     private boolean enablePsy = true;  // 由游戏决定心理影响
@@ -438,8 +435,8 @@ public class GameView implements Initializable {
                         strings.getString("pleaseConfirm"),
                         () -> {
                             game.quitGame();
-                            timeline.stop();
-//                            gameLoop.cancel();
+//                            timeline.stop();
+                            gameLoop.cancel();
                             stage.close();
                         },
                         null);
@@ -660,8 +657,8 @@ public class GameView implements Initializable {
                     }
                 }
             }
-            timeline.stop();
-//            gameLoop.cancel();
+//            timeline.stop();
+            gameLoop.cancel();
         });
     }
 
@@ -2056,13 +2053,10 @@ public class GameView implements Initializable {
     }
 
     private void startAnimation() {
-        timeline = new Timeline();
-
-        timeline.setCycleCount(Animation.INDEFINITE);
         frameAnimation = new AnimationFrame(this::oneFrame, uiFrameTimeMs);
-        KeyFrame keyFrame = new KeyFrame(new Duration(uiFrameTimeMs / 2), e -> frameAnimation.run());
-        timeline.getKeyFrames().add(keyFrame);
-        timeline.play();
+
+        gameLoop = new Timer();
+        gameLoop.schedule(frameAnimation, 0, (long) Math.ceil(uiFrameTimeMs / 3));
     }
 
     private void oneFrame() {
@@ -2613,44 +2607,10 @@ public class GameView implements Initializable {
         if (drawStandingPos) drawStandingPos();
         if (cursorDrawer == null || cursorDrawer.center == null) return;
 
-        PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
-////        long st = System.currentTimeMillis();
-//        CuePlayParams[] possibles = generateCueParamsSd1();
-//        WhitePrediction[] clockwise = new WhitePrediction[8];
-//        WhitePrediction center = game.getGame().predictWhite(
-//                possibles[0],
-//                game.whitePhy,
-//                WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
-//                false,
-//                false,
-//                true,
-//                false);
-//        if (center == null) {
-//            predictedTargetBall = null;
-//            return;
-//        }
-//
-//        for (int i = 1; i < possibles.length; i++) {
-//            clockwise[i - 1] = game.getGame().predictWhite(
-//                    possibles[i],
-//                    game.whitePhy,
-//                    WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
-//                    false,
-//                    false,
-//                    true,
-//                    false
-//            );
-//        }
+//        PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
 
-        WhitePrediction[] clockwise = cursorDrawer.clockwise;
         WhitePrediction center = cursorDrawer.center;
-
-        double[][] predictionStops = new double[clockwise.length + 1][];
-        predictionStops[0] = center.stopPoint();
-        for (int i = 0; i < clockwise.length; i++) {
-            predictionStops[i + 1] = clockwise[i].stopPoint();
-        }
-        List<double[]> outPoints = Algebra.grahamScanEnclose(predictionStops);
+        List<double[]> outPoints = cursorDrawer.outPoints;
 
         if (outPoints.size() >= 3) {
             // 画白球的落位范围
@@ -2659,113 +2619,34 @@ public class GameView implements Initializable {
 
         // 画白球路线
         drawWhitePathSingle(center);
-        if (center.getFirstCollide() == null) {
-            predictedTargetBall = null;
-        } else {
+        if (center.getFirstCollide() != null) {
             gamePane.getGraphicsContext().strokeOval(
                     gamePane.canvasX(center.getWhiteCollisionX()) - ballRadius,
                     gamePane.canvasY(center.getWhiteCollisionY()) - ballRadius,
                     ballDiameter,
                     ballDiameter);  // 绘制预测撞击点的白球
-
-            // 弹库的球就不给预测线了
-            if (center.isHitWallBeforeHitBall()) {
-                predictedTargetBall = null;
-            } else {
-                predictedTargetBall = center.getFirstCollide();
-                double potDt = Algebra.distanceToPoint(
-                        center.getWhiteCollisionX(), center.getWhiteCollisionY(),
-                        center.whiteX, center.whiteY);
-                // 白球行进距离越长，预测线越短
-                double predictLineTotalLen = getPredictionLineTotalLength(
-                        center,
-                        potDt,
-                        game.getGame().getCuingPlayer().getPlayerPerson());
-
-                targetPredictionUnitY = center.getBallDirectionY();
-                targetPredictionUnitX = center.getBallDirectionX();
-                double whiteUnitXBefore = center.getWhiteDirectionXBeforeCollision();
-                double whiteUnitYBefore = center.getWhiteDirectionYBeforeCollision();
-
-                double theta = Algebra.thetaBetweenVectors(
-                        targetPredictionUnitX, targetPredictionUnitY,
-                        whiteUnitXBefore, whiteUnitYBefore
-                );
-
-                // 画预测线
-                // 角度越大，目标球预测线越短
-                double pureMultiplier = Algebra.powerTransferOfAngle(theta);
-                double multiplier = Math.pow(pureMultiplier, 1 / playerPerson.getAnglePrecision());
-
-                // 击球的手的multiplier
-                double handMul = PlayerPerson.HandBody.getPrecisionOfHand(currentHand);
-
-                double totalLen = predictLineTotalLen * multiplier * handMul;
-
-                double lineX = targetPredictionUnitX * totalLen;
-                double lineY = targetPredictionUnitY * totalLen;
-
-                Ball targetBall = center.getFirstCollide();
-                double tarX = targetBall.getX();
-                double tarY = targetBall.getY();
-
-                // 画宽线
-                double xShift = targetPredictionUnitY * gameValues.ball.ballRadius;
-                double yShift = -targetPredictionUnitX * gameValues.ball.ballRadius;
-
-                double leftStartX = gamePane.canvasX(tarX - xShift);
-                double rightStartX = gamePane.canvasX(tarX + xShift);
-                double leftStartY = gamePane.canvasY(tarY - yShift);
-                double rightStartY = gamePane.canvasY(tarY + yShift);
-
-                double leftEndX = gamePane.canvasX(tarX - xShift + lineX);
-                double rightEndX = gamePane.canvasX(tarX + xShift + lineX);
-                double leftEndY = gamePane.canvasY(tarY - yShift + lineY);
-                double rightEndY = gamePane.canvasY(tarY + yShift + lineY);
-
-                Stop[] stops = new Stop[]{
-                        new Stop(0, targetBall.getColorWithOpa()),
-                        new Stop(1, targetBall.getColorTransparent())
-                };
-
-//                Bounds ballPanePos = ballPane.localToScene(ballPane.getBoundsInLocal());
-
-                double sx, sy, ex, ey;
-                if (targetPredictionUnitX < 0) {
-                    sx = -targetPredictionUnitX;
-                    ex = 0;
-                } else {
-                    sx = 0;
-                    ex = targetPredictionUnitX;
-                }
-                if (targetPredictionUnitY < 0) {
-                    sy = -targetPredictionUnitY;
-                    ey = 0;
-                } else {
-                    sy = 0;
-                    ey = targetPredictionUnitY;
-                }
-
-                LinearGradient fill = new LinearGradient(
-                        sx, sy, ex, ey,
-                        true,
-                        CycleMethod.NO_CYCLE,
-                        stops
-                );
-
-                gamePane.getGraphicsContext().setFill(fill);
+            
+            if (!center.isHitWallBeforeHitBall() && predictedTargetBall != null) {
+                gamePane.getGraphicsContext().setFill(cursorDrawer.fill);
                 gamePane.getGraphicsContext().fillPolygon(
-                        new double[]{leftStartX, leftEndX, rightEndX, rightStartX},
-                        new double[]{leftStartY, leftEndY, rightEndY, rightStartY},
+                        new double[]{cursorDrawer.leftStartX, 
+                                cursorDrawer.leftEndX, 
+                                cursorDrawer.rightEndX, 
+                                cursorDrawer.rightStartX},
+                        new double[]{cursorDrawer.leftStartY, 
+                                cursorDrawer.leftEndY, 
+                                cursorDrawer.rightEndY, 
+                                cursorDrawer.rightStartY},
                         4
                 );
 
                 if (drawTargetRefLine) {
-                    double tarCanvasX = gamePane.canvasX(tarX);
-                    double tarCanvasY = gamePane.canvasY(tarY);
+                    double tarCanvasX = gamePane.canvasX(cursorDrawer.tarX);
+                    double tarCanvasY = gamePane.canvasY(cursorDrawer.tarY);
                     gamePane.getGraphicsContext().setStroke(center.getFirstCollide().getColor().brighter().brighter());
                     gamePane.getGraphicsContext().strokeLine(tarCanvasX, tarCanvasY,
-                            tarCanvasX + lineX * gamePane.getScale(), tarCanvasY + lineY * gamePane.getScale());
+                            tarCanvasX + cursorDrawer.lineX * gamePane.getScale(), 
+                            tarCanvasY + cursorDrawer.lineY * gamePane.getScale());
                 }
             }
         }
@@ -2780,9 +2661,13 @@ public class GameView implements Initializable {
         if (game.getGame().getCueBall().isPotted()) return;
         if (aiCalculating) return;
         if (isGameCalculating()) return;
+        if (cursorDrawer != null && cursorDrawer.running) {
+            return;
+        }
 
         PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
-        cursorDrawer = new PredictionDrawing(playerPerson);
+        cursorDrawer = new PredictionDrawing();
+        cursorDrawer.predict(playerPerson);
     }
 
     private void draw() {
@@ -3332,8 +3217,21 @@ public class GameView implements Initializable {
     private class PredictionDrawing {
         WhitePrediction[] clockwise = new WhitePrediction[8];
         WhitePrediction center;
+        List<double[]> outPoints;
+        LinearGradient fill;
 
-        PredictionDrawing(PlayerPerson playerPerson) {
+        double lineX, lineY;
+        double tarX, tarY;
+        double leftStartX, rightStartX, leftStartY, rightStartY;
+        double leftEndX, rightEndX, leftEndY, rightEndY;
+
+        boolean running;
+
+        PredictionDrawing() {
+        }
+
+        private void predict(PlayerPerson playerPerson) {
+            running = true;
             CuePlayParams[] possibles = generateCueParamsSd1();
             center = game.getGame().predictWhite(
                     possibles[0],
@@ -3359,6 +3257,105 @@ public class GameView implements Initializable {
                         false
                 );
             }
+
+            double[][] predictionStops = new double[clockwise.length + 1][];
+            predictionStops[0] = center.stopPoint();
+            for (int i = 0; i < clockwise.length; i++) {
+                predictionStops[i + 1] = clockwise[i].stopPoint();
+            }
+            outPoints = Algebra.grahamScanEnclose(predictionStops);
+
+            if (center.getFirstCollide() == null) {
+                predictedTargetBall = null;
+            } else {
+                // 弹库的球就不给预测线了
+                if (center.isHitWallBeforeHitBall()) {
+                    predictedTargetBall = null;
+                } else {
+                    predictedTargetBall = center.getFirstCollide();
+                    double potDt = Algebra.distanceToPoint(
+                            center.getWhiteCollisionX(), center.getWhiteCollisionY(),
+                            center.whiteX, center.whiteY);
+                    // 白球行进距离越长，预测线越短
+                    double predictLineTotalLen = getPredictionLineTotalLength(
+                            center,
+                            potDt,
+                            game.getGame().getCuingPlayer().getPlayerPerson());
+
+                    targetPredictionUnitY = center.getBallDirectionY();
+                    targetPredictionUnitX = center.getBallDirectionX();
+                    double whiteUnitXBefore = center.getWhiteDirectionXBeforeCollision();
+                    double whiteUnitYBefore = center.getWhiteDirectionYBeforeCollision();
+
+                    double theta = Algebra.thetaBetweenVectors(
+                            targetPredictionUnitX, targetPredictionUnitY,
+                            whiteUnitXBefore, whiteUnitYBefore
+                    );
+
+                    // 画预测线
+                    // 角度越大，目标球预测线越短
+                    double pureMultiplier = Algebra.powerTransferOfAngle(theta);
+                    double multiplier = Math.pow(pureMultiplier, 1 / playerPerson.getAnglePrecision());
+
+                    // 击球的手的multiplier
+                    double handMul = PlayerPerson.HandBody.getPrecisionOfHand(currentHand);
+
+                    double totalLen = predictLineTotalLen * multiplier * handMul;
+
+                    lineX = targetPredictionUnitX * totalLen;
+                    lineY = targetPredictionUnitY * totalLen;
+
+                    Ball targetBall = center.getFirstCollide();
+                    tarX = targetBall.getX();
+                    tarY = targetBall.getY();
+
+                    // 画宽线
+                    double xShift = targetPredictionUnitY * gameValues.ball.ballRadius;
+                    double yShift = -targetPredictionUnitX * gameValues.ball.ballRadius;
+
+                    leftStartX = gamePane.canvasX(tarX - xShift);
+                    rightStartX = gamePane.canvasX(tarX + xShift);
+                    leftStartY = gamePane.canvasY(tarY - yShift);
+                    rightStartY = gamePane.canvasY(tarY + yShift);
+
+                    leftEndX = gamePane.canvasX(tarX - xShift + lineX);
+                    rightEndX = gamePane.canvasX(tarX + xShift + lineX);
+                    leftEndY = gamePane.canvasY(tarY - yShift + lineY);
+                    rightEndY = gamePane.canvasY(tarY + yShift + lineY);
+
+                    Stop[] stops = new Stop[]{
+                            new Stop(0, targetBall.getColorWithOpa()),
+                            new Stop(1, targetBall.getColorTransparent())
+                    };
+
+//                Bounds ballPanePos = ballPane.localToScene(ballPane.getBoundsInLocal());
+
+                    double sx, sy, ex, ey;
+                    if (targetPredictionUnitX < 0) {
+                        sx = -targetPredictionUnitX;
+                        ex = 0;
+                    } else {
+                        sx = 0;
+                        ex = targetPredictionUnitX;
+                    }
+                    if (targetPredictionUnitY < 0) {
+                        sy = -targetPredictionUnitY;
+                        ey = 0;
+                    } else {
+                        sy = 0;
+                        ey = targetPredictionUnitY;
+                    }
+
+                    fill = new LinearGradient(
+                            sx, sy, ex, ey,
+                            true,
+                            CycleMethod.NO_CYCLE,
+                            stops
+                    );
+                }
+            }
+
+            running = false;
         }
     }
 }
