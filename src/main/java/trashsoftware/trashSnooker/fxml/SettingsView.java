@@ -71,7 +71,7 @@ public class SettingsView extends ChildInitializable {
         aiThreadNumBox.getSelectionModel().select(Integer.valueOf(curThreads));
         
         frameRateBox.getItems().addAll(
-                20, 24, 30, 40, 50, 60, 90, 120, 144, 180, 240, 300, 400, 500
+                20, 24, 30, 40, 50, 60, 90, 120, 144, 165, 200, 240, 300, 400, 500
         );
         frameRateBox.getSelectionModel().select(Integer.valueOf(configLoader.getFrameRate()));
     }

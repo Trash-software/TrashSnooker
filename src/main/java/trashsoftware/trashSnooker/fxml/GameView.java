@@ -90,7 +90,7 @@ public class GameView implements Initializable {
     //    public static double scale;
     public static int animationFrameRate = 60;  // 这两个是管物理运算的存档率的，也就是movement和回放文件的帧率
     public static double frameTimeMs = 1000.0 / animationFrameRate;
-    private static double uiFrameTimeMs = 5.0;
+    private static double uiFrameTimeMs = 10.0;
     //    private double minRealPredictLength = 300.0;
     private static double defaultMaxPredictLength = 1200;
     private final List<Control> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
@@ -2625,17 +2625,17 @@ public class GameView implements Initializable {
                     gamePane.canvasY(center.getWhiteCollisionY()) - ballRadius,
                     ballDiameter,
                     ballDiameter);  // 绘制预测撞击点的白球
-            
+
             if (!center.isHitWallBeforeHitBall() && predictedTargetBall != null) {
                 gamePane.getGraphicsContext().setFill(cursorDrawer.fill);
                 gamePane.getGraphicsContext().fillPolygon(
-                        new double[]{cursorDrawer.leftStartX, 
-                                cursorDrawer.leftEndX, 
-                                cursorDrawer.rightEndX, 
+                        new double[]{cursorDrawer.leftStartX,
+                                cursorDrawer.leftEndX,
+                                cursorDrawer.rightEndX,
                                 cursorDrawer.rightStartX},
-                        new double[]{cursorDrawer.leftStartY, 
-                                cursorDrawer.leftEndY, 
-                                cursorDrawer.rightEndY, 
+                        new double[]{cursorDrawer.leftStartY,
+                                cursorDrawer.leftEndY,
+                                cursorDrawer.rightEndY,
                                 cursorDrawer.rightStartY},
                         4
                 );
@@ -2645,7 +2645,7 @@ public class GameView implements Initializable {
                     double tarCanvasY = gamePane.canvasY(cursorDrawer.tarY);
                     gamePane.getGraphicsContext().setStroke(center.getFirstCollide().getColor().brighter().brighter());
                     gamePane.getGraphicsContext().strokeLine(tarCanvasX, tarCanvasY,
-                            tarCanvasX + cursorDrawer.lineX * gamePane.getScale(), 
+                            tarCanvasX + cursorDrawer.lineX * gamePane.getScale(),
                             tarCanvasY + cursorDrawer.lineY * gamePane.getScale());
                 }
             }
@@ -3327,8 +3327,6 @@ public class GameView implements Initializable {
                             new Stop(0, targetBall.getColorWithOpa()),
                             new Stop(1, targetBall.getColorTransparent())
                     };
-
-//                Bounds ballPanePos = ballPane.localToScene(ballPane.getBoundsInLocal());
 
                     double sx, sy, ex, ey;
                     if (targetPredictionUnitX < 0) {
