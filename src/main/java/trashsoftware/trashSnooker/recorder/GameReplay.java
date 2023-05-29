@@ -193,7 +193,7 @@ public abstract class GameReplay implements GameHolder {
             ActualStep actualStep = (ActualStep) step;
             currentCueRecord = actualStep.cueRecord;
             currentMovement = actualStep.movement;
-            currentMovement.reset();
+//            currentMovement.reset();
             currentScoreResult = actualStep.scoreResult;
             thisTarget = actualStep.thisTarget;
             nextTarget = actualStep.nextTarget;

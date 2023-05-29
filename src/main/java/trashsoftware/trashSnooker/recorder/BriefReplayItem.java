@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.*;
+import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -78,7 +79,7 @@ public class BriefReplayItem {
             gameValues = new GameValues(gameRule, tableMetrics, ballMetrics);
             
             if (primaryVersion == 12 && secondaryVersion <= 8) {
-                frameRate = 50;
+                frameRate = 50;  // 以前就是50帧
             } else {
                 frameRate = (int) Util.bytesToIntN(header, 15, 2);
             }

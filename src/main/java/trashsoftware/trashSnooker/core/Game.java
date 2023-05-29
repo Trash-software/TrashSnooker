@@ -1117,7 +1117,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             prediction = new WhitePrediction(cueBallClone);
 
             while (!oneRun() && notTerminated) {
-                if (cumulatedPhysicalTime >= 20000) {
+                if (cumulatedPhysicalTime >= 30000) {
                     // Must be something wrong
                     System.err.println("White prediction congestion");
                     for (Ball ball : getAllBalls()) {

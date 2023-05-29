@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core;
 import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.drawing.BallModel;
 
 import java.util.Arrays;
@@ -200,18 +201,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         frameDegChange =
                 Math.sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ)
                         * phy.calculationsPerSec * animationFrameMs / 800.0;
-
-//        rotation.setAxis(new Point3D(axisX, axisY, axisZ));
-//        rotation.setAngle(degChange);
-//
-//        double theta = -Math.asin(rotation.getMzx());
-//        double cosTheta = Math.cos(theta);
-//        double psi = Math.atan2(rotation.getMzy() / cosTheta, rotation.getMzz() / cosTheta);
-//        double phi = Math.atan2(rotation.getMyx() / cosTheta, rotation.getMxx() / cosTheta);
-//
-//        xAngle += psi;
-//        yAngle += theta;
-//        zAngle += phi;
     }
 
     /**
@@ -416,7 +405,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
             double effectiveAcc = -bounceAcc(phy, vx);
             double nFrames = vx / -effectiveAcc * 2;
-            if (!phy.isPrediction) System.out.println("predict " + nFrames);
+            if (!phy.isPrediction && App.PRINT_DEBUG) System.out.println("predict " + nFrames);
             currentBounce = new CushionBounce(
                     effectiveAcc,
                     0);

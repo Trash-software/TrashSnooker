@@ -58,8 +58,8 @@ import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.core.table.ChineseEightTable;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
-import trashsoftware.trashSnooker.fxml.drawing.CueModel;
 import trashsoftware.trashSnooker.fxml.drawing.AnimationFrame;
+import trashsoftware.trashSnooker.fxml.drawing.CueModel;
 import trashsoftware.trashSnooker.fxml.projection.BallProjection;
 import trashsoftware.trashSnooker.fxml.projection.CushionProjection;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
@@ -92,7 +92,9 @@ public class GameView implements Initializable {
     private static final double WHITE_PREDICT_LEN_AFTER_WALL = 1000.0;  // todo: 根据球员
     private static final long DEFAULT_REPLAY_GAP = 1000;
     //    public static double scale;
-    public static double frameTimeMs = 10.0;
+    public static int animationFrameRate = 60;  // 这两个是管物理运算的存档率的，也就是movement和回放文件的帧率
+    public static double frameTimeMs = 1000.0 / animationFrameRate;
+    private static double uiFrameTimeMs = 5.0;
     //    private double minRealPredictLength = 300.0;
     private static double defaultMaxPredictLength = 1200;
     private final List<Control> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
@@ -245,14 +247,6 @@ public class GameView implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.strings = resources;
 
-        animationPlaySpeedToggle.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                aiAnimationSpeed = Double.parseDouble(newValue.getUserData().toString());
-                replayGap = (long) (DEFAULT_REPLAY_GAP / aiAnimationSpeed);
-                System.out.println("New speed " + aiAnimationSpeed);
-            }
-        }));
-
         animationPlaySpeedToggle.selectToggle(animationPlaySpeedToggle.getToggles().get(3));
 
         ballCanvasGc = ballCanvas.getGraphicsContext2D();
@@ -365,8 +359,9 @@ public class GameView implements Initializable {
 
         gameButtonBox.setVisible(false);
         gameButtonBox.setManaged(false);
-        
-        setFrameRate(replay.getFrameRate());
+
+        animationFrameRate = replay.getFrameRate();
+        frameTimeMs = 1000.0 / animationFrameRate;
 
         setupNameLabels(player1.getPlayerPerson(), player2.getPlayerPerson());
         totalFramesLabel.setText(String.format("(%d)", replay.getItem().totalFrames));
@@ -549,9 +544,9 @@ public class GameView implements Initializable {
     public void setAimingLengthFactor(double aimingLengthFactor) {
         maxRealPredictLength = defaultMaxPredictLength * aimingLengthFactor;
     }
-    
+
     public void setFrameRate(int frameRate) {
-        frameTimeMs = 1000.0 / frameRate;
+        uiFrameTimeMs = 1000.0 / frameRate;
     }
 
     private void keyboardAction(KeyEvent e) {
@@ -1558,6 +1553,7 @@ public class GameView implements Initializable {
     }
 
     private void playerCue(Player player) {
+        updateBeforeCue();
         if (game.gameValues.rule.snookerLike()) {
             AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
             System.out.println(asg.getCurrentTarget() + " " + predictedTargetBall);
@@ -1708,11 +1704,24 @@ public class GameView implements Initializable {
         beginCueAnimationOfHumanPlayer(whiteStartingX, whiteStartingY);
     }
 
+    private void updateBeforeCue() {
+        Toggle sel = animationPlaySpeedToggle.getSelectedToggle();
+        if (sel != null) {
+            double newSpeed = Double.parseDouble(sel.getUserData().toString());
+            if (newSpeed != aiAnimationSpeed) {
+                aiAnimationSpeed = newSpeed;
+                replayGap = (long) (DEFAULT_REPLAY_GAP / aiAnimationSpeed);
+                System.out.println("New speed " + aiAnimationSpeed);
+            }
+        }
+    }
+
     private void aiCue(Player player) {
         aiCue(player, true);
     }
 
     private void aiCue(Player player, boolean aiHasRightToReposition) {
+        updateBeforeCue();
         disableUiWhenCuing();
         Ball.disableGearOffset();  // AI真不会这个，禁用了。在finishCueNextStep里重新启用
         cueButton.setText(strings.getString("aiThinking"));
@@ -1867,6 +1876,7 @@ public class GameView implements Initializable {
     }
 
     private void replayCue() {
+        updateBeforeCue();
         if (replay.getCurrentFlag() == ActualRecorder.FLAG_CUE) {
             CueRecord cueRecord = replay.getCueRecord();
             if (cueRecord == null) return;
@@ -2049,8 +2059,8 @@ public class GameView implements Initializable {
         timeline = new Timeline();
 
         timeline.setCycleCount(Animation.INDEFINITE);
-        frameAnimation = new AnimationFrame(this::oneFrame, frameTimeMs);
-        KeyFrame keyFrame = new KeyFrame(new Duration(2.0), e -> frameAnimation.run());
+        frameAnimation = new AnimationFrame(this::oneFrame, uiFrameTimeMs);
+        KeyFrame keyFrame = new KeyFrame(new Duration(uiFrameTimeMs / 2), e -> frameAnimation.run());
         timeline.getKeyFrames().add(keyFrame);
         timeline.play();
     }
@@ -2058,14 +2068,17 @@ public class GameView implements Initializable {
     private void oneFrame() {
         if (aiCalculating) return;
 
-//        long st = System.currentTimeMillis();
+//        long t0 = System.nanoTime();
         draw();
+//        long t1 = System.nanoTime();
         drawCueBallCanvas();
+//        long t2 = System.nanoTime();
         drawCueAngleCanvas();
+//        long t3 = System.nanoTime();
         drawCue();
+//        long t4 = System.nanoTime();
         fpsLabel.setText(String.valueOf(frameAnimation.getCurrentFps()));
-//        long end = System.currentTimeMillis();
-//        System.out.println("Frame calculation in " + (end - st));
+//        System.out.printf("%d %d %d %d\n", t1 - t0, t2 - t1, t3 - t2, t4 - t3);
     }
 
     private void setupPowerSlider() {
@@ -2129,42 +2142,64 @@ public class GameView implements Initializable {
 //        System.out.println(playingMovement + " " + movement);
         if (playingMovement) {
             // 处理倍速
-            int index = 0;
-//            System.out.println(frameAnimation.getSkippedFrames());
-//            for (int i = 0; i < frameAnimation.getSkippedFrames() + 1; i++) {
-                // 这个loop一定会执行
-                if (replay == null) {
-                    Player player = game.getGame().getCuingPlayer();
-                    if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
-                        index = movement.incrementIndex(aiAnimationSpeed);
-                    } else {
-                        index = movement.incrementIndex();
-                    }
-                } else {
-                    index = movement.incrementIndex(aiAnimationSpeed);
-                }
-//            }
+            long msSinceAnimationBegun = frameAnimation.msSinceAnimationBegun();
 
+            double appliedSpeed;
+            int index;
+            if (replay == null) {
+                Player player = game.getGame().getCuingPlayer();
+                if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
+                    appliedSpeed = aiAnimationSpeed;
+                    index = (int) (msSinceAnimationBegun * aiAnimationSpeed / frameTimeMs);  // 天生一个floor
+                } else {
+                    appliedSpeed = 1.0;
+                    index = (int) (msSinceAnimationBegun / frameTimeMs);  // todo:临时
+                }
+            } else {
+                appliedSpeed = aiAnimationSpeed;
+                index = (int) (msSinceAnimationBegun * aiAnimationSpeed / frameTimeMs);
+            }
+
+            boolean isLast = false;
+            int movementSize = movement.getNFrames();
+            if (index >= movementSize) {
+                index = movementSize - 1;
+                isLast = true;
+            }
+
+            double uiFrameSinceThisAniFrame = (msSinceAnimationBegun - (index * frameTimeMs / appliedSpeed));
+            double rate = uiFrameSinceThisAniFrame / frameTimeMs * appliedSpeed;
+            double frameRateRatio = frameAnimation.lastAnimationFrameMs() / frameTimeMs * appliedSpeed;
+//            System.out.printf("%d %f %f %f\n", index, uiFrameSinceThisAniFrame, rate, frameRateRatio);
+
+            GameHolder holder = getActiveHolder();
             for (Map.Entry<Ball, List<MovementFrame>> entry :
                     movement.getMovementMap().entrySet()) {
-                MovementFrame frame = entry.getValue().get(index);
+                List<MovementFrame> list = entry.getValue();
+                MovementFrame frame = list.get(index);
+
                 if (!frame.potted) {
-                    entry.getKey().model.sphere.setVisible(true);
-                    if (replay != null) {
-                        replay.table.forceDrawBall(
-                                gamePane,
-                                entry.getKey(),
-                                frame.x, frame.y,
-                                frame.xAxis, frame.yAxis, frame.zAxis,
-                                frame.frameDegChange * getCurPlaySpeedMultiplier());
-                    } else {
-                        game.getGame().getTable().forceDrawBall(
-                                gamePane,
-                                entry.getKey(),
-                                frame.x, frame.y,
-                                frame.xAxis, frame.yAxis, frame.zAxis,
-                                frame.frameDegChange * getCurPlaySpeedMultiplier());
+                    MovementFrame nextFrame = null;
+                    if (index + 1 < list.size()) {
+                        nextFrame = list.get(index + 1);
                     }
+                    double x, y;
+                    if (nextFrame == null || nextFrame.potted) {
+                        x = frame.x;
+                        y = frame.y;
+                    } else {
+                        x = Algebra.rateBetween(frame.x, nextFrame.x, rate);
+                        y = Algebra.rateBetween(frame.y, nextFrame.y, rate);
+                    }
+                    double frameDeg = frame.frameDegChange * frameRateRatio;
+
+                    entry.getKey().model.sphere.setVisible(true);
+                    holder.getTable().forceDrawBall(
+                            gamePane,
+                            entry.getKey(),
+                            x, y,
+                            frame.xAxis, frame.yAxis, frame.zAxis,
+                            frameDeg);
                 } else {
                     entry.getKey().model.sphere.setVisible(false);
                 }
@@ -2180,7 +2215,7 @@ public class GameView implements Initializable {
                         break;
                 }
             }
-            if (!movement.hasNext()) {
+            if (isLast) {
                 playingMovement = false;
                 movement = null;
                 if (replay != null) finishCueReplay();
@@ -2606,7 +2641,7 @@ public class GameView implements Initializable {
 //                    false
 //            );
 //        }
-        
+
         WhitePrediction[] clockwise = cursorDrawer.clockwise;
         WhitePrediction center = cursorDrawer.center;
 
@@ -2735,13 +2770,17 @@ public class GameView implements Initializable {
             }
         }
     }
-    
+
     private void createPathPrediction() {
-        if (isPlayingMovement() || aiCalculating || cueAnimationPlayer != null || isGameCalculating()) {
-            cursorDrawer = null;
-            return;
-        }
-        
+        if (replay != null) return;
+        if (game.getGame().isEnded()) return;
+        if (isPlayingMovement()) return;
+        if (movement != null) return;
+        if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) return;
+        if (game.getGame().getCueBall().isPotted()) return;
+        if (aiCalculating) return;
+        if (isGameCalculating()) return;
+
         PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
         cursorDrawer = new PredictionDrawing(playerPerson);
     }
@@ -2765,6 +2804,7 @@ public class GameView implements Initializable {
 
     private void playMovement() {
         playingMovement = true;
+        frameAnimation.beginNewAnimation();
     }
 
     private void beginCueAnimationOfHumanPlayer(double whiteStartingX, double whiteStartingY) {
@@ -2999,7 +3039,7 @@ public class GameView implements Initializable {
         // 如果打点不可能，把出杆键禁用了
         // 自动调整打点太麻烦了
         setCueButtonForPoint();
-        
+
         createPathPrediction();
     }
 
@@ -3288,11 +3328,11 @@ public class GameView implements Initializable {
             }
         }
     }
-    
+
     private class PredictionDrawing {
         WhitePrediction[] clockwise = new WhitePrediction[8];
         WhitePrediction center;
-        
+
         PredictionDrawing(PlayerPerson playerPerson) {
             CuePlayParams[] possibles = generateCueParamsSd1();
             center = game.getGame().predictWhite(

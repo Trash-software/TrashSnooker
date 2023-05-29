@@ -356,4 +356,11 @@ public class Algebra {
         double ratio = (value - domainLow) / (domainHigh - domainLow);
         return rangeLow + (rangeHigh - rangeLow) * ratio;
     }
+
+    /**
+     * 返回从a往b走，走到rate时所在的位置
+     */
+    public static double rateBetween(double a, double b, double rate) {
+        return a + (b - a) * rate;
+    }
 }

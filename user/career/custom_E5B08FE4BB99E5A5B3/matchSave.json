@@ -6,44 +6,40 @@
       "handFeelEffort": 1,
       "person": "custom_E5B08FE4BB99E5A5B3",
       "playerType": "PLAYER",
-      "playCue": "GirlPoolCue",
-      "breakCue": "stdBreakCue"
+      "playCue": "GirlCue",
+      "breakCue": "GirlCue"
     },
-    "p1Wins": 2,
+    "p1Wins": 0,
     "p2": {
       "playerNumber": 2,
-      "handFeelEffort": 0.8833135446291918,
-      "person": "custom_player_160",
+      "handFeelEffort": 1.0250476973763816,
+      "person": "Ding Junhui",
       "playerType": "COMPUTER",
-      "playCue": "stdPottsCue",
-      "breakCue": "stdBreakCue"
+      "playCue": "stdSnookerCue",
+      "breakCue": "stdSnookerCue"
     },
     "p2BreakLoseChance": 0,
     "gameValues": {
-      "ball": "POOL_BALL",
-      "gameRule": "CHINESE_EIGHT",
+      "ball": "SNOOKER_BALL",
+      "gameRule": "SNOOKER",
       "table": {
-        "tableOrdinal": 1,
+        "tableOrdinal": 0,
         "pocketDifficultyOrdinal": 2,
-        "holeSizeOrdinal": 2
+        "holeSizeOrdinal": 1
       }
     },
-    "winRecords": {
-      "1": 1,
-      "2": 1,
-      "3": 2
-    },
+    "winRecords": {"1": 2},
     "p2Wins": 1,
-    "startTime": 1685279435603,
+    "startTime": 1685348609242,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_E5B08FE4BB99E5A5B3+2025+eight_weilin_open-ROUND_2-80",
-    "totalFrames": 5,
+    "matchId": "custom_E5B08FE4BB99E5A5B3+2026+masters-ROUND_1-6",
+    "totalFrames": 3,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
     "p1Breaks": true
   },
-  "p2": "custom_player_160",
-  "stage": "ROUND_2"
+  "p2": "Ding Junhui",
+  "stage": "ROUND_1"
 }

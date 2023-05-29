@@ -9,7 +9,7 @@ public class Movement {
     private final Map<Ball, List<MovementFrame>> movementMap = new HashMap<>();  // 必须是hashmap，详见ball.compareTo()
 //    private final Map<Ball, Deque<MovementFrame>> immutableMap = new HashMap<>();
     private final Map<Ball, MovementFrame> startingPositions = new HashMap<>();
-    private double iterationIndex = 0;
+//    private double iterationIndex = 0;
     private final Ball anyBall;
 
     public Movement(Ball[] allBalls) {
@@ -29,23 +29,31 @@ public class Movement {
         }
     }
     
-    public boolean hasNext() {
-        return iterationIndex < movementMap.get(anyBall).size();
+//    public boolean hasNext() {
+//        return iterationIndex < movementMap.get(anyBall).size();
+//    }
+//    
+//    public int incrementIndex() {
+//        return (int) iterationIndex++;
+//    }
+//    
+//    public int incrementIndex(double nFrames) {
+//        int cur = (int) iterationIndex;
+//        iterationIndex = Math.min(iterationIndex + nFrames, movementMap.get(anyBall).size());
+//        return cur;
+//    }
+    
+    public boolean isInRange(int index) {
+        return index < movementMap.get(anyBall).size();
     }
     
-    public int incrementIndex() {
-        return (int) iterationIndex++;
+    public int getNFrames() {
+        return movementMap.get(anyBall).size();
     }
     
-    public int incrementIndex(double nFrames) {
-        int cur = (int) iterationIndex;
-        iterationIndex = Math.min(iterationIndex + nFrames, movementMap.get(anyBall).size());
-        return cur;
-    }
-    
-    public void reset() {
-        iterationIndex = 0;
-    }
+//    public void reset() {
+//        iterationIndex = 0;
+//    }
     
     public void addFrame(Ball ball, MovementFrame frame) {
         movementMap.get(ball).add(frame);

@@ -1,51 +1,48 @@
 package trashsoftware.trashSnooker.fxml.drawing;
 
 import javafx.application.Platform;
-import trashsoftware.trashSnooker.fxml.GameView;
 
 public class AnimationFrame {
-    
-    Runnable frame;
+
     final double frameTimeMs;
+    final Runnable frame;
     boolean frameAlive;
     long lastFrameTime;
     long thisFrameTime;
     long beginTime;
-    
+
     long cumulatedFrameCount;
     long lastSecondFrameCount;
-    
-    long lastUpdateTime;
+
     long fps;
-    
-    double curAvgFrameTimeMs = GameView.frameTimeMs;  // 不重要
-    int skippedFrames;
-    
+
+    private long animationBeginTime;
+
     public AnimationFrame(Runnable frame, double frameTimeMs) {
         this.frame = frame;
         this.frameTimeMs = frameTimeMs;
         beginTime = System.currentTimeMillis();
         lastFrameTime = beginTime;
     }
-    
+
+    public void beginNewAnimation() {
+        animationBeginTime = System.currentTimeMillis();
+    }
+
+    public long msSinceAnimationBegun() {
+        return System.currentTimeMillis() - animationBeginTime;
+    }
+
     public void run() {
         long t = System.currentTimeMillis();
-        
-        if (Math.floor(t / frameTimeMs) != Math.floor(lastUpdateTime / frameTimeMs)) {
-            if (frameAlive) {
-                skippedFrames++;
-            } else {
-                lastUpdateTime = t;
-                frameAlive = true;
-                thisFrameTime = System.currentTimeMillis();
-                if (thisFrameTime / 1000 != lastFrameTime / 1000) {
 
-                    lastFrameTime = thisFrameTime;
+        if (Math.floor(t / frameTimeMs) != Math.floor(lastFrameTime / frameTimeMs)) {
+            if (!frameAlive) {
+                frameAlive = true;
+                thisFrameTime = t;
+                if (thisFrameTime / 1000 != lastFrameTime / 1000) {
                     fps = cumulatedFrameCount - lastSecondFrameCount;
                     lastSecondFrameCount = cumulatedFrameCount;
-
-                    curAvgFrameTimeMs = 1000.0 / fps;
-//                System.out.println("Avg frame rate: " + fps);
                 }
 
                 cumulatedFrameCount++;
@@ -53,22 +50,18 @@ public class AnimationFrame {
                 Platform.runLater(() -> {
                     frame.run();
                     frameAlive = false;
-                    skippedFrames = 0;
+
+                    lastFrameTime = t;
                 });
             }
         }
     }
-    
+
     public double lastAnimationFrameMs() {
-        return curAvgFrameTimeMs;
-//        return frameTimeMs;
-    }
-    
-    public int getCurrentFps() {
-        return (int) fps;
+        return thisFrameTime - lastFrameTime;
     }
 
-    public int getSkippedFrames() {
-        return skippedFrames;
+    public int getCurrentFps() {
+        return (int) fps;
     }
 }

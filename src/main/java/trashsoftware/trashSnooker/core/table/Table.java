@@ -99,15 +99,16 @@ public abstract class Table {
                               double frameDegChange) {
         ball.model.setX(container, absoluteX);
         ball.model.setY(container, absoluteY);
-        ball.model.rotateBy(
-                xAxis,
-                yAxis,
-                zAxis,
-                frameDegChange
-        );
-//        ball.model.rx.setAngle(Math.toDegrees(xAngle) / 10);
-//        ball.model.ry.setAngle(Math.toDegrees(yAngle) / 10);
-//        ball.model.rz.setAngle(Math.toDegrees(zAngle) / 10);
+        if (frameDegChange != 0) {
+            // 不转的球就别来浪费计算资源了
+            // 旋转矩阵挺贵的
+            ball.model.rotateBy(
+                    xAxis,
+                    yAxis,
+                    zAxis,
+                    frameDegChange
+            );
+        }
     }
 
     public void forceDrawBallInHand(GamePane container, 
