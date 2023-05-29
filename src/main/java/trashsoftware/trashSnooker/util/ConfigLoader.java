@@ -97,7 +97,7 @@ public class ConfigLoader {
     }
     
     public int getFrameRate() {
-        return getInt("frameRate", 50);
+        return getInt("frameRate", 60);
     }
 
     /**
