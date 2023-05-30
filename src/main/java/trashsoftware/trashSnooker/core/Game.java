@@ -1370,6 +1370,51 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 ball.prepareMove(phy);
             }
 
+            boolean anyBallHit;
+            int t = 0;
+            
+            class Tup {
+                final B b1;
+                final B b2;
+                Tup(B b1, B b2) {
+                    this.b1 = b1;
+                    this.b2 = b2;
+                }
+
+                @Override
+                public boolean equals(Object o) {
+                    if (this == o) return true;
+                    if (o == null || getClass() != o.getClass()) return false;
+                    Tup tup = (Tup) o;
+                    return b1 == tup.b1 && b2 == tup.b2;
+                }
+
+                @Override
+                public int hashCode() {
+                    return Objects.hash(b1, b2);
+                }
+            }
+            
+//            HashSet<Tup> collided = 
+            
+            do {
+                t++;
+                anyBallHit = false;
+                for (B ball : randomOrderBallPool1) {
+                    if (ball.isPotted()) continue;
+                    for (B other : randomOrderBallPool2) {
+                        if (ball != other) {
+                            if (ball.willCollide(other)) {
+                                ball.twoMovingBallsHitCore(other, phy, true);
+                                anyBallHit = true;
+                            }
+                        }
+                    }
+                }
+            } while (anyBallHit);
+            if (t > 1)
+            System.out.println("Check collision " + t);
+
             for (int i = 0; i < allBalls.length; i++) {
                 B ball = allBalls[i];
                 if (ball.isPotted()) continue;
@@ -1410,17 +1455,30 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         continue;
                     }
+                    
+                    ball.normalMove(phy);
 
-                    int threeHit = tryHitThreeBalls(ball);
-                    if (threeHit == 0 || threeHit == 2) {
-                        if (tryHitBall(ball, threeHit == 0)) {
-                            if (ball.checkEnterBreakArea(getTable().breakLineX())) {
-                                // 一定在normal move之前
-                                recordCrossLine(ball);
-                            }
-                            ball.normalMove(phy);
-                        }
-                    }
+//                    tryHitManyBalls(ball);
+//                    if (ball.processOneCollision(phy)) {
+//
+//                    } else {
+//                        if (ball.checkEnterBreakArea(getTable().breakLineX())) {
+//                            // 一定在normal move之前
+//                            recordCrossLine(ball);
+//                        }
+//                        ball.normalMove(phy);
+//                    }
+
+//                    int threeHit = tryHitThreeBalls(ball);
+//                    if (threeHit == 0 || threeHit == 2) {
+//                        if (tryHitBall(ball, threeHit == 0)) {
+//                            if (ball.checkEnterBreakArea(getTable().breakLineX())) {
+//                                // 一定在normal move之前
+//                                recordCrossLine(ball);
+//                            }
+//                            ball.normalMove(phy);
+//                        }
+//                    }
 //                    ball.normalMove();
 //                    if (noHit) ball.normalMove();
                 } else {
@@ -1458,6 +1516,17 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //                endMove();
 //            }
 //            System.out.print((System.nanoTime() - st) + " ");
+        }
+
+        private void tryHitManyBalls(B ball) {
+            for (B other : randomOrderBallPool1) {
+                if (ball != other) {
+                    if (ball.willCollide(other)) {
+                        if (ball.isWhite()) whiteCollide(other);  // 记录白球撞到的球
+                        ball.addToCollisionQueue(other);
+                    }
+                }
+            }
         }
 
         private int tryHitThreeBalls(B ball) {

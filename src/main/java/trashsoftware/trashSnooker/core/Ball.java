@@ -6,7 +6,9 @@ import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.drawing.BallModel;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Queue;
 import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cloneable {
@@ -31,6 +33,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private Ball justHit;
     
     private double lastCollisionX, lastCollisionY;  // 记录一下上次碰撞所在的位置
+    
+    private ArrayDeque<Ball> collisionQueue = new ArrayDeque<>();
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ball.ballRadius);
@@ -442,6 +446,27 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         }
         return false;
     }
+    
+    boolean willCollide(Ball ball) {
+        if (justHit == ball || ball.justHit == this) return false;
+        return predictedDtTo(ball) < values.ball.ballDiameter 
+                && currentDtTo(ball) >= values.ball.ballDiameter;
+    }
+    
+    void addToCollisionQueue(Ball ball) {
+        collisionQueue.addLast(ball);
+    }
+    
+    boolean processOneCollision(Phy phy) {
+        if (collisionQueue.isEmpty()) return false;
+        
+        Ball target = collisionQueue.removeFirst();
+        if (willCollide(target)) {
+            twoMovingBallsHitCore(target, phy, true);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * 返回:
@@ -517,6 +542,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         // 离岸位置发生改变，又懒得重新算了
         clearBounceDesiredLeavePos();
         ball.clearBounceDesiredLeavePos();
+        
+        this.justHit = ball;
+        ball.justHit = this;
 
         // 提高精确度
         double x1 = x;
@@ -539,10 +567,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             y2 += dy2;
         }
         
-        this.x = x1;
-        this.y = y1;
-        ball.x = x2;
-        ball.y = y2;
+//        this.x = x1;
+//        this.y = y1;
+//        ball.x = x2;
+//        ball.y = y2;
         
         this.lastCollisionX = x1;
         this.lastCollisionY = y1;
