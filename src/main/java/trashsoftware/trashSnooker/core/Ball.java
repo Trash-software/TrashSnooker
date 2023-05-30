@@ -539,6 +539,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             y2 += dy2;
         }
         
+        this.x = x1;
+        this.y = y1;
+        ball.x = x2;
+        ball.y = y2;
+        
         this.lastCollisionX = x1;
         this.lastCollisionY = y1;
         ball.lastCollisionX = x2;
@@ -596,10 +601,14 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double[] ballOut = Algebra.antiProjection(tangentVec,
                 new double[]{ballOutHor, ballOutVer});
 
-        this.vx = thisOut[0] * values.ball.ballBounceRatio;
-        this.vy = thisOut[1] * values.ball.ballBounceRatio;
-        ball.vx = ballOut[0] * values.ball.ballBounceRatio;
-        ball.vy = ballOut[1] * values.ball.ballBounceRatio;
+//        this.vx = thisOut[0] * values.ball.ballBounceRatio;
+//        this.vy = thisOut[1] * values.ball.ballBounceRatio;
+//        ball.vx = ballOut[0] * values.ball.ballBounceRatio;
+//        ball.vy = ballOut[1] * values.ball.ballBounceRatio;
+        this.vx = thisOut[0];
+        this.vy = thisOut[1];
+        ball.vx = ballOut[0];
+        ball.vy = ballOut[1];
 
         // 齿轮效应的旋转传递
         double thisOutSpeed = Math.hypot(this.vx, this.vy);
@@ -638,6 +647,14 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         nextY = y1 + vy;
         ball.nextX = x2 + ball.vx;
         ball.nextY = y2 + ball.vy;
+        
+        if (Algebra.distanceToPoint(nextX, nextY, ball.nextX, ball.nextY) < values.ball.ballDiameter) {
+            System.err.printf("Ball %d@%f,%f->%f,%f and ball %d@%f,%f->%f,%f not collide properly\n",
+                    getValue(), x, y, nextX, nextY, ball.getValue(), ball.x, ball.y, ball.nextX, ball.nextY);
+            System.err.printf("Last dt: %f, new dt: %f\n",
+                    Algebra.distanceToPoint(x, y, ball.x, ball.y),
+                    Algebra.distanceToPoint(nextX, nextY, ball.nextX, ball.nextY));
+        }
     }
 
     boolean tryHitBall(Ball ball, boolean checkMovingBall, boolean applyGearSpin, Phy phy) {

@@ -1,6 +1,6 @@
 {
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
@@ -9,7 +9,7 @@
     "playCue": "stdSnookerCue",
     "breakCue": "stdBreakCue"
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
@@ -18,16 +18,16 @@
     "playCue": "stdSnookerCue",
     "breakCue": "stdBreakCue"
   },
-  "startTime": 1685381640838,
+  "startTime": 1685456465218,
   "p2BreakLoseChance": 0,
-  "p1BreakLoseChance": 0,
+  "p1BreakLoseChance": 1,
   "gameValues": {
     "ball": "POOL_BALL",
-    "gameRule": "SIDE_POCKET",
+    "gameRule": "CHINESE_EIGHT",
     "table": {
-      "tableOrdinal": 2,
-      "pocketDifficultyOrdinal": 0,
-      "holeSizeOrdinal": 1
+      "tableOrdinal": 1,
+      "pocketDifficultyOrdinal": 2,
+      "holeSizeOrdinal": 2
     }
   },
   "totalFrames": 1,
