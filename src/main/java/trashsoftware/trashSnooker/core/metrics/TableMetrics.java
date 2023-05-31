@@ -10,9 +10,23 @@ public class TableMetrics {
 
     public static final String SNOOKER = "SNOOKER";
     public static final String CHINESE_EIGHT = "CHINESE_EIGHT";
+    public static final String POOL_TABLE_10 = "POOL_TABLE_10";
     public static final String SIDE_POCKET = "SIDE_POCKET";
+    public static final String POOL_TABLE_8 = "POOL_TABLE_8";
+    public static final String POOL_TABLE_7 = "POOL_TABLE_7";
+    public static final String POOL_TABLE_6 = "POOL_TABLE_6";
 
-    private static final String[] NAMES = {SNOOKER, CHINESE_EIGHT, SIDE_POCKET};
+    public static final Color GREEN_TABLE_POCKET_LEATHER = Color.valueOf("#BB9977");
+
+    private static final String[] NAMES = {
+            SNOOKER, 
+            CHINESE_EIGHT,
+            POOL_TABLE_10, 
+            SIDE_POCKET,
+            POOL_TABLE_8,
+            POOL_TABLE_7,
+            POOL_TABLE_6
+    };
     public final String tableName;
     public final TableBuilderFactory factory;
 //    private HoleSize holeSize;
@@ -38,23 +52,17 @@ public class TableMetrics {
 
     // 角袋入口处的宽度，因为袋的边可能有角度
     public double cornerHoleDiameter, cornerHoleRadius;
-    private double midPocketMouthWidth;  // 中袋口的宽度
     public double midHoleDiameter, midHoleRadius;
     public double cornerPocketGravityRadius;  // 袋口处的坡宽度。球进入这个区域后会开始有往袋里掉的意思
     public double midPocketGravityRadius;
-
     public double midArcRadius;
-
     public double cornerHoleDt, cornerHoleTan,  // 也是库边包布部分的宽度
             cornerArcHeight, cornerArcWidth, cornerArcRadius, cornerArcDiameter,
             cornerLineLonger, cornerLineShorter,  // 底袋角直线的占地长宽
             midLineWidth, midLineHeight;  // 中袋角直线占地长宽
-
     public double cornetHoleGraphicalDt;
-
     public double cornerHoleDrift;  // 对于有角度的袋，这个值是袋角伸进洞里多远
     public double arcBounceAngleRate;  // 袋角弧线的反射角系数，[0-1]之间，越接近1，越平坦
-
     public double[] topLeftHoleXY;
     public double[] botLeftHoleXY;
     public double[] topRightHoleXY;
@@ -63,66 +71,52 @@ public class TableMetrics {
     public double[] botMidHoleXY;
     public double[] topMidHoleGraXY;
     public double[] botMidHoleGraXY;
-
     public double[] topLeftHoleGraXY;
     public double[] botLeftHoleGraXY;
     public double[] topRightHoleGraXY;
     public double[] botRightHoleGraXY;
-
     public double[][] allHoles;
-
     public double leftCornerHoleAreaRightX;  // 左顶袋右袋角
     public double midHoleAreaLeftX;  // 中袋左袋角
     public double midHoleAreaRightX;  // 中袋右袋角
     public double rightCornerHoleAreaLeftX;  // 右顶袋左袋角
     public double topCornerHoleAreaDownY;  // 上底袋下袋角
     public double botCornerHoleAreaUpY;  // 下底袋上袋角
-
     public double midHoleLineLeftX, midHoleLineRightX;  // 中袋袋角直线左右极限（仅直袋口）
     public double topMidLineBotY, botMidLineTopY;  // 上中袋袋角直线最下端/下中袋袋角直线最上端
-
     // 中袋袋角弧线
     public double[] topMidHoleLeftArcXy;
     public double[] topMidHoleRightArcXy;
     public double[] botMidHoleLeftArcXy;
     public double[] botMidHoleRightArcXy;
-
     // 中袋袋角直线
     public double[][] topMidHoleLeftLine;
     public double[][] topMidHoleRightLine;
     public double[][] botMidHoleLeftLine;
     public double[][] botMidHoleRightLine;
-
     // 底袋袋角弧线
     public double[] topLeftHoleSideArcXy;  // 左上底袋边库袋角
     public double[] topLeftHoleEndArcXy;  // 左上底袋底库袋角
     public double[] botLeftHoleSideArcXy;
     public double[] botLeftHoleEndArcXy;
-
     public double[] topRightHoleSideArcXy;
     public double[] topRightHoleEndArcXy;
     public double[] botRightHoleSideArcXy;
     public double[] botRightHoleEndArcXy;
-
     // 底袋袋角直线
     public double[][] topLeftHoleSideLine;
     public double[][] topLeftHoleEndLine;
     public double[][] botLeftHoleSideLine;
     public double[][] botLeftHoleEndLine;
-
     public double[][] topRightHoleSideLine;
     public double[][] topRightHoleEndLine;
     public double[][] botRightHoleSideLine;
     public double[][] botRightHoleEndLine;
-
     public double[][] allCornerArcs;
     public double[][] allMidArcs;
-
     public double[][][] allCornerLines;
     public double[][][] allMidHoleLines;
-    
     public List<double[]> tableStars;  // 颗星
-    
     //    public double ballHoleRatio;
 //    public double cornerHoleAngleRatio;  // 打底袋最差的角度和最好的角度差多少
 //    public double midHoleBestAngleWidth;  // 中袋对正的容错空间
@@ -133,6 +127,7 @@ public class TableMetrics {
     public double wallSpinEffectRatio;
     public double cushionPowerSpinFactor;  // 比如在美式桌上，大力翻袋反射角会很奇怪
     public double cornerHoleOpenAngle, midHoleOpenAngle;
+    private double midPocketMouthWidth;  // 中袋口的宽度
 
     private TableMetrics(TableBuilderFactory factory, String tableName) {
         this.tableName = tableName;
@@ -170,10 +165,10 @@ public class TableMetrics {
         }
         throw new RuntimeException("No matching holes");
     }
-    
+
     private List<double[]> createStars() {
         List<double[]> stars = new ArrayList<>();
-        
+
         if (!tableName.equals(SIDE_POCKET)) return stars;
 
         double dt = topY / 3 * 2;
@@ -188,7 +183,7 @@ public class TableMetrics {
                 }
             }
         }
-        
+
         // 短边颗星
         double[] xs = {leftX - dt, rightX + dt};
         double yStarGap = innerHeight / 4.0;
@@ -228,9 +223,9 @@ public class TableMetrics {
         botRightHoleGraXY = new double[]
                 {rightX + cornetHoleGraphicalDt, botY + cornetHoleGraphicalDt};
         topMidHoleGraXY = new double[]
-                {midX, topY - (cornerHoleTan + midHoleRadius) / 2};
+                {midX, topY - (cushionClothWidth + midHoleRadius) / 2};
         botMidHoleGraXY = new double[]
-                {midX, botY + (cornerHoleTan + midHoleRadius) / 2};
+                {midX, botY + (cushionClothWidth + midHoleRadius) / 2};
 
         leftClothX = leftX - cornerHoleTan;
         rightClothX = rightX + cornerHoleTan;
@@ -250,7 +245,7 @@ public class TableMetrics {
         rightCornerHoleAreaLeftX = rightX - cornerArcWidth - cornerLineLonger + cornerHoleDrift;  // 右顶袋左袋角
         topCornerHoleAreaDownY = topY + cornerArcWidth + cornerLineLonger - cornerHoleDrift;  // 上底袋下袋角
         botCornerHoleAreaUpY = botY - cornerArcWidth - cornerLineLonger + cornerHoleDrift;  // 下底袋上袋角
-        
+
         midHoleAreaLeftX = midX - midHoleRadius - midLineWidth - midArcRadius;
         midHoleAreaRightX = midX + midHoleRadius + midLineWidth + midArcRadius;
 
@@ -288,7 +283,7 @@ public class TableMetrics {
         midHoleLineRightX = midX + midHoleRadius + midLineWidth;
         topMidLineBotY = topMidHoleXY[1] + midLineHeight;
         botMidLineTopY = botMidHoleXY[1] - midLineHeight;
-        
+
         topMidHoleLeftLine =
                 new double[][]{{midX - midHoleRadius, topMidHoleXY[1]},
                         {midHoleLineLeftX, topMidLineBotY}};
@@ -363,7 +358,7 @@ public class TableMetrics {
                 botMidHoleLeftLine,
                 botMidHoleRightLine
         };
-        
+
         tableStars = createStars();
     }
 
@@ -392,16 +387,16 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.SNOOKER)
-                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, Color.TAN, 10.0)
+                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 10.0)
                         .tableDimension(3568.7,  // 140.5"
                                 1788.0,
                                 124,
                                 47.625,
                                 33.34)
 //                        .supportedHoles(SNOOKER_HOLES)
-                        .resistanceAndCushionBounce(1.0, 
-                                0.92, 
-                                0.85, 
+                        .resistanceAndCushionBounce(1.0,
+                                0.92,
+                                0.85,
                                 0.8,
                                 0.25);
             }
@@ -412,16 +407,16 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.CHINESE_EIGHT)
-                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, Color.TAN, 10.0)
+                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 10.0)
                         .tableDimension(2540.0,  // 100"
                                 1270.0,
                                 140,
-                                47.625,
+                                51.0,
                                 42.0)
 //                        .supportedHoles(CHINESE_EIGHT_HOLES)
-                        .resistanceAndCushionBounce(1.05, 
-                                0.92, 
-                                0.8, 
+                        .resistanceAndCushionBounce(1.05,
+                                0.92,
+                                0.8,
                                 0.8,
                                 0.3);
             }
@@ -431,7 +426,7 @@ public class TableMetrics {
                 PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
-                return new Builder(this, TableMetrics.SIDE_POCKET)
+                return new Builder(this, TableMetrics.POOL_TABLE_10)
                         .tableColorHard(Color.STEELBLUE, Color.BLACK.brighter().brighter(), Color.SLATEGREY)
                         .tableDimension(2844.8,  // 112"
                                 1422.4,
@@ -459,9 +454,9 @@ public class TableMetrics {
                                 51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.0, 
-                                0.85, 
-                                1.15, 
+                        .resistanceAndCushionBounce(1.0,
+                                0.85,
+                                1.15,
                                 0.9,
                                 0.8);
             }
@@ -471,7 +466,7 @@ public class TableMetrics {
                 PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
-                return new Builder(this, TableMetrics.SIDE_POCKET)
+                return new Builder(this, TableMetrics.POOL_TABLE_8)
                         .tableColorHard(Color.STEELBLUE, Color.BLACK.brighter().brighter(), Color.SLATEGREY)
                         .tableDimension(2235.2,  // 88"
                                 1117.6,
@@ -491,7 +486,7 @@ public class TableMetrics {
                 PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
-                return new Builder(this, TableMetrics.SIDE_POCKET)
+                return new Builder(this, TableMetrics.POOL_TABLE_7)
                         .tableColorHard(Color.STEELBLUE,
                                 Color.BLACK.brighter().brighter(),
                                 Color.SLATEGREY,
@@ -514,10 +509,10 @@ public class TableMetrics {
                 PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
-                return new Builder(this, TableMetrics.SIDE_POCKET)
-                        .tableColorHard(Color.STEELBLUE, 
-                                Color.BLACK.brighter().brighter(), 
-                                Color.SLATEGREY, 
+                return new Builder(this, TableMetrics.POOL_TABLE_6)
+                        .tableColorHard(Color.STEELBLUE,
+                                Color.BLACK.brighter().brighter(),
+                                Color.SLATEGREY,
                                 Color.BLACK.brighter().brighter())
                         .tableDimension(1828.8,  // 72"
                                 914.4,
@@ -575,6 +570,30 @@ public class TableMetrics {
             this.values = new TableMetrics(factory, tableName);
         }
 
+        private static double findMidPocketThroatWidth(double mouthWidth,
+                                                       double arcRadius,
+                                                       double lineAngle,
+                                                       double lineExtraHeight,
+                                                       double lineExtraWidth) {
+            // 通过二分搜索凑出合适的洞底直径
+            double radiusLow = 0;
+            double radiusHigh = mouthWidth / 2;
+            double tan = Math.tan(Math.toRadians(lineAngle));
+            while (radiusHigh - radiusLow > 0.1) {
+                double radiusAvg = (radiusHigh + radiusLow) / 2;
+                double calculatedLineHeight = radiusAvg - arcRadius + lineExtraHeight;
+                double calculatedLineWidth = calculatedLineHeight * tan + lineExtraWidth;
+                double calculatedMouthWidth = radiusAvg * 2 + calculatedLineWidth * 2;
+                if (calculatedMouthWidth > mouthWidth) {
+                    radiusHigh = radiusAvg;
+                } else {
+                    radiusLow = radiusAvg;
+                }
+
+            }
+            return radiusHigh + radiusLow;
+        }
+
         Builder tableColorHard(Color color, Color borderColor, Color pocketBaseColor) {
             return tableColorHard(color, borderColor, pocketBaseColor, pocketBaseColor);
         }
@@ -590,10 +609,10 @@ public class TableMetrics {
             return this;
         }
 
-        Builder tableColorLeather(Color color, 
-                                     Color borderColor, 
-                                     Color pocketBaseColor,
-                                     double pocketBaseInside) {
+        Builder tableColorLeather(Color color,
+                                  Color borderColor,
+                                  Color pocketBaseColor,
+                                  double pocketBaseInside) {
             values.tableColor = color;
             values.gravityAreaColor = color.deriveColor(0, 1, 0.9, 1);
             values.tableBorderColor = borderColor;
@@ -611,7 +630,7 @@ public class TableMetrics {
                                double cushionHeight) {
             double outerWidth = innerWidth + borderWidth * 2;
             double outerHeight = innerHeight + borderWidth * 2;
-            
+
             values.outerWidth = outerWidth;
             values.innerWidth = innerWidth;
             values.outerHeight = outerHeight;
@@ -655,7 +674,7 @@ public class TableMetrics {
             this.cornerPocketOut = cornerPocketOut;
 
 //            if (!values.straightHole) {
-                this.midHoleArcSizeMul = midPocketArcSize;
+            this.midHoleArcSizeMul = midPocketArcSize;
 //            }
             return this;
         }
@@ -698,15 +717,15 @@ public class TableMetrics {
             values.cornerHoleDrift = (values.cornerLineLonger - values.cornerLineShorter) * (1 - cornerPocketOut);
             // values.cornerHoleDrift = longer - shorter;
         }
-        
+
         private void setupMidHole(double midHoleMouthWidth) {
             values.midPocketMouthWidth = midHoleMouthWidth;
             values.midArcRadius = midHoleMouthWidth / 2 * midHoleArcSizeMul;
-            
+
             double midArcCos = Math.cos(Math.toRadians(values.midHoleOpenAngle)) * values.midArcRadius;
             double midArcSin = Math.sin(Math.toRadians(values.midHoleOpenAngle)) * values.midArcRadius;
             double midLineExtraWidth = values.midArcRadius - midArcCos;  // 如果中袋为0度，这个也是0
-            
+
             if (values.midHoleOpenAngle == 0.0) {
                 values.midHoleDiameter = midHoleMouthWidth;
             } else {
@@ -716,36 +735,12 @@ public class TableMetrics {
                 System.out.println("Solved mid dia: " + values.midHoleDiameter);
             }
             values.midHoleRadius = values.midHoleDiameter / 2;
-            
+
             values.midLineHeight = values.midHoleRadius - values.midArcRadius + midArcSin;
             double midLineTan = Math.tan(Math.toRadians(values.midHoleOpenAngle));
             values.midLineWidth = values.midLineHeight * midLineTan + midLineExtraWidth;
         }
-        
-        private static double findMidPocketThroatWidth(double mouthWidth,
-                                                       double arcRadius,
-                                                       double lineAngle,
-                                                       double lineExtraHeight,
-                                                       double lineExtraWidth) {
-            // 通过二分搜索凑出合适的洞底直径
-            double radiusLow = 0;
-            double radiusHigh = mouthWidth / 2;
-            double tan = Math.tan(Math.toRadians(lineAngle));
-            while (radiusHigh - radiusLow > 0.1) {
-                double radiusAvg = (radiusHigh + radiusLow) / 2;
-                double calculatedLineHeight = radiusAvg - arcRadius + lineExtraHeight;
-                double calculatedLineWidth = calculatedLineHeight * tan + lineExtraWidth;
-                double calculatedMouthWidth = radiusAvg * 2 + calculatedLineWidth * 2;
-                if (calculatedMouthWidth > mouthWidth) {
-                    radiusHigh = radiusAvg;
-                } else {
-                    radiusLow = radiusAvg;
-                }
 
-            }
-            return radiusHigh + radiusLow;
-        }
-        
         public Builder holeSize(PocketSize pocketSize) {
             if (cornerHoleArcSizeMul == 0) {
                 throw new RuntimeException("Method 'pocketDifficulty' must be called prior to this method");

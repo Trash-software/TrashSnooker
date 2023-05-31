@@ -1,6 +1,5 @@
 package trashsoftware.trashSnooker.fxml.drawing;
 
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -22,7 +21,7 @@ public class CueModel extends Group {
     private final Rotate baseRotate = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
     private final Scale scalar = new Scale();
     private final Scale cueAngleScale = new Scale(1.0, 1.0);
-    
+
     public Polygon tip;
     public Polygon tipRing;
     public Polygon front;
@@ -94,7 +93,7 @@ public class CueModel extends Group {
                 arc.setFill(cue.frontColor);
                 getChildren().add(arc);
             }
-            
+
             // 握把向前涂色部分
             double[] last = cue.arrow.arrowScales[cue.arrow.arrowScales.length - 1];
             double lastScale = last[1] - last[0];
@@ -172,7 +171,6 @@ public class CueModel extends Group {
 
         double cueAngleCos = Math.cos(Math.toRadians(cueAngleDeg));
         cueAngleScale.setX(cueAngleCos);
-        
 
         setVisible(true);
     }

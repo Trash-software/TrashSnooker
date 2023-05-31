@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -96,7 +97,7 @@ public class GameView implements Initializable {
     private static double uiFrameTimeMs = 10.0;
     //    private double minRealPredictLength = 300.0;
     private static double defaultMaxPredictLength = 1200;
-    private final List<Control> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
+    private final List<Node> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
     @FXML
     GamePane gamePane;
     @FXML
@@ -226,10 +227,12 @@ public class GameView implements Initializable {
     }
 
     private static double[] handPosition(double handDt,
+                                         double cueAngleDeg,
                                          double whiteX, double whiteY,
                                          double trueAimingX, double trueAimingY) {
-        double handX = whiteX - handDt * trueAimingX;
-        double handY = whiteY - handDt * trueAimingY;
+        double cueAngleCos = Math.cos(Math.toRadians(cueAngleDeg));
+        double handX = whiteX - handDt * trueAimingX * cueAngleCos;
+        double handY = whiteY - handDt * trueAimingY * cueAngleCos;
         return new double[]{handX, handY};
     }
 
@@ -265,6 +268,8 @@ public class GameView implements Initializable {
 
         disableWhenCuing.addAll(List.of(
                 cueButton,
+                cuePointCanvas,
+                cueAngleCanvas,
                 handSelectionLeft,
                 handSelectionRight,
                 handSelectionRest
@@ -822,6 +827,9 @@ public class GameView implements Initializable {
     }
 
     private void finishCueNextStep(Player nextCuePlayer) {
+        cuePointCanvas.setDisable(false);
+        cueAngleCanvas.setDisable(false);
+        
         Ball.enableGearOffset();
         aiWhitePath = null;
         miscued = false;
@@ -1556,7 +1564,7 @@ public class GameView implements Initializable {
     }
 
     private void disableUiWhenCuing() {
-        for (Control control : disableWhenCuing) {
+        for (Node control : disableWhenCuing) {
             control.setDisable(true);
         }
     }
@@ -2718,7 +2726,7 @@ public class GameView implements Initializable {
         double errMulWithPower = playerPerson.getErrorMultiplierOfPower(selectedPower);
         double maxPullDt = pullDtOf(playerPerson, personPower);
         double handDt = maxPullDt + HAND_DT_TO_MAX_PULL;
-        double[] handXY = handPosition(handDt, whiteStartingX, whiteStartingY, directionX, directionY);
+        double[] handXY = handPosition(handDt, cueAngleDeg, whiteStartingX, whiteStartingY, directionX, directionY);
 
         Cue cue;
         if (replay != null) {
@@ -2802,7 +2810,9 @@ public class GameView implements Initializable {
             double personPower = getPersonPower(person);  // 球手的用力程度
             double maxPullDt = pullDtOf(person, personPower);
             double handDt = maxPullDt + HAND_DT_TO_MAX_PULL;
+//            System.out.println(handDt);
             double[] handXY = handPosition(handDt,
+                    cueAngleDeg,
                     cueBall.getX(), cueBall.getY(),
                     cursorDirectionUnitX, cursorDirectionUnitY);
 
@@ -2863,6 +2873,9 @@ public class GameView implements Initializable {
         }
     }
 
+    /**
+     * 将杆画在加了塞的位置
+     */
     private double[] getCueHitPoint(double cueBallRealX, double cueBallRealY,
                                     double pointingUnitX, double pointingUnitY) {
         double originalTouchX = gamePane.canvasX(cueBallRealX);
@@ -2891,12 +2904,17 @@ public class GameView implements Initializable {
                                      Cue cue,
                                      boolean isRest) {
 //        System.out.println(distance);
+//        Ball cb = getActiveHolder().getCueBall();
         double[] touchXY = getCueHitPoint(handX, handY, pointingUnitX, pointingUnitY);
 
-        double correctedTipX = touchXY[0] - pointingUnitX * realDistance * gamePane.getScale();
-        double correctedTipY = touchXY[1] - pointingUnitY * realDistance * gamePane.getScale();
+        double cueAngleCos = Math.cos(Math.toRadians(cueAngleDeg));
+        double cosDistance = cueAngleCos * realDistance;
+
+        double correctedTipX = touchXY[0] - pointingUnitX * cosDistance * gamePane.getScale();
+        double correctedTipY = touchXY[1] - pointingUnitY * cosDistance * gamePane.getScale();
 
         Bounds ballPanePos = gamePane.localToScene(gamePane.getBoundsInLocal());
+//        System.out.println(correctedTipX + " " + correctedTipY + " " + realDistance + Arrays.toString(touchXY));
         cue.getCueModel(basePane).show(
                 ballPanePos.getMinX() + correctedTipX,
                 ballPanePos.getMinY() + correctedTipY,
@@ -2939,10 +2957,6 @@ public class GameView implements Initializable {
         setCueButtonForPoint();
 
         createPathPrediction();
-    }
-    
-    private void autoFindAvailableCuePoint() {
-        
     }
 
     private void setCueButtonForPoint() {

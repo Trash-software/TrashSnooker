@@ -1007,7 +1007,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         for (B ball : getAllBalls()) {
             if (!ball.isPotted()) {
                 double dt = Algebra.distanceToPoint(x, y, ball.x, ball.y);
-                if (dt < gameValues.ball.ballDiameter + MIN_GAP_DISTANCE) return true;
+                if (dt <= gameValues.ball.ballDiameter) return true;
             }
         }
         return false;

@@ -187,7 +187,7 @@ public class GamePane extends Pane {
         double cornerVisualRadius = (metrics.topLeftHoleGraXY[0] - metrics.pocketBaseInside) * scale;
         drawCornerBases(metrics, cornerVisualRadius);
 
-        fillTableWithoutPocketArea(metrics, 10.0 * scale);
+        fillTableWithoutPocketArea(metrics, 15.0 * scale);
     }
 
     private void drawHardTable(TableMetrics metrics) {
