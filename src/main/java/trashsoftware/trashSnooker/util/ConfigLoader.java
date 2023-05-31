@@ -130,6 +130,10 @@ public class ConfigLoader {
 
         return new double[]{hardwareWidth, hardwareHeight, zoomFactor};
     }
+    
+    public int getBallMaterialResolution() {
+        return 256;
+    }
 
     public Locale getLocale() {
         if (locale == null) {

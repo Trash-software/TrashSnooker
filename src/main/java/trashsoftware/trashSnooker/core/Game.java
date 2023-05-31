@@ -760,7 +760,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         ball1.setVy(0.05);
 //        ball1.setSpin(-10, -1, 0);
 
-        ball2.setX(2150);
+        ball2.setX(2250);
         ball2.setY(1350);
 
         ball2.setVx(0.4);

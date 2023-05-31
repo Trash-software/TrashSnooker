@@ -20,6 +20,10 @@ public class TableMetrics {
     public Color tableColor;
     public Color gravityAreaColor;
     public Color tableBorderColor;
+    public Color cornerPocketBaseColor;
+    public Color midPocketBaseColor;
+    public double pocketBaseInside;  // 袋口外侧向内凹的幅度
+    public boolean leatherPocket;
 
     public double outerWidth;
     public double outerHeight;
@@ -28,6 +32,7 @@ public class TableMetrics {
     public double leftX, rightX, topY, botY, midX, midY;
     public double leftClothX, rightClothX, topClothY, botClothY;  // 绿色部分的最大
     public double maxLength;  // 对角线长度
+    public double cushionClothWidth;  // 库的视觉宽度
     public double cushionHeight;
     public double speedReduceMultiplier = 1.0;  // 台泥的阻力系数，值越大阻力越大
 
@@ -40,7 +45,8 @@ public class TableMetrics {
 
     public double midArcRadius;
 
-    public double cornerHoleDt, cornerHoleTan, cornerArcHeight, cornerArcWidth, cornerArcRadius, cornerArcDiameter,
+    public double cornerHoleDt, cornerHoleTan,  // 也是库边包布部分的宽度
+            cornerArcHeight, cornerArcWidth, cornerArcRadius, cornerArcDiameter,
             cornerLineLonger, cornerLineShorter,  // 底袋角直线的占地长宽
             midLineWidth, midLineHeight;  // 中袋角直线占地长宽
 
@@ -55,6 +61,8 @@ public class TableMetrics {
     public double[] botRightHoleXY;
     public double[] topMidHoleXY;
     public double[] botMidHoleXY;
+    public double[] topMidHoleGraXY;
+    public double[] botMidHoleGraXY;
 
     public double[] topLeftHoleGraXY;
     public double[] botLeftHoleGraXY;
@@ -123,6 +131,7 @@ public class TableMetrics {
     public double wallBounceRatio;
     public double wallSpinPreserveRatio;
     public double wallSpinEffectRatio;
+    public double cushionPowerSpinFactor;  // 比如在美式桌上，大力翻袋反射角会很奇怪
     public double cornerHoleOpenAngle, midHoleOpenAngle;
 
     private TableMetrics(TableBuilderFactory factory, String tableName) {
@@ -218,6 +227,10 @@ public class TableMetrics {
                 {rightX + cornetHoleGraphicalDt, topY - cornetHoleGraphicalDt};
         botRightHoleGraXY = new double[]
                 {rightX + cornetHoleGraphicalDt, botY + cornetHoleGraphicalDt};
+        topMidHoleGraXY = new double[]
+                {midX, topY - (cornerHoleTan + midHoleRadius) / 2};
+        botMidHoleGraXY = new double[]
+                {midX, botY + (cornerHoleTan + midHoleRadius) / 2};
 
         leftClothX = leftX - cornerHoleTan;
         rightClothX = rightX + cornerHoleTan;
@@ -379,12 +392,18 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.SNOOKER)
-                        .tableColor(Color.GREEN, Color.SADDLEBROWN)
-                        .tableDimension(3820.0, 3568.7,
-                                2035.0, 1788.0,
+                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, Color.TAN, 10.0)
+                        .tableDimension(3568.7,  // 140.5"
+                                1788.0,
+                                124,
+                                47.625,
                                 33.34)
 //                        .supportedHoles(SNOOKER_HOLES)
-                        .resistanceAndCushionBounce(1.0, 0.92, 0.85, 0.8);
+                        .resistanceAndCushionBounce(1.0, 
+                                0.92, 
+                                0.85, 
+                                0.8,
+                                0.25);
             }
         },
         CHINESE_EIGHT("chineseEightTable",
@@ -393,12 +412,38 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.CHINESE_EIGHT)
-                        .tableColor(Color.GREEN, Color.SADDLEBROWN)
-                        .tableDimension(2830.0, 2540.0,
-                                1550.0, 1270.0,
+                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, Color.TAN, 10.0)
+                        .tableDimension(2540.0,  // 100"
+                                1270.0,
+                                140,
+                                47.625,
                                 42.0)
 //                        .supportedHoles(CHINESE_EIGHT_HOLES)
-                        .resistanceAndCushionBounce(1.05, 0.92, 0.8, 0.8);
+                        .resistanceAndCushionBounce(1.05, 
+                                0.92, 
+                                0.8, 
+                                0.8,
+                                0.3);
+            }
+        },
+        POOL_TABLE_10("poolTable10",
+                PocketSize.SIDE_POCKET_HOLES,
+                PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
+            @Override
+            public Builder create() {
+                return new Builder(this, TableMetrics.SIDE_POCKET)
+                        .tableColorHard(Color.STEELBLUE, Color.BLACK.brighter().brighter(), Color.SLATEGREY)
+                        .tableDimension(2844.8,  // 112"
+                                1422.4,
+                                182.5,
+                                51.0,
+                                42.0)
+//                        .supportedHoles(SIDE_POCKET_HOLES)
+                        .resistanceAndCushionBounce(1.0,
+                                0.85,
+                                1.15,
+                                0.9,
+                                0.8);
             }
         },
         SIDE_POCKET("sidePocketTable",
@@ -407,12 +452,84 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.SIDE_POCKET)
-                        .tableColor(Color.STEELBLUE, Color.BLACK)
-                        .tableDimension(2905.0, 2540.0,
-                                1635.0, 1270.0,
+                        .tableColorHard(Color.STEELBLUE, Color.BLACK.brighter().brighter(), Color.SLATEGREY)
+                        .tableDimension(2540.0,
+                                1270.0,
+                                182.5,
+                                51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.0, 0.85, 1.1, 0.9);
+                        .resistanceAndCushionBounce(1.0, 
+                                0.85, 
+                                1.15, 
+                                0.9,
+                                0.8);
+            }
+        },
+        POOL_TABLE_8("poolTable8",
+                PocketSize.SIDE_POCKET_HOLES,
+                PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
+            @Override
+            public Builder create() {
+                return new Builder(this, TableMetrics.SIDE_POCKET)
+                        .tableColorHard(Color.STEELBLUE, Color.BLACK.brighter().brighter(), Color.SLATEGREY)
+                        .tableDimension(2235.2,  // 88"
+                                1117.6,
+                                182.5,
+                                51.0,
+                                42.0)
+//                        .supportedHoles(SIDE_POCKET_HOLES)
+                        .resistanceAndCushionBounce(1.0,
+                                0.85,
+                                1.15,
+                                0.9,
+                                0.8);
+            }
+        },
+        POOL_TABLE_7("poolTable7",
+                PocketSize.SIDE_POCKET_HOLES,
+                PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
+            @Override
+            public Builder create() {
+                return new Builder(this, TableMetrics.SIDE_POCKET)
+                        .tableColorHard(Color.STEELBLUE,
+                                Color.BLACK.brighter().brighter(),
+                                Color.SLATEGREY,
+                                Color.BLACK.brighter().brighter())
+                        .tableDimension(1981.2,  // 78"
+                                990.6,
+                                165.1,
+                                51.0,
+                                42.0)
+//                        .supportedHoles(SIDE_POCKET_HOLES)
+                        .resistanceAndCushionBounce(1.0,
+                                0.85,
+                                1.15,
+                                0.9,
+                                0.8);
+            }
+        },
+        POOL_TABLE_6("poolTable6",
+                PocketSize.SIDE_POCKET_HOLES,
+                PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
+            @Override
+            public Builder create() {
+                return new Builder(this, TableMetrics.SIDE_POCKET)
+                        .tableColorHard(Color.STEELBLUE, 
+                                Color.BLACK.brighter().brighter(), 
+                                Color.SLATEGREY, 
+                                Color.BLACK.brighter().brighter())
+                        .tableDimension(1828.8,  // 72"
+                                914.4,
+                                152.4,
+                                51.0,
+                                42.0)
+//                        .supportedHoles(SIDE_POCKET_HOLES)
+                        .resistanceAndCushionBounce(1.0,
+                                0.85,
+                                1.15,
+                                0.9,
+                                0.8);
             }
         };
 
@@ -458,20 +575,48 @@ public class TableMetrics {
             this.values = new TableMetrics(factory, tableName);
         }
 
-        Builder tableColor(Color color, Color borderColor) {
+        Builder tableColorHard(Color color, Color borderColor, Color pocketBaseColor) {
+            return tableColorHard(color, borderColor, pocketBaseColor, pocketBaseColor);
+        }
+
+        Builder tableColorHard(Color color, Color borderColor, Color cornerPocketBaseColor, Color midPocketColor) {
             values.tableColor = color;
             values.gravityAreaColor = color.deriveColor(0, 1, 0.9, 1);
             values.tableBorderColor = borderColor;
+            values.cornerPocketBaseColor = cornerPocketBaseColor;
+            values.midPocketBaseColor = midPocketColor;
+            values.pocketBaseInside = 0.0;
+            values.leatherPocket = false;
             return this;
         }
 
-        Builder tableDimension(double outerWidth, double innerWidth,
-                               double outerHeight, double innerHeight,
+        Builder tableColorLeather(Color color, 
+                                     Color borderColor, 
+                                     Color pocketBaseColor,
+                                     double pocketBaseInside) {
+            values.tableColor = color;
+            values.gravityAreaColor = color.deriveColor(0, 1, 0.9, 1);
+            values.tableBorderColor = borderColor;
+            values.cornerPocketBaseColor = pocketBaseColor;
+            values.midPocketBaseColor = pocketBaseColor;
+            values.pocketBaseInside = pocketBaseInside;
+            values.leatherPocket = true;
+            return this;
+        }
+
+        Builder tableDimension(double innerWidth,
+                               double innerHeight,
+                               double borderWidth,
+                               double cushionClothWidth,
                                double cushionHeight) {
+            double outerWidth = innerWidth + borderWidth * 2;
+            double outerHeight = innerHeight + borderWidth * 2;
+            
             values.outerWidth = outerWidth;
             values.innerWidth = innerWidth;
             values.outerHeight = outerHeight;
             values.innerHeight = innerHeight;
+            values.cushionClothWidth = cushionClothWidth;
             values.cushionHeight = cushionHeight;
             values.leftX = (outerWidth - innerWidth) / 2;
             values.rightX = innerWidth + values.leftX;
@@ -615,11 +760,13 @@ public class TableMetrics {
         Builder resistanceAndCushionBounce(double tableResistance,
                                            double wallBounce,
                                            double wallSpinEffect,
-                                           double wallSpinPreserve) {
+                                           double wallSpinPreserve,
+                                           double cushionPowerSpin) {
             values.tableResistanceRatio = tableResistance;
             values.wallBounceRatio = wallBounce;
             values.wallSpinEffectRatio = wallSpinEffect;
             values.wallSpinPreserveRatio = wallSpinPreserve;
+            values.cushionPowerSpinFactor = cushionPowerSpin;
             return this;
         }
 

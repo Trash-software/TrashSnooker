@@ -3,18 +3,21 @@ package trashsoftware.trashSnooker.fxml.drawing;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
+import trashsoftware.trashSnooker.util.ConfigLoader;
 
 import java.util.Objects;
 
 public class PoolBallModel extends BallModel {
+    
     protected PoolBallModel(int number) {
         super();
         
-        String fileName = "/trashsoftware/trashSnooker/img/pool/pool" + number + ".png";
+        String fileName = "/trashsoftware/trashSnooker/img/" 
+                + ConfigLoader.getInstance().getBallMaterialResolution() + "/pool/pool" + number + ".png";
         Image img = new Image(Objects.requireNonNull(getClass().getResource(fileName)).toExternalForm());
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(img);
-        material.setSpecularMap(img);
+//        material.setSpecularMap(img);
         
         sphere.setMaterial(material);
     }

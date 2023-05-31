@@ -26,26 +26,24 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class GamePane extends Pane {
-    public static final Color BACKGROUND = Color.SNOW;
     public static final Color LINE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color HOLE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color WHITE_PREDICTION_COLOR = Color.LIGHTGREY;
 
+    final double cornerHoleVisualMul = 1.02;
     private final CurvedPolygonDrawer curvedPolygonDrawer = new CurvedPolygonDrawer(0.667);  // 弯的程度
-    
+    @FXML
+    Canvas gameCanvas;
+    GraphicsContext graphicsContext;
     private double scale;
     private GameValues gameValues;
     private double canvasWidth, canvasHeight;
-    @FXML
-    Canvas gameCanvas;
-    
-    GraphicsContext graphicsContext;
     private ResourceBundle strings;
-    
+
     public GamePane() {
         this(App.getStrings());
     }
-    
+
     public GamePane(ResourceBundle strings) {
         super();
 
@@ -61,7 +59,7 @@ public class GamePane extends Pane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        
+
         graphicsContext = gameCanvas.getGraphicsContext2D();
         graphicsContext.setTextAlign(TextAlignment.CENTER);
         graphicsContext.setFont(App.FONT);
@@ -69,14 +67,14 @@ public class GamePane extends Pane {
 
     public void setupPane(GameValues gameValues, double scaleMul) {
         this.gameValues = gameValues;
-        
+
         generateScales(scaleMul);
     }
 
     public void setupPane(GameValues gameValues) {
         setupPane(gameValues, 1.0);
     }
-    
+
     private void generateScales(double scaleMul) {
         TableMetrics values = gameValues.table;
         double[] screenParams = ConfigLoader.getInstance().getResolution();  // 宽，高，缩放
@@ -89,11 +87,11 @@ public class GamePane extends Pane {
         scale = Math.min(scaleW, scaleH) * scaleMul;
 
         System.out.printf("Scales: w: %.2f, h: %.2f, global: %.2f \n", scaleW, scaleH, getScale());
-        
+
         canvasWidth = values.outerWidth * scale;
         canvasHeight = values.outerHeight * scale;
 //        innerHeight = values.innerHeight * scale;
-        
+
         setupCanvas();
     }
 
@@ -115,7 +113,7 @@ public class GamePane extends Pane {
             ball.model.sphere.setMouseTransparent(true);
         }
     }
-    
+
     public void clear() {
         getChildren().clear();
         getChildren().add(gameCanvas);
@@ -167,23 +165,168 @@ public class GamePane extends Pane {
         setPrefHeight(canvasHeight);
     }
 
+    private void drawLeatherTable(TableMetrics metrics) {
+        double inside = metrics.pocketBaseInside * 0.5 * scale;
+        double midBaseRadius = metrics.topY * scale - inside;
+        graphicsContext.setFill(metrics.midPocketBaseColor);
+        graphicsContext.fillArc(
+                metrics.midX * scale - midBaseRadius,
+                inside,
+                midBaseRadius * 2,
+                midBaseRadius * 2,
+                0, 180, ArcType.CHORD
+        );
+        graphicsContext.fillArc(
+                metrics.midX * scale - midBaseRadius,
+                metrics.outerHeight * scale - inside - midBaseRadius * 2,
+                midBaseRadius * 2,
+                midBaseRadius * 2,
+                180, 180, ArcType.CHORD
+        );
+
+        double cornerVisualRadius = (metrics.topLeftHoleGraXY[0] - metrics.pocketBaseInside) * scale;
+        drawCornerBases(metrics, cornerVisualRadius);
+
+        fillTableWithoutPocketArea(metrics, 10.0 * scale);
+    }
+
+    private void drawHardTable(TableMetrics metrics) {
+        double midPocketNoFill = 30.0 * scale;
+
+        double cornerVisualRadius = metrics.topLeftHoleGraXY[0] * scale;
+        drawCornerBases(metrics, cornerVisualRadius);
+
+        double midBaseLeftX = (metrics.midX - metrics.midHoleRadius) * scale - midPocketNoFill;
+        double midBaseWidth = metrics.midHoleDiameter * scale + midPocketNoFill * 2;
+        double height = (metrics.topY - metrics.cushionClothWidth) * scale;
+        graphicsContext.setFill(metrics.midPocketBaseColor);
+        graphicsContext.fillRect(midBaseLeftX, 0, midBaseWidth, height + 1);  // +1防止那个白边
+        graphicsContext.fillRect(midBaseLeftX, metrics.outerHeight * scale - height - 1, midBaseWidth, height + 1);
+
+        // 袋口保护塑料
+        double plasticProtectorWidth = 9.0;
+        graphicsContext.setFill(Color.BLACK);
+        drawHole(metrics.topMidHoleGraXY, metrics.midHoleRadius + plasticProtectorWidth);
+        drawHole(metrics.botMidHoleGraXY, metrics.midHoleRadius + plasticProtectorWidth);
+
+        double cornerPlasticRadius = metrics.cornerHoleRadius * cornerHoleVisualMul + plasticProtectorWidth;
+        drawHole(metrics.topLeftHoleGraXY, cornerPlasticRadius);
+        drawHole(metrics.botLeftHoleGraXY, cornerPlasticRadius);
+        drawHole(metrics.topRightHoleGraXY, cornerPlasticRadius);
+        drawHole(metrics.botRightHoleGraXY, cornerPlasticRadius);
+        
+        fillTableWithoutPocketArea(metrics, midPocketNoFill);
+    }
+
+    private void drawCornerBases(TableMetrics metrics, double cornerVisualRadius) {
+        graphicsContext.setFill(metrics.cornerPocketBaseColor);
+        drawCornerBase(metrics.topLeftHoleGraXY, cornerVisualRadius, 80, 110);
+        drawCornerBase(metrics.topRightHoleGraXY, cornerVisualRadius, 350, 110);
+        drawCornerBase(metrics.botLeftHoleGraXY, cornerVisualRadius, 170, 110);
+        drawCornerBase(metrics.botRightHoleGraXY, cornerVisualRadius, 260, 110);
+
+        double arcRadius = metrics.topLeftHoleGraXY[0] * scale;
+        double visualIn = metrics.pocketBaseInside * scale;
+        double narrow = (metrics.leftX - metrics.topLeftHoleGraXY[0]) * scale;
+        double wide = (metrics.leftX - metrics.cornerHoleTan) * scale - visualIn;
+
+        double rightRight = metrics.outerWidth * scale;
+        double rightLeft = metrics.rightX * scale;
+
+        // 底袋旁边的两溜
+        // 左上
+        graphicsContext.fillRect(arcRadius,
+                visualIn,
+                narrow,
+                wide);
+        graphicsContext.fillRect(visualIn,
+                arcRadius,
+                wide,
+                narrow);
+
+        // 右上
+        graphicsContext.fillRect(rightLeft,
+                visualIn,
+                narrow,
+                wide);
+        graphicsContext.fillRect(rightRight - wide - visualIn,
+                arcRadius,
+                wide,
+                narrow);
+
+        // 左下
+        graphicsContext.fillRect(arcRadius,
+                metrics.outerHeight * scale - wide - visualIn,
+                narrow,
+                wide);
+        graphicsContext.fillRect(visualIn,
+                metrics.botY * scale,
+                wide,
+                narrow);
+
+        // 右下
+        graphicsContext.fillRect(rightLeft,
+                metrics.outerHeight * scale - wide - visualIn,
+                narrow,
+                wide);
+        graphicsContext.fillRect(rightRight - wide - visualIn,
+                metrics.botY * scale,
+                wide,
+                narrow);
+    }
+
+    private void drawCornerBase(double[] centerPos,
+                                double visualRadius,
+                                double startAngle, double arcExtent) {
+        double drawingDia = visualRadius * 2;
+        double x = centerPos[0] * scale - visualRadius;
+        double y = centerPos[1] * scale - visualRadius;
+        graphicsContext.fillArc(x,
+                y,
+                drawingDia,
+                drawingDia,
+                startAngle,
+                arcExtent,
+                ArcType.ROUND);
+    }
+
+    private void fillTableWithoutPocketArea(TableMetrics metrics, double midPocketNoFill) {
+        double oh = metrics.outerHeight * scale;
+        double topPocketDownY = metrics.topY * scale;
+        double fillHeight = metrics.innerHeight * scale;
+        double leftPocketRightX = metrics.leftX * scale;  // 同时也是边上一溜的宽度
+        double rightPocketLeftX = metrics.rightX * scale;
+        double midPocketLeftX = (metrics.midX - metrics.midHoleRadius) * scale - midPocketNoFill;
+        double midPocketRightX = (metrics.midX + metrics.midHoleRadius) * scale + midPocketNoFill;
+        double fillWidth = midPocketLeftX - leftPocketRightX;
+
+        graphicsContext.setFill(metrics.tableBorderColor);
+        graphicsContext.fillRect(0, topPocketDownY, leftPocketRightX, fillHeight);  // 左边一溜
+        graphicsContext.fillRect(leftPocketRightX, 0, midPocketLeftX - leftPocketRightX, oh);  // 左边中间
+        graphicsContext.fillRect(midPocketRightX, 0, fillWidth, oh);  // 右边中间
+        graphicsContext.fillRect(rightPocketLeftX, topPocketDownY, leftPocketRightX, fillHeight);
+    }
+
     public void drawTable(GameHolder gameHolder) {
         TableMetrics values = gameValues.table;
 
-        graphicsContext.setFill(BACKGROUND);
+        graphicsContext.setFill(GameView.GLOBAL_BACKGROUND);
         graphicsContext.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        double cornerHoleVisualSize = 1.02;
-        double tableCorner = scale * values.cornerHoleDiameter * cornerHoleVisualSize;
-        graphicsContext.setFill(values.tableBorderColor);
-        graphicsContext.fillRoundRect(0, 0, canvasWidth, canvasHeight, tableCorner, tableCorner);
+        double cornerHoleVisualRadius = values.cornerHoleRadius * cornerHoleVisualMul;
+
+        if (values.leatherPocket) {
+            drawLeatherTable(values);
+        } else {
+            drawHardTable(values);
+        }
 
         graphicsContext.setFill(values.tableColor);  // 台泥/台布
         graphicsContext.fillRect(
-                canvasX(values.leftX - values.cornerHoleTan),
-                canvasY(values.topY - values.cornerHoleTan),
-                (values.innerWidth + values.cornerHoleTan * 2) * scale,
-                (values.innerHeight + values.cornerHoleTan * 2) * scale);
+                canvasX(values.leftX - values.cushionClothWidth),
+                canvasY(values.topY - values.cushionClothWidth),
+                (values.innerWidth + values.cushionClothWidth * 2) * scale,
+                (values.innerHeight + values.cushionClothWidth * 2) * scale);
 
 //        // 袋口附近重力区域
 //        graphicsContext.setFill(values.gravityAreaColor);
@@ -242,13 +385,18 @@ public class GamePane extends Pane {
         drawHole(values.topRightHoleXY, values.cornerHoleRadius);
         drawHole(values.botRightHoleXY, values.cornerHoleRadius);
 
+        // 视觉上的中袋
+        drawHole(values.topMidHoleGraXY, values.midHoleRadius);
+        drawHole(values.botMidHoleGraXY, values.midHoleRadius);
+        // 实际中袋
         drawHole(values.topMidHoleXY, values.midHoleRadius);
         drawHole(values.botMidHoleXY, values.midHoleRadius);
 
-        drawHole(values.topLeftHoleGraXY, values.cornerHoleRadius * cornerHoleVisualSize);
-        drawHole(values.botLeftHoleGraXY, values.cornerHoleRadius * cornerHoleVisualSize);
-        drawHole(values.topRightHoleGraXY, values.cornerHoleRadius * cornerHoleVisualSize);
-        drawHole(values.botRightHoleGraXY, values.cornerHoleRadius * cornerHoleVisualSize);
+        // 视觉上的袋底
+        drawHole(values.topLeftHoleGraXY, cornerHoleVisualRadius);
+        drawHole(values.botLeftHoleGraXY, cornerHoleVisualRadius);
+        drawHole(values.topRightHoleGraXY, cornerHoleVisualRadius);
+        drawHole(values.botRightHoleGraXY, cornerHoleVisualRadius);
 
 //        drawHoleOutLine(values.topLeftHoleXY, values.cornerHoleShownRadius + 10, 45.0 - values.cornerHoleOpenAngle);
 //        drawHoleOutLine(values.botLeftHoleXY, values.cornerHoleShownRadius, 135.0);
@@ -373,7 +521,7 @@ public class GamePane extends Pane {
             lastY = canvasY;
         }
     }
-    
+
     public void drawStoppedBalls(Table table,
                                  Ball[] allBalls,
                                  HashMap<Ball, double[]> positionsPot) {

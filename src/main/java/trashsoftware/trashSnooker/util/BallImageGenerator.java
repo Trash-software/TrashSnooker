@@ -20,12 +20,18 @@ import java.io.IOException;
 
 public class BallImageGenerator extends Application {
 
-    private static void makePoolBall(int num) {
+    private static void makePoolBall(int num, int height) {
         Color baseColor = PoolBall.poolBallBaseColor(num);
-        Font font = new Font(104);
-        Canvas canvas = generateBasic(256, baseColor, num > 8, String.valueOf(num), font);
+        Font font = new Font(height / 2.46);
+        Canvas canvas = generateBasic(height, baseColor, num > 8, String.valueOf(num), font);
 
-        File file = new File("images/pool/pool" + num + ".png");
+        File file = new File("images/" + height + "/pool/pool" + num + ".png");
+        File dir = file.getParentFile();
+        if (!dir.exists()) {
+            if (!dir.mkdirs()) {
+                throw new RuntimeException();
+            }
+        }
         WritableImage image = canvas.snapshot(new SnapshotParameters(), null);
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
@@ -147,11 +153,13 @@ public class BallImageGenerator extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         for (int i = 0; i <= 15; i++) {
-            makePoolBall(i);
+            makePoolBall(i, 64);
+            makePoolBall(i ,256);
+            makePoolBall(i ,1024);
         }
-        for (int i = 0; i <= 7; i++) {
-            makeSnookerBall(i);
-        }
+//        for (int i = 0; i <= 7; i++) {
+//            makeSnookerBall(i);
+//        }
 
         primaryStage.show();
     }

@@ -20,6 +20,9 @@ public class Algebra {
         return new double[]{mulX - vx, mulY - vy};
     }
 
+    /**
+     * 返回法向量，在原向量的右手边90度
+     */
     public static double[] normalVector(double x, double y) {
         return new double[]{y, -x};
     }

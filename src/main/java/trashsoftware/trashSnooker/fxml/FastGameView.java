@@ -157,7 +157,9 @@ public class FastGameView extends ChildInitializable {
         );
         ballMetricsBox.getItems().addAll(
                 BallMetrics.SNOOKER_BALL,
-                BallMetrics.POOL_BALL
+                BallMetrics.POOL_BALL,
+                BallMetrics.CAROM_BALL,
+                BallMetrics.RUSSIAN_BALL
         );
 
         gameRuleBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {

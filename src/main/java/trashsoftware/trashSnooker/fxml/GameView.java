@@ -74,8 +74,11 @@ import java.net.URL;
 import java.util.*;
 
 public class GameView implements Initializable {
+    public static final Color GLOBAL_BACKGROUND = Color.WHITESMOKE;  // 似乎正好是javafx默认背景色
+    
     public static final Color WHITE = Color.WHITE;
     public static final Color BLACK = Color.BLACK;
+    public static final Color CUE_AIMING_CROSS = Color.LIGHTGRAY;
     public static final Color CUE_POINT = Color.RED;
     public static final Color INTENT_CUE_POINT = Color.NAVY;
     public static final Color CUE_TIP_COLOR = Color.LIGHTSEAGREEN;
@@ -101,7 +104,7 @@ public class GameView implements Initializable {
     @FXML
     Label cueAngleLabel;
     @FXML
-    Canvas ballCanvas;
+    Canvas cuePointCanvas;
     @FXML
     Slider powerSlider;
     @FXML
@@ -160,7 +163,7 @@ public class GameView implements Initializable {
     private double cueCanvasWH = 80.0;
     private double cueAreaRadius = 36.0;
     private double cueRadius = 4.0;
-    private GraphicsContext ballCanvasGc;
+    private GraphicsContext cuePointCanvasGc;
     private GraphicsContext cueAngleCanvasGc;
     private Pane basePane;  // 杆是画在这个pane上的
     private Stage stage;
@@ -246,9 +249,9 @@ public class GameView implements Initializable {
 
         animationPlaySpeedToggle.selectToggle(animationPlaySpeedToggle.getToggles().get(3));
 
-        ballCanvasGc = ballCanvas.getGraphicsContext2D();
-        ballCanvasGc.setTextAlign(TextAlignment.CENTER);
-        ballCanvasGc.setFont(App.FONT);
+        cuePointCanvasGc = cuePointCanvas.getGraphicsContext2D();
+        cuePointCanvasGc.setTextAlign(TextAlignment.CENTER);
+        cuePointCanvasGc.setFont(App.FONT);
 
         cueAngleCanvasGc = cueAngleCanvas.getGraphicsContext2D();
 
@@ -279,8 +282,8 @@ public class GameView implements Initializable {
         ballRadius = ballDiameter / 2;
 //        cornerArcDiameter = values.cornerArcDiameter * scale;
 
-        ballCanvas.setWidth(cueCanvasWH);
-        ballCanvas.setHeight(cueCanvasWH);
+        cuePointCanvas.setWidth(cueCanvasWH);
+        cuePointCanvas.setHeight(cueCanvasWH);
 
         player1TarCanvas.setHeight(ballDiameter * 1.2);
         player1TarCanvas.setWidth(ballDiameter * 1.2);
@@ -301,10 +304,6 @@ public class GameView implements Initializable {
         player1TarCanvas.getGraphicsContext2D().setStroke(WHITE);
         player2TarCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
         player2TarCanvas.getGraphicsContext2D().setStroke(WHITE);
-
-//        setupCanvas();
-//        startAnimation();
-//        drawTargetBoard(true);
     }
 
     private void setupDebug() {
@@ -569,16 +568,16 @@ public class GameView implements Initializable {
                 turnDirectionDeg(0.01);
                 break;
             case A:
-                setCuePoint(cuePointX - 1, cuePointY);
+                setCuePoint(cuePointX - 1, cuePointY, true);
                 break;
             case D:
-                setCuePoint(cuePointX + 1, cuePointY);
+                setCuePoint(cuePointX + 1, cuePointY, true);
                 break;
             case W:
-                setCuePoint(cuePointX, cuePointY - 1);
+                setCuePoint(cuePointX, cuePointY - 1, true);
                 break;
             case S:
-                setCuePoint(cuePointX, cuePointY + 1);
+                setCuePoint(cuePointX, cuePointY + 1, true);
                 break;
             case Q:
                 setCueAngleDeg(cueAngleDeg + 1);
@@ -1043,15 +1042,28 @@ public class GameView implements Initializable {
         return y * cueAreaRadius + cueCanvasWH / 2;
     }
 
-    private void setCuePoint(double x, double y) {
+    private void setCuePoint(double x, double y, boolean forceMove) {
         if (Algebra.distanceToPoint(x, y, cueCanvasWH / 2, cueCanvasWH / 2) <
                 cueAreaRadius - cueRadius) {
+            double ratioCueAndBall = getRatioOfCueAndBall();
             if (obstacleProjection == null ||
                     obstacleProjection.cueAble(
-                            getCuePointRelX(x), getCuePointRelY(y), getRatioOfCueAndBall())) {
+                            getCuePointRelX(x), getCuePointRelY(y), ratioCueAndBall)) {
                 cuePointX = x;
                 cuePointY = y;
                 recalculateUiRestrictions();
+            } else if (forceMove) {
+                // obstacleProjection 一定!= null
+                boolean curCueAble = obstacleProjection.cueAble(
+                        getCuePointRelX(cuePointX), getCuePointRelY(cuePointY), ratioCueAndBall);
+                boolean newCueAble = obstacleProjection.cueAble(
+                        getCuePointRelX(x), getCuePointRelY(y), ratioCueAndBall);
+                if (newCueAble || !curCueAble) {
+                    // 只要不是从可以打的地方调到打不了的地方，都允许
+                    cuePointX = x;
+                    cuePointY = y;
+                    recalculateUiRestrictions();
+                }
             }
         }
     }
@@ -1083,7 +1095,7 @@ public class GameView implements Initializable {
         if (playingMovement || aiCalculating || cueAnimationPlayer != null) return;
 
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-            setCuePoint(mouseEvent.getX(), mouseEvent.getY());
+            setCuePoint(mouseEvent.getX(), mouseEvent.getY(), false);
         } else if (mouseEvent.getButton() == MouseButton.SECONDARY) {
             restoreCuePoint();
         }
@@ -1092,7 +1104,7 @@ public class GameView implements Initializable {
     private void onCueBallCanvasDragged(MouseEvent mouseEvent) {
         if (playingMovement || aiCalculating || cueAnimationPlayer != null) return;
 
-        setCuePoint(mouseEvent.getX(), mouseEvent.getY());
+        setCuePoint(mouseEvent.getX(), mouseEvent.getY(), false);
     }
 
     private void onCueAngleCanvasClicked(MouseEvent mouseEvent) {
@@ -1566,9 +1578,12 @@ public class GameView implements Initializable {
                     RadioButton rb = new RadioButton(AbstractSnookerGame.ballValueToColorName(i, strings));
                     toggleGroup.getToggles().add(rb);
 
+                    // 是弹出框，只运行一次，不用担心
                     Canvas tarCan = new Canvas();
                     tarCan.setHeight(ballDiameter * 1.2);
                     tarCan.setWidth(ballDiameter * 1.2);
+                    tarCan.getGraphicsContext2D().setFill(GLOBAL_BACKGROUND);
+                    tarCan.getGraphicsContext2D().fillRect(0, 0, tarCan.getWidth(), tarCan.getHeight());
                     drawSnookerTargetBall(tarCan, i, false);
 
                     container.add(tarCan, 0, i - 2);
@@ -2050,6 +2065,8 @@ public class GameView implements Initializable {
         cuePointY = cueCanvasWH / 2;
         intentCuePointX = -1;
         intentCuePointY = -1;
+        
+        if (game != null && game.getGame() != null) recalculateUiRestrictions();
     }
 
     private void startAnimation() {
@@ -2108,8 +2125,8 @@ public class GameView implements Initializable {
         gamePane.getGameCanvas().setOnMouseDragged(this::onDragging);
         gamePane.getGameCanvas().setOnMouseMoved(this::onMouseMoved);
 
-        ballCanvas.setOnMouseClicked(this::onCueBallCanvasClicked);
-        ballCanvas.setOnMouseDragged(this::onCueBallCanvasDragged);
+        cuePointCanvas.setOnMouseClicked(this::onCueBallCanvasClicked);
+        cuePointCanvas.setOnMouseDragged(this::onCueBallCanvasDragged);
 
         cueAngleCanvas.setOnMouseClicked(this::onCueAngleCanvasClicked);
         cueAngleCanvas.setOnMouseDragged(this::onCueAngleCanvasDragged);
@@ -2263,9 +2280,7 @@ public class GameView implements Initializable {
                 player1FramesLabel.setText(String.valueOf(replay.getItem().p1Wins));
                 player2FramesLabel.setText(String.valueOf(replay.getItem().p2Wins));
 
-                singlePoleCanvas.getGraphicsContext2D().setFill(WHITE);
-                singlePoleCanvas.getGraphicsContext2D().fillRect(0, 0,
-                        singlePoleCanvas.getWidth(), singlePoleCanvas.getHeight());
+                wipeCanvas(singlePoleCanvas);
 
                 if (gameValues.rule.snookerLike()) {
                     SnookerScoreResult ssr = (SnookerScoreResult) replay.getScoreResult();
@@ -2293,9 +2308,7 @@ public class GameView implements Initializable {
                 player1FramesLabel.setText(String.valueOf(game.getP1Wins()));
                 player2FramesLabel.setText(String.valueOf(game.getP2Wins()));
 
-                singlePoleCanvas.getGraphicsContext2D().setFill(WHITE);
-                singlePoleCanvas.getGraphicsContext2D().fillRect(0, 0,
-                        singlePoleCanvas.getWidth(), singlePoleCanvas.getHeight());
+                wipeCanvas(singlePoleCanvas);
 
                 if (gameValues.rule.snookerLike()) {
                     drawSnookerSinglePoles(cuePlayer.getSinglePole());
@@ -2432,7 +2445,7 @@ public class GameView implements Initializable {
     }
 
     private void wipeCanvas(Canvas canvas) {
-        canvas.getGraphicsContext2D().setFill(WHITE);
+        canvas.getGraphicsContext2D().setFill(GLOBAL_BACKGROUND);
         canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
@@ -2927,6 +2940,10 @@ public class GameView implements Initializable {
 
         createPathPrediction();
     }
+    
+    private void autoFindAvailableCuePoint() {
+        
+    }
 
     private void setCueButtonForPoint() {
         cueButton.setDisable(obstacleProjection != null &&
@@ -2938,7 +2955,7 @@ public class GameView implements Initializable {
     private void drawCueAngleCanvas() {
         double angleCanvasWh = cueAngleCanvas.getWidth();
         double arcRadius = 60.0;
-        cueAngleCanvasGc.setFill(WHITE);
+        cueAngleCanvasGc.setFill(GLOBAL_BACKGROUND);
         cueAngleCanvasGc.fillRect(0, 0,
                 angleCanvasWh, angleCanvasWh);
         cueAngleCanvasGc.setStroke(Color.GRAY);
@@ -2967,42 +2984,51 @@ public class GameView implements Initializable {
         // Wipe
         double cueAreaDia = cueAreaRadius * 2;
         double padding = (cueCanvasWH - cueAreaDia) / 2;
-        ballCanvasGc.setStroke(BLACK);
-        ballCanvasGc.setFill(Values.WHITE);
-        ballCanvasGc.fillRect(0, 0, ballCanvas.getWidth(), ballCanvas.getHeight());
+        cuePointCanvasGc.setFill(GLOBAL_BACKGROUND);
+        cuePointCanvasGc.fillRect(0, 0, cuePointCanvas.getWidth(), cuePointCanvas.getHeight());
+
+        cuePointCanvasGc.setFill(Values.WHITE);
+        cuePointCanvasGc.fillOval(padding, padding, cueAreaDia, cueAreaDia);
 
         if (obstacleProjection instanceof CushionProjection) {
             // 影响来自裤边
             CushionProjection projection = (CushionProjection) obstacleProjection;
             double lineY = padding + (projection.getLineY() + 1) * cueAreaRadius;
             if (lineY < cueCanvasWH - padding) {
-                ballCanvasGc.setFill(Color.GRAY);
-                ballCanvasGc.fillRect(0, lineY, cueCanvasWH, cueCanvasWH - lineY);
+                cuePointCanvasGc.setFill(Color.GRAY);
+                cuePointCanvasGc.fillRect(0, lineY, cueCanvasWH, cueCanvasWH - lineY);
             }
         } else if (obstacleProjection instanceof BallProjection) {
             // 后斯诺
             BallProjection projection = (BallProjection) obstacleProjection;
-            ballCanvasGc.setFill(Color.GRAY);
-            ballCanvasGc.fillOval(padding + cueAreaRadius * projection.getCenterHor(),
+            cuePointCanvasGc.setFill(Color.GRAY);
+            cuePointCanvasGc.fillOval(padding + cueAreaRadius * projection.getCenterHor(),
                     padding + cueAreaRadius * projection.getCenterVer(),
                     cueAreaDia,
                     cueAreaDia);
         }
 
-        ballCanvasGc.strokeOval(padding, padding, cueAreaDia, cueAreaDia);
+        // 画个十字
+        cuePointCanvasGc.setStroke(CUE_AIMING_CROSS);
+        cuePointCanvasGc.strokeLine(padding, cueCanvasWH / 2, padding + cueAreaDia, cueCanvasWH / 2);
+        cuePointCanvasGc.strokeLine(cueCanvasWH / 2, padding, cueCanvasWH / 2, padding + cueAreaDia);
+
+        // 球的边界
+        cuePointCanvasGc.setStroke(BLACK);
+        cuePointCanvasGc.strokeOval(padding, padding, cueAreaDia, cueAreaDia);
 
         if (intentCuePointX >= 0 && intentCuePointY >= 0) {
-            ballCanvasGc.setFill(INTENT_CUE_POINT);
-            ballCanvasGc.fillOval(intentCuePointX - cueRadius, intentCuePointY - cueRadius,
+            cuePointCanvasGc.setFill(INTENT_CUE_POINT);
+            cuePointCanvasGc.fillOval(intentCuePointX - cueRadius, intentCuePointY - cueRadius,
                     cueRadius * 2, cueRadius * 2);
         }
 
-        ballCanvasGc.setFill(CUE_POINT);
-        ballCanvasGc.fillOval(cuePointX - cueRadius, cuePointY - cueRadius, cueRadius * 2, cueRadius * 2);
+        cuePointCanvasGc.setFill(CUE_POINT);
+        cuePointCanvasGc.fillOval(cuePointX - cueRadius, cuePointY - cueRadius, cueRadius * 2, cueRadius * 2);
 
         if (miscued) {
-            ballCanvasGc.setFill(BLACK);
-            ballCanvasGc.fillText(strings.getString("miscued"), cueCanvasWH / 2, cueCanvasWH / 2);
+            cuePointCanvasGc.setFill(BLACK);
+            cuePointCanvasGc.fillText(strings.getString("miscued"), cueCanvasWH / 2, cueCanvasWH / 2);
         }
     }
 

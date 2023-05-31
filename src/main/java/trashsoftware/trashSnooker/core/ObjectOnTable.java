@@ -67,6 +67,10 @@ public abstract class ObjectOnTable implements Cloneable {
     protected double getSpeed() {
         return Math.hypot(vx, vy);
     }
+    
+    public double getSpeedPerSecond(Phy phy) {
+        return getSpeed() * phy.calculationsPerSec;
+    }
 
     protected double getDistanceMoved() {
         return distance;
@@ -453,6 +457,7 @@ public abstract class ObjectOnTable implements Cloneable {
         double desiredY;
         double desiredVx;
         double desiredVy;
+        double desiredSideSpin;
 
         CushionBounce(double accX, double accY) {
             this.accX = accX;
@@ -472,6 +477,9 @@ public abstract class ObjectOnTable implements Cloneable {
                 y = desiredY;
                 vx = desiredVx;
                 vy = desiredVy;
+                if (ObjectOnTable.this instanceof Ball) {
+                    ((Ball) ObjectOnTable.this).sideSpin = desiredSideSpin;
+                }
             }
         }
 
@@ -484,15 +492,17 @@ public abstract class ObjectOnTable implements Cloneable {
 
         @Override
         void clearDesireLeavePos() {
-            setDesiredLeavePos(0, 0, 0, 0);
+            setDesiredLeavePos(0, 0, 0, 0, 0);
         }
 
         void setDesiredLeavePos(double desiredX, double desiredY,
-                                double desiredVx, double desiredVy) {
+                                double desiredVx, double desiredVy,
+                                double desiredSideSpin) {
             this.desiredX = desiredX;
             this.desiredY = desiredY;
             this.desiredVx = desiredVx;
             this.desiredVy = desiredVy;
+            this.desiredSideSpin = desiredSideSpin;
         }
     }
     
