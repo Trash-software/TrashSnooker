@@ -173,7 +173,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         0.0,
                         selectedSideSpin,
                         false,
-                        0.0
+                        0.0,
+                        false
                 );
                 if (dc != null) {
                     if (dc.wp.getWhiteCushionCountAfter() == 4

@@ -160,7 +160,7 @@ public class ConfigLoader {
         put("nThreads", 4);
         put("locale", "zh_CN");
         put("recordCompression", "xz");
-        put("frameRate", 60);
+        put("frameRate", 120);
         
         double[] screenParams = autoDetectScreenParams();
         putScreenParams(screenParams);

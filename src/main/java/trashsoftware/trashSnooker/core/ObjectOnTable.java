@@ -141,13 +141,13 @@ public abstract class ObjectOnTable implements Cloneable {
     }
 
     protected boolean willPot(Phy phy) {
-        if (x < table.leftClothX || 
-                x >= table.rightClothX || 
-                y < table.topClothY || 
-                y >= table.botClothY) {
-            // 出台了
-            return true;
-        }
+//        if (x < table.leftClothX || 
+//                x >= table.rightClothX || 
+//                y < table.topClothY || 
+//                y >= table.botClothY) {
+//            // 出台了
+//            return true;
+//        }
         
         double cornerRoom = table.cornerHoleRadius - values.ball.ballRadius;
         double midRoom = table.midHoleRadius - values.ball.ballRadius;
@@ -164,24 +164,27 @@ public abstract class ObjectOnTable implements Cloneable {
         if (currentBounce != null) {
             System.err.println("Current is bouncing!");
         }
+        
+        double[] hitPos = getArcHitPos(arcXY, arcRadius);
 
         // todo: 把难的袋口硬度加大，使大力更不容易zang进
         double speed = Math.hypot(vx, vy);
         double ballAngle = Algebra.thetaOf(vx, vy);  // 入射角与垂线的夹角
-        double verticalAngle = Algebra.thetaOf(arcXY[0] - x, arcXY[1] - y);
+        double verticalAngle = Algebra.thetaOf(arcXY[0] - hitPos[0], arcXY[1] - hitPos[1]);
         double injectAngle = Algebra.normalizeAngle(ballAngle - verticalAngle);
         currentBounce = new ArcBounce(
                 arcXY, 
                 bounceAcc(phy, speed),
                 speed * table.wallBounceRatio * 0.9,
-                injectAngle
+                injectAngle,
+                phy.accelerationMultiplier()
         );
 
         x += vx;
         y += vy;
     }
 
-    protected void hitHoleLineArea(double[] lineNormalVec, Phy phy) {
+    protected void hitHoleLineArea(double[][] line, double[] lineNormalVec, Phy phy) {
 //        double[] reflect = Algebra.symmetricVector(vx, vy, lineNormalVec[0], lineNormalVec[1]);
 //        vx = -reflect[0];
 //        vy = -reflect[1];
@@ -190,17 +193,19 @@ public abstract class ObjectOnTable implements Cloneable {
         
         double[] unitNormal = Algebra.unitVector(lineNormalVec);
         double verticalSpeed = Algebra.projectionLengthOn(unitNormal, vv);
-//        double horizontalSpeed = Algebra.projectionLengthOn(new double[]{unitNormal[1], -unitNormal[0]}, vv);
-//        double nFrames = 2.0 / GENERAL_BOUNCE_ACC / phy.cloth.smoothness.cushionBounceFactor;
 
         currentBounce = new LineBounce(
-                -unitNormal[0] * verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
-                -unitNormal[1] * verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
-                Math.hypot(vx, vy) * table.wallBounceRatio * 0.9
+                -unitNormal[0] * 
+                        verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
+                -unitNormal[1] * 
+                        verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
+                Math.hypot(vx, vy) * table.wallBounceRatio * 0.9,
+                phy.accelerationMultiplier()
         );
-//        if (!phy.isPrediction) {
-//            System.out.println("Acc: " + currentBounce.accX + " " + currentBounce.accY);
-//        }
+    }
+    
+    protected double getNFramesInCushion(double verticalSpeed, double acc) {
+        return verticalSpeed / -acc * 2;
     }
 
     protected void tryEnterGravityArea(Phy phy, double[] holeXy, boolean isMidHole) {
@@ -236,7 +241,10 @@ public abstract class ObjectOnTable implements Cloneable {
             vy += accVec[1];
         }
     }
-    
+
+    /**
+     * 返回PLAY_MS下的反弹加速度
+     */
     protected double bounceAcc(Phy phy, double verticalSpeed) {
         return verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC;
     }
@@ -268,6 +276,7 @@ public abstract class ObjectOnTable implements Cloneable {
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
+                                line,
                                 Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
                                 phy);
                         return 2;
@@ -276,6 +285,7 @@ public abstract class ObjectOnTable implements Cloneable {
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
+                                line,
                                 Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
                                 phy);
                         return 2;
@@ -312,6 +322,7 @@ public abstract class ObjectOnTable implements Cloneable {
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
+                                line,
                                 Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
                                 phy);
                         return 2;
@@ -320,6 +331,7 @@ public abstract class ObjectOnTable implements Cloneable {
                     if (predictedDtToLine(line) < radius &&
                             currentDtToLine(line) >= radius) {
                         hitHoleLineArea(
+                                line,
                                 Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
                                 phy);
                         return 2;
@@ -357,6 +369,7 @@ public abstract class ObjectOnTable implements Cloneable {
 
                 if (predictedDtToLine(line) < radius && currentDtToLine(line) >= radius) {
                     hitHoleLineArea(
+                            line,
                             Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
                             phy);
                     return 2;
@@ -380,6 +393,72 @@ public abstract class ObjectOnTable implements Cloneable {
         return 0;
     }
 
+    /**
+     * 返回较为精确的碰库位置
+     */
+    protected double[] getCushionHitPos(double[][] cushionLine) {
+        double x1 = x;
+        double y1 = y;
+        int maxRound = 100;
+        int phyRounds = 0;
+        double tickDt;
+        double curDivider = 1.0;
+
+        double allowedDev = 0.01;  // 0.01 mm
+
+        // 类似二分搜索，找碰撞点
+        while (phyRounds < maxRound) {
+            tickDt = Algebra.distanceToLine(x1, y1, cushionLine[0], cushionLine[1]) - values.ball.ballRadius;
+            if (Math.abs(tickDt) < allowedDev) break;
+            double mul;
+            if (tickDt > 0) {
+                mul = 1;
+            } else {
+                mul = -1;
+            }
+
+            x1 += vx / curDivider * mul;
+            y1 += vy / curDivider * mul;
+
+            curDivider *= 2;
+            phyRounds++;
+        }
+        return new double[]{x1, y1};
+    }
+
+    /**
+     * 返回较为精确的碰库位置
+     */
+    protected double[] getArcHitPos(double[] arcCenter, double arcRadius) {
+        double x1 = x;
+        double y1 = y;
+        int maxRound = 100;
+        int phyRounds = 0;
+        double tickDt;
+        double curDivider = 1.0;
+
+        double allowedDev = 0.01;  // 0.01 mm
+
+        // 类似二分搜索，找碰撞点
+        while (phyRounds < maxRound) {
+            tickDt = Algebra.distanceToPoint(x1, y1, arcCenter[0], arcCenter[1]) - values.ball.ballRadius - arcRadius;
+            if (Math.abs(tickDt) < allowedDev) break;
+            double mul;
+            if (tickDt > 0) {
+                mul = 1;
+            } else {
+                mul = -1;
+            }
+
+            x1 += vx / curDivider * mul;
+            y1 += vy / curDivider * mul;
+
+            curDivider *= 2;
+            phyRounds++;
+        }
+        return new double[]{x1, y1};
+    }
+
     abstract class Bounce implements Cloneable {
 
 //        /*
@@ -396,8 +475,13 @@ public abstract class ObjectOnTable implements Cloneable {
 
 //        double holeArcRadius;
 
+        int accMul;  // 加速度的倍率，用于处理Phy帧时间的问题
         boolean everEnter = false;  // 是否进入过库边区域
         int framesCount = 0;
+        
+        protected Bounce(double accMul) {
+            this.accMul = (int) Math.round(accMul);
+        }
 
         @Override
         protected Object clone() throws CloneNotSupportedException {
@@ -451,7 +535,7 @@ public abstract class ObjectOnTable implements Cloneable {
     }
 
     class CushionBounce extends Bounce {
-        double accX, accY;  // 反弹力的加速度
+        double accX, accY;  // 反弹力的加速度，在PLAY_MS的条件下
         // 如果一切顺利，会在什么地方离开库
         double desiredX;
         double desiredY;
@@ -459,7 +543,8 @@ public abstract class ObjectOnTable implements Cloneable {
         double desiredVy;
         double desiredSideSpin;
 
-        CushionBounce(double accX, double accY) {
+        CushionBounce(double accX, double accY, double accMul) {
+            super(accMul);
             this.accX = accX;
             this.accY = accY;
         }
@@ -509,9 +594,10 @@ public abstract class ObjectOnTable implements Cloneable {
     class LineBounce extends CushionBounce {
         double desiredLeaveSpeed;
         
-        LineBounce(double accX, double accY, double desiredLeaveSpeed) {
-            super(accX, accY);
+        LineBounce(double accX, double accY, double desiredLeaveSpeed, double accelerationMul) {
+            super(accX, accY, accelerationMul);
             
+            this.accX = accX;
             this.desiredLeaveSpeed = desiredLeaveSpeed;
         }
 
@@ -537,8 +623,12 @@ public abstract class ObjectOnTable implements Cloneable {
         double verticalAcc;
         double desiredLeaveSpeed;
         double injectAngle;
+        
+//        double[] lastUnitAcc;
 
-        ArcBounce(double[] arcCenter, double verticalAcc, double desiredLeaveSpeed, double injectAngle) {
+        ArcBounce(double[] arcCenter, double verticalAcc, double desiredLeaveSpeed, 
+                  double injectAngle, double accMul) {
+            super(accMul);
             this.holeArcCenter = arcCenter;
             this.verticalAcc = verticalAcc;
             this.desiredLeaveSpeed = desiredLeaveSpeed;
@@ -551,13 +641,27 @@ public abstract class ObjectOnTable implements Cloneable {
         void processOneFrame() {
             // 每一帧都得更新加速方向
             // 加速方向是球当前位置与圆心的连线
-            // 此处假设球永远砸不到圆的半径那么深
+            // todo: 此处假设球永远砸不到圆的半径那么深
             double[] unitAcc = Algebra.unitVector(x - holeArcCenter[0], y - holeArcCenter[1]);
+//            if (overshoot) unitAcc = lastUnitAcc;
+//            else {
+//                unitAcc = Algebra.unitVector(x - holeArcCenter[0], y - holeArcCenter[1]);
+//                if (lastUnitAcc != null) {
+//                    double unitAccChange = Algebra.thetaBetweenVectors(lastUnitAcc, unitAcc);
+//                    if (unitAccChange >= Algebra.HALF_PI) {
+//                        System.out.println("Overshoot!");
+//                        unitAcc = lastUnitAcc;
+//                        overshoot = true;
+//                    }
+//                }
+//            }
             
             double accX = unitAcc[0] * verticalAcc;
             double accY = unitAcc[1] * verticalAcc;
             vx += accX;
             vy += accY;
+            
+//            lastUnitAcc = unitAcc;
         }
 
         @Override

@@ -205,7 +205,7 @@ public abstract class ActualRecorder implements GameRecorder {
         header[13] = (byte) game.getGameValues().ball.ordinal();
         header[14] = (byte) game.getGameValues().table.getPocketDifficultyOrdinal(); 
         
-        Util.intToBytesN(GameView.animationFrameRate, header, 15, 2);
+        Util.intToBytesN(GameView.productionFrameRate, header, 15, 2);
 
         header[20] = (byte) game.getEntireGame().getTotalFrames();  // todo
         header[21] = (byte) game.getEntireGame().getP1Wins();

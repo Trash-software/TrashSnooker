@@ -30,7 +30,7 @@ public class PocketDifficulty {
             new PocketDifficulty("normal",
                     15.0, 0.5, 7.0,
                     0.5, 0.5,
-                    10.0, 0.2, 12.5)
+                    10.0, 0.25, 12.5)
     };
 
     public final String key;

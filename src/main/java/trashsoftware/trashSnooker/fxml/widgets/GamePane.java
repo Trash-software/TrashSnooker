@@ -164,9 +164,32 @@ public class GamePane extends Pane {
         setPrefWidth(canvasWidth);
         setPrefHeight(canvasHeight);
     }
+    
+    private double getCornerHoleVisualRadiusUnscaled(TableMetrics metrics) {
+//        return metrics.cornerHoleRadius * cornerHoleVisualMul;
+        return metrics.leatherPocket ? 
+                metrics.factory.supportedHoles[0].cornerHoleDiameter / 2 :
+                metrics.cornerHoleRadius;
+    }
+
+    private double getMidHoleVisualRadiusUnscaled(TableMetrics metrics) {
+//        return metrics.cornerHoleRadius * cornerHoleVisualMul;
+        return metrics.leatherPocket ? 
+                metrics.factory.supportedHoles[0].midHoleDiameter / 2 :
+                metrics.midHoleRadius;
+    }
 
     private void drawLeatherTable(TableMetrics metrics) {
-        double inside = metrics.pocketBaseInside * 0.5 * scale;
+//        double cornerVisualRadius = (metrics.topLeftHoleGraXY[0] - metrics.pocketBaseInside) * scale;
+        double cornerVisualRadius = (getCornerHoleVisualRadiusUnscaled(metrics) + metrics.pocketBaseThickness) * scale;
+        
+        // 画中袋的袋底
+        double leatherThickness = (cornerVisualRadius -
+                getCornerHoleVisualRadiusUnscaled(metrics) * scale) * 0.8;  // 我们希望中袋和底袋厚度比例固定
+        double inside = (metrics.topMidHoleGraXY[1] - getMidHoleVisualRadiusUnscaled(metrics)) 
+                * scale - leatherThickness;  // 圆心在topY的地方
+        inside = Math.max(inside, 0);  // 不要超过球台边缘了
+
         double midBaseRadius = metrics.topY * scale - inside;
         graphicsContext.setFill(metrics.midPocketBaseColor);
         graphicsContext.fillArc(
@@ -183,8 +206,7 @@ public class GamePane extends Pane {
                 midBaseRadius * 2,
                 180, 180, ArcType.CHORD
         );
-
-        double cornerVisualRadius = (metrics.topLeftHoleGraXY[0] - metrics.pocketBaseInside) * scale;
+        
         drawCornerBases(metrics, cornerVisualRadius);
 
         fillTableWithoutPocketArea(metrics, 15.0 * scale);
@@ -203,19 +225,20 @@ public class GamePane extends Pane {
         graphicsContext.fillRect(midBaseLeftX, 0, midBaseWidth, height + 1);  // +1防止那个白边
         graphicsContext.fillRect(midBaseLeftX, metrics.outerHeight * scale - height - 1, midBaseWidth, height + 1);
 
+        fillTableWithoutPocketArea(metrics, midPocketNoFill);
+        
         // 袋口保护塑料
         double plasticProtectorWidth = 9.0;
         graphicsContext.setFill(Color.BLACK);
-        drawHole(metrics.topMidHoleGraXY, metrics.midHoleRadius + plasticProtectorWidth);
-        drawHole(metrics.botMidHoleGraXY, metrics.midHoleRadius + plasticProtectorWidth);
+        double midPlasticRadius = getMidHoleVisualRadiusUnscaled(metrics) + plasticProtectorWidth;  // 这种桌子中袋里面大小不变
+        drawHole(metrics.topMidHoleGraXY, midPlasticRadius);
+        drawHole(metrics.botMidHoleGraXY, midPlasticRadius);
 
-        double cornerPlasticRadius = metrics.cornerHoleRadius * cornerHoleVisualMul + plasticProtectorWidth;
+        double cornerPlasticRadius = getCornerHoleVisualRadiusUnscaled(metrics) + plasticProtectorWidth;
         drawHole(metrics.topLeftHoleGraXY, cornerPlasticRadius);
         drawHole(metrics.botLeftHoleGraXY, cornerPlasticRadius);
         drawHole(metrics.topRightHoleGraXY, cornerPlasticRadius);
         drawHole(metrics.botRightHoleGraXY, cornerPlasticRadius);
-        
-        fillTableWithoutPocketArea(metrics, midPocketNoFill);
     }
 
     private void drawCornerBases(TableMetrics metrics, double cornerVisualRadius) {
@@ -226,7 +249,7 @@ public class GamePane extends Pane {
         drawCornerBase(metrics.botRightHoleGraXY, cornerVisualRadius, 260, 110);
 
         double arcRadius = metrics.topLeftHoleGraXY[0] * scale;
-        double visualIn = metrics.pocketBaseInside * scale;
+        double visualIn = metrics.topLeftHoleGraXY[0] * scale - cornerVisualRadius;
         double narrow = (metrics.leftX - metrics.topLeftHoleGraXY[0]) * scale;
         double wide = (metrics.leftX - metrics.cornerHoleTan) * scale - visualIn;
 
@@ -313,7 +336,8 @@ public class GamePane extends Pane {
         graphicsContext.setFill(GameView.GLOBAL_BACKGROUND);
         graphicsContext.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        double cornerHoleVisualRadius = values.cornerHoleRadius * cornerHoleVisualMul;
+        double cornerHoleVisualRadius = getCornerHoleVisualRadiusUnscaled(values);
+        double midHoleVisualRadius = getMidHoleVisualRadiusUnscaled(values);
 
         if (values.leatherPocket) {
             drawLeatherTable(values);
@@ -321,12 +345,25 @@ public class GamePane extends Pane {
             drawHardTable(values);
         }
 
+        graphicsContext.setFill(HOLE_PAINT);
+        // 视觉上的中袋
+        drawHole(values.topMidHoleGraXY, midHoleVisualRadius);
+        drawHole(values.botMidHoleGraXY, midHoleVisualRadius);
+        // 视觉上的袋底
+        drawHole(values.topLeftHoleGraXY, cornerHoleVisualRadius);
+        drawHole(values.botLeftHoleGraXY, cornerHoleVisualRadius);
+        drawHole(values.topRightHoleGraXY, cornerHoleVisualRadius);
+        drawHole(values.botRightHoleGraXY, cornerHoleVisualRadius);
+
+        double actualCornerHoleRadius = values.cornerHoleRadius * scale;
         graphicsContext.setFill(values.tableColor);  // 台泥/台布
-        graphicsContext.fillRect(
+        graphicsContext.fillRoundRect(  // 防止特别小的袋口遮不完台泥的边角
                 canvasX(values.leftX - values.cushionClothWidth),
                 canvasY(values.topY - values.cushionClothWidth),
                 (values.innerWidth + values.cushionClothWidth * 2) * scale,
-                (values.innerHeight + values.cushionClothWidth * 2) * scale);
+                (values.innerHeight + values.cushionClothWidth * 2) * scale,
+                actualCornerHoleRadius,
+                actualCornerHoleRadius);
 
 //        // 袋口附近重力区域
 //        graphicsContext.setFill(values.gravityAreaColor);
@@ -380,23 +417,15 @@ public class GamePane extends Pane {
         drawCornerHoleLinesArcs(values);
 
         graphicsContext.setFill(HOLE_PAINT);
+        // 实际底袋
         drawHole(values.topLeftHoleXY, values.cornerHoleRadius);
         drawHole(values.botLeftHoleXY, values.cornerHoleRadius);
         drawHole(values.topRightHoleXY, values.cornerHoleRadius);
         drawHole(values.botRightHoleXY, values.cornerHoleRadius);
-
-        // 视觉上的中袋
-        drawHole(values.topMidHoleGraXY, values.midHoleRadius);
-        drawHole(values.botMidHoleGraXY, values.midHoleRadius);
+        
         // 实际中袋
         drawHole(values.topMidHoleXY, values.midHoleRadius);
         drawHole(values.botMidHoleXY, values.midHoleRadius);
-
-        // 视觉上的袋底
-        drawHole(values.topLeftHoleGraXY, cornerHoleVisualRadius);
-        drawHole(values.botLeftHoleGraXY, cornerHoleVisualRadius);
-        drawHole(values.topRightHoleGraXY, cornerHoleVisualRadius);
-        drawHole(values.botRightHoleGraXY, cornerHoleVisualRadius);
 
 //        drawHoleOutLine(values.topLeftHoleXY, values.cornerHoleShownRadius + 10, 45.0 - values.cornerHoleOpenAngle);
 //        drawHoleOutLine(values.botLeftHoleXY, values.cornerHoleShownRadius, 135.0);

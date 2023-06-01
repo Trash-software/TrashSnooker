@@ -169,12 +169,18 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             double selectedFrontBackSpin,
             double selectedSideSpin,
             boolean attackAble,  // 可不可以进
-            double nativePrice
+            double nativePrice,
+            boolean allowPocketCorner
     ) {
         WhitePrediction wp = copy.predictWhite(cpp, phy, 50000.0,
                 true, true, false,
                 false);  // 这里不用clone，因为整个game都是clone的
         double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
+        
+        if (!allowPocketCorner && wp.isWhiteHitsHoleArcs()) {
+            return null;
+        }
+        
         Ball firstCollide = wp.getFirstCollide();
         if (firstCollide != null && legalSet.contains(firstCollide)) {
             if (wp.willCueBallPot()) {
@@ -329,7 +335,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return price;
     }
 
-    protected DefenseChoice solveSnooker(Phy phy) {
+    protected DefenseChoice solveSnooker(Phy phy, boolean allowPocketCorner) {
         int curTarget = game.getCurrentTarget();
         boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
         List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
@@ -344,10 +350,10 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         double chanceOfSmallPower = Math.pow(continuousFoulAndMiss, 1.35) / 18 + 0.5;  // 到第6杆时必定小力了
         if (Math.random() < chanceOfSmallPower) {
             System.out.println("AI solving snooker small power!");
-            return solveSnookerDefense(legalBalls, degreesTick, powerTick, phy, true);
+            return solveSnookerDefense(legalBalls, degreesTick, powerTick, phy, true, allowPocketCorner);
         } else {
             System.out.println("AI solving snooker!");
-            return solveSnookerDefense(legalBalls, degreesTick, powerTick, phy, false);
+            return solveSnookerDefense(legalBalls, degreesTick, powerTick, phy, false, allowPocketCorner);
         }
     }
 
@@ -636,9 +642,13 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         if (defenseChoice != null) {
             return makeDefenseCue(defenseChoice, AiCueResult.CueType.DEFENSE);
         }
-        DefenseChoice solveSnooker = solveSnooker(phy);
+        DefenseChoice solveSnooker = solveSnooker(phy, false);
         if (solveSnooker != null) {
             return makeDefenseCue(solveSnooker, AiCueResult.CueType.SOLVE);
+        }
+        DefenseChoice solveSnooker2 = solveSnooker(phy, true);  // 只能说是逼急了，来个袋角解斯诺克
+        if (solveSnooker2 != null) {
+            return makeDefenseCue(solveSnooker2, AiCueResult.CueType.SOLVE);
         }
         return randomAngryCue();
     }
@@ -846,7 +856,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
             for (DefenseAngle da : availableRads) {
                 DefenseThread thread = new DefenseThread(
-                        da.rad, da.price, whitePos, selectedPower, legalSet, phy, gameClonesPool
+                        da.rad, da.price, whitePos, selectedPower, legalSet, phy, gameClonesPool, false
                 );
                 defenseThreads.add(thread);
             }
@@ -899,7 +909,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                               double degreesTick,
                                               double powerTick,
                                               Phy phy,
-                                              boolean smallPower) {
+                                              boolean smallPower,
+                                              boolean allowPocketCorner) {
         Set<Ball> legalSet = new HashSet<>(legalBalls);
 //        DefenseChoice best = null;
 
@@ -931,7 +942,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                         selectedPower,
                         legalSet,
                         phy,
-                        gameClonesPool
+                        gameClonesPool,
+                        allowPocketCorner
                 );
                 ass.threadsOfAngle.add(thread);
             }
@@ -1843,6 +1855,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         Set<Ball> legalSet;
         Phy phy;
         Game[] gameClonesPool;
+        boolean allowPocketCorner;
 
         DefenseChoice result;
 
@@ -1852,7 +1865,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                 double selectedPower,
                                 Set<Ball> legalSet,
                                 Phy phy,
-                                Game[] gameClonesPool) {
+                                Game[] gameClonesPool,
+                                boolean allowPocketCorner) {
             this.rad = rad;
             this.nativePrice = nativePrice;
             this.whitePos = whitePos;
@@ -1860,6 +1874,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             this.legalSet = legalSet;
             this.phy = phy;
             this.gameClonesPool = gameClonesPool;
+            this.allowPocketCorner = allowPocketCorner;
         }
 
         @Override
@@ -1899,7 +1914,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     0.0,
                     0.0,
                     false,
-                    nativePrice
+                    nativePrice,
+                    allowPocketCorner
             );
         }
     }
@@ -1977,7 +1993,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     attackParam.selectedFrontBackSpin,
                     attackParam.selectedSideSpin,
                     true,
-                    1.0  // 进攻杆，AI应该不会吃屎去擦最薄边
+                    1.0,  // 进攻杆，AI应该不会吃屎去擦最薄边
+                    false
             );
 
             if (result != null) {

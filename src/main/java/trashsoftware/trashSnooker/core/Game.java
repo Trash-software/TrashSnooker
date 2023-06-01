@@ -888,6 +888,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 thisCueFoul.addFoul(strings.getString("noBallHitCushion"), foulScoreCalculator.get(), false);
             }
         }
+        for (B ball : getAllBalls()) {
+            if (!ball.isPotted()) {
+                if (ball.isOutOfTable()) {
+                    thisCueFoul.addFoul(strings.getString("flyOutTable"), foulScoreCalculator.get(), false);
+                    ball.pot();
+                }
+            }
+        }
         return thisCueFoul.isFoul();
     }
 

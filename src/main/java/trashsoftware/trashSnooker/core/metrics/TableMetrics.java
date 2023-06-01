@@ -36,7 +36,7 @@ public class TableMetrics {
     public Color tableBorderColor;
     public Color cornerPocketBaseColor;
     public Color midPocketBaseColor;
-    public double pocketBaseInside;  // 袋口外侧向内凹的幅度
+    public double pocketBaseThickness;  // 袋底的厚度，0就是指和外面对齐
     public boolean leatherPocket;
 
     public double outerWidth;
@@ -89,6 +89,15 @@ public class TableMetrics {
     public double[] topMidHoleRightArcXy;
     public double[] botMidHoleLeftArcXy;
     public double[] botMidHoleRightArcXy;
+    
+    // 全台6个库的向量，顺时针走向
+    public double[][] topLeftCushion;
+    public double[][] topRightCushion;
+    public double[][] botLeftCushion;
+    public double[][] botRightCushion;
+    public double[][] leftCushion;
+    public double[][] rightCushion;
+    
     // 中袋袋角直线
     public double[][] topMidHoleLeftLine;
     public double[][] topMidHoleRightLine;
@@ -277,6 +286,26 @@ public class TableMetrics {
                 new double[]{rightX - cornerArcWidth - cornerLineLonger + cornerHoleDrift, botY + cornerArcRadius};
         botRightHoleEndArcXy =
                 new double[]{rightX + cornerArcRadius, botY - cornerArcWidth - cornerLineLonger + cornerHoleDrift};
+        
+        // 库
+        topLeftCushion = new double[][]{
+                {topLeftHoleSideArcXy[0], topY}, {topMidHoleLeftArcXy[0], topY}
+        };
+        topRightCushion = new double[][]{
+                {topMidHoleRightArcXy[0], topY}, {topRightHoleSideArcXy[0], topY}
+        };
+        rightCushion = new double[][]{
+                {rightX, topRightHoleEndArcXy[1]}, {rightX, botRightHoleEndArcXy[1]}
+        };
+        botRightCushion = new double[][]{
+                {botRightHoleSideArcXy[0], botY}, {botMidHoleRightArcXy[0], botY}
+        };
+        botLeftCushion = new double[][]{
+                {botMidHoleLeftArcXy[0], botY}, {botRightHoleSideArcXy[0], botY}
+        };
+        leftCushion = new double[][]{
+                {leftX, botLeftHoleEndArcXy[1]}, {leftX, topLeftHoleEndArcXy[1]}
+        };
 
         // 中袋袋角直线
         midHoleLineLeftX = midX - midHoleRadius - midLineWidth;
@@ -298,9 +327,12 @@ public class TableMetrics {
                         {midHoleLineRightX, botMidLineTopY}};
 
         // 底袋袋角直线
+        // todo: 改为视觉上的顺时针
         topLeftHoleSideLine =
-                new double[][]{{leftX - cornerHoleDrift, topY - cornerHoleTan},
-                        {leftX + cornerLineLonger - cornerHoleDrift, topY - cornerArcHeight}};
+                new double[][]{
+                        {leftX - cornerHoleDrift, topY - cornerHoleTan},
+                        {leftX + cornerLineLonger - cornerHoleDrift, topY - cornerArcHeight}
+        };
         topLeftHoleEndLine =
                 new double[][]{{leftX - cornerHoleTan, topY - cornerHoleDrift},
                         {leftX - cornerArcHeight, topY + cornerLineLonger - cornerHoleDrift}};
@@ -387,7 +419,7 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.SNOOKER)
-                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 10.0)
+                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 40.0)
                         .tableDimension(3568.7,  // 140.5"
                                 1788.0,
                                 124,
@@ -407,10 +439,10 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.CHINESE_EIGHT)
-                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 10.0)
+                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 40.0)
                         .tableDimension(2540.0,  // 100"
                                 1270.0,
-                                140,
+                                124,
                                 51.0,
                                 42.0)
 //                        .supportedHoles(CHINESE_EIGHT_HOLES)
@@ -438,7 +470,7 @@ public class TableMetrics {
                                 0.85,
                                 1.15,
                                 0.9,
-                                0.8);
+                                0.65);
             }
         },
         SIDE_POCKET("sidePocketTable",
@@ -604,7 +636,7 @@ public class TableMetrics {
             values.tableBorderColor = borderColor;
             values.cornerPocketBaseColor = cornerPocketBaseColor;
             values.midPocketBaseColor = midPocketColor;
-            values.pocketBaseInside = 0.0;
+            values.pocketBaseThickness = 0.0;
             values.leatherPocket = false;
             return this;
         }
@@ -612,13 +644,13 @@ public class TableMetrics {
         Builder tableColorLeather(Color color,
                                   Color borderColor,
                                   Color pocketBaseColor,
-                                  double pocketBaseInside) {
+                                  double pocketBaseThickness) {
             values.tableColor = color;
             values.gravityAreaColor = color.deriveColor(0, 1, 0.9, 1);
             values.tableBorderColor = borderColor;
             values.cornerPocketBaseColor = pocketBaseColor;
             values.midPocketBaseColor = pocketBaseColor;
-            values.pocketBaseInside = pocketBaseInside;
+            values.pocketBaseThickness = pocketBaseThickness;
             values.leatherPocket = true;
             return this;
         }

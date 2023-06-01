@@ -92,8 +92,8 @@ public class GameView implements Initializable {
     private static final double WHITE_PREDICT_LEN_AFTER_WALL = 1000.0;  // todo: 根据球员
     private static final long DEFAULT_REPLAY_GAP = 1000;
     //    public static double scale;
-    public static int animationFrameRate = 60;  // 这两个是管物理运算的存档率的，也就是movement和回放文件的帧率
-    public static double frameTimeMs = 1000.0 / animationFrameRate;
+    public static int productionFrameRate = 60;  // 这两个是管物理运算的存档率的，也就是movement和回放文件的帧率
+    public static double frameTimeMs = 1000.0 / productionFrameRate;
     private static double uiFrameTimeMs = 10.0;
     //    private double minRealPredictLength = 300.0;
     private static double defaultMaxPredictLength = 1200;
@@ -199,10 +199,11 @@ public class GameView implements Initializable {
     private boolean aiCalculating;
     private boolean aiAutoPlay = true;
     private boolean printPlayStage = false;
+    private boolean tableGraphicsChanged = true;
     private Ball debuggingBall;
     private long replayStopTime;
     private long replayGap = DEFAULT_REPLAY_GAP;
-    private boolean drawStandingPos = true;
+    private boolean drawStandingPos = false;
     private boolean drawTargetRefLine = false;
     private boolean miscued = false;
     private PlayerPerson.HandSkill currentHand;
@@ -361,8 +362,8 @@ public class GameView implements Initializable {
         gameButtonBox.setVisible(false);
         gameButtonBox.setManaged(false);
 
-        animationFrameRate = replay.getFrameRate();
-        frameTimeMs = 1000.0 / animationFrameRate;
+        productionFrameRate = replay.getFrameRate();
+        frameTimeMs = 1000.0 / productionFrameRate;
 
         setupNameLabels(player1.getPlayerPerson(), player2.getPlayerPerson());
         totalFramesLabel.setText(String.format("(%d)", replay.getItem().totalFrames));
@@ -832,6 +833,7 @@ public class GameView implements Initializable {
         
         Ball.enableGearOffset();
         aiWhitePath = null;
+        tableGraphicsChanged = true;
         miscued = false;
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
             boolean autoAim = true;
@@ -1126,6 +1128,29 @@ public class GameView implements Initializable {
     private void onCueAngleCanvasDragged(MouseEvent mouseEvent) {
         setCueAnglePoint(mouseEvent.getX(), mouseEvent.getY());
     }
+    
+    private void debugClick(MouseEvent mouseEvent) {
+        double realX = gamePane.realX(mouseEvent.getX());
+        double realY = gamePane.realY(mouseEvent.getY());
+        if (debuggingBall == null) {
+            for (Ball ball : game.getGame().getAllBalls()) {
+                if (!ball.isPotted()) {
+                    if (Algebra.distanceToPoint(realX, realY, ball.getX(), ball.getY()) < gameValues.ball.ballRadius) {
+                        debuggingBall = ball;
+                        ball.setPotted(true);
+                        break;
+                    }
+                }
+            }
+        } else {
+            if (game.getGame().isInTable(realX, realY) && !game.getGame().isOccupied(realX, realY)) {
+                debuggingBall.setX(realX);
+                debuggingBall.setY(realY);
+                debuggingBall.setPotted(false);
+                debuggingBall = null;
+            }
+        }
+    }
 
     private void onSingleClick(MouseEvent mouseEvent) {
         System.out.println("Clicked!");
@@ -1134,29 +1159,16 @@ public class GameView implements Initializable {
         if (aiCalculating) return;
         if (cueAnimationPlayer != null) return;
         if (game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() ==
-                PlayerType.COMPUTER) return;
+                PlayerType.COMPUTER) {
+            if (debugMode) {
+                debugClick(mouseEvent);
+            } else {
+                return;
+            }
+        }
 
         if (debugMode) {
-            double realX = gamePane.realX(mouseEvent.getX());
-            double realY = gamePane.realY(mouseEvent.getY());
-            if (debuggingBall == null) {
-                for (Ball ball : game.getGame().getAllBalls()) {
-                    if (!ball.isPotted()) {
-                        if (Algebra.distanceToPoint(realX, realY, ball.getX(), ball.getY()) < gameValues.ball.ballRadius) {
-                            debuggingBall = ball;
-                            ball.setPotted(true);
-                            break;
-                        }
-                    }
-                }
-            } else {
-                if (game.getGame().isInTable(realX, realY) && !game.getGame().isOccupied(realX, realY)) {
-                    debuggingBall.setX(realX);
-                    debuggingBall.setY(realY);
-                    debuggingBall.setPotted(false);
-                    debuggingBall = null;
-                }
-            }
+            debugClick(mouseEvent);
         } else if (game.getGame().getCueBall().isPotted()) {
             game.getGame().placeWhiteBall(gamePane.realX(mouseEvent.getX()), gamePane.realY(mouseEvent.getY()));
             game.getGame().getRecorder().writeBallInHandPlacement();
@@ -1398,6 +1410,7 @@ public class GameView implements Initializable {
         }
 
         suggestedPlayerWhitePath = null;
+        tableGraphicsChanged = true;
 
         replaceBallInHandMenu.setDisable(true);
         letOtherPlayMenu.setDisable(true);
@@ -1805,6 +1818,7 @@ public class GameView implements Initializable {
                 return;
             }
             aiWhitePath = cueResult.getWhitePath();  // todo
+            tableGraphicsChanged = true;
             if (game.gameValues.rule.snookerLike()) {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
                 if (cueResult.getTargetBall() != null) {
@@ -2144,11 +2158,14 @@ public class GameView implements Initializable {
         if (replay != null) return;
 
         if (!game.getGame().isCalculating() &&
-                movement == null &&
-                game.getGame().isBallInHand() &&
-                game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
-            drawBallInHandEssential(game.getGame().getCueBall());
-        } else if (debugMode && debuggingBall != null) {
+                movement == null) {
+            if (game.getGame().isBallInHand() 
+                    && game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
+                drawBallInHandEssential(game.getGame().getCueBall());
+                return;
+            }
+        }
+        if (debugMode && debuggingBall != null) {
             drawBallInHandEssential(debuggingBall);
         }
     }
@@ -2689,23 +2706,24 @@ public class GameView implements Initializable {
         PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
         cursorDrawer = new PredictionDrawing();
         cursorDrawer.predict(playerPerson);
+        
+        tableGraphicsChanged = true;
     }
 
     private void draw() {
-//        long t0 = System.currentTimeMillis();
-        gamePane.drawTable(getActiveHolder());
-//        long t1 = System.currentTimeMillis();
-        if (drawAiPathItem.isSelected()) gamePane.drawPredictedWhitePath(aiWhitePath);
-        if (predictPlayerPathItem.isSelected())
-            gamePane.drawPredictedWhitePath(suggestedPlayerWhitePath);
-//        long t2 = System.currentTimeMillis();
+        boolean changed = tableGraphicsChanged;
+        if (tableGraphicsChanged) {
+            gamePane.drawTable(getActiveHolder());
+            if (drawAiPathItem.isSelected()) gamePane.drawPredictedWhitePath(aiWhitePath);
+            if (predictPlayerPathItem.isSelected())
+                gamePane.drawPredictedWhitePath(suggestedPlayerWhitePath);
+        }
         drawBalls();
-//        long t3 = System.currentTimeMillis();
-        drawCursor();
-//        long t4 = System.currentTimeMillis();
+        if (changed) {
+            drawCursor();
+            tableGraphicsChanged = false;
+        }
         drawBallInHand();
-
-//        System.out.println((t1 - t0) + " " + (t2- t1) + " " + (t3 - t2) + " " + (t4 - t3));
     }
 
     private void playMovement() {
@@ -3224,16 +3242,17 @@ public class GameView implements Initializable {
                     double psyFactor = 1.0 - getPsyAccuracyMultiplier(playerPerson);
                     baseSwingMag *= (1.0 + psyFactor * 5);
                 }
+                double frameRateRatio = frameAnimation.lastAnimationFrameMs() / frameTimeMs;
                 if (!touched) {
                     double changeRatio = (lastCueDtToWhite - cueDtToWhite) / maxPullDistance;
                     pointingAngle += aimingOffset * changeRatio;
                 }
                 if (stage < 0) {  // 向左扭
                     pointingAngle = pointingAngle + baseSwingMag *
-                            errMulWithPower / 2000;
+                            errMulWithPower / 2000 * frameRateRatio;
                 } else if (stage > 0) {  // 向右扭
                     pointingAngle = pointingAngle - baseSwingMag *
-                            errMulWithPower / 2000;
+                            errMulWithPower / 2000 * frameRateRatio;
                 }
 
                 if (!touched) {

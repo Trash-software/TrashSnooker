@@ -63,12 +63,31 @@ public class Algebra {
         double theta = thetaOf(vecOnBase);
 //        System.out.println("Theta: " + Math.toDegrees(theta));
         if (Double.isNaN(theta)) {
-            System.out.println(Arrays.toString(vecOnBase) + ", " + Arrays.toString(unitBase));
+            System.err.println(Arrays.toString(vecOnBase) + ", " + Arrays.toString(unitBase));
         }
         double outUnitX = Math.cos(theta) * unitBase[0] - Math.sin(theta) * unitBase[1];
         double outUnitY = Math.sin(theta) * unitBase[0] + Math.cos(theta) * unitBase[1];
         double vecNorm = Math.hypot(vecOnBase[0], vecOnBase[1]);
         return new double[]{outUnitX * vecNorm, outUnitY * vecNorm};
+    }
+    
+    public static double[][] changeOfBasisMatrix(double rotate) {
+        double sin = Math.sin(rotate);
+        double cos = Math.cos(rotate);
+        return new double[][]{
+                {cos, -sin},
+                {sin, cos}
+        };
+    }
+    
+    public static double[] matrixMultiplyVector(double[][] matrix, double[] vector) {
+        double[] res = new double[matrix.length];
+        for (int r = 0; r < matrix.length; r++) {
+            for (int c = 0; c < matrix[r].length; c++) {
+                res[r] += matrix[r][c] * vector[c];
+            }
+        }
+        return res;
     }
 
     /**
@@ -90,6 +109,14 @@ public class Algebra {
         double a = Math.atan2(y, x);
         if (a < 0.0) a += TWO_PI;
         return a;
+    }
+    
+    public static double rawThetaOf(double x, double y) {
+        return Math.atan2(y, x);
+    }
+    
+    public static double rawThetaOf(double[] vec) {
+        return rawThetaOf(vec[0], vec[1]);
     }
 
     public static double thetaOf(double[] vec) {
