@@ -25,23 +25,51 @@ public class Alert implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
-    
+
     private void setOnClose(Stage stage) {
         stage.setOnCloseRequest(e -> active = false);
     }
 
     public void setupInfo(Stage stage,
                           String header, String content) {
+        functionalWindow(stage, header, content, null, null);
+    }
+    
+    public void setHeaderText(String text) {
+        headerText.setText(text);
+    }
+    
+    public void setContentText(String text) {
+        contentText.setText(text);
+    }
+    
+    public void setPositiveButton(String text, Runnable callback) {
+        yesButton.setText(text);
+        yesButton.setOnAction(e -> Platform.runLater(callback));
+    }
+
+    public void functionalWindow(Stage stage,
+                                 String header, String content, 
+                                 String positiveText,
+                                 Runnable callback) {
         this.stage = stage;
         setOnClose(stage);
 
         this.headerText.setText(header);
         this.contentText.setText(content);
+        if (positiveText != null) this.yesButton.setText(positiveText);
         this.noButton.setVisible(false);
         this.noButton.setManaged(false);
-        this.yesButton.setOnAction(e -> stage.close());
+        this.yesButton.setOnAction(e -> {
+            if (callback != null) Platform.runLater(callback);
+            else stage.close();
+        });
     }
     
+    public void close() {
+        stage.close();
+    }
+
     public void setupAdditional(Node additionalContent) {
         this.additionalPane.getChildren().add(additionalContent);
     }

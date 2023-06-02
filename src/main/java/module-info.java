@@ -44,4 +44,5 @@ module TrashSnooker {
     opens trashsoftware.trashSnooker.fxml.statsViews;
     opens trashsoftware.trashSnooker.core.career.challenge to javafx.base;
     exports trashsoftware.trashSnooker.core.career.challenge;
+    exports trashsoftware.trashSnooker.core.career.awardItems;
 }

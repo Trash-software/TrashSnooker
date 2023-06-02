@@ -36,7 +36,7 @@ public class AlertShower {
 
             Alert view = loader.getController();
             view.setupInfo(newStage, header, content);
-            
+
             if (autoCloseMs > 0) {
                 Thread autoClose = new Thread(() -> {
                     try {
@@ -52,6 +52,38 @@ public class AlertShower {
                 });
                 autoClose.setDaemon(true);
                 autoClose.start();
+            }
+
+            newStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showSingleButtonWindow(Window owner, String content, String header, 
+                                              String buttonText,
+                                              Runnable callback,
+                                              Node additionalContent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    Alert.class.getResource("alert.fxml"),
+                    App.getStrings()
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Stage newStage = new Stage();
+            newStage.initOwner(owner);
+            newStage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(root);
+            newStage.setScene(scene);
+
+            Alert view = loader.getController();
+            view.functionalWindow(newStage, header, content, buttonText, callback);
+
+            if (additionalContent != null) {
+                view.setupAdditional(additionalContent);
             }
             
             newStage.showAndWait();

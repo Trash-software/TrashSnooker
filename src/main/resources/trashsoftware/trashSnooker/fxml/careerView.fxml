@@ -24,10 +24,11 @@
     </HBox>
 
     <VBox GridPane.rowIndex="1" spacing="10.0">
-        <HBox spacing="10.0">
+        <HBox spacing="10.0" alignment="CENTER_LEFT">
             <Label fx:id="levelLabel"/>
-            <ProgressBar fx:id="levelExpBar" prefWidth="180.0"/>
+            <ProgressBar fx:id="levelExpBar" prefWidth="180.0" HBox.hgrow="ALWAYS"/>
             <Label fx:id="levelExpLabel"/>
+            <Button text="%levelUp" fx:id="levelUpBtn" onAction="#levelUpAction" visible="false"/>
         </HBox>
         <AbilityShower fx:id="abilityShower"/>
         <HBox spacing="20.0" alignment="CENTER">

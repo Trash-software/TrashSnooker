@@ -302,6 +302,7 @@ public class CareerManager {
     private void saveCacheInfo() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(careerSave.getInfoFile()))) {
             StringBuilder builder = new StringBuilder();
+            builder.append("name=").append(humanPlayerCareer.getPlayerPerson().getName()).append("\n");
             builder.append("level=").append(humanPlayerCareer.getLevel()).append('\n');
             builder.append("lastModified=").append(System.currentTimeMillis()).append('\n');
 

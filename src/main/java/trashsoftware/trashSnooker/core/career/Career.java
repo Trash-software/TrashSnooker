@@ -2,8 +2,11 @@ package trashsoftware.trashSnooker.core.career;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.aiMatch.AiVsAi;
+import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
+import trashsoftware.trashSnooker.core.career.awardItems.AwardPerk;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.training.Challenge;
@@ -12,13 +15,13 @@ import trashsoftware.trashSnooker.util.DataLoader;
 import java.util.*;
 
 public class Career {
+    
+    public static final double[] PERK_RANDOM_RANGE = {0.5, 2.0};
 
     private final List<ChampionshipScore> championshipScores = new ArrayList<>();  // 不一定按时间顺序
     private final boolean isHumanPlayer;
     private final transient Map<GameRule, Double> efforts = new HashMap<>();
     private PlayerPerson playerPerson;
-    //    private int cumulatedPerks = 0;
-//    private int usedPerks = 0;
     private int availPerks;
     private int totalExp = 0;
     private int level = 1;
@@ -125,7 +128,7 @@ public class Career {
 
             totalExp += challengeSet.getExp();
             expInThisLevel += challengeSet.getExp();
-            tryLevelUp();
+//            tryLevelUp();
         }
     }
     
@@ -179,7 +182,7 @@ public class Career {
             totalExp += exp;
             expInThisLevel += exp;
         }
-        tryLevelUp();
+//        tryLevelUp();
     }
 
     public int getLevel() {
@@ -188,6 +191,41 @@ public class Career {
 
     public int getExpInThisLevel() {
         return expInThisLevel;
+    }
+    
+    public boolean canLevelUp() {
+        return expInThisLevel >= CareerManager.getInstance().getExpNeededToLevelUp(level);
+    }
+    
+    public int[] levelUpPerkRange(int toLevel) {
+        int mean = CareerManager.perksOfLevelUp(toLevel);
+        int low = (int) Math.max(1, Math.round(PERK_RANDOM_RANGE[0] * mean));
+        int high = (int) Math.round(PERK_RANDOM_RANGE[1] * mean);
+        
+        int[] res = new int[high - low + 1];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = i + low;
+        }
+        return res;
+    }
+    
+    public List<AwardMaterial> levelUp() {
+        List<AwardMaterial> result = new ArrayList<>();
+
+        int expNeed = CareerManager.getInstance().getExpNeededToLevelUp(level);
+        level++;
+        expInThisLevel -= expNeed;
+        
+        int[] range = levelUpPerkRange(level);
+        int index = (int) (Math.random() * range.length);
+        int perk = range[index];
+        availPerks += perk;
+        
+        CareerManager.getInstance().saveToDisk();
+        
+        AwardMaterial pm = new AwardPerk(perk);
+        result.add(pm);
+        return result;
     }
 
     private void tryLevelUp() {

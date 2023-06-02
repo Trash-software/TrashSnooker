@@ -4,7 +4,6 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -15,8 +14,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.*;
+import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.fxml.alert.Alert;
 import trashsoftware.trashSnooker.fxml.widgets.AbilityShower;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
@@ -39,6 +40,8 @@ public class CareerView extends ChildInitializable {
     TableColumn<CareerRank, String> rankNameCol;
     @FXML
     Label levelLabel, levelExpLabel;
+    @FXML
+    Button levelUpBtn;
     @FXML
     ProgressBar levelExpBar;
     @FXML
@@ -75,8 +78,8 @@ public class CareerView extends ChildInitializable {
     Label selectedPlayerAchievements, selectedPlayerGameTypesLabel;
     @FXML
     Button skipChampBtn;
-
     CareerManager careerManager;
+    private int perkRndCounter;
     private PerkManager perkManager;
     private Stage selfStage;
     private ResourceBundle strings;
@@ -317,8 +320,12 @@ public class CareerView extends ChildInitializable {
         levelLabel.setText("Lv." + myCareer.getLevel());
         int curExp = myCareer.getExpInThisLevel();
         int expToNext = careerManager.getExpNeededToLevelUp(myCareer.getLevel());
-        levelExpBar.setProgress((double) curExp / expToNext);
+        levelExpBar.setProgress(Math.min(1.0, (double) curExp / expToNext));
         levelExpLabel.setText(String.format("%d/%d", curExp, expToNext));
+
+        boolean canLevelUp = myCareer.canLevelUp();
+        levelUpBtn.setVisible(canLevelUp);
+        levelUpBtn.setDisable(!canLevelUp);
 
         refreshRanks();
         refreshPersonalAwardsTable();
@@ -399,6 +406,59 @@ public class CareerView extends ChildInitializable {
     }
 
     @FXML
+    public void levelUpAction() throws IOException {
+        Career myCareer = careerManager.getHumanPlayerCareer();
+
+        int pastLevel = myCareer.getLevel();
+        List<AwardMaterial> awardMaterials = myCareer.levelUp();
+        int curLevel = myCareer.getLevel();
+        if (awardMaterials != null) {
+            System.out.println("Possible perks: " + Arrays.toString(myCareer.levelUpPerkRange(curLevel)));
+            String nPerk = awardMaterials.get(0).toString();
+
+            FXMLLoader loader = new FXMLLoader(
+                    Alert.class.getResource("alert.fxml"),
+                    App.getStrings()
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Stage newStage = new Stage();
+            newStage.initOwner(selfStage);
+            newStage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(root);
+            newStage.setScene(scene);
+
+            Alert view = loader.getController();
+
+            view.functionalWindow(
+                    newStage,
+                    strings.getString("levelUped"),
+                    String.format("Lv. %d->%d", pastLevel, curLevel),
+                    strings.getString("clickToRandomPerk"),
+                    () -> {
+                        refreshGui();
+                        view.setHeaderText(
+                                String.format(
+                                        strings.getString("levelUpPerkCongrat"),
+                                        nPerk
+                                ));
+                        view.setContentText(
+                                strings.getString("levelUpDes")
+                        );
+                        view.setPositiveButton(
+                                strings.getString("close"),
+                                view::close
+                        );
+                    }
+            );
+
+            newStage.showAndWait();
+        }
+    }
+
+    @FXML
     public void clearUsedPerks() {
         perkManager.clearSelections();
         abilityShower.notifyPerksReset();
@@ -419,7 +479,7 @@ public class CareerView extends ChildInitializable {
 
         abilityShower.notifyPerksReset();
     }
-    
+
     @FXML
     public void trainingChallengeAction() {
         try {
@@ -429,9 +489,9 @@ public class CareerView extends ChildInitializable {
             );
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
-            
+
             Scene scene = new Scene(root);
-            
+
             CareerTrainingView view = loader.getController();
             view.setParent(selfStage.getScene());
             view.setup(selfStage, careerManager.getHumanPlayerCareer(), this);
@@ -461,7 +521,7 @@ public class CareerView extends ChildInitializable {
 
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
-            
+
             TournamentsViewer viewer = loader.getController();
             viewer.setStage(selfStage);
             viewer.setParent(selfStage.getScene());
