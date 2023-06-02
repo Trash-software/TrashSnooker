@@ -117,9 +117,9 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double whiteY = game.getCueBall().getY();
         
         double[] cornerBallPos = leftBreak ? game.getCornerRedBallPosGreenSide() : game.getCornerRedBallPosYellowSide();
-        double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 0.75;
+        double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 2.0;  // 主要有个加塞瞄点偏移的事情
         double[] thinVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thinY - whiteY);
-        double thickY = cornerBallPos[1] - sign * game.getGameValues().ball.ballDiameter * 0.5;
+        double thickY = cornerBallPos[1];
         double[] thickVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thickY - whiteY);
         
         double beginDeg = Math.toDegrees(Algebra.thetaOf(thinVec));

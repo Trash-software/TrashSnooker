@@ -1,10 +1,13 @@
 package trashsoftware.trashSnooker.core.table;
 
+import javafx.scene.canvas.GraphicsContext;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.GameHolder;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
+import trashsoftware.trashSnooker.fxml.GameView;
+import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +16,30 @@ public class ChineseEightTable extends NumberedBallTable {
 
     public ChineseEightTable(TableMetrics tableMetrics) {
         super(tableMetrics);
+    }
+
+    @Override
+    public void drawTableMarks(GamePane view, GraphicsContext graphicsContext, double scale) {
+        super.drawTableMarks(view, graphicsContext, scale);
+
+        // 中八的置球线
+        double firstBallX = firstBallPlacementX();
+        double botPointX = firstBallPlacementX() + tableMetrics.innerWidth / 8;
+        double botCanvasX = view.canvasX(botPointX);
+        double midY = view.canvasY(tableMetrics.midY);
+
+        double radius1 = 3.0 * scale;
+        graphicsContext.setFill(GameView.WHITE);
+        graphicsContext.setStroke(GameView.WHITE);
+        graphicsContext.fillOval(
+                botCanvasX - radius1,
+                midY - radius1,
+                radius1 * 2,
+                radius1 * 2);
+        graphicsContext.strokeLine(
+                view.canvasX(firstBallX), midY,
+                botCanvasX, midY
+        );
     }
 
     public static List<PoolBall> filterRemainingTargetOfPlayer(

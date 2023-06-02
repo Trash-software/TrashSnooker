@@ -34,6 +34,8 @@
                 <MenuItem text="%letOpponentPlay" onAction="#letOtherPlayAction"
                           fx:id="letOtherPlayMenu"
                           disable="true"/>
+                <MenuItem text="%reposition" onAction="#repositionAction" fx:id="repositionMenu"
+                          disable="true"/>
             </Menu>
             <Menu text="%playMenu">
                 <CheckMenuItem fx:id="aiAutoPlayMenuItem" text="%aiAutoPlay"/>

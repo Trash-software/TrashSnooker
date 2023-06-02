@@ -23,7 +23,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     protected final SnookerBall[] redBalls = new SnookerBall[numRedBalls()];
     protected final SnookerBall[] coloredBalls = new SnookerBall[6];
     /*
-    球堆两侧的倒数第一二颗球
+    球堆两侧的倒数第一颗球
      */
     protected final Set<Ball> suggestedRegularBreakBalls = new HashSet<>();
     /*
@@ -438,6 +438,13 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
         if (thisCueFoul.isFoul()) {
             if (thisCueFoul.isMiss()) {
+                // 看有没有解，如果无解，那就不算miss
+                if (!isSolvable()) {
+                    thisCueFoul.setMiss(false);
+                }
+            }
+            
+            if (thisCueFoul.isMiss()) {
                 continuousFoulAndMiss++;
             } else {
                 continuousFoulAndMiss = 0;
@@ -499,6 +506,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     @Override
     public boolean canReposition() {
+        // 不需要再去检查有没有解了，因为无解的球不会判miss
         int minScore = Math.min(player1.getScore(), player2.getScore());
         int maxScore = Math.max(player1.getScore(), player2.getScore());
         boolean notOverScore = minScore + getRemainingScore(false) > maxScore;  // 超分或延分不能复位
@@ -607,8 +615,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     /**
      * 是不是无意识救球，前提是已经犯规且没有击中目标球
      */
-    @Override
-    public boolean isSolvable() {
+    private boolean isSolvable() {
         return isSolvable;
     }
 
@@ -905,14 +912,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 redBalls[index++] = ball;
 
                 if (col == 0) {
-                    if (row >= nRows - 2) {
+                    if (row >= nRows - 1) {
                         suggestedRegularBreakBalls.add(ball);
                         if (row == nRows - 1) {
                             cornerRedBallPoses[1] = new double[]{curX, y};
                         }
                     }
                 } else if (col == nCols - 1) {
-                    if (row >= nRows - 2) {
+                    if (row >= nRows - 1) {
                         suggestedRegularBreakBalls.add(ball);
                         if (row == nRows - 1) {
                             cornerRedBallPoses[0] = new double[]{curX, y};

@@ -1,9 +1,10 @@
 package trashsoftware.trashSnooker.core;
 
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
-import trashsoftware.trashSnooker.util.Util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class CuePlayParams {
 
@@ -27,7 +28,7 @@ public class CuePlayParams {
      * @param actualPower 实际的力量，考虑球员力量、球杆、球的重量
      */
     protected CuePlayParams(double vx, double vy, double xSpin, double ySpin,
-                         double sideSpin, double actualPower) {
+                            double sideSpin, double actualPower) {
         this.vx = vx;
         this.vy = vy;
         this.xSpin = xSpin;
@@ -41,15 +42,15 @@ public class CuePlayParams {
                                                 double actualFrontBackSpin, double actualSideSpin,
                                                 double cueAngleDeg,
                                                 double actualPower) {
-        return makeIdealParams(directionX, directionY, 
-                actualFrontBackSpin, actualSideSpin, 
+        return makeIdealParams(directionX, directionY,
+                actualFrontBackSpin, actualSideSpin,
                 cueAngleDeg, actualPower,
                 false);
     }
 
     /**
      * Ideal指不带随机
-     * 
+     *
      * @param directionX selected x direction
      * @param directionY selected y direction
      */
@@ -60,7 +61,7 @@ public class CuePlayParams {
                                                 boolean slideCue) {
 
         if (actualPower < Values.MIN_SELECTED_POWER) actualPower = Values.MIN_SELECTED_POWER;
-        
+
         double directionalPower = actualPower;
         double directionalSideSpin = actualSideSpin;  // 参与击球方向计算的sideSpin
         if (slideCue) {
@@ -80,7 +81,7 @@ public class CuePlayParams {
         double[] spins = calculateSpins(vx, vy, actualFrontBackSpin, actualSideSpin, cueAngleDeg);
         return new CuePlayParams(vx, vy, spins[0], spins[1], spins[2], actualPower);
     }
-    
+
     public static double getSpeedOfPower(double actualPower, double cueAngleDeg) {
         double speed = actualPower * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
         if (cueAngleDeg > 5) {
@@ -107,12 +108,14 @@ public class CuePlayParams {
     public static double[] unitXYWithSpins(double unitSideSpin, double power,
                                            double cueDirX, double cueDirY) {
         double offsetAngleRad = -unitSideSpin * power / 2400.0;
+//        offsetAngleRad = 0;
         return Algebra.rotateVector(cueDirX, cueDirY, offsetAngleRad);
     }
 
     public static double[] aimingUnitXYIfSpin(double unitSideSpin, double power,
                                               double cueDirX, double cueDirY) {
         double offsetAngleRad = -unitSideSpin * power / 2400.0;
+//        offsetAngleRad = 0;
         return Algebra.rotateVector(cueDirX, cueDirY, -offsetAngleRad);
     }
 
@@ -120,9 +123,9 @@ public class CuePlayParams {
      * 返回这个位置可用的所有手，以优先级排序
      */
     public static List<PlayerPerson.Hand> getPlayableHands(double whiteX, double whiteY,
-                                                          double aimingX, double aimingY,
-                                                          TableMetrics tableMetrics,
-                                                          PlayerPerson person) {
+                                                           double aimingX, double aimingY,
+                                                           TableMetrics tableMetrics,
+                                                           PlayerPerson person) {
         List<PlayerPerson.Hand> result = new ArrayList<>();
         result.add(PlayerPerson.Hand.REST);
 
@@ -143,9 +146,9 @@ public class CuePlayParams {
                 !tableMetrics.isInOuterTable(standingPosRight[1][0], standingPosRight[1][1])) {
             result.add(PlayerPerson.Hand.RIGHT);
         }
-        
+
         result.sort(Comparator.comparingInt(person.handBody::precedenceOfHand));
-        
+
         return result;
     }
 
@@ -190,7 +193,7 @@ public class CuePlayParams {
                                                     PlayerPerson person,
                                                     PlayerPerson.Hand hand) {
         double upBodyLength = person.handBody.height * 10 - 851;
-        double heightMul = 1.75;  
+        double heightMul = 1.75;
         double personLengthX = upBodyLength * -aimingX * heightMul;
         double personLengthY = upBodyLength * -aimingY * heightMul;
 

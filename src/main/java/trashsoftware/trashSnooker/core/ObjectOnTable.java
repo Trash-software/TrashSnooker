@@ -124,7 +124,7 @@ public abstract class ObjectOnTable implements Cloneable {
 
     protected void clearBounceDesiredLeavePos() {
         if (currentBounce != null) {
-            System.out.println("Cleared!");
+            System.out.println("Cleared bounce desired leave pos!");
             currentBounce.clearDesireLeavePos();
         }
     }
@@ -615,6 +615,7 @@ public abstract class ObjectOnTable implements Cloneable {
         @Override
         void clearDesireLeavePos() {
             desiredLeaveSpeed = 0.0;
+            desiredSideSpin = 0.0;
         }
     }
 
@@ -623,6 +624,8 @@ public abstract class ObjectOnTable implements Cloneable {
         double verticalAcc;
         double desiredLeaveSpeed;
         double injectAngle;
+        
+        double desiredLeaveSideSpin;
         
 //        double[] lastUnitAcc;
 
@@ -664,6 +667,10 @@ public abstract class ObjectOnTable implements Cloneable {
 //            lastUnitAcc = unitAcc;
         }
 
+        public void setDesiredLeaveSideSpin(double desiredLeaveSideSpin) {
+            this.desiredLeaveSideSpin = desiredLeaveSideSpin;
+        }
+
         @Override
         void leave() {
             if (desiredLeaveSpeed != 0) {
@@ -681,6 +688,10 @@ public abstract class ObjectOnTable implements Cloneable {
                 vx = vecOfAngle[0] * desiredLeaveSpeed;
                 vy = vecOfAngle[1] * desiredLeaveSpeed;
                 
+                if (ObjectOnTable.this instanceof Ball && desiredLeaveSideSpin != 0.0) {
+                    ((Ball) ObjectOnTable.this).sideSpin = desiredLeaveSideSpin;
+                }
+                
 //                double speed = Math.hypot(vx, vy);
 //                double ratio = speed / desiredLeaveSpeed;
 //                vx /= ratio;
@@ -692,6 +703,7 @@ public abstract class ObjectOnTable implements Cloneable {
         void clearDesireLeavePos() {
             this.desiredLeaveSpeed = 0.0;
             this.injectAngle = 0.0;
+            this.desiredLeaveSideSpin = 0.0;
         }
     }
 }

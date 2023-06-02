@@ -178,6 +178,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
         
         if (!allowPocketCorner && wp.isWhiteHitsHoleArcs()) {
+            wp.resetToInit();
             return null;
         }
         

@@ -11,6 +11,7 @@ public class Movement {
     private final Map<Ball, MovementFrame> startingPositions = new HashMap<>();
 //    private double iterationIndex = 0;
     private final Ball anyBall;
+    private boolean congested = false;
 
     public Movement(Ball[] allBalls) {
         anyBall = allBalls[0];
@@ -28,8 +29,16 @@ public class Movement {
             startingPositions.put(ball, frame);
         }
     }
-    
-//    public boolean hasNext() {
+
+    public void setCongested() {
+        this.congested = true;
+    }
+
+    public boolean isCongested() {
+        return congested;
+    }
+
+    //    public boolean hasNext() {
 //        return iterationIndex < movementMap.get(anyBall).size();
 //    }
 //    

@@ -27,7 +27,7 @@ public enum GameRule {
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_FULL_DENSE,
                     TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS, TrainType.SNAKE_X, TrainType.CLEAR_COLOR},
             BreakRule.ALTERNATE,
-            Set.of(Rule.FOUL_AND_MISS)) {
+            Set.of(Rule.FOUL_AND_MISS, Rule.FOUL_LET_OTHER_PLAY)) {
         @Override
         public boolean snookerLike() {
             return true;
@@ -64,7 +64,7 @@ public enum GameRule {
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF,
                     TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},
             BreakRule.WINNER,
-            Set.of(Rule.FOUL_AND_MISS)) {
+            Set.of(Rule.FOUL_AND_MISS, Rule.FOUL_LET_OTHER_PLAY)) {
         @Override
         public boolean poolLike() {
             return true;

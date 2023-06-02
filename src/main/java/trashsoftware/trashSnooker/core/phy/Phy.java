@@ -16,8 +16,6 @@ public class Phy {
     public final double sideSpinReducer;
     public final double spinEffect;  // 数值越小影响越大
     
-    public final Phy precisedCopy;  // PLAY_MS的副本，用于处理一些精密的事情
-    
     Phy(double calculateMs, TableCloth cloth, boolean isPrediction) {
         this.cloth = cloth;
         this.calculateMs = calculateMs;
@@ -29,8 +27,6 @@ public class Phy {
         spinReducer = cloth.smoothness.spinReduceFactor / calculationsPerSecSqr;
         sideSpinReducer = 120.0 / calculationsPerSecSqr;
         spinEffect = cloth.smoothness.spinEffectFactor / calculateMs;
-        
-        this.precisedCopy = calculateMs == PLAY_MS ? this : new Phy(PLAY_MS, cloth, isPrediction);
     }
     
     public double accelerationMultiplier() {

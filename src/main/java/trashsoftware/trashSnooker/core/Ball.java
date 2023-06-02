@@ -147,8 +147,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
     
     public boolean isOutOfTable() {
-        return x < 0 || x >= values.table.outerWidth ||
-                y < 0 || y >= values.table.outerHeight;
+        return !potted && (x < 0 || x >= values.table.outerWidth ||
+                y < 0 || y >= values.table.outerHeight);
     }
 
     public void setPotted(boolean potted) {
@@ -353,15 +353,50 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
 
         double[] collisionNormal = new double[]{arcXY[0] - x, arcXY[1] - y};  // 切线的法向量
-        applySpinsWhenHitCushion(phy, collisionNormal);
+        double[] tangentUnitVec = Algebra.unitVector(Algebra.normalVector(collisionNormal));
+        tangentUnitVec[0] = -tangentUnitVec[0];  // 切线，从UI上看指向右侧，因为y反了
+        tangentUnitVec[1] = -tangentUnitVec[1];
+
+        applySpinToArcAndLine(collisionNormal, tangentUnitVec, phy, 1.0);
+        
         super.hitHoleArcArea(arcXY, phy, arcRadius);
+        
+        // 撞出塞
+        double sideSpinChangeFactor = Algebra.projectionLengthOn(tangentUnitVec, new double[]{vx, vy});
+        double sideSpinChange = sideSpinChangeFactor * values.table.cushionPowerSpinFactor * CUSHION_COLLISION_SPIN_FACTOR;
+        
+        if (currentBounce instanceof ArcBounce) {
+            ((ArcBounce) currentBounce).setDesiredLeaveSideSpin(sideSpin + sideSpinChange);
+        }
+    }
+    
+    private void applySpinToArcAndLine(double[] collisionNormal, double[] tangentVec, Phy phy, double factor) {
+        double sideSpinStrength = calculateEffectiveSideSpin(phy, collisionNormal);
+        double effectiveSideSpin = sideSpinStrength * table.wallSpinEffectRatio * factor;
+
+        // 也是那个思路，换底，在新的底处理旋转，再换回来
+        double theta = -Algebra.rawThetaOf(tangentVec);
+        double[][] cob = Algebra.changeOfBasisMatrix(theta);
+        double[][] cobInverse = Algebra.changeOfBasisMatrix(-theta);
+
+        double[] vv = new double[]{vx, vy};
+        double[] vChanged = Algebra.matrixMultiplyVector(cob, vv);
+        vChanged[0] += effectiveSideSpin;
+
+        double[] inverse = Algebra.matrixMultiplyVector(cobInverse, vChanged);
+        vx = inverse[0];
+        vy = inverse[1];
+
+//        sideSpin -= effectiveSideSpin;
+        sideSpin *= table.wallSpinPreserveRatio;
     }
 
     protected void hitHoleLineArea(double[][] line, double[] lineNormalVec, Phy phy) {
-        applySpinsWhenHitCushion(phy, lineNormalVec);
+        double[] tanUnitVec = Algebra.unitVector(new double[]{line[1][0] - line[0][0], line[1][1] - line[0][1]});
+        applySpinToArcAndLine(lineNormalVec, tanUnitVec, phy, 0.8);
         super.hitHoleLineArea(line, lineNormalVec, phy);
-//        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
-//        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.95;
+        
+        // 袋角直线撞得出来个屁的塞，反正我是没见过
     }
     
     private double calculateEffectiveSideSpin(Phy phy, double[] cushionNormalVec) {
@@ -388,19 +423,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private void applySpinsWhenHitCushion(Phy phy, double[] cushionNormalVec) {
         double sideSpinStrength = calculateEffectiveSideSpin(phy, cushionNormalVec);
         double effectiveSideSpin = sideSpinStrength * table.wallSpinEffectRatio;
-
-        // todo: 暂时修不好，大概还是因为左手/右手定理的问题
-//        double[] cushionVec = Algebra.normalVector(cushionNormalVec);
-//        double horizontal = Algebra.projectionLengthOn(cushionVec, vec);
-//        
-//        double[] afterSpin = new double[]{horizontal + effectiveSideSpin, vertical};
-//        double newVx = Algebra.projectionLengthOn(Algebra.X_AXIS, afterSpin);
-//        double newVy = Algebra.projectionLengthOn(Algebra.Y_AXIS, afterSpin);
-//        
-//        vx = newVx;
-//        vy = newVy;
-
-        // todo: 真的算，而不是用if。目前没考虑袋角
+        
         if (Arrays.equals(cushionNormalVec, LEFT_CUSHION_VEC_NORM) || Arrays.equals(cushionNormalVec, RIGHT_CUSHION_VEC_NORM)) {
             if (vx < 0) {
                 vy -= effectiveSideSpin;
@@ -425,8 +448,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         sideSpin -= effectiveSideSpin;
         sideSpin *= table.wallSpinPreserveRatio;
 //        sideSpin *= table.wallSpinPreserveRatio / sideSpinEffectMul;
-
-        // todo: 吃库之后侧旋
     }
 
     /**
@@ -586,7 +607,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         
         if (Algebra.distanceToPoint(x1, y1, x2, y2) <= 
                 Algebra.distanceToPoint(x1 + vx, y1 + vy, x2 + ball.vx, y2 + ball.vy)) {
-            System.err.println("Will not even collide!");
+            if (!phy.isPrediction) System.err.println("Will not even collide!");
             return;
         }
         
@@ -662,6 +683,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //        System.out.printf("(%f, %f), (%f, %f)\n", thisHorV, thisVerV, ballHorV, ballVerV);
 //        System.out.print("Ball 1 " + this + " ");
 
+        // todo: 看看有没有问题。应该没问题，以前是因为atan引起的，现在atan2应该就好了
+        // todo: 我错了，去掉之后三天两头卡bug
         if (thisHorV == 0) thisHorV = 0.0000000001;
         if (thisVerV == 0) thisVerV = 0.0000000001;
         if (ballHorV == 0) ballHorV = 0.0000000001;
@@ -742,9 +765,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         ball.nextY = y2 + ball.vy;
         
         if (Algebra.distanceToPoint(nextX, nextY, ball.nextX, ball.nextY) < Algebra.distanceToPoint(x, y, ball.x, ball.y)) {
-            System.err.printf("Ball %d@%f,%f->%f,%f and ball %d@%f,%f->%f,%f not collide properly\n",
+            if (!phy.isPrediction) System.err.printf("Ball %d@%f,%f->%f,%f and ball %d@%f,%f->%f,%f not collide properly\n",
                     getValue(), x, y, nextX, nextY, ball.getValue(), ball.x, ball.y, ball.nextX, ball.nextY);
-            System.err.printf("%d rounds, Last dt: %f, new dt: %f\n",
+            if (!phy.isPrediction) System.err.printf("%d rounds, Last dt: %f, new dt: %f\n",
                     phyRounds,
                     Algebra.distanceToPoint(x, y, ball.x, ball.y),
                     Algebra.distanceToPoint(nextX, nextY, ball.nextX, ball.nextY));

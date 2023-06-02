@@ -76,7 +76,7 @@ public abstract class NumberedBallTable extends Table {
                 breakLineX,
                 view.canvasY(tableMetrics.topY + tableMetrics.innerHeight));
         
-        // 开球点位
+        // 开球点位和置球点位
         double pointYGap = tableMetrics.innerHeight / 4;
         double[][] points = new double[][]{
                 {breakLineX(), tableMetrics.topY + pointYGap},
@@ -86,24 +86,26 @@ public abstract class NumberedBallTable extends Table {
         };
         
         graphicsContext.setFill(GameView.WHITE);
+        double radius1 = 3.0 * scale;
         for (double[] point : points) {
             graphicsContext.fillOval(
-                    view.canvasX(point[0]) - 1.5,
-                    view.canvasY(point[1]) - 1.5,
-                    3, 
-                    3);
+                    view.canvasX(point[0]) - radius1,
+                    view.canvasY(point[1]) - radius1,
+                    radius1 * 2, 
+                    radius1 * 2);
         }
 
         // 颗星标记
         List<double[]> stars = tableMetrics.tableStars;
         graphicsContext.setFill(GameView.WHITE);
 
+        double radius2 = 5.0 * scale;
         for (double[] star : stars) {
             graphicsContext.fillOval(
-                    view.canvasX(star[0]) - 2,
-                    view.canvasY(star[1]) - 2,
-                    5,
-                    5);
+                    view.canvasX(star[0]) - radius2,
+                    view.canvasY(star[1]) - radius2,
+                    radius2,
+                    radius2);
         }
     }
 
@@ -114,20 +116,4 @@ public abstract class NumberedBallTable extends Table {
     public double breakLineX() {
         return tableMetrics.leftX + (tableMetrics.innerWidth * 0.25);
     }
-
-//    @Override
-//    public void forceDrawBall(GameView view,
-//                              Ball ball,
-//                              double absoluteX,
-//                              double absoluteY,
-//                              GraphicsContext graphicsContext,
-//                              double scale) {
-//        drawPoolBallEssential(
-//                view.canvasX(absoluteX),
-//                view.canvasY(absoluteY),
-//                gameValues.ballDiameter * scale,
-//                ball.getColor(),
-//                ball.getValue(),
-//                graphicsContext);
-//    }
 }

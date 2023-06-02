@@ -32,6 +32,7 @@ import java.util.function.Supplier;
 
 public abstract class Game<B extends Ball, P extends Player> implements GameHolder, Cloneable {
     public static final int END_REP = 31;
+    public static final int CONGESTION_LIMIT = 30000;
     //    public static final double calculateMs = 1.0;
 //    public static final double calculationsPerSec = 1000.0 / calculateMs;
 //    public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
@@ -845,12 +846,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public boolean canReposition() {
         return gameValues.rule.hasRule(Rule.FOUL_AND_MISS) && thisCueFoul.isFoul() && thisCueFoul.isMiss();
     }
-
-    public boolean isSolvable() {
-        return true;
-    }
-
-
+    
     public void notReposition() {
     }
 
@@ -1125,7 +1121,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             prediction = new WhitePrediction(cueBallClone);
 
             while (!oneRun() && notTerminated) {
-                if (cumulatedPhysicalTime >= 30000) {
+                if (cumulatedPhysicalTime >= CONGESTION_LIMIT) {
                     // Must be something wrong
                     System.err.println("White prediction congestion");
                     for (Ball ball : getAllBalls()) {
@@ -1159,6 +1155,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             firstBall.prepareMove(phy);
 
             if (firstBall.isLikelyStopped(phy)) return true;
+            if (firstBall.isOutOfTable()) return true;
             if (firstBall.willPot(phy)) {
                 prediction.potFirstBall();
                 return true;
@@ -1192,6 +1189,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             cueBallClone.prepareMove(phy);
 
             if (cueBallClone.isLikelyStopped(phy)) return true;
+            if (cueBallClone.isOutOfTable()) return true;
             if (cueBallClone.willPot(phy)) {
                 prediction.potCueBall();
                 return true;
@@ -1331,9 +1329,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         Movement calculate() {
             movement = new Movement(getAllBalls());
             while (!oneRun() && notTerminated) {
-                if (cumulatedPhysicalTime > 30000) {
+                if (cumulatedPhysicalTime >= CONGESTION_LIMIT) {
                     // Must be something wrong
                     System.err.println("Physical calculation congestion");
+                    movement.setCongested();
                     for (Ball ball : getAllBalls()) {
                         ball.clearMovement();
                     }
@@ -1380,7 +1379,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
             for (int i = 0; i < allBalls.length; i++) {
                 B ball = allBalls[i];
-                if (ball.isPotted()) continue;
+                if (ball.isPotted() || ball.isOutOfTable()) continue;
                 if (!ball.isLikelyStopped(phy)) {
                     noBallMoving = false;
                     if (ball.willPot(phy)) {

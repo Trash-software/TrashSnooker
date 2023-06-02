@@ -19,9 +19,9 @@ public class TableMetrics {
     public static final Color GREEN_TABLE_POCKET_LEATHER = Color.valueOf("#BB9977");
 
     private static final String[] NAMES = {
-            SNOOKER, 
+            SNOOKER,
             CHINESE_EIGHT,
-            POOL_TABLE_10, 
+            POOL_TABLE_10,
             SIDE_POCKET,
             POOL_TABLE_8,
             POOL_TABLE_7,
@@ -89,7 +89,7 @@ public class TableMetrics {
     public double[] topMidHoleRightArcXy;
     public double[] botMidHoleLeftArcXy;
     public double[] botMidHoleRightArcXy;
-    
+
     // 全台6个库的向量，顺时针走向
     public double[][] topLeftCushion;
     public double[][] topRightCushion;
@@ -97,7 +97,7 @@ public class TableMetrics {
     public double[][] botRightCushion;
     public double[][] leftCushion;
     public double[][] rightCushion;
-    
+
     // 中袋袋角直线
     public double[][] topMidHoleLeftLine;
     public double[][] topMidHoleRightLine;
@@ -286,7 +286,7 @@ public class TableMetrics {
                 new double[]{rightX - cornerArcWidth - cornerLineLonger + cornerHoleDrift, botY + cornerArcRadius};
         botRightHoleEndArcXy =
                 new double[]{rightX + cornerArcRadius, botY - cornerArcWidth - cornerLineLonger + cornerHoleDrift};
-        
+
         // 库
         topLeftCushion = new double[][]{
                 {topLeftHoleSideArcXy[0], topY}, {topMidHoleLeftArcXy[0], topY}
@@ -327,34 +327,49 @@ public class TableMetrics {
                         {midHoleLineRightX, botMidLineTopY}};
 
         // 底袋袋角直线
-        // todo: 改为视觉上的顺时针
+        topLeftHoleEndLine =
+                new double[][]{
+                        {leftX - cornerArcHeight, topY + cornerLineLonger - cornerHoleDrift},  // 浅
+                        {leftX - cornerHoleTan, topY - cornerHoleDrift}  // 深
+                };
         topLeftHoleSideLine =
                 new double[][]{
-                        {leftX - cornerHoleDrift, topY - cornerHoleTan},
-                        {leftX + cornerLineLonger - cornerHoleDrift, topY - cornerArcHeight}
-        };
-        topLeftHoleEndLine =
-                new double[][]{{leftX - cornerHoleTan, topY - cornerHoleDrift},
-                        {leftX - cornerArcHeight, topY + cornerLineLonger - cornerHoleDrift}};
-        botLeftHoleSideLine =
-                new double[][]{{leftX - cornerHoleDrift, botY + cornerHoleTan},
-                        {leftX + cornerLineLonger - cornerHoleDrift, botY + cornerArcHeight}};
-        botLeftHoleEndLine =
-                new double[][]{{leftX - cornerHoleTan, botY + cornerHoleDrift},
-                        {leftX - cornerArcHeight, botY - cornerLineLonger + cornerHoleDrift}};
+                        {leftX - cornerHoleDrift, topY - cornerHoleTan},  // 深
+                        {leftX + cornerLineLonger - cornerHoleDrift, topY - cornerArcHeight}  // 浅
+                };
 
         topRightHoleSideLine =
-                new double[][]{{rightX + cornerHoleDrift, topY - cornerHoleTan},
-                        {rightX - cornerLineLonger + cornerHoleDrift, topY - cornerArcHeight}};
+                new double[][]{
+                        {rightX - cornerLineLonger + cornerHoleDrift, topY - cornerArcHeight},  // 浅
+                        {rightX + cornerHoleDrift, topY - cornerHoleTan}  // 深
+                };
         topRightHoleEndLine =
-                new double[][]{{rightX + cornerHoleTan, topY - cornerHoleDrift},
-                        {rightX + cornerArcHeight, topY + cornerLineLonger - cornerHoleDrift}};
-        botRightHoleSideLine =
-                new double[][]{{rightX + cornerHoleDrift, botY + cornerHoleTan},
-                        {rightX - cornerLineLonger + cornerHoleDrift, botY + cornerArcHeight}};
+                new double[][]{
+                        {rightX + cornerHoleTan, topY - cornerHoleDrift},  // 深
+                        {rightX + cornerArcHeight, topY + cornerLineLonger - cornerHoleDrift}  // 浅
+                };
+
         botRightHoleEndLine =
-                new double[][]{{rightX + cornerHoleTan, botY + cornerHoleDrift},
-                        {rightX + cornerArcHeight, botY - cornerLineLonger + cornerHoleDrift}};
+                new double[][]{
+                        {rightX + cornerArcHeight, botY - cornerLineLonger + cornerHoleDrift},  // 浅
+                        {rightX + cornerHoleTan, botY + cornerHoleDrift}  // 深
+                };
+        botRightHoleSideLine =
+                new double[][]{
+                        {rightX + cornerHoleDrift, botY + cornerHoleTan},  // 深
+                        {rightX - cornerLineLonger + cornerHoleDrift, botY + cornerArcHeight}  // 浅
+                };
+
+        botLeftHoleSideLine =
+                new double[][]{
+                        {leftX + cornerLineLonger - cornerHoleDrift, botY + cornerArcHeight},  // 浅
+                        {leftX - cornerHoleDrift, botY + cornerHoleTan}  // 深
+                };
+        botLeftHoleEndLine =
+                new double[][]{
+                        {leftX - cornerHoleTan, botY + cornerHoleDrift},  // 深
+                        {leftX - cornerArcHeight, botY - cornerLineLonger + cornerHoleDrift}  // 浅
+                };
 
         allCornerArcs = new double[][]{
                 topLeftHoleSideArcXy,

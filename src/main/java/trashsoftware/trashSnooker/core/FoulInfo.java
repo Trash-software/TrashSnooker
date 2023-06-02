@@ -37,7 +37,11 @@ public class FoulInfo {
     public boolean isMiss() {
         return miss;
     }
-    
+
+    public void setMiss(boolean miss) {
+        this.miss = miss;
+    }
+
     public String getAllReasons() {
         return String.join("\n", foulReasonAndScore.keySet());
     }

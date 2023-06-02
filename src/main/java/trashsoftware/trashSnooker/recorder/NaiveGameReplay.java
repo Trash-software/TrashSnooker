@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.recorder;
 
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.GamePlayStage;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.movement.Movement;
@@ -119,6 +120,10 @@ public class NaiveGameReplay extends GameReplay {
                             axisX, axisY, axisZ, rotateDeg, potted, movementType, movementValue);
                     movement.addFrame(ball, frame);
                 }
+            }
+            
+            if (steps >= Game.CONGESTION_LIMIT) {
+                movement.setCongested();
             }
 
             return movement;
