@@ -55,7 +55,7 @@ import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.core.table.ChineseEightTable;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
-import trashsoftware.trashSnooker.fxml.drawing.AnimationFrame;
+import trashsoftware.trashSnooker.fxml.drawing.GameLoop;
 import trashsoftware.trashSnooker.fxml.drawing.CueModel;
 import trashsoftware.trashSnooker.fxml.projection.BallProjection;
 import trashsoftware.trashSnooker.fxml.projection.CushionProjection;
@@ -155,8 +155,8 @@ public class GameView implements Initializable {
     boolean debugMode = false;
     boolean devMode = true;
     //    private Timeline timeline;
-    Timer gameLoop;
-    AnimationFrame frameAnimation;
+    GameLoop gameLoop;
+//    AnimationTimer animationTimer;
     private double minPredictLengthPotDt = 2000;
     private double maxPredictLengthPotDt = 100;
     private double ballDiameter;
@@ -441,7 +441,8 @@ public class GameView implements Initializable {
                         () -> {
                             game.quitGame();
 //                            timeline.stop();
-                            gameLoop.cancel();
+//                            gameLoop.cancel();
+                            gameLoop.stop();
                             stage.close();
                         },
                         null);
@@ -663,7 +664,8 @@ public class GameView implements Initializable {
                 }
             }
 //            timeline.stop();
-            gameLoop.cancel();
+//            gameLoop.cancel();
+            gameLoop.stop();
         });
     }
 
@@ -2092,10 +2094,9 @@ public class GameView implements Initializable {
     }
 
     private void startAnimation() {
-        frameAnimation = new AnimationFrame(this::oneFrame, uiFrameTimeMs);
-
-        gameLoop = new Timer();
-        gameLoop.schedule(frameAnimation, 0, (long) Math.ceil(uiFrameTimeMs / 3));
+//        frameAnimation = new AnimationFrame(this::oneFrame, uiFrameTimeMs);
+        gameLoop = new GameLoop(this::oneFrame);
+        gameLoop.start();
     }
 
     private void oneFrame() {
@@ -2110,7 +2111,8 @@ public class GameView implements Initializable {
 //        long t3 = System.nanoTime();
         drawCue();
 //        long t4 = System.nanoTime();
-        fpsLabel.setText(String.valueOf(frameAnimation.getCurrentFps()));
+//        fpsLabel.setText(String.valueOf(frameAnimation.getCurrentFps()));
+        fpsLabel.setText(String.valueOf(gameLoop.getCurrentFps()));
 //        System.out.printf("%d %d %d %d\n", t1 - t0, t2 - t1, t3 - t2, t4 - t3);
     }
 
@@ -2178,7 +2180,7 @@ public class GameView implements Initializable {
 //        System.out.println(playingMovement + " " + movement);
         if (playingMovement) {
             // 处理倍速
-            long msSinceAnimationBegun = frameAnimation.msSinceAnimationBegun();
+            long msSinceAnimationBegun = gameLoop.msSinceAnimationBegun();
 
             double appliedSpeed;
             int index;
@@ -2205,7 +2207,7 @@ public class GameView implements Initializable {
 
             double uiFrameSinceThisAniFrame = (msSinceAnimationBegun - (index * frameTimeMs / appliedSpeed));
             double rate = uiFrameSinceThisAniFrame / frameTimeMs * appliedSpeed;
-            double frameRateRatio = frameAnimation.lastAnimationFrameMs() / frameTimeMs * appliedSpeed;
+            double frameRateRatio = gameLoop.lastAnimationFrameMs() / frameTimeMs * appliedSpeed;
 //            System.out.printf("%d %f %f %f\n", index, uiFrameSinceThisAniFrame, rate, frameRateRatio);
 
             GameHolder holder = getActiveHolder();
@@ -2728,7 +2730,7 @@ public class GameView implements Initializable {
 
     private void playMovement() {
         playingMovement = true;
-        frameAnimation.beginNewAnimation();
+        gameLoop.beginNewAnimation();
     }
 
     private void beginCueAnimationOfHumanPlayer(double whiteStartingX, double whiteStartingY) {
@@ -3190,9 +3192,9 @@ public class GameView implements Initializable {
 
         private void calculateOneFrame() {
             if (reachedMaxPull && heldMs < holdMs) {
-                heldMs += frameAnimation.lastAnimationFrameMs();
+                heldMs += gameLoop.lastAnimationFrameMs();
             } else if (endHeldMs > 0) {
-                endHeldMs += frameAnimation.lastAnimationFrameMs();
+                endHeldMs += gameLoop.lastAnimationFrameMs();
                 if (endHeldMs >= endHoldMs) {
                     ended = true;
                     endCueAnimation();
@@ -3201,12 +3203,12 @@ public class GameView implements Initializable {
                 double lastCueDtToWhite = cueDtToWhite;
 
                 if (doubleAction != null) {
-                    double deltaD = frameAnimation.lastAnimationFrameMs() * doubleAction.speedMul / 2.5;
+                    double deltaD = gameLoop.lastAnimationFrameMs() * doubleAction.speedMul / 2.5;
                     double nextTickDt = cueDtToWhite - deltaD;
                     if (cueDtToWhite > doubleStopDt) {
                         if (nextTickDt <= doubleStopDt) {
                             // 就是这一帧停
-                            doubleHoldMs += frameAnimation.lastAnimationFrameMs();
+                            doubleHoldMs += gameLoop.lastAnimationFrameMs();
                             if (doubleHoldMs >= doubleAction.holdMs) {
                                 // 中停结束了，但是为了代码简单我们还是让它多停一帧
                                 doubleAction = null;
@@ -3222,11 +3224,11 @@ public class GameView implements Initializable {
                 }
                 // 正常出杆
                 if (cueDtToWhite > maxPullDistance * 0.4) {
-                    cueDtToWhite -= cueBeforeSpeed * frameAnimation.lastAnimationFrameMs();
+                    cueDtToWhite -= cueBeforeSpeed * gameLoop.lastAnimationFrameMs();
                 } else if (!touched) {
-                    cueDtToWhite -= cueMaxSpeed * frameAnimation.lastAnimationFrameMs();
+                    cueDtToWhite -= cueMaxSpeed * gameLoop.lastAnimationFrameMs();
                 } else {
-                    cueDtToWhite -= cueBeforeSpeed * frameAnimation.lastAnimationFrameMs();
+                    cueDtToWhite -= cueBeforeSpeed * gameLoop.lastAnimationFrameMs();
                 }
                 double wholeDtPercentage = 1 - (cueDtToWhite - maxExtension) /
                         (maxPullDistance - maxExtension);  // 出杆完成的百分比
@@ -3242,7 +3244,7 @@ public class GameView implements Initializable {
                     double psyFactor = 1.0 - getPsyAccuracyMultiplier(playerPerson);
                     baseSwingMag *= (1.0 + psyFactor * 5);
                 }
-                double frameRateRatio = frameAnimation.lastAnimationFrameMs() / frameTimeMs;
+                double frameRateRatio = gameLoop.lastAnimationFrameMs() / frameTimeMs;
                 if (!touched) {
                     double changeRatio = (lastCueDtToWhite - cueDtToWhite) / maxPullDistance;
                     pointingAngle += aimingOffset * changeRatio;
@@ -3261,10 +3263,10 @@ public class GameView implements Initializable {
                         playMovement();
                     }
                 } else if (cueDtToWhite <= maxExtension) {
-                    endHeldMs += frameAnimation.lastAnimationFrameMs();  // 出杆结束了
+                    endHeldMs += gameLoop.lastAnimationFrameMs();  // 出杆结束了
                 }
             } else {
-                cueDtToWhite += frameAnimation.lastAnimationFrameMs() / 3.0 *
+                cueDtToWhite += gameLoop.lastAnimationFrameMs() / 3.0 *
                         playerPerson.getCuePlayType().getPullSpeedMul();  // 往后拉
                 if (cueDtToWhite >= maxPullDistance) {
                     reachedMaxPull = true;

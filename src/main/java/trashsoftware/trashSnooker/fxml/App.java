@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 //import trashsoftware.configLoader.ConfigLoader;
 import trashsoftware.trashSnooker.util.ConfigLoader;
