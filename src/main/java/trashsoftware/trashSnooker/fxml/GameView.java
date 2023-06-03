@@ -887,6 +887,7 @@ public class GameView implements Initializable {
 
     private void endFrame() {
 //        hideCue();
+        tableGraphicsChanged = true;
         Player wonPlayer = game.getGame().getWiningPlayer();
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
         drawScoreBoard(game.getGame().getCuingPlayer(), false);
@@ -961,6 +962,9 @@ public class GameView implements Initializable {
                                 drawScoreBoard(game.getGame().getCuingPlayer(), true);
                                 drawTargetBoard(true);
                                 setUiFrameStart();
+                                
+                                endCueAnimation();
+                                tableGraphicsChanged = true;
 //                            if (game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
 //                                ss
 //                            }

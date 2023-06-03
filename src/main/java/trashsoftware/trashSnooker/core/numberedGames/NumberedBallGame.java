@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.numberedGames;
 
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.core.table.Table;
@@ -14,6 +15,7 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
         extends Game<PoolBall, P> {
     
     protected BreakStats breakStats;
+    protected P winingPlayer;
 
     protected NumberedBallGame(EntireGame entireGame, GameSettings gameSettings,
                                GameValues gameValues,
@@ -29,6 +31,12 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
             allBallsCopy[i] = (PoolBall) allBalls[i].clone();
         }
         this.allBalls = allBallsCopy;
+    }
+
+    @Override
+    public void withdraw(Player player) {
+        winingPlayer = getAnotherPlayer(player);
+        super.withdraw(player);
     }
     
     protected void updateBreakStats(Set<PoolBall> newPotted) {

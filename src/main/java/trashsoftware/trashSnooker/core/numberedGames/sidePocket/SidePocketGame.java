@@ -19,7 +19,6 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
         implements NeedBigBreak {
 
     private final LinkedHashMap<PoolBall, Boolean> pottedRecord = new LinkedHashMap<>();  // 缓存用，仅用于GameView画目标球
-    protected SidePocketPlayer winingPlayer;
     protected NineBallScoreResult curResult;
     protected boolean canPushOut = false;
     private boolean wasIllegalBreak;

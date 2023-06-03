@@ -26,7 +26,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     private static final int[] FULL_BALL_SLOTS = {0, 2, 3, 7, 9, 10, 12};
     private static final int[] HALF_BALL_SLOTS = {1, 5, 6, 7, 11, 13, 14};
     protected double eightBallPosX;
-    protected ChineseEightBallPlayer winingPlayer;
     protected ChineseEightScoreResult curResult;
     private boolean wasBreakLoseChance;
 
@@ -44,12 +43,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     @Override
     public GameRule getGameType() {
         return GameRule.CHINESE_EIGHT;
-    }
-
-    @Override
-    public void withdraw(Player player) {
-        winingPlayer = getAnotherPlayer(player);
-        super.withdraw(player);
     }
 
     protected PoolBall getEightBall() {
