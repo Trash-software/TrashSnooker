@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
@@ -413,7 +414,8 @@ public class CareerView extends ChildInitializable {
         List<AwardMaterial> awardMaterials = myCareer.levelUp();
         int curLevel = myCareer.getLevel();
         if (awardMaterials != null) {
-            System.out.println("Possible perks: " + Arrays.toString(myCareer.levelUpPerkRange(curLevel)));
+            int[] perkPool = myCareer.levelUpPerkRange(curLevel);
+//            System.out.println("Possible perks: " + Arrays.toString(myCareer.levelUpPerkRange(curLevel)));
             String nPerk = awardMaterials.get(0).toString();
 
             FXMLLoader loader = new FXMLLoader(
@@ -425,17 +427,27 @@ public class CareerView extends ChildInitializable {
 
             Stage newStage = new Stage();
             newStage.initOwner(selfStage);
+            newStage.initStyle(StageStyle.UTILITY);
             newStage.initModality(Modality.WINDOW_MODAL);
+            
+            newStage.setOnHidden(e -> refreshGui());
 
             Scene scene = new Scene(root);
             newStage.setScene(scene);
 
             Alert view = loader.getController();
+            
+            StringBuilder perkPoolStr = new StringBuilder();
+            perkPoolStr.append(strings.getString("perk"))
+                    .append(": ")
+                    .append(Arrays.stream(perkPool)
+                            .mapToObj(String::valueOf)
+                            .collect(Collectors.joining("/")));
 
             view.functionalWindow(
                     newStage,
-                    strings.getString("levelUped"),
                     String.format("Lv. %d->%d", pastLevel, curLevel),
+                    String.format(strings.getString("levelUpAwardPool"), perkPoolStr),
                     strings.getString("clickToRandomPerk"),
                     () -> {
                         refreshGui();

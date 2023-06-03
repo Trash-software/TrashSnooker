@@ -405,6 +405,8 @@ public class TableMetrics {
                 botMidHoleLeftLine,
                 botMidHoleRightLine
         };
+        
+        pocketBaseThickness = Math.min(pocketBaseThickness, topLeftHoleGraXY[0]);
 
         tableStars = createStars();
     }
@@ -426,6 +428,14 @@ public class TableMetrics {
     public boolean isInOuterTable(double x, double y) {
         return x >= 0 && x < outerWidth && y >= 0 && y < outerHeight;
     }
+    
+    public double cornerPocketBackInnerRadius() {
+        return factory.supportedHoles[0].cornerHoleDiameter / 2;
+    }
+
+    public double midPocketBackInnerRadius() {
+        return factory.supportedHoles[0].midHoleDiameter / 2;
+    }
 
     public enum TableBuilderFactory {
         SNOOKER("snookerTable",
@@ -434,7 +444,7 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.SNOOKER)
-                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 40.0)
+                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 36.0)
                         .tableDimension(3568.7,  // 140.5"
                                 1788.0,
                                 124,
@@ -454,7 +464,7 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.CHINESE_EIGHT)
-                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 40.0)
+                        .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 36.0)
                         .tableDimension(2540.0,  // 100"
                                 1270.0,
                                 124,

@@ -168,14 +168,14 @@ public class GamePane extends Pane {
     private double getCornerHoleVisualRadiusUnscaled(TableMetrics metrics) {
 //        return metrics.cornerHoleRadius * cornerHoleVisualMul;
         return metrics.leatherPocket ? 
-                metrics.factory.supportedHoles[0].cornerHoleDiameter / 2 :
+                metrics.cornerPocketBackInnerRadius() :
                 metrics.cornerHoleRadius;
     }
 
     private double getMidHoleVisualRadiusUnscaled(TableMetrics metrics) {
 //        return metrics.cornerHoleRadius * cornerHoleVisualMul;
         return metrics.leatherPocket ? 
-                metrics.factory.supportedHoles[0].midHoleDiameter / 2 :
+                metrics.midPocketBackInnerRadius() :
                 metrics.midHoleRadius;
     }
 

@@ -22,6 +22,7 @@ public class Career {
     private final boolean isHumanPlayer;
     private final transient Map<GameRule, Double> efforts = new HashMap<>();
     private PlayerPerson playerPerson;
+    private int totalPerks;
     private int availPerks;
     private int totalExp = 0;
     private int level = 1;
@@ -39,6 +40,7 @@ public class Career {
     public static Career createByPerson(PlayerPerson playerPerson, boolean isHumanPlayer) {
         Career career = new Career(playerPerson, isHumanPlayer);
         career.availPerks = CareerManager.INIT_PERKS;
+        career.totalPerks = career.availPerks;
         return career;
     }
 
@@ -52,6 +54,7 @@ public class Career {
 
         Career career = new Career(playerPerson, jsonObject.getBoolean("human"));
         career.availPerks = jsonObject.has("availPerks") ? jsonObject.getInt("availPerks") : 0;
+        career.totalPerks = jsonObject.has("totalPerks") ? jsonObject.getInt("totalPerks") : 0;
         career.totalExp = jsonObject.has("totalExp") ? jsonObject.getInt("totalExp") : 0;
         career.level = jsonObject.has("level") ? jsonObject.getInt("level") : 1;
         career.expInThisLevel = jsonObject.has("expInThisLevel") ? jsonObject.getInt("expInThisLevel") : 0;
@@ -107,6 +110,7 @@ public class Career {
         
         if (isHumanPlayer) {
             out.put("availPerks", availPerks);
+            out.put("totalPerks", totalPerks);
             out.put("totalExp", totalExp);
             out.put("level", level);
             out.put("expInThisLevel", expInThisLevel);
@@ -220,6 +224,7 @@ public class Career {
         int index = (int) (Math.random() * range.length);
         int perk = range[index];
         availPerks += perk;
+        totalPerks += perk;
         
         CareerManager.getInstance().saveToDisk();
         
@@ -228,22 +233,13 @@ public class Career {
         return result;
     }
 
-    private void tryLevelUp() {
-        CareerManager manager = CareerManager.getInstance();
-        int expNeed;
-        while (expInThisLevel >= (expNeed = manager.getExpNeededToLevelUp(level))) {
-            level++;
-            availPerks += CareerManager.perksOfLevelUp(level);
-            expInThisLevel -= expNeed;
-        }
-    }
-
     void validateLevel() {
         int levelTotal = 0;  // 累积的升级所需经验
         int remExp = 0;
         int lv = 1;
         int[] expList = CareerManager.getExpRequiredLevelUp();
         for (int i = 0; i < expList.length; i++) {
+            if (lv == level) break;
             int nextLvReq = expList[i];
             int nextLvTotal = levelTotal + nextLvReq;
             remExp = totalExp - levelTotal;
@@ -255,7 +251,11 @@ public class Career {
             levelTotal = nextLvTotal;
         }
         if (lv != level || remExp != expInThisLevel) {
-            System.err.println("You hacked your user data!");
+            System.err.printf("You hacked your user data: should %d,%d, actual: %d,%d \n",
+                    lv, 
+                    remExp,
+                    level,
+                    expInThisLevel);
         }
     }
 
@@ -275,6 +275,10 @@ public class Career {
 
     public int getAvailablePerks() {
         return availPerks;
+    }
+
+    public int getTotalPerks() {
+        return totalPerks;
     }
 
     @Override

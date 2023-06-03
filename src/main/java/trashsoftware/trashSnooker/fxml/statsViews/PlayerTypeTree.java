@@ -89,8 +89,7 @@ public class PlayerTypeTree extends RecordTree {
                 oppoWinFrames += p1p2wins[0];
             }
         }
-
-
+        
         int rowIndex = gridPane.getRowCount();
         gridPane.add(new Label(GameRule.toReadable(gameRule)), 2, rowIndex++);
 
@@ -110,7 +109,7 @@ public class PlayerTypeTree extends RecordTree {
         gridPane.add(new Label(showPercent(matchWinRate)), 1, rowIndex);
         gridPane.add(new Label(String.valueOf(egtList.size() - thisWinMatches)),
                 4, rowIndex);
-        gridPane.add(new Label(showPercent(100 - matchWinRate)), 3, rowIndex);
+        gridPane.add(new Label(showPercent(1 - matchWinRate)), 3, rowIndex);
         rowIndex++;
 
         double frameWinRate = (double) thisWinFrames / (thisWinFrames + oppoWinFrames);
@@ -119,21 +118,21 @@ public class PlayerTypeTree extends RecordTree {
         gridPane.add(new Label(showPercent(frameWinRate)), 1, rowIndex);
         gridPane.add(new Label(String.valueOf(oppoWinFrames)),
                 4, rowIndex);
-        gridPane.add(new Label(showPercent(100 - frameWinRate)), 3, rowIndex);
+        gridPane.add(new Label(showPercent(1 - frameWinRate)), 3, rowIndex);
         rowIndex++;
 
         gridPane.add(new Separator(), 0, rowIndex++, 5, 1);
         for (Map.Entry<Integer, int[]> entry : playerOppoWinsByTotalFrames.entrySet()) {
             int pWins = entry.getValue()[0];
             int oWins = entry.getValue()[1];
-            double pRate = (double) pWins / (pWins + oWins) * 100;
+            double pRate = (double) pWins / (pWins + oWins) * 1;
             gridPane.add(
                     new Label(String.format("%d局%d胜制",
                             entry.getKey(), entry.getKey() / 2 + 1)),
                     2, rowIndex);
             gridPane.add(new Label(String.valueOf(pWins)), 0, rowIndex);
-            gridPane.add(new Label(String.format("%.1f%%", pRate)), 1, rowIndex);
-            gridPane.add(new Label(String.format("%.1f%%", 100 - pRate)), 3, rowIndex);
+            gridPane.add(new Label(showPercent(pRate)), 1, rowIndex);
+            gridPane.add(new Label(showPercent(1 - pRate)), 3, rowIndex);
             gridPane.add(new Label(String.valueOf(oWins)), 4, rowIndex);
             rowIndex++;
         }

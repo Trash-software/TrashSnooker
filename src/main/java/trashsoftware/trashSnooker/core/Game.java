@@ -1020,6 +1020,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     private Movement physicalCalculate(Phy phy) {
 //        physicsTimer = new Timer();
         long st = System.currentTimeMillis();
+//        try {
+//            Thread.sleep(1500);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         physicsCalculator = new PhysicsCalculator(phy);
         Movement movement = physicsCalculator.calculate();
         System.out.println("Physical calculation ends in " + (System.currentTimeMillis() - st) + " ms");
@@ -1190,6 +1195,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
             if (cueBallClone.isLikelyStopped(phy)) return true;
             if (cueBallClone.isOutOfTable()) return true;
+            if (cueBallClone.tryHitPocketsBack(phy)) {
+//                cueBallClone.normalMove(phy);
+                prediction.potCueBall();
+                return true;
+            }
             if (cueBallClone.willPot(phy)) {
                 prediction.potCueBall();
                 return true;
@@ -1382,6 +1392,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 if (ball.isPotted() || ball.isOutOfTable()) continue;
                 if (!ball.isLikelyStopped(phy)) {
                     noBallMoving = false;
+                    if (ball.tryHitPocketsBack(phy)) {
+//                        ball.normalMove(phy);
+                        movementTypes[i] = MovementFrame.POT;
+                        movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
+                        ball.pot();
+                        newPotted.add(ball);
+                        continue;
+                    }
+                    
                     if (ball.willPot(phy)) {
                         movementTypes[i] = MovementFrame.POT;
                         movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
@@ -1420,6 +1439,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
                     int threeHit = tryHitThreeBalls(ball);
                     if (threeHit == 0 || threeHit == 2) {
+                        if (threeHit == 2) {
+                            System.out.println("Cannot process");
+                        }
                         if (tryHitBall(ball, threeHit == 0)) {
                             if (ball.checkEnterBreakArea(getTable().breakLineX())) {
                                 // 一定在normal move之前
@@ -1469,9 +1491,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         private int tryHitThreeBalls(B ball) {
             // 返回值参考 Ball.tryHitTwoBalls
-            if (ball.isWhite()) {
-                return 0;  // 略过白球同时碰到两颗球的情况：无法处理
-            }
+//            if (ball.isWhite()) {
+//                return 0;  // 略过白球同时碰到两颗球的情况：无法处理
+//            }
 
             int result = 0;
             for (B secondBall : randomOrderBallPool1) {
