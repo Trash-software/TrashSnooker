@@ -19,8 +19,11 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.championship.*;
+import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.TableSpec;
+import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
 import trashsoftware.trashSnooker.util.DataLoader;
@@ -47,7 +50,7 @@ public class ChampDrawView extends ChildInitializable {
     @FXML
     Label extraInfoLabel;
     @FXML
-    Button nextRoundButton;
+    Button nextRoundButton, quitTournamentBtn;
 
     Championship championship;
 
@@ -179,6 +182,7 @@ public class ChampDrawView extends ChildInitializable {
                     nextRoundButton.setText(strings.getString("startNextRound"));
                 } else {
                     nextRoundButton.setText(strings.getString("performAllMatches"));
+                    quitTournamentBtn.setDisable(true);
                 }
                 savedRoundLabel.setText("");
                 savedRoundLabel.setManaged(false);
@@ -281,12 +285,47 @@ public class ChampDrawView extends ChildInitializable {
             }
         }
     }
+    
+    private void quitTournament() {
+        if (!championship.isHumanAlive()) return;
+        if (championship.hasSavedRound()) {
+            PlayerVsAiMatch match = championship.continueSavedRound();
+            quitCurrentMatch(match);
+        } else {
+            PlayerVsAiMatch match;
+            while ((match = championship.startNextRound()) == null) {
+                // do nothing
+            }
+            startGameInNewRound(match);
+            quitCurrentMatch(match);
+        }
+        updateGui();
+    }
+    
+    private void quitCurrentMatch(PlayerVsAiMatch match) {
+        EntireGame eg = match.getGame();
+        eg.quitMatch(match.getHumanCareer().getPlayerPerson());
+        PlayerPerson winner = match.getAiCareer().getPlayerPerson();
+        match.finish(winner,
+                eg.getP1Wins(),
+                eg.getP2Wins());
+    }
 
     @Override
     public void backAction() {
         parent.refreshGui();
         
         super.backAction();
+    }
+    
+    @FXML
+    public void quitTournamentAction() {
+        AlertShower.askConfirmation(selfStage,
+                "",
+                strings.getString("quitTournamentConfirmation"),
+                this::quitTournament,
+                null
+        );
     }
 
     @FXML
@@ -307,68 +346,74 @@ public class ChampDrawView extends ChildInitializable {
                     updateGui();
                     return;
                 } else {
-                    ChampionshipData.TableSpec tableSpec = match.getChampionship().getData().getTableSpec();
-
-                    GameValues values = new GameValues(match.getChampionship().getData().getType(), tableSpec.tableMetrics, tableSpec.ballMetrics);
-
-                    InGamePlayer igp1;
-                    InGamePlayer igp2;
-
-                    PlayerType p1t = match.p1.isHumanPlayer() ? PlayerType.PLAYER : PlayerType.COMPUTER;
-                    PlayerType p2t = p1t == PlayerType.PLAYER ? PlayerType.COMPUTER : PlayerType.PLAYER;
-                    
-                    PlayerPerson aiPerson = p1t == PlayerType.COMPUTER ? 
-                            match.p1.getPlayerPerson() : match.p2.getPlayerPerson();
-                    
-                    double p1HandFeelEffort = match.p1.isHumanPlayer() ?
-                            1.0 : match.p1.getHandFeelEffort(championship.getData().getType());
-                    double p2HandFeelEffort = match.p2.isHumanPlayer() ?
-                            1.0 : match.p2.getHandFeelEffort(championship.getData().getType());
-
-                    Cue aiCue = aiPerson.getPreferredCue(championship.getData().getType());
-                    Cue playerCue = cueBox.getValue().cue;
-
-                    Cue p1Cue;
-                    Cue p2Cue;
-
-                    if (match.p1.isHumanPlayer()) {
-                        p1Cue = playerCue;
-                        p2Cue = aiCue;
-                    } else {
-                        p1Cue = aiCue;
-                        p2Cue = playerCue;
-                    }
-
-                    Cue stdBreakCue = DataLoader.getInstance().getStdBreakCue();
-                    if (stdBreakCue == null ||
-                            values.rule == GameRule.SNOOKER ||
-                            values.rule == GameRule.MINI_SNOOKER) {
-                        igp1 = new InGamePlayer(match.p1.getPlayerPerson(), p1Cue,
-                                p1t, 1, p1HandFeelEffort);
-                        igp2 = new InGamePlayer(match.p2.getPlayerPerson(), p2Cue,
-                                p2t, 2, p2HandFeelEffort);
-                    } else {
-                        igp1 = new InGamePlayer(match.p1.getPlayerPerson(), stdBreakCue, p1Cue,
-                                p1t, 1, p1HandFeelEffort);
-                        igp2 = new InGamePlayer(match.p2.getPlayerPerson(), stdBreakCue, p2Cue,
-                                p2t, 2, p2HandFeelEffort);
-                    }
-
-                    EntireGame newGame = new EntireGame(
-                            igp1,
-                            igp2,
-                            values,
-                            match.getChampionship().getData().getNFramesOfStage(match.getStage()),
-                            tableSpec.tableCloth,
-                            match.metaMatchInfo
-                    );
-
-                    match.setGame(newGame);
+                    startGameInNewRound(match);
                 }
             }
             match.setGuiCallback(this::pveMatchFinish, this::pveMatchFinish);
             startGame(match);
         }
+    }
+    
+    private void startGameInNewRound(PlayerVsAiMatch match) {
+        TableSpec tableSpec = match.getChampionship().getData().getTableSpec();
+        BallMetrics ballMetrics = match.getChampionship().getData().getBallMetrics();
+
+        GameValues values = new GameValues(match.getChampionship().getData().getType(), tableSpec.tableMetrics, ballMetrics);
+        values.setTablePreset(match.getChampionship().getData().getTablePreset());
+
+        InGamePlayer igp1;
+        InGamePlayer igp2;
+
+        PlayerType p1t = match.p1.isHumanPlayer() ? PlayerType.PLAYER : PlayerType.COMPUTER;
+        PlayerType p2t = p1t == PlayerType.PLAYER ? PlayerType.COMPUTER : PlayerType.PLAYER;
+
+        PlayerPerson aiPerson = p1t == PlayerType.COMPUTER ?
+                match.p1.getPlayerPerson() : match.p2.getPlayerPerson();
+
+        double p1HandFeelEffort = match.p1.isHumanPlayer() ?
+                1.0 : match.p1.getHandFeelEffort(championship.getData().getType());
+        double p2HandFeelEffort = match.p2.isHumanPlayer() ?
+                1.0 : match.p2.getHandFeelEffort(championship.getData().getType());
+
+        Cue aiCue = aiPerson.getPreferredCue(championship.getData().getType());
+        Cue playerCue = cueBox.getValue().cue;
+
+        Cue p1Cue;
+        Cue p2Cue;
+
+        if (match.p1.isHumanPlayer()) {
+            p1Cue = playerCue;
+            p2Cue = aiCue;
+        } else {
+            p1Cue = aiCue;
+            p2Cue = playerCue;
+        }
+
+        Cue stdBreakCue = DataLoader.getInstance().getStdBreakCue();
+        if (stdBreakCue == null ||
+                values.rule == GameRule.SNOOKER ||
+                values.rule == GameRule.MINI_SNOOKER) {
+            igp1 = new InGamePlayer(match.p1.getPlayerPerson(), p1Cue,
+                    p1t, 1, p1HandFeelEffort);
+            igp2 = new InGamePlayer(match.p2.getPlayerPerson(), p2Cue,
+                    p2t, 2, p2HandFeelEffort);
+        } else {
+            igp1 = new InGamePlayer(match.p1.getPlayerPerson(), stdBreakCue, p1Cue,
+                    p1t, 1, p1HandFeelEffort);
+            igp2 = new InGamePlayer(match.p2.getPlayerPerson(), stdBreakCue, p2Cue,
+                    p2t, 2, p2HandFeelEffort);
+        }
+
+        EntireGame newGame = new EntireGame(
+                igp1,
+                igp2,
+                values,
+                match.getChampionship().getData().getNFramesOfStage(match.getStage()),
+                tableSpec.tableCloth,
+                match.metaMatchInfo
+        );
+
+        match.setGame(newGame);
     }
     
     private void startGame(PlayerVsAiMatch match) {

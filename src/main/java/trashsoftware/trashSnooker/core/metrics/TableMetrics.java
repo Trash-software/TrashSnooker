@@ -29,7 +29,7 @@ public class TableMetrics {
     };
     public final String tableName;
     public final TableBuilderFactory factory;
-//    private HoleSize holeSize;
+    public PocketSize pocketSize;
 
     public Color tableColor;
     public Color gravityAreaColor;
@@ -136,6 +136,8 @@ public class TableMetrics {
     public double wallSpinEffectRatio;
     public double cushionPowerSpinFactor;  // 比如在美式桌上，大力翻袋反射角会很奇怪
     public double cornerHoleOpenAngle, midHoleOpenAngle;
+
+    public double midPocketThroatWidth;
     private double midPocketMouthWidth;  // 中袋口的宽度
 
     private TableMetrics(TableBuilderFactory factory, String tableName) {
@@ -147,6 +149,13 @@ public class TableMetrics {
         return TableBuilderFactory.values()[ordinal];
     }
 
+    public static TableMetrics.TableBuilderFactory fromFactoryName(String typeName) {
+        for (TableBuilderFactory tbf : TableBuilderFactory.values()) {
+            if (tbf.key.equals(typeName)) return tbf;
+        }
+        throw new RuntimeException("No such table " + typeName);
+    }
+
     public int getOrdinal() {
         return factory.ordinal();
     }
@@ -154,7 +163,7 @@ public class TableMetrics {
     public int getHoleSizeOrdinal() {
         for (int i = 0; i < factory.supportedHoles.length; i++) {
             PocketSize size = factory.supportedHoles[i];
-            if (size.cornerHoleDiameter == cornerHoleDiameter && size.midHoleDiameter == midPocketMouthWidth) {
+            if (pocketSize == size) {
                 return i;
             }
         }
@@ -255,8 +264,8 @@ public class TableMetrics {
         topCornerHoleAreaDownY = topY + cornerArcWidth + cornerLineLonger - cornerHoleDrift;  // 上底袋下袋角
         botCornerHoleAreaUpY = botY - cornerArcWidth - cornerLineLonger + cornerHoleDrift;  // 下底袋上袋角
 
-        midHoleAreaLeftX = midX - midHoleRadius - midLineWidth - midArcRadius;
-        midHoleAreaRightX = midX + midHoleRadius + midLineWidth + midArcRadius;
+        midHoleAreaLeftX = midX - midPocketThroatWidth / 2 - midLineWidth - midArcRadius;
+        midHoleAreaRightX = midX + midPocketThroatWidth / 2 + midLineWidth + midArcRadius;
 
         // 中袋袋角弧线，圆心的位置
         topMidHoleLeftArcXy =
@@ -774,10 +783,22 @@ public class TableMetrics {
             values.cornerHoleDrift = (values.cornerLineLonger - values.cornerLineShorter) * (1 - cornerPocketOut);
             // values.cornerHoleDrift = longer - shorter;
         }
+        
+        private void setupMidHoleByThroat(PocketSize pocketSize) {
+            // 目前仅支持圆袋角
+            values.midPocketThroatWidth = pocketSize.midThroatWidth;
+            values.midPocketMouthWidth = values.midPocketThroatWidth;  // 没有直线，一样的
+            
+            values.midHoleDiameter = pocketSize.midHoleDiameter;
+            values.midHoleRadius = values.midHoleDiameter / 2;
+            
+            values.midArcRadius = pocketSize.midArcRadius * midHoleArcSizeMul;
+        }
 
-        private void setupMidHole(double midHoleMouthWidth) {
+        private void setupMidHoleByMouth(PocketSize pocketSize) {
+            double midHoleMouthWidth = pocketSize.midHoleDiameter;
             values.midPocketMouthWidth = midHoleMouthWidth;
-            values.midArcRadius = midHoleMouthWidth / 2 * midHoleArcSizeMul;
+            values.midArcRadius = pocketSize.midArcRadius * midHoleArcSizeMul;
 
             double midArcCos = Math.cos(Math.toRadians(values.midHoleOpenAngle)) * values.midArcRadius;
             double midArcSin = Math.sin(Math.toRadians(values.midHoleOpenAngle)) * values.midArcRadius;
@@ -791,6 +812,7 @@ public class TableMetrics {
                         midHoleMouthWidth, values.midArcRadius, values.midHoleOpenAngle, midArcSin, midLineExtraWidth);
                 System.out.println("Solved mid dia: " + values.midHoleDiameter);
             }
+            values.midPocketThroatWidth = values.midHoleDiameter;
             values.midHoleRadius = values.midHoleDiameter / 2;
 
             values.midLineHeight = values.midHoleRadius - values.midArcRadius + midArcSin;
@@ -802,8 +824,13 @@ public class TableMetrics {
             if (cornerHoleArcSizeMul == 0) {
                 throw new RuntimeException("Method 'pocketDifficulty' must be called prior to this method");
             }
+            values.pocketSize = pocketSize;
 
-            setupMidHole(pocketSize.midHoleDiameter);
+            if (pocketSize.midHoleThroatSpecified) {
+                setupMidHoleByThroat(pocketSize);
+            } else {
+                setupMidHoleByMouth(pocketSize);
+            }
             setCornerHoleSize(pocketSize.cornerHoleDiameter);
 
             return this;

@@ -1,0 +1,411 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Brown": 26,
+    "Yan Bingtao": 16,
+    "Liu Mang": 7,
+    "random_player_103": 21,
+    "random_player_88": 31,
+    "custom_player_1": 29,
+    "custom_player_3": 17,
+    "custom_player_2": 20,
+    "Jack Lisowski": 6,
+    "Glass Heart": 18,
+    "Mark Allen": 8,
+    "Selby": 25,
+    "Karen Wilson": 13,
+    "Zhao Xintong": 15,
+    "Mang Dali": 28,
+    "Neil Robertson": 1,
+    "Stephen Maguire": 19,
+    "Murphy": 10,
+    "John Wizard": 9,
+    "Stuart Bingham": 12,
+    "Matthew Stevens": 23,
+    "random_player_115": 32,
+    "Kid": 5,
+    "Fat Guy": 27,
+    "Ding Junhui": 14,
+    "Smart": 2,
+    "Trump": 11,
+    "High Stick": 30,
+    "Mark Williams": 3,
+    "O_Sullivan": 4,
+    "Luca Brecel": 22,
+    "custom_player_160": 24
+  },
+  "championshipId": "cat_give_power_champ",
+  "matchTree": {"root": {
+    "p1wins": 3,
+    "p1": {
+      "p1wins": 2,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Murphy"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Fat Guy"},
+              "p2": {"winner": "High Stick"},
+              "winner": "Fat Guy",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_1-0",
+              "p2wins": 0
+            },
+            "winner": "Murphy",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_2-8",
+            "p2wins": 0
+          },
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-16",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Trump"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Stephen Maguire"},
+              "p2": {"winner": "custom_player_3"},
+              "winner": "Stephen Maguire",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_1-1",
+              "p2wins": 1
+            },
+            "winner": "Trump",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_2-9",
+            "p2wins": 0
+          },
+          "winner": "Mark Allen",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-17",
+          "p2wins": 0
+        },
+        "winner": "O_Sullivan",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-QUARTER_FINAL-24",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Williams"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Yan Bingtao"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "custom_player_160"},
+              "p2": {"winner": "Luca Brecel"},
+              "winner": "Luca Brecel",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_1-2",
+              "p2wins": 2
+            },
+            "winner": "Yan Bingtao",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_2-10",
+            "p2wins": 1
+          },
+          "winner": "Mark Williams",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-18",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 0,
+          "p1": {"winner": "Kid"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "John Wizard"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "custom_player_2"},
+              "p2": {"winner": "Matthew Stevens"},
+              "winner": "custom_player_2",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_1-3",
+              "p2wins": 1
+            },
+            "winner": "John Wizard",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_2-11",
+            "p2wins": 0
+          },
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-19",
+          "p2wins": 2
+        },
+        "winner": "Mark Williams",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-QUARTER_FINAL-25",
+        "p2wins": 0
+      },
+      "winner": "O_Sullivan",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-SEMI_FINAL-28",
+      "p2wins": 0
+    },
+    "p2": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Smart"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Stuart Bingham"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "random_player_115"},
+              "p2": {"winner": "custom_player_1"},
+              "winner": "custom_player_1",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_1-4",
+              "p2wins": 2
+            },
+            "winner": "Stuart Bingham",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_2-12",
+            "p2wins": 0
+          },
+          "winner": "Smart",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-20",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 1,
+          "p1": {"winner": "Jack Lisowski"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Zhao Xintong"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "random_player_103"},
+              "p2": {"winner": "Selby"},
+              "winner": "random_player_103",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_1-5",
+              "p2wins": 0
+            },
+            "winner": "Zhao Xintong",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_2-13",
+            "p2wins": 0
+          },
+          "winner": "Zhao Xintong",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-21",
+          "p2wins": 2
+        },
+        "winner": "Smart",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-QUARTER_FINAL-26",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Ding Junhui"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Brown"},
+              "p2": {"winner": "Mang Dali"},
+              "winner": "Brown",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_1-6",
+              "p2wins": 1
+            },
+            "winner": "Ding Junhui",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_2-14",
+            "p2wins": 0
+          },
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-22",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Liu Mang"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Karen Wilson"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "random_player_88"},
+              "p2": {"winner": "Glass Heart"},
+              "winner": "Glass Heart",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_1-7",
+              "p2wins": 2
+            },
+            "winner": "Karen Wilson",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_2-15",
+            "p2wins": 0
+          },
+          "winner": "Liu Mang",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-23",
+          "p2wins": 0
+        },
+        "winner": "Liu Mang",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-QUARTER_FINAL-27",
+        "p2wins": 2
+      },
+      "winner": "Liu Mang",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-SEMI_FINAL-29",
+      "p2wins": 2
+    },
+    "winner": "O_Sullivan",
+    "stage": "FINAL",
+    "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-FINAL-30",
+    "p2wins": 2
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 67,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-16",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 66,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-SEMI_FINAL-29",
+      "playerId": "Smart"
+    },
+    {
+      "score": 65,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-QUARTER_FINAL-24",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 65,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-PRE_ROUND_2-11",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 63,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-FINAL-30",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 62,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-FINAL-30",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 62,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-20",
+      "playerId": "Smart"
+    },
+    {
+      "score": 61,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-19",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 60,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-16",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 58,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-QUARTER_FINAL-26",
+      "playerId": "Smart"
+    },
+    {
+      "score": 57,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-SEMI_FINAL-29",
+      "playerId": "Liu Mang"
+    },
+    {
+      "score": 55,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-ROUND_1-20",
+      "playerId": "Smart"
+    },
+    {
+      "score": 53,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-QUARTER_FINAL-26",
+      "playerId": "Smart"
+    },
+    {
+      "score": 52,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-SEMI_FINAL-28",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 50,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+cat_give_power_champ-QUARTER_FINAL-25",
+      "playerId": "John Wizard"
+    }
+  ],
+  "timestamp": "2024/3/10"
+}

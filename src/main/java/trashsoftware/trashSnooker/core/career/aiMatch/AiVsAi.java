@@ -6,6 +6,8 @@ import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
+import trashsoftware.trashSnooker.core.metrics.BallMetrics;
+import trashsoftware.trashSnooker.core.metrics.TableSpec;
 
 import java.util.Map;
 import java.util.Random;
@@ -55,8 +57,9 @@ public abstract class AiVsAi {
     }
 
     private static double calculatePotDifficulty(ChampionshipData data) {
-        ChampionshipData.TableSpec tableSpec = data.getTableSpec();
-        double ballSize = tableSpec.ballMetrics.ballDiameter;
+        TableSpec tableSpec = data.getTableSpec();
+        BallMetrics ballMetrics = data.getBallMetrics();
+        double ballSize = ballMetrics.ballDiameter;
         double pocketSize = tableSpec.tableMetrics.cornerHoleDiameter;
         double ratio = 1 - (pocketSize - ballSize) / ballSize;
         // 用平方

@@ -179,6 +179,18 @@ public class EntireGame {
         int playerNum = igp == p1 ? 1 : 2;
         return playerContinuousLoses(playerNum) >= 3;  // 连输3局以上，rua了
     }
+    
+    public void quitMatch(PlayerPerson quitPerson) {
+        InGamePlayer winner;
+        if (quitPerson.getPlayerId().equals(p1.getPlayerPerson().getPlayerId())) {
+            winner = p2;
+        } else {
+            winner = p1;
+        }
+        while (!playerWinsAframe(winner, false)) {
+            // do nothing
+        }
+    }
 
     public MetaMatchInfo getMetaMatchInfo() {
         return metaMatchInfo;
@@ -200,13 +212,22 @@ public class EntireGame {
         return p2;
     }
 
+    /**
+     * 返回赢了这一局之后，比赛是不是就结束了
+     */
     public boolean playerWinsAframe(InGamePlayer player) {
-        if (gameValues.isStandard()) {
-            DBAccess.getInstance().recordAFrameEnds(
-                    this, game, player.getPlayerPerson());
+        return playerWinsAframe(player, true);
+    }
+    
+    private boolean playerWinsAframe(InGamePlayer player, boolean record) {
+        if (game != null && record) {
+            if (gameValues.isStandard()) {
+                DBAccess.getInstance().recordAFrameEnds(
+                        this, game, player.getPlayerPerson());
+            }
+            updateFrameRecords(game.getPlayer1(), player);
+            updateFrameRecords(game.getPlayer2(), player);
         }
-        updateFrameRecords(game.getPlayer1(), player);
-        updateFrameRecords(game.getPlayer2(), player);
 
         int frameIndex = p1Wins + p2Wins + 1;
         if (player.getPlayerPerson().equals(p1.getPlayerPerson())) {

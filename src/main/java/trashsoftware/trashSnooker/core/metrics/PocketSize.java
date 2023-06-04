@@ -5,10 +5,12 @@ import trashsoftware.trashSnooker.util.Util;
 
 public class PocketSize {
     public static final PocketSize[] SNOOKER_HOLES = {
-            new PocketSize("pocketLarge", 89, 89),
-            new PocketSize("pocketStd", 85, 85),
-            new PocketSize("pocketSmall", 82, 82),
-            new PocketSize("pocketLittle", 78, 78),
+            new PocketSize("pocketLarge", 89, 93),
+            new PocketSize("pocketStd", 
+                    85.0, 
+                    88.0),
+            new PocketSize("pocketSmall", 82, 85),
+            new PocketSize("pocketLittle", 78, 80),
             new PocketSize("pocketTiny", 72, 72)
     };
     public static final PocketSize[] CHINESE_EIGHT_HOLES = {
@@ -27,11 +29,26 @@ public class PocketSize {
     public final String key;
     public final double cornerHoleDiameter;
     public final double midHoleDiameter;
+    public final double midThroatWidth;
+    public final double midArcRadius;
+    public final boolean midHoleThroatSpecified;
 
-    public PocketSize(String name, double cornerHoleDiameter, double midHoleDiameter) {
+    public PocketSize(String name, 
+                      double cornerHoleDiameter, 
+                      double midHoleDiameter, 
+                      double midThroatWidth,
+                      double midArcRadius,
+                      boolean midHoleThroatSpecified) {
         this.key = name;
         this.cornerHoleDiameter = cornerHoleDiameter;
         this.midHoleDiameter = midHoleDiameter;
+        this.midThroatWidth = midThroatWidth;
+        this.midArcRadius = midArcRadius;
+        this.midHoleThroatSpecified = midHoleThroatSpecified;
+    }
+
+    public PocketSize(String name, double cornerHoleDiameter, double midHoleDiameter) {
+        this(name, cornerHoleDiameter, midHoleDiameter, midHoleDiameter, midHoleDiameter / 2, false);
     }
 
     public static PocketSize valueOf(TableMetrics.TableBuilderFactory factory, String jsonString) {

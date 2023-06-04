@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.fxml;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -163,6 +164,54 @@ public class ReplayView implements Initializable {
         });
 
         service.start();
+    }
+    
+    public void naiveFill() {
+        root.getChildren().clear();
+        Thread thread = new Thread(() -> {
+            long begin = System.currentTimeMillis();
+            File[] replays = GameReplay.listReplays();
+            if (replays != null) {
+                for (int i = replays.length - 1; i >= 0; i--) {
+                    File f = replays[i];
+                    try {
+                        BriefReplayItem item = new BriefReplayItem(f);
+
+                        Platform.runLater(() -> {
+                            long time = item.gameBeginTime;
+                            TreeItem<Item> gameItemWrapper = entireGameItems.get(time);
+                            if (gameItemWrapper == null) {
+                                gameItemWrapper = new TreeItem<>(new MatchItem(time, item));
+                                ((MatchItem) gameItemWrapper.getValue()).setChildrenList(gameItemWrapper.getChildren());
+
+                                entireGameItems.put(time, gameItemWrapper);
+                                root.getChildren().add(gameItemWrapper);
+                                root.getChildren().sort(Comparator.comparing(TreeItem::getValue));
+
+                                if (root.getChildren().size() == 1) {
+                                    root.setExpanded(true);
+                                }
+                            }
+                            gameItemWrapper.getChildren().add(new TreeItem<>(new FrameItem(item)));
+                            gameItemWrapper.getChildren().sort(Comparator.comparing(TreeItem::getValue));
+                            replayTable.refresh();  // 这里是为了让match的比分刷新
+                        });
+                        
+                        Thread.sleep(1);  // 猜猜这是为啥
+                    } catch (VersionException ve) {
+                        System.err.printf("Record version: %d.%d\n",
+                                ve.recordPrimaryVersion, ve.recordSecondaryVersion);
+                    } catch (RecordException | IOException re) {
+                        System.err.println(re.getMessage());
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            System.out.println("Records listed in " + (System.currentTimeMillis() - begin) + " ms");
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
 
     public abstract static class Item implements Comparable<Item> {
@@ -376,23 +425,26 @@ public class ReplayView implements Initializable {
                             try {
                                 BriefReplayItem item = new BriefReplayItem(f);
 
-                                long time = item.gameBeginTime;
-                                TreeItem<Item> gameItemWrapper = entireGameItems.get(time);
-                                if (gameItemWrapper == null) {
-                                    gameItemWrapper = new TreeItem<>(new MatchItem(time, item));
-                                    ((MatchItem) gameItemWrapper.getValue()).setChildrenList(gameItemWrapper.getChildren());
+                                Platform.runLater(() -> {
+                                    long time = item.gameBeginTime;
+                                    TreeItem<Item> gameItemWrapper = entireGameItems.get(time);
+                                    if (gameItemWrapper == null) {
+                                        gameItemWrapper = new TreeItem<>(new MatchItem(time, item));
+                                        ((MatchItem) gameItemWrapper.getValue()).setChildrenList(gameItemWrapper.getChildren());
 
-                                    entireGameItems.put(time, gameItemWrapper);
-                                    root.getChildren().add(gameItemWrapper);
-                                    root.getChildren().sort(Comparator.comparing(TreeItem::getValue));
+                                        entireGameItems.put(time, gameItemWrapper);
+                                        root.getChildren().add(gameItemWrapper);
+                                        root.getChildren().sort(Comparator.comparing(TreeItem::getValue));
 
-                                    if (root.getChildren().size() == 1) {
-                                        root.setExpanded(true);
+                                        if (root.getChildren().size() == 1) {
+                                            root.setExpanded(true);
+                                        }
                                     }
-                                }
-                                gameItemWrapper.getChildren().add(new TreeItem<>(new FrameItem(item)));
-                                gameItemWrapper.getChildren().sort(Comparator.comparing(TreeItem::getValue));
-                                replayTable.refresh();  // 这里是为了让match的比分刷新
+                                    gameItemWrapper.getChildren().add(new TreeItem<>(new FrameItem(item)));
+                                    gameItemWrapper.getChildren().sort(Comparator.comparing(TreeItem::getValue));
+                                    replayTable.refresh();  // 这里是为了让match的比分刷新
+                                });
+                                
 
 //                                replayList.add(item);
                             } catch (VersionException ve) {

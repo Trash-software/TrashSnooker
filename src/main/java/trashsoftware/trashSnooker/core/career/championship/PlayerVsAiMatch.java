@@ -98,6 +98,25 @@ public class PlayerVsAiMatch extends CareerMatch {
         return p1.isHumanPlayer() ? p2 : p1;
     }
     
+    public Career getHumanCareer() {
+        return p1.isHumanPlayer() ? p1 : p2;
+    }
+    
+    public void playerQuit(int totalFrames, int p1Wins, int p2Wins) {
+        boolean playerIsP1 = p1.isHumanPlayer();
+        if (playerIsP1) {
+            p2Wins = totalFrames / 2 + 1;
+        } else {
+            p1Wins = totalFrames / 2 + 1;
+        }
+        
+        resultNode.setWinner(getAiCareer(), p1Wins, p2Wins);
+        
+        getMatchSave().delete();
+
+        callback.matchNormalFinish();
+    }
+    
     public void finish(PlayerPerson winnerPerson, int p1Wins, int p2Wins) {
         if (resultNode.isFinished()) return;
         System.out.println(winnerPerson + " wins");
@@ -110,10 +129,10 @@ public class PlayerVsAiMatch extends CareerMatch {
         getMatchSave().delete();
         
         callback.matchNormalFinish();
-        Platform.runLater(guiFinishCallback);
+        if (guiFinishCallback != null) Platform.runLater(guiFinishCallback);
     }
     
     public void saveAndExit() {
-        Platform.runLater(guiAbortionCallback);
+        if (guiAbortionCallback != null) Platform.runLater(guiAbortionCallback);
     }
 }

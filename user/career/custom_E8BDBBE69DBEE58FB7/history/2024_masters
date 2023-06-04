@@ -1,0 +1,179 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 12,
+    "Liu Mang": 11,
+    "Kid": 3,
+    "Ding Junhui": 13,
+    "custom_player_3": 16,
+    "Smart": 1,
+    "Jack Lisowski": 7,
+    "Trump": 9,
+    "Mark Williams": 2,
+    "Mark Allen": 8,
+    "O_Sullivan": 5,
+    "Zhao Xintong": 14,
+    "Neil Robertson": 4,
+    "Stephen Maguire": 15,
+    "Murphy": 10,
+    "John Wizard": 6
+  },
+  "championshipId": "masters",
+  "matchTree": {"root": {
+    "p1wins": 2,
+    "p1": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 1,
+          "p1": {"winner": "Jack Lisowski"},
+          "p2": {"winner": "Ding Junhui"},
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-ROUND_1-0",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Williams"},
+          "p2": {"winner": "Zhao Xintong"},
+          "winner": "Mark Williams",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-ROUND_1-1",
+          "p2wins": 1
+        },
+        "winner": "Ding Junhui",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-QUARTER_FINAL-8",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Murphy"},
+          "winner": "Murphy",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-ROUND_1-2",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Smart"},
+          "p2": {"winner": "Stephen Maguire"},
+          "winner": "Smart",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-ROUND_1-3",
+          "p2wins": 0
+        },
+        "winner": "Smart",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-QUARTER_FINAL-9",
+        "p2wins": 3
+      },
+      "winner": "Smart",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-SEMI_FINAL-12",
+      "p2wins": 3
+    },
+    "p2": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "Kid"},
+          "p2": {"winner": "Liu Mang"},
+          "winner": "Liu Mang",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-ROUND_1-4",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "custom_player_3"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-ROUND_1-5",
+          "p2wins": 1
+        },
+        "winner": "Liu Mang",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-QUARTER_FINAL-10",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {"winner": "Stuart Bingham"},
+          "winner": "Mark Allen",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-ROUND_1-6",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "Trump"},
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-ROUND_1-7",
+          "p2wins": 0
+        },
+        "winner": "O_Sullivan",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-QUARTER_FINAL-11",
+        "p2wins": 3
+      },
+      "winner": "O_Sullivan",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-SEMI_FINAL-13",
+      "p2wins": 3
+    },
+    "winner": "O_Sullivan",
+    "stage": "FINAL",
+    "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-FINAL-14",
+    "p2wins": 4
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 62,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-QUARTER_FINAL-9",
+      "playerId": "Smart"
+    },
+    {
+      "score": 56,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-QUARTER_FINAL-11",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 55,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-ROUND_1-2",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 51,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+masters-FINAL-14",
+      "playerId": "O_Sullivan"
+    }
+  ],
+  "timestamp": "2024/1/15"
+}

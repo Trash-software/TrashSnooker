@@ -1,0 +1,46 @@
+{
+  "tables": [
+    {
+      "id": "starSnookerTableGood",
+      "name": {
+        "zh": "星牌",
+        "en": "Star"
+      },
+      "type": "snookerTable",
+      "goodness": "good",
+      "smoothness": "normal",
+      "pocketSize": "std",
+      "pocketDifficulty": "tight"
+    },
+    {
+      "id": "duckGooseSnookerTable",
+      "name": {
+        "zh": "Duck Goose",
+        "en": "Duck Goose"
+      },
+      "meshes": "",
+      "logo": "",
+      "text": "Duck Goose",
+      "type": "snookerTable",
+      "goodness": "normal",
+      "smoothness": "normal",
+      "pocketSize": "std",
+      "pocketDifficulty": "loose"
+    },
+    {
+      "id": "duckShellSnookerTable",
+      "name": {
+        "zh": "Duck Shell",
+        "en": "Duck Shell"
+      },
+      "meshes": "",
+      "logo": "",
+      "text": "Duck Shell",
+      "type": "snookerTable",
+      "goodness": "good",
+      "smoothness": "normal",
+      "pocketSize": "std",
+      "pocketDifficulty": "tight"
+    }
+  ]
+}

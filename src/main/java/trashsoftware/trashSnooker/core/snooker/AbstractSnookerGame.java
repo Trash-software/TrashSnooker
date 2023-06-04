@@ -725,6 +725,11 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 justCuedPlayer.getSinglePole()
         );
     }
+    
+    public int getPossibleBreak(int alreadySinglePole) {
+        int rem = getRemainingScore(false);
+        return alreadySinglePole + rem;
+    }
 
     @Override
     public SnookerPlayer getWiningPlayer() {

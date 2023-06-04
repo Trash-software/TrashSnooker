@@ -12,7 +12,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.ChampDrawView"
-      prefHeight="720.0" prefWidth="1080.0" spacing="10.0">
+      prefHeight="640.0" prefWidth="1080.0" spacing="10.0">
 
     <padding>
         <Insets topRightBottomLeft="10.0"/>
@@ -34,6 +34,10 @@
             <Button fx:id="nextRoundButton" onAction="#nextRound" text="%startNextRound"/>
             <Label fx:id="savedRoundLabel"/>
             <ComboBox fx:id="cueBox"/>
+            
+            <VBox alignment="BOTTOM_LEFT" VBox.vgrow="ALWAYS">
+                <Button fx:id="quitTournamentBtn" text="%quitTournament" onAction="#quitTournamentAction"/>
+            </VBox>
         </VBox>
 
         <VBox spacing="5.0" HBox.hgrow="ALWAYS">

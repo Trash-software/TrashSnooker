@@ -15,6 +15,7 @@ public class GameValues {
     public final GameRule rule;
     public final TableMetrics table;
     public final BallMetrics ball;
+    private TablePreset tablePreset;  // 不管太多，只管画
     // 袋的正中央，最易进球的位置
     public double[] topLeftHoleOpenCenter;
     public double[] botLeftHoleOpenCenter;
@@ -105,6 +106,10 @@ public class GameValues {
                 botMidHoleOpenCenter
         };
         // open center 和 hole顺序必须一致
+    }
+
+    public void setTablePreset(TablePreset tablePreset) {
+        this.tablePreset = tablePreset;
     }
 
     public void setTrain(TrainType trainType, Challenge challenge) {
@@ -273,6 +278,10 @@ public class GameValues {
         else if (Arrays.equals(pos, botMidHoleOpenCenter)) return TableMetrics.Hole.BOT_MID;
         else if (Arrays.equals(pos, botRightHoleOpenCenter)) return TableMetrics.Hole.BOT_RIGHT;
         else return null;
+    }
+
+    public TablePreset getTablePreset() {
+        return tablePreset;
     }
 
     @Override

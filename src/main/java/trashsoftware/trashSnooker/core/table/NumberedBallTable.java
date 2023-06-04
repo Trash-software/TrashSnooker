@@ -99,7 +99,7 @@ public abstract class NumberedBallTable extends Table {
         List<double[]> stars = tableMetrics.tableStars;
         graphicsContext.setFill(GameView.WHITE);
 
-        double radius2 = 5.0 * scale;
+        double radius2 = 8.0 * scale;
         for (double[] star : stars) {
             graphicsContext.fillOval(
                     view.canvasX(star[0]) - radius2,

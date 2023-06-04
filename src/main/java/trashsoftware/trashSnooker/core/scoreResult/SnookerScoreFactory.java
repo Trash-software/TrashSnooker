@@ -4,11 +4,10 @@ import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.util.Util;
 
-import java.util.Map;
 import java.util.TreeMap;
 
 public class SnookerScoreFactory implements ScoreFactory {
-    
+
     @Override
     public int byteLength() {
         return SnookerScoreResult.BYTE_LENGTH;
@@ -30,7 +29,7 @@ public class SnookerScoreFactory implements ScoreFactory {
             if (nPots > 0) singlePole.put(ball, nPots);
         }
         System.out.println(singlePole);
-        
+
         return new SnookerScoreResult(
                 Util.bytesToInt32(bytes, 4),
                 Util.bytesToInt32(bytes, 8),

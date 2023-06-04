@@ -22,6 +22,7 @@ import trashsoftware.trashSnooker.util.GeneralSaveManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -67,6 +68,8 @@ public class FastGameView extends ChildInitializable {
     ComboBox<PlayerType> player1Player, player2Player;
     @FXML
     ComboBox<CategoryItem> player1CatBox, player2CatBox;
+    @FXML
+    ComboBox<TablePresetWrapper> tablePresetBox;
 
     @FXML
     CheckBox devModeBox;
@@ -85,6 +88,14 @@ public class FastGameView extends ChildInitializable {
     private Stage stage;
     private ResourceBundle strings;
 
+    private static <T> void selectBox(ComboBox<T> box, T value) {
+        int index = box.getItems().indexOf(value);
+        if (index != -1) {
+//            System.out.println(index);
+            box.getSelectionModel().select(index);
+        } else System.out.println("Not value of " + value);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.strings = resources;
@@ -95,6 +106,8 @@ public class FastGameView extends ChildInitializable {
         initClothBox();
         loadPlayerList();
         loadCueList();
+
+        initTablePresentBox();
 
         resumeButton.setDisable(!GeneralSaveManager.getInstance().hasSavedGame());
 
@@ -146,6 +159,38 @@ public class FastGameView extends ChildInitializable {
         clothGoodBox.getItems().addAll(TableCloth.Goodness.values());
         clothSmoothBox.getSelectionModel().select(1);
         clothGoodBox.getSelectionModel().select(1);
+    }
+
+    private void initTablePresentBox() {
+        tableMetricsBox.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> fillTablePresetBox(newValue));
+
+        tablePresetBox.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null && newValue.preset != null) {
+
+//                        selectBox(holeSizeBox, newValue.preset.tableSpec.tableMetrics.pocketSize);
+//                        selectBox(pocketDifficultyBox, newValue.preset.tableSpec.tableMetrics.factory.defaultDifficulty());
+//                        selectBox(clothSmoothBox, newValue.preset.tableSpec.tableCloth.smoothness);
+//                        selectBox(clothGoodBox, newValue.preset.tableSpec.tableCloth.goodness);
+
+                        holeSizeBox.setValue(newValue.preset.tableSpec.tableMetrics.pocketSize);
+                        pocketDifficultyBox.setValue(newValue.preset.tableSpec.tableMetrics.factory.defaultDifficulty());
+                        clothSmoothBox.setValue(newValue.preset.tableSpec.tableCloth.smoothness);
+                        clothGoodBox.setValue(newValue.preset.tableSpec.tableCloth.goodness);
+                    }
+                });
+    }
+
+    private void fillTablePresetBox(TableMetrics.TableBuilderFactory factory) {
+        tablePresetBox.getItems().clear();
+
+        tablePresetBox.getItems().add(new TablePresetWrapper(strings.getString("tableCustom"), null));
+        Map<String, TablePreset> tables = DataLoader.getInstance().getTablesOfType(factory.key);
+        for (TablePreset tp : tables.values()) {
+            tablePresetBox.getItems().add(new TablePresetWrapper(tp.name, tp));
+        }
+        tablePresetBox.getSelectionModel().select(0);
     }
 
     private void initGameTypeBox() {
@@ -213,10 +258,10 @@ public class FastGameView extends ChildInitializable {
     private void loadPlayerList() {
         player1CatBox.getItems().addAll(CategoryItem.values());
         player2CatBox.getItems().addAll(CategoryItem.values());
-        
+
         addCatBoxProperty(player1CatBox, player1Box);
         addCatBoxProperty(player2CatBox, player2Box);
-        
+
 //        Collection<PlayerPerson> playerPeople = DataLoader.getInstance().getActualPlayers();
 //        player1Box.getItems().clear();
 //        player2Box.getItems().clear();
@@ -231,7 +276,7 @@ public class FastGameView extends ChildInitializable {
         player1Player.getSelectionModel().select(0);
         player2Player.getSelectionModel().select(0);
     }
-    
+
     private void addCatBoxProperty(ComboBox<CategoryItem> catBox,
                                    ComboBox<PlayerPerson> playerBox) {
         catBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -339,7 +384,7 @@ public class FastGameView extends ChildInitializable {
         // todo: 检查规则兼容性
 
         GameValues values = new GameValues(rule, tableMetrics, ballMetrics);
-        
+
         TrainType trainType = getTrainType();
         if (trainType != null) {
             Challenge challenge = null;
@@ -349,10 +394,11 @@ public class FastGameView extends ChildInitializable {
 
             values.setTrain(getTrainType(), challenge);
         }
-
+        
+        values.setTablePreset(tablePresetBox.getValue().preset);  // 可以是null
         showGame(values, cloth);
     }
-    
+
     private TrainType getTrainType() {
         if (gameTrainToggleGroup.getSelectedToggle().getUserData().equals("TRAIN")) {
             return trainingItemBox.getValue();
@@ -422,6 +468,25 @@ public class FastGameView extends ChildInitializable {
         }
     }
 
+    public enum CategoryItem {
+        ALL("All"),
+        PROFESSIONAL("Professional"),
+        AMATEUR("Amateur"),
+        NOOB("Noob"),
+        GOD("God");
+
+        private final String cat;
+
+        CategoryItem(String cat) {
+            this.cat = cat;
+        }
+
+        @Override
+        public String toString() {
+            return PlayerPerson.getPlayerCategoryShown(cat, App.getStrings());
+        }
+    }
+
     public static class CueItem {
         public final Cue cue;
         private final String string;
@@ -436,23 +501,19 @@ public class FastGameView extends ChildInitializable {
             return string;
         }
     }
-    
-    public enum CategoryItem {
-        ALL("All"),
-        PROFESSIONAL("Professional"),
-        AMATEUR("Amateur"),
-        NOOB("Noob"),
-        GOD("God");
-        
-        private final String cat;
-        
-        CategoryItem(String cat) {
-            this.cat = cat;
+
+    public static class TablePresetWrapper {
+        public String shown;
+        public TablePreset preset;
+
+        TablePresetWrapper(String shown, TablePreset preset) {
+            this.shown = shown;
+            this.preset = preset;
         }
 
         @Override
         public String toString() {
-            return PlayerPerson.getPlayerCategoryShown(cat, App.getStrings());
+            return shown;
         }
     }
 }

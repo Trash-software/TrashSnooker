@@ -12,6 +12,7 @@ import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.GameHolder;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.core.metrics.TablePreset;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.App;
@@ -355,15 +356,15 @@ public class GamePane extends Pane {
         drawHole(values.topRightHoleGraXY, cornerHoleVisualRadius);
         drawHole(values.botRightHoleGraXY, cornerHoleVisualRadius);
 
-        double actualCornerHoleRadius = values.cornerHoleRadius * scale;
+        double actualCornerHoleSize = values.cornerHoleRadius * 2 * scale;
         graphicsContext.setFill(values.tableColor);  // 台泥/台布
         graphicsContext.fillRoundRect(  // 防止特别小的袋口遮不完台泥的边角
                 canvasX(values.leftX - values.cushionClothWidth),
                 canvasY(values.topY - values.cushionClothWidth),
                 (values.innerWidth + values.cushionClothWidth * 2) * scale,
                 (values.innerHeight + values.cushionClothWidth * 2) * scale,
-                actualCornerHoleRadius,
-                actualCornerHoleRadius);
+                actualCornerHoleSize,
+                actualCornerHoleSize);
 
 //        // 袋口附近重力区域
 //        graphicsContext.setFill(values.gravityAreaColor);
@@ -427,20 +428,10 @@ public class GamePane extends Pane {
         drawHole(values.topMidHoleXY, values.midHoleRadius);
         drawHole(values.botMidHoleXY, values.midHoleRadius);
 
-//        drawHoleOutLine(values.topLeftHoleXY, values.cornerHoleShownRadius + 10, 45.0 - values.cornerHoleOpenAngle);
-//        drawHoleOutLine(values.botLeftHoleXY, values.cornerHoleShownRadius, 135.0);
-//        drawHoleOutLine(values.topRightHoleXY, values.cornerHoleShownRadius, -45.0);
-//        drawHoleOutLine(values.botRightHoleXY, values.cornerHoleShownRadius, -135.0);
-//        drawHoleOutLine(values.topMidHoleXY, values.midHoleRadius, 0.0);
-//        drawHoleOutLine(values.botMidHoleXY, values.midHoleRadius, 180.0);
-
         graphicsContext.setLineWidth(1.0);
         gameHolder.getTable().drawTableMarks(this, graphicsContext, scale);
-//        if (replay != null) {
-//            replay.table.drawTableMarks(this, graphicsContext, scale);
-//        } else {
-//            game.getGame().getTable().drawTableMarks(this, graphicsContext, scale);
-//        }
+        
+        drawTableLogo();
     }
 
     private void drawHole(double[] realXY, double holeRadius) {
@@ -573,5 +564,22 @@ public class GamePane extends Pane {
 
     private void connectEndPoint(double[] pos1, double[] pos2, GraphicsContext gc) {
         gc.strokeLine(canvasX(pos1[0]), canvasY(pos1[1]), canvasX(pos2[0]), canvasY(pos2[1]));
+    }
+    
+    private void drawTableLogo() {
+        TablePreset preset = gameValues.getTablePreset();
+        if (preset != null) {
+            graphicsContext.save();
+            
+            double dt = gameValues.table.topY / 4 * 3;
+            graphicsContext.setFill(Color.BLACK.brighter());
+            graphicsContext.rotate(270);
+            graphicsContext.fillText(preset.getNameOnTable(),
+                    -gameValues.table.midY * scale,
+                    (gameValues.table.rightX + dt) * scale
+            );
+            
+            graphicsContext.restore();
+        }
     }
 }

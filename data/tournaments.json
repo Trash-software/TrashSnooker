@@ -26,8 +26,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "normal"
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -54,8 +54,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "normal"
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -85,8 +85,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "large",
-        "hole_difficulty": "normal"
+        "pocketSize": "large",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -118,8 +118,8 @@
       "table": {
         "goodness": "normal",
         "smoothness": "medium",
-        "hole_size": "large",
-        "hole_difficulty": "loose"
+        "pocketSize": "large",
+        "pocketDifficulty": "loose"
       }
     },
     {
@@ -147,8 +147,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "tight"
+        "pocketSize": "std",
+        "pocketDifficulty": "tight"
       }
     },
     {
@@ -178,8 +178,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "normal"
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -210,12 +210,7 @@
         "zh": "Give Emperor",
         "en": "Give Emperor"
       },
-      "table": {
-        "goodness": "normal",
-        "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "loose"
-      }
+      "tablePreset": "duckGooseSnookerTable"
     },
     {
       "id": "eight_bsc_heiba_open",
@@ -242,8 +237,8 @@
       "table": {
         "goodness": "normal",
         "smoothness": "medium",
-        "hole_size": "large",
-        "hole_difficulty": "loose"
+        "pocketSize": "large",
+        "pocketDifficulty": "loose"
       }
     },
     {
@@ -278,12 +273,7 @@
         "zh": "由游戏内测玩家Give Emperor冠名赞助的比赛。",
         "en": "Sponsored by close beta player 'Give Emperor'."
       },
-      "table": {
-        "goodness": "good",
-        "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "tight"
-      }
+      "tablePreset": "duckShellSnookerTable"
     },
     {
       "id": "eight_master_tour_beijing",
@@ -309,8 +299,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "normal"
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -340,8 +330,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "normal"
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -373,8 +363,8 @@
       "table": {
         "goodness": "normal",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "loose"
+        "pocketSize": "std",
+        "pocketDifficulty": "loose"
       }
     },
     {
@@ -405,8 +395,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "normal"
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -440,8 +430,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "normal"
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -468,8 +458,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "normal"
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -499,8 +489,8 @@
       "table": {
         "goodness": "normal",
         "smoothness": "normal",
-        "hole_size": "large",
-        "hole_difficulty": "loose"
+        "pocketSize": "large",
+        "pocketDifficulty": "loose"
       }
     },
     {
@@ -527,8 +517,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "tight"
+        "pocketSize": "std",
+        "pocketDifficulty": "tight"
       }
     },
     {
@@ -562,8 +552,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "fast",
-        "hole_size": "little",
-        "hole_difficulty": "veryTight"
+        "pocketSize": "little",
+        "pocketDifficulty": "veryTight"
       }
     },
     {
@@ -590,8 +580,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "normal"
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -621,8 +611,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "tight"
+        "pocketSize": "std",
+        "pocketDifficulty": "tight"
       }
     },
     {
@@ -652,8 +642,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "normal"
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -685,8 +675,8 @@
       "table": {
         "goodness": "good",
         "smoothness": "normal",
-        "hole_size": "std",
-        "hole_difficulty": "normal"
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     }
   ]

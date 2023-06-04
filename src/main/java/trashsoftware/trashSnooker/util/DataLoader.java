@@ -8,6 +8,7 @@ import trashsoftware.trashSnooker.core.Cue;
 import trashsoftware.trashSnooker.core.CuePlayType;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
+import trashsoftware.trashSnooker.core.metrics.TablePreset;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +25,7 @@ public class DataLoader {
     private static final String CUSTOM_PLAYER_LIST_FILE = "user/custom_players.json";
     private static final String RANDOM_PLAYERS_LIST_FILE = "user/players_random.json";
     private static final String CUE_LIST_FILE = "data/cues.json";
+    private static final String TABLE_PRESETS_FILE = "data/tables.json";
 
     private static DataLoader instance;
 
@@ -31,6 +33,7 @@ public class DataLoader {
     private final Map<String, PlayerPerson> playerPeople = new HashMap<>();
     private final Map<String, Cue> cues = new HashMap<>();
     private final Map<String, Cue> publicCues = new HashMap<>();
+    private final Map<String, Map<String, TablePreset>> tablePresets = new HashMap<>();
 
     public static DataLoader getInstance() {
         if (instance == null) {
@@ -217,6 +220,8 @@ public class DataLoader {
         cues.clear();
         JSONObject cuesRoot = loadFromDisk(CUE_LIST_FILE);
         loadCues(cuesRoot);
+        JSONObject tablesRoot = loadFromDisk(TABLE_PRESETS_FILE);
+        loadTablePresets(tablesRoot);
 
         playerPeople.clear();
         actualPlayers.clear();
@@ -284,6 +289,29 @@ public class DataLoader {
                 }
             }
         }
+    }
+    
+    private void loadTablePresets(JSONObject root) {
+        if (root.has("tables")) {
+            JSONArray array = root.getJSONArray("tables");
+            for (Object obj : array) {
+                JSONObject object = (JSONObject) obj;
+                String id = object.getString("id");
+                String type = object.getString("type");
+                TablePreset tp = TablePreset.fromJson(object);
+
+                System.out.println(id + " " + tp.tableSpec.tableCloth.goodness.name());
+                
+                Map<String, TablePreset> tablesOfType = tablePresets.computeIfAbsent(
+                        type, k -> new HashMap<>()
+                );
+                tablesOfType.put(id, tp);
+            }
+        }
+    }
+    
+    public Map<String, TablePreset> getTablesOfType(String type) {
+        return tablePresets.getOrDefault(type, new HashMap<>());
     }
 
     public void addPlayerPerson(PlayerPerson playerPerson) {

@@ -444,7 +444,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 double direction = Algebra.thetaOf(vx, vy);
                 double theta = Algebra.angleBetweenTwoAngles(biSector, direction);
                 if (theta < Algebra.HALF_PI) {
-                    pot();
+//                    pot();
 //                    System.out.println("Hit pocket back");
 //                    double[] normal = new double[]{
 //                            nextX - center[0],

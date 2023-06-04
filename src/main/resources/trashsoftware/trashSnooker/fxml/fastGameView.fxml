@@ -68,6 +68,11 @@
         <ComboBox fx:id="totalFramesBox">
         </ComboBox>
     </HBox>
+    
+    <HBox spacing="10.0" alignment="CENTER">
+        <Label text="%tablePreset"/>
+        <ComboBox fx:id="tablePresetBox"/>
+    </HBox>
 
     <HBox spacing="10.0" alignment="CENTER">
         <Label text="%nylonCloth"/>

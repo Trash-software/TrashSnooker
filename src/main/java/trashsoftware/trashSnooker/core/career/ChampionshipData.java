@@ -43,7 +43,9 @@ public class ChampionshipData {
     Map<ChampionshipScore.Rank, Integer> awards = new HashMap<>();  // 每个等级的奖金，包含单杆最高
     Map<ChampionshipScore.Rank, Integer> expMap = new HashMap<>();  // 每个等级的技能点
 
+    TablePreset tablePreset;
     TableSpec tableSpec;
+    BallMetrics ballMetrics;
 
     public static ChampionshipData fromJsonObject(JSONObject jsonObject) {
         ChampionshipData data = new ChampionshipData();
@@ -159,17 +161,14 @@ public class ChampionshipData {
 
         TableCloth cloth;
         TableMetrics metrics;
-        if (jsonObject.has("table")) {
+        if (jsonObject.has("tablePreset")) {
+            tablePreset = DataLoader.getInstance().getTablesOfType(factory.key).get(jsonObject.getString("tablePreset"));
+            tableSpec = tablePreset.tableSpec;
+        } else if (jsonObject.has("table")) {
             JSONObject table = jsonObject.getJSONObject("table");
-            cloth = new TableCloth(
-                    TableCloth.Goodness.valueOf(table.getString("goodness").toUpperCase(Locale.ROOT)),
-                    TableCloth.Smoothness.valueOf(table.getString("smoothness").toUpperCase(Locale.ROOT))
+            tableSpec = TableSpec.fromJsonObject(
+                    table, factory
             );
-            metrics = factory
-                    .create()
-                    .pocketDifficulty(PocketDifficulty.valueOf(factory, table.getString("hole_difficulty")))
-                    .holeSize(PocketSize.valueOf(factory, table.getString("hole_size")))
-                    .build();
         } else {
             cloth = new TableCloth(
                     TableCloth.Goodness.GOOD,
@@ -180,9 +179,9 @@ public class ChampionshipData {
                     .pocketDifficulty(factory.defaultDifficulty())
                     .holeSize(factory.defaultHole())
                     .build();
+            tableSpec = new TableSpec(cloth, metrics);
         }
-
-        BallMetrics ballMetrics;
+        
         switch (getType()) {
             case SNOOKER:
             case MINI_SNOOKER:
@@ -196,8 +195,10 @@ public class ChampionshipData {
             default:
                 throw new RuntimeException();
         }
+    }
 
-        tableSpec = new TableSpec(cloth, metrics, ballMetrics);
+    public TablePreset getTablePreset() {
+        return tablePreset;
     }
 
     /**
@@ -324,6 +325,7 @@ public class ChampionshipData {
             case SNOOKER:
                 return TableMetrics.TableBuilderFactory.SNOOKER;
             case CHINESE_EIGHT:
+            case LIS_EIGHT:
                 return TableMetrics.TableBuilderFactory.CHINESE_EIGHT;
             case SIDE_POCKET:
                 return TableMetrics.TableBuilderFactory.SIDE_POCKET;
@@ -340,6 +342,10 @@ public class ChampionshipData {
 
     public TableSpec getTableSpec() {
         return tableSpec;
+    }
+
+    public BallMetrics getBallMetrics() {
+        return ballMetrics;
     }
 
     private void appendAwardString(ChampionshipScore.Rank rank, StringBuilder builder) {
@@ -412,18 +418,6 @@ public class ChampionshipData {
 
         public String fullName() {
             return year + " " + data.getName();
-        }
-    }
-
-    public static class TableSpec {
-        public final TableCloth tableCloth;
-        public final TableMetrics tableMetrics;
-        public final BallMetrics ballMetrics;
-
-        private TableSpec(TableCloth tableCloth, TableMetrics tableMetrics, BallMetrics ballMetrics) {
-            this.tableCloth = tableCloth;
-            this.tableMetrics = tableMetrics;
-            this.ballMetrics = ballMetrics;
         }
     }
 }

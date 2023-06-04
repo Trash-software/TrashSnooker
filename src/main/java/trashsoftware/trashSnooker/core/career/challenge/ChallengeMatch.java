@@ -23,6 +23,6 @@ public class ChallengeMatch extends CareerMatch {
             System.out.println("Career completed challenge: " + challengeSet.getId());
         }
         CareerManager.getInstance().saveToDisk();
-        Platform.runLater(guiFinishCallback);
+        if (guiFinishCallback != null) Platform.runLater(guiFinishCallback);
     }
 }

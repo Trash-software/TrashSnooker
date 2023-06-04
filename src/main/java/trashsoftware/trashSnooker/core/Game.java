@@ -1236,9 +1236,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (!hitWall) {
                         dtWhenHitFirstWall = cueBallClone.getDistanceMoved();
                     }
-                    hitWall = true;
-                    prediction.whiteCollidesHoleArcs();
-                    prediction.whiteHitCushion();
+                    if (prediction.getSecondCollide() == null) {
+                        // 如果白球碰了第二颗，那接下来就根本不可预测
+                        hitWall = true;
+                        prediction.whiteCollidesHoleArcs();
+                        prediction.whiteHitCushion();
+                    }
                 }
                 return false;
             }

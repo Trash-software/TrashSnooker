@@ -723,6 +723,8 @@ public class GameView implements Initializable {
         replayNextCueButton.setText(strings.getString("replayNextCue"));
         replayNextCueButton.setOnAction(this::replayNextCueAction);
         replayLastCueButton.setDisable(false);
+        
+        tableGraphicsChanged = true;
     }
 
     private void replayLoadNext() {
@@ -809,6 +811,8 @@ public class GameView implements Initializable {
         cursorDirectionUnitX = unit[0];
         cursorDirectionUnitY = unit[1];
         recalculateUiRestrictions();
+        
+        tableGraphicsChanged = true;
     }
 
     @Deprecated
@@ -836,7 +840,6 @@ public class GameView implements Initializable {
 
         Ball.enableGearOffset();
         aiWhitePath = null;
-        tableGraphicsChanged = true;
         miscued = false;
         if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
             boolean autoAim = true;
@@ -873,6 +876,8 @@ public class GameView implements Initializable {
         }
         updatePlayStage();
         recalculateUiRestrictions();
+
+        tableGraphicsChanged = true;
     }
 
     private void updateChampionshipBreaks(SnookerChampionship sc,
@@ -2305,19 +2310,15 @@ public class GameView implements Initializable {
                 playingMovement = false;
                 movement = null;
                 if (replay != null) finishCueReplay();
-                else game.getGame().finishMove(this);
+                else {
+                    game.getGame().finishMove(this);  // 这本不应该在UI线程，但是懒得改
+                }
             }
         } else {
             if (movement == null) {
                 if (tableGraphicsChanged) {
                     if (replay != null) {
                         gamePane.drawStoppedBalls(replay.getTable(), replay.getAllBalls(), replay.getCurrentPositions());
-
-                        if (!replay.finished() &&
-                                System.currentTimeMillis() - replayStopTime > replayGap &&
-                                replayAutoPlayBox.isSelected()) {
-                            replayNextCueAction(null);
-                        }
                     } else {
                         if (cueAnimationPlayer != null) {
                             // 正在进行物理运算，运杆的动画在放
@@ -2325,6 +2326,12 @@ public class GameView implements Initializable {
                             gamePane.drawStoppedBalls(game.getGame().getTable(), game.getGame().getAllBalls(), null);
                         }
                     }
+                }
+                if (replay != null && !replay.finished() &&
+                        System.currentTimeMillis() - replayStopTime > replayGap &&
+                        replayAutoPlayBox.isSelected()) {
+                    System.out.println("replay auto next cue");
+                    replayNextCueAction(null);
                 }
             } else {
                 // 已经算出，但还在放运杆动画
@@ -2384,8 +2391,22 @@ public class GameView implements Initializable {
                 wipeCanvas(singlePoleCanvas);
 
                 if (gameValues.rule.snookerLike()) {
+                    AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
                     drawSnookerSinglePoles(cuePlayer.getSinglePole());
-                    singlePoleLabel.setText(String.valueOf(cuePlayer.getSinglePoleScore()));
+                    
+                    int singlePoleScore = cuePlayer.getSinglePoleScore();
+
+                    String singlePoleText;
+                    if (singlePoleScore < 3) {  // 至少一红一彩再显吧？
+                        singlePoleText = String.valueOf(singlePoleScore);
+                    } else {
+                        singlePoleText = singlePoleScore +
+                                String.format(" (%s)",
+                                        String.format(strings.getString("possibleBreak"),
+                                                asg.getPossibleBreak(singlePoleScore)));
+                    }
+                    
+                    singlePoleLabel.setText(singlePoleText);
                 } else if (gameValues.rule.poolLike()) {
                     if (cuePlayer == game.getGame().getCuingPlayer()) {
                         // 进攻成功了
@@ -2760,7 +2781,6 @@ public class GameView implements Initializable {
     }
 
     private void draw() {
-        boolean changed = tableGraphicsChanged;
         if (tableGraphicsChanged) {
             gamePane.drawTable(getActiveHolder());
             if (drawAiPathItem.isSelected()) gamePane.drawPredictedWhitePath(aiWhitePath);
@@ -2768,11 +2788,11 @@ public class GameView implements Initializable {
                 gamePane.drawPredictedWhitePath(suggestedPlayerWhitePath);
         }
         drawBalls();
-        if (changed) {
+        if (tableGraphicsChanged) {  // drawBalls在movement最后一帧会触发一系列反应，让该值改变
             drawCursor();
-            tableGraphicsChanged = false;  // 一定在drawBalls之后
         }
         drawBallInHand();
+        tableGraphicsChanged = false;  // 一定在drawBalls之后
     }
 
     private void playMovement() {
