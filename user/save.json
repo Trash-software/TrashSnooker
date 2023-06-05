@@ -7,7 +7,7 @@
     "person": "Neil Robertson",
     "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
+    "breakCue": "stdBreakCue"
   },
   "p1Wins": 0,
   "p2": {
@@ -16,24 +16,24 @@
     "person": "Mark Allen",
     "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
+    "breakCue": "stdBreakCue"
   },
-  "startTime": 1685903450089,
+  "startTime": 1685949213979,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "SNOOKER_BALL",
-    "gameRule": "SNOOKER",
+    "ball": "POOL_BALL",
+    "gameRule": "CHINESE_EIGHT",
     "table": {
-      "tableOrdinal": 0,
+      "tableOrdinal": 1,
       "pocketDifficultyOrdinal": 2,
-      "holeSizeOrdinal": 1
+      "holeSizeOrdinal": 2
     }
   },
   "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",
-    "goodness": "NORMAL"
+    "goodness": "GOOD"
   },
   "p1Breaks": true
 }

@@ -7,6 +7,7 @@ import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.training.Challenge;
 import trashsoftware.trashSnooker.core.training.TrainType;
+import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.util.Arrays;
 
@@ -47,37 +48,53 @@ public class GameValues {
         GameRule rule = GameRule.valueOf(jsonObject.getString("gameRule"));
         BallMetrics ballMetrics = BallMetrics.valueOf(jsonObject.getString("ball"));
 
-        JSONObject tableObj = jsonObject.getJSONObject("table");
-        TableMetrics.TableBuilderFactory factory = 
-                TableMetrics.fromOrdinal(tableObj.getInt("tableOrdinal"));
-        PocketSize pocketSize = factory.supportedHoles[tableObj.getInt("holeSizeOrdinal")];
-        
-        int diffOrd = factory.supportedDifficulties.length / 2;
-        if (tableObj.has("pocketDifficultyOrdinal")) {
-            diffOrd = tableObj.getInt("pocketDifficultyOrdinal");
+        TableMetrics tableMetrics;
+        TablePreset tablePreset = null;
+        if (jsonObject.has("tablePreset")) {
+            tablePreset = DataLoader.getInstance().getTablePresetById(jsonObject.getString("tablePreset"));
+            tableMetrics = tablePreset.tableSpec.tableMetrics;
+        } else {
+            JSONObject tableObj = jsonObject.getJSONObject("table");
+            TableMetrics.TableBuilderFactory factory =
+                    TableMetrics.fromOrdinal(tableObj.getInt("tableOrdinal"));
+            PocketSize pocketSize = factory.supportedHoles[tableObj.getInt("holeSizeOrdinal")];
+
+            int diffOrd = factory.supportedDifficulties.length / 2;
+            if (tableObj.has("pocketDifficultyOrdinal")) {
+                diffOrd = tableObj.getInt("pocketDifficultyOrdinal");
+            }
+
+            PocketDifficulty pocketDifficulty = factory.supportedDifficulties[diffOrd];
+            tableMetrics = factory
+                    .create()
+                    .pocketDifficulty(pocketDifficulty)
+                    .holeSize(pocketSize)
+                    .build();
         }
         
-        PocketDifficulty pocketDifficulty = factory.supportedDifficulties[diffOrd];
-        TableMetrics tableMetrics = factory
-                .create()
-                .pocketDifficulty(pocketDifficulty)
-                .holeSize(pocketSize)
-                .build();
+        GameValues gameValues = new GameValues(rule, tableMetrics, ballMetrics);
+        gameValues.setTablePreset(tablePreset);
         
-        return new GameValues(rule, tableMetrics, ballMetrics);
+        return gameValues;
     }
     
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();
         
+        // 似乎不需要考虑training/challenge的问题：谁存这个啊
+        
         jsonObject.put("gameRule", rule.name());
         jsonObject.put("ball", ball.name());
         
-        JSONObject tableObj = new JSONObject();
-        tableObj.put("tableOrdinal", table.getOrdinal());
-        tableObj.put("holeSizeOrdinal", table.getHoleSizeOrdinal());
-        tableObj.put("pocketDifficultyOrdinal", table.getPocketDifficultyOrdinal());
-        jsonObject.put("table", tableObj);
+        if (tablePreset == null) {
+            JSONObject tableObj = new JSONObject();
+            tableObj.put("tableOrdinal", table.getOrdinal());
+            tableObj.put("holeSizeOrdinal", table.getHoleSizeOrdinal());
+            tableObj.put("pocketDifficultyOrdinal", table.getPocketDifficultyOrdinal());
+            jsonObject.put("table", tableObj);
+        } else {
+            jsonObject.put("tablePreset", tablePreset.id);
+        }
         
         return jsonObject;
     }

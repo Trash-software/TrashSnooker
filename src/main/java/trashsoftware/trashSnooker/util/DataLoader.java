@@ -310,6 +310,15 @@ public class DataLoader {
         }
     }
     
+    public TablePreset getTablePresetById(String id) {
+        for (Map<String, TablePreset> entry : tablePresets.values()) {
+            for (Map.Entry<String, TablePreset> presetEntry : entry.entrySet()) {
+                if (presetEntry.getKey().equals(id)) return presetEntry.getValue();
+            }
+        }
+        throw new RuntimeException("Cannot find table " + id);
+    }
+    
     public Map<String, TablePreset> getTablesOfType(String type) {
         return tablePresets.getOrDefault(type, new HashMap<>());
     }

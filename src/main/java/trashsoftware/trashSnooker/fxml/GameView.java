@@ -2316,7 +2316,7 @@ public class GameView implements Initializable {
             }
         } else {
             if (movement == null) {
-                if (tableGraphicsChanged) {
+//                if (tableGraphicsChanged) {  // 有些bug比较难修，算了
                     if (replay != null) {
                         gamePane.drawStoppedBalls(replay.getTable(), replay.getAllBalls(), replay.getCurrentPositions());
                     } else {
@@ -2326,7 +2326,7 @@ public class GameView implements Initializable {
                             gamePane.drawStoppedBalls(game.getGame().getTable(), game.getGame().getAllBalls(), null);
                         }
                     }
-                }
+//                }
                 if (replay != null && !replay.finished() &&
                         System.currentTimeMillis() - replayStopTime > replayGap &&
                         replayAutoPlayBox.isSelected()) {

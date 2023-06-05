@@ -12,6 +12,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public static final double MAX_GEAR_EFFECT = 0.28;  // 齿轮效应造成的最严重分离角损耗
     public static final double GEAR_EFFECT_MAX_POWER = 0.32;  // 大于这个球速就没有齿轮效应了
     public static final double CUSHION_COLLISION_SPIN_FACTOR = 0.5;
+    public static final double SUCK_CUSHION_FACTOR = 0.75;
     private static final Random ERROR_GENERATOR = new Random();
     private static final double[] LEFT_CUSHION_VEC = {0.0, -1.0};  // 视觉上的顺时针方向。注意y是反的
     private static final double[] RIGHT_CUSHION_VEC = {0.0, 1.0};
@@ -519,6 +520,14 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         vx = inverse[0];
         vy = inverse[1];
 
+        double[] spins = new double[]{xSpin, ySpin};
+        double[] spinCob = Algebra.matrixMultiplyVector(cob, spins);
+        spinCob[1] *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
+
+        double[] spinInverse = Algebra.matrixMultiplyVector(cobInverse, spinCob);
+        xSpin = spinInverse[0];
+        ySpin = spinInverse[1];
+
 //        sideSpin -= effectiveSideSpin;
         sideSpin *= table.wallSpinPreserveRatio;
     }
@@ -548,6 +557,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
      * 2. 更新所有旋转效果
      * <p>
      * 需在更新了vx和vy之后调用
+     * <p>
+     * 该方法仅在撞标准库时调用，不负责袋角
      *
      * @param phy              物理
      * @param cushionNormalVec 撞的库的法向量。比如说边库应是(1,0)或(-1,0)
@@ -562,7 +573,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             } else {
                 vy += effectiveSideSpin;
             }
-            xSpin *= (table.wallSpinPreserveRatio * 0.8);
+            xSpin *= (table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR);
             ySpin *= table.wallSpinPreserveRatio;
         } else if (Arrays.equals(cushionNormalVec, TOP_CUSHION_VEC_NORM) || Arrays.equals(cushionNormalVec, BOT_CUSHION_VEC_NORM)) {
             if (vy < 0) {
@@ -571,10 +582,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 vx -= effectiveSideSpin;
             }
             xSpin *= table.wallSpinPreserveRatio;
-            ySpin *= (table.wallSpinPreserveRatio * 0.8);
-        } else {
-            xSpin *= (table.wallSpinPreserveRatio * 0.9);
-            ySpin *= (table.wallSpinPreserveRatio * 0.9);
+            ySpin *= (table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR);
         }
 
         sideSpin -= effectiveSideSpin;
