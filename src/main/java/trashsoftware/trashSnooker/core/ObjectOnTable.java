@@ -67,7 +67,7 @@ public abstract class ObjectOnTable implements Cloneable {
     protected double getSpeed() {
         return Math.hypot(vx, vy);
     }
-    
+
     public double getSpeedPerSecond(Phy phy) {
         return getSpeed() * phy.calculationsPerSec;
     }
@@ -148,23 +148,24 @@ public abstract class ObjectOnTable implements Cloneable {
 //            // 出台了
 //            return true;
 //        }
-        
-        double cornerRoom = table.cornerHoleRadius - values.ball.ballRadius;
+
+//        double cornerRoom = table.cornerHoleRadius - values.ball.ballRadius;
+        double cornerRoom = table.pocketDifficulty.cornerPocketFallRadius - values.ball.ballRadius;
         double midRoom = table.midHoleRadius - values.ball.ballRadius;
 
-        return predictedDtToPoint(table.topLeftHoleXY) < cornerRoom ||
-                predictedDtToPoint(table.botLeftHoleXY) < cornerRoom ||
-                predictedDtToPoint(table.topRightHoleXY) < cornerRoom ||
-                predictedDtToPoint(table.botRightHoleXY) < cornerRoom ||
-                predictedDtToPoint(table.topMidHoleXY) < midRoom ||
-                predictedDtToPoint(table.botMidHoleXY) < midRoom;
+        return predictedDtToPoint(table.topLeftSlateXY) < cornerRoom ||
+                predictedDtToPoint(table.botLeftSlateXY) < cornerRoom ||
+                predictedDtToPoint(table.topRightSlateXY) < cornerRoom ||
+                predictedDtToPoint(table.botRightSlateXY) < cornerRoom ||
+                predictedDtToPoint(table.topMidFallCenter) < midRoom ||
+                predictedDtToPoint(table.botMidFallCenter) < midRoom;
     }
 
     protected void hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
         if (currentBounce != null) {
             System.err.println("Current is bouncing!");
         }
-        
+
         double[] hitPos = getArcHitPos(arcXY, arcRadius);
 
         // todo: 把难的袋口硬度加大，使大力更不容易zang进
@@ -173,7 +174,7 @@ public abstract class ObjectOnTable implements Cloneable {
         double verticalAngle = Algebra.thetaOf(arcXY[0] - hitPos[0], arcXY[1] - hitPos[1]);
         double injectAngle = Algebra.normalizeAngle(ballAngle - verticalAngle);
         currentBounce = new ArcBounce(
-                arcXY, 
+                arcXY,
                 bounceAcc(phy, speed),
                 speed * table.wallBounceRatio * 0.9,
                 injectAngle,
@@ -190,20 +191,20 @@ public abstract class ObjectOnTable implements Cloneable {
 //        vy = -reflect[1];
 
         double[] vv = new double[]{vx, vy};
-        
+
         double[] unitNormal = Algebra.unitVector(lineNormalVec);
         double verticalSpeed = Algebra.projectionLengthOn(unitNormal, vv);
 
         currentBounce = new LineBounce(
-                -unitNormal[0] * 
+                -unitNormal[0] *
                         verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
-                -unitNormal[1] * 
+                -unitNormal[1] *
                         verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
                 Math.hypot(vx, vy) * table.wallBounceRatio * 0.9,
                 phy.accelerationMultiplier()
         );
     }
-    
+
     protected double getNFramesInCushion(double verticalSpeed, double acc) {
         return verticalSpeed / -acc * 2;
     }
@@ -213,12 +214,14 @@ public abstract class ObjectOnTable implements Cloneable {
         double yDiff = holeXy[1] - nextY;
         double dt = Math.hypot(xDiff, yDiff);
 
-        double holeRadius = isMidHole ? table.midHoleRadius : table.cornerHoleRadius;
+        double holeRadius = isMidHole ? 
+                table.pocketDifficulty.midPocketFallRadius : 
+                table.pocketDifficulty.cornerPocketFallRadius;
         double holeAndSlopeRadius = holeRadius +
-                (isMidHole ? 
-                        table.midPocketGravityRadius : 
+                (isMidHole ?
+                        table.midPocketGravityRadius :
                         table.cornerPocketGravityRadius);
-        
+
         double gravityRadius = isMidHole ? table.midPocketGravityRadius : table.cornerPocketGravityRadius;
 
         if (dt < holeAndSlopeRadius) {
@@ -291,13 +294,13 @@ public abstract class ObjectOnTable implements Cloneable {
                         return 2;
                     }
 
-                    tryEnterGravityArea(phy, table.topMidHoleXY, true);
+                    tryEnterGravityArea(phy, table.topMidFallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
                 } else {
 
-                    tryEnterGravityArea(phy, table.topMidHoleXY, true);
+                    tryEnterGravityArea(phy, table.topMidFallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
@@ -337,13 +340,13 @@ public abstract class ObjectOnTable implements Cloneable {
                         return 2;
                     }
 
-                    tryEnterGravityArea(phy, table.botMidHoleXY, true);
+                    tryEnterGravityArea(phy, table.botMidFallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
                 } else {
 
-                    tryEnterGravityArea(phy, table.botMidHoleXY, true);
+                    tryEnterGravityArea(phy, table.botMidFallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
@@ -353,14 +356,26 @@ public abstract class ObjectOnTable implements Cloneable {
 
         // 底袋
         double[] probHole = null;
+        double[] probPocketFallCenter = null;
         if (nextY < table.topCornerHoleAreaDownY) {
-            if (nextX < table.leftCornerHoleAreaRightX) probHole = table.topLeftHoleXY;  // 左上底袋
-            else if (nextX >= table.rightCornerHoleAreaLeftX)
-                probHole = table.topRightHoleXY;  // 右上底袋
+            if (nextX < table.leftCornerHoleAreaRightX) {
+                // 左上底袋
+                probHole = table.topLeftHoleXY;
+                probPocketFallCenter = table.topLeftSlateXY;
+            } else if (nextX >= table.rightCornerHoleAreaLeftX) {
+                // 右上底袋
+                probHole = table.topRightHoleXY;
+                probPocketFallCenter = table.topRightSlateXY;
+            }
         } else if (nextY >= table.botCornerHoleAreaUpY) {
-            if (nextX < table.leftCornerHoleAreaRightX) probHole = table.botLeftHoleXY;  // 左下底袋
-            else if (nextX >= table.rightCornerHoleAreaLeftX)
+            if (nextX < table.leftCornerHoleAreaRightX) {
+                // 左下底袋}
+                probHole = table.botLeftHoleXY;
+                probPocketFallCenter = table.botLeftSlateXY;
+            } else if (nextX >= table.rightCornerHoleAreaLeftX) {
                 probHole = table.botRightHoleXY;  // 右下底袋
+                probPocketFallCenter = table.botRightSlateXY;
+            }
         }
 
         if (probHole != null) {
@@ -376,16 +391,16 @@ public abstract class ObjectOnTable implements Cloneable {
                 }
             }
 //            if (!table.isStraightHole()) {
-                for (double[] cornerArc : table.allCornerArcs) {
-                    if (predictedDtToPoint(cornerArc) < table.cornerArcRadius + radius &&
-                            currentDtToPoint(cornerArc) >= table.cornerArcRadius + radius) {
-                        hitHoleArcArea(cornerArc, phy, table.cornerArcRadius);
-                        return 2;
-                    }
+            for (double[] cornerArc : table.allCornerArcs) {
+                if (predictedDtToPoint(cornerArc) < table.cornerArcRadius + radius &&
+                        currentDtToPoint(cornerArc) >= table.cornerArcRadius + radius) {
+                    hitHoleArcArea(cornerArc, phy, table.cornerArcRadius);
+                    return 2;
                 }
+            }
 //            }
 
-            tryEnterGravityArea(phy, probHole, false);
+            tryEnterGravityArea(phy, probPocketFallCenter, false);
             normalMove(phy);
             prepareMove(phy);
             return 1;
@@ -478,7 +493,7 @@ public abstract class ObjectOnTable implements Cloneable {
         int accMul;  // 加速度的倍率，用于处理Phy帧时间的问题
         boolean everEnter = false;  // 是否进入过库边区域
         int framesCount = 0;
-        
+
         protected Bounce(double accMul) {
             this.accMul = (int) Math.round(accMul);
         }
@@ -502,7 +517,7 @@ public abstract class ObjectOnTable implements Cloneable {
                     everEnter = true;
                 }
             }
-            
+
             if (everEnter) {
                 processOneFrame();
                 framesCount++;
@@ -513,7 +528,7 @@ public abstract class ObjectOnTable implements Cloneable {
                     System.out.println("Frame " + framesCount + " not entered");
                     return false;
                 }
-                
+
                 return true;
             }
         }
@@ -590,13 +605,13 @@ public abstract class ObjectOnTable implements Cloneable {
             this.desiredSideSpin = desiredSideSpin;
         }
     }
-    
+
     class LineBounce extends CushionBounce {
         double desiredLeaveSpeed;
-        
+
         LineBounce(double accX, double accY, double desiredLeaveSpeed, double accelerationMul) {
             super(accX, accY, accelerationMul);
-            
+
             this.accX = accX;
             this.desiredLeaveSpeed = desiredLeaveSpeed;
         }
@@ -624,12 +639,12 @@ public abstract class ObjectOnTable implements Cloneable {
         double verticalAcc;
         double desiredLeaveSpeed;
         double injectAngle;
-        
+
         double desiredLeaveSideSpin;
-        
+
 //        double[] lastUnitAcc;
 
-        ArcBounce(double[] arcCenter, double verticalAcc, double desiredLeaveSpeed, 
+        ArcBounce(double[] arcCenter, double verticalAcc, double desiredLeaveSpeed,
                   double injectAngle, double accMul) {
             super(accMul);
             this.holeArcCenter = arcCenter;
@@ -658,12 +673,12 @@ public abstract class ObjectOnTable implements Cloneable {
 //                    }
 //                }
 //            }
-            
+
             double accX = unitAcc[0] * verticalAcc;
             double accY = unitAcc[1] * verticalAcc;
             vx += accX;
             vy += accY;
-            
+
 //            lastUnitAcc = unitAcc;
         }
 
@@ -679,19 +694,19 @@ public abstract class ObjectOnTable implements Cloneable {
                 double verticalAngle = Algebra.thetaOf(x - holeArcCenter[0], y - holeArcCenter[1]);
                 double ballAngle = Algebra.thetaOf(vx, vy);  // 当前球的射出角
                 double ejectAngle = verticalAngle - injectAngle;  // 根据当年入射角算出来的反射角
-                
+
                 // 取平均值，魔法
                 double realAngle = Algebra.angularBisector(ballAngle, ejectAngle);
 //                System.out.printf("%.2f, %.2f, %.2f\n%n", Math.toDegrees(ballAngle), Math.toDegrees(ejectAngle), Math.toDegrees(realAngle));
-                
+
                 double[] vecOfAngle = Algebra.unitVectorOfAngle(realAngle);
                 vx = vecOfAngle[0] * desiredLeaveSpeed;
                 vy = vecOfAngle[1] * desiredLeaveSpeed;
-                
+
                 if (ObjectOnTable.this instanceof Ball && desiredLeaveSideSpin != 0.0) {
                     ((Ball) ObjectOnTable.this).sideSpin = desiredLeaveSideSpin;
                 }
-                
+
 //                double speed = Math.hypot(vx, vy);
 //                double ratio = speed / desiredLeaveSpeed;
 //                vx /= ratio;

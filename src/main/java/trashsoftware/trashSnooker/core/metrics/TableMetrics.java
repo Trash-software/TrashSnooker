@@ -30,6 +30,7 @@ public class TableMetrics {
     public final String tableName;
     public final TableBuilderFactory factory;
     public PocketSize pocketSize;
+    public PocketDifficulty pocketDifficulty;
 
     public Color tableColor;
     public Color gravityAreaColor;
@@ -44,7 +45,7 @@ public class TableMetrics {
     public double innerWidth;
     public double innerHeight;
     public double leftX, rightX, topY, botY, midX, midY;
-    public double leftClothX, rightClothX, topClothY, botClothY;  // 绿色部分的最大
+//    public double leftClothX, rightClothX, topClothY, botClothY;  // 绿色部分的最大
     public double maxLength;  // 对角线长度
     public double cushionClothWidth;  // 库的视觉宽度
     public double cushionHeight;
@@ -56,7 +57,7 @@ public class TableMetrics {
     public double cornerPocketGravityRadius;  // 袋口处的坡宽度。球进入这个区域后会开始有往袋里掉的意思
     public double midPocketGravityRadius;
     public double midArcRadius;
-    public double cornerHoleDt, cornerHoleTan,  // 也是库边包布部分的宽度
+    public double cornerHoleDt, cornerHoleTan,
             cornerArcHeight, cornerArcWidth, cornerArcRadius, cornerArcDiameter,
             cornerLineLonger, cornerLineShorter,  // 底袋角直线的占地长宽
             midLineWidth, midLineHeight;  // 中袋角直线占地长宽
@@ -76,6 +77,15 @@ public class TableMetrics {
     public double[] topRightHoleGraXY;
     public double[] botRightHoleGraXY;
     public double[][] allHoles;
+    
+    public double[] topLeftSlateXY;  // 库边台泥的交汇点
+    public double[] topRightSlateXY;
+    public double[] botLeftSlateXY;
+    public double[] botRightSlateXY;
+    
+    public double[] topMidFallCenter;  // 中袋的圆心
+    public double[] botMidFallCenter;
+    
     public double leftCornerHoleAreaRightX;  // 左顶袋右袋角
     public double midHoleAreaLeftX;  // 中袋左袋角
     public double midHoleAreaRightX;  // 中袋右袋角
@@ -245,10 +255,10 @@ public class TableMetrics {
         botMidHoleGraXY = new double[]
                 {midX, botY + (cushionClothWidth + midHoleRadius) / 2};
 
-        leftClothX = leftX - cornerHoleTan;
-        rightClothX = rightX + cornerHoleTan;
-        topClothY = topY - cornerHoleTan;
-        botClothY = botY + cornerHoleTan;
+//        leftClothX = leftX - cornerHoleTan;
+//        rightClothX = rightX + cornerHoleTan;
+//        topClothY = topY - cornerHoleTan;
+//        botClothY = botY + cornerHoleTan;
 
         allHoles = new double[][]{
                 topLeftHoleXY,
@@ -257,6 +267,32 @@ public class TableMetrics {
                 botRightHoleXY,
                 topMidHoleXY,
                 botMidHoleXY
+        };
+        
+        topLeftSlateXY = new double[]{
+                leftX - cushionClothWidth,
+                topY - cushionClothWidth
+        };
+        topRightSlateXY = new double[]{
+                rightX + cushionClothWidth,
+                topY - cushionClothWidth
+        };
+        botLeftSlateXY = new double[]{
+                leftX - cushionClothWidth,
+                botY + cushionClothWidth
+        };
+        botRightSlateXY = new double[] {
+                rightX + cushionClothWidth,
+                botY + cushionClothWidth
+        };
+        
+        topMidFallCenter = new double[]{
+                midX,
+                topY - cushionClothWidth - pocketDifficulty.midCenterToSlate
+        };
+        botMidFallCenter = new double[]{
+                midX,
+                botY + cushionClothWidth + pocketDifficulty.midCenterToSlate
         };
 
         leftCornerHoleAreaRightX = leftX + cornerArcWidth + cornerLineLonger - cornerHoleDrift;  // 左顶袋右袋角
@@ -414,7 +450,7 @@ public class TableMetrics {
                 botMidHoleLeftLine,
                 botMidHoleRightLine
         };
-        
+
         pocketBaseThickness = Math.min(pocketBaseThickness, topLeftHoleGraXY[0]);
 
         tableStars = createStars();
@@ -437,7 +473,7 @@ public class TableMetrics {
     public boolean isInOuterTable(double x, double y) {
         return x >= 0 && x < outerWidth && y >= 0 && y < outerHeight;
     }
-    
+
     public double cornerPocketBackInnerRadius() {
         return factory.supportedHoles[0].cornerHoleDiameter / 2;
     }
@@ -714,6 +750,7 @@ public class TableMetrics {
         }
 
         public Builder pocketDifficulty(PocketDifficulty pocketDifficulty) {
+            values.pocketDifficulty = pocketDifficulty;
             return pocketDifficulty(
                     pocketDifficulty.cornerPocketGravityZone,
                     pocketDifficulty.cornerPocketArcSize,
@@ -725,7 +762,7 @@ public class TableMetrics {
             );
         }
 
-        Builder pocketDifficulty(double cornerPocketGravityZone,
+        private Builder pocketDifficulty(double cornerPocketGravityZone,
                                  double cornerPocketArcSize,
                                  double cornerPocketAngle,
                                  double cornerPocketOut,
@@ -780,18 +817,18 @@ public class TableMetrics {
             * * * * * *......
                          x
              */
-            values.cornerHoleDrift = (values.cornerLineLonger - values.cornerLineShorter) * (1 - cornerPocketOut);
-            // values.cornerHoleDrift = longer - shorter;
+//            values.cornerHoleDrift = (values.cornerLineLonger - values.cornerLineShorter) * (1 - cornerPocketOut);
+            values.cornerHoleDrift = values.cornerLineLonger - values.cornerLineShorter;
         }
-        
+
         private void setupMidHoleByThroat(PocketSize pocketSize) {
             // 目前仅支持圆袋角
             values.midPocketThroatWidth = pocketSize.midThroatWidth;
             values.midPocketMouthWidth = values.midPocketThroatWidth;  // 没有直线，一样的
-            
+
             values.midHoleDiameter = pocketSize.midHoleDiameter;
             values.midHoleRadius = values.midHoleDiameter / 2;
-            
+
             values.midArcRadius = pocketSize.midArcRadius * midHoleArcSizeMul;
         }
 

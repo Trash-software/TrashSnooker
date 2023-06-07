@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.TextAlignment;
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.GameHolder;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
@@ -210,7 +211,7 @@ public class GamePane extends Pane {
         
         drawCornerBases(metrics, cornerVisualRadius);
 
-        fillTableWithoutPocketArea(metrics, 15.0 * scale);
+        fillTableWithoutPocketArea(metrics, 0.0);
     }
 
     private void drawHardTable(TableMetrics metrics) {
@@ -380,6 +381,60 @@ public class GamePane extends Pane {
 
 //        Color cushion = values.tableColor.darker();
 
+        graphicsContext.setFill(HOLE_PAINT);
+        // 实际底袋
+        // 底袋往台内的部分
+        drawCornerHoleReal(values.topLeftSlateXY,
+                values.pocketDifficulty.cornerPocketFallRadius,
+                45,
+                values.cornerHoleDiameter,
+                values.cornerHoleOpenAngle);
+        drawCornerHoleReal(values.topRightSlateXY,
+                values.pocketDifficulty.cornerPocketFallRadius,
+                135,
+                values.cornerHoleDiameter,
+                values.cornerHoleOpenAngle);
+        drawCornerHoleReal(values.botRightSlateXY,
+                values.pocketDifficulty.cornerPocketFallRadius,
+                225,
+                values.cornerHoleDiameter,
+                values.cornerHoleOpenAngle);
+        drawCornerHoleReal(values.botLeftSlateXY,
+                values.pocketDifficulty.cornerPocketFallRadius,
+                315,
+                values.cornerHoleDiameter,
+                values.cornerHoleOpenAngle);
+        
+        // 实际中袋
+        drawMidPocketInnerPart(
+                values.topMidFallCenter,
+                values.pocketDifficulty.midPocketFallRadius,
+                90,
+                values.pocketDifficulty.midCenterToSlate
+        );
+        drawMidPocketInnerPart(
+                values.botMidFallCenter,
+                values.pocketDifficulty.midPocketFallRadius,
+                270,
+                values.pocketDifficulty.midCenterToSlate
+        );
+        
+        // 因为新的洞口占据了一些中袋角的空间，在此补上
+        graphicsContext.setFill(values.tableColor);
+        fillMidPocketArc(values.topMidHoleLeftArcXy, values.midArcRadius, 270, 1);
+        fillMidPocketArc(values.topMidHoleRightArcXy, values.midArcRadius, 270, -1);
+        fillMidPocketArc(values.botMidHoleLeftArcXy, values.midArcRadius, 90, -1);
+        fillMidPocketArc(values.botMidHoleRightArcXy, values.midArcRadius, 90, 1);
+        
+        if (values.midArcRadius < values.cushionClothWidth) {
+            // 需要补充中袋口直线
+            fillMidPocketLineSide(values.topMidHoleLeftArcXy, values.midArcRadius, true,true);
+            fillMidPocketLineSide(values.topMidHoleRightArcXy, values.midArcRadius, true, false);
+            fillMidPocketLineSide(values.botMidHoleLeftArcXy, values.midArcRadius, false,true);
+            fillMidPocketLineSide(values.botMidHoleRightArcXy, values.midArcRadius, false, false);
+        }
+
+        // 画边线
         // 库边
         graphicsContext.strokeLine(
                 canvasX(values.leftCornerHoleAreaRightX),
@@ -417,21 +472,114 @@ public class GamePane extends Pane {
         drawMidHoleLinesArcs(values);
         drawCornerHoleLinesArcs(values);
 
-        graphicsContext.setFill(HOLE_PAINT);
-        // 实际底袋
-        drawHole(values.topLeftHoleXY, values.cornerHoleRadius);
-        drawHole(values.botLeftHoleXY, values.cornerHoleRadius);
-        drawHole(values.topRightHoleXY, values.cornerHoleRadius);
-        drawHole(values.botRightHoleXY, values.cornerHoleRadius);
-        
-        // 实际中袋
-        drawHole(values.topMidHoleXY, values.midHoleRadius);
-        drawHole(values.botMidHoleXY, values.midHoleRadius);
-
         graphicsContext.setLineWidth(1.0);
         gameHolder.getTable().drawTableMarks(this, graphicsContext, scale);
         
         drawTableLogo();
+    }
+    
+    private void fillMidPocketLineSide(double[] arcCenter, double arcRadius, boolean isTop, boolean isLeft) {
+        double sign = isLeft ? 1 : -1;
+        
+        TableMetrics metrics = gameValues.table;
+        double x1 = canvasX(arcCenter[0] + arcRadius * sign);
+        double x2 = canvasX(metrics.midX - metrics.midPocketThroatWidth * sign / 2);
+        double x34 = canvasX(arcCenter[0]);
+        
+        double y1 = canvasY(arcCenter[1]);
+        double y2 = canvasY(isTop ? metrics.topY - metrics.cushionClothWidth : metrics.botY + metrics.cushionClothWidth);
+        
+        graphicsContext.fillPolygon(
+                new double[]{
+                        x1, x2, x34, x34
+                },
+                new double[]{
+                        y1, y2, y2, y1
+                },
+                4
+        );
+    }
+    
+    private void fillMidPocketArc(double[] arcCenter, double radius, double verDeg, double extentDirection) {
+        double centerDiff = gameValues.table.midArcRadius - gameValues.table.cushionClothWidth;
+        double overshootDeg = Math.toDegrees(Math.asin(centerDiff / radius));
+        double arcExtent = (90 + overshootDeg);
+        ArcType arcType = arcExtent < 90 ? ArcType.ROUND : ArcType.CHORD;
+        arcExtent = Math.max(90, arcExtent);
+        arcExtent *= extentDirection;
+        
+        graphicsContext.fillArc(
+                canvasX(arcCenter[0] - radius),
+                canvasY(arcCenter[1] - radius),
+                radius * 2 * scale,
+                radius * 2 * scale,
+                verDeg,
+                arcExtent,
+                arcType
+        );
+    }
+    
+    private void drawMidPocketInnerPart(double[] center, 
+                                        double radius, 
+                                        double centerDeg, 
+                                        double centerToSlateDt) {
+        double degDiff = Math.toDegrees(Math.asin(centerToSlateDt / radius));
+        double singleDeg = 90 - degDiff;
+        double startDeg = centerDeg - singleDeg;
+        graphicsContext.fillArc(
+                canvasX(center[0] - radius),
+                canvasY(center[1] - radius),
+                radius * 2 * scale,
+                radius * 2 * scale,
+                -startDeg,
+                -singleDeg * 2,
+                ArcType.ROUND
+        );
+    }
+    
+    private void drawCornerHoleReal(double[] realXY, double radius, double centerDeg, double mouthWidth,
+                                    double openAngle) {
+        // 画非常规形状的底袋
+        double base = mouthWidth / 2;
+        double openAngleHalf = Math.toDegrees(Math.asin(base / radius));
+        double beginDeg = centerDeg - openAngleHalf;
+        graphicsContext.fillArc(
+                canvasX(realXY[0] - radius),
+                canvasY(realXY[1] - radius),
+                radius * 2 * scale,
+                radius * 2 * scale,
+                -beginDeg,
+                -openAngleHalf * 2,
+                ArcType.ROUND
+        );
+        double beginRad = Math.toRadians(beginDeg);
+        double engRad = Math.toRadians(centerDeg + openAngleHalf);
+        double[] beginVec = Algebra.unitVectorOfAngle(beginRad);
+        double[] engVec = Algebra.unitVectorOfAngle(engRad);
+        double p1x = realXY[0] + beginVec[0] * radius;
+        double p1y = realXY[1] + beginVec[1] * radius;
+        double p2x = realXY[0] + engVec[0] * radius;
+        double p2y = realXY[1] + engVec[1] * radius;
+        
+        double lineLen = radius * 0.5;  // 绝对绰绰有余
+        System.out.println(centerDeg + openAngle);
+        double[] line1Vec = Algebra.unitVectorOfAngle(Math.toRadians(centerDeg - openAngle));
+        double[] line2Vec = Algebra.unitVectorOfAngle(Math.toRadians(centerDeg + openAngle));
+        
+        double p3x = p1x - line1Vec[0] * lineLen;
+        double p3y = p1y - line1Vec[1] * lineLen;
+        double p4x = p2x - line2Vec[0] * lineLen;
+        double p4y = p2y - line2Vec[1] * lineLen;
+        
+        graphicsContext.fillPolygon(
+                new double[]{
+                        canvasX(p1x), canvasX(p2x), canvasX(p4x), canvasX(realXY[0]), canvasX(p3x)
+                },
+                new double[]{
+                        canvasY(p1y), canvasY(p2y), canvasY(p4y), canvasY(realXY[1]), canvasY(p3y)
+                },
+                5
+        );
     }
 
     private void drawHole(double[] realXY, double holeRadius) {
