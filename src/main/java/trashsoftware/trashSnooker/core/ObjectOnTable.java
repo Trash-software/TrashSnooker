@@ -5,7 +5,7 @@ import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 public abstract class ObjectOnTable implements Cloneable {
-    protected static final double GENERAL_BOUNCE_ACC = 0.5;
+    protected static final double GENERAL_BOUNCE_ACC = 0.35;
     protected final GameValues values;
     protected final TableMetrics table;
     protected final double radius;
@@ -151,7 +151,7 @@ public abstract class ObjectOnTable implements Cloneable {
 
 //        double cornerRoom = table.cornerHoleRadius - values.ball.ballRadius;
         double cornerRoom = table.pocketDifficulty.cornerPocketFallRadius - values.ball.ballRadius;
-        double midRoom = table.midHoleRadius - values.ball.ballRadius;
+        double midRoom = table.pocketDifficulty.midPocketFallRadius - values.ball.ballRadius;
 
         return predictedDtToPoint(table.topLeftSlateXY) < cornerRoom ||
                 predictedDtToPoint(table.botLeftSlateXY) < cornerRoom ||
@@ -176,7 +176,7 @@ public abstract class ObjectOnTable implements Cloneable {
         currentBounce = new ArcBounce(
                 arcXY,
                 bounceAcc(phy, speed),
-                speed * table.wallBounceRatio * 0.9,
+                speed * table.wallBounceRatio * 0.8,
                 injectAngle,
                 phy.accelerationMultiplier()
         );
@@ -233,7 +233,7 @@ public abstract class ObjectOnTable implements Cloneable {
                 accMag = (gravityRadius - dt + holeRadius) / gravityRadius;
             }
 
-            accMag *= 4800;
+            accMag *= 4500;
             accMag /= phy.calculationsPerSecSqr;
 
             double[] accVec = Algebra.unitVector(xDiff, yDiff);

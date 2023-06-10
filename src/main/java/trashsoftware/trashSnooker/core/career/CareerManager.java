@@ -9,8 +9,10 @@ import trashsoftware.trashSnooker.core.career.championship.ChineseEightChampions
 import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
 import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.JsonChecksum;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.*;
@@ -194,6 +196,14 @@ public class CareerManager {
     }
 
     private static CareerManager fromJson(JSONObject jsonObject, CareerSave careerSave) {
+        String validation = JsonChecksum.checksum(jsonObject);
+        System.out.println(validation);
+        if (jsonObject.has("checksum")) {
+            String checksum = jsonObject.getString("checksum");
+            if (!checksum.equals(validation)) {
+                System.err.println("You hacked your career data!");
+            }
+        }
         JSONArray rootArr = jsonObject.getJSONArray("careers");
         String time = jsonObject.getString("timestamp");
 
@@ -891,6 +901,7 @@ public class CareerManager {
             }
         }
         JSONObject root = new JSONObject();
+        root.put("version", App.VERSION_CODE);
         root.put("timestamp", calendarToString(timestamp));
         root.put("humanPlayer", humanPlayerCareer.getPlayerPerson().getPlayerId());
 
@@ -905,6 +916,10 @@ public class CareerManager {
         }
 
         root.put("careers", rootArr);
+        
+        String checksum = JsonChecksum.checksum(root);
+        root.put("checksum", checksum);
+        
         String str = root.toString(2);
 
         try (BufferedWriter bw = new BufferedWriter(

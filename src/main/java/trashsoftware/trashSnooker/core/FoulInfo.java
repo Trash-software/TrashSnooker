@@ -3,14 +3,12 @@ package trashsoftware.trashSnooker.core;
 import java.util.*;
 
 public class FoulInfo {
-    private boolean foul = false;
     private boolean miss = false;
     private String headerReason;  // 为null时应该就是“犯规”
     private final Map<String, Integer> foulReasonAndScore = new LinkedHashMap<>();
 
     public void addFoul(String reason, int score, boolean miss) {
         this.foulReasonAndScore.put(reason, score);
-        this.foul = true;
         this.miss |= miss;
     }
 
@@ -31,7 +29,7 @@ public class FoulInfo {
     }
 
     public boolean isFoul() {
-        return foul;
+        return !foulReasonAndScore.isEmpty();
     }
 
     public boolean isMiss() {
@@ -54,6 +52,10 @@ public class FoulInfo {
             }
         }
         return maxFoul;
+    }
+    
+    public Integer removeFoul(String reason) {
+        return foulReasonAndScore.remove(reason);
     }
 
     public enum Reason {

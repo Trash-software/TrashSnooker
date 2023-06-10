@@ -25,7 +25,7 @@
         </rowConstraints>
 
         <MenuBar GridPane.columnSpan="2">
-            <Menu text="%gameMenu">
+            <Menu fx:id="gameMenu" text="%gameMenu">
                 <!--                <MenuItem fx:id="saveGameMenu" text="保存" onAction="#saveGameAction"/>-->
                 <MenuItem text="%withdraw" onAction="#withdrawAction" fx:id="withdrawMenu"
                           disable="true"/>
@@ -34,8 +34,10 @@
                 <MenuItem text="%letOpponentPlay" onAction="#letOtherPlayAction"
                           fx:id="letOtherPlayMenu"
                           disable="true"/>
-                <MenuItem text="%reposition" onAction="#repositionAction" fx:id="repositionMenu"
+                <MenuItem fx:id="repositionMenu" text="%reposition" onAction="#repositionAction"
                           disable="true"/>
+                <MenuItem fx:id="pushOutMenu" text="%pushOut" disable="true"
+                          onAction="#pushOutAction"/>
             </Menu>
             <Menu text="%playMenu">
                 <CheckMenuItem fx:id="aiAutoPlayMenuItem" text="%aiAutoPlay"/>

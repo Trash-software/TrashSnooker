@@ -82,6 +82,14 @@ public class DataLoader {
                                                          boolean isCustomPlayer) {
         if (root.has("players")) {
             JSONObject array = root.getJSONObject("players");
+            if (isCustomPlayer && root.has("checksum")) {
+                String checksum = root.getString("checksum");
+                String validation = JsonChecksum.checksum(array);
+                if (!checksum.equals(validation)) {
+                    System.err.println("You hacked your custom players!");
+                }
+            }
+            
             Map<String, PlayerPerson> result = new HashMap<>();
             for (String key : array.keySet()) {
                 Object obj = array.get(key);
@@ -411,8 +419,10 @@ public class DataLoader {
             JSONObject personObject = playerPerson.toJsonObject();
             result.put(playerPerson.getPlayerId(), personObject);
         }
+        String checksum = JsonChecksum.checksum(result);
         JSONObject root = new JSONObject();
         root.put("players", result);
+        root.put("checksum", checksum);
         return root;
     }
 }

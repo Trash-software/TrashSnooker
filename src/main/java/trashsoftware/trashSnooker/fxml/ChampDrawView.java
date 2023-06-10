@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -28,6 +29,7 @@ import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.net.URL;
 import java.util.*;
@@ -51,6 +53,8 @@ public class ChampDrawView extends ChildInitializable {
     Label extraInfoLabel;
     @FXML
     Button nextRoundButton, quitTournamentBtn;
+    @FXML
+    CheckBox showAllMatchesBox;
 
     Championship championship;
 
@@ -77,12 +81,14 @@ public class ChampDrawView extends ChildInitializable {
         championship = CareerManager.getInstance().getChampionshipInProgress();
         assert championship != null;
         
+        champNameLabel.setText(championship.fullName());
         leftBlockWidth = championship.getData().getTotalPlaces() >= 100 ? 28 : 20;
         nodeHGap = nodeWidth + leftBlockWidth + rightBlockWidth + 20.0;  // recalculate
 
         gc2d = treeCanvas.getGraphicsContext2D();
         gc2d.setFont(App.FONT);
 
+        setupCheckbox();
         refreshCueBox();
         initTable();
         updateGui();
@@ -104,6 +110,11 @@ public class ChampDrawView extends ChildInitializable {
                 cueBox.getItems().add(new FastGameView.CueItem(cue, cue.getName()));
             }
         }
+    }
+    
+    private void setupCheckbox() {
+        showAllMatchesBox.selectedProperty().addListener((observable, oldValue, newValue) -> 
+                buildTreeGraph());
     }
 
     private void refreshCueBox() {
@@ -163,6 +174,7 @@ public class ChampDrawView extends ChildInitializable {
             nextRoundButton.setText(strings.getString("close"));
             savedRoundLabel.setText("");
             savedRoundLabel.setManaged(false);
+            quitTournamentBtn.setDisable(true);
         } else {
             if (championship.hasSavedRound()) {
                 nextRoundButton.setText(strings.getString("continueMatch"));
@@ -288,6 +300,7 @@ public class ChampDrawView extends ChildInitializable {
     
     private void quitTournament() {
         if (!championship.isHumanAlive()) return;
+        if (championship.isFinished()) return;
         if (championship.hasSavedRound()) {
             PlayerVsAiMatch match = championship.continueSavedRound();
             quitCurrentMatch(match);
@@ -447,16 +460,28 @@ public class ChampDrawView extends ChildInitializable {
     }
 
     private void buildTreeGraph() {
-        totalRounds = championship.getData().getStages().length;
+        // wipe
+        GraphicsContext gc = treeCanvas.getGraphicsContext2D();
+        gc.setFill(GameView.WHITE);
+        gc.fillRect(0, 0, treeCanvas.getWidth(), treeCanvas.getHeight());
+        
+        ChampionshipStage limit = null;
+        if (!showAllMatchesBox.isSelected()) {
+            limit = championship.getCurrentStage();
+        }
+        
+        if (limit != null) {
+            totalRounds = Util.indexOf(limit, championship.getData().getStages()) + 1;
+        } else {
+            totalRounds = championship.getData().getStages().length;
+        }
 //        int leafNodesCount = 1 << totalRounds;  // 最后一层是
 
         width = (totalRounds + 1) * nodeHGap;
-
-//        double height = nodeHeight * leafNodesCount;
-//        treeCanvas.setHeight(height);
+        
         treeCanvas.setWidth(width);
 
-        Node rootNode = buildNodeTree(championship.getMatchTree().getRoot(), 0);
+        Node rootNode = buildNodeTree(championship.getMatchTree().getRoot(), 0, limit, true);
         double maxY = assignYVal(rootNode, nodeVGap + nodeHeight);
 //        System.out.println(rootNode);
         treeCanvas.setHeight(maxY + nodeVGap * 2);
@@ -559,17 +584,20 @@ public class ChampDrawView extends ChildInitializable {
         }
     }
 
-    private Node buildNodeTree(MatchTreeNode mtn, int depth) {
+    private Node buildNodeTree(MatchTreeNode mtn, int depth, ChampionshipStage limit, boolean recursive) {
         if (mtn == null) return null;
+        
         Node node = new Node();
         node.node = mtn;
         node.depth = depth;
 
         node.x = getX(depth);
-
-        node.left = buildNodeTree(mtn.getPlayer1Position(), depth + 1);
-        node.right = buildNodeTree(mtn.getPlayer2Position(), depth + 1);
-
+        
+        if (recursive) {
+            boolean nextRecursive = limit != mtn.getStage();
+            node.left = buildNodeTree(mtn.getPlayer1Position(), depth + 1, limit, nextRecursive);
+            node.right = buildNodeTree(mtn.getPlayer2Position(), depth + 1, limit, nextRecursive);
+        }
         return node;
     }
 

@@ -57,6 +57,14 @@ public class Util {
             return file.delete();
         }
     }
+    
+    public static String byteArrayToHex(byte[] b) {
+        StringBuilder builder = new StringBuilder();
+        for (byte b1 : b) {
+            builder.append(decimalToHex(b1 & 0xff, 2));
+        }
+        return builder.toString();
+    }
 
     public static String decimalToHex(int dec, int digits) {
         int max = (1 << (digits << 2));

@@ -10,7 +10,9 @@ import trashsoftware.trashSnooker.core.career.awardItems.AwardPerk;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.training.Challenge;
+import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.JsonChecksum;
 
 import java.util.*;
 
@@ -28,7 +30,10 @@ public class Career {
     private int level = 1;
     private int expInThisLevel;
     private double handFeel = 0.9;
-    private final Set<String> completedChallenges = new HashSet<>();
+    
+    //  这些都是Human Career特有的，考虑移入CareerManager
+    private Set<String> completedChallenges;
+    private Map<Integer, List<AwardMaterial>> levelAwards;
 
     private Career(PlayerPerson person, boolean isHumanPlayer) {
         this.playerPerson = person;
@@ -58,6 +63,17 @@ public class Career {
         career.totalExp = jsonObject.has("totalExp") ? jsonObject.getInt("totalExp") : 0;
         career.level = jsonObject.has("level") ? jsonObject.getInt("level") : 1;
         career.expInThisLevel = jsonObject.has("expInThisLevel") ? jsonObject.getInt("expInThisLevel") : 0;
+        
+        if (jsonObject.has("levelAwards")) {
+            career.levelAwards = new HashMap<>();
+            JSONObject levelAwdObj = jsonObject.getJSONObject("levelAwards");
+            for (String key : levelAwdObj.keySet()) {
+                int level = Integer.parseInt(key);
+                JSONObject awdObj = levelAwdObj.getJSONObject(key);
+                List<AwardMaterial> thisLevelAwards = AwardMaterial.fromJsonList(awdObj);
+                career.levelAwards.put(level, thisLevelAwards);
+            }
+        }
 
         career.validateLevel();
 
@@ -80,6 +96,7 @@ public class Career {
         }
         
         if (jsonObject.has("completedChallenges")) {
+            career.completedChallenges = new HashSet<>();
             JSONArray compCha = jsonObject.getJSONArray("completedChallenges");
             for (Object cha : compCha) {
                 career.completedChallenges.add((String) cha);
@@ -116,16 +133,31 @@ public class Career {
             out.put("expInThisLevel", expInThisLevel);
             
             JSONArray compCha = new JSONArray();
-            for (String challengeId : completedChallenges) {
-                compCha.put(challengeId);
+            if (completedChallenges != null) {
+                for (String challengeId : completedChallenges) {
+                    compCha.put(challengeId);
+                }
             }
             out.put("completedChallenges", compCha);
+            
+            JSONObject levelAwdObj = new JSONObject();
+            if (levelAwards != null) {
+                for (Map.Entry<Integer, List<AwardMaterial>> entry : levelAwards.entrySet()) {
+                    JSONObject levelObj = new JSONObject();
+                    for (AwardMaterial am : entry.getValue()) {
+                        am.putToJson(levelObj);
+                    }
+                    levelAwdObj.put(String.valueOf(entry.getKey()), levelObj);
+                }
+            }
+            out.put("levelAwards", levelAwdObj);
         }
 
         return out;
     }
     
     public void completeChallenge(ChallengeSet challengeSet) {
+        if (completedChallenges == null) completedChallenges = new HashSet<>();
         // 仅第一次完成给经验
         if (!completedChallenges.contains(challengeSet.getId())) {
             completedChallenges.add(challengeSet.getId());
@@ -137,7 +169,7 @@ public class Career {
     }
     
     public boolean challengeIsComplete(String challengeId) {
-        return completedChallenges.contains(challengeId);
+        return completedChallenges != null && completedChallenges.contains(challengeId);
     }
 
     public double getEffort(GameRule rule) {
@@ -225,11 +257,15 @@ public class Career {
         int perk = range[index];
         availPerks += perk;
         totalPerks += perk;
+
+        AwardMaterial pm = new AwardPerk(perk);
+        result.add(pm);
+        
+        if (levelAwards == null) levelAwards = new HashMap<>();
+        levelAwards.put(level, result);
         
         CareerManager.getInstance().saveToDisk();
         
-        AwardMaterial pm = new AwardPerk(perk);
-        result.add(pm);
         return result;
     }
 

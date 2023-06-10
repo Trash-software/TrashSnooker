@@ -20,7 +20,8 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
 
     private final LinkedHashMap<PoolBall, Boolean> pottedRecord = new LinkedHashMap<>();  // 缓存用，仅用于GameView画目标球
     protected NineBallScoreResult curResult;
-    protected boolean canPushOut = false;
+    protected boolean pushingOut;
+    private boolean pushedOut;
     private boolean wasIllegalBreak;
 
     public SidePocketGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
@@ -28,6 +29,23 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
 
         initBalls();
         currentTarget = 1;
+    }
+    
+    public boolean currentlyCanPushOut() {
+        return finishedCuesCount == 1;
+    }
+    
+    public boolean isPushingOut() {
+        return pushingOut;
+    }
+
+    public boolean lastCueWasPushOut() {
+        return finishedCuesCount == 2 && pushedOut;
+    }
+
+    public void pushOut() {
+        pushingOut = true;
+        currentTarget = 0;
     }
 
     @Override
@@ -172,8 +190,15 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
             end();
             return;
         }
-        // todo: 开球后的推球规则
-        if (whiteFirstCollide == null) {
+
+        if (isPushingOut()) {
+            thisCueFoul.removeFoul(strings.getString("emptyCue"));
+            thisCueFoul.removeFoul(strings.getString("noBallHitCushion"));
+            thisCueFoul.setMiss(false);
+            
+            pushedOut = true;
+            pushingOut = false;
+        } else if (whiteFirstCollide == null) {
             thisCueFoul.addFoul(strings.getString("emptyCue"), true);
         } else {
             int actualHit = whiteFirstCollide.getValue();
@@ -283,6 +308,8 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
     @Override
     public GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage) {
         if (isBreaking()) return GamePlayStage.BREAK;
+        if (currentTarget == 8) return GamePlayStage.NEXT_BALL_WIN;
+        if (currentTarget == 9) return GamePlayStage.THIS_BALL_WIN;
         return GamePlayStage.NORMAL;
     }
 

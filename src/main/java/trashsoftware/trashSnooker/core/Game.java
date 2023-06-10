@@ -870,7 +870,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     protected boolean checkStandardFouls(Supplier<Integer> foulScoreCalculator) {
         GameRule rule = gameValues.rule;
-        if (!rule.hasRule(Rule.CAN_EMPTY) && whiteFirstCollide == null) {
+        if (whiteFirstCollide == null) {
             // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
             thisCueFoul.addFoul(strings.getString("emptyCue"), foulScoreCalculator.get(), true);
             if (cueBall.isPotted()) ballInHand = true;
@@ -1236,12 +1236,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (!hitWall) {
                         dtWhenHitFirstWall = cueBallClone.getDistanceMoved();
                     }
-                    if (prediction.getSecondCollide() == null) {
+//                    if (prediction.getSecondCollide() == null) {
                         // 如果白球碰了第二颗，那接下来就根本不可预测
+                        // 有bug，修不好，取消判定
                         hitWall = true;
                         prediction.whiteCollidesHoleArcs();
                         prediction.whiteHitCushion();
-                    }
+//                    }
                 }
                 return false;
             }

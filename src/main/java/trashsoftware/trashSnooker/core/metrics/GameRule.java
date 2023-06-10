@@ -80,7 +80,7 @@ public enum GameRule {
             new TrainType[]{TrainType.SNAKE_FULL,
                     TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},
             BreakRule.WINNER,
-            Set.of(Rule.HIT_CUSHION, Rule.FOUL_BALL_IN_HAND, Rule.POCKET_INDICATION, Rule.CAN_EMPTY)) {
+            Set.of(Rule.HIT_CUSHION, Rule.FOUL_BALL_IN_HAND, Rule.POCKET_INDICATION, Rule.PUSH_OUT)) {
         @Override
         public boolean poolLike() {
             return true;

@@ -7,8 +7,8 @@ import trashsoftware.trashSnooker.util.Util;
 public class TableCloth {
 
     private static final double baseSpeedReducer = 90;
-    private static final double baseSpinReducer = 4600;
-    private static final double baseSpinEffect = 1100;
+    private static final double baseSpinReducer = 5200;
+    private static final double baseSpinEffect = 1650;
     public final Goodness goodness;
     public final Smoothness smoothness;
     

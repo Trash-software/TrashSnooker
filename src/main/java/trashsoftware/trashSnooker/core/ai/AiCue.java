@@ -648,6 +648,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             return makeDefenseCue(solveSnooker, AiCueResult.CueType.SOLVE);
         }
         DefenseChoice solveSnooker2 = solveSnooker(phy, true);  // 只能说是逼急了，来个袋角解斯诺克
+        System.out.println("Cannot solve snooker! Try pocket arc!");
         if (solveSnooker2 != null) {
             return makeDefenseCue(solveSnooker2, AiCueResult.CueType.SOLVE);
         }

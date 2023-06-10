@@ -500,7 +500,7 @@ public class TableMetrics {
                                 0.92,
                                 0.85,
                                 0.8,
-                                0.25);
+                                0.35);
             }
         },
         CHINESE_EIGHT("chineseEightTable",
@@ -520,7 +520,7 @@ public class TableMetrics {
                                 0.92,
                                 0.8,
                                 0.8,
-                                0.3);
+                                0.35);
             }
         },
         POOL_TABLE_10("poolTable10",
@@ -540,7 +540,7 @@ public class TableMetrics {
                                 0.85,
                                 1.15,
                                 0.9,
-                                0.65);
+                                0.8);
             }
         },
         SIDE_POCKET("sidePocketTable",

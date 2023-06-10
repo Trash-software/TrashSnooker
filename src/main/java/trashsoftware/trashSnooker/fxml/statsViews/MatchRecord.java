@@ -221,11 +221,9 @@ public class MatchRecord extends RecordTree {
             page.add(new Label(String.valueOf(numberedBreaks[0][1])), 2, rowIndex);
             page.add(new Label(String.valueOf(numberedBreaks[1][1])), 6, rowIndex);
 
-            page.add(new Label(String.format("%.1f%%",
-                            numberedBreaks[0][1] * 100.0 / numberedBreaks[0][0])),
+            page.add(new Label(showPercent(numberedBreaks[0][1], numberedBreaks[0][0])),
                     3, rowIndex);
-            page.add(new Label(String.format("%.1f%%",
-                            numberedBreaks[1][1] * 100.0 / numberedBreaks[1][0])),
+            page.add(new Label(showPercent(numberedBreaks[1][1], numberedBreaks[1][0])),
                     5, rowIndex);
             rowIndex++;
 

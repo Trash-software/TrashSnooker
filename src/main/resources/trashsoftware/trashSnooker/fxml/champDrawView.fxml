@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.CheckBox?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.ChampDrawView"
@@ -22,7 +23,10 @@
         <Button text="%backIcon" onAction="#backAction"/>
     </HBox>
 
-    <Label fx:id="champNameLabel"/>
+    <HBox spacing="20.0">
+        <Label fx:id="champNameLabel"/>
+        <CheckBox fx:id="showAllMatchesBox" text="%showAllMatches" selected="true"/>
+    </HBox>
 
     <ScrollPane prefHeight="540.0" prefWidth="1060.0" style="-fx-padding: 0;">
         <Canvas fx:id="treeCanvas"/>

@@ -234,8 +234,8 @@ public class CuePlayParams {
         }
 
         // 小力高低杆补偿，pow越小，补偿越多
-        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.4);
-        double sideSpinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, 0.75);
+        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SPIN_EXP);
+        double sideSpinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
 
         double side = sideSpinRatio * sideSpin * Values.MAX_SIDE_SPIN_SPEED;
         // 旋转产生的总目标速度

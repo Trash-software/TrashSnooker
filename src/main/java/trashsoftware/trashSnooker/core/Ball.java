@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cloneable {
-    public static final double MAX_GEAR_EFFECT = 0.28;  // 齿轮效应造成的最严重分离角损耗
+    public static final double MAX_GEAR_EFFECT = 0.25;  // 齿轮效应造成的最严重分离角损耗
     public static final double GEAR_EFFECT_MAX_POWER = 0.32;  // 大于这个球速就没有齿轮效应了
     public static final double CUSHION_COLLISION_SPIN_FACTOR = 0.5;
     public static final double SUCK_CUSHION_FACTOR = 0.75;
@@ -995,7 +995,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             double gearPassFactor = 0.2;
             double passRate = Math.cos(Math.abs(collisionThickness));  // 越厚传得越多。
             double speedPassRate = Math.abs(this.sideSpin) / relSpeed;  // 球速越慢，塞越大，传得越多
-            double passed = this.sideSpin * gearPassFactor * passRate * speedPassRate;
+            double passPercentage = gearPassFactor * passRate * speedPassRate;
+            passPercentage = Math.min(passPercentage, 0.25);  // 最多传1/4
+            double passed = this.sideSpin * passPercentage;
+            
             this.sideSpin -= passed;  // 自己的塞会减少，动量守恒嘛
             ball.sideSpin -= passed;  // 右塞传到球上就是左塞了
 

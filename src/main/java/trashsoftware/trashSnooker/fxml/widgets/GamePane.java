@@ -166,17 +166,17 @@ public class GamePane extends Pane {
         setPrefWidth(canvasWidth);
         setPrefHeight(canvasHeight);
     }
-    
+
     private double getCornerHoleVisualRadiusUnscaled(TableMetrics metrics) {
 //        return metrics.cornerHoleRadius * cornerHoleVisualMul;
-        return metrics.leatherPocket ? 
+        return metrics.leatherPocket ?
                 metrics.cornerPocketBackInnerRadius() :
                 metrics.cornerHoleRadius;
     }
 
     private double getMidHoleVisualRadiusUnscaled(TableMetrics metrics) {
 //        return metrics.cornerHoleRadius * cornerHoleVisualMul;
-        return metrics.leatherPocket ? 
+        return metrics.leatherPocket ?
                 metrics.midPocketBackInnerRadius() :
                 metrics.midHoleRadius;
     }
@@ -184,11 +184,11 @@ public class GamePane extends Pane {
     private void drawLeatherTable(TableMetrics metrics) {
 //        double cornerVisualRadius = (metrics.topLeftHoleGraXY[0] - metrics.pocketBaseInside) * scale;
         double cornerVisualRadius = (getCornerHoleVisualRadiusUnscaled(metrics) + metrics.pocketBaseThickness) * scale;
-        
+
         // 画中袋的袋底
         double leatherThickness = (cornerVisualRadius -
                 getCornerHoleVisualRadiusUnscaled(metrics) * scale) * 0.8;  // 我们希望中袋和底袋厚度比例固定
-        double inside = (metrics.topMidHoleGraXY[1] - getMidHoleVisualRadiusUnscaled(metrics)) 
+        double inside = (metrics.topMidHoleGraXY[1] - getMidHoleVisualRadiusUnscaled(metrics))
                 * scale - leatherThickness;  // 圆心在topY的地方
         inside = Math.max(inside, 0);  // 不要超过球台边缘了
 
@@ -208,7 +208,7 @@ public class GamePane extends Pane {
                 midBaseRadius * 2,
                 180, 180, ArcType.CHORD
         );
-        
+
         drawCornerBases(metrics, cornerVisualRadius);
 
         fillTableWithoutPocketArea(metrics, 0.0);
@@ -228,7 +228,7 @@ public class GamePane extends Pane {
         graphicsContext.fillRect(midBaseLeftX, metrics.outerHeight * scale - height - 1, midBaseWidth, height + 1);
 
         fillTableWithoutPocketArea(metrics, midPocketNoFill);
-        
+
         // 袋口保护塑料
         double plasticProtectorWidth = 9.0;
         graphicsContext.setFill(Color.BLACK);
@@ -404,7 +404,7 @@ public class GamePane extends Pane {
                 315,
                 values.cornerHoleDiameter,
                 values.cornerHoleOpenAngle);
-        
+
         // 实际中袋
         drawMidPocketInnerPart(
                 values.topMidFallCenter,
@@ -418,19 +418,19 @@ public class GamePane extends Pane {
                 270,
                 values.pocketDifficulty.midCenterToSlate
         );
-        
+
         // 因为新的洞口占据了一些中袋角的空间，在此补上
         graphicsContext.setFill(values.tableColor);
         fillMidPocketArc(values.topMidHoleLeftArcXy, values.midArcRadius, 270, 1);
         fillMidPocketArc(values.topMidHoleRightArcXy, values.midArcRadius, 270, -1);
         fillMidPocketArc(values.botMidHoleLeftArcXy, values.midArcRadius, 90, -1);
         fillMidPocketArc(values.botMidHoleRightArcXy, values.midArcRadius, 90, 1);
-        
+
         if (values.midArcRadius < values.cushionClothWidth) {
-            // 需要补充中袋口直线
-            fillMidPocketLineSide(values.topMidHoleLeftArcXy, values.midArcRadius, true,true);
+            // 补充中袋口直线
+            fillMidPocketLineSide(values.topMidHoleLeftArcXy, values.midArcRadius, true, true);
             fillMidPocketLineSide(values.topMidHoleRightArcXy, values.midArcRadius, true, false);
-            fillMidPocketLineSide(values.botMidHoleLeftArcXy, values.midArcRadius, false,true);
+            fillMidPocketLineSide(values.botMidHoleLeftArcXy, values.midArcRadius, false, true);
             fillMidPocketLineSide(values.botMidHoleRightArcXy, values.midArcRadius, false, false);
         }
 
@@ -474,21 +474,21 @@ public class GamePane extends Pane {
 
         graphicsContext.setLineWidth(1.0);
         gameHolder.getTable().drawTableMarks(this, graphicsContext, scale);
-        
+
         drawTableLogo();
     }
-    
+
     private void fillMidPocketLineSide(double[] arcCenter, double arcRadius, boolean isTop, boolean isLeft) {
         double sign = isLeft ? 1 : -1;
-        
+
         TableMetrics metrics = gameValues.table;
         double x1 = canvasX(arcCenter[0] + arcRadius * sign);
         double x2 = canvasX(metrics.midX - metrics.midPocketThroatWidth * sign / 2);
         double x34 = canvasX(arcCenter[0]);
-        
+
         double y1 = canvasY(arcCenter[1]);
         double y2 = canvasY(isTop ? metrics.topY - metrics.cushionClothWidth : metrics.botY + metrics.cushionClothWidth);
-        
+
         graphicsContext.fillPolygon(
                 new double[]{
                         x1, x2, x34, x34
@@ -507,7 +507,6 @@ public class GamePane extends Pane {
         ArcType arcType = arcExtent < 90 ? ArcType.ROUND : ArcType.CHORD;
         arcExtent = Math.max(90, arcExtent);
         arcExtent *= extentDirection;
-        
         graphicsContext.fillArc(
                 canvasX(arcCenter[0] - radius),
                 canvasY(arcCenter[1] - radius),
@@ -518,10 +517,10 @@ public class GamePane extends Pane {
                 arcType
         );
     }
-    
-    private void drawMidPocketInnerPart(double[] center, 
-                                        double radius, 
-                                        double centerDeg, 
+
+    private void drawMidPocketInnerPart(double[] center,
+                                        double radius,
+                                        double centerDeg,
                                         double centerToSlateDt) {
         double degDiff = Math.toDegrees(Math.asin(centerToSlateDt / radius));
         double singleDeg = 90 - degDiff;
@@ -536,9 +535,10 @@ public class GamePane extends Pane {
                 ArcType.ROUND
         );
     }
-    
+
     private void drawCornerHoleReal(double[] realXY, double radius, double centerDeg, double mouthWidth,
                                     double openAngle) {
+        // todo: 计算交会点的宽度，那里才是真正的宽度
         // 画非常规形状的底袋
         double base = mouthWidth / 2;
         double openAngleHalf = Math.toDegrees(Math.asin(base / radius));
@@ -560,17 +560,16 @@ public class GamePane extends Pane {
         double p1y = realXY[1] + beginVec[1] * radius;
         double p2x = realXY[0] + engVec[0] * radius;
         double p2y = realXY[1] + engVec[1] * radius;
-        
+
         double lineLen = radius * 0.5;  // 绝对绰绰有余
-        System.out.println(centerDeg + openAngle);
         double[] line1Vec = Algebra.unitVectorOfAngle(Math.toRadians(centerDeg - openAngle));
         double[] line2Vec = Algebra.unitVectorOfAngle(Math.toRadians(centerDeg + openAngle));
-        
+
         double p3x = p1x - line1Vec[0] * lineLen;
         double p3y = p1y - line1Vec[1] * lineLen;
         double p4x = p2x - line2Vec[0] * lineLen;
         double p4y = p2y - line2Vec[1] * lineLen;
-        
+
         graphicsContext.fillPolygon(
                 new double[]{
                         canvasX(p1x), canvasX(p2x), canvasX(p4x), canvasX(realXY[0]), canvasX(p3x)
@@ -713,12 +712,12 @@ public class GamePane extends Pane {
     private void connectEndPoint(double[] pos1, double[] pos2, GraphicsContext gc) {
         gc.strokeLine(canvasX(pos1[0]), canvasY(pos1[1]), canvasX(pos2[0]), canvasY(pos2[1]));
     }
-    
+
     private void drawTableLogo() {
         TablePreset preset = gameValues.getTablePreset();
         if (preset != null) {
             graphicsContext.save();
-            
+
             double dt = gameValues.table.topY / 4 * 3;
             graphicsContext.setFill(Color.BLACK.brighter());
             graphicsContext.rotate(270);
@@ -726,7 +725,7 @@ public class GamePane extends Pane {
                     -gameValues.table.midY * scale,
                     (gameValues.table.rightX + dt) * scale
             );
-            
+
             graphicsContext.restore();
         }
     }

@@ -45,7 +45,6 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
-import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LisEightGame;
 import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
@@ -134,7 +133,9 @@ public class GameView implements Initializable {
     @FXML
     Canvas player1TarCanvas, player2TarCanvas;
     @FXML
-    MenuItem withdrawMenu, replaceBallInHandMenu, letOtherPlayMenu, repositionMenu;
+    Menu gameMenu;
+    @FXML
+    MenuItem withdrawMenu, replaceBallInHandMenu, letOtherPlayMenu, repositionMenu, pushOutMenu;
     @FXML
     Menu debugMenu;
     @FXML
@@ -253,6 +254,8 @@ public class GameView implements Initializable {
         this.strings = resources;
 
         animationPlaySpeedToggle.selectToggle(animationPlaySpeedToggle.getToggles().get(3));
+        drawAiPathItem.selectedProperty().addListener((observable, oldValue, newValue) -> 
+                tableGraphicsChanged = true);
 
         cuePointCanvasGc = cuePointCanvas.getGraphicsContext2D();
         cuePointCanvasGc.setTextAlign(TextAlignment.CENTER);
@@ -374,6 +377,7 @@ public class GameView implements Initializable {
         drawTargetBoard(true);
 
         setupPowerSlider();
+        gameMenu.getItems().clear();
         setUiFrameStart();
         setupDebug();
         setupHandSelection();
@@ -426,6 +430,7 @@ public class GameView implements Initializable {
         setupPowerSlider();
         updatePowerSlider(game.getGame().getCuingPlayer().getPlayerPerson());
 
+        setupGameMenu();
         setUiFrameStart();
         setupDebug();
         setupHandSelection();
@@ -467,6 +472,22 @@ public class GameView implements Initializable {
         EntireGame entireGame = new EntireGame(player1, player2, gameValues,
                 totalFrames, cloth, null);
         setup(stage, entireGame, devMode);
+    }
+    
+    private void setupGameMenu() {
+        gameMenu.getItems().clear();
+        gameMenu.getItems().addAll(withdrawMenu, replaceBallInHandMenu);
+        
+        GameRule rule = gameValues.rule;
+//        if (rule.hasRule(Rule.FOUL_LET_OTHER_PLAY)) {
+            gameMenu.getItems().add(letOtherPlayMenu);
+//        }
+        if (rule.hasRule(Rule.FOUL_AND_MISS)) {
+            gameMenu.getItems().add(repositionMenu);
+        }
+        if (rule.hasRule(Rule.PUSH_OUT)) {
+            gameMenu.getItems().add(pushOutMenu);
+        }
     }
 
     private void setupHandSelection() {
@@ -691,6 +712,7 @@ public class GameView implements Initializable {
                 cueButton.setText(strings.getString("aiCueText"));
             } else {
                 cueButton.setText(strings.getString("cueText"));
+                enableDisabledUi();
             }
         }
         updateScoreDiffLabels();
@@ -860,6 +882,15 @@ public class GameView implements Initializable {
             }
             if (game.getGame().getThisCueFoul().isFoul()) {
                 if (game.getGame().getGameValues().rule.hasRule(Rule.FOUL_LET_OTHER_PLAY)) {
+                    letOtherPlayMenu.setDisable(false);
+                }
+            }
+            if (game.getGame() instanceof SidePocketGame) {
+                SidePocketGame g = (SidePocketGame) game.getGame();
+                if (g.currentlyCanPushOut()) {
+                    pushOutMenu.setDisable(false);
+                }
+                if (g.lastCueWasPushOut()) {
                     letOtherPlayMenu.setDisable(false);
                 }
             }
@@ -1334,6 +1365,7 @@ public class GameView implements Initializable {
         movement = null;
         cueAnimationPlayer = null;
         finishCueReplay();
+        hideCue();
     }
 
     @FXML
@@ -1353,6 +1385,27 @@ public class GameView implements Initializable {
         restoreCuePoint();
         restoreCueAngle();
         updateScoreDiffLabels();
+    }
+    
+    @FXML
+    void pushOutAction() {
+        if (game.getGame() instanceof SidePocketGame) {
+            SidePocketGame g = (SidePocketGame) game.getGame();
+
+            cursorDirectionUnitX = 0.0;
+            cursorDirectionUnitY = 0.0;
+//            hideCue();
+            tableGraphicsChanged = true;
+            
+            g.pushOut();
+
+            drawScoreBoard(game.getGame().getCuingPlayer(), true);
+            drawTargetBoard(true);
+            updatePowerSlider(game.getGame().getCuingPlayer().getPlayerPerson());
+            draw();
+        } else {
+            System.err.println("Game rule no push out!");
+        }
     }
 
     @FXML
@@ -1442,6 +1495,7 @@ public class GameView implements Initializable {
         replaceBallInHandMenu.setDisable(true);
         letOtherPlayMenu.setDisable(true);
         repositionMenu.setDisable(true);
+        pushOutMenu.setDisable(true);
 
         Player player = game.getGame().getCuingPlayer();
         if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
@@ -1607,6 +1661,12 @@ public class GameView implements Initializable {
     private void disableUiWhenCuing() {
         for (Node control : disableWhenCuing) {
             control.setDisable(true);
+        }
+    }
+    
+    private void enableDisabledUi() {
+        for (Node control : disableWhenCuing) {
+            control.setDisable(false);
         }
     }
 
