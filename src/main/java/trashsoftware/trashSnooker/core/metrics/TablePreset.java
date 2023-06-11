@@ -1,7 +1,9 @@
 package trashsoftware.trashSnooker.core.metrics;
 
+import javafx.scene.paint.Color;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.io.File;
 
@@ -13,6 +15,7 @@ public class TablePreset {
     private final File meshes;
     private final File logo;
     private final String nameOnTable;
+    private final Color nameOnTableColor;
     public final TableSpec tableSpec;
     
     public TablePreset(String id, 
@@ -20,6 +23,7 @@ public class TablePreset {
                        TableMetrics.TableBuilderFactory factory,
                        TableSpec tableSpec,
                        String nameOnTable,
+                       Color nameOnTableColor,
                        File meshes, 
                        File logo) {
         this.id = id;
@@ -27,6 +31,7 @@ public class TablePreset {
         this.factory = factory;
         this.tableSpec = tableSpec;
         this.nameOnTable = nameOnTable;
+        this.nameOnTableColor = nameOnTableColor;
         this.meshes = meshes;
         this.logo = logo;
     }
@@ -45,6 +50,9 @@ public class TablePreset {
                 factory,
                 TableSpec.fromJsonObject(jsonObject, factory),
                 jsonObject.has("text") ? jsonObject.getString("text") : "",
+                jsonObject.has("textColor") ? 
+                        DataLoader.parseColor(jsonObject.getString("textColor")) : 
+                        Color.BLACK.brighter(),
                 mesh,
                 logo
         );
@@ -60,6 +68,10 @@ public class TablePreset {
 
     public String getNameOnTable() {
         return nameOnTable;
+    }
+
+    public Color getNameOnTableColor() {
+        return nameOnTableColor;
     }
 
     public File getMeshes() {

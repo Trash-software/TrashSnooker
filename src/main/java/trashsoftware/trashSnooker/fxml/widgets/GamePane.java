@@ -7,6 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
@@ -32,8 +33,9 @@ public class GamePane extends Pane {
     public static final Color LINE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color HOLE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color WHITE_PREDICTION_COLOR = Color.LIGHTGREY;
-
-    final double cornerHoleVisualMul = 1.02;
+    
+    Font tableTextFont;
+    
     private final CurvedPolygonDrawer curvedPolygonDrawer = new CurvedPolygonDrawer(0.667);  // 弯的程度
     @FXML
     Canvas gameCanvas;
@@ -65,7 +67,6 @@ public class GamePane extends Pane {
 
         graphicsContext = gameCanvas.getGraphicsContext2D();
         graphicsContext.setTextAlign(TextAlignment.CENTER);
-        graphicsContext.setFont(App.FONT);
     }
 
     public void setupPane(GameValues gameValues, double scaleMul) {
@@ -166,6 +167,9 @@ public class GamePane extends Pane {
         gameCanvas.setHeight(canvasHeight);
         setPrefWidth(canvasWidth);
         setPrefHeight(canvasHeight);
+        
+        tableTextFont = new Font(App.FONT.getName(), 36 * scale);
+        graphicsContext.setFont(tableTextFont);
     }
 
     private void drawLeatherTable(TableMetrics metrics) {
@@ -702,7 +706,7 @@ public class GamePane extends Pane {
             graphicsContext.save();
 
             double dt = gameValues.table.topY / 4 * 3;
-            graphicsContext.setFill(Color.BLACK.brighter());
+            graphicsContext.setFill(preset.getNameOnTableColor());
             graphicsContext.rotate(270);
             graphicsContext.fillText(preset.getNameOnTable(),
                     -gameValues.table.midY * scale,

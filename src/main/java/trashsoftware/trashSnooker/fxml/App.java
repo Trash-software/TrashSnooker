@@ -29,7 +29,7 @@ public class App extends Application {
             "";
     public static final Font FONT = CLASSIFIER.equals("mac") ?
             new Font("sansserif", 12) :
-            null;
+            Font.getDefault();
     
     private static ResourceBundle strings;
     public static final boolean PRINT_DEBUG = false;

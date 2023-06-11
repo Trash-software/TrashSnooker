@@ -5,9 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Cue;
-import trashsoftware.trashSnooker.core.CuePlayType;
 import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.metrics.TablePreset;
 
 import java.io.*;
@@ -58,7 +56,7 @@ public class DataLoader {
         for (int i = 0; i < darkerCount; ++i) color = color.darker();
         return color;
     }
-    
+
     public static String getStringOfLocale(Object probNames) {
         if (probNames instanceof JSONObject) {
             JSONObject names = (JSONObject) probNames;
@@ -89,7 +87,7 @@ public class DataLoader {
                     System.err.println("You hacked your custom players!");
                 }
             }
-            
+
             Map<String, PlayerPerson> result = new HashMap<>();
             for (String key : array.keySet()) {
                 Object obj = array.get(key);
@@ -140,7 +138,7 @@ public class DataLoader {
             e.printStackTrace();
         }
     }
-    
+
     public static JSONObject loadPlayerListFromDisk(String fileName) {
         JSONObject object = loadFromDisk(fileName);
         if (object.isEmpty()) {
@@ -188,7 +186,7 @@ public class DataLoader {
         }
         return "custom_" + builder;
     }
-    
+
     public List<PlayerPerson> filterActualPlayersByCategory(String category) {
         Collection<PlayerPerson> actPlayers = getActualPlayers();
         if ("All".equals(category)) {
@@ -266,7 +264,7 @@ public class DataLoader {
                 try {
                     JSONObject cueObject = object.getJSONObject(key);
                     String name = getStringOfLocale(cueObject.get("names"));
-                    
+
                     Cue cue = new Cue(
                             key,
                             name,
@@ -298,7 +296,7 @@ public class DataLoader {
             }
         }
     }
-    
+
     private void loadTablePresets(JSONObject root) {
         if (root.has("tables")) {
             JSONArray array = root.getJSONArray("tables");
@@ -309,7 +307,7 @@ public class DataLoader {
                 TablePreset tp = TablePreset.fromJson(object);
 
                 System.out.println(id + " " + tp.tableSpec.tableCloth.goodness.name());
-                
+
                 Map<String, TablePreset> tablesOfType = tablePresets.computeIfAbsent(
                         type, k -> new HashMap<>()
                 );
@@ -317,7 +315,7 @@ public class DataLoader {
             }
         }
     }
-    
+
     public TablePreset getTablePresetById(String id) {
         for (Map<String, TablePreset> entry : tablePresets.values()) {
             for (Map.Entry<String, TablePreset> presetEntry : entry.entrySet()) {
@@ -326,7 +324,7 @@ public class DataLoader {
         }
         throw new RuntimeException("Cannot find table " + id);
     }
-    
+
     public Map<String, TablePreset> getTablesOfType(String type) {
         return tablePresets.getOrDefault(type, new HashMap<>());
     }

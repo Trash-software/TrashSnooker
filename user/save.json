@@ -1,6 +1,6 @@
 {
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
@@ -9,31 +9,27 @@
     "playCue": "stdSnookerCue",
     "breakCue": "stdSnookerCue"
   },
-  "p1Wins": 1,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "Selby",
-    "playerType": "COMPUTER",
+    "person": "Mark Allen",
+    "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
     "breakCue": "stdSnookerCue"
   },
-  "startTime": 1686492265796,
+  "startTime": 1686493684275,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
-    "table": {
-      "tableOrdinal": 6,
-      "pocketDifficultyOrdinal": 0,
-      "holeSizeOrdinal": 0
-    }
+    "tablePreset": "duckGooseSnookerTable"
   },
   "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",
-    "goodness": "GOOD"
+    "goodness": "NORMAL"
   },
   "p1Breaks": true
 }
