@@ -156,6 +156,7 @@ public class GameView implements Initializable {
     RadioButton handSelectionLeft, handSelectionRight, handSelectionRest;
     boolean debugMode = false;
     boolean devMode = true;
+    boolean highPerformanceMode = true;
     //    private Timeline timeline;
     GameLoop gameLoop;
     //    AnimationTimer animationTimer;
@@ -3430,7 +3431,7 @@ public class GameView implements Initializable {
                     possibles[0],
                     game.whitePhy,
                     WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
-                    false,
+                    highPerformanceMode,
                     false,
                     true,
                     false);
@@ -3444,7 +3445,7 @@ public class GameView implements Initializable {
                         possibles[i],
                         game.whitePhy,
                         WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
-                        false,
+                        highPerformanceMode,
                         false,
                         true,
                         false

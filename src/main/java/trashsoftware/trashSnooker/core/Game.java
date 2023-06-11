@@ -1269,9 +1269,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         private void tryPassSecondBall() {
             for (Ball ball : getAllBalls()) {
-                if (!ball.isWhite() && !ball.isPotted()) {
+                if (!ball.isWhite() && !ball.isPotted() && ball != prediction.getFirstCollide()) {
                     if (cueBallClone.predictedDtToPoint(ball.x, ball.y) <
                             gameValues.ball.ballDiameter) {
+                        Ball ballClone = ball.clone();
+                        System.out.println("second: " + ballClone.getValue());
+                        cueBallClone.twoMovingBallsHitCore(ballClone, phy, true);
                         prediction.setSecondCollide(ball,
                                 Math.hypot(cueBallClone.vx, cueBallClone.vy) * phy.calculationsPerSec);
                     }
