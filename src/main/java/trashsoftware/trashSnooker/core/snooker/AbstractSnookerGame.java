@@ -13,7 +13,10 @@ import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
 import trashsoftware.trashSnooker.core.table.Table;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlayer> {
 
@@ -32,7 +35,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
      从黑球方向看，左边一颗在前，右边一颗在后
      */
     protected double[][] cornerRedBallPoses = new double[2][];
-//    private int lastFoulPoints = 0;
+    //    private int lastFoulPoints = 0;
     private boolean doingFreeBall = false;  // 正在击打自由球
     private boolean blackBattle = false;
     private int repositionCount;
@@ -124,6 +127,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             allBallsCopy[i] = (SnookerBall) allBalls[i].clone();
         }
         this.allBalls = allBallsCopy;
+//        System.arraycopy(allBallsCopy, 0, this.redBalls, 0, table.nBalls() - 7);
+//        System.arraycopy(allBallsCopy, table.nBalls() - 7, this.coloredBalls, 0, 6);
     }
 
     @Override
@@ -443,7 +448,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                     thisCueFoul.setMiss(false);
                 }
             }
-            
+
             if (thisCueFoul.isMiss()) {
                 continuousFoulAndMiss++;
             } else {
@@ -725,7 +730,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 justCuedPlayer.getSinglePole()
         );
     }
-    
+
     public int getPossibleBreak(int alreadySinglePole) {
         int rem = getRemainingScore(false);
         return alreadySinglePole + rem;

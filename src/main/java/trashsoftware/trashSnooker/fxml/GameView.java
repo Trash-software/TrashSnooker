@@ -73,6 +73,7 @@ import trashsoftware.trashSnooker.util.Util;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.*;
 
 public class GameView implements Initializable {
     public static final Color GLOBAL_BACKGROUND = Color.WHITESMOKE;  // 似乎正好是javafx默认背景色
@@ -156,7 +157,7 @@ public class GameView implements Initializable {
     RadioButton handSelectionLeft, handSelectionRight, handSelectionRest;
     boolean debugMode = false;
     boolean devMode = true;
-    boolean highPerformanceMode = true;
+    boolean highPerformanceMode = ConfigLoader.getInstance().isHighPerformanceMode();
     //    private Timeline timeline;
     GameLoop gameLoop;
     //    AnimationTimer animationTimer;
@@ -909,6 +910,7 @@ public class GameView implements Initializable {
         updatePlayStage();
         recalculateUiRestrictions();
 
+        cursorDrawer.synchronizeGame();  // 刷新白球预测的线程池
         tableGraphicsChanged = true;
     }
 
@@ -1001,6 +1003,7 @@ public class GameView implements Initializable {
                                 setUiFrameStart();
                                 
                                 endCueAnimation();
+                                cursorDrawer.synchronizeGame();
                                 tableGraphicsChanged = true;
 //                            if (game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
 //                                ss
@@ -3409,6 +3412,11 @@ public class GameView implements Initializable {
     }
 
     private class PredictionDrawing {
+        final int nThreads = Math.min(8, ConfigLoader.getInstance().getInt("nThreads", 8));
+        Game[] gamePool = new Game[8];
+        ExecutorService threadPool;
+        ExecutorCompletionService<PredictionResult> ecs;
+        
         WhitePrediction[] clockwise = new WhitePrediction[8];
         WhitePrediction center;
         List<double[]> outPoints;
@@ -3422,10 +3430,30 @@ public class GameView implements Initializable {
         boolean running;
 
         PredictionDrawing() {
+            threadPool = Executors.newFixedThreadPool(nThreads,
+                    r -> {
+                        Thread t = Executors.defaultThreadFactory().newThread(r);
+                        t.setDaemon(true);
+                        return t;
+                    });
+            ecs = new ExecutorCompletionService<>(threadPool);
+            
+            synchronizeGame();
+        }
+        
+        private void synchronizeGame() {
+//            predictionPool[0] = game.getGame();
+            for (int i = 0; i < gamePool.length; i++) {
+                gamePool[i] = game.getGame().clone();
+            }
         }
 
         private void predict(PlayerPerson playerPerson) {
             running = true;
+//            long t0 = System.currentTimeMillis();
+            
+            Arrays.fill(clockwise, null);
+            
             CuePlayParams[] possibles = generateCueParamsSd1();
             center = game.getGame().predictWhite(
                     possibles[0],
@@ -3439,18 +3467,35 @@ public class GameView implements Initializable {
                 predictedTargetBall = null;
                 return;
             }
-
-            for (int i = 1; i < possibles.length; i++) {
-                clockwise[i - 1] = game.getGame().predictWhite(
-                        possibles[i],
+            
+            for (int i = 0; i < clockwise.length; i++) {
+                final int ii = i;
+                ecs.submit(() -> new PredictionResult(ii, gamePool[ii].predictWhite(
+                        possibles[ii + 1],
                         game.whitePhy,
                         WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
                         highPerformanceMode,
                         false,
                         true,
                         false
-                );
+                )));
             }
+            try {
+                for (int i = 0; i < clockwise.length; i++) {
+                    Future<PredictionResult> res = ecs.take();
+                    PredictionResult pr = res.get(1, TimeUnit.SECONDS);
+                    clockwise[pr.index] = pr.wp;
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                return;
+            } catch (TimeoutException e) {
+                System.err.println("Cannot finish white prediction in time.");
+                return;
+            }
+            
+//            long t1 = System.currentTimeMillis();
+//            System.out.println("Prediction time: " + (t1 - t0));
 
             double[][] predictionStops = new double[clockwise.length + 1][];
             predictionStops[0] = center.stopPoint();
@@ -3548,6 +3593,15 @@ public class GameView implements Initializable {
             }
 
             running = false;
+        }
+
+        class PredictionResult {
+            final int index;
+            final WhitePrediction wp;
+            PredictionResult(int index, WhitePrediction wp) {
+                this.index = index;
+                this.wp = wp;
+            }
         }
     }
 }

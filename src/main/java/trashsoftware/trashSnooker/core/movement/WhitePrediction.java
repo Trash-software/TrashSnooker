@@ -44,6 +44,7 @@ public class WhitePrediction {
     private double pathLength;
     private double distanceTravelledBeforeCollision;  // 白球在碰目标球之前跑了多远
     private double distanceTravelledAfterCollision;
+    private double distanceTravelledAfter2ndCollision;  // 撞了第二颗球之后跑了多远
 
     public WhitePrediction(Ball whiteBall) {
         this.cueBall = whiteBall;
@@ -95,6 +96,9 @@ public class WhitePrediction {
                 distanceTravelledBeforeCollision += dt;
             } else {
                 distanceTravelledAfterCollision += dt;
+                if (whiteSecondCollide != null) {
+                    distanceTravelledAfter2ndCollision += dt;
+                }
             }
         }
         whitePath.add(point);
@@ -197,6 +201,12 @@ public class WhitePrediction {
     public void setSecondCollide(Ball secondCollide, double whiteSpeedWhenCollision) {
         this.whiteSecondCollide = secondCollide;
         this.whiteSpeedWhenHitSecondBall = whiteSpeedWhenCollision;
+    }
+    
+    public double whitePathLenBtw1st2ndCollision() {
+        return whiteSecondCollide == null ? 
+                0 : 
+                distanceTravelledAfterCollision - distanceTravelledAfter2ndCollision;
     }
 
     public void whiteCollidesHoleArcs() {

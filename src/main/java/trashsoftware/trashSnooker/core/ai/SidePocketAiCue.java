@@ -14,8 +14,8 @@ public class SidePocketAiCue extends AiCue<SidePocketGame, SidePocketPlayer> {
     }
 
     @Override
-    protected double priceOfKick(Ball kickedBall, double kickSpeed) {
-        return KICK_USELESS_BALL_MUL;
+    protected double priceOfKick(Ball kickedBall, double kickSpeed, double dtFromFirst) {
+        return kickUselessBallPrice(dtFromFirst);
     }
 
     @Override

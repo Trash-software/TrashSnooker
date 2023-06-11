@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.fxml.drawing.BallModel;
 
@@ -36,6 +37,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             frameDegChange;  // 全部都是针对一个动画帧
     private boolean potted;
     private long msSinceCue;
+    private long msRemainInPocket;
+    private Pocket pottedPocket;
 //    private Ball justHit;
 
     private double lastCollisionX, lastCollisionY;  // 记录一下上次碰撞所在的位置
@@ -340,8 +343,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             double xErr = ERROR_GENERATOR.nextGaussian() * phy.cloth.goodness.errorFactor / phy.calculationsPerSec / 1.2 +
                     phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec / 180;
             double yErr = ERROR_GENERATOR.nextGaussian() * phy.cloth.goodness.errorFactor / phy.calculationsPerSec / 1.2;
-            vx += xErr;
-            vy += yErr;
+            vx += xErr / values.ball.ballWeightRatio;  // 重球相对稳定
+            vy += yErr / values.ball.ballWeightRatio;
         }
 
         double xSpinDiff = xSpin - vx;
@@ -356,7 +359,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //        if (isWhite() && !phy.isPrediction) System.out.println(dynamicDragFactor);
 
         // 乘和除抵了，所以第一部分是线性的
-        double spinReduceRatio = phy.spinReducer / spinDiffTotal * dynamicDragFactor;
+        double spinReduceRatio = phy.spinReducer / spinDiffTotal * dynamicDragFactor 
+                * table.speedReduceMultiplier;  // fixme: 可能是平方
         double xSpinReducer = Math.abs(xSpinDiff * spinReduceRatio);
         double ySpinReducer = Math.abs(ySpinDiff * spinReduceRatio);
 
@@ -383,8 +387,84 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         }
     }
 
+    public boolean canDraw() {
+        return !isPotted() || msRemainInPocket > 0;
+    }
+
+    private void oneFrameInPocket(Phy phy) {
+        double pocketRange = pottedPocket.graphicalRadius - values.ball.ballRadius;
+        double nextDt = predictedDtToPoint(pottedPocket.graphicalCenter);
+        double curDt = currentDtToPoint(pottedPocket.graphicalCenter);
+//        System.out.printf("%f, %f");
+        if (nextDt > pocketRange 
+                && nextDt > curDt) {
+            innerBounce(pottedPocket.graphicalCenter, 0.6);
+        }
+//        tryEnterGravityArea(phy, pottedPocket.graphicalCenter, pottedPocket.isMid);
+        x = nextX;
+        y = nextY;
+        nextX = x + vx;
+        nextY = y + vy;
+    }
+
+    private void innerBounce(double[] center, double factor) {
+        double[] normal = new double[]{
+                nextX - center[0],
+                nextY - center[1]
+        };
+        normal = Algebra.normalVector(normal);
+        double[] bounce = Algebra.symmetricVector(vx, vy, normal[0], normal[1]);
+        vx = bounce[0] * factor;
+        vy = bounce[1] * factor;
+//        nextX = x + vx;
+//        nextY = y + vy;
+    }
+
+    public boolean tryFrameInPocket(Phy phy) {
+        if (isPotted()) {
+            if (msRemainInPocket > 0) {
+                msRemainInPocket -= phy.calculateMs;
+
+                oneFrameInPocket(phy);
+                if (getSpeedPerSecond(phy) < 100) {
+                    // 球已经停了，别放了
+                    msRemainInPocket = 0;
+                    pot();
+                    return false;
+                }
+
+                return true;
+            } else {
+                msRemainInPocket = 0;
+                pot();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public void naturalPot(long remainMs) {
+        msRemainInPocket = remainMs;
+        setPotted(true);
+
+        for (Pocket pocket : table.pockets) {
+            double dt = pocket.fallRadius;
+            if (currentDtToPoint(pocket.fallCenter) < dt || predictedDtToPoint(pocket.fallCenter) < dt) {
+                pottedPocket = pocket;
+                break;
+            }
+        }
+        if (pottedPocket == null) {
+            System.err.println("Cannot find pot pocket");
+            msRemainInPocket = 0;  // 不搞了
+        }
+    }
+
     public void pot() {
         setPotted(true);
+        msRemainInPocket = 0;
+        pottedPocket = null;
         x = 0.0;
         y = 0.0;
         clearMovement();
@@ -398,37 +478,37 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double cornerBackRadius = table.cornerPocketBackInnerRadius();
         double midBackRadius = table.midPocketBackInnerRadius();
         return tryHitPocketBack(
-                table.topLeftHoleGraXY,
+                table.topLeft.graphicalCenter,
                 cornerBackRadius,
                 136,
                 314
         ) ||
                 tryHitPocketBack(
-                        table.topRightHoleGraXY,
+                        table.topRight.graphicalCenter,
                         cornerBackRadius,
                         226,
                         44
                 ) ||
                 tryHitPocketBack(
-                        table.botLeftHoleGraXY,
+                        table.botLeft.graphicalCenter,
                         cornerBackRadius,
                         46,
                         224
                 ) ||
                 tryHitPocketBack(
-                        table.botRightHoleGraXY,
+                        table.botRight.graphicalCenter,
                         cornerBackRadius,
                         316,
                         134
                 ) ||
                 tryHitPocketBack(
-                        table.topMidHoleGraXY,
+                        table.topMid.graphicalCenter,
                         midBackRadius,
                         181,
                         359
                 ) ||
                 tryHitPocketBack(
-                        table.botMidHoleGraXY,
+                        table.botMid.graphicalCenter,
                         midBackRadius,
                         1,
                         179
@@ -998,7 +1078,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             double passPercentage = gearPassFactor * passRate * speedPassRate;
             passPercentage = Math.min(passPercentage, 0.25);  // 最多传1/4
             double passed = this.sideSpin * passPercentage;
-            
+
             this.sideSpin -= passed;  // 自己的塞会减少，动量守恒嘛
             ball.sideSpin -= passed;  // 右塞传到球上就是左塞了
 

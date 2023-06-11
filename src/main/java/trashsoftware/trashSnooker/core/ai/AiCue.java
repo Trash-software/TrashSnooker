@@ -358,7 +358,17 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
     }
 
-    protected abstract double priceOfKick(Ball kickedBall, double kickSpeed);
+    protected abstract double priceOfKick(Ball kickedBall, double kickSpeed, double dtFromFirst);
+    
+    protected double kickUselessBallPrice(double dtFromFirst) {
+        // 小打小k会用到这个
+        if (dtFromFirst >= 500) return KICK_USELESS_BALL_MUL;
+        return Algebra.shiftRange(0, 
+                10 * aiPlayer.getPlayerPerson().getAiPlayStyle().position,  // 走位100的人能控制1000mm内的二次k球
+                1.0, 
+                KICK_USELESS_BALL_MUL, 
+                dtFromFirst);
+    }
 
     protected double selectedPowerToActualPower(double selectedPower,
                                                 double unitCuePointX, double unitCuePointY,
@@ -1700,8 +1710,11 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             }
 //            if (whitePrediction.getSecondCollide() != null) price *= kickBallMul;
             if (whitePrediction.getSecondCollide() != null) {
+                double dtFromCol = whitePrediction.whitePathLenBtw1st2ndCollision();
+//                System.out.println(dtFromCol);
                 priceOfKick = priceOfKick(whitePrediction.getSecondCollide(),
-                        whitePrediction.getWhiteSpeedWhenHitSecondBall());
+                        whitePrediction.getWhiteSpeedWhenHitSecondBall(),
+                        dtFromCol);
                 price *= priceOfKick;
             }
 

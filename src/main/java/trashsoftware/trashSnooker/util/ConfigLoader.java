@@ -152,6 +152,10 @@ public class ConfigLoader {
         return locale;
     }
     
+    public boolean isHighPerformanceMode() {
+        return "high".equals(getString("performance", "high"));
+    }
+    
     public void save() {
         writeConfig();
     }
@@ -161,6 +165,7 @@ public class ConfigLoader {
         put("locale", "zh_CN");
         put("recordCompression", "xz");
         put("frameRate", 120);
+        put("performance", "high");
         
         double[] screenParams = autoDetectScreenParams();
         putScreenParams(screenParams);

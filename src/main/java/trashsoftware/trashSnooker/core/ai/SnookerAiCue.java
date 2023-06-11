@@ -41,11 +41,11 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     }
 
     @Override
-    protected double priceOfKick(Ball kickedBall, double kickSpeed) {
-        if (aliveRedCount >= 2) return KICK_USELESS_BALL_MUL;  // 剩的多，不急着k
+    protected double priceOfKick(Ball kickedBall, double kickSpeed, double dtFromFirst) {
+        if (aliveRedCount >= 2) return kickUselessBallPrice(dtFromFirst);  // 剩的多，不急着k
         
         Double alivePrice = selfBallAlivePrices.get(kickedBall);
-        if (alivePrice == null) return KICK_USELESS_BALL_MUL;
+        if (alivePrice == null) return kickUselessBallPrice(dtFromFirst);
 
         double speedThreshold = Values.BEST_KICK_SPEED;
         double speedMul;

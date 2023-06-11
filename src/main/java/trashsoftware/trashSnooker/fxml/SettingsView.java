@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.util.ConfigLoader;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.net.URL;
 import java.util.*;
@@ -24,6 +25,8 @@ public class SettingsView extends ChildInitializable {
     ComboBox<Resolution> resolutionComboBox;
     @FXML
     ComboBox<SystemZoom> systemZoomComboBox;
+    @FXML
+    ComboBox<Performance> performanceBox;
     @FXML
     ComboBox<Integer> aiThreadNumBox;
     @FXML
@@ -44,7 +47,8 @@ public class SettingsView extends ChildInitializable {
                 languageBox,
                 resolutionComboBox,
                 systemZoomComboBox,
-                aiThreadNumBox));
+                aiThreadNumBox,
+                performanceBox));
 
         configLoader = ConfigLoader.getInstance();
         setupBoxes();
@@ -74,6 +78,10 @@ public class SettingsView extends ChildInitializable {
                 20, 24, 30, 40, 50, 60, 90, 120, 144, 165, 200, 240, 300, 400, 500
         );
         frameRateBox.getSelectionModel().select(Integer.valueOf(configLoader.getFrameRate()));
+        
+        performanceBox.getItems().addAll(Performance.values());
+        performanceBox.getSelectionModel().select(Performance.fromKey(configLoader.getString("performance", 
+                "high")));
     }
 
     private void setupDifficultyBox(ComboBox<Double> box) {
@@ -208,6 +216,10 @@ public class SettingsView extends ChildInitializable {
         if (hasChanged(aiStrengthBox)) {
             configLoader.put("fastGameAiStrength", aiStrengthBox.getSelectionModel().getSelectedItem());
         }
+        
+        if (hasChanged(performanceBox)) {
+            configLoader.put("performance", performanceBox.getValue().toKey());
+        }
 
         configLoader.save();
         super.backAction();
@@ -309,6 +321,24 @@ public class SettingsView extends ChildInitializable {
         @Override
         public String toString() {
             return locale.getDisplayLanguage(locale);
+        }
+    }
+    
+    public enum Performance {
+        LOW,
+        HIGH;
+        
+        @Override
+        public String toString() {
+            return App.getStrings().getString(Util.toLowerCamelCase("PERFORMANCE_" + name()));
+        }
+        
+        static Performance fromKey(String key) {
+            return valueOf(Util.toAllCapsUnderscoreCase(key));
+        }
+        
+        String toKey() {
+            return Util.toLowerCamelCase(name());
         }
     }
 }

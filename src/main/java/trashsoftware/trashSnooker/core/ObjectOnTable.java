@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
@@ -148,17 +149,12 @@ public abstract class ObjectOnTable implements Cloneable {
 //            // 出台了
 //            return true;
 //        }
-
-//        double cornerRoom = table.cornerHoleRadius - values.ball.ballRadius;
-        double cornerRoom = table.pocketDifficulty.cornerPocketFallRadius - values.ball.ballRadius;
-        double midRoom = table.pocketDifficulty.midPocketFallRadius - values.ball.ballRadius;
-
-        return predictedDtToPoint(table.topLeftSlateXY) < cornerRoom ||
-                predictedDtToPoint(table.botLeftSlateXY) < cornerRoom ||
-                predictedDtToPoint(table.topRightSlateXY) < cornerRoom ||
-                predictedDtToPoint(table.botRightSlateXY) < cornerRoom ||
-                predictedDtToPoint(table.topMidFallCenter) < midRoom ||
-                predictedDtToPoint(table.botMidFallCenter) < midRoom;
+        
+        for (Pocket pocket : table.pockets) {
+            double room = pocket.fallRadius - values.ball.ballRadius;
+            if (predictedDtToPoint(pocket.fallCenter) < room) return true;
+        }
+        return false;
     }
 
     protected void hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
@@ -222,18 +218,25 @@ public abstract class ObjectOnTable implements Cloneable {
                         table.midPocketGravityRadius :
                         table.cornerPocketGravityRadius);
 
-        double gravityRadius = isMidHole ? table.midPocketGravityRadius : table.cornerPocketGravityRadius;
-
         if (dt < holeAndSlopeRadius) {
-            // dt应该不会小于 holeRadius - ballRadius 太多
-            double accMag;
-            if (dt < holeRadius) {
-                accMag = 1;
+            double pureHoleRadius = holeRadius - values.ball.ballRadius;
+            
+            double gravity = 9800;
+            double[] supporter;
+            if (dt <= pureHoleRadius) {
+                // 已经完全进袋了，但是我们当袋底也有点角度
+                supporter = new double[]{Algebra.HALF_SQRT2, Algebra.HALF_SQRT2};
             } else {
-                accMag = (gravityRadius - dt + holeRadius) / gravityRadius;
+                double enteredDt = holeAndSlopeRadius - dt;
+                double enterRatio = enteredDt / (holeAndSlopeRadius - pureHoleRadius);
+                double angle = Math.acos(enterRatio);  // 球心与弧心连线 与 水平面 的夹角
+                supporter = Algebra.unitVectorOfAngle(angle);
             }
 
-            accMag *= 4500;
+            double accMag = supporter[0] * gravity;
+            double resist = 0.2;  // 摩擦力
+            accMag *= (1 - resist);
+            
             accMag /= phy.calculationsPerSecSqr;
 
             double[] accVec = Algebra.unitVector(xDiff, yDiff);
@@ -294,13 +297,13 @@ public abstract class ObjectOnTable implements Cloneable {
                         return 2;
                     }
 
-                    tryEnterGravityArea(phy, table.topMidFallCenter, true);
+                    tryEnterGravityArea(phy, table.topMid.fallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
                 } else {
 
-                    tryEnterGravityArea(phy, table.topMidFallCenter, true);
+                    tryEnterGravityArea(phy, table.topMid.fallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
@@ -340,13 +343,13 @@ public abstract class ObjectOnTable implements Cloneable {
                         return 2;
                     }
 
-                    tryEnterGravityArea(phy, table.botMidFallCenter, true);
+                    tryEnterGravityArea(phy, table.botMid.fallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
                 } else {
 
-                    tryEnterGravityArea(phy, table.botMidFallCenter, true);
+                    tryEnterGravityArea(phy, table.botMid.fallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
                     return 1;
@@ -360,21 +363,21 @@ public abstract class ObjectOnTable implements Cloneable {
         if (nextY < table.topCornerHoleAreaDownY) {
             if (nextX < table.leftCornerHoleAreaRightX) {
                 // 左上底袋
-                probHole = table.topLeftHoleXY;
-                probPocketFallCenter = table.topLeftSlateXY;
+                probHole = table.topLeft.fallCenter;
+                probPocketFallCenter = table.topLeft.fallCenter;
             } else if (nextX >= table.rightCornerHoleAreaLeftX) {
                 // 右上底袋
-                probHole = table.topRightHoleXY;
-                probPocketFallCenter = table.topRightSlateXY;
+                probHole = table.topRight.fallCenter;
+                probPocketFallCenter = table.topRight.fallCenter;
             }
         } else if (nextY >= table.botCornerHoleAreaUpY) {
             if (nextX < table.leftCornerHoleAreaRightX) {
                 // 左下底袋}
-                probHole = table.botLeftHoleXY;
-                probPocketFallCenter = table.botLeftSlateXY;
+                probHole = table.botLeft.fallCenter;
+                probPocketFallCenter = table.botLeft.fallCenter;
             } else if (nextX >= table.rightCornerHoleAreaLeftX) {
-                probHole = table.botRightHoleXY;  // 右下底袋
-                probPocketFallCenter = table.botRightSlateXY;
+                probHole = table.botRight.fallCenter;  // 右下底袋
+                probPocketFallCenter = table.botRight.fallCenter;
             }
         }
 
