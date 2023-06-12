@@ -1,48 +1,45 @@
 {
-  "p1": "Mark Allen",
+  "p1": "custom_E5B08FE4BB99E5A5B3",
   "game": {
     "p1": {
       "playerNumber": 1,
-      "handFeelEffort": 0.9844245567916177,
-      "person": "Mark Allen",
-      "playerType": "COMPUTER",
-      "playCue": "stdSnookerCue",
-      "breakCue": "stdSnookerCue"
-    },
-    "p1Wins": 2,
-    "p2": {
-      "playerNumber": 2,
       "handFeelEffort": 1,
       "person": "custom_E5B08FE4BB99E5A5B3",
       "playerType": "PLAYER",
-      "playCue": "GirlCue",
-      "breakCue": "GirlCue"
+      "playCue": "GirlPoolCue",
+      "breakCue": "stdBreakCue"
+    },
+    "p1Wins": 1,
+    "p2": {
+      "playerNumber": 2,
+      "handFeelEffort": 0.9379873979485598,
+      "person": "John Wizard",
+      "playerType": "COMPUTER",
+      "playCue": "stdPottsCue",
+      "breakCue": "stdBreakCue"
     },
     "p2BreakLoseChance": 0,
     "gameValues": {
-      "ball": "SNOOKER_BALL",
-      "gameRule": "SNOOKER",
+      "ball": "POOL_BALL",
+      "gameRule": "CHINESE_EIGHT",
       "table": {
-        "tableOrdinal": 0,
+        "tableOrdinal": 1,
         "pocketDifficultyOrdinal": 2,
-        "holeSizeOrdinal": 1
+        "holeSizeOrdinal": 2
       }
     },
-    "winRecords": {
-      "1": 1,
-      "2": 1
-    },
+    "winRecords": {"1": 1},
     "p2Wins": 0,
-    "startTime": 1686407086164,
+    "startTime": 1686567372232,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_E5B08FE4BB99E5A5B3+2026+world_champ-SEMI_FINAL-108",
-    "totalFrames": 9,
+    "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master_tour_xian-SEMI_FINAL-13",
+    "totalFrames": 5,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
-    "p1Breaks": false
+    "p1Breaks": true
   },
-  "p2": "custom_E5B08FE4BB99E5A5B3",
+  "p2": "John Wizard",
   "stage": "SEMI_FINAL"
 }

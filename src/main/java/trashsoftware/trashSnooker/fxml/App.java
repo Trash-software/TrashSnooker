@@ -19,8 +19,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
     
-    public static final String VERSION_NAME = "0.4.2";
-    public static final int VERSION_CODE = 35;
+    public static final String VERSION_NAME = "0.4.4";
+    public static final int VERSION_CODE = 38;
 
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     public static final String CLASSIFIER = "win";
@@ -29,7 +29,7 @@ public class App extends Application {
             "";
     public static final Font FONT = CLASSIFIER.equals("mac") ?
             new Font("sansserif", 12) :
-            null;
+            Font.getDefault();
     
     private static ResourceBundle strings;
     public static final boolean PRINT_DEBUG = false;

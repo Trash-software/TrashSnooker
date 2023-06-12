@@ -18,6 +18,8 @@
             <MenuItem text="%settingsMenu" onAction="#settingsAction"/>
         </Menu>
         <Menu text="%helpMenu">
+            <MenuItem text="%changelogMenu" onAction="#changelogAction"/>
+            <SeparatorMenuItem/>
             <MenuItem text="%aboutMenu" onAction="#aboutAction"/>
         </Menu>
     </MenuBar>

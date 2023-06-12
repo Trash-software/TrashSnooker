@@ -64,6 +64,9 @@
         <Label text="%systemZoom" GridPane.rowIndex="10"/>
         <ComboBox fx:id="systemZoomComboBox" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
 
+        <Label text="%performanceMode" GridPane.rowIndex="11"/>
+        <ComboBox fx:id="performanceBox" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+
     </GridPane>
 
     <HBox alignment="CENTER_RIGHT" spacing="10.0">

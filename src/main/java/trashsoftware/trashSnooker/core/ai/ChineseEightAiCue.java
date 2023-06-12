@@ -79,9 +79,9 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     @Override
-    protected double priceOfKick(Ball kickedBall, double kickSpeed) {
+    protected double priceOfKick(Ball kickedBall, double kickSpeed, double dtFromFirst) {
         Double alivePrice = selfBallAlivePrices.get(kickedBall);
-        if (alivePrice == null) return KICK_USELESS_BALL_MUL;
+        if (alivePrice == null) return kickUselessBallPrice(dtFromFirst);
 
         double speedThreshold = Values.BEST_KICK_SPEED;
         double speedMul;

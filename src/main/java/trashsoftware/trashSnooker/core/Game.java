@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
@@ -327,8 +328,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                         boolean recordTargetPos,
                                         boolean wipe,
                                         boolean useClone) {
-        if (cueBall.isPotted()) return null;
-
+        if (cueBall.isPotted()) {
+            return null;
+        }
         Ball cueBallClone = useClone ? cueBall.clone() : cueBall;
         cueBallClone.setVx(params.vx / phy.calculationsPerSec);
         cueBallClone.setVy(params.vy / phy.calculationsPerSec);
@@ -394,10 +396,19 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public boolean isInTable(double x, double y) {
-        return x >= gameValues.table.leftX + gameValues.ball.ballRadius &&
-                x < gameValues.table.rightX - gameValues.ball.ballRadius &&
-                y >= gameValues.table.topY + gameValues.ball.ballRadius &&
-                y < gameValues.table.botY - gameValues.ball.ballRadius;
+//        return x >= gameValues.table.leftX + gameValues.ball.ballRadius &&
+//                x < gameValues.table.rightX - gameValues.ball.ballRadius &&
+//                y >= gameValues.table.topY + gameValues.ball.ballRadius &&
+//                y < gameValues.table.botY - gameValues.ball.ballRadius;
+        if (!gameValues.isInTable(x, y, gameValues.ball.ballRadius)) return false;
+        
+        for (Pocket pocket : gameValues.table.pockets) {
+            // 在袋里
+            if (Algebra.distanceToPoint(x, y, pocket.fallCenter[0], pocket.fallCenter[1]) < pocket.fallRadius + pocket.extraSlopeWidth) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public final boolean canPlaceWhite(double x, double y) {
@@ -688,19 +699,20 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //        BIG_LOOP:
         for (int i = 0; i < 6; i++) {
             double[] holeOpenCenter = gameValues.allHoleOpenCenters[i];
-            double[] holeBottom = gameValues.table.allHoles[i];
-            if (i < 4 &&
+//            double[] holeBottom = gameValues.table.allHoles[i];
+            Pocket pocket = gameValues.table.pockets[i];
+            if (!pocket.isMid &&
                     Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ball.ballRadius &&
-                    pointToPointCanPassBall(x, y, holeBottom[0], holeBottom[1], targetBall,
+                    pointToPointCanPassBall(x, y, pocket.fallCenter[0], pocket.fallCenter[1], targetBall,
                             null, true, true)) {
                 // 目标球离袋口瞄球点太近了，转而检查真正的袋口
-                double directionX = holeBottom[0] - x;
-                double directionY = holeBottom[1] - y;
+                double directionX = pocket.fallCenter[0] - x;
+                double directionY = pocket.fallCenter[1] - y;
                 double[] unitXY = Algebra.unitVector(directionX, directionY);
                 double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
                 double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
 
-                list.add(new double[][]{unitXY, holeBottom, new double[]{collisionPointX, collisionPointY}});
+                list.add(new double[][]{unitXY, pocket.fallCenter, new double[]{collisionPointX, collisionPointY}});
             } else if (pointToPointCanPassBall(x, y, holeOpenCenter[0], holeOpenCenter[1], targetBall,
                     null, true, true)) {
                 double directionX = holeOpenCenter[0] - x;
@@ -846,7 +858,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public boolean canReposition() {
         return gameValues.rule.hasRule(Rule.FOUL_AND_MISS) && thisCueFoul.isFoul() && thisCueFoul.isMiss();
     }
-    
+
     public void notReposition() {
     }
 
@@ -1237,11 +1249,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         dtWhenHitFirstWall = cueBallClone.getDistanceMoved();
                     }
 //                    if (prediction.getSecondCollide() == null) {
-                        // 如果白球碰了第二颗，那接下来就根本不可预测
-                        // 有bug，修不好，取消判定
-                        hitWall = true;
-                        prediction.whiteCollidesHoleArcs();
-                        prediction.whiteHitCushion();
+                    // 如果白球碰了第二颗，那接下来就根本不可预测
+                    // 有bug，修不好，取消判定
+                    hitWall = true;
+                    prediction.whiteCollidesHoleArcs();
+                    prediction.whiteHitCushion();
 //                    }
                 }
                 return false;
@@ -1269,9 +1281,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         private void tryPassSecondBall() {
             for (Ball ball : getAllBalls()) {
-                if (!ball.isWhite() && !ball.isPotted()) {
+                if (!ball.isWhite() && !ball.isPotted() && ball != prediction.getFirstCollide()) {
                     if (cueBallClone.predictedDtToPoint(ball.x, ball.y) <
                             gameValues.ball.ballDiameter) {
+                        Ball ballClone = ball.clone();
+//                        System.out.println("second: " + ballClone.getValue());
+                        cueBallClone.twoMovingBallsHitCore(ballClone, phy, true);
                         prediction.setSecondCollide(ball,
                                 Math.hypot(cueBallClone.vx, cueBallClone.vy) * phy.calculationsPerSec);
                     }
@@ -1393,22 +1408,31 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
             for (int i = 0; i < allBalls.length; i++) {
                 B ball = allBalls[i];
-                if (ball.isPotted() || ball.isOutOfTable()) continue;
+                if (ball.isPotted()) {
+                    if (ball.tryFrameInPocket(phy)) {
+                        noBallMoving = false;
+                    }
+                    continue;
+                }
+
+                if (ball.isOutOfTable()) continue;
+
                 if (!ball.isLikelyStopped(phy)) {
                     noBallMoving = false;
+
                     if (ball.tryHitPocketsBack(phy)) {
 //                        ball.normalMove(phy);
                         movementTypes[i] = MovementFrame.POT;
                         movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
-                        ball.pot();
+                        ball.naturalPot(1000);
                         newPotted.add(ball);
                         continue;
                     }
-                    
+
                     if (ball.willPot(phy)) {
                         movementTypes[i] = MovementFrame.POT;
                         movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
-                        ball.pot();
+                        ball.naturalPot(1000);
                         newPotted.add(ball);
                         continue;
                     }
@@ -1480,7 +1504,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     movement.addFrame(ball,
                             new MovementFrame(ball.x, ball.y,
                                     ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(),
-                                    ball.isPotted(),
+                                    !ball.canDraw(),
                                     movementTypes[i], movementValues[i]));
                     movementTypes[i] = MovementFrame.NORMAL;
                     movementValues[i] = 0.0;

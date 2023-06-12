@@ -13,14 +13,14 @@ public class Challenge {
         this.type = trainType;
     }
     
-    public static Challenge fromJson(String jsonString) {
-        String[] spl = jsonString.split("\\+");
-        return new Challenge(GameRule.valueOf(spl[0]), TrainType.valueOf(spl[1]));
-    }
+//    public static Challenge fromJson(String jsonString) {
+//        String[] spl = jsonString.split("\\+");
+//        return new Challenge(GameRule.valueOf(spl[0]), TrainType.valueOf(spl[1]));
+//    }
     
-    public String toJsonString() {
-        return rule.name() + "+" + type.name();
-    }
+//    public String toJsonString() {
+//        return rule.name() + "+" + type.name();
+//    }
 
     @Override
     public String toString() {

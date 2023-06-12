@@ -2,15 +2,11 @@ package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 public class EntireGameTitle {
-    
-    public static final DateFormat FORMAT =
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public final Timestamp startTime;
     public final GameRule gameRule;
@@ -37,8 +33,8 @@ public class EntireGameTitle {
 
     @Override
     public String toString() {
-        return String.format("%s %s (%d) %s", 
-                FORMAT.format(startTime),
+        return String.format("%s %s (%d) %s",
+                Util.TIME_FORMAT_SEC.format(startTime),
                 getP1Name(),
                 totalFrames,
                 getP2Name());

@@ -1,24 +1,24 @@
 {
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
+    "handFeelEffort": 1,
+    "person": "Lao Youtiao",
+    "playerType": "COMPUTER",
+    "playCue": "stdSnookerCue",
+    "breakCue": "stdSnookerCue"
+  },
+  "p1Wins": 0,
+  "p2": {
+    "playerNumber": 2,
     "handFeelEffort": 1,
     "person": "Neil Robertson",
     "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
     "breakCue": "stdSnookerCue"
   },
-  "p1Wins": 1,
-  "p2": {
-    "playerNumber": 2,
-    "handFeelEffort": 1,
-    "person": "Trump",
-    "playerType": "PLAYER",
-    "playCue": "TrumpCue",
-    "breakCue": "TrumpCue"
-  },
-  "startTime": 1686401958080,
+  "startTime": 1686566206949,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {

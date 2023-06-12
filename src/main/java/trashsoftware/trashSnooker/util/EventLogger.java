@@ -10,9 +10,10 @@ import java.util.Date;
 public class EventLogger {
 
     private static final String LOG_DIR = "logs";
-    private static final String CRASH = "crash";
-    private static final String ERROR = "error";
-    private static final String DEBUG = "debug";
+    public static final String CRASH = "crash";
+    public static final String ERROR = "error";
+    public static final String INFO = "info";
+    public static final String DEBUG = "debug";
     //    private static final String LOG_BASE_NAME = LOG_DIR + File.separator + "error-";
     private static final String DATE_FMT = "yyyy-MM-dd HH-mm-ss";
 

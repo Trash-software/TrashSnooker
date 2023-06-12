@@ -49,7 +49,7 @@ public class TableMetrics {
     public double maxLength;  // 对角线长度
     public double cushionClothWidth;  // 库的视觉宽度
     public double cushionHeight;
-    public double speedReduceMultiplier = 1.0;  // 台泥的阻力系数，值越大阻力越大
+    public double speedReduceMultiplier;  // 台泥的阻力系数，值越大阻力越大
 
     // 角袋入口处的宽度，因为袋的边可能有角度
     public double cornerHoleDiameter, cornerHoleRadius;
@@ -64,27 +64,37 @@ public class TableMetrics {
     public double cornetHoleGraphicalDt;
     public double cornerHoleDrift;  // 对于有角度的袋，这个值是袋角伸进洞里多远
     public double arcBounceAngleRate;  // 袋角弧线的反射角系数，[0-1]之间，越接近1，越平坦
-    public double[] topLeftHoleXY;
-    public double[] botLeftHoleXY;
-    public double[] topRightHoleXY;
-    public double[] botRightHoleXY;
-    public double[] topMidHoleXY;
-    public double[] botMidHoleXY;
-    public double[] topMidHoleGraXY;
-    public double[] botMidHoleGraXY;
-    public double[] topLeftHoleGraXY;
-    public double[] botLeftHoleGraXY;
-    public double[] topRightHoleGraXY;
-    public double[] botRightHoleGraXY;
-    public double[][] allHoles;
+//    public double[] topLeftHoleXY;
+//    public double[] botLeftHoleXY;
+//    public double[] topRightHoleXY;
+//    public double[] botRightHoleXY;
+//    public double[] topMidHoleXY;
+//    public double[] botMidHoleXY;
+//    public double[] topMidHoleGraXY;
+//    public double[] botMidHoleGraXY;
+//    public double[] topLeftHoleGraXY;
+//    public double[] botLeftHoleGraXY;
+//    public double[] topRightHoleGraXY;
+//    public double[] botRightHoleGraXY;
+//    public double[][] allHoles;
     
-    public double[] topLeftSlateXY;  // 库边台泥的交汇点
-    public double[] topRightSlateXY;
-    public double[] botLeftSlateXY;
-    public double[] botRightSlateXY;
+    public Pocket topLeft;
+    public Pocket topMid;
+    public Pocket topRight;
+    public Pocket botRight;
+    public Pocket botMid;
+    public Pocket botLeft;
+    public Pocket[] pockets;
     
-    public double[] topMidFallCenter;  // 中袋的圆心
-    public double[] botMidFallCenter;
+//    public double[] topLeftSlateXY;  // 库边台泥的交汇点
+//    public double[] topRightSlateXY;
+//    public double[] botLeftSlateXY;
+//    public double[] botRightSlateXY;
+//    
+//    public double[] topMidFallCenter;  // 中袋的圆心
+//    public double[] botMidFallCenter;
+    
+//    public double[][] allFallCenters;
     
     public double leftCornerHoleAreaRightX;  // 左顶袋右袋角
     public double midHoleAreaLeftX;  // 中袋左袋角
@@ -228,31 +238,31 @@ public class TableMetrics {
     }
 
     private void build() {
-        topLeftHoleXY = new double[]
-                {leftX - cornerHoleDt, topY - cornerHoleDt};
-        botLeftHoleXY = new double[]
-                {leftX - cornerHoleDt, botY + cornerHoleDt};
-        topRightHoleXY = new double[]
-                {rightX + cornerHoleDt, topY - cornerHoleDt};
-        botRightHoleXY = new double[]
-                {rightX + cornerHoleDt, botY + cornerHoleDt};
-        topMidHoleXY = new double[]
+//        double[] topLeftHoleXY = new double[]
+//                {leftX - cornerHoleDt, topY - cornerHoleDt};
+//        double[] botLeftHoleXY = new double[]
+//                {leftX - cornerHoleDt, botY + cornerHoleDt};
+//        double[] topRightHoleXY = new double[]
+//                {rightX + cornerHoleDt, topY - cornerHoleDt};
+//        double[] botRightHoleXY = new double[]
+//                {rightX + cornerHoleDt, botY + cornerHoleDt};
+        double[] topMidHoleXY = new double[]
                 {midX, topY - midHoleRadius};
-        botMidHoleXY = new double[]
+        double[] botMidHoleXY = new double[]
                 {midX, botY + midHoleRadius};
 
         // 仅为了让袋口看起来好看一点用
-        topLeftHoleGraXY = new double[]
+        double[] topLeftHoleGraXY = new double[]
                 {leftX - cornetHoleGraphicalDt, topY - cornetHoleGraphicalDt};
-        botLeftHoleGraXY = new double[]
+        double[] botLeftHoleGraXY = new double[]
                 {leftX - cornetHoleGraphicalDt, botY + cornetHoleGraphicalDt};
-        topRightHoleGraXY = new double[]
+        double[] topRightHoleGraXY = new double[]
                 {rightX + cornetHoleGraphicalDt, topY - cornetHoleGraphicalDt};
-        botRightHoleGraXY = new double[]
+        double[] botRightHoleGraXY = new double[]
                 {rightX + cornetHoleGraphicalDt, botY + cornetHoleGraphicalDt};
-        topMidHoleGraXY = new double[]
+        double[] topMidHoleGraXY = new double[]
                 {midX, topY - (cushionClothWidth + midHoleRadius) / 2};
-        botMidHoleGraXY = new double[]
+        double[] botMidHoleGraXY = new double[]
                 {midX, botY + (cushionClothWidth + midHoleRadius) / 2};
 
 //        leftClothX = leftX - cornerHoleTan;
@@ -260,39 +270,98 @@ public class TableMetrics {
 //        topClothY = topY - cornerHoleTan;
 //        botClothY = botY + cornerHoleTan;
 
-        allHoles = new double[][]{
-                topLeftHoleXY,
-                botLeftHoleXY,
-                topRightHoleXY,
-                botRightHoleXY,
-                topMidHoleXY,
-                botMidHoleXY
-        };
-        
-        topLeftSlateXY = new double[]{
+//        allHoles = new double[][]{
+//                topLeftHoleXY,
+//                botLeftHoleXY,
+//                topRightHoleXY,
+//                botRightHoleXY,
+//                topMidHoleXY,
+//                botMidHoleXY
+//        };
+
+        double[] topLeftSlateXY = new double[]{
                 leftX - cushionClothWidth,
                 topY - cushionClothWidth
         };
-        topRightSlateXY = new double[]{
+        double[] topRightSlateXY = new double[]{
                 rightX + cushionClothWidth,
                 topY - cushionClothWidth
         };
-        botLeftSlateXY = new double[]{
+        double[] botLeftSlateXY = new double[]{
                 leftX - cushionClothWidth,
                 botY + cushionClothWidth
         };
-        botRightSlateXY = new double[] {
+        double[] botRightSlateXY = new double[] {
                 rightX + cushionClothWidth,
                 botY + cushionClothWidth
         };
-        
-        topMidFallCenter = new double[]{
+
+        double[] topMidFallCenter = new double[]{
                 midX,
                 topY - cushionClothWidth - pocketDifficulty.midCenterToSlate
         };
-        botMidFallCenter = new double[]{
+        double[] botMidFallCenter = new double[]{
                 midX,
                 botY + cushionClothWidth + pocketDifficulty.midCenterToSlate
+        };
+        
+        double cornerGraphicalRadius = leatherPocket ?
+                midPocketBackInnerRadius() :
+                midHoleRadius;
+        double midGraphicalRadius = leatherPocket ?
+                cornerPocketBackInnerRadius() :
+                cornerHoleRadius;
+        
+        topLeft = new Pocket(
+                false,
+                topLeftSlateXY,
+                pocketDifficulty.cornerPocketFallRadius,
+                topLeftHoleGraXY,
+                cornerGraphicalRadius,
+                pocketDifficulty.cornerPocketGravityZone
+        );
+        topRight = new Pocket(
+                false,
+                topRightSlateXY,
+                pocketDifficulty.cornerPocketFallRadius,
+                topRightHoleGraXY,
+                cornerGraphicalRadius,
+                pocketDifficulty.cornerPocketGravityZone
+        );
+        botLeft = new Pocket(
+                false,
+                botLeftSlateXY,
+                pocketDifficulty.cornerPocketFallRadius,
+                botLeftHoleGraXY,
+                cornerGraphicalRadius,
+                pocketDifficulty.cornerPocketGravityZone
+        );
+        botRight = new Pocket(
+                false,
+                botRightSlateXY,
+                pocketDifficulty.cornerPocketFallRadius,
+                botRightHoleGraXY,
+                cornerGraphicalRadius,
+                pocketDifficulty.cornerPocketGravityZone
+        );
+        topMid = new Pocket(
+                true,
+                topMidFallCenter,
+                pocketDifficulty.midPocketFallRadius,
+                topMidHoleGraXY,
+                midGraphicalRadius,
+                pocketDifficulty.midPocketGravityZone
+        );
+        botMid = new Pocket(
+                true,
+                botMidFallCenter,
+                pocketDifficulty.midPocketFallRadius,
+                botMidHoleGraXY,
+                midGraphicalRadius,
+                pocketDifficulty.midPocketGravityZone
+        );
+        pockets = new Pocket[]{
+                topLeft, topMid, topRight, botRight, botMid, botLeft
         };
 
         leftCornerHoleAreaRightX = leftX + cornerArcWidth + cornerLineLonger - cornerHoleDrift;  // 左顶袋右袋角
@@ -879,6 +948,7 @@ public class TableMetrics {
                                            double wallSpinPreserve,
                                            double cushionPowerSpin) {
             values.tableResistanceRatio = tableResistance;
+            values.speedReduceMultiplier = tableResistance;
             values.wallBounceRatio = wallBounce;
             values.wallSpinEffectRatio = wallSpinEffect;
             values.wallSpinPreserveRatio = wallSpinPreserve;

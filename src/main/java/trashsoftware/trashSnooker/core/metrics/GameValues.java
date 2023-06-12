@@ -116,11 +116,11 @@ public class GameValues {
 
         allHoleOpenCenters = new double[][]{
                 topLeftHoleOpenCenter,
-                botLeftHoleOpenCenter,
+                topMidHoleOpenCenter,
                 topRightHoleOpenCenter,
                 botRightHoleOpenCenter,
-                topMidHoleOpenCenter,
-                botMidHoleOpenCenter
+                botMidHoleOpenCenter,
+                botLeftHoleOpenCenter
         };
         // open center 和 hole顺序必须一致
     }
@@ -217,11 +217,11 @@ public class GameValues {
 
         double[] probHole = null;
         if (y < table.topCornerHoleAreaDownY) {
-            if (x < table.leftCornerHoleAreaRightX) probHole = table.topLeftHoleXY;  // 左上底袋
-            else if (x >= table.rightCornerHoleAreaLeftX) probHole = table.topRightHoleXY;  // 右上底袋
+            if (x < table.leftCornerHoleAreaRightX) probHole = table.topLeft.fallCenter;  // 左上底袋
+            else if (x >= table.rightCornerHoleAreaLeftX) probHole = table.topRight.fallCenter;  // 右上底袋
         } else if (y >= table.botCornerHoleAreaUpY) {
-            if (x < table.leftCornerHoleAreaRightX) probHole = table.botLeftHoleXY;  // 左下底袋
-            else if (x >= table.rightCornerHoleAreaLeftX) probHole = table.botRightHoleXY;  // 右下底袋
+            if (x < table.leftCornerHoleAreaRightX) probHole = table.botLeft.fallCenter;  // 左下底袋
+            else if (x >= table.rightCornerHoleAreaLeftX) probHole = table.botRight.fallCenter;  // 右下底袋
         }
 
         if (probHole != null) {

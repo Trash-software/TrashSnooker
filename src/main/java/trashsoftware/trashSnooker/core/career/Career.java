@@ -1,17 +1,20 @@
 package trashsoftware.trashSnooker.core.career;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.aiMatch.AiVsAi;
 import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
 import trashsoftware.trashSnooker.core.career.awardItems.AwardPerk;
+import trashsoftware.trashSnooker.core.career.challenge.ChallengeHistory;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.training.Challenge;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.JsonChecksum;
 
 import java.util.*;
@@ -32,7 +35,7 @@ public class Career {
     private double handFeel = 0.9;
     
     //  这些都是Human Career特有的，考虑移入CareerManager
-    private Set<String> completedChallenges;
+    private Map<String, ChallengeHistory> completedChallenges;
     private Map<Integer, List<AwardMaterial>> levelAwards;
 
     private Career(PlayerPerson person, boolean isHumanPlayer) {
@@ -95,12 +98,20 @@ public class Career {
             career.championshipScores.add(score);
         }
         
-        if (jsonObject.has("completedChallenges")) {
-            career.completedChallenges = new HashSet<>();
-            JSONArray compCha = jsonObject.getJSONArray("completedChallenges");
-            for (Object cha : compCha) {
-                career.completedChallenges.add((String) cha);
+        try {
+            if (jsonObject.has("completedChallenges")) {
+                career.completedChallenges = new HashMap<>();
+                JSONArray compCha = jsonObject.getJSONArray("completedChallenges");
+                for (Object cha : compCha) {
+                    if (cha instanceof JSONObject) {
+                        ChallengeHistory ch = ChallengeHistory.fromJson((JSONObject) cha);
+                        career.completedChallenges.put(ch.challengeId, ch);
+                    }
+                    // 舍弃掉旧的String形式
+                }
             }
+        } catch (JSONException e) {
+            EventLogger.log(e, EventLogger.INFO, true);
         }
 
         return career;
@@ -134,8 +145,8 @@ public class Career {
             
             JSONArray compCha = new JSONArray();
             if (completedChallenges != null) {
-                for (String challengeId : completedChallenges) {
-                    compCha.put(challengeId);
+                for (ChallengeHistory ch : completedChallenges.values()) {
+                    compCha.put(ch.toJson());
                 }
             }
             out.put("completedChallenges", compCha);
@@ -156,20 +167,22 @@ public class Career {
         return out;
     }
     
-    public void completeChallenge(ChallengeSet challengeSet) {
-        if (completedChallenges == null) completedChallenges = new HashSet<>();
+    public void completeChallenge(ChallengeSet challengeSet, boolean success, int score) {
+        if (completedChallenges == null) completedChallenges = new HashMap<>();
         // 仅第一次完成给经验
-        if (!completedChallenges.contains(challengeSet.getId())) {
-            completedChallenges.add(challengeSet.getId());
-
+        ChallengeHistory history = completedChallenges.computeIfAbsent(
+                challengeSet.getId(),
+                ChallengeHistory::new
+        );
+        boolean firstSuccess = history.newComplete(success, score);
+        if (firstSuccess) {
             totalExp += challengeSet.getExp();
             expInThisLevel += challengeSet.getExp();
-//            tryLevelUp();
         }
     }
     
-    public boolean challengeIsComplete(String challengeId) {
-        return completedChallenges != null && completedChallenges.contains(challengeId);
+    public ChallengeHistory getChallengeHistory(String challengeId) {
+        return completedChallenges == null ? null : completedChallenges.get(challengeId);
     }
 
     public double getEffort(GameRule rule) {

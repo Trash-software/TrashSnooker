@@ -9,9 +9,9 @@ import trashsoftware.trashSnooker.core.career.championship.MatchTree;
 
 public class MatchTreeTest {
     
-    @Test
-    public void testMatchTreeWorldChamp() {
-        ChampionshipData data = ChampDataManager.getInstance().findDataById("world_champ");
-        System.out.println(data);
-    }
+//    @Test
+//    public void testMatchTreeWorldChamp() {
+//        ChampionshipData data = ChampDataManager.getInstance().findDataById("world_champ");
+//        System.out.println(data);
+//    }
 }

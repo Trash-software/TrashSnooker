@@ -23,9 +23,10 @@
         <Button text="%backIcon" onAction="#backAction"/>
     </HBox>
 
-    <HBox spacing="20.0">
+    <HBox spacing="20.0" alignment="CENTER_LEFT">
         <Label fx:id="champNameLabel"/>
-        <CheckBox fx:id="showAllMatchesBox" text="%showAllMatches" selected="true"/>
+<!--        <CheckBox fx:id="showAllMatchesBox" text="%showAllMatches" selected="true"/>-->
+        <ComboBox fx:id="treeShowingBox"/>
     </HBox>
 
     <ScrollPane prefHeight="540.0" prefWidth="1060.0" style="-fx-padding: 0;">

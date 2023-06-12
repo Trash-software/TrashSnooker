@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.training.Challenge;
+import trashsoftware.trashSnooker.core.training.CustomChallenge;
 import trashsoftware.trashSnooker.core.training.TrainType;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
@@ -17,7 +18,6 @@ public class ChallengeSet {
     private int exp;
     
     private ChallengeSet() {
-        
     }
     
     public static ChallengeSet fromJson(JSONObject object) {
@@ -41,8 +41,14 @@ public class ChallengeSet {
 
         GameValues values = new GameValues(rule, tableMetrics, ballMetrics);
         TrainType trainType = TrainType.valueOf(Util.toAllCapsUnderscoreCase(object.getString("type")));
+        Challenge challenge;
+        if (trainType == TrainType.CUSTOM) {
+            JSONObject schema = object.getJSONObject("schema");
+            challenge = CustomChallenge.fromJson(rule, schema);
+        } else {
+            challenge = new Challenge(rule, trainType);
+        }
         
-        Challenge challenge = new Challenge(rule, trainType);
         values.setTrain(trainType, challenge);
         
         challengeSet.gameValues = values;
