@@ -99,13 +99,13 @@ public abstract class NumberedBallTable extends Table {
         List<double[]> stars = tableMetrics.tableStars;
         graphicsContext.setFill(GameView.WHITE);
 
-        double radius2 = 12.0 * scale;
+        double radius2 = 7.0 * scale;
         for (double[] star : stars) {
             graphicsContext.fillOval(
                     view.canvasX(star[0]) - radius2,
                     view.canvasY(star[1]) - radius2,
-                    radius2,
-                    radius2);
+                    radius2 * 2,
+                    radius2 * 2);
         }
     }
 

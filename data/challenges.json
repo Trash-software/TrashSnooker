@@ -168,6 +168,38 @@
         "en": "Snooker routine-regular",
         "zh": "斯诺克T型蛇彩-标准"
       }
+    },
+    {
+      "id": "snooker-hendry-tough-table-challenge",
+      "rule": "snooker",
+      "type": "custom",
+      "table": "snooker",
+      "pocketSize": "std",
+      "pocketDifficulty": "normal",
+      "exp": 500,
+      "name": {
+        "en": "Hendry's tough ",
+        "zh": "亨得利的高难度清台"
+      },
+      "schema": {
+        "balls": [
+          {"value": 1, "unitX": 0.015, "unitY": 0.35},
+          {"value": 1, "unitX": 0.01, "unitY": 0.7},
+          {"value": 1, "unitX": 0.26, "unitY": 0.04},
+          {"value": 1, "unitX": 0.24, "unitY": 0.93},
+          {"value": 1, "unitX": 0.65, "unitY": 0.02},
+          {"value": 1, "unitX": 0.85, "unitY": 0.015},
+          {"value": 1, "unitX": 0.65, "unitY": 0.945},
+          {"value": 1, "unitX": 0.85, "unitY": 0.98},
+          {"value": 1, "unitX": 0.99, "unitY": 0.33},
+          {"value": 1, "unitX": 0.985, "unitY": 0.78},
+          {"value": 1, "unitX": 0.6, "unitY": 0.54},
+          {"value": 1, "unitX": 0.86, "unitY": 0.51},
+          {"value": 1, "unitX": 0.82, "unitY": 0.5},
+          {"value": 1, "unitX": 0.805, "unitY": 0.485},
+          {"value": 1, "unitX": 0.808, "unitY": 0.52}
+        ]
+      }
     }
   ]
 }

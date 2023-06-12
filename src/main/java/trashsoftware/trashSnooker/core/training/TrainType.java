@@ -11,10 +11,14 @@ public enum TrainType {
     SNAKE_X,
     SNAKE_FULL_ORDERED,
     SNAKE_HALF_ORDERED,
-    CLEAR_COLOR;
+    CLEAR_COLOR,
+    CUSTOM;
 
     @Override
     public String toString() {
+        if (this == CUSTOM) {
+            return "CUSTOM";
+        }
         String key = Util.toLowerCamelCase("TRAINING_" + name());
         return App.getStrings().getString(key);
     }

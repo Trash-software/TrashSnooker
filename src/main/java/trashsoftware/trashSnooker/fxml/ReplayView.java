@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
-public class ReplayView implements Initializable {
+public class ReplayView extends ChildInitializable {
 
     private final Map<Long, TreeItem<Item>> entireGameItems = new TreeMap<>();
     @FXML
@@ -212,6 +212,11 @@ public class ReplayView implements Initializable {
         });
         thread.setDaemon(true);
         thread.start();
+    }
+
+    @Override
+    public Stage getStage() {
+        return stage;
     }
 
     public abstract static class Item implements Comparable<Item> {

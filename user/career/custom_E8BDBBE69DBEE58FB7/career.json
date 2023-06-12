@@ -6241,17 +6241,38 @@
         }
       ],
       "level": 19,
-      "expInThisLevel": 12,
+      "expInThisLevel": 87,
       "availPerks": 40,
       "completedChallenges": [
-        "pool-half-regular",
-        "pool-half-ordered-regular"
+        {
+          "id": "pool-half-regular",
+          "history": [
+            {
+              "score": 2,
+              "success": false,
+              "time": "2023-06-13 00:35:15"
+            },
+            {
+              "score": 8,
+              "success": true,
+              "time": "2023-06-13 00:37:10"
+            }
+          ]
+        },
+        {
+          "id": "pool-half-ordered-regular",
+          "history": [{
+            "score": 2,
+            "success": false,
+            "time": "2023-06-13 00:41:38"
+          }]
+        }
       ],
       "levelAwards": {"19": {"perks": 2}},
       "handFeel": 1.0519488840353741,
       "totalPerks": 6,
       "human": true,
-      "totalExp": 3758,
+      "totalExp": 3833,
       "playerId": "custom_E8BDBBE69DBEE58FB7"
     },
     {
@@ -17016,8 +17037,8 @@
     }
   ],
   "aiGoodness": 0.15,
-  "checksum": "C1C8FC0570DCC3BD64C82209886CA93B",
+  "checksum": "5D79C40FC9B227E34B3B87D777D3A61F",
   "playerGoodness": 3,
-  "version": 36,
+  "version": 37,
   "timestamp": "2024/3/25"
 }

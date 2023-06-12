@@ -1,10 +1,8 @@
 package trashsoftware.trashSnooker.core.training;
 
-import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.EntireGame;
-import trashsoftware.trashSnooker.core.GamePlayStage;
-import trashsoftware.trashSnooker.core.GameSettings;
+import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 
@@ -46,6 +44,35 @@ public class SnookerTraining extends SnookerGame implements Training {
             case CLEAR_COLOR:
                 moveToClearColor();
                 break;
+            case CUSTOM:
+                moveToCustomPosition();
+                break;
+        }
+    }
+    
+    private void moveToCustomPosition() {
+        CustomChallenge customChallenge = (CustomChallenge) challenge;
+        TableMetrics metrics = gameValues.table;
+        int usedReds = 0;
+        double ballR = gameValues.ball.ballRadius;
+        double leftX = metrics.leftX + ballR;  // 我们不希望把球放库上面了
+        double rightX = metrics.rightX - ballR;
+        double topY = metrics.topY + ballR;
+        double botY = metrics.botY - ballR;
+        
+        for (CustomChallenge.BallSchema bs : customChallenge.getBallSchemas()) {
+            double realX = Algebra.shiftRange(0, 1, leftX, rightX, bs.unitX);
+            double realY = Algebra.shiftRange(0, 1, topY, botY, bs.unitY);
+            SnookerBall ball;
+            if (bs.value == 1) {
+                ball = redBalls[usedReds++];
+            } else {
+                ball = getBallByValue(bs.value);
+            }
+            ball.setXY(realX, realY);
+        }
+        for (int i = usedReds; i < numRedBalls(); i++) {
+            redBalls[i].pot();
         }
     }
 

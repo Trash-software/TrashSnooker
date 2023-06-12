@@ -20,6 +20,7 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.CareerManager;
+import trashsoftware.trashSnooker.core.career.challenge.ChallengeHistory;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeManager;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeMatch;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
@@ -37,6 +38,8 @@ public class CareerTrainingView extends ChildInitializable {
     TableColumn<ChallengeItem, String> challengeTitleCol;
     @FXML
     TableColumn<ChallengeItem, Integer> challengeExpCol;
+    @FXML
+    TableColumn<ChallengeItem, String> challengeBestScoreCol;
     @FXML
     TableColumn<ChallengeItem, String> challengeCompletedCol;
     @FXML
@@ -84,6 +87,7 @@ public class CareerTrainingView extends ChildInitializable {
     private void initTable() {
         challengeTitleCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().data.getName()));
         challengeExpCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().data.getExp()));
+        challengeBestScoreCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getHighest()));
         challengeCompletedCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().completed()));
 
         challengeTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -101,8 +105,8 @@ public class CareerTrainingView extends ChildInitializable {
         challengeTable.getItems().clear();
 
         for (ChallengeSet cs : ChallengeManager.getInstance().getAllChallenges()) {
-            boolean completed = career.challengeIsComplete(cs.getId());
-            ChallengeItem item = new ChallengeItem(cs, completed);
+            ChallengeHistory ch = career.getChallengeHistory(cs.getId());
+            ChallengeItem item = new ChallengeItem(cs, ch);
             challengeTable.getItems().add(item);
         }
     }
@@ -123,7 +127,7 @@ public class CareerTrainingView extends ChildInitializable {
             previewPane.setupBalls(fakeGame, false);
             previewPane.drawTable(fakeGame);
             previewPane.drawStoppedBalls(fakeGame.getTable(), fakeGame.getAllBalls(), null);
-            outBox.setPrefWidth(previewPane.getPrefWidth() + 385);
+            outBox.setPrefWidth(previewPane.getPrefWidth() + 455);
 
 //                snapshotPreview(challengeSet.getId());
 //            } else {
@@ -206,15 +210,27 @@ public class CareerTrainingView extends ChildInitializable {
 
     public static class ChallengeItem {
         final ChallengeSet data;
-        final boolean complete;
+        final ChallengeHistory ch;
+        int highest;
 
-        ChallengeItem(ChallengeSet data, boolean complete) {
+        ChallengeItem(ChallengeSet data, ChallengeHistory challengeHistory) {
             this.data = data;
-            this.complete = complete;
+            this.ch = challengeHistory;
+            this.highest = challengeHistory != null ? 
+                    challengeHistory.getBestScore() :
+                    0;
+        }
+
+        public boolean isComplete() {
+            return ch != null && ch.isCompleted();
+        }
+        
+        public String getHighest() {
+            return highest == 0 ? "" : String.valueOf(highest);
         }
 
         public String completed() {
-            return complete ? "✓" : "";
+            return isComplete() ? "✓" : "";
         }
     }
 }

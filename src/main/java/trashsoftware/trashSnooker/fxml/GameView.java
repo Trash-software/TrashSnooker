@@ -654,6 +654,7 @@ public class GameView implements Initializable {
                     game.getGame().getRecorder().stopRecording(false);
                 }
                 if (!game.isFinished() && !game.getGame().isEnded()) {
+                    Player p1 = game.getGame().getPlayer1();
                     game.quitGame();
                     InGamePlayer winner;
                     if (careerMatch != null) {
@@ -672,6 +673,7 @@ public class GameView implements Initializable {
 //                        game.saveTo(PlayerVsAiMatch.getMatchSave());
                         if (matchFinish) {
                             if (careerMatch instanceof ChallengeMatch) {
+                                ((ChallengeMatch) careerMatch).setScore(p1.getScore());
                                 careerMatch.finish(game.getGame().getPlayer2().getPlayerPerson(),
                                         0, 1);
                             } else {
@@ -929,6 +931,7 @@ public class GameView implements Initializable {
     private void endFrame() {
 //        hideCue();
         tableGraphicsChanged = true;
+        Player p1 = game.getGame().getPlayer1();
         Player wonPlayer = game.getGame().getWiningPlayer();
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
         drawScoreBoard(game.getGame().getCuingPlayer(), false);
@@ -939,6 +942,7 @@ public class GameView implements Initializable {
             String title = success ? strings.getString("challengeSuccess") : strings.getString("challengeFailed");
 
             if (careerMatch != null) {
+                ((ChallengeMatch) careerMatch).setScore(p1.getScore());
                 careerMatch.finish(wonPlayer.getPlayerPerson(), success ? 1 : 0, success ? 0 : 1);
             }
             Platform.runLater(() -> {

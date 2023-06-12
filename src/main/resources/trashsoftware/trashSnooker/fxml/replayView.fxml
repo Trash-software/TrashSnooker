@@ -15,6 +15,10 @@
     <padding>
         <Insets topRightBottomLeft="5.0"/>
     </padding>
+
+    <HBox>
+        <Button text="%backIcon" onAction="#backAction"/>
+    </HBox>
     
     <TreeTableView fx:id="replayTable" VBox.vgrow="ALWAYS">
         <columns>

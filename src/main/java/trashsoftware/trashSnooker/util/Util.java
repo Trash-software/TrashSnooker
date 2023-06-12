@@ -5,9 +5,14 @@ import trashsoftware.trashSnooker.core.Values;
 
 import java.io.*;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Util {
+
+    public static final DateFormat TIME_FORMAT_SEC =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static <T> boolean arrayContains(T[] array, T value) {
         for (T ele : array) if (ele == value) return true;
@@ -167,6 +172,15 @@ public class Util {
 
     public static double bytesToDouble(byte[] b, int index) {
         return Double.longBitsToDouble(bytesToLong(b, index));
+    }
+
+    public static void floatToBytes(float d, byte[] arr, int index) {
+        int bits = Float.floatToIntBits(d);
+        int32ToBytes(bits, arr, index);
+    }
+
+    public static float bytesToFloat(byte[] b, int index) {
+        return Float.intBitsToFloat(bytesToInt32(b, index));
     }
 
     public static int indexOf(char c, char[] arr) {

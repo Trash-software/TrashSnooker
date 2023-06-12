@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -32,6 +33,12 @@ public class JsonChecksum {
         } else if (object instanceof Double) {
             Util.doubleToBytes((Double) object, buffer, 0);
             md.update(buffer);
+        } else if (object instanceof Float) {
+            Util.floatToBytes((Float) object, buffer, 0);
+            md.update(buffer);
+        } else if (object instanceof BigDecimal) {
+            Util.doubleToBytes(((BigDecimal) object).doubleValue(), buffer, 0);
+            md.update(buffer);
         } else if (object instanceof Boolean) {
             buffer[0] = (byte) ((Boolean) object ? 1 : 0);
             md.update(buffer, 0, 1);
@@ -50,7 +57,7 @@ public class JsonChecksum {
                 hash(subKey, json.get(subKey));
             }
         } else {
-            throw new RuntimeException("Cannot hash object type: " + object);
+            throw new RuntimeException("Cannot hash object type: " + object + " " + object.getClass() + ", key=" + key);
         }
     }
     

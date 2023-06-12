@@ -127,8 +127,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             allBallsCopy[i] = (SnookerBall) allBalls[i].clone();
         }
         this.allBalls = allBallsCopy;
-//        System.arraycopy(allBallsCopy, 0, this.redBalls, 0, table.nBalls() - 7);
-//        System.arraycopy(allBallsCopy, table.nBalls() - 7, this.coloredBalls, 0, 6);
+        System.arraycopy(allBallsCopy, 0, this.redBalls, 0, table.nBalls() - 7);
+        System.arraycopy(allBallsCopy, table.nBalls() - 7, this.coloredBalls, 0, 6);
     }
 
     @Override
