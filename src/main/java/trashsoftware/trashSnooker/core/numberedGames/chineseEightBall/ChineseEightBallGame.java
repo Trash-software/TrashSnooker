@@ -416,6 +416,15 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         boolean baseFoul = checkStandardFouls(() -> 1);
 
         if (baseFoul && getEightBall().isPotted()) {  // 白球黑八一起进
+            if (isBreaking) {
+                // 开球犯规但进黑八不算输
+                pickupBlackBall();
+                cueBall.pot();
+                ballInHand = true;
+                switchPlayer();
+                return;
+            }
+            
             end();
             winingPlayer = getAnotherPlayer();
             return;

@@ -9,7 +9,7 @@ public class PocketSize {
             new PocketSize("pocketStd", 
                     84.15, 
                     88.0),
-            new PocketSize("pocketSmall", 82, 85),
+            new PocketSize("pocketSmall", 81, 84.15),
             new PocketSize("pocketLittle", 78, 80),
             new PocketSize("pocketTiny", 72, 72)
     };

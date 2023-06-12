@@ -939,17 +939,21 @@ public class GameView implements Initializable {
 
         if (gameValues.isTraining()) {
             boolean success = wonPlayer.getInGamePlayer().getPlayerNumber() == 1;
-            String title = success ? strings.getString("challengeSuccess") : strings.getString("challengeFailed");
-
+            String title = success ? strings.getString("challengeSuccess") : 
+                    strings.getString("challengeFailed");
+            
+            final String content;
             if (careerMatch != null) {
                 ((ChallengeMatch) careerMatch).setScore(p1.getScore());
+                content = ((ChallengeMatch) careerMatch).challengeSet.getName();
                 careerMatch.finish(wonPlayer.getPlayerPerson(), success ? 1 : 0, success ? 0 : 1);
+            } else {
+                content = gameValues.getTrainType().toString();
             }
-            Platform.runLater(() -> {
-                AlertShower.showInfo(stage,
-                        gameValues.getTrainType().toString(),
-                        title);
-            });
+            Platform.runLater(() -> 
+                    AlertShower.showInfo(stage,
+                    content,
+                    title));
         } else {
             int frameNFrom1 = game.getP1Wins() + game.getP2Wins();  // 上面已经更新了
 

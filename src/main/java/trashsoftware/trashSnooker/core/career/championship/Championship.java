@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.career.championship;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -73,10 +74,8 @@ public abstract class Championship {
                 builder.append(line);
             }
             return loadProgressFromJson(new JSONObject(builder.toString()));
-        } catch (FileNotFoundException e) {
+        } catch (IOException | JSONException e) {
             return null;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
     
