@@ -328,8 +328,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                         boolean recordTargetPos,
                                         boolean wipe,
                                         boolean useClone) {
-        if (cueBall.isPotted()) return null;
-
+        if (cueBall.isPotted()) {
+            return null;
+        }
         Ball cueBallClone = useClone ? cueBall.clone() : cueBall;
         cueBallClone.setVx(params.vx / phy.calculationsPerSec);
         cueBallClone.setVy(params.vy / phy.calculationsPerSec);
@@ -395,10 +396,19 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public boolean isInTable(double x, double y) {
-        return x >= gameValues.table.leftX + gameValues.ball.ballRadius &&
-                x < gameValues.table.rightX - gameValues.ball.ballRadius &&
-                y >= gameValues.table.topY + gameValues.ball.ballRadius &&
-                y < gameValues.table.botY - gameValues.ball.ballRadius;
+//        return x >= gameValues.table.leftX + gameValues.ball.ballRadius &&
+//                x < gameValues.table.rightX - gameValues.ball.ballRadius &&
+//                y >= gameValues.table.topY + gameValues.ball.ballRadius &&
+//                y < gameValues.table.botY - gameValues.ball.ballRadius;
+        if (!gameValues.isInTable(x, y, gameValues.ball.ballRadius)) return false;
+        
+        for (Pocket pocket : gameValues.table.pockets) {
+            // 在袋里
+            if (Algebra.distanceToPoint(x, y, pocket.fallCenter[0], pocket.fallCenter[1]) < pocket.fallRadius + pocket.extraSlopeWidth) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public final boolean canPlaceWhite(double x, double y) {
@@ -848,7 +858,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public boolean canReposition() {
         return gameValues.rule.hasRule(Rule.FOUL_AND_MISS) && thisCueFoul.isFoul() && thisCueFoul.isMiss();
     }
-    
+
     public void notReposition() {
     }
 
@@ -1239,11 +1249,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         dtWhenHitFirstWall = cueBallClone.getDistanceMoved();
                     }
 //                    if (prediction.getSecondCollide() == null) {
-                        // 如果白球碰了第二颗，那接下来就根本不可预测
-                        // 有bug，修不好，取消判定
-                        hitWall = true;
-                        prediction.whiteCollidesHoleArcs();
-                        prediction.whiteHitCushion();
+                    // 如果白球碰了第二颗，那接下来就根本不可预测
+                    // 有bug，修不好，取消判定
+                    hitWall = true;
+                    prediction.whiteCollidesHoleArcs();
+                    prediction.whiteHitCushion();
 //                    }
                 }
                 return false;
@@ -1404,12 +1414,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
                     continue;
                 }
-                
+
                 if (ball.isOutOfTable()) continue;
-                
+
                 if (!ball.isLikelyStopped(phy)) {
                     noBallMoving = false;
-                    
+
                     if (ball.tryHitPocketsBack(phy)) {
 //                        ball.normalMove(phy);
                         movementTypes[i] = MovementFrame.POT;
@@ -1418,7 +1428,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         newPotted.add(ball);
                         continue;
                     }
-                    
+
                     if (ball.willPot(phy)) {
                         movementTypes[i] = MovementFrame.POT;
                         movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;

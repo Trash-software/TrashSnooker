@@ -420,6 +420,7 @@ public class GameView implements Initializable {
 
         game.startNextFrame();  // fixme: 问题 game.game不是null的时候就渲染不出球
         drawScoreBoard(game.getGame().getCuingPlayer(), true);
+        cursorDrawer = new PredictionDrawing();
 
         replayButtonBox.setVisible(false);
         replayButtonBox.setManaged(false);
@@ -862,6 +863,8 @@ public class GameView implements Initializable {
         cuePointCanvas.setDisable(false);
         cueAngleCanvas.setDisable(false);
 
+        cursorDrawer.synchronizeGame();  // 刷新白球预测的线程池
+
         Ball.enableGearOffset();
         aiWhitePath = null;
         miscued = false;
@@ -909,8 +912,7 @@ public class GameView implements Initializable {
         }
         updatePlayStage();
         recalculateUiRestrictions();
-
-        cursorDrawer.synchronizeGame();  // 刷新白球预测的线程池
+        
         tableGraphicsChanged = true;
     }
 
@@ -1127,6 +1129,7 @@ public class GameView implements Initializable {
 
     private void restoreCueAngle() {
         cueAngleDeg = 5.0;
+        recalculateUiRestrictions();
         setCueAngleLabel();
     }
 
@@ -1171,16 +1174,20 @@ public class GameView implements Initializable {
                     if (Algebra.distanceToPoint(realX, realY, ball.getX(), ball.getY()) < gameValues.ball.ballRadius) {
                         debuggingBall = ball;
                         ball.setPotted(true);
+                        cursorDrawer.synchronizeGame();
                         break;
                     }
                 }
             }
         } else {
-            if (game.getGame().isInTable(realX, realY) && !game.getGame().isOccupied(realX, realY)) {
-                debuggingBall.setX(realX);
-                debuggingBall.setY(realY);
+            double[] ballRealPos = gamePane.getRealPlaceCanPlaceBall(mouseX, mouseY);
+            if (game.getGame().isInTable(ballRealPos[0], ballRealPos[1]) && 
+                    !game.getGame().isOccupied(ballRealPos[0], ballRealPos[1])) {
+                debuggingBall.setX(ballRealPos[0]);
+                debuggingBall.setY(ballRealPos[1]);
                 debuggingBall.setPotted(false);
                 debuggingBall = null;
+                cursorDrawer.synchronizeGame();
             }
         }
     }
@@ -1202,11 +1209,14 @@ public class GameView implements Initializable {
         if (debugMode) {
             debugClick(mouseEvent);
         } else if (game.getGame().getCueBall().isPotted()) {
-            game.getGame().placeWhiteBall(gamePane.realX(mouseEvent.getX()), gamePane.realY(mouseEvent.getY()));
+            // 放置手中球
+            double[] ballRealPos = gamePane.getRealPlaceCanPlaceBall(mouseEvent.getX(), mouseEvent.getY());
+            
+            game.getGame().placeWhiteBall(ballRealPos[0], ballRealPos[1]);
             game.getGame().getRecorder().writeBallInHandPlacement();
 
             replaceBallInHandMenu.setDisable(false);
-
+            cursorDrawer.synchronizeGame();
         } else if (!game.getGame().isCalculating() && movement == null) {
             Ball whiteBall = game.getGame().getCueBall();
             double[] unit = Algebra.unitVector(
@@ -1403,6 +1413,8 @@ public class GameView implements Initializable {
             
             g.pushOut();
 
+            cursorDrawer.synchronizeGame();
+
             drawScoreBoard(game.getGame().getCuingPlayer(), true);
             drawTargetBoard(true);
             updatePowerSlider(game.getGame().getCuingPlayer().getPlayerPerson());
@@ -1422,6 +1434,7 @@ public class GameView implements Initializable {
         game.getGame().reposition();
         repositionMenu.setDisable(true);
         letOtherPlayMenu.setDisable(true);
+        cursorDrawer.synchronizeGame();
         drawScoreBoard(game.getGame().getCuingPlayer(), true);
         drawTargetBoard(true);
         updatePowerSlider(game.getGame().getCuingPlayer().getPlayerPerson());
@@ -1442,6 +1455,7 @@ public class GameView implements Initializable {
     @FXML
     void letOtherPlayAction() {
         letOtherPlayMenu.setDisable(true);
+        repositionMenu.setDisable(true);
         restoreCuePoint();
         restoreCueAngle();
         cursorDirectionUnitX = 0.0;
@@ -1469,6 +1483,8 @@ public class GameView implements Initializable {
         drawScoreBoard(willPlayPlayer, true);
         drawTargetBoard(true);
         updateScoreDiffLabels();
+        
+        cursorDrawer.synchronizeGame();
 
         if (aiAutoPlay && willPlayPlayer.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
             aiCue(willPlayPlayer, false);  // 老子给你让杆，你复位？豁哥哥
@@ -1483,6 +1499,8 @@ public class GameView implements Initializable {
         cursorDirectionUnitY = 0.0;
 //        hideCue();
         game.getGame().setBallInHand();
+
+        cursorDrawer.synchronizeGame();
     }
 
     @FXML
@@ -2838,8 +2856,9 @@ public class GameView implements Initializable {
         }
 
         PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
-        cursorDrawer = new PredictionDrawing();
         cursorDrawer.predict(playerPerson);
+//        cursorDrawer = new PredictionDrawing();
+//        cursorDrawer.predict(playerPerson);
 
         tableGraphicsChanged = true;
     }
@@ -3079,6 +3098,8 @@ public class GameView implements Initializable {
     }
 
     private void recalculateUiRestrictions() {
+        if (game == null || game.getGame() == null) return;
+        
         Cue currentCue = game.getGame().getCuingPlayer().getInGamePlayer()
                 .getCurrentCue(game.getGame());
         CueBackPredictor.Result backPre =
@@ -3446,13 +3467,15 @@ public class GameView implements Initializable {
             for (int i = 0; i < gamePool.length; i++) {
                 gamePool[i] = game.getGame().clone();
             }
+            center = null;
+            outPoints = null;
+            fill = null;
+            Arrays.fill(clockwise, null);
         }
 
         private void predict(PlayerPerson playerPerson) {
             running = true;
 //            long t0 = System.currentTimeMillis();
-            
-            Arrays.fill(clockwise, null);
             
             CuePlayParams[] possibles = generateCueParamsSd1();
             center = game.getGame().predictWhite(
@@ -3465,6 +3488,7 @@ public class GameView implements Initializable {
                     false);
             if (center == null) {
                 predictedTargetBall = null;
+                running = false;
                 return;
             }
             
@@ -3484,13 +3508,20 @@ public class GameView implements Initializable {
                 for (int i = 0; i < clockwise.length; i++) {
                     Future<PredictionResult> res = ecs.take();
                     PredictionResult pr = res.get(1, TimeUnit.SECONDS);
+                    if (pr.wp == null) {
+                        throw new InterruptedException();
+                    }
                     clockwise[pr.index] = pr.wp;
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
+                synchronizeGame();
+                running = false;
                 return;
             } catch (TimeoutException e) {
                 System.err.println("Cannot finish white prediction in time.");
+                synchronizeGame();
+                running = false;
                 return;
             }
             

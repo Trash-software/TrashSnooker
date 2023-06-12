@@ -260,6 +260,14 @@ public class MatchTreeNode {
         return player1Position == null && player2Position == null;  // 同时也意味着stage == null
     }
     
+    public boolean isP1Win() {
+        return winner == player1Position.winner;
+    }
+    
+    public boolean isP2Win() {
+        return winner == player2Position.winner;
+    }
+    
     public boolean isHumanAlive() {
         if (winner == null) {
             if (player1Position.isHumanAlive()) return true;

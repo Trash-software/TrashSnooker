@@ -122,27 +122,34 @@ public class GamePane extends Pane {
         getChildren().clear();
         getChildren().add(gameCanvas);
     }
+    
+    public double[] getRealPlaceCanPlaceBall(double mouseX, double mouseY) {
+        TableMetrics values = gameValues.table;
+        double x = realX(mouseX);
+        double y = realY(mouseY);
+
+        if (!gameValues.isInTable(x, y, gameValues.ball.ballRadius)) {
+            if (x < values.leftX + gameValues.ball.ballRadius)
+                x = values.leftX + gameValues.ball.ballRadius;
+            else if (x >= values.rightX - gameValues.ball.ballRadius)
+                x = values.rightX - gameValues.ball.ballRadius;
+
+            if (y < values.topY + gameValues.ball.ballRadius)
+                y = values.topY + gameValues.ball.ballRadius;
+            else if (y >= values.botY - gameValues.ball.ballRadius)
+                y = values.botY - gameValues.ball.ballRadius;
+        }
+        return new double[]{x, y};
+    }
 
     public void drawBallInHandEssential(Ball ball, Table table, double mouseX, double mouseY) {
-        TableMetrics values = gameValues.table;
-
-        double x = realX(mouseX);
-        if (x < values.leftX + gameValues.ball.ballRadius)
-            x = values.leftX + gameValues.ball.ballRadius;
-        else if (x >= values.rightX - gameValues.ball.ballRadius)
-            x = values.rightX - gameValues.ball.ballRadius;
-
-        double y = realY(mouseY);
-        if (y < values.topY + gameValues.ball.ballRadius)
-            y = values.topY + gameValues.ball.ballRadius;
-        else if (y >= values.botY - gameValues.ball.ballRadius)
-            y = values.botY - gameValues.ball.ballRadius;
-
+        double[] place = getRealPlaceCanPlaceBall(mouseX, mouseY);
+        
         table.forceDrawBallInHand(
                 this,
                 ball,
-                x,
-                y
+                place[0],
+                place[1]
         );
     }
 

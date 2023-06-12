@@ -10,7 +10,7 @@ import java.util.List;
 
 public class WhitePrediction {
     public final Ball cueBall;
-    public final double whiteX;
+    public final double whiteX;  // 初始的位置
     public final double whiteY;
     private final List<double[]> whitePath = new ArrayList<>();
     private Ball firstCollide;
@@ -84,6 +84,7 @@ public class WhitePrediction {
     }
     
     public double[] stopPoint() {
+        if (whitePath.isEmpty()) return null;
         return whitePath.get(whitePath.size() - 1); 
     }
     

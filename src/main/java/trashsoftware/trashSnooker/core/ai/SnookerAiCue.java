@@ -135,9 +135,13 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         Set<Ball> legalSet = new HashSet<>(legalList);
         
         double clothSlowFactor = phy.cloth.smoothness.speedReduceFactor / TableCloth.Smoothness.FAST.speedReduceFactor;
-        double selPowerLow = 24.0 * clothSlowFactor;
-        double selPowerHigh = 42.0 * clothSlowFactor;
+        double selPowerLow = 20.0 * clothSlowFactor;
+        double selPowerHigh = 38.0 * clothSlowFactor;
         double selPowerTick = 2.0;
+        
+        double allowedYLow = game.getTable().greenBallPos()[1];
+        double allowedYHigh = game.getTable().yellowBallPos()[1];
+        double allowedX = game.getTable().breakLineX();
         
         Set<Ball> suggestedTarget = game.getSuggestedRegularBreakBalls();
         PlayerPerson.HandSkill handSkill = aiPlayer.getPlayerPerson().handBody.getPrimary();
@@ -177,6 +181,12 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         false
                 );
                 if (dc != null) {
+                    double[] whiteStopPos = dc.wp.stopPoint();
+                    if (whiteStopPos == null) continue;
+                    if (whiteStopPos[1] < allowedYLow || 
+                            whiteStopPos[1] > allowedYHigh || 
+                            whiteStopPos[0] > allowedX) continue;
+                    
                     if (dc.wp.getWhiteCushionCountAfter() == 4
                             && !dc.wp.isWhiteHitsHoleArcs()
                             && !dc.wp.isHitWallBeforeHitBall()

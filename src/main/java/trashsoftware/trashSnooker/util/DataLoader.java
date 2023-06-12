@@ -85,6 +85,7 @@ public class DataLoader {
                 String validation = JsonChecksum.checksum(array);
                 if (!checksum.equals(validation)) {
                     System.err.println("You hacked your custom players!");
+                    System.err.println("Old: " + checksum + ", new: " + validation);
                 }
             }
 

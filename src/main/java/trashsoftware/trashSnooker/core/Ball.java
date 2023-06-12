@@ -13,7 +13,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public static final double MAX_GEAR_EFFECT = 0.25;  // 齿轮效应造成的最严重分离角损耗
     public static final double GEAR_EFFECT_MAX_POWER = 0.32;  // 大于这个球速就没有齿轮效应了
     public static final double CUSHION_COLLISION_SPIN_FACTOR = 0.5;
+    public static final double CUSHION_DIRECT_SPIN_APPLY = 0.4;
     public static final double SUCK_CUSHION_FACTOR = 0.75;
+    public static final double MAXIMUM_SPIN_PASS = 0.2;  // 齿轮效应传递旋转的上限
     private static final Random ERROR_GENERATOR = new Random();
     private static final double[] LEFT_CUSHION_VEC = {0.0, -1.0};  // 视觉上的顺时针方向。注意y是反的
     private static final double[] RIGHT_CUSHION_VEC = {0.0, 1.0};
@@ -266,7 +268,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         // 每个动画帧算一次，而不是物理帧
         axisX = ySpin;
         axisY = -xSpin;
-        double ss = sideSpin * 5.0;
+        double ss = sideSpin * Math.PI;  // 不要误会，没有这么神，只是3.14刚好看起来差不多
 //        if (isWhite()) System.out.println(xSpin + " " + ySpin + " " + sideSpin);
         if (Double.isNaN(ss)) ss = 0.0;
         axisZ = -ss;
@@ -359,7 +361,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //        if (isWhite() && !phy.isPrediction) System.out.println(dynamicDragFactor);
 
         // 乘和除抵了，所以第一部分是线性的
-        double spinReduceRatio = phy.spinReducer / spinDiffTotal * dynamicDragFactor 
+        double spinReduceRatio = phy.spinReducer / spinDiffTotal * dynamicDragFactor
                 * table.speedReduceMultiplier;  // fixme: 可能是平方
         double xSpinReducer = Math.abs(xSpinDiff * spinReduceRatio);
         double ySpinReducer = Math.abs(ySpinDiff * spinReduceRatio);
@@ -396,7 +398,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double nextDt = predictedDtToPoint(pottedPocket.graphicalCenter);
         double curDt = currentDtToPoint(pottedPocket.graphicalCenter);
 //        System.out.printf("%f, %f");
-        if (nextDt > pocketRange 
+        if (nextDt > pocketRange
                 && nextDt > curDt) {
             innerBounce(pottedPocket.graphicalCenter, 0.6);
         }
@@ -583,35 +585,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         }
     }
 
-    private void applySpinToArcAndLine(double[] collisionNormal, double[] tangentVec, Phy phy, double factor) {
-        double sideSpinStrength = calculateEffectiveSideSpin(phy, collisionNormal);
-        double effectiveSideSpin = sideSpinStrength * table.wallSpinEffectRatio * factor;
-
-        // 也是那个思路，换底，在新的底处理旋转，再换回来
-        double theta = -Algebra.rawThetaOf(tangentVec);
-        double[][] cob = Algebra.changeOfBasisMatrix(theta);
-        double[][] cobInverse = Algebra.changeOfBasisMatrix(-theta);
-
-        double[] vv = new double[]{vx, vy};
-        double[] vChanged = Algebra.matrixMultiplyVector(cob, vv);
-        vChanged[0] += effectiveSideSpin;
-
-        double[] inverse = Algebra.matrixMultiplyVector(cobInverse, vChanged);
-        vx = inverse[0];
-        vy = inverse[1];
-
-        double[] spins = new double[]{xSpin, ySpin};
-        double[] spinCob = Algebra.matrixMultiplyVector(cob, spins);
-        spinCob[1] *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
-
-        double[] spinInverse = Algebra.matrixMultiplyVector(cobInverse, spinCob);
-        xSpin = spinInverse[0];
-        ySpin = spinInverse[1];
-
-//        sideSpin -= effectiveSideSpin;
-        sideSpin *= table.wallSpinPreserveRatio;
-    }
-
     protected void hitHoleLineArea(double[][] line, double[] lineNormalVec, Phy phy) {
         double[] tanUnitVec = Algebra.unitVector(new double[]{line[1][0] - line[0][0], line[1][1] - line[0][1]});
         applySpinToArcAndLine(lineNormalVec, tanUnitVec, phy, 0.8);
@@ -625,10 +598,49 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         // 库的切线方向的投影长度，意思是砸的深度，越深效果越强
         double vertical = Algebra.projectionLengthOn(cushionNormalVec, vec);
         double mag = Math.abs(vertical) * phy.calculationsPerSec;
+//        double mag = Math.hypot(vx, vy) * phy.calculationsPerSec;
+//        double sideSpinEffectMul = mag / Values.MAX_POWER_SPEED;
 
         double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.7);
 //        System.out.println(mag + " " + sideSpinEffectMul);
         return sideSpin * sideSpinEffectMul;
+    }
+
+    private void applySpinToArcAndLine(double[] collisionNormal, double[] tangentVec, Phy phy, double factor) {
+        double sideSpinStrength = calculateEffectiveSideSpin(phy, collisionNormal);
+//        double sideSpinStrength = Math.abs(sideSpin) * phy.calculationsPerSecSqr;
+        double effectiveSideSpin = sideSpinStrength * table.wallSpinEffectRatio * factor;
+
+        // 也是那个思路，换底，在新的底处理旋转，再换回来
+        double theta = -Algebra.rawThetaOf(tangentVec);
+        double[][] cob = Algebra.changeOfBasisMatrix(theta);
+        double[][] cobInverse = Algebra.changeOfBasisMatrix(-theta);
+
+        double[] vv = new double[]{vx, vy};
+        double[] vChanged = Algebra.matrixMultiplyVector(cob, vv);
+        vChanged[0] += effectiveSideSpin;  // 侧旋的效果
+
+        double[] spins = new double[]{xSpin, ySpin};
+        double[] spinCob = Algebra.matrixMultiplyVector(cob, spins);
+        
+        vChanged[1] += spinCob[1] * (1 - table.wallSpinPreserveRatio) * CUSHION_DIRECT_SPIN_APPLY;  // 一部分旋转直接生效了
+        
+        spinCob[0] *= 1 - (1 - table.wallSpinPreserveRatio) * 0.5;
+        spinCob[1] *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
+        
+        double[] inverse = Algebra.matrixMultiplyVector(cobInverse, vChanged);
+
+        vx = inverse[0];
+        vy = inverse[1];
+
+        double[] spinInverse = Algebra.matrixMultiplyVector(cobInverse, spinCob);
+        xSpin = spinInverse[0];
+        ySpin = spinInverse[1];
+
+//        if (!phy.isPrediction) System.out.println("Spin before " + sideSpin);
+        sideSpin -= effectiveSideSpin;  // 一定同号
+//        if (!phy.isPrediction) System.out.println("Spin after " + sideSpin);
+        sideSpin *= table.wallSpinPreserveRatio;
     }
 
     /**
@@ -653,16 +665,16 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             } else {
                 vy += effectiveSideSpin;
             }
-            xSpin *= (table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR);
-            ySpin *= table.wallSpinPreserveRatio;
+            xSpin *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
+            ySpin *= 1 - (1 - table.wallSpinPreserveRatio) * 0.5;
         } else if (Arrays.equals(cushionNormalVec, TOP_CUSHION_VEC_NORM) || Arrays.equals(cushionNormalVec, BOT_CUSHION_VEC_NORM)) {
             if (vy < 0) {
                 vx += effectiveSideSpin;
             } else {
                 vx -= effectiveSideSpin;
             }
-            xSpin *= table.wallSpinPreserveRatio;
-            ySpin *= (table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR);
+            xSpin *= 1 - (1 - table.wallSpinPreserveRatio) * 0.5;  // 比如ratio是0.8，这里就取0.9
+            ySpin *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
         }
 
         sideSpin -= effectiveSideSpin;
@@ -681,12 +693,14 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             // 先减速，算是对时间复杂度的一种妥协
             vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+//            vy += ySpin * (1 - table.wallSpinPreserveRatio) * CUSHION_DIRECT_SPIN_APPLY;  // 一部分旋转直接生效了
 
             boolean isLeft = nextX < values.table.midX;
             double[] cushionVec = isLeft ? LEFT_CUSHION_VEC : RIGHT_CUSHION_VEC;
             double[] normalVec = isLeft ? LEFT_CUSHION_VEC_NORM : RIGHT_CUSHION_VEC_NORM;
             double[][] cushionLine = isLeft ? values.table.leftCushion : values.table.rightCushion;
-            applySpinsWhenHitCushion(phy, normalVec);
+//            applySpinsWhenHitCushion(phy, normalVec);
+            applySpinToArcAndLine(normalVec, cushionVec, phy, 1.0);
 
             double effectiveAcc = -bounceAcc(phy, vx);
             double nFrames = getNFramesInCushion(vx, effectiveAcc);
@@ -702,7 +716,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     effectiveAcc,
                     0,
                     phy.accelerationMultiplier());
-            ((CushionBounce) currentBounce).setDesiredLeavePos(hitCushionPos[0], leaveY, -vx, vy * (1 - hSpeedLoss),
+            ((CushionBounce) currentBounce).setDesiredLeavePos(
+                    hitCushionPos[0],
+                    leaveY,
+                    -vx,
+                    vy * (1 - hSpeedLoss),
                     sideSpin + sideSpinChange);
             return true;
         }
@@ -711,6 +729,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             // 边库
             vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+//            vx += xSpin * (1 - table.wallSpinPreserveRatio) * CUSHION_DIRECT_SPIN_APPLY;  // 一部分旋转直接生效了
 
             boolean isTop = nextY < table.midY;
             double[] cushionVec = isTop ? TOP_CUSHION_VEC : BOT_CUSHION_VEC;
@@ -719,7 +738,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             double[][] cushionLine = isTop ? (
                     isLeft ? values.table.topLeftCushion : values.table.topRightCushion)
                     : (isLeft ? values.table.botLeftCushion : values.table.botRightCushion);
-            applySpinsWhenHitCushion(phy, normalVec);
+//            applySpinsWhenHitCushion(phy, normalVec);
+            applySpinToArcAndLine(normalVec, cushionVec, phy, 1.0);
 
             double effectiveAcc = -bounceAcc(phy, vy);
             double nFrames = getNFramesInCushion(vy, effectiveAcc);
@@ -735,7 +755,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     0,
                     effectiveAcc,
                     phy.accelerationMultiplier());
-            ((CushionBounce) currentBounce).setDesiredLeavePos(leaveX, hitCushionPos[1], vx * (1 - hSpeedLoss), -vy,
+            ((CushionBounce) currentBounce).setDesiredLeavePos(
+                    leaveX,
+                    hitCushionPos[1],
+                    vx * (1 - hSpeedLoss),
+                    -vy,
                     sideSpin + sideSpinChange);
             return true;
         }
@@ -1072,11 +1096,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double thisOutSpeed = Math.hypot(this.vx, this.vy);
         double ballOutSpeed = Math.hypot(ball.vx, ball.vy);
         if (considerGearSpin && relSpeed != 0.0 && (thisOutSpeed != 0.0 || ballOutSpeed != 0.0)) {
-            double gearPassFactor = 0.2;
+            double gearPassFactor = 0.18;
             double passRate = Math.cos(Math.abs(collisionThickness));  // 越厚传得越多。
             double speedPassRate = Math.abs(this.sideSpin) / relSpeed;  // 球速越慢，塞越大，传得越多
             double passPercentage = gearPassFactor * passRate * speedPassRate;
-            passPercentage = Math.min(passPercentage, 0.25);  // 最多传1/4
+            passPercentage = Math.min(passPercentage, MAXIMUM_SPIN_PASS);  // 最多传1/4
             double passed = this.sideSpin * passPercentage;
 
             this.sideSpin -= passed;  // 自己的塞会减少，动量守恒嘛
