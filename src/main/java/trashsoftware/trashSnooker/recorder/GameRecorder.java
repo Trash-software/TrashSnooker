@@ -24,6 +24,8 @@ public interface GameRecorder {
     void startRecoding() throws IOException;
 
     void stopRecording(boolean normalFinish);
+    
+    void deleteRecord();
 
     void recordPositions() throws IOException;
 

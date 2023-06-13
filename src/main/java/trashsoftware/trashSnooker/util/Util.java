@@ -14,6 +14,9 @@ public class Util {
     public static final DateFormat TIME_FORMAT_SEC =
             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    public static final DateFormat SHOWING_DATE_FORMAT = 
+            new SimpleDateFormat("yyyy/MM/dd HH:mm");
+
     public static <T> boolean arrayContains(T[] array, T value) {
         for (T ele : array) if (ele == value) return true;
         return false;

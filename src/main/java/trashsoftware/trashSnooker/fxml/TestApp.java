@@ -151,21 +151,6 @@ public class TestApp extends Application {
         canvas.getGraphicsContext2D().fillRect(0, 200, 200, 200);
     }
     
-    private void testCue(Pane group) {
-        Cue cue = DataLoader.getInstance().getCues().get("GirlCue");
-//        Cue cue = Recorder.getCues().get("restCue");
-
-        CueModel cueModel = cue.getCueModel(group);
-
-        cueModel.setTranslateX(100);
-        cueModel.setTranslateY(100);
-
-        Rotate rotate = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
-        rotate.setAngle(0);
-        Scale scale = new Scale(0.6, 0.6, 0.6);
-
-        cueModel.getTransforms().addAll(rotate, scale);
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {

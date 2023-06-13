@@ -110,13 +110,15 @@ public class ReplayView extends ChildInitializable {
         stage.initOwner(this.stage);
         stage.initModality(Modality.WINDOW_MODAL);
 
-        Scene scene = new Scene(root);
+        Scene scene = App.createScene(root);
         stage.setScene(scene);
 
         GameView gameView = loader.getController();
         gameView.setupReplay(stage, replay);
 
         stage.show();
+        
+        App.scaleGameStage(stage, 0.98);
         return stage;
     }
 

@@ -187,6 +187,12 @@ public class DataLoader {
         }
         return "custom_" + builder;
     }
+    
+//    public void invalidate() {
+//        for (Cue cue : cues.values()) {
+//            cue.invalidate();
+//        }
+//    }
 
     public List<PlayerPerson> filterActualPlayersByCategory(String category) {
         Collection<PlayerPerson> actPlayers = getActualPlayers();

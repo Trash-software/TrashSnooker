@@ -1052,6 +1052,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected void potSuccess() {
         potSuccess(false);
     }
+    
+    public boolean isStarted() {
+        return finishedCuesCount > 0;
+    }
 
     protected abstract void endMoveAndUpdate();
 

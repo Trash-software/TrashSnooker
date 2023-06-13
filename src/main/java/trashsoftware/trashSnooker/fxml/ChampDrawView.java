@@ -294,7 +294,7 @@ public class ChampDrawView extends ChildInitializable {
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.initStyle(StageStyle.UTILITY);
 
-                Scene scene = new Scene(root);
+                Scene scene = App.createScene(root);
                 stage.setScene(scene);
 
                 CongratView view = loader.getController();
@@ -454,7 +454,7 @@ public class ChampDrawView extends ChildInitializable {
             stage.initOwner(this.selfStage);
             stage.initModality(Modality.WINDOW_MODAL);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             stage.setScene(scene);
 
             AiCueResult.setAiPrecisionFactor(CareerManager.getInstance().getAiGoodness());
@@ -463,6 +463,8 @@ public class ChampDrawView extends ChildInitializable {
             gameView.setupCareerMatch(stage, match);
 
             stage.show();
+
+            App.scaleGameStage(stage);
         } catch (Exception e) {
             EventLogger.error(e);
         }

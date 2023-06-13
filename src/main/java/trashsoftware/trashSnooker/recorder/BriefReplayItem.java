@@ -43,8 +43,6 @@ public class BriefReplayItem {
     private List<ExtraBlock> extraBlocks = new ArrayList<>();
     
     private long personObjLength = 0;
-
-    protected static DateFormat showingDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     
     public BriefReplayItem(File file) throws IOException, VersionException, RecordException {
         this.file = file;
@@ -235,11 +233,11 @@ public class BriefReplayItem {
     
     @FXML
     public String getFrameBeginTimeString() {
-        return showingDateFormat.format(frameBeginTime);
+        return Util.SHOWING_DATE_FORMAT.format(frameBeginTime);
     }
 
     public String getGameBeginTimeString() {
-        return showingDateFormat.format(gameBeginTime);
+        return Util.SHOWING_DATE_FORMAT.format(gameBeginTime);
     }
     
     @FXML

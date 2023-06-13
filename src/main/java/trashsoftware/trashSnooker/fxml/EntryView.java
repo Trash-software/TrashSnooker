@@ -66,9 +66,11 @@ public class EntryView implements Initializable {
         mainView.setParent(thisScene);
         mainView.setSelfStage(stage);
 
-        Scene scene = new Scene(root);
+        Scene scene = App.createScene(root);
         stage.setScene(scene);
         stage.sizeToScene();
+
+        App.scaleWindow(stage);
     }
 
     @Override
@@ -136,7 +138,7 @@ public class EntryView implements Initializable {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             stage.setScene(scene);
 
             stage.show();
@@ -161,7 +163,7 @@ public class EntryView implements Initializable {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             stage.setScene(scene);
 
             stage.show();
@@ -180,7 +182,7 @@ public class EntryView implements Initializable {
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
 
             SettingsView view = loader.getController();
             view.setup(selfStage);
@@ -206,7 +208,7 @@ public class EntryView implements Initializable {
             view.setParent(thisScene);
             view.setStage(selfStage);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             selfStage.setScene(scene);
             selfStage.sizeToScene();
         } catch (IOException e) {
@@ -229,7 +231,7 @@ public class EntryView implements Initializable {
             view.setParent(thisScene);
             view.naiveFill();
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             selfStage.setScene(scene);
         } catch (IOException e) {
             EventLogger.error(e);
@@ -249,7 +251,7 @@ public class EntryView implements Initializable {
         view.setParent(thisScene);
         view.setup(this, selfStage);
 
-        Scene scene = new Scene(root);
+        Scene scene = App.createScene(root);
 
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
@@ -314,7 +316,7 @@ public class EntryView implements Initializable {
         fastGameView.setParent(thisScene);
         fastGameView.setStage(selfStage);
 
-        Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
+        Scene scene = App.createScene(root);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
         selfStage.setScene(scene);
         selfStage.sizeToScene();

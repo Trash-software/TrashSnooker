@@ -18,6 +18,9 @@ public class ConfigLoader {
     private int lastVersion;
 
     private Locale locale;
+    
+    // 一些临时用的变量
+    private double systemZoom;
 
     private ConfigLoader() {
         initConfig();
@@ -91,6 +94,19 @@ public class ConfigLoader {
             return defaultValue;
         }
     }
+    
+    public boolean getBoolean(String key, boolean defaultValue) {
+        String s = getString(key);
+        try {
+            if (s == null) {
+                keyValues.put(key, String.valueOf(defaultValue));
+                return defaultValue;
+            }
+            return Boolean.parseBoolean(s);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
 
     public int getLastVersion() {
         return lastVersion;
@@ -99,36 +115,68 @@ public class ConfigLoader {
     public int getFrameRate() {
         return getInt("frameRate", 120);
     }
+    
+    public int getWhitePredictionPool() {
+        String perf = getString("performance", "high");
+        if ("high".equals(perf)) return 8;
+        else return 4;
+    }
+
+    /**
+     * @return 按照当前游戏设置，配合系统缩放算出来对应的javafx分辨率
+     */
+    public double[] getEffectiveResolution() {
+        double[] res = getResolution();
+        return new double[]{res[0] / res[2], res[1] / res[2]};
+    }
 
     /**
      * @return {屏幕宽, 屏幕高, 缩放}
      */
     public double[] getResolution() {
         String res = getString("resolution");
-        String zoom = getString("systemZoom");
         
         double[] result;
-        if (res == null || zoom == null) {
+        if (res == null) {
             result = autoDetectScreenParams();
             putScreenParams(result);
         } else {
+            double zoom = getSystemZoom();
             String[] widthHeight = res.split("x");
-            result = new double[]{Double.parseDouble(widthHeight[0]), Double.parseDouble(widthHeight[1]), Double.parseDouble(zoom)};
+            result = new double[]{Double.parseDouble(widthHeight[0]), Double.parseDouble(widthHeight[1]), zoom};
         }
         return result;
     }
     
-    private double[] autoDetectScreenParams() {
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        double windowsHeight = screen.getHeight();
+    public double getSystemZoom() {
+        if (systemZoom == 0.0) {
+            double[] screenParams = autoDetectScreenParams();
+            systemZoom = screenParams[2];
+        }
+        return systemZoom;
+    }
+    
+    public static double[] getHardwareResolution() {
         DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice().getDisplayMode();
         int hardwareWidth = mode.getWidth();
         int hardwareHeight = mode.getHeight();
+        return new double[]{hardwareWidth, hardwareHeight};
+    }
 
-        double zoomFactor = hardwareHeight / windowsHeight;
+    /**
+     * @return 返回JavaFX识别的分辨率。如硬件分辨率是1920x1080，系统缩放是125%，那就返回1536x864
+     */
+    public static double[] getSystemResolution() {
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        return new double[]{screen.getWidth(), screen.getHeight()};
+    }
+    
+    private static double[] autoDetectScreenParams() {
+        double[] hardware = getHardwareResolution();
+        double[] window = getSystemResolution();
 
-        return new double[]{hardwareWidth, hardwareHeight, zoomFactor};
+        return new double[]{hardware[0], hardware[1], hardware[1] / window[1]};
     }
     
     public int getBallMaterialResolution() {
@@ -166,6 +214,8 @@ public class ConfigLoader {
         put("recordCompression", "xz");
         put("frameRate", 120);
         put("performance", "high");
+        put("antiAliasing", "disabled");
+        put("display", "windowed");
         
         double[] screenParams = autoDetectScreenParams();
         putScreenParams(screenParams);
@@ -173,7 +223,7 @@ public class ConfigLoader {
     
     private void putScreenParams(double[] screenParams) {
         put("resolution", String.format("%dx%d", (int) screenParams[0], (int) screenParams[1]));
-        put("systemZoom", screenParams[2]);
+//        put("systemZoom", screenParams[2]);
     }
 
     private void writeConfig() {

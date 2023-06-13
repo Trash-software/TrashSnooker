@@ -31,7 +31,7 @@ public class AlertShower {
             newStage.initOwner(owner);
             newStage.initModality(Modality.WINDOW_MODAL);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             newStage.setScene(scene);
 
             Alert view = loader.getController();
@@ -76,7 +76,7 @@ public class AlertShower {
             newStage.initOwner(owner);
             newStage.initModality(Modality.WINDOW_MODAL);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             newStage.setScene(scene);
 
             Alert view = loader.getController();
@@ -120,7 +120,7 @@ public class AlertShower {
             newStage.initOwner(owner);
             newStage.initModality(Modality.WINDOW_MODAL);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             newStage.setScene(scene);
 
             Alert view = loader.getController();

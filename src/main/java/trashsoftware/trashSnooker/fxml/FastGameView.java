@@ -343,7 +343,7 @@ public class FastGameView extends ChildInitializable {
                 stage.initOwner(this.stage);
                 stage.initModality(Modality.WINDOW_MODAL);
 
-                Scene scene = new Scene(root);
+                Scene scene = App.createScene(root);
                 stage.setScene(scene);
 
                 stage.show();
@@ -394,7 +394,7 @@ public class FastGameView extends ChildInitializable {
 
             values.setTrain(getTrainType(), challenge);
         }
-        
+
         values.setTablePreset(tablePresetBox.getValue().preset);  // 可以是null
         showGame(values, cloth);
     }
@@ -453,7 +453,7 @@ public class FastGameView extends ChildInitializable {
             stage.initOwner(this.stage);
             stage.initModality(Modality.WINDOW_MODAL);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             stage.setScene(scene);
 
             AiCueResult.setAiPrecisionFactor(ConfigLoader.getInstance().getDouble("fastGameAiStrength", 1.0));
@@ -463,6 +463,8 @@ public class FastGameView extends ChildInitializable {
             gameView.setAimingLengthFactor(ConfigLoader.getInstance().getDouble("fastGameAiming", 1.0));
 
             stage.show();
+
+            App.scaleGameStage(stage);
         } catch (Exception e) {
             EventLogger.error(e);
         }

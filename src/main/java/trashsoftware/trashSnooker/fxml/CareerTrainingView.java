@@ -25,8 +25,12 @@ import trashsoftware.trashSnooker.core.career.challenge.ChallengeManager;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeMatch;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.fxml.widgets.GamePane;
+import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
+import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
+import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.ThumbLoader;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -52,6 +56,8 @@ public class CareerTrainingView extends ChildInitializable {
     ImageView previewImage;
     @FXML
     Button startBtn;
+    @FXML
+    LabelTable<ChaHistoryEach> historyTable;
 
     private Career career;
     private Stage stage;
@@ -77,11 +83,32 @@ public class CareerTrainingView extends ChildInitializable {
         this.strings = resourceBundle;
 
         initTable();
+        initHistoryTable();
     }
 
     private void refreshCueBox() {
         ChampDrawView.refreshCueBox(cueBox);
         cueBox.getSelectionModel().select(0);
+    }
+    
+    private void initHistoryTable() {
+        LabelTableColumn<ChaHistoryEach, String> timeCol = new LabelTableColumn<>(
+                historyTable,
+                strings.getString("historyDateTime"),
+                che -> new ReadOnlyStringWrapper(che.getTime())
+        );
+        LabelTableColumn<ChaHistoryEach, String> scoreCol = new LabelTableColumn<>(
+                historyTable,
+                strings.getString("historyScore"),
+                che -> new ReadOnlyStringWrapper(che.record.score == 0 ? "-" : String.valueOf(che.record.score))
+        );
+        LabelTableColumn<ChaHistoryEach, String> successCol = new LabelTableColumn<>(
+                historyTable,
+                strings.getString("historySuccess"),
+                che -> new ReadOnlyStringWrapper(che.record.success ? "✔" : "\u274C")
+        );
+        
+        historyTable.addColumns(timeCol, scoreCol, successCol);
     }
 
     private void initTable() {
@@ -97,6 +124,7 @@ public class CareerTrainingView extends ChildInitializable {
                     } else {
                         drawPreview(null);
                     }
+                    updateHistoryTable();
                 }
         );
     }
@@ -108,6 +136,22 @@ public class CareerTrainingView extends ChildInitializable {
             ChallengeHistory ch = career.getChallengeHistory(cs.getId());
             ChallengeItem item = new ChallengeItem(cs, ch);
             challengeTable.getItems().add(item);
+        }
+        
+        updateHistoryTable();
+    }
+    
+    private void updateHistoryTable() {
+        historyTable.clearItems();
+        
+        ChallengeItem selected = challengeTable.getSelectionModel().getSelectedItem();
+        if (selected != null && selected.ch != null) {
+            historyTable.setVisible(true);
+            for (ChallengeHistory.Record record : selected.ch.getScores()) {
+                historyTable.addItem(new ChaHistoryEach(record));
+            }
+        } else {
+            historyTable.setVisible(false);
         }
     }
 
@@ -122,7 +166,8 @@ public class CareerTrainingView extends ChildInitializable {
             previewPane.setVisible(true);
             previewPane.setManaged(true);
 
-            previewPane.setupPane(challengeSet.getGameValues(), 0.32);
+            double[] resolution = ConfigLoader.getInstance().getEffectiveResolution();
+            previewPane.setupPane(challengeSet.getGameValues(), 0.32 * 1536 / resolution[0]);
             Game<?, ?> fakeGame = Game.createGame(null, challengeSet.getGameValues(), null);
             previewPane.setupBalls(fakeGame, false);
             previewPane.drawTable(fakeGame);
@@ -194,7 +239,7 @@ public class CareerTrainingView extends ChildInitializable {
             stage.initOwner(this.stage);
             stage.initModality(Modality.WINDOW_MODAL);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             stage.setScene(scene);
 
             AiCueResult.setAiPrecisionFactor(CareerManager.getInstance().getAiGoodness());
@@ -203,6 +248,8 @@ public class CareerTrainingView extends ChildInitializable {
             gameView.setupCareerMatch(stage, match);
 
             stage.show();
+
+            App.scaleGameStage(stage);
         } catch (Exception e) {
             EventLogger.error(e);
         }
@@ -230,7 +277,19 @@ public class CareerTrainingView extends ChildInitializable {
         }
 
         public String completed() {
-            return isComplete() ? "✓" : "";
+            return isComplete() ? "✔" : "";
+        }
+    }
+    
+    public static class ChaHistoryEach {
+        public final ChallengeHistory.Record record;
+        
+        ChaHistoryEach(ChallengeHistory.Record record) {
+            this.record = record;
+        }
+        
+        public String getTime() {
+            return Util.SHOWING_DATE_FORMAT.format(record.finishTime);
         }
     }
 }

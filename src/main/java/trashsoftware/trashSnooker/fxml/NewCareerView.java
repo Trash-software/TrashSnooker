@@ -171,7 +171,7 @@ public class NewCareerView extends ChildInitializable {
             stage.initOwner(owner);
             stage.initModality(Modality.WINDOW_MODAL);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             stage.setScene(scene);
 
             stage.show();

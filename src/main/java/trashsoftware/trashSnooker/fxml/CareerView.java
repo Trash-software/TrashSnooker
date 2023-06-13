@@ -432,7 +432,7 @@ public class CareerView extends ChildInitializable {
             
             newStage.setOnHidden(e -> refreshGui());
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
             newStage.setScene(scene);
 
             Alert view = loader.getController();
@@ -502,7 +502,7 @@ public class CareerView extends ChildInitializable {
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
 
             CareerTrainingView view = loader.getController();
             view.setParent(selfStage.getScene());
@@ -529,7 +529,7 @@ public class CareerView extends ChildInitializable {
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
 
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
@@ -595,13 +595,15 @@ public class CareerView extends ChildInitializable {
             view.setParent(selfStage.getScene());
 //            mainView.setup(parentStage, stage);
 
-            Scene scene = new Scene(root);
+            Scene scene = App.createScene(root);
 
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
             selfStage.setScene(scene);
 
-            selfStage.show();
+            App.scaleWindow(selfStage);
+
+//            selfStage.show();
         } catch (IOException e) {
             EventLogger.error(e);
         }

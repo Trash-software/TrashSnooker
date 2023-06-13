@@ -261,7 +261,7 @@ public class EntireGame {
         if (framePlayer instanceof SnookerPlayer) {
             SnookerPlayer snookerPlayer = (SnookerPlayer) framePlayer;
             snookerPlayer.flushSinglePoles();
-            if (gameValues.isStandard())
+            if (gameValues.isStandard() && game.isStarted())
                 DBAccess.getInstance().recordSnookerBreaks(this,
                         getGame(),
                         snookerPlayer,
@@ -270,7 +270,7 @@ public class EntireGame {
             // 炸清和接清
             NumberedBallPlayer numberedBallPlayer = (NumberedBallPlayer) framePlayer;
             numberedBallPlayer.flushSinglePoles();
-            if (gameValues.isStandard())
+            if (gameValues.isStandard() && game.isStarted())
                 DBAccess.getInstance().recordNumberedBallResult(this,
                         getGame(),
                         numberedBallPlayer,
@@ -280,7 +280,7 @@ public class EntireGame {
         }
     }
 
-    public void quitGame() {
+    public void quitGameDeleteRecord() {
         if (game != null) {
             game.quitGame();
         }

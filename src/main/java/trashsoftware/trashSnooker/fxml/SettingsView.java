@@ -24,7 +24,11 @@ public class SettingsView extends ChildInitializable {
     @FXML
     ComboBox<Resolution> resolutionComboBox;
     @FXML
+    ComboBox<Display> displayBox;
+    @FXML
     ComboBox<SystemZoom> systemZoomComboBox;
+    @FXML
+    ComboBox<AntiAliasing> antiAliasingComboBox;
     @FXML
     ComboBox<Performance> performanceBox;
     @FXML
@@ -41,14 +45,17 @@ public class SettingsView extends ChildInitializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.strings = resources;
 
-        allBoxes.addAll(List.of(aimLingBox,
+        allBoxes.addAll(List.of(
+                aimLingBox,
                 aiStrengthBox,
                 frameRateBox,
                 languageBox,
                 resolutionComboBox,
                 systemZoomComboBox,
                 aiThreadNumBox,
-                performanceBox));
+                performanceBox,
+                antiAliasingComboBox,
+                displayBox));
 
         configLoader = ConfigLoader.getInstance();
         setupBoxes();
@@ -82,6 +89,14 @@ public class SettingsView extends ChildInitializable {
         performanceBox.getItems().addAll(Performance.values());
         performanceBox.getSelectionModel().select(Performance.fromKey(configLoader.getString("performance", 
                 "high")));
+        
+        antiAliasingComboBox.getItems().addAll(AntiAliasing.values());
+        antiAliasingComboBox.getSelectionModel().select(AntiAliasing.fromKey(configLoader.getString("antiAliasing",
+                "disabled")));
+        
+        displayBox.getItems().addAll(Display.values());
+        displayBox.getSelectionModel().select(Display.fromKey(configLoader.getString("display", 
+                "windowed")));
     }
 
     private void setupDifficultyBox(ComboBox<Double> box) {
@@ -190,6 +205,7 @@ public class SettingsView extends ChildInitializable {
             if (resolution != null) {
                 configLoader.put("resolution", resolution.width + "x" + resolution.height);
             }
+            App.resolutionChanged();
         }
 
         if (hasChanged(systemZoomComboBox)) {
@@ -219,6 +235,14 @@ public class SettingsView extends ChildInitializable {
         
         if (hasChanged(performanceBox)) {
             configLoader.put("performance", performanceBox.getValue().toKey());
+        }
+        
+        if (hasChanged(antiAliasingComboBox)) {
+            configLoader.put("antiAliasing", antiAliasingComboBox.getValue().toKey());
+        }
+
+        if (hasChanged(displayBox)) {
+            configLoader.put("display", displayBox.getValue().toKey());
         }
 
         configLoader.save();
@@ -337,6 +361,42 @@ public class SettingsView extends ChildInitializable {
             return valueOf(Util.toAllCapsUnderscoreCase(key));
         }
         
+        String toKey() {
+            return Util.toLowerCamelCase(name());
+        }
+    }
+    
+    public enum AntiAliasing {
+        DISABLED,
+        BALANCED;
+
+        @Override
+        public String toString() {
+            return App.getStrings().getString(Util.toLowerCamelCase("ANTI_ALIASING_" + name()));
+        }
+
+        static AntiAliasing fromKey(String key) {
+            return valueOf(Util.toAllCapsUnderscoreCase(key));
+        }
+
+        String toKey() {
+            return Util.toLowerCamelCase(name());
+        }
+    }
+    
+    public enum Display {
+        WINDOWED,
+        FULL_SCREEN;
+
+        @Override
+        public String toString() {
+            return App.getStrings().getString(Util.toLowerCamelCase("DISPLAY_" + name()));
+        }
+
+        static Display fromKey(String key) {
+            return valueOf(Util.toAllCapsUnderscoreCase(key));
+        }
+
         String toKey() {
             return Util.toLowerCamelCase(name());
         }

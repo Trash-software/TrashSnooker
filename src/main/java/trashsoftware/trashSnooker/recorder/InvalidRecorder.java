@@ -24,6 +24,11 @@ public class InvalidRecorder implements GameRecorder {
     }
 
     @Override
+    public void deleteRecord() {
+        
+    }
+
+    @Override
     public void recordPositions() throws IOException {
 
     }

@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.fxml.drawing.CueModel;
 import trashsoftware.trashSnooker.util.DataLoader;
 
+import java.util.Objects;
+
 public class Cue {
 
     public final String cueId;
@@ -31,8 +33,6 @@ public class Cue {
     
     public Arrow arrow;
     public final Size tipSize;
-    
-    private CueModel cueModel;
 
     public Cue(String cueId,
                String name,
@@ -75,18 +75,17 @@ public class Cue {
         else tipSize = Size.BIG;
     }
 
-    public CueModel getCueModel(Pane parent) {
-        if (cueModel == null) {
-            cueModel = new CueModel(this);
-            if (parent != null) {
-                cueModel.setDisable(true);
-//                cueModel.setOnMouseClicked(event -> {
-//                    Event.fireEvent(parent, event);
-//                });
-                parent.getChildren().add(cueModel);
-            }
-        }
-        return cueModel;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cue cue = (Cue) o;
+        return Objects.equals(cueId, cue.cueId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cueId);
     }
 
     public String getCueId() {

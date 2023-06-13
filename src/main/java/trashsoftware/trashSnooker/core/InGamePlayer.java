@@ -67,8 +67,8 @@ public class InGamePlayer {
     }
     
     public void hideAllCues(Pane pane) {
-        playCue.getCueModel(pane).hide();
-        breakCue.getCueModel(pane).hide();
+//        playCue.getCueModel(pane).hide();
+//        breakCue.getCueModel(pane).hide();
     }
 
     public Cue getCurrentCue(Game<?, ?> game) {

@@ -40,32 +40,46 @@
         <Label text="%fastGameAiStrength" GridPane.rowIndex="3"/>
         <ComboBox fx:id="aiStrengthBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-        <Label text="%settingsGeneral" GridPane.rowIndex="5">
+        <Label text="%settingsGraphics" GridPane.rowIndex="6">
             <font>
                 <Font size="16.0"/>
             </font>
         </Label>
-        <Separator GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+        <Separator GridPane.rowIndex="6" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
 
-        <Label text="%language" GridPane.rowIndex="6"/>
-        <ComboBox fx:id="languageBox" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        <Label text="%displaySetting" GridPane.rowIndex="7"/>
+        <ComboBox fx:id="displayBox" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
-        <Label text="%frameRate" GridPane.rowIndex="7" visible="false" managed="false"/>
-        <ComboBox fx:id="frameRateBox" GridPane.rowIndex="7" GridPane.columnIndex="1"
+        <Label text="%resolution" GridPane.rowIndex="8"/>
+        <ComboBox fx:id="resolutionComboBox" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+        <Label text="%systemZoom" GridPane.rowIndex="8" visible="false" managed="false"/>
+        <ComboBox fx:id="systemZoomComboBox" GridPane.rowIndex="8" GridPane.columnIndex="1" 
                   visible="false" managed="false"/>
 
-        <Label text="%numAiThreads" GridPane.rowIndex="8"/>
-        <ComboBox fx:id="aiThreadNumBox" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
-        <Label fx:id="cpuActualThreadNumLabel" GridPane.rowIndex="8" GridPane.columnIndex="2"/>
+        <Label text="%antiAliasing" GridPane.rowIndex="9"/>
+        <ComboBox fx:id="antiAliasingComboBox" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
 
-        <Label text="%resolution" GridPane.rowIndex="9"/>
-        <ComboBox fx:id="resolutionComboBox" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+        <Label text="%performanceMode" GridPane.rowIndex="10"/>
+        <ComboBox fx:id="performanceBox" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
 
-        <Label text="%systemZoom" GridPane.rowIndex="10"/>
-        <ComboBox fx:id="systemZoomComboBox" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+        <Label text="%frameRate" GridPane.rowIndex="11" visible="false" managed="false"/>
+        <ComboBox fx:id="frameRateBox" GridPane.rowIndex="11" GridPane.columnIndex="1"
+                  visible="false" managed="false"/>
 
-        <Label text="%performanceMode" GridPane.rowIndex="11"/>
-        <ComboBox fx:id="performanceBox" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+        <Label text="%settingsGeneral" GridPane.rowIndex="13">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Label>
+        <Separator GridPane.rowIndex="13" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+        <Label text="%language" GridPane.rowIndex="14"/>
+        <ComboBox fx:id="languageBox" GridPane.rowIndex="14" GridPane.columnIndex="1"/>
+
+        <Label text="%numAiThreads" GridPane.rowIndex="15"/>
+        <ComboBox fx:id="aiThreadNumBox" GridPane.rowIndex="15" GridPane.columnIndex="1"/>
+        <Label fx:id="cpuActualThreadNumLabel" GridPane.rowIndex="15" GridPane.columnIndex="2"/>
 
     </GridPane>
 

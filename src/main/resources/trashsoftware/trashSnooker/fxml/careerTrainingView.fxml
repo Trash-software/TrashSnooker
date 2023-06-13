@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import trashsoftware.trashSnooker.fxml.widgets.GamePane?>
 <?import javafx.scene.image.ImageView?>
+<?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:id="outBox"
@@ -27,9 +28,11 @@
             </columns>
         </TableView>
         
-        <VBox>
+        <VBox spacing="10.0">
             <GamePane fx:id="previewPane" VBox.vgrow="NEVER"/>
             <ImageView fx:id="previewImage" visible="false"/>
+            <Label text="%challengeHistory" visible="false"/>
+            <LabelTable fx:id="historyTable" visible="false"/>
         </VBox>
     </HBox>
 

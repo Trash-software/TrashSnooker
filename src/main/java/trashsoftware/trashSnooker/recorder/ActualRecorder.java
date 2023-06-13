@@ -12,6 +12,7 @@ import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.ConfigLoader;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.*;
@@ -383,18 +384,13 @@ public abstract class ActualRecorder implements GameRecorder {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
 
-//            long time = System.currentTimeMillis();
-//            int duration = (int) ((time - startTime) / 1000);
-//            
-//            RandomAccessFile raf = new RandomAccessFile(outFile, "rw");
-//            raf.seek(8);
-//            byte[] buf = new byte[4];
-//            Util.int32ToBytes(nCues, buf, 0);
-//            raf.write(buf);
-//            Util.int32ToBytes(duration, buf, 0);
-//            raf.write(buf);
-//            raf.close();
+    @Override
+    public void deleteRecord() {
+        if (!outFile.delete()) {
+            EventLogger.log("Cannot delete record: " + outFile, EventLogger.INFO, true);
         }
     }
 
