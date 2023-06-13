@@ -409,9 +409,9 @@ public class GameView implements Initializable {
 
         setOnHidden();
 
-        for (CueModel cueModel : CueModel.getAllCueModels()) {
-            basePane.getChildren().add(cueModel);
-        }
+//        for (CueModel cueModel : CueModel.getAllCueModels()) {
+//            basePane.getChildren().add(cueModel);
+//        }
 
         startAnimation();
 
@@ -484,9 +484,9 @@ public class GameView implements Initializable {
 
         setOnHidden();
 
-        for (CueModel cueModel : CueModel.getAllCueModels()) {
-            basePane.getChildren().add(cueModel);
-        }
+//        for (CueModel cueModel : CueModel.getAllCueModels()) {
+//            basePane.getChildren().add(cueModel);
+//        }
 
         startAnimation();
     }
@@ -956,7 +956,7 @@ public class GameView implements Initializable {
     }
 
     private void endFrame() {
-//        hideCue();
+        hideCue();
         tableGraphicsChanged = true;
         Player p1 = game.getGame().getPlayer1();
         Player wonPlayer = game.getGame().getWiningPlayer();
@@ -1448,7 +1448,7 @@ public class GameView implements Initializable {
 
             cursorDirectionUnitX = 0.0;
             cursorDirectionUnitY = 0.0;
-//            hideCue();
+            hideCue();
             tableGraphicsChanged = true;
 
             g.pushOut();
@@ -1468,7 +1468,7 @@ public class GameView implements Initializable {
     void repositionAction() {
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
-//        hideCue();
+        hideCue();
         tableGraphicsChanged = true;
 
         game.getGame().reposition();
@@ -1500,10 +1500,12 @@ public class GameView implements Initializable {
         restoreCueAngle();
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
+        
+        hideCue();
 
-        for (CueModel cueModel : CueModel.getAllCueModels()) {
-            cueModel.hide();
-        }
+//        for (CueModel cueModel : CueModel.getAllCueModels()) {
+//            cueModel.hide();
+//        }
 //        game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame()).
         game.getGame().switchPlayer();
 
@@ -1537,7 +1539,7 @@ public class GameView implements Initializable {
         restoreCueAngle();
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
-//        hideCue();
+        hideCue();
         game.getGame().setBallInHand();
 
         cursorDrawer.synchronizeGame();
@@ -2988,9 +2990,10 @@ public class GameView implements Initializable {
 
     private void endCueAnimation() {
 //        System.out.println("End!");
-        for (CueModel cueModel : CueModel.getAllCueModels()) {
-            cueModel.hide();
-        }
+//        for (CueModel cueModel : CueModel.getAllCueModels()) {
+//            cueModel.hide();
+//        }
+        hideCue();
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
         cueAnimationPlayer = null;
@@ -3115,12 +3118,21 @@ public class GameView implements Initializable {
                 originalTouchY + sideYOffset
         };
     }
-
-    // 根本就没得用，SB
-//    private void hideCue() {
-//        game.getGame().getPlayer1().getInGamePlayer().hideAllCues(gamePane);
-//        game.getGame().getPlayer2().getInGamePlayer().hideAllCues(gamePane);
-//    }
+    
+    private void hideCue() {
+        GameHolder gameHolder = getActiveHolder();
+        List<Cue> toHide = List.of(
+                gameHolder.getP1().getPlayCue(),
+                gameHolder.getP1().getBreakCue(),
+                gameHolder.getP2().getPlayCue(),
+                gameHolder.getP2().getBreakCue()
+        );
+        
+        for (Cue cue : toHide) {
+            CueModel cm = cueModelMap.get(cue);
+            if (cm != null) cm.hide();
+        }
+    }
 
     private void drawCueWithDtToHand(double handX,
                                      double handY,

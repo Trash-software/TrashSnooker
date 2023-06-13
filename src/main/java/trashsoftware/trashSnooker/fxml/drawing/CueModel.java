@@ -16,7 +16,7 @@ import java.util.List;
 
 public class CueModel extends Group {
 
-    private static final List<CueModel> allCueModels = new ArrayList<>();
+//    private static final List<CueModel> allCueModels = new ArrayList<>();
     private final boolean isRest;
     private final Rotate baseRotate = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
     private final Scale scalar = new Scale();
@@ -149,12 +149,12 @@ public class CueModel extends Group {
             getTransforms().add(cueAngleScale);
         }
 
-        allCueModels.add(this);
+//        allCueModels.add(this);
     }
 
-    public static List<CueModel> getAllCueModels() {
-        return allCueModels;
-    }
+//    public static List<CueModel> getAllCueModels() {
+//        return allCueModels;
+//    }
 
     public void show(double correctedTipX, double correctedTipY,
                      double pointingUnitX, double pointingUnitY,

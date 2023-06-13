@@ -305,10 +305,12 @@ public abstract class GameReplay implements GameHolder {
         currentScoreResult = scoreFactory.fromBytes(this, scoreResBuf);
     }
 
+    @Override
     public InGamePlayer getP1() {
         return p1;
     }
 
+    @Override
     public InGamePlayer getP2() {
         return p2;
     }

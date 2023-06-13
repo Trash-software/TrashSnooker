@@ -11,4 +11,8 @@ public interface GameHolder {
     Ball getCueBall();
 
     Ball[] getAllBalls();
+    
+    InGamePlayer getP1();
+    
+    InGamePlayer getP2();
 }

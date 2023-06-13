@@ -1099,6 +1099,16 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         ended = true;
     }
 
+    @Override
+    public InGamePlayer getP1() {
+        return player1.getInGamePlayer();
+    }
+
+    @Override
+    public InGamePlayer getP2() {
+        return player2.getInGamePlayer();
+    }
+
     public static class SeeAble {
         public final int seeAbleTargets;
         public final double avgTargetDistance;

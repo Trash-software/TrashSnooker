@@ -118,7 +118,7 @@ public class ReplayView extends ChildInitializable {
 
         stage.show();
         
-        App.scaleGameStage(stage, 0.98);
+        App.scaleGameStage(stage);
         return stage;
     }
 

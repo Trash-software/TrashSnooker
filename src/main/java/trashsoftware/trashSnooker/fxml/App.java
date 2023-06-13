@@ -104,7 +104,8 @@ public class App extends Application {
             double[] systemRes = ConfigLoader.getSystemResolution();
             double rw = systemRes[0] / sw;
             double rh = systemRes[1] / sh;
-            double scaleRatio = rh * scaleMul;
+//            double scaleRatio = rh * scaleMul;
+            double scaleRatio = Math.min(rw, rh) * scaleMul;
 //            System.out.println(rw + "x" + rh + ": " + sw + "x" + sh);
 
             Scale scaleTrans = new Scale(scaleRatio, scaleRatio);
