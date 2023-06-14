@@ -515,6 +515,7 @@ public class GameView implements Initializable {
             handSelectionBox.setManaged(false);
         } else {
             handSelectionToggleGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
+                if (game == null || game.getGame() == null) return;
                 PlayerPerson.Hand selected = PlayerPerson.Hand.valueOf(String.valueOf(t1.getUserData()));
                 PlayerPerson person = game.getGame().getCuingPlayer().getPlayerPerson();
                 currentHand = person.handBody.getHandSkillByHand(selected);
@@ -525,7 +526,7 @@ public class GameView implements Initializable {
         }
     }
 
-    private void updateHandSelection() {
+    private void updateHandSelection(boolean forceChangeHand) {
         Ball cueBall = game.getGame().getCueBall();
         InGamePlayer igp = game.getGame().getCuingPlayer().getInGamePlayer();
         if (igp.getPlayerType() == PlayerType.COMPUTER) return;
@@ -545,7 +546,8 @@ public class GameView implements Initializable {
         handSelectionRight.setDisable(!playAbles.contains(PlayerPerson.Hand.RIGHT));
         handSelectionRest.setDisable(!playAbles.contains(PlayerPerson.Hand.REST));  // 事实上架杆永远可用
 
-        boolean anyChange = (leftWasUsable == handSelectionLeft.isDisabled()) ||
+        boolean anyChange = forceChangeHand || 
+                (leftWasUsable == handSelectionLeft.isDisabled()) ||
                 (rightWasUsable == handSelectionRight.isDisabled());
 
         if (anyChange) {
@@ -874,7 +876,7 @@ public class GameView implements Initializable {
         double[] unit = Algebra.unitVector(dx, dy);
         cursorDirectionUnitX = unit[0];
         cursorDirectionUnitY = unit[1];
-        recalculateUiRestrictions();
+        recalculateUiRestrictions(true);
 
         tableGraphicsChanged = true;
     }
@@ -981,7 +983,7 @@ public class GameView implements Initializable {
         }
 
         Player breakPlayer = game.getGame().getCuingPlayer();
-        updateHandSelection();
+        updateHandSelection(true);
         updatePowerSlider(breakPlayer.getPlayerPerson());
 
         tableGraphicsChanged = true;
@@ -3229,6 +3231,10 @@ public class GameView implements Initializable {
     }
 
     private void recalculateUiRestrictions() {
+        recalculateUiRestrictions(false);
+    }
+
+    private void recalculateUiRestrictions(boolean forceChangeHand) {
         if (game == null || game.getGame() == null) return;
 
         Cue currentCue = game.getGame().getCuingPlayer().getInGamePlayer()
@@ -3257,7 +3263,7 @@ public class GameView implements Initializable {
         }
 
         // 启用/禁用手
-        updateHandSelection();
+        updateHandSelection(forceChangeHand);
 
         // 如果打点不可能，把出杆键禁用了
         // 自动调整打点太麻烦了
@@ -3672,7 +3678,7 @@ public class GameView implements Initializable {
                     predictionStops[i + 1] = clockwise[i].stopPoint();
                 }
                 if (nPoints == 8) {
-                    outPoints = GraphicsUtil.grahamScanEnclose(predictionStops);
+                    outPoints = GraphicsUtil.processPoints(gameValues.table, predictionStops);
                 } else if (nPoints == 4) {
                     double[][] corners = new double[4][];
                     for (int i = 0; i < corners.length; i++) {

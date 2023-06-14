@@ -35,7 +35,7 @@ public class GamePane extends Pane {
     public static final Color WHITE_PREDICTION_COLOR = Color.LIGHTGREY;
 
     private static final boolean DRAW_DIRECT_LINE = false;
-    private final CurvedPolygonDrawer curvedPolygonDrawer = new CurvedPolygonDrawer(0.667);  // 弯的程度
+    private final CurvedPolygonDrawer curvedPolygonDrawer = new CurvedPolygonDrawer(1.0);  // 弯的程度
     Font tableTextFont;
     @FXML
     Canvas gameCanvas;

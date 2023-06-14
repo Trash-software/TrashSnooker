@@ -1,5 +1,5 @@
 {
-  "stageIndex": 2,
+  "stageIndex": 1,
   "seedRanks": {
     "random_player_47": 55,
     "random_player_108": 59,
@@ -70,6 +70,7 @@
   "matchTree": {"root": {
     "p1": {
       "p1": {
+        "p1wins": 2,
         "p1": {
           "p1wins": 2,
           "p1": {
@@ -184,10 +185,13 @@
           "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-ROUND_2-49",
           "p2wins": 0
         },
+        "winner": "John Wizard",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-56"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-56",
+        "p2wins": 0
       },
       "p2": {
+        "p1wins": 2,
         "p1": {
           "p1wins": 1,
           "p1": {
@@ -302,14 +306,17 @@
           "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-ROUND_2-51",
           "p2wins": 2
         },
+        "winner": "custom_E5B08FE4BB99E5A5B3",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-57"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-57",
+        "p2wins": 0
       },
       "stage": "SEMI_FINAL",
       "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-SEMI_FINAL-60"
     },
     "p2": {
       "p1": {
+        "p1wins": 1,
         "p1": {
           "p1wins": 1,
           "p1": {
@@ -424,10 +431,13 @@
           "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-ROUND_2-53",
           "p2wins": 0
         },
+        "winner": "Yan Bingtao",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-58"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-58",
+        "p2wins": 2
       },
       "p2": {
+        "p1wins": 1,
         "p1": {
           "p1wins": 2,
           "p1": {
@@ -542,8 +552,10 @@
           "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-ROUND_2-55",
           "p2wins": 0
         },
+        "winner": "Stuart Bingham",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-59"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-59",
+        "p2wins": 2
       },
       "stage": "SEMI_FINAL",
       "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-SEMI_FINAL-61"
@@ -674,6 +686,14 @@
       "playerId": "Trump"
     },
     {
+      "score": 78,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-59",
+      "playerId": "Stuart Bingham"
+    },
+    {
       "score": 75,
       "stage": "ROUND_2",
       "sim": false,
@@ -688,6 +708,14 @@
       "numFrame": 2,
       "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-ROUND_1-46",
       "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 73,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-59",
+      "playerId": "Karen Wilson"
     },
     {
       "score": 73,
@@ -715,11 +743,27 @@
     },
     {
       "score": 69,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-56",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 69,
       "stage": "PRE_ROUND_1",
       "sim": true,
       "numFrame": 1,
       "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-PRE_ROUND_1-9",
       "playerId": "Selby"
+    },
+    {
+      "score": 67,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2026+chongqing_open-QUARTER_FINAL-58",
+      "playerId": "random_player_0"
     },
     {
       "score": 64,

@@ -8,9 +8,29 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GraphicsUtil {
+    
+    public static final double ENLARGE_RATIO = 1.25;
+    
+    private static double[][] enlargePointsArea(TableMetrics metrics, double[][] outPoints, double ratio) {
+        double[] centroid = centroidOf(outPoints);
+        
+        double[][] result = new double[outPoints.length][2];
+        
+        for (int i = 0; i < outPoints.length; i++) {
+            double[] point = outPoints[i];
+            double dirX = point[0] - centroid[0];
+            double dirY = point[1] - centroid[1];
+
+            result[i][0] = centroid[0] + dirX * ratio;
+            result[i][1] = centroid[1] + dirY * ratio;
+            
+            moveInTableIfNot(metrics, result[i]);
+        }
+        return result;
+    }
 
     /**
-     * 把5个点增到9个点
+     * 把5个点增到9个点(现在还没调好)
      */
     public static List<double[]> populatePoints(TableMetrics metrics,
                                                 List<double[]> centerPath,
@@ -20,37 +40,37 @@ public class GraphicsUtil {
         double[] centerSecondLast = centerPath.get(centerPath.size() - 3);  // 倒数第二个不太确定，但倒数第三个肯定没问题
 
         double[] direction = Algebra.unitVector(centerStop[0] - centerSecondLast[0], centerStop[1] - centerSecondLast[1]);
-        double[] normal = Algebra.normalVector(direction);
-        double[] negDirection = Algebra.reverseVector(direction);
-        double[] negNormal = Algebra.reverseVector(normal);
+//        double[] normal = Algebra.normalVector(direction);
+//        double[] negDirection = Algebra.reverseVector(direction);
+//        double[] negNormal = Algebra.reverseVector(normal);
 
-        double[] smallLeftDir = new double[]{fourCorners[0][0] - centerStop[0], fourCorners[0][1] - centerStop[1]};
+//        double[] smallLeftDir = new double[]{fourCorners[0][0] - centerStop[0], fourCorners[0][1] - centerStop[1]};
         double[] bigLeftDir = new double[]{fourCorners[1][0] - centerStop[0], fourCorners[1][1] - centerStop[1]};
         double[] bigRightDir = new double[]{fourCorners[2][0] - centerStop[0], fourCorners[2][1] - centerStop[1]};
-        double[] smallRightDir = new double[]{fourCorners[3][0] - centerStop[0], fourCorners[3][1] - centerStop[1]};
+//        double[] smallRightDir = new double[]{fourCorners[3][0] - centerStop[0], fourCorners[3][1] - centerStop[1]};
 
-        double[] left = generatePointBtw(centerStop, normal, smallLeftDir, bigLeftDir);
+//        double[] left = generatePointBtw(centerStop, normal, smallLeftDir, bigLeftDir);
         double[] big = generatePointBtw(centerStop, direction, bigLeftDir, bigRightDir);
-        double[] right = generatePointBtw(centerStop, negNormal, bigRightDir, smallRightDir);
-        double[] small = generatePointBtw(centerStop, negDirection, smallRightDir, smallLeftDir);
+//        double[] right = generatePointBtw(centerStop, negNormal, bigRightDir, smallRightDir);
+//        double[] small = generatePointBtw(centerStop, negDirection, smallRightDir, smallLeftDir);
 
         double[][] all = new double[][]{
                 centerStop, 
-                left, 
+//                left, 
                 fourCorners[0], 
                 big, 
                 fourCorners[1], 
-                right, 
+//                right, 
                 fourCorners[2], 
-                small, 
+//                small, 
                 fourCorners[3]
         };
 
-        for (double[] p : all) {
-            moveInTableIfNot(metrics, p);
-        }
-
-        return grahamScanEnclose(all);
+//        for (double[] p : all) {
+//            moveInTableIfNot(metrics, p);
+//        }
+        
+        return grahamScanEnclose(enlargePointsArea(metrics, all, ENLARGE_RATIO));
     }
 
     /**
@@ -82,11 +102,15 @@ public class GraphicsUtil {
 
         double[][] all = new double[][]{centerStop, frontSide[1], p1, frontSide[0], backSide[1], p2, backSide[0]};
 
-        for (double[] p : all) {
-            moveInTableIfNot(metrics, p);
-        }
+//        for (double[] p : all) {
+//            moveInTableIfNot(metrics, p);
+//        }
 
-        return grahamScanEnclose(all);
+        return grahamScanEnclose(enlargePointsArea(metrics, all, ENLARGE_RATIO));
+    }
+    
+    public static List<double[]> processPoints(TableMetrics metrics, double[][] points) {
+        return grahamScanEnclose(enlargePointsArea(metrics, points, ENLARGE_RATIO));
     }
 
     private static double[][] generateBySingle(double[] center,
@@ -126,6 +150,18 @@ public class GraphicsUtil {
         p[0] = Math.min(p[0], metrics.rightX);
         p[1] = Math.max(p[1], metrics.topY);
         p[1] = Math.min(p[1], metrics.botY);
+    }
+    
+    private static double[] centroidOf(double[][] points) {
+        double x = 0.0;
+        double y = 0.0;
+        
+        for (double[] p : points) {
+            x += p[0];
+            y += p[1];
+        }
+        
+        return new double[]{x / points.length, y / points.length};
     }
 
     /**
