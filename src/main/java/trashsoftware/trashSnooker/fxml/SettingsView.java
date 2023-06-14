@@ -6,6 +6,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
+import trashsoftware.trashSnooker.fxml.drawing.PredictionQuality;
 import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -30,7 +31,7 @@ public class SettingsView extends ChildInitializable {
     @FXML
     ComboBox<AntiAliasing> antiAliasingComboBox;
     @FXML
-    ComboBox<Performance> performanceBox;
+    ComboBox<PredictionQuality> performanceBox;
     @FXML
     ComboBox<Integer> aiThreadNumBox;
     @FXML
@@ -86,9 +87,9 @@ public class SettingsView extends ChildInitializable {
         );
         frameRateBox.getSelectionModel().select(Integer.valueOf(configLoader.getFrameRate()));
         
-        performanceBox.getItems().addAll(Performance.values());
-        performanceBox.getSelectionModel().select(Performance.fromKey(configLoader.getString("performance", 
-                "high")));
+        performanceBox.getItems().addAll(PredictionQuality.values());
+        performanceBox.getSelectionModel().select(PredictionQuality.fromKey(configLoader.getString("performance", 
+                "veryHigh")));
         
         antiAliasingComboBox.getItems().addAll(AntiAliasing.values());
         antiAliasingComboBox.getSelectionModel().select(AntiAliasing.fromKey(configLoader.getString("antiAliasing",
@@ -345,24 +346,6 @@ public class SettingsView extends ChildInitializable {
         @Override
         public String toString() {
             return locale.getDisplayLanguage(locale);
-        }
-    }
-    
-    public enum Performance {
-        LOW,
-        HIGH;
-        
-        @Override
-        public String toString() {
-            return App.getStrings().getString(Util.toLowerCamelCase("PERFORMANCE_" + name()));
-        }
-        
-        static Performance fromKey(String key) {
-            return valueOf(Util.toAllCapsUnderscoreCase(key));
-        }
-        
-        String toKey() {
-            return Util.toLowerCamelCase(name());
         }
     }
     

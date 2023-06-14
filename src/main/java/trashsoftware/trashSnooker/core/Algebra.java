@@ -264,6 +264,10 @@ public class Algebra {
         double norm = Math.hypot(x, y);
         return new double[]{x / norm, y / norm};
     }
+    
+    public static double[] reverseVector(double[] vec) {
+        return new double[]{-vec[0], -vec[1]};
+    }
 
     public static double[] rotateVector(double x, double y, double angleRad) {
         double cosA = Math.cos(angleRad);
@@ -309,61 +313,6 @@ public class Algebra {
     
     public static double crossProduct(double[] a, double[] b) {
         return crossProduct(a[0], a[1], b[0], b[1]);
-    }
-
-    /**
-     * @return 返回可以围成凸包的所有点，按逆时针顺序
-     */
-    public static List<double[]> grahamScanEnclose(double[][] allPoints) {
-        double[] basePoint = allPoints[0];
-        for (double[] point : allPoints) {
-            if (point[1] < basePoint[1]) {
-                basePoint = point;  // 最下面的点作为基点
-            }
-        }
-
-        final double[] base = basePoint;
-        double[][] otherPoints = new double[allPoints.length - 1][];
-        int oIndex = 0;
-        for (double[] point : allPoints) {
-            if (point != base) {
-                otherPoints[oIndex++] = point;
-            }
-        }
-        
-        Arrays.sort(otherPoints, (o1, o2) -> {
-            double o1vx = o1[0] - base[0];
-            double o1vy = o1[1] - base[1];
-            double o2vx = o2[0] - base[0];
-            double o2vy = o2[1] - base[1];
-            double cp = crossProduct(o1vx, o1vy, o2vx, o2vy);
-            if (cp < 0) return 1;
-            else if (cp > 0) return -1;
-            else {
-                return Double.compare(Math.hypot(o1vx, o1vy), Math.hypot(o2vx, o2vy));
-            }
-        });
-        
-        List<double[]> stack = new ArrayList<>();
-        stack.add(basePoint);
-        stack.add(otherPoints[0]);
-        
-        int i = 1;
-        while (i < otherPoints.length && stack.size() >= 2) {
-            double[] point = otherPoints[i];
-            double[] peek = stack.get(stack.size() - 1);
-            double[] older = stack.get(stack.size() - 2);
-            double[] lastEdge = new double[]{peek[0] - older[0], peek[1] - older[1]};
-            double[] newEdge = new double[]{point[0] - peek[0], point[1] - peek[1]};
-            double cross = crossProduct(lastEdge, newEdge);
-            if (cross >= 0) {
-                stack.add(point);
-                i++;
-            } else {
-                stack.remove(stack.size() - 1);
-            }
-        }
-        return stack;
     }
     
     public static int log2(int powerOf2) {

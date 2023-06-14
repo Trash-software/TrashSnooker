@@ -172,7 +172,7 @@ public abstract class ObjectOnTable implements Cloneable {
         currentBounce = new ArcBounce(
                 arcXY,
                 bounceAcc(phy, speed),
-                speed * table.wallBounceRatio * 0.8,
+                speed * 0.8,
                 injectAngle,
                 phy.accelerationMultiplier()
         );
@@ -196,7 +196,7 @@ public abstract class ObjectOnTable implements Cloneable {
                         verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
                 -unitNormal[1] *
                         verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
-                Math.hypot(vx, vy) * table.wallBounceRatio * 0.9,
+                Math.hypot(vx, vy) * 0.9,
                 phy.accelerationMultiplier()
         );
     }

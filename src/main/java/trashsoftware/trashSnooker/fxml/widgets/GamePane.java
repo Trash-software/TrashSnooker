@@ -2,7 +2,6 @@ package trashsoftware.trashSnooker.fxml.widgets;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
@@ -10,7 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.GameHolder;
@@ -35,17 +33,17 @@ public class GamePane extends Pane {
     public static final Color LINE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color HOLE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color WHITE_PREDICTION_COLOR = Color.LIGHTGREY;
-    
-    Font tableTextFont;
-    
+
+    private static final boolean DRAW_DIRECT_LINE = false;
     private final CurvedPolygonDrawer curvedPolygonDrawer = new CurvedPolygonDrawer(0.667);  // 弯的程度
+    Font tableTextFont;
     @FXML
     Canvas gameCanvas;
     GraphicsContext graphicsContext;
     private double scale;
     private GameValues gameValues;
     private double canvasWidth, canvasHeight;
-    
+
     private ResourceBundle strings;
 
     public GamePane() {
@@ -125,7 +123,7 @@ public class GamePane extends Pane {
         getChildren().clear();
         getChildren().add(gameCanvas);
     }
-    
+
     public double[] getRealPlaceCanPlaceBall(double mouseX, double mouseY) {
         TableMetrics values = gameValues.table;
         double x = realX(mouseX);
@@ -147,7 +145,7 @@ public class GamePane extends Pane {
 
     public void drawBallInHandEssential(Ball ball, Table table, double mouseX, double mouseY) {
         double[] place = getRealPlaceCanPlaceBall(mouseX, mouseY);
-        
+
         table.forceDrawBallInHand(
                 this,
                 ball,
@@ -177,7 +175,7 @@ public class GamePane extends Pane {
         gameCanvas.setHeight(canvasHeight);
         setPrefWidth(canvasWidth);
         setPrefHeight(canvasHeight);
-        
+
         tableTextFont = new Font(App.FONT.getName(), 36 * scale);
         graphicsContext.setFont(tableTextFont);
     }
@@ -496,7 +494,7 @@ public class GamePane extends Pane {
                 4
         );
     }
-    
+
     private void fillMidPocketArc(double[] arcCenter, double radius, double verDeg, double extentDirection) {
         double centerDiff = gameValues.table.midArcRadius - gameValues.table.cushionClothWidth;
         double overshootDeg = Math.toDegrees(Math.asin(centerDiff / radius));
@@ -702,8 +700,18 @@ public class GamePane extends Pane {
         List<double[]> canvasPoints = actualPoints.stream()
                 .map(point -> new double[]{canvasX(point[0]), canvasY(point[1])})
                 .collect(Collectors.toList());
+        
+        if (DRAW_DIRECT_LINE) {
+            for (double[] p : canvasPoints) {
+                graphicsContext.fillOval(p[0] - 1, p[1] - 1, 3, 3);
+            }
+        }
 
         curvedPolygonDrawer.draw(canvasPoints, graphicsContext);
+    }
+
+    private int indexOfDistanceInPath(List<double[]> path, double distance) {
+        return 0;
     }
 
     private void connectEndPoint(double[] pos1, double[] pos2, GraphicsContext gc) {

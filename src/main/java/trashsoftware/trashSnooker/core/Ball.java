@@ -562,10 +562,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     protected void hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
-
-        // 一般来说袋角的弹性没库边好
-//        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
-//        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor * 0.9;
+        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
 
         double[] collisionNormal = new double[]{arcXY[0] - x, arcXY[1] - y};  // 切线的法向量
         double[] tangentUnitVec = Algebra.unitVector(Algebra.normalVector(collisionNormal));
@@ -586,6 +584,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     protected void hitHoleLineArea(double[][] line, double[] lineNormalVec, Phy phy) {
+        vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+        vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+        
         double[] tanUnitVec = Algebra.unitVector(new double[]{line[1][0] - line[0][0], line[1][1] - line[0][1]});
         applySpinToArcAndLine(lineNormalVec, tanUnitVec, phy, 0.8);
         super.hitHoleLineArea(line, lineNormalVec, phy);

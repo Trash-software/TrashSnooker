@@ -43,7 +43,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //    public static final double spinEffect = 1400.0 / calculateMs;  // 数值越小影响越大
     // 进攻球判定角
     // 如实际角度与可通过的袋口连线的夹角小于该值，判定为进攻球
-    public static final double MAX_ATTACK_DECISION_ANGLE = Math.toRadians(7.5);
+    public static final double MAX_ATTACK_DECISION_ANGLE = Math.toRadians(5.0);
     public static final double MIN_PLACE_DISTANCE = 0.0;  // 防止物理运算卡bug
     public static final double MIN_GAP_DISTANCE = 3.0;
     public final long frameStartTime = System.currentTimeMillis();

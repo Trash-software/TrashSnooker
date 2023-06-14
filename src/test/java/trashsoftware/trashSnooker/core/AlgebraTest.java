@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
 import org.junit.Test;
+import trashsoftware.trashSnooker.fxml.GraphicsUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -97,7 +98,7 @@ public class AlgebraTest {
                 {2, 2},
                 {4, 4}
         };
-        List<double[]> res = Algebra.grahamScanEnclose(points);
+        List<double[]> res = GraphicsUtil.grahamScanEnclose(points);
         for (double[] r : res) System.out.print(Arrays.toString(r) + ", ");
         System.out.println();
 
