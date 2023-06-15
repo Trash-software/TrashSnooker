@@ -5,20 +5,28 @@ import trashsoftware.trashSnooker.util.Util;
 
 public class PocketSize {
     public static final PocketSize[] SNOOKER_HOLES = {
-            new PocketSize("pocketLarge", 89, 93),
+            new PocketSize("pocketLarge", 
+                    88.9, 
+                    86.36),
             new PocketSize("pocketStd", 
                     84.15, 
-                    88.0),
-            new PocketSize("pocketSmall", 81, 84.15),
-            new PocketSize("pocketLittle", 78, 80),
-            new PocketSize("pocketTiny", 72, 72)
+                    82.55),
+            new PocketSize("pocketSmall", 
+                    80, 
+                    78.74),
+            new PocketSize("pocketLittle", 
+                    77.47, 
+                    74.93),
+            new PocketSize("pocketTiny", 
+                    72.39, 
+                    69.85)
     };
     public static final PocketSize[] CHINESE_EIGHT_HOLES = {
-            new PocketSize("pocketHuge", 93, 98),
-            new PocketSize("pocketLarge", 89, 93),
-            new PocketSize("pocketStd", 85, 89),
-            new PocketSize("pocketSmall", 82, 85),
-            new PocketSize("pocketLittle", 78, 81)
+            new PocketSize("pocketHuge", 92.71, 90.17),
+            new PocketSize("pocketLarge", 88.9, 86.36),
+            new PocketSize("pocketStd", 84.15, 82.55),
+            new PocketSize("pocketSmall", 82.55, 80),
+            new PocketSize("pocketLittle", 77.47, 74.93)
     };
     public static final PocketSize[] SIDE_POCKET_HOLES = {
             new PocketSize("pocketLarge", 123.825, 133),

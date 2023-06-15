@@ -416,10 +416,10 @@ public class GamePane extends Pane {
 
         // 因为新的洞口占据了一些中袋角的空间，在此补上
         graphicsContext.setFill(values.tableColor);
-        fillMidPocketArc(values.topMidHoleLeftArcXy, values.midArcRadius, 270, 1);
-        fillMidPocketArc(values.topMidHoleRightArcXy, values.midArcRadius, 270, -1);
-        fillMidPocketArc(values.botMidHoleLeftArcXy, values.midArcRadius, 90, -1);
-        fillMidPocketArc(values.botMidHoleRightArcXy, values.midArcRadius, 90, 1);
+        fillMidPocketArc(values.topMidHoleLeftArcXy, true, 1);
+        fillMidPocketArc(values.topMidHoleRightArcXy, true, -1);
+        fillMidPocketArc(values.botMidHoleLeftArcXy, false, -1);
+        fillMidPocketArc(values.botMidHoleRightArcXy, false, 1);
 
         if (values.midArcRadius < values.cushionClothWidth) {
             // 补充中袋口直线
@@ -495,8 +495,14 @@ public class GamePane extends Pane {
         );
     }
 
-    private void fillMidPocketArc(double[] arcCenter, double radius, double verDeg, double extentDirection) {
-        double centerDiff = gameValues.table.midArcRadius - gameValues.table.cushionClothWidth;
+    private void fillMidPocketArc(double[] arcCenter, boolean isTop, double extentDirection) {
+        TableMetrics metrics = gameValues.table;
+        
+        double verDeg = isTop ? 270 : 90;
+        
+        double radius = metrics.midArcRadius;
+        
+        double centerDiff = metrics.midArcRadius - metrics.cushionClothWidth;
         double overshootDeg = Math.toDegrees(Math.asin(centerDiff / radius));
         double arcExtent = (90 + overshootDeg);
         ArcType arcType = arcExtent < 90 ? ArcType.ROUND : ArcType.CHORD;
@@ -511,6 +517,31 @@ public class GamePane extends Pane {
                 arcExtent,
                 arcType
         );
+        
+        // 如果洞口大小与洞底半径差得比较远，就需要这个来补缺
+        double triangleWidth = radius;
+
+        if (metrics.cushionClothWidth < radius) {
+            double h1 = radius - metrics.cushionClothWidth;  // 短直角边
+            triangleWidth = Math.sqrt(radius * radius - h1 * h1);  // 长直角边
+        }
+        double yEnd = isTop ? metrics.topY : metrics.botY;
+        double yBase = yEnd + (isTop ? -metrics.cushionClothWidth : metrics.cushionClothWidth);
+        
+        double xSide = arcCenter[0];
+        double xSharp = xSide < metrics.midX ? xSide + triangleWidth : xSide - triangleWidth;
+        
+        double[] xs = new double[]{
+                canvasX(xSharp),
+                canvasX(xSide),
+                canvasX(xSide)
+        };
+        double[] ys = new double[]{
+                canvasY(yBase),
+                canvasY(yBase),
+                canvasY(yEnd)
+        };
+        graphicsContext.fillPolygon(xs, ys, 3);
     }
 
     private void drawMidPocketInnerPart(double[] center,
@@ -531,7 +562,10 @@ public class GamePane extends Pane {
         );
     }
 
-    private void drawCornerHoleReal(double[] realXY, double radius, double centerDeg, double mouthWidth,
+    private void drawCornerHoleReal(double[] realXY, 
+                                    double radius, 
+                                    double centerDeg, 
+                                    double mouthWidth,
                                     double openAngle) {
         // todo: 计算交会点的宽度，那里才是真正的宽度
         // 画非常规形状的底袋

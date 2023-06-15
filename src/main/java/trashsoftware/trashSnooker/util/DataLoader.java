@@ -42,6 +42,9 @@ public class DataLoader {
     }
 
     public static Color parseColor(String colorStr) {
+        if (colorStr.startsWith("#")) {
+            return Color.valueOf(colorStr);
+        }
         StringBuilder builder = new StringBuilder();
         int brighterCount = 0;
         int darkerCount = 0;
