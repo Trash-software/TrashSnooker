@@ -1,43 +1,35 @@
 {
-  "winRecords": {
-    "1": 1,
-    "2": 2,
-    "3": 2
-  },
-  "p2Wins": 2,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "custom_player_4",
+    "person": "Trump",
     "playerType": "PLAYER",
-    "playCue": "GirlCue",
-    "breakCue": "stdBreakCue"
+    "playCue": "TrumpCue",
+    "breakCue": "TrumpCue"
   },
-  "p1Wins": 1,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "custom_player_3",
+    "person": "Murphy",
     "playerType": "COMPUTER",
-    "playCue": "GirlCue",
-    "breakCue": "stdBreakCue"
+    "playCue": "stdSnookerCue",
+    "breakCue": "stdSnookerCue"
   },
-  "startTime": 1686771391377,
+  "startTime": 1686846399040,
   "p2BreakLoseChance": 0,
-  "p1BreakLoseChance": 1,
+  "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
-    "table": {
-      "tableOrdinal": 3,
-      "pocketDifficultyOrdinal": 0,
-      "holeSizeOrdinal": 1
-    }
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
+    "tablePreset": "starSnookerTableGood"
   },
-  "totalFrames": 3,
+  "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
   },
-  "p1Breaks": false
+  "p1Breaks": true
 }

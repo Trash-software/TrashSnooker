@@ -6,15 +6,16 @@ public class CueBackPredictor {
     
     private final static double INTERVAL = 1.0;  // 每个预测的间隔，毫米
     
+    private final double[] unitVec;
     private final double dx;
     private final double dy;
     private final double cueRadius;
     private final double x;
     private final double y;
     private final double maxDistance;
-    private final Game game;
+    private final Game<?, ?> game;
     
-    CueBackPredictor(Game game, double cursorPointingX, double cursorPointingY,
+    CueBackPredictor(Game<?, ?> game, double cursorPointingX, double cursorPointingY,
                      double cueWidth, double maxDistance, double whiteX, double whiteY) {
         this.game = game;
         this.x = whiteX;
@@ -22,7 +23,7 @@ public class CueBackPredictor {
         this.cueRadius = cueWidth / 2;
         this.maxDistance = maxDistance;
         
-        double[] unitVec = Algebra.unitVector(cursorPointingX, cursorPointingY);
+        unitVec = Algebra.unitVector(cursorPointingX, cursorPointingY);
         
         dx = -unitVec[0] * INTERVAL;
         dy = -unitVec[1] * INTERVAL;
@@ -45,8 +46,8 @@ public class CueBackPredictor {
             if (res != null) return res;
             
             if (predictor.willPot(phy)) {
-                return new Result(predictor.distance + game.gameValues.table.midHoleDiameter,
-                        game.gameValues.table.cushionHeight);
+                return new CushionObstacle(predictor.distance + game.gameValues.table.midHoleDiameter,
+                        game.gameValues.table.cushionHeight, 0.0);
             }
             
             // 检测袋口区域
@@ -55,13 +56,17 @@ public class CueBackPredictor {
                 // 袋口区域
                 Result res2 = checkBalls(predictor);
                 if (res2 != null) return res2;
-                if (holeAreaResult == 2) return new Result(predictor.distance, 
-                        game.gameValues.table.cushionHeight);
+                if (holeAreaResult == 2) return new CushionObstacle(predictor.distance, 
+                        game.gameValues.table.cushionHeight, 0.0);
                 continue;
             }
             // 检测裤边
-            if (predictor.hitWall()) {
-                return new Result(predictor.distance, game.gameValues.table.cushionHeight);
+            double[] cushionHit = predictor.hitWall();
+            if (cushionHit != null) {
+                double angle = Algebra.thetaBetweenVectors(unitVec, cushionHit) - Algebra.HALF_PI;
+                return new CushionObstacle(predictor.distance, 
+                        game.gameValues.table.cushionHeight, 
+                        angle);
             }
             
             predictor.normalMove(phy);
@@ -75,35 +80,40 @@ public class CueBackPredictor {
             if (!ball.isPotted() && !ball.isWhite()) {
                 if (Algebra.distanceToPoint(predictor.x, predictor.y, 
                         ball.x, ball.y) < threshold) {
-                    return new Result(predictor.distance + game.gameValues.ball.ballRadius,
-                            game.gameValues.ball.ballDiameter, ball);
+                    return new BallObstacle(predictor.distance + game.gameValues.ball.ballRadius, ball);
                 }
             }
         }
         return null;
     }
     
-    public static class Result {
+    public abstract static class Result {
         public final double distance;  // 白球球心与障碍物的距离
-        public final double height;
-        public final Ball obstacle;
         
-        Result(double distance, double height, Ball obstacle) {
+        Result(double distance) {
             this.distance = distance;
-            this.height = height;
+        }
+    }
+    
+    public static class BallObstacle extends Result {
+        public final Ball obstacle;
+
+        BallObstacle(double distance, Ball obstacle) {
+            super(distance);
+            
             this.obstacle = obstacle;
         }
+    }
+    
+    public static class CushionObstacle extends Result {
+        public final double height;
+        public final double relativeAngle;
 
-        Result(double distance, double height) {
-            this(distance, height, null);
-        }
-
-        @Override
-        public String toString() {
-            return "Result{" +
-                    "distance=" + distance +
-                    ", height=" + height +
-                    '}';
+        CushionObstacle(double distance, double height, double relativeAngleRad) {
+            super(distance);
+            
+            this.height = height;
+            this.relativeAngle = relativeAngleRad;
         }
     }
 }

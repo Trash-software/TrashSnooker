@@ -17,10 +17,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public static final double SUCK_CUSHION_FACTOR = 0.75;
     public static final double MAXIMUM_SPIN_PASS = 0.2;  // 齿轮效应传递旋转的上限
     private static final Random ERROR_GENERATOR = new Random();
-    private static final double[] LEFT_CUSHION_VEC = {0.0, -1.0};  // 视觉上的顺时针方向。注意y是反的
-    private static final double[] RIGHT_CUSHION_VEC = {0.0, 1.0};
-    private static final double[] TOP_CUSHION_VEC = {1.0, 0.0};
-    private static final double[] BOT_CUSHION_VEC = {-1.0, 0.0};
+    public static final double[] LEFT_CUSHION_VEC = {0.0, -1.0};  // 视觉上的顺时针方向。注意y是反的
+    public static final double[] RIGHT_CUSHION_VEC = {0.0, 1.0};
+    public static final double[] TOP_CUSHION_VEC = {1.0, 0.0};
+    public static final double[] BOT_CUSHION_VEC = {-1.0, 0.0};
     private static final double[] LEFT_CUSHION_VEC_NORM = {1.0, 0.0};  // 都指向球桌内侧
     private static final double[] RIGHT_CUSHION_VEC_NORM = {-1.0, 0.0};
     private static final double[] TOP_CUSHION_VEC_NORM = {0.0, 1.0};

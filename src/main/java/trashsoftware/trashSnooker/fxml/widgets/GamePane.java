@@ -428,6 +428,16 @@ public class GamePane extends Pane {
             fillMidPocketLineSide(values.botMidHoleLeftArcXy, values.midArcRadius, false, true);
             fillMidPocketLineSide(values.botMidHoleRightArcXy, values.midArcRadius, false, false);
         }
+        
+        // 重新fill一遍底袋角直线的库边台泥，因为袋口有可能侵占了一点点空间
+        fillCornerLineCushionCloth(values.topLeftHoleEndLine, false, false);
+        fillCornerLineCushionCloth(values.topLeftHoleSideLine, true, false);
+        fillCornerLineCushionCloth(values.topRightHoleSideLine, false, true);
+        fillCornerLineCushionCloth(values.topRightHoleEndLine, true, true);
+        fillCornerLineCushionCloth(values.botRightHoleEndLine, false, false);
+        fillCornerLineCushionCloth(values.botRightHoleSideLine, true, false);
+        fillCornerLineCushionCloth(values.botLeftHoleSideLine, false, true);
+        fillCornerLineCushionCloth(values.botLeftHoleEndLine, true, true);
 
         // 画边线
         // 库边
@@ -560,6 +570,65 @@ public class GamePane extends Pane {
                 -singleDeg * 2,
                 ArcType.ROUND
         );
+    }
+    
+    private void fillCornerLineCushionCloth(double[][] line, 
+                                            boolean inward, 
+                                            boolean invert  // 不懂为什么，只是为了修bug。
+    ) {
+        double[] st = line[0];
+        double[] ed = line[1];
+        
+//        double[] direction = new double[]{ed[0] - st[0], ed[1] - st[1]};
+        
+        TableMetrics metrics = gameValues.table;
+        
+        double[] inPoint;
+        double[] outPoint;
+        if (inward) {
+            // st点在外
+            inPoint = ed;
+            outPoint = st;
+        } else {
+            // ed点在外
+            inPoint = st;
+            outPoint = ed;
+        }
+        double[] direction = new double[]{outPoint[0] - inPoint[0], outPoint[1] - inPoint[1]};
+        
+        double inRatio = 0.0;  // 有多大比例在台泥以内的
+        if (outPoint[0] < metrics.leftX - metrics.cushionClothWidth || outPoint[0] > metrics.rightX + metrics.cushionClothWidth) {
+            inRatio = (metrics.cushionClothWidth - metrics.cornerArcHeight) / Math.abs(direction[0]);
+        }
+        if (outPoint[1] < metrics.topY - metrics.cushionClothWidth || outPoint[1] > metrics.botY + metrics.cushionClothWidth) {
+            inRatio = (metrics.cushionClothWidth - metrics.cornerArcHeight) / Math.abs(direction[1]);
+        }
+//        System.out.println(inRatio);
+        double length = Math.hypot(direction[0], direction[1]);
+        double wantLength = length * inRatio;
+        double[] unitDirection = Algebra.unitVector(direction);
+        double[] realOut = new double[]{inPoint[0] + unitDirection[0] * wantLength, inPoint[1] + unitDirection[1] * wantLength};
+        
+        double[] third;
+        if (inward) {
+            if (invert) third = new double[]{realOut[0], inPoint[1]};
+            else third = new double[]{inPoint[0], realOut[1]};
+        } else {
+            if (invert) third = new double[]{inPoint[0], realOut[1]};
+            else third = new double[]{realOut[0], inPoint[1]};
+        }
+        
+        double[] xs = new double[]{
+                canvasX(inPoint[0]),
+                canvasX(realOut[0]),
+                canvasX(third[0])
+        };
+        double[] ys = new double[]{
+                canvasY(inPoint[1]),
+                canvasY(realOut[1]),
+                canvasY(third[1])
+        };
+        graphicsContext.fillPolygon(xs, ys, 3);
     }
 
     private void drawCornerHoleReal(double[] realXY, 

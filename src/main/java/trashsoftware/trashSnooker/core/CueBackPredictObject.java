@@ -20,12 +20,12 @@ public class CueBackPredictObject extends ObjectOnTable {
         distance += eachMove;
     }
     
-    boolean hitWall() {
-        if (nextX < radius + table.leftX ||
-                nextX >= table.rightX - radius) {
-            return true;
-        }
-        return nextY < radius + table.topY ||
-                nextY >= table.botY - radius;
+    double[] hitWall() {
+        if (nextX < radius + table.leftX) return Ball.LEFT_CUSHION_VEC;
+        if (nextX >= table.rightX - radius) return Ball.RIGHT_CUSHION_VEC;
+        if (nextY < radius + table.topY) return Ball.TOP_CUSHION_VEC;
+        if (nextY >= table.botY - radius) return Ball.BOT_CUSHION_VEC;
+            
+        return null;
     }
 }

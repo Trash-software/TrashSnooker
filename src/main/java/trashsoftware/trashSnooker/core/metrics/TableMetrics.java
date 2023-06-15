@@ -305,10 +305,10 @@ public class TableMetrics {
                 botY + cushionClothWidth + pocketDifficulty.midCenterToSlate
         };
         
-        double cornerGraphicalRadius = leatherPocket ?
+        double midGraphicalRadius = leatherPocket ?
                 midPocketBackInnerRadius() :
                 midHoleRadius;
-        double midGraphicalRadius = leatherPocket ?
+        double cornerGraphicalRadius = leatherPocket ?
                 cornerPocketBackInnerRadius() :
                 cornerHoleRadius;
         

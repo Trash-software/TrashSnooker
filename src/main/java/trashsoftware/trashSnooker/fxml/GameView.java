@@ -3243,18 +3243,19 @@ public class GameView implements Initializable {
                 game.getGame().getObstacleDtHeight(cursorDirectionUnitX, cursorDirectionUnitY,
                         currentCue.getCueTipWidth());
         if (backPre != null) {
-            if (backPre.obstacle == null) {
+            if (backPre instanceof CueBackPredictor.CushionObstacle cushionObstacle) {
                 // 影响来自裤边
                 obstacleProjection = new CushionProjection(
                         gameValues,
                         game.getGame().getCueBall(),
-                        backPre.distance,
+                        cushionObstacle.distance,
+                        cushionObstacle.relativeAngle,
                         cueAngleDeg,
                         currentCue.getCueTipWidth());
-            } else {
+            } else if (backPre instanceof CueBackPredictor.BallObstacle ballObstacle) {
                 // 后斯诺
                 obstacleProjection = new BallProjection(
-                        backPre.obstacle, game.getGame().getCueBall(),
+                        ballObstacle.obstacle, game.getGame().getCueBall(),
                         cursorDirectionUnitX, cursorDirectionUnitY,
                         cueAngleDeg);
             }
@@ -3320,11 +3321,28 @@ public class GameView implements Initializable {
         if (obstacleProjection instanceof CushionProjection) {
             // 影响来自裤边
             CushionProjection projection = (CushionProjection) obstacleProjection;
-            double lineY = padding + (projection.getLineY() + 1) * cueAreaRadius;
-            if (lineY < cueCanvasWH - padding) {
-                cuePointCanvasGc.setFill(Color.GRAY);
-                cuePointCanvasGc.fillRect(0, lineY, cueCanvasWH, cueCanvasWH - lineY);
-            }
+            double lineYLeft = padding + (projection.getLineYLeft() + 1) * cueAreaRadius;
+            double lineYRight = padding + (projection.getLineYRight() + 1) * cueAreaRadius;
+            
+            double[] xs = new double[]{
+                    padding,
+                    padding,
+                    cueCanvasWH - padding,
+                    cueCanvasWH - padding
+            };
+            double[] ys = new double[]{
+                    cueCanvasWH,
+                    lineYLeft,
+                    lineYRight,
+                    cueCanvasWH
+            };
+            cuePointCanvasGc.setFill(Color.GRAY);
+            cuePointCanvasGc.fillPolygon(xs, ys, 4);
+            
+//            if (lineY < cueCanvasWH - padding) {
+//                cuePointCanvasGc.setFill(Color.GRAY);
+//                cuePointCanvasGc.fillRect(0, lineY, cueCanvasWH, cueCanvasWH - lineY);
+//            }
         } else if (obstacleProjection instanceof BallProjection) {
             // 后斯诺
             BallProjection projection = (BallProjection) obstacleProjection;
@@ -3731,6 +3749,7 @@ public class GameView implements Initializable {
                     double handMul = PlayerPerson.HandBody.getPrecisionOfHand(currentHand);
 
                     double totalLen = predictLineTotalLen * multiplier * handMul;
+                    totalLen = Math.max(totalLen, 1.0);  // 至少也得一毫米吧哈哈哈哈哈哈
 
                     lineX = targetPredictionUnitX * totalLen;
                     lineY = targetPredictionUnitY * totalLen;
