@@ -39,6 +39,8 @@ public class ReplayView extends ChildInitializable {
 
     private Stage stage;
     private ResourceBundle strings;
+    
+    private boolean interrupted;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -96,6 +98,13 @@ public class ReplayView extends ChildInitializable {
         if (selected != null) {
             playReplay(selected, 1);
         }
+    }
+
+    @Override
+    public void backAction() {
+        interrupted = true;
+        
+        super.backAction();
     }
 
     private Stage playReplay(GameReplay replay) throws IOException {
@@ -175,6 +184,7 @@ public class ReplayView extends ChildInitializable {
             File[] replays = GameReplay.listReplays();
             if (replays != null) {
                 for (int i = replays.length - 1; i >= 0; i--) {
+                    if (interrupted) return;
                     File f = replays[i];
                     try {
                         BriefReplayItem item = new BriefReplayItem(f);

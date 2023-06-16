@@ -916,7 +916,7 @@ public class TableMetrics {
                 // 几何解不出来，通过凑数来寻找近似解
                 values.midHoleDiameter = findMidPocketThroatWidth(
                         midHoleMouthWidth, values.midArcRadius, values.midHoleOpenAngle, midArcSin, midLineExtraWidth);
-                System.out.println("Solved mid dia: " + values.midHoleDiameter);
+//                System.out.println("Solved mid dia: " + values.midHoleDiameter);
             }
             values.midPocketThroatWidth = values.midHoleDiameter;
             values.midHoleRadius = values.midHoleDiameter / 2;

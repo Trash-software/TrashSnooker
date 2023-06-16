@@ -424,6 +424,11 @@ public class FastGameView extends ChildInitializable {
                 System.out.println("No enough players");
                 return;
             }
+            if (p1.getPlayerId().equals(p2.getPlayerId())) {
+                System.out.println("Cannot self fight");
+                return;
+            }
+            
             Cue stdBreakCue = DataLoader.getInstance().getStdBreakCue();
             if (stdBreakCue == null ||
                     gameValues.rule == GameRule.SNOOKER ||
