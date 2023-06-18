@@ -41,8 +41,9 @@ public class CareerManager {
     private final List<Career.CareerWithAwards> snookerRanking = new ArrayList<>();
     private final List<Career.CareerWithAwards> snookerRankingSingleSeason = new ArrayList<>();
     private final List<Career.CareerWithAwards> chineseEightRanking = new ArrayList<>();
-    private Career humanPlayerCareer;  // 玩家的career
+    private HumanCareer humanPlayerCareer;  // 玩家的career
     private Championship inProgress;
+    private int lastSavedVersion;
 
     private double playerGoodness;
     private double aiGoodness;
@@ -158,13 +159,14 @@ public class CareerManager {
 
         setCurrentSave(save);
         CareerManager cm = new CareerManager(save);
+        cm.lastSavedVersion = App.VERSION_CODE;
         cm.playerGoodness = playerGoodness;
         cm.aiGoodness = aiGoodness;
         for (PlayerPerson person : DataLoader.getInstance().getAllPlayers()) {
             Career career;
             if (person.getPlayerId().equals(playerPlayer.getPlayerId())) {
                 career = Career.createByPerson(person, true);
-                cm.humanPlayerCareer = career;
+                cm.humanPlayerCareer = (HumanCareer) career;
             } else {
                 career = Career.createByPerson(person, false);
             }
@@ -208,8 +210,12 @@ public class CareerManager {
         String time = jsonObject.getString("timestamp");
 
         CareerManager careerManager = new CareerManager(careerSave, stringToCalendar(time));
+        
+        if (jsonObject.has("version")) {
+            careerManager.lastSavedVersion = jsonObject.getInt("version");
+        }
 
-        boolean saveNow = false;
+        boolean saveNow = false;  // 更新用
         if (jsonObject.has("playerGoodness")) {
             careerManager.playerGoodness = jsonObject.getDouble("playerGoodness");
         } else {
@@ -232,8 +238,8 @@ public class CareerManager {
             careerManager.playerCareers.add(career);
             newPlayers.remove(career.getPlayerPerson().getPlayerId());  // 有的
 
-            if (career.isHumanPlayer()) {
-                careerManager.humanPlayerCareer = career;
+            if (career instanceof HumanCareer hc) {
+                careerManager.humanPlayerCareer = hc;
             }
         }
 
@@ -828,7 +834,7 @@ public class CareerManager {
         return new ArrayList<>(snookerRanking.subList(0, n));
     }
 
-    public Career getHumanPlayerCareer() {
+    public HumanCareer getHumanPlayerCareer() {
         return humanPlayerCareer;
     }
 
@@ -891,6 +897,7 @@ public class CareerManager {
     }
 
     public void saveToDisk() {
+        lastSavedVersion = App.VERSION_CODE;
         saveCacheInfo();
 
         File file = new File(careerSave.getDir(), CAREER_JSON);
@@ -901,7 +908,7 @@ public class CareerManager {
             }
         }
         JSONObject root = new JSONObject();
-        root.put("version", App.VERSION_CODE);
+        root.put("version", lastSavedVersion);
         root.put("timestamp", calendarToString(timestamp));
         root.put("humanPlayer", humanPlayerCareer.getPlayerPerson().getPlayerId());
 
@@ -936,5 +943,9 @@ public class CareerManager {
 
     public double getPlayerGoodness() {
         return playerGoodness;
+    }
+
+    public int getLastSavedVersion() {
+        return lastSavedVersion;
     }
 }

@@ -329,4 +329,11 @@ public class Util {
         }
         return sen;
     }
+    
+    public static String moneyToReadable(int money) {
+//        if (money < 10000) {
+//            return String.valueOf(money);
+//        }
+        return "$" + money;
+    }
 }

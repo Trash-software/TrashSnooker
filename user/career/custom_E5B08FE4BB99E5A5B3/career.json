@@ -23599,13 +23599,6 @@
       "playerId": "random_player_41"
     },
     {
-      "efforts": {
-        "SNOOKER": 1,
-        "LIS_EIGHT": 1,
-        "MINI_SNOOKER": 1,
-        "CHINESE_EIGHT": 1,
-        "SIDE_POCKET": 1
-      },
       "scores": [
         {
           "ranks": ["TOP_16"],
@@ -24012,6 +24005,20 @@
       ],
       "level": 39,
       "expInThisLevel": 444,
+      "levelAwards": {
+        "37": {"perks": 5},
+        "38": {"perks": 6},
+        "39": {"perks": 8}
+      },
+      "totalExp": 22480,
+      "efforts": {
+        "SNOOKER": 1,
+        "LIS_EIGHT": 1,
+        "MINI_SNOOKER": 1,
+        "CHINESE_EIGHT": 1,
+        "SIDE_POCKET": 1
+      },
+      "money": 1455720,
       "availPerks": 0,
       "completedChallenges": [
         {
@@ -24102,15 +24109,9 @@
           ]
         }
       ],
-      "levelAwards": {
-        "37": {"perks": 5},
-        "38": {"perks": 6},
-        "39": {"perks": 8}
-      },
       "handFeel": 0.9284992511630222,
       "totalPerks": 22,
       "human": true,
-      "totalExp": 22480,
       "playerId": "custom_E5B08FE4BB99E5A5B3"
     },
     {
@@ -32367,8 +32368,8 @@
     }
   ],
   "aiGoodness": 1,
-  "checksum": "5869AEE6B81C348F053ECB8FA1D37DED",
+  "checksum": "01CA81AA1AB5B64CA79C0497660BAFA4",
   "playerGoodness": 1,
-  "version": 39,
-  "timestamp": "2026/7/10"
+  "version": 40,
+  "timestamp": "2026/8/22"
 }

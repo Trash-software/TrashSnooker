@@ -1,44 +1,25 @@
 package trashsoftware.trashSnooker.core.career;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.aiMatch.AiVsAi;
-import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
-import trashsoftware.trashSnooker.core.career.awardItems.AwardPerk;
-import trashsoftware.trashSnooker.core.career.challenge.ChallengeHistory;
-import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
-import trashsoftware.trashSnooker.core.training.Challenge;
-import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.DataLoader;
-import trashsoftware.trashSnooker.util.EventLogger;
-import trashsoftware.trashSnooker.util.JsonChecksum;
 
 import java.util.*;
 
 public class Career {
-    
+
     public static final double[] PERK_RANDOM_RANGE = {0.5, 2.0};
 
     private final List<ChampionshipScore> championshipScores = new ArrayList<>();  // 不一定按时间顺序
     private final boolean isHumanPlayer;
     private final transient Map<GameRule, Double> efforts = new HashMap<>();
     private PlayerPerson playerPerson;
-    private int totalPerks;
-    private int availPerks;
-    private int totalExp = 0;
-    private int level = 1;
-    private int expInThisLevel;
     private double handFeel = 0.9;
-    
-    //  这些都是Human Career特有的，考虑移入CareerManager
-    private Map<String, ChallengeHistory> completedChallenges;
-    private Map<Integer, List<AwardMaterial>> levelAwards;
 
-    private Career(PlayerPerson person, boolean isHumanPlayer) {
+    Career(PlayerPerson person, boolean isHumanPlayer) {
         this.playerPerson = person;
         this.isHumanPlayer = isHumanPlayer;
 
@@ -46,9 +27,13 @@ public class Career {
     }
 
     public static Career createByPerson(PlayerPerson playerPerson, boolean isHumanPlayer) {
-        Career career = new Career(playerPerson, isHumanPlayer);
-        career.availPerks = CareerManager.INIT_PERKS;
-        career.totalPerks = career.availPerks;
+        Career career;
+        if (isHumanPlayer) {
+            career = new HumanCareer(playerPerson);
+        } else {
+            career = new Career(playerPerson, false);
+        }
+        career.initNew();
         return career;
     }
 
@@ -60,24 +45,14 @@ public class Career {
             return null;
         }
 
-        Career career = new Career(playerPerson, jsonObject.getBoolean("human"));
-        career.availPerks = jsonObject.has("availPerks") ? jsonObject.getInt("availPerks") : 0;
-        career.totalPerks = jsonObject.has("totalPerks") ? jsonObject.getInt("totalPerks") : 0;
-        career.totalExp = jsonObject.has("totalExp") ? jsonObject.getInt("totalExp") : 0;
-        career.level = jsonObject.has("level") ? jsonObject.getInt("level") : 1;
-        career.expInThisLevel = jsonObject.has("expInThisLevel") ? jsonObject.getInt("expInThisLevel") : 0;
-        
-        if (jsonObject.has("levelAwards")) {
-            career.levelAwards = new HashMap<>();
-            JSONObject levelAwdObj = jsonObject.getJSONObject("levelAwards");
-            for (String key : levelAwdObj.keySet()) {
-                int level = Integer.parseInt(key);
-                JSONObject awdObj = levelAwdObj.getJSONObject(key);
-                List<AwardMaterial> thisLevelAwards = AwardMaterial.fromJsonList(awdObj);
-                career.levelAwards.put(level, thisLevelAwards);
-            }
+        boolean human = jsonObject.getBoolean("human");
+        Career career;
+        if (human) {
+            career = new HumanCareer(playerPerson);
+        } else {
+            career = new Career(playerPerson, false);
         }
-
+        career.fillFromJson(jsonObject);
         career.validateLevel();
 
         if (jsonObject.has("handFeel")) {
@@ -96,22 +71,6 @@ public class Career {
         for (int i = 0; i < scoreArr.length(); i++) {
             ChampionshipScore score = ChampionshipScore.fromJson(scoreArr.getJSONObject(i));
             career.championshipScores.add(score);
-        }
-        
-        try {
-            if (jsonObject.has("completedChallenges")) {
-                career.completedChallenges = new HashMap<>();
-                JSONArray compCha = jsonObject.getJSONArray("completedChallenges");
-                for (Object cha : compCha) {
-                    if (cha instanceof JSONObject) {
-                        ChallengeHistory ch = ChallengeHistory.fromJson((JSONObject) cha);
-                        career.completedChallenges.put(ch.challengeId, ch);
-                    }
-                    // 舍弃掉旧的String形式
-                }
-            }
-        } catch (JSONException e) {
-            EventLogger.log(e, EventLogger.INFO, true);
         }
 
         return career;
@@ -135,54 +94,25 @@ public class Career {
         out.put("efforts", effortsObj);
         out.put("scores", scoreArr);
         out.put("handFeel", handFeel);
-        
-        if (isHumanPlayer) {
-            out.put("availPerks", availPerks);
-            out.put("totalPerks", totalPerks);
-            out.put("totalExp", totalExp);
-            out.put("level", level);
-            out.put("expInThisLevel", expInThisLevel);
-            
-            JSONArray compCha = new JSONArray();
-            if (completedChallenges != null) {
-                for (ChallengeHistory ch : completedChallenges.values()) {
-                    compCha.put(ch.toJson());
-                }
-            }
-            out.put("completedChallenges", compCha);
-            
-            JSONObject levelAwdObj = new JSONObject();
-            if (levelAwards != null) {
-                for (Map.Entry<Integer, List<AwardMaterial>> entry : levelAwards.entrySet()) {
-                    JSONObject levelObj = new JSONObject();
-                    for (AwardMaterial am : entry.getValue()) {
-                        am.putToJson(levelObj);
-                    }
-                    levelAwdObj.put(String.valueOf(entry.getKey()), levelObj);
-                }
-            }
-            out.put("levelAwards", levelAwdObj);
-        }
+
+        putExtraInJson(out);
 
         return out;
     }
-    
-    public void completeChallenge(ChallengeSet challengeSet, boolean success, int score) {
-        if (completedChallenges == null) completedChallenges = new HashMap<>();
-        // 仅第一次完成给经验
-        ChallengeHistory history = completedChallenges.computeIfAbsent(
-                challengeSet.getId(),
-                ChallengeHistory::new
-        );
-        boolean firstSuccess = history.newComplete(success, score);
-        if (firstSuccess) {
-            totalExp += challengeSet.getExp();
-            expInThisLevel += challengeSet.getExp();
-        }
+
+    /*
+    这几个都是给override用的
+     */
+    protected void initNew() {
     }
-    
-    public ChallengeHistory getChallengeHistory(String challengeId) {
-        return completedChallenges == null ? null : completedChallenges.get(challengeId);
+
+    protected void fillFromJson(JSONObject jsonObject) {
+    }
+
+    protected void putExtraInJson(JSONObject out) {
+    }
+
+    protected void validateLevel() {
     }
 
     public double getEffort(GameRule rule) {
@@ -226,86 +156,6 @@ public class Career {
 
     public void addChampionshipScore(ChampionshipScore score) {
         championshipScores.add(score);
-        for (ChampionshipScore.Rank rank : score.ranks) {
-            int exp = score.data.getExpByRank(rank);
-            totalExp += exp;
-            expInThisLevel += exp;
-        }
-//        tryLevelUp();
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public int getExpInThisLevel() {
-        return expInThisLevel;
-    }
-    
-    public boolean canLevelUp() {
-        return expInThisLevel >= CareerManager.getInstance().getExpNeededToLevelUp(level);
-    }
-    
-    public int[] levelUpPerkRange(int toLevel) {
-        int mean = CareerManager.perksOfLevelUp(toLevel);
-        int low = (int) Math.max(1, Math.round(PERK_RANDOM_RANGE[0] * mean));
-        int high = (int) Math.round(PERK_RANDOM_RANGE[1] * mean);
-        
-        int[] res = new int[high - low + 1];
-        for (int i = 0; i < res.length; i++) {
-            res[i] = i + low;
-        }
-        return res;
-    }
-    
-    public List<AwardMaterial> levelUp() {
-        List<AwardMaterial> result = new ArrayList<>();
-
-        int expNeed = CareerManager.getInstance().getExpNeededToLevelUp(level);
-        level++;
-        expInThisLevel -= expNeed;
-        
-        int[] range = levelUpPerkRange(level);
-        int index = (int) (Math.random() * range.length);
-        int perk = range[index];
-        availPerks += perk;
-        totalPerks += perk;
-
-        AwardMaterial pm = new AwardPerk(perk);
-        result.add(pm);
-        
-        if (levelAwards == null) levelAwards = new HashMap<>();
-        levelAwards.put(level, result);
-        
-        CareerManager.getInstance().saveToDisk();
-        
-        return result;
-    }
-
-    void validateLevel() {
-        int levelTotal = 0;  // 累积的升级所需经验
-        int remExp = 0;
-        int lv = 1;
-        int[] expList = CareerManager.getExpRequiredLevelUp();
-        for (int i = 0; i < expList.length; i++) {
-            if (lv == level) break;
-            int nextLvReq = expList[i];
-            int nextLvTotal = levelTotal + nextLvReq;
-            remExp = totalExp - levelTotal;
-            lv = i + 1;
-            if (levelTotal <= totalExp && nextLvTotal > totalExp) {
-                // 结束了，就是这一级了
-                break;
-            }
-            levelTotal = nextLvTotal;
-        }
-        if (lv != level || remExp != expInThisLevel) {
-            System.err.printf("You hacked your user data: should %d,%d, actual: %d,%d \n",
-                    lv, 
-                    remExp,
-                    level,
-                    expInThisLevel);
-        }
     }
 
     public List<ChampionshipScore> getChampionshipScores() {
@@ -314,20 +164,6 @@ public class Career {
 
     public boolean isHumanPlayer() {
         return isHumanPlayer;
-    }
-
-    public void usePerk(int used) {
-        availPerks -= used;
-
-        CareerManager.getInstance().saveToDisk();
-    }
-
-    public int getAvailablePerks() {
-        return availPerks;
-    }
-
-    public int getTotalPerks() {
-        return totalPerks;
     }
 
     @Override
@@ -432,15 +268,12 @@ public class Career {
 
             for (ChampionshipScore score : career.getChampionshipScores()) {
                 int rankAwards = 0;
-                int completeAwards = 0; 
+                int completeAwards = 0;
                 if (score.data.type == type) {
                     for (ChampionshipScore.Rank rank : score.ranks) {
-                        Integer awd = score.data.getAwardByRank(rank);
-                        if (awd == null) System.err.println("Maybe tournaments.json has changed?");
-                        else {
-                            completeAwards += awd;
-                            if (rank.ranked) rankAwards += awd;
-                        }
+                        int awd = score.data.getAwardByRank(rank);
+                        completeAwards += awd;
+                        if (rank.ranked) rankAwards += awd;
                     }
                     totalAwards += completeAwards;
                     if (score.data.ranked) {

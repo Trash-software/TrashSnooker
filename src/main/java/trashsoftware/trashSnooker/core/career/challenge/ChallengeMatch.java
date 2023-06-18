@@ -5,14 +5,15 @@ import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerMatch;
+import trashsoftware.trashSnooker.core.career.HumanCareer;
 
 public class ChallengeMatch extends CareerMatch {
 
-    public final Career playerCareer;
+    public final HumanCareer playerCareer;
     public final ChallengeSet challengeSet;
     private int score;
     
-    public ChallengeMatch(Career career, ChallengeSet challengeSet) {
+    public ChallengeMatch(HumanCareer career, ChallengeSet challengeSet) {
         this.playerCareer = career;
         this.challengeSet = challengeSet;
     }

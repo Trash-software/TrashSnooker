@@ -9,17 +9,19 @@ import trashsoftware.trashSnooker.core.training.TrainType;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
+import java.util.*;
+
 public class ChallengeSet {
-    
+
+    private final Map<RewardCondition, ChallengeReward> conditionRewards = new HashMap<>();
     private String id;
     private String name;
     private GameValues gameValues;
     private TableCloth cloth;
-    private int exp;
-    
+
     private ChallengeSet() {
     }
-    
+
     public static ChallengeSet fromJson(JSONObject object) {
         ChallengeSet challengeSet = new ChallengeSet();
 
@@ -48,13 +50,26 @@ public class ChallengeSet {
         } else {
             challenge = new Challenge(rule, trainType);
         }
-        
+
         values.setTrain(trainType, challenge);
-        
+
         challengeSet.gameValues = values;
-        
-        challengeSet.exp = object.getInt("exp");
+
+        JSONObject rwd = object.getJSONObject("rewards");
+        for (String key : rwd.keySet()) {
+            RewardCondition condition = RewardCondition.parse(key);
+            ChallengeReward reward = ChallengeReward.fromJson(rwd.getJSONObject(key));
+            challengeSet.conditionRewards.put(condition, reward);
+        }
         return challengeSet;
+    }
+
+    public static int getTotal(Collection<ChallengeReward> rewards, ChallengeReward.Type type) {
+        int sum = 0;
+        for (ChallengeReward cr : rewards) {
+            sum += cr.getBy(type);
+        }
+        return sum;
     }
 
     public String getName() {
@@ -69,8 +84,24 @@ public class ChallengeSet {
         return gameValues;
     }
 
-    public int getExp() {
-        return exp;
+    public Map<RewardCondition, ChallengeReward> getConditionRewards() {
+        return conditionRewards;
+    }
+
+    public Map<RewardCondition, ChallengeReward> getFulfilledBy(List<ChallengeHistory.Record> records) {
+        Map<RewardCondition, ChallengeReward> result = new HashMap<>();
+        for (ChallengeHistory.Record record : records) {
+            for (Map.Entry<RewardCondition, ChallengeReward> entry : conditionRewards.entrySet()) {
+                if (entry.getKey().fulfilled(record)) {
+                    result.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+        return result;
+    }
+
+    public int getTotal(ChallengeReward.Type type) {
+        return getTotal(conditionRewards.values(), type);
     }
 
     public TableCloth getCloth() {

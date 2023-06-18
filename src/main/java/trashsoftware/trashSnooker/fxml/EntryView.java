@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.fxml;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,10 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -38,6 +36,8 @@ public class EntryView implements Initializable {
 
     @FXML
     Button continueCareerBtn, deleteCareerBtn;
+    @FXML
+    ProgressIndicator progressInd;
 
     private Stage selfStage;
     private ResourceBundle strings;
@@ -55,6 +55,7 @@ public class EntryView implements Initializable {
         try {
             root = loader.load();
         } catch (IOException e) {
+            restoreScene();
             throw new RuntimeException(e);
         }
         root.setStyle(App.FONT_STYLE);
@@ -71,6 +72,8 @@ public class EntryView implements Initializable {
         stage.sizeToScene();
 
         App.scaleWindow(stage);
+        
+        restoreScene();
     }
 
     @Override
@@ -120,6 +123,16 @@ public class EntryView implements Initializable {
     private void refreshTable() {
         careersTable.getItems().clear();
         careersTable.getItems().addAll(CareerManager.careerLists());
+    }
+    
+    private void hangScene() {
+        progressInd.setVisible(true);
+        thisScene.getRoot().setDisable(true);
+    }
+    
+    private void restoreScene() {
+        progressInd.setVisible(false);
+        thisScene.getRoot().setDisable(false);
     }
 
     @FXML
@@ -263,10 +276,20 @@ public class EntryView implements Initializable {
     void continueCareer() {
         CareerSave selected = careersTable.getSelectionModel().getSelectedItem();
         if (selected == null) return;
+        
+        hangScene();
 
-        CareerManager.setCurrentSave(selected);
-
-        startCareerView(selfStage);
+        Thread thread = new Thread(() -> {
+            try {
+                CareerManager.setCurrentSave(selected);
+                CareerManager.getInstance();  // 提前触发读取
+                Platform.runLater(() -> startCareerView(selfStage));
+            } catch (Exception e) {
+                restoreScene();
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @FXML

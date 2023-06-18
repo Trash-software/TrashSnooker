@@ -18,21 +18,20 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
-import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.CareerManager;
-import trashsoftware.trashSnooker.core.career.challenge.ChallengeHistory;
-import trashsoftware.trashSnooker.core.career.challenge.ChallengeManager;
-import trashsoftware.trashSnooker.core.career.challenge.ChallengeMatch;
-import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
+import trashsoftware.trashSnooker.core.career.HumanCareer;
+import trashsoftware.trashSnooker.core.career.challenge.*;
 import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
-import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.ThumbLoader;
 import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
 public class CareerTrainingView extends ChildInitializable {
@@ -41,7 +40,7 @@ public class CareerTrainingView extends ChildInitializable {
     @FXML
     TableColumn<ChallengeItem, String> challengeTitleCol;
     @FXML
-    TableColumn<ChallengeItem, Integer> challengeExpCol;
+    TableColumn<ChallengeItem, String> challengeProgressCol;
     @FXML
     TableColumn<ChallengeItem, String> challengeBestScoreCol;
     @FXML
@@ -57,14 +56,16 @@ public class CareerTrainingView extends ChildInitializable {
     @FXML
     Button startBtn;
     @FXML
+    LabelTable<RewardEach> rewardsTable;
+    @FXML
     LabelTable<ChaHistoryEach> historyTable;
 
-    private Career career;
+    private HumanCareer career;
     private Stage stage;
     private ResourceBundle strings;
     private CareerView parent;
 
-    public void setup(Stage stage, Career career, CareerView parent) {
+    public void setup(Stage stage, HumanCareer career, CareerView parent) {
         this.stage = stage;
         this.career = career;
         this.parent = parent;
@@ -83,6 +84,7 @@ public class CareerTrainingView extends ChildInitializable {
         this.strings = resourceBundle;
 
         initTable();
+        initRewardsTable();
         initHistoryTable();
     }
 
@@ -90,7 +92,7 @@ public class CareerTrainingView extends ChildInitializable {
         ChampDrawView.refreshCueBox(cueBox);
         cueBox.getSelectionModel().select(0);
     }
-    
+
     private void initHistoryTable() {
         LabelTableColumn<ChaHistoryEach, String> timeCol = new LabelTableColumn<>(
                 historyTable,
@@ -102,20 +104,46 @@ public class CareerTrainingView extends ChildInitializable {
                 strings.getString("historyScore"),
                 che -> new ReadOnlyStringWrapper(che.record.score == 0 ? "-" : String.valueOf(che.record.score))
         );
-        LabelTableColumn<ChaHistoryEach, String> successCol = new LabelTableColumn<>(
-                historyTable,
-                strings.getString("historySuccess"),
-                che -> new ReadOnlyStringWrapper(che.record.success ? "✔" : "\u274C")
+//        LabelTableColumn<ChaHistoryEach, String> successCol = new LabelTableColumn<>(
+//                historyTable,
+//                strings.getString("historySuccess"),
+//                che -> new ReadOnlyStringWrapper(che.record.clearedAll ? "✔" : "\u274C")
+//        );
+
+        historyTable.addColumns(timeCol, scoreCol);
+    }
+
+    private void initRewardsTable() {
+        LabelTableColumn<RewardEach, String> conditionCol = new LabelTableColumn<>(
+                rewardsTable,
+                "",
+                re -> new ReadOnlyStringWrapper(re.condition.toReadable())
         );
-        
-        historyTable.addColumns(timeCol, scoreCol, successCol);
+        LabelTableColumn<RewardEach, Integer> expCol = new LabelTableColumn<>(
+                rewardsTable,
+                "exp",
+                re -> new ReadOnlyObjectWrapper<>(re.reward.getExp())
+        );
+        LabelTableColumn<RewardEach, Integer> moneyCol = new LabelTableColumn<>(
+                rewardsTable,
+                strings.getString("awards"),
+                re -> new ReadOnlyObjectWrapper<>(re.reward.getMoney())
+        );
+        LabelTableColumn<RewardEach, String> everCompleteCol = new LabelTableColumn<>(
+                rewardsTable,
+                "",
+                re -> new ReadOnlyStringWrapper(re.completed())
+        );
+
+        rewardsTable.addColumns(conditionCol, expCol, moneyCol, everCompleteCol);
+        rewardsTable.setFitToHeight(true);
     }
 
     private void initTable() {
         challengeTitleCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().data.getName()));
-        challengeExpCol.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().data.getExp()));
+        challengeProgressCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getProgress()));
         challengeBestScoreCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getHighest()));
-        challengeCompletedCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().completed()));
+//        challengeCompletedCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().completed()));
 
         challengeTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                     startBtn.setDisable(newValue == null);
@@ -124,6 +152,7 @@ public class CareerTrainingView extends ChildInitializable {
                     } else {
                         drawPreview(null);
                     }
+                    updateRewardsTable();
                     updateHistoryTable();
                 }
         );
@@ -137,13 +166,40 @@ public class CareerTrainingView extends ChildInitializable {
             ChallengeItem item = new ChallengeItem(cs, ch);
             challengeTable.getItems().add(item);
         }
-        
+
+        updateRewardsTable();
         updateHistoryTable();
     }
-    
+
+    private void updateRewardsTable() {
+        rewardsTable.clearItems();
+
+        ChallengeItem selected = challengeTable.getSelectionModel().getSelectedItem();
+        if (selected != null && selected.ch != null) {
+            rewardsTable.setVisible(true);
+            ChallengeSet challengeSet = ChallengeManager.getInstance().getById(selected.ch.challengeId);
+            var completed = challengeSet.getFulfilledBy(selected.ch.getScores());
+            var crs = challengeSet.getConditionRewards();
+            var sorted = new ArrayList<>(crs.keySet());
+            Collections.sort(sorted);
+            System.out.println(sorted);
+            for (var cond : sorted) {
+                boolean everComp = completed.containsKey(cond);
+                RewardEach each = new RewardEach(
+                        cond,
+                        crs.get(cond),
+                        everComp
+                );
+                rewardsTable.addItem(each);
+            }
+        } else {
+            rewardsTable.setVisible(false);
+        }
+    }
+
     private void updateHistoryTable() {
         historyTable.clearItems();
-        
+
         ChallengeItem selected = challengeTable.getSelectionModel().getSelectedItem();
         if (selected != null && selected.ch != null) {
             historyTable.setVisible(true);
@@ -259,37 +315,63 @@ public class CareerTrainingView extends ChildInitializable {
         final ChallengeSet data;
         final ChallengeHistory ch;
         int highest;
+        int total;
+        int got;
 
         ChallengeItem(ChallengeSet data, ChallengeHistory challengeHistory) {
             this.data = data;
             this.ch = challengeHistory;
-            this.highest = challengeHistory != null ? 
+            this.highest = challengeHistory != null ?
                     challengeHistory.getBestScore() :
                     0;
+            this.got = challengeHistory != null ?
+                    challengeHistory.getCompleted(data, ChallengeReward.Type.EXP) :
+                    0;
+            this.total = data.getTotal(ChallengeReward.Type.EXP);
         }
 
-        public boolean isComplete() {
-            return ch != null && ch.isCompleted();
+        public String getProgress() {
+            return got + "/" + total;
         }
-        
+
+//        public boolean isComplete() {
+//            return ch != null && ch.isCompleted();
+//        }
+
         public String getHighest() {
             return highest == 0 ? "" : String.valueOf(highest);
         }
 
-        public String completed() {
-            return isComplete() ? "✔" : "";
-        }
+//        public String completed() {
+//            return isComplete() ? "✔" : "";
+//        }
     }
-    
+
     public static class ChaHistoryEach {
         public final ChallengeHistory.Record record;
-        
+
         ChaHistoryEach(ChallengeHistory.Record record) {
             this.record = record;
         }
-        
+
         public String getTime() {
             return Util.SHOWING_DATE_FORMAT.format(record.finishTime);
+        }
+    }
+
+    public static class RewardEach {
+        public final RewardCondition condition;
+        public final ChallengeReward reward;
+        boolean everCompleted;
+
+        RewardEach(RewardCondition condition, ChallengeReward reward, boolean everCompleted) {
+            this.condition = condition;
+            this.reward = reward;
+            this.everCompleted = everCompleted;
+        }
+
+        public String completed() {
+            return everCompleted ? "✔" : "";
         }
     }
 }

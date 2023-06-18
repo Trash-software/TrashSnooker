@@ -6,19 +6,14 @@ import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class ChallengeHistory {
     public final String challengeId;
     List<Record> scores = new ArrayList<>();
-    boolean completed;
 
     public ChallengeHistory(String challengeId) {
         this.challengeId = challengeId;
-        this.completed = false;
     }
 
     public static ChallengeHistory fromJson(JSONObject jsonObject) {
@@ -34,7 +29,6 @@ public class ChallengeHistory {
                         recObj.getBoolean("success")
                 );
                 ch.scores.add(record);
-                if (record.success) ch.completed = true;
             } catch (ParseException e) {
                 EventLogger.error(e);
             }
@@ -50,7 +44,7 @@ public class ChallengeHistory {
             JSONObject rec = new JSONObject();
             rec.put("time", Util.TIME_FORMAT_SEC.format(record.finishTime));
             rec.put("score", record.score);
-            rec.put("success", record.success);
+            rec.put("success", record.clearedAll);
             his.put(rec);
         }
         object.put("history", his);
@@ -58,23 +52,35 @@ public class ChallengeHistory {
     }
 
     /**
-     * @return 这是不是第一次成功
+     * @return 第一次成功的条目
      */
-    public boolean newComplete(boolean newSuccess, int score) {
-        boolean old = this.completed;
-        
-        scores.add(new Record(
+    public Map<RewardCondition, ChallengeReward> newComplete(ChallengeSet challengeSet, boolean newClearance, int score) {
+        Map<RewardCondition, ChallengeReward> alreadyCompleted = challengeSet.getFulfilledBy(scores);
+
+        Map<RewardCondition, ChallengeReward> newFulfills = new HashMap<>();
+        Record nr = new Record(
                 new Date(),
                 score,
-                newSuccess
-        ));
+                newClearance
+        );
+        for (Map.Entry<RewardCondition, ChallengeReward> entry : challengeSet.getConditionRewards().entrySet()) {
+            RewardCondition cond = entry.getKey();
+            if (!alreadyCompleted.containsKey(cond)) {
+                if (cond.fulfilled(nr)) {
+                    newFulfills.put(cond, entry.getValue());
+                }
+            }
+        }
         
-        this.completed |= newSuccess;
-        return newSuccess && !old;
+        scores.add(nr);
+        
+        return newFulfills;
     }
-
-    public boolean isCompleted() {
-        return completed;
+    
+    public int getCompleted(ChallengeSet challengeSet, ChallengeReward.Type type) {
+        Map<RewardCondition, ChallengeReward> alreadyCompleted = challengeSet.getFulfilledBy(scores);
+        
+        return ChallengeSet.getTotal(alreadyCompleted.values(), type);
     }
     
     public int getBestScore() {
@@ -88,12 +94,12 @@ public class ChallengeHistory {
     public static class Record {
         public final Date finishTime;
         public final int score;
-        public final boolean success;
+        public final boolean clearedAll;
 
-        Record(Date finishTime, int score, boolean success) {
+        Record(Date finishTime, int score, boolean clearedAll) {
             this.finishTime = finishTime;
             this.score = score;
-            this.success = success;
+            this.clearedAll = clearedAll;
         }
     }
 }

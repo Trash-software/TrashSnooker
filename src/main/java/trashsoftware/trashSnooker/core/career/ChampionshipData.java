@@ -19,8 +19,6 @@ public class ChampionshipData {
 
     String id;
     String name;
-    private String description;
-    private String sponsor;
     GameRule type;
     int classLevel = 5;
     int seedPlaces;  // 直接进正赛的种子选手数
@@ -34,18 +32,17 @@ public class ChampionshipData {
     int day;
     Selection selection;
     int expPerFrame;  // 假如每轮打满，每局比赛的exp
-
     Map<ChampionshipStage, Integer> stageFrames = new HashMap<>();  // 每一轮的总局数
     ChampionshipStage[] stages;  // 决赛在前
     ChampionshipScore.Rank[] ranksOfLosers;  // 决赛在前，各个的输家的rank
     ChampionshipScore.Rank[] ranksOfAll;  // 也就比ranksOfLosers多一个冠军
-
     Map<ChampionshipScore.Rank, Integer> awards = new HashMap<>();  // 每个等级的奖金，包含单杆最高
     Map<ChampionshipScore.Rank, Integer> expMap = new HashMap<>();  // 每个等级的技能点
-
     TablePreset tablePreset;
     TableSpec tableSpec;
     BallMetrics ballMetrics;
+    private String description;
+    private String sponsor;
 
     public static ChampionshipData fromJsonObject(JSONObject jsonObject) {
         ChampionshipData data = new ChampionshipData();
@@ -63,7 +60,7 @@ public class ChampionshipData {
         } else {
             data.sponsor = "";
         }
-        
+
         data.type = GameRule.valueOf(jsonObject.getString("type").toUpperCase(Locale.ROOT));
         data.seedPlaces = jsonObject.getInt("seeds");
         data.mainPlaces = jsonObject.getInt("places");
@@ -94,13 +91,13 @@ public class ChampionshipData {
         data.analyzeFramesStages(frames);
 
         JSONArray awards = jsonObject.getJSONArray("awards");
-        
+
         data.expPerFrame = jsonObject.getInt("frameExp");
-        
+
         for (int i = 0; i < data.ranksOfAll.length; i++) {
             int awd = i < awards.length() ? awards.getInt(i) : 0;
             ChampionshipScore.Rank rank = data.ranksOfAll[i];
-    
+
 //            int exp = i < expList.length() ? expList.getInt(i) : 0;
             data.awards.put(rank, awd);
         }
@@ -115,11 +112,11 @@ public class ChampionshipData {
 
             exp = cumulativeTotalFrames * data.expPerFrame;
             cumulativeTotalFrames += frameOf;
-            
+
             if (exp == 0) {
                 exp = frameOf / 2 * data.expPerFrame;  // 一来就洗白。一局一胜那种就算了，不值得得经验
             }
-            
+
             data.expMap.put(rank, exp);
         }
         data.expMap.put(ChampionshipScore.Rank.CHAMPION, cumulativeTotalFrames * data.expPerFrame);
@@ -181,7 +178,7 @@ public class ChampionshipData {
                     .build();
             tableSpec = new TableSpec(cloth, metrics);
         }
-        
+
         switch (getType()) {
             case SNOOKER:
             case MINI_SNOOKER:
@@ -240,7 +237,7 @@ public class ChampionshipData {
 
     public int getAwardByRank(ChampionshipScore.Rank rank) {
         Integer awd = awards.get(rank);
-        return awd == null ? 0 :awd;
+        return awd == null ? 0 : awd;
     }
 
     public int getExpByRank(ChampionshipScore.Rank rank) {
@@ -275,7 +272,7 @@ public class ChampionshipData {
     public int[] getPreMatchNewAdded() {
         return preMatchNewAdded;
     }
-    
+
     public Map<ChampionshipStage, Integer> getStageNewAdd() {
         return stageNewAdd;
     }

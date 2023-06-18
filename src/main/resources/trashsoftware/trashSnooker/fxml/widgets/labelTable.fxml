@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.GridPane?>
+<?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
 <fx:root type="trashsoftware.trashSnooker.fxml.widgets.LabelTable" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" style="-fx-padding: 0;">
-    
+
     <GridPane fx:id="content" vgap="4.0" hgap="16.0"/>
 
 </fx:root>

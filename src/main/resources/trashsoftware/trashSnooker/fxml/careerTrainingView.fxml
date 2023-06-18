@@ -10,7 +10,7 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:id="outBox"
       fx:controller="trashsoftware.trashSnooker.fxml.CareerTrainingView"
-      prefHeight="540.0" prefWidth="430.0" spacing="10.0">
+      prefHeight="640.0" prefWidth="430.0" spacing="10.0">
 
     <padding>
         <Insets topRightBottomLeft="10.0"/>
@@ -22,7 +22,7 @@
         <TableView fx:id="challengeTable" minWidth="415.0">
             <columns>
                 <TableColumn text="%careerChallenge" fx:id="challengeTitleCol" prefWidth="240.0"/>
-                <TableColumn text="exp" fx:id="challengeExpCol" prefWidth="70.0"/>
+                <TableColumn text="exp" fx:id="challengeProgressCol" prefWidth="70.0"/>
                 <TableColumn text="%bestScore" fx:id="challengeBestScoreCol" prefWidth="70.0"/>
                 <TableColumn fx:id="challengeCompletedCol" prefWidth="25.0"/>
             </columns>
@@ -31,6 +31,7 @@
         <VBox spacing="10.0">
             <GamePane fx:id="previewPane" VBox.vgrow="NEVER"/>
             <ImageView fx:id="previewImage" visible="false"/>
+            <LabelTable fx:id="rewardsTable" visible="false"/>
             <Label text="%challengeHistory" visible="false"/>
             <LabelTable fx:id="historyTable" visible="false"/>
         </VBox>

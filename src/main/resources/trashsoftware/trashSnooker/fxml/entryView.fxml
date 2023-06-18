@@ -2,8 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -42,14 +41,23 @@
             </columns>
         </TableView>
 
-        <HBox spacing="10.0" alignment="CENTER">
+        <GridPane hgap="10.0" vgap="10.0" alignment="CENTER">
+<!--            <columnConstraints>-->
+<!--                <ColumnConstraints halignment="RIGHT"/>-->
+<!--                <ColumnConstraints halignment="CENTER"/>-->
+<!--                <ColumnConstraints halignment="LEFT"/>-->
+<!--            </columnConstraints>-->
+            
             <Button text="%continueCareer" onAction="#continueCareer" fx:id="continueCareerBtn"
                     disable="true"/>
             <Button text="%deleteCareer" fx:id="deleteCareerBtn" onAction="#deleteCareer"
-                    disable="true"/>
-            <Button text="%createCareer" onAction="#newCareer"/>
-        </HBox>
+                    disable="true" GridPane.columnIndex="1"/>
+            <Button text="%createCareer" onAction="#newCareer" GridPane.columnIndex="2"/>
+            <Button text="%fastGame" onAction="#fastGame" GridPane.rowIndex="1"
+                    GridPane.columnIndex="1"/>
+            <ProgressIndicator fx:id="progressInd" visible="false" GridPane.rowIndex="1"
+                               GridPane.columnIndex="2"/>
+        </GridPane>
 
-        <Button text="%fastGame" onAction="#fastGame"/>
     </VBox>
 </VBox>

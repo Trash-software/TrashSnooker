@@ -40,7 +40,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     TableColumn<CareerRank, String> rankNameCol;
     @FXML
-    Label levelLabel, levelExpLabel;
+    Label levelLabel, levelExpLabel, moneyLabel;
     @FXML
     Button levelUpBtn;
     @FXML
@@ -80,7 +80,6 @@ public class CareerView extends ChildInitializable {
     @FXML
     Button skipChampBtn;
     CareerManager careerManager;
-    private int perkRndCounter;
     private PerkManager perkManager;
     private Stage selfStage;
     private ResourceBundle strings;
@@ -317,7 +316,7 @@ public class CareerView extends ChildInitializable {
     }
 
     public void refreshGui() {
-        Career myCareer = careerManager.getHumanPlayerCareer();
+        HumanCareer myCareer = careerManager.getHumanPlayerCareer();
         levelLabel.setText("Lv." + myCareer.getLevel());
         int curExp = myCareer.getExpInThisLevel();
         int expToNext = careerManager.getExpNeededToLevelUp(myCareer.getLevel());
@@ -327,6 +326,9 @@ public class CareerView extends ChildInitializable {
         boolean canLevelUp = myCareer.canLevelUp();
         levelUpBtn.setVisible(canLevelUp);
         levelUpBtn.setDisable(!canLevelUp);
+        
+        int money = myCareer.getMoney();
+        moneyLabel.setText(Util.moneyToReadable(money));
 
         refreshRanks();
         refreshPersonalAwardsTable();
@@ -408,7 +410,7 @@ public class CareerView extends ChildInitializable {
 
     @FXML
     public void levelUpAction() throws IOException {
-        Career myCareer = careerManager.getHumanPlayerCareer();
+        HumanCareer myCareer = careerManager.getHumanPlayerCareer();
 
         int pastLevel = myCareer.getLevel();
         List<AwardMaterial> awardMaterials = myCareer.levelUp();

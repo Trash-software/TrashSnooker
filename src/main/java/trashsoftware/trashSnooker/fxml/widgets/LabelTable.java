@@ -32,6 +32,10 @@ public class LabelTable<S> extends ScrollPane {
             throw new RuntimeException(exception);
         }
     }
+    
+    public void contentExpand(boolean expand) {
+        setFitToHeight(expand);
+    }
 
     public void addItem(S item) {
         items.add(item);

@@ -30,6 +30,9 @@
             <Label fx:id="levelExpLabel"/>
             <Button text="%levelUp" fx:id="levelUpBtn" onAction="#levelUpAction" visible="false"/>
         </HBox>
+        <HBox>
+            <Label fx:id="moneyLabel"/>
+        </HBox>
         <AbilityShower fx:id="abilityShower"/>
         <HBox spacing="20.0" alignment="CENTER">
             <HBox alignment="CENTER">

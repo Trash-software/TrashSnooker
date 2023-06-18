@@ -6151,13 +6151,6 @@
       "playerId": "random_player_12"
     },
     {
-      "efforts": {
-        "LIS_EIGHT": 1,
-        "SNOOKER": 1,
-        "MINI_SNOOKER": 1,
-        "CHINESE_EIGHT": 1,
-        "SIDE_POCKET": 1
-      },
       "scores": [
         {
           "ranks": ["PRE_GAMES_2"],
@@ -6242,6 +6235,16 @@
       ],
       "level": 19,
       "expInThisLevel": 87,
+      "levelAwards": {"19": {"perks": 2}},
+      "totalExp": 3833,
+      "efforts": {
+        "LIS_EIGHT": 1,
+        "SNOOKER": 1,
+        "MINI_SNOOKER": 1,
+        "CHINESE_EIGHT": 1,
+        "SIDE_POCKET": 1
+      },
+      "money": 16520,
       "availPerks": 40,
       "completedChallenges": [
         {
@@ -6276,11 +6279,9 @@
           }]
         }
       ],
-      "levelAwards": {"19": {"perks": 2}},
       "handFeel": 1.0519488840353741,
       "totalPerks": 6,
       "human": true,
-      "totalExp": 3833,
       "playerId": "custom_E8BDBBE69DBEE58FB7"
     },
     {
@@ -17045,8 +17046,8 @@
     }
   ],
   "aiGoodness": 0.15,
-  "checksum": "CBFE4FD2CD842BC0AADA3583060EC3D1",
+  "checksum": "ADCAED4BD393B4B7B4C9C39C12861DFE",
   "playerGoodness": 3,
-  "version": 39,
+  "version": 40,
   "timestamp": "2024/3/30"
 }
