@@ -30,6 +30,7 @@ public class AlertShower {
             Stage newStage = new Stage();
             newStage.initOwner(owner);
             newStage.initModality(Modality.WINDOW_MODAL);
+            newStage.setResizable(false);
 
             Scene scene = App.createScene(root);
             newStage.setScene(scene);
@@ -75,6 +76,7 @@ public class AlertShower {
             Stage newStage = new Stage();
             newStage.initOwner(owner);
             newStage.initModality(Modality.WINDOW_MODAL);
+            newStage.setResizable(false);
 
             Scene scene = App.createScene(root);
             newStage.setScene(scene);
@@ -119,6 +121,7 @@ public class AlertShower {
             Stage newStage = new Stage();
             newStage.initOwner(owner);
             newStage.initModality(Modality.WINDOW_MODAL);
+            newStage.setResizable(false);
 
             Scene scene = App.createScene(root);
             newStage.setScene(scene);

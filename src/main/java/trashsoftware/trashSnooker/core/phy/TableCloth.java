@@ -40,8 +40,8 @@ public class TableCloth {
     public enum Goodness {
         EXCELLENT(0.0, 0.0),
         GOOD(0.07, 0.12),
-        NORMAL(0.18, 0.1),
-        BAD(0.35, 0.06),
+        NORMAL(0.15, 0.1),
+        BAD(0.3, 0.06),
         TERRIBLE( 0.8, 0.0);
 
         public final double errorFactor;

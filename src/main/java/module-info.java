@@ -45,4 +45,5 @@ module TrashSnooker {
     opens trashsoftware.trashSnooker.core.career.challenge to javafx.base;
     exports trashsoftware.trashSnooker.core.career.challenge;
     exports trashsoftware.trashSnooker.core.career.awardItems;
+    exports trashsoftware.trashSnooker.util.config;
 }

@@ -86,16 +86,6 @@ public class TableMetrics {
     public Pocket botLeft;
     public Pocket[] pockets;
     
-//    public double[] topLeftSlateXY;  // 库边台泥的交汇点
-//    public double[] topRightSlateXY;
-//    public double[] botLeftSlateXY;
-//    public double[] botRightSlateXY;
-//    
-//    public double[] topMidFallCenter;  // 中袋的圆心
-//    public double[] botMidFallCenter;
-    
-//    public double[][] allFallCenters;
-    
     public double leftCornerHoleAreaRightX;  // 左顶袋右袋角
     public double midHoleAreaLeftX;  // 中袋左袋角
     public double midHoleAreaRightX;  // 中袋右袋角
@@ -735,7 +725,7 @@ public class TableMetrics {
         //        private String name = "Table";
         private double cornerHoleArcSizeMul;
         private double midHoleArcSizeMul;
-        private double cornerPocketOut;
+//        private double cornerPocketOut;
 
         public Builder(TableBuilderFactory factory, String tableName) {
             this.values = new TableMetrics(factory, tableName);
@@ -824,7 +814,6 @@ public class TableMetrics {
                     pocketDifficulty.cornerPocketGravityZone,
                     pocketDifficulty.cornerPocketArcSize,
                     pocketDifficulty.cornerPocketAngle,
-                    pocketDifficulty.cornetPocketOut,
                     pocketDifficulty.midPocketGravityZone,
                     pocketDifficulty.midPocketArcSize,
                     pocketDifficulty.midPocketAngle
@@ -834,7 +823,6 @@ public class TableMetrics {
         private Builder pocketDifficulty(double cornerPocketGravityZone,
                                  double cornerPocketArcSize,
                                  double cornerPocketAngle,
-                                 double cornerPocketOut,
                                  double midPocketGravityZone,
                                  double midPocketArcSize,
                                  double midPocketAngle) {
@@ -843,7 +831,7 @@ public class TableMetrics {
             values.midPocketGravityRadius = midPocketGravityZone;
             values.midHoleOpenAngle = midPocketAngle;
             this.cornerHoleArcSizeMul = cornerPocketArcSize;
-            this.cornerPocketOut = cornerPocketOut;
+//            this.cornerPocketOut = cornerPocketOut;
 
 //            if (!values.straightHole) {
             this.midHoleArcSizeMul = midPocketArcSize;
@@ -859,7 +847,7 @@ public class TableMetrics {
 
             double holeDtOrig = cornerHoleRadius / Math.sqrt(2);
             values.cornetHoleGraphicalDt = holeDtOrig;
-            values.cornerHoleDt = holeDtOrig * (1 - cornerPocketOut);
+            values.cornerHoleDt = holeDtOrig;
             values.cornerHoleTan = cornerHoleRadius * Math.sqrt(2);
 
             values.cornerArcRadius = cornerHoleRadius * cornerHoleArcSizeMul;

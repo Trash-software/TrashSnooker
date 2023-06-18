@@ -15,4 +15,6 @@ public interface GameHolder {
     InGamePlayer getP1();
     
     InGamePlayer getP2();
+    
+    InGamePlayer getCuingIgp();
 }

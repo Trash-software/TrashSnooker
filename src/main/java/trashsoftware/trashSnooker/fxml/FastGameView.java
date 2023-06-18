@@ -14,7 +14,7 @@ import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.training.Challenge;
 import trashsoftware.trashSnooker.core.training.TrainType;
-import trashsoftware.trashSnooker.util.ConfigLoader;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.GeneralSaveManager;

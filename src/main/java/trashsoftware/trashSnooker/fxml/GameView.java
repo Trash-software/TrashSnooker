@@ -68,10 +68,10 @@ import trashsoftware.trashSnooker.recorder.ActualRecorder;
 import trashsoftware.trashSnooker.recorder.CueRecord;
 import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.recorder.TargetRecord;
-import trashsoftware.trashSnooker.util.ConfigLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.IOException;
 import java.net.URL;
@@ -146,7 +146,9 @@ public class GameView implements Initializable {
     MenuItem debugModeMenu;
     //            , saveGameMenu, newGameMenu;
     @FXML
-    ToggleGroup animationPlaySpeedToggle;
+    ToggleGroup player1SpeedToggle, player2SpeedToggle;
+    @FXML
+    Menu player1SpeedMenu, player2SpeedMenu;
     @FXML
     CheckMenuItem aiAutoPlayMenuItem;
     @FXML
@@ -220,7 +222,8 @@ public class GameView implements Initializable {
 
     private ResourceBundle strings;
 
-    private double aiAnimationSpeed = 1.0;
+    private double p1PlaySpeed = 1.0;
+    private double p2PlaySpeed = 1.0;
 
     private List<double[]> aiWhitePath;  // todo: debug用的
     private List<double[]> suggestedPlayerWhitePath;
@@ -263,7 +266,17 @@ public class GameView implements Initializable {
 
         cueModelMap.clear();
 
-        animationPlaySpeedToggle.selectToggle(animationPlaySpeedToggle.getToggles().get(3));
+        player1SpeedToggle.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
+            if (t1 != null)
+                player1SpeedMenu.setText(strings.getString("p1PlaySpeedMenu") + " " + t1.getUserData() + "x");
+        });
+        player2SpeedToggle.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
+            if (t1 != null)
+                player2SpeedMenu.setText(strings.getString("p2PlaySpeedMenu") + " " + t1.getUserData() + "x");
+        });
+
+        player1SpeedToggle.selectToggle(player1SpeedToggle.getToggles().get(3));
+        player2SpeedToggle.selectToggle(player2SpeedToggle.getToggles().get(3));
         drawAiPathItem.selectedProperty().addListener((observable, oldValue, newValue) ->
                 tableGraphicsChanged = true);
 
@@ -273,9 +286,17 @@ public class GameView implements Initializable {
 
         cueAngleCanvasGc = cueAngleCanvas.getGraphicsContext2D();
 
+        boolean aa = ConfigLoader.getInstance().getAntiAliasing().canvasAA;
+        cuePointCanvasGc.setImageSmoothing(aa);
+        cueAngleCanvasGc.setImageSmoothing(aa);
+
+        player1TarCanvas.getGraphicsContext2D().setImageSmoothing(aa);
+        player2TarCanvas.getGraphicsContext2D().setImageSmoothing(aa);
+        singlePoleCanvas.getGraphicsContext2D().setImageSmoothing(aa);
+
         // todo: 喊mac用户来测试
-//        player1TarCanvas.getGraphicsContext2D().setFont(App.FONT);
-//        player2TarCanvas.getGraphicsContext2D().setFont(App.FONT);
+        player1TarCanvas.getGraphicsContext2D().setFont(App.FONT);
+        player2TarCanvas.getGraphicsContext2D().setFont(App.FONT);
 
         addListeners();
 
@@ -470,8 +491,8 @@ public class GameView implements Initializable {
                 e.consume();
 
                 AlertShower.askConfirmation(stage,
+                        strings.getString("closeWindowConcede"),
                         strings.getString("notEndExitWarning"),
-                        strings.getString("pleaseConfirm"),
                         () -> {
 //                            game.quitGame(careerMatch != null);
 //                            timeline.stop();
@@ -546,7 +567,7 @@ public class GameView implements Initializable {
         handSelectionRight.setDisable(!playAbles.contains(PlayerPerson.Hand.RIGHT));
         handSelectionRest.setDisable(!playAbles.contains(PlayerPerson.Hand.REST));  // 事实上架杆永远可用
 
-        boolean anyChange = forceChangeHand || 
+        boolean anyChange = forceChangeHand ||
                 (leftWasUsable == handSelectionLeft.isDisabled()) ||
                 (rightWasUsable == handSelectionRight.isDisabled());
 
@@ -1990,13 +2011,23 @@ public class GameView implements Initializable {
     }
 
     private void updateBeforeCue() {
-        Toggle sel = animationPlaySpeedToggle.getSelectedToggle();
-        if (sel != null) {
-            double newSpeed = Double.parseDouble(sel.getUserData().toString());
-            if (newSpeed != aiAnimationSpeed) {
-                aiAnimationSpeed = newSpeed;
-                replayGap = (long) (DEFAULT_REPLAY_GAP / aiAnimationSpeed);
-                System.out.println("New speed " + aiAnimationSpeed);
+        Toggle sel1 = player1SpeedToggle.getSelectedToggle();
+        if (sel1 != null) {
+            double newSpeed = Double.parseDouble(sel1.getUserData().toString());
+
+            if (newSpeed != p1PlaySpeed) {
+                p1PlaySpeed = newSpeed;
+                replayGap = (long) (DEFAULT_REPLAY_GAP / p1PlaySpeed);
+                System.out.println("New speed 1 " + p1PlaySpeed);
+            }
+        }
+        Toggle sel2 = player2SpeedToggle.getSelectedToggle();
+        if (sel2 != null) {
+            double newSpeed = Double.parseDouble(sel2.getUserData().toString());
+            if (newSpeed != p2PlaySpeed) {
+                p2PlaySpeed = newSpeed;
+                replayGap = (long) (DEFAULT_REPLAY_GAP / p2PlaySpeed);
+                System.out.println("New speed 2 " + p2PlaySpeed);
             }
         }
     }
@@ -2401,21 +2432,21 @@ public class GameView implements Initializable {
             // 处理倍速
             long msSinceAnimationBegun = gameLoop.msSinceAnimationBegun();
 
-            double appliedSpeed;
-            int index;
-            if (replay == null) {
-                Player player = game.getGame().getCuingPlayer();
-                if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
-                    appliedSpeed = aiAnimationSpeed;
-                    index = (int) (msSinceAnimationBegun * aiAnimationSpeed / frameTimeMs);  // 天生一个floor
-                } else {
-                    appliedSpeed = 1.0;
-                    index = (int) (msSinceAnimationBegun / frameTimeMs);
-                }
-            } else {
-                appliedSpeed = aiAnimationSpeed;
-                index = (int) (msSinceAnimationBegun * aiAnimationSpeed / frameTimeMs);
-            }
+            double appliedSpeed = getCurPlaySpeedMultiplier();
+            int index = (int) (msSinceAnimationBegun * appliedSpeed / frameTimeMs);
+//            if (replay == null) {
+//                Player player = game.getGame().getCuingPlayer();
+//                if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
+//                    appliedSpeed = p1PlaySpeed;
+//                    index = (int) (msSinceAnimationBegun * p1PlaySpeed / frameTimeMs);  // 天生一个floor
+//                } else {
+//                    appliedSpeed = 1.0;
+//                    index = (int) (msSinceAnimationBegun / frameTimeMs);
+//                }
+//            } else {
+//                appliedSpeed = p1PlaySpeed;
+//                index = (int) (msSinceAnimationBegun * p1PlaySpeed / frameTimeMs);
+//            }
 
             boolean isLast = false;
             int movementSize = movement.getNFrames();
@@ -2764,20 +2795,23 @@ public class GameView implements Initializable {
     }
 
     private double getCurPlaySpeedMultiplier() {
-        return (replay != null || game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) ?
-                aiAnimationSpeed : 1;
+//        return (replay != null || game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) ?
+//                p1PlaySpeed : 1;
+        InGamePlayer player = getActiveHolder().getCuingIgp();
+        return player.getPlayerNumber() == 1 ? p1PlaySpeed : p2PlaySpeed;
     }
 
     private double getPredictionLineTotalLength(
             WhitePrediction prediction,
-            double potDt, PlayerPerson playerPerson) {
+            double potDt, 
+            PlayerPerson playerPerson) {
         Cue cue = game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame());
 
         // 最大的预测长度
         double origMaxLength = playerPerson.getPrecisionPercentage() / 100 *
                 cue.accuracyMultiplier * maxRealPredictLength;
         // 只计算距离的最小长度
-        double minLength = origMaxLength / 2.5 * playerPerson.getLongPrecision();
+        double minLength = origMaxLength / 2.2 * playerPerson.getLongPrecision();
 
         double potDt2 = Math.max(potDt, maxPredictLengthPotDt);
         double dtRange = minPredictLengthPotDt - maxPredictLengthPotDt;
@@ -3323,7 +3357,7 @@ public class GameView implements Initializable {
             CushionProjection projection = (CushionProjection) obstacleProjection;
             double lineYLeft = padding + (projection.getLineYLeft() + 1) * cueAreaRadius;
             double lineYRight = padding + (projection.getLineYRight() + 1) * cueAreaRadius;
-            
+
             double[] xs = new double[]{
                     padding,
                     padding,
@@ -3338,7 +3372,7 @@ public class GameView implements Initializable {
             };
             cuePointCanvasGc.setFill(Color.GRAY);
             cuePointCanvasGc.fillPolygon(xs, ys, 4);
-            
+
 //            if (lineY < cueCanvasWH - padding) {
 //                cuePointCanvasGc.setFill(Color.GRAY);
 //                cuePointCanvasGc.fillRect(0, lineY, cueCanvasWH, cueCanvasWH - lineY);
@@ -3477,8 +3511,9 @@ public class GameView implements Initializable {
 
             this.cue = cue;
             this.igp = igp;
-            this.playSpeedMultiplier = (igp.getPlayerType() == PlayerType.COMPUTER || replay != null) ?
-                    aiAnimationSpeed : 1;
+//            this.playSpeedMultiplier = (igp.getPlayerType() == PlayerType.COMPUTER || replay != null) ?
+//                    p1PlaySpeed : 1;
+            this.playSpeedMultiplier = igp.getPlayerNumber() == 1 ? p1PlaySpeed : p2PlaySpeed;
 
             this.holdMs = cuePlayType.getPullHoldMs();
             this.endHoldMs = cuePlayType.getEndHoldMs();
@@ -3736,8 +3771,10 @@ public class GameView implements Initializable {
                     double whiteUnitYBefore = center.getWhiteDirectionYBeforeCollision();
 
                     double theta = Algebra.thetaBetweenVectors(
-                            targetPredictionUnitX, targetPredictionUnitY,
-                            whiteUnitXBefore, whiteUnitYBefore
+                            center.getBallDirectionXRaw(), 
+                            center.getBallDirectionYRaw(),  // 防止齿轮/投掷效应的影响
+                            whiteUnitXBefore, 
+                            whiteUnitYBefore
                     );
 
                     // 画预测线

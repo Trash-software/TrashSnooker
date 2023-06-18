@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Cue;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.metrics.TablePreset;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

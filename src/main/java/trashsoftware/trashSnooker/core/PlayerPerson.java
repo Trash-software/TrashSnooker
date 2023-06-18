@@ -8,7 +8,7 @@ import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
-import trashsoftware.trashSnooker.util.ConfigLoader;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.PinyinDict;
 import trashsoftware.trashSnooker.util.Util;

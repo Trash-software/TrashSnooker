@@ -64,7 +64,10 @@ public class SnookerTraining extends SnookerGame implements Training {
             double realX = Algebra.shiftRange(0, 1, leftX, rightX, bs.unitX);
             double realY = Algebra.shiftRange(0, 1, topY, botY, bs.unitY);
             SnookerBall ball;
-            if (bs.value == 1) {
+            if (bs.value == 0) {
+                placeWhiteBall(realX, realY);
+                continue;
+            } else if (bs.value == 1) {
                 ball = redBalls[usedReds++];
             } else {
                 ball = getBallByValue(bs.value);

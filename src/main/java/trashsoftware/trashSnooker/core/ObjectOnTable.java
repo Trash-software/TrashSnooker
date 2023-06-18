@@ -514,6 +514,11 @@ public abstract class ObjectOnTable implements Cloneable {
         final boolean oneFrame() {
             if (framesCount > 30) {
                 System.out.println("Bounce alive for frames " + framesCount);
+                if (everEnter) {
+                    System.out.println("force leave");
+                    leave();
+                    return false;
+                }
             }
             if (!everEnter) {
                 if (!values.isInTable(x, y, values.ball.ballRadius)) {

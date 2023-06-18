@@ -2,8 +2,7 @@ package trashsoftware.trashSnooker.fxml.drawing;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
-import trashsoftware.trashSnooker.core.metrics.BallMetrics;
-import trashsoftware.trashSnooker.util.ConfigLoader;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.util.Objects;
 

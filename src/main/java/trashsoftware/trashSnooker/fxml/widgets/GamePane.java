@@ -21,7 +21,7 @@ import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.fxml.drawing.CurvedPolygonDrawer;
-import trashsoftware.trashSnooker.util.ConfigLoader;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -68,6 +68,9 @@ public class GamePane extends Pane {
 
         graphicsContext = gameCanvas.getGraphicsContext2D();
         graphicsContext.setTextAlign(TextAlignment.CENTER);
+
+        boolean antiAliasing = ConfigLoader.getInstance().getAntiAliasing().canvasAA;
+        graphicsContext.setImageSmoothing(antiAliasing);
     }
 
     public void setupPane(GameValues gameValues, double scaleMul) {

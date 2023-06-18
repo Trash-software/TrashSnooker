@@ -17,6 +17,9 @@ public class WhitePrediction {
     // 目标球碰撞后的单位行进方向
     private double ballDirectionX;
     private double ballDirectionY;
+    // 目标球碰撞后的单位行进方向，但排除任何效应
+    private double ballDirectionXRaw;
+    private double ballDirectionYRaw;
     // 目标球碰撞后的速度
     private double ballInitSpeed;
     // 白球碰到目标球后的单位行进方向
@@ -120,7 +123,10 @@ public class WhitePrediction {
     public void setFirstCollide(Ball firstCollide, 
                                 double whiteSpeedWhenHit,
                                 boolean hitWallBeforeHitBall,
-                                double ballDirectionX, double ballDirectionY,
+                                double ballDirectionX, 
+                                double ballDirectionY,
+                                double ballDirectionXRaw,  // 不考虑投掷/齿轮等效应时，目标球的方向
+                                double ballDirectionYRaw,
                                 double ballInitSpeed,
                                 double whiteDirectionXBeforeCollision,
                                 double whiteDirectionYBeforeCollision,
@@ -131,6 +137,8 @@ public class WhitePrediction {
         this.hitWallBeforeHitBall = hitWallBeforeHitBall;
         this.ballDirectionX = ballDirectionX;
         this.ballDirectionY = ballDirectionY;
+        this.ballDirectionXRaw = ballDirectionXRaw;
+        this.ballDirectionYRaw = ballDirectionYRaw;
         this.ballInitSpeed = ballInitSpeed;
         this.whiteDirectionXBeforeCollision = whiteDirectionXBeforeCollision;
         this.whiteDirectionYBeforeCollision = whiteDirectionYBeforeCollision;
@@ -248,6 +256,14 @@ public class WhitePrediction {
 
     public double getBallDirectionY() {
         return ballDirectionY;
+    }
+
+    public double getBallDirectionXRaw() {
+        return ballDirectionXRaw;
+    }
+
+    public double getBallDirectionYRaw() {
+        return ballDirectionYRaw;
     }
 
     public double getWhiteDirectionXBeforeCollision() {

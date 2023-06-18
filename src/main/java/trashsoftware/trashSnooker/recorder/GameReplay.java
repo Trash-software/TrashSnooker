@@ -315,6 +315,11 @@ public abstract class GameReplay implements GameHolder {
         return p2;
     }
 
+    @Override
+    public InGamePlayer getCuingIgp() {
+        return currentCueRecord == null ? null : currentCueRecord.cuePlayer;
+    }
+
     public int getFrameRate() {
         return item.frameRate;
     }

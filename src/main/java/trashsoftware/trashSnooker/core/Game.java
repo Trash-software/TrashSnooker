@@ -153,11 +153,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         try {
             if (DBAccess.SAVE && entireGame != null) {
                 game.recorder = new NaiveActualRecorder(game, entireGame.getMetaMatchInfo());
-                game.recorder.startRecoding();
             } else {
                 game.recorder = new InvalidRecorder();
-                game.recorder.startRecoding();
             }
+            game.recorder.startRecoding();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -829,6 +828,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return currentPlayer;
     }
 
+    @Override
+    public InGamePlayer getCuingIgp() {
+        return currentPlayer.inGamePlayer;
+    }
+
     public P getPlayer1() {
         return player1;
     }
@@ -1327,6 +1331,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         double whiteVx = cueBallClone.vx;
                         double whiteVy = cueBallClone.vy;
                         cueBallClone.twoMovingBallsHitCore(ball, phy, true);
+                        double[] rawBallUnitVec = Algebra.unitVector(
+                                ball.getLastCollisionX() - cueBallClone.getLastCollisionX(),
+                                ball.getLastCollisionY() - cueBallClone.getLastCollisionY());
                         double[] ballDirectionUnitVec = Algebra.unitVector(ball.vx, ball.vy);
                         double[] whiteDirectionUnitVec = Algebra.unitVector(whiteVx, whiteVy);
 
@@ -1342,6 +1349,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                 Math.hypot(whiteVx, whiteVy) * phy.calculationsPerSec,
                                 hitWall,
                                 ballDirectionUnitVec[0], ballDirectionUnitVec[1],
+                                rawBallUnitVec[0], rawBallUnitVec[1],
                                 ballInitVMmPerS,
                                 whiteDirectionUnitVec[0], whiteDirectionUnitVec[1],
                                 cueBallClone.getLastCollisionX(), cueBallClone.getLastCollisionY());

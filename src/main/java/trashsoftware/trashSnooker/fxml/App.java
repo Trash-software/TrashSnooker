@@ -11,7 +11,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
-import trashsoftware.trashSnooker.util.ConfigLoader;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.File;
@@ -49,12 +49,7 @@ public class App extends Application {
     }
 
     public static Scene createScene(Parent root) {
-        SceneAntialiasing antialiasing = switch (ConfigLoader.getInstance().getString("antiAliasing")) {
-            case "balanced" -> SceneAntialiasing.BALANCED;
-            case "disabled" -> SceneAntialiasing.DISABLED;
-            default -> SceneAntialiasing.DISABLED;
-        };
-
+        SceneAntialiasing antialiasing = ConfigLoader.getInstance().getAntiAliasing().threeDAA;
         return new Scene(root, -1, -1, false, antialiasing);
     }
 

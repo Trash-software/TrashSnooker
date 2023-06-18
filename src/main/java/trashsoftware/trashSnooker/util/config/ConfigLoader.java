@@ -1,6 +1,8 @@
-package trashsoftware.trashSnooker.util;
+package trashsoftware.trashSnooker.util.config;
 
+import javafx.scene.SceneAntialiasing;
 import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.awt.*;
 import java.io.*;
@@ -18,7 +20,7 @@ public class ConfigLoader {
     private int lastVersion;
 
     private Locale locale;
-    
+
     // 一些临时用的变量
     private double systemZoom;
 
@@ -34,7 +36,7 @@ public class ConfigLoader {
                     keyValues.put(key, val);
                 }
             }
-            
+
             lastVersion = getInt("version", 0);
             if (lastVersion != App.VERSION_CODE) {
                 put("version", App.VERSION_CODE);
@@ -51,6 +53,29 @@ public class ConfigLoader {
             instance = new ConfigLoader();
         }
         return instance;
+    }
+
+    public static double[] getHardwareResolution() {
+        DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice().getDisplayMode();
+        int hardwareWidth = mode.getWidth();
+        int hardwareHeight = mode.getHeight();
+        return new double[]{hardwareWidth, hardwareHeight};
+    }
+
+    /**
+     * @return 返回JavaFX识别的分辨率。如硬件分辨率是1920x1080，系统缩放是125%，那就返回1536x864
+     */
+    public static double[] getSystemResolution() {
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        return new double[]{screen.getWidth(), screen.getHeight()};
+    }
+
+    private static double[] autoDetectScreenParams() {
+        double[] hardware = getHardwareResolution();
+        double[] window = getSystemResolution();
+
+        return new double[]{hardware[0], hardware[1], hardware[1] / window[1]};
     }
 
     public void put(String key, Object value) {
@@ -94,7 +119,7 @@ public class ConfigLoader {
             return defaultValue;
         }
     }
-    
+
     public boolean getBoolean(String key, boolean defaultValue) {
         String s = getString(key);
         try {
@@ -111,7 +136,7 @@ public class ConfigLoader {
     public int getLastVersion() {
         return lastVersion;
     }
-    
+
     public int getFrameRate() {
         return getInt("frameRate", 120);
     }
@@ -129,7 +154,7 @@ public class ConfigLoader {
      */
     public double[] getResolution() {
         String res = getString("resolution");
-        
+
         double[] result;
         if (res == null) {
             result = autoDetectScreenParams();
@@ -141,7 +166,7 @@ public class ConfigLoader {
         }
         return result;
     }
-    
+
     public double getSystemZoom() {
         if (systemZoom == 0.0) {
             double[] screenParams = autoDetectScreenParams();
@@ -149,32 +174,17 @@ public class ConfigLoader {
         }
         return systemZoom;
     }
-    
-    public static double[] getHardwareResolution() {
-        DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getDefaultScreenDevice().getDisplayMode();
-        int hardwareWidth = mode.getWidth();
-        int hardwareHeight = mode.getHeight();
-        return new double[]{hardwareWidth, hardwareHeight};
-    }
 
-    /**
-     * @return 返回JavaFX识别的分辨率。如硬件分辨率是1920x1080，系统缩放是125%，那就返回1536x864
-     */
-    public static double[] getSystemResolution() {
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        return new double[]{screen.getWidth(), screen.getHeight()};
-    }
-    
-    private static double[] autoDetectScreenParams() {
-        double[] hardware = getHardwareResolution();
-        double[] window = getSystemResolution();
-
-        return new double[]{hardware[0], hardware[1], hardware[1] / window[1]};
-    }
-    
     public int getBallMaterialResolution() {
         return 256;
+    }
+    
+    public AntiAliasing getAntiAliasing() {
+        return switch (ConfigLoader.getInstance().getString("antiAliasing")) {
+            case "balanced" -> AntiAliasing.BALANCED;
+            case "disabled" -> AntiAliasing.DISABLED;
+            default -> AntiAliasing.DISABLED;
+        };
     }
 
     public Locale getLocale() {
@@ -193,11 +203,11 @@ public class ConfigLoader {
         }
         return locale;
     }
-    
+
     public boolean isHighPerformanceMode() {
         return "high".equals(getString("performance", "high"));
     }
-    
+
     public void save() {
         writeConfig();
     }
@@ -210,11 +220,11 @@ public class ConfigLoader {
         put("performance", "high");
         put("antiAliasing", "disabled");
         put("display", "windowed");
-        
+
         double[] screenParams = autoDetectScreenParams();
         putScreenParams(screenParams);
     }
-    
+
     private void putScreenParams(double[] screenParams) {
         put("resolution", String.format("%dx%d", (int) screenParams[0], (int) screenParams[1]));
 //        put("systemZoom", screenParams[2]);

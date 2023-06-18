@@ -2,17 +2,13 @@ package trashsoftware.trashSnooker.fxml.drawing;
 
 import javafx.scene.Group;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
-import trashsoftware.trashSnooker.util.ConfigLoader;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Objects;
 
 public class Cone extends Group {
 
