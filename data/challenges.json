@@ -230,6 +230,10 @@
       "pocketDifficulty": "normal",
       "rewards": {
         ">=,score,50": {
+          "exp": 100,
+          "money": 500
+        },
+        ">=,score,70": {
           "exp": 200,
           "money": 1000
         },
@@ -238,7 +242,7 @@
           "money": 2000
         },
         "clearance": {
-          "exp": 400,
+          "exp": 500,
           "money": 10000
         }
       },

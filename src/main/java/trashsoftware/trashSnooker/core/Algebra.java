@@ -337,6 +337,18 @@ public class Algebra {
     }
 
     /**
+     * 把值从domain映射到range里
+     */
+    public static double shiftRangeSafe(double domainLow, double domainHigh,
+                                        double rangeLow, double rangeHigh,
+                                        double value) {
+        if (value < domainLow) return rangeLow;
+        if (value > domainHigh) return rangeHigh;
+        double ratio = (value - domainLow) / (domainHigh - domainLow);
+        return rangeLow + (rangeHigh - rangeLow) * ratio;
+    }
+
+    /**
      * 返回从a往b走，走到rate时所在的位置
      */
     public static double rateBetween(double a, double b, double rate) {

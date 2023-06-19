@@ -1,5 +1,5 @@
 {
-  "stageIndex": 3,
+  "stageIndex": 0,
   "seedRanks": {
     "Yan Bingtao": 8,
     "custom_player_1": 7,
@@ -21,12 +21,17 @@
   "championshipId": "eight_master",
   "matchTree": {"root": {
     "p1": {
+      "p1wins": 5,
       "p1": {
+        "p1wins": 5,
         "p1": {
+          "p1wins": 5,
           "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
           "p2": {"winner": "High Stick"},
+          "winner": "custom_E5B08FE4BB99E5A5B3",
           "stage": "ROUND_1",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-ROUND_1-0"
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-ROUND_1-0",
+          "p2wins": 1
         },
         "p2": {
           "p1wins": 5,
@@ -37,10 +42,13 @@
           "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-ROUND_1-1",
           "p2wins": 2
         },
+        "winner": "custom_E5B08FE4BB99E5A5B3",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-QUARTER_FINAL-8"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-QUARTER_FINAL-8",
+        "p2wins": 3
       },
       "p2": {
+        "p1wins": 5,
         "p1": {
           "p1wins": 5,
           "p1": {"winner": "Selby"},
@@ -59,14 +67,20 @@
           "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-ROUND_1-3",
           "p2wins": 4
         },
+        "winner": "Selby",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-QUARTER_FINAL-9"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-QUARTER_FINAL-9",
+        "p2wins": 1
       },
+      "winner": "custom_E5B08FE4BB99E5A5B3",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-SEMI_FINAL-12"
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-SEMI_FINAL-12",
+      "p2wins": 3
     },
     "p2": {
+      "p1wins": 4,
       "p1": {
+        "p1wins": 5,
         "p1": {
           "p1wins": 5,
           "p1": {"winner": "Yan Bingtao"},
@@ -85,10 +99,13 @@
           "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-ROUND_1-5",
           "p2wins": 2
         },
+        "winner": "Yan Bingtao",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-QUARTER_FINAL-10"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-QUARTER_FINAL-10",
+        "p2wins": 1
       },
       "p2": {
+        "p1wins": 5,
         "p1": {
           "p1wins": 5,
           "p1": {"winner": "Ding Junhui"},
@@ -107,11 +124,15 @@
           "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-ROUND_1-7",
           "p2wins": 2
         },
+        "winner": "Ding Junhui",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-QUARTER_FINAL-11"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-QUARTER_FINAL-11",
+        "p2wins": 2
       },
+      "winner": "Ding Junhui",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-SEMI_FINAL-13"
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-SEMI_FINAL-13",
+      "p2wins": 5
     },
     "stage": "FINAL",
     "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_master-FINAL-14"

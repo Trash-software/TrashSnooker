@@ -620,7 +620,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double[] vv = new double[]{vx, vy};
         double[] vCob = Algebra.matrixMultiplyVector(cob, vv);
         vCob[0] += effectiveSideSpin;  // 侧旋的效果
-        vCob[1] += Math.abs(effectiveSideSpin * 0.5);  // 避免加速过度
+        vCob[1] += Math.abs(effectiveSideSpin * 0.36);  // 避免加速过度
 //        System.err.println("fuck");
 
         double[] spins = new double[]{xSpin, ySpin};
@@ -1118,12 +1118,17 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 // 相当于整个坐标系往一个方向扭一点点
                 double angularRate = 0.18;
                 double thisOutAng = Algebra.thetaOf(this.vx, this.vy);
-                double[] thisOutGeared = Algebra.unitVectorOfAngle(thisOutAng - passed * angularRate / thisOutSpeed);
+                double deviation = passed * angularRate / thisOutSpeed;
+                // 弱化大力的效果
+                deviation *= Algebra.shiftRangeSafe(0, phy.maxPowerSpeed(), 1, 0.5, relSpeed);
+                double[] thisOutGeared = Algebra.unitVectorOfAngle(thisOutAng - deviation);
                 this.vx = thisOutSpeed * thisOutGeared[0];
                 this.vy = thisOutSpeed * thisOutGeared[1];
-
+                
                 double ballOutAng = Algebra.thetaOf(ball.vx, ball.vy);
-                double[] ballOutGeared = Algebra.unitVectorOfAngle(ballOutAng - passed * angularRate / ballOutSpeed);
+                double deviation2 = passed * angularRate / ballOutSpeed;
+                deviation2 *= Algebra.shiftRangeSafe(0, phy.maxPowerSpeed(), 1, 0.5, relSpeed);
+                double[] ballOutGeared = Algebra.unitVectorOfAngle(ballOutAng - deviation2);
                 ball.vx = ballOutSpeed * ballOutGeared[0];
                 ball.vy = ballOutSpeed * ballOutGeared[1];
             }

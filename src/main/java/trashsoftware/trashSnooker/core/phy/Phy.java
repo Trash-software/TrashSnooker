@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core.phy;
 
+import trashsoftware.trashSnooker.core.Values;
+
 public class Phy {
     
     public static final double PLAY_MS = 1.0;
@@ -35,6 +37,10 @@ public class Phy {
     
     public double speedMultiplier() {
         return calculateMs / PLAY_MS;
+    }
+    
+    public double maxPowerSpeed() {
+        return Values.MAX_POWER_SPEED / calculationsPerSec;
     }
     
     public static class Factory {
