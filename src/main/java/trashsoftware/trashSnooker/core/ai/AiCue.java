@@ -8,6 +8,7 @@ import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.Util;
@@ -1513,15 +1514,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     selectedFrontBackSpin,
                     attackChoice.handSkill);
 
-            // 不考虑出杆: 球员决定进不进攻的时候肯定不会想自己出杆会歪
-//            double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
-//            double cueSd = muSigXy[1];  // 左右打点的标准差，mm
-//            double unitCueSd = cueSd / gameValues.ball.ballRadius;
-
-//            double sideSpinWithMaxError = selectedSideSpin >= 0 ?
-//                    selectedSideSpin + unitCueSd :
-//                    selectedSideSpin - unitCueSd;
-
             // 和杆还是有关系的，拿着大头杆打斯诺克就不会去想很难的球
             double actualSideSpin = selectedSideSpinToActual(selectedSideSpin,
                     aiPlayer.getInGamePlayer().getPlayCue());
@@ -1542,20 +1534,31 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             double sideDevRad = (radDevOfHighPower - radDevOfLowPower) / 2;
 
             // 太小的力有惩罚
-            if (actualPower < 15.0) {
-                double penalty = Algebra.shiftRange(0, 15, 2, 1, actualPower);
-                sideDevRad *= penalty;
-            }
+//            if (actualPower < 15.0) {
+//                double penalty = Algebra.shiftRange(0, 15, 2, 1, actualPower);
+//                sideDevRad *= penalty;
+//            }
 
             // 瞄准的1倍标准差偏差角
             double aimingSd = (100 - aps.precision) * handSdMul /
                     AiCueResult.DEFAULT_AI_PRECISION;  // 这里用default是因为，我们不希望把AI精确度调低之后它就觉得打不进，一直防守
 
+            double totalDt = attackChoice.targetHoleDistance + attackChoice.whiteCollisionDistance;
+            double whiteInitSpeed = CuePlayParams.getSpeedOfPower(actualPower, 0);
+            double totalMove = gameValues.estimatedMoveDistance(phy, whiteInitSpeed);
+
+            // 预估台泥变线偏差
+            double moveT = gameValues.estimateMoveTime(phy, whiteInitSpeed, totalDt);
+//            double whiteT = gameValues.estimateMoveTime(phy, )
+            double pathChange = moveT * phy.cloth.goodness.errorFactor * TableCloth.RANDOM_ERROR_FACTOR;  // 变线
+//            System.out.println("Path change " + pathChange);  
+
             // 白球的偏差标准差
             double whiteBallDevRad = sideDevRad + aimingSd;
             // 白球在撞击点时的偏差标准差，毫米
             // 这里sin和tan应该差不多，都不准确，tan稍微好一点点
-            double sdCollisionMm = Math.tan(whiteBallDevRad) * attackChoice.whiteCollisionDistance;
+            double sdCollisionMm = Math.tan(whiteBallDevRad) * attackChoice.whiteCollisionDistance + 
+                    pathChange;  // todo: 这里把白球+目标球的变线全算给白球了
 
             // 目标球出发角的大致偏差，标准差。 todo: 目前的算法导致了AI认为近乎90度的薄球不难
             double tarDevSdRad = Math.asin(sdCollisionMm / gameValues.ball.ballDiameter);
@@ -1577,9 +1580,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
             tarDevHoleSdMm += targetDifficultyMm;
 //            tarDevHoleSdMm *= targetDifficulty;
-
-            double totalDt = attackChoice.targetHoleDistance + attackChoice.whiteCollisionDistance;
-            double totalMove = gameValues.estimatedMoveDistance(phy, CuePlayParams.getSpeedOfPower(actualPower, 0));
 
             // 从这个角度看袋允许的偏差
             double allowedDev = AttackChoice.allowedDeviationOfHole(

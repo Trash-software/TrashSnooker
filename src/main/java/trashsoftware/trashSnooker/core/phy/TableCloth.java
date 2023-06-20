@@ -6,6 +6,9 @@ import trashsoftware.trashSnooker.util.Util;
 
 public class TableCloth {
 
+    public static final double RANDOM_ERROR_FACTOR = 1.0 / 1.2;
+    public static final double FIXED_ERROR_FACTOR = 1.0 / 180.0;
+    
     private static final double baseSpeedReducer = 90;
     private static final double baseSpinReducer = 5200;
     private static final double baseSpinEffect = 1650;

@@ -273,6 +273,21 @@ public class GameValues {
         double t = speed / acceleration;  // 加速时间，秒
         return acceleration / 2 * t * t;  // S = 1/2at^2
     }
+
+    /**
+     * @return 预估：以给定的初速度，跑一定距离需要多久
+     */
+    public double estimateMoveTime(Phy phy, double initSpeed, double distance) {
+        double acceleration = speedReducerPerInterval(phy) * phy.calculationsPerSecSqr;
+        double fullT = initSpeed / acceleration;
+        fullT *= 0.85;  // 因为种种原因，这个算出来总是偏大，于是强行减小
+        double fullDt = acceleration / 2 * fullT * fullT;
+        double ratio = fullDt / distance;
+        double timeRatio = ratio * ratio;
+        double t0 = fullT / timeRatio + distance / initSpeed;
+//        System.out.println("Full stop t: " + fullT + ", pocket t: " + t0 + ", full dt: " + fullDt + ", speed: " + initSpeed);
+        return t0;  // 我不确定这对不对
+    }
     
     public double estimateMaxPowerMoveDistance(Phy phy) {
         if (maxPowerMoveDistance == 0) {

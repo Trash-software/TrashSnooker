@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.fxml.drawing.BallModel;
 
 import java.util.Arrays;
@@ -342,9 +343,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
         if (!phy.isPrediction) {
             // 这部分是台泥造成的线路偏差
-            double xErr = ERROR_GENERATOR.nextGaussian() * phy.cloth.goodness.errorFactor / phy.calculationsPerSec / 1.2 +
-                    phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec / 180;
-            double yErr = ERROR_GENERATOR.nextGaussian() * phy.cloth.goodness.errorFactor / phy.calculationsPerSec / 1.2;
+            double xErr = ERROR_GENERATOR.nextGaussian() * 
+                    phy.cloth.goodness.errorFactor / phy.calculationsPerSec * TableCloth.RANDOM_ERROR_FACTOR +
+                    phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec * TableCloth.FIXED_ERROR_FACTOR;
+            double yErr = ERROR_GENERATOR.nextGaussian() * 
+                    phy.cloth.goodness.errorFactor / phy.calculationsPerSec * TableCloth.RANDOM_ERROR_FACTOR;
             vx += xErr / values.ball.ballWeightRatio;  // 重球相对稳定
             vy += yErr / values.ball.ballWeightRatio;
         }
@@ -1081,7 +1084,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 double ratio = thisHorV / thisVerV;
                 int sign = ratio < 0 ? -1 : 1;
                 double offsetRatio = Math.sqrt(Math.abs(ratio * sign)) * sign;
-                ballOutHor = ballOutVer * offsetRatio * (throwEffect * 0.25);  // 目标球身上的投掷效应。AI不会算，所以我们只给玩家搞这个
+                ballOutHor = ballOutVer * offsetRatio * (throwEffect * 0.15);  // 目标球身上的投掷效应。AI不会算，所以我们只给玩家搞这个
             }
         }
 

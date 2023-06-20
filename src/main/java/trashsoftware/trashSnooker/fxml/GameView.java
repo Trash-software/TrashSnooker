@@ -991,6 +991,10 @@ public class GameView implements Initializable {
     private void startNextFrame() {
         game.startNextFrame();
         setupBalls();
+        
+        predictedTargetBall = null;
+        aiWhitePath = null;
+        suggestedPlayerWhitePath = null;
 
         drawScoreBoard(game.getGame().getCuingPlayer(), true);
         drawTargetBoard(true);
@@ -1901,6 +1905,11 @@ public class GameView implements Initializable {
                                        PotAttempt currentAttempt,
                                        PlayerPerson.HandSkill usedHand,
                                        boolean snookered) {
+        gameValues.estimateMoveTime(
+                game.playPhy,
+                CuePlayParams.getSpeedOfPower(getActualPowerPercentage(), 0),
+                2000
+        );
         Movement calculatedMovement = game.getGame().cue(params, game.playPhy);
         CueRecord cueRecord = makeCueRecord(player, params);  // 必须在randomCueError之后
         TargetRecord thisTarget = makeTargetRecord(player);
