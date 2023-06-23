@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.numberedGames;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.InGamePlayer;
 import trashsoftware.trashSnooker.core.Player;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,6 +64,7 @@ public abstract class NumberedBallPlayer extends Player {
 
     public void setBreakSuccess() {
         this.breakSuccess = true;
+        AchManager.getInstance().addAchievement(Achievement.POOL_BREAK_POT, inGamePlayer);
     }
 
     public int getPlayTimes() {

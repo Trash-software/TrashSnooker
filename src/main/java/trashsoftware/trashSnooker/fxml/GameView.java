@@ -34,6 +34,8 @@ import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerMatch;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeMatch;
 import trashsoftware.trashSnooker.core.career.championship.PlayerVsAiMatch;
 import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
@@ -51,6 +53,7 @@ import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEig
 import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.NineBallScoreResult;
+import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.SnookerScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
@@ -848,10 +851,15 @@ public class GameView implements Initializable {
         if (curDefAttempt != null && curDefAttempt.isSolvingSnooker()) {
             curDefAttempt.setSolveSuccess(!game.getGame().isThisCueFoul());
         }
-
-        game.getGame().getRecorder().recordScore(game.getGame().makeScoreResult(justCuedPlayer));
+        
+        ScoreResult scoreResult = game.getGame().makeScoreResult(justCuedPlayer);
+        
+        game.getGame().getRecorder().recordScore(scoreResult);
         game.getGame().getRecorder().recordNextTarget(makeTargetRecord(nextCuePlayer));
         game.getGame().getRecorder().writeCueToStream();
+
+        AchManager.getInstance().updateAfterCueFinish(gamePane, game.getGame(), scoreResult,
+                lastPotAttempt, curDefAttempt);
 
         FoulInfo foulInfo = game.getGame().getThisCueFoul();
         if (foulInfo.isFoul()) {
@@ -1081,6 +1089,7 @@ public class GameView implements Initializable {
                     if (careerMatch != null) {
                         careerMatch.finish(wonPlayer.getPlayerPerson(), game.getP1Wins(), game.getP2Wins());
                     }
+                    AchManager.getInstance().updateAfterMatchEnds(game);
 
                     AlertShower.showInfo(stage,
                             String.format("%s (%d) : (%d) %s",
@@ -1745,6 +1754,7 @@ public class GameView implements Initializable {
 //                power /= 4;
 //                unitSideSpin *= 10;
                 System.out.println("Miscued!");
+                AchManager.getInstance().addAchievement(Achievement.MISCUED, game.getGame().getCuingIgp());
                 slidedCue = true;
             }
             miscued = slidedCue;

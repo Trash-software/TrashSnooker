@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.numberedGames.sidePocket;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SidePocketAiCue;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.movement.Movement;
@@ -188,12 +190,14 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
         if (baseFoul && nineBall.isPotted()) {  // 白球九号一起进
             winingPlayer = getAnotherPlayer();
             end();
+            AchManager.getInstance().addAchievement(Achievement.SUICIDE, getCuingIgp());
             return;
         }
 
         if (isPushingOut()) {
             thisCueFoul.removeFoul(strings.getString("emptyCue"));
             thisCueFoul.removeFoul(strings.getString("noBallHitCushion"));
+            AchManager.getInstance().removePendingAch(Achievement.MISSED_SHOT);
             thisCueFoul.setMiss(false);
             
             pushedOut = true;
@@ -256,7 +260,9 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
             if (pottedBalls.contains(nineBall)) {
                 if (isBreaking) {
                     currentPlayer.setGoldNine();
+                    AchManager.getInstance().addAchievement(Achievement.GOLDEN_NINE, getCuingIgp());
                 }
+                AchManager.getInstance().addAchievement(Achievement.PASS_NINE, getCuingIgp());
                 winingPlayer = currentPlayer;
                 end();
                 return;

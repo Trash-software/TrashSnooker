@@ -2,6 +2,8 @@ package trashsoftware.trashSnooker.core;
 
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
@@ -268,6 +270,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public boolean isDoingSnookerFreeBll() {
         return false;
+    }
+
+    public Set<B> getNewPotted() {
+        return newPotted;
     }
 
     public GameValues getGameValues() {
@@ -890,10 +896,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
             thisCueFoul.addFoul(strings.getString("emptyCue"), foulScoreCalculator.get(), true);
             if (cueBall.isPotted()) ballInHand = true;
+            AchManager.getInstance().addAchievement(Achievement.MISSED_SHOT, getCuingIgp());
         }
         if (cueBall.isPotted()) {
             thisCueFoul.addFoul(strings.getString("cueBallPot"), foulScoreCalculator.get(), false);
             ballInHand = true;
+            AchManager.getInstance().addAchievement(Achievement.CUE_BALL_POT, getCuingIgp());
         }
         if (rule.hasRule(Rule.HIT_CUSHION)) {
             if (newPotted.isEmpty() && !collidesWall) {
@@ -1097,6 +1105,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     protected P getAnotherPlayer() {
         return getAnotherPlayer(currentPlayer);
+    }
+    
+    public InGamePlayer getAnotherIgp(InGamePlayer igp) {
+        return igp == player1.getInGamePlayer() ? player2.getInGamePlayer() : player1.getInGamePlayer();
     }
 
     protected void end() {
@@ -1513,6 +1525,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
             if (noBallMoving) {
                 for (Ball ball : getAllBalls()) {
+                    if (!phy.isPrediction && !ball.isPotted() && ball.pocketHitCount > 5) {
+                        // 没进且晃了很多下
+                        AchManager.getInstance().addAchievement(Achievement.SHAKE_POCKET, getCuingIgp());
+                    }
                     ball.clearMovement();
                 }
             }

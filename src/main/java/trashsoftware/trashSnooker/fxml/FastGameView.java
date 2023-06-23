@@ -428,16 +428,22 @@ public class FastGameView extends ChildInitializable {
                 System.out.println("Cannot self fight");
                 return;
             }
+            double p1RuleProficiency = player1Player.getValue() == PlayerType.COMPUTER ? p1.skillLevelOfGame(gameValues.rule) : 1.0;
+            double p2RuleProficiency = player2Player.getValue() == PlayerType.COMPUTER ? p2.skillLevelOfGame(gameValues.rule) : 1.0;
             
             Cue stdBreakCue = DataLoader.getInstance().getStdBreakCue();
             if (stdBreakCue == null ||
                     gameValues.rule == GameRule.SNOOKER ||
                     gameValues.rule == GameRule.MINI_SNOOKER) {
-                igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue(), 1, 1.0);
-                igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue, player2Player.getValue(), 2, 1.0);
+                igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue(), 1, 
+                        p1RuleProficiency);
+                igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue, player2Player.getValue(), 2,
+                        p2RuleProficiency);
             } else {
-                igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue(), 1, 1.0);
-                igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue(), 2, 1.0);
+                igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue(), 1,
+                        p1RuleProficiency);
+                igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue(), 2,
+                        p2RuleProficiency);
             }
         }
 

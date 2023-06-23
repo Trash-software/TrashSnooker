@@ -25,6 +25,7 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.core.career;
     exports trashsoftware.trashSnooker.core.career.championship;
     exports trashsoftware.trashSnooker.core.training;
+    exports trashsoftware.trashSnooker.core.career.achievement;
 
     opens trashsoftware.trashSnooker.fxml;
     opens trashsoftware.trashSnooker.fxml.alert;

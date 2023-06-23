@@ -59,8 +59,10 @@ public class FoulInfo {
     }
 
     public enum Reason {
-        MISS,
+        EMPTY_CUE,
+        HIT_NON_TARGET,
         WHITE_POTTED,
-        NO_TOUCH_CUSHION
+        NO_TOUCH_CUSHION,
+        OTHER
     }
 }

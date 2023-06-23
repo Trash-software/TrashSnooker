@@ -13,6 +13,7 @@ import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class AddPlayerView implements Initializable {
@@ -84,7 +85,7 @@ public class AddPlayerView implements Initializable {
                 true,
                 null,
                 PlayerPerson.Sex.M,
-                List.of(GameRule.values())
+                Map.of()
         );
         DataLoader.getInstance().addPlayerPerson(playerPerson);
         parent.reloadPlayerList();

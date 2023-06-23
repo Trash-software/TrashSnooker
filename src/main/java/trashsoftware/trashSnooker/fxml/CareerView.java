@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.*;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
@@ -40,7 +41,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     TableColumn<CareerRank, String> rankNameCol;
     @FXML
-    Label levelLabel, levelExpLabel, moneyLabel;
+    Label levelLabel, levelExpLabel, moneyLabel, achievementsLabel;
     @FXML
     Button levelUpBtn;
     @FXML
@@ -152,6 +153,7 @@ public class CareerView extends ChildInitializable {
             selectedPlayerGameTypesLabel.setText(
                     selected.getCareer().getPlayerPerson()
                             .getParticipateGames()
+                            .keySet()
                             .stream()
                             .map(GameRule::toString)
                             .collect(Collectors.joining(", "))
@@ -329,6 +331,9 @@ public class CareerView extends ChildInitializable {
         
         int money = myCareer.getMoney();
         moneyLabel.setText(Util.moneyToReadable(money));
+        
+        int ach = AchManager.getInstance().getNCompletedAchievements();
+        achievementsLabel.setText(strings.getString("achievements") + ": " + ach);
 
         refreshRanks();
         refreshPersonalAwardsTable();
@@ -492,6 +497,30 @@ public class CareerView extends ChildInitializable {
         notifyPerksChanged();
 
         abilityShower.notifyPerksReset();
+    }
+    
+    @FXML
+    public void achievementsAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("achievementsView.fxml"),
+                    strings
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Scene scene = App.createScene(root);
+
+            AchievementsView view = loader.getController();
+            view.setParent(selfStage.getScene());
+
+            selfStage.setScene(scene);
+            selfStage.sizeToScene();
+
+            view.setup(selfStage);
+        } catch (IOException e) {
+            EventLogger.error(e);
+        }
     }
 
     @FXML

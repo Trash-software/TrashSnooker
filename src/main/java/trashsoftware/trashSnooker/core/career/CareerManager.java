@@ -4,6 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.career.achievement.AchCompletion;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.career.championship.ChineseEightChampionship;
 import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
@@ -176,6 +179,7 @@ public class CareerManager {
             throw new RuntimeException("No human player???");
         }
         instance = cm;
+        AchManager.newCareerInstance(save);
 
 //        instance.updateRanking();
 //        instance.saveToDisk();
@@ -228,7 +232,9 @@ public class CareerManager {
             careerManager.aiGoodness = 1.0;
             saveNow = true;
         }
-
+        
+        AchManager.setCareerInstance(careerSave);
+        
         Map<String, PlayerPerson> newPlayers = DataLoader.getInstance().getPlayerPeopleCopy();
 
         for (int i = 0; i < rootArr.length(); i++) {
@@ -317,12 +323,11 @@ public class CareerManager {
 
     private void saveCacheInfo() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(careerSave.getInfoFile()))) {
-            StringBuilder builder = new StringBuilder();
-            builder.append("name=").append(humanPlayerCareer.getPlayerPerson().getName()).append("\n");
-            builder.append("level=").append(humanPlayerCareer.getLevel()).append('\n');
-            builder.append("lastModified=").append(System.currentTimeMillis()).append('\n');
+            String builder = "name=" + humanPlayerCareer.getPlayerPerson().getName() + "\n" +
+                    "level=" + humanPlayerCareer.getLevel() + '\n' +
+                    "lastModified=" + System.currentTimeMillis() + '\n';
 
-            bw.write(builder.toString());
+            bw.write(builder);
             bw.newLine();
         } catch (IOException e) {
             EventLogger.error(e);

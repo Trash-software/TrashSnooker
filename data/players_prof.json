@@ -61,7 +61,7 @@
       "solving": 100,
       "pullDt": [
         50.0,
-        200.0,        
+        200.0,
         50,
         150
       ],
@@ -145,9 +145,9 @@
         "cebSideBreak": false,
         "withdrawAfter": 2
       },
-      "games": [
-        "snooker"
-      ]
+      "games": {
+        "snooker": 1.0
+      }
     },
     "Kid": {
       "spin": 96,
@@ -195,12 +195,12 @@
         "cebSideBreak": true,
         "withdrawAfter": 2
       },
-      "games": [
-        "snooker",
-        "miniSnooker",
-        "chineseEight",
-        "lisEight"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "miniSnooker": 1.0,
+        "chineseEight": 0.9,
+        "lisEight": 0.9
+      }
     },
     "Brown": {
       "spin": 85,
@@ -304,12 +304,12 @@
           "speed": 1.0
         }
       },
-      "games": [
-        "snooker",
-        "miniSnooker",
-        "chineseEight",
-        "lisEight"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "miniSnooker": 1.0,
+        "chineseEight": 0.95,
+        "lisEight": 0.95
+      }
     },
     "John Wizard": {
       "spin": 90.0,
@@ -355,11 +355,11 @@
         "cebSideBreak": false,
         "withdrawAfter": 2
       },
-      "games": [
-        "snooker",
-        "miniSnooker",
-        "chineseEight"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "miniSnooker": 1.0,
+        "chineseEight": 0.9
+      }
     },
     "Matthew Stevens": {
       "spin": 94.0,
@@ -457,11 +457,11 @@
         "cebSideBreak": false,
         "withdrawAfter": 2
       },
-      "games": [
-        "snooker",
-        "miniSnooker",
-        "sidePocket"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "miniSnooker": 1.0,
+        "sidePocket": 0.9
+      }
     },
     "Murphy": {
       "spin": 95,
@@ -555,10 +555,11 @@
         "cebSideBreak": false,
         "withdrawAfter": 2
       },
-      "games": [
-        "snooker",
-        "sidePocket"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "miniSnooker": 1.0,
+        "sidePocket": 0.95
+      }
     },
     "Worst Professional": {
       "spin": 90,
@@ -604,13 +605,13 @@
         "cebSideBreak": false,
         "withdrawAfter": 3
       },
-      "games": [
-        "snooker",
-        "miniSnooker",
-        "chineseEight",
-        "sidePocket",
-        "lisEight"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "miniSnooker": 1.0,
+        "chineseEight": 0.95,
+        "lisEight": 0.95,
+        "sidePocket": 0.9
+      }
     },
     "Glass Heart": {
       "spin": 95.0,
@@ -656,13 +657,13 @@
         "cebSideBreak": false,
         "withdrawAfter": 1
       },
-      "games": [
-        "snooker",
-        "miniSnooker",
-        "chineseEight",
-        "sidePocket",
-        "lisEight"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "miniSnooker": 1.0,
+        "chineseEight": 0.95,
+        "lisEight": 0.95,
+        "sidePocket": 0.9
+      }
     },
     "Selby": {
       "spin": 93.0,
@@ -708,10 +709,10 @@
         "cebSideBreak": false,
         "withdrawAfter": 4
       },
-      "games": [
-        "snooker",
-        "chineseEight"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "chineseEight": 0.98
+      }
     },
     "Mark Williams": {
       "spin": 94,
@@ -808,10 +809,10 @@
         "cebSideBreak": false,
         "withdrawAfter": 3
       },
-      "games": [
-        "snooker",
-        "sidePocket"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "sidePocket": 0.9
+      }
     },
     "Stuart Bingham": {
       "spin": 90.0,
@@ -955,9 +956,10 @@
         "cebSideBreak": false,
         "withdrawAfter": 2
       },
-      "games": [
-        "snooker"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "sidePocket": 0.9
+      }
     },
     "Zhao Xintong": {
       "spin": 96,
@@ -1004,11 +1006,12 @@
         "cebSideBreak": false,
         "withdrawAfter": 2
       },
-      "games": [
-        "snooker",
-        "chineseEight",
-        "lisEight"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "miniSnooker": 1.0,
+        "chineseEight": 0.9,
+        "lisEight": 0.9
+      }
     },
     "Yan Bingtao": {
       "spin": 91,
@@ -1055,11 +1058,12 @@
         "cebSideBreak": false,
         "withdrawAfter": 3
       },
-      "games": [
-        "snooker",
-        "chineseEight",
-        "lisEight"
-      ]
+      "games": {
+        "snooker": 1.0,
+        "miniSnooker": 1.0,
+        "chineseEight": 0.9,
+        "lisEight": 0.9
+      }
     },
     "Luca Brecel": {
       "spin": 98,
@@ -1259,13 +1263,13 @@
         "cebSideBreak": false,
         "withdrawAfter": 3
       },
-      "games": [
-        "snooker",
-        "miniSnooker",
-        "chineseEight",
-        "lisEight",
-        "sidePocket"
-      ]
+      "games": {
+        "snooker": 0.9,
+        "miniSnooker": 0.9,
+        "chineseEight": 1.0,
+        "lisEight": 1.0,
+        "sidePocket": 0.95
+      }
     }
   }
 }

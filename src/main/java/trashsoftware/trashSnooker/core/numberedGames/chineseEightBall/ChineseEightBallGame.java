@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.numberedGames.chineseEightBall;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.ChineseEightAiCue;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.movement.Movement;
@@ -426,6 +428,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             }
             
             end();
+            AchManager.getInstance().addAchievement(Achievement.SUICIDE, getCuingIgp());
             winingPlayer = getAnotherPlayer();
             return;
         }
@@ -445,18 +448,23 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             if (currentTarget == FULL_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
                     thisCueFoul.addFoul(strings.getString("targetFullHitBlack"), true);
+                    AchManager.getInstance().addAchievement(Achievement.BLIND_SHOT, getCuingIgp());
                 } else if (!isFullBall(whiteFirstCollide)) {
                     thisCueFoul.addFoul(strings.getString("targetFullHitHalf"), true);
+                    AchManager.getInstance().addAchievement(Achievement.BLIND_SHOT, getCuingIgp());
                 }
             } else if (currentTarget == HALF_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
                     thisCueFoul.addFoul(strings.getString("targetHalfHitBlack"), true);
+                    AchManager.getInstance().addAchievement(Achievement.BLIND_SHOT, getCuingIgp());
                 } else if (!isHalfBall(whiteFirstCollide)) {
                     thisCueFoul.addFoul(strings.getString("targetHalfHitFull"), true);
+                    AchManager.getInstance().addAchievement(Achievement.BLIND_SHOT, getCuingIgp());
                 }
             } else if (currentTarget == 8) {
                 if (whiteFirstCollide.getValue() != 8) {
                     thisCueFoul.addFoul(strings.getString("targetBlackHitOther"), true);
+                    AchManager.getInstance().addAchievement(Achievement.BLIND_SHOT, getCuingIgp());
                 }
             }
         }
@@ -525,6 +533,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                 } else {  // 误进黑八
                     winingPlayer = getAnotherPlayer();
                     end();
+                    AchManager.getInstance().addAchievement(Achievement.SUICIDE, getCuingIgp());
                 }
                 return;
             }

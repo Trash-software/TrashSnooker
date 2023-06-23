@@ -43,6 +43,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private long msRemainInPocket;
     private Pocket pottedPocket;
 //    private Ball justHit;
+    int pocketHitCount = 0;  // 本杆撞击袋角的次数
 
     private double lastCollisionX, lastCollisionY;  // 记录一下上次碰撞所在的位置
 
@@ -584,6 +585,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         if (currentBounce instanceof ArcBounce) {
             ((ArcBounce) currentBounce).setDesiredLeaveSideSpin(sideSpin + sideSpinChange);
         }
+        
+        pocketHitCount++;
     }
 
     protected void hitHoleLineArea(double[][] line, double[] lineNormalVec, Phy phy) {
@@ -593,6 +596,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double[] tanUnitVec = Algebra.unitVector(new double[]{line[1][0] - line[0][0], line[1][1] - line[0][1]});
         applySpin(lineNormalVec, tanUnitVec, phy, 0.8);
         super.hitHoleLineArea(line, lineNormalVec, phy);
+        
+        pocketHitCount++;
 
         // 袋角直线撞得出来个屁的塞，反正我是没见过
     }
@@ -1203,6 +1208,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         sideSpin = 0.0;
 //        justHit = null;
         frameDegChange = 0.0;
+        pocketHitCount = 0;
     }
 
     protected void prepareMove(Phy phy) {

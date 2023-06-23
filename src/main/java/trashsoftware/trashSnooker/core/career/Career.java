@@ -124,7 +124,7 @@ public class Career {
     }
 
     public double getHandFeelEffort(GameRule rule) {
-        return getHandFeel() * getEffort(rule);
+        return getHandFeel() * getEffort(rule) * getPlayerPerson().skillLevelOfGame(rule);
     }
 
     public void updateEffort(GameRule rule, double effort) {

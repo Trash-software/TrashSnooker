@@ -48,7 +48,7 @@ public class PlayerPerson {
     private final CuePlayType cuePlayType;
     private final AiPlayStyle aiPlayStyle;
     private final Sex sex;
-    private final List<GameRule> participates;
+    private final Map<GameRule, Double> participates;
     private boolean isCustom;
 
     public PlayerPerson(String playerId,
@@ -71,7 +71,7 @@ public class PlayerPerson {
                         @Nullable AiPlayStyle aiPlayStyle,
                         HandBody handBody,
                         Sex sex,
-                        List<GameRule> participates) {
+                        Map<GameRule, Double> participates) {
 
         boolean needTranslate = !Objects.equals(
                 ConfigLoader.getInstance().getLocale().getLanguage().toLowerCase(Locale.ROOT),
@@ -123,7 +123,7 @@ public class PlayerPerson {
                         boolean isCustom,
                         HandBody handBody,
                         Sex sex,
-                        List<GameRule> participateGames) {
+                        Map<GameRule, Double> participateGames) {
         this(
                 playerId,
                 name,
@@ -145,7 +145,7 @@ public class PlayerPerson {
                 aiPlayStyle,
                 handBody == null ? HandBody.DEFAULT : handBody,
                 sex,
-                List.of(GameRule.values())
+                participateGames
         );
 
         setCustom(isCustom);
@@ -232,27 +232,47 @@ public class PlayerPerson {
                 aiPlayStyle,
                 handBody,
                 sex,
-                parseParticipates(personObj.has("games") ? personObj.getJSONArray("games") : null)
+                parseParticipates(personObj.has("games") ? personObj.get("games") : null)
         );
 
         return playerPerson;
     }
 
-    public static List<GameRule> parseParticipates(JSONArray array) {
-        if (array == null) {
-            // 没有专门声明，就是全都参加
-            return List.of(GameRule.values());
-        }
-        List<GameRule> result = new ArrayList<>();
-        for (Object key : array) {
-            String s = String.valueOf(key);
-            if ("all".equals(s)) return List.of(GameRule.values());
 
-            String enumName = Util.toAllCapsUnderscoreCase(s);
-            try {
-                result.add(GameRule.valueOf(enumName));
-            } catch (IllegalArgumentException e) {
-                System.err.println("Unknown game '" + enumName + "'");
+    private static Map<GameRule, Double> participatesAll() {
+        Map<GameRule, Double> res = new HashMap<>();
+        for (GameRule rule : GameRule.values()) {
+            res.put(rule, 1.0);
+        }
+        return res;
+    }
+
+    public static Map<GameRule, Double> parseParticipates(Object object) {
+        if (object == null) {
+            // 没有专门声明，就是全都参加
+            return participatesAll();
+        }
+        Map<GameRule, Double> result = new HashMap<>();
+        if (object instanceof JSONArray array) {
+            for (Object key : array) {
+                String s = String.valueOf(key);
+                if ("all".equals(s)) return participatesAll();
+
+                String enumName = Util.toAllCapsUnderscoreCase(s);
+                try {
+                    result.put(GameRule.valueOf(enumName), 1.0);
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Unknown game '" + enumName + "'");
+                }
+            }
+        } else if (object instanceof JSONObject json) {
+            for (String key : json.keySet()) {
+                String enumName = Util.toAllCapsUnderscoreCase(key);
+                try {
+                    result.put(GameRule.valueOf(enumName), json.getDouble(key));
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Unknown game '" + enumName + "'");
+                }
             }
         }
         return result;
@@ -315,7 +335,7 @@ public class PlayerPerson {
                         Math.max(10, Math.min(90, generateDouble(random, abilityLow * restMul, abilityHigh * restMul)))
                 ),
                 sex,
-                List.of(GameRule.values())
+                participatesAll()
         );
 
         if (sex == Sex.F) {
@@ -431,9 +451,9 @@ public class PlayerPerson {
         obj.put("hand", handObj);
         obj.put("sex", sex.name());
 
-        JSONArray games = new JSONArray();
-        for (GameRule gameRule : participates) {
-            games.put(Util.toLowerCamelCase(gameRule.name()));
+        JSONObject games = new JSONObject();
+        for (GameRule gameRule : participates.keySet()) {
+            games.put(Util.toLowerCamelCase(gameRule.name()), participates.get(gameRule));
         }
         obj.put("games", games);
 
@@ -583,12 +603,16 @@ public class PlayerPerson {
         return sex;
     }
 
-    public List<GameRule> getParticipateGames() {
+    public Map<GameRule, Double> getParticipateGames() {
         return participates;
     }
 
     public boolean isPlayerOf(GameRule gameRule) {
-        return participates.contains(gameRule);
+        return participates.containsKey(gameRule);
+    }
+    
+    public double skillLevelOfGame(GameRule gameRule) {
+        return participates.getOrDefault(gameRule, 0.0);
     }
 
     /**
@@ -661,6 +685,7 @@ public class PlayerPerson {
         private String shownName;
         private HandBody handBody;
         private PlayerPerson originalPerson;  // 记录与复现用，不参与数值计算
+        private double multiplier;
 
         public static ReadableAbility fromPlayerPerson(PlayerPerson playerPerson) {
             return fromPlayerPerson(playerPerson, 1.0);
@@ -669,6 +694,7 @@ public class PlayerPerson {
         public static ReadableAbility fromPlayerPerson(PlayerPerson playerPerson,
                                                        double handFeelEffort) {
             ReadableAbility ra = new ReadableAbility();
+            ra.multiplier = handFeelEffort;
             ra.playerId = playerPerson.playerId;
             ra.name = playerPerson.name;
             ra.shownName = playerPerson.shownName;
@@ -825,6 +851,9 @@ public class PlayerPerson {
         }
 
         public PlayerPerson toPlayerPerson() {
+            if (multiplier != 1.0) {
+                throw new RuntimeException("Cannot export to player person: this one is modified");
+            }
             PlayerPerson person = new PlayerPerson(
                     playerId,
                     name,

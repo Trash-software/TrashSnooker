@@ -79,6 +79,10 @@ public class InGamePlayer {
         }
         return playCue;
     }
+    
+    public boolean isHuman() {
+        return playerType == PlayerType.PLAYER;
+    }
 
     public double getHandFeelEffort() {
         return handFeelEffort;

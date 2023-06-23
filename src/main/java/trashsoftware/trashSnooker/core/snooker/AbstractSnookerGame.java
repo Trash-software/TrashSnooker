@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.snooker;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SnookerAiCue;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.Movement;
@@ -43,6 +45,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private boolean willLoseBecauseThisFoul;
     private boolean isSolvable;  // 球形是否有解
     private int indicatedTarget;
+    
+    private int maxScoreDiff;  // 最大分差，p1的分减p2的分
 
     protected AbstractSnookerGame(EntireGame entireGame,
                                   GameSettings gameSettings,
@@ -459,6 +463,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
             if (willLoseBecauseThisFoul) {
                 // 三次瞎打判负
+                if (getCuingPlayer().getInGamePlayer().isHuman()) 
+                    AchManager.getInstance().addAchievement(Achievement.THREE_MISS_LOST, getCuingIgp());
                 getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
                 getCuingPlayer().withdraw();
                 end();
@@ -708,12 +714,20 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         ball.pickup();
     }
 
+    public int getMaxScoreDiff(int playerNum) {
+        return playerNum == 1 ? maxScoreDiff : -maxScoreDiff;
+    }
+
     @Override
     protected void endMoveAndUpdate() {
         boolean isFreeBall = doingFreeBall;
         doingFreeBall = false;
 
         updateScoreAndTarget(newPotted, isFreeBall);
+        int scoreDiff = player1.getScore() - player2.getScore();
+        if (Math.abs(scoreDiff) > Math.abs(maxScoreDiff)) {
+            maxScoreDiff = scoreDiff;
+        }
         indicatedTarget = 0;
         if (!isEnded())
             pickupPottedBalls(currentTarget);
