@@ -4,14 +4,12 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import trashsoftware.trashSnooker.core.career.achievement.AchCat;
 import trashsoftware.trashSnooker.core.career.achievement.AchCompletion;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
@@ -146,11 +144,18 @@ public class AchievementsView extends ChildInitializable {
         }
         
         public String secondRow() {
-            if (bundle.achievement.repeatable()) {
+            if (bundle.achievement.countLikeRepeatable()) {
                 if (bundle.completion == null) {
                     return "";
                 } else {
                     return String.format(strings.getString("completeTimes"),
+                            bundle.completion.getTimes());
+                }
+            } if (bundle.achievement.isRecordLike()) {
+                if (bundle.completion == null) {
+                    return "";
+                } else {
+                    return String.format(strings.getString("highestRecord"),
                             bundle.completion.getTimes());
                 }
             } else {

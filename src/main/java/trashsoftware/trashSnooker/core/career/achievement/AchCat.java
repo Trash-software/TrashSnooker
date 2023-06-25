@@ -5,7 +5,8 @@ import trashsoftware.trashSnooker.util.Util;
 
 public enum AchCat {
     GENERAL_HIDDEN,
-    GENERAL,
+    GENERAL_TABLE,
+    GENERAL_MATCH,
     FOUL,
     SNOOKER,
     POOL_GENERAL,

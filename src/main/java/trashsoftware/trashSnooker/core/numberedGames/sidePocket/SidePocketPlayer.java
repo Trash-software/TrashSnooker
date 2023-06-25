@@ -12,14 +12,14 @@ public class SidePocketPlayer extends NumberedBallPlayer {
         super(playerPerson);
     }
 
+    public int getTarget() {
+        return target;
+    }
+
     public void setTarget(int target) {
         this.target = target;
     }
 
-    public int getTarget() {
-        return target;
-    }
-    
     public void setGoldNine() {
         this.goldNine = true;
     }

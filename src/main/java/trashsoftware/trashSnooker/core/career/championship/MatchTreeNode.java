@@ -26,9 +26,9 @@ public class MatchTreeNode {
     }
 
     private MatchTreeNode(MatchTreeNode player1Position,
-                         MatchTreeNode player2Position,
-                         ChampionshipStage stage,
-                         MetaMatchInfo metaMatchInfo) {
+                          MatchTreeNode player2Position,
+                          ChampionshipStage stage,
+                          MetaMatchInfo metaMatchInfo) {
         this.player1Position = player1Position;
         this.player2Position = player2Position;
         this.stage = stage;
@@ -41,18 +41,18 @@ public class MatchTreeNode {
                          Championship championship) {
         this(player1Position, player2Position, stage, MetaMatchInfo.fromString(generateId(championship, stage)));
     }
-    
+
     static void restoreIdCounter() {
         matchIdCounter = 0;
     }
-    
+
     static String generateId(Championship championship, ChampionshipStage stage) {
         return championship.uniqueId() + "-" + stage.name() + "-" + (matchIdCounter++);
     }
-    
+
     /**
      * @see Championship#uniqueId()
-     * @see MatchTreeNode#generateId(Championship, ChampionshipStage) 
+     * @see MatchTreeNode#generateId(Championship, ChampionshipStage)
      */
     public static MetaMatchInfo analyzeMatchId(String matchId) {
         return MetaMatchInfo.fromString(matchId);
@@ -71,9 +71,9 @@ public class MatchTreeNode {
             } else {
                 matchId = "generated_" + (matchIdCounter++);
             }
-            
+
             MetaMatchInfo metaMatchInfo = MetaMatchInfo.fromString(matchId, stage);
-            
+
             MatchTreeNode rtn = new MatchTreeNode(p1, p2, stage, metaMatchInfo);
 
             if (object.has("winner")) {
@@ -127,14 +127,14 @@ public class MatchTreeNode {
 
     public MatchTreeNode findNodeByPlayers(String p1Id, String p2Id) {
         if (isLeaf()) return null;
-        
-        if (this.player1Position.winner != null && 
+
+        if (this.player1Position.winner != null &&
                 this.player1Position.winner.getPlayerPerson().getPlayerId().equals(p1Id) &&
                 this.player2Position.winner != null &&
                 this.player2Position.winner.getPlayerPerson().getPlayerId().equals(p2Id)) {
             return this;
         }
-        
+
         MatchTreeNode leftRes = player1Position.findNodeByPlayers(p1Id, p2Id);
         if (leftRes != null) return leftRes;
         return player2Position.findNodeByPlayers(p1Id, p2Id);
@@ -259,15 +259,15 @@ public class MatchTreeNode {
     public boolean isLeaf() {
         return player1Position == null && player2Position == null;  // 同时也意味着stage == null
     }
-    
+
     public boolean isP1Win() {
         return winner == player1Position.winner;
     }
-    
+
     public boolean isP2Win() {
         return winner == player2Position.winner;
     }
-    
+
     public boolean isHumanAlive() {
         if (winner == null) {
             if (player1Position.isHumanAlive()) return true;
@@ -275,6 +275,26 @@ public class MatchTreeNode {
             return false;
         } else {
             return winner.isHumanPlayer();
+        }
+    }
+
+    int getWonRounds(Career career, boolean encountered) {
+        if (isLeaf()) return 0;
+        if (winner == career) {
+            encountered = true;
+        }
+
+        if (encountered) {
+            if (winner == player1Position.winner) {
+                return player1Position.getWonRounds(career, true) + 1;
+            }
+            if (winner == player2Position.winner) {
+                return player2Position.getWonRounds(career, true) + 1;
+            }
+            throw new RuntimeException("?");
+        } else {
+            return Math.max(player1Position.getWonRounds(career, false),
+                    player2Position.getWonRounds(career, false));
         }
     }
 }

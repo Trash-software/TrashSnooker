@@ -20,12 +20,14 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
+import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.JsonChecksum;
@@ -34,19 +36,21 @@ import java.io.*;
 import java.util.*;
 
 public class CareerAchManager extends AchManager {
-    private final List<Achievement> snookerNormal = List.of(
-            Achievement.POT_A_BALL,
-            Achievement.SNOOKER_BREAK_100
-    );
-    private final List<Achievement> chineseEightNormal = List.of(
-            Achievement.POT_A_BALL,
-            Achievement.POOL_BREAK_POT
-    );
+//    private final List<Achievement> snookerNormal = List.of(
+//            Achievement.POT_A_BALL,
+//            Achievement.SNOOKER_BREAK_100
+//    );
+//    private final List<Achievement> chineseEightNormal = List.of(
+//            Achievement.POT_A_BALL,
+//            Achievement.POOL_BREAK_POT
+//    );
     private final CareerSave careerSave;
     private final Map<Achievement, AchCompletion> completedAchievements = new HashMap<>();
     private transient final List<Achievement> thisTimeComplete = new ArrayList<>();  // 记录这一杆完成的，在一次show之后清空
 
     private final Font titleFont = Font.font(App.FONT.getFamily(), FontWeight.BLACK, 16.0);
+    
+    private int humanContinuousPotFail;
 
     CareerAchManager(CareerSave careerSave) {
         this.careerSave = careerSave;
@@ -122,7 +126,7 @@ public class CareerAchManager extends AchManager {
     @Override
     public JSONObject toJson() {
         JSONObject object = new JSONObject();
-        for (Map.Entry<Achievement, AchCompletion> entry : AchManager.getInstance().getCompletedAchievements().entrySet()) {
+        for (Map.Entry<Achievement, AchCompletion> entry : completedAchievements.entrySet()) {
             object.put(entry.getKey().toKey(), entry.getValue().toJson());
         }
         return object;
@@ -148,12 +152,13 @@ public class CareerAchManager extends AchManager {
      */
     @Override
     public void updateAfterCueFinish(Pane owner, Game<?, ?> game, ScoreResult scoreResult,
-                                     PotAttempt potAttempt, DefenseAttempt defenseAttempt) {
-        List<Achievement> all = switch (game.getGameType()) {
-            case SNOOKER -> snookerNormal;
-            case CHINESE_EIGHT -> chineseEightNormal;
-            default -> new ArrayList<>();
-        };
+                                     PotAttempt potAttempt, DefenseAttempt defenseAttempt, 
+                                     GamePlayStage playStage) {
+//        List<Achievement> all = switch (game.getGameType()) {
+//            case SNOOKER -> snookerNormal;
+//            case CHINESE_EIGHT -> chineseEightNormal;
+//            default -> new ArrayList<>();
+//        };
         
         InGamePlayer justCuedPlayer = game.getCuingIgp();
         
@@ -162,9 +167,22 @@ public class CareerAchManager extends AchManager {
 //        Set<Achievement> notCompleted = notCompleted(all);
 
             if (game.isEnded() && game.getWiningPlayer() != null) {
+                humanContinuousPotFail = 0;
                 // 一局结束后的更新
                 if (!game.getGameValues().isTraining() && game.getWiningPlayer().getInGamePlayer().isHuman()) {
                     addAchievement(Achievement.WIN_A_FRAME, justCuedPlayer);
+                    
+                    if (game instanceof AbstractSnookerGame asg) {
+                        int maxAhead = asg.getMaxScoreDiff(justCuedPlayer.getPlayerNumber());
+                        if (maxAhead <= -65) {
+                            addAchievement(Achievement.COME_BACK_BEHIND_65, justCuedPlayer);
+                        }
+                        if ((justCuedPlayer.getPlayerNumber() == 1 && asg.isP2EverOver()) || 
+                                (justCuedPlayer.getPlayerNumber() == 2 && asg.isP1EverOver())) {
+                            // 从被超分逆转胜利
+                            addAchievement(Achievement.COME_BACK_BEHIND_OVER_SCORE, justCuedPlayer);
+                        }
+                    }
                 }
             }
 
@@ -175,10 +193,20 @@ public class CareerAchManager extends AchManager {
             }
 
             // 没犯规了
-
-            if (!game.getNewPotted().isEmpty()) {  // 进球
-                addAchievement(Achievement.POT_A_BALL, justCuedPlayer);
-                addAchievement(Achievement.POT_EIGHT_BALLS, justCuedPlayer);
+            if (potAttempt != null) {
+                if (potAttempt.isSuccess()) {
+                    humanContinuousPotFail = 0;
+                    addAchievement(Achievement.POT_A_BALL, justCuedPlayer);
+                    addAchievement(Achievement.POT_EIGHT_BALLS, justCuedPlayer);
+                } else {
+                    humanContinuousPotFail += 1;
+                    if (humanContinuousPotFail >= 3) {
+                        addAchievement(Achievement.POT_FAIL_THREE, justCuedPlayer);
+                    }
+                    if (playStage == GamePlayStage.THIS_BALL_WIN) {
+                        addAchievement(Achievement.KEY_BALL_FAIL, justCuedPlayer);
+                    }
+                }
             }
             if (defenseAttempt != null) {
                 if (defenseAttempt.isSolvingSnooker()) {
@@ -236,17 +264,68 @@ public class CareerAchManager extends AchManager {
                     addAchievement(Achievement.WIN_ALL_MATCHES, human);
                 }
             }
+
+            if (entireGame.totalFrames >= 9) {
+//                int frameNeed = entireGame.totalFrames / 2 + 1;
+                int achJudge = 5;
+                if (entireGame.getP1Wins() + entireGame.getP2Wins() == entireGame.totalFrames) {
+                    // 打满了
+                    if (p1Human) {
+                        if (entireGame.playerContinuousLoses(2) >= achJudge) {
+                            // 玩家连胜翻盘
+                            addAchievement(Achievement.LEGENDARY_REVENGE, human);
+                        } else if (entireGame.playerContinuousLoses(1) >= achJudge) {
+                            // 玩家连败被翻盘
+                            addAchievement(Achievement.LEGENDARY_REVENGED, human);
+                        }
+                    } else {
+                        if (entireGame.playerContinuousLoses(1) >= achJudge) {
+                            // 玩家连胜翻盘
+                            addAchievement(Achievement.LEGENDARY_REVENGE, human);
+                        } else if (entireGame.playerContinuousLoses(2) >= achJudge) {
+                            // 玩家连败被翻盘
+                            addAchievement(Achievement.LEGENDARY_REVENGED, human);
+                        }
+                    }
+                }
+            }
         }
 
         Platform.runLater(this::showAchievementPopup);
     }
 
-    @Override
-    public void addAchievement(Achievement achievement, InGamePlayer igp) {
+    public void addAchievement(Achievement achievement, int newRecord, InGamePlayer igp) {
         if (!igp.isHuman()) return;
         AchCompletion ac = completedAchievements.get(achievement);
         if (ac != null) {
-            if (achievement.repeatable()) {
+            if (achievement.isRecordLike()) {
+                boolean newComplete = ac.setNewRecord(achievement, newRecord);
+                if (newComplete) {
+                    thisTimeComplete.add(achievement);
+                }
+                saveToDisk();  // 不加到thisTimeComplete里，所以现在就存。暂且认为这个save不是很花时间
+            } else {
+                System.err.println("Achievement '" + achievement + "' is not record like, Should not call this method.");
+            }
+        }
+        AchCompletion newCompletion = new AchCompletion(newRecord);
+        if (achievement.isComplete(newCompletion)) {
+            newCompletion.setFirstCompletion(new Date(System.currentTimeMillis()));
+
+            completedAchievements.put(achievement, newCompletion);
+            thisTimeComplete.add(achievement);
+        } else {
+            completedAchievements.put(achievement, newCompletion);
+        }
+        saveToDisk();
+    }
+
+    @Override
+    public void addAchievement(Achievement achievement, @Nullable InGamePlayer igp) {
+        if (igp != null && !igp.isHuman()) return;
+        AchCompletion ac = completedAchievements.get(achievement);
+        if (ac != null) {
+            if (achievement.countLikeRepeatable()) {
                 boolean newComplete = ac.addOneTime(achievement);
                 if (newComplete) {
                     thisTimeComplete.add(achievement);
@@ -263,8 +342,8 @@ public class CareerAchManager extends AchManager {
             thisTimeComplete.add(achievement);
         } else {
             completedAchievements.put(achievement, newCompletion);
-            saveToDisk();
         }
+        saveToDisk();
     }
 
     @Override
@@ -322,7 +401,7 @@ public class CareerAchManager extends AchManager {
 
         Timeline shower = new Timeline();
         KeyFrame showing = new KeyFrame(Duration.millis(500),
-                new KeyValue(baseRoot.opacityProperty(), 1.0));
+                new KeyValue(baseRoot.opacityProperty(), 0.75));
         shower.getKeyFrames().add(showing);
 
         Timeline keeper = new Timeline();

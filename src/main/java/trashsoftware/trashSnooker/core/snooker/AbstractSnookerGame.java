@@ -47,6 +47,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private int indicatedTarget;
     
     private int maxScoreDiff;  // 最大分差，p1的分减p2的分
+    private boolean p1EverOver;  // p1 p2分别是否曾经超了分
+    private boolean p2EverOver;
 
     protected AbstractSnookerGame(EntireGame entireGame,
                                   GameSettings gameSettings,
@@ -718,6 +720,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return playerNum == 1 ? maxScoreDiff : -maxScoreDiff;
     }
 
+    public boolean isP1EverOver() {
+        return p1EverOver;
+    }
+
+    public boolean isP2EverOver() {
+        return p2EverOver;
+    }
+
     @Override
     protected void endMoveAndUpdate() {
         boolean isFreeBall = doingFreeBall;
@@ -725,8 +735,15 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
         updateScoreAndTarget(newPotted, isFreeBall);
         int scoreDiff = player1.getScore() - player2.getScore();
+        int rem = getRemainingScore(isFreeBall);
         if (Math.abs(scoreDiff) > Math.abs(maxScoreDiff)) {
             maxScoreDiff = scoreDiff;
+        }
+        if (scoreDiff > rem) {
+            p1EverOver = true;
+        }
+        if (-scoreDiff > rem) {
+            p2EverOver = true;
         }
         indicatedTarget = 0;
         if (!isEnded())

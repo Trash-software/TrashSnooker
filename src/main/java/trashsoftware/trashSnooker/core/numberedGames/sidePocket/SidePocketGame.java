@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SidePocketAiCue;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
+import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.movement.Movement;
@@ -16,6 +17,7 @@ import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.table.SidePocketTable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
         implements NeedBigBreak {
@@ -264,6 +266,13 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
                 }
                 AchManager.getInstance().addAchievement(Achievement.PASS_NINE, getCuingIgp());
                 winingPlayer = currentPlayer;
+                
+                SidePocketPlayer loser = getAnotherPlayer(currentPlayer);
+                Set<Integer> loserPotted = loser.getAllPotted().stream().map(Ball::getValue).collect(Collectors.toSet());
+                if (!loserPotted.contains(9) && loserPotted.size() == 8) {
+                    CareerAchManager.getInstance().addAchievement(Achievement.BALL_WORKER, loser.getInGamePlayer());
+                }
+                
                 end();
                 return;
             }

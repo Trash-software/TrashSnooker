@@ -21,6 +21,8 @@ import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipScore;
 import trashsoftware.trashSnooker.core.career.ChampionshipStage;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.*;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
@@ -174,6 +176,12 @@ public class ChampDrawView extends ChildInitializable {
         updateGui();
 
         if (championship.isFinished() || !championship.isHumanAlive()) {
+            int humanWinRounds = championship.getWonRoundsCount(CareerManager.getInstance().getHumanPlayerCareer());
+            System.out.println("Player wins count: " + humanWinRounds);
+            if (humanWinRounds == 0) {
+                AchManager.getInstance().addAchievement(Achievement.ONE_ROUND_TOUR, null);
+            }
+            
             showCongratulation();
         }
     }

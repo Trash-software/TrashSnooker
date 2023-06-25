@@ -288,6 +288,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         cueStartTime = System.currentTimeMillis();
         if (cueFinishTime != 0) thinkTime = (int) (cueStartTime - cueFinishTime);
 
+        System.out.println("Think time: " + thinkTime);
+        if (thinkTime >= 60000) {
+            AchManager.getInstance().addAchievement(Achievement.LONG_THINK, getCuingIgp());
+        }
+
         whiteFirstCollide = null;
         collidesWall = false;
         lastPotSuccess = false;

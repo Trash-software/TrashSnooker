@@ -17,7 +17,7 @@ public class EntireGameTitle {
     public final int totalFrames;
     public final String matchId;  // 在生涯模式中这场比赛的唯一ID；为null in快速游戏
     
-    EntireGameTitle(Timestamp startTime, GameRule gameRule,
+    public EntireGameTitle(Timestamp startTime, GameRule gameRule,
                     String player1Id, String player2Id,
                     boolean player1isAi, boolean player2isAi,
                     int totalFrames, String matchId) {

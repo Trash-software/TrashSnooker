@@ -1,11 +1,15 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
+
 import java.util.*;
 
 public abstract class Player {
 
 //    protected final int number;
     protected final InGamePlayer inGamePlayer;
+    protected final List<Ball> cumulatedPotted = new ArrayList<>();
     protected final TreeMap<Ball, Integer> singlePole = new TreeMap<>();
     protected final List<PotAttempt> attempts = new ArrayList<>();
     protected final List<DefenseAttempt> defenseAttempts = new ArrayList<>();
@@ -60,9 +64,17 @@ public abstract class Player {
                 singlePole.put(ball, 1);
             }
         }
+        this.cumulatedPotted.addAll(pottedBalls);
         int curScore = score;
         addScoreOfPotted(pottedBalls);
         lastAddedScore = score - curScore;
+        
+        int singlePoleCount = getSinglePoleCount();
+
+        if (singlePoleCount >= 3) {
+            AchManager.getInstance().addAchievement(Achievement.THREE_BALLS_IN_A_ROW, inGamePlayer);
+        }
+        AchManager.getInstance().addAchievement(Achievement.POSITIONING_MASTER, singlePoleCount, inGamePlayer);
     }
 
     public TreeMap<Ball, Integer> getSinglePole() {
@@ -75,6 +87,14 @@ public abstract class Player {
             singlePoleScore += entry.getKey().getValue() * entry.getValue();
         }
         return singlePoleScore;
+    }
+    
+    public int getSinglePoleCount() {
+        int singlePoleCount = 0;
+        for (int c : singlePole.values()) {
+            singlePoleCount += c;
+        }
+        return singlePoleCount;
     }
 
     public int getLastAddedScore() {
@@ -96,5 +116,9 @@ public abstract class Player {
 
     public void withdraw() {
         withdrawn = true;
+    }
+
+    public List<Ball> getAllPotted() {
+        return cumulatedPotted;
     }
 }

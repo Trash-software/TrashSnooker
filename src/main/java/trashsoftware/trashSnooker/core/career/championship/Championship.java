@@ -202,6 +202,10 @@ public abstract class Championship {
         return finished;
     }
     
+    public int getWonRoundsCount(Career career) {
+        return matchTree.getRoot().getWonRounds(career, false);
+    }
+    
     public SortedMap<ChampionshipScore.Rank, List<Career>> getResults() {
         SortedMap<ChampionshipScore.Rank, List<Career>> result = new TreeMap<>();
         matchTree.getRoot().getResults(data, result, 0);

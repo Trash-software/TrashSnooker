@@ -1,6 +1,8 @@
 package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
@@ -18,7 +20,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    public static final boolean SAVE = false;
+    public static final boolean SAVE = true;
     private static DBAccess database;
 
     private Connection connection;
@@ -132,6 +134,10 @@ public class DBAccess {
                 }
             }
         }
+        if (data[0] == 0) {
+            AchManager.getInstance().addAchievement(Achievement.FRAME_NO_ATTACK, player.getInGamePlayer());
+        }
+        
         for (DefenseAttempt defenseAttempt : player.getDefenseAttempts()) {
             data[4]++;
             if (defenseAttempt.isSuccess()) {
@@ -529,7 +535,15 @@ public class DBAccess {
                 goldNine = 1;
                 breakClear = 0;
                 continueClear = 0;
+                AchManager.getInstance().addAchievement(Achievement.GOLDEN_NINE, player.getInGamePlayer());
             }
+        }
+        if (breakClear > 0) {
+            AchManager.getInstance().addAchievement(Achievement.POOL_BREAK_CLEAR, player.getInGamePlayer());
+            AchManager.getInstance().addAchievement(Achievement.POOL_CLEAR, player.getInGamePlayer());
+        } 
+        if (continueClear > 0) {
+            AchManager.getInstance().addAchievement(Achievement.POOL_CLEAR, player.getInGamePlayer());
         }
         
         String query = "INSERT INTO " + tableName + " VALUES (" +
@@ -556,8 +570,19 @@ public class DBAccess {
         int highBreak = 0;
         int breaks50 = 0;  // 一局最多两个50+，最多一个100+
         for (Integer b : breakScores) {
-            if (b >= 50) breaks50++;
-            if (b > highBreak) highBreak = b;
+            if (b >= 50) {
+                breaks50++;
+                AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_50, player.getInGamePlayer());
+            }
+            if (b > highBreak) {
+                highBreak = b;
+            }
+        }
+        if (highBreak >= 100) {
+            AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_100, player.getInGamePlayer());
+        }
+        if (highBreak >= 147) {
+            AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_147, player.getInGamePlayer());
         }
         String query = "INSERT INTO SnookerRecord VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +

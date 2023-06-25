@@ -9,14 +9,19 @@ import java.util.Date;
 
 public class AchCompletion {
     private Date firstCompletion;
-    private int times = 1;
+    private int times;
 
-    AchCompletion(Date firstCompletion) {
+    AchCompletion(Date firstCompletion, int times) {
         this.firstCompletion = firstCompletion;
+        this.times = times;
+    }
+
+    AchCompletion(int times) {
+        this(null, times);
     }
 
     AchCompletion() {
-        this(null);
+        this(1);
     }
 
     public static AchCompletion fromJson(JSONObject json) {
@@ -31,7 +36,8 @@ public class AchCompletion {
         } else {
             fc = null;
         }
-        AchCompletion ac = new AchCompletion(fc);
+        AchCompletion ac = new AchCompletion();
+        ac.setFirstCompletion(fc);
         ac.times = json.getInt("completions");
         return ac;
     }
@@ -55,6 +61,22 @@ public class AchCompletion {
     public boolean addOneTime(Achievement achievement) {
         boolean wasComplete = achievement.isComplete(this);
         times++;
+        boolean nc = !wasComplete && achievement.isComplete(this);
+        if (nc) {
+            firstCompletion = new Date();
+        }
+        return nc;
+    }
+
+    /**
+     * 针对recordLike的成就。例如：单杆最高
+     */
+    public boolean setNewRecord(Achievement achievement, int newRecord) {
+        boolean wasComplete = achievement.isComplete(this);
+        if (newRecord > this.times) {
+            this.times = newRecord;
+        }
+
         boolean nc = !wasComplete && achievement.isComplete(this);
         if (nc) {
             firstCompletion = new Date();

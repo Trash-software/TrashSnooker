@@ -1,6 +1,8 @@
 package trashsoftware.trashSnooker.core;
 
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
+import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
@@ -10,6 +12,8 @@ import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.GeneralSaveManager;
 import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
+import trashsoftware.trashSnooker.util.db.EntireGameRecord;
+import trashsoftware.trashSnooker.util.db.EntireGameTitle;
 
 import java.io.File;
 import java.sql.Timestamp;
@@ -229,14 +233,46 @@ public class EntireGame {
             updateFrameRecords(game.getPlayer2(), player);
         }
 
+        boolean end;
+        InGamePlayer winner = null;
         int frameIndex = p1Wins + p2Wins + 1;
         if (player.getPlayerPerson().equals(p1.getPlayerPerson())) {
             winRecords.put(frameIndex, 1);
-            return p1WinsAFrame();
+            end = p1WinsAFrame();
+            if (end) winner = p1;
         } else {
             winRecords.put(frameIndex, 2);
-            return p2WinsAFrame();
+            end = p2WinsAFrame();
+            if (end) winner = p2;
         }
+        if (end && record && gameValues.isStandard()) {
+            EntireGameRecord egr = DBAccess.getInstance().getMatchDetail(toEgt());
+            int winnerIndex = winner.getPlayerNumber() == 1 ? 0 : 1;
+            if (winner.isHuman()) {
+                int[][] totalBasic = egr.totalBasicStats();
+                if (totalBasic[winnerIndex][0] >= 50) {
+                    double potSuccessRate = (double) totalBasic[winnerIndex][1] / totalBasic[winnerIndex][0];
+                    if (potSuccessRate >= 0.9) {
+                        CareerAchManager.getInstance().addAchievement(Achievement.ACCURACY_WIN, winner);
+                    }
+                }
+            }
+        }
+        
+        return end;
+    }
+    
+    public EntireGameTitle toEgt() {
+        return new EntireGameTitle(
+                startTime,
+                gameValues.rule,
+                p1.getPlayerPerson().getPlayerId(),
+                p2.getPlayerPerson().getPlayerId(),
+                !p1.isHuman(),
+                !p2.isHuman(),
+                totalFrames,
+                metaMatchInfo == null ? null : metaMatchInfo.toString()
+        );
     }
 
     public int getTotalFrames() {

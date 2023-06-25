@@ -9,7 +9,9 @@ import java.util.Map;
 
 public class InvalidAchManager extends AchManager {
     @Override
-    public void updateAfterCueFinish(Pane owner, Game<?, ?> game, ScoreResult scoreResult, PotAttempt potAttempt, DefenseAttempt defenseAttempt) {
+    public void updateAfterCueFinish(Pane owner, Game<?, ?> game, ScoreResult scoreResult, 
+                                     PotAttempt potAttempt, DefenseAttempt defenseAttempt,
+                                     GamePlayStage playStage) {
     }
 
     @Override
@@ -33,5 +35,8 @@ public class InvalidAchManager extends AchManager {
 
     @Override
     public void addAchievement(Achievement achievement, InGamePlayer igp) {
+    }
+
+    public void addAchievement(Achievement achievement, int newRecord, InGamePlayer igp) {
     }
 }

@@ -859,7 +859,7 @@ public class GameView implements Initializable {
         game.getGame().getRecorder().writeCueToStream();
 
         AchManager.getInstance().updateAfterCueFinish(gamePane, game.getGame(), scoreResult,
-                lastPotAttempt, curDefAttempt);
+                lastPotAttempt, curDefAttempt, gamePlayStage());
 
         FoulInfo foulInfo = game.getGame().getThisCueFoul();
         if (foulInfo.isFoul()) {
