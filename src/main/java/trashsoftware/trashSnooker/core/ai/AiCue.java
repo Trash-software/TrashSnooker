@@ -1705,7 +1705,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     attackParams.attackChoice.attackingPlayer.getPlayerPerson().getAiPlayStyle().position / 100;
             AttackChoice firstChoice = nextStepAttackChoices.isEmpty() ? null : nextStepAttackChoices.get(0);
             for (AttackChoice next : nextStepAttackChoices) {
-                price += next.defaultRef.price * mul;
+                double positionPrice = next.defaultRef.price * mul;
+                if (next.defaultRef.attackChoice.angleRad < 0.075) {  // 4.3度的样子
+                    positionPrice *= 0.75;
+                }
+                
+                price += positionPrice;
                 mul /= 4;
             }
 //            if (whitePrediction.getSecondCollide() != null) price *= kickBallMul;

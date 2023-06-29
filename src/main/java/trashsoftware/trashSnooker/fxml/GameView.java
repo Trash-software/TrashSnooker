@@ -51,7 +51,7 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
+import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.NineBallScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
@@ -356,7 +356,7 @@ public class GameView implements Initializable {
             singlePoleCanvas.setWidth(ballDiameter * 7 * 1.2);
         else if (gameValues.rule == GameRule.CHINESE_EIGHT || gameValues.rule == GameRule.LIS_EIGHT)
             singlePoleCanvas.setWidth(ballDiameter * 8 * 1.2);
-        else if (gameValues.rule == GameRule.SIDE_POCKET)
+        else if (gameValues.rule == GameRule.AMERICAN_NINE)
             singlePoleCanvas.setWidth(ballDiameter * 9 * 1.2);
         else throw new RuntimeException("nmsl");
 
@@ -986,7 +986,7 @@ public class GameView implements Initializable {
                     letOtherPlayMenu.setDisable(false);
                 }
             }
-            if (game.getGame() instanceof SidePocketGame g) {
+            if (game.getGame() instanceof AmericanNineBallGame g) {
                 if (g.currentlyCanPushOut()) {
                     pushOutMenu.setDisable(false);
                 }
@@ -1539,7 +1539,7 @@ public class GameView implements Initializable {
 
     @FXML
     void pushOutAction() {
-        if (game.getGame() instanceof SidePocketGame g) {
+        if (game.getGame() instanceof AmericanNineBallGame g) {
             cursorDirectionUnitX = 0.0;
             cursorDirectionUnitY = 0.0;
             hideCue();
@@ -2637,7 +2637,7 @@ public class GameView implements Initializable {
                             csr.getP1Rems() : csr.getP2Rems();
                     System.out.println(rems.size());
                     drawChineseEightAllTargets(rems);
-                } else if (gameValues.rule == GameRule.SIDE_POCKET) {
+                } else if (gameValues.rule == GameRule.AMERICAN_NINE) {
                     NineBallScoreResult nsr = (NineBallScoreResult) replay.getScoreResult();
                     Map<PoolBall, Boolean> rems = nsr.getRemBalls();
                     drawPoolBallAllTargets(rems);
@@ -2779,8 +2779,8 @@ public class GameView implements Initializable {
                     ballRange, frame
             );
             drawChineseEightAllTargets(targets);
-        } else if (frame instanceof SidePocketGame) {
-            Map<PoolBall, Boolean> balls = ((SidePocketGame) frame).getBalls();
+        } else if (frame instanceof AmericanNineBallGame) {
+            Map<PoolBall, Boolean> balls = ((AmericanNineBallGame) frame).getBalls();
             drawPoolBallAllTargets(balls);
         }
     }

@@ -183,7 +183,7 @@ public class MatchRecord extends RecordTree {
 
         boolean poolLike = egt.gameRule == GameRule.CHINESE_EIGHT ||
                 egt.gameRule == GameRule.LIS_EIGHT ||
-                egt.gameRule == GameRule.SIDE_POCKET;
+                egt.gameRule == GameRule.AMERICAN_NINE;
         if (egt.gameRule.snookerLike()) {
             int[][] totalSnookerScores = ((EntireGameRecord.Snooker) matchRec).totalScores();
             page.add(new Label(strings.getString("totalPoints")), 0, rowIndex);
@@ -242,7 +242,7 @@ public class MatchRecord extends RecordTree {
             page.add(new Label(String.valueOf(numberedBreaks[1][4])), 6, rowIndex);
             rowIndex++;
             
-            if (egt.gameRule == GameRule.SIDE_POCKET) {
+            if (egt.gameRule == GameRule.AMERICAN_NINE) {
                 page.add(new Label(strings.getString("goldNines")), 0, rowIndex);
                 page.add(new Label(String.valueOf(numberedBreaks[0][5])), 2, rowIndex);
                 page.add(new Label(String.valueOf(numberedBreaks[1][5])), 6, rowIndex);

@@ -458,6 +458,34 @@
       }
     },
     {
+      "id": "american_nine_sydney_burwood_cup",
+      "names": {
+        "zh": "美式九球Burwood杯",
+        "en": "American Nine-Ball Burwood Cup"
+      },
+      "type": "american_nine",
+      "seeds": 0,
+      "places": 32,
+      "pre_matches": [
+      ],
+      "frames": [
+        9, 5, 5, 5, 3
+      ],
+      "awards": [
+        20000, 10000, 6000, 3000, 1500
+      ],
+      "frameExp": 20,
+      "ranked": true,
+      "professional": false,
+      "date": "06/28",
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
+      }
+    },
+    {
       "id": "chongqing_open",
       "names": {
         "zh": "斯诺克CQ公开赛",
@@ -486,6 +514,34 @@
         "smoothness": "normal",
         "pocketSize": "large",
         "pocketDifficulty": "loose"
+      }
+    },
+    {
+      "id": "american_nine_give_power_open",
+      "names": {
+        "zh": "美式九球给力国公开赛",
+        "en": "American Nine-Ball Give Power Open"
+      },
+      "type": "american_nine",
+      "seeds": 0,
+      "places": 64,
+      "pre_matches": [
+      ],
+      "frames": [
+        13, 9, 7, 5, 5, 3
+      ],
+      "awards": [
+        100000, 40000, 20000, 12000, 8000, 5000, 2000
+      ],
+      "frameExp": 25,
+      "ranked": true,
+      "professional": false,
+      "date": "08/05",
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
       }
     },
     {
@@ -523,7 +579,7 @@
         "en": "Snooker Challenger Open"
       },
       "description": {
-        "zh": "一项无关紧要的赛事，但由于其优质的球桌与78mm的特制袋口，成为球员们证明准度的最佳舞台。",
+        "zh": "一项无关紧要的赛事，但由于其优质的球桌与78mm的特制袋口，成为球员们证明准度的舞台。",
         "en": ""
       },
       "type": "snooker",

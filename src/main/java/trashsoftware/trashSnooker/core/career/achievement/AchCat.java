@@ -11,7 +11,11 @@ public enum AchCat {
     SNOOKER,
     POOL_GENERAL,
     CHINESE_EIGHT,
-    AMERICAN_NINE;
+    AMERICAN_NINE,
+    TOUR,
+    SNOOKER_TOUR,
+    CHINESE_EIGHT_TOUR,
+    AMERICAN_NINE_TOUR;
     
     private Achievement[] allAchInCat;
     

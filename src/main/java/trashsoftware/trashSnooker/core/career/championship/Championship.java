@@ -35,7 +35,7 @@ public abstract class Championship {
             case CHINESE_EIGHT:
                 championship = new ChineseEightChampionship(data, timestamp);
                 break;
-            case SIDE_POCKET:
+            case AMERICAN_NINE:
             case MINI_SNOOKER:
             default:
                 throw new RuntimeException("Currently unsupported");
@@ -295,8 +295,10 @@ public abstract class Championship {
         Map<ChampionshipScore.Rank, List<String>> extra = extraAwardsMap();
         
         matchTree.distributeAwards(data, timestamp, extra);
-        CareerManager.getInstance().updateRanking();
-        CareerManager.getInstance().saveToDisk();
+        CareerManager cm = CareerManager.getInstance();
+        cm.updateRanking();
+        cm.checkRankingAchievements();
+        cm.saveToDisk();
     }
 
     public ChampionshipData getData() {

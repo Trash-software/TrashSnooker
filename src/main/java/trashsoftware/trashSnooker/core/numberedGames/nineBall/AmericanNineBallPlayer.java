@@ -1,14 +1,14 @@
-package trashsoftware.trashSnooker.core.numberedGames.sidePocket;
+package trashsoftware.trashSnooker.core.numberedGames.nineBall;
 
 import trashsoftware.trashSnooker.core.InGamePlayer;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 
-public class SidePocketPlayer extends NumberedBallPlayer {
+public class AmericanNineBallPlayer extends NumberedBallPlayer {
 
     private int target;
     private boolean goldNine;
 
-    public SidePocketPlayer(InGamePlayer playerPerson) {
+    public AmericanNineBallPlayer(InGamePlayer playerPerson) {
         super(playerPerson);
     }
 

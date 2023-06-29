@@ -294,17 +294,15 @@ public class EntireGame {
     }
 
     private void updateFrameRecords(Player framePlayer, InGamePlayer winingPlayer) {
-        if (framePlayer instanceof SnookerPlayer) {
-            SnookerPlayer snookerPlayer = (SnookerPlayer) framePlayer;
+        if (framePlayer instanceof SnookerPlayer snookerPlayer) {
             snookerPlayer.flushSinglePoles();
             if (gameValues.isStandard() && game.isStarted())
                 DBAccess.getInstance().recordSnookerBreaks(this,
                         getGame(),
                         snookerPlayer,
                         snookerPlayer.getSinglePolesInThisGame());
-        } else if (framePlayer instanceof NumberedBallPlayer) {
+        } else if (framePlayer instanceof NumberedBallPlayer numberedBallPlayer) {
             // 炸清和接清
-            NumberedBallPlayer numberedBallPlayer = (NumberedBallPlayer) framePlayer;
             numberedBallPlayer.flushSinglePoles();
             if (gameValues.isStandard() && game.isStarted())
                 DBAccess.getInstance().recordNumberedBallResult(this,

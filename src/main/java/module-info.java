@@ -35,7 +35,7 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.core.snooker;
     exports trashsoftware.trashSnooker.core.numberedGames;
     exports trashsoftware.trashSnooker.core.numberedGames.chineseEightBall;
-    exports trashsoftware.trashSnooker.core.numberedGames.sidePocket;
+    exports trashsoftware.trashSnooker.core.numberedGames.nineBall;
     exports trashsoftware.trashSnooker.util;
     exports trashsoftware.trashSnooker.core.movement;
     exports trashsoftware.trashSnooker.util.db;

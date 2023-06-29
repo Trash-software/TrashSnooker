@@ -78,7 +78,7 @@ public abstract class GameReplay implements GameHolder {
                 table = new ChineseEightTable(gameValues.table);
                 scoreFactory = new ChineseEightScoreFactory();
                 break;
-            case SIDE_POCKET:
+            case AMERICAN_NINE:
                 table = new SidePocketTable(gameValues.table);
                 scoreFactory = new NineBallScoreResultFactory();
                 break;

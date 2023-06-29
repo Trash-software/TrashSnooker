@@ -186,7 +186,7 @@ public class ChampionshipData {
                 break;
             case CHINESE_EIGHT:
             case LIS_EIGHT:
-            case SIDE_POCKET:
+            case AMERICAN_NINE:
                 ballMetrics = BallMetrics.POOL_BALL;
                 break;
             default:
@@ -324,8 +324,8 @@ public class ChampionshipData {
             case CHINESE_EIGHT:
             case LIS_EIGHT:
                 return TableMetrics.TableBuilderFactory.CHINESE_EIGHT;
-            case SIDE_POCKET:
-                return TableMetrics.TableBuilderFactory.SIDE_POCKET;
+            case AMERICAN_NINE:
+                return TableMetrics.TableBuilderFactory.POOL_TABLE_9;
             default:
                 throw new RuntimeException("Unknown game type " + type);
         }

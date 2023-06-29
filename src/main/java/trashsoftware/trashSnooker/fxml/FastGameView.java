@@ -219,8 +219,8 @@ public class FastGameView extends ChildInitializable {
                     tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.CHINESE_EIGHT);
                     ballMetricsBox.getSelectionModel().select(BallMetrics.POOL_BALL);
                     break;
-                case SIDE_POCKET:
-                    tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.SIDE_POCKET);
+                case AMERICAN_NINE:
+                    tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.POOL_TABLE_9);
                     ballMetricsBox.getSelectionModel().select(BallMetrics.POOL_BALL);
                     break;
             }

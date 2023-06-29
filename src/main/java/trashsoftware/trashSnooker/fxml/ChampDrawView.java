@@ -175,7 +175,7 @@ public class ChampDrawView extends ChildInitializable {
     private void pveMatchFinish() {
         updateGui();
 
-        if (championship.isFinished() || !championship.isHumanAlive()) {
+        if (championship.isFinished() || !championship.isHumanAlive()) {  // 这里是or，看错两次了
             int humanWinRounds = championship.getWonRoundsCount(CareerManager.getInstance().getHumanPlayerCareer());
             System.out.println("Player wins count: " + humanWinRounds);
             if (humanWinRounds == 0) {
@@ -271,6 +271,8 @@ public class ChampDrawView extends ChildInitializable {
     }
 
     private void showCongratulation() {
+        AchManager.getInstance().showAchievementPopup();  // 展示比如获得冠军这些成就
+        
         SortedMap<ChampionshipScore.Rank, List<Career>> matchRes = championship.getResults();
 
         ChampionshipScore.Rank humanRank = null;
@@ -329,6 +331,7 @@ public class ChampDrawView extends ChildInitializable {
             startGameInNewRound(match);
             quitCurrentMatch(match);
         }
+        AchManager.getInstance().showAchievementPopup();  // 展示比如获得冠军这些成就。当然这里不会是冠军
         updateGui();
     }
 

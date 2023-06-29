@@ -128,7 +128,7 @@ public class GameTypeTree extends RecordTree {
             resultPane.add(new Label(strings.getString("single147")), 0, rowIndex);
             breaks147Row = rowIndex;
             resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
-        } else if (gameRule == GameRule.CHINESE_EIGHT || gameRule == GameRule.SIDE_POCKET) {
+        } else if (gameRule == GameRule.CHINESE_EIGHT || gameRule == GameRule.AMERICAN_NINE) {
             breaksScores = db.getNumberedBallGamesTotal(gameRule, pai.playerId, pai.isAi);
             resultPane.add(new Label(strings.getString("numBreaks")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
@@ -145,7 +145,7 @@ public class GameTypeTree extends RecordTree {
             resultPane.add(new Label(strings.getString("highestSingleBalls")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
             
-            if (gameRule == GameRule.SIDE_POCKET) {
+            if (gameRule == GameRule.AMERICAN_NINE) {
                 resultPane.add(new Label(strings.getString("goldNines")), 0, rowIndex);
                 resultPane.add(new Label(String.valueOf(breaksScores[5])), 1, rowIndex++);
             }

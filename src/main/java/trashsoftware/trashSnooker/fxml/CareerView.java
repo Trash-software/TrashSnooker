@@ -83,6 +83,7 @@ public class CareerView extends ChildInitializable {
     CareerManager careerManager;
     private PerkManager perkManager;
     private Stage selfStage;
+    private EntryView parent;
     private ResourceBundle strings;
 
     private ChampionshipData activeOrNext;
@@ -105,8 +106,6 @@ public class CareerView extends ChildInitializable {
         initTypeBox();
         initTable();
         initAwardsTable();
-
-        refreshGui();
     }
 
     @Override
@@ -114,8 +113,16 @@ public class CareerView extends ChildInitializable {
         return selfStage;
     }
 
-    public void setSelfStage(Stage selfStage) {
+    public void setup(EntryView parent, Stage selfStage) {
         this.selfStage = selfStage;
+        this.parent = parent;
+        
+        // 检测一些新出的成就
+        careerManager.getHumanPlayerCareer().checkScoreAchievements();
+        careerManager.checkRankingAchievements();
+        AchManager.getInstance().showAchievementPopup();
+        
+        refreshGui();
     }
 
     private void refreshPersonalAwardsTable() {
@@ -209,7 +216,7 @@ public class CareerView extends ChildInitializable {
 
         switch (gameRule) {
             case SNOOKER:
-                List<ChampionshipData> threeBigData = ChampDataManager.getInstance().getSnookerThreeBig();
+                List<ChampionshipData> threeBigData = ChampDataManager.getInstance().getSnookerTripleCrown();
                 Map<ChampionshipData, Integer> threeBigAch = new HashMap<>();
                 for (ChampionshipScore cs : csList) {
                     if (threeBigData.contains(cs.data)) {
@@ -411,6 +418,13 @@ public class CareerView extends ChildInitializable {
                     myRank.getShownAwards(),
                     myRank.getTotalAwards()));
         }
+    }
+
+    @Override
+    public void backAction() {
+        parent.refreshGui();
+        
+        super.backAction();
     }
 
     @FXML

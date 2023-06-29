@@ -2,9 +2,9 @@
   "challenges": [
     {
       "id": "pool-half-regular",
-      "rule": "side_pocket",
+      "rule": "american_nine",
       "type": "snake_half",
-      "table": "side_pocket",
+      "table": "pool_table_9",
       "pocketSize": "std",
       "pocketDifficulty": "normal",
       "rewards": {
@@ -19,9 +19,9 @@
     },
     {
       "id": "pool-full-regular",
-      "rule": "side_pocket",
+      "rule": "american_nine",
       "type": "snake_full",
-      "table": "side_pocket",
+      "table": "pool_table_9",
       "pocketSize": "std",
       "pocketDifficulty": "normal",
       "rewards": {
@@ -36,9 +36,9 @@
     },
     {
       "id": "pool-half-ordered-regular",
-      "rule": "side_pocket",
+      "rule": "american_nine",
       "type": "snake_half_ordered",
-      "table": "side_pocket",
+      "table": "pool_table_9",
       "pocketSize": "std",
       "pocketDifficulty": "normal",
       "rewards": {
@@ -53,9 +53,9 @@
     },
     {
       "id": "pool-full-ordered-regular",
-      "rule": "side_pocket",
+      "rule": "american_nine",
       "type": "snake_full_ordered",
-      "table": "side_pocket",
+      "table": "pool_table_9",
       "pocketSize": "std",
       "pocketDifficulty": "normal",
       "rewards": {

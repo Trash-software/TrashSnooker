@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
 import trashsoftware.trashSnooker.core.career.awardItems.AwardPerk;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeHistory;
@@ -160,8 +162,46 @@ public class HumanCareer extends Career {
             int exp = score.data.getExpByRank(rank);
             totalExp += exp;
             expInThisLevel += exp;
-            
+
             earnMoney(score.data.getAwardByRank(rank));
+        }
+        checkScoreAchievements();
+    }
+
+    public void checkScoreAchievements() {
+        AchManager achManager = AchManager.getInstance();
+        
+        Set<String> remSnookerTripleCrown = new HashSet<>(Set.of(ChampDataManager.getSnookerTripleCrownIds()));
+        
+        for (ChampionshipScore score : getChampionshipScores()) {
+            for (ChampionshipScore.Rank rank : score.ranks) {
+                if (score.data.getAwardByRank(rank) > 0) {
+                    achManager.addAchievement(Achievement.EARNED_MONEY, null);
+                }
+                
+                if (rank == ChampionshipScore.Rank.CHAMPION) {
+                    achManager.addAchievement(Achievement.CHAMPION, null);
+                    if (score.data.getType() == GameRule.SNOOKER) {
+                        if (score.data.ranked) {
+                            achManager.addAchievement(Achievement.SNOOKER_RANKED_CHAMPION, null);
+                        }
+                        remSnookerTripleCrown.remove(score.data.id);
+                        if (ChampDataManager.isSnookerWorldChamp(score.data)) {
+                            achManager.addAchievement(Achievement.SNOOKER_WORLD_CHAMPION, null);
+                        }
+                    }
+                } else if (rank == ChampionshipScore.Rank.SECOND_PLACE) {
+                    achManager.addAchievement(Achievement.SECOND_PLACE, null);
+                } else if (rank == ChampionshipScore.Rank.TOP_4) {
+                    achManager.addAchievement(Achievement.BEST_FOUR, null);
+                } else if (rank == ChampionshipScore.Rank.BEST_SINGLE) {
+                    achManager.addAchievement(Achievement.POTTING_MACHINE, null);
+                }
+            }
+        }
+        
+        if (remSnookerTripleCrown.isEmpty()) {
+            achManager.addAchievement(Achievement.SNOOKER_TRIPLE_CROWN, null);
         }
     }
 
@@ -231,7 +271,7 @@ public class HumanCareer extends Career {
             money += new CareerWithAwards(GameRule.SNOOKER, this, Calendar.getInstance()).getTotalAwards();
             money += new CareerWithAwards(GameRule.CHINESE_EIGHT, this, Calendar.getInstance()).getTotalAwards();
             money += new CareerWithAwards(GameRule.LIS_EIGHT, this, Calendar.getInstance()).getTotalAwards();
-            money += new CareerWithAwards(GameRule.SIDE_POCKET, this, Calendar.getInstance()).getTotalAwards();
+            money += new CareerWithAwards(GameRule.AMERICAN_NINE, this, Calendar.getInstance()).getTotalAwards();
             money *= (1 - TAX_RATE);
             CareerManager.getInstance().saveToDisk();
         }

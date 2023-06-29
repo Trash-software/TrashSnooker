@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.core.career.achievement.AchCompletion;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
@@ -44,6 +43,7 @@ public class CareerManager {
     private final List<Career.CareerWithAwards> snookerRanking = new ArrayList<>();
     private final List<Career.CareerWithAwards> snookerRankingSingleSeason = new ArrayList<>();
     private final List<Career.CareerWithAwards> chineseEightRanking = new ArrayList<>();
+    private final List<Career.CareerWithAwards> americanNineRanking = new ArrayList<>();
     private HumanCareer humanPlayerCareer;  // 玩家的career
     private Championship inProgress;
     private int lastSavedVersion;
@@ -467,7 +467,8 @@ public class CareerManager {
                 return chineseEightRanking;
             case LIS_EIGHT:
             case MINI_SNOOKER:
-            case SIDE_POCKET:
+            case AMERICAN_NINE:
+                return americanNineRanking;
             default:
                 return new ArrayList<>();
         }
@@ -750,7 +751,7 @@ public class CareerManager {
             case CHINESE_EIGHT:
                 championship = new ChineseEightChampionship(nextData, timestamp);
                 break;
-            case SIDE_POCKET:
+            case AMERICAN_NINE:
             case LIS_EIGHT:
             case MINI_SNOOKER:
             default:
@@ -783,6 +784,27 @@ public class CareerManager {
         }
 
         chineseEightRanking.sort(Career.CareerWithAwards::twoSeasonsCompare);
+        
+        // 美式九球两年
+        americanNineRanking.clear();
+        for (Career career : playerCareers) {
+            if (career.getPlayerPerson().isPlayerOf(GameRule.AMERICAN_NINE)) {
+                americanNineRanking.add(new Career.CareerWithAwards(GameRule.AMERICAN_NINE, career, timestamp));
+            }
+        }
+
+        americanNineRanking.sort(Career.CareerWithAwards::twoSeasonsCompare);
+    }
+    
+    public void checkRankingAchievements() {
+        CareerRank humanSnooker = humanPlayerRanking(GameRule.SNOOKER, ChampionshipData.Selection.REGULAR);
+
+        if (humanSnooker.rank == 0) {  // 从0开始的
+            AchManager.getInstance().addAchievement(Achievement.SNOOKER_TOP_1, null);
+        }
+        if (humanSnooker.rank < 16) {
+            AchManager.getInstance().addAchievement(Achievement.SNOOKER_TOP_16, null);
+        }
     }
 
     public void updateHandFeels() {
@@ -793,28 +815,19 @@ public class CareerManager {
 
     public void updateEfforts() {
         updateEffortByRank(GameRule.SNOOKER);
-//        updateEffortByRank(GameRule.CHINESE_EIGHT);
-//        updateEffortByRank(GameRule.SIDE_POCKET);
+        updateEffortByRank(GameRule.CHINESE_EIGHT);
+        updateEffortByRank(GameRule.AMERICAN_NINE);
 //        updateEffortByRank(GameRule.MINI_SNOOKER);
     }
 
     private List<Career.CareerWithAwards> getRankOfGame(GameRule rule) {
-        List<Career.CareerWithAwards> rnk;
-
-        switch (rule) {
-            case SNOOKER:
-                rnk = snookerRanking;
-                break;
-            case CHINESE_EIGHT:
-                rnk = chineseEightRanking;
-                break;
-            case MINI_SNOOKER:
-            case SIDE_POCKET:
-            default:
-                throw new RuntimeException();
-        }
-
-        return rnk;
+        return switch (rule) {
+            case SNOOKER -> snookerRanking;
+            case CHINESE_EIGHT -> chineseEightRanking;
+            case AMERICAN_NINE -> americanNineRanking;
+//            case MINI_SNOOKER, 
+            default -> throw new RuntimeException();
+        };
     }
 
     private void updateEffortByRank(GameRule rule) {

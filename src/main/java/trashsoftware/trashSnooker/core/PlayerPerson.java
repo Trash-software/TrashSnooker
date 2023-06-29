@@ -257,6 +257,7 @@ public class PlayerPerson {
             for (Object key : array) {
                 String s = String.valueOf(key);
                 if ("all".equals(s)) return participatesAll();
+                if ("sidePocket".equals(s)) s = "americanNine";  // 填坑
 
                 String enumName = Util.toAllCapsUnderscoreCase(s);
                 try {

@@ -12,7 +12,7 @@ import java.util.List;
 public class ChampDataManager {
 
     public static final String DATA_FILE = "data/tournaments.json";
-    private static final String[] SNOOKER_THREE_BIG_IDS = {
+    private static final String[] SNOOKER_TRIPLE_CROWN_IDS = {
             "world_champ", "masters", "united_kingdom_champ"
     };
     private static ChampDataManager instance;
@@ -21,7 +21,7 @@ public class ChampDataManager {
      */
     private final List<ChampionshipData> championshipData = new ArrayList<>();
 
-    private final List<ChampionshipData> snookerThreeBig = new ArrayList<>();
+    private final List<ChampionshipData> snookerTripleCrown = new ArrayList<>();
 
     public static ChampDataManager getInstance() {
         if (instance == null) {
@@ -33,8 +33,8 @@ public class ChampDataManager {
                 ChampionshipData data = ChampionshipData.fromJsonObject(champObj);
                 instance.championshipData.add(data);
 
-                if (Util.arrayContainsEqual(SNOOKER_THREE_BIG_IDS, data.id)) {
-                    instance.snookerThreeBig.add(data);
+                if (Util.arrayContainsEqual(SNOOKER_TRIPLE_CROWN_IDS, data.id)) {
+                    instance.snookerTripleCrown.add(data);
                 }
             }
             instance.championshipData.sort(Comparator.comparingInt((ChampionshipData o) -> o.month).thenComparingInt(o -> o.day));
@@ -42,12 +42,24 @@ public class ChampDataManager {
         return instance;
     }
 
+    public static String[] getSnookerTripleCrownIds() {
+        return SNOOKER_TRIPLE_CROWN_IDS;
+    }
+
+    public static boolean isSnookerWorldChamp(ChampionshipData data) {
+        return SNOOKER_TRIPLE_CROWN_IDS[0].equals(data.id);
+    }
+
+    public static boolean isSnookerTripleCrown(ChampionshipData data) {
+        return Util.arrayContains(SNOOKER_TRIPLE_CROWN_IDS, data.id);
+    }
+
     public List<ChampionshipData> getChampionshipData() {
         return championshipData;
     }
 
-    public List<ChampionshipData> getSnookerThreeBig() {
-        return snookerThreeBig;
+    public List<ChampionshipData> getSnookerTripleCrown() {
+        return snookerTripleCrown;
     }
 
     public ChampionshipData.WithYear getNextChampionship(int year, int month, int day) {

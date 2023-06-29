@@ -360,6 +360,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             }
         } else if (currentTarget == 1) {
             if (whiteFirstCollide.isRed()) {
+                boolean wrongPot = false;
                 for (SnookerBall ball : pottedBalls) {
                     if (ball.isRed()) {
                         score++;  // 进了颗红球
@@ -367,7 +368,11 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         // 进了颗彩球
                         thisCueFoul.addFoul(strings.getString("targetRedColorPots"),
                                 getFoulScore(pottedBalls), false);
+                        wrongPot = true;
                     }
+                }
+                if (wrongPot && score > 0) {
+                    AchManager.getInstance().addAchievement(Achievement.POT_WRONG_COLOR, getCuingIgp());
                 }
             } else {  // 该打红球时打了彩球
                 int foul = Math.max(4, whiteFirstCollide.getValue());
@@ -441,6 +446,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                             getFoulScore(pottedBalls),
                             false
                     );
+                    for (SnookerBall potted : pottedBalls) {
+                        // 进了彩球同时也误进其他彩球
+                        if (potted.getValue() == indicatedTarget || potted.getValue() == currentTarget) {
+                            AchManager.getInstance().addAchievement(Achievement.POT_WRONG_COLOR, getCuingIgp());
+                        }
+                    }
                 }
             }
             if (cueBall.isPotted()) {
@@ -468,6 +479,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 if (getCuingPlayer().getInGamePlayer().isHuman()) 
                     AchManager.getInstance().addAchievement(Achievement.THREE_MISS_LOST, getCuingIgp());
                 getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
+                if (getScoreSum() > 147) AchManager.getInstance().addAchievement(Achievement.SUM_OVER_147, getCuingIgp());
                 getCuingPlayer().withdraw();
                 end();
                 return;
@@ -476,11 +488,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             if (blackBattle) {
                 // 抢黑时犯规就直接判负
                 getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
+                if (getScoreSum() > 147) AchManager.getInstance().addAchievement(Achievement.SUM_OVER_147, getCuingIgp());
+                
                 end();
                 return;
             }
 
             getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
+            if (getScoreSum() > 147) AchManager.getInstance().addAchievement(Achievement.SUM_OVER_147, getCuingIgp());
             updateTargetPotFailed();
             switchPlayer();
             if (gameValues.rule.hasRule(Rule.FOUL_BALL_IN_HAND)) {
@@ -508,6 +523,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 //            thisCueFoul = false;
         }
 //        System.out.println("Potted: " + pottedBalls + ", first: " + whiteFirstCollide + " score: " + score + ", foul: " + foul);
+    }
+    
+    private int getScoreSum() {
+        return player1.getScore() + player2.getScore();
     }
 
     public boolean isDoingFreeBall() {

@@ -201,6 +201,7 @@ public class CareerAchManager extends AchManager {
                     humanContinuousPotFail = 0;
                     addAchievement(Achievement.POT_A_BALL, justCuedPlayer);
                     addAchievement(Achievement.POT_EIGHT_BALLS, justCuedPlayer);
+                    addAchievement(Achievement.POT_HUNDRED_BALLS, justCuedPlayer);
                 } else {
                     humanContinuousPotFail += 1;
                     if (humanContinuousPotFail >= 3) {

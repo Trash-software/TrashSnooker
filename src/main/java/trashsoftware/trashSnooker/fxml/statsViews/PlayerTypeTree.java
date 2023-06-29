@@ -46,7 +46,7 @@ public class PlayerTypeTree extends RecordTree {
             appendToPane(GameRule.MINI_SNOOKER, gridPane);
             appendToPane(GameRule.CHINESE_EIGHT, gridPane);
             appendToPane(GameRule.LIS_EIGHT, gridPane);
-            appendToPane(GameRule.SIDE_POCKET, gridPane);
+            appendToPane(GameRule.AMERICAN_NINE, gridPane);
 
             rightPane.getChildren().add(gridPane);
         }

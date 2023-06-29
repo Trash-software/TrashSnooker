@@ -75,7 +75,7 @@ public enum GameRule {
             return true;
         }
     },
-    SIDE_POCKET(10, "SidePocket",
+    AMERICAN_NINE(10, "AmericanNine",
             new Cue.Size[]{Cue.Size.BIG, Cue.Size.MEDIUM},
             new TrainType[]{TrainType.SNAKE_FULL,
                     TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},

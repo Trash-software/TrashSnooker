@@ -111,9 +111,7 @@ public class MatchTree {
                 }
                 
                 SnookerBreakScore highestBreak = null;
-                if (championship instanceof SnookerChampionship) {
-                    SnookerChampionship sc = (SnookerChampionship) championship;
-                    
+                if (championship instanceof SnookerChampionship sc) {
                     // 依旧可以是null
                     highestBreak = sc.personalHighest.get(career.getPlayerPerson().getPlayerId());
                 }

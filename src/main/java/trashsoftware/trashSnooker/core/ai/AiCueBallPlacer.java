@@ -3,8 +3,8 @@ package trashsoftware.trashSnooker.core.ai;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketPlayer;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
+import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
+import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 
@@ -26,9 +26,9 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
         } else if (game instanceof ChineseEightBallGame) {
             return new ChineseEightAiCueBallPlacer(
                     (ChineseEightBallGame) game, (ChineseEightBallPlayer) aiPlayer);
-        } else if (game instanceof SidePocketGame) {
+        } else if (game instanceof AmericanNineBallGame) {
             return new SidePocketAiCueBallPlacer(
-                    (SidePocketGame) game, (SidePocketPlayer) aiPlayer);
+                    (AmericanNineBallGame) game, (AmericanNineBallPlayer) aiPlayer);
         } else {
             throw new RuntimeException("No such game type");
         }

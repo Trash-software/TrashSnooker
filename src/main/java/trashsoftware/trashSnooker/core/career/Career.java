@@ -63,7 +63,12 @@ public class Career {
         if (jsonObject.has("efforts")) {
             JSONObject effortObj = jsonObject.getJSONObject("efforts");
             for (String key : effortObj.keySet()) {
-                GameRule rule = GameRule.valueOf(key);
+                GameRule rule;
+                if ("SIDE_POCKET".equals(key)) {
+                    rule = GameRule.AMERICAN_NINE;
+                } else {
+                    rule = GameRule.valueOf(key);
+                }
                 double effort = effortObj.getDouble(key);
                 career.efforts.put(rule, effort);
             }

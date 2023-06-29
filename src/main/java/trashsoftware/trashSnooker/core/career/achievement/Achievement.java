@@ -16,12 +16,13 @@ import java.util.MissingResourceException;
 public enum Achievement {
     POT_A_BALL(AchCat.GENERAL_TABLE),  // 已完成
     POT_EIGHT_BALLS(AchCat.GENERAL_TABLE, 8, false),  // 已完成
+    POT_HUNDRED_BALLS(AchCat.GENERAL_TABLE, 100, false),  // 已完成
     THREE_BALLS_IN_A_ROW(AchCat.GENERAL_TABLE),  // 已完成
     POSITIONING_MASTER(AchCat.GENERAL_TABLE, 7, true),  // 已完成
     GAIN_BY_SNOOKER(AchCat.GENERAL_TABLE),  // 已完成
     SOLVE_SNOOKER_SUCCESS(AchCat.GENERAL_TABLE),  // 已完成
     ACCURACY_WIN(AchCat.GENERAL_TABLE),  // 已完成
-    CONTINUOUS_LONG_POT(AchCat.GENERAL_TABLE),
+    CONTINUOUS_LONG_POT(AchCat.GENERAL_TABLE),  // 已完成
 //    PASS_POT(AchCat.GENERAL),  // todo 传球 完成不了
 
     WIN_A_FRAME(AchCat.GENERAL_MATCH),  // 已完成
@@ -33,6 +34,10 @@ public enum Achievement {
     COMPLETE_LOSS(AchCat.GENERAL_HIDDEN),  // 已完成
     MISCUED(AchCat.GENERAL_HIDDEN),  // 已完成
     SHAKE_POCKET(AchCat.GENERAL_HIDDEN),  // 已完成
+    
+    CUE_BALL_POT(AchCat.GENERAL_HIDDEN),  // 已完成
+    MISSED_SHOT(AchCat.GENERAL_HIDDEN),  // 已完成
+    
     FRAME_NO_ATTACK(AchCat.GENERAL_HIDDEN),  // 已完成
     KEY_BALL_FAIL(AchCat.GENERAL_HIDDEN),  // 已完成
     POT_FAIL_THREE(AchCat.GENERAL_HIDDEN),  // 已完成
@@ -41,15 +46,25 @@ public enum Achievement {
     ONE_ROUND_TOUR(AchCat.GENERAL_HIDDEN),  // 已完成
     LEGENDARY_REVENGED(AchCat.GENERAL_HIDDEN),  // 已完成
     
-    CUE_BALL_POT(AchCat.FOUL),  // 已完成
-    MISSED_SHOT(AchCat.FOUL),  // 已完成
-    
     SNOOKER_BREAK_50(AchCat.SNOOKER),  // 已完成
     SNOOKER_BREAK_100(AchCat.SNOOKER),  // 已完成
-    SNOOKER_BREAK_147(AchCat.GENERAL_HIDDEN),  // 已完成。还是不把147放明面成就上，太难了
+    SNOOKER_BREAK_147(AchCat.SNOOKER) {  // 已完成
+        @Override
+        public boolean isHidden() {
+            return true;  // 还是不把147放明面成就上，太难了
+        }
+    },
     THREE_MISS_LOST(AchCat.SNOOKER),  // 已完成
+//    REPOSITION_THREE(AchCat.SNOOKER),  // 复位三次
     COME_BACK_BEHIND_65(AchCat.SNOOKER),  // 已完成
     COME_BACK_BEHIND_OVER_SCORE(AchCat.SNOOKER),  // 已完成
+    SUM_OVER_147(AchCat.SNOOKER),  // 已完成
+    POT_WRONG_COLOR(AchCat.SNOOKER) {  // 已完成
+        @Override
+        public boolean isHidden() {
+            return true;
+        }
+    },
     
     POOL_BREAK_POT(AchCat.POOL_GENERAL),  // 已完成
     POOL_CLEAR(AchCat.POOL_GENERAL),  // 已完成
@@ -61,7 +76,22 @@ public enum Achievement {
     
     GOLDEN_NINE(AchCat.AMERICAN_NINE),  // 已完成
     BALL_WORKER(AchCat.AMERICAN_NINE),  // 已完成
-    PASS_NINE(AchCat.AMERICAN_NINE);  // 已完成
+    PASS_NINE(AchCat.AMERICAN_NINE),  // 已完成
+    
+    // 巡回赛
+    EARNED_MONEY(AchCat.TOUR),  // 已完成
+    CHAMPION(AchCat.TOUR),  // 已完成
+    SECOND_PLACE(AchCat.TOUR),  // 已完成
+    BEST_FOUR(AchCat.TOUR),  // 已完成
+    
+    // 斯诺克巡回赛
+    SNOOKER_TOP_16(AchCat.SNOOKER_TOUR),  // 已完成
+    SNOOKER_TOP_1(AchCat.SNOOKER_TOUR),  // 已完成
+    SNOOKER_RANKED_CHAMPION(AchCat.SNOOKER_TOUR),  // 已完成
+    SNOOKER_WORLD_CHAMPION(AchCat.SNOOKER_TOUR),  // 已完成
+    SNOOKER_TRIPLE_CROWN(AchCat.SNOOKER_TOUR),  // 已完成
+    POTTING_MACHINE(AchCat.SNOOKER_TOUR),  // 已完成
+    ;
 
     public final AchCat category;
     public final int requiredTimes;
@@ -79,6 +109,10 @@ public enum Achievement {
 
     public static Achievement fromKey(String key) {
         return valueOf(Util.toAllCapsUnderscoreCase(key));
+    }
+    
+    public boolean isHidden() {
+        return false;
     }
     
     public boolean isComplete(AchCompletion completion) {

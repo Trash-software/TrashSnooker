@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS LisEightRecord (
     PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName, PlayerIsAI)
 );
 
-CREATE TABLE IF NOT EXISTS SidePocketRecord (
+CREATE TABLE IF NOT EXISTS AmericanNineRecord (
     EntireBeginTime TIMESTAMP REFERENCES GeneralRecord ON DELETE CASCADE,
     FrameIndex INTEGER,
     PlayerName VARCHAR(32) REFERENCES Player,

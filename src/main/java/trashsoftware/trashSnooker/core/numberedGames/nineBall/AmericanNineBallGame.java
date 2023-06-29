@@ -1,4 +1,4 @@
-package trashsoftware.trashSnooker.core.numberedGames.sidePocket;
+package trashsoftware.trashSnooker.core.numberedGames.nineBall;
 
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
@@ -19,7 +19,7 @@ import trashsoftware.trashSnooker.core.table.SidePocketTable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
+public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlayer>
         implements NeedBigBreak {
 
     private final LinkedHashMap<PoolBall, Boolean> pottedRecord = new LinkedHashMap<>();  // 缓存用，仅用于GameView画目标球
@@ -28,7 +28,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
     private boolean pushedOut;
     private boolean wasIllegalBreak;
 
-    public SidePocketGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
+    public AmericanNineBallGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
         super(entireGame, gameSettings, gameValues, new SidePocketTable(gameValues.table), frameIndex);
 
         initBalls();
@@ -66,7 +66,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
 
     @Override
     public GameRule getGameType() {
-        return GameRule.SIDE_POCKET;
+        return GameRule.AMERICAN_NINE;
     }
 
     public Movement cue(CuePlayParams params, Phy phy) {
@@ -127,7 +127,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
     }
 
     @Override
-    protected AiCue<?, ?> createAiCue(SidePocketPlayer aiPlayer) {
+    protected AiCue<?, ?> createAiCue(AmericanNineBallPlayer aiPlayer) {
         return new SidePocketAiCue(this, aiPlayer);
     }
 
@@ -162,8 +162,8 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
 
     @Override
     protected void initPlayers() {
-        player1 = new SidePocketPlayer(gameSettings.getPlayer1());
-        player2 = new SidePocketPlayer(gameSettings.getPlayer2());
+        player1 = new AmericanNineBallPlayer(gameSettings.getPlayer1());
+        player2 = new AmericanNineBallPlayer(gameSettings.getPlayer2());
     }
 
     @Override
@@ -267,7 +267,7 @@ public class SidePocketGame extends NumberedBallGame<SidePocketPlayer>
                 AchManager.getInstance().addAchievement(Achievement.PASS_NINE, getCuingIgp());
                 winingPlayer = currentPlayer;
                 
-                SidePocketPlayer loser = getAnotherPlayer(currentPlayer);
+                AmericanNineBallPlayer loser = getAnotherPlayer(currentPlayer);
                 Set<Integer> loserPotted = loser.getAllPotted().stream().map(Ball::getValue).collect(Collectors.toSet());
                 if (!loserPotted.contains(9) && loserPotted.size() == 8) {
                     CareerAchManager.getInstance().addAchievement(Achievement.BALL_WORKER, loser.getInGamePlayer());

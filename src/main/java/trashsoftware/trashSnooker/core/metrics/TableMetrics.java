@@ -11,7 +11,7 @@ public class TableMetrics {
     public static final String SNOOKER = "SNOOKER";
     public static final String CHINESE_EIGHT = "CHINESE_EIGHT";
     public static final String POOL_TABLE_10 = "POOL_TABLE_10";
-    public static final String SIDE_POCKET = "SIDE_POCKET";
+    public static final String AMERICAN_NINE = "AMERICAN_NINE";
     public static final String POOL_TABLE_8 = "POOL_TABLE_8";
     public static final String POOL_TABLE_7 = "POOL_TABLE_7";
     public static final String POOL_TABLE_6 = "POOL_TABLE_6";
@@ -22,7 +22,7 @@ public class TableMetrics {
             SNOOKER,
             CHINESE_EIGHT,
             POOL_TABLE_10,
-            SIDE_POCKET,
+            AMERICAN_NINE,
             POOL_TABLE_8,
             POOL_TABLE_7,
             POOL_TABLE_6
@@ -197,7 +197,7 @@ public class TableMetrics {
     private List<double[]> createStars() {
         List<double[]> stars = new ArrayList<>();
 
-        if (!tableName.equals(SIDE_POCKET)) return stars;
+        if (!tableName.equals(AMERICAN_NINE)) return stars;
 
         double dt = topY / 3 * 2;
         // 长边颗星
@@ -602,12 +602,12 @@ public class TableMetrics {
                                 0.8);
             }
         },
-        SIDE_POCKET("sidePocketTable",
+        POOL_TABLE_9("poolTable9",
                 PocketSize.SIDE_POCKET_HOLES,
                 PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
-                return new Builder(this, TableMetrics.SIDE_POCKET)
+                return new Builder(this, TableMetrics.AMERICAN_NINE)
                         .tableColorHard(Color.STEELBLUE, Color.BLACK.brighter().brighter(), Color.SLATEGREY)
                         .tableDimension(2540.0,
                                 1270.0,

@@ -4,12 +4,12 @@ import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketPlayer;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
+import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
+import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallPlayer;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
-public class SidePocketAiCue extends AiCue<SidePocketGame, SidePocketPlayer> {
-    public SidePocketAiCue(SidePocketGame game, SidePocketPlayer aiPlayer) {
+public class SidePocketAiCue extends AiCue<AmericanNineBallGame, AmericanNineBallPlayer> {
+    public SidePocketAiCue(AmericanNineBallGame game, AmericanNineBallPlayer aiPlayer) {
         super(game, aiPlayer);
     }
 

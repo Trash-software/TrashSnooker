@@ -6,8 +6,7 @@ import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketPlayer;
+import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
@@ -314,7 +313,7 @@ public class DBAccess {
                 if (highInResult > rtn[4]) {
                     rtn[4] = highInResult;
                 }
-                if (gameRule == GameRule.SIDE_POCKET) {
+                if (gameRule == GameRule.AMERICAN_NINE) {
                     rtn[5] += resultSet.getInt("GoldNine");
                 }
             }
@@ -440,7 +439,7 @@ public class DBAccess {
 
                 return new EntireGameRecord.Snooker(title, records, durations);
             } else if (title.gameRule == GameRule.CHINESE_EIGHT ||
-                    title.gameRule == GameRule.SIDE_POCKET || 
+                    title.gameRule == GameRule.AMERICAN_NINE || 
                     title.gameRule == GameRule.LIS_EIGHT) {
                 String tableName = title.gameRule.toSqlKey() + "Record";
                 String numQuery = "SELECT * FROM " + tableName + " " +
@@ -458,7 +457,7 @@ public class DBAccess {
                     scores[2] = numRs.getInt("BreakClear");
                     scores[3] = numRs.getInt("ContinueClear");
                     scores[4] = numRs.getInt("Highest");
-                    if (title.gameRule == GameRule.SIDE_POCKET) {
+                    if (title.gameRule == GameRule.AMERICAN_NINE) {
                         scores[5] = numRs.getInt("GoldNine");
                     }
                     PlayerFrameRecord.Numbered numbered = new PlayerFrameRecord.Numbered(
@@ -529,8 +528,8 @@ public class DBAccess {
             if (b > highest) highest = b;
         }
         int goldNine = 0;
-        if (player instanceof SidePocketPlayer) {
-            if (((SidePocketPlayer) player).isGoldNine()) {
+        if (player instanceof AmericanNineBallPlayer) {
+            if (((AmericanNineBallPlayer) player).isGoldNine()) {
                 // 黄金九。由于目前的检测方式有可能将黄金九识别为炸清，所以清空breakClear
                 goldNine = 1;
                 breakClear = 0;
@@ -555,7 +554,7 @@ public class DBAccess {
                 breakClear + ", " + 
                 continueClear + ", " + 
                 highest +
-                (gameRule == GameRule.SIDE_POCKET ? (", " + goldNine + "") : "") +
+                (gameRule == GameRule.AMERICAN_NINE ? (", " + goldNine + "") : "") +
                 ");";
         try {
             executeStatement(query);

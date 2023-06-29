@@ -13,7 +13,7 @@ import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LisEightGame;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
+import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
@@ -146,11 +146,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             } else {
                 game = new LisEightGame(entireGame, gameSettings, gameValues, frameIndex);
             }
-        } else if (gameValues.rule == GameRule.SIDE_POCKET) {
+        } else if (gameValues.rule == GameRule.AMERICAN_NINE) {
             if (gameValues.isTraining()) {
                 game = new PoolTraining(entireGame, gameSettings, gameValues, gameValues.getTrainType(), gameValues.getTrainChallenge());
             } else {
-                game = new SidePocketGame(entireGame, gameSettings, gameValues, frameIndex);
+                game = new AmericanNineBallGame(entireGame, gameSettings, gameValues, frameIndex);
             }
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
 

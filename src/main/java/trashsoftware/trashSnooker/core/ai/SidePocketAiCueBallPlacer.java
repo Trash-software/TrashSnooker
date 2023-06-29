@@ -1,16 +1,16 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketPlayer;
-import trashsoftware.trashSnooker.core.numberedGames.sidePocket.SidePocketGame;
+import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
+import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SidePocketAiCueBallPlacer extends 
-        NumberedGameAiCueBallPlacer<SidePocketGame, SidePocketPlayer> {
+        NumberedGameAiCueBallPlacer<AmericanNineBallGame, AmericanNineBallPlayer> {
     
-    public SidePocketAiCueBallPlacer(SidePocketGame game, SidePocketPlayer player) {
+    public SidePocketAiCueBallPlacer(AmericanNineBallGame game, AmericanNineBallPlayer player) {
         super(game, player);
     }
 

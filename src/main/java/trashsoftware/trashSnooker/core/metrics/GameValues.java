@@ -152,7 +152,7 @@ public class GameValues {
                 (rule == GameRule.MINI_SNOOKER && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.SNOOKER_BALL) ||
                 (rule == GameRule.CHINESE_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
                 (rule == GameRule.LIS_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
-                (rule == GameRule.SIDE_POCKET && table.tableName.equals(TableMetrics.SIDE_POCKET) && ball == BallMetrics.POOL_BALL));
+                (rule == GameRule.AMERICAN_NINE && table.tableName.equals(TableMetrics.AMERICAN_NINE) && ball == BallMetrics.POOL_BALL));
     }
     
     public boolean isInTable(double x, double y, double r) {

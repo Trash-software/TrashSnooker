@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -65,7 +64,7 @@ public class EntryView implements Initializable {
 
         CareerView mainView = loader.getController();
         mainView.setParent(thisScene);
-        mainView.setSelfStage(stage);
+        mainView.setup(this, stage);
 
         Scene scene = App.createScene(root);
         stage.setScene(scene);
@@ -286,6 +285,7 @@ public class EntryView implements Initializable {
                 Platform.runLater(() -> startCareerView(selfStage));
             } catch (Exception e) {
                 restoreScene();
+                EventLogger.error(e);
             }
         });
         thread.setDaemon(true);

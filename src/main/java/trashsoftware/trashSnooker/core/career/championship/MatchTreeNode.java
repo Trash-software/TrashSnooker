@@ -208,7 +208,7 @@ public class MatchTreeNode {
                 break;
             case LIS_EIGHT:
             case MINI_SNOOKER:
-            case SIDE_POCKET:
+            case AMERICAN_NINE:
             default:
                 throw new UnsupportedOperationException();
         }

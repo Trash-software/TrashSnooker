@@ -99,16 +99,20 @@ public class AchievementsView extends ChildInitializable {
         for (AchCat cat : AchCat.values()) {
             Achievement[] achievements = cat.getAll();
             List<AchievementBundle> bundles = new ArrayList<>();
+            int showing = 0;
             int comp = 0;
             for (Achievement achievement : achievements) {
                 AchCompletion completion = allCompleted.get(achievement);
-                if (completion != null) comp++;
+                if (!achievement.isHidden()) showing++;
+                if (achievement.isComplete(completion)) comp++;
                 bundles.add(new AchievementBundle(achievement, completion));
             }
             completed.put(cat, bundles);
-            catCompletions.put(cat, new int[]{achievements.length, comp});
-            
-            achCatTable.getItems().add(new CatItem(cat));
+            catCompletions.put(cat, new int[]{showing, comp});
+
+            if (comp > 0) {
+                achCatTable.getItems().add(new CatItem(cat));
+            }
         }
     }
 
@@ -118,7 +122,8 @@ public class AchievementsView extends ChildInitializable {
         if (selected != null) {
             boolean showIncomplete = selected.cat != AchCat.GENERAL_HIDDEN;
             for (AchievementBundle bundle : completed.get(selected.cat)) {
-                if (!showIncomplete && bundle.completion == null) continue;
+                if ((!showIncomplete || bundle.achievement.isHidden()) && bundle.completion == null) 
+                    continue;
                 
                 AchItem item = new AchItem(bundle);
                 achTable.getItems().add(item);
