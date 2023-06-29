@@ -27,7 +27,12 @@ public class Alert implements Initializable {
     }
 
     private void setOnClose(Stage stage) {
-        stage.setOnCloseRequest(e -> active = false);
+        stage.setOnCloseRequest(e -> {  // 点关闭等于点确定
+            if (active) {
+                yesButton.fire();
+            }
+        });
+        stage.setOnHidden(e -> active = false);
     }
 
     public void setupInfo(Stage stage,
@@ -62,7 +67,10 @@ public class Alert implements Initializable {
         this.noButton.setManaged(false);
         this.yesButton.setOnAction(e -> {
             if (callback != null) Platform.runLater(callback);
-            else stage.close();
+            else {
+                active = false;
+                stage.close();
+            }
         });
     }
     
@@ -84,11 +92,13 @@ public class Alert implements Initializable {
         this.contentText.setText(content);
         this.yesButton.setText(yesText);
         this.yesButton.setOnAction(e -> {
+            active = false;
             stage.close();
             if (yes != null) Platform.runLater(yes);
         });
         this.noButton.setText(noText);
         this.noButton.setOnAction(e -> {
+            active = false;
             stage.close();
             if (no != null) Platform.runLater(no);
         });

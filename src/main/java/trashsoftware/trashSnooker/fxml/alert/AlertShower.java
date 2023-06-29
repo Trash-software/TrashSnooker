@@ -96,7 +96,9 @@ public class AlertShower {
 
     public static void askConfirmation(Window owner, String content, String header,
                                        Runnable positiveCallback, Runnable negativeCallback) {
-        askConfirmation(owner, content, header, "是", "否",
+        askConfirmation(owner, content, header, 
+                App.getStrings().getString("yes"), 
+                App.getStrings().getString("no"),
                 positiveCallback, negativeCallback);
     }
 

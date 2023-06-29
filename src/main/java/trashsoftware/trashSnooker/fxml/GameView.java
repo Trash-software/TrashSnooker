@@ -32,6 +32,7 @@ import trashsoftware.trashSnooker.audio.GameAudio;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
+import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerMatch;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
@@ -144,6 +145,10 @@ public class GameView implements Initializable {
     @FXML
     MenuItem withdrawMenu, replaceBallInHandMenu, letOtherPlayMenu, repositionMenu, pushOutMenu;
     @FXML
+    SeparatorMenuItem gameMenuSep1;
+    @FXML
+    CheckMenuItem aiHelpPlayMenuItem;
+    @FXML
     Menu debugMenu;
     @FXML
     MenuItem debugModeMenu;
@@ -227,6 +232,7 @@ public class GameView implements Initializable {
 
     private double p1PlaySpeed = 1.0;
     private double p2PlaySpeed = 1.0;
+    private boolean aiHelpPlay = false;
 
     private List<double[]> aiWhitePath;  // todo: debug用的
     private List<double[]> suggestedPlayerWhitePath;
@@ -484,6 +490,7 @@ public class GameView implements Initializable {
         updatePowerSlider(game.getGame().getCuingPlayer().getPlayerPerson());
 
         setupGameMenu();
+        setupAiHelper();
 //        setUiFrameStart();
         setupDebug();
 
@@ -519,6 +526,11 @@ public class GameView implements Initializable {
 
     private void setupGameMenu() {
         gameMenu.getItems().clear();
+        gameMenu.setDisable(replay != null);
+        if (careerMatch != null) {
+            gameMenu.getItems().addAll(aiHelpPlayMenuItem, gameMenuSep1);
+        }
+        
         gameMenu.getItems().addAll(withdrawMenu, replaceBallInHandMenu);
 
         GameRule rule = gameValues.rule;
@@ -531,6 +543,21 @@ public class GameView implements Initializable {
         if (rule.hasRule(Rule.PUSH_OUT)) {
             gameMenu.getItems().add(pushOutMenu);
         }
+    }
+    
+    private void setupAiHelper() {
+        aiHelpPlayMenuItem.selectedProperty().addListener(((observableValue, aBoolean, t1) -> {
+            if (t1) {
+                AlertShower.askConfirmation(
+                        stage,
+                        strings.getString("aiHelpPlayerPrompt"),
+                        strings.getString("aiHelpPlayerTitle"),
+                        () -> aiHelpPlay = true,
+                        () -> aiHelpPlayMenuItem.setSelected(false));
+            } else {
+                aiHelpPlay = false;
+            }
+        }));
     }
 
     private void setupHandSelection() {
@@ -938,7 +965,7 @@ public class GameView implements Initializable {
         Ball.enableGearOffset();
         aiWhitePath = null;
         miscued = false;
-        if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
+        if (nextCuePlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER && !aiHelpPlay) {
             boolean autoAim = true;
 
             if (game.getGame().canReposition()) {
@@ -947,8 +974,7 @@ public class GameView implements Initializable {
                 repositionMenu.setDisable(false);
                 askReposition();
             }
-            if (game.getGame() instanceof NeedBigBreak) {
-                NeedBigBreak nbb = (NeedBigBreak) game.getGame();
+            if (game.getGame() instanceof NeedBigBreak nbb) {
                 if (nbb.isJustAfterBreak() && nbb.wasIllegalBreak()) {
 //                    autoAim = false;  // 把autoAim交给askAfterBreakLoseChance的不复位分支
 //                    askAfterBreakLoseChance();
@@ -960,8 +986,7 @@ public class GameView implements Initializable {
                     letOtherPlayMenu.setDisable(false);
                 }
             }
-            if (game.getGame() instanceof SidePocketGame) {
-                SidePocketGame g = (SidePocketGame) game.getGame();
+            if (game.getGame() instanceof SidePocketGame g) {
                 if (g.currentlyCanPushOut()) {
                     pushOutMenu.setDisable(false);
                 }
@@ -1030,6 +1055,8 @@ public class GameView implements Initializable {
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
         drawScoreBoard(game.getGame().getCuingPlayer(), false);
         game.getGame().getRecorder().stopRecording(true);
+        
+        AchManager.getInstance().showAchievementPopup();
 
         if (gameValues.isTraining()) {
             boolean success = wonPlayer.getInGamePlayer().getPlayerNumber() == 1;
@@ -1512,9 +1539,7 @@ public class GameView implements Initializable {
 
     @FXML
     void pushOutAction() {
-        if (game.getGame() instanceof SidePocketGame) {
-            SidePocketGame g = (SidePocketGame) game.getGame();
-
+        if (game.getGame() instanceof SidePocketGame g) {
             cursorDirectionUnitX = 0.0;
             cursorDirectionUnitY = 0.0;
             hideCue();
@@ -1543,6 +1568,8 @@ public class GameView implements Initializable {
         game.getGame().reposition();
         repositionMenu.setDisable(true);
         letOtherPlayMenu.setDisable(true);
+        
+        updateHandSelection(true);
         cursorDrawer.synchronizeGame();
         drawScoreBoard(game.getGame().getCuingPlayer(), true);
         drawTargetBoard(true);
@@ -1631,7 +1658,7 @@ public class GameView implements Initializable {
         pushOutMenu.setDisable(true);
 
         Player player = game.getGame().getCuingPlayer();
-        if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
+        if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER || aiHelpPlay) {
             setButtonsCueStart();
             aiCue(player);
         } else {
@@ -1958,7 +1985,7 @@ public class GameView implements Initializable {
             }
 
             curDefAttempt = new DefenseAttempt(player, snookered);
-            player.addDefenseAttempt(curDefAttempt);
+            player.addAttempt(curDefAttempt);
             System.out.println("Defense!" + (snookered ? " Solving" : ""));
             lastPotAttempt = null;
         }
@@ -2016,7 +2043,7 @@ public class GameView implements Initializable {
             curDefAttempt = new DefenseAttempt(player,
                     cueResult.getCueType() == AiCueResult.CueType.SOLVE);
 
-            player.addDefenseAttempt(curDefAttempt);
+            player.addAttempt(curDefAttempt);
             System.out.println("AI Defense!" + (curDefAttempt.isSolvingSnooker() ? " Solving" : ""));
 
             if (lastPotAttempt != null && lastPotAttempt.getPlayerPerson() == player.getPlayerPerson()) {
@@ -2056,6 +2083,16 @@ public class GameView implements Initializable {
     }
 
     private void aiCue(Player player, boolean aiHasRightToReposition) {
+        boolean aiHelpPlayerPlaying = player.getInGamePlayer().isHuman() && aiHelpPlay;
+        if (aiHelpPlayerPlaying) {
+            if (careerMatch != null) {
+                AiCueResult.setAiPrecisionFactor(CareerManager.getInstance().getPlayerGoodness() * 
+                        Career.AI_HELPER_PRECISION_FACTOR);  // 暗削自动击球
+            }
+        } else {
+            AiCueResult.setAiPrecisionFactor(CareerManager.getInstance().getAiGoodness());
+        }
+        
         updateBeforeCue();
         disableUiWhenCuing();
         Ball.disableGearOffset();  // AI真不会这个，禁用了。在finishCueNextStep里重新启用

@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import trashsoftware.trashSnooker.fxml.widgets.GamePane?>
-<?import javafx.geometry.Insets?>
 <AnchorPane xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="trashsoftware.trashSnooker.fxml.GameView">
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="trashsoftware.trashSnooker.fxml.GameView">
 
     <MenuBar AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
         <Menu text="%window">
             <MenuItem text="%close" onAction="#closeWindowAction"/>
         </Menu>
         <Menu fx:id="gameMenu" text="%gameMenu">
+            <!-- 在这里加没用，gameView里会重新填充gameMenu -->
+            <CheckMenuItem fx:id="aiHelpPlayMenuItem" text="%aiHelpPlayer"/>
+            <SeparatorMenuItem fx:id="gameMenuSep1"/>
             <MenuItem text="%withdraw" onAction="#withdrawAction" fx:id="withdrawMenu"
                       disable="true"/>
             <MenuItem text="%replaceBallInHand" onAction="#replaceBallInHandAction"
@@ -32,7 +35,7 @@
             <CheckMenuItem fx:id="drawAiPathItem" text="%drawPredictionLineAi"/>
             <!--                <CheckMenuItem fx:id="predictPlayerPathItem" text="%drawPredictionLinePlayer"/>-->
             <SeparatorMenuItem/>
-            
+
             <Menu fx:id="player1SpeedMenu" text="%p1PlaySpeedMenu">
                 <fx:define>
                     <ToggleGroup fx:id="player1SpeedToggle"/>
@@ -89,7 +92,7 @@
             <RowConstraints/>
             <RowConstraints/>
         </rowConstraints>
-        
+
         <padding>
             <Insets topRightBottomLeft="5.0"/>
         </padding>

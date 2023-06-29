@@ -148,7 +148,9 @@ public class CareerAchManager extends AchManager {
     }
 
     /**
-     * 理论上来说，最好最后再调用该方法
+     * 
+     * 理论上来说，最好最后再调用该方法。
+     * 注意，该方法会在switchPlayer之后被调用
      */
     @Override
     public void updateAfterCueFinish(Pane owner, Game<?, ?> game, ScoreResult scoreResult,
@@ -160,7 +162,8 @@ public class CareerAchManager extends AchManager {
 //            default -> new ArrayList<>();
 //        };
         
-        InGamePlayer justCuedPlayer = game.getCuingIgp();
+        Player justCuedP = game.getLastCuedPlayer();
+        InGamePlayer justCuedPlayer = justCuedP.getInGamePlayer();
         
         if (justCuedPlayer.isHuman()) {
 
@@ -206,6 +209,18 @@ public class CareerAchManager extends AchManager {
                     if (playStage == GamePlayStage.THIS_BALL_WIN) {
                         addAchievement(Achievement.KEY_BALL_FAIL, justCuedPlayer);
                     }
+                }
+                
+                List<PotAttempt> singlePole = justCuedP.getRecentSinglePoleAttempts();
+                int longCount = 0;
+                for (PotAttempt pa : singlePole) {
+                    if (pa.isLongPot()) {
+                        longCount++;
+                    }
+                }
+                System.out.println("Single pole attack count: " + singlePole.size() + ", long: " + longCount);
+                if (longCount >= 3) {
+                    addAchievement(Achievement.CONTINUOUS_LONG_POT, justCuedPlayer);
                 }
             }
             if (defenseAttempt != null) {
@@ -307,6 +322,7 @@ public class CareerAchManager extends AchManager {
             } else {
                 System.err.println("Achievement '" + achievement + "' is not record like, Should not call this method.");
             }
+            return;
         }
         AchCompletion newCompletion = new AchCompletion(newRecord);
         if (achievement.isComplete(newCompletion)) {
@@ -331,6 +347,8 @@ public class CareerAchManager extends AchManager {
                     thisTimeComplete.add(achievement);
                 }
                 saveToDisk();  // 不加到thisTimeComplete里，所以现在就存。暂且认为这个save不是很花时间
+            } else if (achievement.isRecordLike()) {
+                System.err.println("Achievement '" + achievement + "' is record like, Should not call this method.");
             }
             return;
         }

@@ -1,585 +1,197 @@
 {
-  "stageIndex": -1,
+  "stageIndex": 4,
   "seedRanks": {
-    "random_player_49": 61,
-    "random_player_48": 59,
-    "random_player_88": 54,
-    "custom_player_1": 16,
-    "random_player_0": 53,
-    "custom_player_3": 13,
-    "custom_player_2": 7,
-    "custom_player_4": 21,
-    "Summer Brave": 25,
-    "Lao Youtiao": 49,
-    "Murphy": 12,
-    "random_player_92": 52,
-    "John Wizard": 2,
-    "Stuart Bingham": 9,
-    "Mou Moumou": 26,
-    "random_player_117": 62,
-    "random_player_32": 64,
-    "custom_player_177": 30,
-    "High Stick": 18,
-    "custom_player_178": 29,
-    "Lolita": 39,
-    "custom_player_180": 42,
-    "Luca Brecel": 11,
-    "custom_player_181": 50,
-    "custom_E5B08FE4BB99E5A5B3": 19,
-    "Wang Xu": 24,
-    "random_player_84": 56,
-    "random_player_81": 63,
-    "Brown": 23,
-    "Yan Bingtao": 10,
-    "Liu Mang": 5,
-    "random_player_66": 60,
-    "custom_player_169": 48,
-    "custom_656467": 51,
-    "custom_player_166": 32,
-    "Jack Lisowski": 4,
-    "custom_player_165": 37,
-    "Glass Heart": 8,
-    "custom_player_168": 31,
-    "custom_player_167": 47,
-    "Selby": 3,
-    "custom_player_173": 46,
-    "custom_player_172": 27,
-    "Noob": 36,
-    "Karen Wilson": 34,
-    "custom_player_174": 43,
-    "custom_player_171": 35,
-    "Mang Dali": 41,
-    "custom_player_170": 28,
-    "Stephen Maguire": 22,
-    "Mang Zi": 38,
-    "Matthew Stevens": 6,
-    "custom_E8BDBBE69DBEE58FB7": 33,
-    "custom_player_159": 20,
-    "Fat Guy": 45,
-    "Ding Junhui": 1,
-    "random_player_18": 55,
-    "random_player_19": 58,
-    "Give Emperor": 14,
-    "custom_E78B97E697A5E79A84": 44,
-    "custom_player_160": 17,
-    "Worst Professional": 15,
-    "random_player_63": 57,
-    "Baggage Brother": 40
+    "Yan Bingtao": 16,
+    "Liu Mang": 10,
+    "custom_player_1": 25,
+    "custom_player_3": 19,
+    "custom_player_2": 12,
+    "Jack Lisowski": 11,
+    "custom_player_4": 27,
+    "Glass Heart": 13,
+    "Selby": 9,
+    "Zhao Xintong": 4,
+    "Murphy": 20,
+    "John Wizard": 7,
+    "Stuart Bingham": 15,
+    "Matthew Stevens": 14,
+    "Kid": 2,
+    "custom_player_159": 26,
+    "Ding Junhui": 8,
+    "Smart": 3,
+    "Trump": 5,
+    "High Stick": 22,
+    "Mark Williams": 1,
+    "Give Emperor": 24,
+    "O_Sullivan": 6,
+    "Luca Brecel": 18,
+    "custom_player_160": 21,
+    "custom_player_181": 28,
+    "Worst Professional": 23,
+    "custom_E5B08FE4BB99E5A5B3": 17
   },
-  "championshipId": "chongqing_open",
+  "championshipId": "challenger_open",
   "matchTree": {"root": {
-    "p1wins": 3,
     "p1": {
-      "p1wins": 1,
       "p1": {
-        "p1wins": 2,
-        "p1": {
-          "p1wins": 0,
-          "p1": {
-            "p1wins": 0,
-            "p1": {
-              "p1wins": 0,
-              "p1": {"winner": "Mang Dali"},
-              "p2": {"winner": "random_player_18"},
-              "winner": "random_player_18",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-0",
-              "p2wins": 1
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "Jack Lisowski"},
-              "p2": {"winner": "Brown"},
-              "winner": "Jack Lisowski",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-1",
-              "p2wins": 0
-            },
-            "winner": "Jack Lisowski",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-32",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 0,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "Yan Bingtao"},
-              "p2": {"winner": "custom_player_169"},
-              "winner": "Yan Bingtao",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-2",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Mou Moumou"},
-              "p2": {"winner": "Selby"},
-              "winner": "Selby",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-3",
-              "p2wins": 1
-            },
-            "winner": "Selby",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-33",
-            "p2wins": 2
-          },
-          "winner": "Selby",
-          "stage": "ROUND_2",
-          "matchId": "custom_player_181+2024+chongqing_open-ROUND_2-48",
-          "p2wins": 2
-        },
+        "p1": {"winner": "Mark Williams"},
         "p2": {
-          "p1wins": 0,
           "p1": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 0,
-              "p1": {"winner": "random_player_32"},
-              "p2": {"winner": "random_player_81"},
-              "winner": "random_player_81",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-4",
-              "p2wins": 1
-            },
+            "p1": {"winner": "O_Sullivan"},
             "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Lolita"},
-              "p2": {"winner": "custom_player_4"},
-              "winner": "custom_player_4",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-5",
-              "p2wins": 1
-            },
-            "winner": "random_player_81",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-34",
-            "p2wins": 1
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "Ding Junhui"},
-              "p2": {"winner": "random_player_0"},
-              "winner": "Ding Junhui",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-6",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Liu Mang"},
-              "p2": {"winner": "Matthew Stevens"},
-              "winner": "Matthew Stevens",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-7",
-              "p2wins": 1
-            },
-            "winner": "Ding Junhui",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-35",
-            "p2wins": 0
-          },
-          "winner": "Ding Junhui",
-          "stage": "ROUND_2",
-          "matchId": "custom_player_181+2024+chongqing_open-ROUND_2-49",
-          "p2wins": 2
-        },
-        "winner": "Selby",
-        "stage": "QUARTER_FINAL",
-        "matchId": "custom_player_181+2024+chongqing_open-QUARTER_FINAL-56",
-        "p2wins": 1
-      },
-      "p2": {
-        "p1wins": 2,
-        "p1": {
-          "p1wins": 2,
-          "p1": {
-            "p1wins": 0,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "random_player_84"},
-              "p2": {"winner": "random_player_49"},
-              "winner": "random_player_84",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-8",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Stephen Maguire"},
-              "p2": {"winner": "custom_E5B08FE4BB99E5A5B3"},
-              "winner": "custom_E5B08FE4BB99E5A5B3",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-9",
-              "p2wins": 1
-            },
-            "winner": "custom_E5B08FE4BB99E5A5B3",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-36",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 0,
-            "p1": {
-              "p1wins": 0,
-              "p1": {"winner": "Mang Zi"},
-              "p2": {"winner": "Karen Wilson"},
-              "winner": "Karen Wilson",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-10",
-              "p2wins": 1
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Wang Xu"},
-              "p2": {"winner": "John Wizard"},
-              "winner": "John Wizard",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-11",
-              "p2wins": 1
-            },
-            "winner": "John Wizard",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-37",
-            "p2wins": 2
-          },
-          "winner": "custom_E5B08FE4BB99E5A5B3",
-          "stage": "ROUND_2",
-          "matchId": "custom_player_181+2024+chongqing_open-ROUND_2-50",
-          "p2wins": 1
-        },
-        "p2": {
-          "p1wins": 2,
-          "p1": {
-            "p1wins": 0,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_159"},
-              "p2": {"winner": "custom_player_171"},
-              "winner": "custom_player_159",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-12",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "High Stick"},
-              "p2": {"winner": "custom_player_174"},
-              "winner": "High Stick",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-13",
-              "p2wins": 0
-            },
-            "winner": "High Stick",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-38",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {
               "p1wins": 0,
               "p1": {"winner": "custom_player_1"},
-              "p2": {"winner": "Glass Heart"},
-              "winner": "Glass Heart",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-14",
-              "p2wins": 1
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "custom_E78B97E697A5E79A84"},
-              "p2": {"winner": "custom_player_166"},
-              "winner": "custom_player_166",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-15",
-              "p2wins": 1
-            },
-            "winner": "Glass Heart",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-39",
-            "p2wins": 0
-          },
-          "winner": "High Stick",
-          "stage": "ROUND_2",
-          "matchId": "custom_player_181+2024+chongqing_open-ROUND_2-51",
-          "p2wins": 1
-        },
-        "winner": "custom_E5B08FE4BB99E5A5B3",
-        "stage": "QUARTER_FINAL",
-        "matchId": "custom_player_181+2024+chongqing_open-QUARTER_FINAL-57",
-        "p2wins": 0
-      },
-      "winner": "custom_E5B08FE4BB99E5A5B3",
-      "stage": "SEMI_FINAL",
-      "matchId": "custom_player_181+2024+chongqing_open-SEMI_FINAL-60",
-      "p2wins": 2
-    },
-    "p2": {
-      "p1wins": 0,
-      "p1": {
-        "p1wins": 2,
-        "p1": {
-          "p1wins": 2,
-          "p1": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_160"},
-              "p2": {"winner": "custom_player_177"},
-              "winner": "custom_player_160",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-16",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Give Emperor"},
-              "p2": {"winner": "custom_player_172"},
-              "winner": "custom_player_172",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-17",
-              "p2wins": 1
-            },
-            "winner": "custom_player_160",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-40",
-            "p2wins": 0
-          },
-          "p2": {
-            "p1wins": 1,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_656467"},
-              "p2": {"winner": "custom_player_167"},
-              "winner": "custom_656467",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-18",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_3"},
-              "p2": {"winner": "custom_player_168"},
-              "winner": "custom_player_3",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-19",
-              "p2wins": 0
-            },
-            "winner": "custom_player_3",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-41",
-            "p2wins": 2
-          },
-          "winner": "custom_player_160",
-          "stage": "ROUND_2",
-          "matchId": "custom_player_181+2024+chongqing_open-ROUND_2-52",
-          "p2wins": 1
-        },
-        "p2": {
-          "p1wins": 2,
-          "p1": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 0,
-              "p1": {"winner": "Lao Youtiao"},
               "p2": {"winner": "Murphy"},
               "winner": "Murphy",
               "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-20",
-              "p2wins": 1
+              "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_1-0",
+              "p2wins": 2
             },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Summer Brave"},
-              "p2": {"winner": "custom_player_180"},
-              "winner": "custom_player_180",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-21",
-              "p2wins": 1
-            },
-            "winner": "Murphy",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-42",
-            "p2wins": 0
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_2-8"
           },
           "p2": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 0,
-              "p1": {"winner": "Worst Professional"},
-              "p2": {"winner": "custom_player_178"},
-              "winner": "custom_player_178",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-22",
-              "p2wins": 1
-            },
+            "p1": {"winner": "custom_player_2"},
             "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "custom_player_173"},
-              "p2": {"winner": "random_player_92"},
-              "winner": "random_player_92",
+              "p1wins": 2,
+              "p1": {"winner": "custom_player_3"},
+              "p2": {"winner": "Matthew Stevens"},
+              "winner": "custom_player_3",
               "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-23",
+              "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_1-1",
               "p2wins": 1
             },
-            "winner": "custom_player_178",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-43",
-            "p2wins": 1
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_2-9"
           },
-          "winner": "Murphy",
-          "stage": "ROUND_2",
-          "matchId": "custom_player_181+2024+chongqing_open-ROUND_2-53",
-          "p2wins": 0
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_3-16"
         },
-        "winner": "custom_player_160",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_player_181+2024+chongqing_open-QUARTER_FINAL-58",
-        "p2wins": 1
+        "matchId": "custom_player_181+2024+challenger_open-QUARTER_FINAL-20"
       },
       "p2": {
-        "p1wins": 1,
-        "p1": {
-          "p1wins": 2,
+        "p1": {"winner": "Smart"},
+        "p2": {
           "p1": {
-            "p1wins": 0,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "random_player_48"},
-              "p2": {"winner": "random_player_19"},
-              "winner": "random_player_48",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-24",
-              "p2wins": 0
-            },
+            "p1": {"winner": "Ding Junhui"},
             "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "Luca Brecel"},
-              "p2": {"winner": "random_player_88"},
-              "winner": "Luca Brecel",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-25",
-              "p2wins": 0
-            },
-            "winner": "Luca Brecel",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-44",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {
               "p1wins": 1,
               "p1": {"winner": "Stuart Bingham"},
-              "p2": {"winner": "Baggage Brother"},
-              "winner": "Stuart Bingham",
+              "p2": {"winner": "custom_player_160"},
+              "winner": "custom_player_160",
               "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-26",
-              "p2wins": 0
+              "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_1-2",
+              "p2wins": 2
             },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_2"},
-              "p2": {"winner": "custom_player_165"},
-              "winner": "custom_player_2",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-27",
-              "p2wins": 0
-            },
-            "winner": "Stuart Bingham",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-45",
-            "p2wins": 0
-          },
-          "winner": "Luca Brecel",
-          "stage": "ROUND_2",
-          "matchId": "custom_player_181+2024+chongqing_open-ROUND_2-54",
-          "p2wins": 0
-        },
-        "p2": {
-          "p1wins": 0,
-          "p1": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_170"},
-              "p2": {"winner": "custom_player_181"},
-              "winner": "custom_player_170",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-28",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Noob"},
-              "p2": {"winner": "random_player_63"},
-              "winner": "random_player_63",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-29",
-              "p2wins": 1
-            },
-            "winner": "custom_player_170",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-46",
-            "p2wins": 1
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_2-10"
           },
           "p2": {
-            "p1wins": 0,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "Fat Guy"},
-              "p2": {"winner": "random_player_117"},
-              "winner": "Fat Guy",
-              "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-30",
-              "p2wins": 0
-            },
+            "p1": {"winner": "John Wizard"},
             "p2": {
               "p1wins": 1,
-              "p1": {"winner": "random_player_66"},
-              "p2": {"winner": "custom_E8BDBBE69DBEE58FB7"},
-              "winner": "random_player_66",
+              "p1": {"winner": "Yan Bingtao"},
+              "p2": {"winner": "Worst Professional"},
+              "winner": "Worst Professional",
               "stage": "PRE_ROUND_1",
-              "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-31",
+              "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_1-3",
+              "p2wins": 2
+            },
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_2-11"
+          },
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_3-17"
+        },
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_player_181+2024+challenger_open-QUARTER_FINAL-21"
+      },
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_player_181+2024+challenger_open-SEMI_FINAL-24"
+    },
+    "p2": {
+      "p1": {
+        "p1": {"winner": "Kid"},
+        "p2": {
+          "p1": {
+            "p1": {"winner": "Jack Lisowski"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Luca Brecel"},
+              "p2": {"winner": "Give Emperor"},
+              "winner": "Luca Brecel",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_1-4",
+              "p2wins": 1
+            },
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_2-12"
+          },
+          "p2": {
+            "p1": {"winner": "Liu Mang"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "High Stick"},
+              "p2": {"winner": "custom_player_181"},
+              "winner": "custom_player_181",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_1-5",
+              "p2wins": 2
+            },
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_2-13"
+          },
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_3-18"
+        },
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_player_181+2024+challenger_open-QUARTER_FINAL-22"
+      },
+      "p2": {
+        "p1": {"winner": "Zhao Xintong"},
+        "p2": {
+          "p1": {
+            "p1": {"winner": "Selby"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Glass Heart"},
+              "p2": {"winner": "custom_player_4"},
+              "winner": "Glass Heart",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_1-6",
+              "p2wins": 1
+            },
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_2-14"
+          },
+          "p2": {
+            "p1": {"winner": "Trump"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+              "p2": {"winner": "custom_player_159"},
+              "winner": "custom_E5B08FE4BB99E5A5B3",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_1-7",
               "p2wins": 0
             },
-            "winner": "random_player_66",
-            "stage": "ROUND_1",
-            "matchId": "custom_player_181+2024+chongqing_open-ROUND_1-47",
-            "p2wins": 2
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_2-15"
           },
-          "winner": "random_player_66",
-          "stage": "ROUND_2",
-          "matchId": "custom_player_181+2024+chongqing_open-ROUND_2-55",
-          "p2wins": 2
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_player_181+2024+challenger_open-PRE_ROUND_3-19"
         },
-        "winner": "random_player_66",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_player_181+2024+chongqing_open-QUARTER_FINAL-59",
-        "p2wins": 2
+        "matchId": "custom_player_181+2024+challenger_open-QUARTER_FINAL-23"
       },
-      "winner": "random_player_66",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_player_181+2024+chongqing_open-SEMI_FINAL-61",
-      "p2wins": 2
+      "matchId": "custom_player_181+2024+challenger_open-SEMI_FINAL-25"
     },
-    "winner": "custom_E5B08FE4BB99E5A5B3",
     "stage": "FINAL",
-    "matchId": "custom_player_181+2024+chongqing_open-FINAL-62",
-    "p2wins": 0
+    "matchId": "custom_player_181+2024+challenger_open-FINAL-26"
   }},
-  "finished": true,
-  "snookerBreaks": [{
-    "score": 53,
-    "stage": "PRE_ROUND_1",
-    "sim": true,
-    "numFrame": 1,
-    "matchId": "custom_player_181+2024+chongqing_open-PRE_ROUND_1-6",
-    "playerId": "Ding Junhui"
-  }],
-  "timestamp": "2024/7/10"
+  "finished": false,
+  "snookerBreaks": [],
+  "timestamp": "2024/9/25"
 }

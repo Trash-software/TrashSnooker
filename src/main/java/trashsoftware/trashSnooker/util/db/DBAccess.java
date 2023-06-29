@@ -112,43 +112,43 @@ public class DBAccess {
         // solves, solve successes
         int[] data = new int[12];
         System.out.println(player.getPlayerPerson().getPlayerId() + ": " + player.getAttempts().size());
-        for (PotAttempt attempt : player.getAttempts()) {
-            data[0]++;
-            if (attempt.isSuccess()) data[1]++;
-            if (attempt.isLongPot()) {
-                data[2]++;
-                if (attempt.isSuccess()) data[3]++;
-            }
-            PotAttempt.Position position = attempt.getPositionSuccess();
-            if (position != PotAttempt.Position.NOT_SET) {
-                data[6]++;
-                if (position == PotAttempt.Position.SUCCESS) {
-                    data[7]++;
+        for (CueAttempt attempt : player.getAttempts()) {
+            if (attempt instanceof PotAttempt potAttempt) {
+                data[0]++;
+                if (potAttempt.isSuccess()) data[1]++;
+                if (potAttempt.isLongPot()) {
+                    data[2]++;
+                    if (potAttempt.isSuccess()) data[3]++;
                 }
-            }
-            
-            if (attempt.isRestPot()) {
-                data[8]++;
-                if (attempt.isSuccess()) {
-                    data[9]++;
+                PotAttempt.Position position = potAttempt.getPositionSuccess();
+                if (position != PotAttempt.Position.NOT_SET) {
+                    data[6]++;
+                    if (position == PotAttempt.Position.SUCCESS) {
+                        data[7]++;
+                    }
+                }
+
+                if (potAttempt.isRestPot()) {
+                    data[8]++;
+                    if (potAttempt.isSuccess()) {
+                        data[9]++;
+                    }
+                }
+            } else if (attempt instanceof DefenseAttempt defenseAttempt) {
+                data[4]++;
+                if (defenseAttempt.isSuccess()) {
+                    data[5]++;
+                }
+                if (defenseAttempt.isSolvingSnooker()) {
+                    data[10]++;
+                    if (defenseAttempt.isSolveSuccess()) {
+                        data[11]++;
+                    }
                 }
             }
         }
         if (data[0] == 0) {
             AchManager.getInstance().addAchievement(Achievement.FRAME_NO_ATTACK, player.getInGamePlayer());
-        }
-        
-        for (DefenseAttempt defenseAttempt : player.getDefenseAttempts()) {
-            data[4]++;
-            if (defenseAttempt.isSuccess()) {
-                data[5]++;
-            }
-            if (defenseAttempt.isSolvingSnooker()) {
-                data[10]++;
-                if (defenseAttempt.isSolveSuccess()) {
-                    data[11]++;
-                }
-            }
         }
 
         String queryWhere = getFrameQueryWhere(entireGame, frame,
@@ -572,17 +572,10 @@ public class DBAccess {
         for (Integer b : breakScores) {
             if (b >= 50) {
                 breaks50++;
-                AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_50, player.getInGamePlayer());
             }
             if (b > highBreak) {
                 highBreak = b;
             }
-        }
-        if (highBreak >= 100) {
-            AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_100, player.getInGamePlayer());
-        }
-        if (highBreak >= 147) {
-            AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_147, player.getInGamePlayer());
         }
         String query = "INSERT INTO SnookerRecord VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +

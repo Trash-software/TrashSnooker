@@ -12,6 +12,8 @@ import java.util.*;
 public class Career {
 
     public static final double[] PERK_RANDOM_RANGE = {0.5, 2.0};
+    
+    public static final double AI_HELPER_PRECISION_FACTOR = 0.95;
 
     private final List<ChampionshipScore> championshipScores = new ArrayList<>();  // 不一定按时间顺序
     private final boolean isHumanPlayer;

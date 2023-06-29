@@ -64,6 +64,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected boolean wasDoingFreeBall;  // 记录上一杆是不是自由球，复位用
     protected int finishedCuesCount = 0;  // 击球的计数器
     protected double lastCueVx;
+    protected P lastCuedPlayer;
     protected P currentPlayer;
     /**
      * {@link Game#getCurrentTarget()}
@@ -105,6 +106,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         if (gameSettings != null) {
             initPlayers();
             currentPlayer = gameSettings.isPlayer1Breaks() ? player1 : player2;
+            lastCuedPlayer = currentPlayer;  // 这里不重要，只要是防null
             setBreakingPlayer(currentPlayer);
         }
         cueBall = createWhiteBall();
@@ -301,6 +303,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         clearCushionAndAcrossLine();
         newPotted.clear();
         recordPositions();
+        lastCuedPlayer = currentPlayer;
         recordedTarget = currentTarget;
         wasDoingFreeBall = isDoingSnookerFreeBll();
         placedHandBallButNoHit = false;
@@ -837,6 +840,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public P getCuingPlayer() {
         return currentPlayer;
+    }
+
+    public P getLastCuedPlayer() {
+        return lastCuedPlayer;
     }
 
     @Override

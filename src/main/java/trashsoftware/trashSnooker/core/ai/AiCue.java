@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
-    public static final double ATTACK_DIFFICULTY_THRESHOLD = 18000.0;  // 越大，AI越倾向于进攻
+//    public static final double ATTACK_DIFFICULTY_THRESHOLD = 18000.0;  // 越大，AI越倾向于进攻
 
     public static final double PURE_ATTACK_PROB = 0.4;  // 进攻权重为99的球员只要prob高于这个值他就会进攻。越小，AI越倾向于无脑进攻
     public static final double DEFENSIVE_ATTACK_PROB = 0.2;  // 这个值是线性的，进攻权重为99的球员高于这个值就会尝试性进攻
@@ -51,8 +51,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     protected int nThreads;
     protected G game;
     protected P aiPlayer;
-    private double opponentPureAtkProb;  // 对手会直接进攻的界限
-    private double opponentDefAtkProb;
+    private final double opponentPureAtkProb;  // 对手会直接进攻的界限
+    private final double opponentDefAtkProb;
 
     public AiCue(G game, P aiPlayer) {
         this.game = game;

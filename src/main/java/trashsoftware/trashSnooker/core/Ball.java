@@ -1089,7 +1089,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 double ratio = thisHorV / thisVerV;
                 int sign = ratio < 0 ? -1 : 1;
                 double offsetRatio = Math.sqrt(Math.abs(ratio * sign)) * sign;
-                ballOutHor = ballOutVer * offsetRatio * (throwEffect * 0.15);  // 目标球身上的投掷效应。AI不会算，所以我们只给玩家搞这个
+                ballOutHor = ballOutVer * offsetRatio * (gearRemain * 0.2);  // 目标球身上的投掷效应。AI不会算，所以我们只给玩家搞这个
             }
         }
 

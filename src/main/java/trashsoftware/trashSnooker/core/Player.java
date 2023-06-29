@@ -11,8 +11,9 @@ public abstract class Player {
     protected final InGamePlayer inGamePlayer;
     protected final List<Ball> cumulatedPotted = new ArrayList<>();
     protected final TreeMap<Ball, Integer> singlePole = new TreeMap<>();
-    protected final List<PotAttempt> attempts = new ArrayList<>();
-    protected final List<DefenseAttempt> defenseAttempts = new ArrayList<>();
+//    protected final List<PotAttempt> attempts = new ArrayList<>();
+//    protected final List<DefenseAttempt> defenseAttempts = new ArrayList<>();
+    protected final List<CueAttempt> attemptList = new ArrayList<>();
     protected int score;
     protected int lastAddedScore;
     private boolean withdrawn = false;
@@ -32,21 +33,52 @@ public abstract class Player {
         return inGamePlayer;
     }
     
-    public void addAttempt(PotAttempt potAttempt) {
-        attempts.add(potAttempt);
+    public void addAttempt(CueAttempt attempt) {
+        attemptList.add(attempt);
     }
 
-    public List<PotAttempt> getAttempts() {
-        return attempts;
+    public List<CueAttempt> getAttempts() {
+        return attemptList;
     }
     
-    public void addDefenseAttempt(DefenseAttempt defenseAttempt) {
-        defenseAttempts.add(defenseAttempt);
+    public List<PotAttempt> getRecentSinglePoleAttempts() {
+        List<PotAttempt> result = new ArrayList<>();
+        for (int i = attemptList.size() - 1; i >= 0; i--) {
+            CueAttempt ca = attemptList.get(i);
+            if (ca instanceof PotAttempt pa) {
+                if (pa.isSuccess()) {
+                    result.add(pa);
+                } else {
+                    if (result.isEmpty()) {
+                        result.add(pa);  // 是最后一杆，说明这个单杆终结了
+                    } else {
+                        // 不属于这次单杆
+                        break;
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+        Collections.reverse(result);
+        return result;
     }
 
-    public List<DefenseAttempt> getDefenseAttempts() {
-        return defenseAttempts;
-    }
+    //    public void addAttempt(PotAttempt potAttempt) {
+//        attempts.add(potAttempt);
+//    }
+//
+//    public List<PotAttempt> getAttempts() {
+//        return attempts;
+//    }
+//    
+//    public void addDefenseAttempt(DefenseAttempt defenseAttempt) {
+//        defenseAttempts.add(defenseAttempt);
+//    }
+//
+//    public List<DefenseAttempt> getDefenseAttempts() {
+//        return defenseAttempts;
+//    }
 
 //    public int getNumber() {
 //        return number;
@@ -56,7 +88,10 @@ public abstract class Player {
         return score;
     }
 
-    public final void correctPotBalls(Collection<? extends Ball> pottedBalls) {
+    /**
+     * Override这个method一定记得call super
+     */
+    public void correctPotBalls(Collection<? extends Ball> pottedBalls) {
         for (Ball ball : pottedBalls) {
             if (singlePole.containsKey(ball)) {
                 singlePole.put(ball, singlePole.get(ball) + 1);

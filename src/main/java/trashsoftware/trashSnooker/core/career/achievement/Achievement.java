@@ -21,6 +21,7 @@ public enum Achievement {
     GAIN_BY_SNOOKER(AchCat.GENERAL_TABLE),  // 已完成
     SOLVE_SNOOKER_SUCCESS(AchCat.GENERAL_TABLE),  // 已完成
     ACCURACY_WIN(AchCat.GENERAL_TABLE),  // 已完成
+    CONTINUOUS_LONG_POT(AchCat.GENERAL_TABLE),
 //    PASS_POT(AchCat.GENERAL),  // todo 传球 完成不了
 
     WIN_A_FRAME(AchCat.GENERAL_MATCH),  // 已完成

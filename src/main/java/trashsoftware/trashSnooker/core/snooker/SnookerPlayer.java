@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.snooker;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.InGamePlayer;
 import trashsoftware.trashSnooker.core.Player;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,6 +44,23 @@ public class SnookerPlayer extends Player {
     public void clearSinglePole() {
         singlePoleScores.add(getSinglePoleScore());
         super.clearSinglePole();
+    }
+
+    @Override
+    public void correctPotBalls(Collection<? extends Ball> pottedBalls) {
+        super.correctPotBalls(pottedBalls);
+        
+        int singlePoleScore = getSinglePoleScore();
+        if (singlePoleScore >= 50) {
+            AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_50, getInGamePlayer());
+            if (singlePoleScore >= 100) {
+                AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_100, getInGamePlayer());
+                if (singlePoleScore >= 147) {
+                    AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_147, getInGamePlayer());
+
+                }
+            }
+        }
     }
 
     public void flushSinglePoles() {
