@@ -626,11 +626,19 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 else if (deg >= 360) deg -= 360.0;
 
                 double[] unitXy = Algebra.unitVectorOfAngle(Math.toRadians(deg));
+                CueParams cueParams = CueParams.createBySelected(
+                        50.0,
+                        0.0,
+                        0.0,
+                        this,
+                        getCuingIgp(),
+                        null
+                );
                 CuePlayParams cpp = CuePlayParams.makeIdealParams(
                         unitXy[0],
                         unitXy[1],
-                        0, 0, 0,
-                        50.0
+                        cueParams,
+                        0.0
                 );
                 WhitePrediction wp = predictWhite(cpp, entireGame.predictPhy, 10000.0, false,
                         false, true, false);

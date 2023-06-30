@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.CueParams;
 import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
@@ -42,17 +43,21 @@ public class SidePocketAiCue extends AiCue<AmericanNineBallGame, AmericanNineBal
         double[] unitXY = Algebra.unitVector(dirX, dirY);
 
         double selectedPower = aiPlayer.getPlayerPerson().getMaxPowerPercentage();
+        CueParams cueParams = CueParams.createBySelected(
+                selectedPower,
+                0.0,
+                0.0,
+                game,
+                aiPlayer.getInGamePlayer(),
+                aiPlayer.getPlayerPerson().handBody.getPrimary()
+        );
         CuePlayParams cpp = CuePlayParams.makeIdealParams(
                 unitXY[0],
                 unitXY[1],
-                0.0,
-                0.0,
-                0.0,
-                selectedPowerToActualPower(selectedPower, 0, 0,
-                        aiPlayer.getPlayerPerson().handBody.getPrimary())
+                cueParams,
+                5.0
         );
-        return new DefenseChoice(unitXY, selectedPower, 0.0, cpp,
-                aiPlayer.getPlayerPerson().handBody.getPrimary());
+        return new DefenseChoice(unitXY, cueParams, cpp);
     }
 
     @Override

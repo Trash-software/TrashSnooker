@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class CuePlayParams {
     public final double vy;
 
     // 记录向，不参与实际运算
-    public final double power;
+    public final CueParams cueParams;
 //    public final boolean slideCue;  // 是否滑杆，也是记录向
 
     public double xSpin;
@@ -25,26 +26,25 @@ public class CuePlayParams {
      * @param xSpin       由旋转产生的横向最大速度，mm/s
      * @param ySpin       由旋转产生的纵向最大速度，mm/s
      * @param sideSpin    由侧旋产生的最大速度，mm/s
-     * @param actualPower 实际的力量，考虑球员力量、球杆、球的重量
+     * @param cueParams   记录
      */
     protected CuePlayParams(double vx, double vy, double xSpin, double ySpin,
-                            double sideSpin, double actualPower) {
+                            double sideSpin, CueParams cueParams) {
         this.vx = vx;
         this.vy = vy;
         this.xSpin = xSpin;
         this.ySpin = ySpin;
         this.sideSpin = sideSpin;
 
-        this.power = actualPower;
+        this.cueParams = cueParams;
     }
 
     public static CuePlayParams makeIdealParams(double directionX, double directionY,
-                                                double actualFrontBackSpin, double actualSideSpin,
-                                                double cueAngleDeg,
-                                                double actualPower) {
+                                                CueParams cueParams,
+                                                double cueAngleDeg) {
         return makeIdealParams(directionX, directionY,
-                actualFrontBackSpin, actualSideSpin,
-                cueAngleDeg, actualPower,
+                cueParams,
+                cueAngleDeg,
                 false);
     }
 
@@ -54,32 +54,31 @@ public class CuePlayParams {
      * @param directionX selected x direction
      * @param directionY selected y direction
      */
-    public static CuePlayParams makeIdealParams(double directionX, double directionY,
-                                                double actualFrontBackSpin, double actualSideSpin,
+    public static CuePlayParams makeIdealParams(double directionX, 
+                                                double directionY,
+                                                CueParams cueParams,
                                                 double cueAngleDeg,
-                                                double actualPower,
                                                 boolean slideCue) {
-
-        if (actualPower < Values.MIN_SELECTED_POWER) actualPower = Values.MIN_SELECTED_POWER;
-
-        double directionalPower = actualPower;
-        double directionalSideSpin = actualSideSpin;  // 参与击球方向计算的sideSpin
+        
+        double directionalPower = cueParams.actualPower();
+        double directionalSideSpin = cueParams.actualSideSpin();  // 参与击球方向计算的sideSpin
         if (slideCue) {
-            directionalPower = actualPower;
-            actualPower /= 4.0;
-            directionalSideSpin = actualSideSpin * 10.0;
-            actualSideSpin /= 4.0;
+            cueParams.setActualPower(cueParams.actualPower() / 4.0);
+            directionalSideSpin = cueParams.actualSideSpin() * 10.0;
+            cueParams.setActualSideSpin(cueParams.actualSideSpin() / 4.0);
         }
 
         double[] unitXYWithSpin = unitXYWithSpins(directionalSideSpin, directionalPower, directionX, directionY);
 
-        double speed = getSpeedOfPower(actualPower, cueAngleDeg);
+        double speed = getSpeedOfPower(cueParams.actualPower(), cueAngleDeg);
         double vx = unitXYWithSpin[0] * speed;
         double vy = unitXYWithSpin[1] * speed;
 
         // 重新计算，因为unitSideSpin有呲杆补偿
-        double[] spins = calculateSpins(vx, vy, actualFrontBackSpin, actualSideSpin, cueAngleDeg);
-        return new CuePlayParams(vx, vy, spins[0], spins[1], spins[2], actualPower);
+        double[] spins = calculateSpins(vx, vy, cueParams.actualFrontBackSpin(), cueParams.actualSideSpin(), cueAngleDeg);
+//        System.out.println(cueParams);
+//        System.out.println("spins: " + Arrays.toString(spins));
+        return new CuePlayParams(vx, vy, spins[0], spins[1], spins[2], cueParams);
     }
 
     public static double getSpeedOfPower(double actualPower, double cueAngleDeg) {
@@ -91,7 +90,15 @@ public class CuePlayParams {
         return speed;
     }
 
-    public static double unitFrontBackSpin(double unitCuePoint, PlayerPerson playerPerson,
+    public static double getSelectedFrontBackSpin(double actualFbSpin,
+                                           PlayerPerson playerPerson,
+                                           Cue cue) {
+        return actualFbSpin / cue.spinMultiplier /
+                (playerPerson.getMaxSpinPercentage() / 100.0);
+    }
+
+    public static double unitFrontBackSpin(double unitCuePoint, 
+                                           PlayerPerson playerPerson,
                                            Cue cue) {
         return unitCuePoint * cue.spinMultiplier *
                 playerPerson.getMaxSpinPercentage() / 100.0;

@@ -91,6 +91,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected Table table;
     private boolean ended;
     private PhysicsCalculator physicsCalculator;
+    protected FrameAchievementRecorder achievementRecorder = new FrameAchievementRecorder();
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
@@ -284,6 +285,38 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public GameRecorder getRecorder() {
         return recorder;
+    }
+    
+    public void recordAttemptForAchievement(CueAttempt finishedAttempt, Player player) {
+        if (finishedAttempt instanceof PotAttempt potAttempt) {
+            AiCue.AttackChoice attackChoice = AiCue.AttackChoice.createChoice(
+                    this,
+                    entireGame.predictPhy, 
+                    player,
+                    potAttempt.getCueBallOrigPos(),
+                    potAttempt.getTargetBall(),
+                    null,
+                    getCurrentTarget(),
+                    false,
+                    potAttempt.getTargetDirHole(),
+                    potAttempt.getTargetBallOrigPos()
+            );
+            if (attackChoice != null) {
+                CuePlayParams cpp = potAttempt.getCuePlayParams();
+                AiCue.AttackParam attackParam = new AiCue.AttackParam(
+                        attackChoice,
+                        this,
+                        entireGame.predictPhy, 
+                        player,
+                        cpp.cueParams
+                );
+                System.out.println("Attack pot prob: " + attackChoice.getDefaultRef().getPotProb());
+            } else {
+                System.out.println("Attack is null. Why?");
+            }
+        } else if (finishedAttempt instanceof DefenseAttempt defenseAttempt) {
+            
+        } 
     }
 
     public Movement cue(CuePlayParams params, Phy phy) {
@@ -991,9 +1024,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             null,
                             target,
                             false,
-                            collisionPointX,
-                            collisionPointY,
-                            dirHole
+                            dirHole,
+                            null
                     );
                     if (attackChoice != null) {
                         attackChoices.add(attackChoice);
@@ -1608,5 +1640,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
             return noHit;
         }
+    }
+    
+    public class FrameAchievementRecorder {
+        protected AiCue.AttackChoice currentAttackChoice;  // 由这一杆的参数生成的choice，用于粗略评估难度
     }
 }

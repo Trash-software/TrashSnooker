@@ -11,14 +11,15 @@ public class AiCueResult {
     
     public static final double DEFAULT_AI_PRECISION = 13500.0;
     protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
-    private final double selectedFrontBackSpin;  // 球手想要的高低杆，范围(-1.0, 1.0)，高杆正低杆负
-    private final double selectedSideSpin;
-    private final double selectedPower;
+//    private final double selectedFrontBackSpin;  // 球手想要的高低杆，范围(-1.0, 1.0)，高杆正低杆负
+//    private final double selectedSideSpin;
+//    private final double selectedPower;
+    private final CueParams cueParams;
     private final CueType cueType;
     private final double[] targetOrigPos;
     private final double[][] targetDirHole;
     private final Ball targetBall;
-    private final PlayerPerson.HandSkill handSkill;
+//    private final PlayerPerson.HandSkill handSkill;
     private final double frameImportance;
     private final boolean rua;
     private double unitX, unitY;
@@ -32,22 +33,20 @@ public class AiCueResult {
                        Ball targetBall,
                        double unitX,
                        double unitY,
-                       double selectedFrontBackSpin,
-                       double selectedSideSpin,
-                       double selectedPower,
-                       PlayerPerson.HandSkill handSkill,
+                       CueParams cueParams,
                        double frameImportance,
                        boolean rua) {
         this.unitX = unitX;
         this.unitY = unitY;
-        this.selectedFrontBackSpin = selectedFrontBackSpin;
-        this.selectedSideSpin = selectedSideSpin;
-        this.selectedPower = selectedPower;
+        this.cueParams = cueParams;
+//        this.selectedFrontBackSpin = selectedFrontBackSpin;
+//        this.selectedSideSpin = selectedSideSpin;
+//        this.selectedPower = selectedPower;
         this.cueType = cueType;
         this.targetOrigPos = targetOrigPos;
         this.targetDirHole = targetDirHole;
         this.targetBall = targetBall;
-        this.handSkill = handSkill;
+//        this.handSkill = handSkill;
         this.frameImportance = frameImportance;
         this.rua = rua;
 
@@ -87,7 +86,7 @@ public class AiCueResult {
     }
 
     public PlayerPerson.HandSkill getHandSkill() {
-        return handSkill;
+        return cueParams.getHandSkill();
     }
 
     public CueType getCueType() {
@@ -148,7 +147,7 @@ public class AiCueResult {
             sd = (100 - person.getAiPlayStyle().defense) / precisionFactor;
         }
 
-        double handSdMul = PlayerPerson.HandBody.getSdOfHand(handSkill);
+        double handSdMul = PlayerPerson.HandBody.getSdOfHand(getHandSkill());
         sd *= handSdMul;
 
         // 手感差时偏差大
@@ -163,12 +162,8 @@ public class AiCueResult {
         unitY = vecAfterRandom[1];
     }
 
-    public double getSelectedFrontBackSpin() {
-        return selectedFrontBackSpin;
-    }
-
-    public double getSelectedSideSpin() {
-        return selectedSideSpin;
+    public CueParams getCueParams() {
+        return cueParams;
     }
 
     public double getUnitX() {
@@ -177,10 +172,6 @@ public class AiCueResult {
 
     public double getUnitY() {
         return unitY;
-    }
-
-    public double getSelectedPower() {
-        return selectedPower;
     }
 
     public enum CueType {

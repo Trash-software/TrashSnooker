@@ -68,47 +68,6 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         boolean leftBreak = method == AiPlayStyle.SnookerBreakMethod.LEFT;
         return predictiveRegularBreak(phy, leftBreak);
     }
-
-    private DefenseChoice blindRegularBreak(Phy phy, boolean leftBreak) {
-        double aimingPosX = game.firstRedX() +
-                game.getGameValues().ball.ballDiameter * game.redRowOccupyX * 4.0;
-        double yOffset = (game.getGameValues().ball.ballDiameter + game.redGapDt * 0.6) * 6.75;
-        if (leftBreak) yOffset = -yOffset;
-        double aimingPosY = game.getGameValues().table.midY + yOffset;
-
-        double dirX = aimingPosX - game.getCueBall().getX();
-        double dirY = aimingPosY - game.getCueBall().getY();
-        double[] unitXY = Algebra.unitVector(dirX, dirY);
-        double actualPower = 27.0 * phy.cloth.smoothness.speedReduceFactor / TableCloth.Smoothness.NORMAL.speedReduceFactor;
-        double selectedSideSpin = leftBreak ? -0.6 : 0.6;
-        double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
-                aiPlayer.getInGamePlayer().getCurrentCue(game));
-        System.out.println(actualSideSpin + " " + Util.powerMultiplierOfCuePoint(0.6, 0));
-        double selectedPower = actualPowerToSelectedPower(
-                actualPower / 100 * phy.cloth.smoothness.speedReduceFactor,
-                actualSideSpin,  // fixme
-                0,
-                aiPlayer.getPlayerPerson().handBody.getPrimary()
-        );
-
-        double[] correctedXY = CuePlayParams.aimingUnitXYIfSpin(
-                actualSideSpin,
-                actualPower,
-                unitXY[0],
-                unitXY[1]
-        );
-        CuePlayParams cpp = CuePlayParams.makeIdealParams(
-                correctedXY[0],
-                correctedXY[1],
-                0.0,
-                actualSideSpin,
-                0.0,
-                actualPower
-        );
-//        System.out.println(Arrays.toString(unitXY) + Arrays.toString(correctedXY));
-        return new DefenseChoice(correctedXY, selectedPower, selectedSideSpin, cpp,
-                aiPlayer.getPlayerPerson().handBody.getPrimary());
-    }
     
     private DefenseChoice predictiveRegularBreak(Phy phy, boolean leftBreak) {
         double sign = leftBreak ? -1 : 1;
@@ -128,8 +87,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double tickDeg = totalAng / nTicks * -sign;
         
         double selectedSideSpin = 0.6 * sign;
-        double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
-                aiPlayer.getInGamePlayer().getCurrentCue(game));
+//        double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
+//                aiPlayer.getInGamePlayer().getCurrentCue(game));
         
         List<Ball> legalList = game.getAllLegalBalls(1, false, false);
         Set<Ball> legalSet = new HashSet<>(legalList);
@@ -150,32 +109,30 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             double rad = Math.toRadians(deg);
             double[] unitXy = Algebra.unitVectorOfAngle(rad);
             for (double selectedPower = selPowerLow; selectedPower <= selPowerHigh; selectedPower += selPowerTick) {
-                double actualPower = selectedPowerToActualPower(
+                CueParams cueParams = CueParams.createBySelected(
                         selectedPower,
-                        actualSideSpin,
                         0.0,
+                        selectedSideSpin,
+                        game,
+                        aiPlayer.getInGamePlayer(),
                         handSkill
                 );
+
                 CuePlayParams cpp = CuePlayParams.makeIdealParams(
                         unitXy[0],
                         unitXy[1],
-                        0,
-                        actualSideSpin,
-                        0,
-                        actualPower
+                        cueParams,
+                        0.0
                 );
                 DefenseChoice dc = analyseDefense(
                         this,
                         cpp,
-                        handSkill,
+                        cueParams,
                         phy,
                         game,
                         legalSet,
                         aiPlayer,
                         unitXy,
-                        selectedPower,
-                        0.0,
-                        selectedSideSpin,
                         false,
                         0.0,
                         false
@@ -203,7 +160,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         }
         Collections.sort(legalChoices);
         Collections.reverse(legalChoices);
-        System.out.println("Break sel power " + legalChoices.get(0).selectedPower);
+        System.out.println("Break sel power " + legalChoices.get(0).cueParams.selectedPower());
         return legalChoices.get(0);
     }
 
@@ -305,16 +262,18 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         Random random = new Random();
         boolean isSmallPower = random.nextDouble() < 0.25;
         PlayerPerson pp = aiPlayer.getPlayerPerson();
-        double[] spin;
-        double power;
+        Ball cueBall = game.getCueBall();
+        CueParams cueParams;
+//        double[] spin;
+//        double power;
         if (isSmallPower) {  // 是否是小力轻推
             System.out.println("Small power!");
-            Ball cueBall = game.getCueBall();
-            spin = SPIN_POINTS[0];
-            power = actualPowerToSelectedPower(
+            cueParams = CueParams.createByActual(
                     minActualPower,
-                    spin[0],
-                    spin[1],
+                    0.0,
+                    0.0,
+                    game,
+                    aiPlayer.getInGamePlayer(),
                     CuePlayParams.getPlayableHand(
                             cueBall.getX(),
                             cueBall.getY(),
@@ -327,10 +286,24 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         } else {
             System.out.println("Big power!");
             int index = random.nextInt(SPIN_POINTS.length);
-            spin = SPIN_POINTS[index];
+            double[] spin = SPIN_POINTS[index];
             double powerLow = pp.getControllablePowerPercentage() * 0.7;
             double interval = pp.getControllablePowerPercentage() - powerLow;
-            power = random.nextDouble() * interval + powerLow;
+            cueParams = CueParams.createBySelected(
+                    random.nextDouble() * interval + powerLow,
+                    spin[0],
+                    spin[1],
+                    game,
+                    aiPlayer.getInGamePlayer(),
+                    CuePlayParams.getPlayableHand(
+                            cueBall.getX(),
+                            cueBall.getY(),
+                            choice.cueDirectionUnitVector[0],
+                            choice.cueDirectionUnitVector[1],
+                            game.getGameValues().table,
+                            pp
+                    )
+            );
         }
 
         AttackParam attackParam = new AttackParam(
@@ -338,9 +311,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 game,
                 phy,
                 aiPlayer,
-                power,
-                spin[0],
-                spin[1]
+                cueParams
         );
         AttackThread at = new AttackThread(
                 attackParam,

@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.career.championship;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.aiMatch.AiVsAi;
+import trashsoftware.trashSnooker.core.career.aiMatch.AmericanNineAiVsAi;
 import trashsoftware.trashSnooker.core.career.aiMatch.ChineseAiVsAi;
 import trashsoftware.trashSnooker.core.career.aiMatch.SnookerAiVsAi;
 
@@ -209,6 +210,14 @@ public class MatchTreeNode {
             case LIS_EIGHT:
             case MINI_SNOOKER:
             case AMERICAN_NINE:
+                aiVsAi = new AmericanNineAiVsAi(
+                        player1Position.winner,
+                        player2Position.winner,
+                        championship,
+                        metaMatchInfo.toString(),
+                        data.getNFramesOfStage(stage)
+                );
+                break;
             default:
                 throw new UnsupportedOperationException();
         }
