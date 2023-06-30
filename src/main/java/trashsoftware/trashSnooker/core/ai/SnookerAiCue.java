@@ -310,7 +310,6 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 choice,
                 game,
                 phy,
-                aiPlayer,
                 cueParams
         );
         AttackThread at = new AttackThread(

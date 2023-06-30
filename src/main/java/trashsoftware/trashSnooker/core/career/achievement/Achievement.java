@@ -17,12 +17,20 @@ public enum Achievement {
     POT_A_BALL(AchCat.GENERAL_TABLE),  // 已完成
     POT_EIGHT_BALLS(AchCat.GENERAL_TABLE, 8, false),  // 已完成
     POT_HUNDRED_BALLS(AchCat.GENERAL_TABLE, 100, false),  // 已完成
+    CUMULATIVE_LONG_POTS_1(AchCat.GENERAL_TABLE, 10, false),  // 已完成
     THREE_BALLS_IN_A_ROW(AchCat.GENERAL_TABLE),  // 已完成
     POSITIONING_MASTER(AchCat.GENERAL_TABLE, 7, true),  // 已完成
     GAIN_BY_SNOOKER(AchCat.GENERAL_TABLE),  // 已完成
     SOLVE_SNOOKER_SUCCESS(AchCat.GENERAL_TABLE),  // 已完成
     ACCURACY_WIN(AchCat.GENERAL_TABLE),  // 已完成
+    ACCURACY_WIN_LONG(AchCat.GENERAL_TABLE),  // 已完成
     CONTINUOUS_LONG_POT(AchCat.GENERAL_TABLE),  // 已完成
+    MULTIPLE_EASY_FAILS(AchCat.GENERAL_TABLE) {  // 已完成
+        @Override
+        public boolean isHidden() {
+            return true;
+        }
+    },
 //    PASS_POT(AchCat.GENERAL),  // todo 传球 完成不了
 
     WIN_A_FRAME(AchCat.GENERAL_MATCH),  // 已完成
@@ -55,9 +63,17 @@ public enum Achievement {
         }
     },
     THREE_MISS_LOST(AchCat.SNOOKER),  // 已完成
-//    REPOSITION_THREE(AchCat.SNOOKER),  // 复位三次
+    HARD_SNOOKER_BY_OPPONENT(AchCat.SNOOKER),  // 已完成
+    HARD_SNOOKER_BY_HUMAN(AchCat.SNOOKER),  // 已完成
+    UNSOLVABLE_SNOOKER(AchCat.SNOOKER) {  // 已完成
+        @Override
+        public boolean isHidden() {
+            return true;
+        }
+    }, 
     COME_BACK_BEHIND_65(AchCat.SNOOKER),  // 已完成
     COME_BACK_BEHIND_OVER_SCORE(AchCat.SNOOKER),  // 已完成
+    SUM_BELOW(AchCat.SNOOKER),  // 已完成
     SUM_OVER_147(AchCat.SNOOKER),  // 已完成
     POT_WRONG_COLOR(AchCat.SNOOKER) {  // 已完成
         @Override

@@ -418,7 +418,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                         choice.handSkill
                 );
                 AttackParam acp = new AttackParam(
-                        choice, game, phy, aiPlayer, cueParams
+                        choice, game, phy, cueParams
                 );
                 if (acp.potProb > easiest) easiest = acp.potProb;
                 if (mustAttack || acp.potProb > pureAttackThreshold) {
@@ -1100,12 +1100,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             double[] collisionPos = new double[]{collisionPointX, collisionPointY};
             double[] whiteToColl =
                     new double[]{collisionPointX - whitePos[0], collisionPointY - whitePos[1]};
-            double theta1 = Algebra.thetaOf(whiteToColl);
-            double theta2 = Algebra.thetaOf(targetToHole);
-            double angle = Math.abs(theta1 - theta2);
-            if (angle < 0) angle = -angle;
+            double angle = Algebra.thetaBetweenVectors(whiteToColl, targetToHole);
+//            double theta1 = Algebra.thetaOf(whiteToColl);
+//            double theta2 = Algebra.thetaOf(targetToHole);
+//            double angle = Math.abs(theta1 - theta2);
+//            if (angle < 0) angle = -angle;
 
             if (angle >= Math.PI / 2) {
+//                System.out.println("Impossible angle: " + Math.toDegrees(angle));
                 return null;  // 不可能打进的球
             }
             double whiteDistance = Math.hypot(whiteToColl[0], whiteToColl[1]);
@@ -1143,7 +1145,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     attackChoice,
                     game,
                     phy,
-                    attackingPlayer,
                     CueParams.createBySelected(
                             30,
                             0,
@@ -1188,7 +1189,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 return Math.abs(targetHoleVec[1]) * values.table.midHoleDiameter
                         + (values.table.midPocketGravityRadius + values.ball.ballRadius) * effectiveSlopeMul;
             } else {
-                double holeMax = values.table.cornerHoleDiameter;
+                double holeMax = values.table.cornerHoleDiameter + values.ball.ballRadius / 2;
                 // 要的只是个0-90之间的角度（弧度），与45度对称即可（15===75），都转到第一象限来
                 double rad = Math.atan2(Math.abs(targetHoleVec[0]), Math.abs(targetHoleVec[1]));
                 double angleTo45 = rad > Algebra.QUARTER_PI ?
@@ -1207,7 +1208,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     targetHoleVec,
                     remDtOfBall);
             // 从这个角度看袋允许的偏差
-            return holeWidth - values.ball.ballDiameter * 0.95;  // 0.95是随手写的
+            return holeWidth - values.ball.ballDiameter * 0.9;  // 0.9是随手写的
         }
 
         protected static double holeDifficulty(Game<?, ?> game,
@@ -1500,7 +1501,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         public AttackParam(AttackChoice attackChoice,
                            Game<?, ?> game,
                            Phy phy,
-                           Player aiPlayer,
                            CueParams cueParams) {
             this.attackChoice = attackChoice;
             this.cueParams = cueParams;
@@ -1544,7 +1544,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //            }
 
             // 瞄准的1倍标准差偏差角
-            double aimingSd = (100 - aps.precision) * handSdMul /
+            double aimingSd = (105 - aps.precision) * handSdMul /
                     AiCueResult.DEFAULT_AI_PRECISION;  // 这里用default是因为，我们不希望把AI精确度调低之后它就觉得打不进，一直防守
 
             double totalDt = attackChoice.targetHoleDistance + attackChoice.whiteCollisionDistance;
@@ -1579,8 +1579,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             // 角度球的瞄准难度：从白球处看目标球和袋，在视线背景上的投影距离
             double targetAimingOffset =
                     Math.cos(Math.PI / 2 - attackChoice.angleRad) * attackChoice.targetHoleDistance;
-            // 举个例子，瞄准为90的AI，白球在右顶袋打蓝球右底袋时，offset差不多1770，下面这个值在35毫米左右
-            double targetDifficultyMm = targetAimingOffset * (100 - aps.precision) / 500;
+            // 举个例子，瞄准为90的AI，白球在右顶袋打蓝球右底袋时，offset差不多1770，下面这个值在53毫米左右
+            double targetDifficultyMm = targetAimingOffset * (105 - aps.precision) / 500;
 
             tarDevHoleSdMm += targetDifficultyMm;
 //            tarDevHoleSdMm *= targetDifficulty;
@@ -1596,11 +1596,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
             potProb = nd.cumulativeProbability(allowedDev) - nd.cumulativeProbability(-allowedDev);
             if (potProb < 0) potProb = 0.0;  // 虽然我不知道为什么prob会是负的
-
-//            double threshold = attackProbThreshold(PURE_ATTACK_PROB, aiPlayer.getPlayerPerson().getAiPlayStyle());
-//            double room = 1 - threshold;
-//            price = (potProb - threshold) / room * attackChoice.targetPrice;  // 对于他自己来说的把握
-//            if (price < 0) price = 0;
+            
             price = potProb * attackChoice.targetPrice;
 
 //            System.out.println("Est dev: " + tarDevHoleSdMm +

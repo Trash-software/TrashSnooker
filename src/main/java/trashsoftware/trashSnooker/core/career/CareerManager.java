@@ -6,10 +6,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
-import trashsoftware.trashSnooker.core.career.championship.Championship;
-import trashsoftware.trashSnooker.core.career.championship.ChineseEightChampionship;
-import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
-import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
+import trashsoftware.trashSnooker.core.career.championship.*;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.DataLoader;
@@ -752,6 +749,8 @@ public class CareerManager {
                 championship = new ChineseEightChampionship(nextData, timestamp);
                 break;
             case AMERICAN_NINE:
+                championship = new AmericanNineChampionship(nextData, timestamp);
+                break;
             case LIS_EIGHT:
             case MINI_SNOOKER:
             default:

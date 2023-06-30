@@ -27,7 +27,7 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
             return new ChineseEightAiCueBallPlacer(
                     (ChineseEightBallGame) game, (ChineseEightBallPlayer) aiPlayer);
         } else if (game instanceof AmericanNineBallGame) {
-            return new SidePocketAiCueBallPlacer(
+            return new AmericanNineAiCueBallPlacer(
                     (AmericanNineBallGame) game, (AmericanNineBallPlayer) aiPlayer);
         } else {
             throw new RuntimeException("No such game type");

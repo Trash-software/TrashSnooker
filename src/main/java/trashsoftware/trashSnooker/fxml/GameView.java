@@ -74,7 +74,6 @@ import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.recorder.TargetRecord;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
-import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.IOException;
@@ -820,7 +819,7 @@ public class GameView implements Initializable {
             } else {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
                 snookerScoreDiffLabel.setText(String.format(strings.getString("scoreDiff"),
-                        asg.getScoreDiff()));
+                        asg.getScoreDiffAbs()));
                 snookerScoreRemainingLabel.setText(String.format(strings.getString("scoreRem"),
                         asg.getRemainingScore(asg.isDoingSnookerFreeBll())));
             }
@@ -1910,7 +1909,7 @@ public class GameView implements Initializable {
 
         CuePlayParams params = applyRandomCueError(player);
 //        CuePlayParams params = applyCueError(player, 0, 0, 0,true, currentHand);
-        System.out.println("Final params: " + params.cueParams);
+//        System.out.println("Final params: " + params.cueParams);
         
         if (!snookered && predictedTargetBall != null) {
             List<double[][]> holeDirectionsAndHoles =

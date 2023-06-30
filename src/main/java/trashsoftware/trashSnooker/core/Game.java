@@ -306,11 +306,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 AiCue.AttackParam attackParam = new AiCue.AttackParam(
                         attackChoice,
                         this,
-                        entireGame.predictPhy, 
-                        player,
+                        entireGame.predictPhy,
                         cpp.cueParams
                 );
-                System.out.println("Attack pot prob: " + attackChoice.getDefaultRef().getPotProb());
+                System.out.println("Attack pot prob: " + attackParam.getPotProb());
+                if (attackParam.getPotProb() > 0.95 && !finishedAttempt.isSuccess()) {
+                    int playerIndex = player.getInGamePlayer().getPlayerNumber() - 1;
+                    int failed = ++achievementRecorder.easyBallFails[playerIndex];
+                    
+                    if (failed >= 3) {
+                        AchManager.getInstance().addAchievement(Achievement.MULTIPLE_EASY_FAILS, player.getInGamePlayer());
+                    }
+                }
             } else {
                 System.out.println("Attack is null. Why?");
             }
@@ -1643,6 +1650,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
     
     public class FrameAchievementRecorder {
-        protected AiCue.AttackChoice currentAttackChoice;  // 由这一杆的参数生成的choice，用于粗略评估难度
+        int[] easyBallFails = new int[2];
     }
 }

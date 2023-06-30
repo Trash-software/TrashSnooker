@@ -36,6 +36,8 @@ public abstract class Championship {
                 championship = new ChineseEightChampionship(data, timestamp);
                 break;
             case AMERICAN_NINE:
+                championship = new AmericanNineChampionship(data, timestamp);
+                break;
             case MINI_SNOOKER:
             default:
                 throw new RuntimeException("Currently unsupported");

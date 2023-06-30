@@ -256,6 +256,12 @@ public class EntireGame {
                         CareerAchManager.getInstance().addAchievement(Achievement.ACCURACY_WIN, winner);
                     }
                 }
+                if (totalBasic[winnerIndex][2] >= 8) {
+                    double longPotSuccessRate = (double) totalBasic[winnerIndex][3] / totalBasic[winnerIndex][2];
+                    if (longPotSuccessRate >= 0.75) {
+                        CareerAchManager.getInstance().addAchievement(Achievement.ACCURACY_WIN_LONG, winner);
+                    }
+                }
             }
         }
         

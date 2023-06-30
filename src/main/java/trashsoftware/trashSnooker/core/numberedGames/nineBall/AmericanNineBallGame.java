@@ -2,7 +2,7 @@ package trashsoftware.trashSnooker.core.numberedGames.nineBall;
 
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
-import trashsoftware.trashSnooker.core.ai.SidePocketAiCue;
+import trashsoftware.trashSnooker.core.ai.AmericanNineAiCue;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
@@ -128,7 +128,7 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
 
     @Override
     protected AiCue<?, ?> createAiCue(AmericanNineBallPlayer aiPlayer) {
-        return new SidePocketAiCue(this, aiPlayer);
+        return new AmericanNineAiCue(this, aiPlayer);
     }
 
     @Override
@@ -264,7 +264,9 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
                     currentPlayer.setGoldNine();
                     AchManager.getInstance().addAchievement(Achievement.GOLDEN_NINE, getCuingIgp());
                 }
-                AchManager.getInstance().addAchievement(Achievement.PASS_NINE, getCuingIgp());
+                if (currentTarget != 9) {
+                    AchManager.getInstance().addAchievement(Achievement.PASS_NINE, getCuingIgp());
+                }
                 winingPlayer = currentPlayer;
                 
                 AmericanNineBallPlayer loser = getAnotherPlayer(currentPlayer);

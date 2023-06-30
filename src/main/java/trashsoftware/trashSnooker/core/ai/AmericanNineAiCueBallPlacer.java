@@ -7,10 +7,10 @@ import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallPl
 import java.util.ArrayList;
 import java.util.List;
 
-public class SidePocketAiCueBallPlacer extends 
+public class AmericanNineAiCueBallPlacer extends 
         NumberedGameAiCueBallPlacer<AmericanNineBallGame, AmericanNineBallPlayer> {
     
-    public SidePocketAiCueBallPlacer(AmericanNineBallGame game, AmericanNineBallPlayer player) {
+    public AmericanNineAiCueBallPlacer(AmericanNineBallGame game, AmericanNineBallPlayer player) {
         super(game, player);
     }
 

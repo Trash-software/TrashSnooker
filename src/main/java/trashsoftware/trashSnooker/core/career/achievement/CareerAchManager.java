@@ -156,12 +156,6 @@ public class CareerAchManager extends AchManager {
     public void updateAfterCueFinish(Pane owner, Game<?, ?> game, ScoreResult scoreResult,
                                      PotAttempt potAttempt, DefenseAttempt defenseAttempt, 
                                      GamePlayStage playStage) {
-//        List<Achievement> all = switch (game.getGameType()) {
-//            case SNOOKER -> snookerNormal;
-//            case CHINESE_EIGHT -> chineseEightNormal;
-//            default -> new ArrayList<>();
-//        };
-        
         Player justCuedP = game.getLastCuedPlayer();
         InGamePlayer justCuedPlayer = justCuedP.getInGamePlayer();
         
@@ -191,6 +185,14 @@ public class CareerAchManager extends AchManager {
 
             if (game.isThisCueFoul()) {
                 // 犯规分支
+                if (game instanceof AbstractSnookerGame asg) {
+                    if (asg.getRepositionCount() >= 2) {
+                        if (justCuedPlayer.isHuman()) {
+                            addAchievement(Achievement.HARD_SNOOKER_BY_OPPONENT, justCuedPlayer);
+                        }
+                    }
+                }
+                
                 showAchievement(owner);
                 return;
             }
@@ -211,6 +213,9 @@ public class CareerAchManager extends AchManager {
                         addAchievement(Achievement.KEY_BALL_FAIL, justCuedPlayer);
                     }
                 }
+                if (potAttempt.isLongPot()) {
+                    AchManager.getInstance().addAchievement(Achievement.CUMULATIVE_LONG_POTS_1, justCuedPlayer);
+                }
                 
                 List<PotAttempt> singlePole = justCuedP.getRecentSinglePoleAttempts();
                 int longCount = 0;
@@ -226,7 +231,7 @@ public class CareerAchManager extends AchManager {
             }
             if (defenseAttempt != null) {
                 if (defenseAttempt.isSolvingSnooker()) {
-                    if (defenseAttempt.isSolveSuccess()) {
+                    if (defenseAttempt.isSolveSuccess()) {  // 基本可认为一定是true，否则就犯规了，不会进这个分支
                         addAchievement(Achievement.SOLVE_SNOOKER_SUCCESS, justCuedPlayer);
                     }
                 }
@@ -239,11 +244,16 @@ public class CareerAchManager extends AchManager {
             showAchievement(owner);
         } else {
             InGamePlayer opponent = game.getAnotherIgp(justCuedPlayer);
-            if (opponent.isHuman()) {
+            if (opponent.isHuman()) {  // 保险措施，实际上一定是true
                 if (defenseAttempt != null) {
                     if (defenseAttempt.isSolvingSnooker()) {
                         if (!defenseAttempt.isSolveSuccess()) {
                             addAchievement(Achievement.GAIN_BY_SNOOKER, opponent);
+                            if (game instanceof AbstractSnookerGame asg) {
+                                if (asg.getRepositionCount() >= 2) {
+                                    addAchievement(Achievement.HARD_SNOOKER_BY_HUMAN, opponent);
+                                }
+                            }
                         }
                     }
                 }

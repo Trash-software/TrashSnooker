@@ -9,8 +9,8 @@ import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGa
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallPlayer;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
-public class SidePocketAiCue extends AiCue<AmericanNineBallGame, AmericanNineBallPlayer> {
-    public SidePocketAiCue(AmericanNineBallGame game, AmericanNineBallPlayer aiPlayer) {
+public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineBallPlayer> {
+    public AmericanNineAiCue(AmericanNineBallGame game, AmericanNineBallPlayer aiPlayer) {
         super(game, aiPlayer);
     }
 
