@@ -8,16 +8,19 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.AboutView"
-      prefHeight="280.0" prefWidth="320.0" spacing="10.0">
+      prefHeight="320.0" prefWidth="480.0" spacing="40.0">
 
     <padding>
-        <Insets topRightBottomLeft="10.0"/>
+        <Insets topRightBottomLeft="30.0"/>
     </padding>
+    
+    <ImageView fx:id="iconView" fitWidth="72.0" fitHeight="72.0"/>
 
-    <VBox spacing="5.0">
+    <VBox spacing="5.0" HBox.hgrow="ALWAYS">
         <Label text="%appName">
             <font>
                 <Font size="18.0"/>
@@ -30,8 +33,10 @@
         <!--        <Label text="%studioName"/>-->
 
 
-        <GridPane vgap="10.0" hgap="20.0">
+        <GridPane vgap="8.0" hgap="20.0">
             <rowConstraints>
+                <RowConstraints valignment="TOP"/>
+                <RowConstraints valignment="TOP"/>
                 <RowConstraints valignment="TOP"/>
                 <RowConstraints valignment="TOP"/>
                 <RowConstraints valignment="TOP"/>
@@ -42,28 +47,36 @@
             
             <HBox spacing="10.0" alignment="CENTER_LEFT" GridPane.columnSpan="3">
                 <Separator/>
-                <Label text="%developTeam"/>
-                <Separator prefWidth="120.0" HBox.hgrow="ALWAYS"/>
+                <Label fx:id="developTeamLabel" text="%developTeam"/>
+                <Separator HBox.hgrow="ALWAYS"/>
             </HBox>
+            
+<!--            <Label text="%studioName" GridPane.rowIndex="1"/>-->
             
             <Label text="%developer" GridPane.rowIndex="1"/>
             <Label fx:id="developerNameLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             <Label fx:id="developerContactLabel" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-            
-            <Label text="%designConsultant" GridPane.rowIndex="2"/>
-            <Label fx:id="designConsultantNameLabel" GridPane.rowIndex="2"
+
+            <Label text="%artDesigner" GridPane.rowIndex="2"/>
+            <Label fx:id="artDesignerNameLabel" GridPane.rowIndex="2"
                    GridPane.columnIndex="1"/>
-            <Label fx:id="designConsultantContactLabel" GridPane.rowIndex="2"
+            <Label fx:id="artDesignerContactLabel" GridPane.rowIndex="2"
+                   GridPane.columnIndex="2"/>
+            
+            <Label text="%designConsultant" GridPane.rowIndex="3"/>
+            <Label fx:id="designConsultantNameLabel" GridPane.rowIndex="3"
+                   GridPane.columnIndex="1"/>
+            <Label fx:id="designConsultantContactLabel" GridPane.rowIndex="3"
                    GridPane.columnIndex="2"/>
 
-            <HBox spacing="10.0" GridPane.rowIndex="4" alignment="CENTER_LEFT" GridPane.columnSpan="3">
+            <HBox spacing="10.0" GridPane.rowIndex="6" alignment="CENTER_LEFT" GridPane.columnSpan="3">
                 <Separator/>
                 <Label text="%acknowledgements"/>
-                <Separator prefWidth="120.0" HBox.hgrow="ALWAYS"/>
+                <Separator HBox.hgrow="ALWAYS"/>
             </HBox>
             
-            <Label text="%closedBetaUsers" GridPane.rowIndex="5"/>
-            <Label fx:id="closedBetaPlayersLabel" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label text="%closedBetaUsers" GridPane.rowIndex="7"/>
+            <Label fx:id="closedBetaPlayersLabel" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
         </GridPane>
 
     </VBox>

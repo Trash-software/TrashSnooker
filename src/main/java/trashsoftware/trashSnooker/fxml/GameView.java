@@ -2471,7 +2471,7 @@ public class GameView implements Initializable {
 
     private void startAnimation() {
 //        frameAnimation = new AnimationFrame(this::oneFrame, uiFrameTimeMs);
-        gameLoop = new GameLoop(this::oneFrame);
+        gameLoop = new GameLoop(this::oneFrame, fpsLabel);
         gameLoop.start();
     }
 
@@ -2488,7 +2488,7 @@ public class GameView implements Initializable {
         drawCue();
 //        long t4 = System.nanoTime();
 //        fpsLabel.setText(String.valueOf(frameAnimation.getCurrentFps()));
-        fpsLabel.setText(String.valueOf(gameLoop.getCurrentFps()));
+//        fpsLabel.setText(gameLoop.getCurrentFps() + " -- " + gameLoop.getFpsSpike());
 //        System.out.printf("%d %d %d %d\n", t1 - t0, t2 - t1, t3 - t2, t4 - t3);
     }
 

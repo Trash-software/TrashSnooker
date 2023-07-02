@@ -6,13 +6,13 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -30,6 +30,7 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.JsonChecksum;
 
@@ -399,17 +400,30 @@ public class CareerAchManager extends AchManager {
         Stage stage = new Stage();
 
         VBox baseRoot = new VBox();
-//        baseRoot.setStyle(".vbox { -fx-background-color: red; }");
-        baseRoot.setSpacing(5.0);
+        baseRoot.setAlignment(Pos.CENTER);
+        VBox vbox = new VBox();
+        
+        Insets insetsOut = new Insets(2.0);
+        Insets insets = new Insets(4.0);
+        CornerRadii cornerRadii = new CornerRadii(5.0);
+        baseRoot.setBackground(new Background(new BackgroundFill(Color.valueOf("#FFFCF7"), 
+                cornerRadii, null)));
+        vbox.setBorder(new Border(new BorderStroke(Color.BURLYWOOD,
+                BorderStrokeStyle.SOLID, cornerRadii, BorderWidths.DEFAULT)));
+        baseRoot.setPadding(insetsOut);
         baseRoot.setStyle(App.FONT_STYLE);
+        
+        vbox.setSpacing(5.0);
+        vbox.setPadding(insets);
         
         HBox root = new HBox();
         root.setSpacing(20.0);
 
-        Insets padding = new Insets(5.0);
-        root.setPadding(padding);
-
         ImageView imageView = new ImageView();
+        Image image = ResourcesLoader.getInstance().getAwardIcon();
+        imageView.setFitWidth(48.0);
+        imageView.setFitHeight(48.0);
+        imageView.setImage(image);
         
         root.getChildren().add(imageView);
 
@@ -424,7 +438,8 @@ public class CareerAchManager extends AchManager {
 
         root.getChildren().addAll(rightBox);
         
-        baseRoot.getChildren().addAll(new Label(App.getStrings().getString("achievementComplete")), root);
+        vbox.getChildren().addAll(new Label(App.getStrings().getString("achievementComplete")), root);
+        baseRoot.getChildren().add(vbox);
 
         Scene scene = new Scene(baseRoot);
         scene.setFill(Color.TRANSPARENT);
@@ -437,7 +452,7 @@ public class CareerAchManager extends AchManager {
 
         Timeline shower = new Timeline();
         KeyFrame showing = new KeyFrame(Duration.millis(500),
-                new KeyValue(baseRoot.opacityProperty(), 0.75));
+                new KeyValue(baseRoot.opacityProperty(), 0.8));
         shower.getKeyFrames().add(showing);
 
         Timeline keeper = new Timeline();
@@ -460,8 +475,6 @@ public class CareerAchManager extends AchManager {
         
         stage.show();
         showToPosition(stage);
-//        stage.setX(0);
-//        stage.setY(0);
         
         st.play();
     }

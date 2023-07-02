@@ -11,6 +11,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 
@@ -84,6 +85,7 @@ public class App extends Application {
     }
 
     public static void scaleGameStage(Stage stage, double scaleMul) {
+        stage.getIcons().add(ResourcesLoader.getInstance().getIcon());
         boolean fullScreen = switch (ConfigLoader.getInstance().getString("display")) {
             case "fullScreen" -> true;
             default -> false;
@@ -152,6 +154,7 @@ public class App extends Application {
                     strings
             );
             primaryStage.setTitle(strings.getString("appName"));
+            primaryStage.getIcons().add(ResourcesLoader.getInstance().getIcon());
             Parent parent = loader.load();
 
             parent.setStyle(FONT_STYLE);

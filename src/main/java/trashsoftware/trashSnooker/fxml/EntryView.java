@@ -174,6 +174,7 @@ public class EntryView implements Initializable {
             stage.initOwner(this.selfStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
 
             Scene scene = App.createScene(root);
             stage.setScene(scene);
