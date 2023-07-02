@@ -35,6 +35,7 @@ import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -48,7 +49,9 @@ public class ChampDrawView extends ChildInitializable {
     @FXML
     Canvas treeCanvas;
     @FXML
-    Label currentStageLabel, savedRoundLabel;
+    Label currentStageLabel, humanOpponentLabel, savedRoundLabel;
+    @FXML
+    Button opponentInfoBtn;
     @FXML
     ComboBox<FastGameView.CueItem> cueBox;
     @FXML
@@ -57,12 +60,11 @@ public class ChampDrawView extends ChildInitializable {
     Label extraInfoLabel;
     @FXML
     Button nextRoundButton, quitTournamentBtn;
-    //    @FXML
-//    CheckBox showAllMatchesBox;
     @FXML
     ComboBox<TreeShowing> treeShowingBox;
 
     Championship championship;
+    MatchTreeNode.PvAiSnapshot nextMatchSnapshot;
 
     int showingRounds;
 
@@ -185,6 +187,18 @@ public class ChampDrawView extends ChildInitializable {
             showCongratulation();
         }
     }
+    
+    private void setOpponentText(MatchTreeNode.PvAiSnapshot snapshot) {
+        nextMatchSnapshot = snapshot;
+        opponentInfoBtn.setDisable(snapshot == null);
+        if (snapshot == null) {
+            humanOpponentLabel.setText("");
+        } else {
+            humanOpponentLabel.setText(String.format("%s vs %s",
+                    snapshot.p1().getPlayerPerson().getName(), 
+                    snapshot.p2().getPlayerPerson().getName()));
+        }
+    }
 
     private void updateGui() {
         if (championship.isFinished()) {
@@ -192,6 +206,7 @@ public class ChampDrawView extends ChildInitializable {
             savedRoundLabel.setText("");
             savedRoundLabel.setManaged(false);
             quitTournamentBtn.setDisable(true);
+            setOpponentText(null);
         } else {
             if (championship.hasSavedRound()) {
                 nextRoundButton.setText(strings.getString("continueMatch"));
@@ -204,14 +219,16 @@ public class ChampDrawView extends ChildInitializable {
                         eg.getPlayer2();
                 selectCue(humanIgp.getPlayCue());
                 cueBox.setDisable(true);
+                setOpponentText(championship.findHumanNextOpponent());
             } else {
                 if (championship.isHumanAlive()) {
                     cueBox.setDisable(false);
-
                     nextRoundButton.setText(strings.getString("startNextRound"));
+                    setOpponentText(championship.findHumanNextOpponent());
                 } else {
                     nextRoundButton.setText(strings.getString("performAllMatches"));
                     quitTournamentBtn.setDisable(true);
+                    setOpponentText(null);
                 }
                 savedRoundLabel.setText("");
                 savedRoundLabel.setManaged(false);
@@ -349,6 +366,39 @@ public class ChampDrawView extends ChildInitializable {
         parent.refreshGui();
 
         super.backAction();
+    }
+    
+    @FXML
+    public void opponentInfoAction() {
+        if (nextMatchSnapshot != null) {
+            PlayerPerson person = nextMatchSnapshot.p1().isHumanPlayer() ?
+                    nextMatchSnapshot.p2().getPlayerPerson() : 
+                    nextMatchSnapshot.p1().getPlayerPerson();
+            if (person != null) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(
+                            getClass().getResource("abilityView.fxml"),
+                            strings
+                    );
+                    Parent root = loader.load();
+                    root.setStyle(App.FONT_STYLE);
+
+                    Stage stage = new Stage();
+                    stage.initOwner(selfStage);
+                    stage.initModality(Modality.WINDOW_MODAL);
+
+                    Scene scene = App.createScene(root);
+                    stage.setScene(scene);
+
+                    stage.show();
+
+                    AbilityView controller = loader.getController();
+                    controller.setup(scene, person);
+                } catch (IOException e) {
+                    EventLogger.error(e);
+                }
+            }
+        }
     }
 
     @FXML

@@ -482,7 +482,6 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 if (getCuingPlayer().getInGamePlayer().isHuman()) 
                     AchManager.getInstance().addAchievement(Achievement.THREE_MISS_LOST, getCuingIgp());
                 getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
-                checkScoreSumAchievement();
                 getCuingPlayer().withdraw();
                 end();
                 return;
@@ -491,14 +490,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             if (blackBattle) {
                 // 抢黑时犯规就直接判负
                 getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
-                checkScoreSumAchievement();
                 
                 end();
                 return;
             }
 
             getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
-            checkScoreSumAchievement();
             updateTargetPotFailed();
             switchPlayer();
             if (gameValues.rule.hasRule(Rule.FOUL_BALL_IN_HAND)) {
@@ -527,7 +524,13 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
 //        System.out.println("Potted: " + pottedBalls + ", first: " + whiteFirstCollide + " score: " + score + ", foul: " + foul);
     }
-    
+
+    @Override
+    protected void end() {
+        checkScoreSumAchievement();
+        super.end();
+    }
+
     private void checkScoreSumAchievement() {
         InGamePlayer human = getP1().isHuman() ? getP1() : getP2();
         if (getScoreSum() > 147) {
@@ -536,11 +539,13 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             }
         } else if (getScoreSum() < 75) {
             AchManager.getInstance().addAchievement(Achievement.SUM_BELOW, human);
+        } else if (getScoreSum() < 50) {
+            AchManager.getInstance().addAchievement(Achievement.SUM_BELOW_2, human);
         }
     }
     
     private int getScoreSum() {
-        return player1.getScore() + player2.getScore();
+        return player1.getScore() + player2.getScore() + getRemainingScore(false);
     }
 
     public boolean isDoingFreeBall() {

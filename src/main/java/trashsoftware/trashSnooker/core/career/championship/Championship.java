@@ -3,8 +3,6 @@ package trashsoftware.trashSnooker.core.career.championship;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.*;
-import trashsoftware.trashSnooker.core.career.achievement.AchManager;
-import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.*;
@@ -236,6 +234,19 @@ public abstract class Championship {
 
     public PlayerVsAiMatch startNextRound() {
         return startNextRound(true);
+    }
+
+    /**
+     * 1.如有activeMatch，则返回activeMatch的对手
+     * 2.如human alive，则返回玩家下一个将会遇上的对手
+     * 3.返回null
+     */
+    public MatchTreeNode.PvAiSnapshot findHumanNextOpponent() {
+        if (activeMatch != null) {
+            return activeMatch.toSnapshot();
+        } else {
+            return matchTree.getRoot().getHumanNextOpponent();
+        }
     }
 
     public PlayerVsAiMatch startNextRound(boolean save) {

@@ -78,9 +78,11 @@ public class PlayerPerson {
                 "zh");
 
         this.playerId = playerId.replace('\'', '_');
+        this.isRandom = this.playerId.startsWith("random_");
         this.name = name;
-        this.shownName = (needTranslate && PinyinDict.getInstance().needTranslate(name)) ?
-                PinyinDict.getInstance().translateChineseName(name) : name;
+        this.shownName = (isRandom ? getShownNameOfRandom(this.playerId) :
+                (needTranslate && PinyinDict.getInstance().needTranslate(name)) ?
+                PinyinDict.getInstance().translateChineseName(name) : name);
         this.category = category;
         this.maxPowerPercentage = maxPowerPercentage;
         this.controllablePowerPercentage = controllablePowerPercentage;
@@ -102,8 +104,7 @@ public class PlayerPerson {
         this.aiPlayStyle = aiPlayStyle == null ? deriveAiStyle() : aiPlayStyle;
         this.handBody = handBody;
         this.sex = sex;
-
-        this.isRandom = this.playerId.startsWith("random_");
+        
         this.participates = participates;
     }
 
@@ -238,6 +239,11 @@ public class PlayerPerson {
         return playerPerson;
     }
 
+    public static String getShownNameOfRandom(String id) {
+        String[] spl = id.split("_");
+        int n = Integer.parseInt(spl[spl.length - 1].strip());
+        return String.format(App.getStrings().getString("randomPlayerName"), n);
+    }
 
     private static Map<GameRule, Double> participatesAll() {
         Map<GameRule, Double> res = new HashMap<>();

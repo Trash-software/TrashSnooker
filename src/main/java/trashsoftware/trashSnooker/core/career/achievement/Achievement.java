@@ -64,7 +64,6 @@ public enum Achievement {
     SNOOKER_BREAK_50(AchCat.SNOOKER),  // 已完成
     SNOOKER_BREAK_100(AchCat.SNOOKER),  // 已完成
     SNOOKER_BREAK_147(AchCat.SNOOKER) {  // 已完成
-
         @Override
         public boolean isHidden() {
             return true;  // 还是不把147放明面成就上，太难了
@@ -74,7 +73,6 @@ public enum Achievement {
     HARD_SNOOKER_BY_OPPONENT(AchCat.SNOOKER),  // 已完成
     HARD_SNOOKER_BY_HUMAN(AchCat.SNOOKER),  // 已完成
     UNSOLVABLE_SNOOKER(AchCat.SNOOKER) {  // 已完成
-
         @Override
         public boolean isHidden() {
             return true;
@@ -83,9 +81,20 @@ public enum Achievement {
     COME_BACK_BEHIND_65(AchCat.SNOOKER),  // 已完成
     COME_BACK_BEHIND_OVER_SCORE(AchCat.SNOOKER),  // 已完成
     SUM_BELOW(AchCat.SNOOKER),  // 已完成
+    SUM_BELOW_2(AchCat.SNOOKER) {  // 已完成
+        @Override
+        public boolean isHidden() {
+            return true;
+        }
+    },
+    SNOOKER_NO_POT(AchCat.SNOOKER) {  // 已完成
+        @Override
+        public boolean isHidden() {
+            return true;
+        }
+    },
     SUM_OVER_147(AchCat.SNOOKER),  // 已完成
     POT_WRONG_COLOR(AchCat.SNOOKER) {  // 已完成
-
         @Override
         public boolean isHidden() {
             return true;
@@ -99,10 +108,22 @@ public enum Achievement {
 
     BLIND_SHOT(AchCat.CHINESE_EIGHT),  // 已完成
     REMAIN_ONE_MUST_LOSE(AchCat.CHINESE_EIGHT),  // 已完成
+    CHINESE_EIGHT_NO_POT(AchCat.CHINESE_EIGHT) {  // 已完成
+        @Override
+        public boolean isHidden() {
+            return true;
+        }
+    },
 
     GOLDEN_NINE(AchCat.AMERICAN_NINE),  // 已完成
     BALL_WORKER(AchCat.AMERICAN_NINE),  // 已完成
     PASS_NINE(AchCat.AMERICAN_NINE),  // 已完成
+    AMERICAN_NINE_NO_POT(AchCat.AMERICAN_NINE) {  // 已完成
+        @Override
+        public boolean isHidden() {
+            return true;
+        }
+    },
 
     // 巡回赛
     EARNED_MONEY(AchCat.TOUR),  // 已完成

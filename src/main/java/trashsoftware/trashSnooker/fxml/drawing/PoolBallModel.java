@@ -11,7 +11,7 @@ public class PoolBallModel extends BallModel {
     protected PoolBallModel(int number) {
         super();
         
-        String fileName = "/trashsoftware/trashSnooker/img/" 
+        String fileName = "/trashsoftware/trashSnooker/res/img/" 
                 + ConfigLoader.getInstance().getBallMaterialResolution() + "/pool/pool" + number + ".png";
         Image img = new Image(Objects.requireNonNull(getClass().getResource(fileName)).toExternalForm());
         PhongMaterial material = new PhongMaterial();

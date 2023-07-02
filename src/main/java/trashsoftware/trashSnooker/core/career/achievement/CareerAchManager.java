@@ -16,6 +16,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -329,7 +330,7 @@ public class CareerAchManager extends AchManager {
     }
 
     public void addAchievement(Achievement achievement, int newRecord, InGamePlayer igp) {
-        if (!igp.isHuman()) return;
+        if (achievement == null || !igp.isHuman()) return;
         AchCompletion ac = completedAchievements.get(achievement);
         if (ac != null) {
             if (achievement.isRecordLike()) {
@@ -357,7 +358,7 @@ public class CareerAchManager extends AchManager {
 
     @Override
     public void addAchievement(Achievement achievement, @Nullable InGamePlayer igp) {
-        if (igp != null && !igp.isHuman()) return;
+        if (achievement == null || igp != null && !igp.isHuman()) return;
         AchCompletion ac = completedAchievements.get(achievement);
         if (ac != null) {
             if (achievement.countLikeRepeatable()) {
@@ -443,9 +444,15 @@ public class CareerAchManager extends AchManager {
 
         Scene scene = new Scene(baseRoot);
         scene.setFill(Color.TRANSPARENT);
+        
+        Stage gameStage = App.getFullScreenStage();
+        if (gameStage != null) {
+            stage.initOwner(gameStage);
+        }
 
         stage.setScene(scene);
         stage.initStyle(StageStyle.TRANSPARENT);
+        stage.initModality(Modality.WINDOW_MODAL);
         stage.setAlwaysOnTop(true);
 
         baseRoot.setOpacity(0.0);
@@ -475,6 +482,8 @@ public class CareerAchManager extends AchManager {
         
         stage.show();
         showToPosition(stage);
+        
+//        App.focusFullScreenStage();
         
         st.play();
     }

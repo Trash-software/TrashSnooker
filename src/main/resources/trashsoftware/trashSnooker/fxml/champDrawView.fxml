@@ -34,8 +34,13 @@
     </ScrollPane>
 
     <HBox spacing="10.0">
-        <VBox minWidth="160.0" prefWidth="240" spacing="10.0">
-            <Label fx:id="currentStageLabel"/>
+        <VBox minWidth="180.0" prefWidth="280" spacing="10.0">
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <Label fx:id="currentStageLabel"/>
+                <Label fx:id="humanOpponentLabel"/>
+                <Button fx:id="opponentInfoBtn" onAction="#opponentInfoAction" text="(?)" 
+                        disable="true"/>
+            </HBox>
             <Button fx:id="nextRoundButton" onAction="#nextRound" text="%startNextRound"/>
             <Label fx:id="savedRoundLabel"/>
             <ComboBox fx:id="cueBox"/>

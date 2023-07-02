@@ -6,7 +6,10 @@ import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
+import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallPlayer;
+import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
@@ -146,8 +149,25 @@ public class DBAccess {
                 }
             }
         }
+        
+        // 添加成就
         if (data[0] == 0) {
             AchManager.getInstance().addAchievement(Achievement.FRAME_NO_ATTACK, player.getInGamePlayer());
+        }
+        if (player.getScore() == 0) {
+            int threshold = 5;
+            Achievement achievement = null;
+            if (frame instanceof AbstractSnookerGame) {
+                achievement = Achievement.SNOOKER_NO_POT;
+            } else if (frame instanceof ChineseEightBallGame) {
+                achievement = Achievement.CHINESE_EIGHT_NO_POT;
+            } else if (frame instanceof AmericanNineBallGame) {
+                achievement = Achievement.AMERICAN_NINE_NO_POT;
+                threshold = 4;
+            }
+            if (data[0] + data[4] >= threshold) {  // 攻+防 应该就是总杆数
+                AchManager.getInstance().addAchievement(achievement, player.getInGamePlayer());
+            }
         }
 
         String queryWhere = getFrameQueryWhere(entireGame, frame,

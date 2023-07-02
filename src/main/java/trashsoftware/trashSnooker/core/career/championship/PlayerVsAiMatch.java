@@ -102,6 +102,10 @@ public class PlayerVsAiMatch extends CareerMatch {
         return p1.isHumanPlayer() ? p1 : p2;
     }
     
+    public MatchTreeNode.PvAiSnapshot toSnapshot() {
+        return new MatchTreeNode.PvAiSnapshot(p1, p2);
+    }
+    
     public void playerQuit(int totalFrames, int p1Wins, int p2Wins) {
         boolean playerIsP1 = p1.isHumanPlayer();
         if (playerIsP1) {

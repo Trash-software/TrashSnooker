@@ -286,6 +286,23 @@ public class MatchTreeNode {
             return winner.isHumanPlayer();
         }
     }
+    
+    public PvAiSnapshot getHumanNextOpponent() {
+        if (winner == null) {
+            if (player1Position.winner != null && player2Position.winner != null) {
+                if (player1Position.winner.isHumanPlayer() || player2Position.winner.isHumanPlayer()) {
+                    return new PvAiSnapshot(player1Position.winner, player2Position.winner);
+                } 
+                return null;
+            }
+            PvAiSnapshot c1 = player1Position.getHumanNextOpponent();
+            if (c1 != null) {
+                return c1;
+            }
+            return player2Position.getHumanNextOpponent();
+        }
+        return null;
+    }
 
     int getWonRounds(Career career, boolean encountered) {
         if (isLeaf()) return 0;
@@ -305,5 +322,8 @@ public class MatchTreeNode {
             return Math.max(player1Position.getWonRounds(career, false),
                     player2Position.getWonRounds(career, false));
         }
+    }
+    
+    public record PvAiSnapshot(Career p1, Career p2) {
     }
 }

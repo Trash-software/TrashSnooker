@@ -11,6 +11,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -23,8 +24,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
 
-    public static final String VERSION_NAME = "0.5.0";
-    public static final int VERSION_CODE = 40;
+    public static final String VERSION_NAME = "0.5-SNAPSHOT";
+    public static final int VERSION_CODE = 41;
     public static final String CLASSIFIER = "win";
     public static final String FONT_STYLE = CLASSIFIER.equals("mac") ?
             "-fx-font-family: 'serif'" :
@@ -35,6 +36,8 @@ public class App extends Application {
     public static final boolean PRINT_DEBUG = false;
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     private static ResourceBundle strings;
+    
+    private static Stage fullScreenStage;
 
     public static void startApp() {
         launch();
@@ -108,6 +111,8 @@ public class App extends Application {
             Scale scaleTrans = new Scale(scaleRatio, scaleRatio);
             root.getTransforms().add(scaleTrans);
             stage.setFullScreenExitHint("");
+            
+            fullScreenStage = stage;
 
             // 你他妈两只手都用上试试？
             stage.setFullScreenExitKeyCombination(new KeyCodeCombination(
@@ -120,6 +125,10 @@ public class App extends Application {
             ));
 
             stage.setFullScreen(true);
+//            stage.initStyle(StageStyle.UNDECORATED);
+//            double[] systemResolution = ConfigLoader.getSystemResolution();
+//            stage.setWidth(systemResolution[0]);
+//            stage.setHeight(systemResolution[1]);
         }
 
         stage.widthProperty().addListener(((observableValue, aBoolean, t1) -> {
@@ -136,6 +145,16 @@ public class App extends Application {
         strings = ResourceBundle.getBundle(
                 "trashsoftware.trashSnooker.bundles.Strings",
                 ConfigLoader.getInstance().getLocale());
+    }
+
+    public static Stage getFullScreenStage() {
+        return fullScreenStage != null && fullScreenStage.isShowing() ? fullScreenStage : null;
+    }
+    
+    public static void focusFullScreenStage() {
+        if (fullScreenStage != null && fullScreenStage.isShowing()) {
+            fullScreenStage.requestFocus();
+        }
     }
 
     @Override
