@@ -61,20 +61,31 @@ public class DataLoader {
         return color;
     }
 
-    public static String getStringOfLocale(Object probNames) {
-        if (probNames instanceof JSONObject) {
-            JSONObject names = (JSONObject) probNames;
+    @SuppressWarnings("unchecked")
+    public static <T> T getObjectOfLocale(Object probNames) {
+        if (probNames instanceof JSONObject names) {
             String currentLang = ConfigLoader.getInstance().getLocale().getLanguage();
             if (names.has(currentLang)) {
-                return names.getString(currentLang);
+                return (T) names.getString(currentLang);
             } else {
                 // 随便返回一个
                 for (String key : names.keySet()) {
-                    return names.getString(key);
+                    return (T) names.getString(key);
+                }
+            }
+        } if (probNames instanceof Map<?, ?> names) {
+            String currentLang = ConfigLoader.getInstance().getLocale().getLanguage();
+            Object get = names.get(currentLang);
+            if (get != null) {
+                return (T) get;
+            } else {
+                // 随便返回一个
+                for (Object value : names.values()) {
+                    return (T) String.valueOf(value);
                 }
             }
         } else if (probNames instanceof String) {
-            return (String) probNames;
+            return (T) probNames;
         }
         throw new RuntimeException("Cannot find name: " + probNames);
     }
@@ -96,8 +107,7 @@ public class DataLoader {
             Map<String, PlayerPerson> result = new HashMap<>();
             for (String key : array.keySet()) {
                 Object obj = array.get(key);
-                if (obj instanceof JSONObject) {
-                    JSONObject personObj = (JSONObject) obj;
+                if (obj instanceof JSONObject personObj) {
                     try {
                         if (!SHOW_HIDDEN &&
                                 personObj.has("hidden") &&
@@ -109,8 +119,7 @@ public class DataLoader {
                         if (personObj.has("privateCues")) {
                             JSONArray pCues = personObj.getJSONArray("privateCues");
                             for (Object cueObj : pCues) {
-                                if (cueObj instanceof String) {
-                                    String pCue = (String) cueObj;
+                                if (cueObj instanceof String pCue) {
                                     if (cues.containsKey(pCue)) {
                                         playerPerson.addPrivateCue(cues.get(pCue));
                                     } else {
@@ -274,7 +283,7 @@ public class DataLoader {
             for (String key : object.keySet()) {
                 try {
                     JSONObject cueObject = object.getJSONObject(key);
-                    String name = getStringOfLocale(cueObject.get("names"));
+                    String name = getObjectOfLocale(cueObject.get("names"));
 
                     Cue cue = new Cue(
                             key,

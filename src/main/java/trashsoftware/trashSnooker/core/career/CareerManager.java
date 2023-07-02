@@ -462,10 +462,10 @@ public class CareerManager {
                     return snookerRankingSingleSeason;
             case CHINESE_EIGHT:
                 return chineseEightRanking;
-            case LIS_EIGHT:
-            case MINI_SNOOKER:
             case AMERICAN_NINE:
                 return americanNineRanking;
+            case LIS_EIGHT:
+            case MINI_SNOOKER:
             default:
                 return new ArrayList<>();
         }

@@ -3,7 +3,6 @@ package trashsoftware.trashSnooker.core.metrics;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.util.DataLoader;
-import trashsoftware.trashSnooker.util.Util;
 
 import java.io.File;
 
@@ -46,7 +45,7 @@ public class TablePreset {
         
         return new TablePreset(
                 jsonObject.getString("id"),
-                DataLoader.getStringOfLocale(jsonObject.getJSONObject("name")),
+                DataLoader.getObjectOfLocale(jsonObject.getJSONObject("name")),
                 factory,
                 TableSpec.fromJsonObject(jsonObject, factory),
                 jsonObject.has("text") ? jsonObject.getString("text") : "",

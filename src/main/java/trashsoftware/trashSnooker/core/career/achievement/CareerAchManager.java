@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.CareerSave;
+import trashsoftware.trashSnooker.core.career.ChampionshipStage;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
@@ -274,22 +275,28 @@ public class CareerAchManager extends AchManager {
             humanWin = true;
         }
 
-        if (entireGame.totalFrames >= 3) {
+        if (entireGame.totalFrames >= 5) {
             if (humanWin) {
                 if ((p1Human && entireGame.getP2Wins() == entireGame.totalFrames / 2) || 
                         (!p1Human && entireGame.getP1Wins() == entireGame.totalFrames / 2)) {
                     addAchievement(Achievement.BIG_HEART, human);
+                    if (entireGame.getMetaMatchInfo() != null) {
+                        // 必须!=null
+                        if (entireGame.getMetaMatchInfo().stage == ChampionshipStage.FINAL) {
+                            addAchievement(Achievement.FINAL_STAGE_FINAL_FRAME_WIN, human);
+                        }
+                    }
                 }
             }
             
-            if (entireGame.totalFrames >= 5) {
+//            if (entireGame.totalFrames >= 5) {
                 if ((p1Human && entireGame.getP1Wins() == 0) || (!p1Human && entireGame.getP2Wins() == 0)) {
                     addAchievement(Achievement.LOST_ALL_MATCHES, human);
                 }
                 if ((p1Human && entireGame.getP2Wins() == 0) || (!p1Human && entireGame.getP1Wins() == 0)) {
                     addAchievement(Achievement.WIN_ALL_MATCHES, human);
                 }
-            }
+//            }
 
             if (entireGame.totalFrames >= 9) {
 //                int frameNeed = entireGame.totalFrames / 2 + 1;

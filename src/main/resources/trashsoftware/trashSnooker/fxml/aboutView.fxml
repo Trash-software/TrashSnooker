@@ -8,22 +8,63 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
-<VBox xmlns="http://javafx.com/javafx"
+<HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.AboutView"
-      prefHeight="160.0" prefWidth="320.0" spacing="10.0" alignment="CENTER">
-    
+      prefHeight="280.0" prefWidth="320.0" spacing="10.0">
+
     <padding>
         <Insets topRightBottomLeft="10.0"/>
     </padding>
-    
-    <Label text="%appName">
-        <font>
-            <Font size="16.0"/>
-        </font>
-    </Label>
-    
-    <Label fx:id="versionLabel"/>
 
-    <Label text="%studioName"/>
-</VBox>
+    <VBox spacing="5.0">
+        <Label text="%appName">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Label>
+
+        <Label fx:id="versionLabel"/>
+        <Label/>
+
+        <!--        <Label text="%studioName"/>-->
+
+
+        <GridPane vgap="10.0" hgap="20.0">
+            <rowConstraints>
+                <RowConstraints valignment="TOP"/>
+                <RowConstraints valignment="TOP"/>
+                <RowConstraints valignment="TOP"/>
+                <RowConstraints valignment="TOP"/>
+                <RowConstraints valignment="TOP"/>
+                <RowConstraints valignment="TOP"/>
+            </rowConstraints>
+            
+            <HBox spacing="10.0" alignment="CENTER_LEFT" GridPane.columnSpan="3">
+                <Separator/>
+                <Label text="%developTeam"/>
+                <Separator prefWidth="120.0" HBox.hgrow="ALWAYS"/>
+            </HBox>
+            
+            <Label text="%developer" GridPane.rowIndex="1"/>
+            <Label fx:id="developerNameLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label fx:id="developerContactLabel" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+            
+            <Label text="%designConsultant" GridPane.rowIndex="2"/>
+            <Label fx:id="designConsultantNameLabel" GridPane.rowIndex="2"
+                   GridPane.columnIndex="1"/>
+            <Label fx:id="designConsultantContactLabel" GridPane.rowIndex="2"
+                   GridPane.columnIndex="2"/>
+
+            <HBox spacing="10.0" GridPane.rowIndex="4" alignment="CENTER_LEFT" GridPane.columnSpan="3">
+                <Separator/>
+                <Label text="%acknowledgements"/>
+                <Separator prefWidth="120.0" HBox.hgrow="ALWAYS"/>
+            </HBox>
+            
+            <Label text="%closedBetaUsers" GridPane.rowIndex="5"/>
+            <Label fx:id="closedBetaPlayersLabel" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        </GridPane>
+
+    </VBox>
+</HBox>

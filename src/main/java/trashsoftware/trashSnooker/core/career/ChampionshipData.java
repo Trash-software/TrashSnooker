@@ -48,15 +48,15 @@ public class ChampionshipData {
         ChampionshipData data = new ChampionshipData();
 
         data.id = jsonObject.getString("id");
-        data.name = DataLoader.getStringOfLocale(jsonObject.get("names"));
+        data.name = DataLoader.getObjectOfLocale(jsonObject.get("names"));
         if (jsonObject.has("description")) {
-            data.description = DataLoader.getStringOfLocale(jsonObject.get("description"));
+            data.description = DataLoader.getObjectOfLocale(jsonObject.get("description"));
         } else {
             data.description = "";
         }
 
         if (jsonObject.has("sponsor")) {
-            data.sponsor = DataLoader.getStringOfLocale(jsonObject.get("sponsor"));
+            data.sponsor = DataLoader.getObjectOfLocale(jsonObject.get("sponsor"));
         } else {
             data.sponsor = "";
         }

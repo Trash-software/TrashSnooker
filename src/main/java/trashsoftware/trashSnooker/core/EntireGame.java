@@ -1,6 +1,8 @@
 package trashsoftware.trashSnooker.core;
 
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.career.ChampionshipStage;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
@@ -62,6 +64,16 @@ public class EntireGame {
         this.predictPhy = Phy.Factory.createAiPredictPhy(cloth);
         this.whitePhy = Phy.Factory.createWhitePredictPhy(cloth);
         this.metaMatchInfo = metaMatchInfo;
+        
+        if (metaMatchInfo != null) {
+            if (metaMatchInfo.stage == ChampionshipStage.SEMI_FINAL) {
+                AchManager.getInstance().addAchievement(Achievement.SEMIFINAL_STAGE,
+                        p1.isHuman() ? p1 : p2);
+            } else if (metaMatchInfo.stage == ChampionshipStage.FINAL) {
+                AchManager.getInstance().addAchievement(Achievement.FINAL_STAGE, 
+                        p1.isHuman() ? p1 : p2);
+            }
+        }
 
         if (isNewCreate && gameValues.isStandard())
             DBAccess.getInstance().recordAnEntireGameStarts(this, metaMatchInfo);
@@ -363,6 +375,21 @@ public class EntireGame {
                 .players(p1, p2)
                 .build();
         game = Game.createGame(gameSettings, gameValues, this);
+        
+        if (totalFrames >= 5 && p1Wins + p2Wins + 1 == totalFrames) {
+            // 决胜局
+            AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME, p1);
+            AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME, p2);  // 万一以后快速游戏也有呢？
+            AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME_USUAL_GUEST, p1);
+            AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME_USUAL_GUEST, p2);
+            if (metaMatchInfo != null) {
+                InGamePlayer human = p1.isHuman() ? p1 : p2;
+                if (metaMatchInfo.stage == ChampionshipStage.FINAL) {
+                    AchManager.getInstance().addAchievement(Achievement.FINAL_STAGE_FINAL_FRAME, human);
+                }
+            }
+        }
+        
         if (gameValues.isStandard())
             DBAccess.getInstance().recordAFrameStarts(
                     this, game);

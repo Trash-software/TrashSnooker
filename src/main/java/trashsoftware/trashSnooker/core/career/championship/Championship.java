@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.career.championship;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.*;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.*;

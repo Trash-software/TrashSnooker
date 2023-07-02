@@ -26,7 +26,7 @@ public class ChallengeSet {
         ChallengeSet challengeSet = new ChallengeSet();
 
         challengeSet.id = object.getString("id");
-        challengeSet.name = DataLoader.getStringOfLocale(object.get("name"));
+        challengeSet.name = DataLoader.getObjectOfLocale(object.get("name"));
         challengeSet.cloth = new TableCloth(TableCloth.Goodness.GOOD, TableCloth.Smoothness.NORMAL);
 
         String ruleKey = Util.toAllCapsUnderscoreCase(object.getString("rule"));

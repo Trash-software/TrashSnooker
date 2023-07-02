@@ -24,33 +24,31 @@ public class JsonChecksum {
         md.update(key.getBytes(StandardCharsets.UTF_8));  // 先存key
         if (object == null) {
             // do nothing  
-        } else if (object instanceof Long) {
-            Util.intToBytesN((Long) object, buffer, 0, 8);
+        } else if (object instanceof Long l) {
+            Util.intToBytesN(l, buffer, 0, 8);
             md.update(buffer);
-        } else if (object instanceof Integer) {
-            Util.intToBytesN((Integer) object, buffer, 0, 4);
+        } else if (object instanceof Integer i) {
+            Util.intToBytesN(i, buffer, 0, 4);
             md.update(buffer,0,4);
-        } else if (object instanceof Double) {
-            Util.doubleToBytes((Double) object, buffer, 0);
+        } else if (object instanceof Double d) {
+            Util.doubleToBytes(d, buffer, 0);
             md.update(buffer);
-        } else if (object instanceof Float) {
-            Util.floatToBytes((Float) object, buffer, 0);
+        } else if (object instanceof Float f) {
+            Util.floatToBytes(f, buffer, 0);
             md.update(buffer);
-        } else if (object instanceof BigDecimal) {
-            Util.doubleToBytes(((BigDecimal) object).doubleValue(), buffer, 0);
+        } else if (object instanceof BigDecimal bd) {
+            Util.doubleToBytes(bd.doubleValue(), buffer, 0);
             md.update(buffer);
-        } else if (object instanceof Boolean) {
-            buffer[0] = (byte) ((Boolean) object ? 1 : 0);
+        } else if (object instanceof Boolean bool) {
+            buffer[0] = (byte) (bool ? 1 : 0);
             md.update(buffer, 0, 1);
-        } else if (object instanceof String) {
-            md.update(((String) object).getBytes(StandardCharsets.UTF_8));
-        } else if (object instanceof JSONArray) {
-            JSONArray array = (JSONArray) object;
+        } else if (object instanceof String str) {
+            md.update(str.getBytes(StandardCharsets.UTF_8));
+        } else if (object instanceof JSONArray array) {
             for (int i = 0; i < array.length(); i++) {
                 hash(String.valueOf(i), array.get(i));
             }
-        } else if (object instanceof JSONObject) {
-            JSONObject json = (JSONObject) object;
+        } else if (object instanceof JSONObject json) {
             List<String> keys = new ArrayList<>(json.keySet());
             keys.sort(String::compareTo);
             for (String subKey : keys) {

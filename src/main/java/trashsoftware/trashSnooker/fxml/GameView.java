@@ -575,6 +575,16 @@ public class GameView implements Initializable {
             handSelectionToggleGroup.selectToggle(handSelectionRight);
         }
     }
+    
+    private void updateHandSelectionToggleByData(PlayerPerson.Hand hand) {
+        Toggle toggle = switch (hand) {
+            case LEFT -> handSelectionLeft;
+            case RIGHT -> handSelectionRight;
+            default -> handSelectionRest;
+        };
+        
+        handSelectionToggleGroup.selectToggle(toggle);
+    }
 
     private void updateHandSelection(boolean forceChangeHand) {
         Ball cueBall = game.getGame().getCueBall();
@@ -1044,6 +1054,8 @@ public class GameView implements Initializable {
         updatePowerSlider(breakPlayer.getPlayerPerson());
 
         tableGraphicsChanged = true;
+        
+        AchManager.getInstance().showAchievementPopup();
     }
 
     private void endFrame() {
@@ -2200,6 +2212,7 @@ public class GameView implements Initializable {
                 cursorDirectionUnitY = cueResult.getUnitY();
                 System.out.printf("Ai direction: %f, %f\n", cursorDirectionUnitX, cursorDirectionUnitY);
                 currentHand = cueResult.getHandSkill();
+                updateHandSelectionToggleByData(currentHand.hand);
                 powerSlider.setValue(cueResult.getCueParams().selectedPower());
                 cuePointX = cueCanvasWH / 2 + cueResult.getCueParams().selectedSideSpin() * cueAreaRadius;
                 cuePointY = cueCanvasWH / 2 - cueResult.getCueParams().selectedFrontBackSpin() * cueAreaRadius;
