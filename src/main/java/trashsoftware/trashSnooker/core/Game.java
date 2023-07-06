@@ -156,7 +156,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
 
         try {
-            if (DBAccess.SAVE && entireGame != null) {
+            if (DBAccess.RECORD && entireGame != null) {
                 game.recorder = new NaiveActualRecorder(game, entireGame.getMetaMatchInfo());
             } else {
                 game.recorder = new InvalidRecorder();

@@ -31,6 +31,8 @@ public class ReplayView extends ChildInitializable {
 
     private final Map<Long, TreeItem<Item>> entireGameItems = new TreeMap<>();
     @FXML
+    Button playBtn, exportBtn;
+    @FXML
     TreeTableView<Item> replayTable;
     @FXML
     TreeTableColumn<Item, String> replayCol, eventCol, typeCol, p1Col, p2Col, beginTimeCol, durationCol,
@@ -39,7 +41,7 @@ public class ReplayView extends ChildInitializable {
 
     private Stage stage;
     private ResourceBundle strings;
-    
+
     private boolean interrupted;
 
     @Override
@@ -73,6 +75,7 @@ public class ReplayView extends ChildInitializable {
         }
 
         clickListener();
+        selectionListener();
 //        naiveFill();
     }
 
@@ -80,12 +83,20 @@ public class ReplayView extends ChildInitializable {
         this.stage = stage;
     }
 
+    private void selectionListener() {
+        replayTable.getSelectionModel().selectedItemProperty().addListener((observableValue, itemTreeItem, t1) -> {
+            boolean disable = !(t1.getValue() instanceof FrameItem);
+            playBtn.setDisable(disable);
+            exportBtn.setDisable(disable);
+        });
+    }
+
     private void clickListener() {
         replayTable.setRowFactory(briefReplayItemTableView -> {
             TreeTableRow<Item> row = new TreeTableRow<>();
             row.setOnMouseClicked(mouseEvent -> {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
-                    playReplay(row.getItem(), 1);
+                    playReplay(getReplay(row.getItem()));
                 }
             });
             return row;
@@ -96,55 +107,78 @@ public class ReplayView extends ChildInitializable {
     void playAction() {
         Item selected = replayTable.getSelectionModel().getSelectedItem().getValue();
         if (selected != null) {
-            playReplay(selected, 1);
+            playReplay(getReplay(selected));
+        }
+    }
+
+    @FXML
+    void exportVideoAction() throws IOException {
+        Item selected = replayTable.getSelectionModel().getSelectedItem().getValue();
+
+        GameReplay replay = getReplay(selected);
+        if (replay != null) {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("videoExportView.fxml"),
+                    strings
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Stage stage = new Stage();
+            stage.initOwner(this.stage);
+            stage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = App.createScene(root);
+            stage.setScene(scene);
+
+            VideoExportView view = loader.getController();
+            view.setup(replay, stage);
+
+            stage.show();
         }
     }
 
     @Override
     public void backAction() {
         interrupted = true;
-        
+
         super.backAction();
     }
 
-    private Stage playReplay(GameReplay replay) throws IOException {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("gameView.fxml"),
-                strings
-        );
-        Parent root = loader.load();
-        root.setStyle(App.FONT_STYLE);
+    private void playReplay(GameReplay replay) {
+        if (replay != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("gameView.fxml"),
+                        strings
+                );
+                Parent root = loader.load();
+                root.setStyle(App.FONT_STYLE);
 
-        Stage stage = new Stage();
-        stage.initOwner(this.stage);
-        stage.initModality(Modality.WINDOW_MODAL);
+                Stage stage = new Stage();
+                stage.initOwner(this.stage);
+                stage.initModality(Modality.WINDOW_MODAL);
 
-        Scene scene = App.createScene(root);
-        stage.setScene(scene);
+                Scene scene = App.createScene(root);
+                stage.setScene(scene);
 
-        GameView gameView = loader.getController();
-        gameView.setupReplay(stage, replay);
+                GameView gameView = loader.getController();
+                gameView.setupReplay(stage, replay);
+                gameView.startAnimation();
 
-        stage.show();
-        
-        App.scaleGameStage(stage);
-        return stage;
+                stage.show();
+
+                App.scaleGameStage(stage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-    private void playReplay(Item item, int count) {
+    private GameReplay getReplay(Item item) {
         if (item instanceof FrameItem) {
             try {
-                // fixme: 这真是个无法理解的神奇bug
-                // fixme: stage和replay就是非要都第二次加载时才显球，哪个少加载一次都不行
-                GameReplay replay = GameReplay.loadReplay(item.getValue());
-
-                Stage stage = playReplay(replay);
-                while (count > 0) {
-                    stage.close();
-                    replay = GameReplay.loadReplay(item.getValue());
-                    stage = playReplay(replay);
-                    count--;
-                }
+                return GameReplay.loadReplay(item.getValue());
             } catch (VersionException ve) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("不能播放旧版本的录像");
@@ -159,7 +193,22 @@ public class ReplayView extends ChildInitializable {
                 throw new RuntimeException(e);
             }
         }
+        return null;
     }
+
+//    private void playReplay(Item item) {
+//        GameReplay replay = getReplay(item);
+//        if (replay != null) {
+//            try {
+//                // fixme: 这真是个无法理解的神奇bug
+//                // fixme: stage和replay就是非要都第二次加载时才显球，哪个少加载一次都不行
+//                // fixed: 莫名其妙修好了，可能是BallModel的问题
+//                playReplay(replay);
+//            } catch (IOException e) {  // 这里已经不可能version exception了
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
 
     public void fill() {
         root.getChildren().clear();
@@ -176,7 +225,7 @@ public class ReplayView extends ChildInitializable {
 
         service.start();
     }
-    
+
     public void naiveFill() {
         root.getChildren().clear();
         Thread thread = new Thread(() -> {
@@ -208,7 +257,7 @@ public class ReplayView extends ChildInitializable {
                             gameItemWrapper.getChildren().sort(Comparator.comparing(TreeItem::getValue));
                             replayTable.refresh();  // 这里是为了让match的比分刷新
                         });
-                        
+
                         Thread.sleep(1);  // 猜猜这是为啥
                     } catch (VersionException ve) {
                         System.err.printf("Record version: %d.%d\n",
@@ -461,7 +510,7 @@ public class ReplayView extends ChildInitializable {
                                     gameItemWrapper.getChildren().sort(Comparator.comparing(TreeItem::getValue));
                                     replayTable.refresh();  // 这里是为了让match的比分刷新
                                 });
-                                
+
 
 //                                replayList.add(item);
                             } catch (VersionException ve) {

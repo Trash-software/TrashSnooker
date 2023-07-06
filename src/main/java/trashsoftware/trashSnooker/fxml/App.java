@@ -8,6 +8,7 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
@@ -130,6 +131,10 @@ public class App extends Application {
 //            stage.setWidth(systemResolution[0]);
 //            stage.setHeight(systemResolution[1]);
         }
+
+        // 防止杆把父节点挤大
+        Rectangle clipBound = new Rectangle(stage.getScene().getWidth(), stage.getScene().getHeight());
+        stage.getScene().getRoot().setClip(clipBound);
 
         stage.widthProperty().addListener(((observableValue, aBoolean, t1) -> {
             stage.setX(0);

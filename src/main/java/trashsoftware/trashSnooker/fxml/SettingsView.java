@@ -1,9 +1,7 @@
 package trashsoftware.trashSnooker.fxml;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.drawing.PredictionQuality;
@@ -81,22 +79,22 @@ public class SettingsView extends ChildInitializable {
         cpuActualThreadNumLabel.setText("/" + cpuThreads);
         int curThreads = configLoader.getInt("nThreads", cpuThreads / 4);
         aiThreadNumBox.getSelectionModel().select(Integer.valueOf(curThreads));
-        
+
         frameRateBox.getItems().addAll(
                 20, 24, 30, 40, 50, 60, 90, 120, 144, 165, 200, 240, 300, 400, 500
         );
         frameRateBox.getSelectionModel().select(Integer.valueOf(configLoader.getFrameRate()));
-        
+
         performanceBox.getItems().addAll(PredictionQuality.values());
-        performanceBox.getSelectionModel().select(PredictionQuality.fromKey(configLoader.getString("performance", 
+        performanceBox.getSelectionModel().select(PredictionQuality.fromKey(configLoader.getString("performance",
                 "veryHigh")));
-        
+
         antiAliasingComboBox.getItems().addAll(AntiAliasing.values());
         antiAliasingComboBox.getSelectionModel().select(AntiAliasing.fromKey(configLoader.getString("antiAliasing",
                 "disabled")));
-        
+
         displayBox.getItems().addAll(Display.values());
-        displayBox.getSelectionModel().select(Display.fromKey(configLoader.getString("display", 
+        displayBox.getSelectionModel().select(Display.fromKey(configLoader.getString("display",
                 "windowed")));
     }
 
@@ -215,7 +213,7 @@ public class SettingsView extends ChildInitializable {
                 configLoader.put("systemZoom", zoom.ratio);
             }
         }
-        
+
         if (hasChanged(frameRateBox)) {
             configLoader.put("frameRate", frameRateBox.getValue());
         }
@@ -233,11 +231,11 @@ public class SettingsView extends ChildInitializable {
         if (hasChanged(aiStrengthBox)) {
             configLoader.put("fastGameAiStrength", aiStrengthBox.getSelectionModel().getSelectedItem());
         }
-        
+
         if (hasChanged(performanceBox)) {
             configLoader.put("performance", performanceBox.getValue().toKey());
         }
-        
+
         if (hasChanged(antiAliasingComboBox)) {
             configLoader.put("antiAliasing", antiAliasingComboBox.getValue().toKey());
         }
@@ -348,7 +346,7 @@ public class SettingsView extends ChildInitializable {
             return locale.getDisplayLanguage(locale);
         }
     }
-    
+
     public enum AntiAliasing {
         DISABLED,
         BALANCED;
@@ -366,7 +364,7 @@ public class SettingsView extends ChildInitializable {
             return Util.toLowerCamelCase(name());
         }
     }
-    
+
     public enum Display {
         WINDOWED,
         FULL_SCREEN;

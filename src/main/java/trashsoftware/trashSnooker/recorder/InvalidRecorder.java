@@ -34,7 +34,13 @@ public class InvalidRecorder implements GameRecorder {
     }
 
     @Override
-    public void writeCue(CueRecord cueRecord, Movement movement, TargetRecord thisTarget, TargetRecord nextTarget) throws IOException {
+    public void recordCueAnimation(CueAnimationRec cueAnimationRec) {
+        
+    }
+
+    @Override
+    public void writeCue(CueRecord cueRecord, Movement movement, TargetRecord thisTarget, TargetRecord nextTarget, 
+                         CueAnimationRec cueAnimationRec) throws IOException {
 
     }
 

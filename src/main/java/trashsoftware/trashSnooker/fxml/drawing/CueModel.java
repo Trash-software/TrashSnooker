@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.fxml.drawing;
 
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
@@ -156,8 +157,10 @@ public class CueModel extends Group {
 //        return allCueModels;
 //    }
 
-    public void show(double correctedTipX, double correctedTipY,
-                     double pointingUnitX, double pointingUnitY,
+    public void show(double correctedTipX, 
+                     double correctedTipY,
+                     double pointingUnitX, 
+                     double pointingUnitY,
                      double cueAngleDeg,
                      double scale) {
         setTranslateX(correctedTipX);

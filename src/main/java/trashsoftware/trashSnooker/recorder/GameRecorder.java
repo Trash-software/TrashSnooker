@@ -16,6 +16,8 @@ public interface GameRecorder {
     void recordMovement(Movement movement);
 
     void recordScore(ScoreResult scoreResult);
+    
+    void recordCueAnimation(CueAnimationRec cueAnimationRec);
 
     void recordNextTarget(TargetRecord nextTarget);
 
@@ -29,7 +31,8 @@ public interface GameRecorder {
 
     void recordPositions() throws IOException;
 
-    void writeCue(CueRecord cueRecord, Movement movement, TargetRecord thisTarget, TargetRecord nextTarget) throws IOException;
+    void writeCue(CueRecord cueRecord, Movement movement, TargetRecord thisTarget, TargetRecord nextTarget, 
+                  CueAnimationRec animationRec) throws IOException;
 
     void writeBallInHand() throws IOException;
 

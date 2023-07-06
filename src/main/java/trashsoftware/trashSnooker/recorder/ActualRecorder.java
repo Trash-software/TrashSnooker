@@ -27,9 +27,9 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
 public abstract class ActualRecorder implements GameRecorder {
-    public static final int RECORD_PRIMARY_VERSION = 12;
+    public static final int RECORD_PRIMARY_VERSION = 13;
     public static final int RECORD_SECONDARY_VERSION = 9;
-    public static final int HEADER_LENGTH = 50;
+    public static final int HEADER_LENGTH = 64;
     public static final int PLAYER_HEADER_LENGTH = 98;
     public static final int TOTAL_HEADER_LENGTH = HEADER_LENGTH + PLAYER_HEADER_LENGTH * 2;
     public static final String SIGNATURE = "TSR_";
@@ -56,8 +56,11 @@ public abstract class ActualRecorder implements GameRecorder {
     protected TargetRecord thisTarget;
     // 这玩意一定和下一杆的thisTarget一样，但是为了方便所以记录，反正3字节的事
     protected TargetRecord nextTarget;
+    protected CueAnimationRec animationRec;
     protected boolean finished = false;
     protected int nCues = 0;  // 只计击打，不计放置等
+    protected int nMovementFrames = 0;  // 总共的动画帧数
+    protected int totalBeforeCueMs = 0;  // 出杆动画在球出去之前花费的总时间，ms，1倍速
     protected long recordBeginTime;
     protected List<ExtraBlock> extraBlocks = new ArrayList<>();
     private OutputStream wrapperStream;
@@ -133,6 +136,12 @@ public abstract class ActualRecorder implements GameRecorder {
 //        System.out.println(movement.getMovementMap().get(game.getCueBall()).size());
         this.movement = movement;
     }
+    
+    public final void recordCueAnimation(CueAnimationRec cueAnimationRec) {
+        if (this.animationRec != null) throw new RuntimeException("Repeated recording");
+//        System.out.println(movement.getMovementMap().get(game.getCueBall()).size());
+        this.animationRec = cueAnimationRec;
+    }
 
     public final void recordScore(ScoreResult scoreResult) {
         if (this.scoreResult != null) throw new RuntimeException("Repeated recording");
@@ -145,14 +154,15 @@ public abstract class ActualRecorder implements GameRecorder {
     }
 
     public void writeCueToStream() {
-        if (cueRecord == null || movement == null || scoreResult == null || thisTarget == null || nextTarget == null) {
+        if (cueRecord == null || movement == null || scoreResult == null || 
+                thisTarget == null || nextTarget == null || animationRec == null) {
             throw new RuntimeException(String.format("Score not filled: %s, %s, %s, %s\n",
                     cueRecord, movement, scoreResult, nextTarget));
         }
 //        System.out.println(movement);
         try {
             outputStream.write(FLAG_CUE);
-            writeCue(cueRecord, movement, thisTarget, nextTarget);
+            writeCue(cueRecord, movement, thisTarget, nextTarget, animationRec);
             byte[] b = scoreResult.toBytes();
             outputStream.write(b);
             recordPositions();
@@ -162,6 +172,7 @@ public abstract class ActualRecorder implements GameRecorder {
             scoreResult = null;
             thisTarget = null;
             nextTarget = null;
+            animationRec = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -179,7 +190,8 @@ public abstract class ActualRecorder implements GameRecorder {
     public abstract void writeCue(CueRecord cueRecord,
                                   Movement movement,
                                   TargetRecord thisTarget,
-                                  TargetRecord nextTarget) throws IOException;
+                                  TargetRecord nextTarget,
+                                  CueAnimationRec animationRec) throws IOException;
 
     public abstract void writeBallInHand() throws IOException;
 
@@ -239,6 +251,8 @@ public abstract class ActualRecorder implements GameRecorder {
         DurationMs       40     4       关闭stream时写入
         nCues            44     4       关闭stream时写入
         winnerNumber     48     1       胜者是1还是2,关闭时写入
+        nMovementFrames  52     4       总动画帧数，关闭时写入
+        totalBeforeCueMs 56     4       出杆动画占用的总额外时长
          */
 
         wrapperStream.write(header);
@@ -381,6 +395,13 @@ public abstract class ActualRecorder implements GameRecorder {
                     raf.write(game.getWiningPlayer().getInGamePlayer().getPlayerNumber());
                 else
                     raf.write(0);
+
+                raf.seek(52);
+                Util.int32ToBytes(nMovementFrames, buffer4, 0);
+                raf.write(buffer4);
+                Util.int32ToBytes(totalBeforeCueMs, buffer4, 0);
+                raf.write(buffer4);
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -1,12 +1,19 @@
 package trashsoftware.trashSnooker.fxml.widgets;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point3D;
+import javafx.scene.AmbientLight;
+import javafx.scene.DirectionalLight;
+import javafx.scene.LightBase;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import trashsoftware.trashSnooker.core.Algebra;
@@ -43,8 +50,9 @@ public class GamePane extends Pane {
     private double scale;
     private GameValues gameValues;
     private double canvasWidth, canvasHeight;
+    private final LightBase lighting;
 
-    private ResourceBundle strings;
+    private final ResourceBundle strings;
 
     public GamePane() {
         this(App.getStrings());
@@ -71,6 +79,14 @@ public class GamePane extends Pane {
 
         boolean antiAliasing = ConfigLoader.getInstance().getAntiAliasing().canvasAA;
         graphicsContext.setImageSmoothing(antiAliasing);
+        
+        if (true) {
+            DirectionalLight dl = new DirectionalLight(Color.WHITE);
+            dl.setDirection(new Point3D(0, 0, 1));
+            lighting = dl;
+        } else {
+            lighting = new AmbientLight(Color.WHITE);
+        }
     }
 
     public void setupPane(GameValues gameValues, double scaleMul) {
@@ -125,6 +141,7 @@ public class GamePane extends Pane {
     public void clear() {
         getChildren().clear();
         getChildren().add(gameCanvas);
+        getChildren().add(lighting);
     }
 
     public double[] getRealPlaceCanPlaceBall(double mouseX, double mouseY) {
@@ -181,6 +198,11 @@ public class GamePane extends Pane {
 
         tableTextFont = new Font(App.FONT.getName(), 36 * scale);
         graphicsContext.setFont(tableTextFont);
+        
+        lighting.setTranslateZ(-1000.0);
+
+//        Rectangle clip = new Rectangle(canvasWidth, canvasHeight);
+//        setClip(clip);
     }
 
     private void drawLeatherTable(TableMetrics metrics) {

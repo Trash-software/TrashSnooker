@@ -19,12 +19,14 @@ public class NaiveActualRecorder extends ActualRecorder {
     }
 
     @Override
-    public void writeCue(CueRecord cueRecord, 
-                            Movement movement,
-                            TargetRecord thisTarget,
-                            TargetRecord nextTarget) throws IOException {
+    public void writeCue(CueRecord cueRecord,
+                         Movement movement,
+                         TargetRecord thisTarget,
+                         TargetRecord nextTarget,
+                         CueAnimationRec animationRec) throws IOException {
         writeCueRecord(cueRecord, thisTarget, nextTarget);
         writeMovement(movement);
+        writeCueAnimation(animationRec);
     }
 
     @Override
@@ -32,7 +34,7 @@ public class NaiveActualRecorder extends ActualRecorder {
         recordOneBallPos(game.getCueBall());
     }
 
-    private void writeCueRecord(CueRecord cueRecord, 
+    private void writeCueRecord(CueRecord cueRecord,
                                 TargetRecord thisTarget, TargetRecord nextTarget) throws IOException {
         byte[] buf = new byte[CUE_RECORD_LENGTH];
         buf[0] = (byte) cueRecord.cuePlayer.getPlayerNumber();
@@ -40,7 +42,7 @@ public class NaiveActualRecorder extends ActualRecorder {
         buf[2] = (byte) thisTarget.playerNum;
         buf[3] = (byte) thisTarget.targetRep;
         buf[4] = (byte) (thisTarget.isSnookerFreeBall ? 1 : 0);
-        buf[5] = (byte) nextTarget.playerNum; 
+        buf[5] = (byte) nextTarget.playerNum;
         buf[6] = (byte) nextTarget.targetRep;
         buf[7] = (byte) (nextTarget.isSnookerFreeBall ? 1 : 0);
 
@@ -53,25 +55,35 @@ public class NaiveActualRecorder extends ActualRecorder {
         Util.doubleToBytes(cueRecord.actualVerPoint, buf, 56);
         Util.doubleToBytes(cueRecord.actualHorPoint, buf, 64);
         Util.doubleToBytes(cueRecord.cueAngle, buf, 72);
-        
+
         buf[80] = (byte) cueRecord.playStage.ordinal();
         buf[81] = (byte) cueRecord.hand.ordinal();
 
         outputStream.write(buf);
     }
     
+    private void writeCueAnimation(CueAnimationRec animationRec) throws IOException {
+        totalBeforeCueMs += animationRec.getBeforeCueMs();
+        
+        // 暂时没啥能干的
+    }
+
     private void writeMovement(Movement movement) throws IOException {
+        int maxMovementSteps = 0;
         int steps = -1;
         for (Ball ball : game.getAllBalls()) {
             // 顺序很重要
             List<MovementFrame> frames = movement.getMovementMap().get(ball);
+            if (frames.size() > maxMovementSteps) {
+                maxMovementSteps = frames.size();
+            }
             if (steps == -1) {
                 steps = frames.size();  // 记录有多少帧
                 byte[] stepsBytes = new byte[4];
                 Util.int32ToBytes(steps, stepsBytes, 0);
                 outputStream.write(stepsBytes);
             }
-            if (frames.size() != steps) 
+            if (frames.size() != steps)
                 throw new RuntimeException();
 
             outputStream.write(ball.getValue());
@@ -82,7 +94,7 @@ public class NaiveActualRecorder extends ActualRecorder {
                 buf[1] = (byte) frame.movementType;
                 Util.doubleToBytes(frame.x, buf, 2);
                 Util.doubleToBytes(frame.y, buf, 10);
-                Util.doubleToBytes(frame.movementValue,  buf,18);
+                Util.doubleToBytes(frame.movementValue, buf, 18);
                 Util.doubleToBytes(frame.xAxis, buf, 26);
                 Util.doubleToBytes(frame.yAxis, buf, 34);
                 Util.doubleToBytes(frame.zAxis, buf, 42);
@@ -90,6 +102,7 @@ public class NaiveActualRecorder extends ActualRecorder {
                 outputStream.write(buf);
             }
         }
+        nMovementFrames += maxMovementSteps;
     }
 
     @Override

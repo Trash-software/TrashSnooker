@@ -11,7 +11,7 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.ReplayView"
       prefHeight="600.0" prefWidth="1080.0" spacing="10.0">
-    
+
     <padding>
         <Insets topRightBottomLeft="5.0"/>
     </padding>
@@ -19,7 +19,7 @@
     <HBox>
         <Button text="%backIcon" onAction="#backAction"/>
     </HBox>
-    
+
     <TreeTableView fx:id="replayTable" VBox.vgrow="ALWAYS">
         <columns>
             <TreeTableColumn fx:id="replayCol" text="回放" prefWidth="120.0"/>
@@ -33,9 +33,11 @@
             <TreeTableColumn fx:id="resultCol" text="结果" prefWidth="240.0"/>
         </columns>
     </TreeTableView>
-    
-    <HBox alignment="BOTTOM_RIGHT">
-        <Button text="播放" onAction="#playAction"/>
+
+    <HBox alignment="BOTTOM_RIGHT" spacing="10.0">
+        <Button text="%replayPlay" onAction="#playAction" fx:id="playBtn" disable="true"/>
+        <Button text="%exportAsVideo" onAction="#exportVideoAction" fx:id="exportBtn"
+                disable="true"/>
     </HBox>
 
 </VBox>

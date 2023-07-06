@@ -11,6 +11,8 @@ module TrashSnooker {
     requires org.tukaani.xz;
     requires java.desktop;
     requires commons.math3;
+    requires jcodec;
+//    requires jcodec.javase;
 
     exports trashsoftware.trashSnooker;
     exports trashsoftware.trashSnooker.core;

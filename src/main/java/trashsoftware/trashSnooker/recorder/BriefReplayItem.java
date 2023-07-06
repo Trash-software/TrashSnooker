@@ -37,7 +37,9 @@ public class BriefReplayItem {
 //    private final int durationSec;
     private final InGamePlayer p1;
     private final InGamePlayer p2;
-    protected int frameRate = 50;
+    protected int frameRate;
+    protected int nMovementFrames;
+    protected int totalBeforeCueMs;
     
     private int extraLength;
     private List<ExtraBlock> extraBlocks = new ArrayList<>();
@@ -91,6 +93,9 @@ public class BriefReplayItem {
             duration = Util.bytesToInt32(header, 40);
             nCues = Util.bytesToInt32(header, 44);
             frameWinnerNumber = header[48] & 0xff;
+            
+            nMovementFrames = Util.bytesToInt32(header, 52);
+            totalBeforeCueMs = Util.bytesToInt32(header, 56);
             
             p1 = readOnePlayer(raf, 1);
             p2 = readOnePlayer(raf, 2);
