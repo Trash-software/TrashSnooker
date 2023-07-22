@@ -13,6 +13,7 @@ import java.util.List;
 public class NaiveActualRecorder extends ActualRecorder {
     
     public static final int CUE_RECORD_LENGTH = 84;
+    public static final int CUE_ANIMATION_BUF_LEN = 8;
 
     public NaiveActualRecorder(Game<?, ?> game, MetaMatchInfo metaMatchInfo) {
         super(game, metaMatchInfo);
@@ -25,8 +26,8 @@ public class NaiveActualRecorder extends ActualRecorder {
                          TargetRecord nextTarget,
                          CueAnimationRec animationRec) throws IOException {
         writeCueRecord(cueRecord, thisTarget, nextTarget);
-        writeMovement(movement);
         writeCueAnimation(animationRec);
+        writeMovement(movement);
     }
 
     @Override
@@ -35,7 +36,8 @@ public class NaiveActualRecorder extends ActualRecorder {
     }
 
     private void writeCueRecord(CueRecord cueRecord,
-                                TargetRecord thisTarget, TargetRecord nextTarget) throws IOException {
+                                TargetRecord thisTarget, 
+                                TargetRecord nextTarget) throws IOException {
         byte[] buf = new byte[CUE_RECORD_LENGTH];
         buf[0] = (byte) cueRecord.cuePlayer.getPlayerNumber();
         buf[1] = (byte) (cueRecord.isBreaking ? 1 : 0);
@@ -65,7 +67,10 @@ public class NaiveActualRecorder extends ActualRecorder {
     private void writeCueAnimation(CueAnimationRec animationRec) throws IOException {
         totalBeforeCueMs += animationRec.getBeforeCueMs();
         
-        // 暂时没啥能干的
+        byte[] buf = new byte[CUE_ANIMATION_BUF_LEN];
+        Util.int32ToBytes(animationRec.getBeforeCueMs(), buf, 0);
+        Util.int32ToBytes(animationRec.getAfterCueMs(), buf, 4);
+        outputStream.write(buf);
     }
 
     private void writeMovement(Movement movement) throws IOException {

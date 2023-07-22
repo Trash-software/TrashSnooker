@@ -10,7 +10,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.VideoExportView"
-      prefHeight="400.0" prefWidth="720.0" alignment="CENTER" spacing="10.0">
+      prefHeight="280.0" prefWidth="720.0" alignment="CENTER" spacing="10.0">
 
     <padding>
         <Insets topRightBottomLeft="5.0"/>
@@ -27,9 +27,24 @@
         <Label fx:id="outFileLabel" wrapText="true" GridPane.columnIndex="1"/>
         <Button text="%fileSelection" fx:id="chooseFileBtn" onAction="#selectFileAction"
                 GridPane.columnIndex="2"/>
+        
+        <Label text="%exportCueRange" GridPane.rowIndex="1"/>
+        <HBox GridPane.rowIndex="1" GridPane.columnIndex="1" spacing="5.0" alignment="CENTER_LEFT">
+            <ComboBox fx:id="rangeBeginBox"/>
+            <Label text="-"/>
+            <ComboBox fx:id="rangeEndBox"/>
+        </HBox>
 
-        <Label text="%videoResolution" GridPane.rowIndex="1"/>
-        <ComboBox fx:id="resolutionBox" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="%videoResolution" GridPane.rowIndex="2"/>
+        <HBox GridPane.rowIndex="2" GridPane.columnIndex="1" spacing="5.0" alignment="CENTER_LEFT">
+            <ComboBox fx:id="resolutionBox"/>
+            <Label text=" "/>
+            <ComboBox fx:id="fpsBox"/>
+            <Label text="FPS"/>
+        </HBox>
+
+        <Label text="%exportArea" GridPane.rowIndex="3"/>
+        <ComboBox fx:id="areaBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
     </GridPane>
 
     <Button text="%export" onAction="#exportAction" fx:id="exportBtn"/>

@@ -156,8 +156,11 @@ public class CareerAchManager extends AchManager {
      * 注意，该方法会在switchPlayer之后被调用
      */
     @Override
-    public void updateAfterCueFinish(Pane owner, Game<?, ?> game, ScoreResult scoreResult,
-                                     PotAttempt potAttempt, DefenseAttempt defenseAttempt, 
+    public void updateAfterCueFinish(Pane owner, 
+                                     Game<?, ?> game, 
+                                     ScoreResult scoreResult,
+                                     PotAttempt potAttempt, 
+                                     DefenseAttempt defenseAttempt, 
                                      GamePlayStage playStage) {
         Player justCuedP = game.getLastCuedPlayer();
         InGamePlayer justCuedPlayer = justCuedP.getInGamePlayer();

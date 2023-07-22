@@ -34,18 +34,20 @@ public abstract class GameReplay implements GameHolder {
     protected ScoreResult currentScoreResult;
     protected TargetRecord thisTarget;
     protected TargetRecord nextTarget;
+    protected CueAnimationRec animationRec;
     protected int currentFlag = ActualRecorder.FLAG_NOT_BEGUN;
     protected Ball[] balls;
     protected HashMap<Integer, Ball> valueBallMap = new HashMap<>();
-//    protected HashMap<Ball, double[]> lastPositions = new HashMap<>();
+    //    protected HashMap<Ball, double[]> lastPositions = new HashMap<>();
     protected Ball cueBall;
-    protected int stepIndex = 0;
+    protected int stepIndex = 0;  // 这个包含了击球、手中球这些
+    protected int cueIndex = 0;  // 这个只包含击球
     protected boolean everFinished = false;
-    
+
     protected List<CueStep> historySteps = new ArrayList<>();
 
     protected GameReplay(BriefReplayItem item) throws IOException, VersionException {
-        if (!ActualRecorder.isSecondaryCompatible(item.primaryVersion, item.secondaryVersion)) 
+        if (!ActualRecorder.isSecondaryCompatible(item.primaryVersion, item.secondaryVersion))
             throw new VersionException(item.primaryVersion, item.secondaryVersion);
 
         this.item = item;
@@ -65,32 +67,30 @@ public abstract class GameReplay implements GameHolder {
         createInputStream(item.compression);
 
         switch (gameRule) {
-            case SNOOKER:
+            case SNOOKER -> {
                 table = new SnookerTable(gameValues.table);
                 scoreFactory = new SnookerScoreFactory();
-                break;
-            case MINI_SNOOKER:
+            }
+            case MINI_SNOOKER -> {
                 table = new MiniSnookerTable(gameValues.table);
                 scoreFactory = new SnookerScoreFactory();
-                break;
-            case CHINESE_EIGHT:
-            case LIS_EIGHT:
+            }
+            case CHINESE_EIGHT, LIS_EIGHT -> {
                 table = new ChineseEightTable(gameValues.table);
                 scoreFactory = new ChineseEightScoreFactory();
-                break;
-            case AMERICAN_NINE:
+            }
+            case AMERICAN_NINE -> {
                 table = new SidePocketTable(gameValues.table);
                 scoreFactory = new NineBallScoreResultFactory();
-                break;
-            default:
-                throw new EnumConstantNotPresentException(GameRule.class, gameRule.name());
+            }
+            default -> throw new EnumConstantNotPresentException(GameRule.class, gameRule.name());
         }
         scoreResBuf = new byte[scoreFactory.byteLength()];
 
         loadBallPositions();
     }
 
-    public static GameReplay loadReplay(BriefReplayItem item) 
+    public static GameReplay loadReplay(BriefReplayItem item)
             throws IOException, VersionException {
         if (item.replayType == 0) return new NaiveGameReplay(item);
 
@@ -101,7 +101,7 @@ public abstract class GameReplay implements GameHolder {
         File dir = new File(ActualRecorder.RECORD_DIR);
         return dir.listFiles();
     }
-    
+
     public static File getRecordDir() {
         File f = new File(ActualRecorder.RECORD_DIR);
         if (!f.exists()) {
@@ -114,17 +114,11 @@ public abstract class GameReplay implements GameHolder {
 
     private void createInputStream(int compression) throws IOException {
         switch (compression) {
-            case ActualRecorder.NO_COMPRESSION:
-                inputStream = new BufferedInputStream(wrapperStream);
-                break;
-            case ActualRecorder.GZ_COMPRESSION:
-                inputStream = new GZIPInputStream(wrapperStream);
-                break;
-            case ActualRecorder.XZ_COMPRESSION:
-                inputStream = new XZInputStream(wrapperStream);
-                break;
-            default:
-                throw new RuntimeException();
+            case ActualRecorder.NO_COMPRESSION ->
+                    inputStream = new BufferedInputStream(wrapperStream);
+            case ActualRecorder.GZ_COMPRESSION -> inputStream = new GZIPInputStream(wrapperStream);
+            case ActualRecorder.XZ_COMPRESSION -> inputStream = new XZInputStream(wrapperStream);
+            default -> throw new RuntimeException();
         }
     }
 
@@ -149,6 +143,23 @@ public abstract class GameReplay implements GameHolder {
         return currentFlag == ActualRecorder.FLAG_TERMINATE;
     }
 
+    /**
+     * 跳过一些杆。仅有实际击球算数，置球之类的不算
+     */
+    public int skipCues(int nCues) {
+        int dst = cueIndex + nCues;
+        int skipped = 0;
+        while (cueIndex < dst) {
+            boolean loaded = loadNext();
+            if (!loaded) break;
+
+            if (currentFlag == ActualRecorder.FLAG_CUE) {
+                skipped++;
+            }
+        }
+        return skipped;
+    }
+
     public boolean loadNext() {
         System.out.println("Step: " + stepIndex + ", total: " + historySteps.size());
         if (stepIndex < historySteps.size()) {
@@ -161,6 +172,9 @@ public abstract class GameReplay implements GameHolder {
                 ball.setY(lastFrame.y);
             }
             stepIndex++;
+            if (currentFlag == ActualRecorder.FLAG_CUE) {
+                cueIndex++;
+            }
             return true;
         } else if (everFinished) {
             currentFlag = ActualRecorder.FLAG_TERMINATE;
@@ -173,24 +187,30 @@ public abstract class GameReplay implements GameHolder {
                 }
                 currentFlag = buffer1[0] & 0xff;
                 System.out.println("Flag: " + currentFlag);
-                
+
                 if (currentFlag == ActualRecorder.FLAG_TERMINATE) {
                     everFinished = true;
                     return false;
                 }
                 readNext();
                 stepIndex++;
+                if (currentFlag == ActualRecorder.FLAG_CUE) {
+                    cueIndex++;
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             return currentFlag != ActualRecorder.FLAG_TERMINATE;
         }
     }
-    
+
     private void setCurrentFromHistory() {
+        setCurrentFromHistory(true);
+    }
+
+    private void setCurrentFromHistory(boolean explicit) {
         CueStep step = historySteps.get(stepIndex);
-        if (step instanceof ActualStep) {
-            ActualStep actualStep = (ActualStep) step;
+        if (step instanceof ActualStep actualStep) {
             currentCueRecord = actualStep.cueRecord;
             currentMovement = actualStep.movement;
 //            currentMovement.reset();
@@ -199,22 +219,46 @@ public abstract class GameReplay implements GameHolder {
             nextTarget = actualStep.nextTarget;
             currentFlag = ActualRecorder.FLAG_CUE;
 
-            Map<Ball, MovementFrame> sps = currentMovement.getStartingPositions();
-            for (Ball ball : getAllBalls()) {
-                MovementFrame sp = sps.get(ball);
-                ball.setPotted(sp.potted);
-                ball.setX(sp.x);
-                ball.setY(sp.y);
+            if (explicit) {
+                Map<Ball, MovementFrame> sps = currentMovement.getStartingPositions();
+                for (Ball ball : getAllBalls()) {
+                    MovementFrame sp = sps.get(ball);
+                    ball.setPotted(sp.potted);
+                    ball.setX(sp.x);
+                    ball.setY(sp.y);
+                }
             }
         } else if (step instanceof BallInHandStep) {
             currentFlag = ActualRecorder.FLAG_HANDBALL;
         }
     }
+
+    public int getStepIndex() {
+        return stepIndex;
+    }
+
+    public int getCueIndex() {
+        return cueIndex;
+    }
     
+    public void revertTo(int dstCueIndex) {
+        while (cueIndex > dstCueIndex) {
+            stepIndex -= 1;
+            setCurrentFromHistory(false);
+            if (currentFlag == ActualRecorder.FLAG_CUE) {
+                cueIndex--;
+            }
+        }
+        setCurrentFromHistory(true);
+    }
+
     public boolean loadLast() {
         if (stepIndex < 1) return false;
         stepIndex -= 1;
         setCurrentFromHistory();
+        if (currentFlag == ActualRecorder.FLAG_CUE) {
+            cueIndex--;
+        }
         return true;
     }
 
@@ -234,7 +278,8 @@ public abstract class GameReplay implements GameHolder {
                     currentMovement,
                     currentScoreResult,
                     thisTarget,
-                    nextTarget
+                    nextTarget,
+                    animationRec
             );
             historySteps.add(actualStep);
         } else if (currentFlag == ActualRecorder.FLAG_HANDBALL) {
@@ -253,7 +298,7 @@ public abstract class GameReplay implements GameHolder {
     public HashMap<Ball, double[]> getCurrentPositions() {
         HashMap<Ball, double[]> pos = new HashMap<>();
         for (Ball ball : balls) {
-            pos.put(ball, new double[]{ball.getX(), ball.getY(), 
+            pos.put(ball, new double[]{ball.getX(), ball.getY(),
                     ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(),
                     ball.isPotted() ? 1 : 0});
         }
@@ -294,9 +339,13 @@ public abstract class GameReplay implements GameHolder {
         return currentMovement;
     }
 
+    public CueAnimationRec getAnimationRec() {
+        return animationRec;
+    }
+
     protected abstract void loadBallInHand();
 
-    protected abstract void loadNextRecordAndMovement();
+    protected abstract void loadNextRecordAndMovement() throws IOException;
 
     protected void loadNextScoreResult() throws IOException {
         if (inputStream.read(scoreResBuf) != scoreResBuf.length) {
@@ -328,27 +377,33 @@ public abstract class GameReplay implements GameHolder {
         inputStream.close();
         wrapperStream.close();
     }
-    
+
     protected abstract static class CueStep {
     }
-    
+
     protected static class BallInHandStep extends CueStep {
     }
-    
+
     protected static class ActualStep extends CueStep {
         protected final CueRecord cueRecord;
         protected final Movement movement;
         protected final ScoreResult scoreResult;
         protected final TargetRecord thisTarget;
         protected final TargetRecord nextTarget;
-        
-        ActualStep(CueRecord cueRecord, Movement movement, ScoreResult scoreResult, 
-                   TargetRecord thisTarget, TargetRecord nextTarget) {
+        protected final CueAnimationRec animationRec;
+
+        ActualStep(CueRecord cueRecord,
+                   Movement movement,
+                   ScoreResult scoreResult,
+                   TargetRecord thisTarget,
+                   TargetRecord nextTarget,
+                   CueAnimationRec animationRec) {
             this.cueRecord = cueRecord;
             this.movement = movement;
             this.scoreResult = scoreResult;
             this.thisTarget = thisTarget;
             this.nextTarget = nextTarget;
+            this.animationRec = animationRec;
         }
     }
 }

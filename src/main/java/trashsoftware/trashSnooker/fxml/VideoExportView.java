@@ -35,6 +35,12 @@ public class VideoExportView implements Initializable {
     @FXML
     ComboBox<VideoResolution> resolutionBox;
     @FXML
+    ComboBox<Integer> fpsBox;
+    @FXML
+    ComboBox<VideoConverter.Area> areaBox;
+    @FXML
+    ComboBox<Integer> rangeBeginBox, rangeEndBox;
+    @FXML
     ProgressBar progressBar;
     @FXML
     Label outFileLabel;
@@ -56,8 +62,6 @@ public class VideoExportView implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.strings = resourceBundle;
-
-        resolutionBox.getSelectionModel().select(VideoResolution.RES_720P);
     }
 
     public void setup(GameReplay replay, Stage selfStage) {
@@ -68,12 +72,46 @@ public class VideoExportView implements Initializable {
         outFileLabel.setText(outFile.getAbsolutePath());
 
         resolutionBox.getItems().addAll(VideoResolution.values());
+        resolutionBox.getSelectionModel().select(VideoResolution.RES_720P);
+        
+        fpsBox.getItems().addAll(24, 30, 60);
+        fpsBox.getSelectionModel().select(Integer.valueOf(30));
 
         selfStage.setOnHidden(e -> {
             if (videoCapture != null && !videoCapture.isFinished()) {
                 interruptAction();
             }
         });
+        
+        setRangeBoxes();
+        areaBox.getItems().addAll(VideoConverter.Area.values());
+        areaBox.getSelectionModel().select(VideoConverter.Area.FULL);
+    }
+    
+    private void setRangeBoxes() {
+        int nCues = replay.getItem().getNCues();
+        for (int i = 1; i <= nCues; i++) {
+            rangeBeginBox.getItems().add(i);
+        }
+        
+        rangeBeginBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            Integer selection = rangeEndBox.getSelectionModel().getSelectedItem();
+            rangeEndBox.getItems().clear();
+            for (int i = newValue; i <= nCues; i++) {
+                rangeEndBox.getItems().add(i);
+            }
+            if (selection != null) {
+                if (selection < newValue) {
+                    rangeEndBox.getSelectionModel().select(0);
+                } else {
+                    rangeEndBox.getSelectionModel().select(selection);
+                }
+            } else {
+                rangeEndBox.getSelectionModel().select(rangeEndBox.getItems().size() - 1);
+            }
+        });
+        
+        rangeBeginBox.getSelectionModel().select(0);
     }
 
     @FXML
@@ -114,11 +152,16 @@ public class VideoExportView implements Initializable {
 
     private void createVideoCapture(GameView view) throws IOException {
         VideoResolution resolution = resolutionBox.getValue();
+        
+        int beginCueIndex = rangeBeginBox.getValue() - 1;
+//        replay.skipCues(beginCueIndex);
 
         videoCapture = new VideoCapture(outFile,
                 replay,
-                new VideoConverter.Params(30, resolution.width, resolution.height),
+                new VideoConverter.Params(fpsBox.getValue(), resolution.width, resolution.height, areaBox.getValue()),
                 1000,
+                beginCueIndex,
+                rangeEndBox.getValue(),
                 new ProgressUpdater(),
                 view);
 
@@ -168,7 +211,7 @@ public class VideoExportView implements Initializable {
 
                 stage.show();
 
-                App.scaleGameStage(stage);
+                App.scaleGameStage(stage, gameView);
 
                 gameView.startVideoCapture(videoCapture);
                 stage.toBack();

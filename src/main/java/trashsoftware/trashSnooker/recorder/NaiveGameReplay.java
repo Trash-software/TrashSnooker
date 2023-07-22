@@ -30,20 +30,16 @@ public class NaiveGameReplay extends GameReplay {
 
         if (b == null) {
             switch (gameValues.rule) {
-                case CHINESE_EIGHT:
-                case LIS_EIGHT:
-                case AMERICAN_NINE:
+                case CHINESE_EIGHT, LIS_EIGHT, AMERICAN_NINE -> {
                     b = new PoolBall(val, potted, gameValues);
                     b.setX(x);
                     b.setY(y);
-                    break;
-                case SNOOKER:
-                case MINI_SNOOKER:
+                }
+                case SNOOKER, MINI_SNOOKER -> {
                     b = new SnookerBall(val, new double[]{x, y}, gameValues);
                     b.setPotted(potted);
-                    break;
-                default:
-                    throw new RuntimeException("No such ball");
+                }
+                default -> throw new RuntimeException("No such ball");
             }
 
         } else {
@@ -68,9 +64,20 @@ public class NaiveGameReplay extends GameReplay {
         }
     }
 
+    private void loadCueAnimation() throws IOException {
+        byte[] buf = new byte[NaiveActualRecorder.CUE_ANIMATION_BUF_LEN];
+        if (inputStream.read(buf) != buf.length) throw new IOException();
+        
+        animationRec = new CueAnimationRec(
+                Util.bytesToInt32(buf, 0),
+                Util.bytesToInt32(buf, 4)
+        );
+    }
+
     @Override
-    protected void loadNextRecordAndMovement() {
+    protected void loadNextRecordAndMovement() throws IOException {
         readCueRecordAndTargets();
+        loadCueAnimation();
         currentMovement = getNextMovement();
     }
 
@@ -83,88 +90,80 @@ public class NaiveGameReplay extends GameReplay {
         }
     }
 
-    private Movement getNextMovement() {
-        try {
-            byte[] stepsBuf = new byte[4];
-            if (inputStream.read(stepsBuf) != stepsBuf.length) throw new IOException();
+    private Movement getNextMovement() throws IOException {
+        byte[] stepsBuf = new byte[4];
+        if (inputStream.read(stepsBuf) != stepsBuf.length) throw new IOException();
 
-            int steps = Util.bytesToInt32(stepsBuf, 0);
+        int steps = Util.bytesToInt32(stepsBuf, 0);
 
-            byte[] posBuf = new byte[58];
-            byte[] ballValueBuf = new byte[1];
+        byte[] posBuf = new byte[58];
+        byte[] ballValueBuf = new byte[1];
 
-            Movement movement = new Movement(balls);
-            for (int ballIndex = 0; ballIndex < gameValues.rule.nBalls; ballIndex++) {
-                if (inputStream.read(ballValueBuf) != ballValueBuf.length) {
-                    throw new IOException();
-                }
-                int expectedBall = ballValueBuf[0] & 0xff;
-                Ball ball = balls[ballIndex];
-                if (ball.getValue() != expectedBall) {
-                    throw new RuntimeException(String.format("Expected %d, got %d\n",
-                            expectedBall, ball.getValue()));
-                }
-                for (int s = 0; s < steps; s++) {
-                    if (inputStream.read(posBuf) != posBuf.length) throw new IOException();
-                    boolean potted = posBuf[0] == 1;
-                    int movementType = posBuf[1] & 0xff;
-                    double x = Util.bytesToDouble(posBuf, 2);
-                    double y = Util.bytesToDouble(posBuf, 10);
-                    double movementValue = Util.bytesToDouble(posBuf, 18);
-                    double axisX = Util.bytesToDouble(posBuf, 26);
-                    double axisY = Util.bytesToDouble(posBuf, 34);
-                    double axisZ = Util.bytesToDouble(posBuf, 42);
-                    double rotateDeg = Util.bytesToDouble(posBuf, 50);
-
-                    MovementFrame frame = new MovementFrame(x, y, 
-                            axisX, axisY, axisZ, rotateDeg, potted, movementType, movementValue);
-                    movement.addFrame(ball, frame);
-                }
+        Movement movement = new Movement(balls);
+        for (int ballIndex = 0; ballIndex < gameValues.rule.nBalls; ballIndex++) {
+            if (inputStream.read(ballValueBuf) != ballValueBuf.length) {
+                throw new IOException();
             }
-            
-            if (steps >= Game.CONGESTION_LIMIT) {
-                movement.setCongested();
+            int expectedBall = ballValueBuf[0] & 0xff;
+            Ball ball = balls[ballIndex];
+            if (ball.getValue() != expectedBall) {
+                throw new RuntimeException(String.format("Expected %d, got %d\n",
+                        expectedBall, ball.getValue()));
             }
+            for (int s = 0; s < steps; s++) {
+                if (inputStream.read(posBuf) != posBuf.length) throw new IOException();
+                boolean potted = posBuf[0] == 1;
+                int movementType = posBuf[1] & 0xff;
+                double x = Util.bytesToDouble(posBuf, 2);
+                double y = Util.bytesToDouble(posBuf, 10);
+                double movementValue = Util.bytesToDouble(posBuf, 18);
+                double axisX = Util.bytesToDouble(posBuf, 26);
+                double axisY = Util.bytesToDouble(posBuf, 34);
+                double axisZ = Util.bytesToDouble(posBuf, 42);
+                double rotateDeg = Util.bytesToDouble(posBuf, 50);
 
-            return movement;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+                MovementFrame frame = new MovementFrame(x, y,
+                        axisX, axisY, axisZ, rotateDeg, potted, movementType, movementValue);
+                movement.addFrame(ball, frame);
+            }
         }
+
+        if (steps >= Game.CONGESTION_LIMIT) {
+            movement.setCongested();
+        }
+
+        return movement;
     }
 
-    private void readCueRecordAndTargets() {
-        try {
-            byte[] buf = new byte[NaiveActualRecorder.CUE_RECORD_LENGTH];
-            if (inputStream.read(buf) != buf.length) throw new IOException();
+    private void readCueRecordAndTargets() throws IOException {
+        byte[] buf = new byte[NaiveActualRecorder.CUE_RECORD_LENGTH];
+        if (inputStream.read(buf) != buf.length) throw new IOException();
 
-            currentCueRecord = new CueRecord(
-                    buf[0] == 1 ? p1 : p2,
-                    buf[1] == 1,
-                    Util.bytesToDouble(buf, 8),
-                    Util.bytesToDouble(buf, 16),
-                    Util.bytesToDouble(buf, 24),
-                    Util.bytesToDouble(buf, 32),
-                    Util.bytesToDouble(buf, 40),
-                    Util.bytesToDouble(buf, 48),
-                    Util.bytesToDouble(buf, 56),
-                    Util.bytesToDouble(buf, 64),
-                    Util.bytesToDouble(buf, 72),
-                    GamePlayStage.values()[buf[80] & 0xff],
-                    PlayerPerson.Hand.values()[buf[81] & 0xff]
-            );
-            
-            thisTarget = new TargetRecord(
-                    buf[2] & 0xff,
-                    buf[3] & 0xff,
-                    buf[4] == 1
-            );
-            nextTarget = new TargetRecord(
-                    buf[5] & 0xff,
-                    buf[6] & 0xff,
-                    buf[7] == 1
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        currentCueRecord = new CueRecord(
+                buf[0] == 1 ? p1 : p2,
+                buf[1] == 1,
+                Util.bytesToDouble(buf, 8),
+                Util.bytesToDouble(buf, 16),
+                Util.bytesToDouble(buf, 24),
+                Util.bytesToDouble(buf, 32),
+                Util.bytesToDouble(buf, 40),
+                Util.bytesToDouble(buf, 48),
+                Util.bytesToDouble(buf, 56),
+                Util.bytesToDouble(buf, 64),
+                Util.bytesToDouble(buf, 72),
+                GamePlayStage.values()[buf[80] & 0xff],
+                PlayerPerson.Hand.values()[buf[81] & 0xff]
+        );
+
+        thisTarget = new TargetRecord(
+                buf[2] & 0xff,
+                buf[3] & 0xff,
+                buf[4] == 1
+        );
+        nextTarget = new TargetRecord(
+                buf[5] & 0xff,
+                buf[6] & 0xff,
+                buf[7] == 1
+        );
     }
 }

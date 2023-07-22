@@ -369,6 +369,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
      * @param params                   击球参数
      * @param phy                      使用哪一个物理值
      * @param lengthAfterWall          直接碰库后白球预测线的长度
+     * @param predictPath              是否预测撞击之后的线路
      * @param checkCollisionAfterFirst 是否检查白球打到目标球后是否碰到下一颗球
      * @param recordTargetPos          是否记录第一颗碰撞球的信息
      * @param wipe                     是否还原预测前的状态
@@ -377,6 +378,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public WhitePrediction predictWhite(CuePlayParams params,
                                         Phy phy,
                                         double lengthAfterWall,
+                                        boolean predictPath,
                                         boolean checkCollisionAfterFirst,
                                         boolean recordTargetPos,
                                         boolean wipe,
@@ -396,7 +398,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         WhitePredictor whitePredictor = new WhitePredictor(cueBallClone);
 //        long st = System.currentTimeMillis();
         WhitePrediction prediction =
-                whitePredictor.predict(phy, lengthAfterWall, checkCollisionAfterFirst, recordTargetPos);
+                whitePredictor.predict(phy, lengthAfterWall, predictPath, checkCollisionAfterFirst, recordTargetPos);
 //        System.out.println("White prediction ms: " + (System.currentTimeMillis() - st));
 //        cueBall.setX(whiteX);
 //        cueBall.setY(whiteY);
@@ -1197,6 +1199,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private double dtWhenHitFirstWall = -1.0;
         private boolean notTerminated = true;
         private boolean hitWall;
+        private boolean predictPath;
         private boolean checkCollisionAfterFirst;
         private boolean recordTargetPos;
         private Phy phy;
@@ -1207,10 +1210,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         WhitePrediction predict(Phy phy,
                                 double lenAfterWall,
+                                boolean predictPath,
                                 boolean checkCollisionAfterFirst,
                                 boolean recordTargetPos) {
             this.phy = phy;
             this.lenAfterWall = lenAfterWall;
+            this.predictPath = predictPath;
             this.checkCollisionAfterFirst = checkCollisionAfterFirst;
             this.recordTargetPos = recordTargetPos;
 
@@ -1288,6 +1293,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
             if (cueBallClone.isLikelyStopped(phy)) return true;
             if (cueBallClone.isOutOfTable()) return true;
+            if (!predictPath && prediction.getFirstCollide() != null) return true;
             if (cueBallClone.tryHitPocketsBack(phy)) {
 //                cueBallClone.normalMove(phy);
                 prediction.potCueBall();

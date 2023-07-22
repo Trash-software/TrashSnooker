@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.WritableImage;
 import org.jcodec.api.SequenceEncoder;
 //import org.jcodec.api.awt.AWTSequenceEncoder;
@@ -17,6 +17,8 @@ import org.jcodec.common.io.FileChannelWrapper;
 import org.jcodec.common.io.SeekableByteChannel;
 import org.jcodec.common.model.Picture;
 import org.jcodec.common.model.Rational;
+import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.Util;
 
 import static org.jcodec.common.model.ColorSpace.RGB;
 
@@ -26,20 +28,18 @@ public class VideoConverter {
     FileOutputStream baseOut;
     SeekableByteChannel channel;
 
-    private int vBorderTop = 30;  // 隐藏菜单栏
-
     private final File outFile;
 
-    private int frameCount = 0;
     BufferedImage buffer;
+    BufferedImage cropBuffer;
     BufferedImage scaledOutput;
+    private Rectangle2D crop;
     final Picture picture;
     private final Params params;
     private int topBorder;
     private int leftBorder;
     private int centerWidth;  // 视频中央有画面部分的长宽
     private int centerHeight;
-    private double scale;
     private boolean finished;
 
     public VideoConverter(File outFile, Params params) throws IOException {
@@ -58,13 +58,27 @@ public class VideoConverter {
         if (buffer == null) {
             calculateScales(image.getWidth(), image.getHeight());
             buffer = new BufferedImage((int) image.getWidth(), (int) image.getHeight(), BufferedImage.TYPE_INT_RGB);
+            if (crop != null) {
+                cropBuffer = new BufferedImage((int) crop.getWidth(), (int) crop.getHeight(), BufferedImage.TYPE_INT_RGB);
+                System.out.printf("Crop size: (%f, %f) %d, %d\n",
+                        crop.getMinX(), crop.getMinY(),
+                        cropBuffer.getWidth(), cropBuffer.getHeight());
+            }
             scaledOutput = new BufferedImage(centerWidth, centerHeight, BufferedImage.TYPE_INT_RGB);
         }
 
         long t1 = System.currentTimeMillis();
 
         BufferedImage frame = SwingFXUtils.fromFXImage(image, buffer);
-        resizeImage(frame, scaledOutput);
+        BufferedImage resizeSrc;
+        if (crop != null) {
+            cropImage(frame);
+            resizeSrc = cropBuffer;
+        } else {
+            resizeSrc = frame;
+        }
+        
+        resizeImage(resizeSrc, scaledOutput);
 
         fromBufferedImage(scaledOutput, picture);
         long t2 = System.currentTimeMillis();
@@ -80,11 +94,15 @@ public class VideoConverter {
         return new File(dir, name + ".png");
     }
 
+    public void setCrop(Rectangle2D crop) {
+        this.crop = crop;
+    }
+
     private void calculateScales(double srcW, double srcH) {
         double wScale = params.width() / srcW;
         double hScale = params.height() / srcH;
 
-        scale = Math.min(wScale, hScale);
+        double scale = Math.min(wScale, hScale);
         leftBorder = (int) ((params.width() - srcW * scale) / 2);
         topBorder = (int) ((params.height() - srcH * scale) / 2);
         centerWidth = (int) (scale * srcW);
@@ -93,12 +111,23 @@ public class VideoConverter {
         System.out.println("Size: " + centerWidth + " " + centerHeight + " " + scale + " " +
                 leftBorder + " " + topBorder + " / " + srcW + " " + srcH);
     }
+    
+    private void cropImage(BufferedImage src) {
+        int minX = (int) crop.getMinX();
+        int minY = (int) crop.getMinY();
+        
+        for (int y = 0; y < cropBuffer.getHeight(); y++) {
+            for (int x = 0; x < cropBuffer.getWidth(); x++) {
+                cropBuffer.setRGB(x, y, src.getRGB(x + minX, y + minY));
+            }
+        }
+    }
 
     private void fillDstBackground(Picture dst) {
         byte[] dstData = dst.getPlaneData(0);
-        Arrays.fill(dstData, (byte) -128);
+        Arrays.fill(dstData, (byte) -96);
     }
-    
+
     private void resizeImage(BufferedImage src, BufferedImage dst) {
         java.awt.Image scaled = src.getScaledInstance(centerWidth, centerHeight, BufferedImage.SCALE_AREA_AVERAGING);
         dst.getGraphics().drawImage(scaled, 0, 0, null);
@@ -122,21 +151,6 @@ public class VideoConverter {
                 dstData[index + 2] = (byte) ((rgb1 & 0xff) - 128);
             }
         }
-
-
-//        for (int i = vBorderTop; i < src.getHeight(); i++) {
-//            for (int j = 0; j < src.getWidth(); j++) {
-//                int rgb1 = src.getRGB(j, i);
-//                dstData[off++] = (byte) (((rgb1 >> 16) & 0xff) - 128);
-//                dstData[off++] = (byte) (((rgb1 >> 8) & 0xff) - 128);
-//                dstData[off++] = (byte) ((rgb1 & 0xff) - 128);
-//            }
-//            for (int j = 0; j < widthFill; j++) {
-//                dstData[off++] = 127;
-//                dstData[off++] = 127;
-//                dstData[off++] = 127;
-//            }
-//        }
     }
 
     public void finish() throws IOException {
@@ -163,7 +177,16 @@ public class VideoConverter {
         return params;
     }
 
-    public record Params(int fps, int width, int height) {
+    public record Params(int fps, int width, int height, Area area) {
+    }
 
+    public enum Area {
+        GAME_PANE,
+        FULL;
+
+        @Override
+        public String toString() {
+            return App.getStrings().getString(Util.toLowerCamelCase("EXPORT_AREA_" + name()));
+        }
     }
 }

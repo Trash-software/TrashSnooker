@@ -334,6 +334,11 @@ public class Util {
 //        if (money < 10000) {
 //            return String.valueOf(money);
 //        }
-        return "$" + money;
+        Deque<String> out = new ArrayDeque<>();
+        while (money > 0) {
+            out.addFirst(String.valueOf(money % 1000));
+            money /= 1000;
+        }
+        return String.join(",", out);
     }
 }

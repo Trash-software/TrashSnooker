@@ -1,19 +1,19 @@
 {
-  "p1": "custom_E8BDBBE69DBEE58FB7",
+  "p1": "custom_E5B08FE4BB99E5A5B3",
   "game": {
     "p1": {
       "playerNumber": 1,
       "handFeelEffort": 1,
-      "person": "custom_E8BDBBE69DBEE58FB7",
+      "person": "custom_E5B08FE4BB99E5A5B3",
       "playerType": "PLAYER",
       "playCue": "GirlCue",
       "breakCue": "GirlCue"
     },
-    "p1Wins": 1,
+    "p1Wins": 2,
     "p2": {
       "playerNumber": 2,
-      "handFeelEffort": 1.1042550723325124,
-      "person": "Yan Bingtao",
+      "handFeelEffort": 0.8868333157444972,
+      "person": "Jack Lisowski",
       "playerType": "COMPUTER",
       "playCue": "stdSnookerCue",
       "breakCue": "stdSnookerCue"
@@ -25,24 +25,26 @@
       "table": {
         "tableOrdinal": 0,
         "pocketDifficultyOrdinal": 3,
-        "holeSizeOrdinal": 3
+        "holeSizeOrdinal": 1
       }
     },
     "winRecords": {
       "1": 1,
-      "2": 2
+      "2": 2,
+      "3": 2,
+      "4": 1
     },
-    "p2Wins": 1,
-    "startTime": 1688315580752,
+    "p2Wins": 2,
+    "startTime": 1689509509933,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_1-4",
-    "totalFrames": 3,
+    "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-10",
+    "totalFrames": 5,
     "cloth": {
-      "smoothness": "FAST",
+      "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
     "p1Breaks": false
   },
-  "p2": "Yan Bingtao",
-  "stage": "PRE_ROUND_1"
+  "p2": "Jack Lisowski",
+  "stage": "QUARTER_FINAL"
 }

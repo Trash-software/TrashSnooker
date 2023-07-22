@@ -1,820 +1,343 @@
 {
-  "stageIndex": 3,
+  "stageIndex": 2,
   "seedRanks": {
-    "random_player_47": 79,
-    "random_player_46": 76,
-    "random_player_108": 85,
-    "random_player_49": 78,
-    "random_player_48": 88,
-    "random_player_103": 50,
-    "random_player_43": 86,
-    "random_player_86": 49,
-    "random_player_44": 55,
-    "random_player_88": 58,
-    "custom_player_1": 5,
-    "random_player_0": 45,
-    "custom_player_3": 17,
-    "custom_player_2": 13,
-    "custom_player_4": 10,
-    "random_player_9": 46,
-    "random_player_8": 65,
-    "random_player_6": 61,
-    "random_player_2": 82,
-    "random_player_94": 94,
-    "Summer Brave": 37,
-    "random_player_93": 63,
-    "Lao Youtiao": 21,
-    "random_player_92": 44,
-    "random_player_118": 89,
-    "Mou Moumou": 16,
-    "random_player_117": 72,
-    "random_player_37": 84,
-    "random_player_32": 52,
-    "random_player_115": 56,
-    "random_player_31": 66,
-    "random_player_75": 68,
-    "Kid": 25,
-    "random_player_33": 75,
-    "random_player_113": 83,
-    "custom_player_177": 41,
-    "random_player_39": 64,
-    "High Stick": 12,
-    "custom_player_178": 38,
-    "custom_player_180": 40,
-    "custom_player_181": 9,
-    "random_player_110": 91,
+    "Stuart Bingham": 1,
+    "Yan Bingtao": 11,
+    "Matthew Stevens": 16,
+    "custom_player_1": 15,
+    "Ding Junhui": 8,
+    "Jack Lisowski": 9,
+    "Trump": 10,
+    "Mark Williams": 4,
+    "Mark Allen": 5,
+    "Selby": 12,
+    "O_Sullivan": 6,
+    "Neil Robertson": 3,
     "custom_E5B08FE4BB99E5A5B3": 2,
-    "Wang Xu": 29,
-    "random_player_84": 74,
-    "random_player_81": 95,
-    "random_player_80": 90,
-    "random_player_68": 51,
-    "random_player_24": 81,
-    "Yan Bingtao": 7,
-    "random_player_27": 57,
-    "random_player_127": 60,
-    "Liu Mang": 24,
-    "random_player_64": 87,
-    "random_player_23": 77,
-    "random_player_124": 48,
-    "random_player_66": 54,
-    "custom_656467": 26,
-    "custom_player_169": 31,
-    "custom_player_166": 15,
-    "custom_player_165": 18,
-    "Glass Heart": 6,
-    "custom_player_168": 34,
-    "custom_player_167": 27,
-    "Selby": 1,
-    "custom_player_173": 35,
-    "custom_player_172": 28,
-    "Noob": 39,
-    "custom_player_174": 30,
-    "Zhao Xintong": 4,
-    "Mang Dali": 20,
-    "custom_player_171": 36,
-    "custom_player_170": 32,
-    "random_player_122": 96,
-    "random_player_30": 59,
-    "random_player_14": 53,
-    "Mang Zi": 42,
-    "random_player_16": 71,
-    "random_player_53": 93,
-    "custom_E8BDBBE69DBEE58FB7": 19,
-    "random_player_12": 80,
-    "random_player_99": 92,
-    "Fat Guy": 8,
-    "custom_player_159": 33,
-    "Ding Junhui": 3,
-    "random_player_18": 47,
-    "random_player_17": 62,
-    "random_player_19": 67,
-    "Give Emperor": 22,
-    "custom_E78B97E697A5E79A84": 23,
-    "custom_player_160": 11,
-    "Worst Professional": 14,
-    "random_player_60": 70,
-    "random_player_63": 73,
-    "Baggage Brother": 43,
-    "random_player_62": 69
+    "Stephen Maguire": 14,
+    "Murphy": 7,
+    "John Wizard": 13
   },
-  "championshipId": "eight_weilin_open",
+  "championshipId": "masters",
   "matchTree": {"root": {
     "p1": {
       "p1": {
+        "p1wins": 1,
         "p1": {
-          "p1": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_181"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "Mang Zi"},
-                "p2": {"winner": "custom_player_180"},
-                "winner": "Mang Zi",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-0",
-                "p2wins": 0
-              },
-              "winner": "custom_player_181",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-32",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "Mou Moumou"},
-              "p2": {
-                "p1wins": 0,
-                "p1": {"winner": "random_player_6"},
-                "p2": {"winner": "random_player_24"},
-                "winner": "random_player_24",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-1",
-                "p2wins": 1
-              },
-              "winner": "Mou Moumou",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-33",
-              "p2wins": 0
-            },
-            "winner": "custom_player_181",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-64",
-            "p2wins": 0
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_2"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_64"},
-                "p2": {"winner": "random_player_8"},
-                "winner": "random_player_64",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-2",
-                "p2wins": 0
-              },
-              "winner": "custom_player_2",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-34",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "Mang Dali"},
-              "p2": {
-                "p1wins": 0,
-                "p1": {"winner": "random_player_2"},
-                "p2": {"winner": "random_player_110"},
-                "winner": "random_player_110",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-3",
-                "p2wins": 1
-              },
-              "winner": "Mang Dali",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-35",
-              "p2wins": 0
-            },
-            "winner": "custom_player_2",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-65",
-            "p2wins": 0
-          },
-          "stage": "ROUND_2",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_2-80"
+          "p1wins": 2,
+          "p1": {"winner": "Mark Williams"},
+          "p2": {"winner": "Yan Bingtao"},
+          "winner": "Mark Williams",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-0",
+          "p2wins": 1
         },
         "p2": {
-          "p1": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_160"},
-              "p2": {
-                "p1wins": 0,
-                "p1": {"winner": "random_player_60"},
-                "p2": {"winner": "random_player_63"},
-                "winner": "random_player_63",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-4",
-                "p2wins": 1
-              },
-              "winner": "custom_player_160",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-36",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "Yan Bingtao"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_30"},
-                "p2": {"winner": "random_player_9"},
-                "winner": "random_player_30",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-5",
-                "p2wins": 0
-              },
-              "winner": "Yan Bingtao",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-37",
-              "p2wins": 0
-            },
-            "winner": "custom_player_160",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-66",
-            "p2wins": 1
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_1"},
-              "p2": {
-                "p1wins": 0,
-                "p1": {"winner": "custom_player_173"},
-                "p2": {"winner": "random_player_32"},
-                "winner": "random_player_32",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-6",
-                "p2wins": 1
-              },
-              "winner": "custom_player_1",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-38",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "custom_player_167"},
-              "p2": {
-                "p1wins": 0,
-                "p1": {"winner": "custom_player_168"},
-                "p2": {"winner": "random_player_122"},
-                "winner": "random_player_122",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-7",
-                "p2wins": 1
-              },
-              "winner": "random_player_122",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-39",
-              "p2wins": 1
-            },
-            "winner": "custom_player_1",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-67",
-            "p2wins": 0
-          },
-          "stage": "ROUND_2",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_2-81"
+          "p1wins": 2,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "Matthew Stevens"},
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-1",
+          "p2wins": 1
         },
+        "winner": "O_Sullivan",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-QUARTER_FINAL-88"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-8",
+        "p2wins": 3
       },
       "p2": {
+        "p1wins": 3,
         "p1": {
-          "p1": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_3"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_14"},
-                "p2": {"winner": "custom_player_178"},
-                "winner": "random_player_14",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-8",
-                "p2wins": 0
-              },
-              "winner": "custom_player_3",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-40",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Glass Heart"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_68"},
-                "p2": {"winner": "Noob"},
-                "winner": "random_player_68",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-9",
-                "p2wins": 0
-              },
-              "winner": "random_player_68",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-41",
-              "p2wins": 1
-            },
-            "winner": "custom_player_3",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-68",
-            "p2wins": 0
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
-              "p2": {
-                "p1wins": 0,
-                "p1": {"winner": "random_player_47"},
-                "p2": {"winner": "random_player_16"},
-                "winner": "random_player_16",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-10",
-                "p2wins": 1
-              },
-              "winner": "custom_E5B08FE4BB99E5A5B3",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-42",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "Worst Professional"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_93"},
-                "p2": {"winner": "random_player_66"},
-                "winner": "random_player_93",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-11",
-                "p2wins": 0
-              },
-              "winner": "Worst Professional",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-43",
-              "p2wins": 0
-            },
-            "winner": "custom_E5B08FE4BB99E5A5B3",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-69",
-            "p2wins": 0
-          },
-          "stage": "ROUND_2",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_2-82"
+          "p1wins": 2,
+          "p1": {"winner": "Stuart Bingham"},
+          "p2": {"winner": "custom_player_1"},
+          "winner": "Stuart Bingham",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-2",
+          "p2wins": 1
         },
         "p2": {
-          "p1": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 0,
-              "p1": {"winner": "Liu Mang"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_86"},
-                "p2": {"winner": "random_player_127"},
-                "winner": "random_player_86",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-12",
-                "p2wins": 0
-              },
-              "winner": "random_player_86",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-44",
-              "p2wins": 1
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_656467"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_124"},
-                "p2": {"winner": "random_player_0"},
-                "winner": "random_player_124",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-13",
-                "p2wins": 0
-              },
-              "winner": "custom_656467",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-45",
-              "p2wins": 0
-            },
-            "winner": "random_player_86",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-70",
-            "p2wins": 0
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_165"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_17"},
-                "p2": {"winner": "random_player_18"},
-                "winner": "random_player_17",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-14",
-                "p2wins": 0
-              },
-              "winner": "custom_player_165",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-46",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "custom_player_166"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_84"},
-                "p2": {"winner": "random_player_49"},
-                "winner": "random_player_84",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-15",
-                "p2wins": 0
-              },
-              "winner": "random_player_84",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-47",
-              "p2wins": 1
-            },
-            "winner": "custom_player_165",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-71",
-            "p2wins": 0
-          },
-          "stage": "ROUND_2",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_2-83"
+          "p1wins": 2,
+          "p1": {"winner": "Ding Junhui"},
+          "p2": {"winner": "Trump"},
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-3",
+          "p2wins": 0
         },
+        "winner": "Stuart Bingham",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-QUARTER_FINAL-89"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-9",
+        "p2wins": 1
       },
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-SEMI_FINAL-92"
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-SEMI_FINAL-12"
     },
     "p2": {
       "p1": {
         "p1": {
-          "p1": {
-            "p1wins": 1,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "Lao Youtiao"},
-              "p2": {
-                "p1wins": 0,
-                "p1": {"winner": "random_player_37"},
-                "p2": {"winner": "random_player_103"},
-                "winner": "random_player_103",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-16",
-                "p2wins": 1
-              },
-              "winner": "Lao Youtiao",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-48",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "custom_player_170"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_115"},
-                "p2": {"winner": "random_player_99"},
-                "winner": "random_player_115",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-17",
-                "p2wins": 0
-              },
-              "winner": "random_player_115",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-49",
-              "p2wins": 1
-            },
-            "winner": "random_player_115",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-72",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_4"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_118"},
-                "p2": {"winner": "random_player_113"},
-                "winner": "random_player_118",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-18",
-                "p2wins": 0
-              },
-              "winner": "custom_player_4",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-50",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "High Stick"},
-              "p2": {
-                "p1wins": 0,
-                "p1": {"winner": "random_player_48"},
-                "p2": {"winner": "random_player_94"},
-                "winner": "random_player_94",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-19",
-                "p2wins": 1
-              },
-              "winner": "High Stick",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-51",
-              "p2wins": 0
-            },
-            "winner": "custom_player_4",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-73",
-            "p2wins": 0
-          },
-          "stage": "ROUND_2",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_2-84"
+          "p1wins": 2,
+          "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+          "p2": {"winner": "John Wizard"},
+          "winner": "custom_E5B08FE4BB99E5A5B3",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-4",
+          "p2wins": 1
         },
         "p2": {
-          "p1": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "Selby"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_12"},
-                "p2": {"winner": "custom_player_171"},
-                "winner": "random_player_12",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-20",
-                "p2wins": 0
-              },
-              "winner": "Selby",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-52",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "custom_E8BDBBE69DBEE58FB7"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_108"},
-                "p2": {"winner": "custom_player_159"},
-                "winner": "random_player_108",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-21",
-                "p2wins": 0
-              },
-              "winner": "random_player_108",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-53",
-              "p2wins": 1
-            },
-            "winner": "Selby",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-74",
-            "p2wins": 1
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_169"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_92"},
-                "p2": {"winner": "random_player_31"},
-                "winner": "random_player_92",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-22",
-                "p2wins": 0
-              },
-              "winner": "custom_player_169",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-54",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_player_174"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_23"},
-                "p2": {"winner": "random_player_88"},
-                "winner": "random_player_23",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-23",
-                "p2wins": 0
-              },
-              "winner": "custom_player_174",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-55",
-              "p2wins": 0
-            },
-            "winner": "custom_player_169",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-75",
-            "p2wins": 0
-          },
-          "stage": "ROUND_2",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_2-85"
+          "p1wins": 1,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {"winner": "Jack Lisowski"},
+          "winner": "Jack Lisowski",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-5",
+          "p2wins": 2
         },
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-QUARTER_FINAL-90"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-10"
       },
       "p2": {
+        "p1wins": 3,
         "p1": {
-          "p1": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 0,
-              "p1": {"winner": "custom_player_172"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_44"},
-                "p2": {"winner": "custom_player_177"},
-                "winner": "random_player_44",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-24",
-                "p2wins": 0
-              },
-              "winner": "random_player_44",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-56",
-              "p2wins": 1
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "Ding Junhui"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "Summer Brave"},
-                "p2": {"winner": "random_player_19"},
-                "winner": "Summer Brave",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-25",
-                "p2wins": 0
-              },
-              "winner": "Ding Junhui",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-57",
-              "p2wins": 0
-            },
-            "winner": "random_player_44",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-76",
-            "p2wins": 1
-          },
-          "p2": {
-            "p1wins": 1,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "custom_E78B97E697A5E79A84"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_80"},
-                "p2": {"winner": "random_player_75"},
-                "winner": "random_player_80",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-26",
-                "p2wins": 0
-              },
-              "winner": "custom_E78B97E697A5E79A84",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-58",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Kid"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_39"},
-                "p2": {"winner": "random_player_53"},
-                "winner": "random_player_39",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-27",
-                "p2wins": 0
-              },
-              "winner": "random_player_39",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-59",
-              "p2wins": 1
-            },
-            "winner": "random_player_39",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-77",
-            "p2wins": 2
-          },
-          "stage": "ROUND_2",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_2-86"
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "Selby"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-6",
+          "p2wins": 0
         },
         "p2": {
-          "p1": {
-            "p1wins": 2,
-            "p1": {
-              "p1wins": 0,
-              "p1": {"winner": "Wang Xu"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_117"},
-                "p2": {"winner": "random_player_46"},
-                "winner": "random_player_117",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-28",
-                "p2wins": 0
-              },
-              "winner": "random_player_117",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-60",
-              "p2wins": 1
-            },
-            "p2": {
-              "p1wins": 1,
-              "p1": {"winner": "Fat Guy"},
-              "p2": {
-                "p1wins": 0,
-                "p1": {"winner": "Baggage Brother"},
-                "p2": {"winner": "random_player_62"},
-                "winner": "random_player_62",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-29",
-                "p2wins": 1
-              },
-              "winner": "Fat Guy",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-61",
-              "p2wins": 0
-            },
-            "winner": "random_player_117",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-78",
-            "p2wins": 0
-          },
-          "p2": {
-            "p1wins": 1,
-            "p1": {
-              "p1wins": 1,
-              "p1": {"winner": "Zhao Xintong"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_33"},
-                "p2": {"winner": "random_player_81"},
-                "winner": "random_player_33",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-30",
-                "p2wins": 0
-              },
-              "winner": "Zhao Xintong",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-62",
-              "p2wins": 0
-            },
-            "p2": {
-              "p1wins": 0,
-              "p1": {"winner": "Give Emperor"},
-              "p2": {
-                "p1wins": 1,
-                "p1": {"winner": "random_player_27"},
-                "p2": {"winner": "random_player_43"},
-                "winner": "random_player_27",
-                "stage": "PRE_ROUND_1",
-                "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_1-31",
-                "p2wins": 0
-              },
-              "winner": "random_player_27",
-              "stage": "PRE_ROUND_2",
-              "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-PRE_ROUND_2-63",
-              "p2wins": 1
-            },
-            "winner": "random_player_27",
-            "stage": "ROUND_1",
-            "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_1-79",
-            "p2wins": 2
-          },
-          "stage": "ROUND_2",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-ROUND_2-87"
+          "p1wins": 1,
+          "p1": {"winner": "Murphy"},
+          "p2": {"winner": "Stephen Maguire"},
+          "winner": "Stephen Maguire",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-7",
+          "p2wins": 2
         },
+        "winner": "Neil Robertson",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-QUARTER_FINAL-91"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-11",
+        "p2wins": 1
       },
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-SEMI_FINAL-93"
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-SEMI_FINAL-13"
     },
     "stage": "FINAL",
-    "matchId": "custom_E5B08FE4BB99E5A5B3+2026+eight_weilin_open-FINAL-94"
+    "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-FINAL-14"
   }},
   "finished": false,
-  "timestamp": "2026/12/10"
+  "snookerBreaks": [
+    {
+      "score": 132,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-9",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 131,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-11",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 128,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-2",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 122,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-9",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 121,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-11",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 115,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-11",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 100,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-1",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 99,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-11",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 90,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-8",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 90,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-6",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 89,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-0",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 79,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-7",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 78,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-2",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 74,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-7",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 67,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-6",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 65,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-5",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 63,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-8",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 63,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-1",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 62,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-9",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 62,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-2",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 59,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-0",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 57,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-1",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 53,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-3",
+      "playerId": "Trump"
+    },
+    {
+      "score": 52,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-7",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 51,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-8",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 50,
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-4",
+      "playerId": "custom_E5B08FE4BB99E5A5B3"
+    }
+  ],
+  "timestamp": "2027/1/15"
 }

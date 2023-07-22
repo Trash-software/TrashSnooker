@@ -25,7 +25,7 @@ public class PlayerPerson {
     public final double psy;
     public final boolean isRandom;
     private final String playerId;
-    private final String name;
+    private final String name;  // 名字的原版
     private transient final String shownName;
     private final double maxPowerPercentage;
     private final double controllablePowerPercentage;
@@ -82,7 +82,7 @@ public class PlayerPerson {
         this.name = name;
         this.shownName = (isRandom ? getShownNameOfRandom(this.playerId) :
                 (needTranslate && PinyinDict.getInstance().needTranslate(name)) ?
-                PinyinDict.getInstance().translateChineseName(name) : name);
+                        PinyinDict.getInstance().translateChineseName(name) : name);
         this.category = category;
         this.maxPowerPercentage = maxPowerPercentage;
         this.controllablePowerPercentage = controllablePowerPercentage;
@@ -104,7 +104,7 @@ public class PlayerPerson {
         this.aiPlayStyle = aiPlayStyle == null ? deriveAiStyle() : aiPlayStyle;
         this.handBody = handBody;
         this.sex = sex;
-        
+
         this.participates = participates;
     }
 
@@ -554,7 +554,7 @@ public class PlayerPerson {
 
     @Override
     public String toString() {
-        return name;
+        return playerId;
     }
 
     @Override
@@ -562,7 +562,7 @@ public class PlayerPerson {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlayerPerson that = (PlayerPerson) o;
-        return Objects.equals(name, that.name);
+        return Objects.equals(playerId, that.playerId);
     }
 
     @Override
@@ -617,7 +617,7 @@ public class PlayerPerson {
     public boolean isPlayerOf(GameRule gameRule) {
         return participates.containsKey(gameRule);
     }
-    
+
     public double skillLevelOfGame(GameRule gameRule) {
         return participates.getOrDefault(gameRule, 0.0);
     }
@@ -736,6 +736,10 @@ public class PlayerPerson {
             return name;
         }
 
+        public String getShownName() {
+            return shownName;
+        }
+
         /**
          * @return 非惯用手的好坏
          */
@@ -817,42 +821,41 @@ public class PlayerPerson {
                 perks--;
                 double many = addPerksHowMany(addWhat);
                 switch (addWhat) {
-                    case PerkManager.AIMING:
+                    case PerkManager.AIMING -> {
                         aiming += many;
                         aiming = Math.min(aiming, 100.0);
-                        break;
-                    case PerkManager.CUE_PRECISION:
+                    }
+                    case PerkManager.CUE_PRECISION -> {
                         cuePrecision += many;
                         cuePrecision = Math.min(cuePrecision, 100.0);
-                        break;
-                    case PerkManager.POWER:
+                    }
+                    case PerkManager.POWER -> {
                         normalPower += many;
                         maxPower += many / 0.9;
                         maxPower = Math.min(maxPower, 100.0 * getSex().powerMul);
                         normalPower = Math.min(normalPower, 100.0);
-                        break;
-                    case PerkManager.POWER_CONTROL:
+                    }
+                    case PerkManager.POWER_CONTROL -> {
                         powerControl += many;
                         powerControl = Math.min(powerControl, 100.0);
-                        break;
-                    case PerkManager.SPIN:
+                    }
+                    case PerkManager.SPIN -> {
                         spin += many;
                         spin = Math.min(spin, 100.0);
-                        break;
-                    case PerkManager.SPIN_CONTROL:
+                    }
+                    case PerkManager.SPIN_CONTROL -> {
                         spinControl += many;
                         spinControl = Math.min(spinControl, 100.0);
-                        break;
-                    case PerkManager.ANTI_HAND:
+                    }
+                    case PerkManager.ANTI_HAND -> {
                         handBody.getAntiHand().skill += many;
                         handBody.getAntiHand().skill = Math.min(handBody.getAntiHand().skill, 100.0);
-                        break;
-                    case PerkManager.REST:
+                    }
+                    case PerkManager.REST -> {
                         handBody.getRest().skill += many;
                         handBody.getRest().skill = Math.min(handBody.getRest().skill, 100.0);
-                        break;
-                    default:
-                        throw new RuntimeException("Unknown type " + addWhat);
+                    }
+                    default -> throw new RuntimeException("Unknown type " + addWhat);
                 }
             }
         }

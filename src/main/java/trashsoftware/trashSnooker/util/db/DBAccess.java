@@ -22,7 +22,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DBAccess {
-    public static final boolean SAVE = false;
+    public static final boolean SAVE = true;
     public static final boolean RECORD = true;
     private static DBAccess database;
 

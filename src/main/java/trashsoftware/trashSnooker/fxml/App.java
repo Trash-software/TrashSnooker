@@ -8,6 +8,7 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
@@ -33,7 +34,7 @@ public class App extends Application {
             "";
     public static final Font FONT = CLASSIFIER.equals("mac") ?
             new Font("sansserif", 12) :
-            Font.getDefault();
+            new Font(Font.getDefault().getName(), 12);
     public static final boolean PRINT_DEBUG = false;
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     private static ResourceBundle strings;
@@ -84,11 +85,11 @@ public class App extends Application {
 //        scaleRatio = 0.0;
     }
 
-    public static void scaleGameStage(Stage stage) {
-        scaleGameStage(stage, 1.0);
+    public static void scaleGameStage(Stage stage, GameView gameView) {
+        scaleGameStage(stage, gameView, 1.0);
     }
 
-    public static void scaleGameStage(Stage stage, double scaleMul) {
+    public static void scaleGameStage(Stage stage, GameView gameView, double scaleMul) {
         stage.getIcons().add(ResourcesLoader.getInstance().getIcon());
         boolean fullScreen = switch (ConfigLoader.getInstance().getString("display")) {
             case "fullScreen" -> true;
@@ -133,13 +134,17 @@ public class App extends Application {
         }
 
         // 防止杆把父节点挤大
-        Rectangle clipBound = new Rectangle(stage.getScene().getWidth(), stage.getScene().getHeight());
-        stage.getScene().getRoot().setClip(clipBound);
+        Pane contentPane = gameView.getContentPane();
+        Rectangle clipBound = new Rectangle(contentPane.getWidth(), contentPane.getHeight());
+        System.out.println(clipBound.getWidth() + " " + clipBound.getHeight());
+        contentPane.setClip(clipBound);
 
         stage.widthProperty().addListener(((observableValue, aBoolean, t1) -> {
             stage.setX(0);
             stage.setY(0);
         }));
+
+//        gameView.setupAfterShow();
     }
 
     public static ResourceBundle getStrings() {

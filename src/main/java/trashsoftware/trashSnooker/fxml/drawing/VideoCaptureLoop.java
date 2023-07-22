@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.fxml.drawing;
 
 import javafx.application.Platform;
 import trashsoftware.trashSnooker.recorder.VideoCapture;
+import trashsoftware.trashSnooker.util.EventLogger;
 
 public class VideoCaptureLoop implements GameLoop {
 
@@ -28,7 +29,15 @@ public class VideoCaptureLoop implements GameLoop {
 
     private void oneFrameWrapper() {
         Platform.runLater(() -> {
-            frame.run();
+            try {
+                frame.run();
+            } catch (Exception e) {
+                running = false;
+                videoCapture.fail();
+                EventLogger.error(e);
+                return;
+            }
+            
             relativeTime += frameTimeMs;
             frameCount++;
             videoCapture.getUpdater().update(frameCount, videoCapture.totalFrames);
@@ -63,5 +72,10 @@ public class VideoCaptureLoop implements GameLoop {
     @Override
     public long msSinceAnimationBegun() {
         return (long) (relativeTime - animationBeginTime);
+    }
+
+    @Override
+    public long currentTimeMillis() {
+        return (long) relativeTime;
     }
 }

@@ -663,7 +663,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         cueParams,
                         0.0
                 );
-                WhitePrediction wp = predictWhite(cpp, entireGame.predictPhy, 10000.0, false,
+                WhitePrediction wp = predictWhite(cpp, entireGame.predictPhy, 10000.0, 
+                        false,
+                        false,
                         false, true, false);
                 if (legalSet.contains(wp.getFirstCollide())) {
                     System.out.println("Solvable! Check foul and miss in " + (System.currentTimeMillis() - st) + " ms, " +

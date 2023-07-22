@@ -101,7 +101,7 @@ public class AbilityShower extends GridPane {
         PlayerPerson.ReadableAbility realAbility = perkManager.getOriginalAbility();
         PlayerPerson.ReadableAbility preview = perkManager.getShownAbility();
         
-        nameLabel.setText(realAbility.getName());
+        nameLabel.setText(realAbility.getShownName());
         categoryLabel.setText(PlayerPerson.getPlayerCategoryShown(realAbility.category, strings));
         
         sexLabel.setText(realAbility.getSex().toString());

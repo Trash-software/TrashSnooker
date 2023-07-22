@@ -5,6 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import trashsoftware.trashSnooker.fxml.widgets.AbilityShower?>
 <?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="trashsoftware.trashSnooker.fxml.CareerView"
@@ -27,12 +29,21 @@
         <HBox spacing="10.0" alignment="CENTER_LEFT">
             <Label fx:id="levelLabel"/>
             <ProgressBar fx:id="levelExpBar" prefWidth="180.0" HBox.hgrow="ALWAYS"/>
-            <Label fx:id="levelExpLabel"/>
+            <HBox alignment="CENTER_LEFT" spacing="5.0">
+                <ImageView fx:id="expImage"/>
+                <Label fx:id="levelExpLabel"/>
+            </HBox>
             <Button text="%levelUp" fx:id="levelUpBtn" onAction="#levelUpAction" visible="false"/>
         </HBox>
         <HBox spacing="10.0">
-            <Label fx:id="moneyLabel"/>
-            <Label fx:id="achievementsLabel" text="%achievements" onMouseClicked="#achievementsAction"/>
+            <HBox alignment="CENTER_LEFT" spacing="5.0">
+                <ImageView fx:id="moneyImage"/>
+                <Label fx:id="moneyLabel"/>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#achievementsAction">
+                <ImageView fx:id="achIconImage"/>
+                <Label fx:id="achievementsLabel"/>
+            </HBox>
         </HBox>
         <AbilityShower fx:id="abilityShower"/>
         <HBox spacing="20.0" alignment="CENTER">

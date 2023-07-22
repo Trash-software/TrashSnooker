@@ -34,9 +34,9 @@
     </ScrollPane>
 
     <HBox spacing="10.0">
-        <VBox minWidth="180.0" prefWidth="280" spacing="10.0">
+        <VBox minWidth="200.0" prefWidth="320" spacing="10.0">
+            <Label fx:id="currentStageLabel"/>
             <HBox spacing="10.0" alignment="CENTER_LEFT">
-                <Label fx:id="currentStageLabel"/>
                 <Label fx:id="humanOpponentLabel"/>
                 <Button fx:id="opponentInfoBtn" onAction="#opponentInfoAction" text="(?)" 
                         disable="true"/>

@@ -161,6 +161,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             boolean allowPocketCorner
     ) {
         WhitePrediction wp = copy.predictWhite(cpp, phy, 50000.0,
+                true,
                 true, true, false,
                 false);  // 这里不用clone，因为整个game都是clone的
         double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
@@ -597,6 +598,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             whitePath = iac.whitePrediction.getWhitePath();
         } else {
             WhitePrediction wp = game.predictWhite(iac.params, game.getEntireGame().predictPhy, 0.0,
+                    true,
                     true, false, true, true);
             whitePath = wp.getWhitePath();
         }
@@ -1813,6 +1815,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             );
             // 直接能打到的球，必不会在打到目标球之前碰库
             WhitePrediction wp = game.predictWhite(params, phy, 0.0,
+                    true,
                     true, false, true, true);
             if (wp.getFirstCollide() == null) {
                 // 连球都碰不到，没吃饭？

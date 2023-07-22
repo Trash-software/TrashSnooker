@@ -306,7 +306,7 @@ public class CareerTrainingView extends ChildInitializable {
 
             stage.show();
 
-            App.scaleGameStage(stage);
+            App.scaleGameStage(stage, gameView);
         } catch (Exception e) {
             EventLogger.error(e);
         }

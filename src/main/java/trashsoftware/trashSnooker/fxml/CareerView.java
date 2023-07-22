@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -24,6 +25,7 @@ import trashsoftware.trashSnooker.fxml.widgets.AbilityShower;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
+import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -80,6 +82,8 @@ public class CareerView extends ChildInitializable {
     Label selectedPlayerAchievements, selectedPlayerGameTypesLabel;
     @FXML
     Button skipChampBtn;
+    @FXML
+    ImageView expImage, moneyImage, achIconImage;
     CareerManager careerManager;
     private PerkManager perkManager;
     private Stage selfStage;
@@ -106,6 +110,7 @@ public class CareerView extends ChildInitializable {
         initTypeBox();
         initTable();
         initAwardsTable();
+        setupImages();
     }
 
     @Override
@@ -123,6 +128,26 @@ public class CareerView extends ChildInitializable {
         AchManager.getInstance().showAchievementPopup();
         
         refreshGui();
+    }
+    
+    private void setupImages() {
+        double iconHeight = App.FONT.getSize() * 1.2;
+        double iconWidth = iconHeight * 1.773;
+
+        expImage.setSmooth(true);
+        expImage.setFitHeight(iconHeight);
+        expImage.setFitWidth(iconWidth);
+        expImage.setImage(ResourcesLoader.getInstance().getExpIcon());
+
+        moneyImage.setSmooth(true);
+        moneyImage.setFitHeight(iconHeight);
+        moneyImage.setFitWidth(iconWidth);
+        moneyImage.setImage(ResourcesLoader.getInstance().getMoneyIcon());
+
+        achIconImage.setSmooth(true);
+        achIconImage.setFitHeight(iconHeight * 1.25);
+        achIconImage.setFitWidth(iconHeight * 1.25);
+        achIconImage.setImage(ResourcesLoader.getInstance().getAwardIcon());
     }
 
     private void refreshPersonalAwardsTable() {
@@ -340,7 +365,7 @@ public class CareerView extends ChildInitializable {
         moneyLabel.setText(Util.moneyToReadable(money));
         
         int ach = AchManager.getInstance().getNCompletedAchievements();
-        achievementsLabel.setText(strings.getString("achievements") + ": " + ach);
+        achievementsLabel.setText(String.valueOf(ach));
 
         refreshRanks();
         refreshPersonalAwardsTable();

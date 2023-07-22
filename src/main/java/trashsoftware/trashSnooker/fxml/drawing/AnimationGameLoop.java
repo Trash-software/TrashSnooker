@@ -40,6 +40,11 @@ public class AnimationGameLoop extends AnimationTimer implements GameLoop {
     }
 
     @Override
+    public long currentTimeMillis() {
+        return System.currentTimeMillis();
+    }
+
+    @Override
     public void start() {
         super.start();
 

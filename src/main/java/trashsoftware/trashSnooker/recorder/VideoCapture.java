@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.recorder;
 
 import javafx.beans.property.*;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
@@ -14,7 +15,11 @@ import java.io.IOException;
 public class VideoCapture {
     
     public final long processStartTime = System.currentTimeMillis();
-    public final int totalFrames;  // 视频的总帧数，与replay不一定一样
+    public int totalFrames;  // 视频导出部分的帧数
+    
+    public final int beginCueIndex;
+    public final int endCueIndex;
+    private final int gapMsBtwCue;
     
     final VideoExportView.ProgressUpdater updater;
     
@@ -28,24 +33,53 @@ public class VideoCapture {
                         GameReplay replay, 
                         VideoConverter.Params videoParams, 
                         int gapMsBtwCue,
+                        int beginCueIndex,
+                        int endCueIndex,
                         VideoExportView.ProgressUpdater updater,
                         GameView view) throws IOException {
-        params.setFill(Color.TRANSPARENT);
         this.videoParams = videoParams;
         this.replay = replay;
         this.updater = updater;
         this.view = view;
+        this.beginCueIndex = beginCueIndex;
+        this.endCueIndex = endCueIndex;
+        this.gapMsBtwCue = gapMsBtwCue;
+
+//        params.setFill(Color.TRANSPARENT);
+        
+        readReplayContent();
+        
+        videoConverter = new VideoConverter(outFile, videoParams);
+    }
+    
+    public void setupScreenshotParams(Rectangle2D viewport) {
+        videoConverter.setCrop(viewport);
+//        params.setViewport(viewport);
+    }
+
+    public VideoConverter.Params getVideoParams() {
+        return videoParams;
+    }
+
+    private void readReplayContent() {
+        replay.skipCues(beginCueIndex);
         
         int fps = videoParams.fps();
+        int idleFrames = gapMsBtwCue / fps;
+//        totalFrames = -idleFrames;
+        while (replay.getCueIndex() < endCueIndex) {
+            if (!replay.loadNext()) {
+                break;
+            }
+            
+            if (replay.getCurrentFlag() == ActualRecorder.FLAG_CUE) {
+                totalFrames += idleFrames;
+                totalFrames += replay.getMovement().getNFrames() * fps / replay.getFrameRate();
+                totalFrames += replay.getAnimationRec().getBeforeCueMs() / fps;
+            }
+        }
         
-        int actualFrames = replay.getItem().nMovementFrames / replay.getFrameRate() * fps;
-        int idleFrames = (replay.getItem().nCues - 1) * gapMsBtwCue / fps;  // 第一杆没有
-        int cueAnimationFrames = replay.getItem().totalBeforeCueMs / fps;
-
-//        System.out.printf("Act %d, idle %d, cue %d: \n", actualFrames, idleFrames, cueAnimationFrames);
-        
-        this.totalFrames = actualFrames + idleFrames + cueAnimationFrames + 1;  // 保险
-        videoConverter = new VideoConverter(outFile, videoParams);
+        replay.revertTo(beginCueIndex);
     }
     
     public void recordFrame(Node node) {
@@ -56,7 +90,19 @@ public class VideoCapture {
             throw new RuntimeException(e);
         }
     }
-    
+
+    public int getGapMsBtwCue() {
+        return gapMsBtwCue;
+    }
+
+    public int getBeginCueIndex() {
+        return beginCueIndex;
+    }
+
+    public int getEndCueIndex() {
+        return endCueIndex;
+    }
+
     public int getFps() {
         return videoConverter.getFps();
     }

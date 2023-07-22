@@ -103,37 +103,18 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     public static Color poolBallBaseColor(int number) {
-        switch (number) {
-            case 0:
-                return Values.WHITE;
-            case 1:
-            case 9:
-            case 16:
-            case 17:
-                return Values.YELLOW;
-            case 2:
-            case 10:
-                return Values.BLUE;
-            case 3:
-            case 11:
-                return Values.RED;
-            case 4:
-            case 12:
-                return Values.PURPLE;
-            case 5:
-            case 13:
-                return Values.ORANGE;
-            case 6:
-            case 14:
-                return Values.GREEN;
-            case 7:
-            case 15:
-                return Values.DARK_RED;
-            case 8:
-                return Values.BLACK;
-            default:
-                throw new RuntimeException("Unexpected ball.");
-        }
+        return switch (number) {
+            case 0 -> Values.WHITE;
+            case 1, 9, 16, 17 -> Values.YELLOW;
+            case 2, 10 -> Values.BLUE;
+            case 3, 11 -> Values.RED;
+            case 4, 12 -> Values.PURPLE;
+            case 5, 13 -> Values.ORANGE;
+            case 6, 14 -> Values.GREEN;
+            case 7, 15 -> Values.DARK_RED;
+            case 8 -> Values.BLACK;
+            default -> throw new RuntimeException("Unexpected ball.");
+        };
     }
 
     public static double midHolePowerFactor(double speed) {
@@ -277,7 +258,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
         frameDegChange =
                 Math.sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ)
-                        * phy.calculationsPerSec * animationFrameMs / 800.0;
+                        * phy.calculationsPerSec * animationFrameMs * 0.00145;
     }
 
     /**

@@ -64,8 +64,12 @@ public class SettingsView extends ChildInitializable {
     }
 
     private void setupBoxes() {
-        setupDifficultyBox(aimLingBox);
-        setupDifficultyBox(aiStrengthBox);
+        aimLingBox.getItems().addAll(
+                0.0, 0.15, 0.4, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0
+        );
+        aiStrengthBox.getItems().addAll(
+                0.15, 0.4, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0
+        );
         aimLingBox.getSelectionModel().select(configLoader.getDouble("fastGameAiming", 1.0));
         aiStrengthBox.getSelectionModel().select(configLoader.getDouble("fastGameAiStrength", 1.0));
 
@@ -96,12 +100,6 @@ public class SettingsView extends ChildInitializable {
         displayBox.getItems().addAll(Display.values());
         displayBox.getSelectionModel().select(Display.fromKey(configLoader.getString("display",
                 "windowed")));
-    }
-
-    private void setupDifficultyBox(ComboBox<Double> box) {
-        box.getItems().addAll(
-                0.15, 0.4, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0
-        );
     }
 
     private void setupLanguageBox() {

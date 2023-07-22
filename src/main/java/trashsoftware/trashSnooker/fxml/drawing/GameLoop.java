@@ -11,4 +11,9 @@ public interface GameLoop {
     double lastAnimationFrameMs();
 
     long msSinceAnimationBegun();
+
+    /**
+     * @return 时间轴上的参考时间，不一定要在某个具体时间开始
+     */
+    long currentTimeMillis();
 }

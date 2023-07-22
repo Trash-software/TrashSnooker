@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
 
 public enum PredictionQuality {
+    NONE(0, false),
     VERY_LOW(0, false),
     LOW(2, false),
     MEDIUM(4, false),

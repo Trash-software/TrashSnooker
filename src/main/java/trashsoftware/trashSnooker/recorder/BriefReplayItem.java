@@ -266,8 +266,8 @@ public class BriefReplayItem {
     }
     
     @FXML
-    public String getNCues() {
-        return String.valueOf(nCues);
+    public int getNCues() {
+        return nCues;
     }
 
     @Override

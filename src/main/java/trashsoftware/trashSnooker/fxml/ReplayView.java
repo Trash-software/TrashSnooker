@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.recorder.*;
+import trashsoftware.trashSnooker.res.ResourcesLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -125,6 +126,7 @@ public class ReplayView extends ChildInitializable {
             root.setStyle(App.FONT_STYLE);
 
             Stage stage = new Stage();
+            stage.getIcons().add(ResourcesLoader.getInstance().getIcon());
             stage.initOwner(this.stage);
             stage.initModality(Modality.WINDOW_MODAL);
 
@@ -168,7 +170,7 @@ public class ReplayView extends ChildInitializable {
 
                 stage.show();
 
-                App.scaleGameStage(stage);
+                App.scaleGameStage(stage, gameView);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -235,6 +237,7 @@ public class ReplayView extends ChildInitializable {
                 for (int i = replays.length - 1; i >= 0; i--) {
                     if (interrupted) return;
                     File f = replays[i];
+                    if (!f.getName().endsWith(".replay")) continue;
                     try {
                         BriefReplayItem item = new BriefReplayItem(f);
 
@@ -460,7 +463,7 @@ public class ReplayView extends ChildInitializable {
 
         @Override
         public String nCues() {
-            return getValue().getNCues();
+            return String.valueOf(getValue().getNCues());
         }
 
         @Override
