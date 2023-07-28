@@ -558,12 +558,16 @@ public class DBAccess {
                 AchManager.getInstance().addAchievement(Achievement.GOLDEN_NINE, player.getInGamePlayer());
             }
         }
-        if (breakClear > 0) {
-            AchManager.getInstance().addAchievement(Achievement.POOL_BREAK_CLEAR, player.getInGamePlayer());
+        if (breakClear > 0 || continueClear > 0) {
             AchManager.getInstance().addAchievement(Achievement.POOL_CLEAR, player.getInGamePlayer());
-        } 
-        if (continueClear > 0) {
-            AchManager.getInstance().addAchievement(Achievement.POOL_CLEAR, player.getInGamePlayer());
+            if (gameRule == GameRule.CHINESE_EIGHT) {
+                AchManager.getInstance().addAchievement(Achievement.CEB_CUMULATIVE_CLEAR_1, player.getInGamePlayer());
+                AchManager.getInstance().addAchievement(Achievement.CEB_CUMULATIVE_CLEAR_2, player.getInGamePlayer());
+            }
+            
+            if (breakClear > 0) {
+                AchManager.getInstance().addAchievement(Achievement.POOL_BREAK_CLEAR, player.getInGamePlayer());
+            }
         }
         
         String query = "INSERT INTO " + tableName + " VALUES (" +

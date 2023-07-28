@@ -149,14 +149,14 @@ public class AchievementsView extends ChildInitializable {
         }
         
         public String secondRow() {
-            if (bundle.achievement.countLikeRepeatable()) {
+            if (bundle.achievement.getType() == Achievement.Type.CUMULATIVE) {
                 if (bundle.completion == null) {
                     return "";
                 } else {
                     return String.format(strings.getString("completeTimes"),
                             bundle.completion.getTimes());
                 }
-            } if (bundle.achievement.isRecordLike()) {
+            } if (bundle.achievement.getType() == Achievement.Type.HIGH_RECORD) {
                 if (bundle.completion == null) {
                     return "";
                 } else {

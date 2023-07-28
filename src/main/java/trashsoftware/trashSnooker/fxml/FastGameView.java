@@ -59,7 +59,7 @@ public class FastGameView extends ChildInitializable {
     ComboBox<PocketDifficulty> pocketDifficultyBox;
 
     @FXML
-    ComboBox<PlayerPerson> player1Box, player2Box;
+    ComboBox<PersonItem> player1Box, player2Box;
 
     @FXML
     ComboBox<CueItem> player1CueBox, player2CueBox;
@@ -99,7 +99,7 @@ public class FastGameView extends ChildInitializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.strings = resources;
-
+        
         initTypeSelectionToggle();
         initGameTypeBox();
         initTotalFramesBox();
@@ -168,12 +168,6 @@ public class FastGameView extends ChildInitializable {
         tablePresetBox.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null && newValue.preset != null) {
-
-//                        selectBox(holeSizeBox, newValue.preset.tableSpec.tableMetrics.pocketSize);
-//                        selectBox(pocketDifficultyBox, newValue.preset.tableSpec.tableMetrics.factory.defaultDifficulty());
-//                        selectBox(clothSmoothBox, newValue.preset.tableSpec.tableCloth.smoothness);
-//                        selectBox(clothGoodBox, newValue.preset.tableSpec.tableCloth.goodness);
-
                         holeSizeBox.setValue(newValue.preset.tableSpec.tableMetrics.pocketSize);
                         pocketDifficultyBox.setValue(newValue.preset.tableSpec.tableMetrics.factory.defaultDifficulty());
                         clothSmoothBox.setValue(newValue.preset.tableSpec.tableCloth.smoothness);
@@ -209,20 +203,18 @@ public class FastGameView extends ChildInitializable {
 
         gameRuleBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             switch (newValue) {
-                case SNOOKER:
-                case MINI_SNOOKER:
+                case SNOOKER, MINI_SNOOKER -> {
                     tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.SNOOKER);
                     ballMetricsBox.getSelectionModel().select(BallMetrics.SNOOKER_BALL);
-                    break;
-                case CHINESE_EIGHT:
-                case LIS_EIGHT:
+                }
+                case CHINESE_EIGHT, LIS_EIGHT -> {
                     tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.CHINESE_EIGHT);
                     ballMetricsBox.getSelectionModel().select(BallMetrics.POOL_BALL);
-                    break;
-                case AMERICAN_NINE:
+                }
+                case AMERICAN_NINE -> {
                     tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.POOL_TABLE_9);
                     ballMetricsBox.getSelectionModel().select(BallMetrics.POOL_BALL);
-                    break;
+                }
             }
             reloadTrainingItemByGameType(newValue);
         }));
@@ -262,12 +254,6 @@ public class FastGameView extends ChildInitializable {
         addCatBoxProperty(player1CatBox, player1Box);
         addCatBoxProperty(player2CatBox, player2Box);
 
-//        Collection<PlayerPerson> playerPeople = DataLoader.getInstance().getActualPlayers();
-//        player1Box.getItems().clear();
-//        player2Box.getItems().clear();
-//        player1Box.getItems().addAll(playerPeople);
-//        player2Box.getItems().addAll(playerPeople);
-
         addPlayerBoxProperty(player1Box, player1CueBox, player1InfoButton);
         addPlayerBoxProperty(player2Box, player2CueBox, player2InfoButton);
 
@@ -278,18 +264,20 @@ public class FastGameView extends ChildInitializable {
     }
 
     private void addCatBoxProperty(ComboBox<CategoryItem> catBox,
-                                   ComboBox<PlayerPerson> playerBox) {
+                                   ComboBox<PersonItem> playerBox) {
         catBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 playerBox.getItems().clear();
                 Collection<PlayerPerson> catPlayers = DataLoader.getInstance().filterActualPlayersByCategory(newValue.cat);
-                playerBox.getItems().addAll(catPlayers);
+                for (PlayerPerson person : catPlayers) {
+                    playerBox.getItems().add(new PersonItem(person));
+                }
             }
         });
         catBox.getSelectionModel().select(0);
     }
 
-    private void addPlayerBoxProperty(ComboBox<PlayerPerson> playerBox,
+    private void addPlayerBoxProperty(ComboBox<PersonItem> playerBox,
                                       ComboBox<CueItem> cueBox,
                                       Button infoButton) {
         playerBox.getSelectionModel().selectedItemProperty()
@@ -298,7 +286,7 @@ public class FastGameView extends ChildInitializable {
                         infoButton.setDisable(false);
                         refreshCueList(cueBox);
                         boolean sel = false;
-                        for (Cue cue : newValue.getPrivateCues()) {
+                        for (Cue cue : newValue.person.getPrivateCues()) {
                             cueBox.getItems().add(new CueItem(cue, cue.getName()));
                             if (!sel) {
                                 // 有私杆的人默认选择第一根私杆
@@ -323,13 +311,13 @@ public class FastGameView extends ChildInitializable {
 
     @FXML
     void playerInfoAction(ActionEvent event) {
-        ComboBox<PlayerPerson> personBox;
+        ComboBox<PersonItem> personBox;
         if (Objects.equals(event.getSource(), player1InfoButton)) {
             personBox = player1Box;
         } else {
             personBox = player2Box;
         }
-        PlayerPerson person = personBox.getValue();
+        PersonItem person = personBox.getValue();
         if (person != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(
@@ -349,7 +337,7 @@ public class FastGameView extends ChildInitializable {
                 stage.show();
 
                 AbilityView controller = loader.getController();
-                controller.setup(scene, person);
+                controller.setup(scene, person.person);
             } catch (IOException e) {
                 EventLogger.error(e);
             }
@@ -408,8 +396,8 @@ public class FastGameView extends ChildInitializable {
     }
 
     private void showGame(GameValues gameValues, TableCloth cloth) {
-        PlayerPerson p1 = player1Box.getValue();
-        PlayerPerson p2 = player2Box.getValue();
+        PersonItem p1 = player1Box.getValue();
+        PersonItem p2 = player2Box.getValue();
         if (p1 == null) {
             System.out.println("No enough players");
             return;
@@ -417,32 +405,32 @@ public class FastGameView extends ChildInitializable {
         InGamePlayer igp1;
         InGamePlayer igp2;
         if (gameValues.isTraining()) {
-            igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue(), 1, 1.0);
-            igp2 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue(), 2, 1.0);
+            igp1 = new InGamePlayer(p1.person, player1CueBox.getValue().cue, player1Player.getValue(), 1, 1.0);
+            igp2 = new InGamePlayer(p1.person, player1CueBox.getValue().cue, player1Player.getValue(), 2, 1.0);
         } else {
             if (p2 == null) {
                 System.out.println("No enough players");
                 return;
             }
-            if (p1.getPlayerId().equals(p2.getPlayerId())) {
+            if (p1.person.getPlayerId().equals(p2.person.getPlayerId())) {
                 System.out.println("Cannot self fight");
                 return;
             }
-            double p1RuleProficiency = player1Player.getValue() == PlayerType.COMPUTER ? p1.skillLevelOfGame(gameValues.rule) : 1.0;
-            double p2RuleProficiency = player2Player.getValue() == PlayerType.COMPUTER ? p2.skillLevelOfGame(gameValues.rule) : 1.0;
+            double p1RuleProficiency = player1Player.getValue() == PlayerType.COMPUTER ? p1.person.skillLevelOfGame(gameValues.rule) : 1.0;
+            double p2RuleProficiency = player2Player.getValue() == PlayerType.COMPUTER ? p2.person.skillLevelOfGame(gameValues.rule) : 1.0;
             
             Cue stdBreakCue = DataLoader.getInstance().getStdBreakCue();
             if (stdBreakCue == null ||
                     gameValues.rule == GameRule.SNOOKER ||
                     gameValues.rule == GameRule.MINI_SNOOKER) {
-                igp1 = new InGamePlayer(p1, player1CueBox.getValue().cue, player1Player.getValue(), 1, 
+                igp1 = new InGamePlayer(p1.person, player1CueBox.getValue().cue, player1Player.getValue(), 1, 
                         p1RuleProficiency);
-                igp2 = new InGamePlayer(p2, player2CueBox.getValue().cue, player2Player.getValue(), 2,
+                igp2 = new InGamePlayer(p2.person, player2CueBox.getValue().cue, player2Player.getValue(), 2,
                         p2RuleProficiency);
             } else {
-                igp1 = new InGamePlayer(p1, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue(), 1,
+                igp1 = new InGamePlayer(p1.person, stdBreakCue, player1CueBox.getValue().cue, player1Player.getValue(), 1,
                         p1RuleProficiency);
-                igp2 = new InGamePlayer(p2, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue(), 2,
+                igp2 = new InGamePlayer(p2.person, stdBreakCue, player2CueBox.getValue().cue, player2Player.getValue(), 2,
                         p2RuleProficiency);
             }
         }
@@ -497,6 +485,19 @@ public class FastGameView extends ChildInitializable {
         @Override
         public String toString() {
             return PlayerPerson.getPlayerCategoryShown(cat, App.getStrings());
+        }
+    }
+    
+    public static class PersonItem {
+        public final PlayerPerson person;
+        
+        PersonItem(PlayerPerson person) {
+            this.person = person;
+        }
+
+        @Override
+        public String toString() {
+            return person.getName();
         }
     }
 

@@ -25,6 +25,7 @@ import trashsoftware.trashSnooker.core.career.challenge.*;
 import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
+import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.ThumbLoader;
 import trashsoftware.trashSnooker.util.Util;
@@ -105,11 +106,6 @@ public class CareerTrainingView extends ChildInitializable {
                 strings.getString("historyScore"),
                 che -> new ReadOnlyStringWrapper(che.record.score == 0 ? "-" : String.valueOf(che.record.score))
         );
-//        LabelTableColumn<ChaHistoryEach, String> successCol = new LabelTableColumn<>(
-//                historyTable,
-//                strings.getString("historySuccess"),
-//                che -> new ReadOnlyStringWrapper(che.record.clearedAll ? "✔" : "\u274C")
-//        );
 
         historyTable.addColumns(timeCol, scoreCol);
     }
@@ -122,12 +118,12 @@ public class CareerTrainingView extends ChildInitializable {
         );
         LabelTableColumn<RewardEach, Integer> expCol = new LabelTableColumn<>(
                 rewardsTable,
-                "exp",
+                ResourcesLoader.getInstance().createExpIcon(),
                 re -> new ReadOnlyObjectWrapper<>(re.reward.getExp())
         );
         LabelTableColumn<RewardEach, Integer> moneyCol = new LabelTableColumn<>(
                 rewardsTable,
-                strings.getString("awards"),
+                ResourcesLoader.getInstance().createMoneyIcon(),
                 re -> new ReadOnlyObjectWrapper<>(re.reward.getMoney())
         );
         LabelTableColumn<RewardEach, String> everCompleteCol = new LabelTableColumn<>(

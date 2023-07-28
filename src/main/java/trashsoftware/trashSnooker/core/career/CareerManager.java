@@ -21,6 +21,9 @@ import java.util.*;
 public class CareerManager {
 
     public static final boolean LOG = false;
+    private static final int DEFAULT_YEAR = 2023;
+    private static final int DEFAULT_MONTH = Calendar.JANUARY;
+    private static final int DEFAULT_DAY = 20;
 
     public static final String LEVEL_INFO = "data/level.dat";
     public static final String CAREER_DIR = "user/career/";
@@ -36,6 +39,7 @@ public class CareerManager {
     private final CareerSave careerSave;
     private final ChampDataManager champDataManager = ChampDataManager.getInstance();
     private final List<Career> playerCareers = new ArrayList<>();
+    private final Calendar beginTimestamp;  // 建档的游戏内时间
     private final Calendar timestamp;
     private final List<Career.CareerWithAwards> snookerRanking = new ArrayList<>();
     private final List<Career.CareerWithAwards> snookerRankingSingleSeason = new ArrayList<>();
@@ -51,12 +55,15 @@ public class CareerManager {
     private CareerManager(CareerSave save) {
         this.careerSave = save;
         this.timestamp = Calendar.getInstance();
-        this.timestamp.set(2023, Calendar.JANUARY, 20);  // 初始日期
+        this.timestamp.set(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY);  // 初始日期
+        this.beginTimestamp = Calendar.getInstance();
+        this.beginTimestamp.set(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY);
     }
 
-    private CareerManager(CareerSave save, Calendar timestamp) {
+    private CareerManager(CareerSave save, Calendar timestamp, Calendar beginTimestamp) {
         this.careerSave = save;
         this.timestamp = timestamp;
+        this.beginTimestamp = beginTimestamp;
     }
 
     private static int[] readExpLevelUp() {
@@ -210,7 +217,14 @@ public class CareerManager {
         JSONArray rootArr = jsonObject.getJSONArray("careers");
         String time = jsonObject.getString("timestamp");
 
-        CareerManager careerManager = new CareerManager(careerSave, stringToCalendar(time));
+        Calendar begin;
+        if (jsonObject.has("beginTimestamp")) {
+            begin = stringToCalendar(jsonObject.getString("beginTimestamp"));
+        } else {
+            begin = Calendar.getInstance();
+            begin.set(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY);
+        }
+        CareerManager careerManager = new CareerManager(careerSave, stringToCalendar(time), begin);
         
         if (jsonObject.has("version")) {
             careerManager.lastSavedVersion = jsonObject.getInt("version");
@@ -740,22 +754,12 @@ public class CareerManager {
         updateRanking();
         updateEfforts();  // 在update ranking之后
 
-        Championship championship;
-        switch (nextData.getType()) {
-            case SNOOKER:
-                championship = new SnookerChampionship(nextData, timestamp);
-                break;
-            case CHINESE_EIGHT:
-                championship = new ChineseEightChampionship(nextData, timestamp);
-                break;
-            case AMERICAN_NINE:
-                championship = new AmericanNineChampionship(nextData, timestamp);
-                break;
-            case LIS_EIGHT:
-            case MINI_SNOOKER:
-            default:
-                throw new UnsupportedOperationException();
-        }
+        Championship championship = switch (nextData.getType()) {
+            case SNOOKER -> new SnookerChampionship(nextData, timestamp);
+            case CHINESE_EIGHT -> new ChineseEightChampionship(nextData, timestamp);
+            case AMERICAN_NINE -> new AmericanNineChampionship(nextData, timestamp);
+            default -> throw new UnsupportedOperationException();
+        };
         inProgress = championship;
         return championship;
     }
@@ -801,8 +805,44 @@ public class CareerManager {
         if (humanSnooker.rank == 0) {  // 从0开始的
             AchManager.getInstance().addAchievement(Achievement.SNOOKER_TOP_1, null);
         }
-        if (humanSnooker.rank < 16) {
-            AchManager.getInstance().addAchievement(Achievement.SNOOKER_TOP_16, null);
+        if (humanSnooker.rank < 64) {
+            AchManager.getInstance().addAchievement(Achievement.SNOOKER_TOP_64, null);
+            if (humanSnooker.rank < 16) {
+                AchManager.getInstance().addAchievement(Achievement.SNOOKER_TOP_16, null);
+            }
+        }
+        
+        Calendar check = Calendar.getInstance();
+        check.setTimeInMillis(beginTimestamp.getTimeInMillis());
+        
+        // 一年
+        check.add(Calendar.YEAR, 1);
+        if (check.before(timestamp)) {
+            AchManager.getInstance().addAchievement(Achievement.PLAY_ONE_YEAR, null);
+            
+            // 两年
+            check.add(Calendar.YEAR, 1);
+            if (check.before(timestamp)) {
+                AchManager.getInstance().addAchievement(Achievement.PLAY_TWO_YEARS, null);
+                
+                // 五年
+                check.add(Calendar.YEAR, 3);
+                if (check.before(timestamp)) {
+                    AchManager.getInstance().addAchievement(Achievement.PLAY_FIVE_YEARS, null);
+
+                    // 十年
+                    check.add(Calendar.YEAR, 5);
+                    if (check.before(timestamp)) {
+                        AchManager.getInstance().addAchievement(Achievement.PLAY_TEN_YEARS, null);
+
+                        // 二十年
+                        check.add(Calendar.YEAR, 10);
+                        if (check.before(timestamp)) {
+                            AchManager.getInstance().addAchievement(Achievement.PLAY_TWENTY_YEARS, null);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -927,6 +967,7 @@ public class CareerManager {
         JSONObject root = new JSONObject();
         root.put("version", lastSavedVersion);
         root.put("timestamp", calendarToString(timestamp));
+        root.put("beginTimestamp", calendarToString(beginTimestamp));
         root.put("humanPlayer", humanPlayerCareer.getPlayerPerson().getPlayerId());
 
         root.put("playerGoodness", playerGoodness);

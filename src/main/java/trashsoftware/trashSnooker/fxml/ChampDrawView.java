@@ -31,6 +31,7 @@ import trashsoftware.trashSnooker.core.metrics.TableSpec;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
+import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
@@ -155,13 +156,18 @@ public class ChampDrawView extends ChildInitializable {
 
     private void initTable() {
         LabelTableColumn<MatchResItem, String> rankCol =
-                new LabelTableColumn<>(matchResTable, strings.getString("rankTitle"), param ->
+                new LabelTableColumn<>(matchResTable, 
+                        strings.getString("rankTitle"), 
+                        param ->
                         new ReadOnlyStringWrapper(param.rank.getShown()));
         LabelTableColumn<MatchResItem, Integer> awardCol =
-                new LabelTableColumn<>(matchResTable, strings.getString("awards"), param ->
+                new LabelTableColumn<>(matchResTable,
+                        ResourcesLoader.getInstance().createMoneyIcon(), 
+                        param ->
                         new ReadOnlyObjectWrapper<>(championship.getData().getAwardByRank(param.rank)));
         LabelTableColumn<MatchResItem, String> peopleCol =
-                new LabelTableColumn<>(matchResTable, "", param ->
+                new LabelTableColumn<>(matchResTable,
+                        param ->
                         new ReadOnlyStringWrapper(param.getPeopleString()));
 
         matchResTable.addColumns(rankCol, awardCol, peopleCol);
@@ -537,13 +543,13 @@ public class ChampDrawView extends ChildInitializable {
 
         Node rootNode;
         MatchTreeNode rootMatch = championship.getMatchTree().getRoot();
-        
+
         switch (treeShowing) {
-            case ALIVE:
+            case ALIVE -> {
                 rootNode = onlyBuildAlive(rootMatch, 0, true);
                 showingRounds = rootNode.height() - 1;
-                break;
-            case REMAINING:
+            }
+            case REMAINING -> {
                 ChampionshipStage limit;
                 if (championship.isFinished()) {
                     limit = ChampionshipStage.FINAL;
@@ -552,12 +558,11 @@ public class ChampDrawView extends ChildInitializable {
                 }
                 rootNode = buildNodeTree(rootMatch, 0, limit, true);
                 showingRounds = Util.indexOf(limit, championship.getData().getStages()) + 1;
-                break;
-            default:
-            case FULL:
+            }
+            default -> {
                 rootNode = buildNodeTree(rootMatch, 0, null, true);
                 showingRounds = championship.getData().getStages().length;
-                break;
+            }
         }
 //        int leafNodesCount = 1 << totalRounds;  // 最后一层是
 
@@ -572,7 +577,7 @@ public class ChampDrawView extends ChildInitializable {
         treeCanvas.setHeight(maxY + nodeVGap * 2);
 
         // wipe
-        gc2d.setFill(Color.WHITE);
+        gc2d.setFill(GameView.GLOBAL_BACKGROUND);
         gc2d.fillRect(0, 0, treeCanvas.getWidth(), treeCanvas.getHeight());
 
         drawTitles();

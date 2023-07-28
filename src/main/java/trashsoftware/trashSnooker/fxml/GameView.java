@@ -436,6 +436,7 @@ public class GameView implements Initializable {
         restoreCueAngle();
 //        setupCanvas();
         drawTargetBoard(true);
+        drawScoreBoard(null, true);
 
         setupPowerSlider();
         powerSlider.setDisable(true);
@@ -2686,22 +2687,25 @@ public class GameView implements Initializable {
                 player2FramesLabel.setText(String.valueOf(replay.getItem().p2Wins));
 
                 wipeCanvas(singlePoleCanvas);
+                
+                ScoreResult sr = replay.getScoreResult();
+                if (sr == null) return;  // 还没开始
 
                 if (gameValues.rule.snookerLike()) {
-                    SnookerScoreResult ssr = (SnookerScoreResult) replay.getScoreResult();
+                    SnookerScoreResult ssr = (SnookerScoreResult) sr;
                     player1ScoreLabel.setText(String.valueOf(ssr.getP1TotalScore()));
                     player2ScoreLabel.setText(String.valueOf(ssr.getP2TotalScore()));
                     drawSnookerSinglePoles(ssr.getSinglePoleMap());
                     singlePoleLabel.setText(String.valueOf(ssr.getSinglePoleScore()));
                 } else if (gameValues.rule == GameRule.CHINESE_EIGHT || gameValues.rule == GameRule.LIS_EIGHT) {
-                    ChineseEightScoreResult csr = (ChineseEightScoreResult) replay.getScoreResult();
+                    ChineseEightScoreResult csr = (ChineseEightScoreResult) sr;
 //                    List<PoolBall> rems = ChineseEightTable.filterRemainingTargetOfPlayer(replay.getCueRecord().targetRep, replay);
                     List<PoolBall> rems = replay.getCueRecord().cuePlayer.getPlayerNumber() == 1 ?
                             csr.getP1Rems() : csr.getP2Rems();
                     System.out.println(rems.size());
                     drawChineseEightAllTargets(rems);
                 } else if (gameValues.rule == GameRule.AMERICAN_NINE) {
-                    NineBallScoreResult nsr = (NineBallScoreResult) replay.getScoreResult();
+                    NineBallScoreResult nsr = (NineBallScoreResult) sr;
                     Map<PoolBall, Boolean> rems = nsr.getRemBalls();
                     drawPoolBallAllTargets(rems);
                 }

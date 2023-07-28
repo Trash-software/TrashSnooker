@@ -131,23 +131,11 @@ public class CareerView extends ChildInitializable {
     }
     
     private void setupImages() {
-        double iconHeight = App.FONT.getSize() * 1.2;
-        double iconWidth = iconHeight * 1.773;
+        ResourcesLoader rl = ResourcesLoader.getInstance();
 
-        expImage.setSmooth(true);
-        expImage.setFitHeight(iconHeight);
-        expImage.setFitWidth(iconWidth);
-        expImage.setImage(ResourcesLoader.getInstance().getExpIcon());
-
-        moneyImage.setSmooth(true);
-        moneyImage.setFitHeight(iconHeight);
-        moneyImage.setFitWidth(iconWidth);
-        moneyImage.setImage(ResourcesLoader.getInstance().getMoneyIcon());
-
-        achIconImage.setSmooth(true);
-        achIconImage.setFitHeight(iconHeight * 1.25);
-        achIconImage.setFitWidth(iconHeight * 1.25);
-        achIconImage.setImage(ResourcesLoader.getInstance().getAwardIcon());
+        rl.setIconImage(rl.getExpImg(), expImage);
+        rl.setIconImage(rl.getMoneyImg(), moneyImage);
+        rl.setIconImage(rl.getAwardIcon(), achIconImage, 1.0, 1.25);
     }
 
     private void refreshPersonalAwardsTable() {
@@ -278,7 +266,9 @@ public class CareerView extends ChildInitializable {
                     return new ReadOnlyStringWrapper(builder.toString());
                 });
         LabelTableColumn<PlayerAward, Integer> awardMoneyCol =
-                new LabelTableColumn<>(table, strings.getString("awards"), param -> {
+                new LabelTableColumn<>(table, 
+                        ResourcesLoader.getInstance().createMoneyIcon(), 
+                        param -> {
                     int money = 0;
                     for (ChampionshipScore.Rank rank : param.score.ranks) {
                         money += param.score.data.getAwardByRank(rank);
@@ -300,13 +290,18 @@ public class CareerView extends ChildInitializable {
 
         // 赛事奖金表
         LabelTableColumn<AwardItem, String> titleCol =
-                new LabelTableColumn<>(champAwardsTable, "", param ->
+                new LabelTableColumn<>(champAwardsTable, 
+                        param ->
                         new ReadOnlyStringWrapper(param.rank.getShown()));
         LabelTableColumn<AwardItem, Integer> awardCol =
-                new LabelTableColumn<>(champAwardsTable, strings.getString("awards"), param ->
+                new LabelTableColumn<>(champAwardsTable, 
+                        ResourcesLoader.getInstance().createMoneyIcon(), 
+                        param ->
                         new ReadOnlyObjectWrapper<>(param.data.getAwardByRank(param.rank)));
         LabelTableColumn<AwardItem, Integer> perkCol =
-                new LabelTableColumn<>(champAwardsTable, "exp", param ->
+                new LabelTableColumn<>(champAwardsTable, 
+                        ResourcesLoader.getInstance().createExpIcon(), 
+                        param ->
                         new ReadOnlyObjectWrapper<>(param.data.getExpByRank(param.rank)));
 
         champAwardsTable.addColumns(titleCol, awardCol, perkCol);
@@ -410,7 +405,7 @@ public class CareerView extends ChildInitializable {
 
         // 更新赛事奖金表
         champAwardsTable.clearItems();
-        champAwardsTable.getColumns().get(0).setTitle(data.isRanked() ?
+        champAwardsTable.getColumns().get(0).setTitleText(data.isRanked() ?
                 strings.getString("rankedGame") :
                 strings.getString("nonRankedGame"));
         ChampionshipScore.Rank[] ranks = data.getRanksOfLosers();
@@ -588,10 +583,6 @@ public class CareerView extends ChildInitializable {
     @FXML
     public void seeToursListAction() {
         try {
-//            Stage stage = new Stage();
-//            stage.initModality(Modality.WINDOW_MODAL);
-//            stage.initOwner(selfStage);
-
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("tournamentsViewer.fxml"),
                     strings

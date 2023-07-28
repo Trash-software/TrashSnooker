@@ -1,6 +1,8 @@
 package trashsoftware.trashSnooker.res;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import trashsoftware.trashSnooker.fxml.App;
 
 import java.util.Objects;
 
@@ -35,11 +37,42 @@ public class ResourcesLoader {
         return icon;
     }
 
-    public Image getExpIcon() {
+    public Image getExpImg() {
         return expIcon;
     }
 
-    public Image getMoneyIcon() {
+    public Image getMoneyImg() {
         return moneyIcon;
+    }
+
+    public void setIconImage(Image image, ImageView imageView) {
+        setIconImage(image, imageView, 1.773, 1.0);
+    }
+
+    public void setIconImage(Image image, ImageView imageView, double widthAspect, double scaleMul) {
+        imageView.setImage(image);
+        
+        double iconHeight = App.FONT.getSize() * 1.2;
+        double iconWidth = iconHeight * widthAspect;
+
+        imageView.setSmooth(true);
+        imageView.setFitHeight(iconHeight * scaleMul);
+        imageView.setFitWidth(iconWidth * scaleMul);
+    }
+    
+    private ImageView createIconImage(Image image) {
+        ImageView imageView = new ImageView();
+        
+        setIconImage(image, imageView);
+        
+        return imageView;
+    }
+    
+    public ImageView createExpIcon() {
+        return createIconImage(getExpImg());
+    }
+    
+    public ImageView createMoneyIcon() {
+        return createIconImage(getMoneyImg());
     }
 }

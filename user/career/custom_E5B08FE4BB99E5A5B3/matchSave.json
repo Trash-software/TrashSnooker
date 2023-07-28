@@ -6,45 +6,40 @@
       "handFeelEffort": 1,
       "person": "custom_E5B08FE4BB99E5A5B3",
       "playerType": "PLAYER",
-      "playCue": "GirlCue",
-      "breakCue": "GirlCue"
+      "playCue": "GirlPoolCue",
+      "breakCue": "stdBreakCue"
     },
-    "p1Wins": 2,
+    "p1Wins": 1,
     "p2": {
       "playerNumber": 2,
-      "handFeelEffort": 0.8868333157444972,
-      "person": "Jack Lisowski",
+      "handFeelEffort": 0.8522208810988193,
+      "person": "Fat Guy",
       "playerType": "COMPUTER",
-      "playCue": "stdSnookerCue",
-      "breakCue": "stdSnookerCue"
+      "playCue": "stdPottsCue",
+      "breakCue": "stdBreakCue"
     },
     "p2BreakLoseChance": 0,
     "gameValues": {
-      "ball": "SNOOKER_BALL",
-      "gameRule": "SNOOKER",
+      "ball": "POOL_BALL",
+      "gameRule": "CHINESE_EIGHT",
       "table": {
-        "tableOrdinal": 0,
-        "pocketDifficultyOrdinal": 3,
-        "holeSizeOrdinal": 1
+        "tableOrdinal": 1,
+        "pocketDifficultyOrdinal": 2,
+        "holeSizeOrdinal": 2
       }
     },
-    "winRecords": {
-      "1": 1,
-      "2": 2,
-      "3": 2,
-      "4": 1
-    },
-    "p2Wins": 2,
-    "startTime": 1689509509933,
+    "winRecords": {"1": 1},
+    "p2Wins": 0,
+    "startTime": 1690564520548,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-10",
-    "totalFrames": 5,
+    "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-FINAL-30",
+    "totalFrames": 9,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
-    "p1Breaks": false
+    "p1Breaks": true
   },
-  "p2": "Jack Lisowski",
-  "stage": "QUARTER_FINAL"
+  "p2": "Fat Guy",
+  "stage": "FINAL"
 }

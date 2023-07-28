@@ -38,7 +38,7 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
         winingPlayer = getAnotherPlayer(player);
         super.withdraw(player);
     }
-    
+
     protected void updateBreakStats(Set<PoolBall> newPotted) {
         int uniqueBallsHitCushion = 0;
         int acrossBreakLine = 0;

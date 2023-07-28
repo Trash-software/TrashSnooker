@@ -11,6 +11,7 @@ import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
+import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LisEightGame;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
@@ -80,6 +81,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected boolean lastPotSuccess;
     protected boolean isBreaking = true;
     protected boolean placedHandBallButNoHit;
+    protected boolean firstCueAfterHandBall;
     protected GameValues gameValues;
     //    protected String foulReason;
     protected int thinkTime;
@@ -346,6 +348,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         lastCuedPlayer = currentPlayer;
         recordedTarget = currentTarget;
         wasDoingFreeBall = isDoingSnookerFreeBll();
+        firstCueAfterHandBall = placedHandBallButNoHit;
         placedHandBallButNoHit = false;
 
         lastCueVx = params.vx;
@@ -876,6 +879,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
      */
     public boolean isPlacedHandBallButNoHit() {
         return placedHandBallButNoHit;
+    }
+
+    public boolean isFirstCueAfterHandBall() {
+        return firstCueAfterHandBall;
     }
 
     public abstract Player getWiningPlayer();

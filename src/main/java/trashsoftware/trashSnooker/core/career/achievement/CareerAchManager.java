@@ -218,6 +218,11 @@ public class CareerAchManager extends AchManager {
                     if (playStage == GamePlayStage.THIS_BALL_WIN) {
                         addAchievement(Achievement.KEY_BALL_FAIL, justCuedPlayer);
                     }
+                    if (game instanceof NumberedBallGame<?>) {
+                        if (game.isFirstCueAfterHandBall()) {
+                            addAchievement(Achievement.FREE_BALL_FAIL, justCuedPlayer);
+                        }
+                    }
                 }
                 if (potAttempt.isLongPot()) {
                     AchManager.getInstance().addAchievement(Achievement.CUMULATIVE_LONG_POTS_1, justCuedPlayer);
@@ -336,7 +341,7 @@ public class CareerAchManager extends AchManager {
         if (achievement == null || !igp.isHuman()) return;
         AchCompletion ac = completedAchievements.get(achievement);
         if (ac != null) {
-            if (achievement.isRecordLike()) {
+            if (achievement.getType() == Achievement.Type.HIGH_RECORD) {
                 boolean newComplete = ac.setNewRecord(achievement, newRecord);
                 if (newComplete) {
                     thisTimeComplete.add(achievement);
@@ -364,13 +369,13 @@ public class CareerAchManager extends AchManager {
         if (achievement == null || igp != null && !igp.isHuman()) return;
         AchCompletion ac = completedAchievements.get(achievement);
         if (ac != null) {
-            if (achievement.countLikeRepeatable()) {
+            if (achievement.getType() == Achievement.Type.CUMULATIVE) {
                 boolean newComplete = ac.addOneTime(achievement);
                 if (newComplete) {
                     thisTimeComplete.add(achievement);
                 }
                 saveToDisk();  // 不加到thisTimeComplete里，所以现在就存。暂且认为这个save不是很花时间
-            } else if (achievement.isRecordLike()) {
+            } else if (achievement.getType() == Achievement.Type.HIGH_RECORD) {
                 System.err.println("Achievement '" + achievement + "' is record like, Should not call this method.");
             }
             return;

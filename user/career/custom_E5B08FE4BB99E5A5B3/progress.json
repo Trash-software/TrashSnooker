@@ -1,343 +1,286 @@
 {
-  "stageIndex": 2,
+  "stageIndex": 0,
   "seedRanks": {
-    "Stuart Bingham": 1,
-    "Yan Bingtao": 11,
-    "Matthew Stevens": 16,
-    "custom_player_1": 15,
-    "Ding Junhui": 8,
-    "Jack Lisowski": 9,
-    "Trump": 10,
-    "Mark Williams": 4,
-    "Mark Allen": 5,
-    "Selby": 12,
-    "O_Sullivan": 6,
-    "Neil Robertson": 3,
+    "Yan Bingtao": 1,
+    "Liu Mang": 26,
+    "custom_656467": 19,
+    "custom_player_169": 20,
+    "custom_player_3": 12,
+    "custom_player_2": 8,
+    "custom_player_166": 10,
+    "custom_player_4": 5,
+    "custom_player_165": 13,
+    "custom_player_168": 29,
+    "custom_player_167": 24,
+    "custom_player_173": 30,
+    "custom_player_172": 21,
+    "custom_player_174": 23,
+    "Mang Dali": 15,
+    "custom_player_171": 31,
+    "custom_player_170": 25,
+    "Lao Youtiao": 14,
+    "Mou Moumou": 11,
+    "custom_E8BDBBE69DBEE58FB7": 16,
+    "Kid": 28,
+    "Fat Guy": 6,
+    "custom_player_159": 27,
+    "High Stick": 7,
+    "custom_player_178": 32,
+    "Give Emperor": 17,
+    "custom_E78B97E697A5E79A84": 18,
+    "custom_player_160": 3,
+    "custom_player_181": 4,
+    "Worst Professional": 9,
     "custom_E5B08FE4BB99E5A5B3": 2,
-    "Stephen Maguire": 14,
-    "Murphy": 7,
-    "John Wizard": 13
+    "Wang Xu": 22
   },
-  "championshipId": "masters",
+  "championshipId": "eight_red_pocket_open",
   "matchTree": {"root": {
     "p1": {
+      "p1wins": 1,
       "p1": {
-        "p1wins": 1,
+        "p1wins": 2,
         "p1": {
-          "p1wins": 2,
-          "p1": {"winner": "Mark Williams"},
-          "p2": {"winner": "Yan Bingtao"},
-          "winner": "Mark Williams",
-          "stage": "ROUND_1",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-0",
-          "p2wins": 1
+          "p1wins": 1,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "custom_player_3"},
+            "p2": {"winner": "custom_E8BDBBE69DBEE58FB7"},
+            "winner": "custom_E8BDBBE69DBEE58FB7",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-0",
+            "p2wins": 2
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_player_160"},
+            "p2": {"winner": "custom_player_167"},
+            "winner": "custom_player_160",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-1",
+            "p2wins": 0
+          },
+          "winner": "custom_player_160",
+          "stage": "ROUND_2",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_2-16",
+          "p2wins": 2
         },
         "p2": {
           "p1wins": 2,
-          "p1": {"winner": "O_Sullivan"},
-          "p2": {"winner": "Matthew Stevens"},
-          "winner": "O_Sullivan",
-          "stage": "ROUND_1",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-1",
-          "p2wins": 1
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_player_181"},
+            "p2": {"winner": "custom_player_178"},
+            "winner": "custom_player_181",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-2",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 1,
+            "p1": {"winner": "High Stick"},
+            "p2": {"winner": "Kid"},
+            "winner": "Kid",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-3",
+            "p2wins": 2
+          },
+          "winner": "custom_player_181",
+          "stage": "ROUND_2",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_2-17",
+          "p2wins": 0
         },
-        "winner": "O_Sullivan",
+        "winner": "custom_player_181",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-8",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-QUARTER_FINAL-24",
         "p2wins": 3
       },
       "p2": {
         "p1wins": 3,
         "p1": {
           "p1wins": 2,
-          "p1": {"winner": "Stuart Bingham"},
-          "p2": {"winner": "custom_player_1"},
-          "winner": "Stuart Bingham",
-          "stage": "ROUND_1",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-2",
-          "p2wins": 1
-        },
-        "p2": {
-          "p1wins": 2,
-          "p1": {"winner": "Ding Junhui"},
-          "p2": {"winner": "Trump"},
-          "winner": "Ding Junhui",
-          "stage": "ROUND_1",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-3",
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+            "p2": {"winner": "Worst Professional"},
+            "winner": "custom_E5B08FE4BB99E5A5B3",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-4",
+            "p2wins": 1
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_player_166"},
+            "p2": {"winner": "custom_player_169"},
+            "winner": "custom_player_166",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-5",
+            "p2wins": 0
+          },
+          "winner": "custom_E5B08FE4BB99E5A5B3",
+          "stage": "ROUND_2",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_2-18",
           "p2wins": 0
         },
-        "winner": "Stuart Bingham",
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "Lao Youtiao"},
+            "p2": {"winner": "Mang Dali"},
+            "winner": "Lao Youtiao",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-6",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "custom_656467"},
+            "p2": {"winner": "custom_player_2"},
+            "winner": "custom_player_2",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-7",
+            "p2wins": 2
+          },
+          "winner": "Lao Youtiao",
+          "stage": "ROUND_2",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_2-19",
+          "p2wins": 1
+        },
+        "winner": "custom_E5B08FE4BB99E5A5B3",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-9",
-        "p2wins": 1
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-QUARTER_FINAL-25",
+        "p2wins": 0
       },
+      "winner": "custom_E5B08FE4BB99E5A5B3",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-SEMI_FINAL-12"
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-SEMI_FINAL-28",
+      "p2wins": 3
     },
     "p2": {
+      "p1wins": 3,
       "p1": {
+        "p1wins": 0,
         "p1": {
           "p1wins": 2,
-          "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
-          "p2": {"winner": "John Wizard"},
-          "winner": "custom_E5B08FE4BB99E5A5B3",
-          "stage": "ROUND_1",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-4",
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_player_170"},
+            "p2": {"winner": "Wang Xu"},
+            "winner": "custom_player_170",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-8",
+            "p2wins": 1
+          },
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "Liu Mang"},
+            "p2": {"winner": "custom_player_4"},
+            "winner": "custom_player_4",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-9",
+            "p2wins": 2
+          },
+          "winner": "custom_player_170",
+          "stage": "ROUND_2",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_2-20",
           "p2wins": 1
         },
         "p2": {
-          "p1wins": 1,
-          "p1": {"winner": "Mark Allen"},
-          "p2": {"winner": "Jack Lisowski"},
-          "winner": "Jack Lisowski",
-          "stage": "ROUND_1",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-5",
-          "p2wins": 2
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 0,
+            "p1": {"winner": "Give Emperor"},
+            "p2": {"winner": "Fat Guy"},
+            "winner": "Fat Guy",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-10",
+            "p2wins": 2
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_player_172"},
+            "p2": {"winner": "custom_player_171"},
+            "winner": "custom_player_172",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-11",
+            "p2wins": 0
+          },
+          "winner": "Fat Guy",
+          "stage": "ROUND_2",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_2-21",
+          "p2wins": 1
         },
+        "winner": "Fat Guy",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-10"
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-QUARTER_FINAL-26",
+        "p2wins": 3
       },
       "p2": {
         "p1wins": 3,
         "p1": {
           "p1wins": 2,
-          "p1": {"winner": "Neil Robertson"},
-          "p2": {"winner": "Selby"},
-          "winner": "Neil Robertson",
-          "stage": "ROUND_1",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-6",
-          "p2wins": 0
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "Yan Bingtao"},
+            "p2": {"winner": "custom_player_173"},
+            "winner": "Yan Bingtao",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-12",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Mou Moumou"},
+            "p2": {"winner": "custom_E78B97E697A5E79A84"},
+            "winner": "Mou Moumou",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-13",
+            "p2wins": 1
+          },
+          "winner": "Yan Bingtao",
+          "stage": "ROUND_2",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_2-22",
+          "p2wins": 1
         },
         "p2": {
-          "p1wins": 1,
-          "p1": {"winner": "Murphy"},
-          "p2": {"winner": "Stephen Maguire"},
-          "winner": "Stephen Maguire",
-          "stage": "ROUND_1",
-          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-7",
-          "p2wins": 2
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_player_159"},
+            "p2": {"winner": "custom_player_168"},
+            "winner": "custom_player_159",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-14",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_player_174"},
+            "p2": {"winner": "custom_player_165"},
+            "winner": "custom_player_174",
+            "stage": "ROUND_1",
+            "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_1-15",
+            "p2wins": 0
+          },
+          "winner": "custom_player_159",
+          "stage": "ROUND_2",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-ROUND_2-23",
+          "p2wins": 0
         },
-        "winner": "Neil Robertson",
+        "winner": "Yan Bingtao",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-11",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-QUARTER_FINAL-27",
         "p2wins": 1
       },
+      "winner": "Fat Guy",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-SEMI_FINAL-13"
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-SEMI_FINAL-29",
+      "p2wins": 1
     },
     "stage": "FINAL",
-    "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-FINAL-14"
+    "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_red_pocket_open-FINAL-30"
   }},
   "finished": false,
-  "snookerBreaks": [
-    {
-      "score": 132,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-9",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 131,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-11",
-      "playerId": "Neil Robertson"
-    },
-    {
-      "score": 128,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-2",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 122,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-9",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 121,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-11",
-      "playerId": "Neil Robertson"
-    },
-    {
-      "score": 115,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 4,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-11",
-      "playerId": "Neil Robertson"
-    },
-    {
-      "score": 100,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-1",
-      "playerId": "Matthew Stevens"
-    },
-    {
-      "score": 99,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-11",
-      "playerId": "Stephen Maguire"
-    },
-    {
-      "score": 90,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-8",
-      "playerId": "O_Sullivan"
-    },
-    {
-      "score": 90,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-6",
-      "playerId": "Neil Robertson"
-    },
-    {
-      "score": 89,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-0",
-      "playerId": "Yan Bingtao"
-    },
-    {
-      "score": 79,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-7",
-      "playerId": "Stephen Maguire"
-    },
-    {
-      "score": 78,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-2",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 74,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-7",
-      "playerId": "Stephen Maguire"
-    },
-    {
-      "score": 67,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-6",
-      "playerId": "Neil Robertson"
-    },
-    {
-      "score": 65,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-5",
-      "playerId": "Jack Lisowski"
-    },
-    {
-      "score": 63,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 4,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-8",
-      "playerId": "O_Sullivan"
-    },
-    {
-      "score": 63,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-1",
-      "playerId": "O_Sullivan"
-    },
-    {
-      "score": 62,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 4,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-9",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 62,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-2",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 59,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-0",
-      "playerId": "Mark Williams"
-    },
-    {
-      "score": 57,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-1",
-      "playerId": "O_Sullivan"
-    },
-    {
-      "score": 53,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-3",
-      "playerId": "Trump"
-    },
-    {
-      "score": 52,
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-7",
-      "playerId": "Murphy"
-    },
-    {
-      "score": 51,
-      "stage": "QUARTER_FINAL",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-QUARTER_FINAL-8",
-      "playerId": "O_Sullivan"
-    },
-    {
-      "score": 50,
-      "stage": "ROUND_1",
-      "sim": false,
-      "numFrame": 3,
-      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+masters-ROUND_1-4",
-      "playerId": "custom_E5B08FE4BB99E5A5B3"
-    }
-  ],
-  "timestamp": "2027/1/15"
+  "timestamp": "2027/1/22"
 }

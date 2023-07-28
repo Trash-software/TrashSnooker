@@ -55,9 +55,11 @@ public class SnookerPlayer extends Player {
             AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_50, getInGamePlayer());
             if (singlePoleScore >= 100) {
                 AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_100, getInGamePlayer());
-                if (singlePoleScore >= 147) {
-                    AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_147, getInGamePlayer());
-
+                if (singlePoleScore >= 135) {
+                    AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_100_BIG, getInGamePlayer());
+                    if (singlePoleScore >= 147) {
+                        AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_147, getInGamePlayer());
+                    }
                 }
             }
         }

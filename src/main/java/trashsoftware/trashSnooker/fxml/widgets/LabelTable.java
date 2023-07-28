@@ -96,7 +96,7 @@ public class LabelTable<S> extends ScrollPane {
 
         if (showTitle) {
             for (int i = 0; i < columns.size(); i++) {
-                content.add(columns.get(i).getTitleLabel(), i, 0);
+                content.add(columns.get(i).getTitleNode(), i, 0);
             }
         }
 

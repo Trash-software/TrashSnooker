@@ -12,6 +12,7 @@ import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.CareerView;
+import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.io.IOException;
@@ -109,10 +110,14 @@ public class TournamentItemView extends ScrollPane {
                 new LabelTableColumn<>(awardPerkTable, "", param ->
                         new ReadOnlyStringWrapper(param.rank.getShown()));
         LabelTableColumn<CareerView.AwardItem, Integer> awardCol =
-                new LabelTableColumn<>(awardPerkTable, strings.getString("awards"), param ->
+                new LabelTableColumn<>(awardPerkTable,
+                        ResourcesLoader.getInstance().createMoneyIcon(), 
+                        param ->
                         new ReadOnlyObjectWrapper<>(param.data.getAwardByRank(param.rank)));
         LabelTableColumn<CareerView.AwardItem, Integer> perkCol =
-                new LabelTableColumn<>(awardPerkTable, "exp", param ->
+                new LabelTableColumn<>(awardPerkTable,
+                        ResourcesLoader.getInstance().createExpIcon(), 
+                        param ->
                         new ReadOnlyObjectWrapper<>(param.data.getExpByRank(param.rank)));
         LabelTableColumn<CareerView.AwardItem, String> framesCol =
                 new LabelTableColumn<>(awardPerkTable, strings.getString("totalFrames"), param ->
@@ -161,9 +166,9 @@ public class TournamentItemView extends ScrollPane {
                 sbsTable.addColumns(
                         new LabelTableColumn<>(sbsTable, strings.getString("tournamentHighest"), 
                                 param -> new ReadOnlyStringWrapper(DataLoader.getInstance().getPlayerPerson(param.playerId).getName())),
-                        new LabelTableColumn<>(sbsTable, null,
+                        new LabelTableColumn<>(sbsTable,
                                 param -> new ReadOnlyObjectWrapper<>(param.score)),
-                        new LabelTableColumn<>(sbsTable, null,
+                        new LabelTableColumn<>(sbsTable,
                                 param -> new ReadOnlyStringWrapper(param.getYearElseEmpty() + param.stage.getShown()))
                 );
                 sbsTable.addItems(bestBreaks);
