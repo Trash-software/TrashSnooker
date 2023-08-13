@@ -1017,8 +1017,12 @@ public class GameView implements Initializable {
                                           SnookerPlayer player,
                                           int nFrameFrom1) {
         for (Integer breakScore : player.getSinglePolesInThisGame()) {
-            sc.updateBreakScore(player.getPlayerPerson().getPlayerId(), pva.stage, breakScore, false,
-                    pva.metaMatchInfo.toString(), nFrameFrom1);
+            if (pva.metaMatchInfo == null) {
+                System.err.println("Match too old! No meta info!");
+            } else {
+                sc.updateBreakScore(player.getPlayerPerson().getPlayerId(), pva.stage, breakScore, false,
+                        pva.metaMatchInfo.toString(), nFrameFrom1);
+            }
         }
     }
 

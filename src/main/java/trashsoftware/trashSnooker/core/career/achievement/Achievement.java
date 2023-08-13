@@ -15,8 +15,7 @@ import java.util.MissingResourceException;
  */
 public enum Achievement {
     POT_A_BALL(AchCat.GENERAL_TABLE),  // 已完成
-    POT_EIGHT_BALLS(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 8),  // 已完成
-    POT_HUNDRED_BALLS(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 100),  // 已完成
+    POT_BALLS(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 10, 50, 200),  // 已完成
     CUMULATIVE_LONG_POTS_1(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 10),  // 已完成
     THREE_BALLS_IN_A_ROW(AchCat.GENERAL_TABLE),  // 已完成
     POSITIONING_MASTER(AchCat.GENERAL_TABLE, Type.HIGH_RECORD, 7),  // 已完成
@@ -79,8 +78,7 @@ public enum Achievement {
 
     BLIND_SHOT(AchCat.CHINESE_EIGHT),  // 已完成
     REMAIN_ONE_MUST_LOSE(AchCat.CHINESE_EIGHT),  // 已完成
-    CEB_CUMULATIVE_CLEAR_1(AchCat.CHINESE_EIGHT, Type.CUMULATIVE, 5),  // 已完成
-    CEB_CUMULATIVE_CLEAR_2(AchCat.CHINESE_EIGHT, Type.CUMULATIVE, 20),  // 已完成
+    CEB_CUMULATIVE_CLEAR(AchCat.CHINESE_EIGHT, Type.CUMULATIVE, 5, 10, 20),  // 已完成
     CHINESE_EIGHT_NO_POT(AchCat.CHINESE_EIGHT, true),  // 已完成
 
     GOLDEN_NINE(AchCat.AMERICAN_NINE),  // 已完成
@@ -108,22 +106,19 @@ public enum Achievement {
     SNOOKER_TRIPLE_CROWN(AchCat.SNOOKER_TOUR),  // 已完成
     POTTING_MACHINE(AchCat.SNOOKER_TOUR),  // 已完成
     FIRST_YEAR_WORLD_CHAMP_SHIP(AchCat.SNOOKER_TOUR, true),  // todo: 目前的赛季开始日期不支持
-    DEFEAT_UNIQUE_OPPONENTS_SNOOKER_1(AchCat.SNOOKER_TOUR, Type.HIGH_RECORD, 3),  // 已完成
-    DEFEAT_UNIQUE_OPPONENTS_SNOOKER_2(AchCat.SNOOKER_TOUR, Type.HIGH_RECORD, 8),  // 已完成
+    DEFEAT_UNIQUE_OPPONENTS_SNOOKER(AchCat.SNOOKER_TOUR, Type.CUMULATIVE, 5, 10, 25),
     DEFEAT_SAME_OPPONENT_CONTINUOUS_SNOOKER(AchCat.SNOOKER_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_SNOOKER_1(AchCat.SNOOKER_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_SNOOKER_2(AchCat.SNOOKER_TOUR),  // 已完成
     
     // 中式台球巡回赛
-    DEFEAT_UNIQUE_OPPONENTS_CEB_1(AchCat.CHINESE_EIGHT_TOUR, Type.HIGH_RECORD, 3),  // 已完成
-    DEFEAT_UNIQUE_OPPONENTS_CEB_2(AchCat.CHINESE_EIGHT_TOUR, Type.HIGH_RECORD, 8),  // 已完成
+    DEFEAT_UNIQUE_OPPONENTS_CEB(AchCat.CHINESE_EIGHT_TOUR, Type.CUMULATIVE, 5, 10, 25),
     DEFEAT_SAME_OPPONENT_CONTINUOUS_CEB(AchCat.CHINESE_EIGHT_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_CEB_1(AchCat.CHINESE_EIGHT_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_CEB_2(AchCat.CHINESE_EIGHT_TOUR),  // 已完成
 
     // 美式九球巡回赛
-    DEFEAT_UNIQUE_OPPONENTS_AMERICAN_1(AchCat.AMERICAN_NINE_TOUR, Type.HIGH_RECORD, 3),  // 已完成
-    DEFEAT_UNIQUE_OPPONENTS_AMERICAN_2(AchCat.AMERICAN_NINE_TOUR, Type.HIGH_RECORD, 8),  // 已完成
+    DEFEAT_UNIQUE_OPPONENTS_AMERICAN(AchCat.AMERICAN_NINE_TOUR, Type.CUMULATIVE, 5, 10, 25),
     DEFEAT_SAME_OPPONENT_CONTINUOUS_AMERICAN(AchCat.AMERICAN_NINE_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_1(AchCat.AMERICAN_NINE_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_2(AchCat.AMERICAN_NINE_TOUR),  // 已完成
@@ -131,18 +126,18 @@ public enum Achievement {
 
     public final AchCat category;
     public final Type type;
-    public final int requiredTimes;
+    public final int[] requiredTimes;
     private final boolean hidden;
 
-    Achievement(AchCat category, Type type, int requiredTimes, boolean hidden) {
+    Achievement(AchCat category, Type type, boolean hidden, int... requiredTimes) {
         this.category = category;
         this.type = type;
         this.requiredTimes = requiredTimes;
         this.hidden = hidden;
     }
 
-    Achievement(AchCat category, Type type, int requiredTimes) {
-        this(category, type, requiredTimes, false);
+    Achievement(AchCat category, Type type, int... requiredTimes) {
+        this(category, type, false, requiredTimes);
     }
 
     Achievement(AchCat category) {
@@ -150,7 +145,7 @@ public enum Achievement {
     }
 
     Achievement(AchCat category, boolean hidden) {
-        this(category, Type.ONE_TIME, 1, hidden);
+        this(category, Type.ONE_TIME, hidden, 1);
     }
 
     public static Achievement fromKey(String key) {
@@ -169,8 +164,35 @@ public enum Achievement {
         return type;
     }
 
-    public boolean isComplete(AchCompletion completion) {
-        return completion != null && completion.getTimes() >= requiredTimes;
+    public boolean isFullyComplete(AchCompletion completion) {
+        return completion != null && getNCompleted(completion) == getNLevels();
+    }
+
+//    public boolean isComplete(AchCompletion completion, boolean a) {
+//        return completion != null && completion.getTimes() >= requiredTimes;
+//    }
+    
+    public int[] getLevels() {
+        return requiredTimes;
+    }
+    
+    public int getNLevels() {
+        return requiredTimes.length;
+    }
+
+    public int getCompletedLevelIndex(AchCompletion completion) {
+        if (completion == null) return -1;
+        
+        for (int i = requiredTimes.length - 1; i >= 0; i--) {
+            if (requiredTimes[i] <= completion.getTimes()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public int getNCompleted(AchCompletion completion) {
+        return getCompletedLevelIndex(completion) + 1;
     }
 
     public String toKey() {
@@ -187,11 +209,20 @@ public enum Achievement {
         }
     }
 
-    public String description() {
+    String description() {
         try {
             return App.getStrings().getString(Util.toLowerCamelCase("ACH_DES_" + name()));
         } catch (MissingResourceException e) {
             return name();
+        }
+    }
+    
+    public String getDescriptionOfLevel(int levelIndex) {
+        String s = description();
+        if (s.contains("%d")) {
+            return String.format(s, getLevels()[levelIndex]);
+        } else {
+            return s;
         }
     }
     

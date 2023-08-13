@@ -24,14 +24,14 @@ public class InvalidAchManager extends AchManager {
     }
 
     @Override
-    public Map<Achievement, AchCompletion> getCompletedAchievements() {
+    public Map<Achievement, AchCompletion> getRecordedAchievements() {
         return Map.of();
     }
 
-    @Override
-    public boolean completed(Achievement achievement) {
-        return true;
-    }
+//    @Override
+//    public boolean completed(Achievement achievement) {
+//        return true;
+//    }
 
     @Override
     public void addAchievement(Achievement achievement, InGamePlayer igp) {

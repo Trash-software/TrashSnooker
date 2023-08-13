@@ -49,8 +49,8 @@ public class CareerAchManager extends AchManager {
 //            Achievement.POOL_BREAK_POT
 //    );
     private final CareerSave careerSave;
-    private final Map<Achievement, AchCompletion> completedAchievements = new HashMap<>();
-    private transient final List<Achievement> thisTimeComplete = new ArrayList<>();  // 记录这一杆完成的，在一次show之后清空
+    private final Map<Achievement, AchCompletion> recordedAchievements = new HashMap<>();  // 至少完成了一点点的
+    private transient final List<AchCompletion> thisTimeComplete = new ArrayList<>();  // 记录这一杆完成的，在一次show之后清空
 
     private final Font titleFont = Font.font(App.FONT.getFamily(), FontWeight.BLACK, 16.0);
     
@@ -92,8 +92,8 @@ public class CareerAchManager extends AchManager {
         for (String key : jsonObject.keySet()) {
             try {
                 Achievement ach = Achievement.fromKey(key);
-                AchCompletion completion = AchCompletion.fromJson(jsonObject.getJSONObject(key));
-                cam.completedAchievements.put(ach, completion);
+                AchCompletion completion = AchCompletion.fromJson(ach, jsonObject.getJSONObject(key));
+                cam.recordedAchievements.put(ach, completion);
             } catch (IllegalArgumentException iae) {
                 System.err.println("Unknown achievement: " + key);
             }
@@ -101,13 +101,13 @@ public class CareerAchManager extends AchManager {
         return cam;
     }
 
-    private Set<Achievement> notCompleted(List<Achievement> check) {
-        Set<Achievement> result = new HashSet<>();
-        for (Achievement ach : check) {
-            if (!completed(ach)) result.add(ach);
-        }
-        return result;
-    }
+//    private Set<Achievement> notCompleted(List<Achievement> check) {
+//        Set<Achievement> result = new HashSet<>();
+//        for (Achievement ach : check) {
+//            if (!completed(ach)) result.add(ach);
+//        }
+//        return result;
+//    }
 
     public void saveToDisk() {
         JSONObject jsonObject = new JSONObject();
@@ -130,7 +130,7 @@ public class CareerAchManager extends AchManager {
     @Override
     public JSONObject toJson() {
         JSONObject object = new JSONObject();
-        for (Map.Entry<Achievement, AchCompletion> entry : completedAchievements.entrySet()) {
+        for (Map.Entry<Achievement, AchCompletion> entry : recordedAchievements.entrySet()) {
             object.put(entry.getKey().toKey(), entry.getValue().toJson());
         }
         return object;
@@ -146,14 +146,14 @@ public class CareerAchManager extends AchManager {
     }
 
     @Override
-    public Map<Achievement, AchCompletion> getCompletedAchievements() {
-        return completedAchievements;
+    public Map<Achievement, AchCompletion> getRecordedAchievements() {
+        return recordedAchievements;
     }
 
-    @Override
-    public boolean completed(Achievement achievement) {
-        return achievement.isComplete(completedAchievements.get(achievement));
-    }
+//    @Override
+//    public boolean completed(Achievement achievement) {
+//        return achievement.isComplete(completedAchievements.get(achievement));
+//    }
 
     /**
      * 
@@ -213,8 +213,8 @@ public class CareerAchManager extends AchManager {
                 if (potAttempt.isSuccess()) {
                     humanContinuousPotFail = 0;
                     addAchievement(Achievement.POT_A_BALL, justCuedPlayer);
-                    addAchievement(Achievement.POT_EIGHT_BALLS, justCuedPlayer);
-                    addAchievement(Achievement.POT_HUNDRED_BALLS, justCuedPlayer);
+                    addAchievement(Achievement.POT_BALLS, justCuedPlayer);
+//                    addAchievement(Achievement.POT_HUNDRED_BALLS, justCuedPlayer);
                 } else {
                     humanContinuousPotFail += 1;
                     if (humanContinuousPotFail >= 3) {
@@ -346,12 +346,13 @@ public class CareerAchManager extends AchManager {
 
     public void addAchievement(Achievement achievement, int newRecord, InGamePlayer igp) {
         if (achievement == null || (igp != null && !igp.isHuman())) return;
-        AchCompletion ac = completedAchievements.get(achievement);
+        AchCompletion ac = recordedAchievements.get(achievement);
         if (ac != null) {
-            if (achievement.getType() == Achievement.Type.HIGH_RECORD) {
-                boolean newComplete = ac.setNewRecord(achievement, newRecord);
-                if (newComplete) {
-                    thisTimeComplete.add(achievement);
+            if (achievement.getType() == Achievement.Type.HIGH_RECORD || 
+                    achievement.getType() == Achievement.Type.CUMULATIVE) {
+                boolean changed = ac.setNewRecord(newRecord);
+                if (changed) {
+                    thisTimeComplete.add(ac);
                 }
                 saveToDisk();  // 不加到thisTimeComplete里，所以现在就存。暂且认为这个save不是很花时间
             } else {
@@ -359,14 +360,11 @@ public class CareerAchManager extends AchManager {
             }
             return;
         }
-        AchCompletion newCompletion = new AchCompletion(newRecord);
-        if (achievement.isComplete(newCompletion)) {
-            newCompletion.setFirstCompletion(new Date(System.currentTimeMillis()));
-
-            completedAchievements.put(achievement, newCompletion);
-            thisTimeComplete.add(achievement);
-        } else {
-            completedAchievements.put(achievement, newCompletion);
+        AchCompletion newCompletion = new AchCompletion(achievement);
+        boolean changed = newCompletion.setNewRecord(newRecord);
+        recordedAchievements.put(achievement, newCompletion);
+        if (changed) {
+            thisTimeComplete.add(newCompletion);
         }
         saveToDisk();
     }
@@ -374,12 +372,12 @@ public class CareerAchManager extends AchManager {
     @Override
     public void addAchievement(Achievement achievement, @Nullable InGamePlayer igp) {
         if (achievement == null || (igp != null && !igp.isHuman())) return;
-        AchCompletion ac = completedAchievements.get(achievement);
+        AchCompletion ac = recordedAchievements.get(achievement);
         if (ac != null) {
             if (achievement.getType() == Achievement.Type.CUMULATIVE) {
-                boolean newComplete = ac.addOneTime(achievement);
+                boolean newComplete = ac.addOneTime();
                 if (newComplete) {
-                    thisTimeComplete.add(achievement);
+                    thisTimeComplete.add(ac);
                 }
                 saveToDisk();  // 不加到thisTimeComplete里，所以现在就存。暂且认为这个save不是很花时间
             } else if (achievement.getType() == Achievement.Type.HIGH_RECORD) {
@@ -387,14 +385,11 @@ public class CareerAchManager extends AchManager {
             }
             return;
         }
-        AchCompletion newCompletion = new AchCompletion();
-        if (achievement.isComplete(newCompletion)) {
-            newCompletion.setFirstCompletion(new Date(System.currentTimeMillis()));
-
-            completedAchievements.put(achievement, newCompletion);
-            thisTimeComplete.add(achievement);
-        } else {
-            completedAchievements.put(achievement, newCompletion);
+        AchCompletion newCompletion = new AchCompletion(achievement);
+        boolean newComplete = newCompletion.addOneTime();
+        recordedAchievements.put(achievement, newCompletion);
+        if (newComplete) {
+            thisTimeComplete.add(newCompletion);
         }
         saveToDisk();
     }
@@ -411,8 +406,8 @@ public class CareerAchManager extends AchManager {
         }
     }
 
-    private void showAchievement(Pane owner, List<Achievement> achievements, int index) {
-        Achievement achievement = achievements.get(index);
+    private void showAchievement(Pane owner, List<AchCompletion> achievements, int index) {
+        AchCompletion ac = achievements.get(index);
         Stage stage = new Stage();
 
         VBox baseRoot = new VBox();
@@ -446,11 +441,11 @@ public class CareerAchManager extends AchManager {
         VBox rightBox = new VBox();
         rightBox.setSpacing(10.0);
 
-        Label title = new Label(achievement.title());
+        Label title = new Label(ac.getAchievement().title());
 
         title.setFont(titleFont);
         rightBox.getChildren().add(title);
-        rightBox.getChildren().add(new Label(achievement.description()));
+        rightBox.getChildren().add(new Label(ac.getDescriptionOfCompleted()));  // 刚刚完成了
 
         root.getChildren().addAll(rightBox);
         

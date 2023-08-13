@@ -28,22 +28,19 @@ public class DBAccess {
 
     private static final Map<GameRule, Map<String, Achievement>> ACHIEVEMENT_MAP = Map.of(
             GameRule.SNOOKER, Map.of(
-                    "DEFEAT_UNIQUE_OPPONENTS_1", Achievement.DEFEAT_UNIQUE_OPPONENTS_SNOOKER_1,
-                    "DEFEAT_UNIQUE_OPPONENTS_2", Achievement.DEFEAT_UNIQUE_OPPONENTS_SNOOKER_2,
+                    "DEFEAT_UNIQUE_OPPONENTS", Achievement.DEFEAT_UNIQUE_OPPONENTS_SNOOKER,
                     "DEFEAT_SAME_CONTINUOUS", Achievement.DEFEAT_SAME_OPPONENT_CONTINUOUS_SNOOKER,
                     "DEFEAT_SAME_MULTI_1", Achievement.DEFEAT_SAME_OPPONENT_MULTI_SNOOKER_1,
                     "DEFEAT_SAME_MULTI_2", Achievement.DEFEAT_SAME_OPPONENT_MULTI_SNOOKER_2
             ),
             GameRule.CHINESE_EIGHT, Map.of(
-                    "DEFEAT_UNIQUE_OPPONENTS_1", Achievement.DEFEAT_UNIQUE_OPPONENTS_CEB_1,
-                    "DEFEAT_UNIQUE_OPPONENTS_2", Achievement.DEFEAT_UNIQUE_OPPONENTS_CEB_2,
+                    "DEFEAT_UNIQUE_OPPONENTS", Achievement.DEFEAT_UNIQUE_OPPONENTS_CEB,
                     "DEFEAT_SAME_CONTINUOUS", Achievement.DEFEAT_SAME_OPPONENT_CONTINUOUS_CEB,
                     "DEFEAT_SAME_MULTI_1", Achievement.DEFEAT_SAME_OPPONENT_MULTI_CEB_1,
                     "DEFEAT_SAME_MULTI_2", Achievement.DEFEAT_SAME_OPPONENT_MULTI_CEB_2
             ),
             GameRule.AMERICAN_NINE, Map.of(
-                    "DEFEAT_UNIQUE_OPPONENTS_1", Achievement.DEFEAT_UNIQUE_OPPONENTS_AMERICAN_1,
-                    "DEFEAT_UNIQUE_OPPONENTS_2", Achievement.DEFEAT_UNIQUE_OPPONENTS_AMERICAN_2,
+                    "DEFEAT_UNIQUE_OPPONENTS", Achievement.DEFEAT_UNIQUE_OPPONENTS_AMERICAN,
                     "DEFEAT_SAME_CONTINUOUS", Achievement.DEFEAT_SAME_OPPONENT_CONTINUOUS_AMERICAN,
                     "DEFEAT_SAME_MULTI_1", Achievement.DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_1,
                     "DEFEAT_SAME_MULTI_2", Achievement.DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_2
@@ -145,12 +142,7 @@ public class DBAccess {
                     entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));
                 }
                 int uniqueWins = getUniqueWins(cam, ruleAchMap, entireRecords, playerId);
-                if (uniqueWins >= 3) {
-                    cam.addAchievement(ruleAchMap.get("DEFEAT_UNIQUE_OPPONENTS_1"), uniqueWins, null);
-                    if (uniqueWins >= 8) {
-                        cam.addAchievement(ruleAchMap.get("DEFEAT_UNIQUE_OPPONENTS_2"), uniqueWins, null);
-                    }
-                }
+                cam.addAchievement(ruleAchMap.get("DEFEAT_UNIQUE_OPPONENTS"), uniqueWins, null);
             }
         }
     }
@@ -678,8 +670,7 @@ public class DBAccess {
         if (breakClear > 0 || continueClear > 0) {
             AchManager.getInstance().addAchievement(Achievement.POOL_CLEAR, player.getInGamePlayer());
             if (gameRule == GameRule.CHINESE_EIGHT) {
-                AchManager.getInstance().addAchievement(Achievement.CEB_CUMULATIVE_CLEAR_1, player.getInGamePlayer());
-                AchManager.getInstance().addAchievement(Achievement.CEB_CUMULATIVE_CLEAR_2, player.getInGamePlayer());
+                AchManager.getInstance().addAchievement(Achievement.CEB_CUMULATIVE_CLEAR, player.getInGamePlayer());
             }
 
             if (breakClear > 0) {

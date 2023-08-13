@@ -7,8 +7,6 @@ import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 
 public abstract class AchManager {
 
@@ -43,9 +41,9 @@ public abstract class AchManager {
     
     public abstract void updateAfterMatchEnds(EntireGame entireGame);
 
-    public abstract Map<Achievement, AchCompletion> getCompletedAchievements();
+    public abstract Map<Achievement, AchCompletion> getRecordedAchievements();
 
-    public abstract boolean completed(Achievement achievement);
+//    public abstract boolean completed(Achievement achievement);
     
     /**
      * 直接添加一个成就
@@ -58,10 +56,10 @@ public abstract class AchManager {
     }
     
     public int getNCompletedAchievements() {
-        Map<Achievement, AchCompletion> completionMap = getCompletedAchievements();
-        return completionMap.entrySet()
+        Map<Achievement, AchCompletion> completionMap = getRecordedAchievements();
+        return completionMap.values()
                 .stream()
-                .map(entry -> entry.getKey().isComplete(entry.getValue()) ? 1 : 0)
+                .map(AchCompletion::getNCompleted)
                 .reduce(0, Integer::sum);
     }
 }

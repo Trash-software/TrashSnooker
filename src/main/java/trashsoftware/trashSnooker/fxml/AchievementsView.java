@@ -75,7 +75,12 @@ public class AchievementsView extends ChildInitializable {
             Label bigLabel = new Label(cell.getValue().bundle.achievement.title());
             bigLabel.setFont(titleFont);
             
-            vBox.getChildren().addAll(bigLabel, new Label(cell.getValue().bundle.achievement.description()));
+            AchievementBundle bundle = cell.getValue().bundle;
+            String des = bundle.completion == null ? 
+                    bundle.achievement.getDescriptionOfLevel(0) :
+                    bundle.completion.getDescription();
+            
+            vBox.getChildren().addAll(bigLabel, new Label(des));
             
             return new ReadOnlyObjectWrapper<>(vBox);
         });
@@ -94,7 +99,7 @@ public class AchievementsView extends ChildInitializable {
         completed.clear();
         catCompletions.clear();
 
-        Map<Achievement, AchCompletion> allCompleted = AchManager.getInstance().getCompletedAchievements();
+        Map<Achievement, AchCompletion> allCompleted = AchManager.getInstance().getRecordedAchievements();
 
         for (AchCat cat : AchCat.values()) {
             Achievement[] achievements = cat.getAll();
@@ -103,8 +108,9 @@ public class AchievementsView extends ChildInitializable {
             int comp = 0;
             for (Achievement achievement : achievements) {
                 AchCompletion completion = allCompleted.get(achievement);
-                if (!achievement.isHidden()) showing++;
-                if (achievement.isComplete(completion)) comp++;
+                if (!achievement.isHidden()) showing += achievement.getNLevels();
+                comp += achievement.getNCompleted(completion);
+//                if (achievement.isComplete(completion)) comp++;
                 bundles.add(new AchievementBundle(achievement, completion));
             }
             completed.put(cat, bundles);
@@ -139,10 +145,14 @@ public class AchievementsView extends ChildInitializable {
         }
         
         public String firstRow() {
-            if (bundle.achievement.isComplete(bundle.completion)) {
-                // 这里已经保证不是null了，不信 @see Achievement#isComplete
+            if (bundle.achievement.isFullyComplete(bundle.completion)) {
+                // 这里已经保证不是null了，不信 @see Achievement#isFullyComplete
                 return String.format(strings.getString("firstCompleteDate"),
                         Util.SHOWING_DATE_FORMAT.format(bundle.completion.getFirstCompletion()));
+            } else if (bundle.completion != null) {
+                return String.format("%d/%d", 
+                        bundle.completion.getNCompleted(), 
+                        bundle.achievement.getNLevels());
             } else {
                 return strings.getString("incomplete");
             }
