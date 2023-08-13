@@ -128,15 +128,13 @@ public class ChampionshipData {
         if (jsonObject.has("147")) {
             data.awards.put(ChampionshipScore.Rank.MAXIMUM, jsonObject.getInt("147"));
         }
-//        
-//        for ()
-
-        System.out.println(data.id);
-        System.out.println(Arrays.toString(data.stages));
-        System.out.println(Arrays.toString(data.ranksOfLosers));
-        System.out.println(data.awards);
-        System.out.println(data.expMap);
-        System.out.println(data.stageFrames);
+        
+//        System.out.println(data.id);
+//        System.out.println(Arrays.toString(data.stages));
+//        System.out.println(Arrays.toString(data.ranksOfLosers));
+//        System.out.println(data.awards);
+//        System.out.println(data.expMap);
+//        System.out.println(data.stageFrames);
 
         data.setupTable(jsonObject);
 

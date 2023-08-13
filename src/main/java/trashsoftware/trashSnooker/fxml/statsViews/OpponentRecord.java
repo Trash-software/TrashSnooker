@@ -17,7 +17,10 @@ public class OpponentRecord extends RecordTree {
     final StatsView.PlayerAi thisPlayer;
     final List<EntireGameTitle> egtList;
 
-    OpponentRecord(StatsView.PlayerAi thisPlayer, StatsView.PlayerAi opponent, List<EntireGameTitle> egtList, ResourceBundle strings) {
+    OpponentRecord(StatsView.PlayerAi thisPlayer, 
+                   StatsView.PlayerAi opponent, 
+                   List<EntireGameTitle> egtList, 
+                   ResourceBundle strings) {
         super(opponent.toString(), strings);
         this.thisPlayer = thisPlayer;
         this.egtList = egtList;
@@ -27,7 +30,7 @@ public class OpponentRecord extends RecordTree {
     void setRightPane(Pane rightPane) {
         rightPane.getChildren().clear();
 
-        String oppoName = shown;
+        final String oppoName = shown;
 
         List<EntireGameRecord> entireRecords = new ArrayList<>();
         for (EntireGameTitle egt : egtList) {

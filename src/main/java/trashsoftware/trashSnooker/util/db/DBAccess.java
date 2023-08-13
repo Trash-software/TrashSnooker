@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.util.db;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
+import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
@@ -24,6 +25,31 @@ import java.util.*;
 public class DBAccess {
     public static final boolean SAVE = true;
     public static final boolean RECORD = true;
+
+    private static final Map<GameRule, Map<String, Achievement>> ACHIEVEMENT_MAP = Map.of(
+            GameRule.SNOOKER, Map.of(
+                    "DEFEAT_UNIQUE_OPPONENTS_1", Achievement.DEFEAT_UNIQUE_OPPONENTS_SNOOKER_1,
+                    "DEFEAT_UNIQUE_OPPONENTS_2", Achievement.DEFEAT_UNIQUE_OPPONENTS_SNOOKER_2,
+                    "DEFEAT_SAME_CONTINUOUS", Achievement.DEFEAT_SAME_OPPONENT_CONTINUOUS_SNOOKER,
+                    "DEFEAT_SAME_MULTI_1", Achievement.DEFEAT_SAME_OPPONENT_MULTI_SNOOKER_1,
+                    "DEFEAT_SAME_MULTI_2", Achievement.DEFEAT_SAME_OPPONENT_MULTI_SNOOKER_2
+            ),
+            GameRule.CHINESE_EIGHT, Map.of(
+                    "DEFEAT_UNIQUE_OPPONENTS_1", Achievement.DEFEAT_UNIQUE_OPPONENTS_CEB_1,
+                    "DEFEAT_UNIQUE_OPPONENTS_2", Achievement.DEFEAT_UNIQUE_OPPONENTS_CEB_2,
+                    "DEFEAT_SAME_CONTINUOUS", Achievement.DEFEAT_SAME_OPPONENT_CONTINUOUS_CEB,
+                    "DEFEAT_SAME_MULTI_1", Achievement.DEFEAT_SAME_OPPONENT_MULTI_CEB_1,
+                    "DEFEAT_SAME_MULTI_2", Achievement.DEFEAT_SAME_OPPONENT_MULTI_CEB_2
+            ),
+            GameRule.AMERICAN_NINE, Map.of(
+                    "DEFEAT_UNIQUE_OPPONENTS_1", Achievement.DEFEAT_UNIQUE_OPPONENTS_AMERICAN_1,
+                    "DEFEAT_UNIQUE_OPPONENTS_2", Achievement.DEFEAT_UNIQUE_OPPONENTS_AMERICAN_2,
+                    "DEFEAT_SAME_CONTINUOUS", Achievement.DEFEAT_SAME_OPPONENT_CONTINUOUS_AMERICAN,
+                    "DEFEAT_SAME_MULTI_1", Achievement.DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_1,
+                    "DEFEAT_SAME_MULTI_2", Achievement.DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_2
+            )
+    );
+    
     private static DBAccess database;
 
     private Connection connection;
@@ -76,12 +102,12 @@ public class DBAccess {
 
         closeDB();
     }
-    
+
     private void updateDbStructure() {
         addDbColumn("ALTER TABLE EntireGame ADD COLUMN MatchID TEXT DEFAULT null;");
         addDbColumn("ALTER TABLE SidePocketRecord ADD COLUMN GoldNine INTEGER DEFAULT 0;");
     }
-    
+
     private void addDbColumn(String query) {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(query);
@@ -104,6 +130,97 @@ public class DBAccess {
 
     private String getTypeKey(GameRule gameRule, String playerName) {
         return String.format("'%s_%s'", playerName, gameRule.toSqlKey());
+    }
+
+    public void checkAchievements() {
+        AchManager achManager = AchManager.getInstance();
+        if (achManager instanceof CareerAchManager cam) {
+            String playerId = cam.getPlayerId();
+
+            for (GameRule gameRule : List.of(GameRule.SNOOKER, GameRule.CHINESE_EIGHT, GameRule.AMERICAN_NINE)) {
+                Map<String, Achievement> ruleAchMap = ACHIEVEMENT_MAP.get(gameRule);
+                List<EntireGameTitle> titles = getAllPveMatches(gameRule, playerId, false);
+                List<EntireGameRecord> entireRecords = new ArrayList<>();  // 是有序的
+                for (EntireGameTitle egt : titles) {
+                    entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));
+                }
+                int uniqueWins = getUniqueWins(cam, ruleAchMap, entireRecords, playerId);
+                if (uniqueWins >= 3) {
+                    cam.addAchievement(ruleAchMap.get("DEFEAT_UNIQUE_OPPONENTS_1"), uniqueWins, null);
+                    if (uniqueWins >= 8) {
+                        cam.addAchievement(ruleAchMap.get("DEFEAT_UNIQUE_OPPONENTS_2"), uniqueWins, null);
+                    }
+                }
+            }
+        }
+    }
+    
+    private static int[] winLossCount(List<Integer> opponentWinLoss) {
+        int[] winLoss = new int[2];
+        for (int result : opponentWinLoss) {
+            if (result == 0) {
+                winLoss[0]++;
+            } else {
+                winLoss[1]++;
+            }
+        }
+        return winLoss;
+    }
+
+    private static int getUniqueWins(
+            CareerAchManager cam,
+            Map<String, Achievement> ruleAchMap,
+            List<EntireGameRecord> entireRecords,
+            String playerId) {
+        Map<String, List<Integer>> oppoWinLostMap = new HashMap<>();  // 对于每个对手的胜负。0是玩家胜，1是对手胜
+        for (EntireGameRecord egr : entireRecords) {
+            EntireGameTitle egt = egr.getTitle();
+            String oppoId;
+            boolean oppoWin;
+            if (egt.getPlayer1Id().equals(playerId)) {
+                oppoId = egt.getPlayer2Id();
+                int[] winsCount = egr.getP1P2WinsCount();
+                oppoWin = winsCount[1] > winsCount[0];
+            } else {
+                oppoId = egt.getPlayer1Id();
+                int[] winsCount = egr.getP1P2WinsCount();
+                oppoWin = winsCount[1] < winsCount[0];
+            }
+            List<Integer> cur = oppoWinLostMap.computeIfAbsent(oppoId, key -> new ArrayList<>());
+            if (oppoWin) cur.add(1);
+            else cur.add(0);
+
+            int maxContinuousWin = 0;
+            int continuousWin = 0;  // 最近的连胜
+            for (int i = cur.size() - 1; i >= 0; i--) {
+                if (cur.get(i) == 1) {
+                    continuousWin++;
+                    if (continuousWin > maxContinuousWin) maxContinuousWin = continuousWin;
+                } else {
+                    continuousWin = 0;
+                }
+            }
+            if (maxContinuousWin >= 2) {
+                cam.addAchievement(ruleAchMap.get("DEFEAT_SAME_CONTINUOUS"), null);
+            }
+        }
+
+        int uniqueWins = 0;  // 赢过的不同球员
+        for (var ent : oppoWinLostMap.entrySet()) {
+            if (ent.getValue().contains(0)) {
+                uniqueWins++;
+            }
+            int[] winLoss = winLossCount(ent.getValue());
+            if (winLoss[0] >= 3 && winLoss[1] == 0) {
+                cam.addAchievement(ruleAchMap.get("DEFEAT_SAME_MULTI_1"), null);
+            }
+            int sum = winLoss[0] + winLoss[1];  // ent.getValue().size()
+            double winRate = (double) winLoss[0] / sum;
+            if (sum >= 10 && winRate >= 0.9) {
+                cam.addAchievement(ruleAchMap.get("DEFEAT_SAME_MULTI_2"), null);
+            }
+        }
+        return uniqueWins;
     }
 
     private void storeAttemptsForOnePlayer(EntireGame entireGame, Game<?, ?> frame, Player player) {
@@ -150,7 +267,7 @@ public class DBAccess {
                 }
             }
         }
-        
+
         // 添加成就
         if (data[0] == 0) {
             AchManager.getInstance().addAchievement(Achievement.FRAME_NO_ATTACK, player.getInGamePlayer());
@@ -172,8 +289,8 @@ public class DBAccess {
         }
 
         String queryWhere = getFrameQueryWhere(entireGame, frame,
-                player.getPlayerPerson().getPlayerId(), 
-                player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER, 
+                player.getPlayerPerson().getPlayerId(),
+                player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER,
                 true);
         String query =
                 "UPDATE GeneralRecord SET " +
@@ -188,7 +305,7 @@ public class DBAccess {
                         "RestAttempts = RestAttempts + " + data[8] + ", " +
                         "RestSuccesses = RestSuccesses + " + data[9] + ", " +
                         "Solves = Solves + " + data[10] + ", " +
-                        "SolveSuccesses = SolveSuccesses + " + data[11] + 
+                        "SolveSuccesses = SolveSuccesses + " + data[11] +
                         queryWhere;
         try {
             executeStatement(query);
@@ -203,12 +320,12 @@ public class DBAccess {
         storeAttemptsForOnePlayer(entireGame, frame,
                 frame.getPlayer2());
     }
-    
+
     public List<EntireGameTitle> getAllMatches(GameRule gameRule) {
         String query = "SELECT * FROM EntireGame WHERE GameType = '" + gameRule.toSqlKey() + "';";
         return getMatchesBy(gameRule, query);
     }
-    
+
     public List<EntireGameTitle> getAllPveMatches(GameRule gameRule) {
         String typeStr = "'" + gameRule.toSqlKey() + "'";
         String query = "SELECT * FROM EntireGame " +
@@ -231,7 +348,7 @@ public class DBAccess {
                 "ORDER BY EntireBeginTime;";
         return getMatchesBy(gameRule, query);
     }
-    
+
     private List<EntireGameTitle> getMatchesBy(GameRule gameRule, String query) {
         List<EntireGameTitle> rtn = new ArrayList<>();
         try {
@@ -261,7 +378,7 @@ public class DBAccess {
         Collections.reverse(rtn);
         return rtn;
     }
-    
+
     private boolean isValidPlayer(String playerId) {
         return DataLoader.getInstance().hasPlayer(playerId);
     }
@@ -276,7 +393,7 @@ public class DBAccess {
         int aiRep = playerIsAi ? 1 : 0;
         String highestQuery =
                 "SELECT * FROM SnookerRecord " +
-                        "WHERE (PlayerName = " + pns + " AND " + 
+                        "WHERE (PlayerName = " + pns + " AND " +
                         "PlayerIsAI = " + aiRep + " AND " +
                         "EntireBeginTime IN " +
                         "(SELECT EntireBeginTime FROM EntireGame " +
@@ -294,7 +411,7 @@ public class DBAccess {
                 if (highInResult >= 100) {
                     rtn[3]++;
                 }
-                if ((gameRule == GameRule.SNOOKER && highInResult >= 147) 
+                if ((gameRule == GameRule.SNOOKER && highInResult >= 147)
                         || (gameRule == GameRule.MINI_SNOOKER && highInResult >= 75)) {
                     rtn[4]++;
                 }
@@ -317,7 +434,7 @@ public class DBAccess {
         int aiRep = playerIsAi ? 1 : 0;
         String highestQuery =
                 "SELECT * FROM " + tableName + " " +
-                        "WHERE (PlayerName = " + pns + " AND " + 
+                        "WHERE (PlayerName = " + pns + " AND " +
                         "PlayerIsAI = " + aiRep + " AND " +
                         "EntireBeginTime IN " +
                         "(SELECT EntireBeginTime FROM EntireGame " +
@@ -460,7 +577,7 @@ public class DBAccess {
 
                 return new EntireGameRecord.Snooker(title, records, durations);
             } else if (title.gameRule == GameRule.CHINESE_EIGHT ||
-                    title.gameRule == GameRule.AMERICAN_NINE || 
+                    title.gameRule == GameRule.AMERICAN_NINE ||
                     title.gameRule == GameRule.LIS_EIGHT) {
                 String tableName = title.gameRule.toSqlKey() + "Record";
                 String numQuery = "SELECT * FROM " + tableName + " " +
@@ -517,14 +634,14 @@ public class DBAccess {
         int aiRep = playerIsAi ? 1 : 0;
         return " WHERE (EntireBeginTime = " + entireGame.getStartTimeSqlString() + " AND " +
                 "FrameIndex = " + game.frameIndex + " AND " +
-                "PlayerName = '" + playerName + "' AND " + 
+                "PlayerName = '" + playerName + "' AND " +
                 "PlayerIsAI = " + aiRep + ")" +
                 (endLine ? ";" : "");
     }
 
-    public void recordNumberedBallResult(EntireGame entireGame, 
+    public void recordNumberedBallResult(EntireGame entireGame,
                                          Game<?, ?> frame,
-                                         NumberedBallPlayer player, 
+                                         NumberedBallPlayer player,
                                          boolean wins,
                                          List<Integer> continuousPots) {
         GameRule gameRule = entireGame.gameValues.rule;
@@ -564,20 +681,20 @@ public class DBAccess {
                 AchManager.getInstance().addAchievement(Achievement.CEB_CUMULATIVE_CLEAR_1, player.getInGamePlayer());
                 AchManager.getInstance().addAchievement(Achievement.CEB_CUMULATIVE_CLEAR_2, player.getInGamePlayer());
             }
-            
+
             if (breakClear > 0) {
                 AchManager.getInstance().addAchievement(Achievement.POOL_BREAK_CLEAR, player.getInGamePlayer());
             }
         }
-        
+
         String query = "INSERT INTO " + tableName + " VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
                 frame.frameIndex + ", " +
                 "'" + player.getPlayerPerson().getPlayerId() + "', " +
                 (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) + ", " +
                 (breaks ? 1 : 0) + ", " + (breakPot ? 1 : 0) + ", " +
-                breakClear + ", " + 
-                continueClear + ", " + 
+                breakClear + ", " +
+                continueClear + ", " +
                 highest +
                 (gameRule == GameRule.AMERICAN_NINE ? (", " + goldNine + "") : "") +
                 ");";
@@ -616,11 +733,11 @@ public class DBAccess {
             e.printStackTrace();
         }
     }
-    
+
     public List<String>[] listPlayerIdsHumanComputer() {
         Set<String> humanIds = new TreeSet<>();
         Set<String> computerIds = new TreeSet<>();
-        
+
         String query = "SELECT * FROM EntireGame";
         try {
             Statement statement = connection.createStatement();
@@ -630,7 +747,7 @@ public class DBAccess {
                 boolean p2Ai = result.getInt("Player2IsAI") != 0;
                 String p1 = result.getString("Player1Name");
                 String p2 = result.getString("Player2Name");
-                
+
                 if (p1Ai) {
                     if (isValidPlayer(p1)) computerIds.add(p1);
                 } else {
@@ -728,17 +845,17 @@ public class DBAccess {
         String typeStr = "'" + entireGame.gameValues.rule.toSqlKey() + "'";
         int p1t = entireGame.getPlayer1().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
         int p2t = entireGame.getPlayer2().getPlayerType() == PlayerType.COMPUTER ? 1 : 0;
-        
+
         insertPlayerIfNotExists(entireGame.getPlayer1().getPlayerPerson().getPlayerId());
         insertPlayerIfNotExists(entireGame.getPlayer2().getPlayerPerson().getPlayerId());
-        
+
         String command =
                 "INSERT INTO EntireGame VALUES (" +
                         entireGame.getStartTimeSqlString() + ", " +
                         typeStr + ", " +
                         "'" + entireGame.getPlayer1().getPlayerPerson().getPlayerId() + "', " +
                         "'" + entireGame.getPlayer2().getPlayerPerson().getPlayerId() + "', " +
-                        p1t + ", " + 
+                        p1t + ", " +
                         p2t + ", " +
                         entireGame.getTotalFrames() + ", " +
                         (metaMatchInfo == null ? null : ("'" + metaMatchInfo + "'")) +

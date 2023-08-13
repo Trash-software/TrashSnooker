@@ -28,6 +28,7 @@ import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.IOException;
 import java.net.URL;
@@ -125,6 +126,7 @@ public class CareerView extends ChildInitializable {
         // 检测一些新出的成就
         careerManager.getHumanPlayerCareer().checkScoreAchievements();
         careerManager.checkRankingAchievements();
+        DBAccess.getInstance().checkAchievements();
         AchManager.getInstance().showAchievementPopup();
         
         refreshGui();

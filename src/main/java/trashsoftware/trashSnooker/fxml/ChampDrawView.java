@@ -410,7 +410,7 @@ public class ChampDrawView extends ChildInitializable {
     @FXML
     public void quitTournamentAction() {
         AlertShower.askConfirmation(selfStage,
-                "",
+                strings.getString("quitTournamentDes"),
                 strings.getString("quitTournamentConfirmation"),
                 this::quitTournament,
                 null

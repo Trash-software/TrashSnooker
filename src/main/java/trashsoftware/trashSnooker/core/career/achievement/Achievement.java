@@ -79,8 +79,8 @@ public enum Achievement {
 
     BLIND_SHOT(AchCat.CHINESE_EIGHT),  // 已完成
     REMAIN_ONE_MUST_LOSE(AchCat.CHINESE_EIGHT),  // 已完成
-    CEB_CUMULATIVE_CLEAR_1(AchCat.CHINESE_EIGHT, Type.CUMULATIVE, 5),
-    CEB_CUMULATIVE_CLEAR_2(AchCat.CHINESE_EIGHT, Type.CUMULATIVE, 20),
+    CEB_CUMULATIVE_CLEAR_1(AchCat.CHINESE_EIGHT, Type.CUMULATIVE, 5),  // 已完成
+    CEB_CUMULATIVE_CLEAR_2(AchCat.CHINESE_EIGHT, Type.CUMULATIVE, 20),  // 已完成
     CHINESE_EIGHT_NO_POT(AchCat.CHINESE_EIGHT, true),  // 已完成
 
     GOLDEN_NINE(AchCat.AMERICAN_NINE),  // 已完成
@@ -107,7 +107,26 @@ public enum Achievement {
     SNOOKER_WORLD_CHAMPION(AchCat.SNOOKER_TOUR),  // 已完成
     SNOOKER_TRIPLE_CROWN(AchCat.SNOOKER_TOUR),  // 已完成
     POTTING_MACHINE(AchCat.SNOOKER_TOUR),  // 已完成
-    FIRST_YEAR_WORLD_CHAMP_SHIP(AchCat.SNOOKER_TOUR, true)  // todo: 目前的赛季开始日期不支持
+    FIRST_YEAR_WORLD_CHAMP_SHIP(AchCat.SNOOKER_TOUR, true),  // todo: 目前的赛季开始日期不支持
+    DEFEAT_UNIQUE_OPPONENTS_SNOOKER_1(AchCat.SNOOKER_TOUR, Type.HIGH_RECORD, 3),  // 已完成
+    DEFEAT_UNIQUE_OPPONENTS_SNOOKER_2(AchCat.SNOOKER_TOUR, Type.HIGH_RECORD, 8),  // 已完成
+    DEFEAT_SAME_OPPONENT_CONTINUOUS_SNOOKER(AchCat.SNOOKER_TOUR),  // 已完成
+    DEFEAT_SAME_OPPONENT_MULTI_SNOOKER_1(AchCat.SNOOKER_TOUR),  // 已完成
+    DEFEAT_SAME_OPPONENT_MULTI_SNOOKER_2(AchCat.SNOOKER_TOUR),  // 已完成
+    
+    // 中式台球巡回赛
+    DEFEAT_UNIQUE_OPPONENTS_CEB_1(AchCat.CHINESE_EIGHT_TOUR, Type.HIGH_RECORD, 3),  // 已完成
+    DEFEAT_UNIQUE_OPPONENTS_CEB_2(AchCat.CHINESE_EIGHT_TOUR, Type.HIGH_RECORD, 8),  // 已完成
+    DEFEAT_SAME_OPPONENT_CONTINUOUS_CEB(AchCat.CHINESE_EIGHT_TOUR),  // 已完成
+    DEFEAT_SAME_OPPONENT_MULTI_CEB_1(AchCat.CHINESE_EIGHT_TOUR),  // 已完成
+    DEFEAT_SAME_OPPONENT_MULTI_CEB_2(AchCat.CHINESE_EIGHT_TOUR),  // 已完成
+
+    // 美式九球巡回赛
+    DEFEAT_UNIQUE_OPPONENTS_AMERICAN_1(AchCat.AMERICAN_NINE_TOUR, Type.HIGH_RECORD, 3),  // 已完成
+    DEFEAT_UNIQUE_OPPONENTS_AMERICAN_2(AchCat.AMERICAN_NINE_TOUR, Type.HIGH_RECORD, 8),  // 已完成
+    DEFEAT_SAME_OPPONENT_CONTINUOUS_AMERICAN(AchCat.AMERICAN_NINE_TOUR),  // 已完成
+    DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_1(AchCat.AMERICAN_NINE_TOUR),  // 已完成
+    DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_2(AchCat.AMERICAN_NINE_TOUR),  // 已完成
     ;
 
     public final AchCat category;
@@ -159,9 +178,11 @@ public enum Achievement {
     }
 
     public String title() {
+        String resName = Util.toLowerCamelCase("ACH_" + name());
         try {
-            return App.getStrings().getString(Util.toLowerCamelCase("ACH_" + name()));
+            return App.getStrings().getString(resName);
         } catch (MissingResourceException e) {
+            System.err.println(resName);
             return name();
         }
     }

@@ -16,11 +16,15 @@ public class EntireGameTitle {
     public final boolean player2isAi;
     public final int totalFrames;
     public final String matchId;  // 在生涯模式中这场比赛的唯一ID；为null in快速游戏
-    
-    public EntireGameTitle(Timestamp startTime, GameRule gameRule,
-                    String player1Id, String player2Id,
-                    boolean player1isAi, boolean player2isAi,
-                    int totalFrames, String matchId) {
+
+    public EntireGameTitle(Timestamp startTime,
+                           GameRule gameRule,
+                           String player1Id,
+                           String player2Id,
+                           boolean player1isAi,
+                           boolean player2isAi,
+                           int totalFrames,
+                           String matchId) {
         this.startTime = startTime;
         this.gameRule = gameRule;
         this.player1Id = player1Id;
@@ -39,11 +43,19 @@ public class EntireGameTitle {
                 totalFrames,
                 getP2Name());
     }
-    
+
+    public String getPlayer1Id() {
+        return player1Id;
+    }
+
+    public String getPlayer2Id() {
+        return player2Id;
+    }
+
     public String getP1Name() {
         return DataLoader.getInstance().getPlayerPerson(player1Id).getName();
     }
-    
+
     public String getP2Name() {
         return DataLoader.getInstance().getPlayerPerson(player2Id).getName();
     }

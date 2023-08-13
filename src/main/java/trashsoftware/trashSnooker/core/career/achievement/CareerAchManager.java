@@ -34,6 +34,7 @@ import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.JsonChecksum;
+import trashsoftware.trashSnooker.util.db.DBAccess;
 
 import java.io.*;
 import java.util.*;
@@ -133,6 +134,10 @@ public class CareerAchManager extends AchManager {
             object.put(entry.getKey().toKey(), entry.getValue().toJson());
         }
         return object;
+    }
+    
+    public String getPlayerId() {
+        return careerSave.getPlayerId();
     }
 
     @Override
@@ -334,11 +339,13 @@ public class CareerAchManager extends AchManager {
             }
         }
 
+        DBAccess.getInstance().checkAchievements();
+
         Platform.runLater(this::showAchievementPopup);
     }
 
     public void addAchievement(Achievement achievement, int newRecord, InGamePlayer igp) {
-        if (achievement == null || !igp.isHuman()) return;
+        if (achievement == null || (igp != null && !igp.isHuman())) return;
         AchCompletion ac = completedAchievements.get(achievement);
         if (ac != null) {
             if (achievement.getType() == Achievement.Type.HIGH_RECORD) {
@@ -366,7 +373,7 @@ public class CareerAchManager extends AchManager {
 
     @Override
     public void addAchievement(Achievement achievement, @Nullable InGamePlayer igp) {
-        if (achievement == null || igp != null && !igp.isHuman()) return;
+        if (achievement == null || (igp != null && !igp.isHuman())) return;
         AchCompletion ac = completedAchievements.get(achievement);
         if (ac != null) {
             if (achievement.getType() == Achievement.Type.CUMULATIVE) {
