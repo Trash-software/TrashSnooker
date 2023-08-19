@@ -51,12 +51,12 @@ public class CueBackPredictor {
             }
             
             // 检测袋口区域
-            int holeAreaResult = predictor.tryHitHoleArea(phy);
-            if (holeAreaResult != 0) {
+            ObjectOnTable.CushionHitResult holeAreaResult = predictor.tryHitHoleArea(phy);
+            if (holeAreaResult != null && holeAreaResult.result() != 0) {
                 // 袋口区域
                 Result res2 = checkBalls(predictor);
                 if (res2 != null) return res2;
-                if (holeAreaResult == 2) return new CushionObstacle(predictor.distance, 
+                if (holeAreaResult.result() == 2) return new CushionObstacle(predictor.distance, 
                         game.gameValues.table.cushionHeight, 0.0);
                 continue;
             }

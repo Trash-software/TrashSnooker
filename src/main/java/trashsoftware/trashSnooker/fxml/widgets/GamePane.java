@@ -19,10 +19,7 @@ import javafx.scene.text.TextAlignment;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.GameHolder;
-import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.metrics.Pocket;
-import trashsoftware.trashSnooker.core.metrics.TableMetrics;
-import trashsoftware.trashSnooker.core.metrics.TablePreset;
+import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.fxml.App;
@@ -508,15 +505,15 @@ public class GamePane extends Pane {
         drawTableLogo();
     }
 
-    private void fillMidPocketLineSide(double[] arcCenter, double arcRadius, boolean isTop, boolean isLeft) {
+    private void fillMidPocketLineSide(Cushion.CushionArc arcCenter, double arcRadius, boolean isTop, boolean isLeft) {
         double sign = isLeft ? 1 : -1;
 
         TableMetrics metrics = gameValues.table;
-        double x1 = canvasX(arcCenter[0] + arcRadius * sign);
+        double x1 = canvasX(arcCenter.getCenter()[0] + arcRadius * sign);
         double x2 = canvasX(metrics.midX - metrics.midPocketThroatWidth * sign / 2);
-        double x34 = canvasX(arcCenter[0]);
+        double x34 = canvasX(arcCenter.getCenter()[0]);
 
-        double y1 = canvasY(arcCenter[1]);
+        double y1 = canvasY(arcCenter.getCenter()[1]);
         double y2 = canvasY(isTop ? metrics.topY - metrics.cushionClothWidth : metrics.botY + metrics.cushionClothWidth);
 
         graphicsContext.fillPolygon(
@@ -530,7 +527,7 @@ public class GamePane extends Pane {
         );
     }
 
-    private void fillMidPocketArc(double[] arcCenter, boolean isTop, double extentDirection) {
+    private void fillMidPocketArc(Cushion.CushionArc arcCenter, boolean isTop, double extentDirection) {
         TableMetrics metrics = gameValues.table;
         
         double verDeg = isTop ? 270 : 90;
@@ -544,8 +541,8 @@ public class GamePane extends Pane {
         arcExtent = Math.max(90, arcExtent);
         arcExtent *= extentDirection;
         graphicsContext.fillArc(
-                canvasX(arcCenter[0] - radius),
-                canvasY(arcCenter[1] - radius),
+                canvasX(arcCenter.getCenter()[0] - radius),
+                canvasY(arcCenter.getCenter()[1] - radius),
                 radius * 2 * scale,
                 radius * 2 * scale,
                 verDeg,
@@ -563,7 +560,7 @@ public class GamePane extends Pane {
         double yEnd = isTop ? metrics.topY : metrics.botY;
         double yBase = yEnd + (isTop ? -metrics.cushionClothWidth : metrics.cushionClothWidth);
         
-        double xSide = arcCenter[0];
+        double xSide = arcCenter.getCenter()[0];
         double xSharp = xSide < metrics.midX ? xSide + triangleWidth : xSide - triangleWidth;
         
         double[] xs = new double[]{
@@ -597,12 +594,12 @@ public class GamePane extends Pane {
         );
     }
     
-    private void fillCornerLineCushionCloth(double[][] line, 
-                                            boolean inward, 
+    private void fillCornerLineCushionCloth(Cushion.CushionLine line,
+                                            boolean inward,
                                             boolean invert  // 不懂为什么，只是为了修bug。
     ) {
-        double[] st = line[0];
-        double[] ed = line[1];
+        double[] st = line.getPosition()[0];
+        double[] ed = line.getPosition()[1];
         
 //        double[] direction = new double[]{ed[0] - st[0], ed[1] - st[1]};
         
@@ -741,8 +738,8 @@ public class GamePane extends Pane {
         drawCornerHoleArc(values.botRightHoleEndArcXy, 180, values);
 
         // 袋内直线
-        for (double[][] line : values.allCornerLines) {
-            drawHoleLine(line);
+        for (Cushion.CushionLine line : values.allCornerLines) {
+            drawHoleLine(line.getPosition());
         }
     }
 
@@ -755,10 +752,10 @@ public class GamePane extends Pane {
         );
     }
 
-    private void drawCornerHoleArc(double[] arcRealXY, double startAngle, TableMetrics values) {
+    private void drawCornerHoleArc(Cushion.CushionArc arcRealXY, double startAngle, TableMetrics values) {
         graphicsContext.strokeArc(
-                canvasX(arcRealXY[0] - values.cornerArcRadius),
-                canvasY(arcRealXY[1] - values.cornerArcRadius),
+                canvasX(arcRealXY.getCenter()[0] - values.cornerArcRadius),
+                canvasY(arcRealXY.getCenter()[1] - values.cornerArcRadius),
                 values.cornerArcDiameter * scale,
                 values.cornerArcDiameter * scale,
                 startAngle,
@@ -768,10 +765,10 @@ public class GamePane extends Pane {
 
     private void drawMidHoleLinesArcs(TableMetrics values) {
         double arcDiameter = values.midArcRadius * 2 * scale;
-        double x1 = canvasX(values.topMidHoleLeftArcXy[0] - values.midArcRadius);
-        double x2 = canvasX(values.topMidHoleRightArcXy[0] - values.midArcRadius);
-        double y1 = canvasY(values.topMidHoleLeftArcXy[1] - values.midArcRadius);
-        double y2 = canvasY(values.botMidHoleLeftArcXy[1] - values.midArcRadius);
+        double x1 = canvasX(values.topMidHoleLeftArcXy.getCenter()[0] - values.midArcRadius);
+        double x2 = canvasX(values.topMidHoleRightArcXy.getCenter()[0] - values.midArcRadius);
+        double y1 = canvasY(values.topMidHoleLeftArcXy.getCenter()[1] - values.midArcRadius);
+        double y2 = canvasY(values.botMidHoleLeftArcXy.getCenter()[1] - values.midArcRadius);
 
         double arcExtent = 90 - values.midHoleOpenAngle;
         graphicsContext.strokeArc(x1, y1, arcDiameter, arcDiameter, 270, arcExtent, ArcType.OPEN);
@@ -781,8 +778,8 @@ public class GamePane extends Pane {
 
         // 袋内直线
 //        if (values.isStraightHole()) {
-        for (double[][] line : values.allMidHoleLines) {
-            drawHoleLine(line);
+        for (Cushion.CushionLine line : values.allMidHoleLines) {
+            drawHoleLine(line.getPosition());
         }
 //        }
     }

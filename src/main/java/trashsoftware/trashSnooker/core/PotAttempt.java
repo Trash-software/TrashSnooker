@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core;
 
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.movement.Movement;
 
 public class PotAttempt extends CueAttempt {
 
@@ -13,7 +14,8 @@ public class PotAttempt extends CueAttempt {
     private final double[] targetBallOrigPos;
     private final double[][] targetDirHole;
     private Position positionSuccess = Position.NOT_SET;
-    private PlayerPerson.HandSkill handSkill;
+    
+    private PotAttempt positionToThis;  // 连续进攻中的上一杆
 
     public PotAttempt(GameValues gameValues, 
                       CuePlayParams cuePlayParams,
@@ -39,8 +41,12 @@ public class PotAttempt extends CueAttempt {
         this.positionSuccess = positionSuccess ? Position.SUCCESS : Position.FAILED;
     }
 
-    public void setHandSkill(PlayerPerson.HandSkill handSkill) {
-        this.handSkill = handSkill;
+    public void setPositionToThis(PotAttempt positionToThis) {
+        this.positionToThis = positionToThis;
+    }
+
+    public PotAttempt getPositionToThis() {
+        return positionToThis;
     }
 
     public boolean isRestPot() {

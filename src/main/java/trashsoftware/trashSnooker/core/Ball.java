@@ -1,13 +1,13 @@
 package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.metrics.Cushion;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.fxml.drawing.BallModel;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cloneable {
@@ -18,14 +18,14 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public static final double SUCK_CUSHION_FACTOR = 0.75;
     public static final double MAXIMUM_SPIN_PASS = 0.2;  // 齿轮效应传递旋转的上限
     private static final Random ERROR_GENERATOR = new Random();
-    public static final double[] LEFT_CUSHION_VEC = {0.0, -1.0};  // 视觉上的顺时针方向。注意y是反的
-    public static final double[] RIGHT_CUSHION_VEC = {0.0, 1.0};
-    public static final double[] TOP_CUSHION_VEC = {1.0, 0.0};
-    public static final double[] BOT_CUSHION_VEC = {-1.0, 0.0};
-    private static final double[] LEFT_CUSHION_VEC_NORM = {1.0, 0.0};  // 都指向球桌内侧
-    private static final double[] RIGHT_CUSHION_VEC_NORM = {-1.0, 0.0};
-    private static final double[] TOP_CUSHION_VEC_NORM = {0.0, 1.0};
-    private static final double[] BOT_CUSHION_VEC_NORM = {0.0, -1.0};
+//    public static final double[] LEFT_CUSHION_VEC = {0.0, -1.0};  // 视觉上的顺时针方向。注意y是反的
+//    public static final double[] RIGHT_CUSHION_VEC = {0.0, 1.0};
+//    public static final double[] TOP_CUSHION_VEC = {1.0, 0.0};
+//    public static final double[] BOT_CUSHION_VEC = {-1.0, 0.0};
+//    private static final double[] LEFT_CUSHION_VEC_NORM = {1.0, 0.0};  // 都指向球桌内侧
+//    private static final double[] RIGHT_CUSHION_VEC_NORM = {-1.0, 0.0};
+//    private static final double[] TOP_CUSHION_VEC_NORM = {0.0, 1.0};
+//    private static final double[] BOT_CUSHION_VEC_NORM = {0.0, -1.0};
     private static boolean gearOffsetEnabled = true;  // 齿轮/投掷效应造成的球线路偏差
     private static int idCounter = 0;
     public final BallModel model;
@@ -635,49 +635,49 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         sideSpin *= table.wallSpinPreserveRatio;
     }
 
-    /**
-     * 碰库时的旋转:
-     * 1. 施加侧旋的效果
-     * 2. 更新所有旋转效果
-     * <p>
-     * 需在更新了vx和vy之后调用
-     * <p>
-     * 该方法仅在撞标准库时调用，不负责袋角
-     *
-     * @param phy              物理
-     * @param cushionNormalVec 撞的库的法向量。比如说边库应是(1,0)或(-1,0)
-     */
-    private void applySpinsWhenHitCushion(Phy phy, double[] cushionNormalVec) {
-        double sideSpinStrength = calculateEffectiveSideSpin(phy, cushionNormalVec);
-        double effectiveSideSpin = sideSpinStrength * table.wallSpinEffectRatio;
-
-        if (Arrays.equals(cushionNormalVec, LEFT_CUSHION_VEC_NORM) || Arrays.equals(cushionNormalVec, RIGHT_CUSHION_VEC_NORM)) {
-            if (vx < 0) {
-                vy -= effectiveSideSpin;
-            } else {
-                vy += effectiveSideSpin;
-            }
-            xSpin *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
-            ySpin *= 1 - (1 - table.wallSpinPreserveRatio) * 0.5;
-        } else if (Arrays.equals(cushionNormalVec, TOP_CUSHION_VEC_NORM) || Arrays.equals(cushionNormalVec, BOT_CUSHION_VEC_NORM)) {
-            if (vy < 0) {
-                vx += effectiveSideSpin;
-            } else {
-                vx -= effectiveSideSpin;
-            }
-            xSpin *= 1 - (1 - table.wallSpinPreserveRatio) * 0.5;  // 比如ratio是0.8，这里就取0.9
-            ySpin *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
-        }
-
-        sideSpin -= effectiveSideSpin;
-        sideSpin *= table.wallSpinPreserveRatio;
-//        sideSpin *= table.wallSpinPreserveRatio / sideSpinEffectMul;
-    }
+//    /**
+//     * 碰库时的旋转:
+//     * 1. 施加侧旋的效果
+//     * 2. 更新所有旋转效果
+//     * <p>
+//     * 需在更新了vx和vy之后调用
+//     * <p>
+//     * 该方法仅在撞标准库时调用，不负责袋角
+//     *
+//     * @param phy              物理
+//     * @param cushionNormalVec 撞的库的法向量。比如说边库应是(1,0)或(-1,0)
+//     */
+//    private void applySpinsWhenHitCushion(Phy phy, double[] cushionNormalVec) {
+//        double sideSpinStrength = calculateEffectiveSideSpin(phy, cushionNormalVec);
+//        double effectiveSideSpin = sideSpinStrength * table.wallSpinEffectRatio;
+//
+//        if (Arrays.equals(cushionNormalVec, LEFT_CUSHION_VEC_NORM) || Arrays.equals(cushionNormalVec, RIGHT_CUSHION_VEC_NORM)) {
+//            if (vx < 0) {
+//                vy -= effectiveSideSpin;
+//            } else {
+//                vy += effectiveSideSpin;
+//            }
+//            xSpin *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
+//            ySpin *= 1 - (1 - table.wallSpinPreserveRatio) * 0.5;
+//        } else if (Arrays.equals(cushionNormalVec, TOP_CUSHION_VEC_NORM) || Arrays.equals(cushionNormalVec, BOT_CUSHION_VEC_NORM)) {
+//            if (vy < 0) {
+//                vx += effectiveSideSpin;
+//            } else {
+//                vx -= effectiveSideSpin;
+//            }
+//            xSpin *= 1 - (1 - table.wallSpinPreserveRatio) * 0.5;  // 比如ratio是0.8，这里就取0.9
+//            ySpin *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
+//        }
+//
+//        sideSpin -= effectiveSideSpin;
+//        sideSpin *= table.wallSpinPreserveRatio;
+////        sideSpin *= table.wallSpinPreserveRatio / sideSpinEffectMul;
+//    }
 
     /**
      * 该方法不检测袋口
      */
-    protected boolean tryHitWall(Phy phy) {
+    protected Cushion tryHitWall(Phy phy) {
         if (nextX < values.ball.ballRadius + table.leftX ||
                 nextX >= table.rightX - values.ball.ballRadius) {
             // 顶库(屏幕两边)
@@ -688,21 +688,21 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //            vy += ySpin * (1 - table.wallSpinPreserveRatio) * CUSHION_DIRECT_SPIN_APPLY;  // 一部分旋转直接生效了
 
             boolean isLeft = nextX < values.table.midX;
-            double[] cushionVec = isLeft ? LEFT_CUSHION_VEC : RIGHT_CUSHION_VEC;
-            double[] normalVec = isLeft ? LEFT_CUSHION_VEC_NORM : RIGHT_CUSHION_VEC_NORM;
-            double[][] cushionLine = isLeft ? values.table.leftCushion : values.table.rightCushion;
+            Cushion.EdgeCushion cushion = isLeft ? table.leftCushion : table.rightCushion;
+//            double[] normalVec = isLeft ? LEFT_CUSHION_VEC_NORM : RIGHT_CUSHION_VEC_NORM;
+//            double[][] cushionLine = isLeft ? values.table.leftCushion : values.table.rightCushion;
 //            applySpinsWhenHitCushion(phy, normalVec);
-            applySpin(normalVec, cushionVec, phy, 1.0);
+            applySpin(cushion.getNormal(), cushion.getVector(), phy, 1.0);
 
             double effectiveAcc = -bounceAcc(phy, vx);
             double nFrames = getNFramesInCushion(vx, effectiveAcc);
 
-            double[] hitCushionPos = getCushionHitPos(cushionLine);
+            double[] hitCushionPos = getCushionHitPos(cushion.getPosition());
 
             double leaveY = hitCushionPos[1] + nFrames * vy;
             double hSpeedLoss = values.table.cushionPowerSpinFactor * (getSpeedPerSecond(phy) / Values.MAX_POWER_SPEED) * 0.25;
             // 撞库撞出来的塞
-            double sideSpinChangeFactor = Algebra.projectionLengthOn(cushionVec, new double[]{vx, vy});
+            double sideSpinChangeFactor = Algebra.projectionLengthOn(cushion.getVector(), new double[]{vx, vy});
             double sideSpinChange = sideSpinChangeFactor * values.table.cushionPowerSpinFactor * CUSHION_COLLISION_SPIN_FACTOR;
             currentBounce = new CushionBounce(
                     effectiveAcc,
@@ -714,7 +714,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     -vx,
                     vy * (1 - hSpeedLoss),
                     sideSpin + sideSpinChange);
-            return true;
+            return cushion;
         }
         if (nextY < values.ball.ballRadius + table.topY ||
                 nextY >= table.botY - values.ball.ballRadius) {
@@ -724,24 +724,24 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //            vx += xSpin * (1 - table.wallSpinPreserveRatio) * CUSHION_DIRECT_SPIN_APPLY;  // 一部分旋转直接生效了
 
             boolean isTop = nextY < table.midY;
-            double[] cushionVec = isTop ? TOP_CUSHION_VEC : BOT_CUSHION_VEC;
-            double[] normalVec = isTop ? TOP_CUSHION_VEC_NORM : BOT_CUSHION_VEC_NORM;
+//            double[] cushionVec = isTop ? TOP_CUSHION_VEC : BOT_CUSHION_VEC;
+//            double[] normalVec = isTop ? TOP_CUSHION_VEC_NORM : BOT_CUSHION_VEC_NORM;
             boolean isLeft = nextX < values.table.midX;
-            double[][] cushionLine = isTop ? (
+            Cushion.EdgeCushion cushion = isTop ? (
                     isLeft ? values.table.topLeftCushion : values.table.topRightCushion)
                     : (isLeft ? values.table.botLeftCushion : values.table.botRightCushion);
 //            applySpinsWhenHitCushion(phy, normalVec);
-            applySpin(normalVec, cushionVec, phy, 1.0);
+            applySpin(cushion.getNormal(), cushion.getVector(), phy, 1.0);
 
             double effectiveAcc = -bounceAcc(phy, vy);
             double nFrames = getNFramesInCushion(vy, effectiveAcc);
 
-            double[] hitCushionPos = getCushionHitPos(cushionLine);
+            double[] hitCushionPos = getCushionHitPos(cushion.getPosition());
 
             double leaveX = hitCushionPos[0] + nFrames * vx;
             double hSpeedLoss = values.table.cushionPowerSpinFactor * (getSpeedPerSecond(phy) / Values.MAX_POWER_SPEED) * 0.25;
             // 撞库撞出来的塞
-            double sideSpinChangeFactor = Algebra.projectionLengthOn(cushionVec, new double[]{vx, vy});
+            double sideSpinChangeFactor = Algebra.projectionLengthOn(cushion.getVector(), new double[]{vx, vy});
             double sideSpinChange = sideSpinChangeFactor * values.table.cushionPowerSpinFactor * CUSHION_COLLISION_SPIN_FACTOR;
             currentBounce = new CushionBounce(
                     0,
@@ -753,9 +753,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     vx * (1 - hSpeedLoss),
                     -vy,
                     sideSpin + sideSpinChange);
-            return true;
+            return cushion;
         }
-        return false;
+        return null;
     }
 
     void threeBallHit(Ball ball2, Ball ball3, Phy phy) {

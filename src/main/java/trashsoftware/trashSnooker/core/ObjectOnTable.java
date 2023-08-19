@@ -1,9 +1,12 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.metrics.Cushion;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.phy.Phy;
+
+import java.util.Objects;
 
 public abstract class ObjectOnTable implements Cloneable {
     protected static final double GENERAL_BOUNCE_ACC = 0.35;
@@ -262,97 +265,97 @@ public abstract class ObjectOnTable implements Cloneable {
      * 如果进入袋角区域但未发生撞击，返回{@code 1}。
      * 如未进入，返回{@code 0}
      */
-    protected int tryHitHoleArea(Phy phy) {
+    protected CushionHitResult tryHitHoleArea(Phy phy) {
         if (nextY < radius + table.topY) {
             if (nextX < table.midHoleAreaRightX && nextX >= table.midHoleAreaLeftX) {
                 // 上方中袋在袋角范围内
-                if (predictedDtToPoint(table.topMidHoleLeftArcXy) < table.midArcRadius + radius &&
-                        currentDtToPoint(table.topMidHoleLeftArcXy) >= table.midArcRadius + radius) {
+                if (predictedDtToPoint(table.topMidHoleLeftArcXy.getCenter()) < table.midArcRadius + radius &&
+                        currentDtToPoint(table.topMidHoleLeftArcXy.getCenter()) >= table.midArcRadius + radius) {
                     // 击中上方中袋左侧
-                    hitHoleArcArea(table.topMidHoleLeftArcXy, phy, table.midArcRadius);
-                    return 2;
-                } else if (predictedDtToPoint(table.topMidHoleRightArcXy) < table.midArcRadius + radius &&
-                        currentDtToPoint(table.topMidHoleRightArcXy) >= table.midArcRadius + radius) {
+                    hitHoleArcArea(table.topMidHoleLeftArcXy.getCenter(), phy, table.midArcRadius);
+                    return new CushionHitResult(table.topMidHoleLeftArcXy, 2);
+                } else if (predictedDtToPoint(table.topMidHoleRightArcXy.getCenter()) < table.midArcRadius + radius &&
+                        currentDtToPoint(table.topMidHoleRightArcXy.getCenter()) >= table.midArcRadius + radius) {
                     // 击中上方中袋右侧
-                    hitHoleArcArea(table.topMidHoleRightArcXy, phy, table.midArcRadius);
-                    return 2;
+                    hitHoleArcArea(table.topMidHoleRightArcXy.getCenter(), phy, table.midArcRadius);
+                    return new CushionHitResult(table.topMidHoleRightArcXy, 2);
                 } else if (nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
                     // 疑似上方中袋直线
-                    double[][] line = table.topMidHoleLeftLine;
-                    if (predictedDtToLine(line) < radius &&
-                            currentDtToLine(line) >= radius) {
+                    Cushion.CushionLine line = table.topMidHoleLeftLine;
+                    if (predictedDtToLine(line.getPosition()) < radius &&
+                            currentDtToLine(line.getPosition()) >= radius) {
                         hitHoleLineArea(
-                                line,
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
+                                line.getPosition(),
+                                line.getNormal(),
                                 phy);
-                        return 2;
+                        return new CushionHitResult(line, 2);
                     }
                     line = table.topMidHoleRightLine;
-                    if (predictedDtToLine(line) < radius &&
-                            currentDtToLine(line) >= radius) {
+                    if (predictedDtToLine(line.getPosition()) < radius &&
+                            currentDtToLine(line.getPosition()) >= radius) {
                         hitHoleLineArea(
-                                line,
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
+                                line.getPosition(),
+                                line.getNormal(),
                                 phy);
-                        return 2;
+                        return new CushionHitResult(line, 2);
                     }
 
                     tryEnterGravityArea(phy, table.topMid.fallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
-                    return 1;
+                    return new CushionHitResult(1);
                 } else {
 
                     tryEnterGravityArea(phy, table.topMid.fallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
-                    return 1;
+                    return new CushionHitResult(1);
                 }
             }
         } else if (nextY >= table.botY - radius) {
             if (nextX < table.midHoleAreaRightX && nextX >= table.midHoleAreaLeftX) {
                 // 下方中袋袋角范围内
-                if (predictedDtToPoint(table.botMidHoleLeftArcXy) < table.midArcRadius + radius &&
-                        currentDtToPoint(table.botMidHoleLeftArcXy) >= table.midArcRadius + radius) {
+                if (predictedDtToPoint(table.botMidHoleLeftArcXy.getCenter()) < table.midArcRadius + radius &&
+                        currentDtToPoint(table.botMidHoleLeftArcXy.getCenter()) >= table.midArcRadius + radius) {
                     // 击中下方中袋左侧
-                    hitHoleArcArea(table.botMidHoleLeftArcXy, phy, table.midArcRadius);
-                    return 2;
-                } else if (predictedDtToPoint(table.botMidHoleRightArcXy) < table.midArcRadius + radius &&
-                        currentDtToPoint(table.botMidHoleRightArcXy) >= table.midArcRadius + radius) {
+                    hitHoleArcArea(table.botMidHoleLeftArcXy.getCenter(), phy, table.midArcRadius);
+                    return new CushionHitResult(table.botMidHoleLeftArcXy, 2);
+                } else if (predictedDtToPoint(table.botMidHoleRightArcXy.getCenter()) < table.midArcRadius + radius &&
+                        currentDtToPoint(table.botMidHoleRightArcXy.getCenter()) >= table.midArcRadius + radius) {
                     // 击中下方中袋右侧
-                    hitHoleArcArea(table.botMidHoleRightArcXy, phy, table.midArcRadius);
-                    return 2;
+                    hitHoleArcArea(table.botMidHoleRightArcXy.getCenter(), phy, table.midArcRadius);
+                    return new CushionHitResult(table.botMidHoleRightArcXy, 2);
                 } else if (nextX >= table.midHoleLineLeftX && nextX < table.midHoleLineRightX) {
                     // 疑似下方中袋直线
-                    double[][] line = table.botMidHoleLeftLine;
-                    if (predictedDtToLine(line) < radius &&
-                            currentDtToLine(line) >= radius) {
+                    Cushion.CushionLine line = table.botMidHoleLeftLine;
+                    if (predictedDtToLine(line.getPosition()) < radius &&
+                            currentDtToLine(line.getPosition()) >= radius) {
                         hitHoleLineArea(
-                                line,
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
+                                line.getPosition(),
+                                line.getNormal(),
                                 phy);
-                        return 2;
+                        return new CushionHitResult(line, 2);
                     }
                     line = table.botMidHoleRightLine;
-                    if (predictedDtToLine(line) < radius &&
-                            currentDtToLine(line) >= radius) {
+                    if (predictedDtToLine(line.getPosition()) < radius &&
+                            currentDtToLine(line.getPosition()) >= radius) {
                         hitHoleLineArea(
-                                line,
-                                Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
+                                line.getPosition(),
+                                line.getNormal(),
                                 phy);
-                        return 2;
+                        return new CushionHitResult(line, 2);
                     }
 
                     tryEnterGravityArea(phy, table.botMid.fallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
-                    return 1;
+                    return new CushionHitResult(1);
                 } else {
 
                     tryEnterGravityArea(phy, table.botMid.fallCenter, true);
                     normalMove(phy);
                     prepareMove(phy);
-                    return 1;
+                    return new CushionHitResult(1);
                 }
             }
         }
@@ -383,22 +386,22 @@ public abstract class ObjectOnTable implements Cloneable {
 
         if (probHole != null) {
             for (int i = 0; i < table.allCornerLines.length; ++i) {
-                double[][] line = table.allCornerLines[i];
+                Cushion.CushionLine line = table.allCornerLines[i];
 
-                if (predictedDtToLine(line) < radius && currentDtToLine(line) >= radius) {
+                if (predictedDtToLine(line.getPosition()) < radius && currentDtToLine(line.getPosition()) >= radius) {
                     hitHoleLineArea(
-                            line,
-                            Algebra.normalVector(new double[]{line[0][0] - line[1][0], line[0][1] - line[1][1]}),
+                            line.getPosition(),
+                            line.getNormal(),
                             phy);
-                    return 2;
+                    return new CushionHitResult(line, 2);
                 }
             }
 //            if (!table.isStraightHole()) {
-            for (double[] cornerArc : table.allCornerArcs) {
-                if (predictedDtToPoint(cornerArc) < table.cornerArcRadius + radius &&
-                        currentDtToPoint(cornerArc) >= table.cornerArcRadius + radius) {
-                    hitHoleArcArea(cornerArc, phy, table.cornerArcRadius);
-                    return 2;
+            for (Cushion.CushionArc cornerArc : table.allCornerArcs) {
+                if (predictedDtToPoint(cornerArc.getCenter()) < table.cornerArcRadius + radius &&
+                        currentDtToPoint(cornerArc.getCenter()) >= table.cornerArcRadius + radius) {
+                    hitHoleArcArea(cornerArc.getCenter(), phy, table.cornerArcRadius);
+                    return new CushionHitResult(cornerArc, 2);
                 }
             }
 //            }
@@ -406,9 +409,9 @@ public abstract class ObjectOnTable implements Cloneable {
             tryEnterGravityArea(phy, probPocketFallCenter, false);
             normalMove(phy);
             prepareMove(phy);
-            return 1;
+            return new CushionHitResult(1);
         }
-        return 0;
+        return new CushionHitResult(0);
     }
 
     /**
@@ -729,4 +732,54 @@ public abstract class ObjectOnTable implements Cloneable {
             this.desiredLeaveSideSpin = 0.0;
         }
     }
+
+    public static final class CushionHitResult {
+        private final Cushion cushion;
+        private final int result;
+
+        public CushionHitResult(Cushion cushion, int result) {
+            this.cushion = cushion;
+            this.result = result;
+            
+            if (result == 2) {
+                if (cushion == null) throw new RuntimeException();
+            } else {
+                if (cushion != null) throw new RuntimeException();
+            }
+        }
+        
+        public CushionHitResult(int result) {
+            this(null, result);
+        }
+
+        public Cushion cushion() {
+            return cushion;
+        }
+
+        public int result() {
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (CushionHitResult) obj;
+            return Objects.equals(this.cushion, that.cushion) &&
+                    this.result == that.result;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(cushion, result);
+        }
+
+        @Override
+        public String toString() {
+            return "CushionHitResult[" +
+                    "cushion=" + cushion + ", " +
+                    "result=" + result + ']';
+        }
+    
+        }
 }

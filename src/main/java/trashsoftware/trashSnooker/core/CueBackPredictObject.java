@@ -21,10 +21,10 @@ public class CueBackPredictObject extends ObjectOnTable {
     }
     
     double[] hitWall() {
-        if (nextX < radius + table.leftX) return Ball.LEFT_CUSHION_VEC;
-        if (nextX >= table.rightX - radius) return Ball.RIGHT_CUSHION_VEC;
-        if (nextY < radius + table.topY) return Ball.TOP_CUSHION_VEC;
-        if (nextY >= table.botY - radius) return Ball.BOT_CUSHION_VEC;
+        if (nextX < radius + table.leftX) return table.leftCushion.getVector();
+        if (nextX >= table.rightX - radius) return table.rightCushion.getVector();
+        if (nextY < radius + table.topY) return table.topLeftCushion.getVector();  // topLeft和topRight的vector一样的
+        if (nextY >= table.botY - radius) return table.botRightCushion.getVector();
             
         return null;
     }

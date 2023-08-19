@@ -16,6 +16,8 @@ import java.util.MissingResourceException;
 public enum Achievement {
     POT_A_BALL(AchCat.GENERAL_TABLE),  // 已完成
     POT_BALLS(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 10, 50, 200),  // 已完成
+    POT_BALLS_REST(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 5, 20, 50),  // 已完成
+    POT_BALLS_ANTI(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 5, 20, 50),  // 已完成
     CUMULATIVE_LONG_POTS_1(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 10),  // 已完成
     THREE_BALLS_IN_A_ROW(AchCat.GENERAL_TABLE),  // 已完成
     POSITIONING_MASTER(AchCat.GENERAL_TABLE, Type.HIGH_RECORD, 7),  // 已完成
@@ -25,7 +27,11 @@ public enum Achievement {
     ACCURACY_WIN_LONG(AchCat.GENERAL_TABLE),  // 已完成
     CONTINUOUS_LONG_POT(AchCat.GENERAL_TABLE),  // 已完成
     MULTIPLE_EASY_FAILS(AchCat.GENERAL_TABLE, true),  // 已完成
-//    PASS_POT(AchCat.GENERAL),  // todo 传球 完成不了
+    AROUND_TABLE_POSITION(AchCat.GENERAL_TABLE),
+    MULTI_CUSHION_POSITION_1(AchCat.GENERAL_TABLE),
+    MULTI_CUSHION_POSITION_2(AchCat.GENERAL_TABLE),
+    MULTI_CUSHION_ESCAPE(AchCat.GENERAL_TABLE),
+    // todo: 传球，一杆双响
 
     WIN_A_FRAME(AchCat.GENERAL_MATCH),  // 已完成
     WIN_A_MATCH(AchCat.GENERAL_MATCH),  // 已完成
@@ -88,6 +94,7 @@ public enum Achievement {
 
     // 巡回赛
     EARNED_MONEY(AchCat.TOUR),  // 已完成
+    EARN_MONEY_CUMULATIVE(AchCat.TOUR, Type.CUMULATIVE, 50000, 200000, 1000000),  // 已完成
     CHAMPION(AchCat.TOUR),  // 已完成
     SECOND_PLACE(AchCat.TOUR),  // 已完成
     BEST_FOUR(AchCat.TOUR),  // 已完成

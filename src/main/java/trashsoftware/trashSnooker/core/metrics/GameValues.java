@@ -168,20 +168,20 @@ public class GameValues {
         if (y < r + table.topY) {
             if (x < table.midHoleAreaRightX && x >= table.midHoleAreaLeftX) {
                 // 上方中袋在袋角范围内
-                if (Algebra.distanceToPoint(pos, table.topMidHoleLeftArcXy) < table.midArcRadius + r) {
+                if (Algebra.distanceToPoint(pos, table.topMidHoleLeftArcXy.getCenter()) < table.midArcRadius + r) {
                     // 击中上方中袋左侧
                     return false;
-                } else if (Algebra.distanceToPoint(pos, table.topMidHoleRightArcXy) < table.midArcRadius + r) {
+                } else if (Algebra.distanceToPoint(pos, table.topMidHoleRightArcXy.getCenter()) < table.midArcRadius + r) {
                     // 击中上方中袋右侧
                     return false;
                 } else if (x >= table.midHoleLineLeftX && x < table.midHoleLineRightX) {
                     // 疑似上方中袋直线
-                    double[][] line = table.topMidHoleLeftLine;
-                    if (Algebra.distanceToLine(pos, line) < r) {
+                    Cushion.CushionLine line = table.topMidHoleLeftLine;
+                    if (Algebra.distanceToLine(pos, line.getPosition()) < r) {
                         return false;
                     }
                     line = table.topMidHoleRightLine;
-                    if (Algebra.distanceToLine(pos, line) < r) {
+                    if (Algebra.distanceToLine(pos, line.getPosition()) < r) {
                         return false;
                     }
                     return true;
@@ -192,20 +192,20 @@ public class GameValues {
         } else if (y >= table.botY - r) {
             if (x < table.midHoleAreaRightX && x >= table.midHoleAreaLeftX) {
                 // 下方中袋袋角范围内
-                if (Algebra.distanceToPoint(pos, table.botMidHoleLeftArcXy) < table.midArcRadius + r) {
+                if (Algebra.distanceToPoint(pos, table.botMidHoleLeftArcXy.getCenter()) < table.midArcRadius + r) {
                     // 击中下方中袋左侧
                     return false;
-                } else if (Algebra.distanceToPoint(pos, table.botMidHoleRightArcXy) < table.midArcRadius + r) {
+                } else if (Algebra.distanceToPoint(pos, table.botMidHoleRightArcXy.getCenter()) < table.midArcRadius + r) {
                     // 击中下方中袋右侧
                     return false;
                 } else if (x >= table.midHoleLineLeftX && x < table.midHoleLineRightX) {
                     // 疑似下方中袋直线
-                    double[][] line = table.botMidHoleLeftLine;
-                    if (Algebra.distanceToLine(pos, line) < r) {
+                    Cushion.CushionLine line = table.botMidHoleLeftLine;
+                    if (Algebra.distanceToLine(pos, line.getPosition()) < r) {
                         return false;
                     }
                     line = table.botMidHoleRightLine;
-                    if (Algebra.distanceToLine(pos, line) < r) {
+                    if (Algebra.distanceToLine(pos, line.getPosition()) < r) {
                         return false;
                     }
                     return true;
@@ -226,15 +226,15 @@ public class GameValues {
 
         if (probHole != null) {
             for (int i = 0; i < table.allCornerLines.length; ++i) {
-                double[][] line = table.allCornerLines[i];
+                Cushion.CushionLine line = table.allCornerLines[i];
 
-                if (Algebra.distanceToLine(pos, line) < r) {
+                if (Algebra.distanceToLine(pos, line.getPosition()) < r) {
                     return false;
                 }
             }
 //            if (!table.isStraightHole()) {
-                for (double[] cornerArc : table.allCornerArcs) {
-                    if (Algebra.distanceToPoint(pos, cornerArc) < table.cornerArcRadius + r) {
+                for (Cushion.CushionArc cornerArc : table.allCornerArcs) {
+                    if (Algebra.distanceToPoint(pos, cornerArc.getCenter()) < table.cornerArcRadius + r) {
                         return false;
                     }
                 }

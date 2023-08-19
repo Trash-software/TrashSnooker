@@ -27,6 +27,8 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.core.career.ChampionshipStage;
+import trashsoftware.trashSnooker.core.metrics.Cushion;
+import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
@@ -40,14 +42,7 @@ import java.io.*;
 import java.util.*;
 
 public class CareerAchManager extends AchManager {
-//    private final List<Achievement> snookerNormal = List.of(
-//            Achievement.POT_A_BALL,
-//            Achievement.SNOOKER_BREAK_100
-//    );
-//    private final List<Achievement> chineseEightNormal = List.of(
-//            Achievement.POT_A_BALL,
-//            Achievement.POOL_BREAK_POT
-//    );
+    
     private final CareerSave careerSave;
     private final Map<Achievement, AchCompletion> recordedAchievements = new HashMap<>();  // 至少完成了一点点的
     private transient final List<AchCompletion> thisTimeComplete = new ArrayList<>();  // 记录这一杆完成的，在一次show之后清空
@@ -214,7 +209,47 @@ public class CareerAchManager extends AchManager {
                     humanContinuousPotFail = 0;
                     addAchievement(Achievement.POT_A_BALL, justCuedPlayer);
                     addAchievement(Achievement.POT_BALLS, justCuedPlayer);
-//                    addAchievement(Achievement.POT_HUNDRED_BALLS, justCuedPlayer);
+
+                    PlayerPerson.HandSkill handSkill = potAttempt.getHandSkill();
+                    if (handSkill.hand == PlayerPerson.Hand.REST) {
+                        addAchievement(Achievement.POT_BALLS_REST, justCuedPlayer);
+                    } else if (handSkill.hand == justCuedPlayer.getPlayerPerson().handBody.getAntiHand().hand) {
+                        addAchievement(Achievement.POT_BALLS_ANTI, justCuedPlayer);
+                    }
+                    
+                    // 走位相关
+                    PotAttempt positionPot = potAttempt.getPositionToThis();
+                    if (positionPot != null) {
+                        // 有上一杆
+                        Movement.Trace whiteTrace = positionPot.getWhiteTrace();
+                        List<Cushion> whiteCushionAfter = whiteTrace.getCushionAfter();
+                        int endCount = 0;
+                        int topBotCount = 0;
+                        int arcCount = 0;
+                        for (Cushion cushion : whiteCushionAfter) {
+                            if (cushion instanceof Cushion.EdgeCushion edge) {
+                                if (edge.isEndCushion()) endCount++;
+                                else topBotCount++;
+                            } else if (cushion instanceof Cushion.CushionArc) {
+                                arcCount++;
+                            }
+                        }
+                        if (topBotCount >= 2 && endCount >= 1) {
+//                            System.out.println("around table");
+                            addAchievement(Achievement.AROUND_TABLE_POSITION, justCuedPlayer);
+                        }
+                        // 袋内直线不算，袋角最多算两次
+                        int validCount = topBotCount + endCount + Math.min(arcCount, 2);
+                        if (validCount >= 4) {
+                            addAchievement(Achievement.MULTI_CUSHION_POSITION_1, justCuedPlayer);
+                            if (validCount >= 7) {
+                                addAchievement(Achievement.MULTI_CUSHION_POSITION_2, justCuedPlayer);
+                            }
+                        }
+//                        System.out.printf("Cushion: %d, top bot: %d, end: %d\n",
+//                                whiteCushionAfter.size(), topBotCount, endCount);
+                    }
+                    
                 } else {
                     humanContinuousPotFail += 1;
                     if (humanContinuousPotFail >= 3) {
@@ -249,6 +284,11 @@ public class CareerAchManager extends AchManager {
                 if (defenseAttempt.isSolvingSnooker()) {
                     if (defenseAttempt.isSolveSuccess()) {  // 基本可认为一定是true，否则就犯规了，不会进这个分支
                         addAchievement(Achievement.SOLVE_SNOOKER_SUCCESS, justCuedPlayer);
+
+                        Movement.Trace whiteTrace = defenseAttempt.getWhiteTrace();
+                        if (whiteTrace.getCushionBefore().size() >= 4) {
+                            addAchievement(Achievement.MULTI_CUSHION_ESCAPE, justCuedPlayer);
+                        }
                     }
                 }
             }

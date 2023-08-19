@@ -4,14 +4,10 @@ import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
-import trashsoftware.trashSnooker.core.metrics.GameRule;
-import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.metrics.Pocket;
-import trashsoftware.trashSnooker.core.metrics.Rule;
+import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
-import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LisEightGame;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
@@ -1075,13 +1071,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return closet;
     }
 
-    private void whiteCollide(Ball ball) {
-        if (whiteFirstCollide == null) {
-            whiteFirstCollide = ball;
-            collidesWall = false;  // 必须白球在接触首个目标球后，再有球碰库
-        }
-    }
-
     private void recordPositions() {
         recordedPositions.clear();
         for (B ball : getAllBalls()) {
@@ -1277,15 +1266,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 return false;
             }
 
-            int holeAreaResult = firstBall.tryHitHoleArea(phy);
-            if (holeAreaResult != 0) {
+            ObjectOnTable.CushionHitResult holeAreaResult = firstBall.tryHitHoleArea(phy);
+            if (holeAreaResult != null && holeAreaResult.result() != 0) {
                 tryHitBallOther(firstBall);
-                if (holeAreaResult == 2) {
+                if (holeAreaResult.result() == 2) {
                     prediction.firstBallHitCushion();
                 }
                 return false;
             }
-            if (firstBall.tryHitWall(phy)) {
+            if (firstBall.tryHitWall(phy) != null) {
                 prediction.firstBallHitCushion();
                 return false;
             }
@@ -1330,15 +1319,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 return false;
             }
 
-            int holeAreaResult = cueBallClone.tryHitHoleArea(phy);
-            if (holeAreaResult != 0) {
+            ObjectOnTable.CushionHitResult holeAreaResult = cueBallClone.tryHitHoleArea(phy);
+            if (holeAreaResult != null && holeAreaResult.result() != 0) {
                 // 袋口区域
                 if (prediction.getFirstCollide() == null) {
                     tryWhiteHitBall();
                 } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                     tryPassSecondBall();
                 }
-                if (holeAreaResult == 2) {
+                if (holeAreaResult.result() == 2) {
                     if (!hitWall) {
                         dtWhenHitFirstWall = cueBallClone.getDistanceMoved();
                     }
@@ -1352,7 +1341,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 }
                 return false;
             }
-            if (cueBallClone.tryHitWall(phy)) {
+            if (cueBallClone.tryHitWall(phy) != null) {
                 // 库边
                 if (!hitWall) {
                     dtWhenHitFirstWall = cueBallClone.getDistanceMoved();
@@ -1455,6 +1444,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         Movement calculate() {
             movement = new Movement(getAllBalls());
+            movement.startTrace();
             while (!oneRun() && notTerminated) {
                 if (cumulatedPhysicalTime >= CONGESTION_LIMIT) {
                     // Must be something wrong
@@ -1541,23 +1531,26 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         }
                         continue;
                     }
-
-                    int holeAreaResult = ball.tryHitHoleArea(phy);
-                    if (holeAreaResult != 0) {
+                    
+                    ObjectOnTable.CushionHitResult holeAreaResult = ball.tryHitHoleArea(phy);
+                    if (holeAreaResult != null && holeAreaResult.result() != 0) {
                         // 袋口区域
                         tryHitBall(ball, true);
-                        if (holeAreaResult == 2) {
+                        if (holeAreaResult.result() == 2) {
                             collidesWall = true;
                             recordHitCushion(ball);
+                            if (ball.isWhite()) movement.getWhiteTrace().hitCushion(holeAreaResult.cushion());
                             movementTypes[i] = MovementFrame.CUSHION;
                             movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         }
                         continue;
                     }
-                    if (ball.tryHitWall(phy)) {
+                    Cushion cushion;
+                    if ((cushion = ball.tryHitWall(phy)) != null) {
                         // 库边
                         collidesWall = true;
                         recordHitCushion(ball);
+                        if (ball.isWhite()) movement.getWhiteTrace().hitCushion(cushion);
                         movementTypes[i] = MovementFrame.CUSHION;
                         movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         continue;
@@ -1576,8 +1569,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             ball.normalMove(phy);
                         }
                     }
-//                    ball.normalMove();
-//                    if (noHit) ball.normalMove();
                 } else {
                     if (!ball.sideSpinAtPosition(phy)) {
 
@@ -1592,6 +1583,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (!phy.isPrediction && !ball.isPotted() && ball.pocketHitCount > 5) {
                         // 没进且晃了很多下
                         AchManager.getInstance().addAchievement(Achievement.SHAKE_POCKET, getCuingIgp());
+                    }
+                    if (ball.isWhite()) {
+                        movement.getWhiteTrace().setDistanceMoved(ball.getDistanceMoved());
                     }
                     ball.clearMovement();
                 }
@@ -1644,6 +1638,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 }
             }
             return result;
+        }
+
+        private void whiteCollide(Ball ball) {
+            if (whiteFirstCollide == null) {
+                whiteFirstCollide = ball;
+                collidesWall = false;  // 必须白球在接触首个目标球后，再有球碰库
+            }
+            movement.getWhiteTrace().hitBall(ball);
         }
 
         private boolean tryHitBall(B ball, boolean applyComplexCal) {

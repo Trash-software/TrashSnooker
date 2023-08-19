@@ -1624,6 +1624,9 @@ public class GameView implements Initializable {
             // 哪有自己摆好球再让对手打的
             game.getGame().setBallInHand();
         }
+        
+        curDefAttempt = null;
+        lastPotAttempt = null;
 
         Player willPlayPlayer = game.getGame().getCuingPlayer();
         updatePowerSlider(willPlayPlayer.getPlayerPerson());
@@ -1993,8 +1996,9 @@ public class GameView implements Initializable {
             if (lastPotAttempt != null && lastPotAttempt.getPlayerPerson() == player.getPlayerPerson()) {
                 // 如上一杆也是进攻，则这一杆进不进就是上一杆走位成不成功
                 lastPotAttempt.setPositionSuccess(success);
+                currentAttempt.setPositionToThis(lastPotAttempt);
             }
-            currentAttempt.setHandSkill(usedHand);
+            currentAttempt.setAfterFinish(usedHand, calculatedMovement.getWhiteTrace());
             currentAttempt.setSuccess(success);
             player.addAttempt(currentAttempt);
             if (success) {
@@ -2013,6 +2017,7 @@ public class GameView implements Initializable {
             }
 
             curDefAttempt = new DefenseAttempt(player, snookered);
+            curDefAttempt.setAfterFinish(usedHand, calculatedMovement.getWhiteTrace());
             player.addAttempt(curDefAttempt);
             System.out.println("Defense!" + (snookered ? " Solving" : ""));
             lastPotAttempt = null;
@@ -2059,8 +2064,9 @@ public class GameView implements Initializable {
             if (lastPotAttempt != null && lastPotAttempt.getPlayerPerson() == player.getPlayerPerson()) {
                 // 如上一杆也是进攻，则这一杆进不进就是上一杆走位成不成功
                 lastPotAttempt.setPositionSuccess(success);
+                currentAttempt.setPositionToThis(lastPotAttempt);
             }
-            currentAttempt.setHandSkill(cueResult.getHandSkill());
+            currentAttempt.setAfterFinish(cueResult.getHandSkill(), calculatedMovement.getWhiteTrace());
             currentAttempt.setSuccess(success);
             player.addAttempt(currentAttempt);
             if (success) {
@@ -2073,6 +2079,8 @@ public class GameView implements Initializable {
         } else {
             curDefAttempt = new DefenseAttempt(player,
                     cueResult.getCueType() == AiCueResult.CueType.SOLVE);
+            curDefAttempt.setAfterFinish(cueResult.getHandSkill(), 
+                    calculatedMovement.getWhiteTrace());
 
             player.addAttempt(curDefAttempt);
             System.out.println("AI Defense!" + (curDefAttempt.isSolvingSnooker() ? " Solving" : ""));

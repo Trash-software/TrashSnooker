@@ -45,7 +45,7 @@ public class TableMetrics {
     public double innerWidth;
     public double innerHeight;
     public double leftX, rightX, topY, botY, midX, midY;
-//    public double leftClothX, rightClothX, topClothY, botClothY;  // 绿色部分的最大
+    //    public double leftClothX, rightClothX, topClothY, botClothY;  // 绿色部分的最大
     public double maxLength;  // 对角线长度
     public double cushionClothWidth;  // 库的视觉宽度
     public double cushionHeight;
@@ -64,20 +64,7 @@ public class TableMetrics {
     public double cornetHoleGraphicalDt;
     public double cornerHoleDrift;  // 对于有角度的袋，这个值是袋角伸进洞里多远
     public double arcBounceAngleRate;  // 袋角弧线的反射角系数，[0-1]之间，越接近1，越平坦
-//    public double[] topLeftHoleXY;
-//    public double[] botLeftHoleXY;
-//    public double[] topRightHoleXY;
-//    public double[] botRightHoleXY;
-//    public double[] topMidHoleXY;
-//    public double[] botMidHoleXY;
-//    public double[] topMidHoleGraXY;
-//    public double[] botMidHoleGraXY;
-//    public double[] topLeftHoleGraXY;
-//    public double[] botLeftHoleGraXY;
-//    public double[] topRightHoleGraXY;
-//    public double[] botRightHoleGraXY;
-//    public double[][] allHoles;
-    
+
     public Pocket topLeft;
     public Pocket topMid;
     public Pocket topRight;
@@ -85,7 +72,7 @@ public class TableMetrics {
     public Pocket botMid;
     public Pocket botLeft;
     public Pocket[] pockets;
-    
+
     public double leftCornerHoleAreaRightX;  // 左顶袋右袋角
     public double midHoleAreaLeftX;  // 中袋左袋角
     public double midHoleAreaRightX;  // 中袋右袋角
@@ -95,46 +82,46 @@ public class TableMetrics {
     public double midHoleLineLeftX, midHoleLineRightX;  // 中袋袋角直线左右极限（仅直袋口）
     public double topMidLineBotY, botMidLineTopY;  // 上中袋袋角直线最下端/下中袋袋角直线最上端
     // 中袋袋角弧线
-    public double[] topMidHoleLeftArcXy;
-    public double[] topMidHoleRightArcXy;
-    public double[] botMidHoleLeftArcXy;
-    public double[] botMidHoleRightArcXy;
+    public Cushion.CushionArc topMidHoleLeftArcXy;
+    public Cushion.CushionArc topMidHoleRightArcXy;
+    public Cushion.CushionArc botMidHoleLeftArcXy;
+    public Cushion.CushionArc botMidHoleRightArcXy;
 
     // 全台6个库的向量，顺时针走向
-    public double[][] topLeftCushion;
-    public double[][] topRightCushion;
-    public double[][] botLeftCushion;
-    public double[][] botRightCushion;
-    public double[][] leftCushion;
-    public double[][] rightCushion;
+    public Cushion.EdgeCushion topLeftCushion;
+    public Cushion.EdgeCushion topRightCushion;
+    public Cushion.EdgeCushion botLeftCushion;
+    public Cushion.EdgeCushion botRightCushion;
+    public Cushion.EdgeCushion leftCushion;
+    public Cushion.EdgeCushion rightCushion;
 
     // 中袋袋角直线
-    public double[][] topMidHoleLeftLine;
-    public double[][] topMidHoleRightLine;
-    public double[][] botMidHoleLeftLine;
-    public double[][] botMidHoleRightLine;
+    public Cushion.CushionLine topMidHoleLeftLine;
+    public Cushion.CushionLine topMidHoleRightLine;
+    public Cushion.CushionLine botMidHoleLeftLine;
+    public Cushion.CushionLine botMidHoleRightLine;
     // 底袋袋角弧线
-    public double[] topLeftHoleSideArcXy;  // 左上底袋边库袋角
-    public double[] topLeftHoleEndArcXy;  // 左上底袋底库袋角
-    public double[] botLeftHoleSideArcXy;
-    public double[] botLeftHoleEndArcXy;
-    public double[] topRightHoleSideArcXy;
-    public double[] topRightHoleEndArcXy;
-    public double[] botRightHoleSideArcXy;
-    public double[] botRightHoleEndArcXy;
+    public Cushion.CushionArc topLeftHoleSideArcXy;  // 左上底袋边库袋角
+    public Cushion.CushionArc topLeftHoleEndArcXy;  // 左上底袋底库袋角
+    public Cushion.CushionArc botLeftHoleSideArcXy;
+    public Cushion.CushionArc botLeftHoleEndArcXy;
+    public Cushion.CushionArc topRightHoleSideArcXy;
+    public Cushion.CushionArc topRightHoleEndArcXy;
+    public Cushion.CushionArc botRightHoleSideArcXy;
+    public Cushion.CushionArc botRightHoleEndArcXy;
     // 底袋袋角直线
-    public double[][] topLeftHoleSideLine;
-    public double[][] topLeftHoleEndLine;
-    public double[][] botLeftHoleSideLine;
-    public double[][] botLeftHoleEndLine;
-    public double[][] topRightHoleSideLine;
-    public double[][] topRightHoleEndLine;
-    public double[][] botRightHoleSideLine;
-    public double[][] botRightHoleEndLine;
-    public double[][] allCornerArcs;
-    public double[][] allMidArcs;
-    public double[][][] allCornerLines;
-    public double[][][] allMidHoleLines;
+    public Cushion.CushionLine topLeftHoleSideLine;
+    public Cushion.CushionLine topLeftHoleEndLine;
+    public Cushion.CushionLine botLeftHoleSideLine;
+    public Cushion.CushionLine botLeftHoleEndLine;
+    public Cushion.CushionLine topRightHoleSideLine;
+    public Cushion.CushionLine topRightHoleEndLine;
+    public Cushion.CushionLine botRightHoleSideLine;
+    public Cushion.CushionLine botRightHoleEndLine;
+    public Cushion.CushionArc[] allCornerArcs;
+    public Cushion.CushionArc[] allMidArcs;
+    public Cushion.CushionLine[] allCornerLines;
+    public Cushion.CushionLine[] allMidHoleLines;
     public List<double[]> tableStars;  // 颗星
     //    public double ballHoleRatio;
 //    public double cornerHoleAngleRatio;  // 打底袋最差的角度和最好的角度差多少
@@ -281,7 +268,7 @@ public class TableMetrics {
                 leftX - cushionClothWidth,
                 botY + cushionClothWidth
         };
-        double[] botRightSlateXY = new double[] {
+        double[] botRightSlateXY = new double[]{
                 rightX + cushionClothWidth,
                 botY + cushionClothWidth
         };
@@ -294,14 +281,14 @@ public class TableMetrics {
                 midX,
                 botY + cushionClothWidth + pocketDifficulty.midCenterToSlate
         };
-        
+
         double midGraphicalRadius = leatherPocket ?
                 midPocketBackInnerRadius() :
                 midHoleRadius;
         double cornerGraphicalRadius = leatherPocket ?
                 cornerPocketBackInnerRadius() :
                 cornerHoleRadius;
-        
+
         topLeft = new Pocket(
                 false,
                 topLeftSlateXY,
@@ -364,52 +351,76 @@ public class TableMetrics {
 
         // 中袋袋角弧线，圆心的位置
         topMidHoleLeftArcXy =
-                new double[]{midHoleAreaLeftX, topY - midArcRadius};
+                new Cushion.CushionArc(
+                        new double[]{midHoleAreaLeftX, topY - midArcRadius}
+                );
         topMidHoleRightArcXy =
-                new double[]{midHoleAreaRightX, topY - midArcRadius};
+                new Cushion.CushionArc(
+                        new double[]{midHoleAreaRightX, topY - midArcRadius}
+                );
         botMidHoleLeftArcXy =
-                new double[]{midHoleAreaLeftX, botY + midArcRadius};
+                new Cushion.CushionArc(
+                        new double[]{midHoleAreaLeftX, botY + midArcRadius}
+                );
         botMidHoleRightArcXy =
-                new double[]{midHoleAreaRightX, botY + midArcRadius};
+                new Cushion.CushionArc(
+                        new double[]{midHoleAreaRightX, botY + midArcRadius}
+                );
 
         // 底袋袋角弧线
         topLeftHoleSideArcXy =  // 左上底袋边库袋角
-                new double[]{leftX + cornerArcWidth + cornerLineLonger - cornerHoleDrift, topY - cornerArcRadius};
+                new Cushion.CushionArc(
+                        new double[]{leftX + cornerArcWidth + cornerLineLonger - cornerHoleDrift, topY - cornerArcRadius}
+                );
         topLeftHoleEndArcXy =  // 左上底袋底库袋角
-                new double[]{leftX - cornerArcRadius, topY + cornerArcWidth + cornerLineLonger - cornerHoleDrift};
+                new Cushion.CushionArc(
+                        new double[]{leftX - cornerArcRadius, topY + cornerArcWidth + cornerLineLonger - cornerHoleDrift}
+                );
         botLeftHoleSideArcXy =
-                new double[]{leftX + cornerArcWidth + cornerLineLonger - cornerHoleDrift, botY + cornerArcRadius};
+                new Cushion.CushionArc(
+                        new double[]{leftX + cornerArcWidth + cornerLineLonger - cornerHoleDrift, botY + cornerArcRadius}
+                );
         botLeftHoleEndArcXy =
-                new double[]{leftX - cornerArcRadius, botY - cornerArcWidth - cornerLineLonger + cornerHoleDrift};
+                new Cushion.CushionArc(
+                        new double[]{leftX - cornerArcRadius, botY - cornerArcWidth - cornerLineLonger + cornerHoleDrift}
+                );
 
         topRightHoleSideArcXy =
-                new double[]{rightX - cornerArcWidth - cornerLineLonger + cornerHoleDrift, topY - cornerArcRadius};
+                new Cushion.CushionArc(
+                        new double[]{rightX - cornerArcWidth - cornerLineLonger + cornerHoleDrift, topY - cornerArcRadius}
+                );
         topRightHoleEndArcXy =
-                new double[]{rightX + cornerArcRadius, topY + cornerArcWidth + cornerLineLonger - cornerHoleDrift};
+                new Cushion.CushionArc(
+                        new double[]{rightX + cornerArcRadius, topY + cornerArcWidth + cornerLineLonger - cornerHoleDrift}
+                );
         botRightHoleSideArcXy =
-                new double[]{rightX - cornerArcWidth - cornerLineLonger + cornerHoleDrift, botY + cornerArcRadius};
+                new Cushion.CushionArc(
+                        new double[]{rightX - cornerArcWidth - cornerLineLonger + cornerHoleDrift, botY + cornerArcRadius}
+                );
         botRightHoleEndArcXy =
-                new double[]{rightX + cornerArcRadius, botY - cornerArcWidth - cornerLineLonger + cornerHoleDrift};
+                new Cushion.CushionArc(
+                        new double[]{rightX + cornerArcRadius, botY - cornerArcWidth - cornerLineLonger + cornerHoleDrift}
+                );
 
         // 库
-        topLeftCushion = new double[][]{
-                {topLeftHoleSideArcXy[0], topY}, {topMidHoleLeftArcXy[0], topY}
-        };
-        topRightCushion = new double[][]{
-                {topMidHoleRightArcXy[0], topY}, {topRightHoleSideArcXy[0], topY}
-        };
-        rightCushion = new double[][]{
-                {rightX, topRightHoleEndArcXy[1]}, {rightX, botRightHoleEndArcXy[1]}
-        };
-        botRightCushion = new double[][]{
-                {botRightHoleSideArcXy[0], botY}, {botMidHoleRightArcXy[0], botY}
-        };
-        botLeftCushion = new double[][]{
-                {botMidHoleLeftArcXy[0], botY}, {botRightHoleSideArcXy[0], botY}
-        };
-        leftCushion = new double[][]{
-                {leftX, botLeftHoleEndArcXy[1]}, {leftX, topLeftHoleEndArcXy[1]}
-        };
+        topLeftCushion = new Cushion.EdgeCushion("TOP_LEFT", new double[][]{
+                {topLeftHoleSideArcXy.getCenter()[0], topY}, {topMidHoleLeftArcXy.getCenter()[0], topY}
+        });
+        topRightCushion = new Cushion.EdgeCushion("TOP_RIGHT", new double[][]{
+                {topMidHoleRightArcXy.getCenter()[0], topY}, {topRightHoleSideArcXy.getCenter()[0], topY}
+        });
+        rightCushion = new Cushion.EdgeCushion("RIGHT", new double[][]{
+                {rightX, topRightHoleEndArcXy.getCenter()[1]}, {rightX, botRightHoleEndArcXy.getCenter()[1]}
+        });
+        botRightCushion = new Cushion.EdgeCushion("BOT_RIGHT", new double[][]{
+                {botRightHoleSideArcXy.getCenter()[0], botY}, {botMidHoleRightArcXy.getCenter()[0], botY}
+        });
+        botLeftCushion = new Cushion.EdgeCushion("BOT_LEFT", new double[][]{
+                {botMidHoleLeftArcXy.getCenter()[0], botY}, {botRightHoleSideArcXy.getCenter()[0], botY}
+        });
+        leftCushion = new Cushion.EdgeCushion("LEFT", new double[][]{
+                {leftX, botLeftHoleEndArcXy.getCenter()[1]}, {leftX, topLeftHoleEndArcXy.getCenter()[1]}
+        });
 
         // 中袋袋角直线
         midHoleLineLeftX = midX - midHoleRadius - midLineWidth;
@@ -418,64 +429,88 @@ public class TableMetrics {
         botMidLineTopY = botMidHoleXY[1] - midLineHeight;
 
         topMidHoleLeftLine =
-                new double[][]{{midX - midHoleRadius, topMidHoleXY[1]},
-                        {midHoleLineLeftX, topMidLineBotY}};
+                new Cushion.CushionLine(
+                        new double[][]{{midX - midHoleRadius, topMidHoleXY[1]},
+                                {midHoleLineLeftX, topMidLineBotY}}
+                );
         topMidHoleRightLine =
-                new double[][]{{midX + midHoleRadius, topMidHoleXY[1]},
-                        {midHoleLineRightX, topMidLineBotY}};
+                new Cushion.CushionLine(
+                        new double[][]{{midX + midHoleRadius, topMidHoleXY[1]},
+                                {midHoleLineRightX, topMidLineBotY}}
+                );
         botMidHoleLeftLine =
-                new double[][]{{midX - midHoleRadius, botMidHoleXY[1]},
-                        {midHoleLineLeftX, botMidLineTopY}};
+                new Cushion.CushionLine(
+                        new double[][]{{midX - midHoleRadius, botMidHoleXY[1]},
+                                {midHoleLineLeftX, botMidLineTopY}}
+                );
         botMidHoleRightLine =
-                new double[][]{{midX + midHoleRadius, botMidHoleXY[1]},
-                        {midHoleLineRightX, botMidLineTopY}};
+                new Cushion.CushionLine(
+                        new double[][]{{midX + midHoleRadius, botMidHoleXY[1]},
+                                {midHoleLineRightX, botMidLineTopY}}
+                );
 
         // 底袋袋角直线
         topLeftHoleEndLine =
-                new double[][]{
-                        {leftX - cornerArcHeight, topY + cornerLineLonger - cornerHoleDrift},  // 浅
-                        {leftX - cornerHoleTan, topY - cornerHoleDrift}  // 深
-                };
+                new Cushion.CushionLine(
+                        new double[][]{
+                                {leftX - cornerArcHeight, topY + cornerLineLonger - cornerHoleDrift},  // 浅
+                                {leftX - cornerHoleTan, topY - cornerHoleDrift}  // 深
+                        }
+                );
         topLeftHoleSideLine =
-                new double[][]{
-                        {leftX - cornerHoleDrift, topY - cornerHoleTan},  // 深
-                        {leftX + cornerLineLonger - cornerHoleDrift, topY - cornerArcHeight}  // 浅
-                };
+                new Cushion.CushionLine(
+                        new double[][]{
+                                {leftX - cornerHoleDrift, topY - cornerHoleTan},  // 深
+                                {leftX + cornerLineLonger - cornerHoleDrift, topY - cornerArcHeight}  // 浅
+                        }
+                );
 
         topRightHoleSideLine =
-                new double[][]{
-                        {rightX - cornerLineLonger + cornerHoleDrift, topY - cornerArcHeight},  // 浅
-                        {rightX + cornerHoleDrift, topY - cornerHoleTan}  // 深
-                };
+                new Cushion.CushionLine(
+                        new double[][]{
+                                {rightX - cornerLineLonger + cornerHoleDrift, topY - cornerArcHeight},  // 浅
+                                {rightX + cornerHoleDrift, topY - cornerHoleTan}  // 深
+                        }
+                );
         topRightHoleEndLine =
-                new double[][]{
-                        {rightX + cornerHoleTan, topY - cornerHoleDrift},  // 深
-                        {rightX + cornerArcHeight, topY + cornerLineLonger - cornerHoleDrift}  // 浅
-                };
+                new Cushion.CushionLine(
+                        new double[][]{
+                                {rightX + cornerHoleTan, topY - cornerHoleDrift},  // 深
+                                {rightX + cornerArcHeight, topY + cornerLineLonger - cornerHoleDrift}  // 浅
+                        }
+                );
 
         botRightHoleEndLine =
-                new double[][]{
-                        {rightX + cornerArcHeight, botY - cornerLineLonger + cornerHoleDrift},  // 浅
-                        {rightX + cornerHoleTan, botY + cornerHoleDrift}  // 深
-                };
+                new Cushion.CushionLine(
+                        new double[][]{
+                                {rightX + cornerArcHeight, botY - cornerLineLonger + cornerHoleDrift},  // 浅
+                                {rightX + cornerHoleTan, botY + cornerHoleDrift}  // 深
+                        }
+                );
         botRightHoleSideLine =
-                new double[][]{
-                        {rightX + cornerHoleDrift, botY + cornerHoleTan},  // 深
-                        {rightX - cornerLineLonger + cornerHoleDrift, botY + cornerArcHeight}  // 浅
-                };
+                new Cushion.CushionLine(
+                        new double[][]{
+                                {rightX + cornerHoleDrift, botY + cornerHoleTan},  // 深
+                                {rightX - cornerLineLonger + cornerHoleDrift, botY + cornerArcHeight}  // 浅
+                        }
+                );
 
         botLeftHoleSideLine =
-                new double[][]{
-                        {leftX + cornerLineLonger - cornerHoleDrift, botY + cornerArcHeight},  // 浅
-                        {leftX - cornerHoleDrift, botY + cornerHoleTan}  // 深
-                };
+                new Cushion.CushionLine(
+                        new double[][]{
+                                {leftX + cornerLineLonger - cornerHoleDrift, botY + cornerArcHeight},  // 浅
+                                {leftX - cornerHoleDrift, botY + cornerHoleTan}  // 深
+                        }
+                );
         botLeftHoleEndLine =
-                new double[][]{
-                        {leftX - cornerHoleTan, botY + cornerHoleDrift},  // 深
-                        {leftX - cornerArcHeight, botY - cornerLineLonger + cornerHoleDrift}  // 浅
-                };
+                new Cushion.CushionLine(
+                        new double[][]{
+                                {leftX - cornerHoleTan, botY + cornerHoleDrift},  // 深
+                                {leftX - cornerArcHeight, botY - cornerLineLonger + cornerHoleDrift}  // 浅
+                        }
+                );
 
-        allCornerArcs = new double[][]{
+        allCornerArcs = new Cushion.CushionArc[]{
                 topLeftHoleSideArcXy,
                 topLeftHoleEndArcXy,
                 topRightHoleSideArcXy,
@@ -485,14 +520,14 @@ public class TableMetrics {
                 botRightHoleSideArcXy,
                 botRightHoleEndArcXy
         };
-        allMidArcs = new double[][]{
+        allMidArcs = new Cushion.CushionArc[]{
                 topMidHoleLeftArcXy,
                 topMidHoleRightArcXy,
                 botMidHoleLeftArcXy,
                 botMidHoleRightArcXy
         };
 
-        allCornerLines = new double[][][]{
+        allCornerLines = new Cushion.CushionLine[]{
                 topLeftHoleSideLine,  // "\"
                 topLeftHoleEndLine,  // "\"
                 botRightHoleSideLine,  // "\"
@@ -503,7 +538,7 @@ public class TableMetrics {
                 botLeftHoleEndLine  // "/"
         };
 
-        allMidHoleLines = new double[][][]{
+        allMidHoleLines = new Cushion.CushionLine[]{
                 topMidHoleLeftLine,
                 topMidHoleRightLine,
                 botMidHoleLeftLine,
@@ -821,11 +856,11 @@ public class TableMetrics {
         }
 
         private Builder pocketDifficulty(double cornerPocketGravityZone,
-                                 double cornerPocketArcSize,
-                                 double cornerPocketAngle,
-                                 double midPocketGravityZone,
-                                 double midPocketArcSize,
-                                 double midPocketAngle) {
+                                         double cornerPocketArcSize,
+                                         double cornerPocketAngle,
+                                         double midPocketGravityZone,
+                                         double midPocketArcSize,
+                                         double midPocketAngle) {
             values.cornerPocketGravityRadius = cornerPocketGravityZone;
             values.cornerHoleOpenAngle = cornerPocketAngle;
             values.midPocketGravityRadius = midPocketGravityZone;

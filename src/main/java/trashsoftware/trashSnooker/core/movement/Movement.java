@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.movement;
 
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.metrics.Cushion;
 
 import java.util.*;
 
@@ -12,6 +13,7 @@ public class Movement {
 //    private double iterationIndex = 0;
     private final Ball anyBall;
     private boolean congested = false;
+    private transient Trace whiteTrace;  // 仅用于游戏，不用于录像
 
     public Movement(Ball[] allBalls) {
         anyBall = allBalls[0];
@@ -28,6 +30,17 @@ public class Movement {
 //            immutableMap.put(ball, positionListImm);
             startingPositions.put(ball, frame);
         }
+    }
+
+    /**
+     * 仅有Game应调用，Replay不调用
+     */
+    public void startTrace() {
+        whiteTrace = new Trace();
+    }
+
+    public Trace getWhiteTrace() {
+        return whiteTrace;
     }
 
     public void setCongested() {
@@ -88,5 +101,47 @@ public class Movement {
     public String toString() {
         return "Movement{balls=" + movementMap.size() + "," +
                 "frames=" + new ArrayList<>(movementMap.values()).get(0).size() + "}";
+    }
+    
+    public static class Trace {
+        private final List<Cushion> cushionBefore = new ArrayList<>();
+        private final List<Cushion> cushionAfter = new ArrayList<>();
+        private final List<Ball> collisions = new ArrayList<>();
+        private double distanceMoved;
+        
+        public void hitCushion(Cushion cushion) {
+            if (collisions.isEmpty()) {
+                cushionBefore.add(cushion);
+            } else {
+                cushionAfter.add(cushion);
+            }
+        }
+
+        public void setDistanceMoved(double distanceMoved) {
+            this.distanceMoved = distanceMoved;
+        }
+
+        /**
+         * 注意！这里是白球的总里程，包括碰目标球之前的里程
+         */
+        public double getDistanceMoved() {
+            return distanceMoved;
+        }
+
+        public void hitBall(Ball ball) {
+            collisions.add(ball);
+        }
+
+        public List<Ball> getCollisions() {
+            return collisions;
+        }
+
+        public List<Cushion> getCushionBefore() {
+            return cushionBefore;
+        }
+
+        public List<Cushion> getCushionAfter() {
+            return cushionAfter;
+        }
     }
 }

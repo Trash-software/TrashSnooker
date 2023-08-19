@@ -27,6 +27,7 @@ public class HumanCareer extends Career {
     private int level = 1;
     private int expInThisLevel;
     private int money;
+    private int cumulativeAwards;  // 历史上的税前总奖金
 
     HumanCareer(PlayerPerson playerPerson) {
         super(playerPerson, true);
@@ -144,6 +145,7 @@ public class HumanCareer extends Career {
                 earnMoney(cr.getMoney());
             }
         }
+        checkScoreAchievements();
     }
 
     public ChallengeHistory getChallengeHistory(String challengeId) {
@@ -151,7 +153,9 @@ public class HumanCareer extends Career {
     }
 
     public void earnMoney(int earned) {
-        this.money += Math.round(earned * (1 - TAX_RATE));
+        this.cumulativeAwards += earned;
+        this.money += (int) Math.round(earned * (1 - TAX_RATE));
+        // 这里不检查成就，因为earnMoney之后一般都跟着checkScoreAchievements()
     }
 
     @Override
@@ -173,9 +177,12 @@ public class HumanCareer extends Career {
         
         Set<String> remSnookerTripleCrown = new HashSet<>(Set.of(ChampDataManager.getSnookerTripleCrownIds()));
         
+        int cumAwards = 0;
         for (ChampionshipScore score : getChampionshipScores()) {
             for (ChampionshipScore.Rank rank : score.ranks) {
-                if (score.data.getAwardByRank(rank) > 0) {
+                int award = score.data.getAwardByRank(rank);
+                cumAwards += award;
+                if (award > 0) {
                     achManager.addAchievement(Achievement.EARNED_MONEY, null);
                 }
                 
@@ -203,6 +210,10 @@ public class HumanCareer extends Career {
         if (remSnookerTripleCrown.isEmpty()) {
             achManager.addAchievement(Achievement.SNOOKER_TRIPLE_CROWN, null);
         }
+
+        System.out.println("awards: " + cumulativeAwards + ", " + cumAwards);
+        cumulativeAwards = cumAwards;
+        achManager.addAchievement(Achievement.EARN_MONEY_CUMULATIVE, cumulativeAwards, null);
     }
 
     public int getLevel() {
@@ -268,13 +279,19 @@ public class HumanCareer extends Career {
 
     public int getMoney() {
         if (money == 0 && CareerManager.getInstance().getLastSavedVersion() < 40) {
-            money += new CareerWithAwards(GameRule.SNOOKER, this, Calendar.getInstance()).getTotalAwards();
-            money += new CareerWithAwards(GameRule.CHINESE_EIGHT, this, Calendar.getInstance()).getTotalAwards();
-            money += new CareerWithAwards(GameRule.LIS_EIGHT, this, Calendar.getInstance()).getTotalAwards();
-            money += new CareerWithAwards(GameRule.AMERICAN_NINE, this, Calendar.getInstance()).getTotalAwards();
-            money *= (1 - TAX_RATE);
+            int awards = computeAllAwards();
+            money = (int) ((1 - TAX_RATE) * awards);
             CareerManager.getInstance().saveToDisk();
         }
         return money;
+    }
+    
+    private int computeAllAwards() {
+        int awards = 0;
+        awards += new CareerWithAwards(GameRule.SNOOKER, this, Calendar.getInstance()).getTotalAwards();
+        awards += new CareerWithAwards(GameRule.CHINESE_EIGHT, this, Calendar.getInstance()).getTotalAwards();
+        awards += new CareerWithAwards(GameRule.LIS_EIGHT, this, Calendar.getInstance()).getTotalAwards();
+        awards += new CareerWithAwards(GameRule.AMERICAN_NINE, this, Calendar.getInstance()).getTotalAwards();
+        return awards;
     }
 }
