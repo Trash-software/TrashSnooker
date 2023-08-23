@@ -33,6 +33,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private final Color color;
     private final Color colorWithOpa;
     private final Color colorTransparent;
+    private final Color traceColor;
     private final int identifier;  // 即使是分值一样的球identifier也不一样，但是clone之后identifier保持不变
     protected double xSpin, ySpin;
     protected double sideSpin;
@@ -56,6 +57,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         this.color = generateColor(value);
         this.colorWithOpa = this.color.deriveColor(0, 1, 1.6, 0.5);
         this.colorTransparent = colorWithOpa.deriveColor(0, 1, 1, 0);
+        this.traceColor = this.color.deriveColor(0, 1, 0.75, 1);
 
         model = BallModel.createModel(this);
         setPotted(initPotted);
@@ -1207,6 +1209,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
     public Color getColor() {
         return color;
+    }
+    
+    public Color getTraceColor() {
+        return traceColor;
     }
 
     public int getValue() {

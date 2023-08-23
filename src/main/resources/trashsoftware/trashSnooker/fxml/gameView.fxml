@@ -65,6 +65,12 @@
                 <RadioMenuItem text="4x" toggleGroup="$player2SpeedToggle" userData="4"/>
                 <RadioMenuItem text="8x" toggleGroup="$player2SpeedToggle" userData="8"/>
             </Menu>
+
+            <SeparatorMenuItem/>
+            <CheckMenuItem fx:id="traceWhiteItem" text="%displayWhiteTrace"/>
+            <CheckMenuItem fx:id="traceTargetItem" text="%displayTargetTrace"/>
+            <CheckMenuItem fx:id="traceAllItem" text="%displayAllTrace"/>
+            <MenuItem text="%clearAllTraces" onAction="#clearTraceAction"/>
         </Menu>
         <Menu fx:id="debugMenu" text="Debug">
             <MenuItem text="terminate" onAction="#terminateAction"/>

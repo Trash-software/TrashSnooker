@@ -51,10 +51,10 @@ public abstract class BallModel {
     }
 
     public void setX(GamePane container, double actualX) {
-        sphere.setTranslateX(container.canvasX(actualX));
+        sphere.setTranslateX(container.paneX(actualX));
     }
 
     public void setY(GamePane container, double actualY) {
-        sphere.setTranslateY(container.canvasY(actualY));
+        sphere.setTranslateY(container.paneY(actualY));
     }
 }

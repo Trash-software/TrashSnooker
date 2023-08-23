@@ -1,24 +1,24 @@
 {
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "Lao Youtiao",
+    "person": "Neil Robertson",
     "playerType": "PLAYER",
-    "playCue": "stdPottsCue",
+    "playCue": "stdSnookerCue",
     "breakCue": "stdBreakCue"
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
-    "handFeelEffort": 1,
-    "person": "Mou Moumou",
-    "playerType": "PLAYER",
-    "playCue": "stdPottsCue",
+    "handFeelEffort": 0.5,
+    "person": "Mark Allen",
+    "playerType": "COMPUTER",
+    "playCue": "stdSnookerCue",
     "breakCue": "stdBreakCue"
   },
-  "startTime": 1690308484125,
+  "startTime": 1692714364913,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
@@ -32,8 +32,8 @@
   },
   "totalFrames": 1,
   "cloth": {
-    "smoothness": "NORMAL",
-    "goodness": "GOOD"
+    "smoothness": "SLOW",
+    "goodness": "TERRIBLE"
   },
   "p1Breaks": true
 }

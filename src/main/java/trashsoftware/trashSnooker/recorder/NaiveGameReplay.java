@@ -131,6 +131,7 @@ public class NaiveGameReplay extends GameReplay {
         if (steps >= Game.CONGESTION_LIMIT) {
             movement.setCongested();
         }
+        movement.setupReplay();
 
         return movement;
     }

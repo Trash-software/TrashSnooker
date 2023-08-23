@@ -117,12 +117,6 @@ public abstract class Table {
                                     double realY) {
         ball.model.sphere.setVisible(true);
         forceDrawBall(container, ball, realX, realY, 0, 0, 0, 0);
-//        drawBallBase(
-//                view.canvasX(realX),
-//                view.canvasY(realY),
-//                gameValues.ballDiameter * scale,
-//                ball.getColor(),
-//                graphicsContext);
     }
 
     public void drawStoppedBalls(GamePane container,

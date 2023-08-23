@@ -22,7 +22,6 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
@@ -165,6 +164,8 @@ public class GameView implements Initializable {
     CheckMenuItem drawAiPathItem;
     CheckMenuItem predictPlayerPathItem = new CheckMenuItem();
     @FXML
+    CheckMenuItem traceWhiteItem, traceTargetItem, traceAllItem;
+    @FXML
     VBox handSelectionBox;
     @FXML
     ToggleGroup handSelectionToggleGroup;
@@ -199,6 +200,8 @@ public class GameView implements Initializable {
     private Ball predictedTargetBall;
     private Movement movement;
     private boolean playingMovement = false;
+    private int movementPlayingIndex = 0;  // 第几帧
+    private double movementPercentageInIndex = 0.0;  // 这一帧放了多少
     private GamePlayStage currentPlayStage;  // 只对game有效, 并且不要直接access这个变量, 请用getter
     private PotAttempt lastPotAttempt;
     private DefenseAttempt curDefAttempt;
@@ -1552,6 +1555,11 @@ public class GameView implements Initializable {
         restoreCueAngle();
         updateScoreDiffLabels();
     }
+    
+    @FXML
+    void clearTraceAction() {
+        tableGraphicsChanged = true;
+    }
 
     @FXML
     void pushOutAction() {
@@ -2027,6 +2035,8 @@ public class GameView implements Initializable {
         // 放到这里来更新是为了避免上面这一堆运算的时间导致潜在bug
         // 说白了，为了线程安全
         movement = calculatedMovement;
+        movementPlayingIndex = 0;
+        movementPercentageInIndex = 0.0;
     }
 
     private void aiCueCalculations(CuePlayParams realParams,
@@ -2093,6 +2103,8 @@ public class GameView implements Initializable {
         }
 
         movement = calculatedMovement;
+        movementPlayingIndex = 0;
+        movementPercentageInIndex = 0.0;
     }
 
     private void updateBeforeCue() {
@@ -2196,6 +2208,7 @@ public class GameView implements Initializable {
 
             AiCueResult cueResult = game.getGame().aiCue(player, game.predictPhy);
             System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
+//            System.out.println(cueResult);
             if (cueResult == null) {
                 aiCalculating = false;
                 withdraw(player);
@@ -2262,6 +2275,8 @@ public class GameView implements Initializable {
             replayLastCueButton.setDisable(true);
 
             movement = replay.getMovement();
+            movementPlayingIndex = 0;
+            movementPercentageInIndex = 0.0;
             System.out.println(movement.getMovementMap().get(replay.getCueBall()).size());
 
             cursorDirectionUnitX = cueRecord.aimUnitX;
@@ -2529,10 +2544,10 @@ public class GameView implements Initializable {
     }
 
     private void addListeners() {
-        gamePane.getGameCanvas().setOnMouseClicked(this::onCanvasClicked);
-        gamePane.getGameCanvas().setOnDragDetected(this::onDragStarted);
-        gamePane.getGameCanvas().setOnMouseDragged(this::onDragging);
-        gamePane.getGameCanvas().setOnMouseMoved(this::onMouseMoved);
+        gamePane.getTableCanvas().setOnMouseClicked(this::onCanvasClicked);
+        gamePane.getTableCanvas().setOnDragDetected(this::onDragStarted);
+        gamePane.getTableCanvas().setOnMouseDragged(this::onDragging);
+        gamePane.getTableCanvas().setOnMouseMoved(this::onMouseMoved);
 
         cuePointCanvas.setOnMouseClicked(this::onCuePointCanvasClicked);
         cuePointCanvas.setOnMouseDragged(this::onCuePointCanvasDragged);
@@ -2558,6 +2573,55 @@ public class GameView implements Initializable {
     private void drawBallInHandEssential(Ball ball) {
         gamePane.drawBallInHandEssential(ball, game.getGame().getTable(), mouseX, mouseY);
     }
+    
+    private void drawTraceOfBall(Ball ball, List<MovementFrame> frames) {
+        int end = Math.min(movementPlayingIndex, frames.size());
+        if (end > 1) {
+            gamePane.getLineGraphics().setStroke(ball.getTraceColor());
+            double x = gamePane.canvasX(frames.get(0).x);
+            double y = gamePane.canvasY(frames.get(0).y);
+            for (int i = 1; i < end; i++) {
+                MovementFrame frame = frames.get(i);
+                if (frame.potted) break;
+
+                double nx = gamePane.canvasX(frame.x);
+                double ny = gamePane.canvasY(frame.y);
+                gamePane.getLineGraphics().strokeLine(
+                        x,
+                        y,
+                        nx,
+                        ny
+                );
+                x = nx;
+                y = ny;
+            }
+        }
+    }
+    
+    private void drawTraces() {
+        boolean white = traceWhiteItem.isSelected();
+        boolean target = traceTargetItem.isSelected();
+        boolean all = traceAllItem.isSelected();
+        
+        if (movement != null) {
+            if (all) {
+                for (Map.Entry<Ball, List<MovementFrame>> entry : movement.getMovementMap().entrySet()) {
+                    drawTraceOfBall(entry.getKey(), entry.getValue());
+                }
+            } else {
+                if (white) {
+                    Ball cueBall = getActiveHolder().getCueBall();
+                    drawTraceOfBall(cueBall, movement.getMovementMap().get(cueBall));
+                }
+                if (target) {
+                    Ball targetBall = movement.getWhiteFirstCollide();
+                    if (targetBall != null) {
+                        drawTraceOfBall(targetBall, movement.getMovementMap().get(targetBall));
+                    }
+                }
+            }
+        }
+    }
 
     private void drawBalls() {
 //        System.out.println(playingMovement + " " + movement);
@@ -2566,29 +2630,16 @@ public class GameView implements Initializable {
             long msSinceAnimationBegun = gameLoop.msSinceAnimationBegun();
 
             double appliedSpeed = getCurPlaySpeedMultiplier();
-            int index = (int) (msSinceAnimationBegun * appliedSpeed / frameTimeMs);
-//            if (replay == null) {
-//                Player player = game.getGame().getCuingPlayer();
-//                if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
-//                    appliedSpeed = p1PlaySpeed;
-//                    index = (int) (msSinceAnimationBegun * p1PlaySpeed / frameTimeMs);  // 天生一个floor
-//                } else {
-//                    appliedSpeed = 1.0;
-//                    index = (int) (msSinceAnimationBegun / frameTimeMs);
-//                }
-//            } else {
-//                appliedSpeed = p1PlaySpeed;
-//                index = (int) (msSinceAnimationBegun * p1PlaySpeed / frameTimeMs);
-//            }
+            movementPlayingIndex = (int) (msSinceAnimationBegun * appliedSpeed / frameTimeMs);
 
             boolean isLast = false;
             int movementSize = movement.getNFrames();
-            if (index >= movementSize) {
-                index = movementSize - 1;
+            if (movementPlayingIndex >= movementSize) {
+                movementPlayingIndex = movementSize - 1;
                 isLast = true;
             }
             if (movement.isCongested()) {
-                index = movementSize - 1;
+                movementPlayingIndex = movementSize - 1;
                 isLast = true;
                 Platform.runLater(() -> AlertShower.showInfo(
                         stage,
@@ -2597,8 +2648,8 @@ public class GameView implements Initializable {
                 ));
             }
 
-            double uiFrameSinceThisAniFrame = (msSinceAnimationBegun - (index * frameTimeMs / appliedSpeed));
-            double rate = uiFrameSinceThisAniFrame / frameTimeMs * appliedSpeed;
+            double uiFrameSinceThisAniFrame = (msSinceAnimationBegun - (movementPlayingIndex * frameTimeMs / appliedSpeed));
+            movementPercentageInIndex = uiFrameSinceThisAniFrame / frameTimeMs * appliedSpeed;
             double frameRateRatio = gameLoop.lastAnimationFrameMs() / frameTimeMs * appliedSpeed;
 //            System.out.printf("%d %f %f %f\n", index, uiFrameSinceThisAniFrame, rate, frameRateRatio);
 
@@ -2606,20 +2657,20 @@ public class GameView implements Initializable {
             for (Map.Entry<Ball, List<MovementFrame>> entry :
                     movement.getMovementMap().entrySet()) {
                 List<MovementFrame> list = entry.getValue();
-                MovementFrame frame = list.get(index);
+                MovementFrame frame = list.get(movementPlayingIndex);
 
                 if (!frame.potted) {
                     MovementFrame nextFrame = null;
-                    if (index + 1 < list.size()) {
-                        nextFrame = list.get(index + 1);
+                    if (movementPlayingIndex + 1 < list.size()) {
+                        nextFrame = list.get(movementPlayingIndex + 1);
                     }
                     double x, y;
                     if (nextFrame == null || nextFrame.potted) {
                         x = frame.x;
                         y = frame.y;
                     } else {
-                        x = Algebra.rateBetween(frame.x, nextFrame.x, rate);
-                        y = Algebra.rateBetween(frame.y, nextFrame.y, rate);
+                        x = Algebra.rateBetween(frame.x, nextFrame.x, movementPercentageInIndex);
+                        y = Algebra.rateBetween(frame.y, nextFrame.y, movementPercentageInIndex);
                     }
                     double frameDeg = frame.frameDegChange * frameRateRatio;
 
@@ -2635,14 +2686,11 @@ public class GameView implements Initializable {
                 }
 
                 switch (frame.movementType) {
-                    case MovementFrame.COLLISION:
-                        break;
-                    case MovementFrame.CUSHION:
-                        GameAudio.hitCushion(gameValues.table, frame.movementValue);
-                        break;
-                    case MovementFrame.POT:
-                        GameAudio.pot(gameValues.table, frame.movementValue);
-                        break;
+                    case MovementFrame.COLLISION -> {
+                    }
+                    case MovementFrame.CUSHION ->
+                            GameAudio.hitCushion(gameValues.table, frame.movementValue);
+                    case MovementFrame.POT -> GameAudio.pot(gameValues.table, frame.movementValue);
                 }
             }
             if (isLast) {
@@ -3072,15 +3120,15 @@ public class GameView implements Initializable {
         // 画白球路线
         drawWhitePathSingle(center);
         if (center.getFirstCollide() != null) {
-            gamePane.getGraphicsContext().strokeOval(
+            gamePane.getLineGraphics().strokeOval(
                     gamePane.canvasX(center.getWhiteCollisionX()) - ballRadius,
                     gamePane.canvasY(center.getWhiteCollisionY()) - ballRadius,
                     ballDiameter,
                     ballDiameter);  // 绘制预测撞击点的白球
 
             if (!center.isHitWallBeforeHitBall() && predictedTargetBall != null) {
-                gamePane.getGraphicsContext().setFill(cursorDrawer.fill);
-                gamePane.getGraphicsContext().fillPolygon(
+                gamePane.getLineGraphics().setFill(cursorDrawer.fill);
+                gamePane.getLineGraphics().fillPolygon(
                         new double[]{cursorDrawer.leftStartX,
                                 cursorDrawer.leftEndX,
                                 cursorDrawer.rightEndX,
@@ -3095,8 +3143,8 @@ public class GameView implements Initializable {
                 if (drawTargetRefLine) {
                     double tarCanvasX = gamePane.canvasX(cursorDrawer.tarX);
                     double tarCanvasY = gamePane.canvasY(cursorDrawer.tarY);
-                    gamePane.getGraphicsContext().setStroke(center.getFirstCollide().getColor().brighter().brighter());
-                    gamePane.getGraphicsContext().strokeLine(tarCanvasX, tarCanvasY,
+                    gamePane.getLineGraphics().setStroke(center.getFirstCollide().getColor().brighter().brighter());
+                    gamePane.getLineGraphics().strokeLine(tarCanvasX, tarCanvasY,
                             tarCanvasX + cursorDrawer.lineX * gamePane.getScale(),
                             tarCanvasY + cursorDrawer.lineY * gamePane.getScale());
                 }
@@ -3134,9 +3182,11 @@ public class GameView implements Initializable {
         }
         drawBalls();
         if (tableGraphicsChanged) {  // drawBalls在movement最后一帧会触发一系列反应，让该值改变
+            gamePane.drawTable(getActiveHolder());
             drawCursor();
         }
         drawBallInHand();
+        drawTraces();
         tableGraphicsChanged = false;  // 一定在drawBalls之后
     }
 

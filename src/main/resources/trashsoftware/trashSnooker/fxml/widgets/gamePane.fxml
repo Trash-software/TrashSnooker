@@ -2,9 +2,11 @@
 
 <?import javafx.scene.canvas.Canvas?>
 <?import trashsoftware.trashSnooker.fxml.widgets.GamePane?>
-<fx:root type="trashsoftware.trashSnooker.fxml.widgets.GamePane" xmlns="http://javafx.com/javafx"
+<fx:root type="trashsoftware.trashSnooker.fxml.widgets.GamePane" 
+         xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml">
 
-    <Canvas fx:id="gameCanvas"/>
+    <Canvas fx:id="tableCanvas"/>
+<!--    <Canvas fx:id="lineCanvas"/>-->
 
 </fx:root>

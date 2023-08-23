@@ -619,7 +619,7 @@ public class PlayerPerson {
     }
 
     public double skillLevelOfGame(GameRule gameRule) {
-        return participates.getOrDefault(gameRule, 0.0);
+        return participates.getOrDefault(gameRule, 0.5);
     }
 
     /**

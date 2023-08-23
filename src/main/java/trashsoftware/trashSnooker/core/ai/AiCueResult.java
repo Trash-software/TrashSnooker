@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -38,10 +39,12 @@ public class AiCueResult {
                        boolean rua) {
         this.unitX = unitX;
         this.unitY = unitY;
+        
+        if (Double.isNaN(unitX) || Double.isNaN(unitY)) {
+            throw new RuntimeException("Direction is NaN");
+        }
+        
         this.cueParams = cueParams;
-//        this.selectedFrontBackSpin = selectedFrontBackSpin;
-//        this.selectedSideSpin = selectedSideSpin;
-//        this.selectedPower = selectedPower;
         this.cueType = cueType;
         this.targetOrigPos = targetOrigPos;
         this.targetDirHole = targetDirHole;
@@ -160,6 +163,22 @@ public class AiCueResult {
         double[] vecAfterRandom = Algebra.unitVectorOfAngle(afterRandom);
         unitX = vecAfterRandom[0];
         unitY = vecAfterRandom[1];
+    }
+
+    @Override
+    public String toString() {
+        return "AiCueResult{" +
+                "cueParams=" + cueParams +
+                ", cueType=" + cueType +
+                ", targetOrigPos=" + Arrays.toString(targetOrigPos) +
+                ", targetDirHole=" + Arrays.toString(targetDirHole) +
+                ", targetBall=" + targetBall +
+                ", frameImportance=" + frameImportance +
+                ", rua=" + rua +
+                ", unitX=" + unitX +
+                ", unitY=" + unitY +
+                ", whitePath=" + whitePath +
+                '}';
     }
 
     public CueParams getCueParams() {

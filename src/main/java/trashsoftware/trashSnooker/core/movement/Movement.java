@@ -8,12 +8,11 @@ import java.util.*;
 public class Movement {
 
     private final Map<Ball, List<MovementFrame>> movementMap = new HashMap<>();  // 必须是hashmap，详见ball.compareTo()
-//    private final Map<Ball, Deque<MovementFrame>> immutableMap = new HashMap<>();
     private final Map<Ball, MovementFrame> startingPositions = new HashMap<>();
-//    private double iterationIndex = 0;
     private final Ball anyBall;
     private boolean congested = false;
     private transient Trace whiteTrace;  // 仅用于游戏，不用于录像
+    private transient Ball whiteFirstCollide;  // 仅用于录像，不用于游戏
 
     public Movement(Ball[] allBalls) {
         anyBall = allBalls[0];
@@ -23,12 +22,40 @@ public class Movement {
                     ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(),
                     ball.isPotted(), MovementFrame.NORMAL, 0.0);
             positionList.add(frame);
-
-//            List<MovementFrame> positionListImm = new ArrayDeque<>();
-//            positionListImm.addFirst(frame);
+            
             movementMap.put(ball, positionList);
-//            immutableMap.put(ball, positionListImm);
             startingPositions.put(ball, frame);
+        }
+    }
+    
+    public void setupReplay() {
+        Ball cueBall = null;
+        for (Ball ball : movementMap.keySet()) {
+            if (ball.isWhite()) {
+                cueBall = ball;
+                break;
+            }
+        }
+        if (cueBall == null) throw new RuntimeException("No cue ball in this movement");
+        
+        // 实则是找到第一颗动的非白球
+        // 少发性bug:白球在同一录像帧接触两颗目标球
+        int nFrames = getNFrames();
+        
+        OUT_LOOP:
+        for (int i = 0; i < nFrames - 1; i++) {
+            for (Map.Entry<Ball, List<MovementFrame>> entry : movementMap.entrySet()) {
+                if (entry.getKey().isWhite()) continue;  // 不管白球
+                MovementFrame curFrame = entry.getValue().get(i);
+                if (curFrame.potted) continue;
+                MovementFrame nextFrame = entry.getValue().get(i + 1);
+                
+                if (nextFrame.x != curFrame.x || nextFrame.y != curFrame.y) {
+                    // 这球动了
+                    whiteFirstCollide = entry.getKey();
+                    break OUT_LOOP;
+                }
+            }
         }
     }
 
@@ -50,20 +77,6 @@ public class Movement {
     public boolean isCongested() {
         return congested;
     }
-
-    //    public boolean hasNext() {
-//        return iterationIndex < movementMap.get(anyBall).size();
-//    }
-//    
-//    public int incrementIndex() {
-//        return (int) iterationIndex++;
-//    }
-//    
-//    public int incrementIndex(double nFrames) {
-//        int cur = (int) iterationIndex;
-//        iterationIndex = Math.min(iterationIndex + nFrames, movementMap.get(anyBall).size());
-//        return cur;
-//    }
     
     public boolean isInRange(int index) {
         return index < movementMap.get(anyBall).size();
@@ -72,10 +85,6 @@ public class Movement {
     public int getNFrames() {
         return movementMap.get(anyBall).size();
     }
-    
-//    public void reset() {
-//        iterationIndex = 0;
-//    }
     
     public void addFrame(Ball ball, MovementFrame frame) {
         movementMap.get(ball).add(frame);
@@ -103,6 +112,14 @@ public class Movement {
                 "frames=" + new ArrayList<>(movementMap.values()).get(0).size() + "}";
     }
     
+    public Ball getWhiteFirstCollide() {
+        if (whiteTrace != null) {
+            return whiteTrace.getFirstCollision();
+        } else {
+            return whiteFirstCollide;
+        }
+    }
+    
     public static class Trace {
         private final List<Cushion> cushionBefore = new ArrayList<>();
         private final List<Cushion> cushionAfter = new ArrayList<>();
@@ -115,6 +132,10 @@ public class Movement {
             } else {
                 cushionAfter.add(cushion);
             }
+        }
+        
+        public Ball getFirstCollision() {
+            return collisions.isEmpty() ? null : collisions.get(0);
         }
 
         public void setDistanceMoved(double distanceMoved) {

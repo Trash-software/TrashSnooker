@@ -4,10 +4,6 @@
       "levelDates": {"0": "2023-07-24 04:43:59"},
       "completions": 1
     },
-    "pottingMachine": {
-      "levelDates": {"0": "2023-06-30 04:37:13"},
-      "completions": 1
-    },
     "poolClear": {
       "levelDates": {"0": "2023-07-09 01:46:47"},
       "completions": 1
@@ -18,6 +14,10 @@
     },
     "accuracyWin": {
       "levelDates": {"0": "2023-06-27 18:13:41"},
+      "completions": 1
+    },
+    "pottingMachine": {
+      "levelDates": {"0": "2023-06-30 04:37:13"},
       "completions": 1
     },
     "poolBreakClear": {
@@ -52,37 +52,41 @@
       "levelDates": {"0": "2023-06-24 02:39:45"},
       "completions": 1
     },
-    "snookerBreak100": {
-      "levelDates": {"0": "2023-06-27 02:24:27"},
-      "completions": 1
-    },
     "poolBreakPot": {
       "levelDates": {"0": "2023-06-24 02:40:39"},
+      "completions": 1
+    },
+    "snookerBreak100": {
+      "levelDates": {"0": "2023-06-27 02:24:27"},
       "completions": 1
     },
     "positioningMaster": {
       "levelDates": {"0": "2023-06-27 02:24:08"},
       "completions": 36
     },
-    "cueBallPot": {
-      "levelDates": {"0": "2023-06-26 04:54:01"},
+    "cebCumulativeClear": {
+      "levelDates": {},
       "completions": 1
     },
-    "winAllMatches": {
-      "levelDates": {"0": "2023-06-26 02:07:25"},
-      "completions": 1
+    "defeatUniqueOpponentsAmerican": {
+      "levelDates": {},
+      "completions": 0
     },
     "snookerBreak50": {
       "levelDates": {"0": "2023-06-27 02:24:27"},
+      "completions": 1
+    },
+    "cueBallPot": {
+      "levelDates": {"0": "2023-06-26 04:54:01"},
       "completions": 1
     },
     "oneRoundTour": {
       "levelDates": {"0": "2023-06-26 04:57:04"},
       "completions": 1
     },
-    "defeatUniqueOpponentsAmerican": {
-      "levelDates": {},
-      "completions": 0
+    "winAllMatches": {
+      "levelDates": {"0": "2023-06-26 02:07:25"},
+      "completions": 1
     },
     "remainOneMustLose": {
       "levelDates": {"0": "2023-07-11 15:32:19"},
@@ -116,12 +120,12 @@
       },
       "completions": 2429150
     },
-    "continuousLongPot": {
-      "levelDates": {"0": "2023-06-27 18:07:22"},
-      "completions": 1
-    },
     "earnedMoney": {
       "levelDates": {"0": "2023-06-30 05:39:08"},
+      "completions": 1
+    },
+    "continuousLongPot": {
+      "levelDates": {"0": "2023-06-27 18:07:22"},
       "completions": 1
     },
     "defeatUniqueOpponentsCeb": {
@@ -148,12 +152,12 @@
       "levelDates": {"0": "2023-06-27 18:50:42"},
       "completions": 1
     },
-    "finalStage": {
-      "levelDates": {"0": "2023-07-01 15:20:22"},
-      "completions": 1
-    },
     "defeatSameOpponentMultiCeb1": {
       "levelDates": {"0": "2023-08-13 21:16:37"},
+      "completions": 1
+    },
+    "finalStage": {
+      "levelDates": {"0": "2023-07-01 15:20:22"},
       "completions": 1
     },
     "longThink": {
@@ -182,11 +186,14 @@
     },
     "cumulativeLongPots1": {
       "levelDates": {"0": "2023-07-02 04:16:40"},
-      "completions": 51
+      "completions": 53
     },
     "potBalls": {
-      "levelDates": {"0": "2023-08-14 04:00:29"},
-      "completions": 18
+      "levelDates": {
+        "0": "2023-08-14 04:00:29",
+        "1": "2023-08-23 04:21:14"
+      },
+      "completions": 68
     },
     "defeatUniqueOpponentsSnooker": {
       "levelDates": {
@@ -212,6 +219,10 @@
       "levelDates": {"0": "2023-08-13 21:15:41"},
       "completions": 1
     },
+    "potBallsRest": {
+      "levelDates": {"0": "2023-08-23 04:16:17"},
+      "completions": 14
+    },
     "defeatSameOpponentMultiSnooker1": {
       "levelDates": {"0": "2023-08-13 21:15:41"},
       "completions": 1
@@ -229,5 +240,5 @@
       "completions": 1
     }
   },
-  "checksum": "9DDA3D3001C35E990BB7C55117284E72"
+  "checksum": "340C3E964006C966C2198AE65A6A3E95"
 }

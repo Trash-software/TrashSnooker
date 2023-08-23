@@ -1,19 +1,17 @@
 package trashsoftware.trashSnooker.fxml.widgets;
 
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.DirectionalLight;
 import javafx.scene.LightBase;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import trashsoftware.trashSnooker.core.Algebra;
@@ -33,17 +31,21 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class GamePane extends Pane {
+public class GamePane extends StackPane {
     public static final Color LINE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color HOLE_PAINT = Color.DIMGRAY.darker().darker().darker();
     public static final Color WHITE_PREDICTION_COLOR = Color.LIGHTGREY;
+    public static final Color TRANSPARENT = Color.DIMGRAY;
 
     private static final boolean DRAW_DIRECT_LINE = false;
     private final CurvedPolygonDrawer curvedPolygonDrawer = new CurvedPolygonDrawer(1.0);  // 弯的程度
     Font tableTextFont;
     @FXML
-    Canvas gameCanvas;
+    Canvas tableCanvas;
+//    @FXML
+//    Canvas lineCanvas;
     GraphicsContext graphicsContext;
+//    GraphicsContext lineGraphics;
     private double scale;
     private GameValues gameValues;
     private double canvasWidth, canvasHeight;
@@ -71,12 +73,15 @@ public class GamePane extends Pane {
             throw new RuntimeException(exception);
         }
 
-        graphicsContext = gameCanvas.getGraphicsContext2D();
+        graphicsContext = tableCanvas.getGraphicsContext2D();
         graphicsContext.setTextAlign(TextAlignment.CENTER);
+        
+//        lineGraphics = lineCanvas.getGraphicsContext2D();
 
         boolean antiAliasing = ConfigLoader.getInstance().getAntiAliasing().canvasAA;
         graphicsContext.setImageSmoothing(antiAliasing);
-        
+//        lineGraphics.setImageSmoothing(antiAliasing);
+
         if (true) {
             DirectionalLight dl = new DirectionalLight(Color.WHITE);
             dl.setDirection(new Point3D(0, 0, 1));
@@ -120,8 +125,8 @@ public class GamePane extends Pane {
         return scale;
     }
 
-    public Canvas getGameCanvas() {
-        return gameCanvas;
+    public Canvas getTableCanvas() {
+        return tableCanvas;
     }
 
     public void setupBalls(GameHolder gameHolder, boolean randomRotate) {
@@ -137,7 +142,7 @@ public class GamePane extends Pane {
 
     public void clear() {
         getChildren().clear();
-        getChildren().add(gameCanvas);
+        getChildren().add(tableCanvas);
         getChildren().add(lighting);
     }
 
@@ -178,6 +183,14 @@ public class GamePane extends Pane {
     public double canvasY(double realY) {
         return realY * scale;
     }
+    
+    public double paneX(double realX) {
+        return realX * scale - canvasWidth / 2;
+    }
+    
+    public double paneY(double realY) {
+        return realY * scale - canvasHeight / 2;
+    }
 
     public double realX(double canvasX) {
         return canvasX / scale;
@@ -188,14 +201,21 @@ public class GamePane extends Pane {
     }
 
     private void setupCanvas() {
-        gameCanvas.setWidth(canvasWidth);
-        gameCanvas.setHeight(canvasHeight);
+        tableCanvas.setWidth(canvasWidth);
+        tableCanvas.setHeight(canvasHeight);
+//        lineCanvas.setWidth(canvasWidth + 200);
+//        lineCanvas.setHeight(canvasHeight + 200);
+//        
+//        graphicsContext.setGlobalAlpha(0.5);
+//        lineGraphics.setGlobalAlpha(0.5);
+//        lineGraphics.setGlobalBlendMode();
+        
         setPrefWidth(canvasWidth);
         setPrefHeight(canvasHeight);
 
         tableTextFont = new Font(App.FONT.getName(), 36 * scale);
         graphicsContext.setFont(tableTextFont);
-        
+
         lighting.setTranslateZ(-1000.0);
 
 //        Rectangle clip = new Rectangle(canvasWidth, canvasHeight);
@@ -450,7 +470,7 @@ public class GamePane extends Pane {
             fillMidPocketLineSide(values.botMidHoleLeftArcXy, values.midArcRadius, false, true);
             fillMidPocketLineSide(values.botMidHoleRightArcXy, values.midArcRadius, false, false);
         }
-        
+
         // 重新fill一遍底袋角直线的库边台泥，因为袋口有可能侵占了一点点空间
         fillCornerLineCushionCloth(values.topLeftHoleEndLine, false, false);
         fillCornerLineCushionCloth(values.topLeftHoleSideLine, true, false);
@@ -529,11 +549,11 @@ public class GamePane extends Pane {
 
     private void fillMidPocketArc(Cushion.CushionArc arcCenter, boolean isTop, double extentDirection) {
         TableMetrics metrics = gameValues.table;
-        
+
         double verDeg = isTop ? 270 : 90;
-        
+
         double radius = metrics.midArcRadius;
-        
+
         double centerDiff = metrics.midArcRadius - metrics.cushionClothWidth;
         double overshootDeg = Math.toDegrees(Math.asin(centerDiff / radius));
         double arcExtent = (90 + overshootDeg);
@@ -549,7 +569,7 @@ public class GamePane extends Pane {
                 arcExtent,
                 arcType
         );
-        
+
         // 如果洞口大小与洞底半径差得比较远，就需要这个来补缺
         double triangleWidth = radius;
 
@@ -559,10 +579,10 @@ public class GamePane extends Pane {
         }
         double yEnd = isTop ? metrics.topY : metrics.botY;
         double yBase = yEnd + (isTop ? -metrics.cushionClothWidth : metrics.cushionClothWidth);
-        
+
         double xSide = arcCenter.getCenter()[0];
         double xSharp = xSide < metrics.midX ? xSide + triangleWidth : xSide - triangleWidth;
-        
+
         double[] xs = new double[]{
                 canvasX(xSharp),
                 canvasX(xSide),
@@ -593,18 +613,18 @@ public class GamePane extends Pane {
                 ArcType.ROUND
         );
     }
-    
+
     private void fillCornerLineCushionCloth(Cushion.CushionLine line,
                                             boolean inward,
                                             boolean invert  // 不懂为什么，只是为了修bug。
     ) {
         double[] st = line.getPosition()[0];
         double[] ed = line.getPosition()[1];
-        
+
 //        double[] direction = new double[]{ed[0] - st[0], ed[1] - st[1]};
-        
+
         TableMetrics metrics = gameValues.table;
-        
+
         double[] inPoint;
         double[] outPoint;
         if (inward) {
@@ -617,7 +637,7 @@ public class GamePane extends Pane {
             outPoint = ed;
         }
         double[] direction = new double[]{outPoint[0] - inPoint[0], outPoint[1] - inPoint[1]};
-        
+
         double inRatio = 0.0;  // 有多大比例在台泥以内的
         if (outPoint[0] < metrics.leftX - metrics.cushionClothWidth || outPoint[0] > metrics.rightX + metrics.cushionClothWidth) {
             inRatio = (metrics.cushionClothWidth - metrics.cornerArcHeight) / Math.abs(direction[0]);
@@ -630,7 +650,7 @@ public class GamePane extends Pane {
         double wantLength = length * inRatio;
         double[] unitDirection = Algebra.unitVector(direction);
         double[] realOut = new double[]{inPoint[0] + unitDirection[0] * wantLength, inPoint[1] + unitDirection[1] * wantLength};
-        
+
         double[] third;
         if (inward) {
             if (invert) third = new double[]{realOut[0], inPoint[1]};
@@ -639,7 +659,7 @@ public class GamePane extends Pane {
             if (invert) third = new double[]{inPoint[0], realOut[1]};
             else third = new double[]{realOut[0], inPoint[1]};
         }
-        
+
         double[] xs = new double[]{
                 canvasX(inPoint[0]),
                 canvasX(realOut[0]),
@@ -653,9 +673,9 @@ public class GamePane extends Pane {
         graphicsContext.fillPolygon(xs, ys, 3);
     }
 
-    private void drawCornerHoleReal(double[] realXY, 
-                                    double radius, 
-                                    double centerDeg, 
+    private void drawCornerHoleReal(double[] realXY,
+                                    double radius,
+                                    double centerDeg,
                                     double mouthWidth,
                                     double openAngle) {
         // todo: 计算交会点的宽度，那里才是真正的宽度
@@ -785,25 +805,27 @@ public class GamePane extends Pane {
     }
 
     public void drawPredictedWhitePath(List<double[]> path) {
+        GraphicsContext lineGraphics = getLineGraphics();
         if (path != null && !path.isEmpty()) {
-            graphicsContext.setStroke(WHITE_PREDICTION_COLOR);
+            lineGraphics.setStroke(WHITE_PREDICTION_COLOR);
             double[] pos = path.get(0);
             for (int i = 1; i < path.size(); i++) {
                 double[] dd = path.get(i);
-                graphicsContext.strokeLine(canvasX(pos[0]), canvasY(pos[1]), canvasX(dd[0]), canvasY(dd[1]));
+                lineGraphics.strokeLine(canvasX(pos[0]), canvasY(pos[1]), canvasX(dd[0]), canvasY(dd[1]));
                 pos = dd;
             }
         }
     }
 
     public void drawWhitePathSingle(Ball cueBall, WhitePrediction prediction) {
-        graphicsContext.setStroke(cueBall.getColor());
+        GraphicsContext lineGraphics = getLineGraphics();
+        lineGraphics.setStroke(cueBall.getColor());
         double lastX = canvasX(cueBall.getX());
         double lastY = canvasY(cueBall.getY());
         for (double[] pos : prediction.getWhitePath()) {
             double canvasX = canvasX(pos[0]);
             double canvasY = canvasY(pos[1]);
-            graphicsContext.strokeLine(lastX, lastY, canvasX, canvasY);
+            lineGraphics.strokeLine(lastX, lastY, canvasX, canvasY);
             lastX = canvasX;
             lastY = canvasY;
         }
@@ -819,20 +841,29 @@ public class GamePane extends Pane {
         return graphicsContext;
     }
 
+    public GraphicsContext getLineGraphics() {
+        return graphicsContext;
+    }
+    
+    public void wipeLines() {
+//        lineGraphics.setFill(TRANSPARENT);
+//        lineGraphics.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
+
     public void drawWhiteStopArea(List<double[]> actualPoints) {
-        graphicsContext.setStroke(GameView.WHITE.darker());
+        getLineGraphics().setStroke(GameView.WHITE.darker());
 
         List<double[]> canvasPoints = actualPoints.stream()
                 .map(point -> new double[]{canvasX(point[0]), canvasY(point[1])})
                 .collect(Collectors.toList());
-        
+
         if (DRAW_DIRECT_LINE) {
             for (double[] p : canvasPoints) {
-                graphicsContext.fillOval(p[0] - 1, p[1] - 1, 3, 3);
+                getLineGraphics().fillOval(p[0] - 1, p[1] - 1, 3, 3);
             }
         }
 
-        curvedPolygonDrawer.draw(canvasPoints, graphicsContext);
+        curvedPolygonDrawer.draw(canvasPoints, getLineGraphics());
     }
 
     private int indexOfDistanceInPath(List<double[]> path, double distance) {
