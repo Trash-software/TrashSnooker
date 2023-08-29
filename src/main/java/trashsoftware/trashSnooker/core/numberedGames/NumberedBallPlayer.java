@@ -62,9 +62,13 @@ public abstract class NumberedBallPlayer extends Player {
         return breakSuccess;
     }
 
-    public void setBreakSuccess() {
+    public void setBreakSuccess(int legalPotCount) {
         this.breakSuccess = true;
         AchManager.getInstance().addAchievement(Achievement.POOL_BREAK_POT, inGamePlayer);
+        AchManager.getInstance().addAchievement(
+                Achievement.POOL_BREAK_MASTER,
+                legalPotCount,
+                getInGamePlayer());
     }
 
     public int getPlayTimes() {

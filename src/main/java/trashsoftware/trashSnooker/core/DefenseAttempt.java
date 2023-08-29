@@ -2,10 +2,12 @@ package trashsoftware.trashSnooker.core;
 
 public class DefenseAttempt extends CueAttempt {
     public final Player defensePlayer;
-    private boolean solvingSnooker = false;
+    private boolean solvingSnooker;
     private boolean solveSuccess;
 
-    public DefenseAttempt(Player player, boolean solvingSnooker) {
+    public DefenseAttempt(Player player, CuePlayParams playParams, boolean solvingSnooker) {
+        super(playParams);
+        
         this.defensePlayer = player;
         this.solvingSnooker = solvingSnooker;
         this.success = true;

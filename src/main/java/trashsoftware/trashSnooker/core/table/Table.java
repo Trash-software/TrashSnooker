@@ -144,8 +144,9 @@ public abstract class Table {
                 degChange = xyp[5];
             }
 //            System.out.println(pot + " " + x + ", " + y + ", " + ball.model.sphere.getMaterial() + " ");
-            ball.model.sphere.setVisible(!pot);
-            if (!pot) {
+            boolean hide = pot || (x == 0.0 && y == 0.0);  // todo: 没起作用
+            ball.model.sphere.setVisible(!hide);
+            if (!hide) {
                 forceDrawBall(container, ball, x, y, ax, ay, az, degChange);
             }
         }

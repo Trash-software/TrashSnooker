@@ -789,6 +789,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return isBreaking;
     }
 
+    public boolean isJustAfterBreak() {
+        return finishedCuesCount == 1;
+    }
+
     public void setBallInHand() {
         ballInHand = true;
         cueBall.pot();
@@ -1539,7 +1543,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         if (holeAreaResult.result() == 2) {
                             collidesWall = true;
                             recordHitCushion(ball);
-                            if (ball.isWhite()) movement.getWhiteTrace().hitCushion(holeAreaResult.cushion());
+                            if (ball.isWhite()) 
+                                movement.getWhiteTrace().hitCushion(holeAreaResult.cushion());
+                            else if (ball == whiteFirstCollide) 
+                                movement.getTargetTrace().hitCushion(holeAreaResult.cushion());
                             movementTypes[i] = MovementFrame.CUSHION;
                             movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         }
@@ -1550,7 +1557,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         // 库边
                         collidesWall = true;
                         recordHitCushion(ball);
-                        if (ball.isWhite()) movement.getWhiteTrace().hitCushion(cushion);
+                        if (ball.isWhite()) 
+                            movement.getWhiteTrace().hitCushion(cushion);
+                        else if (ball == whiteFirstCollide)
+                            movement.getTargetTrace().hitCushion(cushion);
                         movementTypes[i] = MovementFrame.CUSHION;
                         movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
                         continue;
@@ -1586,6 +1596,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
                     if (ball.isWhite()) {
                         movement.getWhiteTrace().setDistanceMoved(ball.getDistanceMoved());
+                    } else if (ball == whiteFirstCollide) {
+                        movement.getTargetTrace().setDistanceMoved(ball.getDistanceMoved());
                     }
                     ball.clearMovement();
                 }

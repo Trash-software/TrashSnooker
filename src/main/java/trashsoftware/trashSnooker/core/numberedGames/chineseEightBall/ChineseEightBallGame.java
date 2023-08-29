@@ -338,19 +338,29 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     protected Collection<PoolBall> halfBallsOf(Set<PoolBall> balls) {
         return balls.stream().filter(this::isHalfBall).collect(Collectors.toSet());
     }
+    
+    protected int countFullBalls(Set<PoolBall> balls){
+        int count = 0;
+        for (PoolBall ball : balls) {
+            if (isFullBall(ball)) count++;
+        }
+        return count;
+    }
+
+    protected int countHalfBalls(Set<PoolBall> balls){
+        int count = 0;
+        for (PoolBall ball : balls) {
+            if (isHalfBall(ball)) count++;
+        }
+        return count;
+    }
 
     protected boolean hasFullBalls(Set<PoolBall> balls) {
-        for (PoolBall ball : balls) {
-            if (isFullBall(ball)) return true;
-        }
-        return false;
+        return countFullBalls(balls) > 0;
     }
 
     protected boolean hasHalfBalls(Set<PoolBall> balls) {
-        for (PoolBall ball : balls) {
-            if (isHalfBall(ball)) return true;
-        }
-        return false;
+        return countHalfBalls(balls) > 0;
     }
 
     protected int getTargetOfPlayer(Player playerX) {
@@ -534,8 +544,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                             switchPlayer();
                             System.out.println(thisCueFoul.getAllReasons());
                         } else {
-                            currentPlayer.setBreakSuccess();
-                            System.out.println("开球黑八不选球");
+                            currentPlayer.setBreakSuccess(pottedBalls.size());
+                            System.out.println("Break pot black not calculated");
                         }
                     } else {
                         winingPlayer = getAnotherPlayer();
@@ -550,7 +560,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             }
             if (currentTarget == NOT_SELECTED_REP) {  // 未选球
                 if (isBreaking) {  // 开球进袋不算选球
-                    currentPlayer.setBreakSuccess();
+                    currentPlayer.setBreakSuccess(pottedBalls.size());
                     System.out.println("开球进球不选球");
                     return;
                 }
@@ -569,16 +579,31 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                     currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
                 }
             } else {
+                int sucCount = 0;
+                int potOppoCount = 0;
                 if (currentTarget == FULL_BALL_REP) {
-                    if (hasFullBalls(pottedBalls)) {
+                    sucCount = countFullBalls(pottedBalls);
+                    potOppoCount = countHalfBalls(pottedBalls);
+                    if (sucCount > 0) {
                         lastPotSuccess = true;
                     }
                     currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
                 } else if (currentTarget == HALF_BALL_REP) {
-                    if (hasHalfBalls(pottedBalls)) {
+                    sucCount = countHalfBalls(pottedBalls);
+                    potOppoCount = countFullBalls(pottedBalls);
+                    if (sucCount > 0) {
                         lastPotSuccess = true;
                     }
                     currentPlayer.correctPotBalls(halfBallsOf(pottedBalls));
+                }
+                // 触发成就，且开球不算
+                if (sucCount == 2) {
+                    AchManager.getInstance().addAchievement(Achievement.POT_TWO_LEGAL, getCuingIgp());
+                } else if (sucCount >= 3) {
+                    AchManager.getInstance().addAchievement(Achievement.POT_THREE_LEGAL, getCuingIgp());
+                }
+                if (potOppoCount > 0) {
+                    AchManager.getInstance().addAchievement(Achievement.POT_OPPONENT_BALL, getCuingIgp());
                 }
             }
         }

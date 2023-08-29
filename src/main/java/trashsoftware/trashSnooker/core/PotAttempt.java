@@ -24,6 +24,8 @@ public class PotAttempt extends CueAttempt {
                       double[] cueBallOrigPos, 
                       double[] targetBallOrigPos,
                       double[][] targetDirHole) {
+        super(cuePlayParams);
+        
         this.gameValues = gameValues;
         this.cuePlayParams = cuePlayParams;
         this.playerPerson = playerPerson;

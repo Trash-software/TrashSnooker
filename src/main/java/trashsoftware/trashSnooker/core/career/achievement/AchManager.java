@@ -21,6 +21,10 @@ public abstract class AchManager {
         }
         return instance;
     }
+    
+    public static void closeCareerInstance() {
+        instance = new InvalidAchManager();
+    }
 
     public static void setCareerInstance(CareerSave careerSave) {
         instance = CareerAchManager.loadFromDisk(careerSave);

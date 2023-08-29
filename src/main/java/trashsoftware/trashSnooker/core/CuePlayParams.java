@@ -237,7 +237,11 @@ public class CuePlayParams {
 //        double leftRightSpin = getUnitSideSpin();  // 
         if (frontBackSpin > 0) {
             // 高杆补偿
-            frontBackSpin *= Values.FRONT_SPIN_FACTOR;
+            double factor = Algebra.shiftRangeSafe(
+                    0, 1,
+                    1, Values.FRONT_SPIN_FACTOR, 
+                    frontBackSpin);
+            frontBackSpin *= factor;
         }
 
         // 小力高低杆补偿，pow越小，补偿越多

@@ -12,6 +12,7 @@ public class Movement {
     private final Ball anyBall;
     private boolean congested = false;
     private transient Trace whiteTrace;  // 仅用于游戏，不用于录像
+    private transient Trace targetTrace;  // 仅用于游戏，不用于录像
     private transient Ball whiteFirstCollide;  // 仅用于录像，不用于游戏
 
     public Movement(Ball[] allBalls) {
@@ -64,10 +65,15 @@ public class Movement {
      */
     public void startTrace() {
         whiteTrace = new Trace();
+        targetTrace = new Trace();
     }
 
     public Trace getWhiteTrace() {
         return whiteTrace;
+    }
+
+    public Trace getTargetTrace() {
+        return targetTrace;
     }
 
     public void setCongested() {
@@ -123,7 +129,7 @@ public class Movement {
     public static class Trace {
         private final List<Cushion> cushionBefore = new ArrayList<>();
         private final List<Cushion> cushionAfter = new ArrayList<>();
-        private final List<Ball> collisions = new ArrayList<>();
+        private final List<Ball> collisions = new ArrayList<>();  // 只计白球的
         private double distanceMoved;
         
         public void hitCushion(Cushion cushion) {

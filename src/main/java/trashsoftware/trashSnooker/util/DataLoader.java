@@ -193,19 +193,13 @@ public class DataLoader {
     }
 
     public static String generateIdByName(String name) {
-        byte[] bytes = name.getBytes(StandardCharsets.UTF_8);
-        StringBuilder builder = new StringBuilder();
-        for (byte b : bytes) {
-            builder.append(Util.decimalToHex(b & 0xff, 2));
-        }
-        return "custom_" + builder;
-    }
-    
-//    public void invalidate() {
-//        for (Cue cue : cues.values()) {
-//            cue.invalidate();
+//        byte[] bytes = name.getBytes(StandardCharsets.UTF_8);
+//        StringBuilder builder = new StringBuilder();
+//        for (byte b : bytes) {
+//            builder.append(Util.decimalToHex(b & 0xff, 2));
 //        }
-//    }
+        return "custom_" + Util.generateHex(16);
+    }
 
     public List<PlayerPerson> filterActualPlayersByCategory(String category) {
         Collection<PlayerPerson> actPlayers = getActualPlayers();

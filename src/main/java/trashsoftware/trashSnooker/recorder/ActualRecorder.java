@@ -19,10 +19,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -334,6 +331,10 @@ public abstract class ActualRecorder implements GameRecorder {
         buffer[0] = (byte) (player.getPlayerType() == PlayerType.PLAYER ? 0 : 1);
 
         byte[] id = player.getPlayerPerson().getPlayerId().getBytes(StandardCharsets.UTF_8);
+        if (id.length > 32) {
+            System.err.println("Id too long: " + player.getPlayerPerson().getPlayerId());
+            id = Arrays.copyOf(id, 32);
+        }
         System.arraycopy(id, 0, buffer, 2, id.length);
 
         byte[] playCueId = player.getPlayCue().cueId.getBytes(StandardCharsets.UTF_8);

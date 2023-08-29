@@ -73,6 +73,21 @@ public class Util {
         }
         return builder.toString();
     }
+    
+    public static String generateHex(int digits) {
+        Random random = new Random();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < digits; i++) {
+            int rnd = random.nextInt(16);
+            builder.append(decimalToHex(rnd));
+        }
+        return builder.toString();
+    }
+    
+    private static char decimalToHex(int dec) {
+        if (dec < 10) return (char) ('0' + dec);
+        else return (char) ('A' + (dec - 10));
+    }
 
     public static String decimalToHex(int dec, int digits) {
         int max = (1 << (digits << 2));

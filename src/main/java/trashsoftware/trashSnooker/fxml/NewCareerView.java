@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampDataManager;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
@@ -68,7 +69,7 @@ public class NewCareerView extends ChildInitializable {
                 new Difficulty("aiGoodGood", 2.0),
                 new Difficulty("aiGoodExtreme", 10.0)
         );
-        comboBox.getSelectionModel().select(2);
+        comboBox.getSelectionModel().select(1);
     }
 
     @Override
@@ -126,13 +127,12 @@ public class NewCareerView extends ChildInitializable {
         String name = nameField.getText();
         if (name.isBlank()) return;
 
-        String generatedId = DataLoader.generateIdByName(name);
-        if (DataLoader.getInstance().hasPlayer(generatedId)) {
-            promptLabel.setText(strings.getString("playerPersonAlreadyExists"));
-            return;
-        } else {
-            promptLabel.setText("");
-        }
+        String generatedId;
+        do {
+            generatedId = DataLoader.generateIdByName(name);
+        } while (DataLoader.getInstance().hasPlayer(generatedId));
+        
+        promptLabel.setText("");
 
         boolean leftHanded = handBox.getValue() == Hand.LEFT;
 
@@ -202,6 +202,9 @@ public class NewCareerView extends ChildInitializable {
                         System.out.println("Start simulating");
                         long st = System.currentTimeMillis();
                         CareerManager.getInstance().simulateMatchesInPastTwoYears();
+                        AchManager.newCareerInstance(CareerManager.getInstance().getCareerSave());
+                        
+                        // 一定要在simulateMatches之后
                         System.out.println("Simulation ends in " + (System.currentTimeMillis() - st) + " ms");
                         return null;
                     }

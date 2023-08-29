@@ -183,7 +183,6 @@ public class CareerManager {
             throw new RuntimeException("No human player???");
         }
         instance = cm;
-        AchManager.newCareerInstance(save);
 
 //        instance.updateRanking();
 //        instance.saveToDisk();
@@ -801,14 +800,14 @@ public class CareerManager {
     
     public void checkRankingAchievements() {
         CareerRank humanSnooker = humanPlayerRanking(GameRule.SNOOKER, ChampionshipData.Selection.REGULAR);
-
-        if (humanSnooker.rank == 0) {  // 从0开始的
-            AchManager.getInstance().addAchievement(Achievement.SNOOKER_TOP_1, null);
-        }
+        
         if (humanSnooker.rank < 64) {
             AchManager.getInstance().addAchievement(Achievement.SNOOKER_TOP_64, null);
             if (humanSnooker.rank < 16) {
                 AchManager.getInstance().addAchievement(Achievement.SNOOKER_TOP_16, null);
+                if (humanSnooker.rank == 0) {  // 从0开始的
+                    AchManager.getInstance().addAchievement(Achievement.SNOOKER_TOP_1, null);
+                }
             }
         }
         

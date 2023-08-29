@@ -17,6 +17,7 @@ import javafx.stage.StageStyle;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
@@ -444,6 +445,7 @@ public class CareerView extends ChildInitializable {
 
     @Override
     public void backAction() {
+        CareerAchManager.closeCareerInstance();
         parent.refreshGui();
         
         super.backAction();

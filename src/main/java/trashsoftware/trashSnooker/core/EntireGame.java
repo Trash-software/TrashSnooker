@@ -43,14 +43,21 @@ public class EntireGame {
     private int p1BreakLoseChance;
     private int p2BreakLoseChance;
 
-    public EntireGame(InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
-                      int totalFrames, TableCloth cloth,
+    public EntireGame(InGamePlayer p1, 
+                      InGamePlayer p2, 
+                      GameValues gameValues,
+                      int totalFrames, 
+                      TableCloth cloth,
                       MetaMatchInfo metaMatchInfo) {
         this(p1, p2, gameValues, totalFrames, cloth, true, metaMatchInfo);
     }
 
-    private EntireGame(InGamePlayer p1, InGamePlayer p2, GameValues gameValues,
-                       int totalFrames, TableCloth cloth, boolean isNewCreate,
+    private EntireGame(InGamePlayer p1, 
+                       InGamePlayer p2, 
+                       GameValues gameValues,
+                       int totalFrames, 
+                       TableCloth cloth, 
+                       boolean isNewCreate,
                        MetaMatchInfo metaMatchInfo) {
         this.p1 = p1;
         this.p2 = p2;

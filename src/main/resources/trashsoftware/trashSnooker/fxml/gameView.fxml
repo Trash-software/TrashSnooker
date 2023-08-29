@@ -36,6 +36,9 @@
             <!--                <CheckMenuItem fx:id="predictPlayerPathItem" text="%drawPredictionLinePlayer"/>-->
             <SeparatorMenuItem/>
 
+            <CheckMenuItem fx:id="potInspectionMenu" text="%potInspectionTool"/>
+            <SeparatorMenuItem/>
+
             <Menu fx:id="player1SpeedMenu" text="%p1PlaySpeedMenu">
                 <fx:define>
                     <ToggleGroup fx:id="player1SpeedToggle"/>

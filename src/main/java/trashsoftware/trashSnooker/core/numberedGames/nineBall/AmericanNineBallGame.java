@@ -257,8 +257,17 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
             lastPotSuccess = true;
             currentPlayer.correctPotBalls(pottedBalls);
             if (isBreaking) {
-                currentPlayer.setBreakSuccess();
+                currentPlayer.setBreakSuccess(pottedBalls.size());
+            } else {
+                // 成就的触发条件是非开球
+                if (pottedBalls.size() == 2) {
+                    AchManager.getInstance().addAchievement(Achievement.POT_TWO_LEGAL, getCuingIgp());
+                } else if (pottedBalls.size() >= 3) {
+                    AchManager.getInstance().addAchievement(Achievement.POT_THREE_LEGAL, getCuingIgp());
+                }
             }
+            
+            
             if (pottedBalls.contains(nineBall)) {
                 if (isBreaking) {
                     currentPlayer.setGoldNine();

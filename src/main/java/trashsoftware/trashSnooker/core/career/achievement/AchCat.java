@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.util.Util;
 
 public enum AchCat {
     GENERAL_HIDDEN,
+    UNIQUE_DEFEATS,  // todo: 完全没做
     GENERAL_TABLE,
     GENERAL_MATCH,
     FOUL,

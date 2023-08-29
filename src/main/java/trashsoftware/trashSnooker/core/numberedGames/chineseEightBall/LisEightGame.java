@@ -4,6 +4,8 @@ import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.GameSettings;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 
@@ -124,7 +126,7 @@ public class LisEightGame extends ChineseEightBallGame {
                             switchPlayer();
                             System.out.println(thisCueFoul.getAllReasons());
                         } else {
-                            currentPlayer.setBreakSuccess();
+                            currentPlayer.setBreakSuccess(pottedBalls.size());
                             System.out.println("开球黑八不选球");
                         }
                     } else {
@@ -139,7 +141,7 @@ public class LisEightGame extends ChineseEightBallGame {
             }
             if (currentTarget == NOT_SELECTED_REP) {  // 未选球
                 if (isBreaking) {  // 开球进袋不算选球
-                    currentPlayer.setBreakSuccess();
+                    currentPlayer.setBreakSuccess(pottedBalls.size());
                     System.out.println("开球进球不选球");
                     return;
                 }
@@ -158,16 +160,25 @@ public class LisEightGame extends ChineseEightBallGame {
                     currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
                 }
             } else {
+                int sucCount = 0;
                 if (currentTarget == FULL_BALL_REP) {
-                    if (hasFullBalls(pottedBalls)) {
+                    sucCount = countFullBalls(pottedBalls);
+                    if (sucCount > 0) {
                         lastPotSuccess = true;
                     }
                     currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
                 } else if (currentTarget == HALF_BALL_REP) {
-                    if (hasHalfBalls(pottedBalls)) {
+                    sucCount = countHalfBalls(pottedBalls);
+                    if (sucCount > 0) {
                         lastPotSuccess = true;
                     }
                     currentPlayer.correctPotBalls(halfBallsOf(pottedBalls));
+                }
+                // 触发成就，且开球不算
+                if (sucCount == 2) {
+                    AchManager.getInstance().addAchievement(Achievement.POT_TWO_LEGAL, getCuingIgp());
+                } else if (sucCount >= 3) {
+                    AchManager.getInstance().addAchievement(Achievement.POT_THREE_LEGAL, getCuingIgp());
                 }
             }
         }

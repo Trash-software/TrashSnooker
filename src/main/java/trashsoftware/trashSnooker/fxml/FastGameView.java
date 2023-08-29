@@ -348,7 +348,7 @@ public class FastGameView extends ChildInitializable {
     void resumeAction() {
         EntireGame game = GeneralSaveManager.getInstance().getSave();
         if (game != null) {
-            startGame(game, devModeBox.isSelected());
+            startGame(game);
         } else {
             throw new RuntimeException("???");
         }
@@ -384,6 +384,7 @@ public class FastGameView extends ChildInitializable {
         }
 
         values.setTablePreset(tablePresetBox.getValue().preset);  // 可以是null
+        values.setDevMode(devModeBox.isSelected());
         showGame(values, cloth);
     }
 
@@ -436,10 +437,10 @@ public class FastGameView extends ChildInitializable {
         }
 
         EntireGame game = new EntireGame(igp1, igp2, gameValues, totalFramesBox.getValue(), cloth, null);
-        startGame(game, devModeBox.isSelected());
+        startGame(game);
     }
 
-    private void startGame(EntireGame entireGame, boolean devMode) {
+    private void startGame(EntireGame entireGame) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("gameView.fxml"),
@@ -458,7 +459,7 @@ public class FastGameView extends ChildInitializable {
             AiCueResult.setAiPrecisionFactor(ConfigLoader.getInstance().getDouble("fastGameAiStrength", 1.0));
 
             GameView gameView = loader.getController();
-            gameView.setup(stage, entireGame, devMode);
+            gameView.setup(stage, entireGame);
             gameView.setAimingLengthFactor(ConfigLoader.getInstance().getDouble("fastGameAiming", 1.0));
 
             stage.show();

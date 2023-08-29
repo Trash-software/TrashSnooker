@@ -33,6 +33,7 @@ public class GameValues {
     private double maxPowerMoveDistance;
     private TrainType trainType;
     private Challenge trainChallenge;
+    private boolean devMode = false;
 
     public GameValues(GameRule rule,
                       TableMetrics tableMetrics,
@@ -75,6 +76,9 @@ public class GameValues {
         GameValues gameValues = new GameValues(rule, tableMetrics, ballMetrics);
         gameValues.setTablePreset(tablePreset);
         
+        boolean devMode = jsonObject.has("devMode") && jsonObject.getBoolean("devMode");
+        gameValues.setDevMode(devMode);
+        
         return gameValues;
     }
     
@@ -85,6 +89,7 @@ public class GameValues {
         
         jsonObject.put("gameRule", rule.name());
         jsonObject.put("ball", ball.name());
+        jsonObject.put("devMode", devMode);
         
         if (tablePreset == null) {
             JSONObject tableObj = new JSONObject();
@@ -134,6 +139,14 @@ public class GameValues {
         this.trainChallenge = challenge;
     }
 
+    public void setDevMode(boolean devMode) {
+        this.devMode = devMode;
+    }
+
+    public boolean isDevMode() {
+        return devMode;
+    }
+
     public boolean isTraining() {
         return trainType != null;
     }
@@ -148,6 +161,7 @@ public class GameValues {
 
     public boolean isStandard() {
         return !isTraining() &&
+                !devMode &&
                 ((rule == GameRule.SNOOKER && TableMetrics.SNOOKER.equals(table.tableName) && ball == BallMetrics.SNOOKER_BALL) ||
                 (rule == GameRule.MINI_SNOOKER && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.SNOOKER_BALL) ||
                 (rule == GameRule.CHINESE_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||

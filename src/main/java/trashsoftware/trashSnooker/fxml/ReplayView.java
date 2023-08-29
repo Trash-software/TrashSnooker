@@ -19,6 +19,7 @@ import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.recorder.*;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
+import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -269,6 +270,8 @@ public class ReplayView extends ChildInitializable {
                         System.err.println(re.getMessage());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                    } catch (Exception e) {
+                        EventLogger.error(e);
                     }
                 }
             }

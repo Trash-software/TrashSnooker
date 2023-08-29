@@ -14,24 +14,30 @@ import java.util.MissingResourceException;
  * 纪录型成就：类似最高记录那种
  */
 public enum Achievement {
+    UNIQUE_DEFEAT(AchCat.UNIQUE_DEFEATS),
+    
     POT_A_BALL(AchCat.GENERAL_TABLE),  // 已完成
     POT_BALLS(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 10, 50, 200),  // 已完成
-    POT_BALLS_REST(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 5, 20, 50),  // 已完成
-    POT_BALLS_ANTI(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 5, 20, 50),  // 已完成
+    POT_BALLS_REST(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 1, 10, 30),  // 已完成
+    POT_BALLS_ANTI(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 1, 10, 30),  // 已完成
     CUMULATIVE_LONG_POTS_1(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 10),  // 已完成
     THREE_BALLS_IN_A_ROW(AchCat.GENERAL_TABLE),  // 已完成
     POSITIONING_MASTER(AchCat.GENERAL_TABLE, Type.HIGH_RECORD, 7),  // 已完成
     GAIN_BY_SNOOKER(AchCat.GENERAL_TABLE),  // 已完成
     SOLVE_SNOOKER_SUCCESS(AchCat.GENERAL_TABLE),  // 已完成
+    SOLVE_SNOOKER_SUCCESS_POT(AchCat.GENERAL_TABLE),  // 已完成
     ACCURACY_WIN(AchCat.GENERAL_TABLE),  // 已完成
     ACCURACY_WIN_LONG(AchCat.GENERAL_TABLE),  // 已完成
     CONTINUOUS_LONG_POT(AchCat.GENERAL_TABLE),  // 已完成
+    POT_TWO_LEGAL(AchCat.GENERAL_TABLE),  // 已完成
+    POT_THREE_LEGAL(AchCat.GENERAL_TABLE),  // 已完成
+    DOUBLE_POT(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 1, 10, 30),  // 已完成
+    AROUND_TABLE_POSITION(AchCat.GENERAL_TABLE),  // 已完成
+    MULTI_CUSHION_POSITION_1(AchCat.GENERAL_TABLE),  // 已完成
+    MULTI_CUSHION_POSITION_2(AchCat.GENERAL_TABLE),  // 已完成
+    MULTI_CUSHION_ESCAPE(AchCat.GENERAL_TABLE),  // 已完成
     MULTIPLE_EASY_FAILS(AchCat.GENERAL_TABLE, true),  // 已完成
-    AROUND_TABLE_POSITION(AchCat.GENERAL_TABLE),
-    MULTI_CUSHION_POSITION_1(AchCat.GENERAL_TABLE),
-    MULTI_CUSHION_POSITION_2(AchCat.GENERAL_TABLE),
-    MULTI_CUSHION_ESCAPE(AchCat.GENERAL_TABLE),
-    // todo: 传球，一杆双响
+    // todo: 传球
 
     WIN_A_FRAME(AchCat.GENERAL_MATCH),  // 已完成
     WIN_A_MATCH(AchCat.GENERAL_MATCH),  // 已完成
@@ -61,6 +67,7 @@ public enum Achievement {
     ONE_ROUND_TOUR(AchCat.GENERAL_HIDDEN),  // 已完成
     LEGENDARY_REVENGED(AchCat.GENERAL_HIDDEN),  // 已完成
 
+    // 斯诺克
     SNOOKER_BREAK_50(AchCat.SNOOKER),  // 已完成
     SNOOKER_BREAK_100(AchCat.SNOOKER),  // 已完成
     SNOOKER_BREAK_100_BIG(AchCat.SNOOKER),  // 已完成
@@ -71,18 +78,23 @@ public enum Achievement {
     UNSOLVABLE_SNOOKER(AchCat.SNOOKER, true),  // 已完成 
     COME_BACK_BEHIND_65(AchCat.SNOOKER),  // 已完成
     COME_BACK_BEHIND_OVER_SCORE(AchCat.SNOOKER),  // 已完成
+    NOT_RESPECT(AchCat.SNOOKER),  // 已完成
     SUM_BELOW(AchCat.SNOOKER),  // 已完成
     SUM_BELOW_2(AchCat.SNOOKER, true),  // 已完成
     SNOOKER_NO_POT(AchCat.SNOOKER, true),  // 已完成
     SUM_OVER_147(AchCat.SNOOKER),  // 已完成
     POT_WRONG_COLOR(AchCat.SNOOKER, true),  // 已完成
 
+    // Pool general
+    DOUBLE_POT_WIN(AchCat.POOL_GENERAL),  // 已完成
     POOL_BREAK_POT(AchCat.POOL_GENERAL),  // 已完成
+    POOL_BREAK_MASTER(AchCat.POOL_GENERAL, Type.HIGH_RECORD, 2),  // 已完成
     POOL_CLEAR(AchCat.POOL_GENERAL),  // 已完成
     POOL_BREAK_CLEAR(AchCat.POOL_GENERAL),  // 已完成
     SUICIDE(AchCat.POOL_GENERAL),  // 已完成
 
     BLIND_SHOT(AchCat.CHINESE_EIGHT),  // 已完成
+    POT_OPPONENT_BALL(AchCat.CHINESE_EIGHT),  // todo
     REMAIN_ONE_MUST_LOSE(AchCat.CHINESE_EIGHT),  // 已完成
     CEB_CUMULATIVE_CLEAR(AchCat.CHINESE_EIGHT, Type.CUMULATIVE, 5, 10, 20),  // 已完成
     CHINESE_EIGHT_NO_POT(AchCat.CHINESE_EIGHT, true),  // 已完成

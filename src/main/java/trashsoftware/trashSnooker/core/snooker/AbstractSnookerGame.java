@@ -376,6 +376,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 }
                 if (wrongPot && score > 0) {
                     AchManager.getInstance().addAchievement(Achievement.POT_WRONG_COLOR, getCuingIgp());
+                } else if (!wrongPot) {
+                    if (score == 2) {
+                        AchManager.getInstance().addAchievement(Achievement.POT_TWO_LEGAL, getCuingIgp());
+                    } else if (score >= 3) {
+                        AchManager.getInstance().addAchievement(Achievement.POT_THREE_LEGAL, getCuingIgp());
+                    }
                 }
             } else {  // 该打红球时打了彩球
                 int foul = Math.max(4, whiteFirstCollide.getValue());
@@ -912,6 +918,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     @Override
     public GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage) {
+//        printPlayStage = true;
         if (isBreaking()) return GamePlayStage.BREAK;
         int targetValue = getCurrentTarget();
         int singlePoleScore = getCuingPlayer().getSinglePoleScore();

@@ -197,6 +197,12 @@ public class CareerAchManager extends AchManager {
                             addAchievement(Achievement.HARD_SNOOKER_BY_OPPONENT, justCuedPlayer);
                         }
                     }
+                    if (game.getGameType().snookerLike()) {
+                        if (defenseAttempt.getPlayParams().cueParams.selectedPower() >= 70.0) {
+                            // 这个成就无关解球成功还是失败
+                            addAchievement(Achievement.NOT_RESPECT, justCuedPlayer);
+                        }
+                    }
                 }
                 
                 showAchievement(owner);
@@ -281,6 +287,33 @@ public class CareerAchManager extends AchManager {
                 }
             }
             if (defenseAttempt != null) {
+                // 下一杆还是我打，说明我进了
+                // 至少斯诺克、中八、九球都是这样
+                // 开球不算
+                boolean defensePot = !game.isBreaking() && 
+                        !game.isJustAfterBreak() && 
+                        game.getCuingIgp() == justCuedPlayer;
+                
+                if (defensePot) {
+                    Movement.Trace targetTrace = defenseAttempt.getTargetTrace();
+                    int edgeCushions = 0;
+                    for (Cushion cushion : targetTrace.getCushionBefore()) {
+                        if (cushion instanceof Cushion.EdgeCushion) {
+                            edgeCushions++;
+                        }
+                    }
+                    if (edgeCushions > 0) {
+                        addAchievement(Achievement.DOUBLE_POT, justCuedPlayer);
+                        
+                        if (game instanceof NumberedBallGame) {
+                            if (game.isEnded() && game.getWiningPlayer() != null) {
+                                if (game.getWiningPlayer().getInGamePlayer() == justCuedPlayer) {
+                                    addAchievement(Achievement.DOUBLE_POT_WIN, justCuedPlayer);
+                                }
+                            }
+                        }
+                    }
+                }
                 if (defenseAttempt.isSolvingSnooker()) {
                     if (defenseAttempt.isSolveSuccess()) {  // 基本可认为一定是true，否则就犯规了，不会进这个分支
                         addAchievement(Achievement.SOLVE_SNOOKER_SUCCESS, justCuedPlayer);
@@ -288,6 +321,17 @@ public class CareerAchManager extends AchManager {
                         Movement.Trace whiteTrace = defenseAttempt.getWhiteTrace();
                         if (whiteTrace.getCushionBefore().size() >= 4) {
                             addAchievement(Achievement.MULTI_CUSHION_ESCAPE, justCuedPlayer);
+                        }
+                        
+                        if (defensePot) {
+                            addAchievement(Achievement.SOLVE_SNOOKER_SUCCESS_POT, justCuedPlayer);
+                        }
+                    }
+                    
+                    if (game.getGameType().snookerLike()) {
+                        if (defenseAttempt.getPlayParams().cueParams.selectedPower() >= 70.0) {
+                            // 这个成就无关解球成功还是失败
+                            addAchievement(Achievement.NOT_RESPECT, justCuedPlayer);
                         }
                     }
                 }
@@ -432,6 +476,10 @@ public class CareerAchManager extends AchManager {
             thisTimeComplete.add(newCompletion);
         }
         saveToDisk();
+    }
+    
+    public void setUniqueDefeats(String opponentId, int totalWins) {
+        
     }
 
     @Override

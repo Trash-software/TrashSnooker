@@ -74,34 +74,18 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         this(value, true, values);
     }
 
-//    private static Paint makeGradientColor(Color ballColor) {
-//        Stop[] stops = new Stop[]{
-//                new Stop()
-//        };
-//        LinearGradient gradient = new LinearGradient()
-//    }
-
     public static Color snookerColor(int value) {
-        switch (value) {
-            case 0:
-                return Values.WHITE;
-            case 1:
-                return Values.RED;
-            case 2:
-                return Values.YELLOW;
-            case 3:
-                return Values.GREEN;
-            case 4:
-                return Values.BROWN;
-            case 5:
-                return Values.BLUE;
-            case 6:
-                return Values.PINK;
-            case 7:
-                return Values.BLACK;
-            default:
-                throw new RuntimeException("Unexpected ball.");
-        }
+        return switch (value) {
+            case 0 -> Values.WHITE;
+            case 1 -> Values.RED;
+            case 2 -> Values.YELLOW;
+            case 3 -> Values.GREEN;
+            case 4 -> Values.BROWN;
+            case 5 -> Values.BLUE;
+            case 6 -> Values.PINK;
+            case 7 -> Values.BLACK;
+            default -> throw new RuntimeException("Unexpected ball.");
+        };
     }
 
     public static Color poolBallBaseColor(int number) {
@@ -136,8 +120,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     static void threeBallHits(Ball ball1, Ball ball2, Ball ball3, GameValues values, Phy phy) {
-        // 老子今天就非要研究出来到底谁先撞谁！
-        // 算了，研究不出来
+        // todo: 老子今天就非要研究出来到底谁先撞谁！
+        // fixme: 算了，研究不出来
 
         double dia = values.ball.ballDiameter;
 
@@ -637,45 +621,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         sideSpin *= table.wallSpinPreserveRatio;
     }
 
-//    /**
-//     * 碰库时的旋转:
-//     * 1. 施加侧旋的效果
-//     * 2. 更新所有旋转效果
-//     * <p>
-//     * 需在更新了vx和vy之后调用
-//     * <p>
-//     * 该方法仅在撞标准库时调用，不负责袋角
-//     *
-//     * @param phy              物理
-//     * @param cushionNormalVec 撞的库的法向量。比如说边库应是(1,0)或(-1,0)
-//     */
-//    private void applySpinsWhenHitCushion(Phy phy, double[] cushionNormalVec) {
-//        double sideSpinStrength = calculateEffectiveSideSpin(phy, cushionNormalVec);
-//        double effectiveSideSpin = sideSpinStrength * table.wallSpinEffectRatio;
-//
-//        if (Arrays.equals(cushionNormalVec, LEFT_CUSHION_VEC_NORM) || Arrays.equals(cushionNormalVec, RIGHT_CUSHION_VEC_NORM)) {
-//            if (vx < 0) {
-//                vy -= effectiveSideSpin;
-//            } else {
-//                vy += effectiveSideSpin;
-//            }
-//            xSpin *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
-//            ySpin *= 1 - (1 - table.wallSpinPreserveRatio) * 0.5;
-//        } else if (Arrays.equals(cushionNormalVec, TOP_CUSHION_VEC_NORM) || Arrays.equals(cushionNormalVec, BOT_CUSHION_VEC_NORM)) {
-//            if (vy < 0) {
-//                vx += effectiveSideSpin;
-//            } else {
-//                vx -= effectiveSideSpin;
-//            }
-//            xSpin *= 1 - (1 - table.wallSpinPreserveRatio) * 0.5;  // 比如ratio是0.8，这里就取0.9
-//            ySpin *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
-//        }
-//
-//        sideSpin -= effectiveSideSpin;
-//        sideSpin *= table.wallSpinPreserveRatio;
-////        sideSpin *= table.wallSpinPreserveRatio / sideSpinEffectMul;
-//    }
-
     /**
      * 该方法不检测袋口
      */
@@ -687,13 +632,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             // 先减速，算是对时间复杂度的一种妥协
             vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
-//            vy += ySpin * (1 - table.wallSpinPreserveRatio) * CUSHION_DIRECT_SPIN_APPLY;  // 一部分旋转直接生效了
 
             boolean isLeft = nextX < values.table.midX;
             Cushion.EdgeCushion cushion = isLeft ? table.leftCushion : table.rightCushion;
-//            double[] normalVec = isLeft ? LEFT_CUSHION_VEC_NORM : RIGHT_CUSHION_VEC_NORM;
-//            double[][] cushionLine = isLeft ? values.table.leftCushion : values.table.rightCushion;
-//            applySpinsWhenHitCushion(phy, normalVec);
             applySpin(cushion.getNormal(), cushion.getVector(), phy, 1.0);
 
             double effectiveAcc = -bounceAcc(phy, vx);
@@ -723,16 +664,12 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             // 边库
             vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
             vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
-//            vx += xSpin * (1 - table.wallSpinPreserveRatio) * CUSHION_DIRECT_SPIN_APPLY;  // 一部分旋转直接生效了
 
             boolean isTop = nextY < table.midY;
-//            double[] cushionVec = isTop ? TOP_CUSHION_VEC : BOT_CUSHION_VEC;
-//            double[] normalVec = isTop ? TOP_CUSHION_VEC_NORM : BOT_CUSHION_VEC_NORM;
             boolean isLeft = nextX < values.table.midX;
             Cushion.EdgeCushion cushion = isTop ? (
                     isLeft ? values.table.topLeftCushion : values.table.topRightCushion)
                     : (isLeft ? values.table.botLeftCushion : values.table.botRightCushion);
-//            applySpinsWhenHitCushion(phy, normalVec);
             applySpin(cushion.getNormal(), cushion.getVector(), phy, 1.0);
 
             double effectiveAcc = -bounceAcc(phy, vy);
@@ -774,33 +711,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         }
     }
 
-    int tryHitTwoBalls2(Ball ball1, Ball ball2, Phy phy) {
-        if (isHitting(ball1, phy)) {
-            // 0撞1
-            if (isHitting(ball2, phy)) {
-                // 0撞12
-                threeBallHit(ball1, ball2, phy);
-                return 1;
-            }
-        }
-        if (isHitting(ball2, phy)) {
-            // 0撞2
-            if (ball2.isHitting(ball1, phy)) {
-                // 2撞01
-                ball2.threeBallHit(this, ball1, phy);
-                return 1;
-            }
-        }
-        if (ball1.isHitting(ball2, phy)) {
-            if (ball1.isHitting(this, phy)) {
-                // 1撞02
-                ball1.threeBallHit(this, ball2, phy);
-                return 1;
-            }
-        }
-        return 0;
-    }
-
     /**
      * 返回:
      * 0: 真的没有三颗球撞一起（包括没有球碰撞和纯二球碰撞）
@@ -819,8 +729,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 if (ball2.isNotMoving()) {
                     return ball1.tryHitTwoBalls(this, ball2, phy);
                 } else {
-//                    System.err.println("Both balls are moving");
-//                    return 2;  // ball1、ball2 都在动，无法处理
                     if (isHitting(ball1, phy)) {
                         if (isHitting(ball2, phy)) {
                             threeBallHitCore(ball1, ball2, phy);
@@ -833,18 +741,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         } else {
             if (ball1.isNotMoving() && ball2.isNotMoving()) {
                 // this 去撞另外两颗
-//                double dt1 = currentDtTo(ball1), dt2 = currentDtTo(ball2);
-//                double nextDt1 = predictedDtTo(ball1), nextDt2 = predictedDtTo(ball2);
-//                if (((dt1 = predictedDtTo(ball1)) < values.ball.ballDiameter && currentDtTo(ball1) > dt1
-//                        && justHit != ball1 && ball1.justHit != this
-//                ) && ((dt2 = predictedDtTo(ball2)) < values.ball.ballDiameter && currentDtTo(ball2) > dt2
-//                        && justHit != ball2 && ball2.justHit != this
-//                )) {
-//                if ((nextDt1 < values.ball.ballDiameter && nextDt1 < dt1)
-//                        && (nextDt2 < values.ball.ballDiameter && nextDt2 < dt2)
-////                        && justHit != ball1 && ball1.justHit != this && justHit != ball2 && ball2.justHit != this
-//                ) {
-//                    System.out.println("Hit two static balls!=====================");
                 if (isHitting(ball1, phy) && isHitting(ball2, phy)) {
 
                     threeBallHitCore(ball1, ball2, phy);
@@ -854,8 +750,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     return 0;  // 这三颗球没有贴在一起
                 }
             } else {
-//                System.err.println("Both balls are moving");
-//                return 2;  // this 和 ball1、ball2 中的至少一颗都在动，无法处理
                 if (isHitting(ball1, phy)) {
                     if (isHitting(ball2, phy)) {
                         threeBallHitCore(ball1, ball2, phy);
@@ -934,8 +828,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             count++;
         }
         throw new RuntimeException("Cannot find collision point!");
-//        System.err.println("Cannot find collision point!");
-//        return 0.0;
     }
 
     boolean isHitting(Ball other, Phy phy) {
@@ -962,7 +854,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             if (!phy.isPrediction) {
                 System.err.println("Will not even collide!");
             }
-//            throw new RuntimeException();
             return;
         }
 
@@ -1053,6 +944,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double thisOutVer = ballVerV;
         double ballOutHor = ballHorV;
         double ballOutVer = thisVerV;
+        
+        double spinProj = 0.0;
+        
         if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
             // 实为投掷效应
             double powerGear = Math.min(1.0,
@@ -1060,7 +954,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             double throwEffect = (1 - powerGear) * MAX_GEAR_EFFECT;
             double gearEffect = 1 - throwEffect;
 
-            double spinProj = Algebra.projectionLengthOn(thisV,
+            spinProj = Algebra.projectionLengthOn(thisV,
                     new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
 
             double gearRemain = throwEffect * spinProj;
@@ -1095,6 +989,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double thisOutSpeed = Math.hypot(this.vx, this.vy);
         double ballOutSpeed = Math.hypot(ball.vx, ball.vy);
         if (considerGearSpin && relSpeed != 0.0 && (thisOutSpeed != 0.0 || ballOutSpeed != 0.0)) {
+            // 侧旋的传递
             double gearPassFactor = 0.18;
             double passRate = Math.cos(Math.abs(collisionThickness));  // 越厚传得越多。
             double speedPassRate = Math.abs(this.sideSpin) / relSpeed;  // 球速越慢，塞越大，传得越多
@@ -1104,6 +999,15 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
             this.sideSpin -= passed;  // 自己的塞会减少，动量守恒嘛
             ball.sideSpin -= passed;  // 右塞传到球上就是左塞了
+            
+            // 前后旋转的传递
+            // 这里并没有考虑自身的旋转损失，因为可以理解为已经在其他地方实现了这个效果了
+            double factor = spinProj >= 0.0 ? 0.18 : 0.36;  // 只希望强烈的前向传递
+//            System.out.println("Fact: " + factor + ", proj: " + spinProj);
+            double xSpinPassed = this.xSpin * factor;
+            double ySpinPassed = this.ySpin * factor;
+            ball.xSpin -= xSpinPassed;
+            ball.ySpin -= ySpinPassed;
 
             if (gearOffsetEnabled) {
                 // 相当于整个坐标系往一个方向扭一点点

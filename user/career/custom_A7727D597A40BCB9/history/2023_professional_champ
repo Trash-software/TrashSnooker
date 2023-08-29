@@ -1,0 +1,467 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 3,
+    "Yan Bingtao": 15,
+    "random_player_0": 9,
+    "Ding Junhui": 12,
+    "Jack Lisowski": 14,
+    "Trump": 7,
+    "Selby": 4,
+    "Mark Allen": 6,
+    "Mark Williams": 10,
+    "O_Sullivan": 1,
+    "Zhao Xintong": 2,
+    "Neil Robertson": 5,
+    "Worst Professional": 16,
+    "custom_E5B08FE4BB99E5A5B3": 11,
+    "Murphy": 13,
+    "John Wizard": 8
+  },
+  "championshipId": "professional_champ",
+  "matchTree": {"root": {
+    "p1wins": 4,
+    "p1": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Selby"},
+          "p2": {"winner": "Murphy"},
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-0",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Stuart Bingham"},
+          "p2": {"winner": "Ding Junhui"},
+          "winner": "Stuart Bingham",
+          "stage": "ROUND_1",
+          "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-1",
+          "p2wins": 1
+        },
+        "winner": "Selby",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-8",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-2",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Trump"},
+          "p2": {"winner": "Jack Lisowski"},
+          "winner": "Trump",
+          "stage": "ROUND_1",
+          "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-3",
+          "p2wins": 1
+        },
+        "winner": "O_Sullivan",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-9",
+        "p2wins": 0
+      },
+      "winner": "O_Sullivan",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-SEMI_FINAL-12",
+      "p2wins": 3
+    },
+    "p2": {
+      "p1wins": 2,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "Worst Professional"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-4",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Zhao Xintong"},
+          "p2": {"winner": "random_player_0"},
+          "winner": "Zhao Xintong",
+          "stage": "ROUND_1",
+          "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-5",
+          "p2wins": 1
+        },
+        "winner": "Neil Robertson",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-10",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Yan Bingtao"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-6",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {"winner": "Mark Williams"},
+          "winner": "Mark Allen",
+          "stage": "ROUND_1",
+          "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-7",
+          "p2wins": 1
+        },
+        "winner": "John Wizard",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-11",
+        "p2wins": 1
+      },
+      "winner": "John Wizard",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-SEMI_FINAL-13",
+      "p2wins": 3
+    },
+    "winner": "O_Sullivan",
+    "stage": "FINAL",
+    "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-FINAL-14",
+    "p2wins": 2
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 133,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-FINAL-14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 133,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-SEMI_FINAL-12",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 132,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-3",
+      "playerId": "Trump"
+    },
+    {
+      "score": 130,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-0",
+      "playerId": "Selby"
+    },
+    {
+      "score": 128,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-2",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 127,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-0",
+      "playerId": "Selby"
+    },
+    {
+      "score": 126,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 6,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-FINAL-14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 126,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-SEMI_FINAL-13",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 126,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-9",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 125,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-8",
+      "playerId": "Selby"
+    },
+    {
+      "score": 125,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-6",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 123,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-FINAL-14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 122,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-1",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 121,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-SEMI_FINAL-12",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 121,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-3",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 118,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-9",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 117,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-FINAL-14",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 117,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-2",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 116,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-11",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 115,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-7",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 113,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-8",
+      "playerId": "Selby"
+    },
+    {
+      "score": 111,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-SEMI_FINAL-13",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 109,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-1",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 107,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-SEMI_FINAL-12",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 105,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-7",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 100,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-SEMI_FINAL-13",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 97,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-10",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 90,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-FINAL-14",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 87,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-FINAL-14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 87,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-4",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 86,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-10",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 84,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-5",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 81,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-QUARTER_FINAL-11",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 77,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-SEMI_FINAL-13",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 69,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-SEMI_FINAL-13",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 64,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-5",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 62,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-5",
+      "playerId": "random_player_0"
+    },
+    {
+      "score": 61,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-6",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 57,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-SEMI_FINAL-13",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 54,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_A7727D597A40BCB9+2023+professional_champ-ROUND_1-1",
+      "playerId": "Ding Junhui"
+    }
+  ],
+  "timestamp": "2023/2/22"
+}

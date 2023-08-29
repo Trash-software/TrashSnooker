@@ -127,7 +127,13 @@ public class BriefReplayItem {
 
         byte[] nameBuf = new byte[32];
         if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
-        String pid = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
+        int nameLen = Util.indexOf((byte) 0, nameBuf);
+        if (nameLen < 0 || nameLen > nameBuf.length) {
+            System.err.println("Cannot read name from record");
+            nameLen = 32;
+        }
+        
+        String pid = new String(nameBuf, 0, nameLen, StandardCharsets.UTF_8);
         if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
         String playCueId = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
         if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
