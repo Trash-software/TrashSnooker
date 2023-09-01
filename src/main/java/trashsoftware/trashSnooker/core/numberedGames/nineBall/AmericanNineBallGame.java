@@ -255,7 +255,7 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
         // 已经是没犯规的前提了
         if (!pottedBalls.isEmpty()) {
             lastPotSuccess = true;
-            currentPlayer.correctPotBalls(pottedBalls);
+            currentPlayer.correctPotBalls(this, pottedBalls);
             if (isBreaking) {
                 currentPlayer.setBreakSuccess(pottedBalls.size());
             } else {

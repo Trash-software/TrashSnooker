@@ -140,6 +140,12 @@ public class MatchTreeNode {
         if (leftRes != null) return leftRes;
         return player2Position.findNodeByPlayers(p1Id, p2Id);
     }
+    
+    public boolean isMatchInvolvesHuman() {
+        if (isLeaf()) return false;
+        return (player1Position.winner != null && player1Position.winner.isHumanPlayer()) || 
+                (player2Position.winner != null && player2Position.winner.isHumanPlayer());
+    }
 
     public ChampionshipStage getStage() {
         return stage;

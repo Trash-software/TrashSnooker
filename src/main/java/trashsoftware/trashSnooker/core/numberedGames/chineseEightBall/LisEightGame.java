@@ -85,7 +85,7 @@ public class LisEightGame extends ChineseEightBallGame {
             return;
         }
 
-        if (!baseFoul) {
+//        if (!baseFoul) {
             if (currentTarget == FULL_BALL_REP) {
                 if (whiteFirstCollide.getValue() == 8) {
                     thisCueFoul.addFoul(strings.getString("targetFullHitBlack"), true);
@@ -103,7 +103,7 @@ public class LisEightGame extends ChineseEightBallGame {
                     thisCueFoul.addFoul(strings.getString("targetBlackHitOther"), true);
                 }
             }
-        }
+//        }
 
         if (thisCueFoul.isFoul() && !getEightBall().isPotted()) {
             switchPlayer();
@@ -150,14 +150,14 @@ public class LisEightGame extends ChineseEightBallGame {
                     getAnotherPlayer().setBallRange(HALF_BALL_REP);
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     lastPotSuccess = true;
-                    currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
+                    currentPlayer.correctPotBalls(this, fullBallsOf(pottedBalls));
                 }
                 if (allHalfBalls(pottedBalls)) {
                     currentPlayer.setBallRange(HALF_BALL_REP);
                     getAnotherPlayer().setBallRange(FULL_BALL_REP);
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     lastPotSuccess = true;
-                    currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
+                    currentPlayer.correctPotBalls(this, fullBallsOf(pottedBalls));
                 }
             } else {
                 int sucCount = 0;
@@ -166,13 +166,13 @@ public class LisEightGame extends ChineseEightBallGame {
                     if (sucCount > 0) {
                         lastPotSuccess = true;
                     }
-                    currentPlayer.correctPotBalls(fullBallsOf(pottedBalls));
+                    currentPlayer.correctPotBalls(this, fullBallsOf(pottedBalls));
                 } else if (currentTarget == HALF_BALL_REP) {
                     sucCount = countHalfBalls(pottedBalls);
                     if (sucCount > 0) {
                         lastPotSuccess = true;
                     }
-                    currentPlayer.correctPotBalls(halfBallsOf(pottedBalls));
+                    currentPlayer.correctPotBalls(this, halfBallsOf(pottedBalls));
                 }
                 // 触发成就，且开球不算
                 if (sucCount == 2) {

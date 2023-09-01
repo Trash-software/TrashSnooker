@@ -185,6 +185,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return !potted && (x < 0 || x >= values.table.outerWidth ||
                 y < 0 || y >= values.table.outerHeight);
     }
+    
+    public boolean isNotOnTable() {
+        return isPotted() || isOutOfTable();
+    }
 
     public void pickup() {
         setPotted(false);

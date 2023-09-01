@@ -65,9 +65,13 @@ public class NaiveActualRecorder extends ActualRecorder {
     }
     
     private void writeCueAnimation(CueAnimationRec animationRec) throws IOException {
-        totalBeforeCueMs += animationRec.getBeforeCueMs();
-        
         byte[] buf = new byte[CUE_ANIMATION_BUF_LEN];
+        if (animationRec == null) {
+            outputStream.write(buf);
+            return;
+        }
+
+        totalBeforeCueMs += animationRec.getBeforeCueMs();
         Util.int32ToBytes(animationRec.getBeforeCueMs(), buf, 0);
         Util.int32ToBytes(animationRec.getAfterCueMs(), buf, 4);
         outputStream.write(buf);

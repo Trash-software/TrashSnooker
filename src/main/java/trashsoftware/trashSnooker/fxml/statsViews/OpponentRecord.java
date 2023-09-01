@@ -5,6 +5,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import trashsoftware.trashSnooker.fxml.widgets.AdversarialBar;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 import trashsoftware.trashSnooker.util.db.EntireGameRecord;
@@ -17,9 +19,9 @@ public class OpponentRecord extends RecordTree {
     final StatsView.PlayerAi thisPlayer;
     final List<EntireGameTitle> egtList;
 
-    OpponentRecord(StatsView.PlayerAi thisPlayer, 
-                   StatsView.PlayerAi opponent, 
-                   List<EntireGameTitle> egtList, 
+    OpponentRecord(StatsView.PlayerAi thisPlayer,
+                   StatsView.PlayerAi opponent,
+                   List<EntireGameTitle> egtList,
                    ResourceBundle strings) {
         super(opponent.toString(), strings);
         this.thisPlayer = thisPlayer;
@@ -81,40 +83,52 @@ public class OpponentRecord extends RecordTree {
                 2, rowIndex);
         rowIndex++;
 
-        double matchWinRate = (double) thisWinMatches / egtList.size() * 100;
-        gridPane.add(new Label("胜利"), 2, rowIndex);
-        gridPane.add(new Label(String.valueOf(thisWinMatches)), 0, rowIndex);
-        gridPane.add(new Label(String.format("%.1f%%", matchWinRate)), 1, rowIndex);
-        gridPane.add(new Label(String.valueOf(egtList.size() - thisWinMatches)),
-                4, rowIndex);
-        gridPane.add(new Label(String.format("%.1f%%", 100 - matchWinRate)), 3, rowIndex);
-        rowIndex++;
+        addRowTo(gridPane,
+                rowIndex++,
+                strings.getString("statsMatchesWinTitle"),
+                thisWinMatches,
+                egtList.size() - thisWinMatches);
 
-        double frameWinRate = (double) thisWinFrames / (thisWinFrames + oppoWinFrames) * 100;
-        gridPane.add(new Label("总胜局数"), 2, rowIndex);
-        gridPane.add(new Label(String.valueOf(thisWinFrames)), 0, rowIndex);
-        gridPane.add(new Label(String.format("%.1f%%", frameWinRate)), 1, rowIndex);
-        gridPane.add(new Label(String.valueOf(oppoWinFrames)),
-                4, rowIndex);
-        gridPane.add(new Label(String.format("%.1f%%", 100 - frameWinRate)), 3, rowIndex);
-        rowIndex++;
+        addRowTo(gridPane,
+                rowIndex++,
+                strings.getString("statsFramesWinTitle"),
+                thisWinFrames,
+                oppoWinFrames);
 
         gridPane.add(new Separator(), 0, rowIndex++, 5, 1);
         for (Map.Entry<Integer, int[]> entry : playerOppoWinsByTotalFrames.entrySet()) {
             int pWins = entry.getValue()[0];
             int oWins = entry.getValue()[1];
             double pRate = (double) pWins / (pWins + oWins) * 100;
-            gridPane.add(
-                    new Label(String.format("%d局%d胜制",
-                            entry.getKey(), entry.getKey() / 2 + 1)),
-                    2, rowIndex);
-            gridPane.add(new Label(String.valueOf(pWins)), 0, rowIndex);
-            gridPane.add(new Label(String.format("%.1f%%", pRate)), 1, rowIndex);
-            gridPane.add(new Label(String.format("%.1f%%", 100 - pRate)), 3, rowIndex);
-            gridPane.add(new Label(String.valueOf(oWins)), 4, rowIndex);
-            rowIndex++;
+            
+            addRowTo(gridPane,
+                    rowIndex++,
+                    String.format(strings.getString("bestOfNFrames"),
+                            entry.getKey(), entry.getKey() / 2 + 1),
+                    pWins,
+                    oWins);
         }
 
         rightPane.getChildren().add(gridPane);
+    }
+
+    private void addRowTo(GridPane gridPane,
+                          int rowIndex,
+                          String string,
+                          int v1,
+                          int v2) {
+        double rate = (double) v1 / (v1 + v2);
+
+        VBox matchWinBox = new VBox();
+        matchWinBox.setAlignment(Pos.CENTER);
+        matchWinBox.getChildren().add(new Label(string));
+        matchWinBox.getChildren().add(new AdversarialBar(rate));
+
+        gridPane.add(matchWinBox, 2, rowIndex);
+        gridPane.add(new Label(String.valueOf(v1)), 0, rowIndex);
+        gridPane.add(new Label(showPercent(rate)), 1, rowIndex);
+        gridPane.add(new Label(String.valueOf(v2)),
+                4, rowIndex);
+        gridPane.add(new Label(showPercent(1 - rate)), 3, rowIndex);
     }
 }

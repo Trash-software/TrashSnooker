@@ -23,6 +23,7 @@ import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class NewCareerView extends ChildInitializable {
@@ -56,7 +57,8 @@ public class NewCareerView extends ChildInitializable {
                 new Difficulty("difEasiest", 3.0),
                 new Difficulty("difEasy", 1.5),
                 new Difficulty("difMedium", 1.0),
-                new Difficulty("difHard", 0.75)
+                new Difficulty("difHard", 0.75),
+                new Difficulty("difExtreme", 0.0)
         );
         comboBox.getSelectionModel().select(2);
     }
@@ -70,6 +72,30 @@ public class NewCareerView extends ChildInitializable {
                 new Difficulty("aiGoodExtreme", 10.0)
         );
         comboBox.getSelectionModel().select(1);
+    }
+    
+    public static int getGoodnessIndex(List<Difficulty> difficulties, double multiplier) {
+        double first = difficulties.get(0).multiplier;
+        double last = difficulties.get(difficulties.size() - 1).multiplier;
+        
+        int sign = first < last ? 1 : -1;  // 从小到大是1，从大到小是-1
+        double mul = multiplier * sign;
+        
+        if (mul <= first * sign) return 0;
+        if (mul >= last * sign) return difficulties.size() - 1;
+        
+        for (int index = 1; index < difficulties.size() - 1; index++) {
+            double low = difficulties.get(index - 1).multiplier * sign;
+            double mid = difficulties.get(index).multiplier * sign;
+            double high = difficulties.get(index + 1).multiplier * sign;
+            
+            double tick1 = (low + mid) / 2;
+            double tick2 = (mid + high) / 2;
+            if (mul >= tick1 && mul < tick2) {
+                return index;
+            }
+        }
+        return difficulties.size() / 2;
     }
 
     @Override

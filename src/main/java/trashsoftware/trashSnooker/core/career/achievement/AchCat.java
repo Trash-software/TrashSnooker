@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.career.achievement;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
 
+import java.util.MissingResourceException;
+
 public enum AchCat {
     GENERAL_HIDDEN,
     UNIQUE_DEFEATS,  // todo: 完全没做
@@ -36,6 +38,10 @@ public enum AchCat {
     }
     
     public String shown() {
-        return App.getStrings().getString(Util.toLowerCamelCase("ACH_CAT_" + name()));
+        try {
+            return App.getAchievementStrings().getString(Util.toLowerCamelCase("ACH_CAT_" + name()));
+        } catch (MissingResourceException e) {
+            return name();
+        }
     }
 }

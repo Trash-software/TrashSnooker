@@ -275,18 +275,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return null;
     }
 
-//    protected static double selectedSideSpinToActual(double selectedSideSpin, Cue cue) {
-//        return CuePlayParams.unitSideSpin(selectedSideSpin, cue);
-//    }
-
-//    protected static double selectedFrontBackSpinToActual(double selectedFrontBackSpin,
-//                                                          Game<?, ?> game,
-//                                                          InGamePlayer aiIgp) {
-//        return CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin,
-//                aiIgp.getPlayerPerson(),
-//                aiIgp.getCurrentCue(game));
-//    }
-
     public abstract AiCueResult makeCue(Phy phy);
 
     /**

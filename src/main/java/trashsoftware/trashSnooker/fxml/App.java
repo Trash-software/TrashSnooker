@@ -26,8 +26,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
 
-    public static final String VERSION_NAME = "0.5-SNAPSHOT";
-    public static final int VERSION_CODE = 41;
+    public static final String VERSION_NAME = "0.5-RC";
+    public static final int VERSION_CODE = 44;
     public static final String CLASSIFIER = "win";
     public static final String FONT_STYLE = CLASSIFIER.equals("mac") ?
             "-fx-font-family: 'serif'" :
@@ -38,6 +38,7 @@ public class App extends Application {
     public static final boolean PRINT_DEBUG = false;
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     private static ResourceBundle strings;
+    private static ResourceBundle achievementStrings;
     
     private static Stage fullScreenStage;
 
@@ -151,10 +152,18 @@ public class App extends Application {
         return strings;
     }
 
+    public static ResourceBundle getAchievementStrings() {
+        return achievementStrings;
+    }
+
     public static void reloadStrings() {
+        Locale locale = ConfigLoader.getInstance().getLocale();
         strings = ResourceBundle.getBundle(
                 "trashsoftware.trashSnooker.bundles.Strings",
-                ConfigLoader.getInstance().getLocale());
+                locale);
+        achievementStrings = ResourceBundle.getBundle(
+                "trashsoftware.trashSnooker.bundles.Achievements",
+                locale);
     }
 
     public static Stage getFullScreenStage() {

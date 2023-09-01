@@ -1,10 +1,13 @@
 package trashsoftware.trashSnooker.core.metrics;
 
 import trashsoftware.trashSnooker.core.Algebra;
+import trashsoftware.trashSnooker.core.movement.MovementFrame;
 
 import java.util.Arrays;
 
 public abstract class Cushion {
+
+    public abstract int movementType();
     
     public static abstract class LinearCushion extends Cushion {
         protected final double[][] position;
@@ -41,6 +44,11 @@ public abstract class Cushion {
             this.des = des;
         }
 
+        @Override
+        public int movementType() {
+            return MovementFrame.EDGE_CUSHION;
+        }
+
         public String getDes() {
             return des;
         }
@@ -67,6 +75,11 @@ public abstract class Cushion {
         }
 
         @Override
+        public int movementType() {
+            return MovementFrame.CUSHION_ARC;
+        }
+
+        @Override
         public String toString() {
             return "Pocket arc @" + Arrays.toString(center);
         }
@@ -76,6 +89,11 @@ public abstract class Cushion {
 
         public CushionLine(double[][] pos) {
             super(pos);
+        }
+
+        @Override
+        public int movementType() {
+            return MovementFrame.CUSHION_LINE;
         }
 
         @Override

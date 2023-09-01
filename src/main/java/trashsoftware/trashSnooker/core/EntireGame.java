@@ -246,7 +246,7 @@ public class EntireGame {
         if (game != null && record) {
             if (gameValues.isStandard()) {
                 DBAccess.getInstance().recordAFrameEnds(
-                        this, game, player.getPlayerPerson());
+                        this, game, player);
             }
             updateFrameRecords(game.getPlayer1(), player);
             updateFrameRecords(game.getPlayer2(), player);

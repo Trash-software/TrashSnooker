@@ -1,24 +1,28 @@
 {
-  "winRecords": {"1": 2},
+  "winRecords": {
+    "1": 1,
+    "2": 2,
+    "3": 1
+  },
   "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
-    "person": "Neil Robertson",
+    "person": "Murphy",
+    "playerType": "COMPUTER",
+    "playCue": "stdSnookerCue",
+    "breakCue": "stdSnookerCue"
+  },
+  "p1Wins": 2,
+  "p2": {
+    "playerNumber": 2,
+    "handFeelEffort": 1,
+    "person": "John Wizard",
     "playerType": "PLAYER",
     "playCue": "stdSnookerCue",
     "breakCue": "stdSnookerCue"
   },
-  "p1Wins": 0,
-  "p2": {
-    "playerNumber": 2,
-    "handFeelEffort": 1,
-    "person": "custom_player_4",
-    "playerType": "COMPUTER",
-    "playCue": "GirlCue",
-    "breakCue": "GirlCue"
-  },
-  "startTime": 1693253281536,
+  "startTime": 1693544783893,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
@@ -31,7 +35,7 @@
       "holeSizeOrdinal": 2
     }
   },
-  "totalFrames": 1,
+  "totalFrames": 5,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"

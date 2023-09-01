@@ -8,7 +8,9 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.jetbrains.annotations.NotNull;
 import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.IOException;
 
@@ -39,26 +41,32 @@ public class AlertShower {
             view.setupInfo(newStage, header, content);
 
             if (autoCloseMs > 0) {
-                Thread autoClose = new Thread(() -> {
-                    try {
-                        Thread.sleep(autoCloseMs);
-                        Platform.runLater(() -> {
-                            if (view.isActive()) {  // 确保它不会被手动关了之后又自动关了，虽然daemon好像已经有这个作用了
-                                view.yesButton.fire();
-                            }
-                        });
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                });
-                autoClose.setDaemon(true);
+                Thread autoClose = getThread(autoCloseMs, view);
                 autoClose.start();
             }
 
             newStage.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
+            EventLogger.error(e);
         }
+    }
+
+    @NotNull
+    private static Thread getThread(long autoCloseMs, Alert view) {
+        Thread autoClose = new Thread(() -> {
+            try {
+                Thread.sleep(autoCloseMs);
+                Platform.runLater(() -> {
+                    if (view.isActive()) {  // 确保它不会被手动关了之后又自动关了，虽然daemon好像已经有这个作用了
+                        view.yesButton.fire();
+                    }
+                });
+            } catch (InterruptedException e) {
+                EventLogger.error(e);
+            }
+        });
+        autoClose.setDaemon(true);
+        return autoClose;
     }
 
     public static void showSingleButtonWindow(Window owner, String content, String header, 

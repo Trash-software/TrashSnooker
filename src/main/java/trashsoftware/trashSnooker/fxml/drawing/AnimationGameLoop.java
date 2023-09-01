@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.fxml.drawing;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -72,8 +73,12 @@ public class AnimationGameLoop extends AnimationTimer implements GameLoop {
             lastFrameTime = thisFrameTime;
             thisFrameTime = t;
             cumulatedFrameCount++;
-
-            frame.run();
+            
+            try {
+                frame.run();
+            } catch (Exception e) {
+                EventLogger.error(e);
+            }
             frameAlive = false;
             
             long frameNano = now - lastFrameNano;

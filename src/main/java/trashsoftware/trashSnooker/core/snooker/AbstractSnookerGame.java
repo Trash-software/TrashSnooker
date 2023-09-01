@@ -45,7 +45,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private boolean willLoseBecauseThisFoul;
     private boolean isSolvable;  // 球形是否有解
     private int indicatedTarget;
-    
+
     private int maxScoreDiff;  // 最大分差，p1的分减p2的分
     private boolean p1EverOver;  // p1 p2分别是否曾经超了分
     private boolean p2EverOver;
@@ -86,26 +86,17 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     public static String ballValueToColorName(int ballValue, ResourceBundle strings) {
-        switch (ballValue) {
-            case 1:
-                return strings.getString("redBall");
-            case 2:
-                return strings.getString("yellowBall");
-            case 3:
-                return strings.getString("greenBall");
-            case 4:
-                return strings.getString("brownBall");
-            case 5:
-                return strings.getString("blueBall");
-            case 6:
-                return strings.getString("pinkBall");
-            case 7:
-                return strings.getString("blackBall");
-            case 0:
-                return strings.getString("coloredBall");
-            default:
-                throw new RuntimeException();
-        }
+        return switch (ballValue) {
+            case 1 -> strings.getString("redBall");
+            case 2 -> strings.getString("yellowBall");
+            case 3 -> strings.getString("greenBall");
+            case 4 -> strings.getString("brownBall");
+            case 5 -> strings.getString("blueBall");
+            case 6 -> strings.getString("pinkBall");
+            case 7 -> strings.getString("blackBall");
+            case 0 -> strings.getString("coloredBall");
+            default -> throw new RuntimeException();
+        };
     }
 
     @Override
@@ -340,7 +331,21 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         int score = 0;
         boolean baseFoul = checkStandardFouls(() -> getFoulScore(pottedBalls));
         if (baseFoul) {
-            // do nothing, 只是为了后面不进分支
+            // 不同的分支
+            if (whiteFirstCollide != null) {
+                // == null的分支一定在baseFoul里面
+                // 这里是处理多重犯规下，还有miss的情况
+                if (!wasLegalBall(whiteFirstCollide,
+                        currentTarget,
+                        isFreeBall)) {
+                    thisCueFoul.addFoul(
+                            String.format(strings.getString("targetXOtherHit"),
+                                    ballValueToColorName(currentTarget, strings)),
+                            Math.max(4, Math.max(currentTarget, whiteFirstCollide.getValue())),
+                            true
+                    );
+                }
+            }
         } else if (isFreeBall) {
             int[] scoreFoul = scoreFoulOfFreeBall(pottedBalls);
             score = scoreFoul[0];
@@ -391,6 +396,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         true);
             }
             if (cueBall.isPotted()) {
+                System.err.println("Should not enter this branch");
                 thisCueFoul.addFoul(strings.getString("cueBallPot"), getFoulScore(pottedBalls), false);
                 ballInHand = true;
             }
@@ -464,6 +470,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 }
             }
             if (cueBall.isPotted()) {
+                System.err.println("Should not enter this branch");
                 thisCueFoul.addFoul(strings.getString("cueBallPot"), getFoulScore(pottedBalls), false);
                 ballInHand = true;
             }
@@ -472,6 +479,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             if (thisCueFoul.isMiss()) {
                 // 看有没有解，如果无解，那就不算miss
                 if (!isSolvable()) {
+                    System.out.println("Unsolvable snooker, not miss");
                     thisCueFoul.setMiss(false);
                 }
             }
@@ -485,9 +493,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
             if (willLoseBecauseThisFoul) {
                 // 三次瞎打判负
-                if (getCuingPlayer().getInGamePlayer().isHuman()) 
+                if (getCuingPlayer().getInGamePlayer().isHuman())
                     AchManager.getInstance().addAchievement(Achievement.THREE_MISS_LOST, getCuingIgp());
-                getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
+                addFoulScore();
                 getCuingPlayer().withdraw();
                 end();
                 return;
@@ -495,13 +503,13 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
             if (blackBattle) {
                 // 抢黑时犯规就直接判负
-                getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
-                
+                addFoulScore();
+
                 end();
                 return;
             }
 
-            getAnotherPlayer().addScore(thisCueFoul.getFoulScore());
+            addFoulScore();
             updateTargetPotFailed();
             switchPlayer();
             if (gameValues.rule.hasRule(Rule.FOUL_BALL_IN_HAND)) {
@@ -515,9 +523,13 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         } else {
             if (score > 0) {
                 if (isFreeBall) {
-                    if (pottedBalls.size() != 1) throw new RuntimeException("为什么进了这么多自由球？？？");
+                    if (pottedBalls.size() != 1)
+                        throw new RuntimeException("为什么进了这么多自由球？？？");
                     currentPlayer.potFreeBall(score);
-                } else currentPlayer.correctPotBalls(pottedBalls);
+                } else {
+                    currentPlayer.correctPotBalls(this, pottedBalls);
+                }
+                lastPotSuccess = true;
                 potSuccess(isFreeBall);
             } else {
                 updateTargetPotFailed();
@@ -529,6 +541,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 //            thisCueFoul = false;
         }
 //        System.out.println("Potted: " + pottedBalls + ", first: " + whiteFirstCollide + " score: " + score + ", foul: " + foul);
+    }
+
+    protected void addFoulScore() {
+        int score = thisCueFoul.getFoulScore();
+        getAnotherPlayer().addScore(score);
+        AchManager.getInstance().cumulateAchievement(Achievement.SNOOKER_CUMULATE_FOUL_GAIN,
+                score,
+                getAnotherPlayer().getInGamePlayer());
     }
 
     @Override
@@ -549,7 +569,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             AchManager.getInstance().addAchievement(Achievement.SUM_BELOW_2, human);
         }
     }
-    
+
     private int getScoreSum() {
         return player1.getScore() + player2.getScore() + getRemainingScore(false);
     }
@@ -669,7 +689,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         cueParams,
                         0.0
                 );
-                WhitePrediction wp = predictWhite(cpp, entireGame.predictPhy, 10000.0, 
+                WhitePrediction wp = predictWhite(cpp, entireGame.predictPhy, 10000.0,
                         false,
                         false,
                         false, true, false);
@@ -845,6 +865,19 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         getTable().brownBallPos()[1]
                 ) <= getTable().breakArcRadius() &&
                 !isOccupied(x, y);
+    }
+
+    public boolean wasLegalBall(Ball ball, int targetRep, boolean isSnookerFreeBall) {
+        if (!ball.isWhite()) {
+            if (targetRep == RAW_COLORED_REP) {
+                return ball.getValue() > 1 && ball.getValue() <= 7;
+            } else {
+                if (isSnookerFreeBall) {
+                    return true;
+                } else return ball.getValue() == targetRep;
+            }
+        }
+        return false;
     }
 
     @Override

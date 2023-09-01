@@ -77,7 +77,7 @@ public class CueBackPredictor {
     private Result checkBalls(CueBackPredictObject predictor) {
         double threshold = cueRadius + game.gameValues.ball.ballRadius;
         for (Ball ball : game.getAllBalls()) {
-            if (!ball.isPotted() && !ball.isWhite()) {
+            if (!ball.isNotOnTable() && !ball.isWhite()) {
                 if (Algebra.distanceToPoint(predictor.x, predictor.y, 
                         ball.x, ball.y) < threshold) {
                     return new BallObstacle(predictor.distance + game.gameValues.ball.ballRadius, ball);

@@ -142,6 +142,8 @@ public class GameView implements Initializable {
     @FXML
     Canvas player1TarCanvas, player2TarCanvas;
     @FXML
+    MenuItem repairMenu;
+    @FXML
     Menu gameMenu;
     @FXML
     MenuItem withdrawMenu, replaceBallInHandMenu, letOtherPlayMenu, repositionMenu, pushOutMenu;
@@ -231,7 +233,7 @@ public class GameView implements Initializable {
     private long replayStopTime;
     private long replayGap = DEFAULT_REPLAY_GAP;
     private boolean drawStandingPos = false;
-//    private boolean drawTargetRefLine = false;
+    //    private boolean drawTargetRefLine = false;
     private boolean miscued = false;
     private PlayerPerson.HandSkill currentHand;
     private CareerMatch careerMatch;
@@ -457,6 +459,7 @@ public class GameView implements Initializable {
         drawScoreBoard(null, true);
 
         potInspectionMenu.setDisable(true);
+        repairMenu.setDisable(true);
 
         setupPowerSlider();
         powerSlider.setDisable(true);
@@ -562,12 +565,29 @@ public class GameView implements Initializable {
     private void setupAiHelper() {
         aiHelpPlayMenuItem.selectedProperty().addListener(((observableValue, aBoolean, t1) -> {
             if (t1) {
-                AlertShower.askConfirmation(
-                        stage,
-                        strings.getString("aiHelpPlayerPrompt"),
-                        strings.getString("aiHelpPlayerTitle"),
-                        () -> aiHelpPlay = true,
-                        () -> aiHelpPlayMenuItem.setSelected(false));
+                double playerGoodness;
+                if (careerMatch != null) {
+                    playerGoodness = CareerManager.getInstance().getPlayerGoodness();
+                } else {
+                    playerGoodness = ConfigLoader.getInstance().getDouble("fastGameAiming", 1.0);
+                }
+                if (playerGoodness == 0.0) {
+                    AlertShower.showInfo(
+                            stage,
+                            "",
+                            strings.getString("aiHelpPlayerUnavailable"),
+                            3000
+                    );
+                    aiHelpPlayMenuItem.setSelected(false);
+                    aiHelpPlay = false;
+                } else {
+                    AlertShower.askConfirmation(
+                            stage,
+                            strings.getString("aiHelpPlayerPrompt"),
+                            strings.getString("aiHelpPlayerTitle"),
+                            () -> aiHelpPlay = true,
+                            () -> aiHelpPlayMenuItem.setSelected(false));
+                }
             } else {
                 aiHelpPlay = false;
             }
@@ -885,7 +905,7 @@ public class GameView implements Initializable {
         if (cueAnimationPlayer != null) {
             endCueAnimation();
         }
-        oneFrame();
+//        oneFrame();
         drawScoreBoard(justCuedPlayer, true);
         drawTargetBoard(true);
         restoreCuePoint();
@@ -896,18 +916,28 @@ public class GameView implements Initializable {
         obstacleProjection = null;
         printPlayStage = true;
 
-        if (curDefAttempt != null && curDefAttempt.isSolvingSnooker()) {
-            curDefAttempt.setSolveSuccess(!game.getGame().isThisCueFoul());
+        if (curDefAttempt != null) {
+            curDefAttempt.setAfterScoreUpdate(
+                    game.getGame().getNewPottedLegal(),
+                    game.getGame().isBreaking() || game.getGame().isJustAfterBreak(),  // 保险，免得改了更新顺序就G
+                    !game.getGame().isThisCueFoul()
+            );
         }
 
         ScoreResult scoreResult = game.getGame().makeScoreResult(justCuedPlayer);
 
-        game.getGame().getRecorder().recordScore(scoreResult);
-        game.getGame().getRecorder().recordNextTarget(makeTargetRecord(nextCuePlayer));
-        game.getGame().getRecorder().writeCueToStream();
+        try {
+            game.getGame().getRecorder().recordScore(scoreResult);
+            game.getGame().getRecorder().recordNextTarget(makeTargetRecord(nextCuePlayer));
+            game.getGame().getRecorder().writeCueToStream();
+        } catch (RecordingException re) {
+            EventLogger.error(re);
+            game.getGame().abortRecording();
+        }
 
         AchManager.getInstance().updateAfterCueFinish(gamePane, game.getGame(), scoreResult,
                 lastPotAttempt, curDefAttempt, gamePlayStage());
+        Platform.runLater(() -> AchManager.getInstance().showAchievementPopup());
 
         FoulInfo foulInfo = game.getGame().getThisCueFoul();
         if (foulInfo.isFoul()) {
@@ -1076,6 +1106,7 @@ public class GameView implements Initializable {
 
     private void endFrame() {
         hideCue();
+        tracedMovement = null;
         tableGraphicsChanged = true;
         Player p1 = game.getGame().getPlayer1();
         Player wonPlayer = game.getGame().getWiningPlayer();
@@ -1144,6 +1175,7 @@ public class GameView implements Initializable {
                         careerMatch.finish(wonPlayer.getPlayerPerson(), game.getP1Wins(), game.getP2Wins());
                     }
                     AchManager.getInstance().updateAfterMatchEnds(game);
+                    Platform.runLater(() -> AchManager.getInstance().showAchievementPopup());
 
                     AlertShower.showInfo(stage,
                             String.format("%s (%d) : (%d) %s",
@@ -1373,7 +1405,7 @@ public class GameView implements Initializable {
     }
 
     private void onSingleClick(MouseEvent mouseEvent) {
-        System.out.println("Clicked!");
+//        System.out.println("Clicked!");
         if (replay != null) return;
         if (playingMovement) return;
         if (aiCalculating) return;
@@ -1739,6 +1771,46 @@ public class GameView implements Initializable {
         }
     }
 
+    @FXML
+    void repairAction() {
+        AlertShower.askConfirmation(stage,
+                strings.getString("repairDes"),
+                strings.getString("repairMenu"),
+                strings.getString("confirm"),
+                strings.getString("cancel"),
+                this::repair,
+                null
+        );
+    }
+
+    private void repair() {
+        if (aiCalculating) {
+            AlertShower.showInfo(stage,
+                    "",
+                    strings.getString("repairAiCalculating"));
+            return;
+        }
+
+        try {
+            game.getGame().forcedTerminate();
+            game.getGame().validateBalls();
+            if (movement != null ||
+                    playingMovement ||
+                    cueAnimationPlayer != null) {
+                movement = null;
+                playingMovement = false;
+                cueAnimationPlayer = null;
+
+                game.getGame().finishMove(this);
+            }
+        } catch (Exception e) {
+            AlertShower.showInfo(stage,
+                    "",
+                    strings.getString("repairFailed"));
+            recalculateUiRestrictions();
+        }
+    }
+
     private CuePlayParams applyRandomCueError(Player player) {
         Random random = new Random();
         return applyCueError(player,
@@ -2037,8 +2109,14 @@ public class GameView implements Initializable {
         Movement calculatedMovement = game.getGame().cue(params, game.playPhy);
         CueRecord cueRecord = makeCueRecord(player, params);  // 必须在randomCueError之后
         TargetRecord thisTarget = makeTargetRecord(player);
-        game.getGame().getRecorder().recordCue(cueRecord, thisTarget);
-        game.getGame().getRecorder().recordMovement(calculatedMovement);
+
+        try {
+            game.getGame().getRecorder().recordCue(cueRecord, thisTarget);
+            game.getGame().getRecorder().recordMovement(calculatedMovement);
+        } catch (RecordingException re) {
+            EventLogger.error(re);
+            game.getGame().abortRecording();
+        }
 
         if (currentAttempt != null) {
             boolean success = currentAttempt.getTargetBall().isPotted() && !game.getGame().isThisCueFoul();
@@ -2057,9 +2135,8 @@ public class GameView implements Initializable {
                 currentAttempt.setPositionToThis(lastPotAttempt);
             }
             currentAttempt.setAfterFinish(
-                    usedHand, 
-                    calculatedMovement.getWhiteTrace(), 
-                    calculatedMovement.getTargetTrace());
+                    usedHand,
+                    calculatedMovement);
             currentAttempt.setSuccess(success);
             player.addAttempt(currentAttempt);
             if (success) {
@@ -2079,9 +2156,8 @@ public class GameView implements Initializable {
 
             curDefAttempt = new DefenseAttempt(player, params, snookered);
             curDefAttempt.setAfterFinish(
-                    usedHand, 
-                    calculatedMovement.getWhiteTrace(),
-                    calculatedMovement.getTargetTrace());
+                    usedHand,
+                    calculatedMovement);
             player.addAttempt(curDefAttempt);
             System.out.println("Defense!" + (snookered ? " Solving" : ""));
             lastPotAttempt = null;
@@ -2105,8 +2181,13 @@ public class GameView implements Initializable {
 
         CueRecord cueRecord = makeCueRecord(player, realParams);  // 必须在randomCueError之后
         TargetRecord thisTarget = makeTargetRecord(player);
-        game.getGame().getRecorder().recordCue(cueRecord, thisTarget);
-        game.getGame().getRecorder().recordMovement(calculatedMovement);
+        try {
+            game.getGame().getRecorder().recordCue(cueRecord, thisTarget);
+            game.getGame().getRecorder().recordMovement(calculatedMovement);
+        } catch (RecordingException re) {
+            EventLogger.error(re);
+            game.getGame().abortRecording();
+        }
 
         if (cueResult.isAttack()) {
             PotAttempt currentAttempt = new PotAttempt(
@@ -2134,9 +2215,8 @@ public class GameView implements Initializable {
                 currentAttempt.setPositionToThis(lastPotAttempt);
             }
             currentAttempt.setAfterFinish(
-                    cueResult.getHandSkill(), 
-                    calculatedMovement.getWhiteTrace(),
-                    currentAttempt.getTargetTrace());
+                    cueResult.getHandSkill(),
+                    calculatedMovement);
             currentAttempt.setSuccess(success);
             player.addAttempt(currentAttempt);
             if (success) {
@@ -2152,8 +2232,7 @@ public class GameView implements Initializable {
                     cueResult.getCueType() == AiCueResult.CueType.SOLVE);
             curDefAttempt.setAfterFinish(
                     cueResult.getHandSkill(),
-                    calculatedMovement.getWhiteTrace(),
-                    calculatedMovement.getTargetTrace());
+                    calculatedMovement);
 
             player.addAttempt(curDefAttempt);
             System.out.println("AI Defense!" + (curDefAttempt.isSolvingSnooker() ? " Solving" : ""));
@@ -2204,7 +2283,9 @@ public class GameView implements Initializable {
         boolean aiHelpPlayerPlaying = player.getInGamePlayer().isHuman() && aiHelpPlay;
         if (aiHelpPlayerPlaying) {
             if (careerMatch != null) {
-                AiCueResult.setAiPrecisionFactor(CareerManager.getInstance().getPlayerGoodness() *
+                double playerGoodness = CareerManager.getInstance().getPlayerGoodness();
+                
+                AiCueResult.setAiPrecisionFactor(playerGoodness *
                         Career.AI_HELPER_PRECISION_FACTOR);  // 暗削自动击球
             } else {
                 AiCueResult.setAiPrecisionFactor(ConfigLoader.getInstance().getDouble("fastGameAiming", 1.0));
@@ -2643,6 +2724,7 @@ public class GameView implements Initializable {
     }
 
     private void drawTraceOfBall(Ball ball, List<MovementFrame> frames) {
+        if (frames == null) return;
         int end = Math.min(movementPlayingIndex, frames.size());
         if (end > 1) {
             gamePane.getLineGraphics().setStroke(ball.getTraceColor());
@@ -2752,12 +2834,14 @@ public class GameView implements Initializable {
                 } else {
                     entry.getKey().model.sphere.setVisible(false);
                 }
+//                if (Math.random() < 0.05) throw new RuntimeException();
 
                 switch (frame.movementType) {
                     case MovementFrame.COLLISION -> {
                     }
-                    case MovementFrame.CUSHION ->
+                    case MovementFrame.EDGE_CUSHION ->
                             GameAudio.hitCushion(gameValues.table, frame.movementValue);
+                    // todo
                     case MovementFrame.POT -> GameAudio.pot(gameValues.table, frame.movementValue);
                 }
             }
@@ -3168,11 +3252,11 @@ public class GameView implements Initializable {
             double y = srcBall.getY();
             double endX = gamePane.realX(mouseX);
             double endY = gamePane.realY(mouseY);
-            
+
             double[] direction = new double[]{endX - x, endY - y};
             double[] unitDirection = Algebra.unitVector(direction);
             double length = Math.hypot(direction[0], direction[1]);
-            
+
             double[][] rect = createPolygon(
                     x,
                     y,
@@ -3181,13 +3265,13 @@ public class GameView implements Initializable {
                     length,
                     gameValues.ball.ballRadius
             );
-            
+
             double[] orth = new double[]{-direction[1], -direction[0]};  // 因为y轴反转了
 //            double[] orth = Algebra.normalVector(direction);
             double startDeg = Math.toDegrees(Algebra.thetaOf(orth));
 
             double wh = gameValues.ball.ballDiameter * gamePane.getScale();
-            
+
             gamePane.getLineGraphics().setFill(srcBall.getColorWithOpa());
             gamePane.getLineGraphics().fillPolygon(rect[0], rect[1], 4);
             gamePane.getLineGraphics().fillArc(
@@ -3199,7 +3283,7 @@ public class GameView implements Initializable {
                     180,
                     ArcType.ROUND
             );
-            
+
             gamePane.getLineGraphics().setStroke(srcBall.getColor());
             gamePane.getLineGraphics().strokeOval(
                     gamePane.canvasX(endX - gameValues.ball.ballRadius),
@@ -3281,19 +3365,11 @@ public class GameView implements Initializable {
 
         PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
         cursorDrawer.predict(playerPerson);
-//        cursorDrawer = new PredictionDrawing();
-//        cursorDrawer.predict(playerPerson);
 
         tableGraphicsChanged = true;
     }
 
     private void draw() {
-        if (tableGraphicsChanged) {
-            gamePane.drawTable(getActiveHolder());
-            if (drawAiPathItem.isSelected()) gamePane.drawPredictedWhitePath(aiWhitePath);
-            if (predictPlayerPathItem.isSelected())
-                gamePane.drawPredictedWhitePath(suggestedPlayerWhitePath);
-        }
         drawBalls();
         if (tableGraphicsChanged) {  // drawBalls在movement最后一帧会触发一系列反应，让该值改变
             gamePane.drawTable(getActiveHolder());
@@ -3302,6 +3378,9 @@ public class GameView implements Initializable {
             } else {
                 drawInspection();
             }
+            if (drawAiPathItem.isSelected()) gamePane.drawPredictedWhitePath(aiWhitePath);
+            if (predictPlayerPathItem.isSelected())
+                gamePane.drawPredictedWhitePath(suggestedPlayerWhitePath);
         }
         drawBallInHand();
         if (potInspection == null) {
@@ -3373,7 +3452,12 @@ public class GameView implements Initializable {
             cueAnimationPlayer.hideTime = gameLoop.currentTimeMillis();
             cueAnimationPlayer.cueAnimationRec.setAfterCueMs(
                     (int) ((cueAnimationPlayer.hideTime - cueAnimationPlayer.touchTime) * cueAnimationPlayer.playSpeedMultiplier));
-            game.getGame().getRecorder().recordCueAnimation(cueAnimationPlayer.cueAnimationRec);
+            try {
+                game.getGame().getRecorder().recordCueAnimation(cueAnimationPlayer.cueAnimationRec);
+            } catch (RecordingException re) {
+                EventLogger.error(re);
+                game.getGame().abortRecording();
+            }
         }
         hideCue();
         cursorDirectionUnitX = 0.0;
@@ -3734,7 +3818,7 @@ public class GameView implements Initializable {
 
     /**
      * Param全是real position
-     * 
+     *
      * @return x点的集合，y点的集合
      */
     private double[][] createPolygon(double startX,

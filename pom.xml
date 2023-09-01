@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>TrashSnooker</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5-RC</version>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
@@ -80,7 +80,7 @@
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.40.1.0</version>
+            <version>3.43.0.0</version>
         </dependency>
 
         <dependency>

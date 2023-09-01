@@ -5,14 +5,11 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.*;
-import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -46,7 +43,7 @@ public class BriefReplayItem {
     
     private long personObjLength = 0;
     
-    public BriefReplayItem(File file) throws IOException, VersionException, RecordException {
+    public BriefReplayItem(File file) throws IOException, VersionException, ReplayException {
         this.file = file;
 
         try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
@@ -55,7 +52,7 @@ public class BriefReplayItem {
                 throw new IOException();
 
             String sig = new String(header, 0, 4);
-            if (!ActualRecorder.SIGNATURE.equals(sig)) throw new RecordException("Not a replay");
+            if (!ActualRecorder.SIGNATURE.equals(sig)) throw new ReplayException("Not a replay");
 
             replayType = header[4] & 0xff;
             compression = header[5] & 0xff;
@@ -119,7 +116,7 @@ public class BriefReplayItem {
         }
     }
 
-    private InGamePlayer readOnePlayer(RandomAccessFile raf, int num) throws IOException, RecordException {
+    private InGamePlayer readOnePlayer(RandomAccessFile raf, int num) throws IOException, ReplayException {
         byte[] buf = new byte[2];
         if (raf.read(buf) != buf.length) throw new IOException();
         boolean isAi = buf[0] == 1;
@@ -148,7 +145,7 @@ public class BriefReplayItem {
                 }
             }
             if (playerPerson == null)
-                throw new RecordException("Player " + pid + " does not exist in current database");
+                throw new ReplayException("Player " + pid + " does not exist in current database");
         } else {
             playerPerson = readPlayerPerson(pid, raf);
 //            System.out.println(playerPerson.getPlayerId() + playerPerson.getCuePlayType().toString());

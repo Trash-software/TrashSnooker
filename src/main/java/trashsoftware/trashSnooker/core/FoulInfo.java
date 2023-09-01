@@ -9,7 +9,7 @@ public class FoulInfo {
 
     public void addFoul(String reason, int score, boolean miss) {
         this.foulReasonAndScore.put(reason, score);
-        this.miss |= miss;
+        this.miss = this.miss || miss;
     }
 
     public void addFoul(String reason, boolean miss) {
@@ -56,13 +56,5 @@ public class FoulInfo {
     
     public Integer removeFoul(String reason) {
         return foulReasonAndScore.remove(reason);
-    }
-
-    public enum Reason {
-        EMPTY_CUE,
-        HIT_NON_TARGET,
-        WHITE_POTTED,
-        NO_TOUCH_CUSHION,
-        OTHER
     }
 }

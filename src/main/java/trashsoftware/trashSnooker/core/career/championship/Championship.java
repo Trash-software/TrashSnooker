@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.career.championship;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.util.EventLogger;
 
@@ -204,8 +205,47 @@ public abstract class Championship {
         return finished;
     }
     
+    public Career getChampion() {
+        if (finished && matchTree.getRoot().getWinner() != null) {
+            return matchTree.getRoot().getWinner();
+        } else {
+            EventLogger.warning("Match not finished, should not call this method.");
+            return null;
+        }
+    }
+    
     public int getWonRoundsCount(Career career) {
         return matchTree.getRoot().getWonRounds(career, false);
+    }
+
+    /**
+     * @return 人类玩家是在哪里输的
+     */
+    public MatchTreeNode getHumanLostMatch() {
+        // 需要层次遍历，所以不用在MatchTreeNode里递归操作，而是建立一个队列
+        Deque<MatchTreeNode> queue = new ArrayDeque<>();
+        queue.addLast(getMatchTree().getRoot());
+        
+        while (!queue.isEmpty()) {
+            MatchTreeNode node = queue.removeFirst();
+            if (node.isLeaf()) continue;
+            
+            if (node.isMatchInvolvesHuman()) {
+                Career winner = node.getWinner();
+                if (winner.isHumanPlayer()) {
+                    // human根本没输！
+                    return null;
+                }
+                assert node.getLoser().isHumanPlayer();
+                return node;
+            }
+            
+            queue.addLast(node.getPlayer1Position());
+            queue.addLast(node.getPlayer2Position());
+        }
+        
+        // human就没参赛
+        return null;
     }
     
     public SortedMap<ChampionshipScore.Rank, List<Career>> getResults() {

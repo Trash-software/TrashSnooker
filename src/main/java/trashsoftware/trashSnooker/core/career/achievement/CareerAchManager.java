@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.core.career.ChampionshipStage;
 import trashsoftware.trashSnooker.core.metrics.Cushion;
@@ -42,13 +43,14 @@ import java.io.*;
 import java.util.*;
 
 public class CareerAchManager extends AchManager {
-    
+
     private final CareerSave careerSave;
     private final Map<Achievement, AchCompletion> recordedAchievements = new HashMap<>();  // 至少完成了一点点的
-    private transient final List<AchCompletion> thisTimeComplete = new ArrayList<>();  // 记录这一杆完成的，在一次show之后清空
+    private transient final Deque<AchCompletion> thisTimeComplete = new ArrayDeque<>();  // 记录这一杆完成的，在一次show之后清空
+//    private transient boolean popupShowing = false;
 
     private final Font titleFont = Font.font(App.FONT.getFamily(), FontWeight.BLACK, 16.0);
-    
+
     private int humanContinuousPotFail;
 
     CareerAchManager(CareerSave careerSave) {
@@ -87,22 +89,21 @@ public class CareerAchManager extends AchManager {
         for (String key : jsonObject.keySet()) {
             try {
                 Achievement ach = Achievement.fromKey(key);
-                AchCompletion completion = AchCompletion.fromJson(ach, jsonObject.getJSONObject(key));
-                cam.recordedAchievements.put(ach, completion);
+                if (ach.getType() == Achievement.Type.COLLECTIVE) {
+                    // 千万不要嵌套检查，因为Achievement本身应该是直接复制的
+                    AchCompletion.Collective collective =
+                            AchCompletion.Collective.fromJson(ach, jsonObject.getJSONObject(key));
+                    cam.recordedAchievements.put(ach, collective);
+                } else {
+                    AchCompletion completion = AchCompletion.fromJson(ach, jsonObject.getJSONObject(key));
+                    cam.recordedAchievements.put(ach, completion);
+                }
             } catch (IllegalArgumentException iae) {
-                System.err.println("Unknown achievement: " + key);
+                EventLogger.error("Unknown achievement: " + key);
             }
         }
         return cam;
     }
-
-//    private Set<Achievement> notCompleted(List<Achievement> check) {
-//        Set<Achievement> result = new HashSet<>();
-//        for (Achievement ach : check) {
-//            if (!completed(ach)) result.add(ach);
-//        }
-//        return result;
-//    }
 
     public void saveToDisk() {
         JSONObject jsonObject = new JSONObject();
@@ -130,14 +131,14 @@ public class CareerAchManager extends AchManager {
         }
         return object;
     }
-    
+
     public String getPlayerId() {
         return careerSave.getPlayerId();
     }
 
     @Override
     public void removePendingAch(Achievement achievement) {
-        thisTimeComplete.remove(achievement);
+        thisTimeComplete.removeIf(item -> item.achievement == achievement);
     }
 
     @Override
@@ -151,20 +152,19 @@ public class CareerAchManager extends AchManager {
 //    }
 
     /**
-     * 
      * 理论上来说，最好最后再调用该方法。
      * 注意，该方法会在switchPlayer之后被调用
      */
     @Override
-    public void updateAfterCueFinish(Pane owner, 
-                                     Game<?, ?> game, 
+    public void updateAfterCueFinish(Pane owner,
+                                     Game<?, ?> game,
                                      ScoreResult scoreResult,
-                                     PotAttempt potAttempt, 
-                                     DefenseAttempt defenseAttempt, 
+                                     PotAttempt potAttempt,
+                                     DefenseAttempt defenseAttempt,
                                      GamePlayStage playStage) {
         Player justCuedP = game.getLastCuedPlayer();
         InGamePlayer justCuedPlayer = justCuedP.getInGamePlayer();
-        
+
         if (justCuedPlayer.isHuman()) {
 
 //        Set<Achievement> notCompleted = notCompleted(all);
@@ -174,13 +174,19 @@ public class CareerAchManager extends AchManager {
                 // 一局结束后的更新
                 if (!game.getGameValues().isTraining() && game.getWiningPlayer().getInGamePlayer().isHuman()) {
                     addAchievement(Achievement.WIN_A_FRAME, justCuedPlayer);
+                    addAchievement(Achievement.WIN_FRAMES, justCuedPlayer);
                     
+                    CareerManager cm = CareerManager.getInstance();
+                    if (cm.getAiGoodness() >= 1.0 && cm.getPlayerGoodness() <= 1.0) {
+                        addAchievement(Achievement.WIN_FRAMES_NORMAL_DIFFICULTY, justCuedPlayer);
+                    }
+
                     if (game instanceof AbstractSnookerGame asg) {
                         int maxAhead = asg.getMaxScoreDiff(justCuedPlayer.getPlayerNumber());
                         if (maxAhead <= -65) {
                             addAchievement(Achievement.COME_BACK_BEHIND_65, justCuedPlayer);
                         }
-                        if ((justCuedPlayer.getPlayerNumber() == 1 && asg.isP2EverOver()) || 
+                        if ((justCuedPlayer.getPlayerNumber() == 1 && asg.isP2EverOver()) ||
                                 (justCuedPlayer.getPlayerNumber() == 2 && asg.isP1EverOver())) {
                             // 从被超分逆转胜利
                             addAchievement(Achievement.COME_BACK_BEHIND_OVER_SCORE, justCuedPlayer);
@@ -198,14 +204,14 @@ public class CareerAchManager extends AchManager {
                         }
                     }
                     if (game.getGameType().snookerLike()) {
-                        if (defenseAttempt.getPlayParams().cueParams.selectedPower() >= 70.0) {
-                            // 这个成就无关解球成功还是失败
-                            addAchievement(Achievement.NOT_RESPECT, justCuedPlayer);
+                        if (defenseAttempt != null) {
+                            if (defenseAttempt.getPlayParams().cueParams.selectedPower() >= 70.0) {
+                                // 这个成就无关解球成功还是失败
+                                addAchievement(Achievement.NOT_RESPECT, justCuedPlayer);
+                            }
                         }
                     }
                 }
-                
-                showAchievement(owner);
                 return;
             }
 
@@ -222,7 +228,7 @@ public class CareerAchManager extends AchManager {
                     } else if (handSkill.hand == justCuedPlayer.getPlayerPerson().handBody.getAntiHand().hand) {
                         addAchievement(Achievement.POT_BALLS_ANTI, justCuedPlayer);
                     }
-                    
+
                     // 走位相关
                     PotAttempt positionPot = potAttempt.getPositionToThis();
                     if (positionPot != null) {
@@ -255,7 +261,7 @@ public class CareerAchManager extends AchManager {
 //                        System.out.printf("Cushion: %d, top bot: %d, end: %d\n",
 //                                whiteCushionAfter.size(), topBotCount, endCount);
                     }
-                    
+
                 } else {
                     humanContinuousPotFail += 1;
                     if (humanContinuousPotFail >= 3) {
@@ -273,7 +279,7 @@ public class CareerAchManager extends AchManager {
                 if (potAttempt.isLongPot()) {
                     AchManager.getInstance().addAchievement(Achievement.CUMULATIVE_LONG_POTS_1, justCuedPlayer);
                 }
-                
+
                 List<PotAttempt> singlePole = justCuedP.getRecentSinglePoleAttempts();
                 int longCount = 0;
                 for (PotAttempt pa : singlePole) {
@@ -290,21 +296,12 @@ public class CareerAchManager extends AchManager {
                 // 下一杆还是我打，说明我进了
                 // 至少斯诺克、中八、九球都是这样
                 // 开球不算
-                boolean defensePot = !game.isBreaking() && 
-                        !game.isJustAfterBreak() && 
-                        game.getCuingIgp() == justCuedPlayer;
-                
+                boolean defensePot = defenseAttempt.isPotLegalBall();
+
                 if (defensePot) {
-                    Movement.Trace targetTrace = defenseAttempt.getTargetTrace();
-                    int edgeCushions = 0;
-                    for (Cushion cushion : targetTrace.getCushionBefore()) {
-                        if (cushion instanceof Cushion.EdgeCushion) {
-                            edgeCushions++;
-                        }
-                    }
-                    if (edgeCushions > 0) {
+                    if (defenseAttempt.isDoublePot()) {
                         addAchievement(Achievement.DOUBLE_POT, justCuedPlayer);
-                        
+
                         if (game instanceof NumberedBallGame) {
                             if (game.isEnded() && game.getWiningPlayer() != null) {
                                 if (game.getWiningPlayer().getInGamePlayer() == justCuedPlayer) {
@@ -313,7 +310,11 @@ public class CareerAchManager extends AchManager {
                             }
                         }
                     }
+                    if (defenseAttempt.isPassPot()) {
+                        addAchievement(Achievement.PASS_POT, justCuedPlayer);
+                    }
                 }
+
                 if (defenseAttempt.isSolvingSnooker()) {
                     if (defenseAttempt.isSolveSuccess()) {  // 基本可认为一定是true，否则就犯规了，不会进这个分支
                         addAchievement(Achievement.SOLVE_SNOOKER_SUCCESS, justCuedPlayer);
@@ -322,12 +323,12 @@ public class CareerAchManager extends AchManager {
                         if (whiteTrace.getCushionBefore().size() >= 4) {
                             addAchievement(Achievement.MULTI_CUSHION_ESCAPE, justCuedPlayer);
                         }
-                        
+
                         if (defensePot) {
                             addAchievement(Achievement.SOLVE_SNOOKER_SUCCESS_POT, justCuedPlayer);
                         }
                     }
-                    
+
                     if (game.getGameType().snookerLike()) {
                         if (defenseAttempt.getPlayParams().cueParams.selectedPower() >= 70.0) {
                             // 这个成就无关解球成功还是失败
@@ -340,8 +341,6 @@ public class CareerAchManager extends AchManager {
             if (game.getGameType().poolLike()) {
                 NumberedBallGame<?> nbg = (NumberedBallGame<?>) game;
             }
-
-            showAchievement(owner);
         } else {
             InGamePlayer opponent = game.getAnotherIgp(justCuedPlayer);
             if (opponent.isHuman()) {  // 保险措施，实际上一定是true
@@ -371,12 +370,13 @@ public class CareerAchManager extends AchManager {
         if ((p1Human && entireGame.getP1Wins() > entireGame.getP2Wins()) ||
                 (!p1Human && entireGame.getP2Wins() > entireGame.getP1Wins())) {
             addAchievement(Achievement.WIN_A_MATCH, human);
+            addAchievement(Achievement.WIN_MATCHES, human);
             humanWin = true;
         }
 
         if (entireGame.totalFrames >= 5) {
             if (humanWin) {
-                if ((p1Human && entireGame.getP2Wins() == entireGame.totalFrames / 2) || 
+                if ((p1Human && entireGame.getP2Wins() == entireGame.totalFrames / 2) ||
                         (!p1Human && entireGame.getP1Wins() == entireGame.totalFrames / 2)) {
                     addAchievement(Achievement.BIG_HEART, human);
                     if (entireGame.getMetaMatchInfo() != null) {
@@ -387,14 +387,14 @@ public class CareerAchManager extends AchManager {
                     }
                 }
             }
-            
+
 //            if (entireGame.totalFrames >= 5) {
-                if ((p1Human && entireGame.getP1Wins() == 0) || (!p1Human && entireGame.getP2Wins() == 0)) {
-                    addAchievement(Achievement.LOST_ALL_MATCHES, human);
-                }
-                if ((p1Human && entireGame.getP2Wins() == 0) || (!p1Human && entireGame.getP1Wins() == 0)) {
-                    addAchievement(Achievement.WIN_ALL_MATCHES, human);
-                }
+            if ((p1Human && entireGame.getP1Wins() == 0) || (!p1Human && entireGame.getP2Wins() == 0)) {
+                addAchievement(Achievement.LOST_ALL_MATCHES, human);
+            }
+            if ((p1Human && entireGame.getP2Wins() == 0) || (!p1Human && entireGame.getP1Wins() == 0)) {
+                addAchievement(Achievement.WIN_ALL_MATCHES, human);
+            }
 //            }
 
             if (entireGame.totalFrames >= 9) {
@@ -424,23 +424,46 @@ public class CareerAchManager extends AchManager {
         }
 
         DBAccess.getInstance().checkAchievements();
+    }
 
-        Platform.runLater(this::showAchievementPopup);
+    public void cumulateAchievement(Achievement achievement, int newAdd, InGamePlayer igp) {
+        if (achievement == null || (igp != null && !igp.isHuman())) return;
+
+        AchCompletion ac = recordedAchievements.get(achievement);
+        if (ac != null) {
+            if (achievement.getType() == Achievement.Type.CUMULATIVE) {
+                boolean changed = ac.setNewRecord(ac.getTimes() + newAdd);
+                if (changed) {
+                    thisTimeComplete.addLast(ac);
+                }
+                saveToDisk();  // 不加到thisTimeComplete里，所以现在就存。暂且认为这个save不是很花时间
+            } else {
+                EventLogger.error("Achievement '" + achievement + "' is not record like, Should not call this method.");
+            }
+            return;
+        }
+        AchCompletion newCompletion = new AchCompletion(achievement);
+        boolean changed = newCompletion.setNewRecord(newAdd);
+        recordedAchievements.put(achievement, newCompletion);
+        if (changed) {
+            thisTimeComplete.addLast(newCompletion);
+        }
+        saveToDisk();
     }
 
     public void addAchievement(Achievement achievement, int newRecord, InGamePlayer igp) {
         if (achievement == null || (igp != null && !igp.isHuman())) return;
         AchCompletion ac = recordedAchievements.get(achievement);
         if (ac != null) {
-            if (achievement.getType() == Achievement.Type.HIGH_RECORD || 
+            if (achievement.getType() == Achievement.Type.HIGH_RECORD ||
                     achievement.getType() == Achievement.Type.CUMULATIVE) {
                 boolean changed = ac.setNewRecord(newRecord);
                 if (changed) {
-                    thisTimeComplete.add(ac);
+                    thisTimeComplete.addLast(ac);
                 }
                 saveToDisk();  // 不加到thisTimeComplete里，所以现在就存。暂且认为这个save不是很花时间
             } else {
-                System.err.println("Achievement '" + achievement + "' is not record like, Should not call this method.");
+                EventLogger.error("Achievement '" + achievement + "' is not record like, Should not call this method.");
             }
             return;
         }
@@ -448,7 +471,7 @@ public class CareerAchManager extends AchManager {
         boolean changed = newCompletion.setNewRecord(newRecord);
         recordedAchievements.put(achievement, newCompletion);
         if (changed) {
-            thisTimeComplete.add(newCompletion);
+            thisTimeComplete.addLast(newCompletion);
         }
         saveToDisk();
     }
@@ -461,11 +484,11 @@ public class CareerAchManager extends AchManager {
             if (achievement.getType() == Achievement.Type.CUMULATIVE) {
                 boolean newComplete = ac.addOneTime();
                 if (newComplete) {
-                    thisTimeComplete.add(ac);
+                    thisTimeComplete.addLast(ac);
                 }
                 saveToDisk();  // 不加到thisTimeComplete里，所以现在就存。暂且认为这个save不是很花时间
             } else if (achievement.getType() == Achievement.Type.HIGH_RECORD) {
-                System.err.println("Achievement '" + achievement + "' is record like, Should not call this method.");
+                EventLogger.error("Achievement '" + achievement + "' is record like, Should not call this method.");
             }
             return;
         }
@@ -473,13 +496,21 @@ public class CareerAchManager extends AchManager {
         boolean newComplete = newCompletion.addOneTime();
         recordedAchievements.put(achievement, newCompletion);
         if (newComplete) {
-            thisTimeComplete.add(newCompletion);
+            thisTimeComplete.addLast(newCompletion);
         }
         saveToDisk();
     }
-    
+
     public void setUniqueDefeats(String opponentId, int totalWins) {
-        
+        AchCompletion.Collective defeatsCollection =
+                (AchCompletion.Collective) recordedAchievements.computeIfAbsent(
+                        Achievement.UNIQUE_DEFEAT,
+                        k -> new AchCompletion.Collective(Achievement.UNIQUE_DEFEAT));
+        boolean newComplete = defeatsCollection.setIndividual(opponentId, totalWins);
+        if (newComplete) {
+            AchCompletion indComp = defeatsCollection.getIndividual(opponentId);
+            thisTimeComplete.addLast(indComp);
+        }
     }
 
     @Override
@@ -487,62 +518,80 @@ public class CareerAchManager extends AchManager {
         showAchievement(null);
     }
 
-    private void showAchievement(Pane owner) {
+    protected final synchronized void showAchievement(Pane owner) {
         if (!thisTimeComplete.isEmpty()) {
             saveToDisk();
-            showAchievement(owner, thisTimeComplete, 0);
+            showAchievement(owner, thisTimeComplete);
         }
     }
 
-    private void showAchievement(Pane owner, List<AchCompletion> achievements, int index) {
-        AchCompletion ac = achievements.get(index);
+    /**
+     * 不准从其他地方call这个！！！
+     * 只允许：
+     * 1. 递归调用
+     * 2. 从上面这个synchronized method里调用
+     */
+    private void showAchievement(Pane owner, Deque<AchCompletion> achievements) {
+        if (achievements.isEmpty()) return;
+
+        AchCompletion ac = achievements.removeFirst();
+        Image icon = ac.getImage();
+        if (icon == null) {
+            // 直接下一个
+            EventLogger.error("Finished award icon is null: " + ac.achievement);
+            if (!achievements.isEmpty()) {
+                showAchievement(owner, achievements);
+            }
+            return;
+        }
+//        popupShowing = true;
+
         Stage stage = new Stage();
 
         VBox baseRoot = new VBox();
         baseRoot.setAlignment(Pos.CENTER);
         VBox vbox = new VBox();
-        
+
         Insets insetsOut = new Insets(2.0);
         Insets insets = new Insets(4.0);
         CornerRadii cornerRadii = new CornerRadii(5.0);
-        baseRoot.setBackground(new Background(new BackgroundFill(Color.valueOf("#FFFCF7"), 
+        baseRoot.setBackground(new Background(new BackgroundFill(Color.valueOf("#FFFCF7"),
                 cornerRadii, null)));
         vbox.setBorder(new Border(new BorderStroke(Color.BURLYWOOD,
                 BorderStrokeStyle.SOLID, cornerRadii, BorderWidths.DEFAULT)));
         baseRoot.setPadding(insetsOut);
         baseRoot.setStyle(App.FONT_STYLE);
-        
+
         vbox.setSpacing(5.0);
         vbox.setPadding(insets);
-        
+
         HBox root = new HBox();
         root.setSpacing(20.0);
 
         ImageView imageView = new ImageView();
-        Image image = ResourcesLoader.getInstance().getAwardIcon();
         imageView.setFitWidth(48.0);
         imageView.setFitHeight(48.0);
-        imageView.setImage(image);
-        
+        imageView.setImage(icon);
+
         root.getChildren().add(imageView);
 
         VBox rightBox = new VBox();
         rightBox.setSpacing(10.0);
 
-        Label title = new Label(ac.getAchievement().title());
+        Label title = new Label(ac.getTitle());
 
         title.setFont(titleFont);
         rightBox.getChildren().add(title);
         rightBox.getChildren().add(new Label(ac.getDescriptionOfCompleted()));  // 刚刚完成了
 
         root.getChildren().addAll(rightBox);
-        
+
         vbox.getChildren().addAll(new Label(App.getStrings().getString("achievementComplete")), root);
         baseRoot.getChildren().add(vbox);
 
         Scene scene = new Scene(baseRoot);
         scene.setFill(Color.TRANSPARENT);
-        
+
         Stage gameStage = App.getFullScreenStage();
         if (gameStage != null) {
             stage.initOwner(gameStage);
@@ -571,21 +620,20 @@ public class CareerAchManager extends AchManager {
         SequentialTransition st = new SequentialTransition(shower, keeper, fader);
         st.setOnFinished(event -> {
             stage.hide();
-            if (index < achievements.size() - 1) {
-                showAchievement(owner, achievements, index + 1);
-            } else {
-                thisTimeComplete.clear();  // 显完了，清空
+//            popupShowing = false;
+            if (!achievements.isEmpty()) {
+                showAchievement(owner, achievements);
             }
         });
-        
+
         stage.show();
         showToPosition(stage);
-        
+
 //        App.focusFullScreenStage();
-        
+
         st.play();
     }
-    
+
     private void showToPosition(Stage stage) {
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         double centerX =

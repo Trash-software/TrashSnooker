@@ -11,23 +11,25 @@ public interface GameRecorder {
 
     void setCompression(String compression);
 
-    void recordCue(CueRecord cueRecord, TargetRecord thisTarget);
+    void recordCue(CueRecord cueRecord, TargetRecord thisTarget) throws RecordingException;
 
-    void recordMovement(Movement movement);
+    void recordMovement(Movement movement) throws RecordingException;
 
-    void recordScore(ScoreResult scoreResult);
+    void recordScore(ScoreResult scoreResult) throws RecordingException;
     
-    void recordCueAnimation(CueAnimationRec cueAnimationRec);
+    void recordCueAnimation(CueAnimationRec cueAnimationRec) throws RecordingException;
 
-    void recordNextTarget(TargetRecord nextTarget);
+    void recordNextTarget(TargetRecord nextTarget) throws RecordingException;
 
-    void writeCueToStream();
+    void writeCueToStream() throws RecordingException;
 
     void startRecoding() throws IOException;
 
     void stopRecording(boolean normalFinish);
     
     void deleteRecord();
+    
+    void abort();
 
     void recordPositions() throws IOException;
 

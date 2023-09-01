@@ -12,8 +12,8 @@ public class Movement {
     private final Ball anyBall;
     private boolean congested = false;
     private transient Trace whiteTrace;  // 仅用于游戏，不用于录像
-    private transient Trace targetTrace;  // 仅用于游戏，不用于录像
-    private transient Ball whiteFirstCollide;  // 仅用于录像，不用于游戏
+    private transient Ball whiteFirstCollide;  // 录像游戏都用，但不保存
+    private transient final Map<Ball, Trace> ballTraces = new HashMap<>();  // 仅用于游戏，不用于录像
 
     public Movement(Ball[] allBalls) {
         anyBall = allBalls[0];
@@ -65,7 +65,7 @@ public class Movement {
      */
     public void startTrace() {
         whiteTrace = new Trace();
-        targetTrace = new Trace();
+//        targetTrace = new Trace();
     }
 
     public Trace getWhiteTrace() {
@@ -73,7 +73,15 @@ public class Movement {
     }
 
     public Trace getTargetTrace() {
-        return targetTrace;
+        return ballTraces.get(whiteFirstCollide);
+    }
+    
+    public Trace getTraceOfBallNotNull(Ball ball) {
+        return ballTraces.computeIfAbsent(ball, b -> new Trace());
+    }
+    
+    public Trace getTraceOfBallNullable(Ball ball) {
+        return ballTraces.get(ball);
     }
 
     public void setCongested() {
@@ -117,7 +125,11 @@ public class Movement {
         return "Movement{balls=" + movementMap.size() + "," +
                 "frames=" + new ArrayList<>(movementMap.values()).get(0).size() + "}";
     }
-    
+
+    public void setWhiteFirstCollide(Ball whiteFirstCollide) {
+        this.whiteFirstCollide = whiteFirstCollide;
+    }
+
     public Ball getWhiteFirstCollide() {
         if (whiteTrace != null) {
             return whiteTrace.getFirstCollision();
@@ -169,6 +181,21 @@ public class Movement {
 
         public List<Cushion> getCushionAfter() {
             return cushionAfter;
+        }
+        
+        public int getTotalEdgeCushionCount() {
+            int edgeCushions = 0;
+            for (Cushion cushion : getCushionBefore()) {
+                if (cushion instanceof Cushion.EdgeCushion) {
+                    edgeCushions++;
+                }
+            }
+            for (Cushion cushion : getCushionAfter()) {
+                if (cushion instanceof Cushion.EdgeCushion) {
+                    edgeCushions++;
+                }
+            }
+            return edgeCushions;
         }
     }
 }

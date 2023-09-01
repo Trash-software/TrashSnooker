@@ -16,6 +16,11 @@ import trashsoftware.trashSnooker.util.Util;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileAttribute;
+import java.text.ParseException;
 import java.util.*;
 
 public class CareerManager {
@@ -39,6 +44,7 @@ public class CareerManager {
     private final CareerSave careerSave;
     private final ChampDataManager champDataManager = ChampDataManager.getInstance();
     private final List<Career> playerCareers = new ArrayList<>();
+    private Date careerCreationTime;  // 真实世界的建档时间
     private final Calendar beginTimestamp;  // 建档的游戏内时间
     private final Calendar timestamp;
     private final List<Career.CareerWithAwards> snookerRanking = new ArrayList<>();
@@ -48,6 +54,7 @@ public class CareerManager {
     private HumanCareer humanPlayerCareer;  // 玩家的career
     private Championship inProgress;
     private int lastSavedVersion;
+    private final List<SettingsHistory> settingsHistories = new ArrayList<>();
 
     private double playerGoodness;
     private double aiGoodness;
@@ -166,6 +173,7 @@ public class CareerManager {
 
         setCurrentSave(save);
         CareerManager cm = new CareerManager(save);
+        cm.careerCreationTime = new Date();
         cm.lastSavedVersion = App.VERSION_CODE;
         cm.playerGoodness = playerGoodness;
         cm.aiGoodness = aiGoodness;
@@ -225,6 +233,27 @@ public class CareerManager {
         }
         CareerManager careerManager = new CareerManager(careerSave, stringToCalendar(time), begin);
         
+        Date careerCreationTime = null;
+        if (jsonObject.has("careerCreationTime")) {
+            try {
+                careerCreationTime = 
+                        Util.TIME_FORMAT_SEC.parse(jsonObject.getString("careerCreationTime"));
+            } catch (ParseException e) {
+                EventLogger.error(e);
+            }
+        } 
+        if (careerCreationTime == null) {
+            Path path = careerSave.getDir().toPath();
+            try {
+                BasicFileAttributes bfa = Files.readAttributes(path, BasicFileAttributes.class);
+                careerCreationTime = new Date(bfa.creationTime().toMillis());
+            } catch (IOException e) {
+                EventLogger.warning(e);
+                careerCreationTime = new Date();
+            }
+        }
+        careerManager.careerCreationTime = careerCreationTime;
+        
         if (jsonObject.has("version")) {
             careerManager.lastSavedVersion = jsonObject.getInt("version");
         }
@@ -241,6 +270,14 @@ public class CareerManager {
         } else {
             careerManager.aiGoodness = 1.0;
             saveNow = true;
+        }
+        
+        if (jsonObject.has("settingsHistory")) {
+            JSONArray setHis = jsonObject.getJSONArray("settingsHistory");
+            for (int i = 0; i < setHis.length(); i++) {
+                JSONObject hisObj = setHis.getJSONObject(i);
+                careerManager.settingsHistories.add(SettingsHistory.fromJson(hisObj));
+            }
         }
         
         AchManager.setCareerInstance(careerSave);
@@ -968,9 +1005,16 @@ public class CareerManager {
         root.put("timestamp", calendarToString(timestamp));
         root.put("beginTimestamp", calendarToString(beginTimestamp));
         root.put("humanPlayer", humanPlayerCareer.getPlayerPerson().getPlayerId());
+        root.put("careerCreationTime", Util.TIME_FORMAT_SEC.format(careerCreationTime));
 
         root.put("playerGoodness", playerGoodness);
         root.put("aiGoodness", aiGoodness);
+        
+        JSONArray setHis = new JSONArray();
+        for (SettingsHistory sh : settingsHistories) {
+            setHis.put(sh.toJson());
+        }
+        root.put("settingsHistory", setHis);
 
         JSONArray rootArr = new JSONArray();
 
@@ -993,6 +1037,22 @@ public class CareerManager {
             EventLogger.error(e);
         }
     }
+    
+    public void changeDifficulty(double playerGoodness, double aiGoodness) {
+        this.playerGoodness = playerGoodness;
+        this.aiGoodness = aiGoodness;
+    }
+    
+    public void saveSettings() {
+        settingsHistories.add(new SettingsHistory(
+                getHumanPlayerCareer().getLevel(), 
+                App.VERSION_CODE,
+                new Date(),
+                playerGoodness,
+                aiGoodness
+        ));
+        saveToDisk();
+    }
 
     public double getAiGoodness() {
         return aiGoodness;
@@ -1004,5 +1064,55 @@ public class CareerManager {
 
     public int getLastSavedVersion() {
         return lastSavedVersion;
+    }
+    
+    public static class SettingsHistory {
+        
+        private final int level;
+        private final int version;
+        private final Date date;
+        private final double playerGoodness, aiGoodness;
+        
+        SettingsHistory(int level, 
+                        int version, 
+                        Date date, 
+                        double playerGoodness, 
+                        double aiGoodness) {
+            this.level = level;
+            this.version = version;
+            this.date = date;
+            this.playerGoodness = playerGoodness;
+            this.aiGoodness = aiGoodness;
+        }
+        
+        static SettingsHistory fromJson(JSONObject json) {
+            int level = json.getInt("level");
+            int version = json.getInt("version");
+            Date date;
+            try {
+                date = Util.TIME_FORMAT_SEC.parse(json.getString("date"));
+            } catch (ParseException e) {
+                date = new Date();
+            }
+            double playerGoodness = json.getDouble("playerGoodness");
+            double aiGoodness = json.getDouble("aiGoodness");
+            return new SettingsHistory(
+                    level,
+                    version,
+                    date,
+                    playerGoodness,
+                    aiGoodness
+            );
+        }
+        
+        JSONObject toJson() {
+            JSONObject json = new JSONObject();
+            json.put("version", version);
+            json.put("date", Util.TIME_FORMAT_SEC.format(date));
+            json.put("level", level);
+            json.put("playerGoodness", playerGoodness);
+            json.put("aiGoodness", aiGoodness);
+            return json;
+        }
     }
 }

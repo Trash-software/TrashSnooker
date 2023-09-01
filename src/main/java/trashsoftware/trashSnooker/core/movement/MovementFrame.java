@@ -2,9 +2,11 @@ package trashsoftware.trashSnooker.core.movement;
 
 public class MovementFrame {
     public static final int NORMAL = 0;
-    public static final int CUSHION = 1;
     public static final int POT = 2;
     public static final int COLLISION = 3;
+    public static final int EDGE_CUSHION = 10;
+    public static final int CUSHION_ARC = 11;
+    public static final int CUSHION_LINE = 12;
     
     public final double x;
     public final double y;

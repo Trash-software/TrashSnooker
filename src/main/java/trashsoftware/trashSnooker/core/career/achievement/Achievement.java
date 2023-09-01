@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.career.achievement;
 
 import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.util.MissingResourceException;
@@ -14,34 +15,60 @@ import java.util.MissingResourceException;
  * 纪录型成就：类似最高记录那种
  */
 public enum Achievement {
-    UNIQUE_DEFEAT(AchCat.UNIQUE_DEFEATS),
+    UNIQUE_DEFEAT(AchCat.UNIQUE_DEFEATS, Type.COLLECTIVE) {
+        @Override
+        public int getCompletedLevelIndex(AchCompletion completion) {
+            if (completion == null) return -1;
+            return 0;
+        }
+
+        @Override
+        public int getNCompleted(AchCompletion completion) {
+            if (completion instanceof AchCompletion.Collective collective) {
+                return collective.getNCompleted();
+            } else if (completion instanceof AchCompletion.Sub sub) {
+                return sub.getNCompleted();
+            } else {
+                EventLogger.error("Achievement " + name() + " does not support " + completion);
+                return 0;
+            }
+        }
+
+        @Override
+        public boolean isFullyComplete(AchCompletion completion) {
+            return getNCompleted(completion) >= 1;
+        }
+    },
     
     POT_A_BALL(AchCat.GENERAL_TABLE),  // 已完成
-    POT_BALLS(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 10, 50, 200),  // 已完成
-    POT_BALLS_REST(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 1, 10, 30),  // 已完成
+    POT_BALLS(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 10, 50, 500),  // 已完成
+    POT_BALLS_REST(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 3, 20, 100),  // 已完成
     POT_BALLS_ANTI(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 1, 10, 30),  // 已完成
-    CUMULATIVE_LONG_POTS_1(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 10),  // 已完成
+    CUMULATIVE_LONG_POTS_1(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 5, 20, 100),  // 已完成
     THREE_BALLS_IN_A_ROW(AchCat.GENERAL_TABLE),  // 已完成
     POSITIONING_MASTER(AchCat.GENERAL_TABLE, Type.HIGH_RECORD, 7),  // 已完成
     GAIN_BY_SNOOKER(AchCat.GENERAL_TABLE),  // 已完成
     SOLVE_SNOOKER_SUCCESS(AchCat.GENERAL_TABLE),  // 已完成
-    SOLVE_SNOOKER_SUCCESS_POT(AchCat.GENERAL_TABLE),  // 已完成
+    SOLVE_SNOOKER_SUCCESS_POT(AchCat.GENERAL_HIDDEN),  // 已完成
     ACCURACY_WIN(AchCat.GENERAL_TABLE),  // 已完成
     ACCURACY_WIN_LONG(AchCat.GENERAL_TABLE),  // 已完成
     CONTINUOUS_LONG_POT(AchCat.GENERAL_TABLE),  // 已完成
     POT_TWO_LEGAL(AchCat.GENERAL_TABLE),  // 已完成
     POT_THREE_LEGAL(AchCat.GENERAL_TABLE),  // 已完成
     DOUBLE_POT(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 1, 10, 30),  // 已完成
+    PASS_POT(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 1, 10, 30),  // 已完成
     AROUND_TABLE_POSITION(AchCat.GENERAL_TABLE),  // 已完成
     MULTI_CUSHION_POSITION_1(AchCat.GENERAL_TABLE),  // 已完成
     MULTI_CUSHION_POSITION_2(AchCat.GENERAL_TABLE),  // 已完成
     MULTI_CUSHION_ESCAPE(AchCat.GENERAL_TABLE),  // 已完成
     MULTIPLE_EASY_FAILS(AchCat.GENERAL_TABLE, true),  // 已完成
-    // todo: 传球
 
     WIN_A_FRAME(AchCat.GENERAL_MATCH),  // 已完成
+    WIN_FRAMES(AchCat.GENERAL_MATCH, Type.CUMULATIVE, 5, 20, 100),  // 已完成
     WIN_A_MATCH(AchCat.GENERAL_MATCH),  // 已完成
+    WIN_MATCHES(AchCat.GENERAL_MATCH, Type.CUMULATIVE, 3, 10, 50),  // 已完成
     WIN_ALL_MATCHES(AchCat.GENERAL_MATCH),  // 已完成
+    WIN_FRAMES_NORMAL_DIFFICULTY(AchCat.GENERAL_MATCH, Type.CUMULATIVE, 1, 5, 20),  // 已完成
     SEMIFINAL_STAGE(AchCat.GENERAL_MATCH),  // 已完成
     FINAL_STAGE(AchCat.GENERAL_MATCH),  // 已完成
     FINAL_FRAME(AchCat.GENERAL_MATCH),  // 已完成
@@ -60,6 +87,7 @@ public enum Achievement {
     MISSED_SHOT(AchCat.GENERAL_HIDDEN),  // 已完成
 
     FRAME_NO_ATTACK(AchCat.GENERAL_HIDDEN),  // 已完成
+    LIE_DOWN_WIN(AchCat.GENERAL_HIDDEN),  // 已完成
     KEY_BALL_FAIL(AchCat.GENERAL_HIDDEN),  // 已完成
     POT_FAIL_THREE(AchCat.GENERAL_HIDDEN),  // 已完成
     LOST_ALL_MATCHES(AchCat.GENERAL_HIDDEN),  // 已完成
@@ -72,6 +100,8 @@ public enum Achievement {
     SNOOKER_BREAK_100(AchCat.SNOOKER),  // 已完成
     SNOOKER_BREAK_100_BIG(AchCat.SNOOKER),  // 已完成
     SNOOKER_BREAK_147(AchCat.SNOOKER, true), // 已完成
+    SNOOKER_CUMULATE_SCORE(AchCat.SNOOKER, Type.CUMULATIVE, 200, 1000, 10000),  // 已完成
+    SNOOKER_CUMULATE_FOUL_GAIN(AchCat.SNOOKER, Type.CUMULATIVE, 10, 50, 200),  // 已完成
     THREE_MISS_LOST(AchCat.SNOOKER),  // 已完成
     HARD_SNOOKER_BY_OPPONENT(AchCat.SNOOKER),  // 已完成
     HARD_SNOOKER_BY_HUMAN(AchCat.SNOOKER),  // 已完成
@@ -93,8 +123,9 @@ public enum Achievement {
     POOL_BREAK_CLEAR(AchCat.POOL_GENERAL),  // 已完成
     SUICIDE(AchCat.POOL_GENERAL),  // 已完成
 
+    // 中八
     BLIND_SHOT(AchCat.CHINESE_EIGHT),  // 已完成
-    POT_OPPONENT_BALL(AchCat.CHINESE_EIGHT),  // todo
+    POT_OPPONENT_BALL(AchCat.CHINESE_EIGHT),  // 已完成
     REMAIN_ONE_MUST_LOSE(AchCat.CHINESE_EIGHT),  // 已完成
     CEB_CUMULATIVE_CLEAR(AchCat.CHINESE_EIGHT, Type.CUMULATIVE, 5, 10, 20),  // 已完成
     CHINESE_EIGHT_NO_POT(AchCat.CHINESE_EIGHT, true),  // 已完成
@@ -110,6 +141,7 @@ public enum Achievement {
     CHAMPION(AchCat.TOUR),  // 已完成
     SECOND_PLACE(AchCat.TOUR),  // 已完成
     BEST_FOUR(AchCat.TOUR),  // 已完成
+    DEFEAT_BY_CHAMPION(AchCat.TOUR, true),
     PLAY_ONE_YEAR(AchCat.TOUR),  // 已完成
     PLAY_TWO_YEARS(AchCat.TOUR),  // 已完成
     PLAY_FIVE_YEARS(AchCat.TOUR ,true),  // 已完成
@@ -186,10 +218,6 @@ public enum Achievement {
     public boolean isFullyComplete(AchCompletion completion) {
         return completion != null && getNCompleted(completion) == getNLevels();
     }
-
-//    public boolean isComplete(AchCompletion completion, boolean a) {
-//        return completion != null && completion.getTimes() >= requiredTimes;
-//    }
     
     public int[] getLevels() {
         return requiredTimes;
@@ -221,16 +249,16 @@ public enum Achievement {
     public String title() {
         String resName = Util.toLowerCamelCase("ACH_" + name());
         try {
-            return App.getStrings().getString(resName);
+            return App.getAchievementStrings().getString(resName);
         } catch (MissingResourceException e) {
-            System.err.println(resName);
+            EventLogger.error(resName);
             return name();
         }
     }
 
     String description() {
         try {
-            return App.getStrings().getString(Util.toLowerCamelCase("ACH_DES_" + name()));
+            return App.getAchievementStrings().getString(Util.toLowerCamelCase("ACH_DES_" + name()));
         } catch (MissingResourceException e) {
             return name();
         }
@@ -248,6 +276,7 @@ public enum Achievement {
     public enum Type {
         ONE_TIME,
         HIGH_RECORD,
-        CUMULATIVE
+        CUMULATIVE,
+        COLLECTIVE
     }
 }

@@ -2,12 +2,14 @@ package trashsoftware.trashSnooker.core;
 
 import trashsoftware.trashSnooker.core.movement.Movement;
 
+import java.util.Set;
+
 public abstract class CueAttempt {
 
-    protected Movement.Trace whiteTrace;
-    protected Movement.Trace targetTrace;
+    protected Movement movement;
     protected PlayerPerson.HandSkill handSkill;
     protected boolean success;
+    protected Set<Ball> legalPots;  // 合法打进的球
     protected final CuePlayParams playParams;
     
     protected CueAttempt(CuePlayParams playParams) {
@@ -27,21 +29,27 @@ public abstract class CueAttempt {
     }
 
     public void setAfterFinish(PlayerPerson.HandSkill handSkill, 
-                               Movement.Trace whiteTrace,
-                               Movement.Trace targetTrace) {
+                               Movement movement) {
         this.handSkill = handSkill;
-        this.whiteTrace = whiteTrace;
-        this.targetTrace = targetTrace;
+        this.movement = movement;
 
 //        System.out.println("Trace: before " + whiteTrace.getCushionBefore() + ", after " + whiteTrace.getCushionAfter());
     }
 
+    public boolean isPotLegalBall() {
+        return legalPots != null && !legalPots.isEmpty();
+    }
+    
+    public void setAfterScoreUpdate(Set<Ball> legalPots) {
+        this.legalPots = legalPots;
+    }
+
     public Movement.Trace getWhiteTrace() {
-        return whiteTrace;
+        return movement.getWhiteTrace();
     }
 
     public Movement.Trace getTargetTrace() {
-        return targetTrace;
+        return movement.getTargetTrace();
     }
 
     public PlayerPerson.HandSkill getHandSkill() {

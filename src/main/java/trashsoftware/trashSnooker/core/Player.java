@@ -64,26 +64,6 @@ public abstract class Player {
         return result;
     }
 
-    //    public void addAttempt(PotAttempt potAttempt) {
-//        attempts.add(potAttempt);
-//    }
-//
-//    public List<PotAttempt> getAttempts() {
-//        return attempts;
-//    }
-//    
-//    public void addDefenseAttempt(DefenseAttempt defenseAttempt) {
-//        defenseAttempts.add(defenseAttempt);
-//    }
-//
-//    public List<DefenseAttempt> getDefenseAttempts() {
-//        return defenseAttempts;
-//    }
-
-//    public int getNumber() {
-//        return number;
-//    }
-
     public int getScore() {
         return score;
     }
@@ -91,7 +71,8 @@ public abstract class Player {
     /**
      * Override这个method一定记得call super
      */
-    public void correctPotBalls(Collection<? extends Ball> pottedBalls) {
+    public void correctPotBalls(Game<?, ?> game, Collection<? extends Ball> pottedBalls) {
+        game.newPottedLegal.addAll(pottedBalls);
         for (Ball ball : pottedBalls) {
             if (singlePole.containsKey(ball)) {
                 singlePole.put(ball, singlePole.get(ball) + 1);

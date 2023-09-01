@@ -46,7 +46,7 @@ public class DBAccess {
                     "DEFEAT_SAME_MULTI_2", Achievement.DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_2
             )
     );
-    
+
     private static DBAccess database;
 
     private Connection connection;
@@ -134,6 +134,7 @@ public class DBAccess {
         if (achManager instanceof CareerAchManager cam) {
             String playerId = cam.getPlayerId();
 
+            Map<String, int[]> totalWinLosses = new HashMap<>();  // 对每个球员的胜负，不管什么规则
             for (GameRule gameRule : List.of(GameRule.SNOOKER, GameRule.CHINESE_EIGHT, GameRule.AMERICAN_NINE)) {
                 Map<String, Achievement> ruleAchMap = ACHIEVEMENT_MAP.get(gameRule);
                 List<EntireGameTitle> titles = getAllPveMatches(gameRule, playerId, false);
@@ -141,12 +142,25 @@ public class DBAccess {
                 for (EntireGameTitle egt : titles) {
                     entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));
                 }
-                int uniqueWins = getUniqueWins(cam, ruleAchMap, entireRecords, playerId);
+                int uniqueWins = getUniqueWins(
+                        cam,
+                        ruleAchMap,
+                        entireRecords,
+                        playerId,
+                        totalWinLosses);
                 cam.addAchievement(ruleAchMap.get("DEFEAT_UNIQUE_OPPONENTS"), uniqueWins, null);
+            }
+            for (Map.Entry<String, int[]> oppoTotalWL : totalWinLosses.entrySet()) {
+//                System.out.println(oppoTotalWL.getKey() + ": " + Arrays.toString(oppoTotalWL.getValue()));
+                PlayerPerson person = DataLoader.getInstance().getPlayerPerson(oppoTotalWL.getKey());
+                int wins = oppoTotalWL.getValue()[0];
+                if (!person.isRandom && wins > 0) {
+                    cam.setUniqueDefeats(oppoTotalWL.getKey(), wins);
+                }
             }
         }
     }
-    
+
     private static int[] winLossCount(List<Integer> opponentWinLoss) {
         int[] winLoss = new int[2];
         for (int result : opponentWinLoss) {
@@ -163,7 +177,9 @@ public class DBAccess {
             CareerAchManager cam,
             Map<String, Achievement> ruleAchMap,
             List<EntireGameRecord> entireRecords,
-            String playerId) {
+            String playerId,
+            Map<String, int[]> totalWinLosses  // 这个不参与计算，只是fill这个表
+    ) {
         Map<String, List<Integer>> oppoWinLostMap = new HashMap<>();  // 对于每个对手的胜负。0是玩家胜，1是对手胜
         for (EntireGameRecord egr : entireRecords) {
             EntireGameTitle egt = egr.getTitle();
@@ -179,13 +195,16 @@ public class DBAccess {
                 oppoWin = winsCount[1] < winsCount[0];
             }
             List<Integer> cur = oppoWinLostMap.computeIfAbsent(oppoId, key -> new ArrayList<>());
-            if (oppoWin) cur.add(1);
-            else cur.add(0);
+            if (oppoWin) {
+                cur.add(1);
+            } else {
+                cur.add(0);
+            }
 
             int maxContinuousWin = 0;
             int continuousWin = 0;  // 最近的连胜
             for (int i = cur.size() - 1; i >= 0; i--) {
-                if (cur.get(i) == 1) {
+                if (cur.get(i) == 0) {
                     continuousWin++;
                     if (continuousWin > maxContinuousWin) maxContinuousWin = continuousWin;
                 } else {
@@ -193,6 +212,7 @@ public class DBAccess {
                 }
             }
             if (maxContinuousWin >= 2) {
+//                System.out.println("Continuous win " + oppoId + " " + maxContinuousWin + " times");
                 cam.addAchievement(ruleAchMap.get("DEFEAT_SAME_CONTINUOUS"), null);
             }
         }
@@ -203,6 +223,12 @@ public class DBAccess {
                 uniqueWins++;
             }
             int[] winLoss = winLossCount(ent.getValue());
+            int[] totalWinLossAgainst = totalWinLosses.computeIfAbsent(ent.getKey(), key -> new int[2]);
+            for (int i = 0; i < totalWinLossAgainst.length; i++) {
+                // 应该就是2，保险起见，万一以后有平局呢
+                totalWinLossAgainst[i] += winLoss[i];
+            }
+            
             if (winLoss[0] >= 3 && winLoss[1] == 0) {
                 cam.addAchievement(ruleAchMap.get("DEFEAT_SAME_MULTI_1"), null);
             }
@@ -215,7 +241,10 @@ public class DBAccess {
         return uniqueWins;
     }
 
-    private void storeAttemptsForOnePlayer(EntireGame entireGame, Game<?, ?> frame, Player player) {
+    private void storeAttemptsForOnePlayer(EntireGame entireGame, 
+                                           Game<?, ?> frame, 
+                                           Player player,
+                                           boolean isWinner) {
         // attempts, successes, 
         // long attempts, long successes, 
         // defenses, defense successes,
@@ -259,11 +288,19 @@ public class DBAccess {
                 }
             }
         }
-
+        
         // 添加成就
         if (data[0] == 0) {
-            AchManager.getInstance().addAchievement(Achievement.FRAME_NO_ATTACK, player.getInGamePlayer());
+            if (!isWinner) {
+                AchManager.getInstance().addAchievement(Achievement.FRAME_NO_ATTACK, player.getInGamePlayer());
+            }
         }
+        if (data[1] == 0) {
+            if (isWinner) {
+                AchManager.getInstance().addAchievement(Achievement.LIE_DOWN_WIN, player.getInGamePlayer());
+            }
+        }
+        
         if (player.getScore() == 0) {
             int threshold = 5;
             Achievement achievement = null;
@@ -306,11 +343,15 @@ public class DBAccess {
         }
     }
 
-    public void storeAttempts(EntireGame entireGame, Game<?, ?> frame) {
-        storeAttemptsForOnePlayer(entireGame, frame,
-                frame.getPlayer1());
-        storeAttemptsForOnePlayer(entireGame, frame,
-                frame.getPlayer2());
+    public void storeAttempts(EntireGame entireGame, Game<?, ?> frame, InGamePlayer frameWinner) {
+        storeAttemptsForOnePlayer(entireGame, 
+                frame,
+                frame.getPlayer1(),
+                frameWinner == frame.getPlayer1().getInGamePlayer());
+        storeAttemptsForOnePlayer(entireGame, 
+                frame,
+                frame.getPlayer2(),
+                frameWinner == frame.getPlayer2().getInGamePlayer());
     }
 
     public List<EntireGameTitle> getAllMatches(GameRule gameRule) {
@@ -876,15 +917,15 @@ public class DBAccess {
         }
     }
 
-    public void recordAFrameEnds(EntireGame entireGame, Game<?, ?> game, PlayerPerson winner) {
+    public void recordAFrameEnds(EntireGame entireGame, Game<?, ?> game, InGamePlayer winner) {
         long duration = (System.currentTimeMillis() - game.frameStartTime) / 1000 + 1;
         String generalCmd = "UPDATE Game SET DurationSeconds = " + duration + ", " +
-                "WinnerName = '" + winner.getPlayerId() + "' " +
+                "WinnerName = '" + winner.getPlayerPerson().getPlayerId() + "' " +
                 "WHERE (EntireBeginTime = " + entireGame.getStartTimeSqlString() + " AND " +
                 "FrameIndex = " + game.frameIndex + ");";
         try {
             executeStatement(generalCmd);
-            storeAttempts(entireGame, game);
+            storeAttempts(entireGame, game, winner);
         } catch (SQLException e) {
             e.printStackTrace();
         }

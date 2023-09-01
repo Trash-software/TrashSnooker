@@ -1,5 +1,5 @@
 {
-  "stageIndex": 4,
+  "stageIndex": 2,
   "seedRanks": {
     "Brown": 25,
     "Yan Bingtao": 13,
@@ -36,6 +36,7 @@
       "p1": {
         "p1": {"winner": "O_Sullivan"},
         "p2": {
+          "p1wins": 0,
           "p1": {
             "p1wins": 1,
             "p1": {"winner": "Jack Lisowski"},
@@ -70,8 +71,10 @@
             "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_2-9",
             "p2wins": 2
           },
+          "winner": "Zhao Xintong",
           "stage": "PRE_ROUND_3",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-16"
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-16",
+          "p2wins": 2
         },
         "stage": "QUARTER_FINAL",
         "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-20"
@@ -79,6 +82,7 @@
       "p2": {
         "p1": {"winner": "Neil Robertson"},
         "p2": {
+          "p1wins": 2,
           "p1": {
             "p1wins": 2,
             "p1": {"winner": "Trump"},
@@ -113,8 +117,10 @@
             "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_2-11",
             "p2wins": 0
           },
+          "winner": "Trump",
           "stage": "PRE_ROUND_3",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-17"
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-17",
+          "p2wins": 0
         },
         "stage": "QUARTER_FINAL",
         "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-21"
@@ -126,7 +132,9 @@
       "p1": {
         "p1": {"winner": "Liu Mang"},
         "p2": {
+          "p1wins": 2,
           "p1": {
+            "p1wins": 0,
             "p1": {"winner": "Karen Wilson"},
             "p2": {
               "p1wins": 2,
@@ -137,8 +145,10 @@
               "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_1-4",
               "p2wins": 1
             },
+            "winner": "custom_E8BDBBE69DBEE58FB7",
             "stage": "PRE_ROUND_2",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_2-12"
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_2-12",
+            "p2wins": 2
           },
           "p2": {
             "p1wins": 2,
@@ -157,8 +167,10 @@
             "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_2-13",
             "p2wins": 0
           },
+          "winner": "custom_E8BDBBE69DBEE58FB7",
           "stage": "PRE_ROUND_3",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-18"
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-18",
+          "p2wins": 1
         },
         "stage": "QUARTER_FINAL",
         "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-22"
@@ -166,6 +178,7 @@
       "p2": {
         "p1": {"winner": "Mark Williams"},
         "p2": {
+          "p1wins": 1,
           "p1": {
             "p1wins": 1,
             "p1": {"winner": "John Wizard"},
@@ -200,8 +213,10 @@
             "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_2-15",
             "p2wins": 0
           },
+          "winner": "Kid",
           "stage": "PRE_ROUND_3",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-19"
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-19",
+          "p2wins": 2
         },
         "stage": "QUARTER_FINAL",
         "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-23"
@@ -285,6 +300,14 @@
       "numFrame": 1,
       "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_2-10",
       "playerId": "Trump"
+    },
+    {
+      "score": 57,
+      "stage": "PRE_ROUND_3",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-16",
+      "playerId": "Zhao Xintong"
     },
     {
       "score": 57,

@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.snooker;
 
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.InGamePlayer;
 import trashsoftware.trashSnooker.core.Player;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
@@ -24,6 +25,9 @@ public class SnookerPlayer extends Player {
 
     public void potFreeBall(int freeBallScore) {
         score += freeBallScore;
+        AchManager.getInstance().cumulateAchievement(Achievement.SNOOKER_CUMULATE_SCORE, 
+                freeBallScore, 
+                getInGamePlayer());
         lastAddedScore = freeBallScore;
         Ball freeBall = game.getBallOfValue(freeBallScore);
         if (singlePole.containsKey(freeBall)) {
@@ -35,9 +39,14 @@ public class SnookerPlayer extends Player {
 
     @Override
     protected void addScoreOfPotted(Collection<? extends Ball> pottedBalls) {
+        int add = 0;
         for (Ball ball : pottedBalls) {
-            score += ball.getValue();
+            add += ball.getValue();
         }
+        AchManager.getInstance().cumulateAchievement(Achievement.SNOOKER_CUMULATE_SCORE, 
+                add, 
+                getInGamePlayer());
+        score += add;
     }
 
     @Override
@@ -47,8 +56,8 @@ public class SnookerPlayer extends Player {
     }
 
     @Override
-    public void correctPotBalls(Collection<? extends Ball> pottedBalls) {
-        super.correctPotBalls(pottedBalls);
+    public void correctPotBalls(Game<?, ?> game, Collection<? extends Ball> pottedBalls) {
+        super.correctPotBalls(game, pottedBalls);
         
         int singlePoleScore = getSinglePoleScore();
         if (singlePoleScore >= 50) {

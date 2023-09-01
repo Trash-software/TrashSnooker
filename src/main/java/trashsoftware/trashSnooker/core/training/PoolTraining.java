@@ -94,7 +94,7 @@ public class PoolTraining extends ChineseEightBallGame implements Training {
                 
                 if (onlyPot == whiteFirstCollide) {
                     lastPotSuccess = true;
-                    currentPlayer.correctPotBalls(newPotted);
+                    currentPlayer.correctPotBalls(this, newPotted);
                 }
             }
         }

@@ -39,4 +39,7 @@ public class InvalidAchManager extends AchManager {
 
     public void addAchievement(Achievement achievement, int newRecord, InGamePlayer igp) {
     }
+
+    public void cumulateAchievement(Achievement achievement, int newAdd, InGamePlayer igp) {
+    }
 }

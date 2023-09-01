@@ -12,6 +12,8 @@
     <MenuBar>
         <Menu text="%window">
             <MenuItem text="%close" onAction="#closeWindowAction"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="%repairMenu" onAction="#repairAction" fx:id="repairMenu"/>
         </Menu>
         <Menu fx:id="gameMenu" text="%gameMenu">
             <!-- 在这里加没用，gameView里会重新填充gameMenu -->

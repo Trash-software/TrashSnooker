@@ -21,8 +21,9 @@
         <ColumnConstraints/>
     </columnConstraints>
 
-    <HBox>
+    <HBox spacing="10.0">
         <Button text="%backIcon" onAction="#backAction"/>
+        <Button text="%settingsMenu" onAction="#careerSettingsAction"/>
     </HBox>
 
     <VBox GridPane.rowIndex="1" spacing="10.0">

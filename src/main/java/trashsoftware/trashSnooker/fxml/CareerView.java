@@ -443,12 +443,40 @@ public class CareerView extends ChildInitializable {
         }
     }
 
+    @FXML
     @Override
     public void backAction() {
         CareerAchManager.closeCareerInstance();
         parent.refreshGui();
         
         super.backAction();
+    }
+    
+    @FXML
+    public void careerSettingsAction() {
+        try {
+            Stage popup = new Stage();
+            popup.initOwner(selfStage);
+            popup.initModality(Modality.WINDOW_MODAL);
+            popup.getIcons().add(ResourcesLoader.getInstance().getIcon());
+            
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("careerSettingsView.fxml"),
+                    strings
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Scene scene = App.createScene(root);
+            popup.setScene(scene);
+
+            CareerSettingsView view = loader.getController();
+            view.setup(popup);
+            
+            popup.show();
+        } catch (IOException e) {
+            EventLogger.error(e);
+        }
     }
 
     @FXML

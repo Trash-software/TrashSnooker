@@ -570,6 +570,9 @@ public class PlayerPerson {
         return Objects.hash(playerId);
     }
 
+    /**
+     * @return 返回图形界面上显示的名字
+     */
     public String getName() {
         return shownName;
     }

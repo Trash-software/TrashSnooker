@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -14,6 +16,7 @@ import trashsoftware.trashSnooker.core.career.achievement.AchCat;
 import trashsoftware.trashSnooker.core.career.achievement.AchCompletion;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.net.URL;
@@ -31,6 +34,8 @@ public class AchievementsView extends ChildInitializable {
     TableColumn<AchItem, VBox> textCol;
     @FXML
     TableColumn<AchItem, VBox> dateCol;
+    @FXML
+    TableColumn<AchItem, ImageView> iconCol;
 
     private final Map<AchCat, List<AchievementBundle>> completed = new HashMap<>();
     private final Map<AchCat, int[]> catCompletions = new HashMap<>();  // 值是[总数, 完成数]
@@ -71,11 +76,18 @@ public class AchievementsView extends ChildInitializable {
         
         Font titleFont = Font.font(App.FONT.getFamily(), FontWeight.BLACK, 16.0);
         textCol.setCellValueFactory(cell -> {
+            AchievementBundle bundle = cell.getValue().bundle;
+            
             VBox vBox = new VBox();
-            Label bigLabel = new Label(cell.getValue().bundle.achievement.title());
+            Label bigLabel = new Label();
             bigLabel.setFont(titleFont);
             
-            AchievementBundle bundle = cell.getValue().bundle;
+            if (bundle.completion != null) {
+                bigLabel.setText(bundle.completion.getTitle());
+            } else {
+                bigLabel.setText(bundle.achievement.title());
+            }
+            
             String des = bundle.completion == null ? 
                     bundle.achievement.getDescriptionOfLevel(0) :
                     bundle.completion.getDescription();
@@ -92,6 +104,15 @@ public class AchievementsView extends ChildInitializable {
             vBox.getChildren().addAll(r1, r2);
             
             return new ReadOnlyObjectWrapper<>(vBox);
+        });
+        
+        iconCol.setCellValueFactory(cell -> {
+            Image image = cell.getValue().getImage();
+            if (image == null) return null;
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(32.0);
+            imageView.setFitHeight(32.0);
+            return new ReadOnlyObjectWrapper<>(imageView);
         });
     }
 
@@ -131,8 +152,24 @@ public class AchievementsView extends ChildInitializable {
                 if ((!showIncomplete || bundle.achievement.isHidden()) && bundle.completion == null) 
                     continue;
                 
-                AchItem item = new AchItem(bundle);
-                achTable.getItems().add(item);
+                if (bundle.achievement.getType() == Achievement.Type.COLLECTIVE) {
+                    if (bundle.completion != null) {
+                        AchCompletion.Collective collective = (AchCompletion.Collective) bundle.completion;
+                        for (String pid : collective.getKeys()) {
+                            AchievementBundle subBundle = new AchievementBundle(
+                                    bundle.achievement,
+                                    collective.getIndividual(pid)
+                            );
+                            AchItem item = new AchItem(subBundle);
+                            achTable.getItems().add(item);
+                        }
+                    } else {
+                        EventLogger.error("Collective completion is null, should not enter this branch");
+                    }
+                } else {
+                    AchItem item = new AchItem(bundle);
+                    achTable.getItems().add(item);
+                }
             }
         }
     }
@@ -142,6 +179,15 @@ public class AchievementsView extends ChildInitializable {
 
         AchItem(AchievementBundle bundle) {
             this.bundle = bundle;
+        }
+        
+        public Image getImage() {
+            if (bundle.completion != null) {
+                if (bundle.completion.getNCompleted() > 0) {
+                    return bundle.completion.getImage();
+                }
+            }
+            return null;
         }
         
         public String firstRow() {
@@ -166,12 +212,19 @@ public class AchievementsView extends ChildInitializable {
                     return String.format(strings.getString("completeTimes"),
                             bundle.completion.getTimes());
                 }
-            } if (bundle.achievement.getType() == Achievement.Type.HIGH_RECORD) {
+            } else if (bundle.achievement.getType() == Achievement.Type.HIGH_RECORD) {
                 if (bundle.completion == null) {
                     return "";
                 } else {
                     return String.format(strings.getString("highestRecord"),
                             bundle.completion.getTimes());
+                }
+            } else if (bundle.achievement.getType() == Achievement.Type.COLLECTIVE) {
+                if (bundle.completion instanceof AchCompletion.Sub) {
+                    return String.format(strings.getString("completeTimes"),
+                            bundle.completion.getTimes());
+                } else {
+                    return "";
                 }
             } else {
                 return "";
@@ -198,7 +251,7 @@ public class AchievementsView extends ChildInitializable {
 
         public String completion() {
             int[] numbers = catCompletions.get(cat);
-            if (cat == AchCat.GENERAL_HIDDEN) {
+            if (cat == AchCat.GENERAL_HIDDEN || cat == AchCat.UNIQUE_DEFEATS) {
                 return String.valueOf(numbers[1]);
             } else {
                 return numbers[1] + "/" + numbers[0];

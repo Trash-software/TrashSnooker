@@ -55,6 +55,8 @@ public abstract class AchManager {
     public abstract void addAchievement(Achievement achievement, InGamePlayer igp);
 
     public abstract void addAchievement(Achievement achievement, int newRecord, InGamePlayer igp);
+
+    public abstract void cumulateAchievement(Achievement achievement, int newAdd, InGamePlayer igp);
     
     public void showAchievementPopup() {
     }

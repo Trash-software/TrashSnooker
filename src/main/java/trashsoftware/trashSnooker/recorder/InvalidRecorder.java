@@ -24,6 +24,11 @@ public class InvalidRecorder implements GameRecorder {
     }
 
     @Override
+    public void abort() {
+        
+    }
+
+    @Override
     public void deleteRecord() {
         
     }

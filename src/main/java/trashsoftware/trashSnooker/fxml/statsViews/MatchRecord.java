@@ -2,10 +2,12 @@ package trashsoftware.trashSnooker.fxml.statsViews;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.fxml.widgets.AdversarialBar;
 import trashsoftware.trashSnooker.fxml.widgets.MatchRecordPage;
 import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
@@ -30,18 +32,18 @@ public class MatchRecord extends RecordTree {
 
         EntireGameRecord matchRec = DBAccess.getInstance().getMatchDetail(egt);
         MetaMatchInfo careerMatchInfo = MatchTreeNode.analyzeMatchId(egt.matchId);
-        
+
         MatchRecordPage page = new MatchRecordPage();
 
         int rowIndex = 0;
-        
+
         if (careerMatchInfo != null) {
             page.add(new Label(String.valueOf(careerMatchInfo.year)), 3, rowIndex);
             page.add(new Label(careerMatchInfo.data.getName()), 4, rowIndex);
             page.add(new Label(careerMatchInfo.stage.getShown()), 5, rowIndex);
             rowIndex++;
         }
-        
+
         String[] winLost;
         int[] p1p2Wins = matchRec.getP1P2WinsCount();
         if (p1p2Wins[0] < egt.totalFrames / 2 + 1 && p1p2Wins[1] < egt.totalFrames / 2 + 1) {
@@ -60,15 +62,15 @@ public class MatchRecord extends RecordTree {
 
         String p1Ai = egt.player1isAi ? strings.getString("typeComputer") : strings.getString("typePlayer");
         String p2Ai = egt.player2isAi ? strings.getString("typeComputer") : strings.getString("typePlayer");
-        
+
         Label p1NameLabel = new Label(egt.getP1Name() + "\n" + p1Ai);
         p1NameLabel.setWrapText(true);
         page.add(p1NameLabel, 1, rowIndex, 2, 1);
-        
+
         page.add(new Label(String.valueOf(p1p2Wins[0])), 3, rowIndex);
         page.add(new Label(String.format("(%d)", egt.totalFrames)), 4, rowIndex);
         page.add(new Label(String.valueOf(p1p2Wins[1])), 5, rowIndex);
-        
+
         Label p2NameLabel = new Label(egt.getP2Name() + "\n" + p2Ai);
         p2NameLabel.setWrapText(true);
         page.add(p2NameLabel, 6, rowIndex, 2, 1);
@@ -76,108 +78,48 @@ public class MatchRecord extends RecordTree {
         rowIndex++;
 
         int[][] playersTotalBasics = matchRec.totalBasicStats();
-//            System.out.println(Arrays.deepToString(playersTotalBasics));
-        page.add(new Label(strings.getString("statsAttacks1")), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][0])), 1, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][0])), 7, rowIndex);
-//        rowIndex++;
 
-//        page.add(new Label("进攻成功次数"), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][1])), 2, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][1])), 6, rowIndex);
+        addSucComparison(page,
+                rowIndex++,
+                strings.getString("statsAttacks1"),
+                playersTotalBasics,
+                0,
+                1);
 
-        page.add(new Label(
-                        showPercent(playersTotalBasics[0][1], playersTotalBasics[0][0])),
-                3, rowIndex);
-        page.add(new Label(
-                        showPercent(playersTotalBasics[1][1], playersTotalBasics[1][0])),
-                5, rowIndex);
-        rowIndex++;
+        addSucComparison(page,
+                rowIndex++,
+                strings.getString("statsLongAttacks1"),
+                playersTotalBasics,
+                2,
+                3);
 
-        page.add(new Label(strings.getString("statsLongAttacks1")), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][2])), 1, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][2])), 7, rowIndex);
-//        rowIndex++;
+        addSucComparison(page,
+                rowIndex++,
+                strings.getString("statsRestAttacks1"),
+                playersTotalBasics,
+                8,
+                9);
 
-//        page.add(new Label("长台进攻成功次数"), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][3])), 2, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][3])), 6, rowIndex);
+        addSucComparison(page,
+                rowIndex++,
+                strings.getString("statsPositions1"),
+                playersTotalBasics,
+                6,
+                7);
 
-        page.add(new Label(
-                        showPercent(playersTotalBasics[0][3], playersTotalBasics[0][2])),
-                3, rowIndex);
-        page.add(new Label(
-                        showPercent(playersTotalBasics[1][3], playersTotalBasics[1][2])),
-                5, rowIndex);
-        rowIndex++;
+        addSucComparison(page,
+                rowIndex++,
+                strings.getString("statsDefenses1"),
+                playersTotalBasics,
+                4,
+                5);
 
-        page.add(new Label(strings.getString("statsRestAttacks1")), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][8])), 1, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][8])), 7, rowIndex);
-//        rowIndex++;
-
-//        page.add(new Label("架杆进攻成功次数"), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][9])), 2, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][9])), 6, rowIndex);
-
-        page.add(new Label(
-                        showPercent(playersTotalBasics[0][9], playersTotalBasics[0][8])),
-                3, rowIndex);
-        page.add(new Label(
-                        showPercent(playersTotalBasics[1][9], playersTotalBasics[1][8])),
-                5, rowIndex);
-        rowIndex++;
-
-        page.add(new Label(strings.getString("statsPositions1")), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][6])), 1, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][6])), 7, rowIndex);
-//        rowIndex++;
-
-//        page.add(new Label("走位成功次数"), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][7])), 2, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][7])), 6, rowIndex);
-
-        page.add(new Label(
-                        showPercent(playersTotalBasics[0][7], playersTotalBasics[0][6])),
-                3, rowIndex);
-        page.add(new Label(
-                        showPercent(playersTotalBasics[1][7], playersTotalBasics[1][6])),
-                5, rowIndex);
-        rowIndex++;
-
-        page.add(new Label(strings.getString("statsDefenses1")), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][4])), 1, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][4])), 7, rowIndex);
-//        rowIndex++;
-
-//        page.add(new Label("防守成功次数"), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][5])), 2, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][5])), 6, rowIndex);
-
-        page.add(new Label(
-                        showPercent(playersTotalBasics[0][5], playersTotalBasics[0][4])),
-                3, rowIndex);
-        page.add(new Label(
-                        showPercent(playersTotalBasics[1][5], playersTotalBasics[1][4])),
-                5, rowIndex);
-        rowIndex++;
-
-        page.add(new Label(strings.getString("statsEscapes1")), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][10])), 1, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][10])), 7, rowIndex);
-//        rowIndex++;
-
-//        page.add(new Label("解球成功次数"), 0, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[0][11])), 2, rowIndex);
-        page.add(new Label(String.valueOf(playersTotalBasics[1][11])), 6, rowIndex);
-
-        page.add(new Label(
-                        showPercent(playersTotalBasics[0][11], playersTotalBasics[0][10])),
-                3, rowIndex);
-        page.add(new Label(
-                        showPercent(playersTotalBasics[1][11], playersTotalBasics[1][10])),
-                5, rowIndex);
-        rowIndex++;
+        addSucComparison(page,
+                rowIndex++,
+                strings.getString("statsEscapes1"),
+                playersTotalBasics,
+                10,
+                11);
 
         page.add(new Separator(), 0, rowIndex++, 8, 1);
 
@@ -186,67 +128,70 @@ public class MatchRecord extends RecordTree {
                 egt.gameRule == GameRule.AMERICAN_NINE;
         if (egt.gameRule.snookerLike()) {
             int[][] totalSnookerScores = ((EntireGameRecord.Snooker) matchRec).totalScores();
-            page.add(new Label(strings.getString("totalPoints")), 0, rowIndex);
-            page.add(new Label(String.valueOf(totalSnookerScores[0][0])), 2, rowIndex);
-            page.add(new Label(String.valueOf(totalSnookerScores[1][0])), 6, rowIndex);
-            rowIndex++;
+            
+            addScoreComparison(page,
+                    rowIndex++,
+                    strings.getString("totalPoints"),
+                    totalSnookerScores,
+                    0);
 
-            page.add(new Label(strings.getString("highestBreak")), 0, rowIndex);
-            page.add(new Label(String.valueOf(totalSnookerScores[0][1])), 2, rowIndex);
-            page.add(new Label(String.valueOf(totalSnookerScores[1][1])), 6, rowIndex);
-            rowIndex++;
+            addScoreComparison(page,
+                    rowIndex++,
+                    strings.getString("highestBreak"),
+                    totalSnookerScores,
+                    1);
 
-            page.add(new Label("50+"), 0, rowIndex);
-            page.add(new Label(String.valueOf(totalSnookerScores[0][2])), 2, rowIndex);
-            page.add(new Label(String.valueOf(totalSnookerScores[1][2])), 6, rowIndex);
-            rowIndex++;
+            addScoreComparison(page,
+                    rowIndex++,
+                    strings.getString("single50"), 
+                    totalSnookerScores,
+                    2);
 
-            page.add(new Label("100+"), 0, rowIndex);
-            page.add(new Label(String.valueOf(totalSnookerScores[0][3])), 2, rowIndex);
-            page.add(new Label(String.valueOf(totalSnookerScores[1][3])), 6, rowIndex);
-            rowIndex++;
+            addScoreComparison(page,
+                    rowIndex++,
+                    strings.getString("single100"),
+                    totalSnookerScores,
+                    3);
 
-            page.add(new Label("147"), 0, rowIndex);
-            page.add(new Label(String.valueOf(totalSnookerScores[0][4])), 2, rowIndex);
-            page.add(new Label(String.valueOf(totalSnookerScores[1][4])), 6, rowIndex);
-            rowIndex++;
+            addScoreComparison(page,
+                    rowIndex++,
+                    strings.getString("single147"),
+                    totalSnookerScores,
+                    4);
         } else if (poolLike) {
             int[][] numberedBreaks = ((EntireGameRecord.NumberedBall) matchRec).totalScores();
-            page.add(new Label("开球次数"), 0, rowIndex);
-            page.add(new Label(String.valueOf(numberedBreaks[0][0])), 2, rowIndex);
-            page.add(new Label(String.valueOf(numberedBreaks[1][0])), 6, rowIndex);
-            rowIndex++;
-
-            page.add(new Label("开球进球次数"), 0, rowIndex);
-            page.add(new Label(String.valueOf(numberedBreaks[0][1])), 2, rowIndex);
-            page.add(new Label(String.valueOf(numberedBreaks[1][1])), 6, rowIndex);
-
-            page.add(new Label(showPercent(numberedBreaks[0][1], numberedBreaks[0][0])),
-                    3, rowIndex);
-            page.add(new Label(showPercent(numberedBreaks[1][1], numberedBreaks[1][0])),
-                    5, rowIndex);
-            rowIndex++;
-
-            page.add(new Label("炸清"), 0, rowIndex);
-            page.add(new Label(String.valueOf(numberedBreaks[0][2])), 2, rowIndex);
-            page.add(new Label(String.valueOf(numberedBreaks[1][2])), 6, rowIndex);
-            rowIndex++;
-
-            page.add(new Label("接清"), 0, rowIndex);
-            page.add(new Label(String.valueOf(numberedBreaks[0][3])), 2, rowIndex);
-            page.add(new Label(String.valueOf(numberedBreaks[1][3])), 6, rowIndex);
-            rowIndex++;
-
-            page.add(new Label("单杆最高球数"), 0, rowIndex);
-            page.add(new Label(String.valueOf(numberedBreaks[0][4])), 2, rowIndex);
-            page.add(new Label(String.valueOf(numberedBreaks[1][4])), 6, rowIndex);
-            rowIndex++;
             
+            addSucComparison(page,
+                    rowIndex++,
+                    strings.getString("numBreaks"),
+                    numberedBreaks,
+                    0,
+                    1);
+
+            addScoreComparison(page,
+                    rowIndex++,
+                    strings.getString("breakClears"),
+                    numberedBreaks,
+                    2);
+
+            addScoreComparison(page,
+                    rowIndex++,
+                    strings.getString("continueClears"),
+                    numberedBreaks,
+                    3);
+
+            addScoreComparison(page,
+                    rowIndex++,
+                    strings.getString("highestSingleBalls"),
+                    numberedBreaks,
+                    4);
+
             if (egt.gameRule == GameRule.AMERICAN_NINE) {
-                page.add(new Label(strings.getString("goldNines")), 0, rowIndex);
-                page.add(new Label(String.valueOf(numberedBreaks[0][5])), 2, rowIndex);
-                page.add(new Label(String.valueOf(numberedBreaks[1][5])), 6, rowIndex);
-                rowIndex++;
+                addScoreComparison(page,
+                        rowIndex++,
+                        strings.getString("goldNines"),
+                        numberedBreaks,
+                        5);
             }
         }
 
@@ -332,5 +277,51 @@ public class MatchRecord extends RecordTree {
         }
 
         rightPane.getChildren().add(page);
+    }
+    
+    private void addScoreComparison(GridPane page,
+                                    int rowIndex,
+                                    String string,
+                                    int[][] playersStats,
+                                    int dataIndex) {
+        int v1 = playersStats[0][dataIndex];
+        int v2 = playersStats[1][dataIndex];
+        page.add(new Label(string), 0, rowIndex);
+        page.add(new Label(String.valueOf(v1)), 2, rowIndex);
+        page.add(new Label(String.valueOf(v2)), 6, rowIndex);
+        
+        page.add(new AdversarialBar((double) v1 / (v1 + v2)), 
+                4 , rowIndex);
+    }
+
+    private void addSucComparison(GridPane page,
+                                  int rowIndex,
+                                  String string,
+                                  int[][] playersStats,
+                                  int dataIndex,
+                                  int dataIndexSuc) {
+        double rate1 = (double) playersStats[0][dataIndexSuc] / playersStats[0][dataIndex];
+        double rate2 = (double) playersStats[1][dataIndexSuc] / playersStats[1][dataIndex];
+
+        page.add(new Label(string), 0, rowIndex);
+        page.add(new Label(String.valueOf(playersStats[0][dataIndex])), 1, rowIndex);
+        page.add(new Label(String.valueOf(playersStats[1][dataIndex])), 7, rowIndex);
+
+        page.add(new Label(String.valueOf(playersStats[0][dataIndexSuc])), 2, rowIndex);
+        page.add(new Label(String.valueOf(playersStats[1][dataIndexSuc])), 6, rowIndex);
+
+        page.add(new AdversarialBar(
+                        playersStats[0][dataIndex],
+                        rate1,
+                        playersStats[1][dataIndex],
+                        rate2),
+                4, rowIndex);
+
+        page.add(new Label(
+                        showPercent(rate1)),
+                3, rowIndex);
+        page.add(new Label(
+                        showPercent(rate2)),
+                5, rowIndex);
     }
 }

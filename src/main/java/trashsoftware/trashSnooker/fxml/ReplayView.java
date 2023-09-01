@@ -7,7 +7,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -266,7 +265,7 @@ public class ReplayView extends ChildInitializable {
                     } catch (VersionException ve) {
                         System.err.printf("Record version: %d.%d\n",
                                 ve.recordPrimaryVersion, ve.recordSecondaryVersion);
-                    } catch (RecordException | IOException re) {
+                    } catch (ReplayException | IOException re) {
                         System.err.println(re.getMessage());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -522,7 +521,7 @@ public class ReplayView extends ChildInitializable {
                             } catch (VersionException ve) {
                                 System.err.printf("Record version: %d.%d\n",
                                         ve.recordPrimaryVersion, ve.recordSecondaryVersion);
-                            } catch (RecordException | IOException re) {
+                            } catch (ReplayException | IOException re) {
                                 System.err.println(re.getMessage());
                             }
                         }

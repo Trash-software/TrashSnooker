@@ -131,13 +131,10 @@ public class GameTypeTree extends RecordTree {
         } else if (gameRule == GameRule.CHINESE_EIGHT || gameRule == GameRule.AMERICAN_NINE) {
             breaksScores = db.getNumberedBallGamesTotal(gameRule, pai.playerId, pai.isAi);
             resultPane.add(new Label(strings.getString("numBreaks")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
-            resultPane.add(new Label(strings.getString("numBreaksSuc")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(breaksScores[1])), 1, rowIndex++);
-            resultPane.add(new Label(strings.getString("breaksSucRatio")), 0, rowIndex);
-            resultPane.add(new Label(String.format("%.1f%%",
-                            breaksScores[1] * 100.0 / breaksScores[0])),
-                    1, rowIndex++);
+            resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex);
+            resultPane.add(new Label(String.valueOf(breaksScores[1])), 2, rowIndex);
+            resultPane.add(new Label(showPercent(breaksScores[1], breaksScores[0])),
+                    3, rowIndex++);
             resultPane.add(new Label(strings.getString("breakClears")), 0, rowIndex);
             resultPane.add(new Label(String.valueOf(breaksScores[2])), 1, rowIndex++);
             resultPane.add(new Label(strings.getString("continueClears")), 0, rowIndex);

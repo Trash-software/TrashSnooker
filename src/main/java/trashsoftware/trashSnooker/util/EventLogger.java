@@ -12,6 +12,7 @@ public class EventLogger {
     private static final String LOG_DIR = "logs";
     public static final String CRASH = "crash";
     public static final String ERROR = "error";
+    public static final String WARNING = "warning";
     public static final String INFO = "info";
     public static final String DEBUG = "debug";
     //    private static final String LOG_BASE_NAME = LOG_DIR + File.separator + "error-";
@@ -50,6 +51,25 @@ public class EventLogger {
     }
 
     /**
+     * Logs and prints complete warning message and stack trace to a new log file.
+     *
+     * @param throwable not severe error
+     */
+    public static void warning(Throwable throwable) {
+        warning(throwable, true);
+    }
+
+    /**
+     * Logs complete warning message and stack trace to a new log file.
+     *
+     * @param throwable not severe error
+     * @param print     whether to print stack trace to stderr
+     */
+    public static void warning(Throwable throwable, boolean print) {
+        log(throwable, WARNING, print);
+    }
+
+    /**
      * Logs complete error message and stack trace to a new log file.
      *
      * @param throwable error
@@ -78,6 +98,25 @@ public class EventLogger {
      */
     public static void error(String message) {
         error(message, true);
+    }
+
+    /**
+     * Logs text warning message to a new log file.
+     *
+     * @param message text message
+     * @param print   whether to also print message in console
+     */
+    public static void warning(String message, boolean print) {
+        log(message, WARNING, print);
+    }
+
+    /**
+     * Logs text warning message to a new log file.
+     *
+     * @param message text message
+     */
+    public static void warning(String message) {
+        warning(message, true);
     }
 
     /**

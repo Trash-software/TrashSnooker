@@ -120,43 +120,46 @@ public abstract class ActualRecorder implements GameRecorder {
 
     public abstract void recordPositions() throws IOException;
 
-    public final void recordCue(CueRecord cueRecord, TargetRecord thisTarget) {
+    public final void recordCue(CueRecord cueRecord, TargetRecord thisTarget) throws RecordingException {
         if (this.cueRecord != null || this.thisTarget != null)
-            throw new RuntimeException("Repeated recording");
+            throw new RecordingException("Repeated recording");
         this.cueRecord = cueRecord;
         this.thisTarget = thisTarget;
         this.nCues++;
     }
 
-    public final void recordMovement(Movement movement) {
-        if (this.movement != null) throw new RuntimeException("Repeated recording");
+    public final void recordMovement(Movement movement) throws RecordingException {
+        if (this.movement != null) throw new RecordingException("Repeated recording");
 //        System.out.println(movement.getMovementMap().get(game.getCueBall()).size());
         this.movement = movement;
     }
     
-    public final void recordCueAnimation(CueAnimationRec cueAnimationRec) {
-        if (this.animationRec != null) throw new RuntimeException("Repeated recording");
+    public final void recordCueAnimation(CueAnimationRec cueAnimationRec) throws RecordingException {
+        if (this.animationRec != null) throw new RecordingException("Repeated recording");
 //        System.out.println(movement.getMovementMap().get(game.getCueBall()).size());
         this.animationRec = cueAnimationRec;
     }
 
-    public final void recordScore(ScoreResult scoreResult) {
-        if (this.scoreResult != null) throw new RuntimeException("Repeated recording");
+    public final void recordScore(ScoreResult scoreResult) throws RecordingException {
+        if (this.scoreResult != null) throw new RecordingException("Repeated recording");
         this.scoreResult = scoreResult;
     }
 
-    public final void recordNextTarget(TargetRecord nextTarget) {
-        if (this.nextTarget != null) throw new RuntimeException("Repeated recording");
+    public final void recordNextTarget(TargetRecord nextTarget) throws RecordingException {
+        if (this.nextTarget != null) throw new RecordingException("Repeated recording");
         this.nextTarget = nextTarget;
     }
 
-    public void writeCueToStream() {
+    public void writeCueToStream() throws RecordingException {
         if (cueRecord == null || movement == null || scoreResult == null || 
-                thisTarget == null || nextTarget == null || animationRec == null) {
-            throw new RuntimeException(String.format("Score not filled: %s, %s, %s, %s\n",
+                thisTarget == null || nextTarget == null) {
+            throw new RecordingException(String.format("Score not filled: %s, %s, %s, %s\n",
                     cueRecord, movement, scoreResult, nextTarget));
         }
-//        System.out.println(movement);
+        if (animationRec == null) {
+            EventLogger.warning("Animation record is null");
+        }
+        
         try {
             outputStream.write(FLAG_CUE);
             writeCue(cueRecord, movement, thisTarget, nextTarget, animationRec);
@@ -171,7 +174,7 @@ public abstract class ActualRecorder implements GameRecorder {
             nextTarget = null;
             animationRec = null;
         } catch (IOException e) {
-            e.printStackTrace();
+            EventLogger.error(e);
         }
     }
 
@@ -180,7 +183,7 @@ public abstract class ActualRecorder implements GameRecorder {
             outputStream.write(FLAG_HANDBALL);
             writeBallInHand();
         } catch (IOException e) {
-            e.printStackTrace();
+            EventLogger.error(e);
         }
     }
 
@@ -322,7 +325,7 @@ public abstract class ActualRecorder implements GameRecorder {
                 outputStream = new XZOutputStream(wrapperStream, new LZMA2Options());
                 break;
             default:
-                throw new RuntimeException();
+                throw new RecordingException();
         }
     }
 
@@ -377,7 +380,7 @@ public abstract class ActualRecorder implements GameRecorder {
                 outputStream.close();
                 wrapperStream.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                EventLogger.error(e);
                 return;
             }
 
@@ -404,9 +407,14 @@ public abstract class ActualRecorder implements GameRecorder {
                 raf.write(buffer4);
                 
             } catch (IOException e) {
-                e.printStackTrace();
+                EventLogger.error(e);
             }
         }
+    }
+
+    @Override
+    public void abort() {
+        stopRecording(false);
     }
 
     @Override

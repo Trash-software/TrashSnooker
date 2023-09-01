@@ -27,6 +27,7 @@
             <columns>
                 <TableColumn fx:id="textCol" prefWidth="500.0"/>
                 <TableColumn fx:id="dateCol" prefWidth="200.0"/>
+                <TableColumn fx:id="iconCol" prefWidth="100.0"/>
             </columns>
         </TableView>
     </HBox>

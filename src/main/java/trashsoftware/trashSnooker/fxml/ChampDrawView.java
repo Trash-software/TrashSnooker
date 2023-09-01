@@ -190,7 +190,26 @@ public class ChampDrawView extends ChildInitializable {
                 AchManager.getInstance().addAchievement(Achievement.ONE_ROUND_TOUR, null);
             }
             
+            checkAfterAllMatchesFinish();
             showCongratulation();
+        }
+    }
+    
+    private void checkAfterAllMatchesFinish() {
+        if (championship.isFinished()) {
+            Career champion = championship.getChampion();
+            if (champion == null) {
+                EventLogger.error("Champion should not be null after finished");
+                return;
+            }
+            if (!champion.isHumanPlayer()) {
+                MatchTreeNode humanLost = championship.getHumanLostMatch();
+                if (humanLost != null && 
+                        humanLost.getStage() != ChampionshipStage.FINAL && 
+                        humanLost.getWinner().getPlayerPerson().getPlayerId().equals(champion.getPlayerPerson().getPlayerId())) {
+                    AchManager.getInstance().addAchievement(Achievement.DEFEAT_BY_CHAMPION, null);
+                }
+            }
         }
     }
     
@@ -213,6 +232,8 @@ public class ChampDrawView extends ChildInitializable {
             savedRoundLabel.setManaged(false);
             quitTournamentBtn.setDisable(true);
             setOpponentText(null);
+            checkAfterAllMatchesFinish();
+            AchManager.getInstance().showAchievementPopup();
         } else {
             if (championship.hasSavedRound()) {
                 nextRoundButton.setText(strings.getString("continueMatch"));
