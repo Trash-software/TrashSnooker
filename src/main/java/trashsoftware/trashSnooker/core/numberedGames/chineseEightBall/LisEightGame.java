@@ -121,7 +121,7 @@ public class LisEightGame extends ChineseEightBallGame {
                     end();
                 } else if (currentTarget == NOT_SELECTED_REP) {
                     if (isBreaking) {
-                        pickupBlackBall();
+                        pickupCriticalBall(getEightBall());
                         if (thisCueFoul.isFoul()) {
                             switchPlayer();
                             System.out.println(thisCueFoul.getAllReasons());
@@ -130,11 +130,11 @@ public class LisEightGame extends ChineseEightBallGame {
                             System.out.println("开球黑八不选球");
                         }
                     } else {
-                        pickupBlackBall();
+                        pickupCriticalBall(getEightBall());
                         switchPlayer();
                     }
                 } else {  // 误进黑八
-                    pickupBlackBall();
+                    pickupCriticalBall(getEightBall());
                     switchPlayer();
                 }
                 return;

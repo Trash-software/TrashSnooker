@@ -68,7 +68,7 @@ public enum Achievement {
     WIN_A_MATCH(AchCat.GENERAL_MATCH),  // 已完成
     WIN_MATCHES(AchCat.GENERAL_MATCH, Type.CUMULATIVE, 3, 10, 50),  // 已完成
     WIN_ALL_MATCHES(AchCat.GENERAL_MATCH),  // 已完成
-    WIN_FRAMES_NORMAL_DIFFICULTY(AchCat.GENERAL_MATCH, Type.CUMULATIVE, 1, 5, 20),  // 已完成
+    WIN_FRAMES_NORMAL_DIFFICULTY(AchCat.GENERAL_MATCH, Type.CUMULATIVE),  // 已完成
     SEMIFINAL_STAGE(AchCat.GENERAL_MATCH),  // 已完成
     FINAL_STAGE(AchCat.GENERAL_MATCH),  // 已完成
     FINAL_FRAME(AchCat.GENERAL_MATCH),  // 已完成
@@ -131,6 +131,7 @@ public enum Achievement {
     CHINESE_EIGHT_NO_POT(AchCat.CHINESE_EIGHT, true),  // 已完成
 
     GOLDEN_NINE(AchCat.AMERICAN_NINE),  // 已完成
+    WHITE_GOLDEN_NINE(AchCat.AMERICAN_NINE, true),  // 已完成
     BALL_WORKER(AchCat.AMERICAN_NINE),  // 已完成
     PASS_NINE(AchCat.AMERICAN_NINE),  // 已完成
     AMERICAN_NINE_NO_POT(AchCat.AMERICAN_NINE, true),  // 已完成

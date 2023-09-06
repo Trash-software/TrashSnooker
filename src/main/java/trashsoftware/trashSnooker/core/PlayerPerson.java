@@ -471,15 +471,17 @@ public class PlayerPerson {
 
         return obj;
     }
-
-    public Cue getPreferredCue(GameRule gameRule) {
+    
+    public static Cue getPreferredCue(GameRule gameRule, PlayerPerson person) {
         Cue.Size[] suggested = gameRule.suggestedCues;
 
         // 先看私杆
-        for (Cue.Size size : suggested) {
-            // size是按照推荐顺序排的
-            for (Cue cue : getPrivateCues()) {
-                if (cue.tipSize == size) return cue;
+        if (person != null) {
+            for (Cue.Size size : suggested) {
+                // size是按照推荐顺序排的
+                for (Cue cue : person.getPrivateCues()) {
+                    if (cue.tipSize == size) return cue;
+                }
             }
         }
 
@@ -494,6 +496,10 @@ public class PlayerPerson {
 
         System.err.println("Using break cue to play");
         return DataLoader.getInstance().getStdBreakCue();  // 不会运行到这一步的
+    }
+
+    public Cue getPreferredCue(GameRule gameRule) {
+        return getPreferredCue(gameRule, this);
     }
 
     public double getSolving() {

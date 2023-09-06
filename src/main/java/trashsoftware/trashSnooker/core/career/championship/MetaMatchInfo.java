@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.career.championship;
 
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.career.ChampDataManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
 import trashsoftware.trashSnooker.core.career.ChampionshipStage;
@@ -50,6 +51,13 @@ public class MetaMatchInfo {
             System.err.println("Outdated match id format: " + matchId);
             return null;
         }
+    }
+
+    /**
+     * @return 这个matchId代表的比赛是否是使用这个playerId的career存档为human的比赛
+     */
+    public static boolean matchIdIsByCareer(@Nullable String matchId, String hostPlayerId) {
+        return matchId != null && matchId.startsWith(hostPlayerId + "+");
     }
 
     /**

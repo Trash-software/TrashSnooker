@@ -46,14 +46,14 @@ public class MatchRecord extends RecordTree {
 
         String[] winLost;
         int[] p1p2Wins = matchRec.getP1P2WinsCount();
-        if (p1p2Wins[0] < egt.totalFrames / 2 + 1 && p1p2Wins[1] < egt.totalFrames / 2 + 1) {
-            winLost = new String[]{"", "IN PROGRESS", ""};
-        } else {
+        if (matchRec.isFinished()) {
             if (p1p2Wins[0] > p1p2Wins[1]) {
                 winLost = new String[]{"WIN", "", "LOST"};
             } else {
                 winLost = new String[]{"LOST", "", "WIN"};
             }
+        } else {
+            winLost = new String[]{"", "IN PROGRESS", ""};
         }
         page.add(new Label(winLost[0]), 1, rowIndex);
         page.add(new Label(winLost[1]), 4, rowIndex);

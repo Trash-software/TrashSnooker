@@ -99,7 +99,7 @@ public class FastGameView extends ChildInitializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.strings = resources;
-        
+
         initTypeSelectionToggle();
         initGameTypeBox();
         initTotalFramesBox();
@@ -217,6 +217,10 @@ public class FastGameView extends ChildInitializable {
                 }
             }
             reloadTrainingItemByGameType(newValue);
+            PersonItem p1Item = player1Box.getValue();
+            PersonItem p2Item = player2Box.getValue();
+            selectSuggestedCue(player1CueBox, newValue, p1Item == null ? null : p1Item.person);
+            selectSuggestedCue(player2CueBox, newValue, p2Item == null ? null : p2Item.person);
         }));
 
         tableMetricsBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -285,15 +289,10 @@ public class FastGameView extends ChildInitializable {
                     if (newValue != null) {
                         infoButton.setDisable(false);
                         refreshCueList(cueBox);
-                        boolean sel = false;
                         for (Cue cue : newValue.person.getPrivateCues()) {
                             cueBox.getItems().add(new CueItem(cue, cue.getName()));
-                            if (!sel) {
-                                // 有私杆的人默认选择第一根私杆
-                                cueBox.getSelectionModel().select(cueBox.getItems().size() - 1);
-                                sel = true;
-                            }
                         }
+                        selectSuggestedCue(cueBox, gameRuleBox.getValue(), newValue.person);
                     } else {
                         infoButton.setDisable(true);
                     }
@@ -388,6 +387,23 @@ public class FastGameView extends ChildInitializable {
         showGame(values, cloth);
     }
 
+    public static void selectSuggestedCue(ComboBox<CueItem> cueBox, GameRule rule, PlayerPerson human) {
+        Cue humanSuggestedCue = PlayerPerson.getPreferredCue(rule, human);
+        selectCue(cueBox, humanSuggestedCue);
+    }
+
+    public static void selectCue(ComboBox<CueItem> cueBox, Cue cue) {
+        for (CueItem cueItem : cueBox.getItems()) {
+            if (cueItem.cue == cue) {
+                cueBox.getSelectionModel().select(cueItem);
+                return;
+            }
+        }
+
+        System.err.println("Cue '" + cue.getCueId() + "' not in list");
+        cueBox.getSelectionModel().select(0);
+    }
+
     private TrainType getTrainType() {
         if (gameTrainToggleGroup.getSelectedToggle().getUserData().equals("TRAIN")) {
             return trainingItemBox.getValue();
@@ -419,12 +435,12 @@ public class FastGameView extends ChildInitializable {
             }
             double p1RuleProficiency = player1Player.getValue() == PlayerType.COMPUTER ? p1.person.skillLevelOfGame(gameValues.rule) : 1.0;
             double p2RuleProficiency = player2Player.getValue() == PlayerType.COMPUTER ? p2.person.skillLevelOfGame(gameValues.rule) : 1.0;
-            
+
             Cue stdBreakCue = DataLoader.getInstance().getStdBreakCue();
             if (stdBreakCue == null ||
                     gameValues.rule == GameRule.SNOOKER ||
                     gameValues.rule == GameRule.MINI_SNOOKER) {
-                igp1 = new InGamePlayer(p1.person, player1CueBox.getValue().cue, player1Player.getValue(), 1, 
+                igp1 = new InGamePlayer(p1.person, player1CueBox.getValue().cue, player1Player.getValue(), 1,
                         p1RuleProficiency);
                 igp2 = new InGamePlayer(p2.person, player2CueBox.getValue().cue, player2Player.getValue(), 2,
                         p2RuleProficiency);
@@ -488,10 +504,10 @@ public class FastGameView extends ChildInitializable {
             return PlayerPerson.getPlayerCategoryShown(cat, App.getStrings());
         }
     }
-    
+
     public static class PersonItem {
         public final PlayerPerson person;
-        
+
         PersonItem(PlayerPerson person) {
             this.person = person;
         }

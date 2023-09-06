@@ -1114,8 +1114,6 @@ public class GameView implements Initializable {
         drawScoreBoard(game.getGame().getCuingPlayer(), false);
         game.getGame().getRecorder().stopRecording(true);
 
-        AchManager.getInstance().showAchievementPopup();
-
         if (gameValues.isTraining()) {
             boolean success = wonPlayer.getInGamePlayer().getPlayerNumber() == 1;
             String title = success ? strings.getString("challengeSuccess") :
@@ -1175,7 +1173,7 @@ public class GameView implements Initializable {
                         careerMatch.finish(wonPlayer.getPlayerPerson(), game.getP1Wins(), game.getP2Wins());
                     }
                     AchManager.getInstance().updateAfterMatchEnds(game);
-                    Platform.runLater(() -> AchManager.getInstance().showAchievementPopup());
+                    AchManager.getInstance().showAchievementPopup();
 
                     AlertShower.showInfo(stage,
                             String.format("%s (%d) : (%d) %s",
@@ -1191,9 +1189,7 @@ public class GameView implements Initializable {
                             this::closeWindowAction,
                             null);
                 } else {
-                    //                            if (game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
-                    //                                ss
-                    //                            }
+                    AchManager.getInstance().showAchievementPopup();
                     AlertShower.askConfirmation(
                             stage,
                             strings.getString("ifStartNextFrameContent"),

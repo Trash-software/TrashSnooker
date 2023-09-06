@@ -1,12 +1,15 @@
 import json
 import os
+import random
 
 try:
     from scipy import stats
+    import matplotlib.pyplot as plt
 except ModuleNotFoundError:
     print("缺少运行需要的组件")
     print("请打开cmd或PowerShell，运行以下命令后再次运行本程序")
     input("python -m pip install scipy")
+    input("python -m pip install matplotlib")
     exit(0)
 
 BASE_LEVEL_PERK = 2
@@ -18,6 +21,46 @@ def perk_range(level: int):
     low = max(1, round(PERK_RANDOM_RANGE[0] * mean))
     high = round(PERK_RANDOM_RANGE[1] * mean)
     return low, high
+
+
+def random_perk(p_range):
+    avail_perks = list(range(p_range[0], p_range[1] + 1))
+    return random.choice(avail_perks)
+
+
+def simulate_one(level):
+    return random_perk(perk_range(level))
+
+
+def simulate_life(dst_level):
+    level_perks = {}
+    for lv in range(2, dst_level + 1):
+        level_perks[lv] = simulate_one(lv)
+    return level_perks
+
+
+def simulate_multiple(n, dst_level):
+    res = []
+    for i in range(n):
+        res.append(simulate_life(dst_level))
+    return res
+
+
+def simulate_distribution(n, dst_level):
+    lives = simulate_multiple(n, dst_level)
+    results = []
+    for life in lives:
+        d = analyze_dict(life)
+        results.append(d)
+    cum_avg = [d['avg'] for d in results]
+    cum_p = [d['p'] for d in results]
+    plt.subplot(1, 2, 1)
+    plt.title("Percentage")
+    plt.hist(cum_avg, bins=40, range=(0, 1))
+    plt.subplot(1, 2, 2)
+    plt.title("Europe")
+    plt.hist(cum_p, range=(0, 1))
+    plt.show()
 
 
 def get_africa(p_value):
@@ -41,6 +84,32 @@ def get_africa(p_value):
         return "吃我一矛"
 
 
+def analyze_dict(level_perks):
+    lows = 0
+    highs = 0
+    got = 0
+    prob_list = []
+    for level, perk in level_perks.items():
+        rng = perk_range(level)
+        prob_list.append((perk - rng[0] + 0.5) / (rng[1] - rng[0] + 1))
+
+        lows += rng[0]
+        highs += rng[1]
+        got += perk
+
+    n = len(prob_list)
+    if n > 0:
+        # Bates distribution
+        avg = sum(prob_list) / n
+        expect = 0.5
+        variance = 1 / (12 * n)
+        sd = variance ** 0.5
+        z_score = (avg - expect) / sd
+        p = stats.norm.cdf(z_score)
+        return {"n": n, "lows": lows, "highs": highs, "got": got,
+                "avg": avg, "sd": sd, "p": p}
+
+
 def analyze(career_file):
     with open(career_file, "r", encoding="utf8") as jsf:
         js = json.load(jsf)
@@ -49,33 +118,18 @@ def analyze(career_file):
             if career["human"]:
                 if "levelAwards" in career:
                     level_awd = career["levelAwards"]
-                    lows = 0
-                    highs = 0
-                    got = 0
-                    prob_list = []
-                    for level, awd in level_awd.items():
-                        level = int(level)
-                        rng = perk_range(level)
-                        actual = awd["perks"]
-                        prob_list.append((actual - rng[0]) / (rng[1] - rng[0]))
-
-                        lows += rng[0]
-                        highs += rng[1]
-                        got += actual
-
-                    # Bates distribution
-                    n = len(prob_list)
-                    value = sum(prob_list) / n
-                    expect = 0.5
-                    variance = 1 / (12 * n)
-                    sd = variance ** 0.5
-                    z_score = (value - expect) / sd
-                    p = stats.norm.cdf(z_score)
-
-                    print("==========")
-                    print(f"{n}次升级记录在案，最少{lows}点，最多{highs}点，"
-                          f"你获得了{got}点，欧气程度：{round(p * 100, 2)}%")
-                    print("评价：" + get_africa(p))
+                    level_perks = {int(k): int(v["perks"]) for k, v in level_awd.items()}
+                    res = analyze_dict(level_perks)
+                    if res:
+                        print("==========")
+                        print(f"{res['n']}次升级记录在案，最少{res['lows']}点，最多{res['highs']}点，"
+                              f"你获得了{res['got']}点")
+                        print(f"平均每次抽奖获得了{round(res['avg'] * 100, 2)}%的点数"
+                              f"（sd={round(res['sd'] * 100, 2)}%），"
+                              f"欧气程度：{round(res['p'] * 100, 2)}%")
+                        print("评价：" + get_africa(res['p']))
+                    else:
+                        print("0.4版本之前的升级记录不纳入统计")
                 else:
                     print("0.4版本之前的升级记录不纳入统计")
                 return
@@ -101,11 +155,15 @@ if __name__ == '__main__':
                             if len(spl) == 2 and spl[0] == "name":
                                 num_car[str(len(num_car) + 1)] = \
                                     spl[1], "user/career/" + car + "/career.json"
+            print("0", "模拟")
             for num, car in num_car.items():
                 print(num, car[0])
 
             num_input = input("请输入球员编号")
-            if num_input in num_car:
+            if num_input == "0":
+                simulate_distribution(1000, 50)
+                exit(0)
+            elif num_input in num_car:
                 analyze(num_car[num_input][1])
             else:
                 print("找不到对象！")

@@ -27,6 +27,7 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
     protected boolean pushingOut;
     private boolean pushedOut;
     private boolean wasIllegalBreak;
+    private double nineBallPosX;
 
     public AmericanNineBallGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
         super(entireGame, gameSettings, gameValues, new SidePocketTable(gameValues.table), frameIndex);
@@ -106,7 +107,12 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
             double rowBalls = numBallsRow[row];
             double y = gameValues.table.midY - (gameValues.ball.ballRadius + Game.MIN_PLACE_DISTANCE) * (rowBalls - 1);
             for (int col = 0; col < rowBalls; ++col) {
-                placeOrder.get(index++).setXY(curX, y);
+                PoolBall ball = placeOrder.get(index++);
+                ball.setXY(curX, y);
+                if (ball.getValue() == 9) {
+                    nineBallPosX = curX;
+                }
+                
                 y += gameValues.ball.ballDiameter + Game.MIN_PLACE_DISTANCE;
             }
 
@@ -189,7 +195,15 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
         boolean baseFoul = checkStandardFouls(() -> 1);
 
         PoolBall nineBall = getNineBall();
-        if (baseFoul && nineBall.isPotted()) {  // 白球九号一起进
+        if (baseFoul && nineBall.isNotOnTable()) {  // 白球九号一起进
+            if (isBreaking) {
+                AchManager.getInstance().addAchievement(Achievement.WHITE_GOLDEN_NINE, getCuingIgp());
+                pickupCriticalBall(getNineBall());
+                cueBall.pot();
+                ballInHand = true;
+                switchPlayer();
+                return;
+            }
             winingPlayer = getAnotherPlayer();
             end();
             AchManager.getInstance().addAchievement(Achievement.SUICIDE, getCuingIgp());
@@ -204,6 +218,12 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
             
             pushedOut = true;
             pushingOut = false;
+
+            if (pottedBalls.contains(getNineBall())) {
+                // 推球时进了九号
+                pickupCriticalBall(getNineBall());
+                thisCueFoul.addFoul("potNineWhilePushing");
+            }
         } else if (whiteFirstCollide == null) {
             thisCueFoul.addFoul(strings.getString("emptyCue"), true);
         } else {
@@ -223,6 +243,10 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
                         breakStats.nBallsHitCushion
                 ));
             } else if (isIllegalBreak()) {
+                if (pottedBalls.contains(getNineBall())) {
+                    // 非法开球但进了九号
+                    pickupCriticalBall(getNineBall());
+                }
                 thisCueFoul.setHeaderReason(strings.getString("illegalBreak"));
                 thisCueFoul.addFoul(String.format(
                         strings.getString("breakLoseChanceDes"),
@@ -350,5 +374,10 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
     @Override
     public boolean wasIllegalBreak() {
         return wasIllegalBreak;
+    }
+
+    @Override
+    protected double criticalBallX() {
+        return nineBallPosX;
     }
 }

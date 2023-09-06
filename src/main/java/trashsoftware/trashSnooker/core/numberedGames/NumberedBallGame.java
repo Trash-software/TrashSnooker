@@ -39,6 +39,19 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
         super.withdraw(player);
     }
 
+    protected void pickupCriticalBall(PoolBall ball) {
+        double y = gameValues.table.midY;
+        for (double x = criticalBallX(); x < gameValues.table.rightX - gameValues.ball.ballRadius; x += 1.0) {
+            if (!isOccupied(x, y)) {
+                ball.setX(x);
+                ball.setY(y);
+                ball.pickup();
+                return;
+            }
+        }
+        throw new RuntimeException("Cannot place eight ball");
+    }
+
     protected void updateBreakStats(Set<PoolBall> newPotted) {
         int uniqueBallsHitCushion = 0;
         int acrossBreakLine = 0;
@@ -83,4 +96,9 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
     }
     
     public abstract int getNumBallsTotal();
+
+    /**
+     * @return 致胜球（8或9）的置球点x
+     */
+    protected abstract double criticalBallX();
 }

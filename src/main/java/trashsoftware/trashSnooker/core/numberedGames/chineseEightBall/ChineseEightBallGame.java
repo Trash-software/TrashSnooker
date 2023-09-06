@@ -388,20 +388,6 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         return isJustAfterBreak() && thisCueFoul.isFoul();  // 主要区别就是，ai计算的时候是在lastCueFoul=thisCueFoul之前
     }
 
-    protected void pickupBlackBall() {
-        double y = gameValues.table.midY;
-        for (double x = eightBallPosX; x < gameValues.table.rightX - gameValues.ball.ballRadius; x += 1.0) {
-            if (!isOccupied(x, y)) {
-                Ball eight = getEightBall();
-                eight.setX(x);
-                eight.setY(y);
-                eight.pickup();
-                return;
-            }
-        }
-        throw new RuntimeException("Cannot place eight ball");
-    }
-
     private void backLet(ChineseEightBallPlayer player) {
         if (player.getBallRange() == NOT_SELECTED_REP) return;
 
@@ -431,16 +417,16 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         if (baseFoul && getEightBall().isNotOnTable()) {  // 白球黑八一起进
             if (isBreaking) {
                 // 开球犯规但进黑八不算输
-                pickupBlackBall();
+                pickupCriticalBall(getEightBall());
                 cueBall.pot();
                 ballInHand = true;
                 switchPlayer();
                 return;
             }
             
-            end();
             AchManager.getInstance().addAchievement(Achievement.SUICIDE, getCuingIgp());
             winingPlayer = getAnotherPlayer();
+            end();
             return;
         }
 
@@ -480,7 +466,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             }
         }
 
-        if (thisCueFoul.isFoul() && !getEightBall().isPotted()) {
+        if (thisCueFoul.isFoul() && !getEightBall().isNotOnTable()) {
             cueBall.pot();
             ballInHand = true;
             switchPlayer();
@@ -513,7 +499,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
                 if (pottedBalls.contains(getEightBall())) {
                     // 开球失机但进了黑八
-                    pickupBlackBall();
+                    pickupCriticalBall(getEightBall());
                 }
                 switchPlayer();
                 return;
@@ -538,7 +524,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                     end();
                 } else if (currentTarget == NOT_SELECTED_REP) {
                     if (isBreaking) {
-                        pickupBlackBall();
+                        pickupCriticalBall(getEightBall());
                         if (thisCueFoul.isFoul()) {
                             cueBall.pot();
                             ballInHand = true;
@@ -642,5 +628,10 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     @Override
     protected void updateTargetPotFailed() {
 
+    }
+
+    @Override
+    protected double criticalBallX() {
+        return eightBallPosX;
     }
 }

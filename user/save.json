@@ -1,41 +1,37 @@
 {
-  "winRecords": {
-    "1": 1,
-    "2": 2,
-    "3": 1
-  },
-  "p2Wins": 1,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
-    "handFeelEffort": 1,
-    "person": "Murphy",
+    "handFeelEffort": 0.9,
+    "person": "Neil Robertson",
     "playerType": "COMPUTER",
-    "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
+    "playCue": "stdPoolCue",
+    "breakCue": "stdBreakCue"
   },
-  "p1Wins": 2,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "John Wizard",
+    "person": "custom_A7727D597A40BCB9",
     "playerType": "PLAYER",
-    "playCue": "stdSnookerCue",
-    "breakCue": "stdSnookerCue"
+    "playCue": "stdPoolCue",
+    "breakCue": "stdBreakCue"
   },
-  "startTime": 1693544783893,
+  "startTime": 1693980738884,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "SNOOKER_BALL",
-    "gameRule": "SNOOKER",
-    "devMode": true,
+    "ball": "POOL_BALL",
+    "gameRule": "AMERICAN_NINE",
+    "devMode": false,
     "table": {
-      "tableOrdinal": 0,
-      "pocketDifficultyOrdinal": 2,
-      "holeSizeOrdinal": 2
+      "tableOrdinal": 3,
+      "pocketDifficultyOrdinal": 0,
+      "holeSizeOrdinal": 1
     }
   },
-  "totalFrames": 5,
+  "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"

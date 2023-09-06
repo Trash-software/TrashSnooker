@@ -134,24 +134,7 @@ public class ChampDrawView extends ChildInitializable {
     private void refreshCueBox() {
         refreshCueBox(cueBox);
         PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();
-        selectSuggestedCue(human);
-    }
-
-    private void selectSuggestedCue(PlayerPerson human) {
-        Cue humanSuggestedCue = human.getPreferredCue(championship.getData().getType());
-        selectCue(humanSuggestedCue);
-    }
-
-    private void selectCue(Cue cue) {
-        for (FastGameView.CueItem cueItem : cueBox.getItems()) {
-            if (cueItem.cue == cue) {
-                cueBox.getSelectionModel().select(cueItem);
-                return;
-            }
-        }
-
-        System.err.println("Cue '" + cue.getCueId() + "' not in list");
-        cueBox.getSelectionModel().select(0);
+        FastGameView.selectSuggestedCue(cueBox, championship.getData().getType(), human);
     }
 
     private void initTable() {
@@ -244,7 +227,7 @@ public class ChampDrawView extends ChildInitializable {
                 InGamePlayer humanIgp = eg.getPlayer1().getPlayerType() == PlayerType.PLAYER ?
                         eg.getPlayer1() :
                         eg.getPlayer2();
-                selectCue(humanIgp.getPlayCue());
+                FastGameView.selectCue(cueBox, humanIgp.getPlayCue());
                 cueBox.setDisable(true);
                 setOpponentText(championship.findHumanNextOpponent());
             } else {

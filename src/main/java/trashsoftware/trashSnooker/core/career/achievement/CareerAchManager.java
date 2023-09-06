@@ -47,7 +47,7 @@ public class CareerAchManager extends AchManager {
     private final CareerSave careerSave;
     private final Map<Achievement, AchCompletion> recordedAchievements = new HashMap<>();  // 至少完成了一点点的
     private transient final Deque<AchCompletion> thisTimeComplete = new ArrayDeque<>();  // 记录这一杆完成的，在一次show之后清空
-//    private transient boolean popupShowing = false;
+    private transient boolean popupShowing = false;
 
     private final Font titleFont = Font.font(App.FONT.getFamily(), FontWeight.BLACK, 16.0);
 
@@ -521,6 +521,14 @@ public class CareerAchManager extends AchManager {
     protected final synchronized void showAchievement(Pane owner) {
         if (!thisTimeComplete.isEmpty()) {
             saveToDisk();
+//            while (popupShowing) {
+//                // busy waiting，确实也没办法
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
             showAchievement(owner, thisTimeComplete);
         }
     }
@@ -544,7 +552,7 @@ public class CareerAchManager extends AchManager {
             }
             return;
         }
-//        popupShowing = true;
+        popupShowing = true;
 
         Stage stage = new Stage();
 
@@ -620,7 +628,7 @@ public class CareerAchManager extends AchManager {
         SequentialTransition st = new SequentialTransition(shower, keeper, fader);
         st.setOnFinished(event -> {
             stage.hide();
-//            popupShowing = false;
+            popupShowing = false;
             if (!achievements.isEmpty()) {
                 showAchievement(owner, achievements);
             }

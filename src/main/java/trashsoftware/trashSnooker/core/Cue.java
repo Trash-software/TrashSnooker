@@ -72,7 +72,8 @@ public class Cue {
         if (cueTipWidth <= 9.8) tipSize = Size.VERY_SMALL;
         else if (cueTipWidth < 11.0) tipSize = Size.SMALL;
         else if (cueTipWidth < 12.5) tipSize = Size.MEDIUM;
-        else tipSize = Size.BIG;
+        else if (cueTipWidth < 14.5) tipSize = Size.BIG;
+        else tipSize = Size.HUGE;
     }
 
     @Override
@@ -208,6 +209,7 @@ public class Cue {
         VERY_SMALL,
         SMALL,
         MEDIUM,
-        BIG
+        BIG,
+        HUGE
     }
 }

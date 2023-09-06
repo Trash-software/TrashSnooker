@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
@@ -140,7 +141,9 @@ public class DBAccess {
                 List<EntireGameTitle> titles = getAllPveMatches(gameRule, playerId, false);
                 List<EntireGameRecord> entireRecords = new ArrayList<>();  // 是有序的
                 for (EntireGameTitle egt : titles) {
-                    entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));
+                    if (MetaMatchInfo.matchIdIsByCareer(egt.matchId, playerId)) {
+                        entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));
+                    }
                 }
                 int uniqueWins = getUniqueWins(
                         cam,
@@ -182,6 +185,7 @@ public class DBAccess {
     ) {
         Map<String, List<Integer>> oppoWinLostMap = new HashMap<>();  // 对于每个对手的胜负。0是玩家胜，1是对手胜
         for (EntireGameRecord egr : entireRecords) {
+            if (!egr.isFinished()) continue;  // 没完成的比赛不算
             EntireGameTitle egt = egr.getTitle();
             String oppoId;
             boolean oppoWin;

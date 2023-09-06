@@ -7,6 +7,7 @@ public abstract class EntireGameRecord {
     protected final EntireGameTitle title;
     protected final SortedMap<Integer, PlayerFrameRecord[]> frameRecords;
     protected final SortedMap<Integer, Integer> frameDurations;
+    private final int[] p1p2wins = new int[2];
 
     EntireGameRecord(EntireGameTitle title,
                      SortedMap<Integer, PlayerFrameRecord[]> frameRecords,
@@ -14,6 +15,8 @@ public abstract class EntireGameRecord {
         this.title = title;
         this.frameRecords = frameRecords;
         this.frameDurations = frameDurations;
+        
+        calculateP1P2Wins();
     }
 
     /**
@@ -39,17 +42,24 @@ public abstract class EntireGameRecord {
         }
         return res;
     }
-
-    public int[] getP1P2WinsCount() {
-        int[] res = new int[2];
+    
+    private void calculateP1P2Wins() {
         for (PlayerFrameRecord[] twoFrames : frameRecords.values()) {
             if (twoFrames[0].winnerName.equals(title.player1Id)) {
-                res[0]++;
+                p1p2wins[0]++;
             } else {
-                res[1]++;
+                p1p2wins[1]++;
             }
         }
-        return res;
+    }
+
+    public int[] getP1P2WinsCount() {
+        return p1p2wins;
+    }
+    
+    public boolean isFinished() {
+        int won = (int) Math.ceil((double) title.totalFrames / 2);
+        return p1p2wins[0] == won || p1p2wins[1] == won;
     }
 
     public EntireGameTitle getTitle() {
