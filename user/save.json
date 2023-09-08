@@ -1,40 +1,40 @@
 {
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
-    "handFeelEffort": 0.9,
-    "person": "Neil Robertson",
+    "handFeelEffort": 1,
+    "person": "custom_player_3",
     "playerType": "COMPUTER",
-    "playCue": "stdPoolCue",
-    "breakCue": "stdBreakCue"
+    "playCue": "GirlCue",
+    "breakCue": "GirlCue"
   },
-  "p1Wins": 1,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "custom_A7727D597A40BCB9",
+    "person": "Trump",
     "playerType": "PLAYER",
-    "playCue": "stdPoolCue",
-    "breakCue": "stdBreakCue"
+    "playCue": "TrumpCue",
+    "breakCue": "TrumpCue"
   },
-  "startTime": 1693980738884,
+  "startTime": 1694024969833,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "AMERICAN_NINE",
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
     "devMode": false,
     "table": {
-      "tableOrdinal": 3,
-      "pocketDifficultyOrdinal": 0,
-      "holeSizeOrdinal": 1
+      "tableOrdinal": 0,
+      "pocketDifficultyOrdinal": 4,
+      "holeSizeOrdinal": 4
     }
   },
   "totalFrames": 1,
   "cloth": {
-    "smoothness": "NORMAL",
-    "goodness": "GOOD"
+    "smoothness": "SLOW",
+    "goodness": "TERRIBLE"
   },
   "p1Breaks": true
 }
