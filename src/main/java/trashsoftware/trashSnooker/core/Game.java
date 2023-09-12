@@ -13,7 +13,6 @@ import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LisEightGa
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
-import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.core.table.Table;
@@ -286,17 +285,17 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public GameRecorder getRecorder() {
         return recorder;
     }
-    
+
     public void abortRecording() {
         getRecorder().abort();
         recorder = new InvalidRecorder();
     }
-    
+
     public void recordAttemptForAchievement(CueAttempt finishedAttempt, Player player) {
         if (finishedAttempt instanceof PotAttempt potAttempt) {
-            AiCue.AttackChoice attackChoice = AiCue.AttackChoice.createChoice(
+            AiCue.DirectAttackChoice directAttackChoice = AiCue.DirectAttackChoice.createChoice(
                     this,
-                    entireGame.predictPhy, 
+                    entireGame.predictPhy,
                     player,
                     potAttempt.getCueBallOrigPos(),
                     potAttempt.getTargetBall(),
@@ -306,10 +305,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     potAttempt.getTargetDirHole(),
                     potAttempt.getTargetBallOrigPos()
             );
-            if (attackChoice != null) {
+            if (directAttackChoice != null) {
                 CuePlayParams cpp = potAttempt.getCuePlayParams();
                 AiCue.AttackParam attackParam = new AiCue.AttackParam(
-                        attackChoice,
+                        directAttackChoice,
                         this,
                         entireGame.predictPhy,
                         cpp.cueParams
@@ -318,7 +317,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 if (attackParam.getPotProb() > 0.95 && !finishedAttempt.isSuccess()) {
                     int playerIndex = player.getInGamePlayer().getPlayerNumber() - 1;
                     int failed = ++achievementRecorder.easyBallFails[playerIndex];
-                    
+
                     if (failed >= 3) {
                         AchManager.getInstance().addAchievement(Achievement.MULTIPLE_EASY_FAILS, player.getInGamePlayer());
                     }
@@ -327,8 +326,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 System.out.println("Attack is null. Why?");
             }
         } else if (finishedAttempt instanceof DefenseAttempt defenseAttempt) {
-            
-        } 
+
+        }
     }
 
     public Movement cue(CuePlayParams params, Phy phy) {
@@ -437,7 +436,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             for (B ball : getAllBalls()) ball.clearMovement();
         }
     }
-    
+
     public void validateBalls() {
         for (B ball : getAllBalls()) {
             if (!ball.isNotOnTable()) {
@@ -447,13 +446,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 double moveY = 0;
                 if (ball.x < gameValues.table.leftX - gameValues.ball.ballRadius) {
                     moveX = 1;
-                } else if (ball.x > gameValues.table.rightX + gameValues.ball.ballRadius){
+                } else if (ball.x > gameValues.table.rightX + gameValues.ball.ballRadius) {
                     moveX = -1;
                 }
 
                 if (ball.y < gameValues.table.topY - gameValues.ball.ballRadius) {
                     moveY = 1;
-                } else if (ball.y > gameValues.table.botY + gameValues.ball.ballRadius){
+                } else if (ball.y > gameValues.table.botY + gameValues.ball.ballRadius) {
                     moveY = -1;
                 }
                 if (moveX != 0 || moveY != 0) {
@@ -495,7 +494,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //                y >= gameValues.table.topY + gameValues.ball.ballRadius &&
 //                y < gameValues.table.botY - gameValues.ball.ballRadius;
         if (!gameValues.isInTable(x, y, gameValues.ball.ballRadius)) return false;
-        
+
         for (Pocket pocket : gameValues.table.pockets) {
             // 在袋里
             if (Algebra.distanceToPoint(x, y, pocket.fallCenter[0], pocket.fallCenter[1]) < pocket.fallRadius + pocket.extraSlopeWidth) {
@@ -654,6 +653,209 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
         return true;
 
+    }
+
+    public List<DoublePotAiming> doublePotAble(double whiteX,
+                                               double whiteY,
+                                               Collection<Ball> legalBalls,
+                                               int cushionLimit) {
+        List<DoublePotAiming> list = new ArrayList<>();
+        for (Ball ball : legalBalls) {
+            double[] targetPos = new double[]{ball.x, ball.y};
+            for (Pocket pocket : gameValues.table.pockets) {
+                // 检查每个球去每个袋是否有翻袋线路
+                // 目前仅支持一库
+                Set<DoublePotAiming> c1 = singleCushionDouble(whiteX, whiteY, ball, targetPos, pocket);
+                if (!c1.isEmpty()) {
+                    list.addAll(c1);
+                }
+            }
+        }
+        return list;
+    }
+
+    private Set<DoublePotAiming> singleCushionDouble(double whiteX,
+                                                     double whiteY,
+                                                     Ball ball,
+                                                     double[] targetPos,
+                                                     Pocket pocket) {
+        // 用set是因为目前的算法来看，上方的库左右都是没有区别的，避免重复
+        Set<DoublePotAiming> result = new HashSet<>();
+        TableMetrics table = gameValues.table;
+        double radius = gameValues.ball.ballRadius;
+        double[] pocketOpenCenter = pocket.getOpenCenter(gameValues);
+
+        Cushion.EdgeCushion[] avail = getCushionCanSeePocket(pocket);
+        for (Cushion.EdgeCushion cushion : avail) {
+            // 这就是假想袋的位置
+            // todo: 没有考虑球的直径
+            double[] pocketSymPos = new double[]{pocketOpenCenter[0], pocketOpenCenter[1]};
+            double axisPointX = 0;
+            double axisPointY = 0;
+            if (cushion == table.leftCushion) {
+                // x基于左库往右半颗球处对称
+                axisPointX = table.leftX + radius;
+                pocketSymPos[0] = axisPointX - (pocketOpenCenter[0] - axisPointX);
+            } else if (cushion == table.rightCushion) {
+                axisPointX = table.rightX - radius;
+                pocketSymPos[0] = axisPointX + (axisPointX - pocketOpenCenter[0]);
+            } else if (cushion == table.topLeftCushion || cushion == table.topRightCushion) {
+                axisPointY = table.topY + radius;
+                pocketSymPos[1] = axisPointY - (pocketOpenCenter[1] - axisPointY);
+            } else if (cushion == table.botLeftCushion || cushion == table.botRightCushion) {
+                axisPointY = table.botY - radius;
+                pocketSymPos[1] = axisPointY + (axisPointY - pocketOpenCenter[1]);
+            } else {
+                throw new RuntimeException("Unexpected cushion " + cushion);
+            }
+            DoublePotAiming dpa = getDoublePotAiming(
+                    whiteX, whiteY,
+                    axisPointX, axisPointY,
+                    ball, 
+                    cushion,
+                    targetPos,
+                    pocket, 
+                    pocketOpenCenter,
+                    pocketSymPos);
+            if (dpa != null) result.add(dpa);
+        }
+        return result;
+    }
+
+    /**
+     * 一库翻袋的函数
+     */
+    private DoublePotAiming getDoublePotAiming(double whiteX,
+                                               double whiteY,
+                                               double axisPointX,  // x和y一个是0另一个不是
+                                               double axisPointY,
+                                               Ball ball,
+                                               Cushion cushion,
+                                               double[] targetPos,
+                                               Pocket pocket,
+                                               double[] pocketRealPos,
+                                               double[] pocketSymPos) {
+        double ballDirX = pocketSymPos[0] - targetPos[0];
+        double ballDirY = pocketSymPos[1] - targetPos[1];
+        double[] ballUnitDir = Algebra.unitVector(ballDirX, ballDirY);
+
+        double[] collPos = new double[]{
+                targetPos[0] - ballUnitDir[0] * gameValues.ball.ballDiameter,
+                targetPos[1] - ballUnitDir[1] * gameValues.ball.ballDiameter
+        };
+
+        if (!pointToPointCanPassBall(whiteX, whiteY,
+                collPos[0], collPos[1],
+                cueBall, ball,
+                true, true)) {
+            // 白球处看不到点
+            return null;
+        }
+
+        double[] whiteDir = Algebra.unitVector(collPos[0] - whiteX, collPos[1] - whiteY);
+        double angle = Algebra.thetaBetweenVectors(whiteDir, ballUnitDir);
+        if (angle >= Math.PI / 2) {
+            return null;  // 不可能打进
+        }
+
+        double[] cushionPoint;
+        if (axisPointX != 0) {
+            // 两侧（短库）
+            double ballToCushion = axisPointX - targetPos[0];
+            double ratio = ballToCushion / ballDirX;
+            if (ratio < 0) throw new RuntimeException();  // 一定同号，不然就是bug
+
+            double ballToCushion2 = ballDirY * ratio;
+            cushionPoint = new double[]{axisPointX, targetPos[1] + ballToCushion2};
+        } else {
+            // 上下（长）
+            double ballToCushion = axisPointY - targetPos[1];
+            double ratio = ballToCushion / ballDirY;
+            if (ratio < 0) throw new RuntimeException();  // 一定同号，不然就是bug
+
+            double ballToCushion2 = ballDirX * ratio;
+            cushionPoint = new double[]{targetPos[0] + ballToCushion2, axisPointY};
+        }
+
+        if (!pointToPointCanPassBall(targetPos[0], targetPos[1],
+                cushionPoint[0], cushionPoint[1],
+                ball, null,
+                true, true)) {
+            // 目标球看不到库点
+            return null;
+        }
+        if (!pointToPointCanPassBall(cushionPoint[0], cushionPoint[1],
+                pocketRealPos[0], pocketRealPos[1],
+                null, null,
+                true, true)) {
+            // 库点看不到袋
+            return null;
+        }
+
+//        System.out.println("Coll: " + Arrays.toString(collPos) + ", " +
+//                "cushion: " + cushion + ", " +
+//                "cushion point: " + Arrays.toString(cushionPoint) + ", " +
+//                "pocket: " + pocket.hole + ", " +
+//                "Symmetry: " + Arrays.toString(pocketSymPos));
+
+        return new DoublePotAiming(
+                ball,
+                targetPos,
+                pocket,
+                collPos,
+                List.of(cushionPoint),  // 一库
+                whiteDir,
+                1
+        );
+    }
+
+    /**
+     * 实际上就是返回看得到袋的库
+     */
+    private Cushion.EdgeCushion[] getCushionCanSeePocket(Pocket pocket) {
+        TableMetrics table = gameValues.table;
+
+        if (pocket.hole == TableMetrics.Hole.TOP_MID) {
+            return new Cushion.EdgeCushion[]{
+                    table.botLeftCushion,
+                    table.botRightCushion,
+//                    table.leftCushion,  // 底袋翻中怕是玄幻了点？
+//                    table.rightCushion
+            };
+        } else if (pocket.hole == TableMetrics.Hole.BOT_MID) {
+            return new Cushion.EdgeCushion[]{
+                    table.topLeftCushion,
+                    table.topRightCushion,
+//                    table.leftCushion,
+//                    table.rightCushion
+            };
+        } else if (pocket.hole == TableMetrics.Hole.TOP_LEFT) {
+            return new Cushion.EdgeCushion[]{
+                    table.botLeftCushion,
+                    table.botRightCushion,
+                    table.rightCushion
+            };
+        } else if (pocket.hole == TableMetrics.Hole.TOP_RIGHT) {
+            return new Cushion.EdgeCushion[]{
+                    table.botLeftCushion,
+                    table.botRightCushion,
+                    table.leftCushion
+            };
+        } else if (pocket.hole == TableMetrics.Hole.BOT_RIGHT) {
+            return new Cushion.EdgeCushion[]{
+                    table.topLeftCushion,
+                    table.topRightCushion,
+                    table.leftCushion
+            };
+        } else if (pocket.hole == TableMetrics.Hole.BOT_LEFT) {
+            return new Cushion.EdgeCushion[]{
+                    table.topLeftCushion,
+                    table.topRightCushion,
+                    table.rightCushion
+            };
+        } else {
+            throw new RuntimeException("No such pocket: " + pocket);
+        }
     }
 
     public SeeAble countSeeAbleTargetBalls(double whiteX, double whiteY,
@@ -1058,7 +1260,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         double[] whitePos = new double[]{cueBall.x, cueBall.y};
 
-        List<AiCue.AttackChoice> attackChoices = new ArrayList<>();
+        List<AiCue.DirectAttackChoice> directAttackChoices = new ArrayList<>();
 
         for (Ball ball : targets) {
             List<double[][]> dirHoles = directionsToAccessibleHoles(ball);
@@ -1071,7 +1273,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         collisionPointX, collisionPointY, getCueBall(), ball, true,
                         true)) {
                     // 从白球处看得到进球点
-                    AiCue.AttackChoice attackChoice = AiCue.AttackChoice.createChoice(
+                    AiCue.DirectAttackChoice directAttackChoice = AiCue.DirectAttackChoice.createChoice(
                             this,
                             entireGame.predictPhy,
                             player,
@@ -1083,16 +1285,16 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             dirHole,
                             null
                     );
-                    if (attackChoice != null) {
-                        attackChoices.add(attackChoice);
+                    if (directAttackChoice != null) {
+                        directAttackChoices.add(directAttackChoice);
                     }
                 }
             }
         }
-        if (!attackChoices.isEmpty()) {
+        if (!directAttackChoices.isEmpty()) {
             // 如果有进攻机会，就返回最简单的那颗球
-            Collections.sort(attackChoices);
-            AiCue.AttackChoice easiest = attackChoices.get(0);
+            Collections.sort(directAttackChoices);
+            AiCue.DirectAttackChoice easiest = directAttackChoices.get(0);
 //            double[] tole = easiest.leftRightTolerance();
 //            System.out.println("Tolerance: left " + tole[0] + ", right " + tole[1]);
             return easiest.getBall();
@@ -1157,7 +1359,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected void potSuccess() {
         potSuccess(false);
     }
-    
+
     public boolean isStarted() {
         return finishedCuesCount > 0;
     }
@@ -1207,7 +1409,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected P getAnotherPlayer() {
         return getAnotherPlayer(currentPlayer);
     }
-    
+
     public InGamePlayer getAnotherIgp(InGamePlayer igp) {
         return igp == player1.getInGamePlayer() ? player2.getInGamePlayer() : player1.getInGamePlayer();
     }
@@ -1235,6 +1437,52 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             this.seeAbleTargets = seeAbleTargets;
             this.avgTargetDistance = avgTargetDistance;
             this.maxShadowAngle = maxShadowAngle;
+        }
+    }
+
+    public static class DoublePotAiming {
+        public final Ball target;
+        public final double[] targetPos;
+        public final Pocket pocket;
+        public final double[] collisionPos;
+        public final List<double[]> cushionPos;  // 库点
+        public final double[] whiteAiming;  // 理论上的瞄球方向
+        public final int cushionCount;
+
+        DoublePotAiming(Ball target, 
+                        double[] targetPos,
+                        Pocket pocket,
+                        double[] collisionPos,
+                        List<double[]> cushionPos,
+                        double[] whiteAiming,
+                        int cushionCount) {
+            this.target = target;
+            this.targetPos = targetPos;
+            this.pocket = pocket;
+            this.collisionPos = collisionPos;
+            this.cushionPos = cushionPos;
+            this.whiteAiming = whiteAiming;
+            this.cushionCount = cushionCount;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            DoublePotAiming that = (DoublePotAiming) o;
+            return cushionCount == that.cushionCount &&
+                    Objects.equals(target, that.target) &&
+                    Objects.equals(pocket, that.pocket) &&
+                    Arrays.equals(collisionPos, that.collisionPos) &&
+                    Arrays.equals(whiteAiming, that.whiteAiming);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hash(target, pocket, cushionCount);
+            result = 31 * result + Arrays.hashCode(collisionPos);
+            result = 31 * result + Arrays.hashCode(whiteAiming);
+            return result;
         }
     }
 
@@ -1583,7 +1831,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         }
                         continue;
                     }
-                    
+
                     ObjectOnTable.CushionHitResult holeAreaResult = ball.tryHitHoleArea(phy);
                     if (holeAreaResult != null && holeAreaResult.result() != 0) {
                         // 袋口区域
@@ -1591,7 +1839,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         if (holeAreaResult.result() == 2) {
                             collidesWall = true;
                             recordHitCushion(ball);
-                            if (ball.isWhite()) 
+                            if (ball.isWhite())
                                 movement.getWhiteTrace().hitCushion(holeAreaResult.cushion());
                             else
                                 movement.getTraceOfBallNotNull(ball).hitCushion(holeAreaResult.cushion());
@@ -1722,7 +1970,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             return noHit;
         }
     }
-    
+
     public class FrameAchievementRecorder {
         int[] easyBallFails = new int[2];
     }

@@ -290,6 +290,7 @@ public class TableMetrics {
                 cornerHoleRadius;
 
         topLeft = new Pocket(
+                Hole.TOP_LEFT,
                 false,
                 topLeftSlateXY,
                 pocketDifficulty.cornerPocketFallRadius,
@@ -298,6 +299,7 @@ public class TableMetrics {
                 pocketDifficulty.cornerPocketGravityZone
         );
         topRight = new Pocket(
+                Hole.TOP_RIGHT,
                 false,
                 topRightSlateXY,
                 pocketDifficulty.cornerPocketFallRadius,
@@ -306,6 +308,7 @@ public class TableMetrics {
                 pocketDifficulty.cornerPocketGravityZone
         );
         botLeft = new Pocket(
+                Hole.BOT_LEFT,
                 false,
                 botLeftSlateXY,
                 pocketDifficulty.cornerPocketFallRadius,
@@ -314,6 +317,7 @@ public class TableMetrics {
                 pocketDifficulty.cornerPocketGravityZone
         );
         botRight = new Pocket(
+                Hole.BOT_RIGHT,
                 false,
                 botRightSlateXY,
                 pocketDifficulty.cornerPocketFallRadius,
@@ -322,6 +326,7 @@ public class TableMetrics {
                 pocketDifficulty.cornerPocketGravityZone
         );
         topMid = new Pocket(
+                Hole.TOP_MID,
                 true,
                 topMidFallCenter,
                 pocketDifficulty.midPocketFallRadius,
@@ -330,6 +335,7 @@ public class TableMetrics {
                 pocketDifficulty.midPocketGravityZone
         );
         botMid = new Pocket(
+                Hole.BOT_MID,
                 true,
                 botMidFallCenter,
                 pocketDifficulty.midPocketFallRadius,
@@ -752,7 +758,12 @@ public class TableMetrics {
 
     public enum Hole {
         TOP_LEFT, TOP_MID, TOP_RIGHT,
-        BOT_LEFT, BOT_MID, BOT_RIGHT
+        BOT_LEFT, BOT_MID, BOT_RIGHT;
+
+        @Override
+        public String toString() {
+            return name();
+        }
     }
 
     public static class Builder {

@@ -315,6 +315,17 @@ public class GameValues {
         double t2 = distance * 2 / acceleration;
         return Math.sqrt(t2);
     }
+    
+    public double[] getOpenCenter(TableMetrics.Hole hole) {
+        return switch (hole) {
+            case TOP_LEFT -> topLeftHoleOpenCenter;
+            case TOP_MID -> topMidHoleOpenCenter;
+            case TOP_RIGHT -> topRightHoleOpenCenter;
+            case BOT_RIGHT -> botRightHoleOpenCenter;
+            case BOT_MID -> botMidHoleOpenCenter;
+            case BOT_LEFT -> botLeftHoleOpenCenter;
+        };
+    }
 
     public TableMetrics.Hole getHoleOpenCenter(double[] pos) {
         if (Arrays.equals(pos, topLeftHoleOpenCenter)) return TableMetrics.Hole.TOP_LEFT;

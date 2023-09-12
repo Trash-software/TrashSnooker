@@ -42,6 +42,15 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     @Override
+    protected boolean currentMustAttack() {
+        if (game.getRemainingBallsOfPlayer(aiPlayer) <= 2 && 
+                game.getRemainingBallsOfPlayer(game.getAnotherPlayer(aiPlayer)) > 2) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     protected boolean supportAttackWithDefense(int targetRep) {
         return true;
     }
@@ -133,7 +142,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
         }
         
         double[] whitePos = new double[]{game.getCueBall().getX(), game.getCueBall().getY()};
-        List<AttackChoice> fullChoices = getAttackChoices(
+        List<DirectAttackChoice> fullChoices = getAttackChoices(
                 game,
                 ChineseEightBallGame.FULL_BALL_REP,
                 aiPlayer,
@@ -142,7 +151,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 whitePos,
                 false
         );
-        List<AttackChoice> halfChoices = getAttackChoices(
+        List<DirectAttackChoice> halfChoices = getAttackChoices(
                 game,
                 ChineseEightBallGame.HALF_BALL_REP,
                 aiPlayer,

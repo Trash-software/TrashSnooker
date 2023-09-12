@@ -7,7 +7,6 @@ import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
-import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
 
@@ -187,6 +186,10 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         return null;
     }
 
+    protected boolean currentMustAttack() {
+        return false;  // 已经在makeCue里面处理了
+    }
+
     @Override
     public AiCueResult makeCue(Phy phy) {
         int behind = -game.getScoreDiff(aiPlayer);
@@ -219,12 +222,20 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 if (iac != null) {
                     return makeAttackCue(iac);
                 }
+                IntegratedAttackChoice doublePotChoice = doubleAttack(phy, true);
+                if (doublePotChoice != null) {
+                    return makeAttackCue(doublePotChoice, AiCueResult.CueType.DOUBLE_POT);
+                }
             }
         } else if (currentTarget == AbstractSnookerGame.RAW_COLORED_REP && rem - 7 <= behind) {
             System.out.println("Near being over score and target is colored, must attack");
             IntegratedAttackChoice iac = standardAttack(phy, true);
             if (iac != null) {
                 return makeAttackCue(iac);
+            }
+            IntegratedAttackChoice doublePotChoice = doubleAttack(phy, true);
+            if (doublePotChoice != null) {
+                return makeAttackCue(doublePotChoice, AiCueResult.CueType.DOUBLE_POT);
             }
         }
         if (-behind > rem + 7 && currentTarget == 7) {
@@ -237,15 +248,15 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     }
 
     private IntegratedAttackChoice lastExhibitionShot(Phy phy) {
-        List<AttackChoice> choiceList = getCurrentAttackChoices();
+        List<DirectAttackChoice> choiceList = getCurrentAttackChoices();
         if (choiceList.isEmpty()) {
             System.out.println("Cannot exhibit!");
             return null;
         }
         System.out.println("Exhibition shot!");
 
-        AttackChoice choice = choiceList.get(0);
-        for (AttackChoice ac : choiceList.subList(1, choiceList.size())) {
+        DirectAttackChoice choice = choiceList.get(0);
+        for (DirectAttackChoice ac : choiceList.subList(1, choiceList.size())) {
             if (ac.defaultRef.price > choice.defaultRef.price) {
                 choice = ac;
             }
@@ -285,8 +296,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             );
         } else {
             System.out.println("Big power!");
-            int index = random.nextInt(SPIN_POINTS.length);
-            double[] spin = SPIN_POINTS[index];
+            int index = random.nextInt(ATTACK_SPIN_POINTS.length);
+            double[] spin = ATTACK_SPIN_POINTS[index];
             double powerLow = pp.getControllablePowerPercentage() * 0.7;
             double interval = pp.getControllablePowerPercentage() - powerLow;
             cueParams = CueParams.createBySelected(

@@ -1,7 +1,6 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.*;
-import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,18 +8,15 @@ import java.util.List;
 import java.util.Random;
 
 public class AiCueResult {
-    
+
     public static final double DEFAULT_AI_PRECISION = 13500.0;
     protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
-//    private final double selectedFrontBackSpin;  // 球手想要的高低杆，范围(-1.0, 1.0)，高杆正低杆负
-//    private final double selectedSideSpin;
-//    private final double selectedPower;
     private final CueParams cueParams;
     private final CueType cueType;
     private final double[] targetOrigPos;
     private final double[][] targetDirHole;
     private final Ball targetBall;
-//    private final PlayerPerson.HandSkill handSkill;
+    //    private final PlayerPerson.HandSkill handSkill;
     private final double frameImportance;
     private final boolean rua;
     private double unitX, unitY;
@@ -39,11 +35,11 @@ public class AiCueResult {
                        boolean rua) {
         this.unitX = unitX;
         this.unitY = unitY;
-        
+
         if (Double.isNaN(unitX) || Double.isNaN(unitY)) {
             throw new RuntimeException("Direction is NaN");
         }
-        
+
         this.cueParams = cueParams;
         this.cueType = cueType;
         this.targetOrigPos = targetOrigPos;
@@ -81,7 +77,7 @@ public class AiCueResult {
     }
 
     public boolean isAttack() {
-        return cueType == CueType.ATTACK;
+        return cueType == CueType.ATTACK || cueType == CueType.DOUBLE_POT;
     }
 
     public double[][] getTargetDirHole() {
@@ -140,6 +136,9 @@ public class AiCueResult {
         if (cueType == CueType.ATTACK) {
             sd = (100 - person.getAiPlayStyle().precision) / precisionFactor;  // 再歪也歪不了太多吧？
             System.out.println("Precision factor: " + precisionFactor + ", Random offset: " + sd);
+        } else if (cueType == CueType.DOUBLE_POT) {
+//            sd = 0.000000000001;  // 测试用
+            sd = (100 - person.getAiPlayStyle().doubleAbility) / precisionFactor;
         } else if (cueType == CueType.BREAK || gamePlayStage == GamePlayStage.BREAK) {
             sd = (100 - Math.max(person.getAiPlayStyle().precision,
                     person.getAiPlayStyle().defense)) / precisionFactor;
@@ -195,6 +194,7 @@ public class AiCueResult {
 
     public enum CueType {
         ATTACK,
+        DOUBLE_POT,
         DEFENSE,
         BREAK,
         SOLVE

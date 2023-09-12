@@ -30,6 +30,11 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
     }
 
     @Override
+    protected boolean currentMustAttack() {
+        return false;
+    }
+
+    @Override
     protected DefenseChoice breakCue(Phy phy) {
         return standardBreak();
     }

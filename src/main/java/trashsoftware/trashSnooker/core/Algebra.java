@@ -152,6 +152,7 @@ public class Algebra {
         if (theta > Math.PI) {
             theta = Math.PI * 2 - theta;
         }
+        if (theta < 0) throw new RuntimeException();
         return theta;
     }
 
