@@ -346,13 +346,20 @@ public class Util {
     }
     
     public static String moneyToReadable(int money) {
-//        if (money < 10000) {
-//            return String.valueOf(money);
-//        }
         Deque<String> out = new ArrayDeque<>();
+        boolean full = true;
         while (money > 0) {
-            out.addFirst(String.valueOf(money % 1000));
+            int m = money % 1000;
+            String s;
+            if (m == 0 && full) {
+                s = "000";
+            } else {
+                s = String.valueOf(m);
+            }
+            
+            out.addFirst(s);
             money /= 1000;
+            full = false;
         }
         return String.join(",", out);
     }

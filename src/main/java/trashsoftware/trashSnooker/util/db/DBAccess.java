@@ -25,7 +25,7 @@ import java.util.*;
 
 public class DBAccess {
     public static final boolean SAVE = true;
-    public static final boolean RECORD = false;
+    public static final boolean RECORD = true;
 
     private static final Map<GameRule, Map<String, Achievement>> ACHIEVEMENT_MAP = Map.of(
             GameRule.SNOOKER, Map.of(

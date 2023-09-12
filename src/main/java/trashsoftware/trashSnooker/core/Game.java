@@ -293,6 +293,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public void recordAttemptForAchievement(CueAttempt finishedAttempt, Player player) {
         if (finishedAttempt instanceof PotAttempt potAttempt) {
+            if (potAttempt.getTargetDirHole() == null) {
+                // todo: 翻袋
+                // 实际上是AI翻袋才会是null，只有ai代打时才会到这个分支
+                // 而AI代打理论上也不应该计入成就，所以其实也没有todo
+                // 确实是因为逻辑这么写有点太丑了
+                return;
+            }
+            
             AiCue.DirectAttackChoice directAttackChoice = AiCue.DirectAttackChoice.createChoice(
                     this,
                     entireGame.predictPhy,

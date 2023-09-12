@@ -84,6 +84,11 @@ public class PotAttempt extends CueAttempt {
     }
 
     public boolean isLongPot() {
+        if (targetDirHole == null) {
+            // todo: 是翻袋
+            return false;
+        }
+        
         double whiteTargetDt = Math.hypot(
                 targetBallOrigPos[0] - cueBallOrigPos[0],
                 targetBallOrigPos[1] - cueBallOrigPos[1]

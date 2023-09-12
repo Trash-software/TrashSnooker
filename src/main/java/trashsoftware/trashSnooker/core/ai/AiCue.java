@@ -519,6 +519,11 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             return null;
         }
 
+        Game[] gameClonesPool = new Game[nThreads];
+        for (int i = 0; i < gameClonesPool.length; i++) {
+            gameClonesPool[i] = game.clone();
+        }
+
         List<AttackThread> attackThreads = new ArrayList<>();
         for (AttackParam pureAttack : pureAttacks) {
             AttackThread thread = new AttackThread(
@@ -527,6 +532,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     nextTarget,
                     nextStepLegalBalls,
                     phy,
+                    gameClonesPool,
                     stage
             );
             attackThreads.add(thread);
@@ -591,10 +597,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         // 研究连打带跑
         List<DefensiveAttackThread> defensiveThreads = new ArrayList<>();
-        Game[] gameClonesPool = new Game[nThreads];
-        for (int i = 0; i < gameClonesPool.length; i++) {
-            gameClonesPool[i] = game.clone();
-        }
 
         List<Ball> legalBalls = game.getAllLegalBalls(game.getCurrentTarget(),
                 game.isDoingSnookerFreeBll(),
@@ -1844,6 +1846,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 nd = new NormalDistribution(0.0, Math.max(tarDevHoleSdMm * 2, 0.00001));
             } else if (attackChoice instanceof DoubleAttackChoice doubleAc) {
                 // 稍微给高点
+                // 除数越大，AI越倾向打翻袋
                 double targetDifficultyMm = targetAimingOffset * (105 - aps.doubleAbility) / 1000;
 
                 tarDevHoleSdMm += targetDifficultyMm;
@@ -2045,7 +2048,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         List<Ball> nextStepLegalBalls;
         Phy phy;
         GamePlayStage stage;
-        Game<?, ?> game2;  // todo: 这里的clone可以用线程池优化
+        Game[] gameClonesPool;
+//        Game<?, ?> game2;  // todo: 这里的clone可以用线程池优化
 
         IntegratedAttackChoice result;
 
@@ -2054,17 +2058,21 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                int nextTarget,
                                List<Ball> nextStepLegalBalls,
                                Phy phy,
+                               Game[] gameClonesPool,
                                GamePlayStage stage) {
             this.attackParams = attackParams;
             this.values = values;
             this.nextTarget = nextTarget;
             this.nextStepLegalBalls = nextStepLegalBalls;
             this.phy = phy;
+            this.gameClonesPool = gameClonesPool;
             this.stage = stage;
         }
 
         @Override
         public void run() {
+            int threadIndex = (int) (Thread.currentThread().getId() % gameClonesPool.length);
+            Game<?, P> copy = gameClonesPool[threadIndex];
             //        System.out.print(selectedPower);
             double actualFbSpin = attackParams.cueParams.actualFrontBackSpin();
             double actualSideSpin = attackParams.cueParams.actualSideSpin();
@@ -2089,10 +2097,9 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             );
             boolean checkPot = attackParams.attackChoice instanceof DoubleAttackChoice;
 //            game2 = checkPot ? game.clone() : game;
-            game2 = game;
             
             // 直接能打到的球，必不会在打到目标球之前碰库
-            WhitePrediction wp = game2.predictWhite(params, phy, 0.0,
+            WhitePrediction wp = copy.predictWhite(params, phy, 0.0,
                     true,
                     true, checkPot, true, false);
             if (wp.getFirstCollide() == null) {
@@ -2127,11 +2134,11 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 return;
             }
             double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
-            if (game2 instanceof AbstractSnookerGame asg) {
+            if (copy instanceof AbstractSnookerGame asg) {
                 asg.pickupPottedBallsLast(correctedChoice.attackTarget);
             }
             List<DirectAttackChoice> nextStepDirectAttackChoices =
-                    getAttackChoices(game2,
+                    getAttackChoices(copy,
                             nextTarget,
                             aiPlayer,
                             wp.getFirstCollide(),
@@ -2185,7 +2192,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         @Override
         public void run() {
-            int threadIndex = (int) (Thread.currentThread().getId() % nThreads);
+            int threadIndex = (int) (Thread.currentThread().getId() % gameClonesPool.length);
             Game<?, P> copy = gameClonesPool[threadIndex];
 
             double[] unitXY = Algebra.unitVectorOfAngle(rad);
@@ -2260,7 +2267,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         @Override
         public void run() {
-            int threadIndex = (int) (Thread.currentThread().getId() % nThreads);
+            int threadIndex = (int) (Thread.currentThread().getId() % gameClonesPool.length);
             Game<?, P> copy = gameClonesPool[threadIndex];
 
             double actualFbSpin = attackParam.cueParams.actualFrontBackSpin();

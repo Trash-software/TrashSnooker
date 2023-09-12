@@ -329,6 +329,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 AbstractSnookerGame.END_REP,
                 new ArrayList<>(),
                 phy,
+                new Game[]{game},
                 GamePlayStage.NO_PRESSURE
         );
         at.run();

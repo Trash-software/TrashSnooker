@@ -3,9 +3,9 @@
   "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
-    "handFeelEffort": 1,
-    "person": "Neil Robertson",
-    "playerType": "PLAYER",
+    "handFeelEffort": 0.5,
+    "person": "Mark Allen",
+    "playerType": "COMPUTER",
     "playCue": "stdPottsCue",
     "breakCue": "stdBreakCue"
   },
@@ -13,12 +13,12 @@
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 0.5,
-    "person": "Mark Allen",
+    "person": "Neil Robertson",
     "playerType": "COMPUTER",
     "playCue": "stdPottsCue",
     "breakCue": "stdBreakCue"
   },
-  "startTime": 1694543580578,
+  "startTime": 1694545108259,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
@@ -31,7 +31,7 @@
       "holeSizeOrdinal": 2
     }
   },
-  "totalFrames": 5,
+  "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
