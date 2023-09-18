@@ -188,7 +188,7 @@ public class GameTypeTree extends RecordTree {
                             egr.getTitle().totalFrames, k -> new int[2]);
             playerWinsInThisMatchSize[1]++;
             int[] p1p2wins = egr.getP1P2WinsCount();
-            totalFrames += egr.getTitle().totalFrames;
+            totalFrames += egr.getP1P2WinsCount()[0] + egr.getP1P2WinsCount()[1];
             boolean isFinal = false;
             if (egr.getTitle().totalFrames >= 3 && p1p2wins[0] + p1p2wins[1] == egr.getTitle().totalFrames) {
                 finalFrames++;

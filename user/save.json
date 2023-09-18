@@ -1,40 +1,43 @@
 {
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
+  "winRecords": {
+    "1": 2,
+    "2": 2
+  },
+  "p2Wins": 2,
   "p1": {
     "playerNumber": 1,
-    "handFeelEffort": 0.5,
-    "person": "Mark Allen",
-    "playerType": "COMPUTER",
+    "handFeelEffort": 1,
+    "person": "Neil Robertson",
+    "playerType": "PLAYER",
     "playCue": "stdPottsCue",
     "breakCue": "stdBreakCue"
   },
-  "p1Wins": 1,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 0.5,
-    "person": "Neil Robertson",
+    "person": "Trump",
     "playerType": "COMPUTER",
-    "playCue": "stdPottsCue",
+    "playCue": "TrumpCue",
     "breakCue": "stdBreakCue"
   },
-  "startTime": 1694545108259,
+  "startTime": 1694629579351,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
     "ball": "POOL_BALL",
     "gameRule": "CHINESE_EIGHT",
-    "devMode": false,
+    "devMode": true,
     "table": {
       "tableOrdinal": 1,
       "pocketDifficultyOrdinal": 2,
       "holeSizeOrdinal": 2
     }
   },
-  "totalFrames": 1,
+  "totalFrames": 3,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
   },
-  "p1Breaks": true
+  "p1Breaks": false
 }

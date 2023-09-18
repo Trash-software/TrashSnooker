@@ -19,7 +19,7 @@ public class SettingsView extends ChildInitializable {
     @FXML
     ComboBox<LocaleName> languageBox;
     @FXML
-    ComboBox<Integer> frameRateBox;
+    ComboBox<Integer> frameRateBox, prodFrameRateBox;
     @FXML
     ComboBox<Resolution> resolutionComboBox;
     @FXML
@@ -48,6 +48,7 @@ public class SettingsView extends ChildInitializable {
                 aimLingBox,
                 aiStrengthBox,
                 frameRateBox,
+                prodFrameRateBox,
                 languageBox,
                 resolutionComboBox,
                 systemZoomComboBox,
@@ -88,6 +89,11 @@ public class SettingsView extends ChildInitializable {
                 20, 24, 30, 40, 50, 60, 90, 120, 144, 165, 200, 240, 300, 400, 500
         );
         frameRateBox.getSelectionModel().select(Integer.valueOf(configLoader.getFrameRate()));
+
+        prodFrameRateBox.getItems().addAll(
+                30, 50, 60, 90, 120, 160, 240
+        );
+        prodFrameRateBox.getSelectionModel().select(Integer.valueOf(configLoader.getProductionFrameRate()));
 
         performanceBox.getItems().addAll(PredictionQuality.values());
         performanceBox.getSelectionModel().select(PredictionQuality.fromKey(configLoader.getString("performance",
@@ -214,6 +220,10 @@ public class SettingsView extends ChildInitializable {
 
         if (hasChanged(frameRateBox)) {
             configLoader.put("frameRate", frameRateBox.getValue());
+        }
+        
+        if (hasChanged(prodFrameRateBox)) {
+            configLoader.put("productionFrameRate", prodFrameRateBox.getValue());
         }
 
         if (hasChanged(aiThreadNumBox)) {

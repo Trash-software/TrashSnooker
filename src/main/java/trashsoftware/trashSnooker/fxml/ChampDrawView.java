@@ -11,7 +11,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Transform;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -62,7 +67,11 @@ public class ChampDrawView extends ChildInitializable {
     @FXML
     Button nextRoundButton, quitTournamentBtn;
     @FXML
+    Button zoomInBtn, zoomOutBtn;
+    @FXML
     ComboBox<TreeShowing> treeShowingBox;
+    @FXML
+    ScrollPane scrollPane;
 
     Championship championship;
     MatchTreeNode.PvAiSnapshot nextMatchSnapshot;
@@ -70,6 +79,12 @@ public class ChampDrawView extends ChildInitializable {
     int showingRounds;
 
     GraphicsContext gc2d;
+    Font font;
+    double zoomRatio = 1.0;
+    int zoomIndex = 6;
+    static final double[] allowedZooms = {
+            0.25, 0.35, 0.5, 0.625, 0.75, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.5
+    };
 
     double nodeHeight = 20;
     double nodeVGap = 24;
@@ -77,7 +92,7 @@ public class ChampDrawView extends ChildInitializable {
     double leftBlockWidth = 20.0;
     double rightBlockWidth = 20.0;
     double nodeHGap = nodeWidth + leftBlockWidth + rightBlockWidth + 20.0;
-    double width;
+    double width, height;
 
     CareerView parent;
     Stage selfStage;
@@ -107,14 +122,16 @@ public class ChampDrawView extends ChildInitializable {
         leftBlockWidth = championship.getData().getTotalPlaces() >= 100 ? 28 : 20;
         nodeHGap = nodeWidth + leftBlockWidth + rightBlockWidth + 20.0;  // recalculate
 
+        font = App.FONT;
         gc2d = treeCanvas.getGraphicsContext2D();
-        gc2d.setFont(App.FONT);
+        gc2d.setFont(font);
+//        gc2d.setTextAlign(TextAlignment.JUSTIFY);
 
         setupCheckbox();
         refreshCueBox();
         initTable();
         updateGui();
-        
+
         treeShowingBox.getSelectionModel().select(0);
     }
 
@@ -127,7 +144,7 @@ public class ChampDrawView extends ChildInitializable {
 //        showAllMatchesBox.selectedProperty().addListener((observable, oldValue, newValue) ->
 //                buildTreeGraph());
         treeShowingBox.getItems().addAll(TreeShowing.values());
-        treeShowingBox.getSelectionModel().selectedIndexProperty().addListener(((observable, oldValue, newValue) -> 
+        treeShowingBox.getSelectionModel().selectedIndexProperty().addListener(((observable, oldValue, newValue) ->
                 buildTreeGraph()));
     }
 
@@ -139,19 +156,19 @@ public class ChampDrawView extends ChildInitializable {
 
     private void initTable() {
         LabelTableColumn<MatchResItem, String> rankCol =
-                new LabelTableColumn<>(matchResTable, 
-                        strings.getString("rankTitle"), 
+                new LabelTableColumn<>(matchResTable,
+                        strings.getString("rankTitle"),
                         param ->
-                        new ReadOnlyStringWrapper(param.rank.getShown()));
+                                new ReadOnlyStringWrapper(param.rank.getShown()));
         LabelTableColumn<MatchResItem, Integer> awardCol =
                 new LabelTableColumn<>(matchResTable,
-                        ResourcesLoader.getInstance().createMoneyIcon(), 
+                        ResourcesLoader.getInstance().createMoneyIcon(),
                         param ->
-                        new ReadOnlyObjectWrapper<>(championship.getData().getAwardByRank(param.rank)));
+                                new ReadOnlyObjectWrapper<>(championship.getData().getAwardByRank(param.rank)));
         LabelTableColumn<MatchResItem, String> peopleCol =
                 new LabelTableColumn<>(matchResTable,
                         param ->
-                        new ReadOnlyStringWrapper(param.getPeopleString()));
+                                new ReadOnlyStringWrapper(param.getPeopleString()));
 
         matchResTable.addColumns(rankCol, awardCol, peopleCol);
     }
@@ -172,12 +189,12 @@ public class ChampDrawView extends ChildInitializable {
             if (humanWinRounds == 0) {
                 AchManager.getInstance().addAchievement(Achievement.ONE_ROUND_TOUR, null);
             }
-            
+
             checkAfterAllMatchesFinish();
             showCongratulation();
         }
     }
-    
+
     private void checkAfterAllMatchesFinish() {
         if (championship.isFinished()) {
             Career champion = championship.getChampion();
@@ -187,15 +204,15 @@ public class ChampDrawView extends ChildInitializable {
             }
             if (!champion.isHumanPlayer()) {
                 MatchTreeNode humanLost = championship.getHumanLostMatch();
-                if (humanLost != null && 
-                        humanLost.getStage() != ChampionshipStage.FINAL && 
+                if (humanLost != null &&
+                        humanLost.getStage() != ChampionshipStage.FINAL &&
                         humanLost.getWinner().getPlayerPerson().getPlayerId().equals(champion.getPlayerPerson().getPlayerId())) {
                     AchManager.getInstance().addAchievement(Achievement.DEFEAT_BY_CHAMPION, null);
                 }
             }
         }
     }
-    
+
     private void setOpponentText(MatchTreeNode.PvAiSnapshot snapshot) {
         nextMatchSnapshot = snapshot;
         opponentInfoBtn.setDisable(snapshot == null);
@@ -203,7 +220,7 @@ public class ChampDrawView extends ChildInitializable {
             humanOpponentLabel.setText("");
         } else {
             humanOpponentLabel.setText(String.format("%s vs %s",
-                    snapshot.p1().getPlayerPerson().getName(), 
+                    snapshot.p1().getPlayerPerson().getName(),
                     snapshot.p2().getPlayerPerson().getName()));
         }
     }
@@ -299,7 +316,7 @@ public class ChampDrawView extends ChildInitializable {
 
     private void showCongratulation() {
         AchManager.getInstance().showAchievementPopup();  // 展示比如获得冠军这些成就
-        
+
         SortedMap<ChampionshipScore.Rank, List<Career>> matchRes = championship.getResults();
 
         ChampionshipScore.Rank humanRank = null;
@@ -377,12 +394,38 @@ public class ChampDrawView extends ChildInitializable {
 
         super.backAction();
     }
-    
+
+    @FXML
+    public void zoomInAction() {
+        zoomRatio = allowedZooms[++zoomIndex];
+        zoomOutBtn.setDisable(zoomIndex == 0);
+        zoomInBtn.setDisable(zoomIndex == allowedZooms.length - 1);
+        
+        font = new Font(App.FONT.getName(), App.FONT.getSize() * zoomRatio);
+        gc2d.setFont(font);
+        gc2d.setLineWidth(zoomRatio);
+        buildTreeGraph();
+
+        System.out.println(zoomRatio + " " + font.getSize());
+    }
+
+    @FXML
+    public void zoomOutAction() {
+        zoomRatio = allowedZooms[--zoomIndex];
+        zoomOutBtn.setDisable(zoomIndex == 0);
+        zoomInBtn.setDisable(zoomIndex == allowedZooms.length - 1);
+        
+        font = new Font(App.FONT.getName(), App.FONT.getSize() * zoomRatio);
+        gc2d.setFont(font);
+        gc2d.setLineWidth(zoomRatio);
+        buildTreeGraph();
+    }
+
     @FXML
     public void opponentInfoAction() {
         if (nextMatchSnapshot != null) {
             PlayerPerson person = nextMatchSnapshot.p1().isHumanPlayer() ?
-                    nextMatchSnapshot.p2().getPlayerPerson() : 
+                    nextMatchSnapshot.p2().getPlayerPerson() :
                     nextMatchSnapshot.p1().getPlayerPerson();
             if (person != null) {
                 try {
@@ -574,15 +617,17 @@ public class ChampDrawView extends ChildInitializable {
 
         width = (showingRounds + 1) * nodeHGap;
 
-        treeCanvas.setWidth(width);
-        
         double maxY = assignPosition(rootNode, nodeVGap + nodeHeight);
 //        System.out.println(rootNode);
-        treeCanvas.setHeight(maxY + nodeVGap * 2);
+        height = maxY + nodeVGap * 2;
+        treeCanvas.setWidth(width * zoomRatio);
+        treeCanvas.setHeight(height * zoomRatio);
 
         // wipe
         gc2d.setFill(GameView.GLOBAL_BACKGROUND);
-        gc2d.fillRect(0, 0, treeCanvas.getWidth(), treeCanvas.getHeight());
+        gc2d.fillRect(0, 0,
+                treeCanvas.getWidth(),
+                treeCanvas.getHeight());
 
         drawTitles();
         drawTreeToGraph(rootNode, true, null);
@@ -592,12 +637,12 @@ public class ChampDrawView extends ChildInitializable {
         gc2d.setFill(Color.BLACK);
         gc2d.setStroke(Color.BLACK);
         for (int i = 0; i < showingRounds; i++) {
-            double x = getX(i + 1) + nodeWidth + leftBlockWidth;
             ChampionshipStage stage = championship.getData().getStages()[i];
             int totalFrames = championship.getData().getNFramesOfStage(stage);
             int winFrames = totalFrames / 2 + 1;
             String text = stage.getShown() + " " + totalFrames + "/" + winFrames;
-            gc2d.fillText(text, x, nodeHeight / 2);
+            double x = getX(i + 1) + nodeWidth + leftBlockWidth;
+            fillText(text, x, nodeHeight / 2);
         }
     }
 
@@ -622,9 +667,18 @@ public class ChampDrawView extends ChildInitializable {
         }
         double leftX = x1 + nodeWidth + leftBlockWidth + rightBlockWidth;
         double midX = (leftX + x2) / 2;
-        gc2d.strokeLine(leftX, y1, midX, y1);
-        gc2d.strokeLine(midX, y1, midX, parentY);
-        gc2d.strokeLine(midX, parentY, x2, parentY);
+        strokeLine(leftX,
+                y1,
+                midX,
+                y1);
+        strokeLine(midX,
+                y1,
+                midX,
+                parentY);
+        strokeLine(midX,
+                parentY,
+                x2,
+                parentY);
     }
 
     private void drawTreeToGraph(Node node, boolean isAlive, Node parent) {
@@ -636,9 +690,12 @@ public class ChampDrawView extends ChildInitializable {
         gc2d.setStroke(color);
 
         double y1 = y - nodeHeight / 2;
-        gc2d.strokeRect(x, y1, nodeWidth + leftBlockWidth + rightBlockWidth, nodeHeight);
-        gc2d.strokeLine(x + leftBlockWidth, y1, x + leftBlockWidth, y1 + nodeHeight);
-        gc2d.strokeLine(x + leftBlockWidth + nodeWidth, y1, x + leftBlockWidth + nodeWidth, y1 + nodeHeight);
+        strokeRect(x, 
+                y1,
+                nodeWidth  + leftBlockWidth + rightBlockWidth, 
+                nodeHeight);
+        strokeLine(x + leftBlockWidth, y1, x + leftBlockWidth, y1 + nodeHeight);
+        strokeLine(x + leftBlockWidth + nodeWidth, y1, x + leftBlockWidth + nodeWidth, y1 + nodeHeight);
         if (parent != null) {
 //            gc2d.strokeLine(x + nodeWidth + nodeBlockWidth, y, parent.x, parent.y);
             connectLineTo(x, y, parent.x, parent.y);
@@ -646,20 +703,19 @@ public class ChampDrawView extends ChildInitializable {
             if (completed) {
                 boolean isLeftChild = parent.left == node;
                 int winFrames = isLeftChild ? parent.node.getP1Wins() : parent.node.getP2Wins();
-                gc2d.fillText(String.valueOf(winFrames), x + leftBlockWidth + nodeWidth + 3, y + 3);
+                fillText(String.valueOf(winFrames), x + leftBlockWidth + nodeWidth + 3, y + 3);
             }
         }
-
-//        System.out.printf("Fill at %f, %f\n", x + leftBlockWidth + 3, y + 3);
+        
         if (node.node.isFinished()) {
             PlayerPerson person = node.node.getWinner().getPlayerPerson();
-            gc2d.fillText(person.getName(), x + leftBlockWidth + 3, y + 3);
+            fillText(person.getName(), x + leftBlockWidth + 3, y + 3);
             Integer rankSeed = championship.getCareerSeedMap().get(person.getPlayerId());
             if (rankSeed != null) {
-                gc2d.fillText(String.valueOf(rankSeed), x + 3, y + 3);
+                fillText(String.valueOf(rankSeed), x + 3, y + 3);
             }
         } else {
-            gc2d.fillText(strings.getString("undetermined"), x + leftBlockWidth + 3, y + 3);
+            fillText(strings.getString("undetermined"), x + leftBlockWidth + 3, y + 3);
         }
 
         if (node.left != null && node.right != null) {
@@ -678,6 +734,24 @@ public class ChampDrawView extends ChildInitializable {
             drawTreeToGraph(node.left, leftAlive, node);
             drawTreeToGraph(node.right, rightAlive, node);
         }
+    }
+    
+    private void strokeLine(double x1, double y1, double x2, double y2) {
+        gc2d.strokeLine(x1 * zoomRatio,
+                y1 * zoomRatio,
+                x2 * zoomRatio,
+                y2 * zoomRatio);
+    }
+
+    private void strokeRect(double x, double y, double w, double h) {
+        gc2d.strokeRect(x * zoomRatio,
+                y * zoomRatio,
+                w * zoomRatio,
+                h * zoomRatio);
+    }
+    
+    private void fillText(String text, double x, double y) {
+        gc2d.fillText(text, x * zoomRatio, y * zoomRatio);
     }
 
     private Node onlyBuildAlive(MatchTreeNode mtn, int depth, boolean recursive) {
@@ -754,7 +828,7 @@ public class ChampDrawView extends ChildInitializable {
         private int depth;
         private double y;
         private double x;
-        
+
         int height() {
             int leftH = left == null ? 0 : left.height();
             int rightH = right == null ? 0 : right.height();

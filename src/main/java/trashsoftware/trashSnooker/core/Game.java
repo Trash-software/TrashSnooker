@@ -23,6 +23,7 @@ import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.recorder.GameRecorder;
 import trashsoftware.trashSnooker.recorder.InvalidRecorder;
 import trashsoftware.trashSnooker.recorder.NaiveActualRecorder;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 
@@ -300,7 +301,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 // 确实是因为逻辑这么写有点太丑了
                 return;
             }
-            
+
             AiCue.DirectAttackChoice directAttackChoice = AiCue.DirectAttackChoice.createChoice(
                     this,
                     entireGame.predictPhy,
@@ -385,7 +386,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
      * @param lengthAfterWall          直接碰库后白球预测线的长度
      * @param predictPath              是否预测撞击之后的线路
      * @param checkCollisionAfterFirst 是否检查白球打到目标球后是否碰到下一颗球
-     * @param recordTargetPos          是否记录第一颗碰撞球的信息
+     * @param predictTargetBall        是否记录对第一颗碰撞球进行模拟
      * @param wipe                     是否还原预测前的状态
      * @param useClone                 是否使用拷贝的白球，仅为多线程服务
      */
@@ -394,7 +395,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                         double lengthAfterWall,
                                         boolean predictPath,
                                         boolean checkCollisionAfterFirst,
-                                        boolean recordTargetPos,
+                                        boolean predictTargetBall,
                                         boolean wipe,
                                         boolean useClone) {
         if (cueBall.isNotOnTable()) {
@@ -412,7 +413,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         WhitePredictor whitePredictor = new WhitePredictor(cueBallClone);
 //        long st = System.currentTimeMillis();
         WhitePrediction prediction =
-                whitePredictor.predict(phy, lengthAfterWall, predictPath, checkCollisionAfterFirst, recordTargetPos);
+                whitePredictor.predict(phy,
+                        lengthAfterWall,
+                        predictPath,
+                        checkCollisionAfterFirst,
+                        predictTargetBall);
 //        System.out.println("White prediction ms: " + (System.currentTimeMillis() - st));
 //        cueBall.setX(whiteX);
 //        cueBall.setY(whiteY);
@@ -719,10 +724,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             DoublePotAiming dpa = getDoublePotAiming(
                     whiteX, whiteY,
                     axisPointX, axisPointY,
-                    ball, 
+                    ball,
                     cushion,
                     targetPos,
-                    pocket, 
+                    pocket,
                     pocketOpenCenter,
                     pocketSymPos);
             if (dpa != null) result.add(dpa);
@@ -771,7 +776,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             // 两侧（短库）
             double ballToCushion = axisPointX - targetPos[0];
             double ratio = ballToCushion / ballDirX;
-            if (ratio < 0) throw new RuntimeException();  // 一定同号，不然就是bug
+            if (ratio < 0) {
+                // 一定同号，不然就是bug
+                EventLogger.error(String.format("ball to cus: %f, ball dirX: %f, ax x: %f",
+                        ballToCushion, ballDirX, axisPointX));
+                return null;
+            }
 
             double ballToCushion2 = ballDirY * ratio;
             cushionPoint = new double[]{axisPointX, targetPos[1] + ballToCushion2};
@@ -779,7 +789,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             // 上下（长）
             double ballToCushion = axisPointY - targetPos[1];
             double ratio = ballToCushion / ballDirY;
-            if (ratio < 0) throw new RuntimeException();  // 一定同号，不然就是bug
+            if (ratio < 0) {
+                // 一定同号，不然就是bug
+                EventLogger.error(String.format("ball to cus: %f, ball dirY: %f, ax y: %f",
+                        ballToCushion, ballDirY, axisPointY));
+                return null;
+            }
 
             double ballToCushion2 = ballDirX * ratio;
             cushionPoint = new double[]{targetPos[0] + ballToCushion2, axisPointY};
@@ -1457,7 +1472,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         public final double[] whiteAiming;  // 理论上的瞄球方向
         public final int cushionCount;
 
-        DoublePotAiming(Ball target, 
+        DoublePotAiming(Ball target,
                         double[] targetPos,
                         Pocket pocket,
                         double[] collisionPos,
@@ -1505,7 +1520,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private boolean hitWall;
         private boolean predictPath;
         private boolean checkCollisionAfterFirst;
-        private boolean recordTargetPos;
+        private boolean predictTargetBall;
         private Phy phy;
 
         WhitePredictor(Ball cueBallClone) {
@@ -1516,12 +1531,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                 double lenAfterWall,
                                 boolean predictPath,
                                 boolean checkCollisionAfterFirst,
-                                boolean recordTargetPos) {
+                                boolean predictTargetBall) {
             this.phy = phy;
             this.lenAfterWall = lenAfterWall;
             this.predictPath = predictPath;
             this.checkCollisionAfterFirst = checkCollisionAfterFirst;
-            this.recordTargetPos = recordTargetPos;
+            this.predictTargetBall = predictTargetBall;
 
 //            cueBallClone = cueBall.clone();
 
@@ -1550,7 +1565,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             cumulatedPhysicalTime += phy.calculateMs;
             boolean whiteRun = oneRunWhite();
             Ball firstBall = prediction.getFirstCollide();
-            if (recordTargetPos && firstBall != null) {
+            if (predictTargetBall && firstBall != null) {
                 boolean firstBallRun = oneRunFirstBall(firstBall);
                 return whiteRun && firstBallRun;
             } else {
@@ -1623,6 +1638,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                     tryPassSecondBall();
                 }
+                if (prediction.getFirstCollide() != null && predictTargetBall) {
+                    checkTwiceCollision();
+                }
                 cueBallClone.normalMove(phy);
                 return false;
             }
@@ -1634,6 +1652,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     tryWhiteHitBall();
                 } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                     tryPassSecondBall();
+                }
+                if (prediction.getFirstCollide() != null && predictTargetBall) {
+                    checkTwiceCollision();
                 }
                 if (holeAreaResult.result() == 2) {
                     if (!hitWall) {
@@ -1666,7 +1687,24 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                 tryPassSecondBall();
             }
+            if (prediction.getFirstCollide() != null && predictTargetBall) {
+                checkTwiceCollision();
+            }
             cueBallClone.normalMove(phy);
+            return false;
+        }
+
+        private boolean checkTwiceCollision() {
+            // assert true了应该
+            if (whiteFirstCollide != null) {
+//                System.out.println("Twice Dt: " + cueBallClone.predictedDtToPoint(whiteFirstCollide.x, whiteFirstCollide.y));
+                if (cueBallClone.predictedDtToPoint(whiteFirstCollide.x, whiteFirstCollide.y) <
+                        gameValues.ball.ballDiameter) {
+//                    System.out.println("Twice collision!");
+                    prediction.setTwiceColl(true);
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -1712,7 +1750,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
                         // todo: 确认是否考虑了齿轮效应
                         double ballInitVMmPerS = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
-                        if (!recordTargetPos) {
+                        if (!predictTargetBall) {
                             ball.vx = 0;
                             ball.vy = 0;
                         }

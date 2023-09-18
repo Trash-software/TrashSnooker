@@ -222,10 +222,10 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 if (iac != null) {
                     return makeAttackCue(iac);
                 }
-                IntegratedAttackChoice doublePotChoice = doubleAttack(phy, true);
-                if (doublePotChoice != null) {
-                    return makeAttackCue(doublePotChoice, AiCueResult.CueType.DOUBLE_POT);
-                }
+//                IntegratedAttackChoice doublePotChoice = doubleAttack(phy, true);
+//                if (doublePotChoice != null) {
+//                    return makeAttackCue(doublePotChoice, AiCueResult.CueType.DOUBLE_POT);
+//                }
             }
         } else if (currentTarget == AbstractSnookerGame.RAW_COLORED_REP && rem - 7 <= behind) {
             System.out.println("Near being over score and target is colored, must attack");
@@ -233,10 +233,10 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             if (iac != null) {
                 return makeAttackCue(iac);
             }
-            IntegratedAttackChoice doublePotChoice = doubleAttack(phy, true);
-            if (doublePotChoice != null) {
-                return makeAttackCue(doublePotChoice, AiCueResult.CueType.DOUBLE_POT);
-            }
+//            IntegratedAttackChoice doublePotChoice = doubleAttack(phy, true);
+//            if (doublePotChoice != null) {
+//                return makeAttackCue(doublePotChoice, AiCueResult.CueType.DOUBLE_POT);
+//            }
         }
         if (-behind > rem + 7 && currentTarget == 7) {
             IntegratedAttackChoice exhibition = lastExhibitionShot(phy);
@@ -248,15 +248,15 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     }
 
     private IntegratedAttackChoice lastExhibitionShot(Phy phy) {
-        List<DirectAttackChoice> choiceList = getCurrentAttackChoices();
+        List<AttackChoice> choiceList = getCurrentAttackChoices();
         if (choiceList.isEmpty()) {
             System.out.println("Cannot exhibit!");
             return null;
         }
         System.out.println("Exhibition shot!");
 
-        DirectAttackChoice choice = choiceList.get(0);
-        for (DirectAttackChoice ac : choiceList.subList(1, choiceList.size())) {
+        AttackChoice choice = choiceList.get(0);
+        for (AttackChoice ac : choiceList.subList(1, choiceList.size())) {
             if (ac.defaultRef.price > choice.defaultRef.price) {
                 choice = ac;
             }

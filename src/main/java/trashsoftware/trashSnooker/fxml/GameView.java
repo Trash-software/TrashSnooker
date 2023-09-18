@@ -95,10 +95,14 @@ public class GameView implements Initializable {
     private static final double WHITE_PREDICT_LEN_AFTER_WALL = 1000.0;  // todo: 根据球员
     private static final long DEFAULT_REPLAY_GAP = 1000;
     //    public static double scale;
-    public static int productionFrameRate = 60;  // 这两个是管物理运算的存档率的，也就是movement和回放文件的帧率
+
+    /**
+     * 这两个是管物理运算的存档率的，也就是movement和回放文件的帧率
+     */
+    public static int productionFrameRate = ConfigLoader.getInstance().getProductionFrameRate();
     public static double frameTimeMs = 1000.0 / productionFrameRate;
+
     private static double uiFrameTimeMs = 10.0;
-    //    private double minRealPredictLength = 300.0;
     private static double defaultMaxPredictLength = 1200;
     private final List<Node> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
     @FXML
@@ -2280,7 +2284,7 @@ public class GameView implements Initializable {
         if (aiHelpPlayerPlaying) {
             if (careerMatch != null) {
                 double playerGoodness = CareerManager.getInstance().getPlayerGoodness();
-                
+
                 AiCueResult.setAiPrecisionFactor(playerGoodness *
                         Career.AI_HELPER_PRECISION_FACTOR);  // 暗削自动击球
             } else {
@@ -2350,7 +2354,13 @@ public class GameView implements Initializable {
                 }
             }
 
-            AiCueResult cueResult = game.getGame().aiCue(player, game.predictPhy);
+            AiCueResult cueResult0 = null;
+            try {
+                cueResult0 = game.getGame().aiCue(player, game.predictPhy);
+            } catch (Exception e) {
+                EventLogger.error(e);
+            }
+            final AiCueResult cueResult = cueResult0;
             System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
 //            System.out.println(cueResult);
             if (cueResult == null) {

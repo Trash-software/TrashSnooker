@@ -38,6 +38,7 @@ public class WhitePrediction {
     
     private boolean hitWallBeforeHitBall;
     private boolean cueBallWillPot;
+    private boolean cueBallFirstBallTwiceColl;  // 二次碰撞
     
     // 非必选项
     private Ball whiteSecondCollide;
@@ -170,6 +171,14 @@ public class WhitePrediction {
 
     public boolean willFirstBallPot() {
         return firstBallWillPot;
+    }
+
+    public void setTwiceColl(boolean cueBallFirstBallTwiceColl) {
+        this.cueBallFirstBallTwiceColl = cueBallFirstBallTwiceColl;
+    }
+
+    public boolean isCueBallFirstBallTwiceColl() {
+        return cueBallFirstBallTwiceColl;
     }
 
     public double getFirstBallX() {

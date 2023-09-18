@@ -279,6 +279,7 @@ public class Career {
                 if (score.data.type == type) {
                     for (ChampionshipScore.Rank rank : score.ranks) {
                         int awd = score.data.getAwardByRank(rank);
+                        // todo: 没考虑平分奖金，如单杆最高、满分杆
                         completeAwards += awd;
                         if (rank.ranked) rankAwards += awd;
                     }

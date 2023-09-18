@@ -140,6 +140,10 @@ public class ConfigLoader {
     public int getFrameRate() {
         return getInt("frameRate", 120);
     }
+    
+    public int getProductionFrameRate() {
+        return getInt("productionFrameRate", 60);
+    }
 
     /**
      * @return 按照当前游戏设置，配合系统缩放算出来对应的javafx分辨率

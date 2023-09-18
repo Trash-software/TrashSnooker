@@ -64,16 +64,17 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
         double[] bestPos = null;
         double maxPrice = 0;
         for (double[] pos : legalPositions) {
-            List<AiCue.DirectAttackChoice> directAttackChoices = AiCue.getAttackChoices(
+            List<AiCue.AttackChoice> attackChoices = AiCue.getAttackChoices(
                     game,
                     target,
                     player,
                     null,
                     legalBalls,
                     pos,
-                    false
+                    false,
+                    true
             );
-            for (AiCue.DirectAttackChoice choice : directAttackChoices) {
+            for (AiCue.AttackChoice choice : attackChoices) {
                 if (choice.defaultRef.price > maxPrice) {
                     maxPrice = choice.defaultRef.price;
                     bestPos = pos;

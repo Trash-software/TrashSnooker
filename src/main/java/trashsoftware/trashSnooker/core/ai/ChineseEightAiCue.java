@@ -142,23 +142,25 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
         }
         
         double[] whitePos = new double[]{game.getCueBall().getX(), game.getCueBall().getY()};
-        List<DirectAttackChoice> fullChoices = getAttackChoices(
+        List<AttackChoice> fullChoices = getAttackChoices(
                 game,
                 ChineseEightBallGame.FULL_BALL_REP,
                 aiPlayer,
                 null,
                 fullLegals,
                 whitePos,
-                false
+                false,
+                true
         );
-        List<DirectAttackChoice> halfChoices = getAttackChoices(
+        List<AttackChoice> halfChoices = getAttackChoices(
                 game,
                 ChineseEightBallGame.HALF_BALL_REP,
                 aiPlayer,
                 null,
                 halfLegals,
                 whitePos,
-                false
+                false,
+                true
         );
         
         IntegratedAttackChoice fullAttack = attackGivenChoices(fullChoices, phy, false);

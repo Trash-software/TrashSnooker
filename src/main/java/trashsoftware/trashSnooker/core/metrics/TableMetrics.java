@@ -422,7 +422,7 @@ public class TableMetrics {
                 {botRightHoleSideArcXy.getCenter()[0], botY}, {botMidHoleRightArcXy.getCenter()[0], botY}
         });
         botLeftCushion = new Cushion.EdgeCushion("BOT_LEFT", new double[][]{
-                {botMidHoleLeftArcXy.getCenter()[0], botY}, {botRightHoleSideArcXy.getCenter()[0], botY}
+                {botMidHoleLeftArcXy.getCenter()[0], botY}, {botLeftHoleSideArcXy.getCenter()[0], botY}
         });
         leftCushion = new Cushion.EdgeCushion("LEFT", new double[][]{
                 {leftX, botLeftHoleEndArcXy.getCenter()[1]}, {leftX, topLeftHoleEndArcXy.getCenter()[1]}
