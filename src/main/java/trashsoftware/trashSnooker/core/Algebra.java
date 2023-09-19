@@ -182,6 +182,10 @@ public class Algebra {
         double ang = realMod(angleRad, TWO_PI);
         return ang > Math.PI ? ang - TWO_PI : ang;
     }
+    
+    public static double normalizeAngleDeg(double angleDeg) {
+        return Math.toDegrees(normalizeAngle(Math.toRadians(angleDeg)));
+    }
 
     /**
      * 把一个角转化为[0, 2PI)内

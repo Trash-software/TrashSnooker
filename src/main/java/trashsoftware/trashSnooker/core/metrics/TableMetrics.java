@@ -15,6 +15,7 @@ public class TableMetrics {
     public static final String POOL_TABLE_8 = "POOL_TABLE_8";
     public static final String POOL_TABLE_7 = "POOL_TABLE_7";
     public static final String POOL_TABLE_6 = "POOL_TABLE_6";
+    public static final String RUSSIAN = "RUSSIAN";
 
     public static final Color GREEN_TABLE_POCKET_LEATHER = Color.valueOf("#BB9977");
 
@@ -25,7 +26,8 @@ public class TableMetrics {
             AMERICAN_NINE,
             POOL_TABLE_8,
             POOL_TABLE_7,
-            POOL_TABLE_6
+            POOL_TABLE_6,
+            RUSSIAN
     };
     public final String tableName;
     public final TableBuilderFactory factory;
@@ -624,7 +626,7 @@ public class TableMetrics {
             }
         },
         POOL_TABLE_10("poolTable10",
-                PocketSize.SIDE_POCKET_HOLES,
+                PocketSize.AMERICAN_NINE_POCKETS,
                 PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
@@ -644,7 +646,7 @@ public class TableMetrics {
             }
         },
         POOL_TABLE_9("poolTable9",
-                PocketSize.SIDE_POCKET_HOLES,
+                PocketSize.AMERICAN_NINE_POCKETS,
                 PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
@@ -664,7 +666,7 @@ public class TableMetrics {
             }
         },
         POOL_TABLE_8("poolTable8",
-                PocketSize.SIDE_POCKET_HOLES,
+                PocketSize.AMERICAN_NINE_POCKETS,
                 PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
@@ -684,7 +686,7 @@ public class TableMetrics {
             }
         },
         POOL_TABLE_7("poolTable7",
-                PocketSize.SIDE_POCKET_HOLES,
+                PocketSize.AMERICAN_NINE_POCKETS,
                 PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
@@ -707,7 +709,7 @@ public class TableMetrics {
             }
         },
         POOL_TABLE_6("poolTable6",
-                PocketSize.SIDE_POCKET_HOLES,
+                PocketSize.AMERICAN_NINE_POCKETS,
                 PocketDifficulty.BLUE_TABLE_DIFFICULTIES) {
             @Override
             public Builder create() {
@@ -727,6 +729,29 @@ public class TableMetrics {
                                 1.15,
                                 0.9,
                                 0.8);
+            }
+        },
+        RUSSIAN("russianTable",
+                PocketSize.RUSSIAN_POCKETS,
+                PocketDifficulty.RUSSIAN_TABLE_DIFFICULTIES) {
+            @Override
+            public Builder create() {
+                return new Builder(this, TableMetrics.RUSSIAN)
+                        .tableColorLeather(Color.GREEN, 
+                                Color.SADDLEBROWN, 
+                                GREEN_TABLE_POCKET_LEATHER, 
+                                36.0)
+                        .tableDimension(3568.7,  // 140.5"
+                                1788.0,
+                                124,
+                                47.625,
+                                33.34)
+//                        .supportedHoles(SNOOKER_HOLES)
+                        .resistanceAndCushionBounce(1.0,
+                                0.86,
+                                0.85,
+                                0.8,
+                                0.35);
             }
         };
 

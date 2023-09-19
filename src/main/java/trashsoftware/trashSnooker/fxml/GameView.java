@@ -909,7 +909,7 @@ public class GameView implements Initializable {
         if (cueAnimationPlayer != null) {
             endCueAnimation();
         }
-//        oneFrame();
+        oneFrame();  // 处理一下比如说斯诺克捡起彩球这种，不然在AI算出来下一步之前，球不会显示
         drawScoreBoard(justCuedPlayer, true);
         drawTargetBoard(true);
         restoreCuePoint();
@@ -2309,19 +2309,29 @@ public class GameView implements Initializable {
             long st = System.currentTimeMillis();
             if (game.getGame().isBallInHand()) {
                 System.out.println("AI is trying to place ball");
-                double[] pos = AiCueBallPlacer.createAiCueBallPlacer(game.getGame(), player)
-                        .getPositionToPlaceCueBall();
+                long placeSt = System.currentTimeMillis();
+                AiCueBallPlacer<?, ?> cbp = AiCueBallPlacer.createAiCueBallPlacer(game.getGame(), player);
+                double[] pos = cbp.getPositionToPlaceCueBall();
                 if (pos == null) {
                     // Ai不知道摆哪了，认输
                     aiCalculating = false;
                     withdraw(player);
                     return;
                 }
-                System.out.println("AI placed cue ball at " + Arrays.toString(pos));
+                long placeEnd = System.currentTimeMillis();
+                System.out.println("AI placed cue ball at " + Arrays.toString(pos) + ", time: " + (placeEnd - placeSt));
 
                 game.getGame().placeWhiteBall(pos[0], pos[1]);
                 game.getGame().getRecorder().writeBallInHandPlacement();
-                Platform.runLater(this::draw);
+                if (cbp.getBallSpecified() != null) {
+                    game.getGame().setSpecifiedTarget(cbp.getBallSpecified());
+                }
+                aiCalculating = false;
+                Platform.runLater(() -> {
+                    cueButton.setText(strings.getString("aiCueText"));
+                    finishCueNextStep(player);
+                });
+                return;
             }
             if (gameValues.rule.snookerLike()) {
                 AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();

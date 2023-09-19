@@ -28,10 +28,13 @@ public class PocketSize {
             new PocketSize("pocketSmall", 82.55, 80),
             new PocketSize("pocketLittle", 77.47, 74.93)
     };
-    public static final PocketSize[] SIDE_POCKET_HOLES = {
+    public static final PocketSize[] AMERICAN_NINE_POCKETS = {
             new PocketSize("pocketLarge", 123.825, 133),
             new PocketSize("pocketStd", 117.475, 127),  // 中袋是mouth的直径
             new PocketSize("pocketSmall", 111.125, 120)
+    };
+    public static final PocketSize[] RUSSIAN_POCKETS = {
+            new PocketSize("pocketStd", 71.0, 80.0)
     };
     
     public final String key;

@@ -38,6 +38,13 @@ public class PocketDifficulty {
                     12.0, 0.25, 12.5,
                     76.2, 19.05)
     };
+    public static PocketDifficulty[] RUSSIAN_TABLE_DIFFICULTIES = {
+            new PocketDifficulty("normal",
+                    10.0, 0.25, -7.5, 80.0,
+                    0.5, 
+                    10.0, 0.25, -7.5,
+                    53.0, 10.0)
+    };
 
     public final String key;
     public final double cornerPocketGravityZone;

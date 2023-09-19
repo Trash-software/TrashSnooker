@@ -37,6 +37,10 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
     protected abstract List<double[]> legalPositions();
     
     protected abstract double[] breakPosition();
+    
+    public Ball getBallSpecified() {
+        return null;
+    }
 
     /**
      * 返回AI选定的放置白球位坐标，但并不真正放置白球
@@ -49,7 +53,7 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
         
         boolean justAfterBreak = false;
         if (game instanceof ChineseEightBallGame) {
-            justAfterBreak = ((ChineseEightBallGame) game).isJustAfterBreak();
+            justAfterBreak = game.isJustAfterBreak();
         }
         
         List<double[]> legalPositions = legalPositions();
@@ -64,7 +68,7 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
         double[] bestPos = null;
         double maxPrice = 0;
         for (double[] pos : legalPositions) {
-            List<AiCue.AttackChoice> attackChoices = AiCue.getAttackChoices(
+            List<AttackChoice> attackChoices = AiCue.getAttackChoices(
                     game,
                     target,
                     player,
@@ -74,7 +78,7 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
                     false,
                     true
             );
-            for (AiCue.AttackChoice choice : attackChoices) {
+            for (AttackChoice choice : attackChoices) {
                 if (choice.defaultRef.price > maxPrice) {
                     maxPrice = choice.defaultRef.price;
                     bestPos = pos;

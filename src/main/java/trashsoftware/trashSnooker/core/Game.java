@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core;
 
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
+import trashsoftware.trashSnooker.core.ai.AttackChoice;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.metrics.*;
@@ -92,6 +93,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     private boolean ended;
     private PhysicsCalculator physicsCalculator;
     protected FrameAchievementRecorder achievementRecorder = new FrameAchievementRecorder();
+    protected Ball specifiedTarget;
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
@@ -302,7 +304,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 return;
             }
 
-            AiCue.DirectAttackChoice directAttackChoice = AiCue.DirectAttackChoice.createChoice(
+            AttackChoice.DirectAttackChoice directAttackChoice = AttackChoice.DirectAttackChoice.createChoice(
                     this,
                     entireGame.predictPhy,
                     player,
@@ -377,6 +379,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public AiCueResult aiCue(Player aiPlayer, Phy phy) {
         AiCue<?, ?> aiCue = createAiCue((P) aiPlayer);
+        aiCue.setPresetTarget(specifiedTarget);
+        specifiedTarget = null;
         return aiCue.makeCue(phy);
     }
 
@@ -488,6 +492,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public void quitGame() {
     }
+    
+    public void forcePlaceWhiteNoRecord(double realX, double realY) {
+        cueBall.setX(realX);
+        cueBall.setY(realY);
+        cueBall.pickup();
+    }
 
     public void placeWhiteBall(double realX, double realY) {
         if (canPlaceWhite(realX, realY)) {
@@ -499,6 +509,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         } else {
             System.out.printf("Position %f, %f cannot place cue ball \n", realX, realY);
         }
+    }
+    
+    public void setSpecifiedTarget(Ball specifiedTarget) {
+        this.specifiedTarget = specifiedTarget;
+    }
+
+    public Ball getSpecifiedTarget() {
+        return specifiedTarget;
     }
 
     public boolean isInTable(double x, double y) {
@@ -1283,7 +1301,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         double[] whitePos = new double[]{cueBall.x, cueBall.y};
 
-        List<AiCue.DirectAttackChoice> directAttackChoices = new ArrayList<>();
+        List<AttackChoice.DirectAttackChoice> directAttackChoices = new ArrayList<>();
 
         for (Ball ball : targets) {
             List<double[][]> dirHoles = directionsToAccessibleHoles(ball);
@@ -1296,7 +1314,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         collisionPointX, collisionPointY, getCueBall(), ball, true,
                         true)) {
                     // 从白球处看得到进球点
-                    AiCue.DirectAttackChoice directAttackChoice = AiCue.DirectAttackChoice.createChoice(
+                    AttackChoice.DirectAttackChoice directAttackChoice = AttackChoice.DirectAttackChoice.createChoice(
                             this,
                             entireGame.predictPhy,
                             player,
@@ -1317,7 +1335,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         if (!directAttackChoices.isEmpty()) {
             // 如果有进攻机会，就返回最简单的那颗球
             Collections.sort(directAttackChoices);
-            AiCue.DirectAttackChoice easiest = directAttackChoices.get(0);
+            AttackChoice.DirectAttackChoice easiest = directAttackChoices.get(0);
 //            double[] tole = easiest.leftRightTolerance();
 //            System.out.println("Tolerance: left " + tole[0] + ", right " + tole[1]);
             return easiest.getBall();

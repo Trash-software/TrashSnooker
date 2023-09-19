@@ -32,7 +32,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         for (Ball ball : game.getAllBalls()) {
             if (ball.isRed() && !ball.isPotted()) {
                 allRedCount++;
-                double aliveScore = ballAlivePrice(ball);
+                double aliveScore = ballAlivePrice(game, ball);
                 if (aliveScore > ALIVE_THRESHOLD) aliveRedCount++;
                 selfBallAlivePrices.put(ball, aliveScore);
             }
@@ -40,26 +40,30 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     }
 
     @Override
-    protected double priceOfKick(Ball kickedBall, double kickSpeed, double dtFromFirst) {
-        if (aliveRedCount >= 2) return kickUselessBallPrice(dtFromFirst);  // 剩的多，不急着k
-        
-        Double alivePrice = selfBallAlivePrices.get(kickedBall);
-        if (alivePrice == null) return kickUselessBallPrice(dtFromFirst);
+    protected KickPriceCalculator kickPriceCalculator() {
+        return (kickedBall, kickSpeed, dtFromFirst) -> {
+            if (aliveRedCount >= 2) return kickUselessBallPrice(dtFromFirst);  // 剩的多，不急着k
 
-        double speedThreshold = Values.BEST_KICK_SPEED;
-        double speedMul;
-        if (kickSpeed > speedThreshold * 2) speedMul = 1.5;
-        else if (kickSpeed > speedThreshold) speedMul = 1.0;
-        else speedMul = 0.5;
+            Double alivePrice = selfBallAlivePrices.get(kickedBall);
+            if (alivePrice == null) return kickUselessBallPrice(dtFromFirst);
 
-        if (alivePrice == 0) return 2.0 * speedMul;
-        double kickPriority = 20.0 / alivePrice;
+            double speedThreshold = Values.BEST_KICK_SPEED;
+            double speedMul;
+            if (kickSpeed > speedThreshold * 2) speedMul = 1.5;
+            else if (kickSpeed > speedThreshold) speedMul = 1.0;
+            else speedMul = 0.5;
 
-        return Math.max(0.5, speedMul * Math.min(2.0, kickPriority));
+            if (alivePrice == 0) return 2.0 * speedMul;
+            double kickPriority = 20.0 / alivePrice;
+
+            return Math.max(0.5, speedMul * Math.min(2.0, kickPriority));
+        };
     }
 
+
+
     @Override
-    protected DefenseChoice breakCue(Phy phy) {
+    protected FinalChoice.DefenseChoice breakCue(Phy phy) {
         AiPlayStyle.SnookerBreakMethod method =
                 aiPlayer.getPlayerPerson().getAiPlayStyle().snookerBreakMethod;
 
@@ -68,7 +72,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         return predictiveRegularBreak(phy, leftBreak);
     }
     
-    private DefenseChoice predictiveRegularBreak(Phy phy, boolean leftBreak) {
+    private FinalChoice.DefenseChoice predictiveRegularBreak(Phy phy, boolean leftBreak) {
         double sign = leftBreak ? -1 : 1;
         
         double whiteX = game.getCueBall().getX();
@@ -103,7 +107,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         
         Set<Ball> suggestedTarget = game.getSuggestedRegularBreakBalls();
         PlayerPerson.HandSkill handSkill = aiPlayer.getPlayerPerson().handBody.getPrimary();
-        List<DefenseChoice> legalChoices = new ArrayList<>();
+        List<FinalChoice.DefenseChoice> legalChoices = new ArrayList<>();
         for (double deg = beginDeg, i = 0; i < nTicks; deg += tickDeg, i++) {
             double rad = Math.toRadians(deg);
             double[] unitXy = Algebra.unitVectorOfAngle(rad);
@@ -123,7 +127,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         cueParams,
                         0.0
                 );
-                DefenseChoice dc = analyseDefense(
+                FinalChoice.DefenseChoice dc = analyseDefense(
                         this,
                         cpp,
                         cueParams,
@@ -163,7 +167,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         return legalChoices.get(0);
     }
 
-    private DefenseChoice backBreak(Phy phy) {
+    private FinalChoice.DefenseChoice backBreak(Phy phy) {
         return null;
     }
 
@@ -176,13 +180,13 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             // 例外: 如果AI要打自由球，那就不直接放弃复位，因为我们无法避免AI打自由球直接贴球防守这种犯规打法
             return false;
         }
-        
-        IntegratedAttackChoice attackChoice = standardAttack(phy, false);
+
+        FinalChoice.IntegratedAttackChoice attackChoice = standardAttack(phy, false);
         return attackChoice == null || !attackChoice.isPureAttack;  // 先就这样吧，暂时不考虑更好的防一杆
     }
 
     @Override
-    protected DefenseChoice standardDefense() {
+    protected FinalChoice.DefenseChoice standardDefense() {
         return null;
     }
 
@@ -209,16 +213,16 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             if (currentTarget == 1) {
                 if (game.remainingRedCount() == 1) {
                     System.out.println("Last red, make snooker");
-                    DefenseChoice def = getBestDefenseChoice(phy);
+                    FinalChoice.DefenseChoice def = getBestDefenseChoice(phy);
                     if (def != null) return makeDefenseCue(def, AiCueResult.CueType.DEFENSE);
                 }
             } else if (currentTarget != AbstractSnookerGame.RAW_COLORED_REP) {
                 System.out.println("Ordered colors, make snooker");
-                DefenseChoice def = getBestDefenseChoice(phy);
+                FinalChoice.DefenseChoice def = getBestDefenseChoice(phy);
                 if (def != null) return makeDefenseCue(def, AiCueResult.CueType.DEFENSE);
             } else {
                 System.out.println("Being over score and target is colored, must attack");
-                IntegratedAttackChoice iac = standardAttack(phy, true);
+                FinalChoice.IntegratedAttackChoice iac = standardAttack(phy, true);
                 if (iac != null) {
                     return makeAttackCue(iac);
                 }
@@ -229,7 +233,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             }
         } else if (currentTarget == AbstractSnookerGame.RAW_COLORED_REP && rem - 7 <= behind) {
             System.out.println("Near being over score and target is colored, must attack");
-            IntegratedAttackChoice iac = standardAttack(phy, true);
+            FinalChoice.IntegratedAttackChoice iac = standardAttack(phy, true);
             if (iac != null) {
                 return makeAttackCue(iac);
             }
@@ -239,7 +243,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 //            }
         }
         if (-behind > rem + 7 && currentTarget == 7) {
-            IntegratedAttackChoice exhibition = lastExhibitionShot(phy);
+            FinalChoice.IntegratedAttackChoice exhibition = lastExhibitionShot(phy);
             if (exhibition != null) {
                 return makeAttackCue(exhibition);
             }
@@ -247,7 +251,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         return regularCueDecision(phy);
     }
 
-    private IntegratedAttackChoice lastExhibitionShot(Phy phy) {
+    private FinalChoice.IntegratedAttackChoice lastExhibitionShot(Phy phy) {
         List<AttackChoice> choiceList = getCurrentAttackChoices();
         if (choiceList.isEmpty()) {
             System.out.println("Cannot exhibit!");
@@ -330,7 +334,9 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 new ArrayList<>(),
                 phy,
                 new Game[]{game},
-                GamePlayStage.NO_PRESSURE
+                aiPlayer,
+                GamePlayStage.NO_PRESSURE,
+                null  // 没有球了，k谁
         );
         at.run();
         return at.result;

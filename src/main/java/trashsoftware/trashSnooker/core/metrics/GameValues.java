@@ -176,6 +176,12 @@ public class GameValues {
                 y < table.botY - r) {
             return true;
         }
+        if (x < table.leftX - table.cushionClothWidth || 
+                x >= table.rightX + table.cushionClothWidth || 
+                y < table.topY - table.cushionClothWidth || 
+                y >= table.botY + table.cushionClothWidth) {
+            return false;
+        }
         
         double[] pos = new double[]{x, y};
 
@@ -256,21 +262,6 @@ public class GameValues {
             
             return true;
         }
-        
-//        // 检测袋角弧线
-//        for (double[] cornerArc : table.allCornerArcs) {
-//            if (Algebra.distanceToPoint(x, y, cornerArc[0], cornerArc[1]) < table.cornerArcRadius + r) {
-//                return false;
-//            }
-//        }
-//        for (double[] midArc : table.allMidArcs) {
-//            if (Algebra.distanceToPoint(x, y, midArc[0], midArc[1]) < table.midArcRadius + r) {
-//                return false;
-//            }
-//        }
-//        
-//        // 检测袋角直线
-        
         return false;
     }
 
@@ -327,7 +318,7 @@ public class GameValues {
         };
     }
 
-    public TableMetrics.Hole getHoleOpenCenter(double[] pos) {
+    public TableMetrics.Hole getHoleByOpenCenter(double[] pos) {
         if (Arrays.equals(pos, topLeftHoleOpenCenter)) return TableMetrics.Hole.TOP_LEFT;
         else if (Arrays.equals(pos, topMidHoleOpenCenter)) return TableMetrics.Hole.TOP_MID;
         else if (Arrays.equals(pos, topRightHoleOpenCenter)) return TableMetrics.Hole.TOP_RIGHT;

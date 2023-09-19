@@ -1,9 +1,6 @@
 {
-  "winRecords": {
-    "1": 2,
-    "2": 2
-  },
-  "p2Wins": 2,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
@@ -15,13 +12,13 @@
   "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
-    "handFeelEffort": 0.5,
-    "person": "Trump",
+    "handFeelEffort": 1,
+    "person": "Give Emperor",
     "playerType": "COMPUTER",
-    "playCue": "TrumpCue",
+    "playCue": "stdPottsCue",
     "breakCue": "stdBreakCue"
   },
-  "startTime": 1694629579351,
+  "startTime": 1695152962064,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
@@ -34,10 +31,10 @@
       "holeSizeOrdinal": 2
     }
   },
-  "totalFrames": 3,
+  "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
   },
-  "p1Breaks": false
+  "p1Breaks": true
 }

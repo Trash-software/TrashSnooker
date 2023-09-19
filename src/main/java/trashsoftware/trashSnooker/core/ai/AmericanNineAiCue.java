@@ -15,8 +15,8 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
     }
 
     @Override
-    protected double priceOfKick(Ball kickedBall, double kickSpeed, double dtFromFirst) {
-        return kickUselessBallPrice(dtFromFirst);
+    protected KickPriceCalculator kickPriceCalculator() {
+        return ((kickedBall, kickSpeed, dtFromFirst) -> kickUselessBallPrice(dtFromFirst));
     }
 
     @Override
@@ -25,7 +25,7 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
     }
 
     @Override
-    protected DefenseChoice standardDefense() {
+    protected FinalChoice.DefenseChoice standardDefense() {
         return null;
     }
 
@@ -35,11 +35,11 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
     }
 
     @Override
-    protected DefenseChoice breakCue(Phy phy) {
+    protected FinalChoice.DefenseChoice breakCue(Phy phy) {
         return standardBreak();
     }
     
-    private DefenseChoice standardBreak() {
+    private FinalChoice.DefenseChoice standardBreak() {
         PoolBall cueBall = game.getCueBall();
         PoolBall oneBall = game.getBallByValue(1);
         double dirX = oneBall.getX() - cueBall.getX();
@@ -62,7 +62,7 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
                 cueParams,
                 5.0
         );
-        return new DefenseChoice(unitXY, cueParams, cpp);
+        return new FinalChoice.DefenseChoice(unitXY, cueParams, cpp);
     }
 
     @Override

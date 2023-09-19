@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.ai;
 
+import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallPlayer;
@@ -8,13 +9,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AmericanNineAiCueBallPlacer extends 
-        NumberedGameAiCueBallPlacer<AmericanNineBallGame, AmericanNineBallPlayer> {
+        TargetOrientedCueBallPlacer<AmericanNineBallGame, AmericanNineBallPlayer> {
     
     public AmericanNineAiCueBallPlacer(AmericanNineBallGame game, AmericanNineBallPlayer player) {
         super(game, player);
     }
 
     @Override
+    protected ALLOWED_POS currentAllowedPos() {
+        return ALLOWED_POS.FULL_TABLE;
+    }
+
+    @Override
+    protected List<Ball> targetsSortedByPrivilege() {
+        return List.of(game.getBallByValue(game.getCurrentTarget()));
+    }
+
+    @Override
+    protected List<double[]> legalPositions() {
+        List<double[]> legalPos;
+        double sep = 24;
+        do {
+            legalPos = legalPositions(sep);
+            sep *= 1.5;
+        } while (legalPos.isEmpty() && sep < 1000);
+
+        return legalPos;
+    }
+    
     protected List<double[]> legalPositions(double smallSep) {
         GameValues values = game.getGameValues();
         double xLimit = values.table.rightX - values.ball.ballRadius;

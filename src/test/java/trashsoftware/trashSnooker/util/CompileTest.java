@@ -8,5 +8,6 @@ public class CompileTest {
     @Test
     public void testDbCorrectlySet() {
         assert DBAccess.SAVE;
+        assert DBAccess.RECORD;
     }
 }

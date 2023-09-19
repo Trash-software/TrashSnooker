@@ -11,39 +11,39 @@ import java.util.List;
 import java.util.Map;
 
 public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightBallPlayer> {
-    
+
     private final Map<Ball, Double> selfBallAlivePrices = new HashMap<>();
 
     public ChineseEightAiCue(ChineseEightBallGame game, ChineseEightBallPlayer aiPlayer) {
         super(game, aiPlayer);
-        
+
         makeAlivePriceMap();
     }
-    
+
     private void makeAlivePriceMap() {
         int range = aiPlayer.getBallRange();
         if (range == ChineseEightBallGame.NOT_SELECTED_REP) return;
-        for (Ball ball : game.getAllLegalBalls(range, false, 
+        for (Ball ball : game.getAllLegalBalls(range, false,
                 false  // 是不是死球和线不线内无关
         )) {
-            selfBallAlivePrices.put(ball, ballAlivePrice(ball));
+            selfBallAlivePrices.put(ball, ballAlivePrice(game, ball));
         }
         Ball eight = game.getBallByValue(8);
-        selfBallAlivePrices.put(eight, ballAlivePrice(eight));
+        selfBallAlivePrices.put(eight, ballAlivePrice(game, eight));
     }
-    
+
     public static boolean isCenterBreak(ChineseEightBallPlayer player) {
         return !player.getPlayerPerson().getAiPlayStyle().cebSideBreak;
     }
 
     @Override
-    protected DefenseChoice standardDefense() {
+    protected FinalChoice.DefenseChoice standardDefense() {
         return null;
     }
 
     @Override
     protected boolean currentMustAttack() {
-        if (game.getRemainingBallsOfPlayer(aiPlayer) <= 2 && 
+        if (game.getRemainingBallsOfPlayer(aiPlayer) <= 2 &&
                 game.getRemainingBallsOfPlayer(game.getAnotherPlayer(aiPlayer)) > 2) {
             return true;
         }
@@ -56,7 +56,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     @Override
-    protected DefenseChoice breakCue(Phy phy) {
+    protected FinalChoice.DefenseChoice breakCue(Phy phy) {
         // todo: 小力开球和大力开球
 //        if (aiPlayer.getPlayerPerson().getControllablePowerPercentage() < 80.0) {
 //            
@@ -65,8 +65,8 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
 //        }
         return centerBreak();
     }
-    
-    private DefenseChoice centerBreak() {
+
+    private FinalChoice.DefenseChoice centerBreak() {
         double dirX = game.getTable().firstBallPlacementX() - game.getCueBall().getX();
         double dirY = game.getGameValues().table.midY - game.getCueBall().getY();
         double[] unitXY = Algebra.unitVector(dirX, dirY);
@@ -85,24 +85,26 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 cueParams,
                 5.0
         );
-        return new DefenseChoice(unitXY, cueParams, cpp);
+        return new FinalChoice.DefenseChoice(unitXY, cueParams, cpp);
     }
 
     @Override
-    protected double priceOfKick(Ball kickedBall, double kickSpeed, double dtFromFirst) {
-        Double alivePrice = selfBallAlivePrices.get(kickedBall);
-        if (alivePrice == null) return kickUselessBallPrice(dtFromFirst);
+    protected KickPriceCalculator kickPriceCalculator() {
+        return (kickedBall, kickSpeed, dtFromFirst) -> {
+            Double alivePrice = selfBallAlivePrices.get(kickedBall);
+            if (alivePrice == null) return kickUselessBallPrice(dtFromFirst);
 
-        double speedThreshold = Values.BEST_KICK_SPEED;
-        double speedMul;
-        if (kickSpeed > speedThreshold * 2) speedMul = 1.5;
-        else if (kickSpeed > speedThreshold) speedMul = 1.0;
-        else speedMul = 0.5;
-        
-        if (alivePrice == 0) return 2.0 * speedMul;
-        double kickPriority = 20.0 / alivePrice;  // alive price 本身大，那就不k最好
-        
-        return Math.max(0.5, speedMul * Math.min(2.0, kickPriority));
+            double speedThreshold = Values.BEST_KICK_SPEED;
+            double speedMul;
+            if (kickSpeed > speedThreshold * 2) speedMul = 1.5;
+            else if (kickSpeed > speedThreshold) speedMul = 1.0;
+            else speedMul = 0.5;
+
+            if (alivePrice == 0) return 2.0 * speedMul;
+            double kickPriority = 20.0 / alivePrice;  // alive price 本身大，那就不k最好
+
+            return Math.max(0.5, speedMul * Math.min(2.0, kickPriority));
+        };
     }
 
     @Override
@@ -113,20 +115,22 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
         }
         return regularCueDecision(phy);
     }
-    
-    private double priceOfSet(Collection<Ball> balls) {
+
+    public static double avgPriceOfSet(Game<?, ?> game, Collection<Ball> balls) {
         double price = 0.0;
         for (Ball ball : balls) {
-            price += ballAlivePrice(ball);
+            price += ballAlivePrice(game, ball);
         }
-        return price;
+        return price / balls.size();
     }
-    
+
     private AiCueResult selectBallCue(Phy phy) {
+        // todo: 这个price其实反过来，用difficulty更好
+        // todo: 因为球数也会影响，哪怕是平均，都没有difficulty准确
         List<Ball> fullBalls = game.getAllLegalBalls(ChineseEightBallGame.FULL_BALL_REP, false, false);
         List<Ball> halfBalls = game.getAllLegalBalls(ChineseEightBallGame.HALF_BALL_REP, false, false);
-        double fullPrice = priceOfSet(fullBalls);
-        double halfPrice = priceOfSet(halfBalls);
+        double fullPrice = avgPriceOfSet(game, fullBalls);
+        double halfPrice = avgPriceOfSet(game, halfBalls);
         System.out.printf("Selecting ball. Full price: %f, half price: %f\n", fullPrice, halfPrice);
 
         boolean isInLineHandBall = game.isInLineHandBallForAi();
@@ -140,7 +144,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
             fullLegals = fullBalls;
             halfLegals = halfBalls;
         }
-        
+
         double[] whitePos = new double[]{game.getCueBall().getX(), game.getCueBall().getY()};
         List<AttackChoice> fullChoices = getAttackChoices(
                 game,
@@ -162,10 +166,10 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 false,
                 true
         );
-        
-        IntegratedAttackChoice fullAttack = attackGivenChoices(fullChoices, phy, false);
-        IntegratedAttackChoice halfAttack = attackGivenChoices(halfChoices, phy, false);
-        
+
+        FinalChoice.IntegratedAttackChoice fullAttack = attackGivenChoices(fullChoices, phy, false);
+        FinalChoice.IntegratedAttackChoice halfAttack = attackGivenChoices(halfChoices, phy, false);
+
         if (fullAttack == null) {
             if (halfAttack != null) {
                 return makeAttackCue(halfAttack);
