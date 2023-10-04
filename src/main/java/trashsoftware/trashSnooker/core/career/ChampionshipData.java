@@ -41,6 +41,10 @@ public class ChampionshipData {
     TablePreset tablePreset;
     TableSpec tableSpec;
     BallMetrics ballMetrics;
+    private int registryFee;
+    private int seedRegistryFee;
+    private int flightFee;
+    private int hotelFee;
     private String description;
     private String sponsor;
 
@@ -127,6 +131,16 @@ public class ChampionshipData {
                         0);
         if (jsonObject.has("147")) {
             data.awards.put(ChampionshipScore.Rank.MAXIMUM, jsonObject.getInt("147"));
+        }
+        
+        if (jsonObject.has("fees")) {
+            JSONObject fees = jsonObject.getJSONObject("fees");
+            data.registryFee = fees.getInt("registry");
+            data.seedRegistryFee = fees.getInt("registrySeed");
+            data.flightFee = fees.getInt("flight");
+            data.hotelFee = fees.getInt("hotel");
+        } else {
+            System.err.println("Championship " + data.id + " contains no fees.");
         }
         
 //        System.out.println(data.id);
@@ -315,18 +329,34 @@ public class ChampionshipData {
         return awards;
     }
 
+    public int getRegistryFee() {
+        return registryFee;
+    }
+
+    public int getSeedRegistryFee() {
+        return seedRegistryFee;
+    }
+
+    public int getHotelFee() {
+        return hotelFee;
+    }
+
+    public int getFlightFee() {
+        return flightFee;
+    }
+    
+    public int getTotalFees(boolean isSeed) {
+        int registry = isSeed ? getSeedRegistryFee() : getRegistryFee();
+        return registry + getHotelFee() + getFlightFee();
+    }
+
     private TableMetrics.TableBuilderFactory tableType() {
-        switch (type) {
-            case SNOOKER:
-                return TableMetrics.TableBuilderFactory.SNOOKER;
-            case CHINESE_EIGHT:
-            case LIS_EIGHT:
-                return TableMetrics.TableBuilderFactory.CHINESE_EIGHT;
-            case AMERICAN_NINE:
-                return TableMetrics.TableBuilderFactory.POOL_TABLE_9;
-            default:
-                throw new RuntimeException("Unknown game type " + type);
-        }
+        return switch (type) {
+            case SNOOKER -> TableMetrics.TableBuilderFactory.SNOOKER;
+            case CHINESE_EIGHT, LIS_EIGHT -> TableMetrics.TableBuilderFactory.CHINESE_EIGHT;
+            case AMERICAN_NINE -> TableMetrics.TableBuilderFactory.POOL_TABLE_9;
+            default -> throw new RuntimeException("Unknown game type " + type);
+        };
     }
 
     public Calendar toCalendar(int year) {

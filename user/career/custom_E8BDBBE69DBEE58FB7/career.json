@@ -7083,8 +7083,17 @@
         "CHINESE_EIGHT": 1,
         "AMERICAN_NINE": 1
       },
-      "money": 30120,
-      "availPerks": 58,
+      "money": 19720,
+      "invoices": [{
+        "perkUsed": 1,
+        "moneyCost": 10400,
+        "ability": {"cuePrecision": [
+          86.60887584775675,
+          88.27843205536891
+        ]},
+        "type": "upgrade"
+      }],
+      "availPerks": 56,
       "completedChallenges": [
         {
           "id": "pool-full-regular",
@@ -19390,8 +19399,8 @@
   ],
   "beginTimestamp": "2023/1/20",
   "aiGoodness": 0.15,
-  "checksum": "BAAD07A0695F5CCDE9B155D0FF7D28AD",
+  "checksum": "D09139FAF7BC0644078C349A8F8EDD19",
   "playerGoodness": 3,
-  "version": 43,
+  "version": 45,
   "timestamp": "2024/9/25"
 }

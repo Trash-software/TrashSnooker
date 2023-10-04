@@ -4,7 +4,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Point3D;
+import javafx.scene.AmbientLight;
 import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
@@ -15,9 +17,8 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import trashsoftware.trashSnooker.core.Cue;
-import trashsoftware.trashSnooker.fxml.drawing.CueModel;
-import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.fxml.drawing.CueModel3D;
+import trashsoftware.trashSnooker.fxml.drawing.TruncateCone;
 
 public class TestApp extends Application {
     private double x = 300, y = 300;
@@ -27,6 +28,31 @@ public class TestApp extends Application {
     double vy = 3;
     Rotate rotate1 = new Rotate();
     Rotate rotate2 = new Rotate();
+    
+    private void testCone(Pane group) {
+        CueModel3D cueModel3D = CueModel3D.makeDefault();
+        
+        cueModel3D.setTranslateX(200);
+        cueModel3D.setTranslateY(100);
+
+        Rotate xRotate = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
+        Rotate yRotate = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
+        Rotate zRotate = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
+        
+//        xRotate.setAngle(45);
+//        zRotate.setAngle(90);
+        
+        cueModel3D.getTransforms().addAll(xRotate, yRotate, zRotate, new Scale(0.35, 0.35, 0.35));
+        
+        group.getChildren().add(cueModel3D);
+
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(20), e -> {
+            yRotate.setAngle(yRotate.getAngle() + 1);
+        }));
+        timeline.setCycleCount(500);
+        timeline.play();
+    }
     
     private void testBallRotate(Pane group) {
         Sphere sphere = new Sphere(ballRadius);
@@ -157,23 +183,27 @@ public class TestApp extends Application {
         Pane group = new Pane();
         Canvas canvas = new Canvas();
 
-        canvas.setHeight(720);
-        canvas.setWidth(1280);
+        canvas.setHeight(500);
+        canvas.setWidth(1440);
         canvas.getGraphicsContext2D().setFill(Color.GREEN);
-        canvas.getGraphicsContext2D().fillRect(0, 0, 1280, 720);
+        canvas.getGraphicsContext2D().fillRect(0, 0, 1440, 500);
 
         group.getChildren().add(canvas);
+
+//        AmbientLight light = new AmbientLight();
+//        group.getChildren().add(light);
         
-        testBallRotate(group);
+        testCone(group);
+//        testBallRotate(group);
 //        testCue(group);
 //        testGradient(group, canvas);
         
-        Scene scene = new Scene(group);
+        Scene scene = new Scene(group, -1, -1,false, SceneAntialiasing.BALANCED);
 
         primaryStage.setScene(scene);
 
         primaryStage.show();
-
+        primaryStage.setY(50);
     }
     
     private double[] getEulerAngles(Rotate r) {

@@ -65,6 +65,8 @@ public class CareerView extends ChildInitializable {
     @FXML
     Label nextChampionshipLabel, champInProgLabel, champInProgStageLabel;
     @FXML
+    Label registryFeeLabel, travelFeeLabel, totalFeeLabel;
+    @FXML
     CheckBox joinChampBox;
     //    @FXML
 //    Label champAwardsLabel1, champAwardsLabel2;
@@ -346,6 +348,14 @@ public class CareerView extends ChildInitializable {
         rankingTable.getSelectionModel().selectedItemProperty()
                 .addListener(((observable, oldValue, newValue) -> refreshSelectedPlayerTable(newValue)));
     }
+    
+    private void updateMoneyLabel(int money, int moneyCost) {
+        String moneyStr = Util.moneyToReadable(money);
+        if (moneyCost != 0) {
+            moneyStr += " - " + moneyCost;
+        }
+        moneyLabel.setText(moneyStr);
+    }
 
     public void refreshGui() {
         HumanCareer myCareer = careerManager.getHumanPlayerCareer();
@@ -359,8 +369,9 @@ public class CareerView extends ChildInitializable {
         levelUpBtn.setVisible(canLevelUp);
         levelUpBtn.setDisable(!canLevelUp);
         
-        int money = myCareer.getMoney();
-        moneyLabel.setText(Util.moneyToReadable(money));
+        int money = careerManager.getHumanPlayerCareer().getMoney();
+        int moneyCost = perkManager.getCost();
+        updateMoneyLabel(money, moneyCost);
         
         int ach = AchManager.getInstance().getNCompletedAchievements();
         achievementsLabel.setText(String.valueOf(ach));
@@ -384,7 +395,8 @@ public class CareerView extends ChildInitializable {
             ChampionshipData.WithYear nextData = careerManager.nextChampionshipData();
             data = nextData.data;
 
-            if (careerManager.humanPlayerQualifiedToJoin(data, data.getSelection())) {
+            boolean humanQualified = careerManager.humanPlayerQualifiedToJoin(data, data.getSelection());
+            if (humanQualified) {
                 joinChampBox.setDisable(false);
                 joinChampBox.setSelected(true);
             } else {
@@ -392,6 +404,11 @@ public class CareerView extends ChildInitializable {
                 joinChampBox.setSelected(false);
             }
             nextChampionshipLabel.setText(nextData.fullName());
+            int registryFee = careerManager.getHumanRegistryFee(data, humanQualified);
+            registryFeeLabel.setText(String.valueOf(registryFee));
+            int travelFee = data.getFlightFee() + data.getHotelFee();
+            travelFeeLabel.setText(String.valueOf(travelFee));
+            totalFeeLabel.setText(String.valueOf(registryFee + travelFee));
         } else {
             champInProgBox.setVisible(true);
             champInProgBox.setManaged(true);
@@ -553,8 +570,9 @@ public class CareerView extends ChildInitializable {
 
     @FXML
     public void applyPerks() {
-        int used = perkManager.applyPerks();
-        careerManager.getHumanPlayerCareer().usePerk(used);
+        PerkManager.UpgradeRec used = perkManager.applyPerks();  // 在getCost之后
+        
+        careerManager.getHumanPlayerCareer().recordUpgradeAndUsePerk(used);
 
 //        DataLoader.getInstance().updatePlayer(perkManager.getAbility().toPlayerPerson());
         careerManager.reloadHumanPlayerPerson();
@@ -704,6 +722,11 @@ public class CareerView extends ChildInitializable {
 
     public void notifyPerksChanged() {
         availPerksLabel.setText(perkManager.getAvailPerks() + "");
+        int money = careerManager.getHumanPlayerCareer().getMoney();
+        int moneyCost = perkManager.getCost();
+        updateMoneyLabel(money, moneyCost);
+        
+        confirmAddPerkBtn.setDisable(moneyCost > money);
     }
 
     public enum CareerAwardTime {

@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.recorder;
 
 import org.tukaani.xz.XZInputStream;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.movement.Movement;

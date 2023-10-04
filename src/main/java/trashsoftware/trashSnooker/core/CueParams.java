@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.util.Util;
 
 /**

@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core;
 
 import javafx.scene.layout.Pane;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.util.DataLoader;
 
 public class InGamePlayer {

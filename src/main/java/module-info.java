@@ -50,4 +50,5 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.core.career.awardItems;
     exports trashsoftware.trashSnooker.util.config;
     exports trashsoftware.trashSnooker.res;
+    exports trashsoftware.trashSnooker.core.cue;
 }

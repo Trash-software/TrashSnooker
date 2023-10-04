@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.core.metrics;
 
 import trashsoftware.trashSnooker.core.BreakRule;
-import trashsoftware.trashSnooker.core.Cue;
+import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.training.TrainType;

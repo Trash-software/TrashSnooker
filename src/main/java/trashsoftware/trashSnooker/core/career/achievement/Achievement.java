@@ -80,6 +80,7 @@ public enum Achievement {
     LONG_THINK(AchCat.GENERAL_HIDDEN),  // 已完成
     COMPLETE_LOSS(AchCat.GENERAL_HIDDEN),  // 已完成
     MISCUED(AchCat.GENERAL_HIDDEN),  // 已完成
+    MISCUE_POT(AchCat.GENERAL_HIDDEN),  // 已完成
     SHAKE_POCKET(AchCat.GENERAL_HIDDEN),  // 已完成
     FREE_BALL_FAIL(AchCat.GENERAL_HIDDEN),  // 已完成
 

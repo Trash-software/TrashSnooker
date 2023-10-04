@@ -4,8 +4,10 @@ import javafx.scene.paint.Color;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.Cue;
+import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.cue.PlanarCue;
+import trashsoftware.trashSnooker.core.cue.TexturedCue;
 import trashsoftware.trashSnooker.core.metrics.TablePreset;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
@@ -278,29 +280,58 @@ public class DataLoader {
                 try {
                     JSONObject cueObject = object.getJSONObject(key);
                     String name = getObjectOfLocale(cueObject.get("names"));
-
-                    Cue cue = new Cue(
-                            key,
-                            name,
-                            cueObject.getDouble("frontLength"),
-                            cueObject.getDouble("midLength"),
-                            cueObject.getDouble("backLength"),
-                            cueObject.getDouble("ringThickness"),
-                            cueObject.getDouble("tipThickness"),
-                            cueObject.getDouble("endDiameter"),
-                            cueObject.getDouble("tipDiameter"),
-                            parseColor(cueObject.getString("ringColor")),
-                            parseColor(cueObject.getString("frontColor")),
-                            parseColor(cueObject.getString("midColor")),
-                            parseColor(cueObject.getString("backColor")),
-                            cueObject.getDouble("power"),
-                            cueObject.getDouble("spin"),
-                            cueObject.getDouble("accuracy"),
-                            cueObject.getBoolean("privacy")
-                    );
-                    if (cueObject.has("arrow")) {
-                        JSONObject arrowObj = cueObject.getJSONObject("arrow");
-                        cue.createArrow(arrowObj);
+                    
+                    Cue cue;
+                    if (cueObject.has("textured") && cueObject.getBoolean("textured")) {
+                        JSONArray segmentArray = cueObject.getJSONArray("segments");
+                        List<TexturedCue.Segment> segments = new ArrayList<>();
+                        for (int i = 0; i < segmentArray.length(); i++) {
+                            JSONObject segObj = segmentArray.getJSONObject(i);
+                            segments.add(new TexturedCue.Segment(
+                                    segObj.getString("texture"),
+                                    segObj.getDouble("length"),
+                                    segObj.getDouble("diameter1"),
+                                    segObj.getDouble("diameter2")
+                            ));
+                        }
+                        
+                        cue = new TexturedCue(
+                                key,
+                                name,
+                                segments,
+                                cueObject.getDouble("ringThickness"),
+                                cueObject.getDouble("tipThickness"),
+                                parseColor(cueObject.getString("ringColor")),
+                                parseColor(cueObject.getString("backColor")),
+                                cueObject.getDouble("power"),
+                                cueObject.getDouble("spin"),
+                                cueObject.getDouble("accuracy"),
+                                cueObject.getBoolean("privacy")
+                        );
+                    } else {
+                        cue = new PlanarCue(
+                                key,
+                                name,
+                                cueObject.getDouble("frontLength"),
+                                cueObject.getDouble("midLength"),
+                                cueObject.getDouble("backLength"),
+                                cueObject.getDouble("ringThickness"),
+                                cueObject.getDouble("tipThickness"),
+                                cueObject.getDouble("endDiameter"),
+                                cueObject.getDouble("tipDiameter"),
+                                parseColor(cueObject.getString("ringColor")),
+                                parseColor(cueObject.getString("frontColor")),
+                                parseColor(cueObject.getString("midColor")),
+                                parseColor(cueObject.getString("backColor")),
+                                cueObject.getDouble("power"),
+                                cueObject.getDouble("spin"),
+                                cueObject.getDouble("accuracy"),
+                                cueObject.getBoolean("privacy")
+                        );
+                        if (cueObject.has("arrow")) {
+                            JSONObject arrowObj = cueObject.getJSONObject("arrow");
+                            ((PlanarCue) cue).createArrow(arrowObj);
+                        }
                     }
                     cues.put(key, cue);
                     if (!cue.privacy) publicCues.put(key, cue);

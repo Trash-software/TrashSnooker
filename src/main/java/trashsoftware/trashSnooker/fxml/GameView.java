@@ -41,6 +41,7 @@ import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeMatch;
 import trashsoftware.trashSnooker.core.career.championship.PlayerVsAiMatch;
 import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
+import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Rule;
@@ -105,6 +106,7 @@ public class GameView implements Initializable {
     private static double uiFrameTimeMs = 10.0;
     private static double defaultMaxPredictLength = 1200;
     private final List<Node> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
+    private final Map<Cue, CueModel> cueModelMap = new HashMap<>();
     @FXML
     GamePane gamePane;  // 球和桌子画在这里
     @FXML
@@ -221,6 +223,7 @@ public class GameView implements Initializable {
     private double cuePointX, cuePointY;  // 杆法的击球点
     private double intentCuePointX = -1, intentCuePointY = -1;  // 计划的杆法击球点
     private double cueAngleDeg = 5.0;
+    private double cueRollRotateDeg = 180.0;  // 转杆，并不重要
     private double cueAngleBaseVer = 10.0;
     private double cueAngleBaseHor = 10.0;
     private CueAnimationPlayer cueAnimationPlayer;
@@ -243,17 +246,12 @@ public class GameView implements Initializable {
     private CareerMatch careerMatch;
     private PredictionDrawing cursorDrawer;
     private PotInspection potInspection;
-
     private ResourceBundle strings;
-
     private double p1PlaySpeed = 1.0;
     private double p2PlaySpeed = 1.0;
     private boolean aiHelpPlay = false;
-
     private List<double[]> aiWhitePath;  // todo: debug用的
     private List<double[]> suggestedPlayerWhitePath;
-
-    private final Map<Cue, CueModel> cueModelMap = new HashMap<>();
 
     private static double pullDtOf(PlayerPerson person, double personPower) {
         return (person.getMaxPullDt() - person.getMinPullDt()) *
@@ -722,6 +720,14 @@ public class GameView implements Initializable {
             case S -> setCuePoint(cuePointX, cuePointY + 1, true);
             case Q -> setCueAngleDeg(cueAngleDeg + 1);
             case E -> setCueAngleDeg(cueAngleDeg - 1);
+            case Z -> cueRollRotateDeg += 3; 
+            case X -> cueRollRotateDeg -= 3;
+        }
+    }
+    
+    private void keyboardReleaseAction(KeyEvent e) {
+        if (replay != null || aiCalculating || playingMovement || cueAnimationPlayer != null) {
+            return;
         }
     }
 
@@ -729,10 +735,12 @@ public class GameView implements Initializable {
         powerSlider.setBlockIncrement(1.0);
 
         basePane.setOnKeyPressed(this::keyboardAction);
+        basePane.setOnKeyReleased(this::keyboardReleaseAction);
 
         for (Toggle toggle : handSelectionToggleGroup.getToggles()) {
             RadioButton rb = (RadioButton) toggle;
             rb.setOnKeyPressed(this::keyboardAction);
+            rb.setOnKeyReleased(this::keyboardReleaseAction);
         }
     }
 
@@ -1274,6 +1282,10 @@ public class GameView implements Initializable {
 
     private double getCuePointCanvasY(double y) {
         return y * cueAreaRadius + cueCanvasWH / 2;
+    }
+    
+    private void setCueRollDeg(double cueRollDeg) {
+        
     }
 
     private void setCuePoint(double x, double y, boolean forceMove) {
@@ -2141,6 +2153,9 @@ public class GameView implements Initializable {
             player.addAttempt(currentAttempt);
             if (success) {
                 System.out.println("Pot success!");
+                if (miscued) {
+                    AchManager.getInstance().addAchievement(Achievement.MISCUE_POT, player.getInGamePlayer());
+                }
             } else {
                 System.out.println("Pot failed!");
             }
@@ -3649,19 +3664,21 @@ public class GameView implements Initializable {
             }
         }
 
-        getCueModel(cue).show(
+        CueModel cueModel = getCueModel(cue);
+        cueModel.show(
                 anchorX + correctedTipX,
                 anchorY + correctedTipY,
                 pointingUnitX,
                 pointingUnitY,
                 cueAngleDeg,
                 gamePane.getScale());
+        cueModel.setCueRotation(cueRollRotateDeg);
     }
 
     private CueModel getCueModel(Cue cue) {
         CueModel cueModel = cueModelMap.get(cue);
         if (cueModel == null) {
-            cueModel = new CueModel(cue);
+            cueModel = CueModel.createCueModel(cue);
             cueModel.setDisable(true);
             contentPane.getChildren().add(cueModel);  // fixme
             cueModelMap.put(cue, cueModel);
@@ -3875,8 +3892,8 @@ public class GameView implements Initializable {
     }
 
     class CueAnimationPlayer {
-        private final CueAnimationRec cueAnimationRec = new CueAnimationRec();
         final double[] restCuePointing;
+        private final CueAnimationRec cueAnimationRec = new CueAnimationRec();
         private final long holdMs;  // 拉至满弓的停顿时间
         private final long endHoldMs;  // 出杆完成后的停顿时间
         private final double initDistance, maxPullDistance;
@@ -3892,6 +3909,7 @@ public class GameView implements Initializable {
         private final InGamePlayer igp;
         private final PlayerPerson playerPerson;
         private final double playSpeedMultiplier;
+        private final long beginTime;
         private long heldMs = 0;
         private long endHeldMs = 0;
         private double cueDtToWhite;  // 杆的动画离白球的真实距离，未接触前为正
@@ -3902,8 +3920,6 @@ public class GameView implements Initializable {
         private CuePlayType.DoubleAction doubleAction;
         private double doubleStopDt;  // 如果二段出杆，在哪里停（离白球的距离）
         private double doubleHoldMs;  // 二段出杆停的计时器
-
-        private final long beginTime;
         private long touchTime;
         private long hideTime;
 

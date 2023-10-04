@@ -256,20 +256,20 @@ public class CareerManager {
         
         if (jsonObject.has("version")) {
             careerManager.lastSavedVersion = jsonObject.getInt("version");
+        } else {
+            careerManager.lastSavedVersion = 39;
         }
-
-        boolean saveNow = false;  // 更新用
+        System.out.println("Save file version: " + careerManager.lastSavedVersion);
+        
         if (jsonObject.has("playerGoodness")) {
             careerManager.playerGoodness = jsonObject.getDouble("playerGoodness");
         } else {
             careerManager.playerGoodness = 1.0;
-            saveNow = true;
         }
         if (jsonObject.has("aiGoodness")) {
             careerManager.aiGoodness = jsonObject.getDouble("aiGoodness");
         } else {
             careerManager.aiGoodness = 1.0;
-            saveNow = true;
         }
         
         if (jsonObject.has("settingsHistory")) {
@@ -311,13 +311,9 @@ public class CareerManager {
         }
 
         careerManager.updateRanking();
-
-        if (saveNow) {
-            careerManager.saveToDisk();
-        } else {
-            careerManager.saveCacheInfo();
-        }
-
+        
+        careerManager.saveCacheInfo();
+        
         return careerManager;
     }
 
@@ -483,6 +479,23 @@ public class CareerManager {
                 return cr;
         }
         return null;
+    }
+
+    public int getHumanRegistryFee(ChampionshipData data, boolean humanQualified) {
+        if (!humanQualified) {
+            return data.getRegistryFee();
+        }
+        List<TourCareer> qualifiedCareers = participants(data, true, true);
+        for (TourCareer tourCareer : qualifiedCareers) {
+            if (tourCareer.career.isHumanPlayer()) {
+                if (tourCareer.seedNum <= data.getSeedPlaces()) {
+                    return data.getSeedRegistryFee();
+                } else {
+                    return data.getRegistryFee();
+                }
+            }
+        }
+        return data.getRegistryFee();
     }
 
     /**
@@ -1033,6 +1046,7 @@ public class CareerManager {
         try (BufferedWriter bw = new BufferedWriter(
                 new FileWriter(file, StandardCharsets.UTF_8))) {
             bw.write(str);
+            System.out.println("Saved!");
         } catch (IOException e) {
             EventLogger.error(e);
         }

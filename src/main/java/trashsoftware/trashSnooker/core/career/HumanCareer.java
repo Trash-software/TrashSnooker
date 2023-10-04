@@ -13,7 +13,9 @@ import trashsoftware.trashSnooker.core.career.challenge.ChallengeReward;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.challenge.RewardCondition;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
 
@@ -21,6 +23,7 @@ public class HumanCareer extends Career {
     public static final double TAX_RATE = 0.2;
     private final Map<String, ChallengeHistory> completedChallenges = new HashMap<>();
     private final Map<Integer, List<AwardMaterial>> levelAwards = new HashMap<>();
+    private final List<JSONObject> invoices = new ArrayList<>();
     private int totalPerks;
     private int availPerks;
     private int totalExp = 0;
@@ -37,6 +40,7 @@ public class HumanCareer extends Career {
     protected void initNew() {
         availPerks = CareerManager.INIT_PERKS;
         totalPerks = availPerks;
+        money = 30000;
     }
 
     @Override
@@ -55,6 +59,14 @@ public class HumanCareer extends Career {
                 JSONObject awdObj = levelAwdObj.getJSONObject(key);
                 List<AwardMaterial> thisLevelAwards = AwardMaterial.fromJsonList(awdObj);
                 levelAwards.put(level, thisLevelAwards);
+            }
+        }
+        
+        if (jsonObject.has("invoices")) {
+            JSONArray invoiceArr = jsonObject.getJSONArray("invoices");
+            for (int i = 0; i < invoiceArr.length(); i++) {
+                JSONObject invObj = invoiceArr.getJSONObject(i);
+                invoices.add(invObj);
             }
         }
 
@@ -102,6 +114,12 @@ public class HumanCareer extends Career {
             }
         }
         out.put("levelAwards", levelAwdObj);
+        
+        JSONArray invoiceArr = new JSONArray();
+        for (JSONObject inv : invoices) {
+            invoiceArr.put(inv);
+        }
+        out.put("invoices", invoiceArr);
     }
 
     @Override
@@ -263,10 +281,21 @@ public class HumanCareer extends Career {
         return result;
     }
 
-    public void usePerk(int used) {
-        availPerks -= used;
-
-        CareerManager.getInstance().saveToDisk();
+    public void recordUpgradeAndUsePerk(PerkManager.UpgradeRec upgradeRec) {
+        money -= upgradeRec.moneyCost();
+        availPerks -= upgradeRec.perkUsed();
+        
+        JSONObject record = new JSONObject();
+        record.put("type", "upgrade");
+        record.put("perkUsed", upgradeRec.perkUsed());
+        record.put("moneyCost", upgradeRec.moneyCost());
+        JSONObject skillUpgrade = new JSONObject();
+        for (Map.Entry<String, double[]> entry : upgradeRec.abilityUpdated().entrySet()) {
+            skillUpgrade.put(entry.getKey(), Util.arrayToJson(entry.getValue()));
+        }
+        record.put("ability", skillUpgrade);
+        
+        invoices.add(record);
     }
 
     public int getAvailablePerks() {
@@ -278,12 +307,48 @@ public class HumanCareer extends Career {
     }
 
     public int getMoney() {
+        checkMoney();
+        
+        return money;
+    }
+    
+    private void checkMoney() {
+        boolean save = false;
         if (money == 0 && CareerManager.getInstance().getLastSavedVersion() < 40) {
             int awards = computeAllAwards();
             money = (int) ((1 - TAX_RATE) * awards);
+            save = true;
+        }
+        if (CareerManager.getInstance().getLastSavedVersion() < 46) {
+            int usedPerks = totalPerks - availPerks;
+            if (usedPerks > 0) {
+                // 防止篡改perk得钱
+                // 假设平均一个点把一个技能升2.5
+                int moneyUsed = 0;
+                int pkRem = usedPerks;
+                double[] simAbility = new double[PerkManager.N_CATEGORIES];
+                Arrays.fill(simAbility, 75);
+                while (pkRem > 0) {
+                    for (int sk = 0; sk < PerkManager.N_CATEGORIES; sk++) {
+                        simAbility[sk] += (120 - simAbility[sk]) * 0.05;
+                        int cost = PerkManager.moneySpent(simAbility[sk]);
+                        moneyUsed += cost;
+                        pkRem--;
+                        if (pkRem == 0) break;
+                    }
+                }
+
+                System.out.println("Simulate money use: " + moneyUsed);
+                money = Math.max(10000, money - moneyUsed);
+            } else {
+                System.out.println("Not simulate money use because perk inconsistency");
+            }
+            save = true;
+        }
+
+        if (save) {
             CareerManager.getInstance().saveToDisk();
         }
-        return money;
     }
     
     private int computeAllAwards() {

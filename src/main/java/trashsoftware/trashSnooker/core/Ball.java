@@ -418,7 +418,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         setPotted(true);
 
         for (Pocket pocket : table.pockets) {
-            double dt = pocket.fallRadius;
+            double dt = pocket.fallRadius - values.ball.ballRadius;
             if (currentDtToPoint(pocket.fallCenter) < dt || predictedDtToPoint(pocket.fallCenter) < dt) {
                 pottedPocket = pocket;
                 break;

@@ -102,6 +102,14 @@
             <Button text="%start" onAction="#nextChamp"/>
             <Button fx:id="skipChampBtn" text="%skip" onAction="#skipNextChamp"/>
         </HBox>
+        <HBox spacing="5.0">
+            <Label text="%registryFee"/>
+            <Label fx:id="registryFeeLabel"/>
+            <Label text="%travelFee"/>
+            <Label fx:id="travelFeeLabel"/>
+            <Label text="%totalFee"/>
+            <Label fx:id="totalFeeLabel"/>
+        </HBox>
     </VBox>
 
     <LabelTable fx:id="champAwardsTable"

@@ -2022,7 +2022,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private boolean tryHitBall(B ball, boolean applyComplexCal) {
             boolean noHit = true;
             for (B otherBall : randomOrderBallPool1) {
-                if (ball != otherBall) {
+                if (ball != otherBall && !otherBall.isPotted()) {
+                    // 因为球会在袋内滞留约1秒，滞留期间当然是不会碰撞的
                     if (ball.tryHitBall(otherBall, true, applyComplexCal, phy)) {
                         // hit ball
                         noHit = false;

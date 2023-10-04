@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.util;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Values;
 
@@ -362,5 +363,13 @@ public class Util {
             full = false;
         }
         return String.join(",", out);
+    }
+    
+    public static JSONArray arrayToJson(double[] array) {
+        JSONArray json = new JSONArray();
+        for (double d : array) {
+            json.put(d);
+        }
+        return json;
     }
 }

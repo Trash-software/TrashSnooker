@@ -28,22 +28,13 @@ public abstract class Championship {
     private static Championship loadProgressFromJson(JSONObject jsonObject) {
         ChampionshipData data = ChampDataManager.getInstance().findDataById(jsonObject.getString("championshipId"));
         Calendar timestamp = CareerManager.stringToCalendar(jsonObject.getString("timestamp"));
-        Championship championship;
-        switch (data.getType()) {
-            case SNOOKER:
-                championship = new SnookerChampionship(data, timestamp);
-                break;
-            case CHINESE_EIGHT:
-                championship = new ChineseEightChampionship(data, timestamp);
-                break;
-            case AMERICAN_NINE:
-                championship = new AmericanNineChampionship(data, timestamp);
-                break;
-            case MINI_SNOOKER:
-            default:
-                throw new RuntimeException("Currently unsupported");
-        }
-        
+        Championship championship = switch (data.getType()) {
+            case SNOOKER -> new SnookerChampionship(data, timestamp);
+            case CHINESE_EIGHT -> new ChineseEightChampionship(data, timestamp);
+            case AMERICAN_NINE -> new AmericanNineChampionship(data, timestamp);
+            default -> throw new RuntimeException("Currently unsupported");
+        };
+
         if (jsonObject.has("seedRanks")) {
             JSONObject sr = jsonObject.getJSONObject("seedRanks");
             for (String pid : sr.keySet()) {
