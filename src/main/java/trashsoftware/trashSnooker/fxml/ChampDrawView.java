@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.fxml;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -56,8 +57,11 @@ public class ChampDrawView extends ChildInitializable {
     Label currentStageLabel, humanOpponentLabel, savedRoundLabel;
     @FXML
     Button opponentInfoBtn;
+//    @FXML
+//    ComboBox<FastGameView.CueItem> cueBox;
     @FXML
-    ComboBox<FastGameView.CueItem> cueBox;
+    Button cueButton;
+    FastGameView.CueSelection cueSelection;
     @FXML
     LabelTable<MatchResItem> matchResTable;
     @FXML
@@ -115,6 +119,8 @@ public class ChampDrawView extends ChildInitializable {
 
         championship = CareerManager.getInstance().getChampionshipInProgress();
         assert championship != null;
+        
+        cueSelection = new FastGameView.CueSelection(cueButton);
 
         champNameLabel.setText(championship.fullName());
         leftBlockWidth = championship.getData().getTotalPlaces() >= 100 ? 28 : 20;
@@ -147,9 +153,18 @@ public class ChampDrawView extends ChildInitializable {
     }
 
     private void refreshCueBox() {
-        refreshCueBox(cueBox);
+        cueSelection.getAvailableCues().clear();
         PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();
-        FastGameView.selectSuggestedCue(cueBox, championship.getData().getType(), human);
+        for (Cue cue : human.getPrivateCues()) {
+            cueSelection.getAvailableCues().add(cue);
+        }
+        for (Cue cue : DataLoader.getInstance().getCues().values()) {
+            if (!cue.privacy) {
+                cueSelection.getAvailableCues().add(cue);
+            }
+        }
+//        FastGameView.selectSuggestedCue(cueBox, championship.getData().getType(), human);
+        FastGameView.selectSuggestedCue(cueSelection, championship.getData().getType(), human);
     }
 
     private void initTable() {
@@ -242,12 +257,14 @@ public class ChampDrawView extends ChildInitializable {
                 InGamePlayer humanIgp = eg.getPlayer1().getPlayerType() == PlayerType.PLAYER ?
                         eg.getPlayer1() :
                         eg.getPlayer2();
-                FastGameView.selectCue(cueBox, humanIgp.getPlayCue());
-                cueBox.setDisable(true);
+//                FastGameView.selectCue(cueBox, humanIgp.getPlayCue());
+                cueSelection.select(humanIgp.getPlayCue());
+                
+                cueButton.setDisable(true);
                 setOpponentText(championship.findHumanNextOpponent());
             } else {
                 if (championship.isHumanAlive()) {
-                    cueBox.setDisable(false);
+                    cueButton.setDisable(false);
                     nextRoundButton.setText(strings.getString("startNextRound"));
                     setOpponentText(championship.findHumanNextOpponent());
                 } else {
@@ -487,6 +504,11 @@ public class ChampDrawView extends ChildInitializable {
             startGame(match);
         }
     }
+    
+    @FXML
+    void changeCueAction() {
+        FastGameView.showCueSelectionView(cueSelection, selfStage);
+    }
 
     private void startGameInNewRound(PlayerVsAiMatch match) {
         TableSpec tableSpec = match.getChampionship().getData().getTableSpec();
@@ -510,7 +532,8 @@ public class ChampDrawView extends ChildInitializable {
                 1.0 : match.p2.getHandFeelEffort(championship.getData().getType());
 
         Cue aiCue = aiPerson.getPreferredCue(championship.getData().getType());
-        Cue playerCue = cueBox.getValue().cue;
+//        Cue playerCue = cueBox.getValue().cue;
+        Cue playerCue = cueSelection.getSelected();
 
         Cue p1Cue;
         Cue p2Cue;

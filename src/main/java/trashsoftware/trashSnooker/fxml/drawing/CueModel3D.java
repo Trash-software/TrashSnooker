@@ -1,24 +1,17 @@
 package trashsoftware.trashSnooker.fxml.drawing;
 
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
-import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.TexturedCue;
 import trashsoftware.trashSnooker.util.DataLoader;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class CueModel3D extends CueModel {
 
     private final TexturedCue cue;
     private Color tipColor;
-
-    List<SegmentGroup> bodySegments = new ArrayList<>();
+    private final int conePoly;
 
     Cylinder ring;
     Cylinder tip;
@@ -27,13 +20,24 @@ public class CueModel3D extends CueModel {
     private final Rotate cueAngleRotate = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
     private final Rotate rollRotate = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
     private double scale = 1.0;
+    private double renderingScale = 1.0;
 
-    private CueModel3D(TexturedCue cue,
-                       Color tipColor) {
+    public CueModel3D(TexturedCue cue,
+                      Color tipColor,
+                      double initScale) {
+        this(cue, tipColor, 90, initScale);
+    }
+
+    public CueModel3D(TexturedCue cue,
+                      Color tipColor,
+                      int conePoly,
+                      double initScale) {
         this.cue = cue;
         this.tipColor = tipColor;
+        this.conePoly = conePoly;
         
-        initSegments();
+        this.scale = initScale;
+        this.renderingScale = initScale;
 
         build();
 
@@ -43,47 +47,18 @@ public class CueModel3D extends CueModel {
         rollRotate.setAngle(180);
 
         getTransforms().addAll(alignRotate, baseRotate, cueAngleRotate, rollRotate);
-
-//        setEffect(new Glow());
-
-//        AmbientLight light = new AmbientLight();
-//        light.setv
-//        light.setColor(Color.WHITE);
-//
-//        getChildren().add(light);
-
-//        DirectionalLight dl = new DirectionalLight(Color.WHITE);
-//        dl.setDirection(new Point3D(0, 0, 1));
-//        dl.setTranslateZ(-100);
-//        dl.setTranslateX(-100);
-//        dl.setTranslateY(-100);
-//        
-//        getChildren().add(dl);
     }
 
-    public static CueModel3D makeDefault() {
-        return makeSingleBodyCue((TexturedCue) DataLoader.getInstance().getCueById("stdSnookerCue"),
-                Color.BLUE);
-    }
-
-    public static CueModel3D makeSingleBodyCue(TexturedCue cue,
-                                               Color tipColor) {
-        return new CueModel3D(
-                cue,
-                tipColor
-        );
-    }
-    
-    private void initSegments() {
-        for (TexturedCue.Segment segment : cue.getSegments()) {
-            SegmentGroup group = new SegmentGroup(segment, segment.createMaterial());
-            bodySegments.add(group);
-        }
+    public static CueModel3D makeDefault(String cueId, int poly) {
+        return new CueModel3D((TexturedCue) DataLoader.getTestInstance().getCueById(cueId),
+                Color.BLUE,
+                poly,
+                1.0);
     }
 
     private void build() {
         getChildren().clear();
-        
+
         double tipRadius = cue.getCueTipWidth() / 2 * scale;
         double tipThickness = cue.cueTipThickness * scale;
         double ringThickness = cue.tipRingThickness * scale;
@@ -100,17 +75,18 @@ public class CueModel3D extends CueModel {
         ring.setTranslateY(ringThickness / 2);
 
         getChildren().addAll(tip, ring);
-        
+
         double position = ringThickness;
-        
-        for (SegmentGroup seg : bodySegments) {
-            double len = seg.segment.length() * scale;
-            TruncateCone cone = new TruncateCone(48,
-                    (float) (seg.segment.diameter1() * 0.5 * scale),
-                    (float) (seg.segment.diameter2() * 0.5 * scale),
+
+        for (TexturedCue.Segment segment : cue.getSegments()) {
+            double len = segment.length() * scale;
+            TruncateCone cone = new TruncateCone(conePoly,
+                    (float) (segment.diameter1() * 0.5 * scale),
+                    (float) (segment.diameter2() * 0.5 * scale),
                     (float) len,
-                    seg.material
-                    );
+                    segment.getMaterial(),
+                    false
+            );
             cone.setTranslateY(position);
             getChildren().add(cone);
             position += len;
@@ -121,29 +97,21 @@ public class CueModel3D extends CueModel {
     }
 
     @Override
-    protected void setCueAngle(double cueAngleDeg) {
+    public void setCueAngle(double cueAngleDeg) {
         cueAngleRotate.setAngle(cueAngleDeg);
     }
 
     @Override
     public void setScale(double scale) {
-        this.scale = scale;
-
-        build();
+        if (scale != renderingScale) {
+            this.scale = scale;
+            build();
+            renderingScale = scale;
+        }
     }
 
     @Override
     public void setCueRotation(double rotationDeg) {
         rollRotate.setAngle(rotationDeg);
-    }
-
-    static class SegmentGroup {
-        final TexturedCue.Segment segment;
-        final PhongMaterial material;
-        
-        SegmentGroup(TexturedCue.Segment segment, PhongMaterial material) {
-            this.segment = segment;
-            this.material = material;
-        }
     }
 }

@@ -4,9 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Point3D;
-import javafx.scene.AmbientLight;
-import javafx.scene.Scene;
-import javafx.scene.SceneAntialiasing;
+import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
@@ -28,30 +26,30 @@ public class TestApp extends Application {
     double vy = 3;
     Rotate rotate1 = new Rotate();
     Rotate rotate2 = new Rotate();
+
+    Rotate xRotate = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
+    Rotate yRotate = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
+    Rotate zRotate = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
     
     private void testCone(Pane group) {
-        CueModel3D cueModel3D = CueModel3D.makeDefault();
+        CueModel3D cueModel3D = CueModel3D.makeDefault("stdPoolCue", 8);
         
-        cueModel3D.setTranslateX(200);
+        cueModel3D.setTranslateX(100);
         cueModel3D.setTranslateY(100);
-
-        Rotate xRotate = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
-        Rotate yRotate = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
-        Rotate zRotate = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
         
 //        xRotate.setAngle(45);
 //        zRotate.setAngle(90);
         
-        cueModel3D.getTransforms().addAll(xRotate, yRotate, zRotate, new Scale(0.35, 0.35, 0.35));
+        cueModel3D.getTransforms().addAll(xRotate, yRotate, zRotate, new Scale(0.8, 0.8, 0.8));
         
         group.getChildren().add(cueModel3D);
 
-        Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(20), e -> {
-            yRotate.setAngle(yRotate.getAngle() + 1);
-        }));
-        timeline.setCycleCount(500);
-        timeline.play();
+//        Timeline timeline = new Timeline();
+//        timeline.getKeyFrames().add(new KeyFrame(new Duration(20), e -> {
+//            yRotate.setAngle(yRotate.getAngle() + 1);
+//        }));
+//        timeline.setCycleCount(500);
+//        timeline.play();
     }
     
     private void testBallRotate(Pane group) {
@@ -177,6 +175,9 @@ public class TestApp extends Application {
         canvas.getGraphicsContext2D().fillRect(0, 200, 200, 200);
     }
     
+    boolean dragging;
+    double dragBeginX, dragBeginY;
+    double lastDragX, lastDragY;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -187,6 +188,30 @@ public class TestApp extends Application {
         canvas.setWidth(1440);
         canvas.getGraphicsContext2D().setFill(Color.GREEN);
         canvas.getGraphicsContext2D().fillRect(0, 0, 1440, 500);
+        
+        canvas.setOnMouseClicked(e -> {
+            System.out.println("click " + e.getX() + " " + e.getY());
+        });
+        
+        canvas.setOnMouseDragged(e -> {
+            if (dragging) {
+                double dx = e.getX() - lastDragX;
+                double dy = e.getY() - lastDragY;
+                
+                xRotate.setAngle(xRotate.getAngle() - dx * 0.5);
+                yRotate.setAngle(yRotate.getAngle() + dy * 0.5);
+            } else {
+                dragBeginX = e.getX();
+                dragBeginY = e.getY();
+                dragging = true;
+            }
+            lastDragX = e.getX();
+            lastDragY = e.getY();
+        });
+        
+        canvas.setOnMouseDragReleased(e -> {
+            dragging = false;
+        });
 
         group.getChildren().add(canvas);
 
@@ -198,7 +223,15 @@ public class TestApp extends Application {
 //        testCue(group);
 //        testGradient(group, canvas);
         
+        DirectionalLight light = new DirectionalLight();
+        light.setTranslateZ(2000);
+        group.getChildren().add(light);
+
+        Camera camera = new ParallelCamera();
+//        camera.setTranslateZ(2000);
+        
         Scene scene = new Scene(group, -1, -1,false, SceneAntialiasing.BALANCED);
+        scene.setCamera(camera);
 
         primaryStage.setScene(scene);
 

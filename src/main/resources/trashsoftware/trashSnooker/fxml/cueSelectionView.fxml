@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import trashsoftware.trashSnooker.fxml.widgets.CueList?>
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.CueSelectionView"
+      prefWidth="720.0" prefHeight="400.0">
+    
+    <padding>
+        <Insets topRightBottomLeft="5.0"/>
+    </padding>
+
+    <CueList fx:id="cueList"/>
+
+</VBox>

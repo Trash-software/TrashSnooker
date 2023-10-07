@@ -54,7 +54,8 @@
             </HBox>
             <Button fx:id="nextRoundButton" onAction="#nextRound" text="%startNextRound"/>
             <Label fx:id="savedRoundLabel"/>
-            <ComboBox fx:id="cueBox"/>
+<!--            <ComboBox fx:id="cueBox"/>-->
+            <Button fx:id="cueButton" onAction="#changeCueAction"/>
             
             <VBox alignment="BOTTOM_LEFT" VBox.vgrow="ALWAYS">
                 <Button fx:id="quitTournamentBtn" text="%quitTournament" onAction="#quitTournamentAction"/>

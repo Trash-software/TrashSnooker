@@ -44,6 +44,16 @@ public class DataLoader {
         return instance;
     }
 
+    public static DataLoader getTestInstance() {
+        if (instance == null) {
+            instance = new DataLoader();
+            instance.cues.clear();
+            JSONObject cuesRoot = loadFromDisk(CUE_LIST_FILE);
+            instance.loadCues(cuesRoot);
+        }
+        return instance;
+    }
+
     public static Color parseColor(String colorStr) {
         if (colorStr.startsWith("#")) {
             return Color.valueOf(colorStr);

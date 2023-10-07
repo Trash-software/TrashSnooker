@@ -24,7 +24,7 @@ public class CueModel2D extends CueModel {
     private final Scale cueAngleScale = new Scale(1.0, 1.0, 1.0);
     private final Scale scalar = new Scale();
 
-    CueModel2D(PlanarCue cue) {
+    CueModel2D(PlanarCue cue, double initScale) {
         double tipFrontX = 0;
         double tipBackX = cue.cueTipThickness;
         double tipY = cue.getCueTipWidth() / 2;
@@ -143,18 +143,20 @@ public class CueModel2D extends CueModel {
         if (!isRest) {
             getTransforms().add(cueAngleScale);
         }
+        
+        setScale(initScale);
 
 //        allCueModels.add(this);
     }
 
     @Override
-    protected void setCueAngle(double cueAngleDeg) {
+    public void setCueAngle(double cueAngleDeg) {
         double cueAngleCos = Math.cos(Math.toRadians(cueAngleDeg));
         cueAngleScale.setX(cueAngleCos);
     }
 
     @Override
-    protected void setScale(double scale) {
+    public void setScale(double scale) {
         scalar.setX(scale);
         scalar.setY(scale);
         scalar.setZ(scale);

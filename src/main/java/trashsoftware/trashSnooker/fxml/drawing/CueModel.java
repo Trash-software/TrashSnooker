@@ -11,16 +11,20 @@ import trashsoftware.trashSnooker.fxml.GameView;
 public abstract class CueModel extends Group {
 
     protected final Rotate baseRotate = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
-    
+
     public static CueModel createCueModel(Cue cue) {
+        return createCueModel(cue, 1.0);
+    }
+
+    public static CueModel createCueModel(Cue cue, double initScale) {
         if (cue instanceof TexturedCue tc) {
-            // todo: 锥度
-            return CueModel3D.makeSingleBodyCue(
-                    tc,
-                    GameView.CUE_TIP_COLOR
+            return new CueModel3D(tc,
+                    GameView.CUE_TIP_COLOR,
+                    initScale
             );
         } else if (cue instanceof PlanarCue pc) {
-            return new CueModel2D(pc);
+            return new CueModel2D(pc,
+                    initScale);
         } else {
             throw new RuntimeException("Unsupported cue type");
         }
@@ -39,7 +43,7 @@ public abstract class CueModel extends Group {
 
         double angleRad = Algebra.thetaOf(-pointingUnitX, -pointingUnitY);  // 因为默认杆头是朝左的
         baseRotate.setAngle(Math.toDegrees(angleRad));
-        
+
         setCueAngle(cueAngleDeg);
 
         setVisible(true);
@@ -48,10 +52,10 @@ public abstract class CueModel extends Group {
     public void hide() {
         setVisible(false);
     }
-    
-    protected abstract void setCueAngle(double cueAngleDeg);
-    
-    protected abstract void setScale(double scale);
-    
+
+    public abstract void setCueAngle(double cueAngleDeg);
+
+    public abstract void setScale(double scale);
+
     public abstract void setCueRotation(double rotationDeg);
 }

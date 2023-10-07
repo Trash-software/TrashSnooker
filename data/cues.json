@@ -11,15 +11,21 @@
       "spin": 0.95,
       "accuracy": 1.05,
       "ringColor": "GOLD-",
-      "backColor": "SADDLEBROWN-",
+      "backColor": "GOLD-",
       "privacy": false,
       "textured": true,
       "segments": [
         {
-          "length": 1442,
+          "length": 1435,
           "diameter1": 9.5,
           "diameter2": 24.0,
           "texture": "stdSnookerCue.png"
+        },
+        {
+          "length": 5,
+          "diameter1": 24.0,
+          "diameter2": 10.0,
+          "texture": "BLACK+"
         }
       ]
     },
@@ -28,37 +34,36 @@
         "zh": "波茨杆",
         "en": "Potts Cue"
       },
-      "frontLength": 1072.0,
-      "midLength": 5.0,
-      "backLength": 365.0,
       "tipThickness": 4.0,
       "ringThickness": 9.0,
-      "tipDiameter": 11.5,
-      "endDiameter": 26.0,
       "power": 1.05,
       "spin": 1.05,
       "accuracy": 0.85,
       "ringColor": "GOLD-",
-      "frontColor": "BISQUE",
-      "midColor": "ORANGE+",
-      "backColor": "SADDLEBROWN-",
+      "backColor": "GOLD-",
       "privacy": false,
-      "arrow": {
-        "color": "BLACK+",
-        "firstGap": 150.0,
-        "lastGap": 100.0,
-        "firstScale": 300.0,
-        "lastScale": 180.0,
-        "frontSpace": 100.0,
-        "depth": 2.0
-      }
+      "textured": true,
+      "segments": [
+        {
+          "length": 1435,
+          "diameter1": 11.5,
+          "diameter2": 26.0,
+          "texture": "stdSnookerCue.png"
+        },
+        {
+          "length": 5,
+          "diameter1": 26.0,
+          "diameter2": 11.0,
+          "texture": "BLACK+"
+        }
+      ]
     },
     "stdPoolCue": {
       "names": {
         "zh": "九球杆",
         "en": "Pool Cue"
       },
-      "ringThickness": 10.0,
+      "ringThickness": 12.0,
       "tipThickness": 5.0,
       "power": 1.15,
       "spin": 1.2,
@@ -69,16 +74,28 @@
       "textured": true,
       "segments": [
         {
-          "length": 600,
+          "length": 475,
           "diameter1": 13.5,
-          "diameter2": 16.0,
-          "texture": "BEIGE"
+          "diameter2": 14.0,
+          "texture": "BISQUE"
         },
         {
-          "length": 850,
-          "diameter1": 16.0,
+          "length": 250,
+          "diameter1": 14.0,
+          "diameter2": 20.0,
+          "texture": "BISQUE"
+        },
+        {
+          "length": 725,
+          "diameter1": 20.0,
           "diameter2": 27.0,
           "texture": "stdPoolCueBack.png"
+        },
+        {
+          "length": 5,
+          "diameter1": 27.0,
+          "diameter2": 15.0,
+          "texture": "BLACK+"
         }
       ]
     },

@@ -1,6 +1,6 @@
 {
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
     "handFeelEffort": 1,
@@ -9,18 +9,18 @@
     "playCue": "stdPottsCue",
     "breakCue": "stdBreakCue"
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "handFeelEffort": 1,
-    "person": "Give Emperor",
-    "playerType": "COMPUTER",
+    "person": "Mark Allen",
+    "playerType": "PLAYER",
     "playCue": "stdPottsCue",
     "breakCue": "stdBreakCue"
   },
-  "startTime": 1695152962064,
+  "startTime": 1696609317641,
   "p2BreakLoseChance": 0,
-  "p1BreakLoseChance": 0,
+  "p1BreakLoseChance": 1,
   "gameValues": {
     "ball": "POOL_BALL",
     "gameRule": "CHINESE_EIGHT",
