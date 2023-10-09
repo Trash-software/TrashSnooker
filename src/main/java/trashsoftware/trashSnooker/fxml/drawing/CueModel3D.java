@@ -19,13 +19,13 @@ public class CueModel3D extends CueModel {
 
     private final Rotate cueAngleRotate = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
     private final Rotate rollRotate = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
-    private double scale = 1.0;
-    private double renderingScale = 1.0;
+    private double scale;
+    private double renderingScale;
 
     public CueModel3D(TexturedCue cue,
                       Color tipColor,
                       double initScale) {
-        this(cue, tipColor, 90, initScale);
+        this(cue, tipColor, 48, initScale);
     }
 
     public CueModel3D(TexturedCue cue,

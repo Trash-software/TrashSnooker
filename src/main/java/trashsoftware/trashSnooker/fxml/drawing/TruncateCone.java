@@ -50,9 +50,9 @@ public class TruncateCone extends MeshView {
             int index = i * 4;
             
             float ulx = (float) (i * topSepX + baseX);
-            float urx = (float) (ulx + topSepX);
+//            float urx = (float) (ulx + topSepX);
             float llx = (float) (i * sep);
-            float lrx = (float) (llx + sep);
+//            float lrx = (float) (llx + sep);
             
             // 0 左上
             textCoords[index] = ulx;
@@ -74,7 +74,7 @@ public class TruncateCone extends MeshView {
         double eachDeg = 360.0 / poly;
         for (int i = 0; i < poly; i++) {
             double deg = i * eachDeg;
-            double deg2 = (i + 1) * eachDeg;
+//            double deg2 = (i + 1) * eachDeg;
             int index = i * 6;
 
             float leftX = (float) Math.cos(Math.toRadians(deg));
@@ -90,14 +90,6 @@ public class TruncateCone extends MeshView {
             points[index + 3] = leftX * r2;
             points[index + 4] = h;
             points[index + 5] = leftZ * r2;
-//            // 2 右下
-//            points[index + 6] = rightX * r2;
-//            points[index + 7] = h;
-//            points[index + 8] = rightZ * r2;
-//            // 3 右上
-//            points[index + 9] = rightX * r1;
-//            points[index + 10] = 0;
-//            points[index + 11] = rightZ * r1;
             
             // 每一个面的排列
             // v0, t0, v1, t1, v2, t2

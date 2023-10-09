@@ -15,8 +15,10 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import trashsoftware.trashSnooker.core.cue.CueTip;
 import trashsoftware.trashSnooker.fxml.drawing.CueModel3D;
-import trashsoftware.trashSnooker.fxml.drawing.TruncateCone;
+import trashsoftware.trashSnooker.fxml.drawing.Hemisphere;
+import trashsoftware.trashSnooker.fxml.drawing.TipModel;
 
 public class TestApp extends Application {
     private double x = 300, y = 300;
@@ -30,18 +32,39 @@ public class TestApp extends Application {
     Rotate xRotate = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
     Rotate yRotate = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
     Rotate zRotate = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
-    
+
+    private void testHemisphere(Pane group) {
+//        Group sub = new Group();
+//        Hemisphere hs = Hemisphere.createByBaseRadius(48, 100, 90);
+//
+//        PhongMaterial material = new PhongMaterial();
+//        material.setDiffuseColor(Color.BLUE);
+//        hs.setMaterial(material);
+//
+//        sub.getChildren().add(hs);
+//        sub.setTranslateX(200);
+//        sub.setTranslateY(200);
+
+        TipModel sub = new TipModel(new CueTip("xx", 50, 100));
+        sub.setTranslateX(200);
+        sub.setTranslateY(200);
+
+        sub.getTransforms().addAll(xRotate, yRotate, zRotate);
+
+        group.getChildren().add(sub);
+    }
+
     private void testCone(Pane group) {
         CueModel3D cueModel3D = CueModel3D.makeDefault("stdPoolCue", 8);
-        
+
         cueModel3D.setTranslateX(100);
         cueModel3D.setTranslateY(100);
-        
+
 //        xRotate.setAngle(45);
 //        zRotate.setAngle(90);
-        
+
         cueModel3D.getTransforms().addAll(xRotate, yRotate, zRotate, new Scale(0.8, 0.8, 0.8));
-        
+
         group.getChildren().add(cueModel3D);
 
 //        Timeline timeline = new Timeline();
@@ -51,11 +74,13 @@ public class TestApp extends Application {
 //        timeline.setCycleCount(500);
 //        timeline.play();
     }
-    
+
     private void testBallRotate(Pane group) {
         Sphere sphere = new Sphere(ballRadius);
-        Image img = new Image(getClass().getResource("/trashsoftware/trashSnooker/img/pool/pool9.png").toExternalForm());
+        Image img = new Image(getClass().getResource(
+                "/trashsoftware/trashSnooker/res/img/256/pool/pool0.png").toExternalForm());
         PhongMaterial material = new PhongMaterial();
+//        PhongMaterial material = new PhongMaterial(Color.RED, img, null, null, null);
         material.setDiffuseMap(img);
         sphere.setMaterial(material);
 
@@ -67,10 +92,10 @@ public class TestApp extends Application {
 
         sphere2.setTranslateX(600);
         sphere2.setTranslateY(300);
-        
+
         group.getChildren().add(sphere);
         group.getChildren().add(sphere2);
-        
+
         Rotate xRotate = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
         Rotate yRotate = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
         Rotate zRotate = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
@@ -110,7 +135,7 @@ public class TestApp extends Application {
 //        r2.setAngle(20);
 
         double[] last = new double[3];
-        
+
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(new KeyFrame(new Duration(20), e -> {
             sphere.setTranslateX(x);
@@ -125,7 +150,7 @@ public class TestApp extends Application {
             Transform cur = sphere.getTransforms().remove(0);
             Transform tr = nr.createConcatenation(cur);
             sphere.getTransforms().add(tr);
-            
+
 //            rotate1.setAngle(
 //                    rotate1.getAngle() +
 //                            Math.hypot(vx, vy));
@@ -140,7 +165,7 @@ public class TestApp extends Application {
 //            yRotate.setAngle(yRotate.getAngle() + 3);
 //            zRotate.setAngle(zRotate.getAngle() + 3);
 //            yRotate.setAngle(yRotate.getAngle() + vy);
-            
+
 //            xRotate.setAngle(Math.toDegrees(ea[0]));
 //            yRotate.setAngle(Math.toDegrees(ea[1]));
 //            zRotate.setAngle(Math.toDegrees(ea[2]));
@@ -160,13 +185,13 @@ public class TestApp extends Application {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
-    
+
 //    private void rotateBy()
-    
+
     private void testGradient(Pane group, Canvas canvas) {
         Stop[] stops = new Stop[]{new Stop(0, Color.RED), new Stop(1, Color.BLUE)};
         LinearGradient gradient = new LinearGradient(
-                0, 0, 1, 0.4, 
+                0, 0, 1, 0.4,
                 true,
                 CycleMethod.NO_CYCLE,
                 stops
@@ -174,7 +199,7 @@ public class TestApp extends Application {
         canvas.getGraphicsContext2D().setFill(gradient);
         canvas.getGraphicsContext2D().fillRect(0, 200, 200, 200);
     }
-    
+
     boolean dragging;
     double dragBeginX, dragBeginY;
     double lastDragX, lastDragY;
@@ -188,16 +213,16 @@ public class TestApp extends Application {
         canvas.setWidth(1440);
         canvas.getGraphicsContext2D().setFill(Color.GREEN);
         canvas.getGraphicsContext2D().fillRect(0, 0, 1440, 500);
-        
+
         canvas.setOnMouseClicked(e -> {
             System.out.println("click " + e.getX() + " " + e.getY());
         });
-        
+
         canvas.setOnMouseDragged(e -> {
             if (dragging) {
                 double dx = e.getX() - lastDragX;
                 double dy = e.getY() - lastDragY;
-                
+
                 xRotate.setAngle(xRotate.getAngle() - dx * 0.5);
                 yRotate.setAngle(yRotate.getAngle() + dy * 0.5);
             } else {
@@ -208,7 +233,7 @@ public class TestApp extends Application {
             lastDragX = e.getX();
             lastDragY = e.getY();
         });
-        
+
         canvas.setOnMouseDragReleased(e -> {
             dragging = false;
         });
@@ -217,20 +242,21 @@ public class TestApp extends Application {
 
 //        AmbientLight light = new AmbientLight();
 //        group.getChildren().add(light);
-        
-        testCone(group);
+
+        testHemisphere(group);
+//        testCone(group);
 //        testBallRotate(group);
 //        testCue(group);
 //        testGradient(group, canvas);
-        
+
         DirectionalLight light = new DirectionalLight();
         light.setTranslateZ(2000);
         group.getChildren().add(light);
 
         Camera camera = new ParallelCamera();
 //        camera.setTranslateZ(2000);
-        
-        Scene scene = new Scene(group, -1, -1,false, SceneAntialiasing.BALANCED);
+
+        Scene scene = new Scene(group, -1, -1, false, SceneAntialiasing.BALANCED);
         scene.setCamera(camera);
 
         primaryStage.setScene(scene);
@@ -238,7 +264,7 @@ public class TestApp extends Application {
         primaryStage.show();
         primaryStage.setY(50);
     }
-    
+
     private double[] getEulerAngles(Rotate r) {
         double theta = -Math.asin(r.getMzx());
         double cosTheta = Math.cos(theta);
@@ -246,7 +272,7 @@ public class TestApp extends Application {
         double phi = Math.atan2(r.getMyx() / cosTheta, r.getMxx() / cosTheta);
         return new double[]{psi, theta, phi};
     }
-    
+
     private Point3D calculateAxis(double xSpin, double ySpin, double sideSpin) {
         double ry = -xSpin;
         return new Point3D(ySpin, ry, -sideSpin);

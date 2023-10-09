@@ -7,8 +7,8 @@
       },
       "tipThickness": 3.0,
       "ringThickness": 8.0,
-      "power": 0.95,
-      "spin": 0.95,
+      "power": 0.85,
+      "spin": 0.9,
       "accuracy": 1.05,
       "ringColor": "GOLD-",
       "backColor": "GOLD-",
@@ -36,8 +36,8 @@
       },
       "tipThickness": 4.0,
       "ringThickness": 9.0,
-      "power": 1.05,
-      "spin": 1.05,
+      "power": 0.95,
+      "spin": 1.0,
       "accuracy": 0.85,
       "ringColor": "GOLD-",
       "backColor": "GOLD-",
@@ -65,8 +65,8 @@
       },
       "ringThickness": 12.0,
       "tipThickness": 5.0,
-      "power": 1.15,
-      "spin": 1.2,
+      "power": 1.05,
+      "spin": 1.1,
       "accuracy": 0.65,
       "ringColor": "OLDLACE",
       "backColor": "BLACK++",
@@ -74,14 +74,14 @@
       "textured": true,
       "segments": [
         {
-          "length": 475,
+          "length": 450,
           "diameter1": 13.5,
-          "diameter2": 14.0,
+          "diameter2": 16.0,
           "texture": "BISQUE"
         },
         {
-          "length": 250,
-          "diameter1": 14.0,
+          "length": 275,
+          "diameter1": 16.0,
           "diameter2": 20.0,
           "texture": "BISQUE"
         },
@@ -132,9 +132,9 @@
       "tipThickness": 4.0,
       "tipDiameter": 15.0,
       "endDiameter": 30.0,
-      "power": 1.4,
-      "spin": 1.0,
-      "accuracy": 0.4,
+      "power": 1.25,
+      "spin": 0.5,
+      "accuracy": 0.8,
       "ringColor": "BLACK",
       "frontColor": "BLACK++",
       "midColor": "BLACK++",
@@ -146,51 +146,70 @@
         "zh": "少女粉斯诺克杆",
         "en": "Girl's Cue"
       },
-      "frontLength": 1065.0,
-      "midLength": 5.0,
-      "backLength": 365.0,
       "ringThickness": 8.0,
       "tipThickness": 3.0,
-      "tipDiameter": 9.0,
-      "endDiameter": 20.0,
-      "power": 0.9,
-      "spin": 1.0,
+      "power": 0.85,
+      "spin": 0.95,
       "accuracy": 1.1,
       "ringColor": "SILVER",
-      "frontColor": "LAVENDERBLUSH",
-      "midColor": "ORANGERED",
       "backColor": "HOTPINK",
       "privacy": true,
-      "arrow": {
-        "color": "BLACK+",
-        "firstGap": 180.0,
-        "lastGap": 140.0,
-        "firstScale": 300.0,
-        "lastScale": 120.0,
-        "frontSpace": 150.0,
-        "depth": 1.5
-      }
+      "textured": true,
+      "segments": [
+        {
+          "length": 1435,
+          "diameter1": 9.5,
+          "diameter2": 22.0,
+          "texture": "girlSnookerCue.png"
+        },
+        {
+          "length": 4,
+          "diameter1": 22.0,
+          "diameter2": 11.0,
+          "texture": "HOTPINK"
+        }
+      ]
     },
     "GirlPoolCue": {
       "names": {
         "zh": "少女粉九球杆",
         "en": "Girl's Pool Cue"
       },
-      "frontLength": 700.0,
-      "midLength": 450.0,
-      "backLength": 300.0,
       "ringThickness": 10.0,
       "tipThickness": 5.0,
-      "tipDiameter": 11.5,
-      "endDiameter": 24.0,
       "power": 1.05,
-      "spin": 1.08,
+      "spin": 1.1,
       "accuracy": 0.7,
-      "ringColor": "SILVER",
-      "frontColor": "LAVENDERBLUSH",
-      "midColor": "LIGHTPINK",
-      "backColor": "BLUEVIOLET+",
-      "privacy": true
+      "ringColor": "OLDLACE",
+      "backColor": "GOLD+",
+      "privacy": true,
+      "textured": true,
+      "segments": [
+        {
+          "length": 450,
+          "diameter1": 12.0,
+          "diameter2": 14.0,
+          "texture": "LAVENDERBLUSH"
+        },
+        {
+          "length": 275,
+          "diameter1": 12.0,
+          "diameter2": 19.0,
+          "texture": "LAVENDERBLUSH"
+        },
+        {
+          "length": 725,
+          "diameter1": 19.0,
+          "diameter2": 25.0,
+          "texture": "girPoolCueBack.png"
+        },
+        {
+          "length": 5,
+          "diameter1": 25.0,
+          "diameter2": 15.0,
+          "texture": "BLUEVIOLET+"
+        }
+      ]
     },
     "MasterCue": {
       "names": {
@@ -314,7 +333,7 @@
       "frontLength": 1000.0,
       "midLength": 4.0,
       "backLength": 300.0,
-      "ringThickness": 9.0,
+      "ringThickness": 9.8,
       "tipThickness": 3.0,
       "tipDiameter": 9.2,
       "endDiameter": 19.0,
