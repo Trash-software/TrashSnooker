@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.cue.Cue;
+import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
@@ -34,7 +35,7 @@ public class PlayerPerson {
     private final double precisionPercentage;
     private final double anglePrecision;
     private final double longPrecision;
-    private final List<Cue> privateCues = new ArrayList<>();
+    private final List<CueBrand> privateCues = new ArrayList<>();
     private final double solving;
     private final double minPullDt;  // 最小力时的拉杆长度
     private final double maxPullDt;
@@ -441,7 +442,7 @@ public class PlayerPerson {
         obj.put("powerControl", getPowerControl());
 
         JSONArray privateCues = new JSONArray();
-        for (Cue cue : getPrivateCues()) {
+        for (CueBrand cue : getPrivateCues()) {
             privateCues.put(cue.getCueId());
         }
 
@@ -475,33 +476,33 @@ public class PlayerPerson {
         return obj;
     }
     
-    public static Cue getPreferredCue(GameRule gameRule, PlayerPerson person) {
+    public static CueBrand getPreferredCue(GameRule gameRule, PlayerPerson person) {
         Cue.Size[] suggested = gameRule.suggestedCues;
 
         // 先看私杆
         if (person != null) {
             for (Cue.Size size : suggested) {
                 // size是按照推荐顺序排的
-                for (Cue cue : person.getPrivateCues()) {
+                for (CueBrand cue : person.getPrivateCues()) {
                     if (cue.tipSize == size) return cue;
                 }
             }
         }
 
-        Collection<Cue> publicCues = DataLoader.getInstance().getPublicCues().values();
+        Collection<CueBrand> publicCues = DataLoader.getInstance().getPublicCues().values();
         // 再看公杆
         for (Cue.Size size : suggested) {
             // size是按照推荐顺序排的
-            for (Cue cue : publicCues) {
+            for (CueBrand cue : publicCues) {
                 if (cue.tipSize == size) return cue;
             }
         }
 
         System.err.println("Using break cue to play");
-        return DataLoader.getInstance().getStdBreakCue();  // 不会运行到这一步的
+        return DataLoader.getInstance().getStdBreakCueBrand();  // 不会运行到这一步的
     }
 
-    public Cue getPreferredCue(GameRule gameRule) {
+    public CueBrand getPreferredCue(GameRule gameRule) {
         return getPreferredCue(gameRule, this);
     }
 
@@ -553,11 +554,14 @@ public class PlayerPerson {
         return maxExtension;
     }
 
-    public void addPrivateCue(Cue privateCue) {
+    public void addPrivateCue(CueBrand privateCue) {
         privateCues.add(privateCue);
     }
 
-    public List<Cue> getPrivateCues() {
+    /**
+     * @return 这个人出道就应该有的杆型，不包含生涯模式买的
+     */
+    public List<CueBrand> getPrivateCues() {
         return privateCues;
     }
 

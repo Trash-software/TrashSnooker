@@ -4,30 +4,28 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.effect.PerspectiveTransform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import trashsoftware.trashSnooker.util.DataLoader;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Objects;
 
-public class TexturedCue extends Cue {
+public class TexturedCueBrand extends CueBrand {
 
     private final List<Segment> segments;  // 从杆头到杆尾
 
-    public TexturedCue(String cueId,
-                       String name,
-                       List<Segment> segments,
-                       double tipRingThickness,
-                       double cueTipThickness,
-                       Color tipRingColor,
-                       Color backColor,
-                       double powerMultiplier,
-                       double spinMultiplier,
-                       double accuracyMultiplier,
-                       boolean privacy) {
+    public TexturedCueBrand(String cueId,
+                            String name,
+                            List<Segment> segments,
+                            double tipRingThickness,
+                            double cueTipThickness,
+                            Color tipRingColor,
+                            Color backColor,
+                            double powerMultiplier,
+                            double spinMultiplier,
+                            double accuracyMultiplier,
+                            boolean privacy) {
         super(cueId,
                 name,
                 tipRingThickness,
@@ -46,11 +44,6 @@ public class TexturedCue extends Cue {
 
     public List<Segment> getSegments() {
         return segments;
-    }
-
-    @Override
-    public double getTotalLength() {
-        return getWoodPartLength() + tipRingThickness;
     }
 
     @Override

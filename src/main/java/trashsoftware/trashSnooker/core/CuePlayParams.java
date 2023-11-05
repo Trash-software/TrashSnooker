@@ -93,23 +93,23 @@ public class CuePlayParams {
     public static double getSelectedFrontBackSpin(double actualFbSpin,
                                            PlayerPerson playerPerson,
                                            Cue cue) {
-        return actualFbSpin / cue.spinMultiplier /
+        return actualFbSpin / cue.getSpinMultiplier() /
                 (playerPerson.getMaxSpinPercentage() / 100.0);
     }
 
     public static double unitFrontBackSpin(double unitCuePoint, 
                                            PlayerPerson playerPerson,
                                            Cue cue) {
-        return unitCuePoint * cue.spinMultiplier *
+        return unitCuePoint * cue.getSpinMultiplier() *
                 playerPerson.getMaxSpinPercentage() / 100.0;
     }
 
     public static double getSelectedSideSpin(double actualSideSpin, Cue cue) {
-        return actualSideSpin / cue.spinMultiplier;
+        return actualSideSpin / cue.getSpinMultiplier();
     }
 
     public static double unitSideSpin(double unitCuePoint, Cue cue) {
-        return unitCuePoint * cue.spinMultiplier;
+        return unitCuePoint * cue.getSpinMultiplier();
     }
 
     public static double[] unitXYWithSpins(double unitSideSpin, double power,

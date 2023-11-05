@@ -463,6 +463,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     @Override
     public void backAction() {
+        CareerManager.closeInstance();
         CareerAchManager.closeCareerInstance();
         parent.refreshGui();
         

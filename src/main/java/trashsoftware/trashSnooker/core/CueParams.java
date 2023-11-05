@@ -42,7 +42,7 @@ public class CueParams {
                                              InGamePlayer inGamePlayer,
                                              PlayerPerson.HandSkill handSkill) {
         Cue cue = inGamePlayer.getCurrentCue(game);
-        double cuePowerMul = cue.powerMultiplier;
+        double cuePowerMul = cue.getPowerMultiplier();
 
         double actualFbSpin = CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin, inGamePlayer.getPlayerPerson(), cue);
         double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin, cue);
@@ -69,7 +69,7 @@ public class CueParams {
                                            InGamePlayer inGamePlayer,
                                            PlayerPerson.HandSkill handSkill) {
         Cue cue = inGamePlayer.getCurrentCue(game);
-        double cuePowerMul = cue.powerMultiplier;
+        double cuePowerMul = cue.getPowerMultiplier();
 
         double mul = Util.powerMultiplierOfCuePoint(actualSideSpin, actualFrontBackSpin);
         double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
@@ -101,7 +101,7 @@ public class CueParams {
         double mul = Util.powerMultiplierOfCuePoint(unitCuePointX, unitCuePointY);
         double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
         return selectedPower * handMul * mul *
-                igp.getCurrentCue(game).powerMultiplier /
+                igp.getCurrentCue(game).getPowerMultiplier() /
                 game.getGameValues().ball.ballWeightRatio;
     }
 
@@ -114,7 +114,7 @@ public class CueParams {
         double mul = Util.powerMultiplierOfCuePoint(unitCuePointX, unitCuePointY);
         double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
         return actualPower / handMul / mul /
-                igp.getCurrentCue(game).powerMultiplier *
+                igp.getCurrentCue(game).getPowerMultiplier() *
                 game.getGameValues().ball.ballWeightRatio;
     }
 

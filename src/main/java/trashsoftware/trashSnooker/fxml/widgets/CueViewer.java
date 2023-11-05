@@ -2,16 +2,13 @@ package trashsoftware.trashSnooker.fxml.widgets;
 
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import trashsoftware.trashSnooker.core.cue.Cue;
-import trashsoftware.trashSnooker.core.cue.TexturedCue;
 import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.fxml.FastGameView;
 import trashsoftware.trashSnooker.fxml.drawing.CueModel;
 import trashsoftware.trashSnooker.fxml.drawing.CueModel3D;
 
@@ -19,6 +16,7 @@ import java.util.ResourceBundle;
 
 public class CueViewer extends Pane {
     
+    private final FastGameView.CueAndBrand cueAndBrand;
     private final Cue cue;
     private final CueModel cueModel;
     
@@ -32,10 +30,11 @@ public class CueViewer extends Pane {
     
     private ResourceBundle strings;
     
-    public CueViewer(ResourceBundle strings, Cue cue, double width) {
+    public CueViewer(ResourceBundle strings, FastGameView.CueAndBrand cueAndBrand, double width) {
         this.strings = strings;
-        this.cue = cue;
-        this.cueModel = CueModel.createCueModel(cue, (width * 0.95) / cue.getTotalLength());
+        this.cueAndBrand = cueAndBrand;
+        this.cue = cueAndBrand.getNonNullInstance();
+        this.cueModel = CueModel.createCueModel(this.cue, (width * 0.95) / cueAndBrand.brand.getWoodPartLength());
         xRotate.setPivotY(width / 2);
         
         cueModel.setTranslateX(width * 0.05);
@@ -51,18 +50,17 @@ public class CueViewer extends Pane {
                     double dx = e.getX() - lastDragX;
                     double dy = e.getY() - lastDragY;
 
-                    double dstXRotate = Math.max(0, Math.min(75, xRotate.getAngle() - dx * 0.5));
+                    double dstXRotate = Math.max(0, Math.min(75, xRotate.getAngle() - dx * 0.25));
                     xRotate.setAngle(dstXRotate);
-                    yRotate.setAngle(yRotate.getAngle() + dy * 0.5);
+                    yRotate.setAngle(yRotate.getAngle() + dy);
                 }
                 lastDragX = e.getX();
                 lastDragY = e.getY();
                 dragging = true;
             });
             
-            setOnMouseDragReleased(e -> {
-                dragging = false;
-            });
+            setOnMouseDragReleased(e -> dragging = false);  // 这个好像不管用
+            setOnMouseReleased(e -> dragging = false);
             
             setOnMouseClicked(e -> {
                 if (e.getButton() == MouseButton.SECONDARY) {
@@ -89,10 +87,10 @@ public class CueViewer extends Pane {
         cueInfoBox.getChildren().addAll(nameLabel);
         String cueInfo = String.format(
                 "%s: %.1f cm  %s: %.0f  %s: %.0f  %s: %.0f",
-                strings.getString("cueRingDiameter"), cue.getCueTipWidth(),
-                strings.getString("cuePower"), cue.powerMultiplier * 100,
-                strings.getString("cueAiming"), cue.accuracyMultiplier * 100,
-                strings.getString("cueSpin"), cue.spinMultiplier * 100
+                strings.getString("cueRingDiameter"), cueAndBrand.brand.getCueTipWidth(),
+                strings.getString("cuePower"), cue.getOrigPowerMultiplier() * 100,
+                strings.getString("cueAiming"), cue.getAccuracyMultiplier() * 100,
+                strings.getString("cueSpin"), cue.getOrigSpinMultiplier() * 100
         );
         cueInfoBox.getChildren().add(new Label(cueInfo));
     }

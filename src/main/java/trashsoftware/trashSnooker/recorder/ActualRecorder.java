@@ -27,7 +27,7 @@ public abstract class ActualRecorder implements GameRecorder {
     public static final int RECORD_PRIMARY_VERSION = 13;
     public static final int RECORD_SECONDARY_VERSION = 9;
     public static final int HEADER_LENGTH = 64;
-    public static final int PLAYER_HEADER_LENGTH = 98;
+    public static final int PLAYER_HEADER_LENGTH = 256;
     public static final int TOTAL_HEADER_LENGTH = HEADER_LENGTH + PLAYER_HEADER_LENGTH * 2;
     public static final String SIGNATURE = "TSR_";
 
@@ -340,10 +340,16 @@ public abstract class ActualRecorder implements GameRecorder {
         }
         System.arraycopy(id, 0, buffer, 2, id.length);
 
-        byte[] playCueId = player.getPlayCue().cueId.getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(playCueId, 0, buffer, 34, playCueId.length);
-        byte[] breakCueId = player.getBreakCue().cueId.getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(breakCueId, 0, buffer, 66, breakCueId.length);
+        // todo: 存cuebrand
+        byte[] playCueBrandId = player.getPlayCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+        System.arraycopy(playCueBrandId, 0, buffer, 34, playCueBrandId.length);
+        byte[] playCueInsId = player.getPlayCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+        System.arraycopy(playCueInsId, 0, buffer, 66, playCueInsId.length);
+        
+        byte[] breakCueBrandId = player.getBreakCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+        System.arraycopy(breakCueBrandId, 0, buffer, 130, breakCueBrandId.length);
+        byte[] breakCueInsId = player.getBreakCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+        System.arraycopy(breakCueInsId, 0, buffer, 162, breakCueInsId.length);
 
         wrapperStream.write(buffer);
     }

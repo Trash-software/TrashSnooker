@@ -2,7 +2,6 @@ package trashsoftware.trashSnooker.fxml;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,14 +19,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
-import trashsoftware.trashSnooker.core.career.Career;
-import trashsoftware.trashSnooker.core.career.CareerManager;
-import trashsoftware.trashSnooker.core.career.ChampionshipScore;
-import trashsoftware.trashSnooker.core.career.ChampionshipStage;
+import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.*;
 import trashsoftware.trashSnooker.core.cue.Cue;
+import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
@@ -100,17 +97,21 @@ public class ChampDrawView extends ChildInitializable {
     Stage selfStage;
     private ResourceBundle strings;
 
-    public static void refreshCueBox(ComboBox<FastGameView.CueItem> cueBox) {
+    public static void refreshCueBox(ComboBox<FastGameView.CueAndBrand> cueBox) {
         cueBox.getItems().clear();
-        PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();
-        for (Cue cue : human.getPrivateCues()) {
-            cueBox.getItems().add(new FastGameView.CueItem(cue, cue.getName()));
+//        PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();
+        InventoryManager inventoryManager = CareerManager.getInstance().getInventory();
+        for (Cue cue : inventoryManager.getAllCues()) {
+            cueBox.getItems().add(new FastGameView.CueAndBrand(cue.getBrand(), cue));
         }
-        for (Cue cue : DataLoader.getInstance().getCues().values()) {
-            if (!cue.privacy) {
-                cueBox.getItems().add(new FastGameView.CueItem(cue, cue.getName()));
-            }
-        }
+//        for (Cue cue : human.getPrivateCues()) {
+//            cueBox.getItems().add(new FastGameView.CueItem(cue, cue.getName()));
+//        }
+//        for (Cue cue : DataLoader.getInstance().getCues().values()) {
+//            if (!cue.privacy) {
+//                cueBox.getItems().add(new FastGameView.CueItem(cue, cue.getName()));
+//            }
+//        }
     }
 
     @Override
@@ -155,14 +156,19 @@ public class ChampDrawView extends ChildInitializable {
     private void refreshCueBox() {
         cueSelection.getAvailableCues().clear();
         PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();
-        for (Cue cue : human.getPrivateCues()) {
-            cueSelection.getAvailableCues().add(cue);
+
+        InventoryManager inventoryManager = CareerManager.getInstance().getInventory();
+        for (Cue cue : inventoryManager.getAllCues()) {
+            cueSelection.getAvailableCues().add(new FastGameView.CueAndBrand(cue.getBrand(), cue));
         }
-        for (Cue cue : DataLoader.getInstance().getCues().values()) {
-            if (!cue.privacy) {
-                cueSelection.getAvailableCues().add(cue);
-            }
-        }
+//        for (Cue cue : human.getPrivateCues()) {
+//            cueSelection.getAvailableCues().add(cue);
+//        }
+//        for (Cue cue : DataLoader.getInstance().getCues().values()) {
+//            if (!cue.privacy) {
+//                cueSelection.getAvailableCues().add(cue);
+//            }
+//        }
 //        FastGameView.selectSuggestedCue(cueBox, championship.getData().getType(), human);
         FastGameView.selectSuggestedCue(cueSelection, championship.getData().getType(), human);
     }
@@ -258,7 +264,8 @@ public class ChampDrawView extends ChildInitializable {
                         eg.getPlayer1() :
                         eg.getPlayer2();
 //                FastGameView.selectCue(cueBox, humanIgp.getPlayCue());
-                cueSelection.select(humanIgp.getPlayCue());
+//                cueSelection.select(humanIgp.getPlayCue());
+                cueSelection.selectByCue(humanIgp.getPlayCue());
                 
                 cueButton.setDisable(true);
                 setOpponentText(championship.findHumanNextOpponent());
@@ -531,9 +538,10 @@ public class ChampDrawView extends ChildInitializable {
         double p2HandFeelEffort = match.p2.isHumanPlayer() ?
                 1.0 : match.p2.getHandFeelEffort(championship.getData().getType());
 
-        Cue aiCue = aiPerson.getPreferredCue(championship.getData().getType());
+        CueBrand aiCueBrand = aiPerson.getPreferredCue(championship.getData().getType());
+        Cue aiCue = Cue.createForCareerGameAi(aiCueBrand);
 //        Cue playerCue = cueBox.getValue().cue;
-        Cue playerCue = cueSelection.getSelected();
+        Cue playerCue = cueSelection.getSelected().getNonNullInstance();
 
         Cue p1Cue;
         Cue p2Cue;
@@ -545,9 +553,10 @@ public class ChampDrawView extends ChildInitializable {
             p1Cue = aiCue;
             p2Cue = playerCue;
         }
-
-        Cue stdBreakCue = DataLoader.getInstance().getStdBreakCue();
-        if (stdBreakCue == null ||
+        
+        CueBrand stdBreakCueBrand = DataLoader.getInstance().getStdBreakCueBrand();
+//        Cue stdBreakCue = DataLoader.getInstance().getStdBreakCueBrand();
+        if (stdBreakCueBrand == null ||
                 values.rule == GameRule.SNOOKER ||
                 values.rule == GameRule.MINI_SNOOKER) {
             igp1 = new InGamePlayer(match.p1.getPlayerPerson(), p1Cue,
@@ -555,6 +564,8 @@ public class ChampDrawView extends ChildInitializable {
             igp2 = new InGamePlayer(match.p2.getPlayerPerson(), p2Cue,
                     p2t, 2, p2HandFeelEffort);
         } else {
+            // todo: 玩家也有可能买开球杆
+            Cue stdBreakCue = Cue.createForCareerGameAi(stdBreakCueBrand);
             igp1 = new InGamePlayer(match.p1.getPlayerPerson(), stdBreakCue, p1Cue,
                     p1t, 1, p1HandFeelEffort);
             igp2 = new InGamePlayer(match.p2.getPlayerPerson(), stdBreakCue, p2Cue,

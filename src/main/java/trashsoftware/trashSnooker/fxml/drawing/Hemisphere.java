@@ -40,12 +40,14 @@ public class Hemisphere extends MeshView {
         
         float textXTick = 1f / sep;
 
-        boolean hasRem = nLatTicks != nLatitudes / tick;
+//        boolean hasRem = nLatTicks != nLatitudes / tick;
 //        int yPts = hasRem ? nLatTicks + 1 : nLatTicks;
         int yPts = nLatTicks + 1;
         float[] points = new float[yPts * sep * 3];
-        float[] textCoords = new float[yPts * sep * 2];
+        float[] textCoords = new float[yPts * (sep + 1) * 2];
         int[] faces = new int[(yPts - 1) * sep * 12];
+        
+        double height = getHeight();
         
         // 第一个点就是北极点
         
@@ -57,18 +59,28 @@ public class Hemisphere extends MeshView {
                 latitude = 90 - tick * latI;
             }
             
-            float y = (float) ((1 - Math.sin(Math.toRadians(latitude))) * sphereRadius);
+            float y = (float) ((1 - Math.sin(Math.toRadians(latitude))) * sphereRadius - height);
             float cutRadius = (float) (Math.cos(Math.toRadians(latitude)) * sphereRadius);
             float textY = (float) latI / yPts;  // 不严谨，最后一格会被拉伸，但影响不大
+            
+            // text coordinates
+            for (int lon = 0; lon < sep + 1; lon++) {
+                int gridIndex = latI * sep + lon;
+                int tcIndex = gridIndex * 2;
+                
+                float textX = lon * textXTick;
+                textCoords[tcIndex] = textX;
+                textCoords[tcIndex + 1] = textY;
+            }
+            
             for (int lon = 0; lon < sep; lon++) {
                 double longitude = lon * tick;
                 float leftX = (float) Math.cos(Math.toRadians(longitude)) * cutRadius;
                 float leftZ = (float) Math.sin(Math.toRadians(longitude)) * cutRadius;
-                float textX = lon * textXTick;
                 
                 int gridIndex = latI * sep + lon;
                 int ptIndex = gridIndex * 3;
-                int tcIndex = gridIndex * 2;
+//                int tcIndex = gridIndex * 2;
                 
                 int pt = gridIndex;
                 int tc = gridIndex;
@@ -79,21 +91,16 @@ public class Hemisphere extends MeshView {
                 int upPt = upGridIndex;
                 int upTc = upGridIndex;
 
-                int rightLonIndex = lon + 1 == sep ? 0 : lon + 1;
-                int upRightGridIndex = (latI - 1) * sep + rightLonIndex;
-                int upRightPt = upRightGridIndex;
-                int upRightTc = upRightGridIndex;
+                int rightLonPtIndex = lon + 1 == sep ? 0 : lon + 1;
+                int upRightPt = (latI - 1) * sep + rightLonPtIndex;
+                int upRightTc = (latI - 1) * sep + lon + 1;
 
-                int rightGridIndex = latI * sep + rightLonIndex;
-                int rightPt = rightGridIndex;
-                int rightTc = rightGridIndex;
+                int rightPt = latI * sep + rightLonPtIndex;
+                int rightTc = latI * sep + lon + 1;
                 
                 points[ptIndex] = leftX;
                 points[ptIndex + 1] = y;
                 points[ptIndex + 2] = leftZ;
-                
-                textCoords[tcIndex] = textX;
-                textCoords[tcIndex + 1] = textY;
 
                 // （左上，左下，右下）三角形
                 faces[faceIndex] = upPt;

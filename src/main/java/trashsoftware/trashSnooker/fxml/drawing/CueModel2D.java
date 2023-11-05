@@ -6,7 +6,7 @@ import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Scale;
 import trashsoftware.trashSnooker.core.cue.Cue;
-import trashsoftware.trashSnooker.core.cue.PlanarCue;
+import trashsoftware.trashSnooker.core.cue.PlanarCueBrand;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public class CueModel2D extends CueModel {
@@ -24,12 +24,14 @@ public class CueModel2D extends CueModel {
     private final Scale cueAngleScale = new Scale(1.0, 1.0, 1.0);
     private final Scale scalar = new Scale();
 
-    CueModel2D(PlanarCue cue, double initScale) {
+    CueModel2D(Cue cue, double initScale) {
+        PlanarCueBrand cueBrand = (PlanarCueBrand) cue.getBrand();
+        
         double tipFrontX = 0;
-        double tipBackX = cue.cueTipThickness;
+        double tipBackX = cueBrand.cueTipThickness;
         double tipY = cue.getCueTipWidth() / 2;
 
-        isRest = "restCue".equals(cue.cueId);
+        isRest = "restCue".equals(cueBrand.cueId);
         if (isRest) {
             double restX = 30.0;
             tip = new Polygon(
@@ -49,7 +51,7 @@ public class CueModel2D extends CueModel {
         }
         getChildren().add(tip);
 
-        double ringBackX = tipBackX + cue.tipRingThickness;
+        double ringBackX = tipBackX + cueBrand.tipRingThickness;
 
         tipRing = new Polygon(
                 tipBackX, -tipY,
@@ -57,66 +59,66 @@ public class CueModel2D extends CueModel {
                 ringBackX, tipY,
                 tipBackX, tipY
         );
-        tipRing.setFill(cue.tipRingColor);
+        tipRing.setFill(cueBrand.tipRingColor);
         getChildren().add(tipRing);
 
-        double frontBackX = tipBackX + cue.frontLength;
-        double frontBackY = cue.getFrontMaxWidth() / 2;
+        double frontBackX = tipBackX + cueBrand.frontLength;
+        double frontBackY = cueBrand.getFrontMaxWidth() / 2;
         front = new Polygon(
                 ringBackX, -tipY,
                 frontBackX, -frontBackY,
                 frontBackX, frontBackY,
                 ringBackX, tipY
         );
-        front.setFill(cue.frontColor);
+        front.setFill(cueBrand.frontColor);
         getChildren().add(front);
 
-        if (cue.arrow != null) {
-            for (int i = 0; i < cue.arrow.arrowScales.length; i++) {
-                double[] arrow = cue.arrow.arrowScales[i];
+        if (cueBrand.arrow != null) {
+            for (int i = 0; i < cueBrand.arrow.arrowScales.length; i++) {
+                double[] arrow = cueBrand.arrow.arrowScales[i];
                 Arc arc = new Arc(
                         arrow[1],
                         0,
                         arrow[1] - arrow[0],
-                        arrow[2] / 2 - cue.arrow.depth / 2,
+                        arrow[2] / 2 - cueBrand.arrow.depth / 2,
                         90,
                         180
                 );
                 arc.setType(ArcType.OPEN);
-                arc.setStroke(cue.arrow.arrowColor);
-                arc.setStrokeWidth(cue.arrow.depth);
-                arc.setFill(cue.frontColor);
+                arc.setStroke(cueBrand.arrow.arrowColor);
+                arc.setStrokeWidth(cueBrand.arrow.depth);
+                arc.setFill(cueBrand.frontColor);
                 getChildren().add(arc);
             }
 
             // 握把向前涂色部分
-            double[] last = cue.arrow.arrowScales[cue.arrow.arrowScales.length - 1];
+            double[] last = cueBrand.arrow.arrowScales[cueBrand.arrow.arrowScales.length - 1];
             double lastScale = last[1] - last[0];
             Arc arc = new Arc(
                     frontBackX,
                     0,
                     lastScale,
-                    cue.getFrontMaxWidth() / 2,
+                    cueBrand.getFrontMaxWidth() / 2,
                     90,
                     180
             );
             arc.setStrokeWidth(0);
-            arc.setFill(cue.backColor);
+            arc.setFill(cueBrand.backColor);
             getChildren().add(arc);
         }
 
-        double midBackX = frontBackX + cue.midLength;
-        double midBackY = cue.getMidMaxWidth() / 2;
+        double midBackX = frontBackX + cueBrand.midLength;
+        double midBackY = cueBrand.getMidMaxWidth() / 2;
         mid = new Polygon(
                 frontBackX, -frontBackY,
                 midBackX, -midBackY,
                 midBackX, midBackY,
                 frontBackX, frontBackY
         );
-        mid.setFill(cue.midColor);
+        mid.setFill(cueBrand.midColor);
         getChildren().add(mid);
 
-        double backBackX = midBackX + cue.backLength;
+        double backBackX = midBackX + cueBrand.backLength;
         double backBackY = cue.getEndWidth() / 2;
         back = new Polygon(
                 midBackX, -midBackY,
@@ -124,7 +126,7 @@ public class CueModel2D extends CueModel {
                 backBackX, backBackY,
                 midBackX, midBackY
         );
-        back.setFill(cue.backColor);
+        back.setFill(cueBrand.backColor);
         getChildren().add(back);
 
         double tailLength = cue.getCueTipWidth() * 0.2;

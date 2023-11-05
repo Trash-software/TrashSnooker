@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import trashsoftware.trashSnooker.core.cue.CueTip;
 import trashsoftware.trashSnooker.fxml.drawing.CueModel3D;
-import trashsoftware.trashSnooker.fxml.drawing.Hemisphere;
+import trashsoftware.trashSnooker.fxml.drawing.CueTipModel;
 import trashsoftware.trashSnooker.fxml.drawing.TipModel;
 
 public class TestApp extends Application {
@@ -45,7 +45,7 @@ public class TestApp extends Application {
 //        sub.setTranslateX(200);
 //        sub.setTranslateY(200);
 
-        TipModel sub = new TipModel(new CueTip("xx", 50, 100));
+        TipModel sub = CueTipModel.create(CueTip.createDefault(50, 30));
         sub.setTranslateX(200);
         sub.setTranslateY(200);
 
@@ -54,8 +54,9 @@ public class TestApp extends Application {
         group.getChildren().add(sub);
     }
 
-    private void testCone(Pane group) {
-        CueModel3D cueModel3D = CueModel3D.makeDefault("stdPoolCue", 8);
+    private void test3DCueModel(Pane group) {
+        CueModel3D cueModel3D = CueModel3D.makeDefault("trashCue1", 48);
+        cueModel3D.setScale(0.8);
 
         cueModel3D.setTranslateX(100);
         cueModel3D.setTranslateY(100);
@@ -63,7 +64,7 @@ public class TestApp extends Application {
 //        xRotate.setAngle(45);
 //        zRotate.setAngle(90);
 
-        cueModel3D.getTransforms().addAll(xRotate, yRotate, zRotate, new Scale(0.8, 0.8, 0.8));
+        cueModel3D.getTransforms().addAll(xRotate, yRotate, zRotate);
 
         group.getChildren().add(cueModel3D);
 
@@ -201,7 +202,6 @@ public class TestApp extends Application {
     }
 
     boolean dragging;
-    double dragBeginX, dragBeginY;
     double lastDragX, lastDragY;
 
     @Override
@@ -213,29 +213,32 @@ public class TestApp extends Application {
         canvas.setWidth(1440);
         canvas.getGraphicsContext2D().setFill(Color.GREEN);
         canvas.getGraphicsContext2D().fillRect(0, 0, 1440, 500);
-
-        canvas.setOnMouseClicked(e -> {
-            System.out.println("click " + e.getX() + " " + e.getY());
-        });
+        
+        xRotate.setPivotY(canvas.getWidth() / 2);
 
         canvas.setOnMouseDragged(e -> {
             if (dragging) {
                 double dx = e.getX() - lastDragX;
                 double dy = e.getY() - lastDragY;
+//                System.out.println(dx);
 
-                xRotate.setAngle(xRotate.getAngle() - dx * 0.5);
-                yRotate.setAngle(yRotate.getAngle() + dy * 0.5);
+                xRotate.setAngle(xRotate.getAngle() - dx * 0.2);
+                yRotate.setAngle(yRotate.getAngle() + dy * 1);
             } else {
-                dragBeginX = e.getX();
-                dragBeginY = e.getY();
                 dragging = true;
             }
             lastDragX = e.getX();
             lastDragY = e.getY();
         });
+        
+        canvas.setOnMouseReleased(e -> {
+            dragging = false;
+            System.out.println("Release");
+        });
 
         canvas.setOnMouseDragReleased(e -> {
             dragging = false;
+            System.out.println("Drag Release");
         });
 
         group.getChildren().add(canvas);
@@ -243,8 +246,8 @@ public class TestApp extends Application {
 //        AmbientLight light = new AmbientLight();
 //        group.getChildren().add(light);
 
-        testHemisphere(group);
-//        testCone(group);
+//        testHemisphere(group);
+        test3DCueModel(group);
 //        testBallRotate(group);
 //        testCue(group);
 //        testGradient(group, canvas);

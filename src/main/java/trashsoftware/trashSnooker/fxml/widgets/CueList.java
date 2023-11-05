@@ -9,6 +9,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.fxml.FastGameView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class CueList extends ScrollPane {
         }
     }
     
-    public void addCue(Cue cue, double prefWidth, String buttonText, Runnable buttonCallback) {
+    public void addCue(FastGameView.CueAndBrand cue, double prefWidth, String buttonText, Runnable buttonCallback) {
         CueViewer viewer = new CueViewer(strings, cue, prefWidth);
         content.add(viewer, 0, nCues);
 

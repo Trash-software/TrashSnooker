@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.cue.Cue;
+import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
@@ -124,6 +125,7 @@ public class BriefReplayItem {
         PlayerType type = isAi ? PlayerType.COMPUTER : PlayerType.PLAYER;
 
         byte[] nameBuf = new byte[32];
+        byte[] cueInsBuf = new byte[64];
         if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
         int nameLen = Util.indexOf((byte) 0, nameBuf);
         if (nameLen < 0 || nameLen > nameBuf.length) {
@@ -133,9 +135,13 @@ public class BriefReplayItem {
         
         String pid = new String(nameBuf, 0, nameLen, StandardCharsets.UTF_8);
         if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
-        String playCueId = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
+        String playCueBrandId = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
         if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
-        String breakCueId = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
+        String playCueInsId = new String(nameBuf, 0, Util.indexOf((byte) 0, cueInsBuf), StandardCharsets.UTF_8);
+        if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
+        String breakCueBrandId = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
+        if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
+        String breakCueInsId = new String(nameBuf, 0, Util.indexOf((byte) 0, cueInsBuf), StandardCharsets.UTF_8);
 
         PlayerPerson playerPerson = null;
         if (primaryVersion == 11) {
@@ -151,9 +157,11 @@ public class BriefReplayItem {
             playerPerson = readPlayerPerson(pid, raf);
 //            System.out.println(playerPerson.getPlayerId() + playerPerson.getCuePlayType().toString());
         }
-
-        Cue playCue = Objects.requireNonNull(DataLoader.getInstance().getCues().get(playCueId));
-        Cue breakCue = Objects.requireNonNull(DataLoader.getInstance().getCues().get(breakCueId));
+        
+        CueBrand playCueBrand = Objects.requireNonNull(DataLoader.getInstance().getCues().get(playCueBrandId));
+        Cue playCue = Cue.createForFastGame(playCueBrand);  // todo: restore instance
+        CueBrand breakCueBrand = Objects.requireNonNull(DataLoader.getInstance().getCues().get(breakCueBrandId));
+        Cue breakCue = Cue.createForFastGame(breakCueBrand);
 
         return new InGamePlayer(playerPerson, breakCue, playCue, type, num, 1.0);
     }

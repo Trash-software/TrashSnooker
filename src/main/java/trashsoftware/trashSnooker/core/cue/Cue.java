@@ -1,100 +1,149 @@
 package trashsoftware.trashSnooker.core.cue;
 
-import javafx.scene.paint.Color;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.PermanentCounters;
+import trashsoftware.trashSnooker.util.Util;
 
-import java.util.Objects;
+import java.util.Date;
+import java.util.Map;
 
-public abstract class Cue {
+public class Cue {
 
-    public final String cueId;
-    public final String name;
-
-    public final double cueTipThickness;
-    public final double tipRingThickness;
+    private static int fastGameInstanceId;
     
-    protected final double endWidth;
-    protected final double cueTipWidth;
-
-    public final double powerMultiplier;
-    public final double spinMultiplier;
-    public final double accuracyMultiplier;
-
-    public final Color tipRingColor;
-    public final Color backColor;
-
-    public final boolean privacy;
+    protected CueBrand brand;
+    private String instanceId;
+    protected CueTip cueTip;
     
-    public final Size tipSize;
+    private String customName;  // fixme
 
-    protected Cue(String cueId,
-               String name,
-               double tipRingThickness,
-               double cueTipThickness,
-               double endWidth,
-               double cueTipWidth,
-               Color tipRingColor,
-               Color backColor,
-               double powerMultiplier,
-               double spinMultiplier,
-               double accuracyMultiplier,
-               boolean privacy) {
-        this.cueId = cueId;
-        this.name = name;
-
-        this.tipRingThickness = tipRingThickness;
-        this.cueTipThickness = cueTipThickness;
-        this.endWidth = endWidth;
-        this.cueTipWidth = cueTipWidth;
-        this.tipRingColor = tipRingColor;
-
-        this.backColor = backColor;
-        this.powerMultiplier = powerMultiplier;
-        this.spinMultiplier = spinMultiplier;
-        this.accuracyMultiplier = accuracyMultiplier;
-        this.privacy = privacy;
-        
-        if (cueTipWidth <= 9.8) tipSize = Size.VERY_SMALL;
-        else if (cueTipWidth < 11.0) tipSize = Size.SMALL;
-        else if (cueTipWidth < 12.5) tipSize = Size.MEDIUM;
-        else if (cueTipWidth < 14.5) tipSize = Size.BIG;
-        else tipSize = Size.HUGE;
+    protected Cue(CueBrand brand, String instanceId, CueTip cueTip, String customName) {
+        this.brand = brand;
+        this.instanceId = instanceId;
+        this.cueTip = cueTip;
+        this.customName = customName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Cue cue = (Cue) o;
-        return Objects.equals(cueId, cue.cueId);
+    protected Cue(CueBrand brand, String instanceId) {
+        this.brand = brand;
+        this.instanceId = instanceId;
+
+        if (brand.isRest) {
+            // todo: 可能会有其他形状的架杆
+            cueTip = CueTip.createCrossRest();
+        } else {
+            cueTip = CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness);
+        }
+    }
+    
+    public static Cue createForFastGame(CueBrand brand) {
+        System.out.println("Created fast game cue instance for " + brand.cueId);
+        return new Cue(brand,
+                brand.getCueId() + "-fast-" + fastGameInstanceId++,
+                brand.isRest ? 
+                        CueTip.createCrossRest() :
+                        CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
+                brand.getName()
+        );
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(cueId);
+    public static Cue createForCareerGameAi(CueBrand brand) {
+        System.out.println("Created ai cue instance for " + brand.cueId);
+        return new Cue(brand,
+                brand.getCueId() + "-ai-" + fastGameInstanceId++,
+                CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
+                brand.getName() + "-ai"
+        );
+    }
+    
+    public static Cue createForCareer(CueBrand cueBrand, CueTip tip, CareerSave owner) {
+//        String instanceId = cueBrand.getCueId() + "-" + owner.getPlayerId() + "-" +
+//                Util.TIME_FORMAT_SEC.format(new Date());
+        String instanceId = cueBrand.getCueId() + "-" + 
+                owner.getPlayerId() + "-" + PermanentCounters.getInstance().nextCueInstance();
+        return new Cue(
+                cueBrand,
+                instanceId,
+                tip,
+                cueBrand.getName() + "-" + owner.getPlayerName()
+        );
+    }
+    
+    public static Cue fromJson(JSONObject jsonObject,
+                               DataLoader loader,
+                               Map<String, CueTip> tipInstances) {
+        String instanceId = jsonObject.getString("instanceId");
+        CueBrand cueBrand = loader.getCueById(jsonObject.getString("brand"));
+        CueTip tip = tipInstances.get(jsonObject.getString("tipId"));
+        return new Cue(
+                cueBrand,
+                instanceId,
+                tip,
+                jsonObject.getString("customName")
+        );
+    }
+    
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("instanceId", instanceId);
+        jsonObject.put("brand", brand.cueId);
+        jsonObject.put("tipId", cueTip.getInstanceId());
+        jsonObject.put("customName", customName);
+        return jsonObject;
     }
 
-    public String getCueId() {
-        return cueId;
+    public void setCueTip(CueTip cueTip) {
+        this.cueTip = cueTip;
     }
 
-    public String getName() {
-        return name;
+    @NotNull
+    public CueTip getCueTip() {
+        return cueTip;
     }
 
-    public abstract double getTotalLength();
+    public String getInstanceId() {
+        return instanceId;
+    }
 
-    public abstract double getWoodPartLength();
+    public CueBrand getBrand() {
+        return brand;
+    }
+
+    public double getOrigPowerMultiplier() {
+        return brand.powerMultiplier;
+    }
+
+    public double getPowerMultiplier() {
+        return brand.powerMultiplier;
+    }
+
+    public double getOrigSpinMultiplier() {
+        return brand.spinMultiplier;
+    }
+
+    public double getSpinMultiplier() {
+        return brand.spinMultiplier * cueTip.getGrip();
+    }
+
+    public double getAccuracyMultiplier() {
+        return brand.accuracyMultiplier;
+    }
 
     public double getEndWidth() {
-        return endWidth;
+        return brand.endWidth;
     }
 
     public double getCueTipWidth() {
-        return cueTipWidth;
+        return brand.cueTipWidth;
     }
     
+    public String getName() {
+        return brand.getName();  // todo
+    }
+
     public enum Size {
         VERY_SMALL,
         SMALL,

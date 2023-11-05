@@ -4,10 +4,8 @@ import javafx.scene.paint.Color;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.cue.Cue;
+import trashsoftware.trashSnooker.core.cue.*;
 import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.core.cue.PlanarCue;
-import trashsoftware.trashSnooker.core.cue.TexturedCue;
 import trashsoftware.trashSnooker.core.metrics.TablePreset;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
@@ -25,16 +23,23 @@ public class DataLoader {
     };
     private static final String CUSTOM_PLAYER_LIST_FILE = "user/custom_players.json";
     private static final String RANDOM_PLAYERS_LIST_FILE = "user/players_random.json";
+    public static final String COUNTERS_FILE = "user/counters.json";
+//    private static final String CUE_INSTANCES_FILE = "user/cue_instances.json";
     private static final String CUE_LIST_FILE = "data/cues.json";
+    private static final String CUE_TIP_LIST_FILE = "data/cue_tips.json";
     private static final String TABLE_PRESETS_FILE = "data/tables.json";
 
     private static DataLoader instance;
 
     private final Map<String, PlayerPerson> actualPlayers = new HashMap<>();
     private final Map<String, PlayerPerson> playerPeople = new HashMap<>();
-    private final Map<String, Cue> cues = new HashMap<>();
-    private final Map<String, Cue> publicCues = new HashMap<>();
+    private final Map<String, CueBrand> cues = new HashMap<>();
+    private final Map<String, CueBrand> publicCues = new HashMap<>();
+    private final Map<String, CueTipBrand> cueTips = new HashMap<>();
+//    private final Map<String, Cue> cueInstances = new HashMap<>();
     private final Map<String, Map<String, TablePreset>> tablePresets = new HashMap<>();
+    
+    private Cue stdRestCue;
 
     public static DataLoader getInstance() {
         if (instance == null) {
@@ -50,6 +55,10 @@ public class DataLoader {
             instance.cues.clear();
             JSONObject cuesRoot = loadFromDisk(CUE_LIST_FILE);
             instance.loadCues(cuesRoot);
+            JSONObject tipsRoot = loadFromDisk(CUE_TIP_LIST_FILE);
+            instance.loadCueTips(tipsRoot);
+//            JSONObject cueInstancesRoot = loadFromDisk(CUE_INSTANCES_FILE);
+//            instance.loadCueInstances(cueInstancesRoot);
         }
         return instance;
     }
@@ -103,7 +112,7 @@ public class DataLoader {
     }
 
     private static Map<String, PlayerPerson> loadPlayers(JSONObject root,
-                                                         Map<String, Cue> cues,
+                                                         Map<String, CueBrand> cues,
                                                          boolean isCustomPlayer) {
         if (root.has("players")) {
             JSONObject array = root.getJSONObject("players");
@@ -250,14 +259,21 @@ public class DataLoader {
 
     private void loadAll() {
         cues.clear();
+        cueTips.clear();
+        playerPeople.clear();
+        actualPlayers.clear();
+//        cueInstances.clear();
+        
         JSONObject cuesRoot = loadFromDisk(CUE_LIST_FILE);
         loadCues(cuesRoot);
+        JSONObject tipsRoot = loadFromDisk(CUE_TIP_LIST_FILE);
+        loadCueTips(tipsRoot);
         JSONObject tablesRoot = loadFromDisk(TABLE_PRESETS_FILE);
         loadTablePresets(tablesRoot);
 
-        playerPeople.clear();
-        actualPlayers.clear();
-
+//        JSONObject cueInstancesRoot = loadFromDisk(CUE_INSTANCES_FILE);
+//        loadCueInstances(cueInstancesRoot);
+        
         for (String fileName : PLAYER_LIST_FILES) {
             JSONObject playersRoot = loadPlayerListFromDisk(fileName);
             Map<String, PlayerPerson> people = loadPlayers(playersRoot, cues, false);
@@ -282,6 +298,50 @@ public class DataLoader {
 
         System.out.println(playerPeople.size() + " players loaded, " + actualPlayers.size() + " actual");
     }
+    
+    private void loadCueTips(JSONObject root) {
+        if (root.has("cueTips")) {
+            JSONObject object = root.getJSONObject("cueTips");
+            for (String key : object.keySet()) {
+                try {
+                    JSONObject tipJson = object.getJSONObject(key);
+                    String name = key;
+                    if (tipJson.has("names")) {
+                        name = getObjectOfLocale(tipJson.get("names"));
+                    }
+                    CueTipBrand brand = new CueTipBrand(
+                            key,
+                            name,
+                            tipJson.getDouble("origThickness"),
+                            tipJson.getDouble("diameter") / 2,
+                            tipJson.getDouble("minDiameter") / 2,
+                            tipJson.getDouble("grip"),
+                            tipJson.getDouble("totalHp"),
+                            tipJson.getInt("price")
+                    );
+                    cueTips.put(key, brand);
+                    
+                } catch (JSONException e) {
+                    EventLogger.error(e);
+                }
+            }
+        }
+    }
+    
+//    private void loadCueInstances(JSONObject root) {
+//        if (root.has("cueInstances")) {
+//            JSONObject object = root.getJSONObject("cueInstances");
+//            for (String key : object.keySet()) {
+//                try {
+//                    JSONObject cueInsObject = object.getJSONObject(key);
+//                    Cue cue = Cue.fromJson(cueInsObject, this);
+//                    cueInstances.put(key, cue);
+//                } catch (JSONException e) {
+//                    EventLogger.error(e);
+//                }
+//            }
+//        }
+//    }
 
     private void loadCues(JSONObject root) {
         if (root.has("cues")) {
@@ -291,13 +351,13 @@ public class DataLoader {
                     JSONObject cueObject = object.getJSONObject(key);
                     String name = getObjectOfLocale(cueObject.get("names"));
                     
-                    Cue cue;
+                    CueBrand cue;
                     if (cueObject.has("textured") && cueObject.getBoolean("textured")) {
                         JSONArray segmentArray = cueObject.getJSONArray("segments");
-                        List<TexturedCue.Segment> segments = new ArrayList<>();
+                        List<TexturedCueBrand.Segment> segments = new ArrayList<>();
                         for (int i = 0; i < segmentArray.length(); i++) {
                             JSONObject segObj = segmentArray.getJSONObject(i);
-                            segments.add(new TexturedCue.Segment(
+                            segments.add(new TexturedCueBrand.Segment(
                                     segObj.getString("texture"),
                                     segObj.getDouble("length"),
                                     segObj.getDouble("diameter1"),
@@ -305,7 +365,7 @@ public class DataLoader {
                             ));
                         }
                         
-                        cue = new TexturedCue(
+                        cue = new TexturedCueBrand(
                                 key,
                                 name,
                                 segments,
@@ -319,7 +379,7 @@ public class DataLoader {
                                 cueObject.getBoolean("privacy")
                         );
                     } else {
-                        cue = new PlanarCue(
+                        cue = new PlanarCueBrand(
                                 key,
                                 name,
                                 cueObject.getDouble("frontLength"),
@@ -340,13 +400,13 @@ public class DataLoader {
                         );
                         if (cueObject.has("arrow")) {
                             JSONObject arrowObj = cueObject.getJSONObject("arrow");
-                            ((PlanarCue) cue).createArrow(arrowObj);
+                            ((PlanarCueBrand) cue).createArrow(arrowObj);
                         }
                     }
                     cues.put(key, cue);
                     if (!cue.privacy) publicCues.put(key, cue);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    EventLogger.error(e);
                 }
             }
         }
@@ -445,24 +505,48 @@ public class DataLoader {
         return new HashMap<>(playerPeople);
     }
 
-    public Map<String, Cue> getCues() {
+    public Map<String, CueBrand> getCues() {
         return cues;
     }
 
-    public Cue getStdBreakCue() {
+    public CueBrand getStdBreakCueBrand() {
         return cues.get("stdBreakCue");
     }
 
-    public Cue getRestCue() {
+    public CueBrand getRestCueBrand() {
         return cues.get("restCue");
     }
 
-    public Map<String, Cue> getPublicCues() {
+    public Cue getRestCue() {
+        if (stdRestCue == null) {
+            stdRestCue = Cue.createForFastGame(cues.get("restCue"));
+        }
+        return stdRestCue;
+    }
+
+    public Map<String, CueBrand> getPublicCues() {
         return publicCues;
     }
 
-    public Cue getCueById(String cueId) {
+    public CueBrand getCueById(String cueId) {
         return cues.get(cueId);
+    }
+    
+//    public Cue getCueInstanceById(String instanceId) {
+//        return cueInstances.get(instanceId);
+//    }
+    
+//    public CueTip getTipById(String tipInstanceId, CueBrand cueBrand) {
+//        CareerManager careerManager = CareerManager.getInstance();
+//        if (careerManager != null) {
+//            careerManager.getInventory().
+//        } else {
+//            return CueTip.createDefault(cueBrand.getCueTipWidth() , cueBrand.cueTipThickness);
+//        }
+//    }
+    
+    public CueTipBrand getTipBrandById(String tipBrandId) {
+        return cueTips.get(tipBrandId);
     }
 
     private JSONObject makeCustomJson() {

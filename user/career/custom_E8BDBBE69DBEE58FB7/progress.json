@@ -34,6 +34,7 @@
   "matchTree": {"root": {
     "p1": {
       "p1": {
+        "p1wins": 0,
         "p1": {"winner": "O_Sullivan"},
         "p2": {
           "p1wins": 0,
@@ -76,10 +77,13 @@
           "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-16",
           "p2wins": 2
         },
+        "winner": "Zhao Xintong",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-20"
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-20",
+        "p2wins": 2
       },
       "p2": {
+        "p1wins": 1,
         "p1": {"winner": "Neil Robertson"},
         "p2": {
           "p1wins": 2,
@@ -122,8 +126,10 @@
           "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-17",
           "p2wins": 0
         },
+        "winner": "Trump",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-21"
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-21",
+        "p2wins": 2
       },
       "stage": "SEMI_FINAL",
       "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-SEMI_FINAL-24"
@@ -176,6 +182,7 @@
         "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-22"
       },
       "p2": {
+        "p1wins": 0,
         "p1": {"winner": "Mark Williams"},
         "p2": {
           "p1wins": 1,
@@ -218,8 +225,10 @@
           "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-19",
           "p2wins": 2
         },
+        "winner": "Kid",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-23"
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-23",
+        "p2wins": 2
       },
       "stage": "SEMI_FINAL",
       "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-SEMI_FINAL-25"
@@ -246,6 +255,22 @@
       "playerId": "Zhao Xintong"
     },
     {
+      "score": 112,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-21",
+      "playerId": "Trump"
+    },
+    {
+      "score": 101,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-20",
+      "playerId": "Zhao Xintong"
+    },
+    {
       "score": 92,
       "stage": "PRE_ROUND_2",
       "sim": true,
@@ -268,6 +293,22 @@
       "numFrame": 1,
       "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_1-1",
       "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 68,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-21",
+      "playerId": "Trump"
+    },
+    {
+      "score": 65,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-21",
+      "playerId": "Trump"
     },
     {
       "score": 64,

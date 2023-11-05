@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.util.DataLoader;
 
-public class PlanarCue extends Cue {
+public class PlanarCueBrand extends CueBrand {
 
     public final double frontLength;
     public final double midLength;
@@ -15,23 +15,23 @@ public class PlanarCue extends Cue {
 
     public Arrow arrow;
 
-    public PlanarCue(String cueId, 
-                     String name, 
-                     double frontLength, 
-                     double midLength, 
-                     double backLength, 
-                     double tipRingThickness, 
-                     double cueTipThickness, 
-                     double endWidth, 
-                     double cueTipWidth, 
-                     Color tipRingColor, 
-                     Color frontColor, 
-                     Color midColor, 
-                     Color backColor, 
-                     double powerMultiplier, 
-                     double spinMultiplier, 
-                     double accuracyMultiplier, 
-                     boolean privacy) {
+    public PlanarCueBrand(String cueId,
+                          String name,
+                          double frontLength,
+                          double midLength,
+                          double backLength,
+                          double tipRingThickness,
+                          double cueTipThickness,
+                          double endWidth,
+                          double cueTipWidth,
+                          Color tipRingColor,
+                          Color frontColor,
+                          Color midColor,
+                          Color backColor,
+                          double powerMultiplier,
+                          double spinMultiplier,
+                          double accuracyMultiplier,
+                          boolean privacy) {
         super(cueId, 
                 name, 
                 tipRingThickness, 
@@ -63,11 +63,6 @@ public class PlanarCue extends Cue {
                 arrowObj.getDouble("frontSpace"),
                 arrowObj.getDouble("depth")
         );
-    }
-
-    @Override
-    public double getTotalLength() {
-        return getWoodPartLength() + cueTipThickness;
     }
 
     @Override
@@ -145,7 +140,7 @@ public class PlanarCue extends Cue {
 
         private int computeNArrows() {
             // 等差数列
-            double space = PlanarCue.this.frontLength - frontSpace;
+            double space = PlanarCueBrand.this.frontLength - frontSpace;
             double avg = (firstGap + lastGap) / 2;
             return (int) (space / avg);
         }

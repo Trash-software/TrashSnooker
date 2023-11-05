@@ -48,7 +48,7 @@ public class CareerTrainingView extends ChildInitializable {
     @FXML
     TableColumn<ChallengeItem, String> challengeCompletedCol;
     @FXML
-    ComboBox<FastGameView.CueItem> cueBox;
+    ComboBox<FastGameView.CueAndBrand> cueBox;
     @FXML
     VBox outBox;
     @FXML
@@ -254,7 +254,7 @@ public class CareerTrainingView extends ChildInitializable {
 
     private void startGameChallenge(ChallengeItem item) {
         ChallengeSet challengeSet = item.data;
-        Cue cue = cueBox.getSelectionModel().getSelectedItem().cue;
+        Cue cue = cueBox.getSelectionModel().getSelectedItem().getNonNullInstance();
         PlayerPerson person = career.getPlayerPerson();
 
         InGamePlayer igp1 = new InGamePlayer(person, cue, PlayerType.PLAYER, 1, 1.0);

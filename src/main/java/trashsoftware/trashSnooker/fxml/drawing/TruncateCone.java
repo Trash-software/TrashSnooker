@@ -20,8 +20,7 @@ public class TruncateCone extends MeshView {
                         float topRadius, 
                         float botRadius, 
                         float length, 
-                        PhongMaterial texture, 
-                        boolean skewedTexture) {
+                        PhongMaterial texture) {
         this.poly = poly;
         this.r1 = topRadius;
         this.r2 = botRadius;
@@ -29,47 +28,30 @@ public class TruncateCone extends MeshView {
 
         float[] points = new float[poly * 6];
         int[] faces = new int[poly * 12];
-        float[] textCoords = new float[poly * 4];
+        float[] textCoords = new float[(poly + 1) * 4];
 
         double sep = 1.0 / poly;
-        double baseX;
-        double topSepX;
-        if (skewedTexture) {
-            double ratio = topRadius / botRadius;
-            baseX = 0.5 - ratio / 2;
-            topSepX = sep * ratio;
-        } else {
-            baseX = 0.0;
-            topSepX = sep;
-        }
+        
         // texture coords
-
-        for (int i = 0; i < poly; i++) {
+        for (int i = 0; i < poly + 1; i++) {
+            // +1是因为
+            // 圆柱的最后一个侧面可以接到第一个面，但贴图不能从最右边接到最左边
+            
             // 棱台的每个侧边由两个三角形拼成
             // 实际上只需一条边，但我们写了两条边，为了简单
             int index = i * 4;
             
-            float ulx = (float) (i * topSepX + baseX);
-//            float urx = (float) (ulx + topSepX);
-            float llx = (float) (i * sep);
-//            float lrx = (float) (llx + sep);
+            float x = (float) (i * sep);
             
             // 0 左上
-            textCoords[index] = ulx;
+            textCoords[index] = x;
             textCoords[index + 1] = 0;
             // 1 左下
-            textCoords[index + 2] = llx;
+            textCoords[index + 2] = x;
             textCoords[index + 3] = 1;
-//            // 2 右下
-//            textCoords[index + 4] = lrx;
-//            textCoords[index + 5] = 1;
-//            // 3 右上
-//            textCoords[index + 6] = urx;
-//            textCoords[index + 7] = 0;
         }
         
         int nPoints = points.length / 3;
-        int nCoords = textCoords.length / 2;
 
         double eachDeg = 360.0 / poly;
         for (int i = 0; i < poly; i++) {
@@ -79,8 +61,6 @@ public class TruncateCone extends MeshView {
 
             float leftX = (float) Math.cos(Math.toRadians(deg));
             float leftZ = (float) Math.sin(Math.toRadians(deg));
-//            float rightX = (float) Math.cos(Math.toRadians(deg2));
-//            float rightZ = (float) Math.sin(Math.toRadians(deg2));
 
             // 0 左上
             points[index] = leftX * r1;
@@ -96,23 +76,29 @@ public class TruncateCone extends MeshView {
             
             int faceIndex = i * 12;
             int ptIndex = i * 2;
-            int tcIndex = i * 2;
+            
+            int ul = ptIndex;
+            int ll = ptIndex + 1;
+            int urPt = ptIndex + 2 >= nPoints ? 0 : ptIndex + 2;
+            int lrPt = ptIndex + 3 >= nPoints ? 1 : ptIndex + 3;
+            int urTc = ptIndex + 2;
+            int lrTc = ptIndex + 3;
             
             // （左上，左下，右下）三角形
-            faces[faceIndex] = ptIndex;
-            faces[faceIndex + 1] = tcIndex;
-            faces[faceIndex + 2] = ptIndex + 1;
-            faces[faceIndex + 3] = tcIndex + 1;
-            faces[faceIndex + 4] = ptIndex + 3 >= nPoints ? 1 : ptIndex + 3;
-            faces[faceIndex + 5] = tcIndex + 3 >= nCoords ? 1 : tcIndex + 3;
+            faces[faceIndex] = ul;
+            faces[faceIndex + 1] = ul;
+            faces[faceIndex + 2] = ll;
+            faces[faceIndex + 3] = ll;
+            faces[faceIndex + 4] = lrPt;
+            faces[faceIndex + 5] = lrTc;
 
             // （左上，右下，右上）三角形
-            faces[faceIndex + 6] = ptIndex;
-            faces[faceIndex + 7] = tcIndex;
-            faces[faceIndex + 8] = ptIndex + 3 >= nPoints ? 1 : ptIndex + 3;
-            faces[faceIndex + 9] = tcIndex + 3 >= nCoords ? 1 : tcIndex + 3;
-            faces[faceIndex + 10] = ptIndex + 2 >= nPoints ? 0 : ptIndex + 2;
-            faces[faceIndex + 11] = tcIndex + 2 >= nCoords ? 0 : tcIndex + 2;
+            faces[faceIndex + 6] = ul;
+            faces[faceIndex + 7] = ul;
+            faces[faceIndex + 8] = lrPt;
+            faces[faceIndex + 9] = lrTc;
+            faces[faceIndex + 10] = urPt;
+            faces[faceIndex + 11] = urTc;
         }
         TriangleMesh mesh = new TriangleMesh();
         mesh.getPoints().addAll(points);

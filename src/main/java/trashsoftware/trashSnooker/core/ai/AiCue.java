@@ -1225,7 +1225,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //            double sideSpinSd = muSigXy[1];  // 左右打点的标准差，mm
             double powerErrorFactor = playerPerson.getErrorMultiplierOfPower(cueParams.selectedPower());
             double powerSd = (100.0 - playerPerson.getPowerControl()) / 100.0;
-            powerSd *= attackChoice.attackingPlayer.getInGamePlayer().getPlayCue().powerMultiplier;
+            powerSd *= attackChoice.attackingPlayer.getInGamePlayer().getPlayCue().getPowerMultiplier();
             powerSd *= handSdMul;
             powerSd *= powerErrorFactor;  // 力量的标准差
 

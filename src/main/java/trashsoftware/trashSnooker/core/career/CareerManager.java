@@ -51,6 +51,7 @@ public class CareerManager {
     private final List<Career.CareerWithAwards> snookerRankingSingleSeason = new ArrayList<>();
     private final List<Career.CareerWithAwards> chineseEightRanking = new ArrayList<>();
     private final List<Career.CareerWithAwards> americanNineRanking = new ArrayList<>();
+    private final InventoryManager inventoryManager;
     private HumanCareer humanPlayerCareer;  // 玩家的career
     private Championship inProgress;
     private int lastSavedVersion;
@@ -65,12 +66,16 @@ public class CareerManager {
         this.timestamp.set(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY);  // 初始日期
         this.beginTimestamp = Calendar.getInstance();
         this.beginTimestamp.set(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY);
+        
+        inventoryManager = InventoryManager.createInstance(save);
     }
 
     private CareerManager(CareerSave save, Calendar timestamp, Calendar beginTimestamp) {
         this.careerSave = save;
         this.timestamp = timestamp;
         this.beginTimestamp = beginTimestamp;
+
+        inventoryManager = InventoryManager.createInstance(save);
     }
 
     private static int[] readExpLevelUp() {
@@ -143,6 +148,10 @@ public class CareerManager {
 
     public static void setCurrentSave(CareerSave currentSave) {
         CareerManager.currentSave = currentSave;
+    }
+
+    public static CareerSave getCurrentSave() {
+        return currentSave;
     }
 
     private static CareerManager loadFromFile(CareerSave careerSave) throws IOException {
@@ -362,6 +371,15 @@ public class CareerManager {
             EventLogger.error(e);
         }
         return res;
+    }
+    
+    public static void closeInstance() {
+        instance = null;
+        currentSave = null;
+    }
+
+    public InventoryManager getInventory() {
+        return inventoryManager;
     }
 
     private void saveCacheInfo() {

@@ -4,8 +4,8 @@ import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.cue.Cue;
-import trashsoftware.trashSnooker.core.cue.PlanarCue;
-import trashsoftware.trashSnooker.core.cue.TexturedCue;
+import trashsoftware.trashSnooker.core.cue.PlanarCueBrand;
+import trashsoftware.trashSnooker.core.cue.TexturedCueBrand;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public abstract class CueModel extends Group {
@@ -17,13 +17,13 @@ public abstract class CueModel extends Group {
     }
 
     public static CueModel createCueModel(Cue cue, double initScale) {
-        if (cue instanceof TexturedCue tc) {
-            return new CueModel3D(tc,
+        if (cue.getBrand() instanceof TexturedCueBrand) {
+            return new CueModel3D(cue,
                     GameView.CUE_TIP_COLOR,
                     initScale
             );
-        } else if (cue instanceof PlanarCue pc) {
-            return new CueModel2D(pc,
+        } else if (cue.getBrand() instanceof PlanarCueBrand) {
+            return new CueModel2D(cue,
                     initScale);
         } else {
             throw new RuntimeException("Unsupported cue type");

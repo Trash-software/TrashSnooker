@@ -252,6 +252,7 @@ public class GameView implements Initializable {
     private boolean aiHelpPlay = false;
     private List<double[]> aiWhitePath;  // todo: debug用的
     private List<double[]> suggestedPlayerWhitePath;
+    private Cue lastCuedCue;
 
     private static double pullDtOf(PlayerPerson person, double personPower) {
         return (person.getMaxPullDt() - person.getMinPullDt()) *
@@ -1866,7 +1867,7 @@ public class GameView implements Initializable {
 
         // 因为力量控制导致的力量偏差
         powerFactor = powerFactor * playerPerson.getPowerSd(selPower, handSkill);  // 用力越大误差越大
-        powerFactor *= cue.powerMultiplier;  // 发力范围越大的杆控力越粗糙
+        powerFactor *= cue.getPowerMultiplier();  // 发力范围越大的杆控力越粗糙
         if (enablePsy) {
             double psyPowerMul = getPsyControlMultiplier(playerPerson);
             powerFactor /= psyPowerMul;
@@ -1944,14 +1945,18 @@ public class GameView implements Initializable {
 
         boolean slidedCue = false;
         if (mutate) {
+            double cueTipHealthReduce = selPower * 0.01;
+            
             if (isMiscue()) {
 //                power /= 4;
 //                unitSideSpin *= 10;
                 System.out.println("Miscued!");
                 AchManager.getInstance().addAchievement(Achievement.MISCUED, game.getGame().getCuingIgp());
                 slidedCue = true;
+                cueTipHealthReduce *= 100;
             }
             miscued = slidedCue;
+            cue.getCueTip().reduceHp(cueTipHealthReduce);
         }
 
 //        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
@@ -3175,7 +3180,7 @@ public class GameView implements Initializable {
 
         // 最大的预测长度
         double origMaxLength = playerPerson.getPrecisionPercentage() / 100 *
-                cue.accuracyMultiplier * maxRealPredictLength;
+                cue.getAccuracyMultiplier() * maxRealPredictLength;
         // 只计算距离的最小长度
         double minLength = origMaxLength / 2.2 * playerPerson.getLongPrecision();
 
@@ -3672,7 +3677,9 @@ public class GameView implements Initializable {
                 pointingUnitY,
                 cueAngleDeg,
                 gamePane.getScale());
-        cueModel.setCueRotation(cueRollRotateDeg);
+        if (!isRest) {
+            cueModel.setCueRotation(cueRollRotateDeg);
+        }
     }
 
     private CueModel getCueModel(Cue cue) {
