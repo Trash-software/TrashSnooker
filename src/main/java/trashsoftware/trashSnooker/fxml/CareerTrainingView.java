@@ -48,7 +48,7 @@ public class CareerTrainingView extends ChildInitializable {
     @FXML
     TableColumn<ChallengeItem, String> challengeCompletedCol;
     @FXML
-    ComboBox<FastGameView.CueAndBrand> cueBox;
+    ComboBox<CueSelection.CueAndBrand> cueBox;
     @FXML
     VBox outBox;
     @FXML
@@ -91,7 +91,7 @@ public class CareerTrainingView extends ChildInitializable {
     }
 
     private void refreshCueBox() {
-        ChampDrawView.refreshCueBox(cueBox);
+//        ChampDrawView.refreshCueBox(cueBox);
         cueBox.getSelectionModel().select(0);
     }
 
@@ -254,11 +254,16 @@ public class CareerTrainingView extends ChildInitializable {
 
     private void startGameChallenge(ChallengeItem item) {
         ChallengeSet challengeSet = item.data;
-        Cue cue = cueBox.getSelectionModel().getSelectedItem().getNonNullInstance();
+//        Cue cue = cueBox.getSelectionModel().getSelectedItem().getNonNullInstance();
         PlayerPerson person = career.getPlayerPerson();
 
-        InGamePlayer igp1 = new InGamePlayer(person, cue, PlayerType.PLAYER, 1, 1.0);
-        InGamePlayer igp2 = new InGamePlayer(person, cue, PlayerType.PLAYER, 2, 1.0);
+//        InGamePlayer igp1 = new InGamePlayer(person, cue, PlayerType.PLAYER, 1, 1.0);
+//        InGamePlayer igp2 = new InGamePlayer(person, cue, PlayerType.PLAYER, 2, 1.0);
+        InGamePlayer igp1 = new InGamePlayer(person, PlayerType.PLAYER, 
+                CareerManager.getInstance().getInventory(), challengeSet.getGameValues().rule,
+                1, 1.0);
+        InGamePlayer igp2 = new InGamePlayer(person, PlayerType.PLAYER, 
+                null, challengeSet.getGameValues().rule, 2, 1.0);
 
         EntireGame game = new EntireGame(igp1, igp2, challengeSet.getGameValues(), 1, challengeSet.getCloth(), null);
 

@@ -41,7 +41,8 @@ public class CueParams {
                                              Game<?, ?> game,
                                              InGamePlayer inGamePlayer,
                                              PlayerPerson.HandSkill handSkill) {
-        Cue cue = inGamePlayer.getCurrentCue(game);
+//        Cue cue = inGamePlayer.getCurrentCue(game);
+        Cue cue = inGamePlayer.getCueSelection().getSelected().getNonNullInstance();
         double cuePowerMul = cue.getPowerMultiplier();
 
         double actualFbSpin = CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin, inGamePlayer.getPlayerPerson(), cue);
@@ -68,7 +69,8 @@ public class CueParams {
                                            Game<?, ?> game,
                                            InGamePlayer inGamePlayer,
                                            PlayerPerson.HandSkill handSkill) {
-        Cue cue = inGamePlayer.getCurrentCue(game);
+//        Cue cue = inGamePlayer.getCurrentCue(game);
+        Cue cue = inGamePlayer.getCueSelection().getSelected().getNonNullInstance();
         double cuePowerMul = cue.getPowerMultiplier();
 
         double mul = Util.powerMultiplierOfCuePoint(actualSideSpin, actualFrontBackSpin);
@@ -101,7 +103,7 @@ public class CueParams {
         double mul = Util.powerMultiplierOfCuePoint(unitCuePointX, unitCuePointY);
         double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
         return selectedPower * handMul * mul *
-                igp.getCurrentCue(game).getPowerMultiplier() /
+                igp.getCueSelection().getSelected().getNonNullInstance().getPowerMultiplier() /
                 game.getGameValues().ball.ballWeightRatio;
     }
 
@@ -114,7 +116,7 @@ public class CueParams {
         double mul = Util.powerMultiplierOfCuePoint(unitCuePointX, unitCuePointY);
         double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
         return actualPower / handMul / mul /
-                igp.getCurrentCue(game).getPowerMultiplier() *
+                igp.getCueSelection().getSelected().getNonNullInstance().getPowerMultiplier() *
                 game.getGameValues().ball.ballWeightRatio;
     }
 

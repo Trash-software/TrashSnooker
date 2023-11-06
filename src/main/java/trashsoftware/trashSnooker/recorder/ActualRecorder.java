@@ -340,16 +340,16 @@ public abstract class ActualRecorder implements GameRecorder {
         }
         System.arraycopy(id, 0, buffer, 2, id.length);
 
-        // todo: 存cuebrand
-        byte[] playCueBrandId = player.getPlayCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(playCueBrandId, 0, buffer, 34, playCueBrandId.length);
-        byte[] playCueInsId = player.getPlayCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(playCueInsId, 0, buffer, 66, playCueInsId.length);
-        
-        byte[] breakCueBrandId = player.getBreakCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(breakCueBrandId, 0, buffer, 130, breakCueBrandId.length);
-        byte[] breakCueInsId = player.getBreakCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(breakCueInsId, 0, buffer, 162, breakCueInsId.length);
+//        // todo: 存cuebrand
+//        byte[] playCueBrandId = player.getPlayCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+//        System.arraycopy(playCueBrandId, 0, buffer, 34, playCueBrandId.length);
+//        byte[] playCueInsId = player.getPlayCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+//        System.arraycopy(playCueInsId, 0, buffer, 66, playCueInsId.length);
+//        
+//        byte[] breakCueBrandId = player.getBreakCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+//        System.arraycopy(breakCueBrandId, 0, buffer, 130, breakCueBrandId.length);
+//        byte[] breakCueInsId = player.getBreakCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+//        System.arraycopy(breakCueInsId, 0, buffer, 162, breakCueInsId.length);
 
         wrapperStream.write(buffer);
     }

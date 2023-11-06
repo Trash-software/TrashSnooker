@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.ChampionshipStage;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
@@ -11,6 +12,7 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.GeneralSaveManager;
 import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
@@ -141,12 +143,17 @@ public class EntireGame {
     }
 
     public static EntireGame loadFrom(File file) {
-        if (!file.exists()) return null;
-        JSONObject json = Util.readJson(file);
-        assert json != null;
-        EntireGame eg = fromJson(json);
-        if (eg.isFinished()) return null;
-        return eg;
+        try {
+            if (!file.exists()) return null;
+            JSONObject json = Util.readJson(file);
+            assert json != null;
+            EntireGame eg = fromJson(json);
+            if (eg.isFinished()) return null;
+            return eg;
+        } catch (JSONException e) {
+            EventLogger.error(e);
+            return null;
+        }
     }
 
     public JSONObject toJson() {

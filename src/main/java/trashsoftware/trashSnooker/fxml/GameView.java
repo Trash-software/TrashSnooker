@@ -126,6 +126,8 @@ public class GameView implements Initializable {
     @FXML
     Button cueButton;
     @FXML
+    Button changeCueButton;
+    @FXML
     Button replayNextCueButton, replayLastCueButton;
     @FXML
     CheckBox replayAutoPlayBox;
@@ -338,6 +340,7 @@ public class GameView implements Initializable {
 
         disableWhenCuing.addAll(List.of(
                 cueButton,
+                changeCueButton,
                 cuePointCanvas,
                 cueAngleCanvas,
                 handSelectionLeft,
@@ -721,11 +724,11 @@ public class GameView implements Initializable {
             case S -> setCuePoint(cuePointX, cuePointY + 1, true);
             case Q -> setCueAngleDeg(cueAngleDeg + 1);
             case E -> setCueAngleDeg(cueAngleDeg - 1);
-            case Z -> cueRollRotateDeg += 3; 
+            case Z -> cueRollRotateDeg += 3;
             case X -> cueRollRotateDeg -= 3;
         }
     }
-    
+
     private void keyboardReleaseAction(KeyEvent e) {
         if (replay != null || aiCalculating || playingMovement || cueAnimationPlayer != null) {
             return;
@@ -1111,6 +1114,11 @@ public class GameView implements Initializable {
         Player breakPlayer = game.getGame().getCuingPlayer();
         updateHandSelection(true);
         updatePowerSlider(breakPlayer.getPlayerPerson());
+        if (breakPlayer.getInGamePlayer().isHuman()) {
+            changeCueButton.setDisable(false);
+        } else {
+            changeCueButton.setDisable(true);
+        }
 
         tableGraphicsChanged = true;
 
@@ -1264,9 +1272,7 @@ public class GameView implements Initializable {
     }
 
     private double getRatioOfCueAndBall() {
-        return game.getGame().getCuingPlayer().getInGamePlayer()
-                .getCurrentCue(game.getGame()).getCueTipWidth() /
-                gameValues.ball.ballDiameter;
+        return getCuingCue().getCueTipWidth() / gameValues.ball.ballDiameter;
     }
 
     private double getCuePointRelX(double x) {
@@ -1284,9 +1290,9 @@ public class GameView implements Initializable {
     private double getCuePointCanvasY(double y) {
         return y * cueAreaRadius + cueCanvasWH / 2;
     }
-    
+
     private void setCueRollDeg(double cueRollDeg) {
-        
+
     }
 
     private void setCuePoint(double x, double y, boolean forceMove) {
@@ -1785,6 +1791,24 @@ public class GameView implements Initializable {
     }
 
     @FXML
+    void changeCueAction() {
+        InGamePlayer cuingIgp = game.getGame().getCuingIgp();
+        if (cuingIgp != null) {
+            CueSelection selection = cuingIgp.getCueSelection();
+            CueSelectionView.showCueSelectionView(selection,
+                    stage,
+                    this::hideCue,
+                    () -> {
+                        cursorDirectionUnitX = 0;
+                        cursorDirectionUnitY = 0;
+                        recalculateUiRestrictions();
+                        tableGraphicsChanged = true;
+                        draw();
+                    });
+        }
+    }
+
+    @FXML
     void repairAction() {
         AlertShower.askConfirmation(stage,
                 strings.getString("repairDes"),
@@ -1824,6 +1848,14 @@ public class GameView implements Initializable {
         }
     }
 
+    /**
+     * @return 正在击球的球员正在使用的杆
+     */
+    private Cue getCuingCue() {
+        InGamePlayer cuing = game.getGame().getCuingIgp();
+        return cuing.getCueSelection().getSelected().getNonNullInstance();
+    }
+
     private CuePlayParams applyRandomCueError(Player player) {
         Random random = new Random();
         return applyCueError(player,
@@ -1840,7 +1872,7 @@ public class GameView implements Initializable {
                                         double sideSpinFactor,
                                         boolean mutate,
                                         PlayerPerson.HandSkill handSkill) {
-        Cue cue = player.getInGamePlayer().getCurrentCue(game.getGame());
+        Cue cue = getCuingCue();
         PlayerPerson playerPerson = player.getPlayerPerson();
 
         // 用架杆影响打点精确度
@@ -1946,7 +1978,7 @@ public class GameView implements Initializable {
         boolean slidedCue = false;
         if (mutate) {
             double cueTipHealthReduce = selPower * 0.01;
-            
+
             if (isMiscue()) {
 //                power /= 4;
 //                unitSideSpin *= 10;
@@ -3176,7 +3208,8 @@ public class GameView implements Initializable {
             WhitePrediction prediction,
             double potDt,
             PlayerPerson playerPerson) {
-        Cue cue = game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame());
+//        Cue cue = game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame());
+        Cue cue = getCuingCue();
 
         // 最大的预测长度
         double origMaxLength = playerPerson.getPrecisionPercentage() / 100 *
@@ -3449,7 +3482,8 @@ public class GameView implements Initializable {
         if (replay != null) {
             cue = replay.getCurrentCue();
         } else {
-            cue = cuingPlayer.getCurrentCue(game.getGame());
+            cue = getCuingCue();
+//            cue = cuingPlayer.getCurrentCue(game.getGame());
         }
 
         double[] restCuePointing = null;
@@ -3566,7 +3600,8 @@ public class GameView implements Initializable {
                     MIN_CUE_BALL_DT -
                             maxPullDt - HAND_DT_TO_MAX_PULL +
                             gameValues.ball.ballRadius,
-                    game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame()),
+//                    game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame()),
+                    getCuingCue(),
                     false);
         } else {
 //            System.out.println("Drawing!");
@@ -3623,14 +3658,16 @@ public class GameView implements Initializable {
     }
 
     private void hideCue() {
-        GameHolder gameHolder = getActiveHolder();
-        List<Cue> toHide = List.of(
-                gameHolder.getP1().getPlayCue(),
-                gameHolder.getP1().getBreakCue(),
-                gameHolder.getP2().getPlayCue(),
-                gameHolder.getP2().getBreakCue(),
-                DataLoader.getInstance().getRestCue()
-        );
+        List<Cue> toHide = new ArrayList<>();
+        toHide.add(DataLoader.getInstance().getRestCue());
+        for (InGamePlayer igp : new InGamePlayer[]{game.getPlayer1(), game.getPlayer2()}) {
+            for (CueSelection.CueAndBrand cab : igp.getCueSelection().getAvailableCues()) {
+                Cue ins = cab.getCueInstance();
+                if (ins != null) {
+                    toHide.add(ins);
+                }
+            }
+        }
 
         for (Cue cue : toHide) {
             CueModel cm = cueModelMap.get(cue);
@@ -3701,8 +3738,9 @@ public class GameView implements Initializable {
     private void recalculateUiRestrictions(boolean forceChangeHand) {
         if (game == null || game.getGame() == null) return;
 
-        Cue currentCue = game.getGame().getCuingPlayer().getInGamePlayer()
-                .getCurrentCue(game.getGame());
+//        Cue currentCue = game.getGame().getCuingPlayer().getInGamePlayer()
+//                .getCurrentCue(game.getGame());
+        Cue currentCue = getCuingCue();
         CueBackPredictor.Result backPre =
                 game.getGame().getObstacleDtHeight(cursorDirectionUnitX, cursorDirectionUnitY,
                         currentCue.getCueTipWidth());
@@ -3733,6 +3771,14 @@ public class GameView implements Initializable {
         // 如果打点不可能，把出杆键禁用了
         // 自动调整打点太麻烦了
         setCueButtonForPoint();
+
+        // 只有玩家可以换球杆
+        InGamePlayer cuingIgp = game.getGame().getCuingIgp();
+        if (cuingIgp.isHuman()) {
+            changeCueButton.setDisable(false);
+        } else {
+            changeCueButton.setDisable(true);
+        }
 
         createPathPrediction();
     }

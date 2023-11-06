@@ -163,7 +163,7 @@ public class BriefReplayItem {
         CueBrand breakCueBrand = Objects.requireNonNull(DataLoader.getInstance().getCues().get(breakCueBrandId));
         Cue breakCue = Cue.createForFastGame(breakCueBrand);
 
-        return new InGamePlayer(playerPerson, breakCue, playCue, type, num, 1.0);
+        return new InGamePlayer(playerPerson, type, null, gameValues.rule, num, 1.0);
     }
     
     private PlayerPerson readPlayerPerson(String pid, RandomAccessFile raf) throws IOException {
