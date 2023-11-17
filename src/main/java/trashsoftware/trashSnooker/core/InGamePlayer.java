@@ -43,24 +43,19 @@ public class InGamePlayer {
                 cueSelection.getAvailableCues().add(cab);
             }
         } else {
+            for (CueBrand pri : playerPerson.getPrivateCues()) {
+                cueSelection.getAvailableCues().add(new CueSelection.CueAndBrand(pri));
+            }
             for (CueBrand cue : DataLoader.getInstance().getCues().values()) {
                 if (!cue.privacy) {
                     CueSelection.CueAndBrand cab = new CueSelection.CueAndBrand(cue);
                     cueSelection.getAvailableCues().add(cab);
                 }
             }
-            for (CueBrand pri : playerPerson.getPrivateCues()) {
-                cueSelection.getAvailableCues().add(new CueSelection.CueAndBrand(pri));
-            }
             cueSelection.select(cueSelection.getAvailableCues().get(0));
         }
         FastGameView.selectSuggestedCue(cueSelection, gameRule, playerPerson);
     }
-
-//    public InGamePlayer(PlayerPerson playerPerson, Cue cue, PlayerType playerType, int playerNumber,
-//                        double handFeelEffort) {
-//        this(playerPerson, cue, cue, playerType, playerNumber, handFeelEffort);
-//    }
 
     public static InGamePlayer fromJson(JSONObject jsonObject) {
         DataLoader loader = DataLoader.getInstance();
@@ -70,29 +65,17 @@ public class InGamePlayer {
         
         PlayerType playerType = PlayerType.valueOf(jsonObject.getString("playerType"));
         
-        String breakCueId = jsonObject.getString("breakCue");
-        String playCueId = jsonObject.getString("playCue");
-        
-        Cue breakCue;
-        Cue playCue;
-        
         InventoryManager inventoryManager;
         // 严重警告：
         // 注意！！！
         // 只有生涯模式的玩家才是instanceId
         // 其余都是brandId
         if (CareerManager.getCurrentSave() == null || playerType == PlayerType.COMPUTER) {
-            breakCue = Cue.createForFastGame(loader.getCueById(breakCueId));
-            playCue = Cue.createForFastGame(loader.getCueById(playCueId));
             inventoryManager = null;
         } else {
             CareerManager careerManager = CareerManager.getInstance();
-            breakCue = careerManager.getInventory().getCueByInstanceId(breakCueId);
-            playCue = careerManager.getInventory().getCueByInstanceId(playCueId);
             inventoryManager = careerManager.getInventory();
         }
-        System.out.println(breakCue);
-        System.out.println(playCue);
         
         int number = jsonObject.getInt("playerNumber");
         double handFeelEffort = jsonObject.getDouble("handFeelEffort");
@@ -109,20 +92,8 @@ public class InGamePlayer {
 
     public JSONObject toJson() {
         JSONObject object = new JSONObject();
-        
-//        String breakCueId;
-//        String playCueId;
-//        if (CareerManager.getCurrentSave() == null || playerType == PlayerType.COMPUTER) {
-//            breakCueId = breakCue.getBrand().cueId;
-//            playCueId = playCue.getBrand().cueId;
-//        } else {
-//            breakCueId = breakCue.getInstanceId();
-//            playCueId = playCue.getInstanceId();
-//        }
 
         object.put("person", playerPerson.getPlayerId());
-//        object.put("breakCue", breakCueId);
-//        object.put("playCue", playCueId);
         object.put("gameRule", gameRule.name());
         object.put("playerType", playerType.name());
         object.put("playerNumber", playerNumber);
@@ -164,18 +135,6 @@ public class InGamePlayer {
     public PlayerType getPlayerType() {
         return playerType;
     }
-
-//    public Cue getBreakCue() {
-//        return breakCue;
-//    }
-//
-//    public Cue getPlayCue() {
-//        return playCue;
-//    }
-
-//    public PersonRecord getPersonRecord() {
-//        return personRecord;
-//    }
 
     public PlayerPerson getPlayerPerson() {
         return playerPerson;

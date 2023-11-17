@@ -3,7 +3,7 @@ package trashsoftware.trashSnooker.core;
 import javafx.scene.control.Button;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueBrand;
-import trashsoftware.trashSnooker.fxml.FastGameView;
+import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,12 @@ public class CueSelection {
         for (CueAndBrand cab : available) {
             if (brand.cueId.equals(cab.brand.cueId)) {
                 select(cab);
+                return;
             }
+        }
+        EventLogger.warning("Failed to selected by brand: " + brand.cueId + ". \nInventory: ");
+        for (CueAndBrand cab : available) {
+            EventLogger.warning(cab.brand.cueId);
         }
     }
 
@@ -66,10 +71,26 @@ public class CueSelection {
         }
 
         public Cue getNonNullInstance() {
+            return getNonNullInstance(InstanceType.REGULAR);
+        }
+
+        public Cue getNonNullInstance(InstanceType instanceType) {
             if (instance == null) {
-                instance = Cue.createForFastGame(brand);
+                if (brand.isRest) {
+                    instance = Cue.createRest(brand);
+                } else {
+                    instance = switch (instanceType) {
+                        case REGULAR -> Cue.createOneTimeInstance(brand);
+                        case REPLAY -> Cue.createForReplay(brand);
+                    };
+                }
             }
             return instance;
         }
+    }
+    
+    public enum InstanceType {
+        REGULAR,
+        REPLAY
     }
 }

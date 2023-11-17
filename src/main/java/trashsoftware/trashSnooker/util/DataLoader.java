@@ -519,7 +519,7 @@ public class DataLoader {
 
     public Cue getRestCue() {
         if (stdRestCue == null) {
-            stdRestCue = Cue.createForFastGame(cues.get("restCue"));
+            stdRestCue = Cue.createRest(cues.get("restCue"));
         }
         return stdRestCue;
     }

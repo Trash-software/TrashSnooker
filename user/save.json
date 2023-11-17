@@ -3,28 +3,26 @@
   "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
-    "handFeelEffort": 1,
-    "person": "custom_player_3",
-    "playerType": "PLAYER",
-    "playCue": "GirlPoolCue",
-    "breakCue": "stdBreakCue"
+    "gameRule": "CHINESE_EIGHT",
+    "handFeelEffort": 0.5,
+    "person": "Neil Robertson",
+    "playerType": "COMPUTER"
   },
   "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
+    "gameRule": "CHINESE_EIGHT",
     "handFeelEffort": 1,
-    "person": "custom_player_4",
-    "playerType": "PLAYER",
-    "playCue": "GirlCue",
-    "breakCue": "stdBreakCue"
+    "person": "custom_player_3",
+    "playerType": "COMPUTER"
   },
-  "startTime": 1697055291055,
+  "startTime": 1700244524826,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
     "ball": "POOL_BALL",
     "gameRule": "CHINESE_EIGHT",
-    "devMode": true,
+    "devMode": false,
     "table": {
       "tableOrdinal": 1,
       "pocketDifficultyOrdinal": 2,

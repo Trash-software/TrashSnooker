@@ -51,7 +51,7 @@ public class BriefReplayItem {
         try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
             byte[] header = new byte[ActualRecorder.HEADER_LENGTH];
             if (raf.read(header) != header.length)
-                throw new IOException();
+                throw new IOException("Header length not match");
 
             String sig = new String(header, 0, 4);
             if (!ActualRecorder.SIGNATURE.equals(sig)) throw new ReplayException("Not a replay");
@@ -103,13 +103,13 @@ public class BriefReplayItem {
                     (primaryVersion == 12 && secondaryVersion >= 8)) {
                 byte[] extraLenBytes = new byte[4];
                 if (raf.read(extraLenBytes) != extraLenBytes.length)
-                    throw new IOException();
+                    throw new IOException("Cannot read extra field");
 
                 extraLength = Util.bytesToInt32(extraLenBytes, 0);
 
                 byte[] extra = new byte[extraLength - 4];
                 if (raf.read(extra) != extra.length)
-                    throw new IOException();
+                    throw new IOException("Extra field length not match");
 
                 readExtraBlocks(extra);
             } else {
@@ -119,14 +119,14 @@ public class BriefReplayItem {
     }
 
     private InGamePlayer readOnePlayer(RandomAccessFile raf, int num) throws IOException, ReplayException {
-        byte[] buf = new byte[2];
-        if (raf.read(buf) != buf.length) throw new IOException();
+        byte[] buf = new byte[8];
+        if (raf.read(buf) != buf.length) throw new IOException("Cannot read header buffer");
         boolean isAi = buf[0] == 1;
         PlayerType type = isAi ? PlayerType.COMPUTER : PlayerType.PLAYER;
 
         byte[] nameBuf = new byte[32];
-        byte[] cueInsBuf = new byte[64];
-        if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
+//        byte[] cueInsBuf = new byte[64];
+        if (raf.read(nameBuf) != nameBuf.length) throw new IOException("Cannot read name buffer");
         int nameLen = Util.indexOf((byte) 0, nameBuf);
         if (nameLen < 0 || nameLen > nameBuf.length) {
             System.err.println("Cannot read name from record");
@@ -134,14 +134,15 @@ public class BriefReplayItem {
         }
         
         String pid = new String(nameBuf, 0, nameLen, StandardCharsets.UTF_8);
-        if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
-        String playCueBrandId = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
-        if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
-        String playCueInsId = new String(nameBuf, 0, Util.indexOf((byte) 0, cueInsBuf), StandardCharsets.UTF_8);
-        if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
-        String breakCueBrandId = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
-        if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
-        String breakCueInsId = new String(nameBuf, 0, Util.indexOf((byte) 0, cueInsBuf), StandardCharsets.UTF_8);
+        
+//        if (raf.read(nameBuf) != nameBuf.length) throw new IOException("Name buffer length not match");
+//        String playCueBrandId = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
+//        if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
+//        String playCueInsId = new String(nameBuf, 0, Util.indexOf((byte) 0, cueInsBuf), StandardCharsets.UTF_8);
+//        if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
+//        String breakCueBrandId = new String(nameBuf, 0, Util.indexOf((byte) 0, nameBuf), StandardCharsets.UTF_8);
+//        if (raf.read(nameBuf) != nameBuf.length) throw new IOException();
+//        String breakCueInsId = new String(nameBuf, 0, Util.indexOf((byte) 0, cueInsBuf), StandardCharsets.UTF_8);
 
         PlayerPerson playerPerson = null;
         if (primaryVersion == 11) {
@@ -158,10 +159,10 @@ public class BriefReplayItem {
 //            System.out.println(playerPerson.getPlayerId() + playerPerson.getCuePlayType().toString());
         }
         
-        CueBrand playCueBrand = Objects.requireNonNull(DataLoader.getInstance().getCues().get(playCueBrandId));
-        Cue playCue = Cue.createForFastGame(playCueBrand);  // todo: restore instance
-        CueBrand breakCueBrand = Objects.requireNonNull(DataLoader.getInstance().getCues().get(breakCueBrandId));
-        Cue breakCue = Cue.createForFastGame(breakCueBrand);
+//        CueBrand playCueBrand = Objects.requireNonNull(DataLoader.getInstance().getCues().get(playCueBrandId));
+//        Cue playCue = Cue.createForFastGame(playCueBrand);  // todo: restore instance
+//        CueBrand breakCueBrand = Objects.requireNonNull(DataLoader.getInstance().getCues().get(breakCueBrandId));
+//        Cue breakCue = Cue.createForFastGame(breakCueBrand);
 
         return new InGamePlayer(playerPerson, type, null, gameValues.rule, num, 1.0);
     }
@@ -169,12 +170,13 @@ public class BriefReplayItem {
     private PlayerPerson readPlayerPerson(String pid, RandomAccessFile raf) throws IOException {
         byte[] lenBuf = new byte[4];
         if (raf.read(lenBuf) != lenBuf.length) {
-            throw new IOException();
+            throw new IOException("Cannot read length of player person");
         }
         int byteLen = Util.bytesToInt32(lenBuf, 0);
+//        System.out.println(byteLen);
         byte[] strBuf = new byte[byteLen];
         if (raf.read(strBuf) != strBuf.length) {
-            throw new IOException();
+            throw new IOException("Cannot read player person");
         }
         personObjLength += strBuf.length + lenBuf.length;
         String str = new String(strBuf);

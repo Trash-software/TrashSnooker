@@ -56,8 +56,8 @@ public class ChampDrawView extends ChildInitializable {
     Button opponentInfoBtn;
 //    @FXML
 //    ComboBox<FastGameView.CueItem> cueBox;
-    @FXML
-    Button cueButton;
+//    @FXML
+//    Button cueButton;
 //    FastGameView.CueSelection cueSelection;
     @FXML
     LabelTable<MatchResItem> matchResTable;
@@ -267,11 +267,11 @@ public class ChampDrawView extends ChildInitializable {
 //                cueSelection.select(humanIgp.getPlayCue());
 //                cueSelection.selectByCue(humanIgp.getPlayCue());
                 
-                cueButton.setDisable(true);
+//                cueButton.setDisable(true);
                 setOpponentText(championship.findHumanNextOpponent());
             } else {
                 if (championship.isHumanAlive()) {
-                    cueButton.setDisable(false);
+//                    cueButton.setDisable(false);
                     nextRoundButton.setText(strings.getString("startNextRound"));
                     setOpponentText(championship.findHumanNextOpponent());
                 } else {
@@ -512,10 +512,10 @@ public class ChampDrawView extends ChildInitializable {
         }
     }
     
-    @FXML
-    void changeCueAction() {
-//        FastGameView.showCueSelectionView(cueSelection, selfStage);
-    }
+//    @FXML
+//    void changeCueAction() {
+////        FastGameView.showCueSelectionView(cueSelection, selfStage);
+//    }
 
     private void startGameInNewRound(PlayerVsAiMatch match) {
         TableSpec tableSpec = match.getChampionship().getData().getTableSpec();

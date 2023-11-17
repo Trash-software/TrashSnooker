@@ -15,6 +15,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
+import trashsoftware.trashSnooker.recorder.ActualRecorder;
 import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.recorder.VideoCapture;
 import trashsoftware.trashSnooker.recorder.VideoConverter;
@@ -67,8 +68,15 @@ public class VideoExportView implements Initializable {
     public void setup(GameReplay replay, Stage selfStage) {
         this.replay = replay;
         this.selfStage = selfStage;
+        
+        File outDir = new File(ActualRecorder.RECORD_EXPORT_DIR);
+        if (!outDir.exists()) {
+            if (!outDir.mkdirs()) {
+                throw new RuntimeException("Cannot create output directory");
+            }
+        }
 
-        outFile = new File(replay.getItem().getFile().getAbsolutePath() + ".mp4");
+        outFile = new File( outDir, replay.getItem().getFile().getName() + ".mp4");
         outFileLabel.setText(outFile.getAbsolutePath());
 
         resolutionBox.getItems().addAll(VideoResolution.values());

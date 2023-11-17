@@ -57,7 +57,7 @@ public class CueModel3D extends CueModel {
 
     public static CueModel3D makeDefault(String cueId, int poly) {
         TexturedCueBrand tcb = (TexturedCueBrand) DataLoader.getTestInstance().getCueById(cueId);
-        Cue testCue = Cue.createForFastGame(tcb);
+        Cue testCue = Cue.createOneTimeInstance(tcb);
         return new CueModel3D(testCue,
                 Color.BLUE,
                 poly,

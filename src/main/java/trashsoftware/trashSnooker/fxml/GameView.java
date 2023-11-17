@@ -1852,7 +1852,7 @@ public class GameView implements Initializable {
      * @return 正在击球的球员正在使用的杆
      */
     private Cue getCuingCue() {
-        InGamePlayer cuing = game.getGame().getCuingIgp();
+        InGamePlayer cuing = getActiveHolder().getCuingIgp();
         return cuing.getCueSelection().getSelected().getNonNullInstance();
     }
 
@@ -3660,7 +3660,7 @@ public class GameView implements Initializable {
     private void hideCue() {
         List<Cue> toHide = new ArrayList<>();
         toHide.add(DataLoader.getInstance().getRestCue());
-        for (InGamePlayer igp : new InGamePlayer[]{game.getPlayer1(), game.getPlayer2()}) {
+        for (InGamePlayer igp : new InGamePlayer[]{getActiveHolder().getP1(), getActiveHolder().getP2()}) {
             for (CueSelection.CueAndBrand cab : igp.getCueSelection().getAvailableCues()) {
                 Cue ins = cab.getCueInstance();
                 if (ins != null) {
@@ -3946,7 +3946,7 @@ public class GameView implements Initializable {
 
     class CueAnimationPlayer {
         final double[] restCuePointing;
-        private final CueAnimationRec cueAnimationRec = new CueAnimationRec();
+        private final CueAnimationRec cueAnimationRec;
         private final long holdMs;  // 拉至满弓的停顿时间
         private final long endHoldMs;  // 出杆完成后的停顿时间
         private final double initDistance, maxPullDistance;
@@ -3988,6 +3988,8 @@ public class GameView implements Initializable {
                            InGamePlayer igp,
                            PlayerPerson.HandSkill handSkill,
                            double[] restCuePointing) {
+
+            cueAnimationRec = new CueAnimationRec(cue);
 
             playerPerson = igp.getPlayerPerson();
             double personPower = getPersonPower(selectedPower, playerPerson);

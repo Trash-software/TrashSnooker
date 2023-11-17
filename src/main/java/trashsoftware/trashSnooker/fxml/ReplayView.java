@@ -212,21 +212,21 @@ public class ReplayView extends ChildInitializable {
 //        }
 //    }
 
-    public void fill() {
-        root.getChildren().clear();
-
-        long begin = System.currentTimeMillis();
-        FillReplayService service = new FillReplayService();
-
-        service.setOnSucceeded(e -> {
-            System.out.println("Records listed in " + (System.currentTimeMillis() - begin) + " ms");
-        });
-        service.setOnFailed(e -> {
-            e.getSource().getException().printStackTrace();
-        });
-
-        service.start();
-    }
+//    public void fill() {
+//        root.getChildren().clear();
+//
+//        long begin = System.currentTimeMillis();
+//        FillReplayService service = new FillReplayService();
+//
+//        service.setOnSucceeded(e -> {
+//            System.out.println("Records listed in " + (System.currentTimeMillis() - begin) + " ms");
+//        });
+//        service.setOnFailed(e -> {
+//            e.getSource().getException().printStackTrace();
+//        });
+//
+//        service.start();
+//    }
 
     public void naiveFill() {
         root.getChildren().clear();
@@ -266,7 +266,7 @@ public class ReplayView extends ChildInitializable {
                         System.err.printf("Record version: %d.%d\n",
                                 ve.recordPrimaryVersion, ve.recordSecondaryVersion);
                     } catch (ReplayException | IOException re) {
-                        System.err.println(re.getMessage());
+                        System.err.println("replay error: " + re.getClass() + ": " + re.getMessage());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (Exception e) {
@@ -482,53 +482,53 @@ public class ReplayView extends ChildInitializable {
         }
     }
 
-    private class FillReplayService extends Service<Void> {
-
-        @Override
-        protected Task<Void> createTask() {
-            return new Task<>() {
-                @Override
-                protected Void call() {
-                    File[] replays = GameReplay.listReplays();
-                    if (replays != null) {
-                        for (int i = replays.length - 1; i >= 0; i--) {
-                            File f = replays[i];
-                            try {
-                                BriefReplayItem item = new BriefReplayItem(f);
-
-                                Platform.runLater(() -> {
-                                    long time = item.gameBeginTime;
-                                    TreeItem<Item> gameItemWrapper = entireGameItems.get(time);
-                                    if (gameItemWrapper == null) {
-                                        gameItemWrapper = new TreeItem<>(new MatchItem(time, item));
-                                        ((MatchItem) gameItemWrapper.getValue()).setChildrenList(gameItemWrapper.getChildren());
-
-                                        entireGameItems.put(time, gameItemWrapper);
-                                        root.getChildren().add(gameItemWrapper);
-                                        root.getChildren().sort(Comparator.comparing(TreeItem::getValue));
-
-                                        if (root.getChildren().size() == 1) {
-                                            root.setExpanded(true);
-                                        }
-                                    }
-                                    gameItemWrapper.getChildren().add(new TreeItem<>(new FrameItem(item)));
-                                    gameItemWrapper.getChildren().sort(Comparator.comparing(TreeItem::getValue));
-                                    replayTable.refresh();  // 这里是为了让match的比分刷新
-                                });
-
-
-//                                replayList.add(item);
-                            } catch (VersionException ve) {
-                                System.err.printf("Record version: %d.%d\n",
-                                        ve.recordPrimaryVersion, ve.recordSecondaryVersion);
-                            } catch (ReplayException | IOException re) {
-                                System.err.println(re.getMessage());
-                            }
-                        }
-                    }
-                    return null;
-                }
-            };
-        }
-    }
+//    private class FillReplayService extends Service<Void> {
+//
+//        @Override
+//        protected Task<Void> createTask() {
+//            return new Task<>() {
+//                @Override
+//                protected Void call() {
+//                    File[] replays = GameReplay.listReplays();
+//                    if (replays != null) {
+//                        for (int i = replays.length - 1; i >= 0; i--) {
+//                            File f = replays[i];
+//                            try {
+//                                BriefReplayItem item = new BriefReplayItem(f);
+//
+//                                Platform.runLater(() -> {
+//                                    long time = item.gameBeginTime;
+//                                    TreeItem<Item> gameItemWrapper = entireGameItems.get(time);
+//                                    if (gameItemWrapper == null) {
+//                                        gameItemWrapper = new TreeItem<>(new MatchItem(time, item));
+//                                        ((MatchItem) gameItemWrapper.getValue()).setChildrenList(gameItemWrapper.getChildren());
+//
+//                                        entireGameItems.put(time, gameItemWrapper);
+//                                        root.getChildren().add(gameItemWrapper);
+//                                        root.getChildren().sort(Comparator.comparing(TreeItem::getValue));
+//
+//                                        if (root.getChildren().size() == 1) {
+//                                            root.setExpanded(true);
+//                                        }
+//                                    }
+//                                    gameItemWrapper.getChildren().add(new TreeItem<>(new FrameItem(item)));
+//                                    gameItemWrapper.getChildren().sort(Comparator.comparing(TreeItem::getValue));
+//                                    replayTable.refresh();  // 这里是为了让match的比分刷新
+//                                });
+//
+//
+////                                replayList.add(item);
+//                            } catch (VersionException ve) {
+//                                System.err.printf("Record version: %d.%d\n",
+//                                        ve.recordPrimaryVersion, ve.recordSecondaryVersion);
+//                            } catch (ReplayException | IOException re) {
+//                                System.err.println("replay error: " + re.getClass() + ": " + re.getMessage());
+//                            }
+//                        }
+//                    }
+//                    return null;
+//                }
+//            };
+//        }
+//    }
 }
