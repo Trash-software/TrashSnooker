@@ -12,15 +12,19 @@ import trashsoftware.trashSnooker.core.career.challenge.ChallengeHistory;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeReward;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.challenge.RewardCondition;
+import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
+import java.time.Duration;
 import java.util.*;
 
 public class HumanCareer extends Career {
     public static final double TAX_RATE = 0.2;
+    public static final double YEAR_IZE_INTEREST_RATE = 0.12;  // 贷款利率
     private final Map<String, ChallengeHistory> completedChallenges = new HashMap<>();
     private final Map<Integer, List<AwardMaterial>> levelAwards = new HashMap<>();
     private final List<JSONObject> invoices = new ArrayList<>();
@@ -304,6 +308,54 @@ public class HumanCareer extends Career {
 
     public int getTotalPerks() {
         return totalPerks;
+    }
+
+    /**
+     * 返回开始下一个赛事时，应缴的强制费用
+     */
+    public Map<String, Integer> calculateFixedFees(ChampionshipData.WithYear nextChampData) {
+        List<ChampionshipScore> scores = getChampionshipScores();
+        if (scores.isEmpty()) return Map.of();
+
+        ChampionshipScore last = scores.get(scores.size() - 1);
+        Calendar lastTime = last.timestamp;
+        
+        Calendar nextTime = nextChampData.toCalendar();
+        int diffDays = (int) Duration.between(lastTime.toInstant(), nextTime.toInstant()).toDays();
+
+        Map<String, Integer> res = new HashMap<>();
+        
+        if (money < 0) {
+            double owe = -money;
+            int loanInterest = (int) Math.round(diffDays / 365.0 * owe * YEAR_IZE_INTEREST_RATE);
+            res.put("oweInterest", loanInterest);
+        }
+        
+        return res;
+    }
+
+    /**
+     * 收取一些固定费用，如利息
+     * 不包含参赛费用
+     */
+    public void updateMoneyChampStart(ChampionshipData.WithYear nextChampData) {
+        Map<String, Integer> feesMap = calculateFixedFees(nextChampData);
+        int fees = feesMap.values().stream().reduce(0, Integer::sum);
+        
+        if (fees > 0) {
+            // 收利息
+            money -= fees;
+        }
+    }
+
+    /**
+     * 这个方法可以把钱扣到负数
+     * 目前没做债务管理器
+     */
+    public void payParticipateFees(Championship championship) {
+        ChampionshipData data = championship.getData();
+        int totalFee = data.getTotalFees(championship.isPlayerSeed(getPlayerPerson().getPlayerId()));
+        money -= totalFee;
     }
 
     public int getMoney() {

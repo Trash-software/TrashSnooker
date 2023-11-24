@@ -45,6 +45,12 @@
                 <ImageView fx:id="achIconImage"/>
                 <Label fx:id="achievementsLabel"/>
             </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#inventoryAction">
+                <Label text="%inventory"/>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#storeAction">
+                <Label text="%store"/>
+            </HBox>
         </HBox>
         <AbilityShower fx:id="abilityShower"/>
         <HBox spacing="20.0" alignment="CENTER">
@@ -102,13 +108,19 @@
             <Button text="%start" onAction="#nextChamp"/>
             <Button fx:id="skipChampBtn" text="%skip" onAction="#skipNextChamp"/>
         </HBox>
-        <HBox spacing="5.0">
+        <HBox fx:id="feesBoxChecked" spacing="5.0">
             <Label text="%registryFee"/>
             <Label fx:id="registryFeeLabel"/>
             <Label text="%travelFee"/>
             <Label fx:id="travelFeeLabel"/>
+<!--            <Label text="%otherFee"/>-->
+            <Label fx:id="otherFeeLabel1"/>
             <Label text="%totalFee"/>
             <Label fx:id="totalFeeLabel"/>
+        </HBox>
+        <HBox fx:id="feesBoxUnchecked" spacing="5.0" visible="false" managed="false">
+<!--            <Label text="%otherFee"/>-->
+            <Label fx:id="otherFeeLabel2"/>
         </HBox>
     </VBox>
 

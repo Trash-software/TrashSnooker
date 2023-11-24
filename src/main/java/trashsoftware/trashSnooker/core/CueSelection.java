@@ -62,8 +62,12 @@ public class CueSelection {
             this.instance = instance;
         }
 
-        CueAndBrand(CueBrand brand) {
+        public CueAndBrand(CueBrand brand) {
             this(brand, null);
+        }
+        
+        public CueAndBrand(Cue instance) {
+            this(instance.getBrand(), instance);
         }
 
         public Cue getCueInstance() {

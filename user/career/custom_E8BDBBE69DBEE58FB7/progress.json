@@ -1,5 +1,5 @@
 {
-  "stageIndex": 2,
+  "stageIndex": 1,
   "seedRanks": {
     "Brown": 25,
     "Yan Bingtao": 13,
@@ -136,6 +136,7 @@
     },
     "p2": {
       "p1": {
+        "p1wins": 0,
         "p1": {"winner": "Liu Mang"},
         "p2": {
           "p1wins": 2,
@@ -178,8 +179,10 @@
           "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-PRE_ROUND_3-18",
           "p2wins": 1
         },
+        "winner": "custom_E8BDBBE69DBEE58FB7",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-22"
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-22",
+        "p2wins": 2
       },
       "p2": {
         "p1wins": 0,
@@ -297,6 +300,14 @@
     {
       "score": 68,
       "stage": "QUARTER_FINAL",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-22",
+      "playerId": "custom_E8BDBBE69DBEE58FB7"
+    },
+    {
+      "score": 68,
+      "stage": "QUARTER_FINAL",
       "sim": true,
       "numFrame": 2,
       "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-21",
@@ -336,6 +347,14 @@
     },
     {
       "score": 60,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2024+challenger_open-QUARTER_FINAL-20",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 59,
       "stage": "QUARTER_FINAL",
       "sim": true,
       "numFrame": 1,

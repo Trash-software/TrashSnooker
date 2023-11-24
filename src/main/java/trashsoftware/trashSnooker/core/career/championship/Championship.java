@@ -87,6 +87,12 @@ public abstract class Championship {
     public boolean isHumanAlive() {
         return matchTree.isHumanAlive();
     }
+    
+    public boolean isPlayerSeed(String personId) {
+        // seed从1开始的
+        Integer seedNum = getCareerSeedMap().get(personId);
+        return seedNum != null && seedNum <= data.getSeedPlaces();
+    }
 
     public Map<String, Integer> getCareerSeedMap() {
         return careerSeedMap;

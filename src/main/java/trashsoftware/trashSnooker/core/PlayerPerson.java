@@ -362,8 +362,10 @@ public class PlayerPerson {
         );
 
         if (sex == Sex.F) {
-            person.privateCues.add(DataLoader.getInstance().getCueById("GirlCue"));
-            person.privateCues.add(DataLoader.getInstance().getCueById("GirlPoolCue"));
+            for (String fLimitId : new String[]{"GirlCue", "GirlPoolCue"}) {
+                CueBrand cb = DataLoader.getInstance().getCueById(fLimitId);
+                person.addPrivateCue(cb);
+            }
         }
         return person;
     }

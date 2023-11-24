@@ -13,6 +13,7 @@
       "ringColor": "GOLD-",
       "backColor": "GOLD-",
       "privacy": false,
+      "available": true,
       "textured": true,
       "segments": [
         {
@@ -42,6 +43,7 @@
       "ringColor": "GOLD-",
       "backColor": "GOLD-",
       "privacy": false,
+      "available": true,
       "textured": true,
       "segments": [
         {
@@ -71,6 +73,7 @@
       "ringColor": "OLDLACE",
       "backColor": "BLACK++",
       "privacy": false,
+      "available": true,
       "textured": true,
       "segments": [
         {
@@ -112,6 +115,7 @@
       "ringColor": "GOLD-",
       "backColor": "BISQUE",
       "privacy": true,
+      "available": false,
       "textured": true,
       "segments": [
         {
@@ -143,6 +147,7 @@
       "midColor": "BLACK++",
       "backColor": "BLACK++",
       "privacy": false,
+      "available": true,
       "textured": true,
       "segments": [
         {
@@ -172,6 +177,7 @@
       "ringColor": "LIGHTPINK",
       "backColor": "HOTPINK",
       "privacy": true,
+      "available": true,
       "textured": true,
       "segments": [
         {
@@ -207,17 +213,24 @@
       "ringColor": "WHITESMOKE",
       "backColor": "GOLD+",
       "privacy": true,
+      "available": true,
       "textured": true,
       "segments": [
         {
-          "length": 450,
+          "length": 100,
           "diameter1": 12.0,
-          "diameter2": 12.0,
+          "diameter2": 11.0,
+          "texture": "LAVENDERBLUSH"
+        },
+        {
+          "length": 350,
+          "diameter1": 11.0,
+          "diameter2": 12.5,
           "texture": "LAVENDERBLUSH"
         },
         {
           "length": 275,
-          "diameter1": 12.0,
+          "diameter1": 12.5,
           "diameter2": 19.0,
           "texture": "LAVENDERBLUSH"
         },
@@ -392,11 +405,18 @@
       "ringColor": "OLDLACE",
       "backColor": "BLACK++",
       "privacy": false,
+      "available": true,
       "textured": true,
       "segments": [
         {
-          "length": 450,
+          "length": 100,
           "diameter1": 13.5,
+          "diameter2": 13.0,
+          "texture": "BISQUE"
+        },
+        {
+          "length": 350,
+          "diameter1": 13.0,
           "diameter2": 15.0,
           "texture": "BISQUE"
         },

@@ -7,13 +7,18 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.EventLogger;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class TexturedCueBrand extends CueBrand {
+public class TexturedCueBrand extends CueBrand implements Cloneable {
 
-    private final List<Segment> segments;  // 从杆头到杆尾
+    private List<Segment> segments;  // 从杆头到杆尾
 
     public TexturedCueBrand(String cueId,
                             String name,
@@ -25,7 +30,8 @@ public class TexturedCueBrand extends CueBrand {
                             double powerMultiplier,
                             double spinMultiplier,
                             double accuracyMultiplier,
-                            boolean privacy) {
+                            boolean privacy,
+                            boolean availability) {
         super(cueId,
                 name,
                 tipRingThickness,
@@ -37,7 +43,8 @@ public class TexturedCueBrand extends CueBrand {
                 powerMultiplier,
                 spinMultiplier,
                 accuracyMultiplier,
-                privacy);
+                privacy,
+                availability);
 
         this.segments = segments;
     }
@@ -51,8 +58,33 @@ public class TexturedCueBrand extends CueBrand {
         return segments.stream().map(s -> s.length).reduce(0.0, Double::sum);
     }
 
+    public void removeTextures() {
+        for (Segment segment : segments) {
+            segment.setTexture("WHITESMOKE");
+        }
+    }
+
+    @Override
+    public TexturedCueBrand clone() {
+        try {
+            TexturedCueBrand clone = (TexturedCueBrand) super.clone();
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            clone.segments = new ArrayList<>();
+            for (Segment segment : segments) {
+                clone.segments.add(new Segment(
+                        segment.texture, 
+                        segment.length, 
+                        segment.diameter1, 
+                        segment.diameter2));
+            }
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
     public static final class Segment {
-        private final String texture;
+        private String texture;
         private final double length;
         private final double diameter1;
         private final double diameter2;
@@ -97,19 +129,40 @@ public class TexturedCueBrand extends CueBrand {
             return material;
         }
 
+        public void setTexture(String texture) {
+            this.texture = texture;
+            
+            createMaterial();
+        }
+
         private PhongMaterial createMaterial() {
             PhongMaterial mat = new PhongMaterial();
 
             if (texture.indexOf('.') != -1) {
-                Image orig = new Image(
-                        Objects.requireNonNull(
-                                        getClass()
-                                                .getResource("/trashsoftware/trashSnooker/res/img/256/cue/" +
-                                                        texture))
-                                .toExternalForm());
-                mat.setDiffuseMap(orig);
+                URL url = getClass()
+                        .getResource("/trashsoftware/trashSnooker/res/img/256/cue/" +
+                                texture);
+                if (url != null) {
+                    Image orig = new Image(url.toExternalForm());
+                    mat.setDiffuseMap(orig);
+                } else {
+                    // 外部
+                    File file = new File(texture);
+                    if (file.exists()) {
+                        Image orig = new Image(file.getAbsolutePath());
+                        mat.setDiffuseMap(orig);
+                    } else {
+                        mat.setDiffuseColor(Color.WHITESMOKE);
+                    }
+                }
             } else {
-                mat.setDiffuseColor(DataLoader.parseColor(texture));
+                Color color;
+                try {
+                    color = DataLoader.parseColor(texture);
+                } catch (IllegalArgumentException iae) {
+                    color = Color.WHITESMOKE;
+                }
+                mat.setDiffuseColor(color);
             }
             return mat;
         }

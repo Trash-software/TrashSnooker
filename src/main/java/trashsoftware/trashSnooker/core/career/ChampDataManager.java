@@ -62,6 +62,9 @@ public class ChampDataManager {
         return snookerTripleCrown;
     }
 
+    /**
+     * Immutable
+     */
     public ChampionshipData.WithYear getNextChampionship(int year, int month, int day) {
         // month是现实月份，从1开始
         int dayOfYear = ChampionshipData.dayOfYear(month, day);

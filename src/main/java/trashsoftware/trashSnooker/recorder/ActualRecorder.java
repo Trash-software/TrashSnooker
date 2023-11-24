@@ -25,7 +25,7 @@ import java.util.zip.GZIPOutputStream;
 
 public abstract class ActualRecorder implements GameRecorder {
     public static final int RECORD_PRIMARY_VERSION = 14;
-    public static final int RECORD_SECONDARY_VERSION = 10;
+    public static final int RECORD_SECONDARY_VERSION = 0;
     public static final int HEADER_LENGTH = 64;
     public static final int PLAYER_HEADER_LENGTH = 40;
     public static final int TOTAL_HEADER_LENGTH = HEADER_LENGTH + PLAYER_HEADER_LENGTH * 2;

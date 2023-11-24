@@ -31,19 +31,21 @@ public class PlanarCueBrand extends CueBrand {
                           double powerMultiplier,
                           double spinMultiplier,
                           double accuracyMultiplier,
-                          boolean privacy) {
-        super(cueId, 
-                name, 
-                tipRingThickness, 
-                cueTipThickness, 
-                endWidth, 
-                cueTipWidth, 
-                tipRingColor, 
-                backColor, 
-                powerMultiplier, 
-                spinMultiplier, 
-                accuracyMultiplier, 
-                privacy);
+                          boolean privacy,
+                          boolean availability) {
+        super(cueId,
+                name,
+                tipRingThickness,
+                cueTipThickness,
+                endWidth,
+                cueTipWidth,
+                tipRingColor,
+                backColor,
+                powerMultiplier,
+                spinMultiplier,
+                accuracyMultiplier,
+                privacy,
+                availability);
 
         this.frontLength = frontLength;
         this.midLength = midLength;

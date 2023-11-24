@@ -137,18 +137,18 @@ public class DataLoader {
                         }
                         PlayerPerson playerPerson = PlayerPerson.fromJson(key, personObj);
 
-                        if (personObj.has("privateCues")) {
-                            JSONArray pCues = personObj.getJSONArray("privateCues");
-                            for (Object cueObj : pCues) {
-                                if (cueObj instanceof String pCue) {
-                                    if (cues.containsKey(pCue)) {
-                                        playerPerson.addPrivateCue(cues.get(pCue));
-                                    } else {
-                                        System.out.printf("%s没有%s\n", playerPerson.getPlayerId(), pCue);
-                                    }
-                                }
-                            }
-                        }
+//                        if (personObj.has("privateCues")) {
+//                            JSONArray pCues = personObj.getJSONArray("privateCues");
+//                            for (Object cueObj : pCues) {
+//                                if (cueObj instanceof String pCue) {
+//                                    if (cues.containsKey(pCue)) {
+//                                        playerPerson.addPrivateCue(cues.get(pCue));
+//                                    } else {
+//                                        System.out.printf("%s没有%s\n", playerPerson.getPlayerId(), pCue);
+//                                    }
+//                                }
+//                            }
+//                        }
                         playerPerson.setCustom(isCustomPlayer);
                         result.put(key, playerPerson);
                     } catch (JSONException e) {
@@ -351,6 +351,8 @@ public class DataLoader {
                     JSONObject cueObject = object.getJSONObject(key);
                     String name = getObjectOfLocale(cueObject.get("names"));
                     
+                    boolean avail = cueObject.has("available") && cueObject.getBoolean("available");
+                    
                     CueBrand cue;
                     if (cueObject.has("textured") && cueObject.getBoolean("textured")) {
                         JSONArray segmentArray = cueObject.getJSONArray("segments");
@@ -376,7 +378,8 @@ public class DataLoader {
                                 cueObject.getDouble("power"),
                                 cueObject.getDouble("spin"),
                                 cueObject.getDouble("accuracy"),
-                                cueObject.getBoolean("privacy")
+                                cueObject.getBoolean("privacy"),
+                                avail
                         );
                     } else {
                         cue = new PlanarCueBrand(
@@ -396,7 +399,8 @@ public class DataLoader {
                                 cueObject.getDouble("power"),
                                 cueObject.getDouble("spin"),
                                 cueObject.getDouble("accuracy"),
-                                cueObject.getBoolean("privacy")
+                                cueObject.getBoolean("privacy"),
+                                avail
                         );
                         if (cueObject.has("arrow")) {
                             JSONObject arrowObj = cueObject.getJSONObject("arrow");

@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.fxml.widgets;
 
+import javafx.scene.AmbientLight;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
@@ -64,6 +65,7 @@ public class CueViewer extends Pane {
             setOnMouseReleased(e -> dragging = false);
             
             setOnMouseClicked(e -> {
+                System.out.println("CLick!");
                 if (e.getButton() == MouseButton.SECONDARY) {
                     xRotate.setAngle(0);
                     yRotate.setAngle(0);
@@ -73,8 +75,6 @@ public class CueViewer extends Pane {
         
         fillCueInfo();
         getChildren().addAll(cueInfoBox, cueModel);
-
-//        setVgrow(cueModel, Priority.NEVER);
         
         setWidth(width);
         setMinHeight(width * 0.1);

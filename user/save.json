@@ -1,38 +1,41 @@
 {
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
+  "winRecords": {
+    "1": 2,
+    "2": 2
+  },
+  "p2Wins": 2,
   "p1": {
     "playerNumber": 1,
-    "gameRule": "CHINESE_EIGHT",
-    "handFeelEffort": 0.5,
-    "person": "Neil Robertson",
-    "playerType": "COMPUTER"
+    "gameRule": "AMERICAN_NINE",
+    "handFeelEffort": 1,
+    "person": "custom_player_4",
+    "playerType": "PLAYER"
   },
   "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
-    "gameRule": "CHINESE_EIGHT",
+    "gameRule": "AMERICAN_NINE",
     "handFeelEffort": 1,
-    "person": "custom_player_3",
+    "person": "custom_player_2",
     "playerType": "COMPUTER"
   },
-  "startTime": 1700244524826,
+  "startTime": 1700330380289,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
     "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
+    "gameRule": "AMERICAN_NINE",
     "devMode": false,
     "table": {
-      "tableOrdinal": 1,
-      "pocketDifficultyOrdinal": 2,
-      "holeSizeOrdinal": 2
+      "tableOrdinal": 5,
+      "pocketDifficultyOrdinal": 0,
+      "holeSizeOrdinal": 1
     }
   },
-  "totalFrames": 1,
+  "totalFrames": 3,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
   },
-  "p1Breaks": true
+  "p1Breaks": false
 }
