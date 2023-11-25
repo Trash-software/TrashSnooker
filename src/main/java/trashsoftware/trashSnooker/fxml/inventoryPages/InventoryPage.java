@@ -23,14 +23,22 @@ public class InventoryPage extends AbsInvPage {
     public InventoryPage(ResourceBundle strings) {
         super("inventoryPage.fxml", strings);
         
-        fill();
+        reload();
     }
     
     private void fill() {
+        cueList.clear();
         for (Cue cue : inventoryManager.getAllCues()) {
             CueSelection.CueAndBrand cab = new CueSelection.CueAndBrand(cue);
-            cueList.addCue(cab, 640,
-                    strings.getString("select"), null);
+            cueList.addCue(cab, 
+                    640,
+                    null, 
+                    null);
         }
+    }
+
+    @Override
+    public void reload() {
+        fill();
     }
 }

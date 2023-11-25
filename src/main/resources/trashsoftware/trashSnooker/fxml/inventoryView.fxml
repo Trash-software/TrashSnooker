@@ -9,6 +9,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import trashsoftware.trashSnooker.fxml.inventoryPages.InventoryPage?>
 <?import trashsoftware.trashSnooker.fxml.inventoryPages.StorePage?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Label?>
 <VBox spacing="10.0" xmlns="http://javafx.com/javafx/11.0.14-internal"
       xmlns:fx="http://javafx.com/fxml/1"
       prefHeight="480.0"
@@ -21,6 +23,10 @@
 
     <HBox spacing="10.0">
         <Button onAction="#backAction" text="%backIcon"/>
+    </HBox>
+    <HBox alignment="CENTER_LEFT" spacing="5.0">
+        <ImageView fx:id="moneyImage"/>
+        <Label fx:id="moneyLabel"/>
     </HBox>
     <TabPane fx:id="baseTabPane" tabClosingPolicy="UNAVAILABLE">
         <Tab text="%inventory">

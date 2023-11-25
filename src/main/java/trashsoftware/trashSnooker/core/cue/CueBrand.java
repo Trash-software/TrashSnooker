@@ -24,6 +24,7 @@ public abstract class CueBrand {
     public final boolean isRest;
     public final boolean privacy;
     public final boolean available;
+    public final int price;
 
     public final Cue.Size tipSize;
 
@@ -39,7 +40,8 @@ public abstract class CueBrand {
                        double spinMultiplier,
                        double accuracyMultiplier,
                        boolean privacy,
-                       boolean availability) {
+                       boolean availability,
+                       int price) {
         this.cueId = cueId;
         this.name = name;
 
@@ -55,6 +57,7 @@ public abstract class CueBrand {
         this.accuracyMultiplier = accuracyMultiplier;
         this.privacy = privacy;
         this.available = availability;
+        this.price = price;
 
         if (cueTipWidth <= 9.8) tipSize = Cue.Size.VERY_SMALL;
         else if (cueTipWidth < 11.0) tipSize = Cue.Size.SMALL;
@@ -75,6 +78,10 @@ public abstract class CueBrand {
 
     public boolean isAvailable() {
         return available;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     @Override

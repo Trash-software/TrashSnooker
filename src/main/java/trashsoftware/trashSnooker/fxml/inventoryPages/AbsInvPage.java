@@ -7,6 +7,7 @@ import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.HumanCareer;
 import trashsoftware.trashSnooker.core.career.InventoryManager;
 import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.fxml.InventoryView;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -17,6 +18,8 @@ public abstract class AbsInvPage extends VBox {
     
     protected HumanCareer humanCareer;
     protected InventoryManager inventoryManager;
+    
+    protected InventoryView inventoryView;
 
     public AbsInvPage(String path) {
         this(path, App.getStrings());
@@ -40,5 +43,11 @@ public abstract class AbsInvPage extends VBox {
         CareerManager careerManager = CareerManager.getInstance();
         this.humanCareer = careerManager.getHumanPlayerCareer();
         this.inventoryManager = careerManager.getInventory();
+    }
+    
+    public abstract void reload();
+
+    public void setParent(InventoryView inventoryView) {
+        this.inventoryView = inventoryView;
     }
 }

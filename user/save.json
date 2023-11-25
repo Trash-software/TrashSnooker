@@ -1,41 +1,38 @@
 {
-  "winRecords": {
-    "1": 2,
-    "2": 2
-  },
-  "p2Wins": 2,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
-    "gameRule": "AMERICAN_NINE",
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "custom_player_4",
+    "person": "Summer Brave",
     "playerType": "PLAYER"
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
-    "gameRule": "AMERICAN_NINE",
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "custom_player_2",
+    "person": "custom_player_4",
     "playerType": "COMPUTER"
   },
-  "startTime": 1700330380289,
+  "startTime": 1700844291525,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "AMERICAN_NINE",
-    "devMode": false,
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
+    "devMode": true,
     "table": {
-      "tableOrdinal": 5,
-      "pocketDifficultyOrdinal": 0,
-      "holeSizeOrdinal": 1
+      "tableOrdinal": 0,
+      "pocketDifficultyOrdinal": 2,
+      "holeSizeOrdinal": 2
     }
   },
-  "totalFrames": 3,
+  "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
   },
-  "p1Breaks": false
+  "p1Breaks": true
 }

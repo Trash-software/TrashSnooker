@@ -31,7 +31,8 @@ public class TexturedCueBrand extends CueBrand implements Cloneable {
                             double spinMultiplier,
                             double accuracyMultiplier,
                             boolean privacy,
-                            boolean availability) {
+                            boolean availability,
+                            int price) {
         super(cueId,
                 name,
                 tipRingThickness,
@@ -44,7 +45,8 @@ public class TexturedCueBrand extends CueBrand implements Cloneable {
                 spinMultiplier,
                 accuracyMultiplier,
                 privacy,
-                availability);
+                availability,
+                price);
 
         this.segments = segments;
     }

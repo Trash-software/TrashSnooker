@@ -32,7 +32,8 @@ public class PlanarCueBrand extends CueBrand {
                           double spinMultiplier,
                           double accuracyMultiplier,
                           boolean privacy,
-                          boolean availability) {
+                          boolean availability,
+                          int price) {
         super(cueId,
                 name,
                 tipRingThickness,
@@ -45,7 +46,8 @@ public class PlanarCueBrand extends CueBrand {
                 spinMultiplier,
                 accuracyMultiplier,
                 privacy,
-                availability);
+                availability,
+                price);
 
         this.frontLength = frontLength;
         this.midLength = midLength;

@@ -15,6 +15,7 @@ import trashsoftware.trashSnooker.core.CueSelection;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.FastGameView;
+import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,21 +62,32 @@ public class CueList extends ScrollPane {
 //        content.setClip(bound);
     }
     
+    public void clear() {
+        content.getChildren().clear();
+        nCues = 0;
+    }
+    
     public void addCue(CueSelection.CueAndBrand cue, 
                        double prefWidth, 
                        String buttonText, 
                        Runnable buttonCallback) {
-        CueViewer viewer = new CueViewer(strings, cue, prefWidth);
-        content.add(viewer, 0, nCues);
+        try {
+            CueViewer viewer = new CueViewer(strings, cue, prefWidth);
+            content.add(viewer, 0, nCues);
 
-        Button actionButton = new Button(buttonText);
-        if (buttonCallback == null) {
-            actionButton.setDisable(true);
-        } else {
-            actionButton.setOnAction(event -> buttonCallback.run());
+            if (buttonText != null) {
+                Button actionButton = new Button(buttonText);
+                if (buttonCallback == null) {
+                    actionButton.setDisable(true);
+                } else {
+                    actionButton.setOnAction(event -> buttonCallback.run());
+                }
+                content.add(actionButton, 1, nCues);
+            }
+
+            nCues++;
+        } catch (Exception e) {
+            EventLogger.error(e);
         }
-        content.add(actionButton, 1, nCues);
-        
-        nCues++;
     }
 }

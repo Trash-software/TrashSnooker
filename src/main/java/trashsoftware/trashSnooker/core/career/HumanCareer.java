@@ -179,6 +179,21 @@ public class HumanCareer extends Career {
         this.money += (int) Math.round(earned * (1 - TAX_RATE));
         // 这里不检查成就，因为earnMoney之后一般都跟着checkScoreAchievements()
     }
+    
+    public void buyCue(String cueInstanceId, int price) {
+        int moneyBefore = money;
+        money -= price;
+        
+        JSONObject invoice = new JSONObject();
+        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+        invoice.put("timestamp", timestamp);
+        invoice.put("type", "purchase");
+        invoice.put("moneyBefore", moneyBefore);
+        invoice.put("moneyCost", price);
+        invoice.put("moneyAfter", money);
+        invoice.put("item", cueInstanceId);
+        invoices.add(invoice);
+    }
 
     @Override
     public void addChampionshipScore(ChampionshipScore score) {
@@ -286,13 +301,18 @@ public class HumanCareer extends Career {
     }
 
     public void recordUpgradeAndUsePerk(PerkManager.UpgradeRec upgradeRec) {
+        int moneyBefore = money;
         money -= upgradeRec.moneyCost();
         availPerks -= upgradeRec.perkUsed();
         
         JSONObject record = new JSONObject();
+        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+        record.put("timestamp", timestamp);
         record.put("type", "upgrade");
         record.put("perkUsed", upgradeRec.perkUsed());
+        record.put("moneyBefore", moneyBefore);
         record.put("moneyCost", upgradeRec.moneyCost());
+        record.put("moneyAfter", money);
         JSONObject skillUpgrade = new JSONObject();
         for (Map.Entry<String, double[]> entry : upgradeRec.abilityUpdated().entrySet()) {
             skillUpgrade.put(entry.getKey(), Util.arrayToJson(entry.getValue()));
@@ -344,7 +364,24 @@ public class HumanCareer extends Career {
         
         if (fees > 0) {
             // 收利息
+            int moneyBefore = money;
             money -= fees;
+
+            JSONObject invoice = new JSONObject();
+            String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+            invoice.put("timestamp", timestamp);
+            invoice.put("type", "fees");
+            invoice.put("moneyBefore", moneyBefore);
+            JSONArray subArray = new JSONArray();
+            for (Map.Entry<String, Integer> feeItem : feesMap.entrySet()) {
+                JSONObject sub = new JSONObject();
+                sub.put("item", feeItem.getKey());
+                sub.put("moneyCost", feeItem.getValue());
+                subArray.put(sub);
+            }
+            invoice.put("items", subArray);
+            invoice.put("moneyAfter", money);
+            invoices.add(invoice);
         }
     }
 
@@ -354,8 +391,42 @@ public class HumanCareer extends Career {
      */
     public void payParticipateFees(Championship championship) {
         ChampionshipData data = championship.getData();
-        int totalFee = data.getTotalFees(championship.isPlayerSeed(getPlayerPerson().getPlayerId()));
-        money -= totalFee;
+        int moneyBefore = money;
+        boolean isSeed = championship.isPlayerSeed(getPlayerPerson().getPlayerId());
+        int registryFee = isSeed ? data.getSeedRegistryFee() : data.getRegistryFee();
+        int travelFee = data.getFlightFee();
+        int hotelFee = data.getFlightFee();
+        
+        money -= (registryFee + travelFee + hotelFee);
+
+        JSONObject invoice = new JSONObject();
+        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+        invoice.put("timestamp", timestamp);
+        invoice.put("type", "participation");
+        invoice.put("match", championship.uniqueId());
+        invoice.put("moneyBefore", moneyBefore);
+        
+        JSONObject o1 = new JSONObject();
+        o1.put("item", "registry");
+        o1.put("moneyCost", registryFee);
+        
+        JSONObject o2 = new JSONObject();
+        o2.put("item", "travel");
+        o2.put("moneyCost", travelFee);
+        
+        JSONObject o3 = new JSONObject();
+        o3.put("item", "hotel");
+        o3.put("moneyCost", hotelFee);
+        
+        JSONArray subArray = new JSONArray();
+        subArray.put(o1);
+        subArray.put(o2);
+        subArray.put(o3);
+        
+        invoice.put("items", subArray);
+        
+        invoice.put("moneyAfter", money);
+        invoices.add(invoice);
     }
 
     public int getMoney() {

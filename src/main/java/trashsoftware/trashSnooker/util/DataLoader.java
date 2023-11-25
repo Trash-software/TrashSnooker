@@ -352,6 +352,9 @@ public class DataLoader {
                     String name = getObjectOfLocale(cueObject.get("names"));
                     
                     boolean avail = cueObject.has("available") && cueObject.getBoolean("available");
+                    int price = cueObject.has("price") ?
+                            cueObject.getInt("price") :
+                            100;
                     
                     CueBrand cue;
                     if (cueObject.has("textured") && cueObject.getBoolean("textured")) {
@@ -379,7 +382,8 @@ public class DataLoader {
                                 cueObject.getDouble("spin"),
                                 cueObject.getDouble("accuracy"),
                                 cueObject.getBoolean("privacy"),
-                                avail
+                                avail,
+                                price
                         );
                     } else {
                         cue = new PlanarCueBrand(
@@ -400,7 +404,8 @@ public class DataLoader {
                                 cueObject.getDouble("spin"),
                                 cueObject.getDouble("accuracy"),
                                 cueObject.getBoolean("privacy"),
-                                avail
+                                avail,
+                                price
                         );
                         if (cueObject.has("arrow")) {
                             JSONObject arrowObj = cueObject.getJSONObject("arrow");

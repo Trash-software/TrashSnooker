@@ -104,6 +104,9 @@ public class Cue {
         String instanceId = jsonObject.getString("instanceId");
         CueBrand cueBrand = loader.getCueById(jsonObject.getString("brand"));
         CueTip tip = tipInstances.get(jsonObject.getString("tipId"));
+        if (tip == null) {
+            System.err.println("No tip!");
+        }
         return new Cue(
                 cueBrand,
                 instanceId,

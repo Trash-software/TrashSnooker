@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
 
-    public static final String VERSION_NAME = "0.6";
+    public static final String VERSION_NAME = "0.6-PREVIEW";
     public static final int VERSION_CODE = 47;
     public static final String CLASSIFIER = "win";
     public static final String FONT_STYLE = CLASSIFIER.equals("mac") ?

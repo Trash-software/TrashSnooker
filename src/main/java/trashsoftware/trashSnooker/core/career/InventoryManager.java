@@ -23,7 +23,7 @@ public class InventoryManager {
     
     private final File file;
     private final Map<String, CueTip> cueTips = new HashMap<>();
-    private final Map<String, Cue> cues = new HashMap<>();  // 注意，key是CueBrand的id
+    private final Map<String, Cue> cues = new HashMap<>();  // key是instance的id
     
     private InventoryManager(CareerSave save, File file) {
         this.file = file;
@@ -147,6 +147,14 @@ public class InventoryManager {
     
     public List<CueTip> getAllCueTips() {
         return new ArrayList<>(cueTips.values());
+    }
+    
+    public void addTip(CueTip tip) {
+        cueTips.put(tip.getInstanceId(), tip);
+    }
+    
+    public void addCue(Cue cue) {
+        cues.put(cue.getInstanceId(), cue);
     }
     
     public void saveToDisk() {

@@ -42,6 +42,7 @@ import trashsoftware.trashSnooker.core.career.challenge.ChallengeMatch;
 import trashsoftware.trashSnooker.core.career.championship.PlayerVsAiMatch;
 import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
 import trashsoftware.trashSnooker.core.cue.Cue;
+import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Rule;
@@ -254,7 +255,6 @@ public class GameView implements Initializable {
     private boolean aiHelpPlay = false;
     private List<double[]> aiWhitePath;  // todo: debug用的
     private List<double[]> suggestedPlayerWhitePath;
-    private Cue lastCuedCue;
 
     private static double pullDtOf(PlayerPerson person, double personPower) {
         return (person.getMaxPullDt() - person.getMinPullDt()) *
@@ -1873,6 +1873,15 @@ public class GameView implements Initializable {
                                         boolean mutate,
                                         PlayerPerson.HandSkill handSkill) {
         Cue cue = getCuingCue();
+        double ballDia = gameValues.ball.ballDiameter;
+        // 越大的球，打点的比例偏差越小
+        double hitPointBaseScale = BallMetrics.SNOOKER_BALL.ballDiameter / ballDia;
+        // 皮头越大的杆，打点的偏差越大
+        hitPointBaseScale *= cue.getCueTipWidth() / 10.0;  // 把10作为标准
+        
+        frontBackSpinFactor *= hitPointBaseScale;
+        sideSpinFactor *= hitPointBaseScale;
+        
         PlayerPerson playerPerson = player.getPlayerPerson();
 
         // 用架杆影响打点精确度

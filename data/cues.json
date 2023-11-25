@@ -2,14 +2,14 @@
   "cues": {
     "stdSnookerCue": {
       "names": {
-        "zh": "斯诺克杆",
-        "en": "Snooker Cue"
+        "zh": "球房公杆-小头",
+        "en": "Public Snooker Cue"
       },
       "tipThickness": 3.0,
       "ringThickness": 8.0,
-      "power": 0.85,
-      "spin": 0.9,
-      "accuracy": 1.05,
+      "power": 0.8,
+      "spin": 0.8,
+      "accuracy": 1.0,
       "ringColor": "GOLD-",
       "backColor": "GOLD-",
       "privacy": false,
@@ -21,6 +21,37 @@
           "diameter1": 9.5,
           "diameter2": 24.0,
           "texture": "stdSnookerCue.png"
+        },
+        {
+          "length": 5,
+          "diameter1": 24.0,
+          "diameter2": 10.0,
+          "texture": "BLACK+"
+        }
+      ]
+    },
+    "profSnookerCue": {
+      "names": {
+        "zh": "进阶斯诺克杆",
+        "en": "Snooker Cue"
+      },
+      "tipThickness": 3.0,
+      "ringThickness": 8.0,
+      "power": 0.85,
+      "spin": 0.9,
+      "accuracy": 1.05,
+      "ringColor": "GOLD-",
+      "backColor": "GOLD-",
+      "privacy": true,
+      "available": true,
+      "price": 300,
+      "textured": true,
+      "segments": [
+        {
+          "length": 1435,
+          "diameter1": 9.5,
+          "diameter2": 24.0,
+          "texture": "profSnookerCue.png"
         },
         {
           "length": 5,
@@ -178,6 +209,7 @@
       "backColor": "HOTPINK",
       "privacy": true,
       "available": true,
+      "price": 1200,
       "textured": true,
       "segments": [
         {
@@ -207,13 +239,14 @@
       },
       "ringThickness": 10.0,
       "tipThickness": 5.0,
-      "power": 1.05,
+      "power": 1.0,
       "spin": 1.1,
       "accuracy": 0.7,
       "ringColor": "WHITESMOKE",
       "backColor": "GOLD+",
       "privacy": true,
       "available": true,
+      "price": 2500,
       "textured": true,
       "segments": [
         {
@@ -399,13 +432,14 @@
       },
       "ringThickness": 12.0,
       "tipThickness": 5.0,
-      "power": 1.05,
-      "spin": 1.1,
+      "power": 1.0,
+      "spin": 1.05,
       "accuracy": 0.65,
       "ringColor": "OLDLACE",
       "backColor": "BLACK++",
       "privacy": false,
       "available": true,
+      "price": 200,
       "textured": true,
       "segments": [
         {
@@ -431,6 +465,55 @@
           "diameter1": 21.0,
           "diameter2": 30.0,
           "texture": "trashCue1.png"
+        },
+        {
+          "length": 5,
+          "diameter1": 30.0,
+          "diameter2": 15.0,
+          "texture": "BLACK+"
+        }
+      ]
+    },
+    "trashCue2": {
+      "names": {
+        "zh": "垃圾二号",
+        "en": "Trash Cue 2"
+      },
+      "ringThickness": 12.0,
+      "tipThickness": 5.0,
+      "power": 1.05,
+      "spin": 1.1,
+      "accuracy": 0.7,
+      "ringColor": "OLDLACE",
+      "backColor": "BLACK++",
+      "privacy": true,
+      "available": true,
+      "price": 1000,
+      "textured": true,
+      "segments": [
+        {
+          "length": 100,
+          "diameter1": 13.5,
+          "diameter2": 13.0,
+          "texture": "BISQUE"
+        },
+        {
+          "length": 350,
+          "diameter1": 13.0,
+          "diameter2": 15.0,
+          "texture": "BISQUE"
+        },
+        {
+          "length": 275,
+          "diameter1": 15.0,
+          "diameter2": 21.0,
+          "texture": "BISQUE"
+        },
+        {
+          "length": 725,
+          "diameter1": 21.0,
+          "diameter2": 30.0,
+          "texture": "trashCue2.png"
         },
         {
           "length": 5,

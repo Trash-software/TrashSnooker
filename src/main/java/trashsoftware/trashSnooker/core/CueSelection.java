@@ -73,6 +73,10 @@ public class CueSelection {
         public Cue getCueInstance() {
             return instance;
         }
+        
+        public void initInstanceForViewing() {
+            getNonNullInstance(InstanceType.REPLAY);
+        }
 
         public Cue getNonNullInstance() {
             return getNonNullInstance(InstanceType.REGULAR);
