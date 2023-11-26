@@ -36,7 +36,7 @@
             </HBox>
             <Button text="%levelUp" fx:id="levelUpBtn" onAction="#levelUpAction" visible="false"/>
         </HBox>
-        <HBox spacing="10.0">
+        <HBox spacing="20.0">
             <HBox alignment="CENTER_LEFT" spacing="5.0">
                 <ImageView fx:id="moneyImage"/>
                 <Label fx:id="moneyLabel"/>
@@ -46,9 +46,11 @@
                 <Label fx:id="achievementsLabel"/>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#inventoryAction">
+                <ImageView fx:id="inventoryImage"/>
                 <Label text="%inventory"/>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#storeAction">
+                <ImageView fx:id="storeImage"/>
                 <Label text="%store"/>
             </HBox>
         </HBox>

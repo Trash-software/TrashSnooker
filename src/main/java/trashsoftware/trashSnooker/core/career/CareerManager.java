@@ -189,10 +189,10 @@ public class CareerManager {
         for (PlayerPerson person : DataLoader.getInstance().getAllPlayers()) {
             Career career;
             if (person.getPlayerId().equals(playerPlayer.getPlayerId())) {
-                career = Career.createByPerson(person, true);
+                career = Career.createByPerson(person, true, save);
                 cm.humanPlayerCareer = (HumanCareer) career;
             } else {
-                career = Career.createByPerson(person, false);
+                career = Career.createByPerson(person, false, save);
             }
             cm.playerCareers.add(career);
         }
@@ -295,7 +295,7 @@ public class CareerManager {
 
         for (int i = 0; i < rootArr.length(); i++) {
             JSONObject personObj = rootArr.getJSONObject(i);
-            Career career = Career.fromJson(personObj);
+            Career career = Career.fromJson(personObj, careerSave);
             if (career == null) continue;
             careerManager.playerCareers.add(career);
             newPlayers.remove(career.getPlayerPerson().getPlayerId());  // 有的
@@ -314,7 +314,7 @@ public class CareerManager {
 
         // 把可能存在的新增球员加进生涯管理器中
         for (PlayerPerson newPlayer : newPlayers.values()) {
-            Career career = Career.createByPerson(newPlayer, false);
+            Career career = Career.createByPerson(newPlayer, false, careerSave);
             // 新球员初始就0分吧
             careerManager.playerCareers.add(career);
         }

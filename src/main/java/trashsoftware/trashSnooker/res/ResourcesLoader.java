@@ -18,11 +18,15 @@ public class ResourcesLoader {
     private final Image awardBronze;
     private final Image moneyIcon;
     private final Image expIcon;
+    private final Image inventoryIcon;
+    private final Image storeIcon;
 
     private ResourcesLoader() {
         icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.png")));
         moneyIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("money.png")));
         expIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("exp.png")));
+        inventoryIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("inventory.png")));
+        storeIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("store.png")));
 
         awardIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("ach_gold.png")));
         awardGold = new Image(Objects.requireNonNull(getClass().getResourceAsStream("ach_gold.png")));
@@ -76,6 +80,14 @@ public class ResourcesLoader {
 
     public Image getMoneyImg() {
         return moneyIcon;
+    }
+
+    public Image getInventoryIcon() {
+        return inventoryIcon;
+    }
+
+    public Image getStoreIcon() {
+        return storeIcon;
     }
 
     public void setIconImage(Image image, ImageView imageView) {

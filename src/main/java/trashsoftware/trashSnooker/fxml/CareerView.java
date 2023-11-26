@@ -89,7 +89,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     Button skipChampBtn;
     @FXML
-    ImageView expImage, moneyImage, achIconImage;
+    ImageView expImage, moneyImage, inventoryImage, storeImage, achIconImage;
     CareerManager careerManager;
     private PerkManager perkManager;
     private Stage selfStage;
@@ -147,6 +147,8 @@ public class CareerView extends ChildInitializable {
 
         rl.setIconImage(rl.getExpImg(), expImage);
         rl.setIconImage(rl.getMoneyImg(), moneyImage);
+        rl.setIconImage(rl.getInventoryIcon(), inventoryImage, 1.0, 1.25);
+        rl.setIconImage(rl.getStoreIcon(), storeImage, 1.0, 1.25);
         rl.setIconImage(rl.getAwardIcon(), achIconImage, 1.0, 1.25);
     }
 

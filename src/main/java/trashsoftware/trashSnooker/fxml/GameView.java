@@ -839,6 +839,7 @@ public class GameView implements Initializable {
             }
         } else {
             igp = game.getGame().getCuingPlayer().getInGamePlayer();
+            withdrawMenu.setDisable(!igp.isHuman());
         }
 
         PlayerPerson playerPerson = igp.getPlayerPerson();

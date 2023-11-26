@@ -14,47 +14,60 @@ import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.challenge.RewardCondition;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
-import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
+import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.JsonChecksum;
 import trashsoftware.trashSnooker.util.Util;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.*;
 
 public class HumanCareer extends Career {
     public static final double TAX_RATE = 0.2;
     public static final double YEAR_IZE_INTEREST_RATE = 0.12;  // 贷款利率
+    public static final int DAILY_LIFE_FEE = 100;
+
     private final Map<String, ChallengeHistory> completedChallenges = new HashMap<>();
     private final Map<Integer, List<AwardMaterial>> levelAwards = new HashMap<>();
-    private final List<JSONObject> invoices = new ArrayList<>();
-    private int totalPerks;
-    private int availPerks;
-    private int totalExp = 0;
-    private int level = 1;
-    private int expInThisLevel;
-    private int money;
-    private int cumulativeAwards;  // 历史上的税前总奖金
 
-    HumanCareer(PlayerPerson playerPerson) {
-        super(playerPerson, true);
+    private FinancialManager financial;
+
+
+    HumanCareer(PlayerPerson playerPerson, CareerSave save) {
+        super(playerPerson, true, save);
     }
 
     @Override
-    protected void initNew() {
-        availPerks = CareerManager.INIT_PERKS;
-        totalPerks = availPerks;
-        money = 30000;
+    protected void initNew(CareerSave save) {
+        financial = new FinancialManager(save);
+        financial.availPerks = CareerManager.INIT_PERKS;
+        financial.totalPerks = financial.availPerks;
+        financial.money = 30000;
     }
 
     @Override
-    protected void fillFromJson(JSONObject jsonObject) {
-        availPerks = jsonObject.has("availPerks") ? jsonObject.getInt("availPerks") : 0;
-        totalPerks = jsonObject.has("totalPerks") ? jsonObject.getInt("totalPerks") : 0;
-        totalExp = jsonObject.has("totalExp") ? jsonObject.getInt("totalExp") : 0;
-        level = jsonObject.has("level") ? jsonObject.getInt("level") : 1;
-        expInThisLevel = jsonObject.has("expInThisLevel") ? jsonObject.getInt("expInThisLevel") : 0;
-        money = jsonObject.has("money") ? jsonObject.getInt("money") : 0;
+    protected void fillFromJson(JSONObject jsonObject, CareerSave save) {
+        financial = new FinancialManager(save);
+        if (!financial.loadFromJson()) {
+            try {
+                financial.availPerks = jsonObject.getInt("availPerks");
+                financial.totalPerks = jsonObject.getInt("totalPerks");
+                financial.totalExp = jsonObject.getInt("totalExp");
+                financial.level = jsonObject.getInt("level");
+                financial.expInThisLevel = jsonObject.getInt("expInThisLevel");
+                financial.money = jsonObject.getInt("money");
+            } catch (JSONException e) {
+                financial.availPerks = 0;
+                financial.totalPerks = 0;
+                financial.totalExp = 0;
+                financial.level = 1;
+                financial.expInThisLevel = 0;
+                financial.money = 0;
+                System.err.println("No financial info loaded");
+            }
+        }
 
         if (jsonObject.has("levelAwards")) {
             JSONObject levelAwdObj = jsonObject.getJSONObject("levelAwards");
@@ -63,14 +76,6 @@ public class HumanCareer extends Career {
                 JSONObject awdObj = levelAwdObj.getJSONObject(key);
                 List<AwardMaterial> thisLevelAwards = AwardMaterial.fromJsonList(awdObj);
                 levelAwards.put(level, thisLevelAwards);
-            }
-        }
-        
-        if (jsonObject.has("invoices")) {
-            JSONArray invoiceArr = jsonObject.getJSONArray("invoices");
-            for (int i = 0; i < invoiceArr.length(); i++) {
-                JSONObject invObj = invoiceArr.getJSONObject(i);
-                invoices.add(invObj);
             }
         }
 
@@ -92,12 +97,9 @@ public class HumanCareer extends Career {
 
     @Override
     protected void putExtraInJson(JSONObject out) {
-        out.put("availPerks", availPerks);
-        out.put("totalPerks", totalPerks);
-        out.put("totalExp", totalExp);
-        out.put("level", level);
-        out.put("expInThisLevel", expInThisLevel);
-        out.put("money", money);
+        // 悄悄存另一个json，不讲武德
+        // 理论上不应该这样，但考虑到本method只会在CareerManager#saveToDisk里调用，所以也将就了
+        financial.writeToDisk();
 
         JSONArray compCha = new JSONArray();
         if (completedChallenges != null) {
@@ -118,12 +120,6 @@ public class HumanCareer extends Career {
             }
         }
         out.put("levelAwards", levelAwdObj);
-        
-        JSONArray invoiceArr = new JSONArray();
-        for (JSONObject inv : invoices) {
-            invoiceArr.put(inv);
-        }
-        out.put("invoices", invoiceArr);
     }
 
     @Override
@@ -133,23 +129,23 @@ public class HumanCareer extends Career {
         int lv = 1;
         int[] expList = CareerManager.getExpRequiredLevelUp();
         for (int i = 0; i < expList.length; i++) {
-            if (lv == level) break;
+            if (lv == financial.level) break;
             int nextLvReq = expList[i];
             int nextLvTotal = levelTotal + nextLvReq;
-            remExp = totalExp - levelTotal;
+            remExp = financial.totalExp - levelTotal;
             lv = i + 1;
-            if (levelTotal <= totalExp && nextLvTotal > totalExp) {
+            if (levelTotal <= financial.totalExp && nextLvTotal > financial.totalExp) {
                 // 结束了，就是这一级了
                 break;
             }
             levelTotal = nextLvTotal;
         }
-        if (lv != level || remExp != expInThisLevel) {
+        if (lv != financial.level || remExp != financial.expInThisLevel) {
             System.err.printf("You hacked your user data: should %d,%d, actual: %d,%d \n",
                     lv,
                     remExp,
-                    level,
-                    expInThisLevel);
+                    financial.level,
+                    financial.expInThisLevel);
         }
     }
 
@@ -159,14 +155,39 @@ public class HumanCareer extends Career {
                 challengeSet.getId(),
                 ChallengeHistory::new
         );
+        int moneyBefore = financial.money;
+        JSONObject invoice = new JSONObject();
+        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+        invoice.put("timestamp", timestamp);
+        invoice.put("type", "challengeEarn");
+        invoice.put("match", challengeSet.getId());
+        JSONObject items = new JSONObject();
+        
         Map<RewardCondition, ChallengeReward> newFulfills = history.newComplete(challengeSet, clearance, score);
         if (!newFulfills.isEmpty()) {
-            for (ChallengeReward cr : newFulfills.values()) {
-                totalExp += cr.getExp();
-                expInThisLevel += cr.getExp();
-                earnMoney(cr.getMoney());
+            for (Map.Entry<RewardCondition, ChallengeReward> entry : newFulfills.entrySet()) {
+                ChallengeReward cr = entry.getValue();
+                
+                int before = financial.money;
+                
+                financial.totalExp += cr.getExp();
+                financial.expInThisLevel += cr.getExp();
+                int raw = cr.getMoney();
+                earnMoney(raw, TAX_RATE);
+                int real = financial.money - before;
+
+                JSONObject subItem = new JSONObject();
+                subItem.put("raw", raw);
+                subItem.put("actual", real);
+                items.put(entry.getKey().toJsonString(), subItem);
             }
         }
+
+        invoice.put("items", items);
+        invoice.put("moneyBefore", moneyBefore);
+        invoice.put("moneyAfter", financial.money);
+        financial.invoices.add(invoice);
+        
         checkScoreAchievements();
     }
 
@@ -174,46 +195,75 @@ public class HumanCareer extends Career {
         return completedChallenges == null ? null : completedChallenges.get(challengeId);
     }
 
-    public void earnMoney(int earned) {
-        this.cumulativeAwards += earned;
-        this.money += (int) Math.round(earned * (1 - TAX_RATE));
+    /**
+     * 记录一笔合法收入
+     * 
+     * @param earned  标价
+     * @param taxRate 实行的税率
+     */
+    public void earnMoney(int earned, double taxRate) {
+        financial.cumulativeAwards += earned;
+        financial.money += (int) Math.round(earned * (1 - taxRate));
         // 这里不检查成就，因为earnMoney之后一般都跟着checkScoreAchievements()
     }
-    
+
     public void buyCue(String cueInstanceId, int price) {
-        int moneyBefore = money;
-        money -= price;
-        
+        int moneyBefore = financial.money;
+        financial.money -= price;
+
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
         invoice.put("type", "purchase");
         invoice.put("moneyBefore", moneyBefore);
         invoice.put("moneyCost", price);
-        invoice.put("moneyAfter", money);
+        invoice.put("moneyAfter", financial.money);
         invoice.put("item", cueInstanceId);
-        invoices.add(invoice);
+        financial.invoices.add(invoice);
     }
 
     @Override
     public void addChampionshipScore(ChampionshipScore score) {
         super.addChampionshipScore(score);
+        
+        int moneyBefore = financial.money;
+        JSONObject invoice = new JSONObject();
+        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+        invoice.put("timestamp", timestamp);
+        invoice.put("type", "championshipEarn");
+        invoice.put("match", score.data.getId());
+        invoice.put("year", score.getYear());
 
+        JSONObject items = new JSONObject();
         for (ChampionshipScore.Rank rank : score.ranks) {
             int exp = score.data.getExpByRank(rank);
-            totalExp += exp;
-            expInThisLevel += exp;
-
-            earnMoney(score.data.getAwardByRank(rank));
+            financial.totalExp += exp;
+            financial.expInThisLevel += exp;
+            
+            int before = financial.money;
+            int raw = score.data.getAwardByRank(rank);
+            earnMoney(raw, TAX_RATE);
+            int real = financial.money - before;
+            
+            JSONObject subItem = new JSONObject();
+            subItem.put("raw", raw);
+            subItem.put("actual", real);
+            items.put(rank.name(), subItem);
         }
+        
+        invoice.put("items", items);
+        invoice.put("moneyBefore", moneyBefore);
+        invoice.put("moneyAfter", financial.money);
+        financial.invoices.add(invoice);
+        
         checkScoreAchievements();
     }
 
     public void checkScoreAchievements() {
         AchManager achManager = AchManager.getInstance();
-        
+
         Set<String> remSnookerTripleCrown = new HashSet<>(Set.of(ChampDataManager.getSnookerTripleCrownIds()));
-        
+
         int cumAwards = 0;
         for (ChampionshipScore score : getChampionshipScores()) {
             for (ChampionshipScore.Rank rank : score.ranks) {
@@ -222,7 +272,7 @@ public class HumanCareer extends Career {
                 if (award > 0) {
                     achManager.addAchievement(Achievement.EARNED_MONEY, null);
                 }
-                
+
                 if (rank == ChampionshipScore.Rank.CHAMPION) {
                     achManager.addAchievement(Achievement.CHAMPION, null);
                     if (score.data.getType() == GameRule.SNOOKER) {
@@ -243,26 +293,26 @@ public class HumanCareer extends Career {
                 }
             }
         }
-        
+
         if (remSnookerTripleCrown.isEmpty()) {
             achManager.addAchievement(Achievement.SNOOKER_TRIPLE_CROWN, null);
         }
 
-        System.out.println("awards: " + cumulativeAwards + ", " + cumAwards);
-        cumulativeAwards = cumAwards;
-        achManager.addAchievement(Achievement.EARN_MONEY_CUMULATIVE, cumulativeAwards, null);
+        System.out.println("awards: " + financial.cumulativeAwards + ", " + cumAwards);
+        financial.cumulativeAwards = cumAwards;
+        achManager.addAchievement(Achievement.EARN_MONEY_CUMULATIVE, financial.cumulativeAwards, null);
     }
 
     public int getLevel() {
-        return level;
+        return financial.level;
     }
 
     public int getExpInThisLevel() {
-        return expInThisLevel;
+        return financial.expInThisLevel;
     }
 
     public boolean canLevelUp() {
-        return expInThisLevel >= CareerManager.getInstance().getExpNeededToLevelUp(level);
+        return financial.expInThisLevel >= CareerManager.getInstance().getExpNeededToLevelUp(financial.level);
     }
 
     public int[] levelUpPerkRange(int toLevel) {
@@ -280,20 +330,20 @@ public class HumanCareer extends Career {
     public List<AwardMaterial> levelUp() {
         List<AwardMaterial> result = new ArrayList<>();
 
-        int expNeed = CareerManager.getInstance().getExpNeededToLevelUp(level);
-        level++;
-        expInThisLevel -= expNeed;
+        int expNeed = CareerManager.getInstance().getExpNeededToLevelUp(financial.level);
+        financial.level++;
+        financial.expInThisLevel -= expNeed;
 
-        int[] range = levelUpPerkRange(level);
+        int[] range = levelUpPerkRange(financial.level);
         int index = (int) (Math.random() * range.length);
         int perk = range[index];
-        availPerks += perk;
-        totalPerks += perk;
+        financial.availPerks += perk;
+        financial.totalPerks += perk;
 
         AwardMaterial pm = new AwardPerk(perk);
         result.add(pm);
 
-        levelAwards.put(level, result);
+        levelAwards.put(financial.level, result);
 
         CareerManager.getInstance().saveToDisk();
 
@@ -301,10 +351,10 @@ public class HumanCareer extends Career {
     }
 
     public void recordUpgradeAndUsePerk(PerkManager.UpgradeRec upgradeRec) {
-        int moneyBefore = money;
-        money -= upgradeRec.moneyCost();
-        availPerks -= upgradeRec.perkUsed();
-        
+        int moneyBefore = financial.money;
+        financial.money -= upgradeRec.moneyCost();
+        financial.availPerks -= upgradeRec.perkUsed();
+
         JSONObject record = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         record.put("timestamp", timestamp);
@@ -312,22 +362,22 @@ public class HumanCareer extends Career {
         record.put("perkUsed", upgradeRec.perkUsed());
         record.put("moneyBefore", moneyBefore);
         record.put("moneyCost", upgradeRec.moneyCost());
-        record.put("moneyAfter", money);
+        record.put("moneyAfter", financial.money);
         JSONObject skillUpgrade = new JSONObject();
         for (Map.Entry<String, double[]> entry : upgradeRec.abilityUpdated().entrySet()) {
             skillUpgrade.put(entry.getKey(), Util.arrayToJson(entry.getValue()));
         }
         record.put("ability", skillUpgrade);
-        
-        invoices.add(record);
+
+        financial.invoices.add(record);
     }
 
     public int getAvailablePerks() {
-        return availPerks;
+        return financial.availPerks;
     }
 
     public int getTotalPerks() {
-        return totalPerks;
+        return financial.totalPerks;
     }
 
     /**
@@ -339,18 +389,20 @@ public class HumanCareer extends Career {
 
         ChampionshipScore last = scores.get(scores.size() - 1);
         Calendar lastTime = last.timestamp;
-        
+
         Calendar nextTime = nextChampData.toCalendar();
         int diffDays = (int) Duration.between(lastTime.toInstant(), nextTime.toInstant()).toDays();
 
         Map<String, Integer> res = new HashMap<>();
-        
-        if (money < 0) {
-            double owe = -money;
+
+        int lifeFee = diffDays * DAILY_LIFE_FEE;
+        res.put("lifeFee", lifeFee);
+        if (financial.money < 0) {
+            double owe = -financial.money;
             int loanInterest = (int) Math.round(diffDays / 365.0 * owe * YEAR_IZE_INTEREST_RATE);
             res.put("oweInterest", loanInterest);
         }
-        
+
         return res;
     }
 
@@ -361,11 +413,10 @@ public class HumanCareer extends Career {
     public void updateMoneyChampStart(ChampionshipData.WithYear nextChampData) {
         Map<String, Integer> feesMap = calculateFixedFees(nextChampData);
         int fees = feesMap.values().stream().reduce(0, Integer::sum);
-        
+
         if (fees > 0) {
-            // 收利息
-            int moneyBefore = money;
-            money -= fees;
+            int moneyBefore = financial.money;
+            financial.money -= fees;
 
             JSONObject invoice = new JSONObject();
             String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
@@ -380,8 +431,8 @@ public class HumanCareer extends Career {
                 subArray.put(sub);
             }
             invoice.put("items", subArray);
-            invoice.put("moneyAfter", money);
-            invoices.add(invoice);
+            invoice.put("moneyAfter", financial.money);
+            financial.invoices.add(invoice);
         }
     }
 
@@ -391,13 +442,13 @@ public class HumanCareer extends Career {
      */
     public void payParticipateFees(Championship championship) {
         ChampionshipData data = championship.getData();
-        int moneyBefore = money;
+        int moneyBefore = financial.money;
         boolean isSeed = championship.isPlayerSeed(getPlayerPerson().getPlayerId());
         int registryFee = isSeed ? data.getSeedRegistryFee() : data.getRegistryFee();
         int travelFee = data.getFlightFee();
         int hotelFee = data.getFlightFee();
-        
-        money -= (registryFee + travelFee + hotelFee);
+
+        financial.money -= (registryFee + travelFee + hotelFee);
 
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
@@ -405,45 +456,65 @@ public class HumanCareer extends Career {
         invoice.put("type", "participation");
         invoice.put("match", championship.uniqueId());
         invoice.put("moneyBefore", moneyBefore);
-        
+
         JSONObject o1 = new JSONObject();
         o1.put("item", "registry");
         o1.put("moneyCost", registryFee);
-        
+
         JSONObject o2 = new JSONObject();
         o2.put("item", "travel");
         o2.put("moneyCost", travelFee);
-        
+
         JSONObject o3 = new JSONObject();
         o3.put("item", "hotel");
         o3.put("moneyCost", hotelFee);
-        
+
         JSONArray subArray = new JSONArray();
         subArray.put(o1);
         subArray.put(o2);
         subArray.put(o3);
-        
+
         invoice.put("items", subArray);
-        
-        invoice.put("moneyAfter", money);
-        invoices.add(invoice);
+
+        invoice.put("moneyAfter", financial.money);
+        financial.invoices.add(invoice);
     }
 
     public int getMoney() {
         checkMoney();
-        
-        return money;
+
+        return financial.money;
     }
-    
+
     private void checkMoney() {
         boolean save = false;
-        if (money == 0 && CareerManager.getInstance().getLastSavedVersion() < 40) {
+        if (financial.money == 0 && CareerManager.getInstance().getLastSavedVersion() < 40) {
             int awards = computeAllAwards();
-            money = (int) ((1 - TAX_RATE) * awards);
+            financial.money = (int) ((1 - TAX_RATE) * awards);
             save = true;
         }
         if (CareerManager.getInstance().getLastSavedVersion() < 46) {
-            int usedPerks = totalPerks - availPerks;
+            // 扣参赛费和生活费
+            Calendar beginDate = null;
+            Calendar lastDate = null;
+            for (ChampionshipScore cs : getChampionshipScores()) {
+                int cost = cs.data.getRegistryFee() + cs.data.getFlightFee() + cs.data.getHotelFee();
+                financial.money -= cost;
+                
+                if (beginDate == null) {
+                    beginDate = cs.timestamp;
+                }
+                
+                lastDate = cs.timestamp;
+            }
+            
+            if (beginDate != null && lastDate != null && beginDate != lastDate) {
+                int diffDays = (int) Duration.between(beginDate.toInstant(), lastDate.toInstant()).toDays();
+                financial.money -= diffDays * DAILY_LIFE_FEE;
+            }
+            
+            // 大致模拟加点花的钱
+            int usedPerks = financial.totalPerks - financial.availPerks;
             if (usedPerks > 0) {
                 // 防止篡改perk得钱
                 // 假设平均一个点把一个技能升2.5
@@ -462,7 +533,7 @@ public class HumanCareer extends Career {
                 }
 
                 System.out.println("Simulate money use: " + moneyUsed);
-                money = Math.max(10000, money - moneyUsed);
+                financial.money = Math.max(10000, financial.money - moneyUsed);
             } else {
                 System.out.println("Not simulate money use because perk inconsistency");
             }
@@ -473,7 +544,7 @@ public class HumanCareer extends Career {
             CareerManager.getInstance().saveToDisk();
         }
     }
-    
+
     private int computeAllAwards() {
         int awards = 0;
         awards += new CareerWithAwards(GameRule.SNOOKER, this, Calendar.getInstance()).getTotalAwards();
@@ -481,5 +552,89 @@ public class HumanCareer extends Career {
         awards += new CareerWithAwards(GameRule.LIS_EIGHT, this, Calendar.getInstance()).getTotalAwards();
         awards += new CareerWithAwards(GameRule.AMERICAN_NINE, this, Calendar.getInstance()).getTotalAwards();
         return awards;
+    }
+
+    public static class FinancialManager {
+        private final File jsonFile;
+        private final List<JSONObject> invoices = new ArrayList<>();
+        private int totalPerks;
+        private int availPerks;
+        private int totalExp = 0;
+        private int level = 1;
+        private int expInThisLevel;
+        private int money;
+        private int cumulativeAwards;  // 历史上的税前总奖金
+
+        FinancialManager(CareerSave save) {
+            jsonFile = new File(save.getDir(), "financial.json");
+        }
+
+        boolean loadFromJson() {
+            if (jsonFile.exists()) {
+                try {
+                    JSONObject json = DataLoader.loadFromDisk(jsonFile.getAbsolutePath());
+
+                    String checksum = json.has("checksum") ? json.getString("checksum") : "";
+                    JSONObject jsonObject = json.getJSONObject("financial");
+                    
+                    String curCheck = JsonChecksum.checksum(jsonObject);
+                    if (!curCheck.equals(checksum)) {
+                        EventLogger.warning("You hacked your financial record!");
+                    }
+
+                    availPerks = jsonObject.has("availPerks") ? jsonObject.getInt("availPerks") : 0;
+                    totalPerks = jsonObject.has("totalPerks") ? jsonObject.getInt("totalPerks") : 0;
+                    totalExp = jsonObject.has("totalExp") ? jsonObject.getInt("totalExp") : 0;
+                    level = jsonObject.has("level") ? jsonObject.getInt("level") : 1;
+                    expInThisLevel = jsonObject.has("expInThisLevel") ? jsonObject.getInt("expInThisLevel") : 0;
+                    money = jsonObject.has("money") ? jsonObject.getInt("money") : 0;
+
+                    if (jsonObject.has("invoices")) {
+                        JSONArray invoiceArr = jsonObject.getJSONArray("invoices");
+                        for (int i = 0; i < invoiceArr.length(); i++) {
+                            JSONObject invObj = invoiceArr.getJSONObject(i);
+                            invoices.add(invObj);
+                        }
+                    }
+
+                    return true;
+                } catch (JSONException e) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        JSONObject toJson() {
+            JSONObject json = new JSONObject();
+
+            JSONObject out = new JSONObject();
+            out.put("availPerks", availPerks);
+            out.put("totalPerks", totalPerks);
+            out.put("totalExp", totalExp);
+            out.put("level", level);
+            out.put("expInThisLevel", expInThisLevel);
+            out.put("money", money);
+
+            JSONArray invoiceArr = new JSONArray();
+            for (JSONObject inv : invoices) {
+                invoiceArr.put(inv);
+            }
+            out.put("invoices", invoiceArr);
+
+            json.put("financial", out);
+
+            String checksum = JsonChecksum.checksum(out);
+
+            json.put("checksum", checksum);
+
+            return json;
+        }
+
+        void writeToDisk() {
+            JSONObject json = toJson();
+            DataLoader.saveToDisk(json, jsonFile.getAbsolutePath());
+        }
     }
 }
