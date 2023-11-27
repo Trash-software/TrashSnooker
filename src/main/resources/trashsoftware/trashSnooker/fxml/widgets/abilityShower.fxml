@@ -4,17 +4,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import trashsoftware.trashSnooker.fxml.widgets.AbilityShower?>
+<?import trashsoftware.trashSnooker.fxml.widgets.RadarChart?>
 <fx:root type="trashsoftware.trashSnooker.fxml.widgets.AbilityShower"
          xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         alignment="CENTER" vgap="10.0" hgap="20.0">
-    
-    <columnConstraints>
-        <ColumnConstraints/>
-        <ColumnConstraints/>
-        <ColumnConstraints/>
-        <ColumnConstraints fx:id="buttonsCol"/>
-    </columnConstraints>
+         spacing="10">
 
     <Label fx:id="nameLabel" text="Name" GridPane.columnSpan="3" alignment="CENTER">
         <font>
@@ -22,69 +16,94 @@
         </font>
     </Label>
 
-    <Label fx:id="categoryLabel" text="%catProf" GridPane.rowIndex="2"/>
-    
-    <Label fx:id="sexLabel" GridPane.rowIndex="3"/>
-    <Label fx:id="heightLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    <Label fx:id="categoryLabel" text="%catProf"/>
 
-    <Label text="%aiming" GridPane.rowIndex="4"/>
-    <ProgressBar fx:id="aimingBar" prefWidth="240.0"
-                 GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-    <Label fx:id="aimingLabel" text="99" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
-    <Button fx:id="aimingBtn" onAction="#addPerk" text="+" GridPane.rowIndex="4" GridPane.columnIndex="3"/>
+    <HBox spacing="10.0">
+        <Label fx:id="sexLabel"/>
+        <Label fx:id="heightLabel"/>
+    </HBox>
 
-    <Label text="%cuePrecision" GridPane.rowIndex="5">
-        <tooltip>
-            <Tooltip text="%cuePrecisionTooltip"/>
-        </tooltip>
-    </Label>
-    <ProgressBar fx:id="cuePrecisionBar" prefWidth="240.0"
-                 GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-    <Label fx:id="cuePrecisionLabel" text="99" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
-    <Button fx:id="cuePrecisionBtn" onAction="#addPerk" text="+" GridPane.rowIndex="5" GridPane.columnIndex="3"/>
+    <GridPane fx:id="barChartRoot" alignment="CENTER" vgap="10.0" hgap="20.0">
+        <columnConstraints>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints fx:id="buttonsCol"/>
+        </columnConstraints>
 
-    <Label text="%powerAndMaxPower" GridPane.rowIndex="6">
-        <tooltip>
-            <Tooltip text="%powerTooltip"/>
-        </tooltip>
-    </Label>
-    <ProgressBar fx:id="powerBar" prefWidth="240.0"
-                 GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-    <Label fx:id="powerLabel" text="99/99" GridPane.rowIndex="6" GridPane.columnIndex="2"/>
-    <Button fx:id="powerBtn" onAction="#addPerk" text="+" GridPane.rowIndex="6" GridPane.columnIndex="3"/>
+        <Label text="%aiming" GridPane.rowIndex="0"/>
+        <ProgressBar fx:id="aimingBar" prefWidth="240.0"
+                     GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label fx:id="aimingLabel" text="99" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+        <Button fx:id="aimingBtn" onAction="#addPerk" text="+" GridPane.rowIndex="0"
+                GridPane.columnIndex="3"/>
 
-    <Label text="%powerControl" GridPane.rowIndex="7">
-        <tooltip>
-            <Tooltip text="%powerControlTooltip"/>
-        </tooltip>
-    </Label>
-    <ProgressBar fx:id="powerControlBar" prefWidth="240.0"
-                 GridPane.rowIndex="7" GridPane.columnIndex="1"/>
-    <Label fx:id="powerControlLabel" text="99" GridPane.rowIndex="7" GridPane.columnIndex="2"/>
-    <Button fx:id="powerControlBtn" onAction="#addPerk" text="+" GridPane.rowIndex="7" GridPane.columnIndex="3"/>
+        <Label text="%cuePrecision" GridPane.rowIndex="1">
+            <tooltip>
+                <Tooltip text="%cuePrecisionTooltip"/>
+            </tooltip>
+        </Label>
+        <ProgressBar fx:id="cuePrecisionBar" prefWidth="240.0"
+                     GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label fx:id="cuePrecisionLabel" text="99" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+        <Button fx:id="cuePrecisionBtn" onAction="#addPerk" text="+" GridPane.rowIndex="1"
+                GridPane.columnIndex="3"/>
 
-    <Label text="%spinText" GridPane.rowIndex="8"/>
-    <ProgressBar fx:id="spinBar" prefWidth="240.0"
-                 GridPane.rowIndex="8" GridPane.columnIndex="1"/>
-    <Label fx:id="spinLabel" text="99" GridPane.rowIndex="8" GridPane.columnIndex="2"/>
-    <Button fx:id="spinBtn" onAction="#addPerk" text="+" GridPane.rowIndex="8" GridPane.columnIndex="3"/>
+        <Label text="%powerAndMaxPower" GridPane.rowIndex="2">
+            <tooltip>
+                <Tooltip text="%powerTooltip"/>
+            </tooltip>
+        </Label>
+        <ProgressBar fx:id="powerBar" prefWidth="240.0"
+                     GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label fx:id="powerLabel" text="99/99" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+        <Button fx:id="powerBtn" onAction="#addPerk" text="+" GridPane.rowIndex="2"
+                GridPane.columnIndex="3"/>
 
-    <Label text="%spinControlText" GridPane.rowIndex="9"/>
-    <ProgressBar fx:id="spinControlBar" prefWidth="240.0"
-                 GridPane.rowIndex="9" GridPane.columnIndex="1"/>
-    <Label fx:id="spinControlLabel" text="99" GridPane.rowIndex="9" GridPane.columnIndex="2"/>
-    <Button fx:id="spinControlBtn" onAction="#addPerk" text="+" GridPane.rowIndex="9" GridPane.columnIndex="3"/>
+        <Label text="%powerControl" GridPane.rowIndex="3">
+            <tooltip>
+                <Tooltip text="%powerControlTooltip"/>
+            </tooltip>
+        </Label>
+        <ProgressBar fx:id="powerControlBar" prefWidth="240.0"
+                     GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label fx:id="powerControlLabel" text="99" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+        <Button fx:id="powerControlBtn" onAction="#addPerk" text="+" GridPane.rowIndex="3"
+                GridPane.columnIndex="3"/>
 
-    <Label text="%offHand" GridPane.rowIndex="10"/>
-    <ProgressBar fx:id="notGoodHandBar" prefWidth="240.0"
-                 GridPane.rowIndex="10" GridPane.columnIndex="1"/>
-    <Label fx:id="notGoodHandLabel" text="99" GridPane.rowIndex="10" GridPane.columnIndex="2"/>
-    <Button fx:id="notGoodHandBtn" onAction="#addPerk" text="+" GridPane.rowIndex="10" GridPane.columnIndex="3"/>
+        <Label text="%spinText" GridPane.rowIndex="4"/>
+        <ProgressBar fx:id="spinBar" prefWidth="240.0"
+                     GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label fx:id="spinLabel" text="99" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+        <Button fx:id="spinBtn" onAction="#addPerk" text="+" GridPane.rowIndex="4"
+                GridPane.columnIndex="3"/>
 
-    <Label text="%restHand" GridPane.rowIndex="11"/>
-    <ProgressBar fx:id="restBar" prefWidth="240.0"
-                 GridPane.rowIndex="11" GridPane.columnIndex="1"/>
-    <Label fx:id="restLabel" text="99" GridPane.rowIndex="11" GridPane.columnIndex="2"/>
-    <Button fx:id="restBtn" onAction="#addPerk" text="+" GridPane.rowIndex="11" GridPane.columnIndex="3"/>
+        <Label text="%spinControlText" GridPane.rowIndex="5"/>
+        <ProgressBar fx:id="spinControlBar" prefWidth="240.0"
+                     GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        <Label fx:id="spinControlLabel" text="99" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
+        <Button fx:id="spinControlBtn" onAction="#addPerk" text="+" GridPane.rowIndex="5"
+                GridPane.columnIndex="3"/>
+
+        <Label text="%offHand" GridPane.rowIndex="6"/>
+        <ProgressBar fx:id="notGoodHandBar" prefWidth="240.0"
+                     GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        <Label fx:id="notGoodHandLabel" text="99" GridPane.rowIndex="6" GridPane.columnIndex="2"/>
+        <Button fx:id="notGoodHandBtn" onAction="#addPerk" text="+" GridPane.rowIndex="6"
+                GridPane.columnIndex="3"/>
+
+        <Label text="%restHand" GridPane.rowIndex="7"/>
+        <ProgressBar fx:id="restBar" prefWidth="240.0"
+                     GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+        <Label fx:id="restLabel" text="99" GridPane.rowIndex="7" GridPane.columnIndex="2"/>
+        <Button fx:id="restBtn" onAction="#addPerk" text="+" GridPane.rowIndex="7"
+                GridPane.columnIndex="3"/>
+    </GridPane>
+
+    <RadarChart fx:id="radarChartRoot" visible="false" managed="false">
+
+    </RadarChart>
+
+    <Button fx:id="switchButton" text="%radarChart" onAction="#switchChart"/>
 
 </fx:root>

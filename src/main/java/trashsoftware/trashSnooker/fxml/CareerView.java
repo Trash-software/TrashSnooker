@@ -437,7 +437,7 @@ public class CareerView extends ChildInitializable {
                     } else {
                         label = feesItem.getKey();
                     }
-                    builder.append(label).append(": ").append(feesItem.getValue()).append(' ');
+                    builder.append(label).append(" ").append(feesItem.getValue()).append(' ');
                 }
                 String sbs = builder.toString();
                 otherFeeLabel1.setText(sbs);
