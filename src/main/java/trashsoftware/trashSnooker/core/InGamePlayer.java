@@ -110,15 +110,6 @@ public class InGamePlayer {
     public CueSelection getCueSelection() {
         return cueSelection;
     }
-
-//    public Cue getCurrentCue(Game<?, ?> game) {
-//        if (game instanceof NeedBigBreak) {
-//            if (((NeedBigBreak) game).isBreaking()) {
-//                return breakCue;
-//            }
-//        }
-//        return playCue;
-//    }
     
     public boolean isHuman() {
         return playerType == PlayerType.PLAYER;

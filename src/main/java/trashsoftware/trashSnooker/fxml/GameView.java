@@ -112,8 +112,6 @@ public class GameView implements Initializable {
     GamePane gamePane;  // 球和桌子画在这里
     @FXML
     Pane contentPane;
-    //    @FXML
-//    Pane contentPane;
     @FXML
     Canvas cueAngleCanvas;
     @FXML
@@ -226,7 +224,8 @@ public class GameView implements Initializable {
     private double cuePointX, cuePointY;  // 杆法的击球点
     private double intentCuePointX = -1, intentCuePointY = -1;  // 计划的杆法击球点
     private double cueAngleDeg = 5.0;
-    private double cueRollRotateDeg = 180.0;  // 转杆，并不重要
+    private double cueRollRotateDeg1 = 180.0;  // 转杆，并不重要
+    private double cueRollRotateDeg2 = 180.0;  // 球员2的转杆
     private double cueAngleBaseVer = 10.0;
     private double cueAngleBaseHor = 10.0;
     private CueAnimationPlayer cueAnimationPlayer;
@@ -724,8 +723,20 @@ public class GameView implements Initializable {
             case S -> setCuePoint(cuePointX, cuePointY + 1, true);
             case Q -> setCueAngleDeg(cueAngleDeg + 1);
             case E -> setCueAngleDeg(cueAngleDeg - 1);
-            case Z -> cueRollRotateDeg += 3;
-            case X -> cueRollRotateDeg -= 3;
+            case Z -> {
+                if (getActiveHolder().getCuingIgp().getPlayerNumber() == 1) {
+                    cueRollRotateDeg1 += 3;
+                } else {
+                    cueRollRotateDeg2 += 3;
+                }
+            }
+            case X -> {
+                if (getActiveHolder().getCuingIgp().getPlayerNumber() == 1) {
+                    cueRollRotateDeg1 -= 3;
+                } else {
+                    cueRollRotateDeg2 -= 3;
+                }
+            }
         }
     }
 
@@ -1854,6 +1865,17 @@ public class GameView implements Initializable {
      */
     private Cue getCuingCue() {
         InGamePlayer cuing = getActiveHolder().getCuingIgp();
+        if (game != null) {
+            if (game.gameValues.rule.poolLike() && !cuing.isHuman()) {
+                if (game.getGame().isBreaking()) {
+                    cuing.getCueSelection().selectByBrand(DataLoader.getInstance().getStdBreakCueBrand());
+                } else {
+                    FastGameView.selectSuggestedCue(cuing.getCueSelection(), 
+                            game.gameValues.rule, 
+                            cuing.getPlayerPerson());
+                }
+            }
+        }
         return cuing.getCueSelection().getSelected().getNonNullInstance();
     }
 
@@ -3725,7 +3747,12 @@ public class GameView implements Initializable {
                 cueAngleDeg,
                 gamePane.getScale());
         if (!isRest) {
-            cueModel.setCueRotation(cueRollRotateDeg);
+            if (getActiveHolder().getCuingIgp().getPlayerNumber() == 1) {
+                cueModel.setCueRotation(cueRollRotateDeg1);
+            } else {
+                cueModel.setCueRotation(cueRollRotateDeg2);
+            }
+            
         }
     }
 
@@ -3735,6 +3762,7 @@ public class GameView implements Initializable {
             cueModel = CueModel.createCueModel(cue);
             cueModel.setDisable(true);
             contentPane.getChildren().add(cueModel);  // fixme
+//            basePane.getChildren().add(cueModel);  // fixme
             cueModelMap.put(cue, cueModel);
         }
 

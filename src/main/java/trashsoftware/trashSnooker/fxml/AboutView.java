@@ -43,8 +43,8 @@ public class AboutView implements Initializable {
     );
 
     public static final Map<String, String[]> CLOSED_BETA_USERS_NAME = Map.of(
-            "zh", new String[]{"Atom张", "陈哥"},
-            "en", new String[]{"Atom Zhang", "Cheng Brother"}
+            "zh", new String[]{"Purple Fat", "Atom张", "陈哥"},
+            "en", new String[]{"Purple Fat", "Atom Zhang", "Cheng Brother"}
     );
     
     @Override

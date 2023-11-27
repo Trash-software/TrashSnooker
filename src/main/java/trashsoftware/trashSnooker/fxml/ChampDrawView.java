@@ -17,16 +17,16 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.EntireGame;
+import trashsoftware.trashSnooker.core.InGamePlayer;
+import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.PlayerType;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.*;
-import trashsoftware.trashSnooker.core.cue.Cue;
-import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
-import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.TableSpec;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
@@ -54,7 +54,7 @@ public class ChampDrawView extends ChildInitializable {
     Label currentStageLabel, humanOpponentLabel, savedRoundLabel;
     @FXML
     Button opponentInfoBtn;
-//    @FXML
+    //    @FXML
 //    ComboBox<FastGameView.CueItem> cueBox;
 //    @FXML
 //    Button cueButton;
@@ -97,30 +97,13 @@ public class ChampDrawView extends ChildInitializable {
     Stage selfStage;
     private ResourceBundle strings;
 
-//    public static void refreshCueBox(ComboBox<FastGameView.CueAndBrand> cueBox) {
-//        cueBox.getItems().clear();
-////        PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();
-//        InventoryManager inventoryManager = CareerManager.getInstance().getInventory();
-//        for (Cue cue : inventoryManager.getAllCues()) {
-//            cueBox.getItems().add(new FastGameView.CueAndBrand(cue.getBrand(), cue));
-//        }
-////        for (Cue cue : human.getPrivateCues()) {
-////            cueBox.getItems().add(new FastGameView.CueItem(cue, cue.getName()));
-////        }
-////        for (Cue cue : DataLoader.getInstance().getCues().values()) {
-////            if (!cue.privacy) {
-////                cueBox.getItems().add(new FastGameView.CueItem(cue, cue.getName()));
-////            }
-////        }
-//    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.strings = resourceBundle;
 
         championship = CareerManager.getInstance().getChampionshipInProgress();
         assert championship != null;
-        
+
 //        cueSelection = new FastGameView.CueSelection(cueButton);
 
         champNameLabel.setText(championship.fullName());
@@ -146,32 +129,10 @@ public class ChampDrawView extends ChildInitializable {
     }
 
     private void setupCheckbox() {
-//        showAllMatchesBox.selectedProperty().addListener((observable, oldValue, newValue) ->
-//                buildTreeGraph());
         treeShowingBox.getItems().addAll(TreeShowing.values());
         treeShowingBox.getSelectionModel().selectedIndexProperty().addListener(((observable, oldValue, newValue) ->
                 buildTreeGraph()));
     }
-
-//    private void refreshCueBox() {
-//        cueSelection.getAvailableCues().clear();
-//        PlayerPerson human = CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson();
-//
-//        InventoryManager inventoryManager = CareerManager.getInstance().getInventory();
-//        for (Cue cue : inventoryManager.getAllCues()) {
-//            cueSelection.getAvailableCues().add(new FastGameView.CueAndBrand(cue.getBrand(), cue));
-//        }
-////        for (Cue cue : human.getPrivateCues()) {
-////            cueSelection.getAvailableCues().add(cue);
-////        }
-////        for (Cue cue : DataLoader.getInstance().getCues().values()) {
-////            if (!cue.privacy) {
-////                cueSelection.getAvailableCues().add(cue);
-////            }
-////        }
-////        FastGameView.selectSuggestedCue(cueBox, championship.getData().getType(), human);
-//        FastGameView.selectSuggestedCue(cueSelection, championship.getData().getType(), human);
-//    }
 
     private void initTable() {
         LabelTableColumn<MatchResItem, String> rankCol =
@@ -195,8 +156,6 @@ public class ChampDrawView extends ChildInitializable {
     public void setup(CareerView parent, Stage selfStage) {
         this.parent = parent;
         this.selfStage = selfStage;
-
-        this.selfStage.setOnHidden(event -> parent.refreshGui());
     }
 
     private void pveMatchFinish() {
@@ -266,7 +225,7 @@ public class ChampDrawView extends ChildInitializable {
 //                FastGameView.selectCue(cueBox, humanIgp.getPlayCue());
 //                cueSelection.select(humanIgp.getPlayCue());
 //                cueSelection.selectByCue(humanIgp.getPlayCue());
-                
+
 //                cueButton.setDisable(true);
                 setOpponentText(championship.findHumanNextOpponent());
             } else {
@@ -422,7 +381,7 @@ public class ChampDrawView extends ChildInitializable {
         zoomRatio = allowedZooms[++zoomIndex];
         zoomOutBtn.setDisable(zoomIndex == 0);
         zoomInBtn.setDisable(zoomIndex == allowedZooms.length - 1);
-        
+
         font = new Font(App.FONT.getName(), App.FONT.getSize() * zoomRatio);
         gc2d.setFont(font);
         gc2d.setLineWidth(zoomRatio);
@@ -436,7 +395,7 @@ public class ChampDrawView extends ChildInitializable {
         zoomRatio = allowedZooms[--zoomIndex];
         zoomOutBtn.setDisable(zoomIndex == 0);
         zoomInBtn.setDisable(zoomIndex == allowedZooms.length - 1);
-        
+
         font = new Font(App.FONT.getName(), App.FONT.getSize() * zoomRatio);
         gc2d.setFont(font);
         gc2d.setLineWidth(zoomRatio);
@@ -469,6 +428,7 @@ public class ChampDrawView extends ChildInitializable {
 
                     AbilityView controller = loader.getController();
                     controller.setup(scene, person);
+                    controller.setOpponent(CareerManager.getInstance().getHumanPlayerCareer().getPlayerPerson());
                 } catch (IOException e) {
                     EventLogger.error(e);
                 }
@@ -511,7 +471,7 @@ public class ChampDrawView extends ChildInitializable {
             startGame(match);
         }
     }
-    
+
 //    @FXML
 //    void changeCueAction() {
 ////        FastGameView.showCueSelectionView(cueSelection, selfStage);
@@ -521,11 +481,11 @@ public class ChampDrawView extends ChildInitializable {
         TableSpec tableSpec = match.getChampionship().getData().getTableSpec();
         BallMetrics ballMetrics = match.getChampionship().getData().getBallMetrics();
 
-        GameValues values = new GameValues(match.getChampionship().getData().getType(), 
-                tableSpec.tableMetrics, 
+        GameValues values = new GameValues(match.getChampionship().getData().getType(),
+                tableSpec.tableMetrics,
                 ballMetrics);
         values.setTablePreset(match.getChampionship().getData().getTablePreset());
-        
+
         CareerManager careerManager = CareerManager.getInstance();
 
         InGamePlayer igp1;
@@ -541,7 +501,7 @@ public class ChampDrawView extends ChildInitializable {
                 1.0 : match.p1.getHandFeelEffort(championship.getData().getType());
         double p2HandFeelEffort = match.p2.isHumanPlayer() ?
                 1.0 : match.p2.getHandFeelEffort(championship.getData().getType());
-        
+
         InventoryManager p1Im = p1t == PlayerType.COMPUTER ? null : careerManager.getInventory();
         InventoryManager p2Im = p1Im == null ? careerManager.getInventory() : null;
 
@@ -560,7 +520,7 @@ public class ChampDrawView extends ChildInitializable {
 //            p1Cue = aiCue;
 //            p2Cue = playerCue;
 //        }
-        
+
 //        CueBrand stdBreakCueBrand = DataLoader.getInstance().getStdBreakCueBrand();
 ////        Cue stdBreakCue = DataLoader.getInstance().getStdBreakCueBrand();
 //        if (stdBreakCueBrand == null ||
@@ -575,20 +535,20 @@ public class ChampDrawView extends ChildInitializable {
 //                    2, 
 //                    p2HandFeelEffort);
 //        } else {
-            // todo: 玩家也有可能买开球杆
+        // todo: 玩家也有可能买开球杆
 //            Cue stdBreakCue = Cue.createForCareerGameAi(stdBreakCueBrand);
-            igp1 = new InGamePlayer(match.p1.getPlayerPerson(),
-                    p1t, 
-                    p1Im,
-                    values.rule,
-                    1, 
-                    p1HandFeelEffort);
-            igp2 = new InGamePlayer(match.p2.getPlayerPerson(),
-                    p2t,
-                    p2Im,
-                    values.rule,
-                    2, 
-                    p2HandFeelEffort);
+        igp1 = new InGamePlayer(match.p1.getPlayerPerson(),
+                p1t,
+                p1Im,
+                values.rule,
+                1,
+                p1HandFeelEffort);
+        igp2 = new InGamePlayer(match.p2.getPlayerPerson(),
+                p2t,
+                p2Im,
+                values.rule,
+                2,
+                p2HandFeelEffort);
 //        }
 
         EntireGame newGame = new EntireGame(
@@ -741,9 +701,9 @@ public class ChampDrawView extends ChildInitializable {
         gc2d.setStroke(color);
 
         double y1 = y - nodeHeight / 2;
-        strokeRect(x, 
+        strokeRect(x,
                 y1,
-                nodeWidth  + leftBlockWidth + rightBlockWidth, 
+                nodeWidth + leftBlockWidth + rightBlockWidth,
                 nodeHeight);
         strokeLine(x + leftBlockWidth, y1, x + leftBlockWidth, y1 + nodeHeight);
         strokeLine(x + leftBlockWidth + nodeWidth, y1, x + leftBlockWidth + nodeWidth, y1 + nodeHeight);
@@ -757,7 +717,7 @@ public class ChampDrawView extends ChildInitializable {
                 fillText(String.valueOf(winFrames), x + leftBlockWidth + nodeWidth + 3, y + 3);
             }
         }
-        
+
         if (node.node.isFinished()) {
             PlayerPerson person = node.node.getWinner().getPlayerPerson();
             fillText(person.getName(), x + leftBlockWidth + 3, y + 3);
@@ -786,7 +746,7 @@ public class ChampDrawView extends ChildInitializable {
             drawTreeToGraph(node.right, rightAlive, node);
         }
     }
-    
+
     private void strokeLine(double x1, double y1, double x2, double y2) {
         gc2d.strokeLine(x1 * zoomRatio,
                 y1 * zoomRatio,
@@ -800,7 +760,7 @@ public class ChampDrawView extends ChildInitializable {
                 w * zoomRatio,
                 h * zoomRatio);
     }
-    
+
     private void fillText(String text, double x, double y) {
         gc2d.fillText(text, x * zoomRatio, y * zoomRatio);
     }

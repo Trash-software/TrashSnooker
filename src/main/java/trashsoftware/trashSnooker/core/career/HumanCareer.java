@@ -547,10 +547,11 @@ public class HumanCareer extends Career {
 
     private int computeAllAwards() {
         int awards = 0;
-        awards += new CareerWithAwards(GameRule.SNOOKER, this, Calendar.getInstance()).getTotalAwards();
-        awards += new CareerWithAwards(GameRule.CHINESE_EIGHT, this, Calendar.getInstance()).getTotalAwards();
-        awards += new CareerWithAwards(GameRule.LIS_EIGHT, this, Calendar.getInstance()).getTotalAwards();
-        awards += new CareerWithAwards(GameRule.AMERICAN_NINE, this, Calendar.getInstance()).getTotalAwards();
+        // 只是利用这个类来算钱，没有实际作用
+        awards += new CareerRanker.ByAwards(GameRule.SNOOKER, this, Calendar.getInstance()).getTotalAwards();
+        awards += new CareerRanker.ByAwards(GameRule.CHINESE_EIGHT, this, Calendar.getInstance()).getTotalAwards();
+        awards += new CareerRanker.ByAwards(GameRule.LIS_EIGHT, this, Calendar.getInstance()).getTotalAwards();
+        awards += new CareerRanker.ByAwards(GameRule.AMERICAN_NINE, this, Calendar.getInstance()).getTotalAwards();
         return awards;
     }
 

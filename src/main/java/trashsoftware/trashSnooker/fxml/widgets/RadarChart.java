@@ -19,14 +19,16 @@ public class RadarChart extends VBox {
 
     public static final Color BACKGROUND = Color.WHITESMOKE;
     public static final Color TEXTS = Color.BLACK;
-    public static final Color TICKS = Color.GRAY;
+    public static final Color MAJOR_TICKS = Color.GRAY;
+    public static final Color MINOR_TICKS = Color.LIGHTGRAY;
+    public static final Color RADIO_TICKS = Color.DARKGRAY;
     public static final Color[] LINES = {
             Color.CORNFLOWERBLUE, 
             Color.DARKRED
     };
     public static final Color[] AREAS = {
-            Color.CYAN.deriveColor(0, 1, 1, 0.3),
-            Color.DARKRED.deriveColor(0, 1, 1, 0.3)
+            Color.CYAN.deriveColor(0, 1, 1, 0.25),
+            Color.DARKRED.deriveColor(0, 1, 1, 0.25)
     };
     
     @FXML
@@ -84,7 +86,7 @@ public class RadarChart extends VBox {
         
         double size = Math.min(width, height);
         
-        width = size * 1.2;
+        width = size * 1.5;
         height = size;
         
         canvas.setWidth(width);
@@ -93,7 +95,7 @@ public class RadarChart extends VBox {
         double centerX = width * 0.5;
         double centerY = height * 0.5;
         
-        double totalR = size * 0.35;
+        double totalR = size * 0.38;
         double eachTickR = totalR / nTicks;
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -101,7 +103,6 @@ public class RadarChart extends VBox {
         gc.fillRect(0, 0, width, height);
         
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.setStroke(TICKS);
         gc.setFill(TEXTS);
 
         List<List<double[]>> valueCoords = new ArrayList<>();
@@ -123,14 +124,23 @@ public class RadarChart extends VBox {
                 double x1 = r * Math.cos(nextRad) + centerX;
                 double y1 = r * Math.sin(nextRad) + centerY;
                 
+                if (j == nTicks - 1) {
+                    gc.setStroke(MAJOR_TICKS);
+                } else {
+                    gc.setStroke(MINOR_TICKS);
+                }
+                
                 gc.strokeLine(x0, y0, x1, y1);
             }
 
+            gc.setStroke(RADIO_TICKS);
             double xEnd = totalR * Math.cos(rad) + centerX;
             double yEnd = totalR * Math.sin(rad) + centerY;
             gc.strokeLine(centerX, centerY, xEnd, yEnd);
+
+            double textRExpand = 1 + Math.abs(Math.cos(rad)) * 0.12;  // 横向大一点
+            double textR = size * 0.44 * textRExpand;
             
-            double textR = size * 0.425;
             double textX = textR * Math.cos(rad) + centerX;
             double textY = textR * Math.sin(rad) + centerY;
             gc.fillText(titles[i], textX, textY);
@@ -158,6 +168,8 @@ public class RadarChart extends VBox {
                 double[] coord = coordsV.get(i);
                 xPoints[i] = coord[0];
                 yPoints[i] = coord[1];
+                
+                gc.strokeOval(coord[0] - 1.5, coord[1] - 1.5, 3, 3);
             }
 
             gc.strokePolygon(xPoints, yPoints, nPoints);

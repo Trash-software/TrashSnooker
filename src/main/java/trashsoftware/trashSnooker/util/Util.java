@@ -353,11 +353,9 @@ public class Util {
         boolean full = true;
         while (money > 0) {
             int m = money % 1000;
-            String s;
-            if (m == 0 && full) {
-                s = "000";
-            } else {
-                s = String.valueOf(m);
+            String s = String.valueOf(m);
+            if (full && s.length() < 3) {
+                s = "0".repeat(3 - s.length()) + s;
             }
             
             out.addFirst(s);

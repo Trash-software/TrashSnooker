@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
@@ -21,7 +20,6 @@ import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.HumanCareer;
 import trashsoftware.trashSnooker.core.career.challenge.*;
-import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
@@ -48,8 +46,6 @@ public class CareerTrainingView extends ChildInitializable {
     @FXML
     TableColumn<ChallengeItem, String> challengeCompletedCol;
     @FXML
-    ComboBox<CueSelection.CueAndBrand> cueBox;
-    @FXML
     VBox outBox;
     @FXML
     GamePane previewPane;
@@ -73,7 +69,6 @@ public class CareerTrainingView extends ChildInitializable {
         this.parent = parent;
 
         refreshList();
-        refreshCueBox();
     }
 
     @Override
@@ -88,11 +83,6 @@ public class CareerTrainingView extends ChildInitializable {
         initTable();
         initRewardsTable();
         initHistoryTable();
-    }
-
-    private void refreshCueBox() {
-//        ChampDrawView.refreshCueBox(cueBox);
-        cueBox.getSelectionModel().select(0);
     }
 
     private void initHistoryTable() {
@@ -259,10 +249,10 @@ public class CareerTrainingView extends ChildInitializable {
 
 //        InGamePlayer igp1 = new InGamePlayer(person, cue, PlayerType.PLAYER, 1, 1.0);
 //        InGamePlayer igp2 = new InGamePlayer(person, cue, PlayerType.PLAYER, 2, 1.0);
-        InGamePlayer igp1 = new InGamePlayer(person, PlayerType.PLAYER, 
+        InGamePlayer igp1 = new InGamePlayer(person, PlayerType.PLAYER,
                 CareerManager.getInstance().getInventory(), challengeSet.getGameValues().rule,
                 1, 1.0);
-        InGamePlayer igp2 = new InGamePlayer(person, PlayerType.PLAYER, 
+        InGamePlayer igp2 = new InGamePlayer(person, PlayerType.PLAYER,
                 null, challengeSet.getGameValues().rule, 2, 1.0);
 
         EntireGame game = new EntireGame(igp1, igp2, challengeSet.getGameValues(), 1, challengeSet.getCloth(), null);
