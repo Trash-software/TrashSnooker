@@ -1,11 +1,27 @@
 {
   "achievements": {
+    "miscuePot": {
+      "levelDates": {"0": "2023-11-20 05:50:03"},
+      "completions": 1
+    },
     "frameNoAttack": {
       "levelDates": {"0": "2023-11-05 01:33:05"},
       "completions": 1
     },
+    "lieDownWin": {
+      "levelDates": {"0": "2023-11-27 02:57:03"},
+      "completions": 1
+    },
     "gainBySnooker": {
       "levelDates": {"0": "2023-07-09 00:51:43"},
+      "completions": 1
+    },
+    "secondPlace": {
+      "levelDates": {"0": "2023-11-27 02:57:15"},
+      "completions": 1
+    },
+    "finalStage": {
+      "levelDates": {"0": "2023-11-27 02:53:02"},
       "completions": 1
     },
     "winAMatch": {
@@ -22,11 +38,11 @@
     },
     "snookerCumulateFoulGain": {
       "levelDates": {"0": "2023-09-02 05:41:24"},
-      "completions": 10
+      "completions": 28
     },
     "snookerCumulateScore": {
       "levelDates": {"0": "2023-09-02 05:42:58"},
-      "completions": 313
+      "completions": 661
     },
     "longThink": {
       "levelDates": {"0": "2023-07-09 00:54:25"},
@@ -34,6 +50,10 @@
     },
     "potABall": {
       "levelDates": {"0": "2023-07-03 02:41:20"},
+      "completions": 1
+    },
+    "notRespect": {
+      "levelDates": {"0": "2023-11-27 02:43:13"},
       "completions": 1
     },
     "missedShot": {
@@ -49,37 +69,41 @@
         "0": "2023-08-19 22:48:18",
         "1": "2023-09-02 05:40:13"
       },
-      "completions": 32
+      "completions": 58
     },
     "potBalls": {
       "levelDates": {
         "0": "2023-08-19 22:48:59",
         "1": "2023-09-02 05:40:36"
       },
-      "completions": 115
+      "completions": 237
     },
     "defeatUniqueOpponentsSnooker": {
-      "levelDates": {},
-      "completions": 4
-    },
-    "solveSnookerSuccess": {
-      "levelDates": {"0": "2023-07-03 02:40:47"},
-      "completions": 1
+      "levelDates": {"0": "2023-11-20 06:00:12"},
+      "completions": 6
     },
     "positioningMaster": {
       "levelDates": {"0": "2023-07-09 00:46:39"},
       "completions": 19
     },
+    "solveSnookerSuccess": {
+      "levelDates": {"0": "2023-07-03 02:40:47"},
+      "completions": 1
+    },
     "defeatUniqueOpponentsAmerican": {
       "levelDates": {},
       "completions": 0
+    },
+    "snookerBreak50": {
+      "levelDates": {"0": "2023-08-19 22:50:57"},
+      "completions": 1
     },
     "cueBallPot": {
       "levelDates": {"0": "2023-08-31 19:59:41"},
       "completions": 1
     },
-    "snookerBreak50": {
-      "levelDates": {"0": "2023-08-19 22:50:57"},
+    "keyBallFail": {
+      "levelDates": {"0": "2023-11-20 05:59:22"},
       "completions": 1
     },
     "threeBallsInARow": {
@@ -90,13 +114,16 @@
       "levelDates": {"0": "2023-07-09 00:52:38"},
       "completions": 1
     },
+    "potBallsRest": {
+      "levelDates": {
+        "0": "2023-08-31 19:53:41",
+        "1": "2023-11-20 05:55:31"
+      },
+      "completions": 30
+    },
     "defeatSameOpponentContinuousSnooker": {
       "levelDates": {"0": "2023-08-14 03:32:21"},
       "completions": 1
-    },
-    "potBallsRest": {
-      "levelDates": {"0": "2023-08-31 19:53:41"},
-      "completions": 15
     },
     "uniqueDefeat": {"collection": {
       "Mark Allen": {
@@ -114,6 +141,16 @@
         "completions": 1,
         "key": "Karen Wilson"
       },
+      "Liu Mang": {
+        "levelDates": {"0": "2023-11-20 06:00:12"},
+        "completions": 1,
+        "key": "Liu Mang"
+      },
+      "Kid": {
+        "levelDates": {"0": "2023-11-27 02:49:55"},
+        "completions": 1,
+        "key": "Kid"
+      },
       "Fat Guy": {
         "levelDates": {"0": "2023-08-31 19:52:15"},
         "completions": 1,
@@ -130,19 +167,19 @@
       "completions": 1
     },
     "winMatches": {
-      "levelDates": {},
-      "completions": 1
+      "levelDates": {"0": "2023-11-27 02:49:55"},
+      "completions": 3
     },
     "earnMoneyCumulative": {
-      "levelDates": {},
-      "completions": 37650
-    },
-    "continuousLongPot": {
-      "levelDates": {"0": "2023-09-02 05:40:13"},
-      "completions": 1
+      "levelDates": {"0": "2023-11-27 02:57:15"},
+      "completions": 97650
     },
     "earnedMoney": {
       "levelDates": {"0": "2023-07-03 02:39:56"},
+      "completions": 1
+    },
+    "continuousLongPot": {
+      "levelDates": {"0": "2023-09-02 05:40:13"},
       "completions": 1
     },
     "shakePocket": {
@@ -152,7 +189,11 @@
     "defeatUniqueOpponentsCeb": {
       "levelDates": {},
       "completions": 1
+    },
+    "semifinalStage": {
+      "levelDates": {"0": "2023-11-26 04:53:53"},
+      "completions": 1
     }
   },
-  "checksum": "CDC44D98704DF5C43C5314FEED7EB581"
+  "checksum": "58AA779E7E3936F7646C2B9EC089AF06"
 }

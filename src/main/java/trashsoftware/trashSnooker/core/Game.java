@@ -556,7 +556,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         CueBackPredictor cueBackPredictor =
                 new CueBackPredictor(this, cursorPointingX, cursorPointingY, cueWidth,
                         getCuingPlayer().getInGamePlayer()
-                                .getCurrentCue(this).getBrand().getWoodPartLength() + 300.0,
+                                .getCueSelection().getSelected().brand.getWoodPartLength() + 300.0,
                         cueBall.x, cueBall.y);
         // System.out.println("Cue back prediction time: " + (System.currentTimeMillis() - st));
         return cueBackPredictor.predict();

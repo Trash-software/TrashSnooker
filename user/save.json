@@ -1,32 +1,30 @@
 {
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "custom_player_3",
-    "playerType": "PLAYER",
-    "playCue": "GirlPoolCue",
-    "breakCue": "stdBreakCue"
+    "person": "Summer Brave",
+    "playerType": "PLAYER"
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
     "person": "custom_player_4",
-    "playerType": "PLAYER",
-    "playCue": "GirlCue",
-    "breakCue": "stdBreakCue"
+    "playerType": "COMPUTER"
   },
-  "startTime": 1697055291055,
+  "startTime": 1700844291525,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
     "devMode": true,
     "table": {
-      "tableOrdinal": 1,
+      "tableOrdinal": 0,
       "pocketDifficultyOrdinal": 2,
       "holeSizeOrdinal": 2
     }

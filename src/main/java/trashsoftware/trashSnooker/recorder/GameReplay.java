@@ -307,8 +307,9 @@ public abstract class GameReplay implements GameHolder {
     }
 
     public Cue getCurrentCue() {
-        return currentCueRecord.isBreaking ?
-                currentCueRecord.cuePlayer.getBreakCue() : currentCueRecord.cuePlayer.getPlayCue();
+        return getAnimationRec().getCue();  // fixme
+//        return currentCueRecord.isBreaking ?
+//                currentCueRecord.cuePlayer.getBreakCue() : currentCueRecord.cuePlayer.getPlayCue();
     }
 
     public TargetRecord getNextTarget() {

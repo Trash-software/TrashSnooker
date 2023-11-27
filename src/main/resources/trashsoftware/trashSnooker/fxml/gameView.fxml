@@ -128,6 +128,8 @@
                                  toggleGroup="$handSelectionToggleGroup" userData="RIGHT"/>
                     <RadioButton fx:id="handSelectionRest" text="%restHand"
                                  toggleGroup="$handSelectionToggleGroup" userData="REST"/>
+                    
+                    <Button fx:id="changeCueButton" text="%changeCue" onAction="#changeCueAction"/>
                 </VBox>
                 <VBox fx:id="replayButtonBox" spacing="10.0" alignment="CENTER">
                     <Button fx:id="replayLastCueButton" text="%replayLastCue"

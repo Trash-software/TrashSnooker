@@ -14,6 +14,8 @@ public class Career {
     public static final double[] PERK_RANDOM_RANGE = {0.5, 2.0};
     
     public static final double AI_HELPER_PRECISION_FACTOR = 0.95;
+    
+    protected final CareerSave careerSave;
 
     private final List<ChampionshipScore> championshipScores = new ArrayList<>();  // 不一定按时间顺序
     private final boolean isHumanPlayer;
@@ -21,25 +23,28 @@ public class Career {
     private PlayerPerson playerPerson;
     private double handFeel = 0.9;
 
-    Career(PlayerPerson person, boolean isHumanPlayer) {
+    Career(PlayerPerson person, boolean isHumanPlayer, CareerSave save) {
         this.playerPerson = person;
         this.isHumanPlayer = isHumanPlayer;
+        this.careerSave = save;
 
         for (GameRule gameRule : GameRule.values()) efforts.put(gameRule, 1.0);
     }
 
-    public static Career createByPerson(PlayerPerson playerPerson, boolean isHumanPlayer) {
+    public static Career createByPerson(PlayerPerson playerPerson, 
+                                        boolean isHumanPlayer, 
+                                        CareerSave save) {
         Career career;
         if (isHumanPlayer) {
-            career = new HumanCareer(playerPerson);
+            career = new HumanCareer(playerPerson, save);
         } else {
-            career = new Career(playerPerson, false);
+            career = new Career(playerPerson, false, save);
         }
-        career.initNew();
+        career.initNew(save);
         return career;
     }
 
-    public static Career fromJson(JSONObject jsonObject) {
+    public static Career fromJson(JSONObject jsonObject, CareerSave careerSave) {
         String playerId = jsonObject.getString("playerId");
         PlayerPerson playerPerson = DataLoader.getInstance().getPlayerPerson(playerId);
         if (playerPerson == null) {
@@ -50,11 +55,11 @@ public class Career {
         boolean human = jsonObject.getBoolean("human");
         Career career;
         if (human) {
-            career = new HumanCareer(playerPerson);
+            career = new HumanCareer(playerPerson, careerSave);
         } else {
-            career = new Career(playerPerson, false);
+            career = new Career(playerPerson, false, careerSave);
         }
-        career.fillFromJson(jsonObject);
+        career.fillFromJson(jsonObject, careerSave);
         career.validateLevel();
 
         if (jsonObject.has("handFeel")) {
@@ -110,10 +115,10 @@ public class Career {
     /*
     这几个都是给override用的
      */
-    protected void initNew() {
+    protected void initNew(CareerSave save) {
     }
 
-    protected void fillFromJson(JSONObject jsonObject) {
+    protected void fillFromJson(JSONObject jsonObject, CareerSave save) {
     }
 
     protected void putExtraInJson(JSONObject out) {

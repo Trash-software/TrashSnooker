@@ -1,0 +1,68 @@
+{
+  "financial": {
+    "money": 26900,
+    "invoices": [
+      {
+        "perkUsed": 6,
+        "moneyBefore": 30000,
+        "moneyCost": 2500,
+        "moneyAfter": 27500,
+        "ability": {
+          "cuePrecision": [
+            75.55284945710311,
+            79.88644663503555
+          ],
+          "normalPower": [
+            71.30158377649693,
+            76.04967935828847
+          ],
+          "spin": [
+            76.978799838682,
+            81.1733668544105
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2023-11-27 16:11:34"
+      },
+      {
+        "match": "custom_C3A707E9A33EE9A3+2023+eight_red_pocket_open",
+        "moneyBefore": 27500,
+        "moneyAfter": 26500,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-11-27 16:11:35"
+      },
+      {
+        "year": 2023,
+        "match": "eight_red_pocket_open",
+        "moneyBefore": 26500,
+        "moneyAfter": 26900,
+        "type": "championshipEarn",
+        "items": {"TOP_32": {
+          "actual": 400,
+          "raw": 500
+        }},
+        "timestamp": "2023-11-27 16:15:03"
+      }
+    ],
+    "level": 1,
+    "expInThisLevel": 20,
+    "availPerks": 0,
+    "totalPerks": 6,
+    "totalExp": 20
+  },
+  "checksum": "E17209F346DC7A18DD42FF7C7F2705B1"
+}

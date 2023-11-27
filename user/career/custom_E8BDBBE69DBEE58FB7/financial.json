@@ -1,0 +1,36 @@
+{
+  "financial": {
+    "money": 63420,
+    "invoices": [
+      {
+        "match": "pool-full-regular",
+        "moneyBefore": 15420,
+        "moneyAfter": 15420,
+        "type": "challengeEarn",
+        "items": {"clearance": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-11-27 02:52:03"
+      },
+      {
+        "year": 2024,
+        "match": "challenger_open",
+        "moneyBefore": 15420,
+        "moneyAfter": 63420,
+        "type": "championshipEarn",
+        "items": {"SECOND_PLACE": {
+          "actual": 48000,
+          "raw": 60000
+        }},
+        "timestamp": "2023-11-27 02:57:15"
+      }
+    ],
+    "level": 8,
+    "expInThisLevel": 2324,
+    "availPerks": 56,
+    "totalPerks": 24,
+    "totalExp": 3217
+  },
+  "checksum": "31BFA3204CFF900068180E12AAD9818B"
+}

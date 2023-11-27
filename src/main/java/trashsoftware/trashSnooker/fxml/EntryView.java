@@ -184,6 +184,31 @@ public class EntryView implements Initializable {
             EventLogger.error(e);
         }
     }
+
+    @FXML
+    void cuePreviewerAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("cuePreviewerView.fxml"),
+                    strings
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Stage stage = new Stage();
+            stage.setTitle(strings.getString("appName"));
+            stage.initOwner(this.selfStage);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+
+            Scene scene = App.createScene(root);
+            stage.setScene(scene);
+
+            stage.show();
+        } catch (IOException e) {
+            EventLogger.error(e);
+        }
+    }
     
     @FXML
     void settingsAction() {

@@ -8,15 +8,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.App;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class AbilityShower extends GridPane {
+public class AbilityShower extends VBox {
     private final Map<Button, Combo> btnMap = new HashMap<>();
     @FXML
     Label nameLabel, categoryLabel, sexLabel, heightLabel;
@@ -31,19 +33,27 @@ public class AbilityShower extends GridPane {
             spinControlBtn, notGoodHandBtn, restBtn;
     @FXML
     ColumnConstraints buttonsCol;
+    @FXML
+    GridPane barChartRoot;
+    @FXML
+    RadarChart radarChartRoot;
+    @FXML
+    Button switchButton;
+    boolean showingRadar = false;
+
     private final Button[] buttons;
-//    private PlayerPerson.ReadableAbility ability;
+    //    private PlayerPerson.ReadableAbility ability;
     private PerkManager perkManager;
-    
+
     private final ResourceBundle strings;
-    
+
     public AbilityShower() {
         this(App.getStrings());
     }
 
     public AbilityShower(ResourceBundle strings) {
         super();
-        
+
         this.strings = strings;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
@@ -79,7 +89,7 @@ public class AbilityShower extends GridPane {
 
     public void setup(PerkManager perkManager, boolean showAddButtons) {
         this.perkManager = perkManager;
-        
+
 //        this.ability = PlayerPerson.ReadableAbility.fromPlayerPerson(pp);
 
         if (!showAddButtons) {
@@ -93,25 +103,68 @@ public class AbilityShower extends GridPane {
         } else {
             notifyPerksReset();
         }
-        
+
         setupTexts();
+        setupRadar();
+    }
+
+    private void setupRadar() {
+        PlayerPerson.ReadableAbility realAbility = perkManager.getOriginalAbility();
+        PlayerPerson.ReadableAbility preview = perkManager.getShownAbility();
+
+        String[] titles = new String[]{
+                strings.getString("aiming") + "\n" + numToString(realAbility.aiming),
+                strings.getString("cuePrecision") + "\n" + numToString(realAbility.cuePrecision),
+                strings.getString("spinControlText") + "\n" + numToString(realAbility.spinControl),
+                strings.getString("powerControl") + "\n" + numToString(realAbility.powerControl),
+                strings.getString("power") + "\n" + numToString((realAbility.normalPower + realAbility.maxPower) / 2),
+                strings.getString("spinText") + "\n" + numToString(realAbility.spin),
+                strings.getString("offHand") + "\n" + numToString(realAbility.getAnotherHandGoodness()),
+                strings.getString("restHand") + "\n" + numToString(realAbility.getRestGoodness()),
+        };
+
+        double[] valuesReal = getRadarValues(realAbility);
+        double[] valuesPre = getRadarValues(preview);
+
+        if (Arrays.equals(valuesReal, valuesPre)) {
+            radarChartRoot.setValues(titles, valuesReal);
+        } else {
+            radarChartRoot.setValues(titles, valuesReal, valuesPre);
+        }
     }
     
+    private double[] getRadarValues(PlayerPerson.ReadableAbility ability) {
+        return new double[]{
+                abilityRate(ability.aiming),
+                abilityRate(ability.cuePrecision),
+                abilityRate(ability.spinControl),
+                abilityRate(ability.powerControl),
+                abilityRate((ability.normalPower + ability.maxPower) / 2),
+                abilityRate(ability.spin),
+                abilityRate(ability.getAnotherHandGoodness()),
+                abilityRate(ability.getRestGoodness()),
+        };
+    }
+
+    private double abilityRate(double ability100) {
+        return Math.min(Math.max((ability100 - 50) / 50, 0), 1);
+    }
+
     private void setupTexts() {
         PlayerPerson.ReadableAbility realAbility = perkManager.getOriginalAbility();
         PlayerPerson.ReadableAbility preview = perkManager.getShownAbility();
-        
+
         nameLabel.setText(realAbility.getShownName());
         categoryLabel.setText(PlayerPerson.getPlayerCategoryShown(realAbility.category, strings));
-        
+
         sexLabel.setText(realAbility.getSex().toString());
         heightLabel.setText(String.format("%.0f cm", realAbility.getHandBody().height));
-        
+
         String aiming = numToString(realAbility.aiming);
         if (preview.aiming != realAbility.aiming) {
             aiming += " (" + numToString(preview.aiming) + ")";
         }
-        
+
         aimingLabel.setText(aiming);
         aimingBar.setProgress(realAbility.aiming / 100.0);
 
@@ -121,11 +174,11 @@ public class AbilityShower extends GridPane {
         }
         cuePrecisionLabel.setText(cuePrecision);
         cuePrecisionBar.setProgress(realAbility.cuePrecision / 100);
-        
+
         String power = String.format("%s/%s",
                 numToString(realAbility.normalPower),
                 numToString(realAbility.maxPower));
-        
+
         if (preview.normalPower != realAbility.normalPower) {
             power += " (" + numToString(preview.normalPower) + ")";
         }
@@ -145,7 +198,7 @@ public class AbilityShower extends GridPane {
         if (preview.spin != realAbility.spin) {
             spin += " (" + numToString(preview.spin) + ")";
         }
-        
+
         spinLabel.setText(spin);
         spinBar.setProgress(realAbility.spin / 100.0);
 
@@ -181,21 +234,38 @@ public class AbilityShower extends GridPane {
         Combo combo = btnMap.get(src);
         int added = perkManager.addPerkTo(combo.cat);
         src.setText(added + "+");
-        
+
         double afterAdd = perkManager.getShownAbility().getAbilityByCat(combo.cat);
         if (afterAdd >= 99.95) src.setDisable(true);
-        
+
         setupTexts();
-        
+        setupRadar();
+
 //        Label label = combo.label;
 //        String orig = label.getText().split("\\+")[0];
 //        label.setText(orig + "+" + PlayerPerson.ReadableAbility.addPerksHowMany(combo.cat, added));
-        
+
         if (perkManager.getAvailPerks() <= 0) {
             for (Button button : buttons) {
                 button.setDisable(true);
             }
         }
+    }
+
+    @FXML
+    void switchChart() {
+        if (showingRadar) {
+            switchButton.setText(strings.getString("radarChart"));
+        } else {
+            switchButton.setText(strings.getString("barChart"));
+        }
+
+        showingRadar = !showingRadar;
+
+        radarChartRoot.setVisible(showingRadar);
+        radarChartRoot.setManaged(showingRadar);
+        barChartRoot.setVisible(!showingRadar);
+        barChartRoot.setManaged(!showingRadar);
     }
 
     public void notifyPerksReset() {
@@ -212,6 +282,7 @@ public class AbilityShower extends GridPane {
                 button.setText("+");
             }
         }
+        setupRadar();
         setupTexts();
     }
 

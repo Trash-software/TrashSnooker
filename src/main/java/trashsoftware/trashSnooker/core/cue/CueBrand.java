@@ -18,26 +18,30 @@ public abstract class CueBrand {
     final double spinMultiplier;
     final double accuracyMultiplier;
 
-    public final Color tipRingColor;
-    public final Color backColor;
+    public Color tipRingColor;
+    public Color backColor;
 
     public final boolean isRest;
     public final boolean privacy;
+    public final boolean available;
+    public final int price;
 
     public final Cue.Size tipSize;
 
     protected CueBrand(String cueId,
-                  String name,
-                  double tipRingThickness,
-                  double cueTipThickness,
-                  double endWidth,
-                  double cueTipWidth,
-                  Color tipRingColor,
-                  Color backColor,
-                  double powerMultiplier,
-                  double spinMultiplier,
-                  double accuracyMultiplier,
-                  boolean privacy) {
+                       String name,
+                       double tipRingThickness,
+                       double cueTipThickness,
+                       double endWidth,
+                       double cueTipWidth,
+                       Color tipRingColor,
+                       Color backColor,
+                       double powerMultiplier,
+                       double spinMultiplier,
+                       double accuracyMultiplier,
+                       boolean privacy,
+                       boolean availability,
+                       int price) {
         this.cueId = cueId;
         this.name = name;
 
@@ -52,6 +56,8 @@ public abstract class CueBrand {
         this.spinMultiplier = spinMultiplier;
         this.accuracyMultiplier = accuracyMultiplier;
         this.privacy = privacy;
+        this.available = availability;
+        this.price = price;
 
         if (cueTipWidth <= 9.8) tipSize = Cue.Size.VERY_SMALL;
         else if (cueTipWidth < 11.0) tipSize = Cue.Size.SMALL;
@@ -68,6 +74,14 @@ public abstract class CueBrand {
         if (o == null || getClass() != o.getClass()) return false;
         CueBrand cue = (CueBrand) o;
         return Objects.equals(cueId, cue.cueId);
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     @Override
@@ -88,4 +102,9 @@ public abstract class CueBrand {
     }
 
     public abstract double getWoodPartLength();
+
+    @Override
+    public String toString() {
+        return "CueBrand-" + cueId;
+    }
 }

@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.List;
 public class NaiveActualRecorder extends ActualRecorder {
     
     public static final int CUE_RECORD_LENGTH = 84;
-    public static final int CUE_ANIMATION_BUF_LEN = 8;
+    public static final int CUE_ANIMATION_BUF_LEN = 128;  // 8 + 120
 
     public NaiveActualRecorder(Game<?, ?> game, MetaMatchInfo metaMatchInfo) {
         super(game, metaMatchInfo);
@@ -66,6 +67,7 @@ public class NaiveActualRecorder extends ActualRecorder {
     
     private void writeCueAnimation(CueAnimationRec animationRec) throws IOException {
         byte[] buf = new byte[CUE_ANIMATION_BUF_LEN];
+        
         if (animationRec == null) {
             outputStream.write(buf);
             return;
@@ -74,6 +76,16 @@ public class NaiveActualRecorder extends ActualRecorder {
         totalBeforeCueMs += animationRec.getBeforeCueMs();
         Util.int32ToBytes(animationRec.getBeforeCueMs(), buf, 0);
         Util.int32ToBytes(animationRec.getAfterCueMs(), buf, 4);
+
+        String cueId = animationRec.getCue().getInstanceId();
+        byte[] insIdBytes = cueId.getBytes();
+        if (insIdBytes.length >= CUE_ANIMATION_BUF_LEN - 8) {
+            EventLogger.warning("Cue id too long: " + cueId);
+            System.arraycopy(insIdBytes, 0, buf, 8, CUE_ANIMATION_BUF_LEN - 8);
+        } else {
+            System.arraycopy(insIdBytes, 0, buf, 8, insIdBytes.length);
+        }
+        
         outputStream.write(buf);
     }
 

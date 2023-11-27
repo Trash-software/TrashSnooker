@@ -128,9 +128,9 @@ public class PerkManager {
     }
 
     public static int moneySpent(double abilityAfterAdd) {
-        if (abilityAfterAdd < 70) return 500;
+        if (abilityAfterAdd < 70) return 300;
         int tick = (int) ((abilityAfterAdd - 70) / 5);  // [0-6)
-        return 600 + tick * tick * 100;
+        return 350 + tick * tick * 50;
     }
 
     public record UpgradeRec(int perkUsed, int moneyCost, Map<String, double[]> abilityUpdated) {

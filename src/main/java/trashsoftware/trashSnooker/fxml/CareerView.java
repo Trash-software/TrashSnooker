@@ -9,8 +9,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -65,11 +67,11 @@ public class CareerView extends ChildInitializable {
     @FXML
     Label nextChampionshipLabel, champInProgLabel, champInProgStageLabel;
     @FXML
-    Label registryFeeLabel, travelFeeLabel, totalFeeLabel;
+    Label registryFeeLabel, travelFeeLabel, otherFeeLabel1, otherFeeLabel2, totalFeeLabel;
+    @FXML
+    HBox feesBoxChecked, feesBoxUnchecked;
     @FXML
     CheckBox joinChampBox;
-    //    @FXML
-//    Label champAwardsLabel1, champAwardsLabel2;
     @FXML
     LabelTable<AwardItem> champAwardsTable;
     @FXML
@@ -87,7 +89,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     Button skipChampBtn;
     @FXML
-    ImageView expImage, moneyImage, achIconImage;
+    ImageView expImage, moneyImage, inventoryImage, storeImage, achIconImage;
     CareerManager careerManager;
     private PerkManager perkManager;
     private Stage selfStage;
@@ -108,8 +110,13 @@ public class CareerView extends ChildInitializable {
                 PlayerPerson.ReadableAbility.fromPlayerPerson(pp));
         abilityShower.setup(perkManager, pp.isCustom());
 
-        joinChampBox.selectedProperty().addListener(((observable, oldValue, newValue) ->
-                skipChampBtn.setDisable(newValue)));
+        joinChampBox.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            skipChampBtn.setDisable(newValue);
+            feesBoxChecked.setVisible(newValue);
+            feesBoxChecked.setManaged(newValue);
+            feesBoxUnchecked.setVisible(!newValue);
+            feesBoxUnchecked.setVisible(!newValue);
+        }));
 
         initTypeBox();
         initTable();
@@ -125,21 +132,23 @@ public class CareerView extends ChildInitializable {
     public void setup(EntryView parent, Stage selfStage) {
         this.selfStage = selfStage;
         this.parent = parent;
-        
+
         // 检测一些新出的成就
         careerManager.getHumanPlayerCareer().checkScoreAchievements();
         careerManager.checkRankingAchievements();
         DBAccess.getInstance().checkAchievements();
         AchManager.getInstance().showAchievementPopup();
-        
+
         refreshGui();
     }
-    
+
     private void setupImages() {
         ResourcesLoader rl = ResourcesLoader.getInstance();
 
         rl.setIconImage(rl.getExpImg(), expImage);
         rl.setIconImage(rl.getMoneyImg(), moneyImage);
+        rl.setIconImage(rl.getInventoryIcon(), inventoryImage, 1.0, 1.25);
+        rl.setIconImage(rl.getStoreIcon(), storeImage, 1.0, 1.25);
         rl.setIconImage(rl.getAwardIcon(), achIconImage, 1.0, 1.25);
     }
 
@@ -271,15 +280,15 @@ public class CareerView extends ChildInitializable {
                     return new ReadOnlyStringWrapper(builder.toString());
                 });
         LabelTableColumn<PlayerAward, Integer> awardMoneyCol =
-                new LabelTableColumn<>(table, 
-                        ResourcesLoader.getInstance().createMoneyIcon(), 
+                new LabelTableColumn<>(table,
+                        ResourcesLoader.getInstance().createMoneyIcon(),
                         param -> {
-                    int money = 0;
-                    for (ChampionshipScore.Rank rank : param.score.ranks) {
-                        money += param.score.data.getAwardByRank(rank);
-                    }
-                    return new ReadOnlyObjectWrapper<>(money);
-                });
+                            int money = 0;
+                            for (ChampionshipScore.Rank rank : param.score.ranks) {
+                                money += param.score.data.getAwardByRank(rank);
+                            }
+                            return new ReadOnlyObjectWrapper<>(money);
+                        });
 
         table.addColumns(champCol, scoreCol, awardMoneyCol);
     }
@@ -295,19 +304,19 @@ public class CareerView extends ChildInitializable {
 
         // 赛事奖金表
         LabelTableColumn<AwardItem, String> titleCol =
-                new LabelTableColumn<>(champAwardsTable, 
+                new LabelTableColumn<>(champAwardsTable,
                         param ->
-                        new ReadOnlyStringWrapper(param.rank.getShown()));
+                                new ReadOnlyStringWrapper(param.rank.getShown()));
         LabelTableColumn<AwardItem, Integer> awardCol =
-                new LabelTableColumn<>(champAwardsTable, 
-                        ResourcesLoader.getInstance().createMoneyIcon(), 
+                new LabelTableColumn<>(champAwardsTable,
+                        ResourcesLoader.getInstance().createMoneyIcon(),
                         param ->
-                        new ReadOnlyObjectWrapper<>(param.data.getAwardByRank(param.rank)));
+                                new ReadOnlyObjectWrapper<>(param.data.getAwardByRank(param.rank)));
         LabelTableColumn<AwardItem, Integer> perkCol =
-                new LabelTableColumn<>(champAwardsTable, 
-                        ResourcesLoader.getInstance().createExpIcon(), 
+                new LabelTableColumn<>(champAwardsTable,
+                        ResourcesLoader.getInstance().createExpIcon(),
                         param ->
-                        new ReadOnlyObjectWrapper<>(param.data.getExpByRank(param.rank)));
+                                new ReadOnlyObjectWrapper<>(param.data.getExpByRank(param.rank)));
 
         champAwardsTable.addColumns(titleCol, awardCol, perkCol);
     }
@@ -348,13 +357,19 @@ public class CareerView extends ChildInitializable {
         rankingTable.getSelectionModel().selectedItemProperty()
                 .addListener(((observable, oldValue, newValue) -> refreshSelectedPlayerTable(newValue)));
     }
-    
+
     private void updateMoneyLabel(int money, int moneyCost) {
+        int afterCost = money - moneyCost;
         String moneyStr = Util.moneyToReadable(money);
         if (moneyCost != 0) {
             moneyStr += " - " + moneyCost;
         }
         moneyLabel.setText(moneyStr);
+        if (afterCost < 0) {
+            moneyLabel.setTextFill(Color.RED.darker());
+        } else {
+            moneyLabel.setTextFill(Color.BLACK);
+        }
     }
 
     public void refreshGui() {
@@ -368,11 +383,11 @@ public class CareerView extends ChildInitializable {
         boolean canLevelUp = myCareer.canLevelUp();
         levelUpBtn.setVisible(canLevelUp);
         levelUpBtn.setDisable(!canLevelUp);
-        
+
         int money = careerManager.getHumanPlayerCareer().getMoney();
         int moneyCost = perkManager.getCost();
         updateMoneyLabel(money, moneyCost);
-        
+
         int ach = AchManager.getInstance().getNCompletedAchievements();
         achievementsLabel.setText(String.valueOf(ach));
 
@@ -408,7 +423,31 @@ public class CareerView extends ChildInitializable {
             registryFeeLabel.setText(String.valueOf(registryFee));
             int travelFee = data.getFlightFee() + data.getHotelFee();
             travelFeeLabel.setText(String.valueOf(travelFee));
-            totalFeeLabel.setText(String.valueOf(registryFee + travelFee));
+
+            int fixedFees = 0;
+            Map<String, Integer> feesMap = careerManager.getHumanPlayerCareer().calculateFixedFees(nextData);
+            if (!feesMap.isEmpty()) {
+                
+                StringBuilder builder = new StringBuilder();
+                for (Map.Entry<String, Integer> feesItem : feesMap.entrySet()) {
+                    fixedFees += feesItem.getValue();
+                    String label; 
+                    if (strings.containsKey(feesItem.getKey())) {
+                        label = strings.getString(feesItem.getKey());
+                    } else {
+                        label = feesItem.getKey();
+                    }
+                    builder.append(label).append(" ").append(feesItem.getValue()).append(' ');
+                }
+                String sbs = builder.toString();
+                otherFeeLabel1.setText(sbs);
+                otherFeeLabel2.setText(sbs);
+            } else {
+                otherFeeLabel1.setText("");
+                otherFeeLabel2.setText("");
+            }
+            
+            totalFeeLabel.setText(String.valueOf(registryFee + travelFee + fixedFees));
         } else {
             champInProgBox.setVisible(true);
             champInProgBox.setManaged(true);
@@ -466,10 +505,10 @@ public class CareerView extends ChildInitializable {
         CareerManager.closeInstance();
         CareerAchManager.closeCareerInstance();
         parent.refreshGui();
-        
+
         super.backAction();
     }
-    
+
     @FXML
     public void careerSettingsAction() {
         try {
@@ -477,7 +516,7 @@ public class CareerView extends ChildInitializable {
             popup.initOwner(selfStage);
             popup.initModality(Modality.WINDOW_MODAL);
             popup.getIcons().add(ResourcesLoader.getInstance().getIcon());
-            
+
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("careerSettingsView.fxml"),
                     strings
@@ -490,7 +529,7 @@ public class CareerView extends ChildInitializable {
 
             CareerSettingsView view = loader.getController();
             view.setup(popup);
-            
+
             popup.show();
         } catch (IOException e) {
             EventLogger.error(e);
@@ -520,14 +559,14 @@ public class CareerView extends ChildInitializable {
             newStage.initOwner(selfStage);
             newStage.initStyle(StageStyle.UTILITY);
             newStage.initModality(Modality.WINDOW_MODAL);
-            
+
             newStage.setOnHidden(e -> refreshGui());
 
             Scene scene = App.createScene(root);
             newStage.setScene(scene);
 
             Alert view = loader.getController();
-            
+
             StringBuilder perkPoolStr = new StringBuilder();
             perkPoolStr.append(strings.getString("perk"))
                     .append(": ")
@@ -572,7 +611,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     public void applyPerks() {
         PerkManager.UpgradeRec used = perkManager.applyPerks();  // 在getCost之后
-        
+
         careerManager.getHumanPlayerCareer().recordUpgradeAndUsePerk(used);
 
 //        DataLoader.getInstance().updatePlayer(perkManager.getAbility().toPlayerPerson());
@@ -583,7 +622,7 @@ public class CareerView extends ChildInitializable {
 
         abilityShower.notifyPerksReset();
     }
-    
+
     @FXML
     public void achievementsAction() {
         try {
@@ -606,6 +645,16 @@ public class CareerView extends ChildInitializable {
         } catch (IOException e) {
             EventLogger.error(e);
         }
+    }
+
+    @FXML
+    public void inventoryAction() {
+        showInventoryStore(true);
+    }
+
+    @FXML
+    public void storeAction() {
+        showInventoryStore(false);
     }
 
     @FXML
@@ -660,7 +709,14 @@ public class CareerView extends ChildInitializable {
 
     @FXML
     public void nextChamp() {
+        HumanCareer humanCareer = careerManager.getHumanPlayerCareer();
+        ChampionshipData.WithYear nextData = careerManager.nextChampionshipData();
+
+        humanCareer.updateMoneyChampStart(nextData);  // 扣生活费
+
         Championship championship = careerManager.startNextChampionship();
+        humanCareer.payParticipateFees(championship);  // 扣报名费、住宿费、机票
+
         championship.startChampionship(joinChampBox.isSelected(), !joinChampBox.isDisabled());
 
         refreshGui();
@@ -671,7 +727,10 @@ public class CareerView extends ChildInitializable {
     @FXML
     public void skipNextChamp() {
         if (!joinChampBox.isSelected()) {
+            careerManager.getHumanPlayerCareer().updateMoneyChampStart(careerManager.nextChampionshipData());  // 扣生活费
+
             Championship championship = careerManager.startNextChampionship();
+
             championship.startChampionship(false, !joinChampBox.isDisabled());
 
             while (!championship.isFinished()) {
@@ -685,6 +744,30 @@ public class CareerView extends ChildInitializable {
     @FXML
     public void continueChampInProg() {
         showChampDrawView();
+    }
+
+    private void showInventoryStore(boolean isInventory) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("inventoryView.fxml"),
+                    strings
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Scene scene = App.createScene(root);
+
+            InventoryView view = loader.getController();
+            view.setStage(selfStage);
+            view.setParent(selfStage.getScene());
+
+            selfStage.setScene(scene);
+            selfStage.sizeToScene();
+
+            view.setup(isInventory);
+        } catch (IOException e) {
+            EventLogger.error(e);
+        }
     }
 
     private void showChampDrawView() {
@@ -726,7 +809,7 @@ public class CareerView extends ChildInitializable {
         int money = careerManager.getHumanPlayerCareer().getMoney();
         int moneyCost = perkManager.getCost();
         updateMoneyLabel(money, moneyCost);
-        
+
         confirmAddPerkBtn.setDisable(moneyCost > money);
     }
 

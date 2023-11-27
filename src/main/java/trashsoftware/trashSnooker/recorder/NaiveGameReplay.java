@@ -1,13 +1,14 @@
 package trashsoftware.trashSnooker.recorder;
 
-import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.Game;
-import trashsoftware.trashSnooker.core.GamePlayStage;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.cue.Cue;
+import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
+import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
@@ -68,7 +69,26 @@ public class NaiveGameReplay extends GameReplay {
         byte[] buf = new byte[NaiveActualRecorder.CUE_ANIMATION_BUF_LEN];
         if (inputStream.read(buf) != buf.length) throw new IOException();
         
+        String cueInsId = new String(buf, 8, NaiveActualRecorder.CUE_ANIMATION_BUF_LEN - 8);
+        cueInsId = cueInsId.replace("\0", "");
+        String[] spl = cueInsId.split(Cue.BRAND_SEPARATOR);
+        String cueBrandId;
+        if (spl.length > 0) {
+            cueBrandId = spl[0];
+        } else {
+            cueBrandId = "";
+        }
+        
+        CueBrand cueBrand = DataLoader.getInstance().getCueById(cueBrandId);
+        if (cueBrand == null) {
+            EventLogger.warning("Replay cue is null: " + cueBrandId);
+            cueBrand = DataLoader.getInstance().getStdBreakCueBrand();  // 随便选一个让它不是null
+        }
+        InGamePlayer cuing = getCuingIgp();
+        cuing.getCueSelection().selectByBrand(cueBrand);
+        
         animationRec = new CueAnimationRec(
+                cuing.getCueSelection().getSelected().getNonNullInstance(CueSelection.InstanceType.REPLAY),
                 Util.bytesToInt32(buf, 0),
                 Util.bytesToInt32(buf, 4)
         );
@@ -77,7 +97,7 @@ public class NaiveGameReplay extends GameReplay {
     @Override
     protected void loadNextRecordAndMovement() throws IOException {
         readCueRecordAndTargets();
-        loadCueAnimation();
+        loadCueAnimation();  // must after readCueRecordAndTargets()
         currentMovement = getNextMovement();
     }
 

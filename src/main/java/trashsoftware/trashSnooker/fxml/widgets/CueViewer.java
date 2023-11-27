@@ -1,11 +1,13 @@
 package trashsoftware.trashSnooker.fxml.widgets;
 
+import javafx.scene.AmbientLight;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
+import trashsoftware.trashSnooker.core.CueSelection;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.FastGameView;
@@ -16,7 +18,7 @@ import java.util.ResourceBundle;
 
 public class CueViewer extends Pane {
     
-    private final FastGameView.CueAndBrand cueAndBrand;
+    private final CueSelection.CueAndBrand cueAndBrand;
     private final Cue cue;
     private final CueModel cueModel;
     
@@ -30,7 +32,7 @@ public class CueViewer extends Pane {
     
     private ResourceBundle strings;
     
-    public CueViewer(ResourceBundle strings, FastGameView.CueAndBrand cueAndBrand, double width) {
+    public CueViewer(ResourceBundle strings, CueSelection.CueAndBrand cueAndBrand, double width) {
         this.strings = strings;
         this.cueAndBrand = cueAndBrand;
         this.cue = cueAndBrand.getNonNullInstance();
@@ -63,6 +65,7 @@ public class CueViewer extends Pane {
             setOnMouseReleased(e -> dragging = false);
             
             setOnMouseClicked(e -> {
+                System.out.println("CLick!");
                 if (e.getButton() == MouseButton.SECONDARY) {
                     xRotate.setAngle(0);
                     yRotate.setAngle(0);
@@ -72,8 +75,6 @@ public class CueViewer extends Pane {
         
         fillCueInfo();
         getChildren().addAll(cueInfoBox, cueModel);
-
-//        setVgrow(cueModel, Priority.NEVER);
         
         setWidth(width);
         setMinHeight(width * 0.1);

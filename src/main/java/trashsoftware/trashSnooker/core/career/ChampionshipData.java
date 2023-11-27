@@ -440,6 +440,10 @@ public class ChampionshipData {
             this.data = data;
             this.year = year;
         }
+        
+        public Calendar toCalendar() {
+            return data.toCalendar(year);
+        }
 
         public String fullName() {
             return year + " " + data.getName();

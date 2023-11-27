@@ -348,6 +348,8 @@ public class Util {
     
     public static String moneyToReadable(int money) {
         Deque<String> out = new ArrayDeque<>();
+        String sign = money < 0 ? "-" : "";
+        money = Math.abs(money);
         boolean full = true;
         while (money > 0) {
             int m = money % 1000;
@@ -362,7 +364,7 @@ public class Util {
             money /= 1000;
             full = false;
         }
-        return String.join(",", out);
+        return sign + String.join(",", out);
     }
     
     public static JSONArray arrayToJson(double[] array) {

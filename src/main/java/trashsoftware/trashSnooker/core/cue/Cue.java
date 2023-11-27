@@ -5,70 +5,96 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.PermanentCounters;
-import trashsoftware.trashSnooker.util.Util;
 
-import java.util.Date;
 import java.util.Map;
 
 public class Cue {
 
-    private static int fastGameInstanceId;
+    private static int oneTimeInstanceCounter;
+    
+    public static final String BRAND_SEPARATOR = ":";
     
     protected CueBrand brand;
     private String instanceId;
     protected CueTip cueTip;
+    private final boolean permanent;  // 是否是生涯模式的球员私有杆
     
     private String customName;  // fixme
 
-    protected Cue(CueBrand brand, String instanceId, CueTip cueTip, String customName) {
+    protected Cue(CueBrand brand, 
+                  String instanceId, 
+                  CueTip cueTip, 
+                  String customName,
+                  boolean isPermanent) {
         this.brand = brand;
         this.instanceId = instanceId;
         this.cueTip = cueTip;
         this.customName = customName;
+        this.permanent = isPermanent;
+
+        System.out.println("Created cue instance " + instanceId);
     }
 
-    protected Cue(CueBrand brand, String instanceId) {
-        this.brand = brand;
-        this.instanceId = instanceId;
+//    protected Cue(CueBrand brand, String instanceId) {
+//        this.brand = brand;
+//        this.instanceId = instanceId;
+//
+//        if (brand.isRest) {
+//            // todo: 可能会有其他形状的架杆
+//            cueTip = CueTip.createCrossRest();
+//        } else {
+//            cueTip = CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness);
+//        }
+//    }
 
-        if (brand.isRest) {
-            // todo: 可能会有其他形状的架杆
-            cueTip = CueTip.createCrossRest();
-        } else {
-            cueTip = CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness);
-        }
+    public static Cue createRest(CueBrand brand) {
+        return new Cue(brand,
+                brand.getCueId() + BRAND_SEPARATOR + "rest",
+                CueTip.createCrossRest(),
+                brand.getName(),
+                false
+        );
     }
     
-    public static Cue createForFastGame(CueBrand brand) {
-        System.out.println("Created fast game cue instance for " + brand.cueId);
+    public static Cue createOneTimeInstance(CueBrand brand) {
         return new Cue(brand,
-                brand.getCueId() + "-fast-" + fastGameInstanceId++,
-                brand.isRest ? 
-                        CueTip.createCrossRest() :
-                        CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
-                brand.getName()
+                brand.getCueId() + BRAND_SEPARATOR + "fast-" + oneTimeInstanceCounter++,
+                CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
+                brand.getName(),
+                false
         );
     }
 
-    public static Cue createForCareerGameAi(CueBrand brand) {
-        System.out.println("Created ai cue instance for " + brand.cueId);
+//    public static Cue createForCareerGameAi(CueBrand brand) {
+//        System.out.println("Created ai cue instance for " + brand.cueId);
+//        return new Cue(brand,
+//                brand.getCueId() + "-ai-" + oneTimeInstanceCounter++,
+//                CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
+//                brand.getName() + "-ai",
+//                false
+//        );
+//    }
+
+    public static Cue createForReplay(CueBrand brand) {
         return new Cue(brand,
-                brand.getCueId() + "-ai-" + fastGameInstanceId++,
+                brand.getCueId() + BRAND_SEPARATOR + "replay",
                 CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
-                brand.getName() + "-ai"
+                brand.getName() + BRAND_SEPARATOR + "replay",
+                false
         );
     }
     
     public static Cue createForCareer(CueBrand cueBrand, CueTip tip, CareerSave owner) {
 //        String instanceId = cueBrand.getCueId() + "-" + owner.getPlayerId() + "-" +
 //                Util.TIME_FORMAT_SEC.format(new Date());
-        String instanceId = cueBrand.getCueId() + "-" + 
+        String instanceId = cueBrand.getCueId() + BRAND_SEPARATOR + 
                 owner.getPlayerId() + "-" + PermanentCounters.getInstance().nextCueInstance();
         return new Cue(
                 cueBrand,
                 instanceId,
                 tip,
-                cueBrand.getName() + "-" + owner.getPlayerName()
+                cueBrand.getName() + BRAND_SEPARATOR + owner.getPlayerName(),
+                true
         );
     }
     
@@ -78,11 +104,15 @@ public class Cue {
         String instanceId = jsonObject.getString("instanceId");
         CueBrand cueBrand = loader.getCueById(jsonObject.getString("brand"));
         CueTip tip = tipInstances.get(jsonObject.getString("tipId"));
+        if (tip == null) {
+            System.err.println("No tip!");
+        }
         return new Cue(
                 cueBrand,
                 instanceId,
                 tip,
-                jsonObject.getString("customName")
+                jsonObject.getString("customName"),
+                true
         );
     }
     
@@ -93,6 +123,10 @@ public class Cue {
         jsonObject.put("tipId", cueTip.getInstanceId());
         jsonObject.put("customName", customName);
         return jsonObject;
+    }
+
+    public boolean isPermanent() {
+        return permanent;
     }
 
     public void setCueTip(CueTip cueTip) {

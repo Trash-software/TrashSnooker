@@ -10,6 +10,7 @@ import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.PinyinDict;
@@ -237,6 +238,19 @@ public class PlayerPerson {
                 sex,
                 parseParticipates(personObj.has("games") ? personObj.get("games") : null)
         );
+        
+        if (personObj.has("privateCues")) {
+            JSONArray priCues = personObj.getJSONArray("privateCues");
+            for (int i = 0; i < priCues.length(); i++) {
+                String cbi = priCues.getString(i);
+                CueBrand cueBrand = DataLoader.getInstance().getCueById(cbi);
+                if (cueBrand != null) {
+                    playerPerson.getPrivateCues().add(cueBrand);
+                } else {
+                    EventLogger.warning("Private cue brand '" + cbi + "' not available");
+                }
+            }
+        }
 
         return playerPerson;
     }
@@ -348,8 +362,10 @@ public class PlayerPerson {
         );
 
         if (sex == Sex.F) {
-            person.privateCues.add(DataLoader.getInstance().getCueById("GirlCue"));
-            person.privateCues.add(DataLoader.getInstance().getCueById("GirlPoolCue"));
+            for (String fLimitId : new String[]{"GirlCue", "GirlPoolCue"}) {
+                CueBrand cb = DataLoader.getInstance().getCueById(fLimitId);
+                person.addPrivateCue(cb);
+            }
         }
         return person;
     }

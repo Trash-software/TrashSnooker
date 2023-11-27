@@ -24,10 +24,10 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
 public abstract class ActualRecorder implements GameRecorder {
-    public static final int RECORD_PRIMARY_VERSION = 13;
-    public static final int RECORD_SECONDARY_VERSION = 9;
+    public static final int RECORD_PRIMARY_VERSION = 14;
+    public static final int RECORD_SECONDARY_VERSION = 0;
     public static final int HEADER_LENGTH = 64;
-    public static final int PLAYER_HEADER_LENGTH = 256;
+    public static final int PLAYER_HEADER_LENGTH = 40;
     public static final int TOTAL_HEADER_LENGTH = HEADER_LENGTH + PLAYER_HEADER_LENGTH * 2;
     public static final String SIGNATURE = "TSR_";
 
@@ -41,7 +41,8 @@ public abstract class ActualRecorder implements GameRecorder {
     public static final int DEFLATE_COMPRESSION = 1;
     public static final int GZ_COMPRESSION = 2;
     public static final int XZ_COMPRESSION = 3;
-    protected static final String RECORD_DIR = "user" + File.separator + "replays";
+    public static final String RECORD_DIR = "user" + File.separator + "replays";
+    public static final String RECORD_EXPORT_DIR = "user" + File.separator + "replay_videos";
     protected static DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
     protected int compression = NO_COMPRESSION;
     protected File outFile;
@@ -77,7 +78,7 @@ public abstract class ActualRecorder implements GameRecorder {
     }
 
     public static boolean isPrimaryCompatible(int replayPrimary) {
-        return replayPrimary == ActualRecorder.RECORD_PRIMARY_VERSION || replayPrimary == 11;
+        return replayPrimary == ActualRecorder.RECORD_PRIMARY_VERSION;
     }
 
     public static boolean isSecondaryCompatible(int replayPrimary, int replaySecondary) {
@@ -338,18 +339,19 @@ public abstract class ActualRecorder implements GameRecorder {
             System.err.println("Id too long: " + player.getPlayerPerson().getPlayerId());
             id = Arrays.copyOf(id, 32);
         }
-        System.arraycopy(id, 0, buffer, 2, id.length);
+        // 前8reserve
+        System.arraycopy(id, 0, buffer, 8, id.length);
 
-        // todo: 存cuebrand
-        byte[] playCueBrandId = player.getPlayCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(playCueBrandId, 0, buffer, 34, playCueBrandId.length);
-        byte[] playCueInsId = player.getPlayCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(playCueInsId, 0, buffer, 66, playCueInsId.length);
-        
-        byte[] breakCueBrandId = player.getBreakCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(breakCueBrandId, 0, buffer, 130, breakCueBrandId.length);
-        byte[] breakCueInsId = player.getBreakCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
-        System.arraycopy(breakCueInsId, 0, buffer, 162, breakCueInsId.length);
+//        // todo: 存cuebrand
+//        byte[] playCueBrandId = player.getPlayCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+//        System.arraycopy(playCueBrandId, 0, buffer, 34, playCueBrandId.length);
+//        byte[] playCueInsId = player.getPlayCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+//        System.arraycopy(playCueInsId, 0, buffer, 66, playCueInsId.length);
+//        
+//        byte[] breakCueBrandId = player.getBreakCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+//        System.arraycopy(breakCueBrandId, 0, buffer, 130, breakCueBrandId.length);
+//        byte[] breakCueInsId = player.getBreakCue().getInstanceId().getBytes(StandardCharsets.UTF_8);
+//        System.arraycopy(breakCueInsId, 0, buffer, 162, breakCueInsId.length);
 
         wrapperStream.write(buffer);
     }
