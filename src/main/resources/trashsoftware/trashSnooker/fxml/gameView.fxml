@@ -9,7 +9,7 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.GameView">
 
-    <AnchorPane fx:id="contentPane">
+    <AnchorPane fx:id="contentPane" VBox.vgrow="ALWAYS">
         <MenuBar HBox.hgrow="NEVER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <Menu text="%window">
                 <MenuItem text="%close" onAction="#closeWindowAction"/>

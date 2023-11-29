@@ -119,6 +119,11 @@ public class CueModel3D extends CueModel {
     }
 
     @Override
+    public void redraw() {
+        build();
+    }
+
+    @Override
     public void setCueRotation(double rotationDeg) {
         rollRotate.setAngle(rotationDeg);
     }

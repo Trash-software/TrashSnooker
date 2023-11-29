@@ -33,7 +33,7 @@ public class HumanCareer extends Career {
     private final Map<Integer, List<AwardMaterial>> levelAwards = new HashMap<>();
 
     private FinancialManager financial;
-
+    private AwardDistributionHint unShownAwd;
 
     HumanCareer(PlayerPerson playerPerson, CareerSave save) {
         super(playerPerson, true, save);
@@ -207,6 +207,22 @@ public class HumanCareer extends Career {
         // 这里不检查成就，因为earnMoney之后一般都跟着checkScoreAchievements()
     }
 
+    public void buyCueTip(String tipInstanceId, int price) {
+        int moneyBefore = financial.money;
+        financial.money -= price;
+
+        JSONObject invoice = new JSONObject();
+        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+        invoice.put("timestamp", timestamp);
+        invoice.put("type", "purchase");
+        invoice.put("itemType", "tip");
+        invoice.put("moneyBefore", moneyBefore);
+        invoice.put("moneyCost", price);
+        invoice.put("moneyAfter", financial.money);
+        invoice.put("item", tipInstanceId);
+        financial.invoices.add(invoice);
+    }
+
     public void buyCue(String cueInstanceId, int price) {
         int moneyBefore = financial.money;
         financial.money -= price;
@@ -215,6 +231,7 @@ public class HumanCareer extends Career {
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
         invoice.put("type", "purchase");
+        invoice.put("itemType", "cue");
         invoice.put("moneyBefore", moneyBefore);
         invoice.put("moneyCost", price);
         invoice.put("moneyAfter", financial.money);
@@ -233,12 +250,16 @@ public class HumanCareer extends Career {
         invoice.put("type", "championshipEarn");
         invoice.put("match", score.data.getId());
         invoice.put("year", score.getYear());
+        
+        int moneyEarned = 0;
+        int expEarned = 0;
 
         JSONObject items = new JSONObject();
         for (ChampionshipScore.Rank rank : score.ranks) {
             int exp = score.data.getExpByRank(rank);
             financial.totalExp += exp;
             financial.expInThisLevel += exp;
+            expEarned += exp;
             
             int before = financial.money;
             int raw = score.data.getAwardByRank(rank);
@@ -249,12 +270,16 @@ public class HumanCareer extends Career {
             subItem.put("raw", raw);
             subItem.put("actual", real);
             items.put(rank.name(), subItem);
+            
+            moneyEarned += real;
         }
         
         invoice.put("items", items);
         invoice.put("moneyBefore", moneyBefore);
         invoice.put("moneyAfter", financial.money);
         financial.invoices.add(invoice);
+        
+        unShownAwd = new AwardDistributionHint(moneyEarned, expEarned);
         
         checkScoreAchievements();
     }
@@ -544,6 +569,10 @@ public class HumanCareer extends Career {
             CareerManager.getInstance().saveToDisk();
         }
     }
+    
+    public InventoryManager getInventory() {
+        return CareerManager.getInstance().getInventory();
+    }
 
     private int computeAllAwards() {
         int awards = 0;
@@ -553,6 +582,12 @@ public class HumanCareer extends Career {
         awards += new CareerRanker.ByAwards(GameRule.LIS_EIGHT, this, Calendar.getInstance()).getTotalAwards();
         awards += new CareerRanker.ByAwards(GameRule.AMERICAN_NINE, this, Calendar.getInstance()).getTotalAwards();
         return awards;
+    }
+
+    public AwardDistributionHint getAndRemoveUnShownAwd() {
+        AwardDistributionHint awd = unShownAwd;
+        unShownAwd = null;
+        return awd;
     }
 
     public static class FinancialManager {
@@ -637,5 +672,9 @@ public class HumanCareer extends Career {
             JSONObject json = toJson();
             DataLoader.saveToDisk(json, jsonFile.getAbsolutePath());
         }
+    }
+    
+    public record AwardDistributionHint(int money, int exp) {
+        
     }
 }

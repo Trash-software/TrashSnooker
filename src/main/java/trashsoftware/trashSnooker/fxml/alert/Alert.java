@@ -36,7 +36,8 @@ public class Alert implements Initializable {
     }
 
     public void setupInfo(Stage stage,
-                          String header, String content) {
+                          String header, 
+                          String content) {
         functionalWindow(stage, header, content, null, null);
     }
     
@@ -54,14 +55,20 @@ public class Alert implements Initializable {
     }
 
     public void functionalWindow(Stage stage,
-                                 String header, String content, 
+                                 String header, 
+                                 String content, 
                                  String positiveText,
                                  Runnable callback) {
         this.stage = stage;
         setOnClose(stage);
 
         this.headerText.setText(header);
-        this.contentText.setText(content);
+        
+        if (content != null) {
+            this.contentText.setText(content);
+        } else {
+            this.contentText.setManaged(false);
+        }
         if (positiveText != null) this.yesButton.setText(positiveText);
         this.noButton.setVisible(false);
         this.noButton.setManaged(false);

@@ -218,19 +218,10 @@ public class ChampDrawView extends ChildInitializable {
                 EntireGame eg = championship.getSavedRound().getGame();
                 savedRoundLabel.setText(eg.getP1Wins() + " (" + eg.getTotalFrames() + ") " + eg.getP2Wins());
                 savedRoundLabel.setManaged(true);
-
-//                InGamePlayer humanIgp = eg.getPlayer1().getPlayerType() == PlayerType.PLAYER ?
-//                        eg.getPlayer1() :
-//                        eg.getPlayer2();
-//                FastGameView.selectCue(cueBox, humanIgp.getPlayCue());
-//                cueSelection.select(humanIgp.getPlayCue());
-//                cueSelection.selectByCue(humanIgp.getPlayCue());
-
-//                cueButton.setDisable(true);
+                
                 setOpponentText(championship.findHumanNextOpponent());
             } else {
                 if (championship.isHumanAlive()) {
-//                    cueButton.setDisable(false);
                     nextRoundButton.setText(strings.getString("startNextRound"));
                     setOpponentText(championship.findHumanNextOpponent());
                 } else {

@@ -61,10 +61,41 @@
         }
       ]
     },
+    "profSnookerCueThicker": {
+      "names": {
+        "zh": "进阶小头杆-10.2",
+        "en": "Thin Cue-10.2"
+      },
+      "tipThickness": 3.0,
+      "ringThickness": 8.0,
+      "power": 0.88,
+      "spin": 0.95,
+      "accuracy": 1.0,
+      "ringColor": "GOLD-",
+      "backColor": "GOLD-",
+      "privacy": true,
+      "available": true,
+      "price": 1000,
+      "textured": true,
+      "segments": [
+        {
+          "length": 1435,
+          "diameter1": 10.2,
+          "diameter2": 24.0,
+          "texture": "profSnookerCueThicker.png"
+        },
+        {
+          "length": 5,
+          "diameter1": 24.0,
+          "diameter2": 10.0,
+          "texture": "BLACK+"
+        }
+      ]
+    },
     "stdPottsCue": {
       "names": {
-        "zh": "波茨杆",
-        "en": "Potts Cue"
+        "zh": "球房公杆-波茨",
+        "en": "Public Potts Cue"
       },
       "tipThickness": 4.0,
       "ringThickness": 9.0,
@@ -93,8 +124,8 @@
     },
     "stdPoolCue": {
       "names": {
-        "zh": "九球杆",
-        "en": "Pool Cue"
+        "zh": "球房公杆-大头",
+        "en": "Public Pool Cue"
       },
       "ringThickness": 12.0,
       "tipThickness": 5.0,
@@ -437,7 +468,7 @@
       "accuracy": 0.65,
       "ringColor": "OLDLACE",
       "backColor": "BLACK++",
-      "privacy": false,
+      "privacy": true,
       "available": true,
       "price": 1000,
       "textured": true,

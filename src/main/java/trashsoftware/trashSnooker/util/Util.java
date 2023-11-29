@@ -347,22 +347,23 @@ public class Util {
     }
     
     public static String moneyToReadable(int money) {
-        Deque<String> out = new ArrayDeque<>();
-        String sign = money < 0 ? "-" : "";
-        money = Math.abs(money);
-        boolean full = true;
-        while (money > 0) {
-            int m = money % 1000;
-            String s = String.valueOf(m);
-            if (full && s.length() < 3) {
-                s = "0".repeat(3 - s.length()) + s;
-            }
-            
-            out.addFirst(s);
-            money /= 1000;
-            full = false;
-        }
-        return sign + String.join(",", out);
+        return String.format("%,d", money);
+//        Deque<String> out = new ArrayDeque<>();
+//        String sign = money < 0 ? "-" : "";
+//        money = Math.abs(money);
+//        boolean full = true;
+//        while (money > 0) {
+//            int m = money % 1000;
+//            String s = String.valueOf(m);
+//            if (m != money && full && s.length() < 3) {
+//                s = "0".repeat(3 - s.length()) + s;
+//            }
+//            
+//            out.addFirst(s);
+//            money /= 1000;
+//            full = false;
+//        }
+//        return sign + String.join(",", out);
     }
     
     public static JSONArray arrayToJson(double[] array) {

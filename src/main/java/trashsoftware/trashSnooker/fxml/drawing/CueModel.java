@@ -29,6 +29,10 @@ public abstract class CueModel extends Group {
             throw new RuntimeException("Unsupported cue type");
         }
     }
+    
+    public void show() {
+        setVisible(true);
+    }
 
     public void show(double correctedTipX,
                      double correctedTipY,
@@ -56,6 +60,8 @@ public abstract class CueModel extends Group {
     public abstract void setCueAngle(double cueAngleDeg);
 
     public abstract void setScale(double scale);
+    
+    public abstract void redraw();
 
     public abstract void setCueRotation(double rotationDeg);
 }

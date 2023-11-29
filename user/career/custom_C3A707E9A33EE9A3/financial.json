@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 17750,
+    "money": 9250,
     "invoices": [
       {
         "perkUsed": 6,
@@ -347,13 +347,168 @@
           "raw": 5000
         }},
         "timestamp": "2023-11-28 04:59:50"
+      },
+      {
+        "moneyBefore": 17750,
+        "moneyAfter": 17050,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 700
+        }],
+        "timestamp": "2023-11-28 14:33:12"
+      },
+      {
+        "match": "custom_C3A707E9A33EE9A3+2023+china_open",
+        "moneyBefore": 17050,
+        "moneyAfter": 16050,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-11-28 14:33:12"
+      },
+      {
+        "year": 2023,
+        "match": "china_open",
+        "moneyBefore": 16050,
+        "moneyAfter": 20050,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 4000,
+          "raw": 5000
+        }},
+        "timestamp": "2023-11-29 18:02:48"
+      },
+      {
+        "perkUsed": 5,
+        "moneyBefore": 20050,
+        "moneyCost": 2300,
+        "moneyAfter": 17750,
+        "ability": {
+          "powerControl": [
+            75.0185536848834,
+            77.26762600063923
+          ],
+          "cuePrecision": [
+            79.88644663503555,
+            81.89212430328378
+          ],
+          "normalPower": [
+            76.04967935828847,
+            78.24719539037405
+          ],
+          "spin": [
+            83.11469851168998,
+            84.95896358610548
+          ],
+          "spinControl": [
+            77.12254776547955,
+            79.26642037720558
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2023-11-29 18:03:19"
+      },
+      {
+        "moneyBefore": 17750,
+        "moneyAfter": 17250,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 500
+        }],
+        "timestamp": "2023-11-30 02:37:28"
+      },
+      {
+        "match": "custom_C3A707E9A33EE9A3+2023+eight_spadina_open",
+        "moneyBefore": 17250,
+        "moneyAfter": 16250,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-11-30 02:37:28"
+      },
+      {
+        "year": 2023,
+        "match": "eight_spadina_open",
+        "moneyBefore": 16250,
+        "moneyAfter": 16250,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_1": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-11-30 02:41:17"
+      },
+      {
+        "item": "profSnookerCueThicker:custom_C3A707E9A33EE9A3-243",
+        "moneyBefore": 16250,
+        "moneyCost": 1000,
+        "moneyAfter": 15250,
+        "type": "purchase",
+        "timestamp": "2023-11-30 04:10:10"
+      },
+      {
+        "moneyBefore": 15250,
+        "moneyAfter": 13450,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1800
+        }],
+        "timestamp": "2023-11-30 05:21:23"
+      },
+      {
+        "match": "custom_C3A707E9A33EE9A3+2023+world_champ",
+        "moneyBefore": 13450,
+        "moneyAfter": 9250,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          }
+        ],
+        "timestamp": "2023-11-30 05:21:23"
       }
     ],
-    "level": 3,
-    "expInThisLevel": 92,
-    "availPerks": 0,
-    "totalPerks": 9,
-    "totalExp": 300
+    "level": 5,
+    "expInThisLevel": 74,
+    "availPerks": 2,
+    "totalPerks": 16,
+    "totalExp": 525
   },
-  "checksum": "D28AD0A51248D3AA6453EA086ACF738A"
+  "checksum": "FA5C7FB8D79CC3E44A06C543542D4792"
 }

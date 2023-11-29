@@ -30,7 +30,7 @@ public class InventoryView extends ChildInitializable {
     Label moneyLabel;
     
     @FXML
-    ImageView moneyImage;
+    ImageView moneyImage, inventoryImage, storeImage;
     
     private HumanCareer humanCareer;
 
@@ -59,6 +59,8 @@ public class InventoryView extends ChildInitializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ResourcesLoader rl = ResourcesLoader.getInstance();
         rl.setIconImage(rl.getMoneyImg(), moneyImage);
+        rl.setIconImage(rl.getInventoryIcon(), inventoryImage, 1.0, 1.25);
+        rl.setIconImage(rl.getStoreIcon(), storeImage, 1.0, 1.25);
         
         humanCareer = CareerManager.getInstance().getHumanPlayerCareer();
         

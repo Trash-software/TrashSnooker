@@ -29,6 +29,7 @@ import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
+import org.json.JSONObject;
 import trashsoftware.trashSnooker.audio.GameAudio;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
@@ -693,6 +694,17 @@ public class GameView implements Initializable {
 
         double playerGoodness = CareerManager.getInstance().getPlayerGoodness();
         setAimingLengthFactor(playerGoodness);
+
+        JSONObject careerCache = CareerManager.getInstance().getCache();
+        if (careerCache.has("playerCue")) {
+            String cueInsId = careerCache.getString("playerCue");
+            if (game.getPlayer1().isHuman()) {
+                game.getPlayer1().getCueSelection().selectByInstanceId(cueInsId);
+            }
+            if (game.getPlayer2().isHuman()) {
+                game.getPlayer2().getCueSelection().selectByInstanceId(cueInsId);
+            }
+        }
     }
 
     public void setAimingLengthFactor(double aimingLengthFactor) {
@@ -1807,16 +1819,32 @@ public class GameView implements Initializable {
         InGamePlayer cuingIgp = game.getGame().getCuingIgp();
         if (cuingIgp != null) {
             CueSelection selection = cuingIgp.getCueSelection();
-            CueSelectionView.showCueSelectionView(selection,
-                    stage,
-                    this::hideCue,
-                    () -> {
-                        cursorDirectionUnitX = 0;
-                        cursorDirectionUnitY = 0;
-                        recalculateUiRestrictions();
-                        tableGraphicsChanged = true;
-                        draw();
-                    });
+            Runnable callback = () -> {
+                cursorDirectionUnitX = 0;
+                cursorDirectionUnitY = 0;
+                recalculateUiRestrictions();
+                tableGraphicsChanged = true;
+                if (careerMatch != null) {
+                    CareerManager cm = CareerManager.getInstance();
+                    cm.getCache().put("playerCue",
+                            selection.getSelected().getCueInstance().getInstanceId());
+                    cm.saveCache();
+                }
+                draw();
+            };
+
+            if (careerMatch != null && cuingIgp.isHuman()) {
+                CueSelectionView.showCueSelectionView(selection,
+                        stage,
+                        this::hideCue,
+                        callback,
+                        CareerManager.getInstance().getHumanPlayerCareer());
+            } else {
+                CueSelectionView.showCueSelectionView(selection,
+                        stage,
+                        this::hideCue,
+                        callback);
+            }
         }
     }
 
@@ -1870,8 +1898,8 @@ public class GameView implements Initializable {
                 if (game.getGame().isBreaking()) {
                     cuing.getCueSelection().selectByBrand(DataLoader.getInstance().getStdBreakCueBrand());
                 } else {
-                    FastGameView.selectSuggestedCue(cuing.getCueSelection(), 
-                            game.gameValues.rule, 
+                    FastGameView.selectSuggestedCue(cuing.getCueSelection(),
+                            game.gameValues.rule,
                             cuing.getPlayerPerson());
                 }
             }
@@ -1901,10 +1929,10 @@ public class GameView implements Initializable {
         double hitPointBaseScale = BallMetrics.SNOOKER_BALL.ballDiameter / ballDia;
         // 皮头越大的杆，打点的偏差越大
         hitPointBaseScale *= cue.getCueTipWidth() / 10.0;  // 把10作为标准
-        
+
         frontBackSpinFactor *= hitPointBaseScale;
         sideSpinFactor *= hitPointBaseScale;
-        
+
         PlayerPerson playerPerson = player.getPlayerPerson();
 
         // 用架杆影响打点精确度
@@ -2009,18 +2037,14 @@ public class GameView implements Initializable {
 
         boolean slidedCue = false;
         if (mutate) {
-            double cueTipHealthReduce = selPower * 0.01;
-
             if (isMiscue()) {
 //                power /= 4;
 //                unitSideSpin *= 10;
                 System.out.println("Miscued!");
                 AchManager.getInstance().addAchievement(Achievement.MISCUED, game.getGame().getCuingIgp());
                 slidedCue = true;
-                cueTipHealthReduce *= 100;
             }
             miscued = slidedCue;
-            cue.getCueTip().reduceHp(cueTipHealthReduce);
         }
 
 //        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
@@ -2134,6 +2158,9 @@ public class GameView implements Initializable {
         boolean snookered = game.getGame().isSnookered();
 
         CuePlayParams params = applyRandomCueError(player);
+        if (careerMatch != null) {
+            reduceCueHp(getCuingCue(), player, params);
+        }
 //        CuePlayParams params = applyCueError(player, 0, 0, 0,true, currentHand);
 //        System.out.println("Final params: " + params.cueParams);
 
@@ -2175,6 +2202,31 @@ public class GameView implements Initializable {
         Thread thread = new Thread(() ->
                 playerCueCalculations(params, player, attempt, usedHand, snookered));
         thread.start();
+    }
+    
+    private void reduceCueHp(Cue cue, Player player, CuePlayParams params) {
+        double reduce = params.cueParams.actualPower() / 30.0;
+        double cuePointReduce = Math.hypot(params.cueParams.actualFrontBackSpin(),
+                params.cueParams.actualSideSpin() * 0.5);
+        
+        reduce *= Algebra.shiftRangeSafe(0, 
+                1, 
+                0.5,
+                1.0,
+                cuePointReduce);
+        reduce *= gameValues.ball.ballWeightRatio;
+        
+        if (isMiscue()) {
+            reduce *= 100;
+        }
+        
+        boolean show = cue.getCueTip().reduceHp(reduce);
+        
+        if (show) {
+            AlertShower.showInfo(stage,
+                    strings.getString("tipBrokenTip"),
+                    strings.getString("tipBroken"));
+        }
     }
 
     private void playerCueCalculations(CuePlayParams params,
@@ -2488,6 +2540,9 @@ public class GameView implements Initializable {
                 cueAngleDeg = 0.0;
 
                 CuePlayParams realParams = applyRandomCueError(player);
+                if (aiHelpPlayerPlaying && careerMatch != null) {
+                    reduceCueHp(getCuingCue(), player, realParams);
+                }
 
                 double whiteStartingX = game.getGame().getCueBall().getX();
                 double whiteStartingY = game.getGame().getCueBall().getY();
@@ -3752,7 +3807,7 @@ public class GameView implements Initializable {
             } else {
                 cueModel.setCueRotation(cueRollRotateDeg2);
             }
-            
+
         }
     }
 

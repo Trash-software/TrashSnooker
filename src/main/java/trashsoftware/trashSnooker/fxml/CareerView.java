@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -24,6 +25,7 @@ import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.alert.Alert;
+import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.widgets.AbilityShower;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
@@ -499,6 +501,55 @@ public class CareerView extends ChildInitializable {
         perkManager.synchronizePerks();
         notifyPerksChanged();
         abilityShower.notifyPerksReset();
+        
+        // 如果有还没显示的新奖金，就显示
+        // 如果玩家在champDrawView完赛之后直接退了，那也懒得给他显了
+        HumanCareer.AwardDistributionHint awd = myCareer.getAndRemoveUnShownAwd();
+        if (awd != null) {
+            showAwardAlert(awd);
+        }
+    }
+    
+    private void showAwardAlert(HumanCareer.AwardDistributionHint awd) {
+        FXMLLoader loader = new FXMLLoader(
+                Alert.class.getResource("alert.fxml"),
+                App.getStrings()
+        );
+        Parent root;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            EventLogger.error(e);
+            return;
+        }
+        root.setStyle(App.FONT_STYLE);
+        
+        Stage newStage = new Stage();
+        newStage.initOwner(selfStage);
+        newStage.initModality(Modality.WINDOW_MODAL);
+        newStage.setResizable(false);
+        
+        Scene scene = new Scene(root);
+        newStage.setScene(scene);
+
+        ResourcesLoader rl = ResourcesLoader.getInstance();
+        
+        Alert alert = loader.getController();
+        alert.setupInfo(newStage,
+                strings.getString("awardGained"),
+                null);
+        GridPane gp = new GridPane();
+        gp.setVgap(10.0);
+        gp.setHgap(5.0);
+        ImageView moneyIv = new ImageView();
+        rl.setIconImage(rl.getMoneyImg(), moneyIv);
+        gp.addRow(0, moneyIv, new Label(Util.moneyToReadable(awd.money())));
+        ImageView expIv = new ImageView();
+        rl.setIconImage(rl.getExpImg(), expIv);
+        gp.addRow(1, expIv, new Label(String.valueOf(awd.exp())));
+        alert.setupAdditional(gp);
+        
+        newStage.show();
     }
 
     private void refreshRanks() {

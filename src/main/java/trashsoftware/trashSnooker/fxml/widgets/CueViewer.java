@@ -1,8 +1,15 @@
 package trashsoftware.trashSnooker.fxml.widgets;
 
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.AmbientLight;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -23,9 +30,12 @@ public class CueViewer extends Pane {
     private final CueModel cueModel;
     
     VBox cueInfoBox = new VBox();
+    private final HBox cueInfoSecondRow = new HBox();
 
     private Rotate xRotate = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
     private Rotate yRotate = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
+    
+    private double scale;
     
     private double lastDragX, lastDragY;
     private boolean dragging;
@@ -36,7 +46,9 @@ public class CueViewer extends Pane {
         this.strings = strings;
         this.cueAndBrand = cueAndBrand;
         this.cue = cueAndBrand.getNonNullInstance();
-        this.cueModel = CueModel.createCueModel(this.cue, (width * 0.95) / cueAndBrand.brand.getWoodPartLength());
+        
+        scale = (width * 0.95) / cueAndBrand.brand.getWoodPartLength();
+        this.cueModel = CueModel.createCueModel(this.cue, scale);
         xRotate.setPivotY(width / 2);
         
         cueModel.setTranslateX(width * 0.05);
@@ -74,14 +86,52 @@ public class CueViewer extends Pane {
         }
         
         fillCueInfo();
-        getChildren().addAll(cueInfoBox, cueModel);
+        Separator sp1 = new Separator(Orientation.HORIZONTAL);
+        sp1.setHalignment(HPos.CENTER);
+        sp1.setPrefWidth(width);
+//        Separator sp2 = new Separator(Orientation.HORIZONTAL);
+//        sp2.setHalignment(HPos.CENTER);
+//        sp2.setPrefWidth(width);
         
+        getChildren().addAll(sp1, cueInfoBox, cueModel);
+        
+        setPadding(new Insets(5.0));
+        
+        setPrefWidth(width);
         setWidth(width);
         setMinHeight(width * 0.1);
         setMaxWidth(width);
         setMaxHeight(width * 0.1);
     }
     
+    public void updateModel() {
+        cueModel.setScale(scale);
+    }
+
+    public void addExtra(Node extra) {
+        cueInfoSecondRow.setAlignment(Pos.CENTER_LEFT);
+        cueInfoSecondRow.setSpacing(10.0);
+        cueInfoSecondRow.getChildren().add(extra);
+    }
+
+    public void show() {
+        setVisible(true);
+        cueModel.show();
+    }
+    
+    public void hide() {
+        setVisible(false);
+        cueModel.hide();
+    }
+
+    public Cue getCue() {
+        return cue;
+    }
+
+    public CueModel getCueModel() {
+        return cueModel;
+    }
+
     private void fillCueInfo() {
         Label nameLabel = new Label(cue.getName());
         nameLabel.setFont(new Font(App.FONT.getName(), App.FONT.getSize() * 1.35));
@@ -93,6 +143,7 @@ public class CueViewer extends Pane {
                 strings.getString("cueAiming"), cue.getAccuracyMultiplier() * 100,
                 strings.getString("cueSpin"), cue.getOrigSpinMultiplier() * 100
         );
-        cueInfoBox.getChildren().add(new Label(cueInfo));
+        cueInfoSecondRow.getChildren().add(new Label(cueInfo));
+        cueInfoBox.getChildren().add(cueInfoSecondRow);
     }
 }

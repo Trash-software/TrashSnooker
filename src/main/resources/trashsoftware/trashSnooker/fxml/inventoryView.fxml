@@ -13,8 +13,8 @@
 <?import javafx.scene.control.Label?>
 <VBox spacing="10.0" xmlns="http://javafx.com/javafx/11.0.14-internal"
       xmlns:fx="http://javafx.com/fxml/1"
-      prefHeight="480.0"
-      prefWidth="720.0"
+      prefHeight="640.0"
+      prefWidth="960.0"
       fx:controller="trashsoftware.trashSnooker.fxml.InventoryView">
 
     <padding>
@@ -30,9 +30,15 @@
     </HBox>
     <TabPane fx:id="baseTabPane" tabClosingPolicy="UNAVAILABLE">
         <Tab text="%inventory">
+            <graphic>
+                <ImageView fx:id="inventoryImage"/>
+            </graphic>
             <InventoryPage fx:id="inventoryRoot"/>
         </Tab>
         <Tab text="%store">
+            <graphic>
+                <ImageView fx:id="storeImage"/>
+            </graphic>
             <StorePage fx:id="storeRoot"/>
         </Tab>
     </TabPane>

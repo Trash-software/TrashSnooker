@@ -41,6 +41,16 @@ public class CueSelection {
         for (CueAndBrand cab : available) {
             if (cab.instance != null && cue.getInstanceId().equals(cab.instance.getInstanceId())) {
                 select(cab);
+                break;
+            }
+        }
+    }
+    
+    public void selectByInstanceId(String instanceId) {
+        for (CueAndBrand cab : available) {
+            if (cab.instance != null && instanceId.equals(cab.instance.getInstanceId())) {
+                select(cab);
+                break;
             }
         }
     }

@@ -36,6 +36,7 @@ public class CareerManager {
     public static final String CAREER_JSON = "career.json";
     public static final String PROGRESS_FILE = "progress.json";
     public static final String HISTORY_DIR = "history";
+    public static final String CACHE = "cache.json";
     //    public static final int PROFESSIONAL_LIMIT = 32;
     public static final int INIT_PERKS = 6;
     public static final int BASE_LEVEL_PERK = 2;
@@ -57,6 +58,7 @@ public class CareerManager {
     private Championship inProgress;
     private int lastSavedVersion;
     private final List<SettingsHistory> settingsHistories = new ArrayList<>();
+    private JSONObject cache;
 
     private double playerGoodness;
     private double aiGoodness;
@@ -200,6 +202,7 @@ public class CareerManager {
         if (cm.humanPlayerCareer == null) {
             throw new RuntimeException("No human player???");
         }
+        cm.cache = new JSONObject();
         instance = cm;
 
 //        instance.updateRanking();
@@ -321,6 +324,8 @@ public class CareerManager {
         }
 
         careerManager.updateRanking();
+        
+        careerManager.cache = DataLoader.loadFromDisk(new File(careerSave.getDir(), CACHE).getAbsolutePath());
         
         careerManager.saveCacheInfo();
         
@@ -985,6 +990,15 @@ public class CareerManager {
     public void reloadHumanPlayerPerson() {
         humanPlayerCareer.setPlayerPerson(
                 DataLoader.getInstance().getPlayerPerson(humanPlayerCareer.getPlayerPerson().getPlayerId()));
+    }
+
+    public JSONObject getCache() {
+        if (cache == null) cache = new JSONObject();
+        return cache;
+    }
+    
+    public void saveCache() {
+        DataLoader.saveToDisk(cache, new File(careerSave.getDir(), CACHE).getAbsolutePath());
     }
 
     /**

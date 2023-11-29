@@ -151,7 +151,7 @@ public class Cue {
     }
 
     public double getPowerMultiplier() {
-        return brand.powerMultiplier;
+        return brand.powerMultiplier * cueTip.getPower();
     }
 
     public double getOrigSpinMultiplier() {

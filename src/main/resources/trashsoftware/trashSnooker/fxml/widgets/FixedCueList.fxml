@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import trashsoftware.trashSnooker.fxml.widgets.FixedCueList?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<fx:root type="trashsoftware.trashSnooker.fxml.widgets.FixedCueList"
+         xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" prefHeight="400.0">
+    <GridPane fx:id="container" FixedCueList.hgrow="ALWAYS" vgap="5.0">
+        <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints halignment="RIGHT"/>
+        </columnConstraints>
+    </GridPane>
+    <ScrollBar fx:id="scrollBar" orientation="VERTICAL"/>
+</fx:root>

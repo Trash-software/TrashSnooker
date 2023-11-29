@@ -8,6 +8,7 @@
 
 <?import trashsoftware.trashSnooker.fxml.widgets.CueList?>
 <?import javafx.scene.text.Font?>
+<?import trashsoftware.trashSnooker.fxml.widgets.FixedCueList?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          type="trashsoftware.trashSnooker.fxml.inventoryPages.StorePage"
@@ -18,6 +19,6 @@
             <Font size="18.0"/>
         </font>
     </Label>
-    <CueList fx:id="cueList"/>
+    <FixedCueList fx:id="cueList"/>
 
 </fx:root>
