@@ -224,7 +224,8 @@ public class FixedCueList extends HBox {
     @NotNull
     private static GraphicsContext getGraphicsContext(double percent, Canvas canvas) {
         Color fill;
-        if (percent < 0.25) fill = Color.DARKRED;
+        if (percent < CueTip.TIP_HEALTH_LOW) fill = Color.DIMGRAY;
+        else if (percent < 0.25) fill = Color.DARKRED;
         else if (percent < 0.5) fill = Color.GOLDENROD;
         else fill = Color.LIMEGREEN;
 
@@ -232,7 +233,7 @@ public class FixedCueList extends HBox {
         gc.setFill(fill);
         gc.setStroke(Color.BLACK);
 
-        gc.fillRect(0, 0, canvas.getWidth() * percent, canvas.getHeight());
+        gc.fillRect(0, 0, Math.max(0,canvas.getWidth() * percent), canvas.getHeight());
 
         gc.setLineWidth(2.0);
         gc.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());

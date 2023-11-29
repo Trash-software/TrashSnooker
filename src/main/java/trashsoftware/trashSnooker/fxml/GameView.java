@@ -831,6 +831,7 @@ public class GameView implements Initializable {
                             careerMatch.saveMatch();
                             careerMatch.saveAndExit();
                         }
+                        CareerManager.getInstance().getInventory().saveToDisk();
                     } else {
                         if (game.getGame().isStarted() || (game.getP1Wins() + game.getP2Wins() > 0)) {
                             boolean matchFinish = game.playerWinsAframe(winner);
@@ -1169,6 +1170,7 @@ public class GameView implements Initializable {
                 ((ChallengeMatch) careerMatch).setScore(p1.getScore());
                 content = ((ChallengeMatch) careerMatch).challengeSet.getName();
                 careerMatch.finish(wonPlayer.getPlayerPerson(), success ? 1 : 0, success ? 0 : 1);
+                CareerManager.getInstance().getInventory().saveToDisk();
             } else {
                 content = gameValues.getTrainType().toString();
             }
@@ -1197,6 +1199,7 @@ public class GameView implements Initializable {
                     }
                 }
                 careerMatch.saveMatch();
+                CareerManager.getInstance().getInventory().saveToDisk();
             } else {
                 game.generalSave();
             }

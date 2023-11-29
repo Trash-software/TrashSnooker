@@ -1,10 +1,10 @@
 {
   "achievements": {
-    "poolClear": {
+    "poolBreakClear": {
       "levelDates": {"0": "2023-11-28 02:14:56"},
       "completions": 1
     },
-    "poolBreakClear": {
+    "poolClear": {
       "levelDates": {"0": "2023-11-28 02:14:56"},
       "completions": 1
     },
@@ -12,21 +12,17 @@
       "levelDates": {"0": "2023-11-27 16:14:54"},
       "completions": 1
     },
-    "lieDownWin": {
-      "levelDates": {"0": "2023-11-28 14:35:27"},
-      "completions": 1
-    },
     "gainBySnooker": {
       "levelDates": {"0": "2023-11-27 23:12:28"},
+      "completions": 1
+    },
+    "lieDownWin": {
+      "levelDates": {"0": "2023-11-28 14:35:27"},
       "completions": 1
     },
     "potWrongColor": {
       "levelDates": {"0": "2023-11-30 05:32:04"},
       "completions": 1
-    },
-    "passPot": {
-      "levelDates": {"0": "2023-11-28 02:55:08"},
-      "completions": 2
     },
     "aroundTablePosition": {
       "levelDates": {"0": "2023-11-27 23:09:11"},
@@ -35,6 +31,10 @@
     "winAMatch": {
       "levelDates": {"0": "2023-11-28 02:14:57"},
       "completions": 1
+    },
+    "passPot": {
+      "levelDates": {"0": "2023-11-28 02:55:08"},
+      "completions": 2
     },
     "snookerCumulateFoulGain": {
       "levelDates": {
@@ -83,13 +83,13 @@
       "levelDates": {"0": "2023-11-28 02:54:09"},
       "completions": 11
     },
-    "winFramesNormalDifficulty": {
-      "levelDates": {},
-      "completions": 11
-    },
     "miscued": {
       "levelDates": {"0": "2023-11-27 23:21:47"},
       "completions": 1
+    },
+    "winFramesNormalDifficulty": {
+      "levelDates": {},
+      "completions": 11
     },
     "cumulativeLongPots1": {
       "levelDates": {
@@ -109,6 +109,10 @@
       "levelDates": {"0": "2023-11-30 06:08:34"},
       "completions": 5
     },
+    "positioningMaster": {
+      "levelDates": {"0": "2023-11-27 23:04:48"},
+      "completions": 21
+    },
     "cebCumulativeClear": {
       "levelDates": {},
       "completions": 1
@@ -117,25 +121,21 @@
       "levelDates": {"0": "2023-11-28 02:25:19"},
       "completions": 1
     },
-    "positioningMaster": {
-      "levelDates": {"0": "2023-11-27 23:04:48"},
-      "completions": 21
+    "defeatUniqueOpponentsAmerican": {
+      "levelDates": {},
+      "completions": 0
     },
-    "snookerBreak50": {
-      "levelDates": {"0": "2023-11-28 03:21:56"},
+    "cueBallPot": {
+      "levelDates": {"0": "2023-11-28 03:57:31"},
       "completions": 1
     },
     "oneRoundTour": {
       "levelDates": {"0": "2023-11-27 16:14:57"},
       "completions": 1
     },
-    "cueBallPot": {
-      "levelDates": {"0": "2023-11-28 03:57:31"},
+    "snookerBreak50": {
+      "levelDates": {"0": "2023-11-28 03:21:56"},
       "completions": 1
-    },
-    "defeatUniqueOpponentsAmerican": {
-      "levelDates": {},
-      "completions": 0
     },
     "remainOneMustLose": {
       "levelDates": {"0": "2023-11-28 03:04:56"},
@@ -153,13 +153,13 @@
       "levelDates": {"0": "2023-11-28 03:27:44"},
       "completions": 1
     },
-    "potBallsRest": {
-      "levelDates": {"0": "2023-11-28 02:58:47"},
-      "completions": 14
-    },
     "defeatSameOpponentContinuousSnooker": {
       "levelDates": {"0": "2023-11-28 14:35:28"},
       "completions": 1
+    },
+    "potBallsRest": {
+      "levelDates": {"0": "2023-11-28 02:58:47"},
+      "completions": 14
     },
     "uniqueDefeat": {"collection": {
       "Mou Moumou": {
@@ -218,21 +218,21 @@
       "levelDates": {},
       "completions": 20000
     },
-    "earnedMoney": {
-      "levelDates": {"0": "2023-11-27 16:15:03"},
-      "completions": 1
-    },
     "shakePocket": {
       "levelDates": {"0": "2023-11-28 02:51:02"},
       "completions": 1
     },
-    "defeatUniqueOpponentsCeb": {
-      "levelDates": {},
-      "completions": 4
+    "earnedMoney": {
+      "levelDates": {"0": "2023-11-27 16:15:03"},
+      "completions": 1
     },
     "potBallsAnti": {
       "levelDates": {"0": "2023-11-27 16:13:08"},
       "completions": 5
+    },
+    "defeatUniqueOpponentsCeb": {
+      "levelDates": {},
+      "completions": 4
     }
   },
   "checksum": "A6299E1F4B0FF683B39D9B614870FE33"
