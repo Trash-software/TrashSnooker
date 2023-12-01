@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.fxml.inventoryPages;
 
 import javafx.fxml.FXML;
+import org.jetbrains.annotations.NotNull;
 import trashsoftware.trashSnooker.core.CueSelection;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerSave;
@@ -42,6 +43,20 @@ public class StorePage extends AbsInvPage {
     private void fill() {
         cueList.clear();
         List<Cue> haves = inventoryManager.getAllCues();
+        List<CueSelection.CueAndBrand> notHaves = getNotHavingCues(haves);
+
+        notHaves.sort(Comparator.comparingInt(x -> x.brand.getPrice()));
+        for (CueSelection.CueAndBrand cab : notHaves) {
+            cab.initInstanceForViewing();
+            cueList.addCue(cab,
+                    900,
+                    strings.getString("buy") + " - " + cab.brand.getPrice(),
+                    () -> askBuyCue(cab));
+        }
+    }
+
+    @NotNull
+    private static List<CueSelection.CueAndBrand> getNotHavingCues(List<Cue> haves) {
         List<CueSelection.CueAndBrand> notHaves = new ArrayList<>();
         OUT_LOOP:
         for (CueBrand cueBrand : DataLoader.getInstance().getCues().values()) {
@@ -56,15 +71,7 @@ public class StorePage extends AbsInvPage {
                 notHaves.add(cab);
             }
         }
-        
-        notHaves.sort(Comparator.comparingInt(x -> x.brand.getPrice()));
-        for (CueSelection.CueAndBrand cab : notHaves) {
-            cab.initInstanceForViewing();
-            cueList.addCue(cab,
-                    900,
-                    strings.getString("buy") + " - " + cab.brand.getPrice(),
-                    () -> askBuyCue(cab));
-        }
+        return notHaves;
     }
 
     void askBuyCue(CueSelection.CueAndBrand cab) {
@@ -109,9 +116,11 @@ public class StorePage extends AbsInvPage {
         System.out.println("Cue bought!");
 
         AlertShower.showInfo(inventoryView.getStage(),
-                strings.getString("purchaseCompleteDes"),
+                strings.getString("purchaseCompleteDes") + "\n" +
+                strings.getString("purchaseCueDes"),
                 strings.getString("purchaseComplete"));
 
+        // 注意：如果有正在进行中的比赛，新杆需在下场比赛开始时才会生效
         inventoryView.updateView();
     }
 

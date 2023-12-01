@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 8520,
+    "money": 2020,
     "invoices": [
       {
         "perkUsed": 6,
@@ -705,6 +705,24 @@
           }
         ],
         "timestamp": "2023-12-01 17:02:59"
+      },
+      {
+        "itemType": "cue",
+        "item": "profPoolCue:custom_C3A707E9A33EE9A3-257",
+        "moneyBefore": 8520,
+        "moneyCost": 3000,
+        "moneyAfter": 5520,
+        "type": "purchase",
+        "timestamp": "2023-12-02 04:43:23"
+      },
+      {
+        "itemType": "cue",
+        "item": "trashCue2Carbon:custom_C3A707E9A33EE9A3-260",
+        "moneyBefore": 5520,
+        "moneyCost": 3500,
+        "moneyAfter": 2020,
+        "type": "purchase",
+        "timestamp": "2023-12-02 05:19:05"
       }
     ],
     "level": 10,
@@ -713,5 +731,5 @@
     "totalPerks": 29,
     "totalExp": 1400
   },
-  "checksum": "0E97B9BCA5C85C441382F7C9C5FFF3C7"
+  "checksum": "708951525634BBAF9E5B704A68BE20E0"
 }
