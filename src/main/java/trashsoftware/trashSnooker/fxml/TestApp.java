@@ -18,7 +18,11 @@ import javafx.util.Duration;
 import trashsoftware.trashSnooker.core.cue.CueTip;
 import trashsoftware.trashSnooker.fxml.drawing.CueModel3D;
 import trashsoftware.trashSnooker.fxml.drawing.CueTipModel;
+import trashsoftware.trashSnooker.fxml.drawing.NonStretchSphere;
 import trashsoftware.trashSnooker.fxml.drawing.TipModel;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
+
+import java.util.Objects;
 
 public class TestApp extends Application {
     private double x = 300, y = 300;
@@ -52,6 +56,29 @@ public class TestApp extends Application {
         sub.getTransforms().addAll(xRotate, yRotate, zRotate);
 
         group.getChildren().add(sub);
+    }
+    
+    private void testCustomSphere(Pane group) {
+        NonStretchSphere nss = new NonStretchSphere(128, 57.15);
+
+        String fileName = "/trashsoftware/trashSnooker/res/img/"
+                + 256 + "/pool/pool" + "0" + ".png";
+        Image img = new Image(Objects.requireNonNull(getClass().getResource(fileName)).toExternalForm());
+        PhongMaterial material = new PhongMaterial();
+        material.setDiffuseMap(img);
+        nss.setMaterial(material);
+        
+        nss.setTranslateX(200);
+        nss.setTranslateY(200);
+        xRotate.setPivotX(200);
+//        yRotate.setPivotZ(200);
+        
+        double s = 0.45;
+        Scale scale = new Scale(s, s, s);
+        
+        nss.getTransforms().addAll(xRotate, yRotate, zRotate);
+        nss.setPolarLimit(45);
+        group.getChildren().add(nss);
     }
 
     private void test3DCueModel(Pane group) {
@@ -214,7 +241,7 @@ public class TestApp extends Application {
         canvas.getGraphicsContext2D().setFill(Color.GREEN);
         canvas.getGraphicsContext2D().fillRect(0, 0, 1440, 500);
         
-        xRotate.setPivotY(canvas.getWidth() / 2);
+//        xRotate.setPivotY(canvas.getWidth() / 2);
 
         canvas.setOnMouseDragged(e -> {
             if (dragging) {
@@ -247,7 +274,8 @@ public class TestApp extends Application {
 //        group.getChildren().add(light);
 
 //        testHemisphere(group);
-        test3DCueModel(group);
+//        test3DCueModel(group);
+        testCustomSphere(group);
 //        testBallRotate(group);
 //        testCue(group);
 //        testGradient(group, canvas);

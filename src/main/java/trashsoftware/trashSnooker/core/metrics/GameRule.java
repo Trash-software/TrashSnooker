@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.core.BreakRule;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.cue.CueSize;
 import trashsoftware.trashSnooker.core.training.TrainType;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
@@ -23,7 +24,7 @@ import java.util.Set;
  */
 public enum GameRule {
     SNOOKER(22, "Snooker",
-            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL},
+            new CueSize[]{CueSize.VERY_SMALL, CueSize.SMALL},
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_FULL_DENSE,
                     TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS, TrainType.SNAKE_X, TrainType.CLEAR_COLOR},
             BreakRule.ALTERNATE,
@@ -34,7 +35,7 @@ public enum GameRule {
         }
     },
     MINI_SNOOKER(13, "MiniSnooker",
-            new Cue.Size[]{Cue.Size.VERY_SMALL, Cue.Size.SMALL},
+            new CueSize[]{CueSize.VERY_SMALL, CueSize.SMALL},
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS, TrainType.CLEAR_COLOR},
             BreakRule.ALTERNATE,
             Set.of(Rule.HIT_CUSHION, Rule.FOUL_BALL_IN_HAND)) {
@@ -44,7 +45,7 @@ public enum GameRule {
         }
     },
     CHINESE_EIGHT(16, "ChineseEight",
-            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG},
+            new CueSize[]{CueSize.MEDIUM, CueSize.SMALL, CueSize.BIG},
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF,
                     TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},
             BreakRule.WINNER,
@@ -60,7 +61,7 @@ public enum GameRule {
         }
     },
     LIS_EIGHT(16, "LisEight",
-            new Cue.Size[]{Cue.Size.MEDIUM, Cue.Size.SMALL, Cue.Size.BIG},
+            new CueSize[]{CueSize.MEDIUM, CueSize.SMALL, CueSize.BIG},
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF,
                     TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},
             BreakRule.WINNER,
@@ -76,7 +77,7 @@ public enum GameRule {
         }
     },
     AMERICAN_NINE(10, "AmericanNine",
-            new Cue.Size[]{Cue.Size.BIG, Cue.Size.MEDIUM},
+            new CueSize[]{CueSize.BIG, CueSize.MEDIUM},
             new TrainType[]{TrainType.SNAKE_FULL,
                     TrainType.SNAKE_FULL_ORDERED, TrainType.SNAKE_HALF_ORDERED},
             BreakRule.WINNER,
@@ -89,14 +90,14 @@ public enum GameRule {
 
     public final String sqlKey;
     public final int nBalls;
-    public final Cue.Size[] suggestedCues;
+    public final CueSize[] suggestedCues;
     public final TrainType[] supportedTrainings;
     public final BreakRule breakRule;
     public final Set<Rule> ruleSet;
 
     GameRule(int nBalls, 
              String sqlKey, 
-             Cue.Size[] suggestedCues,
+             CueSize[] suggestedCues,
              TrainType[] supportedTrainings,
              BreakRule breakRule,
              Set<Rule> ruleSet) {

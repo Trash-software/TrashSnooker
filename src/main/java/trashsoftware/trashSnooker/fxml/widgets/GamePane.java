@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
+import javafx.scene.CacheHint;
 import javafx.scene.DirectionalLight;
 import javafx.scene.LightBase;
 import javafx.scene.canvas.Canvas;
@@ -131,6 +132,9 @@ public class GamePane extends StackPane {
 
     public void setupBalls(GameHolder gameHolder, boolean randomRotate) {
         clear();
+        
+//        setCache(true);
+//        setCacheHint(CacheHint.SCALE_AND_ROTATE);
 
         for (Ball ball : gameHolder.getAllBalls()) {
             ball.model.setVisualRadius(gameValues.ball.ballRadius * scale);

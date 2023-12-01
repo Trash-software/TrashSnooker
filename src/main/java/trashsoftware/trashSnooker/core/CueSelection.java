@@ -62,6 +62,13 @@ public class CueSelection {
     public CueAndBrand getSelected() {
         return selected;
     }
+    
+    public boolean hasThisBrand(CueBrand brand) {
+        for (CueAndBrand cab : getAvailableCues()) {
+            if (cab.brand.getCueId().equals(brand.getCueId())) return true;
+        }
+        return false;
+    }
 
     public static class CueAndBrand {
         public final CueBrand brand;

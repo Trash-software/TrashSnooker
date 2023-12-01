@@ -41,7 +41,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CareerView extends ChildInitializable {
-
+    @FXML
+    GridPane basePane;
     @FXML
     TableView<RankedCareer> rankingTable;
     @FXML
@@ -168,6 +169,16 @@ public class CareerView extends ChildInitializable {
     }
 
     private void showHideSelectedPanel(boolean show) {
+        if (show) {
+            basePane.getColumnConstraints().get(0).setPercentWidth(33.4);
+            basePane.getColumnConstraints().get(1).setPercentWidth(33.3);
+            basePane.getColumnConstraints().get(2).setPercentWidth(33.3);
+        } else {
+            basePane.getColumnConstraints().get(0).setPercentWidth(50.0);
+            basePane.getColumnConstraints().get(1).setPercentWidth(50.0);
+            basePane.getColumnConstraints().get(2).setPercentWidth(0.0);
+        }
+        
         selectedPlayerInfoTable.setVisible(show);
         selectedPlayerInfoTable.setManaged(show);
         selectedPlayerAchBox.setVisible(show);
@@ -202,8 +213,8 @@ public class CareerView extends ChildInitializable {
             selectedPlayerAchievements.setText(
                     getAchievements(cs, rankTypeBox.getValue()));
 
-            if (selfStage != null && (currentlyVisible != selectedPlayerInfoTable.isVisible()))
-                selfStage.sizeToScene();
+//            if (selfStage != null && (currentlyVisible != selectedPlayerInfoTable.isVisible()))
+//                selfStage.sizeToScene();
         }
     }
 

@@ -43,11 +43,15 @@ public class InGamePlayer {
                 cueSelection.getAvailableCues().add(cab);
             }
         } else {
+            // fast game
             for (CueBrand pri : playerPerson.getPrivateCues()) {
                 cueSelection.getAvailableCues().add(new CueSelection.CueAndBrand(pri));
             }
             for (CueBrand cue : DataLoader.getInstance().getCues().values()) {
-                if (!cue.privacy) {
+                if (playerPerson.getSex() != PlayerPerson.Sex.F && cue.getCueId().toLowerCase().startsWith("girl")) {
+                    continue;
+                }
+                if (cue.available && !cueSelection.hasThisBrand(cue)) {
                     CueSelection.CueAndBrand cab = new CueSelection.CueAndBrand(cue);
                     cueSelection.getAvailableCues().add(cab);
                 }

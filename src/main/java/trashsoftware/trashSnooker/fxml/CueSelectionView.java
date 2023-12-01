@@ -95,14 +95,14 @@ public class CueSelectionView implements Initializable {
 
             if (humanCareer == null) {
                 cueList.addCue(cue,
-                        640,
+                        780,
                         strings.getString("select"),
                         cue == cueSelection.getSelected() ?
                                 null : buttonCallback
                 );
             } else {
                 cueList.addCue(cue,
-                        640,
+                        780,
                         humanCareer,
                         () -> reloadList(cueSelection,
                                 beforeSelectionChanged,

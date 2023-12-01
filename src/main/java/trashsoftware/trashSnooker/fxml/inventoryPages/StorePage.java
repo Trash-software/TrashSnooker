@@ -15,6 +15,8 @@ import trashsoftware.trashSnooker.fxml.widgets.FixedCueList;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -40,6 +42,7 @@ public class StorePage extends AbsInvPage {
     private void fill() {
         cueList.clear();
         List<Cue> haves = inventoryManager.getAllCues();
+        List<CueSelection.CueAndBrand> notHaves = new ArrayList<>();
         OUT_LOOP:
         for (CueBrand cueBrand : DataLoader.getInstance().getCues().values()) {
             if (cueBrand.isAvailable()) {
@@ -50,12 +53,17 @@ public class StorePage extends AbsInvPage {
                 }
                 // todo: 预览版instance
                 CueSelection.CueAndBrand cab = new CueSelection.CueAndBrand(cueBrand);
-                cab.initInstanceForViewing();
-                cueList.addCue(cab,
-                        900,
-                        strings.getString("buy") + " - " + cab.brand.getPrice(),
-                        () -> askBuyCue(cab));
+                notHaves.add(cab);
             }
+        }
+        
+        notHaves.sort(Comparator.comparingInt(x -> x.brand.getPrice()));
+        for (CueSelection.CueAndBrand cab : notHaves) {
+            cab.initInstanceForViewing();
+            cueList.addCue(cab,
+                    900,
+                    strings.getString("buy") + " - " + cab.brand.getPrice(),
+                    () -> askBuyCue(cab));
         }
     }
 

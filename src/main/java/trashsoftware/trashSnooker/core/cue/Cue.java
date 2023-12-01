@@ -15,11 +15,11 @@ public class Cue {
     public static final String BRAND_SEPARATOR = ":";
     
     protected CueBrand brand;
-    private String instanceId;
+    private final String instanceId;
     protected CueTip cueTip;
     private final boolean permanent;  // 是否是生涯模式的球员私有杆
     
-    private String customName;  // fixme
+    private final String customName;  // fixme
 
     protected Cue(CueBrand brand, 
                   String instanceId, 
@@ -35,18 +35,6 @@ public class Cue {
         System.out.println("Created cue instance " + instanceId);
     }
 
-//    protected Cue(CueBrand brand, String instanceId) {
-//        this.brand = brand;
-//        this.instanceId = instanceId;
-//
-//        if (brand.isRest) {
-//            // todo: 可能会有其他形状的架杆
-//            cueTip = CueTip.createCrossRest();
-//        } else {
-//            cueTip = CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness);
-//        }
-//    }
-
     public static Cue createRest(CueBrand brand) {
         return new Cue(brand,
                 brand.getCueId() + BRAND_SEPARATOR + "rest",
@@ -59,34 +47,22 @@ public class Cue {
     public static Cue createOneTimeInstance(CueBrand brand) {
         return new Cue(brand,
                 brand.getCueId() + BRAND_SEPARATOR + "fast-" + oneTimeInstanceCounter++,
-                CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
+                CueTip.createDefault(brand.cueTipWidth, brand.tipSize.getDefaultTipThickness()),
                 brand.getName(),
                 false
         );
     }
 
-//    public static Cue createForCareerGameAi(CueBrand brand) {
-//        System.out.println("Created ai cue instance for " + brand.cueId);
-//        return new Cue(brand,
-//                brand.getCueId() + "-ai-" + oneTimeInstanceCounter++,
-//                CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
-//                brand.getName() + "-ai",
-//                false
-//        );
-//    }
-
     public static Cue createForReplay(CueBrand brand) {
         return new Cue(brand,
                 brand.getCueId() + BRAND_SEPARATOR + "replay",
-                CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
+                CueTip.createDefault(brand.cueTipWidth, brand.tipSize.getDefaultTipThickness()),
                 brand.getName() + BRAND_SEPARATOR + "replay",
                 false
         );
     }
     
     public static Cue createForCareer(CueBrand cueBrand, CueTip tip, CareerSave owner) {
-//        String instanceId = cueBrand.getCueId() + "-" + owner.getPlayerId() + "-" +
-//                Util.TIME_FORMAT_SEC.format(new Date());
         String instanceId = cueBrand.getCueId() + BRAND_SEPARATOR + 
                 owner.getPlayerId() + "-" + PermanentCounters.getInstance().nextCueInstance();
         return new Cue(
@@ -176,13 +152,5 @@ public class Cue {
     
     public String getName() {
         return brand.getName();  // todo
-    }
-
-    public enum Size {
-        VERY_SMALL,
-        SMALL,
-        MEDIUM,
-        BIG,
-        HUGE
     }
 }

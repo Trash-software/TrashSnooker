@@ -1,105 +1,43 @@
 package trashsoftware.trashSnooker.fxml.widgets;
 
-import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 import trashsoftware.trashSnooker.core.CueSelection;
-import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.HumanCareer;
+import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueTip;
 import trashsoftware.trashSnooker.core.cue.CueTipBrand;
 import trashsoftware.trashSnooker.fxml.App;
-import trashsoftware.trashSnooker.fxml.alert.AlertShower;
+import trashsoftware.trashSnooker.fxml.BuyTipView;
 import trashsoftware.trashSnooker.util.EventLogger;
-import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class FixedCueList extends HBox {
-
-    @FXML
-    ScrollBar scrollBar;
-    @FXML
-    GridPane container;
-
-    private int viewSlots = 5;
+public class FixedCueList extends FixedModelList {
 
     private final List<Bundle> views = new ArrayList<>();
 
-    private final ResourceBundle strings;
-
     public FixedCueList() {
-        this(App.getStrings());
+        super();
     }
 
-    public FixedCueList(ResourceBundle strings) {
-        this.strings = strings;
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-                "fixedCueList.fxml"), strings);
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
-
-        scrollBar.valueProperty().addListener(((observable, oldValue, newValue) -> update()));
-        setOnScroll(event -> {
-            if (event.getDeltaY() == 0) return;
-            int gaps = getNCues() - viewSlots;
-            if (gaps <= 0) return;
-            double tick = 1.0 / gaps;
-            double delta = event.getDeltaY() < 0 ? tick : -tick;
-            double value = scrollBar.getValue() + delta;
-            value = Math.max(0.0, Math.min(1.0, value));
-            scrollBar.setValue(value);
-        });
-        setScrollBar();
-    }
-
-    private void setScrollBar() {
-        double visAmount = (double) viewSlots / getNCues();
-        if (visAmount >= 1) {
-            scrollBar.setVisible(false);
-            scrollBar.setManaged(false);
-            return;
-        } else {
-            scrollBar.setVisible(true);
-            scrollBar.setManaged(true);
-        }
-
-        scrollBar.setMax(1.0);
-        scrollBar.setMin(0.0);
-        scrollBar.setVisibleAmount(visAmount);
-
-        scrollBar.setValue(0);
-    }
-
-    private void update() {
-        int gaps = views.size() - viewSlots;
-        int viewPos;
-        if (gaps <= 0) {
-            viewPos = 0;
-        } else {
-            viewPos = (int) Math.round(scrollBar.getValue() * gaps);
-        }
+    @Override
+    protected void update() {
+        int viewPos = getViewPos();
 
         container.getChildren().clear();
         for (int i = viewPos; i < Math.min(viewPos + viewSlots, views.size()); i++) {
@@ -118,12 +56,9 @@ public class FixedCueList extends HBox {
         views.clear();
     }
 
-    public int getNCues() {
-        return views.size();
-    }
-
-    public void setViewSlots(int viewSlots) {
-        this.viewSlots = viewSlots;
+    @Override
+    public int getNModels() {
+        return views == null ? 0 : views.size();
     }
 
     public void addCue(CueSelection.CueAndBrand cueAndBrand,
@@ -184,41 +119,54 @@ public class FixedCueList extends HBox {
         canvas.setHeight(20.0);
 
         GraphicsContext gc = getGraphicsContext(percent, canvas);
-        gc.fillText(ss, canvas.getWidth() / 2, canvas.getHeight() / 2 + App.FONT.getSize() * 0.25);
+        gc.fillText(ss, canvas.getWidth() / 2, canvas.getHeight() / 2 + App.FONT.getSize() * 0.33);
 
         Button changeButton = new Button(strings.getString("changeTip"));
         changeButton.setOnAction(e -> {
-            // todo: 临时
-            CueTipBrand tipBrand = CueTipBrand.getById("stdTip");
-            AlertShower.askConfirmation(
-                    getScene().getWindow(),
-                    String.format(strings.getString("changeTipPrice"),
-                            Util.moneyToReadable(humanCareer.getMoney() - tipBrand.price())),
-                    String.format(strings.getString("changeTipConfirm"),
-                            Util.moneyToReadable(tipBrand.price())),
-                    () -> {
-                        CueTip newTip = CueTip.createByCue(cueAndBrand.brand,
-                                tipBrand,
-                                CareerManager.getInstance().getCareerSave());
-                        humanCareer.buyCueTip(newTip.getInstanceId(), tipBrand.price());
-                        humanCareer.getInventory().installTip(
-                                newTip,
-                                cueAndBrand.getCueInstance());
-                        Platform.runLater(changeTipCallback);
-                    },
-                    null
-            );
+            showTipChangeView(cueAndBrand.getCueInstance(), humanCareer, changeTipCallback);
         });
+
+        String tipName = currentTip.getBrand().shownName();
 
         HBox box = new HBox();
         box.setSpacing(5.0);
         box.setAlignment(Pos.CENTER_LEFT);
+        box.getChildren().add(new Label(String.format(strings.getString("tipNameFmt"), tipName)));
         box.getChildren().add(new Label(strings.getString("tipHp")));
         box.getChildren().add(canvas);
         box.getChildren().add(changeButton);
 
         bundle.extra.getChildren().add(box);
 //        cueViewer.addExtra(box);
+    }
+    
+    private void showTipChangeView(Cue cue, 
+                                   HumanCareer humanCareer,
+                                   Runnable changeTipCallback) {
+        Stage stage = new Stage();
+        stage.initOwner(getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setResizable(false);
+        
+        stage.setTitle(strings.getString("changeTip"));
+
+        FXMLLoader fxmlLoader = new FXMLLoader(BuyTipView.class.getResource(
+                "buyTipView.fxml"), strings);
+        try {
+            Parent root = fxmlLoader.load();
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+
+            BuyTipView controller = fxmlLoader.getController();
+            controller.setup(stage, humanCareer, cue, changeTipCallback);
+
+            stage.show();
+            
+            controller.fillTipBrands();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 
     @NotNull
@@ -233,7 +181,7 @@ public class FixedCueList extends HBox {
         gc.setFill(fill);
         gc.setStroke(Color.BLACK);
 
-        gc.fillRect(0, 0, Math.max(0,canvas.getWidth() * percent), canvas.getHeight());
+        gc.fillRect(0, 0, Math.max(0, canvas.getWidth() * percent), canvas.getHeight());
 
         gc.setLineWidth(2.0);
         gc.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());

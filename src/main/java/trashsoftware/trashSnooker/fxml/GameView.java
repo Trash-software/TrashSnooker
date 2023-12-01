@@ -239,6 +239,7 @@ public class GameView implements Initializable {
     private boolean aiAutoPlay = true;
     private boolean printPlayStage = false;
     private boolean tableGraphicsChanged = true;
+    private boolean showTipBrokenMsg;
     private Ball debuggingBall;
     private long replayStopTime;
     private long replayGap = DEFAULT_REPLAY_GAP;
@@ -1053,6 +1054,14 @@ public class GameView implements Initializable {
         cueAngleCanvas.setDisable(false);
 
         cursorDrawer.synchronizeGame();  // 刷新白球预测的线程池
+        
+        if (showTipBrokenMsg) {
+            Platform.runLater(() -> AlertShower.showInfo(stage,
+                    strings.getString("tipBrokenTip"),
+                    strings.getString("tipBroken")));
+            
+            showTipBrokenMsg = false;
+        }
 
         Ball.enableGearOffset();
         aiWhitePath = null;
@@ -2208,6 +2217,8 @@ public class GameView implements Initializable {
     }
     
     private void reduceCueHp(Cue cue, Player player, CuePlayParams params) {
+        if (!cue.isPermanent()) return;
+        
         double reduce = params.cueParams.actualPower() / 30.0;
         double cuePointReduce = Math.hypot(params.cueParams.actualFrontBackSpin(),
                 params.cueParams.actualSideSpin() * 0.5);
@@ -2223,12 +2234,9 @@ public class GameView implements Initializable {
             reduce *= 100;
         }
         
-        boolean show = cue.getCueTip().reduceHp(reduce);
-        
-        if (show) {
-            AlertShower.showInfo(stage,
-                    strings.getString("tipBrokenTip"),
-                    strings.getString("tipBroken"));
+        showTipBrokenMsg = cue.getCueTip().reduceHp(reduce);
+        if (showTipBrokenMsg) {
+            System.out.println("Tip broken!");
         }
     }
 

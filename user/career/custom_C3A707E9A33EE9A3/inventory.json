@@ -13,19 +13,19 @@
       "brand": "stdSnookerCue"
     },
     {
-      "tipId": "stdTip-232",
+      "tipId": "breakTip:custom_C3A707E9A33EE9A3-253",
       "instanceId": "stdBreakCue:custom_C3A707E9A33EE9A3-233",
       "customName": "开球杆:三号实验员",
       "brand": "stdBreakCue"
     },
     {
-      "tipId": "stdTip-246",
+      "tipId": "primeTipMedium:custom_C3A707E9A33EE9A3-254",
       "instanceId": "profSnookerCueThicker:custom_C3A707E9A33EE9A3-243",
       "customName": "进阶小头杆-10.2:三号实验员",
       "brand": "profSnookerCueThicker"
     },
     {
-      "tipId": "stdTip-245",
+      "tipId": "primeTipSoft:custom_C3A707E9A33EE9A3-255",
       "instanceId": "profSnookerCue:custom_C3A707E9A33EE9A3-241",
       "customName": "进阶斯诺克杆:三号实验员",
       "brand": "profSnookerCue"
@@ -38,11 +38,25 @@
     }
   ],
   "tips": {
+    "breakTip:custom_C3A707E9A33EE9A3-253": {
+      "totalHp": 5000,
+      "instanceId": "breakTip:custom_C3A707E9A33EE9A3-253",
+      "diameter": 15,
+      "hp": 4947.6504523942185,
+      "brand": "breakTip"
+    },
+    "primeTipMedium:custom_C3A707E9A33EE9A3-254": {
+      "totalHp": 462.3999999999999,
+      "instanceId": "primeTipMedium:custom_C3A707E9A33EE9A3-254",
+      "diameter": 10.2,
+      "hp": 347.83362862823,
+      "brand": "primeTipMedium"
+    },
     "stdTip-248": {
       "totalHp": 810,
       "instanceId": "stdTip-248",
       "diameter": 13.5,
-      "hp": 810,
+      "hp": 804.5258740697523,
       "brand": "stdTip"
     },
     "stdTip-236": {
@@ -94,6 +108,13 @@
       "hp": 462.3999999999999,
       "brand": "stdTip"
     },
+    "primeTipSoft:custom_C3A707E9A33EE9A3-255": {
+      "totalHp": 320.88888888888886,
+      "instanceId": "primeTipSoft:custom_C3A707E9A33EE9A3-255",
+      "diameter": 9.5,
+      "hp": 269.27702604180615,
+      "brand": "primeTipSoft"
+    },
     "stdTip-234": {
       "totalHp": 900,
       "instanceId": "stdTip-234",
@@ -105,7 +126,7 @@
       "totalHp": 401.1111111111111,
       "instanceId": "stdTip-245",
       "diameter": 9.5,
-      "hp": 105,
+      "hp": -3.8352534668615395,
       "brand": "stdTip"
     },
     "stdTip-240": {

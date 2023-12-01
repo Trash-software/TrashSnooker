@@ -12,7 +12,6 @@ import java.util.Date;
 public class CueTip {
     
     public static double TIP_HEALTH_LOW = 0.1;
-    private static int instanceCounter;
     
     private final String instanceId;
     private final CueTipBrand brand;
@@ -31,9 +30,13 @@ public class CueTip {
     }
     
     public static CueTip createByCue(CueBrand cueBrand, CueTipBrand tipBrand, CareerSave owner) {
-//        String instanceId = tipBrand.id() + "-" + owner.getPlayerId() + "-" + 
-//                Util.TIME_FORMAT_SEC.format(new Date());
-        String instanceId = tipBrand.id() + "-" + PermanentCounters.getInstance().nextCueInstance();
+        String instanceId;
+        if (owner != null) {
+            instanceId = tipBrand.id() + ":" +
+                    owner.getPlayerId() + "-" + PermanentCounters.getInstance().nextCueInstance();
+        } else {
+            instanceId = tipBrand.id() + "-" + PermanentCounters.getInstance().nextCueInstance();
+        }
         
         double totalHp = calculateTotalHp(tipBrand.totalHp(), 
                 tipBrand.maxRadius() * 2,
@@ -47,10 +50,18 @@ public class CueTip {
                 false);
     }
     
+    public static CueTip createPreviewInstance(CueTipBrand tipBrand) {
+        return new CueTip(tipBrand.id() + "-preview",
+                tipBrand,
+                tipBrand.maxRadius(),
+                tipBrand.totalHp(),
+                tipBrand.totalHp(),
+                false);
+    }
+    
     public static CueTip createDefault(double diameter, double thickness) {
         var brand = CueTipBrand.createDefault(diameter, thickness);
         return new CueTip(
-//                "universalTip-" + instanceCounter++,
                 "universalTip-" + PermanentCounters.getInstance().nextTipInstance(),
                 brand,
                 brand.maxRadius(), 
@@ -136,9 +147,9 @@ public class CueTip {
     
     public double getPower() {
         if (isBroken()) {
-            return 0.75;
+            return 0.75 * brand.origPower();
         } else {
-            return 1.0;  // todo: 皮头也有传力
+            return brand.origPower();  // todo: 皮头也有传力
         }
     }
     
@@ -150,7 +161,7 @@ public class CueTip {
             return brand.origGrip() * Algebra.shiftRangeSafe(
                     0.0,
                     TIP_HEALTH_LOW, 
-                    0.8,
+                    0.75,
                     1.0,
                     hpPercentage
             );

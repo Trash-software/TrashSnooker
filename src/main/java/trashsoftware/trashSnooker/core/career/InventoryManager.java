@@ -63,8 +63,14 @@ public class InventoryManager {
         cues.addAll(human.getPrivateCues());
         
         for (CueBrand cueBrand : cues) {
+            CueTipBrand tipBrand;
+            if (cueBrand.isBreakCue()) {
+                tipBrand = CueTipBrand.getById("breakTip");
+            } else {
+                tipBrand = CueTipBrand.getById("stdTip");
+            }
             CueTip tip = CueTip.createByCue(cueBrand, 
-                    CueTipBrand.getById("stdTip"),
+                    tipBrand,
                     save);
             cueTips.put(tip.getInstanceId(), tip);
             Cue cue = Cue.createForCareer(cueBrand, tip, save);

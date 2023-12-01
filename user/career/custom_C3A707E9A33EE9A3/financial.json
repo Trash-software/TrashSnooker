@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 9250,
+    "money": 8520,
     "invoices": [
       {
         "perkUsed": 6,
@@ -502,13 +502,216 @@
           }
         ],
         "timestamp": "2023-11-30 05:21:23"
+      },
+      {
+        "match": "pool-half-regular",
+        "moneyBefore": 9250,
+        "moneyAfter": 9250,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2023-12-01 02:09:45"
+      },
+      {
+        "match": "pool-half-regular",
+        "moneyBefore": 9250,
+        "moneyAfter": 9250,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2023-12-01 02:12:05"
+      },
+      {
+        "match": "pool-full-regular",
+        "moneyBefore": 9250,
+        "moneyAfter": 9250,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2023-12-01 02:13:10"
+      },
+      {
+        "perkUsed": 2,
+        "moneyBefore": 9250,
+        "moneyCost": 950,
+        "moneyAfter": 8300,
+        "ability": {"powerControl": [
+          77.26762600063923,
+          81.4340324655769
+        ]},
+        "type": "upgrade",
+        "timestamp": "2023-12-01 04:15:17"
+      },
+      {
+        "match": "pool-half-regular",
+        "moneyBefore": 8300,
+        "moneyAfter": 8300,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2023-12-01 04:43:17"
+      },
+      {
+        "match": "pool-half-regular",
+        "moneyBefore": 8300,
+        "moneyAfter": 8300,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2023-12-01 04:46:28"
+      },
+      {
+        "match": "pool-half-regular",
+        "moneyBefore": 8300,
+        "moneyAfter": 8300,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2023-12-01 04:54:45"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipSoft:custom_C3A707E9A33EE9A3-255",
+        "moneyBefore": 8300,
+        "moneyCost": 80,
+        "moneyAfter": 8220,
+        "type": "purchase",
+        "timestamp": "2023-12-01 04:57:22"
+      },
+      {
+        "year": 2023,
+        "match": "world_champ",
+        "moneyBefore": 8220,
+        "moneyAfter": 24220,
+        "type": "championshipEarn",
+        "items": {"TOP_32": {
+          "actual": 16000,
+          "raw": 20000
+        }},
+        "timestamp": "2023-12-01 05:13:54"
+      },
+      {
+        "perkUsed": 13,
+        "moneyBefore": 24220,
+        "moneyCost": 6700,
+        "moneyAfter": 17520,
+        "ability": {
+          "rest": [
+            62.53548709781043,
+            70.83192614806406
+          ],
+          "powerControl": [
+            81.4340324655769,
+            85.19421430018316
+          ],
+          "cuePrecision": [
+            81.89212430328378,
+            83.79751808811959
+          ],
+          "normalPower": [
+            78.24719539037405,
+            80.33483562085534
+          ],
+          "spin": [
+            84.95896358610548,
+            88.37546463646021
+          ],
+          "antiHand": [
+            53.5,
+            62.9845625
+          ],
+          "spinControl": [
+            79.26642037720558,
+            83.23794439042803
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2023-12-01 05:14:39"
+      },
+      {
+        "moneyBefore": 17520,
+        "moneyAfter": 13720,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 3800
+        }],
+        "timestamp": "2023-12-01 05:24:26"
+      },
+      {
+        "moneyBefore": 13720,
+        "moneyAfter": 7520,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 6200
+        }],
+        "timestamp": "2023-12-01 05:24:35"
+      },
+      {
+        "match": "custom_C3A707E9A33EE9A3+2023+eight_master_tour_xian",
+        "moneyBefore": 7520,
+        "moneyAfter": 6520,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-01 05:24:35"
+      },
+      {
+        "year": 2023,
+        "match": "eight_master_tour_xian",
+        "moneyBefore": 6520,
+        "moneyAfter": 10520,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 4000,
+          "raw": 5000
+        }},
+        "timestamp": "2023-12-01 16:06:25"
+      },
+      {
+        "moneyBefore": 10520,
+        "moneyAfter": 9520,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1000
+        }],
+        "timestamp": "2023-12-01 17:02:59"
+      },
+      {
+        "match": "custom_C3A707E9A33EE9A3+2023+american_nine_sydney_burwood_cup",
+        "moneyBefore": 9520,
+        "moneyAfter": 8520,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-01 17:02:59"
       }
     ],
-    "level": 5,
-    "expInThisLevel": 74,
-    "availPerks": 2,
-    "totalPerks": 16,
-    "totalExp": 525
+    "level": 10,
+    "expInThisLevel": 151,
+    "availPerks": 0,
+    "totalPerks": 29,
+    "totalExp": 1400
   },
-  "checksum": "FA5C7FB8D79CC3E44A06C543542D4792"
+  "checksum": "0E97B9BCA5C85C441382F7C9C5FFF3C7"
 }

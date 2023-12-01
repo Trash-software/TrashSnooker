@@ -10,6 +10,7 @@
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="trashsoftware.trashSnooker.fxml.CareerView"
+          fx:id="basePane"
           prefHeight="720.0" prefWidth="1080.0" vgap="10.0" hgap="20.0">
 
     <padding>
@@ -19,6 +20,7 @@
     <columnConstraints>
         <ColumnConstraints percentWidth="50.0"/>
         <ColumnConstraints percentWidth="50.0"/>
+        <ColumnConstraints percentWidth="0.0"/>
     </columnConstraints>
 
     <HBox spacing="10.0">
