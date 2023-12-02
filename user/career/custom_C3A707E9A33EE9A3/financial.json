@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": -31167,
+    "money": -26367,
     "invoices": [
       {
         "perkUsed": 6,
@@ -992,13 +992,38 @@
           }
         ],
         "timestamp": "2023-12-02 18:56:13"
+      },
+      {
+        "inGameDate": "2023/12/10",
+        "year": 2023,
+        "match": "eight_weilin_open",
+        "moneyBefore": -31167,
+        "moneyAfter": -26367,
+        "type": "championshipEarn",
+        "items": {"TOP_4": {
+          "actual": 4800,
+          "raw": 6000
+        }},
+        "timestamp": "2023-12-03 08:43:10"
+      },
+      {
+        "inGameDate": "2023/12/10",
+        "match": "pool-half-regular",
+        "moneyBefore": -26367,
+        "moneyAfter": -26367,
+        "type": "challengeEarn",
+        "items": {"clearance": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-12-03 08:55:06"
       }
     ],
     "level": 12,
-    "expInThisLevel": 55,
+    "expInThisLevel": 95,
     "availPerks": 9,
     "totalPerks": 38,
-    "totalExp": 1720
+    "totalExp": 1760
   },
-  "checksum": "80BDBCE94FA969BD525A402D83F790EE"
+  "checksum": "AE6C90B1FE65A3466437B9786419E9C4"
 }

@@ -162,7 +162,7 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
-        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
         invoice.put("inGameDate", inGameDate);
         invoice.put("type", "challengeEarn");
         invoice.put("match", challengeSet.getId());
@@ -219,7 +219,7 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
-        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
         invoice.put("inGameDate", inGameDate);
         invoice.put("type", "purchase");
         invoice.put("itemType", "tip");
@@ -237,7 +237,7 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
-        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
         invoice.put("inGameDate", inGameDate);
         invoice.put("type", "purchase");
         invoice.put("itemType", "cue");
@@ -256,7 +256,7 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
-        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
         invoice.put("inGameDate", inGameDate);
         invoice.put("type", "championshipEarn");
         invoice.put("match", score.data.getId());
@@ -394,7 +394,7 @@ public class HumanCareer extends Career {
         JSONObject record = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         record.put("timestamp", timestamp);
-        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
         record.put("inGameDate", inGameDate);
         record.put("type", "upgrade");
         record.put("perkUsed", upgradeRec.perkUsed());
@@ -459,7 +459,7 @@ public class HumanCareer extends Career {
             JSONObject invoice = new JSONObject();
             String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
             invoice.put("timestamp", timestamp);
-            String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+            String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
             invoice.put("inGameDate", inGameDate);
             invoice.put("type", "fees");
             invoice.put("moneyBefore", moneyBefore);
@@ -493,7 +493,7 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
-        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
         invoice.put("inGameDate", inGameDate);
         invoice.put("type", "participation");
         invoice.put("match", championship.uniqueId());

@@ -4,7 +4,9 @@ import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.json.JSONArray;
@@ -15,6 +17,7 @@ import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueTip;
+import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -28,6 +31,12 @@ public class CashFlowView extends ChildInitializable {
     
     @FXML
     GridPane listPane;
+    @FXML
+    Label moneyLabel;
+    @FXML
+    ImageView moneyImage;
+    @FXML
+    Label cumIncomeLabel, cumExpenditureLabel;
 
     private Stage stage;
     private final List<InvoiceObject> invoiceObjects = new ArrayList<>();
@@ -52,6 +61,9 @@ public class CashFlowView extends ChildInitializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.strings = resourceBundle;
+
+        ResourcesLoader rl = ResourcesLoader.getInstance();
+        rl.setIconImage(rl.getMoneyImg(), moneyImage);
     }
     
     private void createObjects(HumanCareer humanCareer) {
@@ -86,6 +98,9 @@ public class CashFlowView extends ChildInitializable {
 
     private void fill() {
         listPane.getChildren().clear();
+        
+        int cumIncome = 0;
+        int cumExpenditure = 0;
         
         int row = 0;
         Calendar last = null;
@@ -197,10 +212,26 @@ public class CashFlowView extends ChildInitializable {
                 listPane.add(new Separator(Orientation.HORIZONTAL), 0, row++, 3, 1);
 
                 last = io.inGameDate;
+                
+                if (mc > 0) cumIncome += mc;
+                else if (mc < 0) cumExpenditure += mc;
             } catch (RuntimeException e) {
                 EventLogger.warning(e);
             }
         }
+
+        int money = humanCareer.getMoney();
+        moneyLabel.setText(Util.moneyToReadable(money));
+        if (money < 0) {
+            moneyLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
+        } else {
+            moneyLabel.setTextFill(Color.BLACK);
+        }
+        
+        cumIncomeLabel.setTextFill(CareerView.EARN_MONEY_COLOR);
+        cumIncomeLabel.setText(Util.moneyToReadable(cumIncome, true));
+        cumExpenditureLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
+        cumExpenditureLabel.setText(Util.moneyToReadable(cumExpenditure, true));
     }
     
     class InvoiceObject {

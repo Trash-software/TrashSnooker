@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.CashFlowView"
@@ -17,6 +18,11 @@
 
     <HBox spacing="10.0">
         <Button text="%backIcon" onAction="#backAction"/>
+
+        <HBox alignment="CENTER_LEFT" spacing="5.0">
+            <ImageView fx:id="moneyImage"/>
+            <Label fx:id="moneyLabel"/>
+        </HBox>
     </HBox>
     
     <ScrollPane VBox.vgrow="ALWAYS">
@@ -24,7 +30,15 @@
             <columnConstraints>
                 <ColumnConstraints/>
                 <ColumnConstraints/>
+                <ColumnConstraints/>
             </columnConstraints>
         </GridPane>
     </ScrollPane>
+    
+    <GridPane vgap="5.0" hgap="10.0">
+        <Label text="%cumIncome"/>
+        <Label fx:id="cumIncomeLabel" GridPane.columnIndex="1"/>
+        <Label text="%cumExpenditure" GridPane.rowIndex="1"/>
+        <Label fx:id="cumExpenditureLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    </GridPane>
 </VBox>

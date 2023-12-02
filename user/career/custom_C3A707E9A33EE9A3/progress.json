@@ -1,5 +1,5 @@
 {
-  "stageIndex": 1,
+  "stageIndex": -1,
   "seedRanks": {
     "random_player_47": 86,
     "random_player_46": 71,
@@ -100,7 +100,9 @@
   },
   "championshipId": "eight_weilin_open",
   "matchTree": {"root": {
+    "p1wins": 7,
     "p1": {
+      "p1wins": 5,
       "p1": {
         "p1wins": 2,
         "p1": {
@@ -471,10 +473,13 @@
         "matchId": "custom_C3A707E9A33EE9A3+2023+eight_weilin_open-QUARTER_FINAL-89",
         "p2wins": 3
       },
+      "winner": "John Wizard",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_C3A707E9A33EE9A3+2023+eight_weilin_open-SEMI_FINAL-92"
+      "matchId": "custom_C3A707E9A33EE9A3+2023+eight_weilin_open-SEMI_FINAL-92",
+      "p2wins": 0
     },
     "p2": {
+      "p1wins": 5,
       "p1": {
         "p1wins": 3,
         "p1": {
@@ -845,12 +850,16 @@
         "matchId": "custom_C3A707E9A33EE9A3+2023+eight_weilin_open-QUARTER_FINAL-91",
         "p2wins": 2
       },
+      "winner": "custom_player_160",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_C3A707E9A33EE9A3+2023+eight_weilin_open-SEMI_FINAL-93"
+      "matchId": "custom_C3A707E9A33EE9A3+2023+eight_weilin_open-SEMI_FINAL-93",
+      "p2wins": 1
     },
+    "winner": "John Wizard",
     "stage": "FINAL",
-    "matchId": "custom_C3A707E9A33EE9A3+2023+eight_weilin_open-FINAL-94"
+    "matchId": "custom_C3A707E9A33EE9A3+2023+eight_weilin_open-FINAL-94",
+    "p2wins": 1
   }},
-  "finished": false,
+  "finished": true,
   "timestamp": "2023/12/10"
 }
