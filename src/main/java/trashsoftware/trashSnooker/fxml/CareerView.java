@@ -41,6 +41,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CareerView extends ChildInitializable {
+    public static final Color EARN_MONEY_COLOR = Color.GREEN;
+    public static final Color SPEND_MONEY_COLOR = Color.RED.darker();
     @FXML
     GridPane basePane;
     @FXML
@@ -398,7 +400,7 @@ public class CareerView extends ChildInitializable {
         }
         moneyLabel.setText(moneyStr);
         if (afterCost < 0) {
-            moneyLabel.setTextFill(Color.RED.darker());
+            moneyLabel.setTextFill(SPEND_MONEY_COLOR);
         } else {
             moneyLabel.setTextFill(Color.BLACK);
         }
@@ -425,10 +427,7 @@ public class CareerView extends ChildInitializable {
 
         refreshRanks();
         refreshPersonalAwardsTable();
-        currentDateLabel.setText(String.format("%d/%d/%d",
-                careerManager.getTimestamp().get(Calendar.YEAR),
-                careerManager.getTimestamp().get(Calendar.MONTH) + 1,
-                careerManager.getTimestamp().get(Calendar.DAY_OF_MONTH)));
+        currentDateLabel.setText(CareerManager.calendarToString(careerManager.getTimestamp()));
 
         Championship inProgress = careerManager.getChampionshipInProgress();
 //        System.out.println(inProgress);
@@ -719,6 +718,30 @@ public class CareerView extends ChildInitializable {
 
         abilityShower.notifyPerksReset();
     }
+    
+    @FXML
+    public void invoiceAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("cashFlowView.fxml"),
+                    strings
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Scene scene = App.createScene(root);
+
+            CashFlowView view = loader.getController();
+            view.setParent(selfStage.getScene());
+
+            selfStage.setScene(scene);
+            selfStage.sizeToScene();
+
+            view.setup(selfStage, careerManager.getHumanPlayerCareer());
+        } catch (IOException e) {
+            EventLogger.error(e);
+        }
+    }
 
     @FXML
     public void achievementsAction() {
@@ -812,8 +835,11 @@ public class CareerView extends ChildInitializable {
         humanCareer.updateMoneyChampStart(nextData);  // 扣生活费
 
         Championship championship = careerManager.startNextChampionship();
-        humanCareer.payParticipateFees(championship);  // 扣报名费、住宿费、机票
-
+        boolean humanJoin = !joinChampBox.isDisabled() && joinChampBox.isSelected();
+        if (humanJoin) {
+            humanCareer.payParticipateFees(championship);  // 扣报名费、住宿费、机票
+        }
+        
         championship.startChampionship(joinChampBox.isSelected(), !joinChampBox.isDisabled());
 
         refreshGui();

@@ -149,6 +149,10 @@ public class InventoryManager {
         return cues.get(instanceId);
     }
     
+    public CueTip getTipByInstanceId(String tipInsId) {
+        return cueTips.get(tipInsId);
+    }
+    
     public List<Cue> getAllCues() {
         return new ArrayList<>(cues.values());
     }

@@ -23,10 +23,11 @@
 
     <HBox spacing="10.0">
         <Button onAction="#backAction" text="%backIcon"/>
-    </HBox>
-    <HBox alignment="CENTER_LEFT" spacing="5.0">
-        <ImageView fx:id="moneyImage"/>
-        <Label fx:id="moneyLabel"/>
+
+        <HBox alignment="CENTER_LEFT" spacing="5.0">
+            <ImageView fx:id="moneyImage"/>
+            <Label fx:id="moneyLabel"/>
+        </HBox>
     </HBox>
     <TabPane fx:id="baseTabPane" tabClosingPolicy="UNAVAILABLE">
         <Tab text="%inventory">

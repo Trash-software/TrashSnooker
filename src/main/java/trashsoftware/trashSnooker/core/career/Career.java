@@ -14,8 +14,11 @@ public class Career {
     public static final double[] PERK_RANDOM_RANGE = {0.5, 2.0};
     
     public static final double AI_HELPER_PRECISION_FACTOR = 0.95;
-    
-    protected final CareerSave careerSave;
+
+    /**
+     * 注意一点：这里的careerManager有可能处于未完全初始化的状态
+     */
+    protected final CareerManager careerManager;
 
     private final List<ChampionshipScore> championshipScores = new ArrayList<>();  // 不一定按时间顺序
     private final boolean isHumanPlayer;
@@ -23,28 +26,28 @@ public class Career {
     private PlayerPerson playerPerson;
     private double handFeel = 0.9;
 
-    Career(PlayerPerson person, boolean isHumanPlayer, CareerSave save) {
+    Career(PlayerPerson person, boolean isHumanPlayer, CareerManager careerManager) {
         this.playerPerson = person;
         this.isHumanPlayer = isHumanPlayer;
-        this.careerSave = save;
+        this.careerManager = careerManager;
 
         for (GameRule gameRule : GameRule.values()) efforts.put(gameRule, 1.0);
     }
 
     public static Career createByPerson(PlayerPerson playerPerson, 
-                                        boolean isHumanPlayer, 
-                                        CareerSave save) {
+                                        boolean isHumanPlayer,
+                                        CareerManager careerManager) {
         Career career;
         if (isHumanPlayer) {
-            career = new HumanCareer(playerPerson, save);
+            career = new HumanCareer(playerPerson, careerManager);
         } else {
-            career = new Career(playerPerson, false, save);
+            career = new Career(playerPerson, false, careerManager);
         }
-        career.initNew(save);
+        career.initNew();
         return career;
     }
 
-    public static Career fromJson(JSONObject jsonObject, CareerSave careerSave) {
+    public static Career fromJson(JSONObject jsonObject, CareerManager careerManager) {
         String playerId = jsonObject.getString("playerId");
         PlayerPerson playerPerson = DataLoader.getInstance().getPlayerPerson(playerId);
         if (playerPerson == null) {
@@ -55,11 +58,11 @@ public class Career {
         boolean human = jsonObject.getBoolean("human");
         Career career;
         if (human) {
-            career = new HumanCareer(playerPerson, careerSave);
+            career = new HumanCareer(playerPerson, careerManager);
         } else {
-            career = new Career(playerPerson, false, careerSave);
+            career = new Career(playerPerson, false, careerManager);
         }
-        career.fillFromJson(jsonObject, careerSave);
+        career.fillFromJson(jsonObject, careerManager);
         career.validateLevel();
 
         if (jsonObject.has("handFeel")) {
@@ -115,16 +118,20 @@ public class Career {
     /*
     这几个都是给override用的
      */
-    protected void initNew(CareerSave save) {
+    protected void initNew() {
     }
 
-    protected void fillFromJson(JSONObject jsonObject, CareerSave save) {
+    protected void fillFromJson(JSONObject jsonObject, CareerManager careerManager) {
     }
 
     protected void putExtraInJson(JSONObject out) {
     }
 
     protected void validateLevel() {
+    }
+
+    public CareerManager getCareerManager() {
+        return careerManager;
     }
 
     public double getEffort(GameRule rule) {

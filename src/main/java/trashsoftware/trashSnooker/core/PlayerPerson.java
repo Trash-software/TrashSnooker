@@ -52,6 +52,7 @@ public class PlayerPerson {
     private final CuePlayType cuePlayType;
     private final AiPlayStyle aiPlayStyle;
     private final Sex sex;
+    private final boolean underage;
     private final Map<GameRule, Double> participates;
     private boolean isCustom;
 
@@ -75,6 +76,7 @@ public class PlayerPerson {
                         @Nullable AiPlayStyle aiPlayStyle,
                         HandBody handBody,
                         Sex sex,
+                        boolean underage,
                         Map<GameRule, Double> participates) {
 
         boolean needTranslate = !Objects.equals(
@@ -108,6 +110,7 @@ public class PlayerPerson {
         this.aiPlayStyle = aiPlayStyle == null ? deriveAiStyle() : aiPlayStyle;
         this.handBody = handBody;
         this.sex = sex;
+        this.underage = underage;
 
         this.participates = participates;
     }
@@ -128,6 +131,7 @@ public class PlayerPerson {
                         boolean isCustom,
                         HandBody handBody,
                         Sex sex,
+                        boolean underage,
                         Map<GameRule, Double> participateGames) {
         this(
                 playerId,
@@ -150,6 +154,7 @@ public class PlayerPerson {
                 aiPlayStyle,
                 handBody == null ? HandBody.DEFAULT : handBody,
                 sex,
+                underage,
                 participateGames
         );
 
@@ -237,6 +242,7 @@ public class PlayerPerson {
                 aiPlayStyle,
                 handBody,
                 sex,
+                personObj.has("underage") && personObj.getBoolean("underage"),
                 parseParticipates(personObj.has("games") ? personObj.get("games") : null)
         );
         
@@ -306,14 +312,22 @@ public class PlayerPerson {
                                             String name,
                                             double abilityLow,
                                             double abilityHigh) {
+        Sex sex = Math.random() < 0.1 ? Sex.F : Sex.M;
         return randomPlayer(id,
                 name,
                 Math.random() < 0.25,
                 abilityLow,
                 abilityHigh,
                 false,
-                180.0,
-                Math.random() < 0.1 ? Sex.F : Sex.M);
+                randomHeight(sex),
+                sex);
+    }
+    
+    private static double randomHeight(Sex sex) {
+        double mean = sex.stdHeight;
+        double sd = (sex.maxHeight - sex.minHeight) / 8;
+        double g = new Random().nextGaussian();
+        return mean + g * sd;
     }
 
     public static PlayerPerson randomPlayer(String id,
@@ -359,6 +373,7 @@ public class PlayerPerson {
                         Math.max(10, Math.min(90, generateDouble(random, abilityLow * restMul, abilityHigh * restMul)))
                 ),
                 sex,
+                false,
                 participatesAll()
         );
 
@@ -422,7 +437,7 @@ public class PlayerPerson {
     private AiPlayStyle deriveAiStyle() {
         double position = powerControl;
         return new AiPlayStyle(
-                Math.min(99.5, precisionPercentage * 1.1),
+                Math.min(99.5, precisionPercentage * 1.05),
                 Math.min(99.5, precisionPercentage),
                 Math.min(99.5, position),
                 Math.min(99.5, position),
@@ -533,6 +548,10 @@ public class PlayerPerson {
 
     public void setCustom(boolean custom) {
         isCustom = custom;
+    }
+
+    public boolean isUnderage() {
+        return underage;
     }
 
     public AiPlayStyle getAiPlayStyle() {
@@ -919,6 +938,7 @@ public class PlayerPerson {
                     true,
                     handBody,
                     getSex(),
+                    originalPerson.underage,
                     originalPerson.participates
             );
             person.privateCues.addAll(originalPerson.privateCues);

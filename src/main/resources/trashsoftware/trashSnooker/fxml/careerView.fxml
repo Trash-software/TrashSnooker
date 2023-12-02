@@ -39,7 +39,7 @@
             <Button text="%levelUp" fx:id="levelUpBtn" onAction="#levelUpAction" visible="false"/>
         </HBox>
         <HBox spacing="20.0">
-            <HBox alignment="CENTER_LEFT" spacing="5.0">
+            <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#invoiceAction">
                 <ImageView fx:id="moneyImage"/>
                 <Label fx:id="moneyLabel"/>
             </HBox>

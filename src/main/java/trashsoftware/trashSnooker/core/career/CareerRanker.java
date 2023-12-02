@@ -6,7 +6,6 @@ import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.util.Calendar;
-import java.util.Map;
 
 public abstract class CareerRanker {
     
@@ -196,6 +195,7 @@ public abstract class CareerRanker {
         private int rankScore;
         private int totalWins;
         private int totalMatches;
+        private int tier;
         private double winRate;
         
         protected ByTier(GameRule type, Career career) {
@@ -234,16 +234,22 @@ public abstract class CareerRanker {
 //            
 //            return fullTier(rankFrom0 + Math.max(0, CareerManager.TIER_LIMIT - totalTierPlayers));
         }
-        
-        private static int fullTier(int rankFrom0, double winRate) {
-            if (rankFrom0 < 3) return 11;
-            else if (rankFrom0 < 8) return 10;
-            else if (rankFrom0 < 18) return 9;
-            else if (rankFrom0 < 36) return 8;
-            else return 7;
+
+        public void setTier(int tier) {
+            this.tier = tier;
         }
 
-        public static int compare(ByTier t, ByTier o) {
+        public int getTier() {
+            return tier;
+        }
+        
+        public static int compareWithTierSet(ByTier t, ByTier o) {
+            int tierCmp = -Integer.compare(t.tier, o.tier);
+            if (tierCmp != 0) return tierCmp;
+            else return roughCompare(t, o);
+        }
+
+        public static int roughCompare(ByTier t, ByTier o) {
             int tTier = t.rankScore;
             int oTier = o.rankScore;
             
@@ -314,7 +320,7 @@ public abstract class CareerRanker {
         }
         
         public boolean canHaveTier() {
-            return totalMatches >= 10 && winRate >= 0.4;
+            return totalMatches >= 6 && winRate >= 0.33;
         }
 
         public double getWinRate() {

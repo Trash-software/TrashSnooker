@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 2020,
+    "money": -31167,
     "invoices": [
       {
         "perkUsed": 6,
@@ -723,13 +723,282 @@
         "moneyAfter": 2020,
         "type": "purchase",
         "timestamp": "2023-12-02 05:19:05"
+      },
+      {
+        "year": 2023,
+        "match": "american_nine_sydney_burwood_cup",
+        "moneyBefore": 2020,
+        "moneyAfter": 4420,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 2400,
+          "raw": 3000
+        }},
+        "timestamp": "2023-12-02 05:49:56"
+      },
+      {
+        "moneyBefore": 4420,
+        "moneyAfter": 3220,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1200
+        }],
+        "timestamp": "2023-12-02 05:54:00"
+      },
+      {
+        "moneyBefore": 3220,
+        "moneyAfter": -580,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 3800
+        }],
+        "timestamp": "2023-12-02 05:54:36"
+      },
+      {
+        "match": "custom_C3A707E9A33EE9A3+2023+american_nine_give_power_open",
+        "moneyBefore": -580,
+        "moneyAfter": -4380,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1800
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 1800
+          }
+        ],
+        "timestamp": "2023-12-02 05:54:36"
+      },
+      {
+        "moneyBefore": -4380,
+        "moneyAfter": -9959,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 5500
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 79
+          }
+        ],
+        "timestamp": "2023-12-02 05:57:27"
+      },
+      {
+        "moneyBefore": -9959,
+        "moneyAfter": -19150,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 8900
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 291
+          }
+        ],
+        "timestamp": "2023-12-02 05:58:03"
+      },
+      {
+        "match": "custom_C3A707E9A33EE9A3+2023+challenger_open",
+        "moneyBefore": -19150,
+        "moneyAfter": -24150,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 1000
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          }
+        ],
+        "timestamp": "2023-12-02 05:58:03"
+      },
+      {
+        "year": 2023,
+        "match": "challenger_open",
+        "moneyBefore": -24150,
+        "moneyAfter": -24150,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_1": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-12-02 16:26:58"
+      },
+      {
+        "moneyBefore": -24150,
+        "moneyAfter": -26525,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 2200
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 175
+          }
+        ],
+        "timestamp": "2023-12-02 16:27:53"
+      },
+      {
+        "match": "custom_C3A707E9A33EE9A3+2023+eight_master_tour_hebei",
+        "moneyBefore": -26525,
+        "moneyAfter": -27525,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-02 16:27:53"
+      },
+      {
+        "year": 2023,
+        "match": "eight_master_tour_hebei",
+        "moneyBefore": -27525,
+        "moneyAfter": -23525,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 4000,
+          "raw": 5000
+        }},
+        "timestamp": "2023-12-02 16:43:10"
+      },
+      {
+        "moneyBefore": -23525,
+        "moneyAfter": -24710,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 1100
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 85
+          }
+        ],
+        "timestamp": "2023-12-02 18:35:46"
+      },
+      {
+        "moneyBefore": -24710,
+        "moneyAfter": -27413,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 2500
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 203
+          }
+        ],
+        "timestamp": "2023-12-02 18:35:49"
+      },
+      {
+        "match": "custom_C3A707E9A33EE9A3+2023+united_kingdom_champ",
+        "moneyBefore": -27413,
+        "moneyAfter": -31613,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          }
+        ],
+        "timestamp": "2023-12-02 18:35:49"
+      },
+      {
+        "year": 2023,
+        "match": "united_kingdom_champ",
+        "moneyBefore": -31613,
+        "moneyAfter": -27613,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_1": {
+          "actual": 4000,
+          "raw": 5000
+        }},
+        "timestamp": "2023-12-02 18:48:40"
+      },
+      {
+        "moneyBefore": -27613,
+        "moneyAfter": -30667,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 2800
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 254
+          }
+        ],
+        "timestamp": "2023-12-02 18:56:13"
+      },
+      {
+        "match": "custom_C3A707E9A33EE9A3+2023+eight_weilin_open",
+        "moneyBefore": -30667,
+        "moneyAfter": -31167,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 100
+          },
+          {
+            "item": "travel",
+            "moneyCost": 200
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 200
+          }
+        ],
+        "timestamp": "2023-12-02 18:56:13"
       }
     ],
-    "level": 10,
-    "expInThisLevel": 151,
-    "availPerks": 0,
-    "totalPerks": 29,
-    "totalExp": 1400
+    "level": 12,
+    "expInThisLevel": 55,
+    "availPerks": 9,
+    "totalPerks": 38,
+    "totalExp": 1720
   },
-  "checksum": "708951525634BBAF9E5B704A68BE20E0"
+  "checksum": "80BDBCE94FA969BD525A402D83F790EE"
 }

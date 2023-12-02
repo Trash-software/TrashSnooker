@@ -11,7 +11,7 @@ public class MetaMatchInfo {
     public final int year;
     public final ChampionshipData data;
     public final ChampionshipStage stage;
-    public final int idNum;
+    public final int idNum;  // -1 if invalid
     
     MetaMatchInfo(String hostPlayerId, int year, ChampionshipData data,
                   ChampionshipStage stage,
@@ -38,7 +38,11 @@ public class MetaMatchInfo {
             String dataId = champInfo[2];
             ChampionshipData data = ChampDataManager.getInstance().findDataById(dataId);
             
-            if (parts.length == 2) {
+            if (parts.length == 1) {
+                return new MetaMatchInfo(champInfo[0], year, data,
+                        defaultStage,
+                        -1);
+            } else if (parts.length == 2) {
                 return new MetaMatchInfo(champInfo[0], year, data,
                         defaultStage,
                         Integer.parseInt(parts[1]));

@@ -156,6 +156,7 @@
       "anglePrecision": 0.8,
       "longPrecision": 1.25,
       "name": "Kid",
+      "underage": true,
       "maxPower": 56,
       "controllablePower": 44,
       "solving": 60,
@@ -1314,7 +1315,7 @@
     },
     "Zheng Yubo": {
       "spin": 93.0,
-      "precision": 92.0,
+      "precision": 93.0,
       "anglePrecision": 1.2,
       "longPrecision": 1,
       "name": "郑YB",
@@ -1332,7 +1333,7 @@
         0,
         2,
         0,
-        2
+        3
       ],
       "powerControl": 96,
       "privateCues": [
@@ -1348,7 +1349,7 @@
         "rest": 85
       },
       "ai": {
-        "precision": 92,
+        "precision": 96,
         "stable": 90,
         "position": 95,
         "defense": 90,
@@ -1365,7 +1366,7 @@
     },
     "Tang Chunxiao": {
       "spin": 88.0,
-      "precision": 86.0,
+      "precision": 85.0,
       "anglePrecision": 1,
       "longPrecision": 1,
       "name": "唐CX",
@@ -1382,9 +1383,9 @@
       "cueSwingMag": 8,
       "cuePointMuSigma": [
         0,
-        2,
+        3,
         0,
-        4
+        6
       ],
       "powerControl": 94,
       "privateCues": [
@@ -1400,7 +1401,7 @@
         "rest": 85
       },
       "ai": {
-        "precision": 88,
+        "precision": 89,
         "stable": 80,
         "position": 90,
         "defense": 85,
@@ -1415,9 +1416,62 @@
         "lisEight": 1.0
       }
     },
+    "Wang Sinuo": {
+      "spin": 85.0,
+      "precision": 80.0,
+      "anglePrecision": 1,
+      "longPrecision": 1,
+      "name": "王SN",
+      "sex": "F",
+      "maxPower": 81,
+      "controllablePower": 72,
+      "solving": 65,
+      "pullDt": [
+        140.0,
+        240.0
+      ],
+      "aimingOffset": 0,
+      "cuePlayType": "p1.0,h600,e500;s",
+      "cueSwingMag": 8,
+      "cuePointMuSigma": [
+        0,
+        4,
+        0,
+        7
+      ],
+      "powerControl": 90,
+      "privateCues": [
+        "trashCue1",
+        "profPoolCue"
+      ],
+      "category": "Professional",
+      "psy": 50,
+      "height": 174,
+      "width": 0.85,
+      "hand": {
+        "left": 55,
+        "right": 100,
+        "rest": 80
+      },
+      "ai": {
+        "precision": 84,
+        "stable": 70,
+        "position": 85,
+        "defense": 77,
+        "attackPri": 70,
+        "likeShow": 40,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      },
+      "games": {
+        "chineseEight": 1.0,
+        "lisEight": 1.0
+      }
+    },
     "Chu Bingjie": {
       "spin": 92.0,
-      "precision": 85.0,
+      "precision": 87.0,
       "anglePrecision": 1.0,
       "longPrecision": 1.0,
       "name": "楚BJ",
@@ -1433,9 +1487,9 @@
       "cueSwingMag": 10,
       "cuePointMuSigma": [
         0,
-        2,
+        3,
         0,
-        2.5
+        4
       ],
       "powerControl": 97,
       "privateCues": [
@@ -1451,7 +1505,7 @@
         "rest": 85
       },
       "ai": {
-        "precision": 90,
+        "precision": 91,
         "stable": 88,
         "position": 96,
         "defense": 92,

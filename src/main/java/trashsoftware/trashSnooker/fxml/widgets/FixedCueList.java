@@ -25,11 +25,13 @@ import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class FixedCueList extends FixedModelList {
 
     private final List<Bundle> views = new ArrayList<>();
+    private Comparator<CueSelection.CueAndBrand> displayComparator;
 
     public FixedCueList() {
         super();
@@ -66,7 +68,8 @@ public class FixedCueList extends FixedModelList {
                        HumanCareer humanCareer,
                        Runnable changeTipCallback,
                        String buttonText,
-                       Runnable buttonCallback) {
+                       Runnable buttonCallback,
+                       boolean refresh) {
         try {
             CueViewer viewer = new CueViewer(strings, cueAndBrand, prefWidth);
             Bundle bundle = new Bundle(viewer);
@@ -88,15 +91,29 @@ public class FixedCueList extends FixedModelList {
         } catch (Exception e) {
             EventLogger.error(e);
         }
-        setScrollBar();
-        update();
+        if (refresh) {
+            display();
+        }
     }
 
     public void addCue(CueSelection.CueAndBrand cueAndBrand,
                        double prefWidth,
                        String buttonText,
-                       Runnable buttonCallback) {
-        addCue(cueAndBrand, prefWidth, null, null, buttonText, buttonCallback);
+                       Runnable buttonCallback,
+                       boolean refresh) {
+        addCue(cueAndBrand, prefWidth, null, null, buttonText, buttonCallback, refresh);
+    }
+
+    public void setDisplayComparator(Comparator<CueSelection.CueAndBrand> displayComparator) {
+        this.displayComparator = displayComparator;
+    }
+    
+    public void display() {
+        if (displayComparator != null) {
+            views.sort((a, b) -> displayComparator.compare(a.cueViewer.getCueAndBrand(), b.cueViewer.getCueAndBrand()));
+        }
+        setScrollBar();
+        update();
     }
 
     private void updateCueModels() {

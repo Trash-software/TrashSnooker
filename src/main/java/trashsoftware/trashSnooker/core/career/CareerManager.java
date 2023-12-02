@@ -8,6 +8,7 @@ import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.*;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LetBall;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -21,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CareerManager {
 
@@ -192,10 +194,10 @@ public class CareerManager {
         for (PlayerPerson person : DataLoader.getInstance().getAllPlayers()) {
             Career career;
             if (person.getPlayerId().equals(playerPlayer.getPlayerId())) {
-                career = Career.createByPerson(person, true, save);
+                career = Career.createByPerson(person, true, cm);
                 cm.humanPlayerCareer = (HumanCareer) career;
             } else {
-                career = Career.createByPerson(person, false, save);
+                career = Career.createByPerson(person, false, cm);
             }
             cm.playerCareers.add(career);
         }
@@ -299,7 +301,7 @@ public class CareerManager {
 
         for (int i = 0; i < rootArr.length(); i++) {
             JSONObject personObj = rootArr.getJSONObject(i);
-            Career career = Career.fromJson(personObj, careerSave);
+            Career career = Career.fromJson(personObj, careerManager);
             if (career == null) continue;
             careerManager.playerCareers.add(career);
             newPlayers.remove(career.getPlayerPerson().getPlayerId());  // 有的
@@ -318,7 +320,7 @@ public class CareerManager {
 
         // 把可能存在的新增球员加进生涯管理器中
         for (PlayerPerson newPlayer : newPlayers.values()) {
-            Career career = Career.createByPerson(newPlayer, false, careerSave);
+            Career career = Career.createByPerson(newPlayer, false, careerManager);
             // 新球员初始就0分吧
             careerManager.playerCareers.add(career);
         }
@@ -451,20 +453,22 @@ public class CareerManager {
                 }
                 crs.add(RankedCareer.createByAwards(i, byAwd.career, rankedAwd, byAwd.getTotalAwards()));
             } else if (careerRanker instanceof CareerRanker.ByTier byTier) {
-                if (!byTier.canHaveTier() || i >= TIER_LIMIT) {
-                    if (!tierAssigned) {
-                        // 第一个没tier的人
-                        int haveTiers = crs.size();
-                        for (int j = 0; j < haveTiers; j++) {
-                            RankedCareer rc = crs.get(j);
-                            rc.setTier(CareerRanker.ByTier.computeTier(j, rc.getWinRateNum(), haveTiers));
-                        }
-                        tierAssigned = true;
-                    }
-                }
-
-                crs.add(RankedCareer.createByTier(i, byTier.career, 
-                        byTier.getTotalWins(), byTier.getTotalMatches(), byTier.getWinRate()));
+//                if (!byTier.canHaveTier() || i >= TIER_LIMIT) {
+//                    if (!tierAssigned) {
+//                        // 第一个没tier的人
+//                        int haveTiers = crs.size();
+//                        for (int j = 0; j < haveTiers; j++) {
+//                            RankedCareer rc = crs.get(j);
+//                            int winRateTier = CareerRanker.ByTier.computeTier(j, rc.getWinRateNum(), haveTiers);
+//                            rc.setTier(winRateTier);
+//                        }
+//                        tierAssigned = true;
+//                    }
+//                }
+                RankedCareer rc = RankedCareer.createByTier(i, byTier.career,
+                        byTier.getTotalWins(), byTier.getTotalMatches(), byTier.getWinRate());
+                rc.setTier(byTier.getTier());
+                crs.add(rc);
             }
         }
         return crs;
@@ -814,6 +818,14 @@ public class CareerManager {
         return timestamp;
     }
 
+    public Calendar getBeginTimestamp() {
+        return beginTimestamp;
+    }
+
+    public ChampDataManager getChampDataManager() {
+        return champDataManager;
+    }
+
     /**
      * @return 只返回下一个比赛是什么，不推进时间
      */
@@ -878,7 +890,16 @@ public class CareerManager {
             }
         }
 
-        chineseEightRanking.sort(CareerRanker.ByTier::compare);
+        chineseEightRanking.sort(CareerRanker.ByTier::roughCompare);
+        int haveTiers = (int) chineseEightRanking.stream().filter(CareerRanker.ByTier::canHaveTier).count();
+        
+        for (int rank = 0; rank < chineseEightRanking.size(); rank++) {
+            CareerRanker.ByTier byTier = chineseEightRanking.get(rank);
+            int winRateTier = CareerRanker.ByTier.computeTier(rank, byTier.getWinRate(), haveTiers);
+            winRateTier -= LetBall.magicScore(byTier.career.getPlayerPerson());
+            byTier.setTier(winRateTier);
+        }
+        chineseEightRanking.sort(CareerRanker.ByTier::compareWithTierSet);
         
         // 美式九球两年
         americanNineRanking.clear();

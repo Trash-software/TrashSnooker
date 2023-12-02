@@ -77,6 +77,10 @@ public class RankedCareer {
     public void setTier(int tier) {
         this.tier = tier;
     }
+    
+    public int getTierNum() {
+        return tier;
+    }
 
     @FXML
     public String getTier() {

@@ -42,17 +42,20 @@ public class StorePage extends AbsInvPage {
 
     private void fill() {
         cueList.clear();
+        cueList.setDisplayComparator(Comparator.comparingInt(a -> a.brand.getPrice()));
+        
         List<Cue> haves = inventoryManager.getAllCues();
         List<CueSelection.CueAndBrand> notHaves = getNotHavingCues(haves);
-
-        notHaves.sort(Comparator.comparingInt(x -> x.brand.getPrice()));
+        
         for (CueSelection.CueAndBrand cab : notHaves) {
             cab.initInstanceForViewing();
             cueList.addCue(cab,
                     900,
                     strings.getString("buy") + " - " + cab.brand.getPrice(),
-                    () -> askBuyCue(cab));
+                    () -> askBuyCue(cab),
+                    false);
         }
+        cueList.display();
     }
 
     @NotNull

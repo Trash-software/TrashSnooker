@@ -32,6 +32,13 @@ public class InventoryPage extends AbsInvPage {
 
     private void fill() {
         cueList.clear();
+        cueList.setDisplayComparator((a, b) -> {
+            // 1. 最近买的在前
+            int purchaseTimeCmp = -a.getNonNullInstance().getCreationTime().compareTo(b.getCueInstance().getCreationTime());
+            if (purchaseTimeCmp != 0) return purchaseTimeCmp;
+            // 2. 贵的在前
+            return -Integer.compare(a.brand.getPrice(), b.brand.getPrice());
+        });
         for (Cue cue : inventoryManager.getAllCues()) {
             CueSelection.CueAndBrand cab = new CueSelection.CueAndBrand(cue);
             cueList.addCue(cab, 
@@ -39,8 +46,10 @@ public class InventoryPage extends AbsInvPage {
                     humanCareer, 
                     () -> inventoryView.updateView(),
                     null, 
-                    null);
+                    null,
+                    false);
         }
+        cueList.display();
     }
     
     @FXML

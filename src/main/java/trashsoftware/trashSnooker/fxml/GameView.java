@@ -79,6 +79,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 public class GameView implements Initializable {
     public static final Color GLOBAL_BACKGROUND = Color.WHITESMOKE;  // 似乎正好是javafx默认背景色
@@ -1831,15 +1832,16 @@ public class GameView implements Initializable {
         InGamePlayer cuingIgp = game.getGame().getCuingIgp();
         if (cuingIgp != null) {
             CueSelection selection = cuingIgp.getCueSelection();
-            Runnable callback = () -> {
+            Consumer<CueSelection.CueAndBrand> callback = sel -> {
                 cursorDirectionUnitX = 0;
                 cursorDirectionUnitY = 0;
                 recalculateUiRestrictions();
                 tableGraphicsChanged = true;
+                sel.getCueInstance().setLastSelectTime();
                 if (careerMatch != null) {
                     CareerManager cm = CareerManager.getInstance();
                     cm.getCache().put("playerCue",
-                            selection.getSelected().getCueInstance().getInstanceId());
+                            sel.getCueInstance().getInstanceId());
                     cm.saveCache();
                 }
                 draw();

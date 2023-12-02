@@ -128,6 +128,10 @@ public class CueViewer extends Pane {
         return cue;
     }
 
+    public CueSelection.CueAndBrand getCueAndBrand() {
+        return cueAndBrand;
+    }
+
     public CueModel getCueModel() {
         return cueModel;
     }

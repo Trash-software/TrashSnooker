@@ -609,6 +609,66 @@
         "right": 100
       }
     },
+    "custom_582A14CC794812FB": {
+      "solving": 76.14081991666038,
+      "aimingOffset": 0,
+      "powerControl": 79.46175611274825,
+      "precision": 79.13925971683004,
+      "sex": "M",
+      "longPrecision": 1,
+      "ai": {
+        "doubleAbility": 71.22533374514704,
+        "defense": 79.46175611274825,
+        "stable": 79.13925971683004,
+        "precision": 83.09622270267154,
+        "position": 79.46175611274825,
+        "attackPri": 79.13925971683004,
+        "snookerBreak": "RIGHT",
+        "likePowerRange": [
+          15,
+          60
+        ],
+        "withdrawAfter": 2,
+        "likeShow": 50,
+        "cebSideBreak": true
+      },
+      "cuePointMuSigma": [
+        0,
+        7.744514200081109,
+        0,
+        8.952539961169762
+      ],
+      "cuePlayType": "p1.000000,h800,e500;s",
+      "spin": 70.75713029728149,
+      "pullDt": [
+        50,
+        200,
+        50,
+        150
+      ],
+      "psy": 90,
+      "name": "四号实验员",
+      "width": 1,
+      "games": {
+        "lisEight": 1,
+        "americanNine": 1,
+        "miniSnooker": 1,
+        "snooker": 1,
+        "chineseEight": 1
+      },
+      "controllablePower": 77.8510522759941,
+      "anglePrecision": 1,
+      "cueSwingMag": 0,
+      "maxPower": 86.50116919554901,
+      "category": "Amateur",
+      "privateCues": [],
+      "height": 180,
+      "hand": {
+        "rest": 71.6095111897759,
+        "left": 50,
+        "right": 100
+      }
+    },
     "custom_player_167": {
       "solving": 72.9663268261897,
       "aimingOffset": 0,
@@ -1641,5 +1701,5 @@
       }
     }
   },
-  "checksum": "2F60BDB585C916C926683219A35E9D82"
+  "checksum": "2C4A969CFB0314E99691D9A49D1CA871"
 }

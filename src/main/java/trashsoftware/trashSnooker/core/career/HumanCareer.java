@@ -34,22 +34,25 @@ public class HumanCareer extends Career {
 
     private FinancialManager financial;
     private AwardDistributionHint unShownAwd;
+    private final CareerManager careerManager;
 
-    HumanCareer(PlayerPerson playerPerson, CareerSave save) {
-        super(playerPerson, true, save);
+    HumanCareer(PlayerPerson playerPerson, CareerManager careerManager) {
+        super(playerPerson, true, careerManager);
+        
+        this.careerManager = careerManager;
     }
 
     @Override
-    protected void initNew(CareerSave save) {
-        financial = new FinancialManager(save);
+    protected void initNew() {
+        financial = new FinancialManager(careerManager.getCareerSave());
         financial.availPerks = CareerManager.INIT_PERKS;
         financial.totalPerks = financial.availPerks;
         financial.money = 30000;
     }
 
     @Override
-    protected void fillFromJson(JSONObject jsonObject, CareerSave save) {
-        financial = new FinancialManager(save);
+    protected void fillFromJson(JSONObject jsonObject, CareerManager careerManager) {
+        financial = new FinancialManager(careerManager.getCareerSave());
         if (!financial.loadFromJson()) {
             try {
                 financial.availPerks = jsonObject.getInt("availPerks");
@@ -159,6 +162,8 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
+        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        invoice.put("inGameDate", inGameDate);
         invoice.put("type", "challengeEarn");
         invoice.put("match", challengeSet.getId());
         JSONObject items = new JSONObject();
@@ -214,6 +219,8 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
+        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        invoice.put("inGameDate", inGameDate);
         invoice.put("type", "purchase");
         invoice.put("itemType", "tip");
         invoice.put("moneyBefore", moneyBefore);
@@ -230,6 +237,8 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
+        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        invoice.put("inGameDate", inGameDate);
         invoice.put("type", "purchase");
         invoice.put("itemType", "cue");
         invoice.put("moneyBefore", moneyBefore);
@@ -247,6 +256,8 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
+        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        invoice.put("inGameDate", inGameDate);
         invoice.put("type", "championshipEarn");
         invoice.put("match", score.data.getId());
         invoice.put("year", score.getYear());
@@ -383,6 +394,8 @@ public class HumanCareer extends Career {
         JSONObject record = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         record.put("timestamp", timestamp);
+        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        record.put("inGameDate", inGameDate);
         record.put("type", "upgrade");
         record.put("perkUsed", upgradeRec.perkUsed());
         record.put("moneyBefore", moneyBefore);
@@ -446,6 +459,8 @@ public class HumanCareer extends Career {
             JSONObject invoice = new JSONObject();
             String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
             invoice.put("timestamp", timestamp);
+            String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+            invoice.put("inGameDate", inGameDate);
             invoice.put("type", "fees");
             invoice.put("moneyBefore", moneyBefore);
             JSONArray subArray = new JSONArray();
@@ -478,6 +493,8 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
+        String inGameDate = Util.TIME_FORMAT_SEC.format(CareerManager.calendarToString(getCareerManager().getTimestamp()));
+        invoice.put("inGameDate", inGameDate);
         invoice.put("type", "participation");
         invoice.put("match", championship.uniqueId());
         invoice.put("moneyBefore", moneyBefore);
@@ -588,6 +605,10 @@ public class HumanCareer extends Career {
         AwardDistributionHint awd = unShownAwd;
         unShownAwd = null;
         return awd;
+    }
+    
+    public List<JSONObject> getInvoices() {
+        return new ArrayList<>(financial.invoices);
     }
 
     public static class FinancialManager {
