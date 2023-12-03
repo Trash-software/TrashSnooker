@@ -836,11 +836,15 @@ public class CareerView extends ChildInitializable {
 
         Championship championship = careerManager.startNextChampionship();
         boolean humanJoin = !joinChampBox.isDisabled() && joinChampBox.isSelected();
+        
+        championship.startChampionship(joinChampBox.isSelected(), !joinChampBox.isDisabled());
+
         if (humanJoin) {
+            humanCareer.receiveInviteAward(championship);  // 接收邀请金
             humanCareer.payParticipateFees(championship);  // 扣报名费、住宿费、机票
         }
         
-        championship.startChampionship(joinChampBox.isSelected(), !joinChampBox.isDisabled());
+        CareerManager.getInstance().saveToDisk();
 
         refreshGui();
 
@@ -859,6 +863,8 @@ public class CareerView extends ChildInitializable {
             while (!championship.isFinished()) {
                 championship.startNextRound();
             }
+            
+            CareerManager.getInstance().saveToDisk();
 
             refreshGui();
         }

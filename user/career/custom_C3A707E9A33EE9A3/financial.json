@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": -26367,
+    "money": -34749,
     "invoices": [
       {
         "perkUsed": 6,
@@ -1017,6 +1017,62 @@
           "raw": 0
         }},
         "timestamp": "2023-12-03 08:55:06"
+      },
+      {
+        "inGameDate": "2023/12/10",
+        "moneyBefore": -26367,
+        "moneyAfter": -33322,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 6400
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 555
+          }
+        ],
+        "timestamp": "2023-12-03 13:02:00"
+      },
+      {
+        "inGameDate": "2024/1/15",
+        "moneyBefore": -33322,
+        "moneyAfter": -33749,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 350
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 77
+          }
+        ],
+        "timestamp": "2023-12-03 13:22:26"
+      },
+      {
+        "inGameDate": "2024/1/22",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_red_pocket_open",
+        "moneyBefore": -33749,
+        "moneyAfter": -34749,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-03 13:22:26"
       }
     ],
     "level": 12,
@@ -1025,5 +1081,5 @@
     "totalPerks": 38,
     "totalExp": 1760
   },
-  "checksum": "AE6C90B1FE65A3466437B9786419E9C4"
+  "checksum": "85837A326AF77BB75328FD6AC216E0C9"
 }

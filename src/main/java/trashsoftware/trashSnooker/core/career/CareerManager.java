@@ -41,6 +41,7 @@ public class CareerManager {
     public static final String CACHE = "cache.json";
     //    public static final int PROFESSIONAL_LIMIT = 32;
     public static final int INIT_PERKS = 6;
+    public static final int INIT_MONEY = 30000;
     public static final int BASE_LEVEL_PERK = 2;
     private static final int[] EXP_REQUIRED_LEVEL_UP = readExpLevelUp();
     private static CareerManager instance;
@@ -535,11 +536,7 @@ public class CareerManager {
         List<TourCareer> qualifiedCareers = participants(data, true, true);
         for (TourCareer tourCareer : qualifiedCareers) {
             if (tourCareer.career.isHumanPlayer()) {
-                if (tourCareer.seedNum <= data.getSeedPlaces()) {
-                    return data.getSeedRegistryFee();
-                } else {
-                    return data.getRegistryFee();
-                }
+                return data.getRegistryFee();
             }
         }
         return data.getRegistryFee();

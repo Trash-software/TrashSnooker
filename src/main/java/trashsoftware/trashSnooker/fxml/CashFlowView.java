@@ -1,7 +1,10 @@
 package trashsoftware.trashSnooker.fxml;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
@@ -10,9 +13,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.career.*;
+import trashsoftware.trashSnooker.core.career.CareerManager;
+import trashsoftware.trashSnooker.core.career.ChampionshipData;
+import trashsoftware.trashSnooker.core.career.ChampionshipScore;
+import trashsoftware.trashSnooker.core.career.HumanCareer;
+import trashsoftware.trashSnooker.core.career.challenge.ChallengeManager;
+import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.cue.Cue;
@@ -22,13 +29,10 @@ import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class CashFlowView extends ChildInitializable {
-    
+
     @FXML
     GridPane listPane;
     @FXML
@@ -37,6 +41,8 @@ public class CashFlowView extends ChildInitializable {
     ImageView moneyImage;
     @FXML
     Label cumIncomeLabel, cumExpenditureLabel;
+    @FXML
+    PieChart incomeChart, expenditureChart;
 
     private Stage stage;
     private final List<InvoiceObject> invoiceObjects = new ArrayList<>();
@@ -47,7 +53,7 @@ public class CashFlowView extends ChildInitializable {
     public void setup(Stage stage, HumanCareer humanCareer) {
         this.stage = stage;
         this.humanCareer = humanCareer;
-        
+
         createObjects(humanCareer);
 
         fill();
@@ -65,7 +71,7 @@ public class CashFlowView extends ChildInitializable {
         ResourcesLoader rl = ResourcesLoader.getInstance();
         rl.setIconImage(rl.getMoneyImg(), moneyImage);
     }
-    
+
     private void createObjects(HumanCareer humanCareer) {
         List<JSONObject> invoices = humanCareer.getInvoices();
         Calendar current = CareerManager.getInstance().getBeginTimestamp();
@@ -86,9 +92,9 @@ public class CashFlowView extends ChildInitializable {
                     current.set(Calendar.MONTH, data.getMonth() - 1);
                     current.set(Calendar.DAY_OF_MONTH, data.getDay());
                 }
-                
+
                 InvoiceObject io = new InvoiceObject(type, (Calendar) current.clone(), object);
-                
+
                 invoiceObjects.add(io);
             } catch (RuntimeException e) {
                 EventLogger.warning(e);
@@ -98,10 +104,26 @@ public class CashFlowView extends ChildInitializable {
 
     private void fill() {
         listPane.getChildren().clear();
-        
+
+        Map<String, Integer> incomes = new HashMap<>(
+                Map.of("initMoney", CareerManager.INIT_MONEY,
+                        "championshipEarn", 0,
+                        "challengeEarn", 0,
+                        "invitation", 0)
+        );
+        Map<String, Integer> expenditures = new HashMap<>(
+                Map.of("registry", 0,
+                        "travel", 0,
+                        "hotel", 0,
+                        "purchase", 0,
+                        "upgrade", 0,
+                        "lifeFee", 0,
+                        "oweInterest", 0)
+        );
+
         int cumIncome = 0;
         int cumExpenditure = 0;
-        
+
         int row = 0;
         Calendar last = null;
         for (InvoiceObject io : invoiceObjects) {
@@ -119,9 +141,18 @@ public class CashFlowView extends ChildInitializable {
                     listPane.add(monthLabel, 0, row++);
                 }
 
+                Integer typeExpend = expenditures.get(io.type);
+                if (typeExpend != null) {
+                    expenditures.put(io.type, typeExpend - io.getMoneyChange());
+                }
+                Integer typeIncome = incomes.get(io.type);
+                if (typeIncome != null) {
+                    incomes.put(io.type, typeIncome + io.getMoneyChange());
+                }
+
                 String date = CareerManager.calendarToString(io.inGameDate);
                 listPane.add(new Label(date), 0, row++);
-                listPane.add(new Label(io.getType()), 0, row);
+                listPane.add(new Label(io.getShownType()), 0, row);
                 listPane.add(new Label(io.getItemDes()), 1, row++);
 
                 listPane.add(new Separator(Orientation.HORIZONTAL), 1, row++, 2, 1);
@@ -132,7 +163,7 @@ public class CashFlowView extends ChildInitializable {
                     moneyBefore.setTextFill(CareerView.SPEND_MONEY_COLOR);
                 }
                 listPane.add(moneyBefore, 2, row++);
-                
+
                 for (String key : io.others.keySet()) {
                     Object obj = io.others.get(key);
                     if (obj instanceof JSONObject subObj) {
@@ -162,29 +193,31 @@ public class CashFlowView extends ChildInitializable {
                         for (int i = 0; i < subArr.length(); i++) {
                             JSONObject subObj = subArr.getJSONObject(i);
                             if (!subObj.has("item")) continue;
-                            
-                            String sKey = Util.toLowerCamelCase("SUB_INVOICE_" + 
-                                    Util.toAllCapsUnderscoreCase(subObj.getString("item")));
-                            String shownItem = sKey;
-                            if (strings.containsKey(sKey)) {
-                                shownItem = strings.getString(sKey);
-                            }
-                            
+
+                            String item = subObj.getString("item");
+
+                            String shownItem = formatType(item);
+
                             int subChange;
                             if (subObj.has("moneyCost")) {
                                 subChange = -subObj.getInt("moneyCost");
+                                Integer subExpend = expenditures.get(item);
+                                if (subExpend != null) {
+                                    expenditures.put(item, subExpend - subChange);
+                                }
                             } else if (subObj.has("moneyEarned")) {
                                 subChange = subObj.getInt("moneyEarned");
                             } else {
                                 continue;
                             }
-                            
+
                             String subChangeStr = Util.moneyToReadable(subChange, true);
-                            
+
                             listPane.add(new Label(shownItem), 1, row);
                             Label subChangeLabel = new Label(subChangeStr);
-                            if (subChange < 0) subChangeLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
-                            
+                            if (subChange < 0)
+                                subChangeLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
+
                             listPane.add(subChangeLabel, 2, row++);
                         }
                     }
@@ -212,7 +245,7 @@ public class CashFlowView extends ChildInitializable {
                 listPane.add(new Separator(Orientation.HORIZONTAL), 0, row++, 3, 1);
 
                 last = io.inGameDate;
-                
+
                 if (mc > 0) cumIncome += mc;
                 else if (mc < 0) cumExpenditure += mc;
             } catch (RuntimeException e) {
@@ -227,31 +260,61 @@ public class CashFlowView extends ChildInitializable {
         } else {
             moneyLabel.setTextFill(Color.BLACK);
         }
-        
+
         cumIncomeLabel.setTextFill(CareerView.EARN_MONEY_COLOR);
         cumIncomeLabel.setText(Util.moneyToReadable(cumIncome, true));
         cumExpenditureLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
         cumExpenditureLabel.setText(Util.moneyToReadable(cumExpenditure, true));
+
+        drawPieChart(incomeChart, incomes);
+        drawPieChart(expenditureChart, expenditures);
     }
-    
+
+    private String formatType(String typeKey) {
+        String sKey = Util.toLowerCamelCase("SUB_INVOICE_" +
+                Util.toAllCapsUnderscoreCase(typeKey));
+        if (strings.containsKey(sKey)) {
+            return strings.getString(sKey);
+        } else {
+            String upper = "INVOICE_" + Util.toAllCapsUnderscoreCase(typeKey);
+            String key = Util.toLowerCamelCase(upper);
+            if (strings.containsKey(key)) return strings.getString(key);
+        }
+        return sKey;
+    }
+
+    private void drawPieChart(PieChart chart, Map<String, Integer> map) {
+        ObservableList<PieChart.Data> pieChartData =
+                FXCollections.observableArrayList();
+
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            pieChartData.add(new PieChart.Data(
+                    formatType(entry.getKey()) + 
+                            " " + Util.moneyToReadable(entry.getValue()),
+                    entry.getValue()));
+        }
+
+        chart.setData(pieChartData);
+    }
+
     class InvoiceObject {
         final Calendar inGameDate;
         final String type;
         JSONObject others;
-        
+
         InvoiceObject(String type, Calendar inGameDate, JSONObject others) {
             this.inGameDate = inGameDate;
             this.type = type;
             this.others = others;
         }
-        
-        public String getType() {
+
+        public String getShownType() {
             String upper = "INVOICE_" + Util.toAllCapsUnderscoreCase(type);
             String key = Util.toLowerCamelCase(upper);
             if (strings.containsKey(key)) return strings.getString(key);
             else return type;
         }
-        
+
         public String getItemDes() {
             return switch (type) {
                 case "championshipEarn" -> {
@@ -260,8 +323,14 @@ public class CashFlowView extends ChildInitializable {
                     yield data.getName();
                 }
                 case "challengeEarn" -> {
-                    // todo
-                    yield "";
+                    ChallengeSet cs = ChallengeManager.getInstance().getById(others.getString("match"));
+                    if (cs == null) yield "";
+                    yield cs.getName();
+                }
+                case "invitation", "participation" -> {
+                    String champInsId = others.getString("match");
+                    MetaMatchInfo mmi = MatchTreeNode.analyzeMatchId(champInsId);
+                    yield mmi.data.getName();
                 }
                 case "purchase" -> {
                     String item = others.getString("item");
@@ -289,23 +358,19 @@ public class CashFlowView extends ChildInitializable {
                         }
                     }
                 }
-                case "participation" -> {
-                    String champInsId = others.getString("match");
-                    MetaMatchInfo mmi = MatchTreeNode.analyzeMatchId(champInsId);
-                    yield mmi.data.getName();
-                }
+                case "fees" -> strings.getString("fixedExpenditure");
                 default -> "";
             };
         }
-        
+
         public int getMoneyBefore() {
             return others.getInt("moneyBefore");
         }
-        
+
         public int getMoneyAfter() {
             return others.getInt("moneyAfter");
         }
-        
+
         public int getMoneyChange() {
             return getMoneyAfter() - getMoneyBefore();
         }

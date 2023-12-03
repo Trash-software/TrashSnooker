@@ -77,6 +77,22 @@ public class ChampDataManager {
         return new ChampionshipData.WithYear(championshipData.get(0), year + 1);  // 明年的第一个比赛了
     }
 
+    /**
+     * Immutable
+     */
+    public ChampionshipData.WithYear getPreviousChampionship(int year, int month, int day) {
+        // month是现实月份，从1开始
+        int dayOfYear = ChampionshipData.dayOfYear(month, day);
+        for (ChampionshipData data : championshipData.reversed()) {
+            int champDay = ChampionshipData.dayOfYear(data.month, data.day);
+            if (champDay < dayOfYear) {
+                return new ChampionshipData.WithYear(data, year);
+            }
+        }
+        return new ChampionshipData.WithYear(championshipData.get(championshipData.size() - 1), 
+                year - 1);  // 去年的最后一个比赛了
+    }
+
     public ChampionshipData findDataById(String championshipId) {
         for (ChampionshipData data : championshipData) {
             if (data.id.equals(championshipId)) return data;
