@@ -165,6 +165,10 @@ public class CueModel2D extends CueModel {
     }
 
     @Override
+    public void redraw() {
+    }
+
+    @Override
     public void setCueRotation(double rotationDeg) {
     }
 

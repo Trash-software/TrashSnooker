@@ -2,15 +2,68 @@
   "cueTips": {
     "stdTip": {
       "names": {
-        "zh": "公杆皮头",
+        "zh": "普通皮头",
         "en": "Regular Tip"
       },
       "diameter": 15.0,
       "minDiameter": 9.0,
-      "grip": 1.0,
+      "grip": 0.9,
+      "power": 1.0,
       "origThickness": 5.0,
       "totalHp": 1000,
-      "price": 50
+      "price": 30
+    },
+    "primeTipHard": {
+      "names": {
+        "zh": "高级皮头-硬",
+        "en": "Prime Tip-Hard"
+      },
+      "diameter": 15.0,
+      "minDiameter": 9.0,
+      "grip": 0.9,
+      "power": 1.05,
+      "origThickness": 5.0,
+      "totalHp": 1250,
+      "price": 80
+    },
+    "primeTipMedium": {
+      "names": {
+        "zh": "高级皮头-中等",
+        "en": "Prime Tip-Medium"
+      },
+      "diameter": 15.0,
+      "minDiameter": 9.0,
+      "grip": 1.0,
+      "power": 1.0,
+      "origThickness": 5.0,
+      "totalHp": 1000,
+      "price": 80
+    },
+    "primeTipSoft": {
+      "names": {
+        "zh": "高级皮头-软",
+        "en": "Prime Tip-Soft"
+      },
+      "diameter": 15.0,
+      "minDiameter": 9.0,
+      "grip": 1.1,
+      "power": 0.96,
+      "origThickness": 5.0,
+      "totalHp": 800,
+      "price": 80
+    },
+    "breakTip": {
+      "names": {
+        "zh": "冲杆皮头",
+        "en": "Breaking Tip"
+      },
+      "diameter": 15.0,
+      "minDiameter": 9.0,
+      "grip": 0.5,
+      "power": 1.2,
+      "origThickness": 5.0,
+      "totalHp": 5000,
+      "price": 100
     }
   }
 }

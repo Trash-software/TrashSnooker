@@ -316,6 +316,7 @@ public class DataLoader {
                             tipJson.getDouble("diameter") / 2,
                             tipJson.getDouble("minDiameter") / 2,
                             tipJson.getDouble("grip"),
+                            tipJson.getDouble("power"),
                             tipJson.getDouble("totalHp"),
                             tipJson.getInt("price")
                     );
@@ -375,7 +376,6 @@ public class DataLoader {
                                 name,
                                 segments,
                                 cueObject.getDouble("ringThickness"),
-                                cueObject.getDouble("tipThickness"),
                                 parseColor(cueObject.getString("ringColor")),
                                 parseColor(cueObject.getString("backColor")),
                                 cueObject.getDouble("power"),
@@ -541,21 +541,12 @@ public class DataLoader {
         return cues.get(cueId);
     }
     
-//    public Cue getCueInstanceById(String instanceId) {
-//        return cueInstances.get(instanceId);
-//    }
-    
-//    public CueTip getTipById(String tipInstanceId, CueBrand cueBrand) {
-//        CareerManager careerManager = CareerManager.getInstance();
-//        if (careerManager != null) {
-//            careerManager.getInventory().
-//        } else {
-//            return CueTip.createDefault(cueBrand.getCueTipWidth() , cueBrand.cueTipThickness);
-//        }
-//    }
-    
     public CueTipBrand getTipBrandById(String tipBrandId) {
         return cueTips.get(tipBrandId);
+    }
+
+    public Map<String, CueTipBrand> getCueTips() {
+        return cueTips;
     }
 
     private JSONObject makeCustomJson() {

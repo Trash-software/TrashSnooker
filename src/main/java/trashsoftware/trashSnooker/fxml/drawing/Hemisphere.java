@@ -49,7 +49,12 @@ public class Hemisphere extends MeshView {
         
         double height = getHeight();
         
-        // 第一个点就是北极点
+        // 北极点
+        for (int lon = 0; lon < sep; lon++) {
+//            points[lon * 3] = 0;
+            points[lon * 3 + 1] = (float) -height;
+//            points[lon * 3 + 2] = 0;
+        }
         
         for (int latI = 1; latI < yPts; latI++) {
             double latitude;
@@ -80,7 +85,6 @@ public class Hemisphere extends MeshView {
                 
                 int gridIndex = latI * sep + lon;
                 int ptIndex = gridIndex * 3;
-//                int tcIndex = gridIndex * 2;
                 
                 int pt = gridIndex;
                 int tc = gridIndex;
@@ -119,15 +123,6 @@ public class Hemisphere extends MeshView {
                 faces[faceIndex + 11] = upRightTc;
             }
         }
-
-//        for (int i = 0; i < 3; i++) {
-//            for (int j = i; j < points.length; j += 3) {
-//                System.out.print(points[j] + " ");
-//            }
-//            System.out.println();
-//        }
-//        System.out.println(textCoords.length);
-//        System.out.println(Arrays.toString(faces));
         
         mesh.getPoints().addAll(points);
         mesh.getTexCoords().addAll(textCoords);

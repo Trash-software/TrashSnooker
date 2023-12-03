@@ -224,14 +224,9 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
         InGamePlayer p1 = gameSettings.getPlayer1();
         InGamePlayer p2 = gameSettings.getPlayer2();
-
-        if (p1.getPlayerPerson().getSex() != p2.getPlayerPerson().getSex()) {
-            if (p1.getPlayerPerson().getSex() == PlayerPerson.Sex.F) {
-                p1Letted.put(LetBall.BACK, 1);
-            } else {
-                p2Letted.put(LetBall.BACK, 1);
-            }
-        }
+        
+        LetBall.chineseEightLetBall(p1.getPlayerPerson(), p1Letted,
+                p2.getPlayerPerson(), p2Letted);
 
         System.out.println("P1 letted balls: " + p1Letted);
         System.out.println("P2 letted balls: " + p2Letted);

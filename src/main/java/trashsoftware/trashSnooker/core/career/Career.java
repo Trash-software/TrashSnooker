@@ -14,8 +14,11 @@ public class Career {
     public static final double[] PERK_RANDOM_RANGE = {0.5, 2.0};
     
     public static final double AI_HELPER_PRECISION_FACTOR = 0.95;
-    
-    protected final CareerSave careerSave;
+
+    /**
+     * 注意一点：这里的careerManager有可能处于未完全初始化的状态
+     */
+    protected final CareerManager careerManager;
 
     private final List<ChampionshipScore> championshipScores = new ArrayList<>();  // 不一定按时间顺序
     private final boolean isHumanPlayer;
@@ -23,28 +26,28 @@ public class Career {
     private PlayerPerson playerPerson;
     private double handFeel = 0.9;
 
-    Career(PlayerPerson person, boolean isHumanPlayer, CareerSave save) {
+    Career(PlayerPerson person, boolean isHumanPlayer, CareerManager careerManager) {
         this.playerPerson = person;
         this.isHumanPlayer = isHumanPlayer;
-        this.careerSave = save;
+        this.careerManager = careerManager;
 
         for (GameRule gameRule : GameRule.values()) efforts.put(gameRule, 1.0);
     }
 
     public static Career createByPerson(PlayerPerson playerPerson, 
-                                        boolean isHumanPlayer, 
-                                        CareerSave save) {
+                                        boolean isHumanPlayer,
+                                        CareerManager careerManager) {
         Career career;
         if (isHumanPlayer) {
-            career = new HumanCareer(playerPerson, save);
+            career = new HumanCareer(playerPerson, careerManager);
         } else {
-            career = new Career(playerPerson, false, save);
+            career = new Career(playerPerson, false, careerManager);
         }
-        career.initNew(save);
+        career.initNew();
         return career;
     }
 
-    public static Career fromJson(JSONObject jsonObject, CareerSave careerSave) {
+    public static Career fromJson(JSONObject jsonObject, CareerManager careerManager) {
         String playerId = jsonObject.getString("playerId");
         PlayerPerson playerPerson = DataLoader.getInstance().getPlayerPerson(playerId);
         if (playerPerson == null) {
@@ -55,11 +58,11 @@ public class Career {
         boolean human = jsonObject.getBoolean("human");
         Career career;
         if (human) {
-            career = new HumanCareer(playerPerson, careerSave);
+            career = new HumanCareer(playerPerson, careerManager);
         } else {
-            career = new Career(playerPerson, false, careerSave);
+            career = new Career(playerPerson, false, careerManager);
         }
-        career.fillFromJson(jsonObject, careerSave);
+        career.fillFromJson(jsonObject, careerManager);
         career.validateLevel();
 
         if (jsonObject.has("handFeel")) {
@@ -115,16 +118,20 @@ public class Career {
     /*
     这几个都是给override用的
      */
-    protected void initNew(CareerSave save) {
+    protected void initNew() {
     }
 
-    protected void fillFromJson(JSONObject jsonObject, CareerSave save) {
+    protected void fillFromJson(JSONObject jsonObject, CareerManager careerManager) {
     }
 
     protected void putExtraInJson(JSONObject out) {
     }
 
     protected void validateLevel() {
+    }
+
+    public CareerManager getCareerManager() {
+        return careerManager;
     }
 
     public double getEffort(GameRule rule) {
@@ -184,158 +191,5 @@ public class Career {
                 "playerPerson=" + playerPerson.getPlayerId() +
                 ", isHumanPlayer=" + isHumanPlayer +
                 '}';
-    }
-
-    public static class CareerWithAwards {
-        public final Career career;
-        public final GameRule type;
-        private int oneSeasonAwards;
-        private int twoSeasonsAwards;
-        private int totalAwards;
-
-        public CareerWithAwards(GameRule type, Career career, Calendar timestamp) {
-            this.career = career;
-            this.type = type;
-
-            calculateAwards(timestamp);
-        }
-
-        public static int twoSeasonsCompare(CareerWithAwards t, Career.CareerWithAwards o) {
-            return compare(t, o, t.twoSeasonsAwards, o.twoSeasonsAwards);
-        }
-
-        public static int oneSeasonCompare(CareerWithAwards t, Career.CareerWithAwards o) {
-            return compare(t, o, t.oneSeasonAwards, o.oneSeasonAwards);
-        }
-
-        private static int compare(CareerWithAwards t, Career.CareerWithAwards o,
-                                   int tAwd, int oAwd) {
-            int awdCmp = -Integer.compare(tAwd, oAwd);
-            if (awdCmp != 0) return awdCmp;
-            if ("God".equals(t.career.playerPerson.category) && !"God".equals(o.career.playerPerson.category)) {
-                return 1;
-            }
-            if ("God".equals(o.career.playerPerson.category) && !"God".equals(t.career.playerPerson.category)) {
-                return -1;
-            }
-            int rndCmp = Boolean.compare(t.career.playerPerson.isRandom, o.career.playerPerson.isRandom);
-            if (rndCmp != 0) return rndCmp;
-            return -Double.compare(t.winScore(), o.winScore());
-        }
-
-        /**
-         * 可能存在球员看不起小比赛的情况
-         *
-         * @param selfRanking 本人的排名，从0计
-         * @param front       前一位的，如果本人是冠军则null
-         * @param back        后一位的，如果本人是垫底则null
-         */
-        public boolean willJoinMatch(ChampionshipData data, int selfRanking,
-                                     CareerWithAwards front, CareerWithAwards back) {
-
-            if (career.isHumanPlayer) return true;  // 我们无权替真人玩家决定
-
-            if ("God".equals(career.getPlayerPerson().category)) return false;  // Master别出来打比赛
-            if (!career.getPlayerPerson().isPlayerOf(data.type)) return false;  // 不是玩这个的
-
-            if (selfRanking < 16) {
-                int champAwd = data.getAwardByRank(ChampionshipScore.Rank.CHAMPION);
-
-                int selfAwd = getEffectiveAward(data.getSelection());
-
-                if (data.getClassLevel() <= 2) return true;  // 重要比赛，要去
-
-                double mustJoinRatio = selfAwd * 0.2;
-                if (champAwd >= mustJoinRatio) return true;  // 大比赛，要去
-
-                if (!data.isRanked() && data.getClassLevel() >= 4) return false;  // 小的非排名赛，算了吧
-
-                int frontAwd = front == null ? Integer.MAX_VALUE : front.getEffectiveAward(data.getSelection());
-                int backAwd = back == null ? 0 : back.getEffectiveAward(data.getSelection());
-
-                if (selfAwd + champAwd < frontAwd) {
-                    return false;  // 拿了冠军也追不上前一名
-                }
-                if (backAwd + champAwd < selfAwd) {
-                    return false;  // 后一名拿了冠军也追不上我
-                }
-            }
-            return true;
-        }
-
-        private void calculateAwards(Calendar timestamp) {
-            oneSeasonAwards = 0;
-            twoSeasonsAwards = 0;
-            totalAwards = 0;
-
-            Calendar twoYearBefore = Calendar.getInstance();
-            twoYearBefore.set(timestamp.get(Calendar.YEAR) - 2,
-                    timestamp.get(Calendar.MONTH),
-                    timestamp.get(Calendar.DAY_OF_MONTH) - 1);  // 上上届要算
-
-            Calendar oneYearBefore = Calendar.getInstance();
-            oneYearBefore.set(timestamp.get(Calendar.YEAR) - 1,
-                    timestamp.get(Calendar.MONTH),
-                    timestamp.get(Calendar.DAY_OF_MONTH) - 1);  // 上上届要算
-
-            for (ChampionshipScore score : career.getChampionshipScores()) {
-                int rankAwards = 0;
-                int completeAwards = 0;
-                if (score.data.type == type) {
-                    for (ChampionshipScore.Rank rank : score.ranks) {
-                        int awd = score.data.getAwardByRank(rank);
-                        // todo: 没考虑平分奖金，如单杆最高、满分杆
-                        completeAwards += awd;
-                        if (rank.ranked) rankAwards += awd;
-                    }
-                    totalAwards += completeAwards;
-                    if (score.data.ranked) {
-                        if (oneYearBefore.before(score.timestamp)) {
-                            oneSeasonAwards += rankAwards;
-                        }
-                        if (twoYearBefore.before(score.timestamp)) {
-                            twoSeasonsAwards += rankAwards;
-                        }
-                    }
-                }
-            }
-        }
-
-        public int getEffectiveAward(ChampionshipData.Selection selection) {
-            switch (selection) {
-                case REGULAR:
-                case ALL_CHAMP:
-                default:
-                    return twoSeasonsAwards;
-                case SINGLE_SEASON:
-                    return oneSeasonAwards;
-            }
-        }
-
-        public int getTwoSeasonsAwards() {
-            return twoSeasonsAwards;
-        }
-
-        public int getOneSeasonAwards() {
-            return oneSeasonAwards;
-        }
-
-        public int getTotalAwards() {
-            return totalAwards;
-        }
-
-        private double winScore() {
-            return AiVsAi.playerSimpleWinningScore(
-                    career.getPlayerPerson(),
-                    career.getPlayerPerson().getAiPlayStyle(),
-                    PlayerPerson.ReadableAbility.fromPlayerPerson(career.getPlayerPerson()),
-                    false
-            );
-        }
-
-        @Override
-        public String toString() {
-            return career.getPlayerPerson().getPlayerId() + ": " + twoSeasonsAwards;
-        }
     }
 }

@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.json.JSONException;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.cue.Cue;
@@ -64,12 +63,6 @@ public class FastGameView extends ChildInitializable {
     @FXML
     ComboBox<PersonItem> player1Box, player2Box;
 
-    //    @FXML
-//    ComboBox<CueItem> player1CueBox, player2CueBox;
-//    @FXML
-//    Button player1CueBtn, player2CueBtn;
-//    CueSelection p1CueSelection, p2CueSelection;
-
     @FXML
     ComboBox<PlayerType> player1Player, player2Player;
     @FXML
@@ -106,9 +99,6 @@ public class FastGameView extends ChildInitializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.strings = resources;
 
-//        p1CueSelection = new CueSelection(player1CueBtn);
-//        p2CueSelection = new CueSelection(player2CueBtn);
-
         initTypeSelectionToggle();
         initGameTypeBox();
         initTotalFramesBox();
@@ -117,7 +107,7 @@ public class FastGameView extends ChildInitializable {
         loadCueList();
 
         initTablePresentBox();
-        
+
         resumeButton.setDisable(!GeneralSaveManager.getInstance().hasSavedGame());
 
         gameRuleBox.getSelectionModel().select(0);
@@ -226,10 +216,6 @@ public class FastGameView extends ChildInitializable {
                 }
             }
             reloadTrainingItemByGameType(newValue);
-            PersonItem p1Item = player1Box.getValue();
-            PersonItem p2Item = player2Box.getValue();
-//            selectSuggestedCue(p1CueSelection, newValue, p1Item == null ? null : p1Item.person);
-//            selectSuggestedCue(p2CueSelection, newValue, p2Item == null ? null : p2Item.person);
         }));
 
         tableMetricsBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -295,16 +281,7 @@ public class FastGameView extends ChildInitializable {
                                       Button infoButton) {
         playerBox.getSelectionModel().selectedItemProperty()
                 .addListener(((observable, oldValue, newValue) -> {
-                    if (newValue != null) {
-                        infoButton.setDisable(false);
-//                        refreshCueList(cueSelection);
-//                        for (CueBrand pri : newValue.person.getPrivateCues()) {
-//                            cueSelection.available.add(new CueAndBrand(pri));
-//                        }
-//                        selectSuggestedCue(cueSelection, gameRuleBox.getValue(), newValue.person);
-                    } else {
-                        infoButton.setDisable(true);
-                    }
+                    infoButton.setDisable(newValue == null);
                 }));
     }
 
@@ -320,12 +297,16 @@ public class FastGameView extends ChildInitializable {
     @FXML
     void playerInfoAction(ActionEvent event) {
         ComboBox<PersonItem> personBox;
+        ComboBox<PersonItem> anotherBox;
         if (Objects.equals(event.getSource(), player1InfoButton)) {
             personBox = player1Box;
+            anotherBox = player2Box;
         } else {
             personBox = player2Box;
+            anotherBox = player1Box;
         }
         PersonItem person = personBox.getValue();
+        PersonItem another = anotherBox.getValue();
         if (person != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(
@@ -346,6 +327,10 @@ public class FastGameView extends ChildInitializable {
 
                 AbilityView controller = loader.getController();
                 controller.setup(scene, person.person);
+                
+                if (another != null) {
+                    controller.setOpponent(another.person);
+                }
             } catch (IOException e) {
                 EventLogger.error(e);
             }
@@ -396,76 +381,11 @@ public class FastGameView extends ChildInitializable {
         showGame(values, cloth);
     }
 
-//    @FXML
-//    void changeCueAction(ActionEvent event) {
-//        if (event.getSource() == player1CueBtn) {
-//            showCueSelectionView(p1CueSelection, stage);
-//        } else if (event.getSource() == player2CueBtn) {
-//            showCueSelectionView(p2CueSelection, stage);
-//        }
-//    }
+    public static void selectSuggestedCue(CueSelection cueSelection, GameRule rule, PlayerPerson person) {
+        CueBrand personSuggestedCue = PlayerPerson.getPreferredCue(rule, person);
 
-    public static void showCueSelectionView(CueSelection cueSelection, Stage parentStage) {
-        ResourceBundle strings = App.getStrings();
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    CueSelectionView.class.getResource("cueSelectionView.fxml"),
-                    strings
-            );
-            Parent root = loader.load();
-            root.setStyle(App.FONT_STYLE);
-
-            Stage stage = new Stage();
-            stage.initOwner(parentStage);
-            stage.initModality(Modality.WINDOW_MODAL);
-
-            Scene scene = App.createScene(root);
-            stage.setScene(scene);
-
-            stage.show();
-
-            CueSelectionView view = loader.getController();
-//            for (CueAndBrand cue : cueSelection.available) {
-//                view.cueList.addCue(cue,
-//                        640,
-//                        strings.getString("select"),
-//                        cue == cueSelection.selected ?
-//                                null :
-//                                () -> {
-//                                    cueSelection.select(cue);
-//                                    stage.close();
-//                                }
-//                );
-//            }
-            stage.sizeToScene();
-        } catch (IOException e) {
-            EventLogger.error(e);
-        }
+        cueSelection.selectByBrand(personSuggestedCue);
     }
-
-//    public static void selectSuggestedCue(ComboBox<CueItem> cueBox, GameRule rule, PlayerPerson human) {
-//        CueBrand humanSuggestedCue = PlayerPerson.getPreferredCue(rule, human);
-//        selectCue(cueBox, humanSuggestedCue);
-//    }
-
-    public static void selectSuggestedCue(CueSelection cueSelection, GameRule rule, PlayerPerson human) {
-        CueBrand humanSuggestedCue = PlayerPerson.getPreferredCue(rule, human);
-//        selectCue(cueBox, humanSuggestedCue);
-
-        cueSelection.selectByBrand(humanSuggestedCue);
-    }
-
-//    public static void selectCue(ComboBox<CueItem> cueBox, Cue cue) {
-//        for (CueItem cueItem : cueBox.getItems()) {
-//            if (cueItem.cue == cue) {
-//                cueBox.getSelectionModel().select(cueItem);
-//                return;
-//            }
-//        }
-//
-//        System.err.println("Cue '" + cue.getCueId() + "' not in list");
-//        cueBox.getSelectionModel().select(0);
-//    }
 
     private TrainType getTrainType() {
         if (gameTrainToggleGroup.getSelectedToggle().getUserData().equals("TRAIN")) {
@@ -492,17 +412,17 @@ public class FastGameView extends ChildInitializable {
 //        Cue p1CueInstance = p1CueSel.getNonNullInstance();
 
         if (gameValues.isTraining()) {
-            igp1 = new InGamePlayer(p1.person, 
-                    player1Player.getValue(), 
+            igp1 = new InGamePlayer(p1.person,
+                    player1Player.getValue(),
                     null,
-                    gameRule, 
-                    1, 
+                    gameRule,
+                    1,
                     1.0);
-            igp2 = new InGamePlayer(p1.person, 
-                    player1Player.getValue(), 
+            igp2 = new InGamePlayer(p1.person,
+                    player1Player.getValue(),
                     null,
-                    gameRule, 
-                    2, 
+                    gameRule,
+                    2,
                     1.0);
         } else {
             if (p2 == null) {
@@ -513,8 +433,6 @@ public class FastGameView extends ChildInitializable {
                 System.out.println("Cannot self fight");
                 return;
             }
-//            CueAndBrand p2CueSel = p2CueSelection.getSelected();
-//            Cue p2CueInstance = p2CueSel.getNonNullInstance();
 
             double p1RuleProficiency = player1Player.getValue() == PlayerType.COMPUTER ? p1.person.skillLevelOfGame(gameValues.rule) : 1.0;
             double p2RuleProficiency = player2Player.getValue() == PlayerType.COMPUTER ? p2.person.skillLevelOfGame(gameValues.rule) : 1.0;

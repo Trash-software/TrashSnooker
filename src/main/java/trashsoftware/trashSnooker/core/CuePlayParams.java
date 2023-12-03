@@ -19,6 +19,8 @@ public class CuePlayParams {
     public double xSpin;
     public double ySpin;
     public double sideSpin;
+    
+    private final boolean miscued;
 
     /**
      * @param vx          x speed, in real, mm/s
@@ -26,15 +28,17 @@ public class CuePlayParams {
      * @param xSpin       由旋转产生的横向最大速度，mm/s
      * @param ySpin       由旋转产生的纵向最大速度，mm/s
      * @param sideSpin    由侧旋产生的最大速度，mm/s
+     * @param miscued     是否滑杆
      * @param cueParams   记录
      */
     protected CuePlayParams(double vx, double vy, double xSpin, double ySpin,
-                            double sideSpin, CueParams cueParams) {
+                            double sideSpin, boolean miscued, CueParams cueParams) {
         this.vx = vx;
         this.vy = vy;
         this.xSpin = xSpin;
         this.ySpin = ySpin;
         this.sideSpin = sideSpin;
+        this.miscued = miscued;
 
         this.cueParams = cueParams;
     }
@@ -78,7 +82,7 @@ public class CuePlayParams {
         double[] spins = calculateSpins(vx, vy, cueParams.actualFrontBackSpin(), cueParams.actualSideSpin(), cueAngleDeg);
 //        System.out.println(cueParams);
 //        System.out.println("spins: " + Arrays.toString(spins));
-        return new CuePlayParams(vx, vy, spins[0], spins[1], spins[2], cueParams);
+        return new CuePlayParams(vx, vy, spins[0], spins[1], spins[2], slideCue, cueParams);
     }
 
     public static double getSpeedOfPower(double actualPower, double cueAngleDeg) {
@@ -275,5 +279,9 @@ public class CuePlayParams {
 //                spinX, spinY, mbummeX, mbummeY);
 
         return new double[]{spinX + mbummeX, spinY + mbummeY, side};
+    }
+
+    public boolean isMiscued() {
+        return miscued;
     }
 }

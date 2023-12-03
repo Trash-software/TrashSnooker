@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.chart.PieChart?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.CashFlowView"
+      prefHeight="720.0" prefWidth="1020.0" spacing="10.0">
+    <padding>
+        <Insets topRightBottomLeft="10.0"/>
+    </padding>
+
+    <HBox spacing="10.0">
+        <Button text="%backIcon" onAction="#backAction"/>
+
+        <HBox alignment="CENTER_LEFT" spacing="5.0">
+            <ImageView fx:id="moneyImage"/>
+            <Label fx:id="moneyLabel"/>
+        </HBox>
+    </HBox>
+    
+    <HBox VBox.vgrow="ALWAYS" spacing="10.0">
+        <ScrollPane HBox.hgrow="ALWAYS">
+            <GridPane fx:id="listPane" vgap="5.0" hgap="10.0">
+                <columnConstraints>
+                    <ColumnConstraints/>
+                    <ColumnConstraints/>
+                    <ColumnConstraints/>
+                </columnConstraints>
+            </GridPane>
+        </ScrollPane>
+        
+        <GridPane vgap="5.0" hgap="10.0">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50.0" halignment="RIGHT"/>
+                <ColumnConstraints percentWidth="50.0" halignment="LEFT"/>
+            </columnConstraints>
+            
+            <Label text="%cumIncome"/>
+            <Label fx:id="cumIncomeLabel" GridPane.columnIndex="1"/>
+            <PieChart fx:id="incomeChart" legendSide="RIGHT" prefWidth="640.0"
+                      GridPane.rowIndex="1" GridPane.columnSpan="2"/>
+            
+            <Label text="%cumExpenditure" GridPane.rowIndex="2"/>
+            <Label fx:id="cumExpenditureLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <PieChart fx:id="expenditureChart" legendSide="RIGHT" prefWidth="640.0"
+                      GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+        </GridPane>
+        
+    </HBox>
+    
+</VBox>

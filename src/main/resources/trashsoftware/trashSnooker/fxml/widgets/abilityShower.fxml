@@ -5,25 +5,54 @@
 <?import javafx.scene.text.Font?>
 <?import trashsoftware.trashSnooker.fxml.widgets.AbilityShower?>
 <?import trashsoftware.trashSnooker.fxml.widgets.RadarChart?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.shape.Rectangle?>
 <fx:root type="trashsoftware.trashSnooker.fxml.widgets.AbilityShower"
          xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          spacing="10">
 
-    <Label fx:id="nameLabel" text="Name" GridPane.columnSpan="3" alignment="CENTER">
-        <font>
-            <Font size="18.0"/>
-        </font>
-    </Label>
+    <AnchorPane>
+        <VBox fx:id="selfBox" spacing="5.0" AnchorPane.leftAnchor="0.0">
+            <Label fx:id="nameLabel" text="Name" GridPane.columnSpan="3" alignment="CENTER">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
 
-    <Label fx:id="categoryLabel" text="%catProf"/>
+            <HBox spacing="10.0">
+                <Label fx:id="categoryLabel" text="%catProf"/>
+                <Rectangle fx:id="colorRect" width="16.0" height="16.0" visible="false"/>
+            </HBox>
 
-    <HBox spacing="10.0">
-        <Label fx:id="sexLabel"/>
-        <Label fx:id="heightLabel"/>
-    </HBox>
+            <HBox spacing="10.0">
+                <Label fx:id="sexLabel"/>
+                <Label fx:id="heightLabel"/>
+            </HBox>
+        </VBox>
 
-    <GridPane fx:id="barChartRoot" alignment="CENTER" vgap="10.0" hgap="20.0">
+        <VBox fx:id="opponentBox" spacing="5.0" alignment="TOP_RIGHT" visible="false"
+              managed="false" AnchorPane.rightAnchor="0.0">
+            <Label fx:id="nameLabel2" text="Name" GridPane.columnSpan="3" alignment="CENTER"
+                   textFill="gray">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+
+            <HBox spacing="10.0" alignment="TOP_RIGHT">
+                <Rectangle fx:id="colorRect2" width="16.0" height="16.0"/>
+                <Label fx:id="categoryLabel2" text="%catProf" textFill="gray"/>
+            </HBox>
+
+            <HBox spacing="10.0" alignment="TOP_RIGHT">
+                <Label fx:id="heightLabel2" textFill="gray"/>
+                <Label fx:id="sexLabel2" textFill="gray"/>
+            </HBox>
+        </VBox>
+    </AnchorPane>
+
+    <GridPane fx:id="barChartRoot" vgap="10.0" hgap="20.0">
         <columnConstraints>
             <ColumnConstraints/>
             <ColumnConstraints/>
@@ -100,10 +129,10 @@
                 GridPane.columnIndex="3"/>
     </GridPane>
 
-    <RadarChart fx:id="radarChartRoot" visible="false" managed="false">
+    <RadarChart fx:id="radarChartRoot" visible="false" managed="false" alignment="TOP_CENTER"/>
 
-    </RadarChart>
-
-    <Button fx:id="switchButton" text="%radarChart" onAction="#switchChart"/>
+    <HBox spacing="5.0">
+        <Button fx:id="switchButton" text="%radarChart" onAction="#switchChart"/>
+    </HBox>
 
 </fx:root>

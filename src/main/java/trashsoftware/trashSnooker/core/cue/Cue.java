@@ -4,8 +4,12 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.PermanentCounters;
+import trashsoftware.trashSnooker.util.Util;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Map;
 
 public class Cue {
@@ -15,11 +19,15 @@ public class Cue {
     public static final String BRAND_SEPARATOR = ":";
     
     protected CueBrand brand;
-    private String instanceId;
+    private final String instanceId;
     protected CueTip cueTip;
     private final boolean permanent;  // 是否是生涯模式的球员私有杆
+    @NotNull
+    private Date creationTime;
+    @NotNull
+    private Date lastSelectTime;
     
-    private String customName;  // fixme
+    private final String customName;  // fixme
 
     protected Cue(CueBrand brand, 
                   String instanceId, 
@@ -31,21 +39,12 @@ public class Cue {
         this.cueTip = cueTip;
         this.customName = customName;
         this.permanent = isPermanent;
+        
+        creationTime = new Date();
+        lastSelectTime = new Date(0);
 
         System.out.println("Created cue instance " + instanceId);
     }
-
-//    protected Cue(CueBrand brand, String instanceId) {
-//        this.brand = brand;
-//        this.instanceId = instanceId;
-//
-//        if (brand.isRest) {
-//            // todo: 可能会有其他形状的架杆
-//            cueTip = CueTip.createCrossRest();
-//        } else {
-//            cueTip = CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness);
-//        }
-//    }
 
     public static Cue createRest(CueBrand brand) {
         return new Cue(brand,
@@ -59,34 +58,22 @@ public class Cue {
     public static Cue createOneTimeInstance(CueBrand brand) {
         return new Cue(brand,
                 brand.getCueId() + BRAND_SEPARATOR + "fast-" + oneTimeInstanceCounter++,
-                CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
+                CueTip.createDefault(brand.cueTipWidth, brand.tipSize.getDefaultTipThickness()),
                 brand.getName(),
                 false
         );
     }
 
-//    public static Cue createForCareerGameAi(CueBrand brand) {
-//        System.out.println("Created ai cue instance for " + brand.cueId);
-//        return new Cue(brand,
-//                brand.getCueId() + "-ai-" + oneTimeInstanceCounter++,
-//                CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
-//                brand.getName() + "-ai",
-//                false
-//        );
-//    }
-
     public static Cue createForReplay(CueBrand brand) {
         return new Cue(brand,
                 brand.getCueId() + BRAND_SEPARATOR + "replay",
-                CueTip.createDefault(brand.cueTipWidth, brand.cueTipThickness),
+                CueTip.createDefault(brand.cueTipWidth, brand.tipSize.getDefaultTipThickness()),
                 brand.getName() + BRAND_SEPARATOR + "replay",
                 false
         );
     }
     
     public static Cue createForCareer(CueBrand cueBrand, CueTip tip, CareerSave owner) {
-//        String instanceId = cueBrand.getCueId() + "-" + owner.getPlayerId() + "-" +
-//                Util.TIME_FORMAT_SEC.format(new Date());
         String instanceId = cueBrand.getCueId() + BRAND_SEPARATOR + 
                 owner.getPlayerId() + "-" + PermanentCounters.getInstance().nextCueInstance();
         return new Cue(
@@ -107,13 +94,24 @@ public class Cue {
         if (tip == null) {
             System.err.println("No tip!");
         }
-        return new Cue(
+        Cue cue = new Cue(
                 cueBrand,
                 instanceId,
                 tip,
                 jsonObject.getString("customName"),
                 true
         );
+        try {
+            if (jsonObject.has("creationTime")) {
+                cue.creationTime = Util.TIME_FORMAT_SEC.parse(jsonObject.getString("creationTime"));
+            }
+            if (jsonObject.has("lastSelectTime")) {
+                cue.lastSelectTime = Util.TIME_FORMAT_SEC.parse(jsonObject.getString("lastSelectTime"));
+            }
+        } catch (ParseException e) {
+            EventLogger.warning(e);
+        }
+        return cue;
     }
     
     public JSONObject toJson() {
@@ -122,6 +120,8 @@ public class Cue {
         jsonObject.put("brand", brand.cueId);
         jsonObject.put("tipId", cueTip.getInstanceId());
         jsonObject.put("customName", customName);
+        jsonObject.put("creationTime", Util.TIME_FORMAT_SEC.format(creationTime));
+        jsonObject.put("lastSelectTime", Util.TIME_FORMAT_SEC.format(lastSelectTime));
         return jsonObject;
     }
 
@@ -151,7 +151,7 @@ public class Cue {
     }
 
     public double getPowerMultiplier() {
-        return brand.powerMultiplier;
+        return brand.powerMultiplier * cueTip.getPower();
     }
 
     public double getOrigSpinMultiplier() {
@@ -178,11 +178,15 @@ public class Cue {
         return brand.getName();  // todo
     }
 
-    public enum Size {
-        VERY_SMALL,
-        SMALL,
-        MEDIUM,
-        BIG,
-        HUGE
+    public @NotNull Date getCreationTime() {
+        return creationTime;
+    }
+
+    public @NotNull Date getLastSelectTime() {
+        return lastSelectTime;
+    }
+
+    public void setLastSelectTime() {
+        this.lastSelectTime = new Date();
     }
 }

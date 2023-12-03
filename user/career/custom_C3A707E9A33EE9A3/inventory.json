@@ -1,56 +1,90 @@
 {"inventory": {
   "cueInstances": [
     {
-      "tipId": "stdTip-234",
+      "tipId": "stdTip-248",
       "instanceId": "stdPoolCue:custom_C3A707E9A33EE9A3-235",
+      "creationTime": "2023-12-02 18:35:41",
       "customName": "九球杆:三号实验员",
-      "brand": "stdPoolCue"
+      "brand": "stdPoolCue",
+      "lastSelectTime": "1970-01-01 10:00:00"
     },
     {
-      "tipId": "stdTip-230",
+      "tipId": "stdTip:custom_C3A707E9A33EE9A3-259",
+      "instanceId": "trashCue2Carbon:custom_C3A707E9A33EE9A3-260",
+      "creationTime": "2023-12-02 18:35:41",
+      "customName": "垃圾二号-黑科技版:三号实验员",
+      "brand": "trashCue2Carbon",
+      "lastSelectTime": "2023-12-02 18:57:47"
+    },
+    {
+      "tipId": "stdTip-247",
       "instanceId": "stdSnookerCue:custom_C3A707E9A33EE9A3-231",
+      "creationTime": "2023-12-02 18:35:41",
       "customName": "球房公杆-小头:三号实验员",
-      "brand": "stdSnookerCue"
+      "brand": "stdSnookerCue",
+      "lastSelectTime": "1970-01-01 10:00:00"
     },
     {
-      "tipId": "stdTip-232",
+      "tipId": "breakTip:custom_C3A707E9A33EE9A3-253",
       "instanceId": "stdBreakCue:custom_C3A707E9A33EE9A3-233",
+      "creationTime": "2023-12-02 18:35:41",
       "customName": "开球杆:三号实验员",
-      "brand": "stdBreakCue"
+      "brand": "stdBreakCue",
+      "lastSelectTime": "2023-12-03 18:35:28"
     },
     {
-      "tipId": "stdTip-238",
-      "instanceId": "trashCue1:custom_C3A707E9A33EE9A3-239",
-      "customName": "垃圾一号:三号实验员",
-      "brand": "trashCue1"
+      "tipId": "primeTipMedium:custom_C3A707E9A33EE9A3-254",
+      "instanceId": "profSnookerCueThicker:custom_C3A707E9A33EE9A3-243",
+      "creationTime": "2023-12-02 18:35:41",
+      "customName": "进阶小头杆-10.2:三号实验员",
+      "brand": "profSnookerCueThicker",
+      "lastSelectTime": "2023-12-03 05:38:09"
     },
     {
-      "tipId": "stdTip-236",
+      "tipId": "primeTipSoft:custom_C3A707E9A33EE9A3-255",
+      "instanceId": "profSnookerCue:custom_C3A707E9A33EE9A3-241",
+      "creationTime": "2023-12-02 18:35:41",
+      "customName": "进阶斯诺克杆:三号实验员",
+      "brand": "profSnookerCue",
+      "lastSelectTime": "2023-12-02 18:36:30"
+    },
+    {
+      "tipId": "stdTip-252",
       "instanceId": "stdPottsCue:custom_C3A707E9A33EE9A3-237",
+      "creationTime": "2023-12-02 18:35:41",
       "customName": "波茨杆:三号实验员",
-      "brand": "stdPottsCue"
+      "brand": "stdPottsCue",
+      "lastSelectTime": "1970-01-01 10:00:00"
+    },
+    {
+      "tipId": "primeTipSoft:custom_C3A707E9A33EE9A3-258",
+      "instanceId": "profPoolCue:custom_C3A707E9A33EE9A3-257",
+      "creationTime": "2023-12-02 18:35:41",
+      "customName": "进阶九球杆:三号实验员",
+      "brand": "profPoolCue",
+      "lastSelectTime": "2023-12-03 18:35:47"
     }
   ],
   "tips": {
-    "stdTip-232": {
-      "totalHp": 1000,
-      "instanceId": "stdTip-232",
+    "breakTip:custom_C3A707E9A33EE9A3-253": {
+      "totalHp": 5000,
+      "instanceId": "breakTip:custom_C3A707E9A33EE9A3-253",
       "diameter": 15,
-      "hp": 1000,
-      "brand": "stdTip"
+      "hp": 4877.745917453769,
+      "brand": "breakTip"
     },
-    "stdTip-234": {
-      "totalHp": 900,
-      "instanceId": "stdTip-234",
+    "primeTipMedium:custom_C3A707E9A33EE9A3-254": {
+      "totalHp": 462.3999999999999,
+      "instanceId": "primeTipMedium:custom_C3A707E9A33EE9A3-254",
+      "diameter": 10.2,
+      "hp": 344.15787927311465,
+      "brand": "primeTipMedium"
+    },
+    "stdTip-248": {
+      "totalHp": 810,
+      "instanceId": "stdTip-248",
       "diameter": 13.5,
-      "hp": 900,
-      "brand": "stdTip"
-    },
-    "stdTip-230": {
-      "totalHp": 633.3333333333333,
-      "instanceId": "stdTip-230",
-      "diameter": 9.5,
-      "hp": 633.3333333333333,
+      "hp": 798.8626803581769,
       "brand": "stdTip"
     },
     "stdTip-236": {
@@ -60,11 +94,130 @@
       "hp": 766.6666666666667,
       "brand": "stdTip"
     },
+    "stdTip-247": {
+      "totalHp": 401.1111111111111,
+      "instanceId": "stdTip-247",
+      "diameter": 9.5,
+      "hp": 401.1111111111111,
+      "brand": "stdTip"
+    },
+    "stdTip:custom_C3A707E9A33EE9A3-256": {
+      "totalHp": 751.1111111111112,
+      "instanceId": "stdTip:custom_C3A707E9A33EE9A3-256",
+      "diameter": 13,
+      "hp": 751.1111111111112,
+      "brand": "stdTip"
+    },
     "stdTip-238": {
       "totalHp": 900,
       "instanceId": "stdTip-238",
       "diameter": 13.5,
       "hp": 900,
+      "brand": "stdTip"
+    },
+    "stdTip-249": {
+      "totalHp": 587.7777777777778,
+      "instanceId": "stdTip-249",
+      "diameter": 11.5,
+      "hp": 587.7777777777778,
+      "brand": "stdTip"
+    },
+    "stdTip-244": {
+      "totalHp": 633.3333333333333,
+      "instanceId": "stdTip-244",
+      "diameter": 9.5,
+      "hp": 633.3333333333333,
+      "brand": "stdTip"
+    },
+    "stdTip-232": {
+      "totalHp": 1000,
+      "instanceId": "stdTip-232",
+      "diameter": 15,
+      "hp": 1000,
+      "brand": "stdTip"
+    },
+    "stdTip-246": {
+      "totalHp": 462.3999999999999,
+      "instanceId": "stdTip-246",
+      "diameter": 10.2,
+      "hp": 462.3999999999999,
+      "brand": "stdTip"
+    },
+    "primeTipSoft:custom_C3A707E9A33EE9A3-255": {
+      "totalHp": 320.88888888888886,
+      "instanceId": "primeTipSoft:custom_C3A707E9A33EE9A3-255",
+      "diameter": 9.5,
+      "hp": 230.55165055894403,
+      "brand": "primeTipSoft"
+    },
+    "stdTip-234": {
+      "totalHp": 900,
+      "instanceId": "stdTip-234",
+      "diameter": 13.5,
+      "hp": 900,
+      "brand": "stdTip"
+    },
+    "stdTip-245": {
+      "totalHp": 401.1111111111111,
+      "instanceId": "stdTip-245",
+      "diameter": 9.5,
+      "hp": -3.8352534668615395,
+      "brand": "stdTip"
+    },
+    "stdTip:custom_C3A707E9A33EE9A3-259": {
+      "totalHp": 728.1777777777779,
+      "instanceId": "stdTip:custom_C3A707E9A33EE9A3-259",
+      "diameter": 12.8,
+      "hp": 713.7275397348094,
+      "brand": "stdTip"
+    },
+    "stdTip-240": {
+      "totalHp": 633.3333333333333,
+      "instanceId": "stdTip-240",
+      "diameter": 9.5,
+      "hp": 275,
+      "brand": "stdTip"
+    },
+    "stdTip-251": {
+      "totalHp": 587.7777777777778,
+      "instanceId": "stdTip-251",
+      "diameter": 11.5,
+      "hp": 587.7777777777778,
+      "brand": "stdTip"
+    },
+    "stdTip-250": {
+      "totalHp": 587.7777777777778,
+      "instanceId": "stdTip-250",
+      "diameter": 11.5,
+      "hp": 587.7777777777778,
+      "brand": "stdTip"
+    },
+    "primeTipSoft:custom_C3A707E9A33EE9A3-258": {
+      "totalHp": 600.8888888888889,
+      "instanceId": "primeTipSoft:custom_C3A707E9A33EE9A3-258",
+      "diameter": 13,
+      "hp": 442.67997976317855,
+      "brand": "primeTipSoft"
+    },
+    "stdTip-242": {
+      "totalHp": 679.9999999999999,
+      "instanceId": "stdTip-242",
+      "diameter": 10.2,
+      "hp": 679.9999999999999,
+      "brand": "stdTip"
+    },
+    "stdTip-230": {
+      "totalHp": 633.3333333333333,
+      "instanceId": "stdTip-230",
+      "diameter": 9.5,
+      "hp": 120,
+      "brand": "stdTip"
+    },
+    "stdTip-252": {
+      "totalHp": 587.7777777777778,
+      "instanceId": "stdTip-252",
+      "diameter": 11.5,
+      "hp": 587.7777777777778,
       "brand": "stdTip"
     }
   }

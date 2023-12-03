@@ -6,91 +6,91 @@
 <?import javafx.scene.layout.*?>
 <?import trashsoftware.trashSnooker.fxml.widgets.GamePane?>
 <VBox xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="trashsoftware.trashSnooker.fxml.GameView">
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.GameView">
 
-    <MenuBar>
-        <Menu text="%window">
-            <MenuItem text="%close" onAction="#closeWindowAction"/>
-            <SeparatorMenuItem/>
-            <MenuItem text="%repairMenu" onAction="#repairAction" fx:id="repairMenu"/>
-        </Menu>
-        <Menu fx:id="gameMenu" text="%gameMenu">
-            <!-- 在这里加没用，gameView里会重新填充gameMenu -->
-            <CheckMenuItem fx:id="aiHelpPlayMenuItem" text="%aiHelpPlayer"/>
-            <SeparatorMenuItem fx:id="gameMenuSep1"/>
-            <MenuItem text="%withdraw" onAction="#withdrawAction" fx:id="withdrawMenu"
-                      disable="true"/>
-            <MenuItem text="%replaceBallInHand" onAction="#replaceBallInHandAction"
-                      fx:id="replaceBallInHandMenu" disable="true"/>
-            <MenuItem text="%letOpponentPlay" onAction="#letOtherPlayAction"
-                      fx:id="letOtherPlayMenu"
-                      disable="true"/>
-            <MenuItem fx:id="repositionMenu" text="%reposition" onAction="#repositionAction"
-                      disable="true"/>
-            <MenuItem fx:id="pushOutMenu" text="%pushOut" disable="true"
-                      onAction="#pushOutAction"/>
-        </Menu>
-        <Menu text="%playMenu">
-            <CheckMenuItem fx:id="aiAutoPlayMenuItem" text="%aiAutoPlay"/>
-            <SeparatorMenuItem/>
-            <CheckMenuItem fx:id="drawAiPathItem" text="%drawPredictionLineAi"/>
-            <!--                <CheckMenuItem fx:id="predictPlayerPathItem" text="%drawPredictionLinePlayer"/>-->
-            <SeparatorMenuItem/>
-
-            <CheckMenuItem fx:id="potInspectionMenu" text="%potInspectionTool"/>
-            <SeparatorMenuItem/>
-
-            <Menu fx:id="player1SpeedMenu" text="%p1PlaySpeedMenu">
-                <fx:define>
-                    <ToggleGroup fx:id="player1SpeedToggle"/>
-                </fx:define>
-                <RadioMenuItem text="0.125x" toggleGroup="$player1SpeedToggle"
-                               userData="0.125"/>
-                <RadioMenuItem text="0.25x" toggleGroup="$player1SpeedToggle"
-                               userData="0.25"/>
-                <RadioMenuItem text="0.5x" toggleGroup="$player1SpeedToggle" userData="0.5"/>
-                <RadioMenuItem text="1x" toggleGroup="$player1SpeedToggle" userData="1"/>
-                <RadioMenuItem text="2x" toggleGroup="$player1SpeedToggle" userData="2"/>
-                <RadioMenuItem text="4x" toggleGroup="$player1SpeedToggle" userData="4"/>
-                <RadioMenuItem text="8x" toggleGroup="$player1SpeedToggle" userData="8"/>
+    <AnchorPane fx:id="contentPane" VBox.vgrow="ALWAYS">
+        <MenuBar HBox.hgrow="NEVER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <Menu text="%window">
+                <MenuItem text="%close" onAction="#closeWindowAction"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="%repairMenu" onAction="#repairAction" fx:id="repairMenu"/>
             </Menu>
-
-            <Menu fx:id="player2SpeedMenu" text="%p2PlaySpeedMenu">
-                <fx:define>
-                    <ToggleGroup fx:id="player2SpeedToggle"/>
-                </fx:define>
-                <RadioMenuItem text="0.125x" toggleGroup="$player2SpeedToggle"
-                               userData="0.125"/>
-                <RadioMenuItem text="0.25x" toggleGroup="$player2SpeedToggle"
-                               userData="0.25"/>
-                <RadioMenuItem text="0.5x" toggleGroup="$player2SpeedToggle" userData="0.5"/>
-                <RadioMenuItem text="1x" toggleGroup="$player2SpeedToggle" userData="1"/>
-                <RadioMenuItem text="2x" toggleGroup="$player2SpeedToggle" userData="2"/>
-                <RadioMenuItem text="4x" toggleGroup="$player2SpeedToggle" userData="4"/>
-                <RadioMenuItem text="8x" toggleGroup="$player2SpeedToggle" userData="8"/>
+            <Menu fx:id="gameMenu" text="%gameMenu">
+                <!-- 在这里加没用，gameView里会重新填充gameMenu -->
+                <CheckMenuItem fx:id="aiHelpPlayMenuItem" text="%aiHelpPlayer"/>
+                <SeparatorMenuItem fx:id="gameMenuSep1"/>
+                <MenuItem text="%withdraw" onAction="#withdrawAction" fx:id="withdrawMenu"
+                          disable="true"/>
+                <MenuItem text="%replaceBallInHand" onAction="#replaceBallInHandAction"
+                          fx:id="replaceBallInHandMenu" disable="true"/>
+                <MenuItem text="%letOpponentPlay" onAction="#letOtherPlayAction"
+                          fx:id="letOtherPlayMenu"
+                          disable="true"/>
+                <MenuItem fx:id="repositionMenu" text="%reposition" onAction="#repositionAction"
+                          disable="true"/>
+                <MenuItem fx:id="pushOutMenu" text="%pushOut" disable="true"
+                          onAction="#pushOutAction"/>
             </Menu>
+            <Menu text="%playMenu">
+                <CheckMenuItem fx:id="aiAutoPlayMenuItem" text="%aiAutoPlay"/>
+                <SeparatorMenuItem/>
+                <CheckMenuItem fx:id="drawAiPathItem" text="%drawPredictionLineAi"/>
+                <!--                <CheckMenuItem fx:id="predictPlayerPathItem" text="%drawPredictionLinePlayer"/>-->
+                <SeparatorMenuItem/>
 
-            <SeparatorMenuItem/>
-            <CheckMenuItem fx:id="traceWhiteItem" text="%displayWhiteTrace"/>
-            <CheckMenuItem fx:id="traceTargetItem" text="%displayTargetTrace"/>
-            <CheckMenuItem fx:id="traceAllItem" text="%displayAllTrace"/>
-            <MenuItem text="%clearAllTraces" onAction="#clearTraceAction"/>
-        </Menu>
-        <Menu fx:id="debugMenu" text="Debug">
-            <MenuItem text="terminate" onAction="#terminateAction"/>
-            <MenuItem fx:id="debugModeMenu" text="debug mode" onAction="#debugModeAction"/>
-            <MenuItem text="test" onAction="#testAction"/>
-            <MenuItem text="tie" onAction="#tieTestAction"/>
-            <MenuItem text="clear red balls" onAction="#clearRedBallsAction"/>
-            <MenuItem text="p1+10" onAction="#p1AddScoreAction"/>
-            <MenuItem text="p2+10" onAction="#p2AddScoreAction"/>
-        </Menu>
-    </MenuBar>
-    
-    <AnchorPane fx:id="contentPane">
-        <GridPane vgap="2.0" hgap="20.0" style="-fx-background: whitesmoke">
+                <CheckMenuItem fx:id="potInspectionMenu" text="%potInspectionTool"/>
+                <SeparatorMenuItem/>
 
+                <Menu fx:id="player1SpeedMenu" text="%p1PlaySpeedMenu">
+                    <fx:define>
+                        <ToggleGroup fx:id="player1SpeedToggle"/>
+                    </fx:define>
+                    <RadioMenuItem text="0.125x" toggleGroup="$player1SpeedToggle"
+                                   userData="0.125"/>
+                    <RadioMenuItem text="0.25x" toggleGroup="$player1SpeedToggle"
+                                   userData="0.25"/>
+                    <RadioMenuItem text="0.5x" toggleGroup="$player1SpeedToggle" userData="0.5"/>
+                    <RadioMenuItem text="1x" toggleGroup="$player1SpeedToggle" userData="1"/>
+                    <RadioMenuItem text="2x" toggleGroup="$player1SpeedToggle" userData="2"/>
+                    <RadioMenuItem text="4x" toggleGroup="$player1SpeedToggle" userData="4"/>
+                    <RadioMenuItem text="8x" toggleGroup="$player1SpeedToggle" userData="8"/>
+                </Menu>
+
+                <Menu fx:id="player2SpeedMenu" text="%p2PlaySpeedMenu">
+                    <fx:define>
+                        <ToggleGroup fx:id="player2SpeedToggle"/>
+                    </fx:define>
+                    <RadioMenuItem text="0.125x" toggleGroup="$player2SpeedToggle"
+                                   userData="0.125"/>
+                    <RadioMenuItem text="0.25x" toggleGroup="$player2SpeedToggle"
+                                   userData="0.25"/>
+                    <RadioMenuItem text="0.5x" toggleGroup="$player2SpeedToggle" userData="0.5"/>
+                    <RadioMenuItem text="1x" toggleGroup="$player2SpeedToggle" userData="1"/>
+                    <RadioMenuItem text="2x" toggleGroup="$player2SpeedToggle" userData="2"/>
+                    <RadioMenuItem text="4x" toggleGroup="$player2SpeedToggle" userData="4"/>
+                    <RadioMenuItem text="8x" toggleGroup="$player2SpeedToggle" userData="8"/>
+                </Menu>
+
+                <SeparatorMenuItem/>
+                <CheckMenuItem fx:id="traceWhiteItem" text="%displayWhiteTrace"/>
+                <CheckMenuItem fx:id="traceTargetItem" text="%displayTargetTrace"/>
+                <CheckMenuItem fx:id="traceAllItem" text="%displayAllTrace"/>
+                <MenuItem text="%clearAllTraces" onAction="#clearTraceAction"/>
+            </Menu>
+            <Menu fx:id="debugMenu" text="Debug">
+                <MenuItem text="terminate" onAction="#terminateAction"/>
+                <MenuItem fx:id="debugModeMenu" text="debug mode" onAction="#debugModeAction"/>
+                <MenuItem text="test" onAction="#testAction"/>
+                <MenuItem text="tie" onAction="#tieTestAction"/>
+                <MenuItem text="clear red balls" onAction="#clearRedBallsAction"/>
+                <MenuItem text="p1+10" onAction="#p1AddScoreAction"/>
+                <MenuItem text="p2+10" onAction="#p2AddScoreAction"/>
+            </Menu>
+        </MenuBar>
+
+        <GridPane AnchorPane.topAnchor="25.0" vgap="2.0" hgap="20.0"
+                  style="-fx-background: whitesmoke">
             <columnConstraints>
                 <ColumnConstraints halignment="CENTER"/>
                 <ColumnConstraints/>
@@ -128,7 +128,7 @@
                                  toggleGroup="$handSelectionToggleGroup" userData="RIGHT"/>
                     <RadioButton fx:id="handSelectionRest" text="%restHand"
                                  toggleGroup="$handSelectionToggleGroup" userData="REST"/>
-                    
+
                     <Button fx:id="changeCueButton" text="%changeCue" onAction="#changeCueAction"/>
                 </VBox>
                 <VBox fx:id="replayButtonBox" spacing="10.0" alignment="CENTER">
@@ -191,6 +191,6 @@
 
         </GridPane>
     </AnchorPane>
-    
+
 </VBox>
 

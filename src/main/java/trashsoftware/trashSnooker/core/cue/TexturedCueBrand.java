@@ -9,6 +9,7 @@ import javafx.scene.paint.PhongMaterial;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,7 +25,6 @@ public class TexturedCueBrand extends CueBrand implements Cloneable {
                             String name,
                             List<Segment> segments,
                             double tipRingThickness,
-                            double cueTipThickness,
                             Color tipRingColor,
                             Color backColor,
                             double powerMultiplier,
@@ -36,7 +36,6 @@ public class TexturedCueBrand extends CueBrand implements Cloneable {
         super(cueId,
                 name,
                 tipRingThickness,
-                cueTipThickness,
                 segments.get(segments.size() - 1).diameter2,
                 segments.get(0).diameter1,
                 tipRingColor,
@@ -146,13 +145,13 @@ public class TexturedCueBrand extends CueBrand implements Cloneable {
                                 texture);
                 if (url != null) {
                     Image orig = new Image(url.toExternalForm());
-                    mat.setDiffuseMap(orig);
+                    mat.setDiffuseMap(getImageInCorrectDirection(orig));
                 } else {
                     // 外部
                     File file = new File(texture);
                     if (file.exists()) {
                         Image orig = new Image(file.getAbsolutePath());
-                        mat.setDiffuseMap(orig);
+                        mat.setDiffuseMap(getImageInCorrectDirection(orig));
                     } else {
                         mat.setDiffuseColor(Color.WHITESMOKE);
                     }
@@ -167,6 +166,17 @@ public class TexturedCueBrand extends CueBrand implements Cloneable {
                 mat.setDiffuseColor(color);
             }
             return mat;
+        }
+        
+        private Image getImageInCorrectDirection(Image image) {
+            if (image.getWidth() >= image.getHeight()) {
+                ImageView iv = new ImageView(image);
+                iv.setRotate(90);
+                SnapshotParameters params = new SnapshotParameters();
+                return iv.snapshot(params, null);
+            } else {
+                return image;
+            }
         }
 
         public double length() {

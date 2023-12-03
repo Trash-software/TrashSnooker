@@ -37,8 +37,6 @@
         </VBox>
     </HBox>
 
-    <ComboBox fx:id="cueBox"/>
-
     <HBox>
         <Button fx:id="startBtn" disable="true" text="%start" onAction="#startChallengeAction"/>
     </HBox>

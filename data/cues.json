@@ -5,7 +5,6 @@
         "zh": "球房公杆-小头",
         "en": "Public Snooker Cue"
       },
-      "tipThickness": 3.0,
       "ringThickness": 8.0,
       "power": 0.8,
       "spin": 0.8,
@@ -35,7 +34,6 @@
         "zh": "进阶斯诺克杆",
         "en": "Snooker Cue"
       },
-      "tipThickness": 3.0,
       "ringThickness": 8.0,
       "power": 0.85,
       "spin": 0.9,
@@ -44,7 +42,7 @@
       "backColor": "GOLD-",
       "privacy": true,
       "available": true,
-      "price": 300,
+      "price": 1000,
       "textured": true,
       "segments": [
         {
@@ -61,15 +59,44 @@
         }
       ]
     },
+    "profSnookerCueThicker": {
+      "names": {
+        "zh": "进阶小头杆-10.2",
+        "en": "Thin Cue-10.2"
+      },
+      "ringThickness": 8.0,
+      "power": 0.88,
+      "spin": 0.95,
+      "accuracy": 1.0,
+      "ringColor": "GOLD-",
+      "backColor": "GOLD-",
+      "privacy": true,
+      "available": true,
+      "price": 1000,
+      "textured": true,
+      "segments": [
+        {
+          "length": 1435,
+          "diameter1": 10.2,
+          "diameter2": 24.0,
+          "texture": "profSnookerCueThicker.png"
+        },
+        {
+          "length": 5,
+          "diameter1": 24.0,
+          "diameter2": 10.0,
+          "texture": "BLACK+"
+        }
+      ]
+    },
     "stdPottsCue": {
       "names": {
-        "zh": "波茨杆",
-        "en": "Potts Cue"
+        "zh": "球房公杆-波茨",
+        "en": "Public Potts Cue"
       },
-      "tipThickness": 4.0,
       "ringThickness": 9.0,
-      "power": 0.95,
-      "spin": 1.0,
+      "power": 0.9,
+      "spin": 0.95,
       "accuracy": 0.85,
       "ringColor": "GOLD-",
       "backColor": "GOLD-",
@@ -93,13 +120,12 @@
     },
     "stdPoolCue": {
       "names": {
-        "zh": "九球杆",
-        "en": "Pool Cue"
+        "zh": "球房公杆-大头",
+        "en": "Public Pool Cue"
       },
       "ringThickness": 12.0,
-      "tipThickness": 5.0,
-      "power": 1.05,
-      "spin": 1.1,
+      "power": 1.0,
+      "spin": 1.05,
       "accuracy": 0.65,
       "ringColor": "OLDLACE",
       "backColor": "BLACK++",
@@ -169,8 +195,7 @@
         "en": "Break Cue"
       },
       "ringThickness": 0.0,
-      "tipThickness": 4.0,
-      "power": 1.25,
+      "power": 1.15,
       "spin": 0.5,
       "accuracy": 0.8,
       "ringColor": "BLACK",
@@ -201,7 +226,6 @@
         "en": "Girl's Cue"
       },
       "ringThickness": 8.0,
-      "tipThickness": 3.0,
       "power": 0.85,
       "spin": 0.95,
       "accuracy": 1.1,
@@ -209,7 +233,7 @@
       "backColor": "HOTPINK",
       "privacy": true,
       "available": true,
-      "price": 1200,
+      "price": 2000,
       "textured": true,
       "segments": [
         {
@@ -238,15 +262,14 @@
         "en": "Girl's Pool Cue"
       },
       "ringThickness": 10.0,
-      "tipThickness": 5.0,
       "power": 1.0,
-      "spin": 1.1,
-      "accuracy": 0.7,
+      "spin": 1.05,
+      "accuracy": 0.75,
       "ringColor": "WHITESMOKE",
       "backColor": "GOLD+",
       "privacy": true,
       "available": true,
-      "price": 2500,
+      "price": 3000,
       "textured": true,
       "segments": [
         {
@@ -356,8 +379,8 @@
       "tipThickness": 7.0,
       "tipDiameter": 15.0,
       "endDiameter": 30.0,
-      "power": 1.1,
-      "spin": 1.15,
+      "power": 1.05,
+      "spin": 1.1,
       "accuracy": 0.75,
       "ringColor": "OLDLACE",
       "frontColor": "BLACK++",
@@ -431,15 +454,14 @@
         "en": "Trash Cue 1"
       },
       "ringThickness": 12.0,
-      "tipThickness": 5.0,
       "power": 1.0,
       "spin": 1.05,
       "accuracy": 0.65,
       "ringColor": "OLDLACE",
       "backColor": "BLACK++",
-      "privacy": false,
+      "privacy": true,
       "available": true,
-      "price": 200,
+      "price": 1000,
       "textured": true,
       "segments": [
         {
@@ -480,15 +502,14 @@
         "en": "Trash Cue 2"
       },
       "ringThickness": 12.0,
-      "tipThickness": 5.0,
       "power": 1.05,
-      "spin": 1.1,
+      "spin": 1.08,
       "accuracy": 0.7,
       "ringColor": "OLDLACE",
       "backColor": "BLACK++",
       "privacy": true,
       "available": true,
-      "price": 1000,
+      "price": 2000,
       "textured": true,
       "segments": [
         {
@@ -514,6 +535,102 @@
           "diameter1": 21.0,
           "diameter2": 30.0,
           "texture": "trashCue2.png"
+        },
+        {
+          "length": 5,
+          "diameter1": 30.0,
+          "diameter2": 15.0,
+          "texture": "BLACK+"
+        }
+      ]
+    },
+    "trashCue2Carbon": {
+      "names": {
+        "zh": "垃圾二号-黑科技版",
+        "en": "Trash Cue 2-Carbon"
+      },
+      "ringThickness": 8.0,
+      "power": 1.1,
+      "spin": 1.1,
+      "accuracy": 0.7,
+      "ringColor": "#663333",
+      "backColor": "BLACK++",
+      "privacy": true,
+      "available": true,
+      "price": 3500,
+      "textured": true,
+      "segments": [
+        {
+          "length": 100,
+          "diameter1": 12.8,
+          "diameter2": 12.5,
+          "texture": "#333333"
+        },
+        {
+          "length": 350,
+          "diameter1": 12.5,
+          "diameter2": 14.5,
+          "texture": "#333333"
+        },
+        {
+          "length": 275,
+          "diameter1": 14.5,
+          "diameter2": 21.0,
+          "texture": "#333333"
+        },
+        {
+          "length": 725,
+          "diameter1": 21.0,
+          "diameter2": 30.0,
+          "texture": "trashCue2.png"
+        },
+        {
+          "length": 5,
+          "diameter1": 30.0,
+          "diameter2": 15.0,
+          "texture": "BLACK+"
+        }
+      ]
+    },
+    "profPoolCue": {
+      "names": {
+        "zh": "进阶九球杆",
+        "en": "Prof Pool Cue"
+      },
+      "ringThickness": 12.0,
+      "power": 1.05,
+      "spin": 1.08,
+      "accuracy": 0.75,
+      "ringColor": "OLDLACE",
+      "backColor": "BLACK++",
+      "privacy": true,
+      "available": true,
+      "price": 3000,
+      "textured": true,
+      "segments": [
+        {
+          "length": 100,
+          "diameter1": 13.0,
+          "diameter2": 12.5,
+          "texture": "BISQUE"
+        },
+        {
+          "length": 350,
+          "diameter1": 12.5,
+          "diameter2": 15.0,
+          "texture": "BISQUE"
+        },
+        {
+          "length": 275,
+          "diameter1": 15.0,
+          "diameter2": 21.0,
+          "texture": "BISQUE"
+        },
+        {
+          "length": 725,
+          "diameter1": 21.0,
+          "diameter2": 30.0,
+          "texture": "profPoolCue.png"
         },
         {
           "length": 5,

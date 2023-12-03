@@ -19,5 +19,16 @@ public class PoolBallModel extends BallModel {
 //        material.setSpecularMap(img);
         
         sphere.setMaterial(material);
+        
+        if (number == 0) {
+            sphere.setPolarLimit(45);
+        } else {
+            sphere.setPolarLimit(75);
+        }
+    }
+
+    @Override
+    public boolean textured() {
+        return true;
     }
 }

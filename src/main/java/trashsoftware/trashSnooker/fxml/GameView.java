@@ -29,6 +29,7 @@ import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
+import org.json.JSONObject;
 import trashsoftware.trashSnooker.audio.GameAudio;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
@@ -78,6 +79,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 public class GameView implements Initializable {
     public static final Color GLOBAL_BACKGROUND = Color.WHITESMOKE;  // 似乎正好是javafx默认背景色
@@ -112,8 +114,6 @@ public class GameView implements Initializable {
     GamePane gamePane;  // 球和桌子画在这里
     @FXML
     Pane contentPane;
-    //    @FXML
-//    Pane contentPane;
     @FXML
     Canvas cueAngleCanvas;
     @FXML
@@ -226,7 +226,8 @@ public class GameView implements Initializable {
     private double cuePointX, cuePointY;  // 杆法的击球点
     private double intentCuePointX = -1, intentCuePointY = -1;  // 计划的杆法击球点
     private double cueAngleDeg = 5.0;
-    private double cueRollRotateDeg = 180.0;  // 转杆，并不重要
+    private double cueRollRotateDeg1 = 180.0;  // 转杆，并不重要
+    private double cueRollRotateDeg2 = 180.0;  // 球员2的转杆
     private double cueAngleBaseVer = 10.0;
     private double cueAngleBaseHor = 10.0;
     private CueAnimationPlayer cueAnimationPlayer;
@@ -239,6 +240,7 @@ public class GameView implements Initializable {
     private boolean aiAutoPlay = true;
     private boolean printPlayStage = false;
     private boolean tableGraphicsChanged = true;
+    private boolean showTipBrokenMsg;
     private Ball debuggingBall;
     private long replayStopTime;
     private long replayGap = DEFAULT_REPLAY_GAP;
@@ -694,6 +696,17 @@ public class GameView implements Initializable {
 
         double playerGoodness = CareerManager.getInstance().getPlayerGoodness();
         setAimingLengthFactor(playerGoodness);
+
+        JSONObject careerCache = CareerManager.getInstance().getCache();
+        if (careerCache.has("playerCue")) {
+            String cueInsId = careerCache.getString("playerCue");
+            if (game.getPlayer1().isHuman()) {
+                game.getPlayer1().getCueSelection().selectByInstanceId(cueInsId);
+            }
+            if (game.getPlayer2().isHuman()) {
+                game.getPlayer2().getCueSelection().selectByInstanceId(cueInsId);
+            }
+        }
     }
 
     public void setAimingLengthFactor(double aimingLengthFactor) {
@@ -724,8 +737,20 @@ public class GameView implements Initializable {
             case S -> setCuePoint(cuePointX, cuePointY + 1, true);
             case Q -> setCueAngleDeg(cueAngleDeg + 1);
             case E -> setCueAngleDeg(cueAngleDeg - 1);
-            case Z -> cueRollRotateDeg += 3;
-            case X -> cueRollRotateDeg -= 3;
+            case Z -> {
+                if (getActiveHolder().getCuingIgp().getPlayerNumber() == 1) {
+                    cueRollRotateDeg1 += 3;
+                } else {
+                    cueRollRotateDeg2 += 3;
+                }
+            }
+            case X -> {
+                if (getActiveHolder().getCuingIgp().getPlayerNumber() == 1) {
+                    cueRollRotateDeg1 -= 3;
+                } else {
+                    cueRollRotateDeg2 -= 3;
+                }
+            }
         }
     }
 
@@ -808,6 +833,7 @@ public class GameView implements Initializable {
                             careerMatch.saveMatch();
                             careerMatch.saveAndExit();
                         }
+                        CareerManager.getInstance().getInventory().saveToDisk();
                     } else {
                         if (game.getGame().isStarted() || (game.getP1Wins() + game.getP2Wins() > 0)) {
                             boolean matchFinish = game.playerWinsAframe(winner);
@@ -1029,6 +1055,14 @@ public class GameView implements Initializable {
         cueAngleCanvas.setDisable(false);
 
         cursorDrawer.synchronizeGame();  // 刷新白球预测的线程池
+        
+        if (showTipBrokenMsg) {
+            Platform.runLater(() -> AlertShower.showInfo(stage,
+                    strings.getString("tipBrokenTip"),
+                    strings.getString("tipBroken")));
+            
+            showTipBrokenMsg = false;
+        }
 
         Ball.enableGearOffset();
         aiWhitePath = null;
@@ -1146,6 +1180,7 @@ public class GameView implements Initializable {
                 ((ChallengeMatch) careerMatch).setScore(p1.getScore());
                 content = ((ChallengeMatch) careerMatch).challengeSet.getName();
                 careerMatch.finish(wonPlayer.getPlayerPerson(), success ? 1 : 0, success ? 0 : 1);
+                CareerManager.getInstance().getInventory().saveToDisk();
             } else {
                 content = gameValues.getTrainType().toString();
             }
@@ -1174,6 +1209,7 @@ public class GameView implements Initializable {
                     }
                 }
                 careerMatch.saveMatch();
+                CareerManager.getInstance().getInventory().saveToDisk();
             } else {
                 game.generalSave();
             }
@@ -1796,16 +1832,33 @@ public class GameView implements Initializable {
         InGamePlayer cuingIgp = game.getGame().getCuingIgp();
         if (cuingIgp != null) {
             CueSelection selection = cuingIgp.getCueSelection();
-            CueSelectionView.showCueSelectionView(selection,
-                    stage,
-                    this::hideCue,
-                    () -> {
-                        cursorDirectionUnitX = 0;
-                        cursorDirectionUnitY = 0;
-                        recalculateUiRestrictions();
-                        tableGraphicsChanged = true;
-                        draw();
-                    });
+            Consumer<CueSelection.CueAndBrand> callback = sel -> {
+                cursorDirectionUnitX = 0;
+                cursorDirectionUnitY = 0;
+                recalculateUiRestrictions();
+                tableGraphicsChanged = true;
+                sel.getCueInstance().setLastSelectTime();
+                if (careerMatch != null) {
+                    CareerManager cm = CareerManager.getInstance();
+                    cm.getCache().put("playerCue",
+                            sel.getCueInstance().getInstanceId());
+                    cm.saveCache();
+                }
+                draw();
+            };
+
+            if (careerMatch != null && cuingIgp.isHuman()) {
+                CueSelectionView.showCueSelectionView(selection,
+                        stage,
+                        this::hideCue,
+                        callback,
+                        CareerManager.getInstance().getHumanPlayerCareer());
+            } else {
+                CueSelectionView.showCueSelectionView(selection,
+                        stage,
+                        this::hideCue,
+                        callback);
+            }
         }
     }
 
@@ -1854,6 +1907,17 @@ public class GameView implements Initializable {
      */
     private Cue getCuingCue() {
         InGamePlayer cuing = getActiveHolder().getCuingIgp();
+        if (game != null) {
+            if (game.gameValues.rule.poolLike() && !cuing.isHuman()) {
+                if (game.getGame().isBreaking()) {
+                    cuing.getCueSelection().selectByBrand(DataLoader.getInstance().getStdBreakCueBrand());
+                } else {
+                    FastGameView.selectSuggestedCue(cuing.getCueSelection(),
+                            game.gameValues.rule,
+                            cuing.getPlayerPerson());
+                }
+            }
+        }
         return cuing.getCueSelection().getSelected().getNonNullInstance();
     }
 
@@ -1879,10 +1943,10 @@ public class GameView implements Initializable {
         double hitPointBaseScale = BallMetrics.SNOOKER_BALL.ballDiameter / ballDia;
         // 皮头越大的杆，打点的偏差越大
         hitPointBaseScale *= cue.getCueTipWidth() / 10.0;  // 把10作为标准
-        
+
         frontBackSpinFactor *= hitPointBaseScale;
         sideSpinFactor *= hitPointBaseScale;
-        
+
         PlayerPerson playerPerson = player.getPlayerPerson();
 
         // 用架杆影响打点精确度
@@ -1987,18 +2051,14 @@ public class GameView implements Initializable {
 
         boolean slidedCue = false;
         if (mutate) {
-            double cueTipHealthReduce = selPower * 0.01;
-
             if (isMiscue()) {
 //                power /= 4;
 //                unitSideSpin *= 10;
                 System.out.println("Miscued!");
                 AchManager.getInstance().addAchievement(Achievement.MISCUED, game.getGame().getCuingIgp());
                 slidedCue = true;
-                cueTipHealthReduce *= 100;
             }
             miscued = slidedCue;
-            cue.getCueTip().reduceHp(cueTipHealthReduce);
         }
 
 //        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
@@ -2112,6 +2172,9 @@ public class GameView implements Initializable {
         boolean snookered = game.getGame().isSnookered();
 
         CuePlayParams params = applyRandomCueError(player);
+        if (careerMatch != null) {
+            reduceCueHp(getCuingCue(), player, params);
+        }
 //        CuePlayParams params = applyCueError(player, 0, 0, 0,true, currentHand);
 //        System.out.println("Final params: " + params.cueParams);
 
@@ -2153,6 +2216,30 @@ public class GameView implements Initializable {
         Thread thread = new Thread(() ->
                 playerCueCalculations(params, player, attempt, usedHand, snookered));
         thread.start();
+    }
+    
+    private void reduceCueHp(Cue cue, Player player, CuePlayParams params) {
+        if (!cue.isPermanent()) return;
+        
+        double reduce = params.cueParams.actualPower() / 30.0;
+        double cuePointReduce = Math.hypot(params.cueParams.actualFrontBackSpin(),
+                params.cueParams.actualSideSpin() * 0.5);
+        
+        reduce *= Algebra.shiftRangeSafe(0, 
+                1, 
+                0.5,
+                1.0,
+                cuePointReduce);
+        reduce *= gameValues.ball.ballWeightRatio;
+        
+        if (isMiscue()) {
+            reduce *= 100;
+        }
+        
+        showTipBrokenMsg = cue.getCueTip().reduceHp(reduce);
+        if (showTipBrokenMsg) {
+            System.out.println("Tip broken!");
+        }
     }
 
     private void playerCueCalculations(CuePlayParams params,
@@ -2466,6 +2553,9 @@ public class GameView implements Initializable {
                 cueAngleDeg = 0.0;
 
                 CuePlayParams realParams = applyRandomCueError(player);
+                if (aiHelpPlayerPlaying && careerMatch != null) {
+                    reduceCueHp(getCuingCue(), player, realParams);
+                }
 
                 double whiteStartingX = game.getGame().getCueBall().getX();
                 double whiteStartingY = game.getGame().getCueBall().getY();
@@ -3725,7 +3815,12 @@ public class GameView implements Initializable {
                 cueAngleDeg,
                 gamePane.getScale());
         if (!isRest) {
-            cueModel.setCueRotation(cueRollRotateDeg);
+            if (getActiveHolder().getCuingIgp().getPlayerNumber() == 1) {
+                cueModel.setCueRotation(cueRollRotateDeg1);
+            } else {
+                cueModel.setCueRotation(cueRollRotateDeg2);
+            }
+
         }
     }
 
@@ -3735,6 +3830,7 @@ public class GameView implements Initializable {
             cueModel = CueModel.createCueModel(cue);
             cueModel.setDisable(true);
             contentPane.getChildren().add(cueModel);  // fixme
+//            basePane.getChildren().add(cueModel);  // fixme
             cueModelMap.put(cue, cueModel);
         }
 

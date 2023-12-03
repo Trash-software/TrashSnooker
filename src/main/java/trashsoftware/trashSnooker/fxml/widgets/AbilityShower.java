@@ -3,12 +3,14 @@ package trashsoftware.trashSnooker.fxml.widgets;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.App;
 
@@ -21,7 +23,13 @@ import java.util.ResourceBundle;
 public class AbilityShower extends VBox {
     private final Map<Button, Combo> btnMap = new HashMap<>();
     @FXML
+    VBox selfBox, opponentBox;
+    @FXML
     Label nameLabel, categoryLabel, sexLabel, heightLabel;
+    @FXML
+    Label nameLabel2, categoryLabel2, sexLabel2, heightLabel2;
+    @FXML
+    Rectangle colorRect, colorRect2;
     @FXML
     Label aimingLabel, cuePrecisionLabel, powerLabel, spinLabel, powerControlLabel,
             spinControlLabel, notGoodHandLabel, restLabel;
@@ -40,6 +48,8 @@ public class AbilityShower extends VBox {
     @FXML
     Button switchButton;
     boolean showingRadar = false;
+
+    private PlayerPerson.ReadableAbility opponentAbi;
 
     private final Button[] buttons;
     //    private PlayerPerson.ReadableAbility ability;
@@ -107,24 +117,55 @@ public class AbilityShower extends VBox {
         setupTexts();
         setupRadar();
     }
+    
+    public void setOpponent(PlayerPerson.ReadableAbility opponentAbi) {
+        this.opponentAbi = opponentAbi;
+
+        nameLabel2.setText(opponentAbi.getShownName());
+        categoryLabel2.setText(PlayerPerson.getPlayerCategoryShown(opponentAbi.category, strings));
+
+        sexLabel2.setText(opponentAbi.getSex().toString());
+        heightLabel2.setText(String.format("%.0f cm", opponentAbi.getHandBody().height));
+        
+        setupRadar();
+    }
 
     private void setupRadar() {
-        PlayerPerson.ReadableAbility realAbility = perkManager.getOriginalAbility();
-        PlayerPerson.ReadableAbility preview = perkManager.getShownAbility();
+        colorRect.setFill(RadarChart.LINES[0]);
+        colorRect2.setFill(RadarChart.LINES[1]);
+        
+        PlayerPerson.ReadableAbility ability1 = perkManager.getOriginalAbility();
 
-        String[] titles = new String[]{
-                strings.getString("aiming") + "\n" + numToString(realAbility.aiming),
-                strings.getString("cuePrecision") + "\n" + numToString(realAbility.cuePrecision),
-                strings.getString("spinControlText") + "\n" + numToString(realAbility.spinControl),
-                strings.getString("powerControl") + "\n" + numToString(realAbility.powerControl),
-                strings.getString("power") + "\n" + numToString((realAbility.normalPower + realAbility.maxPower) / 2),
-                strings.getString("spinText") + "\n" + numToString(realAbility.spin),
-                strings.getString("offHand") + "\n" + numToString(realAbility.getAnotherHandGoodness()),
-                strings.getString("restHand") + "\n" + numToString(realAbility.getRestGoodness()),
-        };
+        PlayerPerson.ReadableAbility ability2;
+        String[] titles;
+        if (opponentAbi != null) {
+            ability2 = opponentAbi;
+            titles = new String[]{
+                    strings.getString("aiming"),
+                    strings.getString("cuePrecision"),
+                    strings.getString("spinControlText"),
+                    strings.getString("powerControl"),
+                    strings.getString("power"),
+                    strings.getString("spinText"),
+                    strings.getString("offHand"),
+                    strings.getString("restHand"),
+            };
+        } else {
+            ability2 = perkManager.getShownAbility();
+            titles = new String[]{
+                    strings.getString("aiming") + "\n" + numToString(ability1.aiming),
+                    strings.getString("cuePrecision") + "\n" + numToString(ability1.cuePrecision),
+                    strings.getString("spinControlText") + "\n" + numToString(ability1.spinControl),
+                    strings.getString("powerControl") + "\n" + numToString(ability1.powerControl),
+                    strings.getString("power") + "\n" + numToString((ability1.normalPower + ability1.maxPower) / 2),
+                    strings.getString("spinText") + "\n" + numToString(ability1.spin),
+                    strings.getString("offHand") + "\n" + numToString(ability1.getAnotherHandGoodness()),
+                    strings.getString("restHand") + "\n" + numToString(ability1.getRestGoodness()),
+            };
+        }
 
-        double[] valuesReal = getRadarValues(realAbility);
-        double[] valuesPre = getRadarValues(preview);
+        double[] valuesReal = getRadarValues(ability1);
+        double[] valuesPre = getRadarValues(ability2);
 
         if (Arrays.equals(valuesReal, valuesPre)) {
             radarChartRoot.setValues(titles, valuesReal);
@@ -241,10 +282,6 @@ public class AbilityShower extends VBox {
         setupTexts();
         setupRadar();
 
-//        Label label = combo.label;
-//        String orig = label.getText().split("\\+")[0];
-//        label.setText(orig + "+" + PlayerPerson.ReadableAbility.addPerksHowMany(combo.cat, added));
-
         if (perkManager.getAvailPerks() <= 0) {
             for (Button button : buttons) {
                 button.setDisable(true);
@@ -266,6 +303,12 @@ public class AbilityShower extends VBox {
         radarChartRoot.setManaged(showingRadar);
         barChartRoot.setVisible(!showingRadar);
         barChartRoot.setManaged(!showingRadar);
+
+        boolean showingComparison = showingRadar && opponentAbi != null;
+        opponentBox.setVisible(showingComparison);
+        opponentBox.setManaged(showingComparison);
+        colorRect.setVisible(showingComparison);
+        colorRect2.setVisible(showingComparison);
     }
 
     public void notifyPerksReset() {

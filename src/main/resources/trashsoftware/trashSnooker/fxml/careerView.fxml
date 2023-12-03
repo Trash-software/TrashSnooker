@@ -10,6 +10,7 @@
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="trashsoftware.trashSnooker.fxml.CareerView"
+          fx:id="basePane"
           prefHeight="720.0" prefWidth="1080.0" vgap="10.0" hgap="20.0">
 
     <padding>
@@ -17,8 +18,9 @@
     </padding>
 
     <columnConstraints>
-        <ColumnConstraints/>
-        <ColumnConstraints/>
+        <ColumnConstraints percentWidth="50.0"/>
+        <ColumnConstraints percentWidth="50.0"/>
+        <ColumnConstraints percentWidth="0.0"/>
     </columnConstraints>
 
     <HBox spacing="10.0">
@@ -37,7 +39,7 @@
             <Button text="%levelUp" fx:id="levelUpBtn" onAction="#levelUpAction" visible="false"/>
         </HBox>
         <HBox spacing="20.0">
-            <HBox alignment="CENTER_LEFT" spacing="5.0">
+            <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#invoiceAction">
                 <ImageView fx:id="moneyImage"/>
                 <Label fx:id="moneyLabel"/>
             </HBox>
@@ -66,9 +68,9 @@
     </VBox>
 
     <Button text="%careerChallenges" onAction="#trainingChallengeAction" GridPane.rowIndex="2"/>
-    <Button text="%seeToursList" onAction="#seeToursListAction" GridPane.rowIndex="5"/>
+    <Button text="%seeToursList" onAction="#seeToursListAction" GridPane.rowIndex="3"/>
 
-    <LabelTable fx:id="allAwardsTable" GridPane.rowIndex="6"/>
+    <LabelTable fx:id="allAwardsTable" GridPane.rowIndex="4" GridPane.rowSpan="2"/>
 
     <HBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="10.0">
         <Label text="%worldRanking"/>
@@ -84,16 +86,16 @@
         <columns>
             <TableColumn text="%rankRank" fx:id="rankCol"/>
             <TableColumn text="%rankName" fx:id="rankNameCol"/>
-            <TableColumn text="%rankAwards" fx:id="rankedAwardCol"/>
-            <TableColumn text="%rankTotalAwards" fx:id="totalAwardCol"/>
+            <TableColumn text="%rankAwards" fx:id="rankFirstDesCol"/>
+            <TableColumn text="%rankTotalAwards" fx:id="rankSecondDesCol"/>
         </columns>
     </TableView>
 
     <Label fx:id="myRankLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-    <Label fx:id="currentDateLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    <Label fx:id="currentDateLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-    <VBox fx:id="champInProgBox" GridPane.rowIndex="5" GridPane.columnIndex="1" spacing="10.0">
+    <VBox fx:id="champInProgBox" GridPane.rowIndex="4" GridPane.columnIndex="1" spacing="10.0">
         <HBox spacing="10.0">
             <Label text="%tourInProgress"/>
             <Label fx:id="champInProgLabel"/>
@@ -102,7 +104,7 @@
         </HBox>
     </VBox>
 
-    <VBox fx:id="nextChampInfoBox" GridPane.rowIndex="5" GridPane.columnIndex="1" spacing="10.0">
+    <VBox fx:id="nextChampInfoBox" GridPane.rowIndex="4" GridPane.columnIndex="1" spacing="10.0">
         <HBox spacing="10.0">
             <Label text="%nextTour"/>
             <Label fx:id="nextChampionshipLabel"/>
@@ -127,7 +129,7 @@
     </VBox>
 
     <LabelTable fx:id="champAwardsTable"
-                GridPane.rowIndex="6"
+                GridPane.rowIndex="5"
                 GridPane.columnIndex="1"/>
 
     <LabelTable fx:id="selectedPlayerInfoTable" GridPane.rowIndex="1" GridPane.columnIndex="2"

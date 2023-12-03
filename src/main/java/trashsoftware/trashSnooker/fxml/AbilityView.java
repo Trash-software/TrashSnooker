@@ -28,4 +28,8 @@ public class AbilityView implements Initializable {
         PerkManager pm = new PerkManager(null, 0, PlayerPerson.ReadableAbility.fromPlayerPerson(pp));
         abilityContainer.setup(pm, false);
     }
+    
+    public void setOpponent(PlayerPerson opponent) {
+        abilityContainer.setOpponent(PlayerPerson.ReadableAbility.fromPlayerPerson(opponent));
+    }
 }

@@ -347,24 +347,13 @@ public class Util {
     }
     
     public static String moneyToReadable(int money) {
-        Deque<String> out = new ArrayDeque<>();
-        String sign = money < 0 ? "-" : "";
-        money = Math.abs(money);
-        boolean full = true;
-        while (money > 0) {
-            int m = money % 1000;
-            String s;
-            if (m == 0 && full) {
-                s = "000";
-            } else {
-                s = String.valueOf(m);
-            }
-            
-            out.addFirst(s);
-            money /= 1000;
-            full = false;
-        }
-        return sign + String.join(",", out);
+        return String.format("%,d", money);
+    }
+
+    public static String moneyToReadable(int money, boolean forceSign) {
+        String s = String.format("%,d", money);
+        if (money > 0) s = "+" + s;
+        return s;
     }
     
     public static JSONArray arrayToJson(double[] array) {

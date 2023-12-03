@@ -7,8 +7,7 @@ import java.util.Objects;
 public abstract class CueBrand {
     public final String cueId;
     public final String name;
-
-    public final double cueTipThickness;
+    
     public final double tipRingThickness;
 
     protected final double endWidth;
@@ -26,12 +25,11 @@ public abstract class CueBrand {
     public final boolean available;
     public final int price;
 
-    public final Cue.Size tipSize;
+    public final CueSize tipSize;
 
     protected CueBrand(String cueId,
                        String name,
                        double tipRingThickness,
-                       double cueTipThickness,
                        double endWidth,
                        double cueTipWidth,
                        Color tipRingColor,
@@ -46,7 +44,6 @@ public abstract class CueBrand {
         this.name = name;
 
         this.tipRingThickness = tipRingThickness;
-        this.cueTipThickness = cueTipThickness;
         this.endWidth = endWidth;
         this.cueTipWidth = cueTipWidth;
         this.tipRingColor = tipRingColor;
@@ -59,11 +56,11 @@ public abstract class CueBrand {
         this.available = availability;
         this.price = price;
 
-        if (cueTipWidth <= 9.8) tipSize = Cue.Size.VERY_SMALL;
-        else if (cueTipWidth < 11.0) tipSize = Cue.Size.SMALL;
-        else if (cueTipWidth < 12.5) tipSize = Cue.Size.MEDIUM;
-        else if (cueTipWidth < 14.5) tipSize = Cue.Size.BIG;
-        else tipSize = Cue.Size.HUGE;
+        if (cueTipWidth <= 9.8) tipSize = CueSize.VERY_SMALL;
+        else if (cueTipWidth < 11.0) tipSize = CueSize.SMALL;
+        else if (cueTipWidth < 12.5) tipSize = CueSize.MEDIUM;
+        else if (cueTipWidth < 14.5) tipSize = CueSize.BIG;
+        else tipSize = CueSize.HUGE;
 
         isRest = "restCue".equals(cueId);
     }
@@ -82,6 +79,10 @@ public abstract class CueBrand {
 
     public int getPrice() {
         return price;
+    }
+    
+    public boolean isBreakCue() {
+        return cueId.toLowerCase().endsWith("breakcue");
     }
 
     @Override

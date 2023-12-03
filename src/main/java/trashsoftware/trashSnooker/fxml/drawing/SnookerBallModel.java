@@ -13,4 +13,10 @@ public class SnookerBallModel extends BallModel {
         material.setDiffuseColor(Ball.snookerColor(value));
         sphere.setMaterial(material);
     }
+
+    @Override
+    public boolean textured() {
+        // 注意：红点母球可以为true
+        return false;
+    }
 }

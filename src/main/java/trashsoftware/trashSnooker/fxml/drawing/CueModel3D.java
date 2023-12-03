@@ -10,7 +10,7 @@ import trashsoftware.trashSnooker.util.DataLoader;
 
 public class CueModel3D extends CueModel {
     
-    public static final int CIRCLE_DIVISION = 48;
+    public static final int CIRCLE_DIVISION = 24;
 
     private final Cue cue;
     private final TexturedCueBrand brand;
@@ -116,6 +116,11 @@ public class CueModel3D extends CueModel {
             build();
             renderingScale = scale;
         }
+    }
+
+    @Override
+    public void redraw() {
+        build();
     }
 
     @Override

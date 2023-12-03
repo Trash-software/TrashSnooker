@@ -1,0 +1,56 @@
+{
+  "financial": {
+    "money": -3000,
+    "invoices": [
+      {
+        "inGameDate": "2024/10/10",
+        "moneyBefore": 0,
+        "moneyAfter": -2200,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2023-12-03 11:47:18"
+      },
+      {
+        "item": 12,
+        "inGameDate": "2024/10/18",
+        "match": "custom_A7727D597A40BCB9+2024+eight_master_tour_hebei",
+        "moneyBefore": -2200,
+        "moneyAfter": -2000,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-03 11:47:18"
+      },
+      {
+        "inGameDate": "2024/10/18",
+        "match": "custom_A7727D597A40BCB9+2024+eight_master_tour_hebei",
+        "moneyBefore": -2000,
+        "moneyAfter": -3000,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-03 11:47:18"
+      }
+    ],
+    "level": 1,
+    "expInThisLevel": 0,
+    "availPerks": 0,
+    "totalPerks": 0,
+    "totalExp": 0
+  },
+  "checksum": "AE0CC716BF1FE936D4B176DAE0D650E8"
+}

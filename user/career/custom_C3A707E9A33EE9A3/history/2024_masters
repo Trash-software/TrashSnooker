@@ -1,0 +1,387 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 8,
+    "Yan Bingtao": 11,
+    "Ding Junhui": 15,
+    "Smart": 14,
+    "Selby": 3,
+    "Mark Williams": 10,
+    "Mark Allen": 16,
+    "Lolita": 12,
+    "O_Sullivan": 9,
+    "Zhao Xintong": 6,
+    "Luca Brecel": 7,
+    "Neil Robertson": 1,
+    "custom_E5B08FE4BB99E5A5B3": 2,
+    "Stephen Maguire": 13,
+    "Murphy": 5,
+    "John Wizard": 4
+  },
+  "championshipId": "masters",
+  "matchTree": {"root": {
+    "p1wins": 4,
+    "p1": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Luca Brecel"},
+          "p2": {"winner": "Stephen Maguire"},
+          "winner": "Luca Brecel",
+          "stage": "ROUND_1",
+          "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-0",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 1,
+          "p1": {"winner": "Murphy"},
+          "p2": {"winner": "Mark Williams"},
+          "winner": "Mark Williams",
+          "stage": "ROUND_1",
+          "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-1",
+          "p2wins": 2
+        },
+        "winner": "Mark Williams",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_C3A707E9A33EE9A3+2024+masters-QUARTER_FINAL-8",
+        "p2wins": 3
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 1,
+          "p1": {"winner": "Zhao Xintong"},
+          "p2": {"winner": "Yan Bingtao"},
+          "winner": "Yan Bingtao",
+          "stage": "ROUND_1",
+          "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-2",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+          "p2": {"winner": "Lolita"},
+          "winner": "custom_E5B08FE4BB99E5A5B3",
+          "stage": "ROUND_1",
+          "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-3",
+          "p2wins": 0
+        },
+        "winner": "custom_E5B08FE4BB99E5A5B3",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_C3A707E9A33EE9A3+2024+masters-QUARTER_FINAL-9",
+        "p2wins": 3
+      },
+      "winner": "Mark Williams",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-SEMI_FINAL-12",
+      "p2wins": 0
+    },
+    "p2": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "Ding Junhui"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-4",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Selby"},
+          "p2": {"winner": "O_Sullivan"},
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-5",
+          "p2wins": 0
+        },
+        "winner": "Neil Robertson",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_C3A707E9A33EE9A3+2024+masters-QUARTER_FINAL-10",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Smart"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-6",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 0,
+          "p1": {"winner": "Stuart Bingham"},
+          "p2": {"winner": "Mark Allen"},
+          "winner": "Mark Allen",
+          "stage": "ROUND_1",
+          "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-7",
+          "p2wins": 2
+        },
+        "winner": "John Wizard",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_C3A707E9A33EE9A3+2024+masters-QUARTER_FINAL-11",
+        "p2wins": 0
+      },
+      "winner": "Neil Robertson",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-SEMI_FINAL-13",
+      "p2wins": 0
+    },
+    "winner": "Mark Williams",
+    "stage": "FINAL",
+    "matchId": "custom_C3A707E9A33EE9A3+2024+masters-FINAL-14",
+    "p2wins": 3
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 130,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-FINAL-14",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 125,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 6,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-FINAL-14",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 123,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-5",
+      "playerId": "Selby"
+    },
+    {
+      "score": 120,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-FINAL-14",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 96,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-5",
+      "playerId": "Selby"
+    },
+    {
+      "score": 94,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-1",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 90,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-FINAL-14",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 87,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-QUARTER_FINAL-10",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 82,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-4",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 80,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-QUARTER_FINAL-8",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 79,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-FINAL-14",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 79,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-7",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 78,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-SEMI_FINAL-13",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 77,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-3",
+      "playerId": "custom_E5B08FE4BB99E5A5B3"
+    },
+    {
+      "score": 69,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-1",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 68,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-SEMI_FINAL-12",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 68,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-1",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 65,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-QUARTER_FINAL-8",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 65,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-4",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 61,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-7",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 57,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-SEMI_FINAL-12",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 57,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-QUARTER_FINAL-9",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 54,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-0",
+      "playerId": "Luca Brecel"
+    },
+    {
+      "score": 53,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-FINAL-14",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 53,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-QUARTER_FINAL-9",
+      "playerId": "custom_E5B08FE4BB99E5A5B3"
+    },
+    {
+      "score": 52,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-QUARTER_FINAL-11",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 52,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-0",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 51,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-SEMI_FINAL-12",
+      "playerId": "custom_E5B08FE4BB99E5A5B3"
+    },
+    {
+      "score": 51,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-QUARTER_FINAL-8",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 50,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+masters-ROUND_1-6",
+      "playerId": "John Wizard"
+    }
+  ],
+  "timestamp": "2024/1/15"
+}

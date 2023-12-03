@@ -2,6 +2,9 @@ package trashsoftware.trashSnooker.core.cue;
 
 import trashsoftware.trashSnooker.util.DataLoader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public record CueTipBrand(
         String id,
         String shownName,
@@ -9,6 +12,7 @@ public record CueTipBrand(
         double maxRadius,
         double minRadius,
         double origGrip,
+        double origPower,
         double totalHp,
         int price
 ) {
@@ -19,6 +23,7 @@ public record CueTipBrand(
                 thickness,
                 diameter / 2,
                 diameter / 2,
+                1.0,
                 1.0,
                 1000,
                 50
@@ -34,12 +39,17 @@ public record CueTipBrand(
                 1,
                 1,
                 1,
+                1,
                 0
         );
     }
     
     public static CueTipBrand getById(String brandId) {
         return DataLoader.getInstance().getTipBrandById(brandId);
+    }
+    
+    public static List<CueTipBrand> listAll() {
+        return new ArrayList<>(DataLoader.getInstance().getCueTips().values());
     }
     
     public boolean isAvailableForCue(CueBrand cueBrand) {

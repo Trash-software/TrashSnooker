@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.HumanCareer;
@@ -30,7 +31,7 @@ public class InventoryView extends ChildInitializable {
     Label moneyLabel;
     
     @FXML
-    ImageView moneyImage;
+    ImageView moneyImage, inventoryImage, storeImage;
     
     private HumanCareer humanCareer;
 
@@ -59,6 +60,8 @@ public class InventoryView extends ChildInitializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ResourcesLoader rl = ResourcesLoader.getInstance();
         rl.setIconImage(rl.getMoneyImg(), moneyImage);
+        rl.setIconImage(rl.getInventoryIcon(), inventoryImage, 1.0, 1.25);
+        rl.setIconImage(rl.getStoreIcon(), storeImage, 1.0, 1.25);
         
         humanCareer = CareerManager.getInstance().getHumanPlayerCareer();
         
@@ -66,7 +69,13 @@ public class InventoryView extends ChildInitializable {
     }
     
     public void updateView() {
-        moneyLabel.setText(Util.moneyToReadable(humanCareer.getMoney()));
+        int money = humanCareer.getMoney();
+        moneyLabel.setText(Util.moneyToReadable(money));
+        if (money < 0) {
+            moneyLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
+        } else {
+            moneyLabel.setTextFill(Color.BLACK);
+        }
         
         storeRoot.reload();
         inventoryRoot.reload();

@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.career.aiMatch;
 
 import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.InGamePlayer;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
@@ -8,6 +9,10 @@ import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LetBall;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChineseAiVsAi extends AiVsAi {
     boolean p1break = true;
@@ -37,13 +42,14 @@ public class ChineseAiVsAi extends AiVsAi {
                 ));
         
         // 让球安排起
-        if (p1.getPlayerPerson().getSex() != p2.getPlayerPerson().getSex()) {
-            if (p1.getPlayerPerson().getSex() == PlayerPerson.Sex.F) {
-                sp1.remCount--;
-            } else {
-                sp2.remCount--;
-            }
-        }
+        Map<LetBall, Integer> p1Letted = new HashMap<>();
+        Map<LetBall, Integer> p2Letted = new HashMap<>();
+
+        LetBall.chineseEightLetBall(p1.getPlayerPerson(), p1Letted,
+                p2.getPlayerPerson(), p2Letted);
+        
+        sp1.remCount -= p1Letted.values().stream().reduce(0, Integer::sum);
+        sp2.remCount -= p2Letted.values().stream().reduce(0, Integer::sum);
 
         SimPlayer playing = p1break ? sp1 : sp2;
         

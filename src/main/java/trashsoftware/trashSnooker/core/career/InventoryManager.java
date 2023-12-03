@@ -21,12 +21,14 @@ public class InventoryManager {
     
     public static final String INVENTORY_FILE = "inventory.json";
     
+    private final CareerSave save;
     private final File file;
     private final Map<String, CueTip> cueTips = new HashMap<>();
     private final Map<String, Cue> cues = new HashMap<>();  // key是instance的id
     
     private InventoryManager(CareerSave save, File file) {
         this.file = file;
+        this.save = save;
     }
     
     public static InventoryManager createInstance(CareerSave save) {
@@ -61,8 +63,14 @@ public class InventoryManager {
         cues.addAll(human.getPrivateCues());
         
         for (CueBrand cueBrand : cues) {
+            CueTipBrand tipBrand;
+            if (cueBrand.isBreakCue()) {
+                tipBrand = CueTipBrand.getById("breakTip");
+            } else {
+                tipBrand = CueTipBrand.getById("stdTip");
+            }
             CueTip tip = CueTip.createByCue(cueBrand, 
-                    CueTipBrand.getById("stdTip"),
+                    tipBrand,
                     save);
             cueTips.put(tip.getInstanceId(), tip);
             Cue cue = Cue.createForCareer(cueBrand, tip, save);
@@ -141,6 +149,10 @@ public class InventoryManager {
         return cues.get(instanceId);
     }
     
+    public CueTip getTipByInstanceId(String tipInsId) {
+        return cueTips.get(tipInsId);
+    }
+    
     public List<Cue> getAllCues() {
         return new ArrayList<>(cues.values());
     }
@@ -155,6 +167,12 @@ public class InventoryManager {
     
     public void addCue(Cue cue) {
         cues.put(cue.getInstanceId(), cue);
+    }
+    
+    public void installTip(CueTip cueTip, Cue cue) {
+        cueTips.put(cueTip.getInstanceId(), cueTip);
+        cue.setCueTip(cueTip);
+        saveToDisk();
     }
     
     public void saveToDisk() {

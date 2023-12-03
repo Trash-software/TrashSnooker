@@ -6,6 +6,7 @@ import trashsoftware.trashSnooker.util.DataLoader;
 
 public class PlanarCueBrand extends CueBrand {
 
+    public final double cueTipThickness;
     public final double frontLength;
     public final double midLength;
     public final double backLength;
@@ -37,7 +38,6 @@ public class PlanarCueBrand extends CueBrand {
         super(cueId,
                 name,
                 tipRingThickness,
-                cueTipThickness,
                 endWidth,
                 cueTipWidth,
                 tipRingColor,
@@ -49,6 +49,7 @@ public class PlanarCueBrand extends CueBrand {
                 availability,
                 price);
 
+        this.cueTipThickness = cueTipThickness;
         this.frontLength = frontLength;
         this.midLength = midLength;
         this.backLength = backLength;

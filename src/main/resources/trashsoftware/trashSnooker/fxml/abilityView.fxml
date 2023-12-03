@@ -8,10 +8,15 @@
 
 <?import javafx.scene.text.Font?>
 <?import trashsoftware.trashSnooker.fxml.widgets.AbilityShower?>
+<?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.AbilityView"
-      prefHeight="400.0" prefWidth="600.0" alignment="CENTER">
+      prefHeight="420.0" prefWidth="480.0" alignment="CENTER">
+    
+    <padding>
+        <Insets topRightBottomLeft="10.0"/>
+    </padding>
     
     <AbilityShower fx:id="abilityContainer"/>
 

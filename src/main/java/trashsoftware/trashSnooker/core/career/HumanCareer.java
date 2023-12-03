@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.career;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
@@ -27,29 +28,34 @@ import java.util.*;
 public class HumanCareer extends Career {
     public static final double TAX_RATE = 0.2;
     public static final double YEAR_IZE_INTEREST_RATE = 0.12;  // 贷款利率
+    public static final int DAILY_LIFE_FEE_LOW = 50;
     public static final int DAILY_LIFE_FEE = 100;
+    public static final int DAILY_LIFE_FEE_HIGH = 200;
 
     private final Map<String, ChallengeHistory> completedChallenges = new HashMap<>();
     private final Map<Integer, List<AwardMaterial>> levelAwards = new HashMap<>();
 
     private FinancialManager financial;
+    private AwardDistributionHint unShownAwd;
+    private final CareerManager careerManager;
 
-
-    HumanCareer(PlayerPerson playerPerson, CareerSave save) {
-        super(playerPerson, true, save);
+    HumanCareer(PlayerPerson playerPerson, CareerManager careerManager) {
+        super(playerPerson, true, careerManager);
+        
+        this.careerManager = careerManager;
     }
 
     @Override
-    protected void initNew(CareerSave save) {
-        financial = new FinancialManager(save);
+    protected void initNew() {
+        financial = new FinancialManager(careerManager.getCareerSave());
         financial.availPerks = CareerManager.INIT_PERKS;
         financial.totalPerks = financial.availPerks;
         financial.money = 30000;
     }
 
     @Override
-    protected void fillFromJson(JSONObject jsonObject, CareerSave save) {
-        financial = new FinancialManager(save);
+    protected void fillFromJson(JSONObject jsonObject, CareerManager careerManager) {
+        financial = new FinancialManager(careerManager.getCareerSave());
         if (!financial.loadFromJson()) {
             try {
                 financial.availPerks = jsonObject.getInt("availPerks");
@@ -159,6 +165,8 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+        invoice.put("inGameDate", inGameDate);
         invoice.put("type", "challengeEarn");
         invoice.put("match", challengeSet.getId());
         JSONObject items = new JSONObject();
@@ -207,6 +215,24 @@ public class HumanCareer extends Career {
         // 这里不检查成就，因为earnMoney之后一般都跟着checkScoreAchievements()
     }
 
+    public void buyCueTip(String tipInstanceId, int price) {
+        int moneyBefore = financial.money;
+        financial.money -= price;
+
+        JSONObject invoice = new JSONObject();
+        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+        invoice.put("timestamp", timestamp);
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+        invoice.put("inGameDate", inGameDate);
+        invoice.put("type", "purchase");
+        invoice.put("itemType", "tip");
+        invoice.put("moneyBefore", moneyBefore);
+        invoice.put("moneyCost", price);
+        invoice.put("moneyAfter", financial.money);
+        invoice.put("item", tipInstanceId);
+        financial.invoices.add(invoice);
+    }
+
     public void buyCue(String cueInstanceId, int price) {
         int moneyBefore = financial.money;
         financial.money -= price;
@@ -214,7 +240,10 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+        invoice.put("inGameDate", inGameDate);
         invoice.put("type", "purchase");
+        invoice.put("itemType", "cue");
         invoice.put("moneyBefore", moneyBefore);
         invoice.put("moneyCost", price);
         invoice.put("moneyAfter", financial.money);
@@ -230,15 +259,21 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+        invoice.put("inGameDate", inGameDate);
         invoice.put("type", "championshipEarn");
         invoice.put("match", score.data.getId());
         invoice.put("year", score.getYear());
+        
+        int moneyEarned = 0;
+        int expEarned = 0;
 
         JSONObject items = new JSONObject();
         for (ChampionshipScore.Rank rank : score.ranks) {
             int exp = score.data.getExpByRank(rank);
             financial.totalExp += exp;
             financial.expInThisLevel += exp;
+            expEarned += exp;
             
             int before = financial.money;
             int raw = score.data.getAwardByRank(rank);
@@ -249,12 +284,16 @@ public class HumanCareer extends Career {
             subItem.put("raw", raw);
             subItem.put("actual", real);
             items.put(rank.name(), subItem);
+            
+            moneyEarned += real;
         }
         
         invoice.put("items", items);
         invoice.put("moneyBefore", moneyBefore);
         invoice.put("moneyAfter", financial.money);
         financial.invoices.add(invoice);
+        
+        unShownAwd = new AwardDistributionHint(moneyEarned, expEarned);
         
         checkScoreAchievements();
     }
@@ -358,6 +397,8 @@ public class HumanCareer extends Career {
         JSONObject record = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         record.put("timestamp", timestamp);
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+        record.put("inGameDate", inGameDate);
         record.put("type", "upgrade");
         record.put("perkUsed", upgradeRec.perkUsed());
         record.put("moneyBefore", moneyBefore);
@@ -381,21 +422,38 @@ public class HumanCareer extends Career {
     }
 
     /**
+     * 存款越多，日常开销越高
+     */
+    public int calculateDailyLifeFee() {
+        int moneyLow = 0;
+        int moneyHigh = 1_000_000;
+        
+        double lifeFee = Algebra.shiftRangeSafe(moneyLow, moneyHigh,
+                DAILY_LIFE_FEE_LOW, DAILY_LIFE_FEE_HIGH,
+                financial.money);
+//        System.out.println("Daily life fee " + lifeFee);
+        
+        return (int) (Math.round(lifeFee / 10) * 10);  // 整10
+    }
+
+    /**
      * 返回开始下一个赛事时，应缴的强制费用
      */
     public Map<String, Integer> calculateFixedFees(ChampionshipData.WithYear nextChampData) {
-        List<ChampionshipScore> scores = getChampionshipScores();
-        if (scores.isEmpty()) return Map.of();
-
-        ChampionshipScore last = scores.get(scores.size() - 1);
-        Calendar lastTime = last.timestamp;
+        ChampionshipData.WithYear last = careerManager.getChampDataManager().getPreviousChampionship(
+                nextChampData.year, nextChampData.data.month, nextChampData.data.day
+        );
+        
+        Calendar lastTime = last.toCalendar();
+        if (lastTime.before(careerManager.getBeginTimestamp())) return Map.of();
 
         Calendar nextTime = nextChampData.toCalendar();
         int diffDays = (int) Duration.between(lastTime.toInstant(), nextTime.toInstant()).toDays();
 
         Map<String, Integer> res = new HashMap<>();
 
-        int lifeFee = diffDays * DAILY_LIFE_FEE;
+        int lifeFee = diffDays * calculateDailyLifeFee();
+        System.out.println("Life fee: " + diffDays + " * " + calculateDailyLifeFee());
         res.put("lifeFee", lifeFee);
         if (financial.money < 0) {
             double owe = -financial.money;
@@ -421,6 +479,8 @@ public class HumanCareer extends Career {
             JSONObject invoice = new JSONObject();
             String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
             invoice.put("timestamp", timestamp);
+            String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+            invoice.put("inGameDate", inGameDate);
             invoice.put("type", "fees");
             invoice.put("moneyBefore", moneyBefore);
             JSONArray subArray = new JSONArray();
@@ -435,6 +495,37 @@ public class HumanCareer extends Career {
             financial.invoices.add(invoice);
         }
     }
+    
+    public void receiveInviteAward(Championship championship) {
+        Integer humanSeedNum = championship.getCareerSeedMap().get(getPlayerPerson().getPlayerId());
+        if (humanSeedNum == null) {
+            EventLogger.warning("Human joined, but no seed num.");
+            return;
+        }
+        int award = 0;
+        for (Map.Entry<Integer, Integer> entry : championship.getData().getInviteAwardMap().entrySet()) {
+            if (humanSeedNum <= entry.getKey()) {  // seed num从1开始的
+                award += entry.getValue();
+            }
+        }
+        if (award > 0) {
+            int moneyBefore = financial.money;
+            financial.money += award;
+                    
+            JSONObject invoice = new JSONObject();
+            String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+            invoice.put("timestamp", timestamp);
+            String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+            invoice.put("inGameDate", inGameDate);
+            invoice.put("type", "invitation");
+            invoice.put("match", championship.uniqueId());
+            invoice.put("item", humanSeedNum);
+            invoice.put("moneyBefore", moneyBefore);
+            invoice.put("moneyEarn", award);
+            invoice.put("moneyAfter", financial.money);
+            financial.invoices.add(invoice);
+        }
+    }
 
     /**
      * 这个方法可以把钱扣到负数
@@ -443,8 +534,7 @@ public class HumanCareer extends Career {
     public void payParticipateFees(Championship championship) {
         ChampionshipData data = championship.getData();
         int moneyBefore = financial.money;
-        boolean isSeed = championship.isPlayerSeed(getPlayerPerson().getPlayerId());
-        int registryFee = isSeed ? data.getSeedRegistryFee() : data.getRegistryFee();
+        int registryFee = data.getRegistryFee();
         int travelFee = data.getFlightFee();
         int hotelFee = data.getFlightFee();
 
@@ -453,6 +543,8 @@ public class HumanCareer extends Career {
         JSONObject invoice = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
         invoice.put("timestamp", timestamp);
+        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+        invoice.put("inGameDate", inGameDate);
         invoice.put("type", "participation");
         invoice.put("match", championship.uniqueId());
         invoice.put("moneyBefore", moneyBefore);
@@ -494,7 +586,7 @@ public class HumanCareer extends Career {
             save = true;
         }
         if (CareerManager.getInstance().getLastSavedVersion() < 46) {
-            // 扣参赛费和生活费
+            // 大概扣一下参赛费和生活费
             Calendar beginDate = null;
             Calendar lastDate = null;
             for (ChampionshipScore cs : getChampionshipScores()) {
@@ -544,14 +636,29 @@ public class HumanCareer extends Career {
             CareerManager.getInstance().saveToDisk();
         }
     }
+    
+    public InventoryManager getInventory() {
+        return CareerManager.getInstance().getInventory();
+    }
 
     private int computeAllAwards() {
         int awards = 0;
-        awards += new CareerWithAwards(GameRule.SNOOKER, this, Calendar.getInstance()).getTotalAwards();
-        awards += new CareerWithAwards(GameRule.CHINESE_EIGHT, this, Calendar.getInstance()).getTotalAwards();
-        awards += new CareerWithAwards(GameRule.LIS_EIGHT, this, Calendar.getInstance()).getTotalAwards();
-        awards += new CareerWithAwards(GameRule.AMERICAN_NINE, this, Calendar.getInstance()).getTotalAwards();
+        // 只是利用这个类来算钱，没有实际作用
+        awards += new CareerRanker.ByAwards(GameRule.SNOOKER, this, Calendar.getInstance()).getTotalAwards();
+        awards += new CareerRanker.ByAwards(GameRule.CHINESE_EIGHT, this, Calendar.getInstance()).getTotalAwards();
+        awards += new CareerRanker.ByAwards(GameRule.LIS_EIGHT, this, Calendar.getInstance()).getTotalAwards();
+        awards += new CareerRanker.ByAwards(GameRule.AMERICAN_NINE, this, Calendar.getInstance()).getTotalAwards();
         return awards;
+    }
+
+    public AwardDistributionHint getAndRemoveUnShownAwd() {
+        AwardDistributionHint awd = unShownAwd;
+        unShownAwd = null;
+        return awd;
+    }
+    
+    public List<JSONObject> getInvoices() {
+        return new ArrayList<>(financial.invoices);
     }
 
     public static class FinancialManager {
@@ -636,5 +743,8 @@ public class HumanCareer extends Career {
             JSONObject json = toJson();
             DataLoader.saveToDisk(json, jsonFile.getAbsolutePath());
         }
+    }
+    
+    public record AwardDistributionHint(int money, int exp) {
     }
 }

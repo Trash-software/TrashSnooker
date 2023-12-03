@@ -559,19 +559,20 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     private void checkScoreSumAchievement() {
         InGamePlayer human = getP1().isHuman() ? getP1() : getP2();
-        if (getScoreSum() > 147) {
+        if (getScoreSum(false) > 147) {
             if (getScoreDiffAbs() <= 50) {
                 AchManager.getInstance().addAchievement(Achievement.SUM_OVER_147, human);
             }
-        } else if (getScoreSum() < 75) {
+        } else if (getScoreSum(true) < 75) {
             AchManager.getInstance().addAchievement(Achievement.SUM_BELOW, human);
-        } else if (getScoreSum() < 50) {
+        } else if (getScoreSum(true) < 50) {
             AchManager.getInstance().addAchievement(Achievement.SUM_BELOW_2, human);
         }
     }
 
-    private int getScoreSum() {
-        return player1.getScore() + player2.getScore() + getRemainingScore(false);
+    private int getScoreSum(boolean includeRemain) {
+        return player1.getScore() + player2.getScore() + 
+                (includeRemain ? getRemainingScore(false) : 0);
     }
 
     public boolean isDoingFreeBall() {

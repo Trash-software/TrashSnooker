@@ -8,16 +8,28 @@
 
 <?import trashsoftware.trashSnooker.fxml.widgets.CueList?>
 <?import javafx.scene.text.Font?>
+<?import trashsoftware.trashSnooker.fxml.widgets.FixedCueList?>
+<?import javafx.geometry.Insets?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          type="trashsoftware.trashSnooker.fxml.inventoryPages.InventoryPage"
          prefHeight="400.0" prefWidth="600.0" spacing="10.0">
     
-    <Label text="%inventoryCues">
-        <font>
-            <Font size="18.0"/>
-        </font>
-    </Label>
-    <CueList fx:id="cueList"/>
+    <padding>
+        <Insets top="10.0"/>
+    </padding>
+    
+    <HBox>
+        <Label text="%inventoryCues">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Label>
+        <HBox HBox.hgrow="ALWAYS" alignment="TOP_RIGHT">
+            <Button text="%tipAbout" onAction="#tipHelpAction"/>
+        </HBox>
+    </HBox>
+    
+    <FixedCueList fx:id="cueList"/>
 
 </fx:root>

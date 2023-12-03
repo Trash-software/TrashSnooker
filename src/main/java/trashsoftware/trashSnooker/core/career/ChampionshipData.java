@@ -42,9 +42,15 @@ public class ChampionshipData {
     TableSpec tableSpec;
     BallMetrics ballMetrics;
     private int registryFee;
-    private int seedRegistryFee;
     private int flightFee;
     private int hotelFee;
+    /**
+     * 种子选手的邀请金
+     * 注意：会累加
+     * 比如{16:1000, 4: 2000}
+     * 则排行前4的选手会拿到3000
+     */
+    private final SortedMap<Integer, Integer> inviteAwardMap = new TreeMap<>();
     private String description;
     private String sponsor;
 
@@ -136,11 +142,18 @@ public class ChampionshipData {
         if (jsonObject.has("fees")) {
             JSONObject fees = jsonObject.getJSONObject("fees");
             data.registryFee = fees.getInt("registry");
-            data.seedRegistryFee = fees.getInt("registrySeed");
             data.flightFee = fees.getInt("flight");
             data.hotelFee = fees.getInt("hotel");
         } else {
             System.err.println("Championship " + data.id + " contains no fees.");
+        }
+        
+        if (jsonObject.has("invite")) {
+            JSONObject invite = jsonObject.getJSONObject("invite");
+            for (String key : invite.keySet()) {
+                int value = invite.getInt(key);
+                data.inviteAwardMap.put(Integer.parseInt(key), value);
+            }
         }
         
 //        System.out.println(data.id);
@@ -333,10 +346,6 @@ public class ChampionshipData {
         return registryFee;
     }
 
-    public int getSeedRegistryFee() {
-        return seedRegistryFee;
-    }
-
     public int getHotelFee() {
         return hotelFee;
     }
@@ -344,10 +353,9 @@ public class ChampionshipData {
     public int getFlightFee() {
         return flightFee;
     }
-    
-    public int getTotalFees(boolean isSeed) {
-        int registry = isSeed ? getSeedRegistryFee() : getRegistryFee();
-        return registry + getHotelFee() + getFlightFee();
+
+    public SortedMap<Integer, Integer> getInviteAwardMap() {
+        return inviteAwardMap;
     }
 
     private TableMetrics.TableBuilderFactory tableType() {

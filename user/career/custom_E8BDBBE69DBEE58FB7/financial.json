@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 63420,
+    "money": 58920,
     "invoices": [
       {
         "match": "pool-full-regular",
@@ -24,13 +24,66 @@
           "raw": 60000
         }},
         "timestamp": "2023-11-27 02:57:15"
+      },
+      {
+        "perkUsed": 3,
+        "moneyBefore": 63420,
+        "moneyCost": 1300,
+        "moneyAfter": 62120,
+        "ability": {
+          "powerControl": [
+            79.56543838517604,
+            81.58716646591724
+          ],
+          "normalPower": [
+            69.01237561712979,
+            70.6617568362733
+          ],
+          "spin": [
+            75.1087488710723,
+            77.35331142751868
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2023-11-28 04:05:15"
+      },
+      {
+        "moneyBefore": 62120,
+        "moneyAfter": 59920,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2023-11-28 16:41:45"
+      },
+      {
+        "match": "custom_E8BDBBE69DBEE58FB7+2024+eight_master_tour_hebei",
+        "moneyBefore": 59920,
+        "moneyAfter": 58920,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-11-28 16:41:45"
       }
     ],
     "level": 8,
     "expInThisLevel": 2324,
-    "availPerks": 56,
+    "availPerks": 53,
     "totalPerks": 24,
     "totalExp": 3217
   },
-  "checksum": "31BFA3204CFF900068180E12AAD9818B"
+  "checksum": "9679B4E17D8D7CB2520CCF5DDC8E3C56"
 }

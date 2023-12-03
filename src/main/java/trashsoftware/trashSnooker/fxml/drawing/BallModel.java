@@ -13,10 +13,10 @@ import java.util.Random;
 
 public abstract class BallModel {
 
-    public final Sphere sphere;
+    public final NonStretchSphere sphere;
 
     protected BallModel() {
-        sphere = new Sphere();
+        sphere = new NonStretchSphere(64, 1.0);
 
         sphere.getTransforms().add(new Rotate());
     }
@@ -44,10 +44,12 @@ public abstract class BallModel {
     }
 
     public void rotateBy(double axisX, double axisY, double axisZ, double deg) {
+//        if (textured()) {
         Rotate nr = new Rotate(deg, new Point3D(axisX, axisY, axisZ));
         Transform cur = sphere.getTransforms().remove(0);
         Transform tr = nr.createConcatenation(cur);
         sphere.getTransforms().add(tr);
+//        }
     }
 
     public void setX(GamePane container, double actualX) {
@@ -57,4 +59,6 @@ public abstract class BallModel {
     public void setY(GamePane container, double actualY) {
         sphere.setTranslateY(container.paneY(actualY));
     }
+
+    public abstract boolean textured();
 }

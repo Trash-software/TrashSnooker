@@ -11,8 +11,7 @@ import java.util.Date;
 
 public class CueTip {
     
-    public static double TIP_HEALTH_LOW = 0.2;
-    private static int instanceCounter;
+    public static double TIP_HEALTH_LOW = 0.1;
     
     private final String instanceId;
     private final CueTipBrand brand;
@@ -31,9 +30,13 @@ public class CueTip {
     }
     
     public static CueTip createByCue(CueBrand cueBrand, CueTipBrand tipBrand, CareerSave owner) {
-//        String instanceId = tipBrand.id() + "-" + owner.getPlayerId() + "-" + 
-//                Util.TIME_FORMAT_SEC.format(new Date());
-        String instanceId = tipBrand.id() + "-" + PermanentCounters.getInstance().nextCueInstance();
+        String instanceId;
+        if (owner != null) {
+            instanceId = tipBrand.id() + ":" +
+                    owner.getPlayerId() + "-" + PermanentCounters.getInstance().nextCueInstance();
+        } else {
+            instanceId = tipBrand.id() + "-" + PermanentCounters.getInstance().nextCueInstance();
+        }
         
         double totalHp = calculateTotalHp(tipBrand.totalHp(), 
                 tipBrand.maxRadius() * 2,
@@ -47,10 +50,18 @@ public class CueTip {
                 false);
     }
     
+    public static CueTip createPreviewInstance(CueTipBrand tipBrand) {
+        return new CueTip(tipBrand.id() + "-preview",
+                tipBrand,
+                tipBrand.maxRadius(),
+                tipBrand.totalHp(),
+                tipBrand.totalHp(),
+                false);
+    }
+    
     public static CueTip createDefault(double diameter, double thickness) {
         var brand = CueTipBrand.createDefault(diameter, thickness);
         return new CueTip(
-//                "universalTip-" + instanceCounter++,
                 "universalTip-" + PermanentCounters.getInstance().nextTipInstance(),
                 brand,
                 brand.maxRadius(), 
@@ -73,7 +84,7 @@ public class CueTip {
     }
     
     public static double calculateTotalHp(double origTotalHp, double origDiameter, double diameter) {
-        return origTotalHp * (diameter / origDiameter);
+        return origTotalHp * Math.pow(diameter / origDiameter, 2);
     }
     
     public static CueTip fromJson(JSONObject json) {
@@ -113,25 +124,44 @@ public class CueTip {
     }
 
     public double getTotalDurability() {
+        return totalHp;
+    }
+    
+    public double getBrandOrigDurability() {
         return brand.totalHp();
     }
 
     public double getRadius() {
         return radius;
     }
-    
-    public void reduceHp(double value) {
+
+    /**
+     * @return 是不是就是这杆打爆的
+     */
+    public boolean reduceHp(double value) {
+        double curHp = hp;
         System.out.println("hp reduced " + value);
-        this.hp -= value;
+        hp -= value;
+        return curHp > 0 && hp <= 0;
+    }
+    
+    public double getPower() {
+        if (isBroken()) {
+            return 0.75 * brand.origPower();
+        } else {
+            return brand.origPower();  // todo: 皮头也有传力
+        }
     }
     
     public double getGrip() {
         double hpPercentage = getHpPercentage();
-        if (hpPercentage < TIP_HEALTH_LOW) {
+        if (hpPercentage <= 0) {
+            return 0.25;
+        } else if (hpPercentage < TIP_HEALTH_LOW) {
             return brand.origGrip() * Algebra.shiftRangeSafe(
                     0.0,
                     TIP_HEALTH_LOW, 
-                    0.5,
+                    0.75,
                     1.0,
                     hpPercentage
             );
@@ -140,7 +170,7 @@ public class CueTip {
     }
     
     public double getHpPercentage() {
-        return hp / brand.totalHp();
+        return hp / totalHp;
     }
     
     public boolean isDecaying() {
