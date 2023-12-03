@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.cue;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.CareerSave;
+import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.PermanentCounters;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 public class Cue {
 
+    public static double BOTTOM_SUE_POINT = 0.8;
     private static int oneTimeInstanceCounter;
     
     public static final String BRAND_SEPARATOR = ":";
@@ -56,9 +58,16 @@ public class Cue {
     }
     
     public static Cue createOneTimeInstance(CueBrand brand) {
+        CueTip tip;
+        if (brand.isBreakCue()) {
+            tip = CueTip.createDefaultBreak(brand.cueTipWidth, brand.tipSize.getDefaultTipThickness());
+        } else {
+            tip = CueTip.createDefault(brand.cueTipWidth, brand.tipSize.getDefaultTipThickness());
+        }
+        
         return new Cue(brand,
                 brand.getCueId() + BRAND_SEPARATOR + "fast-" + oneTimeInstanceCounter++,
-                CueTip.createDefault(brand.cueTipWidth, brand.tipSize.getDefaultTipThickness()),
+                tip,
                 brand.getName(),
                 false
         );
@@ -155,11 +164,11 @@ public class Cue {
     }
 
     public double getOrigSpinMultiplier() {
-        return brand.spinMultiplier;
+        return brand.getElasticity();
     }
 
     public double getSpinMultiplier() {
-        return brand.spinMultiplier * cueTip.getGrip();
+        return brand.getElasticity();
     }
 
     public double getAccuracyMultiplier() {
@@ -188,5 +197,56 @@ public class Cue {
 
     public void setLastSelectTime() {
         this.lastSelectTime = new Date();
+    }
+    
+    public double[] aiCuePoint(double[] aiCuePoint, BallMetrics ballMetrics) {
+        double fb = aiCuePoint[0];
+        double side = aiCuePoint[1];
+        
+        double radius = getCueAbleRelRadius(ballMetrics);
+        
+        if (fb < 0) {
+            // 这里是高杆正低杆负
+            fb *= BOTTOM_SUE_POINT;
+        }
+        
+        return new double[]{fb * radius, side * radius};
+    }
+    
+    public double[][] getCueAbleArea(BallMetrics ballMetrics, int sep) {
+        double baseRadius = getCueAbleRelRadius(ballMetrics);
+        
+        double tickDeg = 360.0 / sep;
+        
+        double[][] result = new double[sep][2];
+        
+        for (int degI = 0; degI < sep; degI++) {
+            double deg = degI * tickDeg;
+            double rad = Math.toRadians(deg);
+            double x = Math.cos(rad);
+            double y = Math.sin(rad);
+            
+            double yMul = 1.0;
+            if (deg > 0 && deg < 180) {
+                yMul = 1.0 - y * (1 - BOTTOM_SUE_POINT);  // sin(rad)，如果要改y就要把这里写明
+            }
+
+            result[degI][0] = x * baseRadius;
+            result[degI][1] = y * baseRadius * yMul;
+        }
+        return result;
+    }
+
+    /**
+     * @return 不会呲杆的打点范围，0-1之间
+     */
+    public double getCueAbleRelRadius(BallMetrics ballMetrics) {
+        CueTip tip = getCueTip();
+        
+        // 来自于一个我没想起来的公式里的3/4次方
+        double maxGripAngle = Math.pow(tip.getRadius() / ballMetrics.ballRadius, 0.75) 
+                * tip.getGrip() * 170.0;
+//        System.out.println(tip.getBrand().id() + " Grip angle " + maxGripAngle);
+        return Math.sin(Math.toRadians(maxGripAngle));
     }
 }

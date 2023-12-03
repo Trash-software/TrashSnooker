@@ -4,6 +4,7 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
@@ -496,14 +497,15 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         List<AttackParam> pureAttacks = new ArrayList<>();
         List<AttackParam> defensiveAttacks = new ArrayList<>();  // 连打带防
-
+        Cue cue = aiPlayer.getInGamePlayer().getCueSelection().getSelected().getNonNullInstance();
         double easiest = 0.0;
         for (double selectedPower = minPower; selectedPower <= powerLimit; selectedPower += tick) {
             for (double[] spins : availSpins) {
+                double[] aiSpins = cue.aiCuePoint(spins, game.getGameValues().ball);
                 CueParams cueParams = CueParams.createBySelected(
                         selectedPower,
-                        spins[0],
-                        spins[1],
+                        aiSpins[0],
+                        aiSpins[1],
                         game,
                         aiPlayer.getInGamePlayer(),
                         choice.handSkill
@@ -1310,7 +1312,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             } else if (attackChoice instanceof AttackChoice.DoubleAttackChoice doubleAc) {
                 // 稍微给高点
                 // 除数越大，AI越倾向打翻袋
-                double targetDifficultyMm = targetAimingOffset * (105 - aps.doubleAbility) / 500;
+                double targetDifficultyMm = targetAimingOffset * (105 - aps.doubleAbility) / 400;
 
                 tarDevHoleSdMm += targetDifficultyMm;
 

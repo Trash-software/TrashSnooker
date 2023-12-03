@@ -19,17 +19,17 @@ public class CuePlayParams {
     public double xSpin;
     public double ySpin;
     public double sideSpin;
-    
+
     private final boolean miscued;
 
     /**
-     * @param vx          x speed, in real, mm/s
-     * @param vy          y speed, in real, mm/s
-     * @param xSpin       由旋转产生的横向最大速度，mm/s
-     * @param ySpin       由旋转产生的纵向最大速度，mm/s
-     * @param sideSpin    由侧旋产生的最大速度，mm/s
-     * @param miscued     是否滑杆
-     * @param cueParams   记录
+     * @param vx        x speed, in real, mm/s
+     * @param vy        y speed, in real, mm/s
+     * @param xSpin     由旋转产生的横向最大速度，mm/s
+     * @param ySpin     由旋转产生的纵向最大速度，mm/s
+     * @param sideSpin  由侧旋产生的最大速度，mm/s
+     * @param miscued   是否滑杆
+     * @param cueParams 记录
      */
     protected CuePlayParams(double vx, double vy, double xSpin, double ySpin,
                             double sideSpin, boolean miscued, CueParams cueParams) {
@@ -58,12 +58,12 @@ public class CuePlayParams {
      * @param directionX selected x direction
      * @param directionY selected y direction
      */
-    public static CuePlayParams makeIdealParams(double directionX, 
+    public static CuePlayParams makeIdealParams(double directionX,
                                                 double directionY,
                                                 CueParams cueParams,
                                                 double cueAngleDeg,
                                                 boolean slideCue) {
-        
+
         double directionalPower = cueParams.actualPower();
         double directionalSideSpin = cueParams.actualSideSpin();  // 参与击球方向计算的sideSpin
         if (slideCue) {
@@ -95,13 +95,13 @@ public class CuePlayParams {
     }
 
     public static double getSelectedFrontBackSpin(double actualFbSpin,
-                                           PlayerPerson playerPerson,
-                                           Cue cue) {
+                                                  PlayerPerson playerPerson,
+                                                  Cue cue) {
         return actualFbSpin / cue.getSpinMultiplier() /
                 (playerPerson.getMaxSpinPercentage() / 100.0);
     }
 
-    public static double unitFrontBackSpin(double unitCuePoint, 
+    public static double unitFrontBackSpin(double unitCuePoint,
                                            PlayerPerson playerPerson,
                                            Cue cue) {
         return unitCuePoint * cue.getSpinMultiplier() *
@@ -243,7 +243,7 @@ public class CuePlayParams {
             // 高杆补偿
             double factor = Algebra.shiftRangeSafe(
                     0, 1,
-                    1, Values.FRONT_SPIN_FACTOR, 
+                    1, Values.FRONT_SPIN_FACTOR,
                     frontBackSpin);
             frontBackSpin *= factor;
         }

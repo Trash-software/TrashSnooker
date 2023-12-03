@@ -73,6 +73,7 @@ import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 import trashsoftware.trashSnooker.recorder.*;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.PointInPoly;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.IOException;
@@ -198,7 +199,7 @@ public class GameView implements Initializable {
     private double ballRadius;
     private double cueCanvasWH = 80.0;
     private double cueAreaRadius = 36.0;
-    private double cueRadius = 4.0;
+    //    private double cueRadius = 4.0;
     private GraphicsContext cuePointCanvasGc;
     private GraphicsContext cueAngleCanvasGc;
     private Pane basePane;  // 杆是画在这个pane上的
@@ -257,6 +258,8 @@ public class GameView implements Initializable {
     private boolean aiHelpPlay = false;
     private List<double[]> aiWhitePath;  // todo: debug用的
     private List<double[]> suggestedPlayerWhitePath;
+
+    private double[][] cueAbleArea;  // 不会呲杆的打点，暂时与障碍无关
 
     private static double pullDtOf(PlayerPerson person, double personPower) {
         return (person.getMaxPullDt() - person.getMinPullDt()) *
@@ -367,7 +370,7 @@ public class GameView implements Initializable {
         if (zoomRatio < 1.0) {
             cueCanvasWH *= zoomRatio;
             cueAreaRadius *= zoomRatio;
-            cueRadius *= zoomRatio;
+//            cueRadius *= zoomRatio;
 
             cueAngleBaseHor *= zoomRatio;
             cueAngleBaseVer *= zoomRatio;
@@ -517,6 +520,7 @@ public class GameView implements Initializable {
 
         setupPowerSlider();
         updatePowerSlider(game.getGame().getCuingPlayer().getPlayerPerson());
+        recalculateUiRestrictions();
 
         setupGameMenu();
         setupAiHelper();
@@ -1055,12 +1059,12 @@ public class GameView implements Initializable {
         cueAngleCanvas.setDisable(false);
 
         cursorDrawer.synchronizeGame();  // 刷新白球预测的线程池
-        
+
         if (showTipBrokenMsg) {
             Platform.runLater(() -> AlertShower.showInfo(stage,
                     strings.getString("tipBrokenTip"),
                     strings.getString("tipBroken")));
-            
+
             showTipBrokenMsg = false;
         }
 
@@ -1309,7 +1313,7 @@ public class GameView implements Initializable {
     }
 
     private double getRatioOfCueAndBall() {
-        return getCuingCue().getCueTipWidth() / gameValues.ball.ballDiameter;
+        return getCuingCue().getCueTipWidth() / gameValues.ball.ballDiameter;  // 故意用的杆头而不是皮头的粗细
     }
 
     private double getCuePointRelX(double x) {
@@ -1328,26 +1332,46 @@ public class GameView implements Initializable {
         return y * cueAreaRadius + cueCanvasWH / 2;
     }
 
-    private void setCueRollDeg(double cueRollDeg) {
-
-    }
-
-    private void setCuePoint(double x, double y, boolean forceMove) {
+    private void setCuePoint(double x, double y, boolean byButton) {
         if (Algebra.distanceToPoint(x, y, cueCanvasWH / 2, cueCanvasWH / 2) <
-                cueAreaRadius - cueRadius) {
+                cueAreaRadius) {
             double ratioCueAndBall = getRatioOfCueAndBall();
+
+            double curX = getCuePointRelX(cuePointX), curY = getCuePointRelY(cuePointY);
+            double newX = getCuePointRelX(x), newY = getCuePointRelY(y);
+            double[] curPos = new double[]{curX, curY};
+            double[] newPos = new double[]{newX, newY};
+
+            boolean curInArea = true;
+            boolean newInArea = true;
+            if (cueAbleArea != null) {
+                curInArea = PointInPoly.pointInPoly(curPos, cueAbleArea);
+                newInArea = PointInPoly.pointInPoly(newPos, cueAbleArea);
+//                System.out.println(curInArea + " " + newInArea + Arrays.toString(newPos));
+            } else {
+                System.out.println("Cue able area is null!");
+            }
+
             if (obstacleProjection == null
-//                    || true
                     || obstacleProjection.cueAble(
-                    getCuePointRelX(x), getCuePointRelY(y), ratioCueAndBall)) {
-                cuePointX = x;
-                cuePointY = y;
+                    newX, newY, ratioCueAndBall)) {
+                
+                if (byButton) {
+                    if (newInArea || !curInArea) {
+                        cuePointX = x;
+                        cuePointY = y;
+                    }
+                } else {
+                    cuePointX = x;
+                    cuePointY = y;
+                }
+                
                 recalculateUiRestrictions();
-            } else if (forceMove) {
+            } else if (byButton) {
                 // obstacleProjection 一定!= null
-                boolean curCueAble = obstacleProjection.cueAble(
+                boolean curCueAble = curInArea && obstacleProjection.cueAble(
                         getCuePointRelX(cuePointX), getCuePointRelY(cuePointY), ratioCueAndBall);
-                boolean newCueAble = obstacleProjection.cueAble(
+                boolean newCueAble = newInArea && obstacleProjection.cueAble(
                         getCuePointRelX(x), getCuePointRelY(y), ratioCueAndBall);
                 if (newCueAble || !curCueAble) {
                     // 只要不是从可以打的地方调到打不了的地方，都允许
@@ -1398,7 +1422,7 @@ public class GameView implements Initializable {
         if (replay != null || playingMovement || aiCalculating || cueAnimationPlayer != null)
             return;
 
-        setCuePoint(mouseEvent.getX(), mouseEvent.getY(), false);
+        setCuePoint(mouseEvent.getX(), mouseEvent.getY(), true);
     }
 
     private void onCueAngleCanvasClicked(MouseEvent mouseEvent) {
@@ -2063,12 +2087,24 @@ public class GameView implements Initializable {
 
 //        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
 
-        return generateCueParams(selPower, getSelectedFrontBackSpin(cpy), getSelectedSideSpin(cpx), cueAngleDeg, slidedCue);
+        return generateCueParams(selPower, 
+                getSelectedFrontBackSpin(cpy), 
+                getSelectedSideSpin(cpx), 
+                cueAngleDeg, 
+                slidedCue);
     }
 
     private boolean isMiscue() {
-        return Algebra.distanceToPoint(cuePointX, cuePointY, cueCanvasWH / 2, cueCanvasWH / 2)
-                > cueAreaRadius - cueRadius;
+//        return Algebra.distanceToPoint(cuePointX, cuePointY, cueCanvasWH / 2, cueCanvasWH / 2)
+//                > cueAreaRadius - cueRadius;
+        if (cueAbleArea == null) {
+            EventLogger.error("Cue able area is null");
+            return false;
+        } else {
+            return !PointInPoly.pointInPoly(
+                    new double[]{getCuePointRelX(cuePointX), getCuePointRelY(cuePointY)},
+                    cueAbleArea);
+        }
     }
 
     private CueRecord makeCueRecord(Player cuePlayer, CuePlayParams paramsWithError) {
@@ -2217,25 +2253,28 @@ public class GameView implements Initializable {
                 playerCueCalculations(params, player, attempt, usedHand, snookered));
         thread.start();
     }
-    
+
     private void reduceCueHp(Cue cue, Player player, CuePlayParams params) {
         if (!cue.isPermanent()) return;
-        
-        double reduce = params.cueParams.actualPower() / 30.0;
+
+        double reduce = Math.pow(params.cueParams.actualPower() / 100, 1.5) * 8;
         double cuePointReduce = Math.hypot(params.cueParams.actualFrontBackSpin(),
                 params.cueParams.actualSideSpin() * 0.5);
-        
-        reduce *= Algebra.shiftRangeSafe(0, 
-                1, 
+
+        reduce *= Algebra.shiftRangeSafe(0,
+                1,
                 0.5,
                 1.0,
                 cuePointReduce);
         reduce *= gameValues.ball.ballWeightRatio;
-        
-        if (isMiscue()) {
-            reduce *= 100;
+
+        if (miscued) {
+            double factor = Math.random();
+            factor += 0.5;
+            factor *= 800;  // 呲杆时力度和旋转分别都被除以了4。乘以上面shift就是800。50-150倍损耗
+            reduce *= factor;
         }
-        
+
         showTipBrokenMsg = cue.getCueTip().reduceHp(reduce);
         if (showTipBrokenMsg) {
             System.out.println("Tip broken!");
@@ -2866,7 +2905,7 @@ public class GameView implements Initializable {
         gamePane.getTableCanvas().setOnMouseDragged(this::onDragging);
         gamePane.getTableCanvas().setOnMouseMoved(this::onMouseMoved);
 
-        cuePointCanvas.setOnMouseClicked(this::onCuePointCanvasClicked);
+        cuePointCanvas.setOnMousePressed(this::onCuePointCanvasClicked);
         cuePointCanvas.setOnMouseDragged(this::onCuePointCanvasDragged);
 
         cueAngleCanvas.setOnMouseClicked(this::onCueAngleCanvasClicked);
@@ -3837,6 +3876,10 @@ public class GameView implements Initializable {
         return cueModel;
     }
 
+    private void calculateCueAbleArea() {
+        cueAbleArea = getCuingCue().getCueAbleArea(gameValues.ball, 32);
+    }
+
     private void recalculateUiRestrictions() {
         recalculateUiRestrictions(false);
     }
@@ -3871,6 +3914,8 @@ public class GameView implements Initializable {
             obstacleProjection = null;
         }
 
+        calculateCueAbleArea();
+
         // 启用/禁用手
         updateHandSelection(forceChangeHand);
 
@@ -3880,11 +3925,7 @@ public class GameView implements Initializable {
 
         // 只有玩家可以换球杆
         InGamePlayer cuingIgp = game.getGame().getCuingIgp();
-        if (cuingIgp.isHuman()) {
-            changeCueButton.setDisable(false);
-        } else {
-            changeCueButton.setDisable(true);
-        }
+        changeCueButton.setDisable(!cuingIgp.isHuman());
 
         createPathPrediction();
     }
@@ -3977,6 +4018,24 @@ public class GameView implements Initializable {
         cuePointCanvasGc.setStroke(BLACK);
         cuePointCanvasGc.strokeOval(padding, padding, cueAreaDia, cueAreaDia);
 
+        // 画可用的打点
+        if (cueAbleArea != null) {
+            double[] xs = new double[cueAbleArea.length];
+            double[] ys = new double[cueAbleArea.length];
+            for (int i = 0; i < cueAbleArea.length; i++) {
+                xs[i] = cueCanvasWH / 2 + cueAbleArea[i][0] * cueAreaRadius;
+                ys[i] = cueCanvasWH / 2 + cueAbleArea[i][1] * cueAreaRadius;
+            }
+
+            cuePointCanvasGc.setStroke(Color.DIMGRAY);
+            cuePointCanvasGc.setLineDashes(2);
+
+            cuePointCanvasGc.strokePolygon(xs, ys, cueAbleArea.length);
+        }
+        cuePointCanvasGc.setLineDashes();
+
+        double cueRadius = getCuingCue().getCueTip().getRadius();
+        // 画打点
         if (intentCuePointX >= 0 && intentCuePointY >= 0) {
             cuePointCanvasGc.setFill(INTENT_CUE_POINT);
             cuePointCanvasGc.fillOval(intentCuePointX - cueRadius, intentCuePointY - cueRadius,

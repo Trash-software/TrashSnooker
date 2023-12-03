@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.cue;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 
 import java.util.Objects;
 
@@ -14,8 +15,13 @@ public abstract class CueBrand {
     protected final double cueTipWidth;
 
     final double powerMultiplier;
-    final double spinMultiplier;
+//    final double spinMultiplier;
     final double accuracyMultiplier;
+
+    /**
+     * 材质的弹性，直接影响杆法效果
+     */
+    final double elasticity;
 
     public Color tipRingColor;
     public Color backColor;
@@ -35,7 +41,7 @@ public abstract class CueBrand {
                        Color tipRingColor,
                        Color backColor,
                        double powerMultiplier,
-                       double spinMultiplier,
+                       double elasticity,
                        double accuracyMultiplier,
                        boolean privacy,
                        boolean availability,
@@ -50,7 +56,8 @@ public abstract class CueBrand {
 
         this.backColor = backColor;
         this.powerMultiplier = powerMultiplier;
-        this.spinMultiplier = spinMultiplier;
+//        this.spinMultiplier = spinMultiplier;
+        this.elasticity = elasticity;
         this.accuracyMultiplier = accuracyMultiplier;
         this.privacy = privacy;
         this.available = availability;
@@ -80,7 +87,15 @@ public abstract class CueBrand {
     public int getPrice() {
         return price;
     }
+
+    public double getElasticity() {
+        return elasticity;
+    }
     
+    public double getHardness() {
+        return powerMultiplier;
+    }
+
     public boolean isBreakCue() {
         return cueId.toLowerCase().endsWith("breakcue");
     }
@@ -100,6 +115,16 @@ public abstract class CueBrand {
 
     public double getCueTipWidth() {
         return cueTipWidth;
+    }
+
+    /**
+     * @see Cue#getCueAbleRelRadius(BallMetrics) 
+     */
+    public double theoreticalSpinStrength() {
+        double maxGripAngle = Math.pow(cueTipWidth / 2 / 57.00, 0.75)
+                * 1 * 170.0;
+//        System.out.println(tip.getBrand().id() + " Grip angle " + maxGripAngle);
+        return Math.sin(Math.toRadians(maxGripAngle)) * getElasticity() * 2.0;
     }
 
     public abstract double getWoodPartLength();

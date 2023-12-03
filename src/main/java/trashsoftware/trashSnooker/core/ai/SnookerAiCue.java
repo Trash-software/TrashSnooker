@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
@@ -89,9 +90,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double totalAng = Math.toDegrees(Algebra.thetaBetweenVectors(thickVec, thinVec));
         double tickDeg = totalAng / nTicks * -sign;
         
-        double selectedSideSpin = 0.6 * sign;
-//        double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
-//                aiPlayer.getInGamePlayer().getCurrentCue(game));
+        double selectedSideSpin = 0.45 * sign;
         
         List<Ball> legalList = game.getAllLegalBalls(1, false, false);
         Set<Ball> legalSet = new HashSet<>(legalList);
@@ -302,12 +301,14 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             System.out.println("Big power!");
             int index = random.nextInt(ATTACK_SPIN_POINTS.length);
             double[] spin = ATTACK_SPIN_POINTS[index];
+            Cue cue = aiPlayer.getInGamePlayer().getCueSelection().getSelected().getNonNullInstance();
+            double[] aiSpin = cue.aiCuePoint(spin, game.getGameValues().ball);
             double powerLow = pp.getControllablePowerPercentage() * 0.7;
             double interval = pp.getControllablePowerPercentage() - powerLow;
             cueParams = CueParams.createBySelected(
                     random.nextDouble() * interval + powerLow,
-                    spin[0],
-                    spin[1],
+                    aiSpin[0],
+                    aiSpin[1],
                     game,
                     aiPlayer.getInGamePlayer(),
                     CuePlayParams.getPlayableHand(

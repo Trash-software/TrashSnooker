@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": -34749,
+    "money": -29949,
     "invoices": [
       {
         "perkUsed": 6,
@@ -1073,13 +1073,26 @@
           }
         ],
         "timestamp": "2023-12-03 13:22:26"
+      },
+      {
+        "inGameDate": "2024/1/22",
+        "year": 2024,
+        "match": "eight_red_pocket_open",
+        "moneyBefore": -34749,
+        "moneyAfter": -29949,
+        "type": "championshipEarn",
+        "items": {"TOP_4": {
+          "actual": 4800,
+          "raw": 6000
+        }},
+        "timestamp": "2023-12-04 02:44:17"
       }
     ],
     "level": 12,
-    "expInThisLevel": 95,
+    "expInThisLevel": 315,
     "availPerks": 9,
     "totalPerks": 38,
-    "totalExp": 1760
+    "totalExp": 1980
   },
-  "checksum": "85837A326AF77BB75328FD6AC216E0C9"
+  "checksum": "229C8958EB2149FF2EA82FBE542EA07D"
 }

@@ -107,10 +107,10 @@
                 <Insets topRightBottomLeft="5.0"/>
             </padding>
 
-            <Canvas fx:id="cueAngleCanvas" GridPane.rowIndex="1" width="80.0" height="80.0"/>
+            <Canvas fx:id="cueAngleCanvas" GridPane.rowIndex="1" width="100.0" height="100.0"/>
             <Label fx:id="cueAngleLabel" GridPane.rowIndex="2" text="5°"/>
 
-            <Canvas fx:id="cuePointCanvas" GridPane.rowIndex="3" width="80.0" height="80.0"/>
+            <Canvas fx:id="cuePointCanvas" GridPane.rowIndex="3" width="100.0" height="100.0"/>
 
             <VBox alignment="TOP_CENTER" GridPane.rowIndex="4" spacing="10.0">
                 <Slider fx:id="powerSlider" prefHeight="320.0" orientation="VERTICAL"/>
