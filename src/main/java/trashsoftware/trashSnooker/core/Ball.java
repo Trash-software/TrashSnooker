@@ -15,7 +15,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public static final double GEAR_EFFECT_MAX_POWER = 0.32;  // 大于这个球速就没有齿轮效应了
     public static final double CUSHION_COLLISION_SPIN_FACTOR = 0.5;
     public static final double CUSHION_DIRECT_SPIN_APPLY = 0.4;
-    public static final double SUCK_CUSHION_FACTOR = 0.75;
+    public static final double SUCK_CUSHION_FACTOR = 0.8;
     public static final double MAXIMUM_SPIN_PASS = 0.2;  // 齿轮效应传递旋转的上限
     private static final Random ERROR_GENERATOR = new Random();
     private static boolean gearOffsetEnabled = true;  // 齿轮/投掷效应造成的球线路偏差

@@ -558,6 +558,8 @@ public class CareerView extends ChildInitializable {
         rl.setIconImage(rl.getExpImg(), expIv);
         gp.addRow(1, expIv, new Label(String.valueOf(awd.exp())));
         alert.setupAdditional(gp);
+
+        AlertShower.setAutoClose(3000, alert);
         
         newStage.show();
     }
@@ -761,7 +763,7 @@ public class CareerView extends ChildInitializable {
             selfStage.setScene(scene);
             selfStage.sizeToScene();
 
-            view.setup(selfStage);
+            view.setup(selfStage, this);
         } catch (IOException e) {
             EventLogger.error(e);
         }

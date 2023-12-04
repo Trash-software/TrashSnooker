@@ -491,6 +491,7 @@ public class GameView implements Initializable {
         this.player2 = entireGame.getPlayer2();
         this.stage = stage;
         this.devMode = entireGame.gameValues.isDevMode();
+        this.drawStandingPos = devMode;
         this.aiAutoPlay = !this.devMode;
 
         this.basePane = (Pane) stage.getScene().getRoot();
@@ -642,6 +643,7 @@ public class GameView implements Initializable {
         List<PlayerPerson.Hand> playAbles = CuePlayParams.getPlayableHands(
                 cueBall.getX(), cueBall.getY(),
                 cursorDirectionUnitX, cursorDirectionUnitY,
+                cueAngleDeg,
                 gameValues.table,
                 playingPerson
         );
@@ -2042,8 +2044,8 @@ public class GameView implements Initializable {
 
             xError = xError * xSig + muSigXy[0];
             yError = yError * ySig + muSigXy[2];
-            xError = xError * mulWithPower * cueAreaRadius / 200;
-            yError = yError * mulWithPower * cueAreaRadius / 200;
+            xError = xError * mulWithPower * cueAreaRadius / 240;
+            yError = yError * mulWithPower * cueAreaRadius / 240;
             cpx = intentCuePointX + xError;
             cpy = intentCuePointY + yError;
             if (mutate) {
@@ -3437,6 +3439,7 @@ public class GameView implements Initializable {
         double[][] standingPos = CuePlayParams.personStandingPosition(
                 cueBall.getX(), cueBall.getY(),
                 cursorDirectionUnitX, cursorDirectionUnitY,
+                cueAngleDeg,
                 playerPerson,
                 playerPerson.handBody.getPrimary().hand
         );
@@ -3851,7 +3854,7 @@ public class GameView implements Initializable {
                 anchorY + correctedTipY,
                 pointingUnitX,
                 pointingUnitY,
-                cueAngleDeg,
+                isRest ? 0.0 : cueAngleDeg,
                 gamePane.getScale());
         if (!isRest) {
             if (getActiveHolder().getCuingIgp().getPlayerNumber() == 1) {

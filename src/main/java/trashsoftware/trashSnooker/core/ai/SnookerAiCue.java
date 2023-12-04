@@ -293,6 +293,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
+                            0.0,
                             game.getGameValues().table,
                             pp
                     )
@@ -316,6 +317,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
+                            0.0,
                             game.getGameValues().table,
                             pp
                     )

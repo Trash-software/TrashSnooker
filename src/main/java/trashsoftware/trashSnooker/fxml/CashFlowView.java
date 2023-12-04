@@ -18,6 +18,7 @@ import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
 import trashsoftware.trashSnooker.core.career.ChampionshipScore;
 import trashsoftware.trashSnooker.core.career.HumanCareer;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeManager;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
@@ -109,7 +110,8 @@ public class CashFlowView extends ChildInitializable {
                 Map.of("initMoney", CareerManager.INIT_MONEY,
                         "championshipEarn", 0,
                         "challengeEarn", 0,
-                        "invitation", 0)
+                        "invitation", 0,
+                        "achievementAward", 0)
         );
         Map<String, Integer> expenditures = new HashMap<>(
                 Map.of("registry", 0,
@@ -153,7 +155,11 @@ public class CashFlowView extends ChildInitializable {
                 String date = CareerManager.calendarToString(io.inGameDate);
                 listPane.add(new Label(date), 0, row++);
                 listPane.add(new Label(io.getShownType()), 0, row);
-                listPane.add(new Label(io.getItemDes()), 1, row++);
+                
+                Label desLabel = new Label(io.getItemDes());
+                desLabel.setWrapText(true);
+                desLabel.setMaxWidth(180.0);
+                listPane.add(desLabel, 1, row++);
 
                 listPane.add(new Separator(Orientation.HORIZONTAL), 1, row++, 2, 1);
 
@@ -359,6 +365,11 @@ public class CashFlowView extends ChildInitializable {
                     }
                 }
                 case "fees" -> strings.getString("fixedExpenditure");
+                case "achievementAward" -> {
+                    int level = others.getInt("level");
+                    Achievement achievement = Achievement.valueOf(others.getString("item"));
+                    yield achievement.getDescriptionOfLevel(level);
+                }
                 default -> "";
             };
         }

@@ -68,7 +68,7 @@ public enum Achievement {
     WIN_A_MATCH(AchCat.GENERAL_MATCH),  // 已完成
     WIN_MATCHES(AchCat.GENERAL_MATCH, Type.CUMULATIVE, 3, 10, 50),  // 已完成
     WIN_ALL_MATCHES(AchCat.GENERAL_MATCH),  // 已完成
-    WIN_FRAMES_NORMAL_DIFFICULTY(AchCat.GENERAL_MATCH, Type.CUMULATIVE),  // 已完成
+    WIN_FRAMES_NORMAL_DIFFICULTY(AchCat.GENERAL_MATCH, Type.CUMULATIVE, 1),  // 已完成
     SEMIFINAL_STAGE(AchCat.GENERAL_MATCH),  // 已完成
     FINAL_STAGE(AchCat.GENERAL_MATCH),  // 已完成
     FINAL_FRAME(AchCat.GENERAL_MATCH),  // 已完成
@@ -243,6 +243,14 @@ public enum Achievement {
     public int getNCompleted(AchCompletion completion) {
         return getCompletedLevelIndex(completion) + 1;
     }
+    
+    public int getMoneyByCompLevel(int levelIndex) {
+        return switch (levelIndex) {
+            default -> 200;
+            case 1 -> 500;
+            case 2 -> 1000;
+        };
+    } 
 
     public String toKey() {
         return Util.toLowerCamelCase(name());

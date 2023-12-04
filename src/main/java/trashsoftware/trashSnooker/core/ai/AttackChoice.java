@@ -81,6 +81,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             PlayerPerson.HandSkill handSkill = CuePlayParams.getPlayableHand(
                     whitePos[0], whitePos[1],
                     cueDirUnit[0], cueDirUnit[1],
+                    0.0,
                     game.getGameValues().table,
                     attackingPlayer.getPlayerPerson()
             );
@@ -226,6 +227,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             PlayerPerson.HandSkill handSkill = CuePlayParams.getPlayableHand(
                     whitePos[0], whitePos[1],
                     cueDirUnit[0], cueDirUnit[1],
+                    0.0,
                     game.getGameValues().table,
                     attackingPlayer.getPlayerPerson()
             );

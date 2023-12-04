@@ -105,6 +105,7 @@ public class CareerAchManager extends AchManager {
         return cam;
     }
 
+    @Override
     public void saveToDisk() {
         JSONObject jsonObject = new JSONObject();
         JSONObject root = toJson();
@@ -521,14 +522,6 @@ public class CareerAchManager extends AchManager {
     protected final synchronized void showAchievement(Pane owner) {
         if (!thisTimeComplete.isEmpty()) {
             saveToDisk();
-//            while (popupShowing) {
-//                // busy waiting，确实也没办法
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
             showAchievement(owner, thisTimeComplete);
         }
     }
@@ -642,7 +635,7 @@ public class CareerAchManager extends AchManager {
         st.play();
     }
 
-    private void showToPosition(Stage stage) {
+    public static void showToPosition(Stage stage) {
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         double centerX =
                 bounds.getMinX() + (bounds.getWidth() - stage.getWidth())

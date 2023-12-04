@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": -29949,
+    "money": -16812,
     "invoices": [
       {
         "perkUsed": 6,
@@ -1086,13 +1086,836 @@
           "raw": 6000
         }},
         "timestamp": "2023-12-04 02:44:17"
+      },
+      {
+        "inGameDate": "2024/1/22",
+        "moneyBefore": -29949,
+        "moneyAfter": -30129,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 150
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 30
+          }
+        ],
+        "timestamp": "2023-12-04 04:10:47"
+      },
+      {
+        "inGameDate": "2024/1/25",
+        "match": "custom_C3A707E9A33EE9A3+2024+fresh_hand_open",
+        "moneyBefore": -30129,
+        "moneyAfter": -34329,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          }
+        ],
+        "timestamp": "2023-12-04 04:10:47"
+      },
+      {
+        "inGameDate": "2024/1/25",
+        "year": 2024,
+        "match": "fresh_hand_open",
+        "moneyBefore": -34329,
+        "moneyAfter": -34329,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_1": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-12-04 16:02:42"
+      },
+      {
+        "item": "LONG_THINK",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -34329,
+        "moneyAfter": -34129,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:38"
+      },
+      {
+        "item": "MISCUED",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -34129,
+        "moneyAfter": -33929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:39"
+      },
+      {
+        "item": "MISCUE_POT",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -33929,
+        "moneyAfter": -33729,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:40"
+      },
+      {
+        "item": "SHAKE_POCKET",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -33729,
+        "moneyAfter": -33529,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:40"
+      },
+      {
+        "item": "FREE_BALL_FAIL",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -33529,
+        "moneyAfter": -33329,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:40"
+      },
+      {
+        "item": "CUE_BALL_POT",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -33329,
+        "moneyAfter": -33129,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:41"
+      },
+      {
+        "item": "MISSED_SHOT",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -33129,
+        "moneyAfter": -32929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:41"
+      },
+      {
+        "item": "FRAME_NO_ATTACK",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -32929,
+        "moneyAfter": -32729,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:41"
+      },
+      {
+        "item": "LIE_DOWN_WIN",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -32729,
+        "moneyAfter": -32529,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:42"
+      },
+      {
+        "item": "KEY_BALL_FAIL",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -32529,
+        "moneyAfter": -32329,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:42"
+      },
+      {
+        "item": "POT_FAIL_THREE",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -32329,
+        "moneyAfter": -32129,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:42"
+      },
+      {
+        "item": "LOST_ALL_MATCHES",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -32129,
+        "moneyAfter": -31929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:43"
+      },
+      {
+        "item": "ONE_ROUND_TOUR",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -31929,
+        "moneyAfter": -31729,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:43"
+      },
+      {
+        "item": "POT_A_BALL",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -31729,
+        "moneyAfter": -31529,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:46"
+      },
+      {
+        "item": "POT_BALLS",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -31529,
+        "moneyAfter": -31329,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:46"
+      },
+      {
+        "item": "POT_BALLS_REST",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -31329,
+        "moneyAfter": -31129,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:47"
+      },
+      {
+        "item": "POT_BALLS",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": -31129,
+        "moneyAfter": -30629,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2023-12-04 21:55:47"
+      },
+      {
+        "item": "POT_BALLS_REST",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": -30629,
+        "moneyAfter": -30129,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2023-12-04 21:55:48"
+      },
+      {
+        "item": "POT_BALLS",
+        "inGameDate": "2024/1/25",
+        "level": 2,
+        "moneyBefore": -30129,
+        "moneyAfter": -29129,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2023-12-04 21:55:48"
+      },
+      {
+        "item": "POT_BALLS_ANTI",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -29129,
+        "moneyAfter": -28929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:49"
+      },
+      {
+        "item": "CUMULATIVE_LONG_POTS_1",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -28929,
+        "moneyAfter": -28729,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:49"
+      },
+      {
+        "item": "POT_BALLS_ANTI",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": -28729,
+        "moneyAfter": -28229,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2023-12-04 21:55:50"
+      },
+      {
+        "item": "CUMULATIVE_LONG_POTS_1",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": -28229,
+        "moneyAfter": -27729,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2023-12-04 21:55:50"
+      },
+      {
+        "item": "CUMULATIVE_LONG_POTS_1",
+        "inGameDate": "2024/1/25",
+        "level": 2,
+        "moneyBefore": -27729,
+        "moneyAfter": -26729,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2023-12-04 21:55:51"
+      },
+      {
+        "item": "THREE_BALLS_IN_A_ROW",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -26729,
+        "moneyAfter": -26529,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:51"
+      },
+      {
+        "item": "POSITIONING_MASTER",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -26529,
+        "moneyAfter": -26329,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:52"
+      },
+      {
+        "item": "GAIN_BY_SNOOKER",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -26329,
+        "moneyAfter": -26129,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:53"
+      },
+      {
+        "item": "SOLVE_SNOOKER_SUCCESS",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -26129,
+        "moneyAfter": -25929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:53"
+      },
+      {
+        "item": "POT_TWO_LEGAL",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -25929,
+        "moneyAfter": -25729,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:55"
+      },
+      {
+        "item": "DOUBLE_POT",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -25729,
+        "moneyAfter": -25529,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:55"
+      },
+      {
+        "item": "PASS_POT",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -25529,
+        "moneyAfter": -25329,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:55"
+      },
+      {
+        "item": "AROUND_TABLE_POSITION",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -25329,
+        "moneyAfter": -25129,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:56"
+      },
+      {
+        "item": "MULTI_CUSHION_POSITION_1",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -25129,
+        "moneyAfter": -24929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:55:56"
+      },
+      {
+        "item": "WIN_A_FRAME",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -24929,
+        "moneyAfter": -24729,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:24"
+      },
+      {
+        "item": "WIN_FRAMES",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -24729,
+        "moneyAfter": -24529,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:24"
+      },
+      {
+        "item": "WIN_FRAMES",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": -24529,
+        "moneyAfter": -24029,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2023-12-04 21:56:25"
+      },
+      {
+        "item": "WIN_A_MATCH",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -24029,
+        "moneyAfter": -23829,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:25"
+      },
+      {
+        "item": "WIN_MATCHES",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -23829,
+        "moneyAfter": -23629,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:26"
+      },
+      {
+        "item": "WIN_MATCHES",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": -23629,
+        "moneyAfter": -23129,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2023-12-04 21:56:26"
+      },
+      {
+        "item": "WIN_ALL_MATCHES",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -23129,
+        "moneyAfter": -22929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:27"
+      },
+      {
+        "item": "WIN_FRAMES_NORMAL_DIFFICULTY",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -22929,
+        "moneyAfter": -22729,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:27"
+      },
+      {
+        "item": "SEMIFINAL_STAGE",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -22729,
+        "moneyAfter": -22529,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:27"
+      },
+      {
+        "item": "FINAL_FRAME",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -22529,
+        "moneyAfter": -22329,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:28"
+      },
+      {
+        "item": "SNOOKER_BREAK_50",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -22329,
+        "moneyAfter": -22129,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:30"
+      },
+      {
+        "item": "SNOOKER_BREAK_100",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -22129,
+        "moneyAfter": -21929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:30"
+      },
+      {
+        "item": "SNOOKER_CUMULATE_SCORE",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -21929,
+        "moneyAfter": -21729,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:31"
+      },
+      {
+        "item": "SNOOKER_CUMULATE_FOUL_GAIN",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -21729,
+        "moneyAfter": -21529,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:31"
+      },
+      {
+        "item": "SNOOKER_CUMULATE_SCORE",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": -21529,
+        "moneyAfter": -21029,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2023-12-04 21:56:31"
+      },
+      {
+        "item": "SNOOKER_CUMULATE_FOUL_GAIN",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": -21029,
+        "moneyAfter": -20529,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2023-12-04 21:56:32"
+      },
+      {
+        "item": "NOT_RESPECT",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -20529,
+        "moneyAfter": -20329,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:32"
+      },
+      {
+        "item": "SUM_BELOW",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -20329,
+        "moneyAfter": -20129,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:33"
+      },
+      {
+        "item": "POT_WRONG_COLOR",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -20129,
+        "moneyAfter": -19929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:34"
+      },
+      {
+        "item": "POOL_BREAK_POT",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -19929,
+        "moneyAfter": -19729,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:35"
+      },
+      {
+        "item": "POOL_BREAK_MASTER",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -19729,
+        "moneyAfter": -19529,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:36"
+      },
+      {
+        "item": "POOL_CLEAR",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -19529,
+        "moneyAfter": -19329,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:36"
+      },
+      {
+        "item": "POOL_BREAK_CLEAR",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -19329,
+        "moneyAfter": -19129,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:36"
+      },
+      {
+        "item": "BLIND_SHOT",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -19129,
+        "moneyAfter": -18929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:38"
+      },
+      {
+        "item": "POT_OPPONENT_BALL",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -18929,
+        "moneyAfter": -18729,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:39"
+      },
+      {
+        "item": "REMAIN_ONE_MUST_LOSE",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -18729,
+        "moneyAfter": -18529,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:39"
+      },
+      {
+        "item": "EARNED_MONEY",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -18529,
+        "moneyAfter": -18329,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:41"
+      },
+      {
+        "item": "EARN_MONEY_CUMULATIVE",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -18329,
+        "moneyAfter": -18129,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:41"
+      },
+      {
+        "item": "BEST_FOUR",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -18129,
+        "moneyAfter": -17929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:41"
+      },
+      {
+        "item": "DEFEAT_BY_CHAMPION",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -17929,
+        "moneyAfter": -17729,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:42"
+      },
+      {
+        "item": "SNOOKER_TOP_64",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -17729,
+        "moneyAfter": -17529,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:43"
+      },
+      {
+        "item": "DEFEAT_UNIQUE_OPPONENTS_SNOOKER",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -17529,
+        "moneyAfter": -17329,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:44"
+      },
+      {
+        "item": "DEFEAT_SAME_OPPONENT_CONTINUOUS_SNOOKER",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -17329,
+        "moneyAfter": -17129,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:44"
+      },
+      {
+        "item": "DEFEAT_UNIQUE_OPPONENTS_CEB",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": -17129,
+        "moneyAfter": -16929,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-04 21:56:46"
+      },
+      {
+        "item": "DEFEAT_UNIQUE_OPPONENTS_CEB",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": -16929,
+        "moneyAfter": -16429,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2023-12-04 21:56:47"
+      },
+      {
+        "inGameDate": "2024/1/25",
+        "moneyBefore": -16429,
+        "moneyAfter": -16817,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 350
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 38
+          }
+        ],
+        "timestamp": "2023-12-05 01:01:17"
+      },
+      {
+        "inGameDate": "2024/2/1",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_yangjiaping_mid_cup",
+        "moneyBefore": -16817,
+        "moneyAfter": -17317,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 100
+          },
+          {
+            "item": "travel",
+            "moneyCost": 200
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 200
+          }
+        ],
+        "timestamp": "2023-12-05 01:01:17"
+      },
+      {
+        "inGameDate": "2024/2/1",
+        "year": 2024,
+        "match": "eight_yangjiaping_mid_cup",
+        "moneyBefore": -17317,
+        "moneyAfter": -15317,
+        "type": "championshipEarn",
+        "items": {"TOP_4": {
+          "actual": 2000,
+          "raw": 2500
+        }},
+        "timestamp": "2023-12-05 04:35:04"
+      },
+      {
+        "inGameDate": "2024/2/1",
+        "moneyBefore": -15317,
+        "moneyAfter": -15812,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 450
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 45
+          }
+        ],
+        "timestamp": "2023-12-05 04:36:56"
+      },
+      {
+        "inGameDate": "2024/2/10",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_northeast_open",
+        "moneyBefore": -15812,
+        "moneyAfter": -16812,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-05 04:36:56"
       }
     ],
-    "level": 12,
-    "expInThisLevel": 315,
-    "availPerks": 9,
-    "totalPerks": 38,
-    "totalExp": 1980
+    "level": 14,
+    "expInThisLevel": 5,
+    "availPerks": 18,
+    "totalPerks": 47,
+    "totalExp": 2155
   },
-  "checksum": "229C8958EB2149FF2EA82FBE542EA07D"
+  "checksum": "196C0DD6C53C42C202F2EC395AF60A4A"
 }

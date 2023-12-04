@@ -883,6 +883,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         PlayerPerson.HandSkill handSkill = CuePlayParams.getPlayableHand(
                 game.getCueBall().getX(), game.getCueBall().getY(),
                 directionVec[0], directionVec[1],
+                0.0,
                 game.getGameValues().table,
                 game.getCuingPlayer().getPlayerPerson()
         );
@@ -1561,6 +1562,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     whitePos[1],
                     unitXY[0],  // fixme: 这里存疑
                     unitXY[1],
+                    0.0,
                     copy.getGameValues().table,
                     copy.getCuingPlayer().getPlayerPerson()
             );
