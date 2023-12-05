@@ -20,6 +20,7 @@ public class ResourcesLoader {
     private final Image expIcon;
     private final Image inventoryIcon;
     private final Image storeIcon;
+    private final Image filterIcon;
 
     private ResourcesLoader() {
         icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.png")));
@@ -27,6 +28,7 @@ public class ResourcesLoader {
         expIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("exp.png")));
         inventoryIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("inventory.png")));
         storeIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("store.png")));
+        filterIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("filter.png")));
 
         awardIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("ach_gold.png")));
         awardGold = new Image(Objects.requireNonNull(getClass().getResourceAsStream("ach_gold.png")));
@@ -88,6 +90,10 @@ public class ResourcesLoader {
 
     public Image getStoreIcon() {
         return storeIcon;
+    }
+    
+    public Image getFilterImage() {
+        return filterIcon;
     }
 
     public void setIconImage(Image image, ImageView imageView) {

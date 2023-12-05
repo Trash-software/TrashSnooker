@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": -20657,
+    "money": -8000,
     "invoices": [
       {
         "perkUsed": 6,
@@ -1978,13 +1978,229 @@
           }
         ],
         "timestamp": "2023-12-05 04:45:50"
+      },
+      {
+        "inGameDate": "2024/2/27",
+        "year": 2024,
+        "match": "dog_give_power_open",
+        "moneyBefore": -20657,
+        "moneyAfter": -12657,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 8000,
+          "raw": 10000
+        }},
+        "timestamp": "2023-12-05 19:59:58"
+      },
+      {
+        "inGameDate": "2024/2/27",
+        "moneyBefore": -12657,
+        "moneyAfter": -12874,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 200
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 17
+          }
+        ],
+        "timestamp": "2023-12-05 20:02:08"
+      },
+      {
+        "inGameDate": "2024/3/2",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_bsc_heiba_open",
+        "moneyBefore": -12874,
+        "moneyAfter": -13194,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 20
+          },
+          {
+            "item": "travel",
+            "moneyCost": 200
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 100
+          }
+        ],
+        "timestamp": "2023-12-05 20:02:08"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipSoft:custom_C3A707E9A33EE9A3-269",
+        "inGameDate": "2024/3/2",
+        "moneyBefore": -13194,
+        "moneyCost": 80,
+        "moneyAfter": -13274,
+        "type": "purchase",
+        "timestamp": "2023-12-05 20:03:37"
+      },
+      {
+        "inGameDate": "2024/3/2",
+        "year": 2024,
+        "match": "eight_bsc_heiba_open",
+        "moneyBefore": -13274,
+        "moneyAfter": -13154,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_2": {
+          "actual": 120,
+          "raw": 150
+        }},
+        "timestamp": "2023-12-05 20:10:10"
+      },
+      {
+        "inGameDate": "2024/3/2",
+        "moneyBefore": -13154,
+        "moneyAfter": -13589,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 400
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 35
+          }
+        ],
+        "timestamp": "2023-12-06 01:32:46"
+      },
+      {
+        "inGameDate": "2024/3/10",
+        "moneyBefore": -13589,
+        "moneyAfter": -14025,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 400
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 36
+          }
+        ],
+        "timestamp": "2023-12-06 01:58:01"
+      },
+      {
+        "item": 16,
+        "inGameDate": "2024/3/18",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_master_tour_beijing",
+        "moneyBefore": -14025,
+        "moneyAfter": -13825,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-06 01:58:01"
+      },
+      {
+        "inGameDate": "2024/3/18",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_master_tour_beijing",
+        "moneyBefore": -13825,
+        "moneyAfter": -14825,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-06 01:58:01"
+      },
+      {
+        "inGameDate": "2024/3/18",
+        "year": 2024,
+        "match": "eight_master_tour_beijing",
+        "moneyBefore": -14825,
+        "moneyAfter": -10825,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 4000,
+          "raw": 5000
+        }},
+        "timestamp": "2023-12-06 02:03:53"
+      },
+      {
+        "inGameDate": "2024/3/18",
+        "moneyBefore": -10825,
+        "moneyAfter": -11200,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 350
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 25
+          }
+        ],
+        "timestamp": "2023-12-06 03:30:20"
+      },
+      {
+        "inGameDate": "2024/3/25",
+        "match": "custom_C3A707E9A33EE9A3+2024+china_open",
+        "moneyBefore": -11200,
+        "moneyAfter": -12200,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-06 03:30:20"
+      },
+      {
+        "item": "HARD_SNOOKER_BY_HUMAN",
+        "inGameDate": "2024/3/25",
+        "level": 0,
+        "moneyBefore": -12200,
+        "moneyAfter": -12000,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-06 06:02:18"
+      },
+      {
+        "inGameDate": "2024/3/25",
+        "year": 2024,
+        "match": "china_open",
+        "moneyBefore": -12000,
+        "moneyAfter": -8000,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 4000,
+          "raw": 5000
+        }},
+        "timestamp": "2023-12-06 06:53:10"
       }
     ],
-    "level": 14,
-    "expInThisLevel": 30,
-    "availPerks": 18,
-    "totalPerks": 47,
-    "totalExp": 2180
+    "level": 15,
+    "expInThisLevel": 243,
+    "availPerks": 24,
+    "totalPerks": 53,
+    "totalExp": 2665
   },
-  "checksum": "68B99A8EE6FF520B2E767A6BEDC1757F"
+  "checksum": "87A401923C3DDE3496F14145773BF860"
 }

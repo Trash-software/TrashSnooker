@@ -2,11 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import trashsoftware.trashSnooker.fxml.widgets.AbilityShower?>
 <?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="trashsoftware.trashSnooker.fxml.CareerView"
@@ -23,12 +22,19 @@
         <ColumnConstraints percentWidth="0.0"/>
     </columnConstraints>
 
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+    </rowConstraints>
+
     <HBox spacing="10.0">
         <Button text="%backIcon" onAction="#backAction"/>
         <Button text="%settingsMenu" onAction="#careerSettingsAction"/>
-    </HBox>
 
-    <VBox GridPane.rowIndex="1" spacing="10.0">
         <HBox spacing="10.0" alignment="CENTER_LEFT">
             <Label fx:id="levelLabel"/>
             <ProgressBar fx:id="levelExpBar" prefWidth="180.0" HBox.hgrow="ALWAYS"/>
@@ -38,24 +44,28 @@
             </HBox>
             <Button text="%levelUp" fx:id="levelUpBtn" onAction="#levelUpAction" visible="false"/>
         </HBox>
-        <HBox spacing="20.0">
-            <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#invoiceAction">
-                <ImageView fx:id="moneyImage"/>
-                <Label fx:id="moneyLabel"/>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#achievementsAction">
-                <ImageView fx:id="achIconImage"/>
-                <Label fx:id="achievementsLabel"/>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#inventoryAction">
-                <ImageView fx:id="inventoryImage"/>
-                <Label text="%inventory"/>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#storeAction">
-                <ImageView fx:id="storeImage"/>
-                <Label text="%store"/>
-            </HBox>
+    </HBox>
+
+    <HBox spacing="20.0" GridPane.rowIndex="1">
+        <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#invoiceAction">
+            <ImageView fx:id="moneyImage"/>
+            <Label fx:id="moneyLabel"/>
         </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#achievementsAction">
+            <ImageView fx:id="achIconImage"/>
+            <Label fx:id="achievementsLabel"/>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#inventoryAction">
+            <ImageView fx:id="inventoryImage"/>
+            <Label text="%inventory"/>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="5.0" onMouseClicked="#storeAction">
+            <ImageView fx:id="storeImage"/>
+            <Label text="%store"/>
+        </HBox>
+    </HBox>
+
+    <VBox GridPane.rowIndex="2" spacing="10.0">
         <AbilityShower fx:id="abilityShower"/>
         <HBox spacing="20.0" alignment="CENTER">
             <HBox alignment="CENTER">
@@ -67,35 +77,13 @@
         </HBox>
     </VBox>
 
-    <Button text="%careerChallenges" onAction="#trainingChallengeAction" GridPane.rowIndex="2"/>
-    <Button text="%seeToursList" onAction="#seeToursListAction" GridPane.rowIndex="3"/>
-
-    <LabelTable fx:id="allAwardsTable" GridPane.rowIndex="4" GridPane.rowSpan="2"/>
-
-    <HBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="10.0">
-        <Label text="%worldRanking"/>
-        <ComboBox fx:id="rankTypeBox"/>
-
-        <Separator orientation="VERTICAL"/>
-        <Label text="%rankingType"/>
-        <ComboBox fx:id="rankMethodBox"/>
+    <HBox GridPane.rowIndex="3" spacing="10.0" alignment="CENTER_LEFT">
+        <Label fx:id="currentDateLabel"/>
+        <Button text="%careerChallenges" onAction="#trainingChallengeAction"/>
+        <Button text="%seeToursList" onAction="#seeToursListAction"/>
     </HBox>
 
-    <TableView fx:id="rankingTable" prefWidth="360.0" prefHeight="360.0"
-               GridPane.rowIndex="1" GridPane.columnIndex="1">
-        <columns>
-            <TableColumn text="%rankRank" fx:id="rankCol"/>
-            <TableColumn text="%rankName" fx:id="rankNameCol"/>
-            <TableColumn text="%rankAwards" fx:id="rankFirstDesCol"/>
-            <TableColumn text="%rankTotalAwards" fx:id="rankSecondDesCol"/>
-        </columns>
-    </TableView>
-
-    <Label fx:id="myRankLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-    <Label fx:id="currentDateLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-    <VBox fx:id="champInProgBox" GridPane.rowIndex="4" GridPane.columnIndex="1" spacing="10.0">
+    <VBox fx:id="champInProgBox" GridPane.rowIndex="4" spacing="10.0">
         <HBox spacing="10.0">
             <Label text="%tourInProgress"/>
             <Label fx:id="champInProgLabel"/>
@@ -104,7 +92,7 @@
         </HBox>
     </VBox>
 
-    <VBox fx:id="nextChampInfoBox" GridPane.rowIndex="4" GridPane.columnIndex="1" spacing="10.0">
+    <VBox fx:id="nextChampInfoBox" GridPane.rowIndex="4" spacing="10.0">
         <HBox spacing="10.0">
             <Label text="%nextTour"/>
             <Label fx:id="nextChampionshipLabel"/>
@@ -117,26 +105,51 @@
             <Label fx:id="registryFeeLabel"/>
             <Label text="%travelFee"/>
             <Label fx:id="travelFeeLabel"/>
-<!--            <Label text="%otherFee"/>-->
+            <!--            <Label text="%otherFee"/>-->
             <Label fx:id="otherFeeLabel1"/>
             <Label text="%totalFee"/>
             <Label fx:id="totalFeeLabel"/>
         </HBox>
         <HBox fx:id="feesBoxUnchecked" spacing="5.0" visible="false" managed="false">
-<!--            <Label text="%otherFee"/>-->
+            <!--            <Label text="%otherFee"/>-->
             <Label fx:id="otherFeeLabel2"/>
+            <Label text="%totalFee"/>
+            <Label fx:id="totalFeeLabel2"/>
         </HBox>
     </VBox>
 
-    <LabelTable fx:id="champAwardsTable"
-                GridPane.rowIndex="5"
-                GridPane.columnIndex="1"/>
+    <LabelTable fx:id="champAwardsTable" GridPane.rowIndex="6"/>
+
+    <TableView fx:id="rankingTable" prefWidth="360.0" prefHeight="360.0"
+               GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="2">
+        <columns>
+            <TableColumn text="%rankRank" fx:id="rankCol"/>
+            <TableColumn text="%rankName" fx:id="rankNameCol"/>
+            <TableColumn text="%rankAwards" fx:id="rankFirstDesCol"/>
+            <TableColumn text="%rankTotalAwards" fx:id="rankSecondDesCol"/>
+        </columns>
+    </TableView>
+
+    <Label fx:id="myRankLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    <LabelTable fx:id="allAwardsTable" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                GridPane.rowSpan="3"/>
+
+    <HBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="10.0">
+        <Label text="%worldRanking"/>
+        <ComboBox fx:id="rankTypeBox"/>
+
+        <Separator orientation="VERTICAL"/>
+        <Label text="%rankingType"/>
+        <ComboBox fx:id="rankMethodBox"/>
+    </HBox>
 
     <LabelTable fx:id="selectedPlayerInfoTable" GridPane.rowIndex="1" GridPane.columnIndex="2"
+                GridPane.rowSpan="2"
                 visible="false" managed="false" prefWidth="360.0" prefHeight="360.0"/>
 
-    <VBox fx:id="selectedPlayerAchBox" GridPane.rowIndex="2" GridPane.columnIndex="2"
-          GridPane.rowSpan="5"
+    <VBox fx:id="selectedPlayerAchBox" GridPane.rowIndex="4" GridPane.columnIndex="2"
+          GridPane.rowSpan="4"
           visible="false" managed="false">
         <Label text="%participateGames"/>
         <Label fx:id="selectedPlayerGameTypesLabel"/>

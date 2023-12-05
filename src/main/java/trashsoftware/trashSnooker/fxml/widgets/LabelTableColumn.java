@@ -37,6 +37,10 @@ public class LabelTableColumn<S, T> {
 
     public void setTitleText(String titleText) {
         this.title = new Label(titleText);
+        
+        if (table != null) {
+            table.refresh();
+        }
     }
 
     public final ObjectProperty<Callback<S, ObservableValue<T>>> cellValueFactoryProperty() {
@@ -49,9 +53,5 @@ public class LabelTableColumn<S, T> {
     public final void setCellValueFactory(Callback<S, ObservableValue<T>> value) {
         cellValueFactoryProperty().set(value);
         if (table != null) table.refresh();
-    }
-
-    public static abstract class CellDataFeatures<S, T> {
-
     }
 }

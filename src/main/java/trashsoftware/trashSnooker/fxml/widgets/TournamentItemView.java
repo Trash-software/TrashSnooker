@@ -4,10 +4,13 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
 import trashsoftware.trashSnooker.fxml.App;
@@ -26,7 +29,7 @@ public class TournamentItemView extends ScrollPane {
     LabelTable<CareerView.AwardItem> awardPerkTable;
     LabelTable<HistoryChamp> champsTable;
 
-    private ResourceBundle strings;
+    private final ResourceBundle strings;
     private ChampionshipData data;
 
     public TournamentItemView() {
@@ -62,7 +65,9 @@ public class TournamentItemView extends ScrollPane {
         champsTable = new LabelTable<>();
 
         int row = 0;
-        rootPane.add(new Label(data.getName()), 0, row++);
+        Label nameLabel = new Label(data.getName());
+        nameLabel.setFont(new Font(App.FONT.getName(), 18));
+        rootPane.add(nameLabel, 0, row++);
 
         HBox tourTypeBox = new HBox();
         tourTypeBox.setSpacing(10.0);
@@ -75,12 +80,12 @@ public class TournamentItemView extends ScrollPane {
 
         rootPane.add(tourTypeBox, 0, row++);
 
-        if (data.getDescription().length() > 0) {
+        if (!data.getDescription().isEmpty()) {
             Label des = new Label(data.getDescription());
             des.setWrapText(true);
             rootPane.add(des, 0, row++);
         }
-        if (data.getSponsor().length() > 0) {
+        if (!data.getSponsor().isEmpty()) {
             Label sponsor = new Label(strings.getString("sponsor") + ": " + data.getSponsor());
             sponsor.setWrapText(true);
             rootPane.add(sponsor, 0, row++);
@@ -103,7 +108,6 @@ public class TournamentItemView extends ScrollPane {
         rootPane.add(positionsTable, 0, row++);
         
         rootPane.add(awardPerkTable, 0, row++);
-        rootPane.add(champsTable, 0, row++);
 
         // 赛事奖金表
         LabelTableColumn<CareerView.AwardItem, String> titleCol =
@@ -135,6 +139,24 @@ public class TournamentItemView extends ScrollPane {
             awardPerkTable.addItem(new CareerView.AwardItem(data, rank, stage));
         }
         
+        // 赛事报名费表
+        LabelTable<ChampionshipData> feesTable = new LabelTable<>();
+        LabelTableColumn<ChampionshipData, Integer> feesCol1 =
+                new LabelTableColumn<>(feesTable, strings.getString("registryFee"),
+                        params -> new ReadOnlyObjectWrapper<>(params.getRegistryFee()));
+        LabelTableColumn<ChampionshipData, Integer> feesCol2 =
+                new LabelTableColumn<>(feesTable, strings.getString("flightFee"),
+                        params -> new ReadOnlyObjectWrapper<>(params.getFlightFee()));
+        LabelTableColumn<ChampionshipData, Integer> feesCol3 =
+                new LabelTableColumn<>(feesTable, strings.getString("hotelFee"),
+                        params -> new ReadOnlyObjectWrapper<>(params.getHotelFee()));
+
+        feesTable.addColumns(feesCol1, feesCol2, feesCol3);
+        feesTable.addItem(data);
+        
+        rootPane.add(feesTable, 0, row++);
+        rootPane.add(new Separator(Orientation.HORIZONTAL), 0, row++, 1, 1);
+        
         // 历届冠军
         LabelTableColumn<HistoryChamp, Integer> yearCol =
                 new LabelTableColumn<>(champsTable, strings.getString("historyChampions"), param ->
@@ -144,6 +166,7 @@ public class TournamentItemView extends ScrollPane {
                         new ReadOnlyStringWrapper(param.career.getPlayerPerson().getName()));
 
         champsTable.addColumns(yearCol, personCol);
+        rootPane.add(champsTable, 0, row++);
         
         TournamentStats stats = CareerManager.getInstance().tournamentHistory(data);
 
