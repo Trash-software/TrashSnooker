@@ -10,15 +10,15 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
-    "lieDownWin": {
-      "levelDates": {"0": "2023-11-28 14:35:27"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
-    },
     "finalFrameUsualGuest": {
       "levelDates": {},
       "completions": 2,
       "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "lieDownWin": {
+      "levelDates": {"0": "2023-11-28 14:35:27"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "freeBallFail": {
       "levelDates": {"0": "2023-12-01 04:46:28"},
@@ -45,7 +45,7 @@
         "0": "2023-11-28 03:32:04",
         "1": "2023-12-01 03:53:01"
       },
-      "completions": 1460,
+      "completions": 1537,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "RECEIVED",
@@ -82,6 +82,11 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
+    "positioningMaster": {
+      "levelDates": {"0": "2023-11-27 23:04:48"},
+      "completions": 28,
+      "levelAwardReceived": {"0": "RECEIVED"}
+    },
     "cebCumulativeClear": {
       "levelDates": {"0": "2023-12-05 01:33:59"},
       "completions": 7,
@@ -91,9 +96,18 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "positioningMaster": {
-      "levelDates": {"0": "2023-11-27 23:04:48"},
-      "completions": 28,
+    "defeatUniqueOpponentsAmerican": {
+      "levelDates": {},
+      "completions": 2,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
+    "oneRoundTour": {
+      "levelDates": {"0": "2023-11-27 16:14:57"},
+      "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
     "cueBallPot": {
@@ -108,20 +122,6 @@
     },
     "winAllMatches": {
       "levelDates": {"0": "2023-12-01 04:12:38"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
-    },
-    "defeatUniqueOpponentsAmerican": {
-      "levelDates": {},
-      "completions": 2,
-      "levelAwardReceived": {
-        "0": "NOT_COMPLETED",
-        "1": "NOT_COMPLETED",
-        "2": "NOT_COMPLETED"
-      }
-    },
-    "oneRoundTour": {
-      "levelDates": {"0": "2023-11-27 16:14:57"},
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
@@ -325,6 +325,11 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
+    "aroundTablePosition": {
+      "levelDates": {"0": "2023-11-27 23:09:11"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
+    },
     "passPot": {
       "levelDates": {"0": "2023-11-28 02:55:08"},
       "completions": 4,
@@ -333,11 +338,6 @@
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
-    },
-    "aroundTablePosition": {
-      "levelDates": {"0": "2023-11-27 23:09:11"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "snookerCumulateFoulGain": {
       "levelDates": {
@@ -383,14 +383,14 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "winFramesNormalDifficulty": {
-      "levelDates": {"0": "2023-11-27 23:21:48"},
-      "completions": 44,
-      "levelAwardReceived": {"0": "RECEIVED"}
-    },
     "miscued": {
       "levelDates": {"0": "2023-11-27 23:21:47"},
       "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
+    },
+    "winFramesNormalDifficulty": {
+      "levelDates": {"0": "2023-11-27 23:21:48"},
+      "completions": 44,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
     "bestFour": {
@@ -404,7 +404,7 @@
         "1": "2023-11-28 03:26:21",
         "2": "2023-12-04 01:53:45"
       },
-      "completions": 111,
+      "completions": 112,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "RECEIVED",
@@ -417,7 +417,7 @@
         "1": "2023-11-28 02:20:54",
         "2": "2023-12-02 06:02:52"
       },
-      "completions": 792,
+      "completions": 813,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "RECEIVED",
@@ -463,7 +463,7 @@
         "0": "2023-11-28 02:58:47",
         "1": "2023-12-01 04:07:31"
       },
-      "completions": 30,
+      "completions": 31,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "RECEIVED",
@@ -510,5 +510,5 @@
       }
     }
   },
-  "checksum": "F0B58E26F2139814BB4086FC3A067B4E"
+  "checksum": "9D8E82CAEC24BE63C0B295C359A8A2A0"
 }

@@ -71,6 +71,7 @@
     "p1": {
       "p1": {
         "p1": {
+          "p1wins": 2,
           "p1": {
             "p1wins": 0,
             "p1": {
@@ -121,10 +122,13 @@
             "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_1-33",
             "p2wins": 1
           },
+          "winner": "O_Sullivan",
           "stage": "ROUND_2",
-          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-48"
+          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-48",
+          "p2wins": 0
         },
         "p2": {
+          "p1wins": 2,
           "p1": {
             "p1wins": 0,
             "p1": {
@@ -175,14 +179,17 @@
             "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_1-35",
             "p2wins": 0
           },
+          "winner": "custom_A7727D597A40BCB9",
           "stage": "ROUND_2",
-          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-49"
+          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-49",
+          "p2wins": 0
         },
         "stage": "QUARTER_FINAL",
         "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-QUARTER_FINAL-56"
       },
       "p2": {
         "p1": {
+          "p1wins": 0,
           "p1": {
             "p1wins": 1,
             "p1": {
@@ -233,10 +240,13 @@
             "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_1-37",
             "p2wins": 1
           },
+          "winner": "Yan Bingtao",
           "stage": "ROUND_2",
-          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-50"
+          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-50",
+          "p2wins": 2
         },
         "p2": {
+          "p1wins": 1,
           "p1": {
             "p1wins": 1,
             "p1": {
@@ -287,8 +297,10 @@
             "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_1-39",
             "p2wins": 0
           },
+          "winner": "Lolita",
           "stage": "ROUND_2",
-          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-51"
+          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-51",
+          "p2wins": 2
         },
         "stage": "QUARTER_FINAL",
         "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-QUARTER_FINAL-57"
@@ -353,6 +365,7 @@
           "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-52"
         },
         "p2": {
+          "p1wins": 1,
           "p1": {
             "p1wins": 0,
             "p1": {
@@ -403,14 +416,17 @@
             "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_1-43",
             "p2wins": 1
           },
+          "winner": "Ding Junhui",
           "stage": "ROUND_2",
-          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-53"
+          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-53",
+          "p2wins": 2
         },
         "stage": "QUARTER_FINAL",
         "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-QUARTER_FINAL-58"
       },
       "p2": {
         "p1": {
+          "p1wins": 0,
           "p1": {
             "p1wins": 0,
             "p1": {
@@ -461,10 +477,13 @@
             "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_1-45",
             "p2wins": 0
           },
+          "winner": "Karen Wilson",
           "stage": "ROUND_2",
-          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-54"
+          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-54",
+          "p2wins": 2
         },
         "p2": {
+          "p1wins": 1,
           "p1": {
             "p1wins": 0,
             "p1": {
@@ -515,8 +534,10 @@
             "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_1-47",
             "p2wins": 1
           },
+          "winner": "Matthew Stevens",
           "stage": "ROUND_2",
-          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-55"
+          "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-55",
+          "p2wins": 2
         },
         "stage": "QUARTER_FINAL",
         "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-QUARTER_FINAL-59"
@@ -539,10 +560,26 @@
     },
     {
       "score": 130,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-50",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 130,
       "stage": "ROUND_1",
       "sim": true,
       "numFrame": 1,
       "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_1-32",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 127,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-48",
       "playerId": "O_Sullivan"
     },
     {
@@ -552,6 +589,14 @@
       "numFrame": 1,
       "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-PRE_ROUND_1-22",
       "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 115,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-48",
+      "playerId": "O_Sullivan"
     },
     {
       "score": 115,
@@ -587,6 +632,14 @@
     },
     {
       "score": 97,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-50",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 97,
       "stage": "PRE_ROUND_1",
       "sim": true,
       "numFrame": 1,
@@ -600,6 +653,22 @@
       "numFrame": 1,
       "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_1-37",
       "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 83,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-51",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 71,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-55",
+      "playerId": "Matthew Stevens"
     },
     {
       "score": 67,
@@ -634,12 +703,36 @@
       "playerId": "Trump"
     },
     {
+      "score": 60,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-54",
+      "playerId": "Karen Wilson"
+    },
+    {
       "score": 58,
       "stage": "ROUND_1",
       "sim": true,
       "numFrame": 1,
       "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_1-33",
       "playerId": "Neil Robertson"
+    },
+    {
+      "score": 57,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-51",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 56,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-55",
+      "playerId": "Matthew Stevens"
     },
     {
       "score": 56,
@@ -667,11 +760,35 @@
     },
     {
       "score": 54,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-51",
+      "playerId": "Lolita"
+    },
+    {
+      "score": 54,
       "stage": "PRE_ROUND_1",
       "sim": true,
       "numFrame": 1,
       "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-PRE_ROUND_1-9",
       "playerId": "Luca Brecel"
+    },
+    {
+      "score": 52,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-53",
+      "playerId": "random_player_92"
+    },
+    {
+      "score": 51,
+      "stage": "ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open-ROUND_2-49",
+      "playerId": "custom_A7727D597A40BCB9"
     },
     {
       "score": 51,
