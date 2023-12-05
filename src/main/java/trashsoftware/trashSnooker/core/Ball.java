@@ -12,7 +12,7 @@ import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cloneable {
     public static final double MAX_GEAR_EFFECT = 0.25;  // 齿轮效应造成的最严重分离角损耗
-    public static final double GEAR_EFFECT_MAX_POWER = 0.32;  // 大于这个球速就没有齿轮效应了
+    public static final double GEAR_EFFECT_MAX_POWER = 0.25;  // 大于这个球速就没有齿轮效应了
     public static final double CUSHION_COLLISION_SPIN_FACTOR = 0.5;
     public static final double CUSHION_DIRECT_SPIN_APPLY = 0.4;
     public static final double SUCK_CUSHION_FACTOR = 0.8;
@@ -946,7 +946,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
             // 实为投掷效应
             double powerGear = Math.min(1.0,
-                    totalSpeed / GEAR_EFFECT_MAX_POWER / Values.MAX_POWER_SPEED * values.ball.ballWeightRatio);  // 32的力就没有效应了(高低杆要打出35的球速，起码要45的力)
+                    totalSpeed / GEAR_EFFECT_MAX_POWER / Values.MAX_POWER_SPEED * 
+                            values.ball.ballWeightRatio);  // 25的力就没有效应了(高低杆要打出25的球速，起码要35的力)
             double throwEffect = (1 - powerGear) * MAX_GEAR_EFFECT;
             double gearEffect = 1 - throwEffect;
 

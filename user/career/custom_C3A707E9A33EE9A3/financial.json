@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": -16812,
+    "money": -20657,
     "invoices": [
       {
         "perkUsed": 6,
@@ -1909,13 +1909,82 @@
           }
         ],
         "timestamp": "2023-12-05 04:36:56"
+      },
+      {
+        "inGameDate": "2024/2/10",
+        "year": 2024,
+        "match": "eight_northeast_open",
+        "moneyBefore": -16812,
+        "moneyAfter": -16812,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_2": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-12-05 04:42:04"
+      },
+      {
+        "inGameDate": "2024/2/10",
+        "moneyBefore": -16812,
+        "moneyAfter": -17478,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 600
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 66
+          }
+        ],
+        "timestamp": "2023-12-05 04:45:45"
+      },
+      {
+        "inGameDate": "2024/2/22",
+        "moneyBefore": -17478,
+        "moneyAfter": -17757,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 250
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 29
+          }
+        ],
+        "timestamp": "2023-12-05 04:45:50"
+      },
+      {
+        "inGameDate": "2024/2/27",
+        "match": "custom_C3A707E9A33EE9A3+2024+dog_give_power_open",
+        "moneyBefore": -17757,
+        "moneyAfter": -20657,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          }
+        ],
+        "timestamp": "2023-12-05 04:45:50"
       }
     ],
     "level": 14,
-    "expInThisLevel": 5,
+    "expInThisLevel": 30,
     "availPerks": 18,
     "totalPerks": 47,
-    "totalExp": 2155
+    "totalExp": 2180
   },
-  "checksum": "196C0DD6C53C42C202F2EC395AF60A4A"
+  "checksum": "68B99A8EE6FF520B2E767A6BEDC1757F"
 }
