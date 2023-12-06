@@ -73,11 +73,11 @@ public class Cue {
         );
     }
 
-    public static Cue createForReplay(CueBrand brand) {
+    public static Cue createForTempView(CueBrand brand) {
         return new Cue(brand,
-                brand.getCueId() + BRAND_SEPARATOR + "replay",
+                brand.getCueId() + BRAND_SEPARATOR + "view",
                 CueTip.createDefault(brand.cueTipWidth, brand.tipSize.getDefaultTipThickness()),
-                brand.getName() + BRAND_SEPARATOR + "replay",
+                brand.getName() + BRAND_SEPARATOR + "view",
                 false
         );
     }

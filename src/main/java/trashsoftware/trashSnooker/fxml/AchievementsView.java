@@ -72,10 +72,10 @@ public class AchievementsView extends ChildInitializable {
                 AchManager.getInstance().getNCompletedAchievements()));
     }
 
-    @Override
-    public Stage getStage() {
-        return stage;
-    }
+//    @Override
+//    public Stage getStage() {
+//        return stage;
+//    }
 
     @Override
     public void backAction() {

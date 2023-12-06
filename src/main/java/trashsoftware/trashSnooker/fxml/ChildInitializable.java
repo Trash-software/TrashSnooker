@@ -1,32 +1,49 @@
 package trashsoftware.trashSnooker.fxml;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.stage.Window;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Objects;
 
 public abstract class ChildInitializable implements Initializable {
-    private Scene parentScene;
+    private Parent parentRoot;
 //    private T parentController;
     
-    public void setParent(Scene parentScene) {
-        this.parentScene = parentScene;
+    public void setParent(Parent parentRoot) {
+        this.parentRoot = parentRoot;
 //        this.parentController = parentController;
     }
     
-    public abstract Stage getStage();
+    public void setParent(Window window) {
+        setParent(window.getScene());
+    }
+
+    public void setParent(Scene scene) {
+        parentRoot = (Parent) scene.getRoot().getChildrenUnmodifiable().get(0);
+    }
+    
+    private Parent getParentRoot() {
+        return Objects.requireNonNull(parentRoot);
+    }
+    
+//    public abstract Stage getStage();
     
     @FXML
     public void backAction() {
-        Stage stage = getStage();
-        stage.setTitle(App.getStrings().getString("appName"));
-        stage.setScene(parentScene);
-        stage.sizeToScene();
+        App.setRoot(getParentRoot());
+//        Stage stage = getStage();
+////        stage.setTitle(App.getStrings().getString("appName"));
+////        stage.setScene(parentRoot);
+//        
+//        boolean wasMax = stage.isMaximized();
+//        stage.sizeToScene();
+//        if (wasMax) {
+//            stage.setMaximized(false);
+//            stage.setMaximized(true);
+//        }
     }
 }

@@ -47,6 +47,11 @@ public class SnookerScoreResult extends ScoreResult {
         return p2TotalScore;
     }
 
+    @Override
+    public int getSinglePoleBallCount() {
+        return singlePoleMap.values().stream().reduce(0, Integer::sum);
+    }
+
     public SortedMap<Ball, Integer> getSinglePoleMap() {
         return singlePoleMap;
     }

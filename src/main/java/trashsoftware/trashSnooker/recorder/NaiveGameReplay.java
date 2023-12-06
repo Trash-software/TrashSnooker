@@ -88,7 +88,7 @@ public class NaiveGameReplay extends GameReplay {
         cuing.getCueSelection().selectByBrand(cueBrand);
         
         animationRec = new CueAnimationRec(
-                cuing.getCueSelection().getSelected().getNonNullInstance(CueSelection.InstanceType.REPLAY),
+                cuing.getCueSelection().getSelected().getNonNullInstance(CueSelection.InstanceType.TEMP_VIEW),
                 Util.bytesToInt32(buf, 0),
                 Util.bytesToInt32(buf, 4)
         );

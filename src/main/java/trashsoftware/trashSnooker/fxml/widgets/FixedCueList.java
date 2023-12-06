@@ -36,7 +36,7 @@ public class FixedCueList extends FixedModelList {
     public FixedCueList() {
         super();
     }
-
+    
     @Override
     protected void update() {
         int viewPos = getViewPos();

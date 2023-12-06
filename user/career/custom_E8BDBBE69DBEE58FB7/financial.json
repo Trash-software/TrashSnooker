@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 56060,
+    "money": 51220,
     "invoices": [
       {
         "match": "pool-full-regular",
@@ -215,13 +215,103 @@
           "raw": 500
         }},
         "timestamp": "2023-12-04 02:36:04"
+      },
+      {
+        "inGameDate": "2025/1/22",
+        "moneyBefore": 56060,
+        "moneyAfter": 55880,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 180
+        }],
+        "timestamp": "2023-12-06 17:22:04"
+      },
+      {
+        "inGameDate": "2025/1/25",
+        "match": "custom_E8BDBBE69DBEE58FB7+2025+fresh_hand_open",
+        "moneyBefore": 55880,
+        "moneyAfter": 53180,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 500
+          }
+        ],
+        "timestamp": "2023-12-06 17:22:04"
+      },
+      {
+        "inGameDate": "2025/1/25",
+        "year": 2025,
+        "match": "fresh_hand_open",
+        "moneyBefore": 53180,
+        "moneyAfter": 53180,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_1": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-12-06 17:22:09"
+      },
+      {
+        "inGameDate": "2025/1/25",
+        "moneyBefore": 53180,
+        "moneyAfter": 52760,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 420
+        }],
+        "timestamp": "2023-12-06 17:22:14"
+      },
+      {
+        "inGameDate": "2025/2/1",
+        "moneyBefore": 52760,
+        "moneyAfter": 52220,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 540
+        }],
+        "timestamp": "2023-12-06 17:22:17"
+      },
+      {
+        "inGameDate": "2025/2/10",
+        "match": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open",
+        "moneyBefore": 52220,
+        "moneyAfter": 51220,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-06 17:22:17"
       }
     ],
     "level": 8,
-    "expInThisLevel": 2409,
+    "expInThisLevel": 2449,
     "availPerks": 53,
     "totalPerks": 24,
-    "totalExp": 3302
+    "totalExp": 3342
   },
-  "checksum": "F9158A2DB64B5D973A3F8F19C68A9C79"
+  "checksum": "FD3C46F5D908EA39D42907D499C039E6"
 }

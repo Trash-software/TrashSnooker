@@ -64,23 +64,13 @@
             <Label text="%store"/>
         </HBox>
     </HBox>
-
-    <VBox GridPane.rowIndex="2" spacing="10.0">
-        <AbilityShower fx:id="abilityShower"/>
-        <HBox spacing="20.0" alignment="CENTER">
-            <HBox alignment="CENTER">
-                <Label text="可用技能点："/>
-                <Label fx:id="availPerksLabel"/>
-            </HBox>
-            <Button text="%restorePerks" fx:id="clearPerkBtn" onAction="#clearUsedPerks"/>
-            <Button text="%applyPerks" fx:id="confirmAddPerkBtn" onAction="#applyPerks"/>
-        </HBox>
-    </VBox>
+    
+    <AbilityShower fx:id="abilityShower" GridPane.rowIndex="2"/>
 
     <HBox GridPane.rowIndex="3" spacing="10.0" alignment="CENTER_LEFT">
         <Label fx:id="currentDateLabel"/>
-        <Button text="%careerChallenges" onAction="#trainingChallengeAction"/>
         <Button text="%seeToursList" onAction="#seeToursListAction"/>
+        <Button text="%careerChallenges" onAction="#trainingChallengeAction"/>
     </HBox>
 
     <VBox fx:id="champInProgBox" GridPane.rowIndex="4" spacing="10.0">

@@ -26,12 +26,11 @@ public class InventoryPage extends AbsInvPage {
 
     public InventoryPage(ResourceBundle strings) {
         super("inventoryPage.fxml", strings);
-
-        reload();
     }
 
     private void fill() {
         cueList.clear();
+        cueList.setViewSlots(inventoryView.getNumRows());
         cueList.setDisplayComparator((a, b) -> {
             // 1. 最近买的在前
             int purchaseTimeCmp = -a.getNonNullInstance().getCreationTime().compareTo(b.getCueInstance().getCreationTime());
@@ -41,8 +40,8 @@ public class InventoryPage extends AbsInvPage {
         });
         for (Cue cue : inventoryManager.getAllCues()) {
             CueSelection.CueAndBrand cab = new CueSelection.CueAndBrand(cue);
-            cueList.addCue(cab, 
-                    900, 
+            cueList.addCue(cab,
+                    inventoryView.getCueWidth(), 
                     humanCareer, 
                     () -> inventoryView.updateView(),
                     null, 

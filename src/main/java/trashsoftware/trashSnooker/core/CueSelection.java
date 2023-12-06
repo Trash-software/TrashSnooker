@@ -92,7 +92,7 @@ public class CueSelection {
         }
         
         public void initInstanceForViewing() {
-            getNonNullInstance(InstanceType.REPLAY);
+            getNonNullInstance(InstanceType.TEMP_VIEW);
         }
 
         public Cue getNonNullInstance() {
@@ -106,7 +106,7 @@ public class CueSelection {
                 } else {
                     instance = switch (instanceType) {
                         case REGULAR -> Cue.createOneTimeInstance(brand);
-                        case REPLAY -> Cue.createForReplay(brand);
+                        case TEMP_VIEW -> Cue.createForTempView(brand);
                     };
                 }
             }
@@ -116,6 +116,6 @@ public class CueSelection {
     
     public enum InstanceType {
         REGULAR,
-        REPLAY
+        TEMP_VIEW
     }
 }

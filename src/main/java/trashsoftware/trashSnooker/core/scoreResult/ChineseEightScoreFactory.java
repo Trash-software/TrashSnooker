@@ -25,7 +25,8 @@ public class ChineseEightScoreFactory implements ScoreFactory {
                 Util.bytesToInt32(bytes, 4),  // fixme: 显然不对
                 bytes[0] & 0xff,
                 readPlayerRems(replay, bytes, 4),
-                readPlayerRems(replay, bytes, 12)
+                readPlayerRems(replay, bytes, 12),
+                bytes[1] & 0xff
         );
     }
 

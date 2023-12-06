@@ -4,6 +4,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -116,6 +117,7 @@ public class CareerView extends ChildInitializable {
                 careerManager.getHumanPlayerCareer().getAvailablePerks(),
                 PlayerPerson.ReadableAbility.fromPlayerPerson(pp));
         abilityShower.setup(perkManager, pp.isCustom());
+        abilityShower.setExtraField(createPerksBox());
 
         joinChampBox.selectedProperty().addListener(((observable, oldValue, newValue) ->
                 refreshFeesTexts(newValue)));
@@ -127,10 +129,24 @@ public class CareerView extends ChildInitializable {
         setupImages();
     }
 
-    @Override
-    public Stage getStage() {
-        return selfStage;
+    private HBox createPerksBox() {
+        HBox box = new HBox();
+        box.setSpacing(10.0);
+        box.setAlignment(Pos.CENTER);
+        availPerksLabel = new Label();
+        clearPerkBtn = new Button(strings.getString("restorePerks"));
+        clearPerkBtn.setOnAction(e -> clearUsedPerks());
+        confirmAddPerkBtn = new Button(strings.getString("applyPerks"));
+        confirmAddPerkBtn.setOnAction(e -> applyPerks());
+        
+        box.getChildren().addAll(availPerksLabel, clearPerkBtn, confirmAddPerkBtn);
+        return box;
     }
+
+//    @Override
+//    public Stage getStage() {
+//        return selfStage;
+//    }
 
     public void setup(EntryView parent, Stage selfStage) {
         this.selfStage = selfStage;
@@ -217,7 +233,7 @@ public class CareerView extends ChildInitializable {
             selectedPlayerAchievements.setText(
                     getAchievements(cs, rankTypeBox.getValue()));
 
-            if (selfStage != null 
+            if (selfStage != null
                     && !selfStage.isMaximized()
                     && (currentlyVisible != selectedPlayerInfoTable.isVisible()))
                 selfStage.sizeToScene();
@@ -739,15 +755,12 @@ public class CareerView extends ChildInitializable {
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
 
-            Scene scene = App.createScene(root);
-
             CashFlowView view = loader.getController();
             view.setParent(selfStage.getScene());
 
-            selfStage.setScene(scene);
-            selfStage.sizeToScene();
-
             view.setup(selfStage, careerManager.getHumanPlayerCareer());
+            
+            App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);
         }
@@ -763,15 +776,11 @@ public class CareerView extends ChildInitializable {
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
 
-            Scene scene = App.createScene(root);
-
             AchievementsView view = loader.getController();
             view.setParent(selfStage.getScene());
 
-            selfStage.setScene(scene);
-            selfStage.sizeToScene();
-
             view.setup(selfStage, this);
+            App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);
         }
@@ -797,14 +806,11 @@ public class CareerView extends ChildInitializable {
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
 
-            Scene scene = App.createScene(root);
-
             CareerTrainingView view = loader.getController();
             view.setParent(selfStage.getScene());
             view.setup(selfStage, careerManager.getHumanPlayerCareer(), this);
 
-            selfStage.setScene(scene);
-            selfStage.sizeToScene();
+            App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);
         }
@@ -820,8 +826,6 @@ public class CareerView extends ChildInitializable {
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
 
-            Scene scene = App.createScene(root);
-
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
 
@@ -830,8 +834,7 @@ public class CareerView extends ChildInitializable {
             viewer.setParent(selfStage.getScene());
             viewer.initialSelection(activeOrNext);
 
-            selfStage.setScene(scene);
-            selfStage.sizeToScene();
+            App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);
         }
@@ -894,16 +897,12 @@ public class CareerView extends ChildInitializable {
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
 
-            Scene scene = App.createScene(root);
-
             InventoryView view = loader.getController();
             view.setStage(selfStage);
             view.setParent(selfStage.getScene());
 
-            selfStage.setScene(scene);
-            selfStage.sizeToScene();
-
             view.setup(isInventory);
+            App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);
         }
@@ -911,10 +910,6 @@ public class CareerView extends ChildInitializable {
 
     private void showChampDrawView() {
         try {
-//            Stage stage = new Stage();
-//            stage.initModality(Modality.WINDOW_MODAL);
-//            stage.initOwner(selfStage);
-
             selfStage.setTitle(CareerManager.getInstance().getChampionshipInProgress().fullName());
 
             FXMLLoader loader = new FXMLLoader(
@@ -929,13 +924,12 @@ public class CareerView extends ChildInitializable {
             view.setParent(selfStage.getScene());
 //            mainView.setup(parentStage, stage);
 
-            Scene scene = App.createScene(root);
+            App.setRoot(root);
+//            Scene scene = App.createScene(root);
 
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
-            selfStage.setScene(scene);
-
-            App.scaleWindow(selfStage);
+//            selfStage.setScene(scene);
 
 //            selfStage.show();
         } catch (IOException e) {
@@ -944,7 +938,7 @@ public class CareerView extends ChildInitializable {
     }
 
     public void notifyPerksChanged() {
-        availPerksLabel.setText(perkManager.getAvailPerks() + "");
+        availPerksLabel.setText(String.format(strings.getString("availPerksFmt"), perkManager.getAvailPerks()));
         int money = careerManager.getHumanPlayerCareer().getMoney();
         int moneyCost = perkManager.getCost();
         updateMoneyLabel(money, moneyCost);

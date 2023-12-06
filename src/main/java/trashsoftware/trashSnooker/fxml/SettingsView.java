@@ -184,10 +184,10 @@ public class SettingsView extends ChildInitializable {
         return box.getSelectionModel().getSelectedIndex() != lastIndex;  // null也是changed
     }
 
-    @Override
-    public Stage getStage() {
-        return stage;
-    }
+//    @Override
+//    public Stage getStage() {
+//        return stage;
+//    }
 
     void setup(Stage stage) {
         this.stage = stage;

@@ -55,6 +55,7 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LetBall;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.NineBallScoreResult;
@@ -2273,7 +2274,7 @@ public class GameView implements Initializable {
         if (miscued) {
             double factor = Math.random();
             factor += 0.5;
-            factor *= 800;  // 呲杆时力度和旋转分别都被除以了4。乘以上面shift就是800。50-150倍损耗
+            factor *= 400;  // 呲杆时力度和旋转分别都被除以了4。乘以上面shift就是800。但是800太夸张，就减半了
             reduce *= factor;
         }
 
@@ -3123,18 +3124,21 @@ public class GameView implements Initializable {
 //                    List<PoolBall> rems = ChineseEightTable.filterRemainingTargetOfPlayer(replay.getCueRecord().targetRep, replay);
                     List<PoolBall> rems = replay.getCueRecord().cuePlayer.getPlayerNumber() == 1 ?
                             csr.getP1Rems() : csr.getP2Rems();
-                    System.out.println(rems.size());
+                    singlePoleLabel.setText(csr.getSinglePoleBallCount() == 0 ? 
+                            "" : 
+                            String.valueOf(csr.getSinglePoleBallCount()));
                     drawChineseEightAllTargets(rems);
                 } else if (gameValues.rule == GameRule.AMERICAN_NINE) {
                     NineBallScoreResult nsr = (NineBallScoreResult) sr;
                     Map<PoolBall, Boolean> rems = nsr.getRemBalls();
+                    singlePoleLabel.setText(nsr.getSinglePoleBallCount() == 0 ?
+                            "" :
+                            String.valueOf(nsr.getSinglePoleBallCount()));
                     drawPoolBallAllTargets(rems);
                 }
             });
         } else {
             Platform.runLater(() -> {
-                player1ScoreLabel.setText(String.valueOf(game.getGame().getPlayer1().getScore()));
-                player2ScoreLabel.setText(String.valueOf(game.getGame().getPlayer2().getScore()));
                 player1FramesLabel.setText(String.valueOf(game.getP1Wins()));
                 player2FramesLabel.setText(String.valueOf(game.getP2Wins()));
 
@@ -3142,9 +3146,14 @@ public class GameView implements Initializable {
 
                 if (gameValues.rule.snookerLike()) {
                     AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
-                    drawSnookerSinglePoles(cuePlayer.getSinglePole());
+                    SnookerPlayer snookerPlayer = (SnookerPlayer) cuePlayer;
+                    
+                    player1ScoreLabel.setText(String.valueOf(asg.getPlayer1().getScore()));
+                    player2ScoreLabel.setText(String.valueOf(asg.getPlayer2().getScore()));
+                    
+                    drawSnookerSinglePoles(snookerPlayer.getSinglePole());
 
-                    int singlePoleScore = cuePlayer.getSinglePoleScore();
+                    int singlePoleScore = snookerPlayer.getSinglePoleScore();
 
                     String singlePoleText;
                     if (singlePoleScore < 3) {  // 至少一红一彩再显吧？
@@ -3158,18 +3167,50 @@ public class GameView implements Initializable {
 
                     singlePoleLabel.setText(singlePoleText);
                 } else if (gameValues.rule.poolLike()) {
+                    String singlePole = "";
                     if (cuePlayer == game.getGame().getCuingPlayer()) {
                         // 进攻成功了
                         drawNumberedAllTargets((NumberedBallGame<?>) game.getGame(),
                                 (NumberedBallPlayer) cuePlayer);
+                        int sp = cuePlayer.getSinglePoleCount();
+                        if (sp > 0) singlePole = String.valueOf(sp);
                     } else {
                         // 进攻失败了
                         drawNumberedAllTargets((NumberedBallGame<?>) game.getGame(),
                                 (NumberedBallPlayer) game.getGame().getCuingPlayer());
                     }
+                    singlePoleLabel.setText(singlePole);
+                    
+                    if (gameValues.rule == GameRule.CHINESE_EIGHT) {
+                        // 让球
+                        ChineseEightBallPlayer p1 = (ChineseEightBallPlayer) game.getGame().getPlayer1();
+                        ChineseEightBallPlayer p2 = (ChineseEightBallPlayer) game.getGame().getPlayer2();
+                        
+                        Map<LetBall, Integer> p1Letted = p1.getLettedBalls();
+                        Map<LetBall, Integer> p2Letted = p2.getLettedBalls();
+                        if (!p1Letted.isEmpty()) {
+                            if (!p2Letted.isEmpty()) {
+                                EventLogger.warning("Both players have been let ball. This is not reasonable");
+                            }
+                            player1ScoreLabel.setText(getLetBallText(p1Letted));
+                        }
+                        if (!p2Letted.isEmpty()) {
+                            player2ScoreLabel.setText(getLetBallText(p2Letted));
+                        }
+                    }
                 }
             });
         }
+    }
+    
+    private String getLetBallText(Map<LetBall, Integer> letBalls) {
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry<LetBall, Integer> entry : letBalls.entrySet()) {
+            if (entry.getValue() > 0) {
+                builder.append(entry.getKey().getShown(entry.getValue(), strings)).append(' ');
+            }
+        }
+        return builder.toString();
     }
 
     private void drawTargetBoard(boolean showNextTarget) {

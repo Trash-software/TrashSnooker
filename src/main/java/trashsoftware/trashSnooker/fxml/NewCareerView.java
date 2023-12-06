@@ -110,10 +110,10 @@ public class NewCareerView extends ChildInitializable {
         ChampDataManager.getInstance();
     }
 
-    @Override
-    public Stage getStage() {
-        return owner;
-    }
+//    @Override
+//    public Stage getStage() {
+//        return owner;
+//    }
 
     public void setup(EntryView entryView, Stage owner) {
         this.entryView = entryView;

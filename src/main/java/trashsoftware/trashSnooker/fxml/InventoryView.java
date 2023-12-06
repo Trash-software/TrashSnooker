@@ -39,9 +39,15 @@ public class InventoryView extends ChildInitializable {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+        
+        stage.widthProperty().addListener((observable, oldValue, newValue) -> {
+            updateView();
+        });
+        stage.heightProperty().addListener((observable, oldValue, newValue) -> {
+            updateView();
+        });
     }
-
-    @Override
+    
     public Stage getStage() {
         return stage;
     }
@@ -54,6 +60,7 @@ public class InventoryView extends ChildInitializable {
         }
         inventoryRoot.setParent(this);
         storeRoot.setParent(this);
+        updateView();
     }
 
     @Override
@@ -64,8 +71,6 @@ public class InventoryView extends ChildInitializable {
         rl.setIconImage(rl.getStoreIcon(), storeImage, 1.0, 1.25);
         
         humanCareer = CareerManager.getInstance().getHumanPlayerCareer();
-        
-        updateView();
     }
     
     public void updateView() {
@@ -79,5 +84,16 @@ public class InventoryView extends ChildInitializable {
         
         storeRoot.reload();
         inventoryRoot.reload();
+    }
+    
+    public double getCueWidth() {
+        return getStage().getWidth() * 0.9;
+    }
+    
+    public int getNumRows() {
+        double w = getStage().getWidth();
+        double h = getStage().getHeight() - 150;
+        double aspectRatio = w / h;
+        return Math.max(1, (int) (10 / aspectRatio));
     }
 }

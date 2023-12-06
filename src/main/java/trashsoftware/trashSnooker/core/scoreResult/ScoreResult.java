@@ -8,7 +8,9 @@ public abstract class ScoreResult {
         this.thinkTime = thinkTime;
         this.justCuedPlayerNum = justCuedPlayerNum;
     }
-    
+
+    public abstract int getSinglePoleBallCount();
+
     public abstract byte[] toBytes();
 
     public int getJustCuedPlayerNum() {

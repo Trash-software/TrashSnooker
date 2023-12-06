@@ -285,10 +285,10 @@ public class FastGameView extends ChildInitializable {
                 }));
     }
 
-    @Override
-    public Stage getStage() {
-        return stage;
-    }
+//    @Override
+//    public Stage getStage() {
+//        return stage;
+//    }
 
     public void setStage(Stage stage) {
         this.stage = stage;

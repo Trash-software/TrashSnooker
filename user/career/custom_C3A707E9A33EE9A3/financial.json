@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": -8000,
+    "money": -14378,
     "invoices": [
       {
         "perkUsed": 6,
@@ -2194,6 +2194,127 @@
           "raw": 5000
         }},
         "timestamp": "2023-12-06 06:53:10"
+      },
+      {
+        "inGameDate": "2024/3/25",
+        "moneyBefore": -8000,
+        "moneyAfter": -8263,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 250
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 13
+          }
+        ],
+        "timestamp": "2023-12-06 16:23:57"
+      },
+      {
+        "inGameDate": "2024/3/30",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_spadina_open",
+        "moneyBefore": -8263,
+        "moneyAfter": -9263,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-06 16:23:57"
+      },
+      {
+        "inGameDate": "2024/3/30",
+        "year": 2024,
+        "match": "eight_spadina_open",
+        "moneyBefore": -9263,
+        "moneyAfter": -9263,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_1": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-12-06 16:28:14"
+      },
+      {
+        "inGameDate": "2024/3/30",
+        "moneyBefore": -9263,
+        "moneyAfter": -10218,
+        "type": "fees",
+        "items": [
+          {
+            "item": "lifeFee",
+            "moneyCost": 900
+          },
+          {
+            "item": "oweInterest",
+            "moneyCost": 55
+          }
+        ],
+        "timestamp": "2023-12-06 17:02:42"
+      },
+      {
+        "inGameDate": "2024/4/17",
+        "match": "custom_C3A707E9A33EE9A3+2024+world_champ",
+        "moneyBefore": -10218,
+        "moneyAfter": -14418,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          }
+        ],
+        "timestamp": "2023-12-06 17:02:42"
+      },
+      {
+        "item": "SOLVE_SNOOKER_SUCCESS_POT",
+        "inGameDate": "2024/4/17",
+        "level": 0,
+        "moneyBefore": -14418,
+        "moneyAfter": -14218,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-07 02:33:23"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipSoft:custom_C3A707E9A33EE9A3-270",
+        "inGameDate": "2024/4/17",
+        "moneyBefore": -14218,
+        "moneyCost": 80,
+        "moneyAfter": -14298,
+        "type": "purchase",
+        "timestamp": "2023-12-07 04:07:29"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipSoft:custom_C3A707E9A33EE9A3-271",
+        "inGameDate": "2024/4/17",
+        "moneyBefore": -14298,
+        "moneyCost": 80,
+        "moneyAfter": -14378,
+        "type": "purchase",
+        "timestamp": "2023-12-07 04:11:14"
       }
     ],
     "level": 15,
@@ -2202,5 +2323,5 @@
     "totalPerks": 53,
     "totalExp": 2665
   },
-  "checksum": "87A401923C3DDE3496F14145773BF860"
+  "checksum": "85FCAC7EBD3B8EA04C1F9AF27308E389"
 }

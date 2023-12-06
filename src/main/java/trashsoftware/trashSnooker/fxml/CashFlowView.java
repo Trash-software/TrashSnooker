@@ -86,10 +86,10 @@ public class CashFlowView extends ChildInitializable {
         fill(true);
     }
 
-    @Override
-    public Stage getStage() {
-        return stage;
-    }
+//    @Override
+//    public Stage getStage() {
+//        return stage;
+//    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -99,7 +99,7 @@ public class CashFlowView extends ChildInitializable {
         rl.setIconImage(rl.getMoneyImg(), moneyImage);
 
         ImageView btnImg = new ImageView();
-        rl.setIconImage(rl.getFilterImage(), btnImg, 1.0, 1.0);
+        rl.setIconImage1x1(rl.getFilterImage(), btnImg);
 
         filterButton.setGraphic(btnImg);
 
@@ -167,14 +167,10 @@ public class CashFlowView extends ChildInitializable {
         Calendar current = CareerManager.getInstance().getBeginTimestamp();
         for (JSONObject object : invoices) {
             try {
-                boolean timeIsReal = false;
+                String type = object.getString("type");
                 if (object.has("inGameDate")) {
                     current = CareerManager.stringToCalendar(object.getString("inGameDate"));
-                    timeIsReal = true;
-                }
-
-                String type = object.getString("type");
-                if (!timeIsReal && "championshipEarn".equals(type)) {
+                } else if ("championshipEarn".equals(type)) {
                     int year = object.getInt("year");
                     String match = object.getString("match");
                     ChampionshipData data = CareerManager.getInstance().getChampDataManager().findDataById(match);

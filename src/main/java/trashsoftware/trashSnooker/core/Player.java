@@ -96,14 +96,6 @@ public abstract class Player {
     public TreeMap<Ball, Integer> getSinglePole() {
         return singlePole;
     }
-
-    public int getSinglePoleScore() {
-        int singlePoleScore = 0;
-        for (Map.Entry<Ball, Integer> entry : singlePole.entrySet()) {
-            singlePoleScore += entry.getKey().getValue() * entry.getValue();
-        }
-        return singlePoleScore;
-    }
     
     public int getSinglePoleCount() {
         int singlePoleCount = 0;

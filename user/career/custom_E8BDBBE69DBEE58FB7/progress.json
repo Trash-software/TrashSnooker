@@ -1,289 +1,484 @@
 {
-  "stageIndex": -1,
+  "stageIndex": 4,
   "seedRanks": {
-    "Yan Bingtao": 9,
-    "Liu Mang": 2,
-    "custom_player_1": 15,
-    "custom_656467": 31,
-    "custom_player_166": 30,
-    "custom_player_165": 32,
-    "Glass Heart": 11,
+    "random_player_103": 59,
+    "Tang Chunxiao": 33,
+    "random_player_88": 57,
+    "custom_player_1": 17,
+    "random_player_0": 54,
+    "custom_player_3": 13,
+    "custom_player_2": 19,
+    "custom_player_4": 20,
+    "custom_A7727D597A40BCB9": 43,
+    "Summer Brave": 34,
+    "Lao Youtiao": 40,
+    "John Wizard": 3,
+    "Mou Moumou": 16,
+    "random_player_32": 53,
+    "Kid": 2,
+    "custom_player_177": 47,
+    "random_player_39": 62,
+    "custom_player_178": 21,
+    "High Stick": 22,
+    "Wang Sinuo": 44,
+    "custom_player_180": 18,
+    "custom_player_181": 15,
+    "custom_E5B08FE4BB99E5A5B3": 7,
+    "Wang Xu": 14,
+    "random_player_84": 60,
+    "Yan Bingtao": 8,
+    "Liu Mang": 1,
+    "random_player_64": 63,
+    "random_player_23": 58,
+    "random_player_66": 64,
+    "custom_656467": 36,
+    "custom_C3A707E9A33EE9A3": 45,
+    "custom_player_169": 51,
+    "Zheng Yubo": 42,
+    "custom_player_166": 35,
+    "custom_player_165": 37,
+    "Glass Heart": 10,
+    "custom_player_168": 48,
+    "custom_player_167": 38,
+    "custom_582A14CC794812FB": 46,
     "Selby": 12,
-    "custom_player_172": 24,
-    "Noob": 27,
-    "custom_player_174": 18,
-    "Zhao Xintong": 5,
-    "Mang Dali": 21,
-    "Summer Brave": 29,
-    "John Wizard": 4,
-    "Mou Moumou": 14,
-    "Mang Zi": 19,
-    "custom_E8BDBBE69DBEE58FB7": 23,
-    "Kid": 3,
+    "custom_player_173": 39,
+    "custom_player_172": 11,
+    "Noob": 31,
+    "custom_player_174": 23,
+    "Zhao Xintong": 4,
+    "Mang Dali": 26,
+    "custom_player_171": 49,
+    "custom_player_170": 50,
+    "random_player_14": 56,
+    "Mang Zi": 24,
+    "random_player_16": 61,
+    "custom_E8BDBBE69DBEE58FB7": 28,
     "Fat Guy": 6,
-    "custom_player_159": 20,
-    "Ding Junhui": 7,
-    "custom_player_178": 16,
-    "High Stick": 17,
-    "Mark Williams": 1,
-    "Give Emperor": 26,
-    "custom_E78B97E697A5E79A84": 25,
-    "Chu Bingjie": 28,
-    "custom_player_160": 10,
-    "Worst Professional": 22,
-    "custom_E5B08FE4BB99E5A5B3": 8,
-    "Wang Xu": 13
+    "custom_player_159": 25,
+    "Ding Junhui": 5,
+    "random_player_18": 55,
+    "Give Emperor": 30,
+    "custom_E78B97E697A5E79A84": 29,
+    "Chu Bingjie": 32,
+    "custom_player_160": 9,
+    "Worst Professional": 27,
+    "random_player_60": 52,
+    "Baggage Brother": 41
   },
-  "championshipId": "eight_red_pocket_open",
+  "championshipId": "eight_northeast_open",
   "matchTree": {"root": {
-    "p1wins": 5,
     "p1": {
-      "p1wins": 2,
       "p1": {
-        "p1wins": 1,
         "p1": {
-          "p1wins": 2,
           "p1": {
-            "p1wins": 2,
-            "p1": {"winner": "custom_player_160"},
-            "p2": {"winner": "Summer Brave"},
-            "winner": "custom_player_160",
+            "p1": {"winner": "Fat Guy"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "Give Emperor"},
+              "p2": {
+                "p1wins": 0,
+                "p1": {"winner": "custom_A7727D597A40BCB9"},
+                "p2": {"winner": "random_player_84"},
+                "winner": "random_player_84",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-0",
+                "p2wins": 1
+              },
+              "winner": "random_player_84",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-16",
+              "p2wins": 1
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-0",
-            "p2wins": 0
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-32"
           },
           "p2": {
-            "p1wins": 1,
-            "p1": {"winner": "Mark Williams"},
-            "p2": {"winner": "Mang Zi"},
-            "winner": "Mang Zi",
+            "p1": {"winner": "Mou Moumou"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "custom_player_4"},
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "Zheng Yubo"},
+                "p2": {"winner": "custom_player_166"},
+                "winner": "Zheng Yubo",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-1",
+                "p2wins": 0
+              },
+              "winner": "custom_player_4",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-17",
+              "p2wins": 0
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-1",
-            "p2wins": 2
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-33"
           },
-          "winner": "custom_player_160",
           "stage": "ROUND_2",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_2-16",
-          "p2wins": 0
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_2-48"
         },
         "p2": {
-          "p1wins": 0,
           "p1": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_player_172"},
-            "p2": {"winner": "Worst Professional"},
-            "winner": "Worst Professional",
+            "p1": {"winner": "Ding Junhui"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Chu Bingjie"},
+              "p2": {
+                "p1wins": 0,
+                "p1": {"winner": "random_player_16"},
+                "p2": {"winner": "Lao Youtiao"},
+                "winner": "Lao Youtiao",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-2",
+                "p2wins": 1
+              },
+              "winner": "Chu Bingjie",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-18",
+              "p2wins": 0
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-2",
-            "p2wins": 2
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-34"
           },
           "p2": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_E8BDBBE69DBEE58FB7"},
-            "p2": {"winner": "custom_E5B08FE4BB99E5A5B3"},
-            "winner": "custom_E5B08FE4BB99E5A5B3",
+            "p1": {"winner": "Selby"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "custom_player_1"},
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "custom_player_169"},
+                "p2": {"winner": "custom_player_170"},
+                "winner": "custom_player_169",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-3",
+                "p2wins": 0
+              },
+              "winner": "custom_player_1",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-19",
+              "p2wins": 0
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-3",
-            "p2wins": 2
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-35"
           },
-          "winner": "custom_E5B08FE4BB99E5A5B3",
           "stage": "ROUND_2",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_2-17",
-          "p2wins": 2
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_2-49"
         },
-        "winner": "custom_E5B08FE4BB99E5A5B3",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-QUARTER_FINAL-24",
-        "p2wins": 3
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-QUARTER_FINAL-56"
       },
       "p2": {
-        "p1wins": 3,
         "p1": {
-          "p1wins": 2,
           "p1": {
-            "p1wins": 2,
-            "p1": {"winner": "Liu Mang"},
-            "p2": {"winner": "custom_player_165"},
-            "winner": "Liu Mang",
+            "p1": {"winner": "Kid"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Mang Zi"},
+              "p2": {
+                "p1wins": 0,
+                "p1": {"winner": "custom_player_167"},
+                "p2": {"winner": "custom_656467"},
+                "winner": "custom_656467",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-4",
+                "p2wins": 1
+              },
+              "winner": "Mang Zi",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-20",
+              "p2wins": 0
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-4",
-            "p2wins": 0
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-36"
           },
           "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Chu Bingjie"},
-            "p2": {"winner": "Wang Xu"},
-            "winner": "Chu Bingjie",
+            "p1": {"winner": "custom_player_181"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "custom_player_2"},
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "random_player_0"},
+                "p2": {"winner": "custom_player_171"},
+                "winner": "random_player_0",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-5",
+                "p2wins": 0
+              },
+              "winner": "custom_player_2",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-21",
+              "p2wins": 0
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-5",
-            "p2wins": 0
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-37"
           },
-          "winner": "Liu Mang",
           "stage": "ROUND_2",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_2-18",
-          "p2wins": 0
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_2-50"
         },
         "p2": {
-          "p1wins": 2,
           "p1": {
-            "p1wins": 2,
             "p1": {"winner": "John Wizard"},
-            "p2": {"winner": "Noob"},
-            "winner": "John Wizard",
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "Worst Professional"},
+              "p2": {
+                "p1wins": 0,
+                "p1": {"winner": "custom_player_177"},
+                "p2": {"winner": "random_player_60"},
+                "winner": "random_player_60",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-6",
+                "p2wins": 1
+              },
+              "winner": "random_player_60",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-22",
+              "p2wins": 1
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-6",
-            "p2wins": 0
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-38"
           },
           "p2": {
-            "p1wins": 1,
-            "p1": {"winner": "Mou Moumou"},
-            "p2": {"winner": "custom_player_178"},
-            "winner": "custom_player_178",
+            "p1": {"winner": "Glass Heart"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "custom_player_174"},
+              "p2": {
+                "p1wins": 0,
+                "p1": {"winner": "Wang Sinuo"},
+                "p2": {"winner": "custom_C3A707E9A33EE9A3"},
+                "winner": "custom_C3A707E9A33EE9A3",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-7",
+                "p2wins": 1
+              },
+              "winner": "custom_C3A707E9A33EE9A3",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-23",
+              "p2wins": 1
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-7",
-            "p2wins": 2
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-39"
           },
-          "winner": "John Wizard",
           "stage": "ROUND_2",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_2-19",
-          "p2wins": 0
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_2-51"
         },
-        "winner": "Liu Mang",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-QUARTER_FINAL-25",
-        "p2wins": 0
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-QUARTER_FINAL-57"
       },
-      "winner": "Liu Mang",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-SEMI_FINAL-28",
-      "p2wins": 3
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-SEMI_FINAL-60"
     },
     "p2": {
-      "p1wins": 3,
       "p1": {
-        "p1wins": 0,
         "p1": {
-          "p1wins": 2,
           "p1": {
-            "p1wins": 2,
-            "p1": {"winner": "custom_player_1"},
-            "p2": {"winner": "Give Emperor"},
-            "winner": "custom_player_1",
+            "p1": {"winner": "Yan Bingtao"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "Noob"},
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "random_player_39"},
+                "p2": {"winner": "Baggage Brother"},
+                "winner": "random_player_39",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-8",
+                "p2wins": 0
+              },
+              "winner": "random_player_39",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-24",
+              "p2wins": 1
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-8",
-            "p2wins": 0
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-40"
           },
           "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "High Stick"},
-            "p2": {"winner": "Mang Dali"},
-            "winner": "High Stick",
+            "p1": {"winner": "Wang Xu"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "Mang Dali"},
+              "p2": {
+                "p1wins": 0,
+                "p1": {"winner": "custom_player_173"},
+                "p2": {"winner": "Tang Chunxiao"},
+                "winner": "Tang Chunxiao",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-9",
+                "p2wins": 1
+              },
+              "winner": "Tang Chunxiao",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-25",
+              "p2wins": 1
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-9",
-            "p2wins": 0
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-41"
           },
-          "winner": "custom_player_1",
           "stage": "ROUND_2",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_2-20",
-          "p2wins": 1
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_2-52"
         },
         "p2": {
-          "p1wins": 0,
           "p1": {
-            "p1wins": 2,
-            "p1": {"winner": "Selby"},
-            "p2": {"winner": "custom_E78B97E697A5E79A84"},
-            "winner": "Selby",
+            "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "custom_E8BDBBE69DBEE58FB7"},
+              "p2": {
+                "p1wins": 0,
+                "p1": {"winner": "Summer Brave"},
+                "p2": {"winner": "random_player_18"},
+                "winner": "random_player_18",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-10",
+                "p2wins": 1
+              },
+              "winner": "custom_E8BDBBE69DBEE58FB7",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-26",
+              "p2wins": 0
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-10",
-            "p2wins": 1
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-42"
           },
           "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Kid"},
-            "p2": {"winner": "custom_656467"},
-            "winner": "Kid",
+            "p1": {"winner": "custom_player_160"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "custom_player_159"},
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "random_player_103"},
+                "p2": {"winner": "random_player_32"},
+                "winner": "random_player_103",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-11",
+                "p2wins": 0
+              },
+              "winner": "random_player_103",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-27",
+              "p2wins": 1
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-11",
-            "p2wins": 0
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-43"
           },
-          "winner": "Kid",
           "stage": "ROUND_2",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_2-21",
-          "p2wins": 2
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_2-53"
         },
-        "winner": "Kid",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-QUARTER_FINAL-26",
-        "p2wins": 3
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-QUARTER_FINAL-58"
       },
       "p2": {
-        "p1wins": 3,
         "p1": {
-          "p1wins": 1,
           "p1": {
-            "p1wins": 2,
-            "p1": {"winner": "Zhao Xintong"},
-            "p2": {"winner": "Yan Bingtao"},
-            "winner": "Zhao Xintong",
+            "p1": {"winner": "Liu Mang"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "High Stick"},
+              "p2": {
+                "p1wins": 0,
+                "p1": {"winner": "custom_player_168"},
+                "p2": {"winner": "random_player_66"},
+                "winner": "random_player_66",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-12",
+                "p2wins": 1
+              },
+              "winner": "random_player_66",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-28",
+              "p2wins": 1
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-12",
-            "p2wins": 0
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-44"
           },
           "p2": {
-            "p1wins": 1,
-            "p1": {"winner": "Fat Guy"},
-            "p2": {"winner": "Ding Junhui"},
-            "winner": "Ding Junhui",
+            "p1": {"winner": "custom_player_3"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "custom_player_178"},
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "custom_582A14CC794812FB"},
+                "p2": {"winner": "random_player_88"},
+                "winner": "custom_582A14CC794812FB",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-13",
+                "p2wins": 0
+              },
+              "winner": "custom_582A14CC794812FB",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-29",
+              "p2wins": 1
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-13",
-            "p2wins": 2
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-45"
           },
-          "winner": "Ding Junhui",
           "stage": "ROUND_2",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_2-22",
-          "p2wins": 2
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_2-54"
         },
         "p2": {
-          "p1wins": 0,
           "p1": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_player_166"},
-            "p2": {"winner": "custom_player_174"},
-            "winner": "custom_player_174",
+            "p1": {"winner": "Zhao Xintong"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "custom_E78B97E697A5E79A84"},
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "random_player_23"},
+                "p2": {"winner": "random_player_64"},
+                "winner": "random_player_23",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-14",
+                "p2wins": 0
+              },
+              "winner": "random_player_23",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-30",
+              "p2wins": 1
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-14",
-            "p2wins": 2
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-46"
           },
           "p2": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_player_159"},
-            "p2": {"winner": "Glass Heart"},
-            "winner": "Glass Heart",
+            "p1": {"winner": "custom_player_172"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "custom_player_180"},
+              "p2": {
+                "p1wins": 1,
+                "p1": {"winner": "random_player_14"},
+                "p2": {"winner": "custom_player_165"},
+                "winner": "random_player_14",
+                "stage": "PRE_ROUND_1",
+                "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_1-15",
+                "p2wins": 0
+              },
+              "winner": "random_player_14",
+              "stage": "PRE_ROUND_2",
+              "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-PRE_ROUND_2-31",
+              "p2wins": 1
+            },
             "stage": "ROUND_1",
-            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_1-15",
-            "p2wins": 2
+            "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_1-47"
           },
-          "winner": "Glass Heart",
           "stage": "ROUND_2",
-          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-ROUND_2-23",
-          "p2wins": 2
+          "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-ROUND_2-55"
         },
-        "winner": "Ding Junhui",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-QUARTER_FINAL-27",
-        "p2wins": 0
+        "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-QUARTER_FINAL-59"
       },
-      "winner": "Kid",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-SEMI_FINAL-29",
-      "p2wins": 2
+      "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-SEMI_FINAL-61"
     },
-    "winner": "Liu Mang",
     "stage": "FINAL",
-    "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open-FINAL-30",
-    "p2wins": 0
+    "matchId": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open-FINAL-62"
   }},
-  "finished": true,
-  "timestamp": "2025/1/22"
+  "finished": false,
+  "timestamp": "2025/2/10"
 }

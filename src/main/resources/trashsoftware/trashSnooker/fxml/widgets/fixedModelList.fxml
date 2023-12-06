@@ -6,7 +6,7 @@
 <?import trashsoftware.trashSnooker.fxml.widgets.FixedModelList?>
 <fx:root type="trashsoftware.trashSnooker.fxml.widgets.FixedModelList"
          xmlns="http://javafx.com/javafx"
-         xmlns:fx="http://javafx.com/fxml" prefHeight="400.0">
+         xmlns:fx="http://javafx.com/fxml">
     <GridPane fx:id="container" vgap="5.0" hgap="10.0" FixedModelList.hgrow="ALWAYS">
         <columnConstraints>
             <ColumnConstraints />

@@ -20,7 +20,8 @@ public class NineBallScoreResultFactory implements ScoreFactory {
         return new NineBallScoreResult(
                 Util.bytesToInt32(bytes, 4),
                 bytes[0] & 0xff,
-                readRems(replay, bytes, 8)
+                readRems(replay, bytes, 8),
+                bytes[1] & 0xff
         );
     }
 

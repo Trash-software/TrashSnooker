@@ -1,8 +1,10 @@
 package trashsoftware.trashSnooker.core.numberedGames.chineseEightBall;
 
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * 让球，不知道怎么翻译
@@ -50,5 +52,19 @@ public enum LetBall {
                 p1Let.put(BACK, 1);
                 break;
         }
+    }
+    
+    public String getShown(int howMany, ResourceBundle strings) {
+        String keyFmt = switch (this) {
+            case FRONT -> strings.getString("letBallFrontFmt");
+            case MID -> strings.getString("letBallMidFmt");
+            case BACK -> strings.getString("letBallBackFmt");
+        };
+        String numKey = "num" + howMany;
+        String numVal;
+        if (strings.containsKey(numKey)) numVal = strings.getString(numKey);
+        else numVal = String.valueOf(howMany);
+        
+        return String.format(keyFmt, numVal);
     }
 }

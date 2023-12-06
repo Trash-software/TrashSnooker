@@ -32,6 +32,7 @@ import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class CareerTrainingView extends ChildInitializable {
@@ -71,10 +72,10 @@ public class CareerTrainingView extends ChildInitializable {
         refreshList();
     }
 
-    @Override
-    public Stage getStage() {
-        return stage;
-    }
+//    @Override
+//    public Stage getStage() {
+//        return stage;
+//    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -162,12 +163,17 @@ public class CareerTrainingView extends ChildInitializable {
         rewardsTable.clearItems();
 
         ChallengeItem selected = challengeTable.getSelectionModel().getSelectedItem();
-        if (selected != null && selected.ch != null) {
+        if (selected != null) {
             rewardsTable.setVisible(true);
-            ChallengeSet challengeSet = ChallengeManager.getInstance().getById(selected.ch.challengeId);
-            var completed = challengeSet.getFulfilledBy(selected.ch.getScores());
-            var crs = challengeSet.getConditionRewards();
+            var crs = selected.data.getConditionRewards();
             var sorted = new ArrayList<>(crs.keySet());
+            Map<RewardCondition, ChallengeReward> completed;
+            if (selected.ch != null) {
+                ChallengeSet challengeSet = ChallengeManager.getInstance().getById(selected.ch.challengeId);
+                completed = challengeSet.getFulfilledBy(selected.ch.getScores());
+            } else {
+                completed = Map.of();
+            }
             Collections.sort(sorted);
             System.out.println(sorted);
             for (var cond : sorted) {
@@ -200,7 +206,7 @@ public class CareerTrainingView extends ChildInitializable {
 
     private void drawPreview(ChallengeSet challengeSet) {
         if (challengeSet == null) {
-//            previewPane.clear();
+            previewPane.clear();
         } else {
 //            Image image = ThumbLoader.loadThumbOf(challengeSet.getId());
 //            if (image == null) {

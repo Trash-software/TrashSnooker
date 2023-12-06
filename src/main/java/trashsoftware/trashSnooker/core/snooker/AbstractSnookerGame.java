@@ -409,9 +409,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         foul,
                         true);
             } else {
-                if (currentTarget == 0) {
+                if (currentTarget == RAW_COLORED_REP) {
                     // 任意彩球
-                    if (indicatedTarget == 0) {
+                    if (indicatedTarget == RAW_COLORED_REP) {
                         System.err.println("Program error");
                     } else if (indicatedTarget != realTarget) {
                         int foul = Math.max(4, Math.max(realTarget, indicatedTarget));
@@ -422,7 +422,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                                 true);
                     }
                 }
-                if (currentTarget != 0 && realTarget != currentTarget) {  // 打了非目标球的彩球
+                if (currentTarget != RAW_COLORED_REP && realTarget != currentTarget) {  // 打了非目标球的彩球
                     int foul = Math.max(4, Math.max(realTarget, currentTarget));
                     thisCueFoul.addFoul(String.format(strings.getString("targetXOtherHit"),
                                     ballValueToColorName(currentTarget, strings)),
@@ -435,9 +435,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                             if (onlyBall == whiteFirstCollide) score = onlyBall.getValue();
                             else {
                                 int foul = Math.max(4, onlyBall.getValue());
-                                thisCueFoul.addFoul(strings.getString("targetColorRedHit"),
+                                thisCueFoul.addFoul(strings.getString("targetColorOtherPot"),
                                         foul,
-                                        true);
+                                        false);
                             }
                         }
                     } else {  // 非任意彩球
@@ -571,7 +571,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     private int getScoreSum(boolean includeRemain) {
-        return player1.getScore() + player2.getScore() + 
+        return player1.getScore() + player2.getScore() +
                 (includeRemain ? getRemainingScore(false) : 0);
     }
 
@@ -903,6 +903,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     @Override
     public double priceOfTarget(int targetRep, Ball ball, Player attackingPlayer,
                                 Ball lastPotting) {
+        SnookerPlayer snookerPlayer = (SnookerPlayer) attackingPlayer;
         if (targetRep == 1) {
             return 1.0;  // 目标球是红球，有可能是自由球
         } else if (targetRep == AbstractSnookerGame.RAW_COLORED_REP) {
@@ -911,10 +912,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             int remMax;
 
             if (lastPotting == null) {
-                scoreBehind = -getScoreDiff((SnookerPlayer) attackingPlayer);
+                scoreBehind = -getScoreDiff(snookerPlayer);
                 remMax = remReds * 8 + 34;
             } else {
-                scoreBehind = -getScoreDiff((SnookerPlayer) attackingPlayer) - 1;
+                scoreBehind = -getScoreDiff(snookerPlayer) - 1;
                 remMax = remReds * 8 + 26;
             }
 
@@ -930,7 +931,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 else return ball.getValue() / 50.0;
             }
 
-            int curSinglePole = attackingPlayer.getSinglePoleScore();
+            int curSinglePole = snookerPlayer.getSinglePoleScore();
             if (lastPotting != null) curSinglePole += 1;
 //            System.out.println(curSinglePole + " " + remMax);
             if (curSinglePole > 24 && curSinglePole + remMax == 147) {

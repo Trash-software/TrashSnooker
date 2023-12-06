@@ -5,6 +5,7 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -41,6 +42,7 @@ public class EntryView implements Initializable {
     private Stage selfStage;
     private ResourceBundle strings;
     private Scene thisScene;
+    private Parent entryRoot;
 
     void startCareerView(Stage stage) {
 //        stage.initOwner(owner);
@@ -57,7 +59,6 @@ public class EntryView implements Initializable {
             restoreScene();
             throw new RuntimeException(e);
         }
-        root.setStyle(App.FONT_STYLE);
 
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
@@ -66,11 +67,9 @@ public class EntryView implements Initializable {
         mainView.setParent(thisScene);
         mainView.setup(this, stage);
 
-        Scene scene = App.createScene(root);
-        stage.setScene(scene);
-        stage.sizeToScene();
+        App.setRoot(root);
 
-        App.scaleWindow(stage);
+//        App.scaleWindow(stage);
         
         restoreScene();
     }
@@ -94,19 +93,25 @@ public class EntryView implements Initializable {
     public void setup(Stage selfStage) {
         this.selfStage = selfStage;
         this.thisScene = selfStage.getScene();
-
+        this.entryRoot = (Parent) thisScene.getRoot().getChildrenUnmodifiable().get(0);
+        
         refreshGui();
 
         this.selfStage.setOnCloseRequest(e -> {
-            if (selfStage.getScene() != thisScene) {
-                e.consume();
-                AlertShower.askConfirmation(
-                        selfStage,
-                        strings.getString("confirmExitAppDes"),
-                        strings.getString("confirmExitApp"),
-                        selfStage::hide,
-                        null
-                );
+            try {
+                Node currentShowing = App.getAppRoot().getChildren().get(0);
+                if (currentShowing != entryRoot) {
+                    e.consume();
+                    AlertShower.askConfirmation(
+                            selfStage,
+                            strings.getString("confirmExitAppDes"),
+                            strings.getString("confirmExitApp"),
+                            selfStage::hide,
+                            null
+                    );
+                }
+            } catch (Exception err) {
+                EventLogger.error(err);
             }
         });
         this.selfStage.setOnHidden(e -> {
@@ -220,13 +225,11 @@ public class EntryView implements Initializable {
             Parent root = loader.load();
             root.setStyle(App.FONT_STYLE);
 
-            Scene scene = App.createScene(root);
-
             SettingsView view = loader.getController();
             view.setup(selfStage);
             view.setParent(thisScene);
 
-            selfStage.setScene(scene);
+            App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);
         }
@@ -245,10 +248,8 @@ public class EntryView implements Initializable {
             StatsView view = loader.getController();
             view.setParent(thisScene);
             view.setStage(selfStage);
-
-            Scene scene = App.createScene(root);
-            selfStage.setScene(scene);
-            selfStage.sizeToScene();
+            
+            App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);
         }
@@ -269,8 +270,7 @@ public class EntryView implements Initializable {
             view.setParent(thisScene);
             view.naiveFill();
 
-            Scene scene = App.createScene(root);
-            selfStage.setScene(scene);
+            App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);
         }
@@ -289,12 +289,9 @@ public class EntryView implements Initializable {
         view.setParent(thisScene);
         view.setup(this, selfStage);
 
-        Scene scene = App.createScene(root);
-
 //            Scene scene = new Scene(root, -1, -1, false, SceneAntialiasing.BALANCED);
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
-        selfStage.setScene(scene);
-        selfStage.sizeToScene();
+        App.setRoot(root);
     }
 
     @FXML
@@ -349,11 +346,6 @@ public class EntryView implements Initializable {
 
     @FXML
     void fastGame() throws IOException {
-//            ConfigLoader.startLoader(CONFIG);
-//        Stage stage = new Stage();
-//        stage.initOwner(selfStage);
-//        stage.initModality(Modality.WINDOW_MODAL);
-
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("fastGameView.fxml"),
                 strings
@@ -365,11 +357,9 @@ public class EntryView implements Initializable {
         fastGameView.setParent(thisScene);
         fastGameView.setStage(selfStage);
 
-        Scene scene = App.createScene(root);
+        App.setRoot(root);
+        
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
-        selfStage.setScene(scene);
-        selfStage.sizeToScene();
-
-//        stage.show();
+        
     }
 }

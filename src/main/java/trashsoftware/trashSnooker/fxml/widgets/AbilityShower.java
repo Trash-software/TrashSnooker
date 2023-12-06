@@ -4,15 +4,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.res.ResourcesLoader;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,7 +50,10 @@ public class AbilityShower extends VBox {
     @FXML
     RadarChart radarChartRoot;
     @FXML
+    HBox extraField;
+    @FXML
     Button switchButton;
+    ImageView switchButtonGraphic;
     boolean showingRadar = false;
 
     private PlayerPerson.ReadableAbility opponentAbi;
@@ -56,6 +63,7 @@ public class AbilityShower extends VBox {
     private PerkManager perkManager;
 
     private final ResourceBundle strings;
+    private final ResourcesLoader rl = ResourcesLoader.getInstance();
 
     public AbilityShower() {
         this(App.getStrings());
@@ -91,6 +99,10 @@ public class AbilityShower extends VBox {
                 notGoodHandBtn, new Combo(PerkManager.ANTI_HAND, notGoodHandLabel),
                 restBtn, new Combo(PerkManager.REST, restLabel)
         ));
+        
+        switchButtonGraphic = new ImageView();
+        switchButton.setGraphic(switchButtonGraphic);
+        setSwitchButton();
     }
 
     public static String numToString(double d) {
@@ -116,6 +128,11 @@ public class AbilityShower extends VBox {
 
         setupTexts();
         setupRadar();
+    }
+    
+    public void setExtraField(Node node) {
+        extraField.getChildren().clear();
+        extraField.getChildren().add(node);
     }
     
     public void setOpponent(PlayerPerson.ReadableAbility opponentAbi) {
@@ -291,12 +308,6 @@ public class AbilityShower extends VBox {
 
     @FXML
     void switchChart() {
-        if (showingRadar) {
-            switchButton.setText(strings.getString("radarChart"));
-        } else {
-            switchButton.setText(strings.getString("barChart"));
-        }
-
         showingRadar = !showingRadar;
 
         radarChartRoot.setVisible(showingRadar);
@@ -309,6 +320,16 @@ public class AbilityShower extends VBox {
         opponentBox.setManaged(showingComparison);
         colorRect.setVisible(showingComparison);
         colorRect2.setVisible(showingComparison);
+        
+        setSwitchButton();
+    }
+    
+    private void setSwitchButton() {
+        if (showingRadar) {
+            rl.setIconImage1x1(rl.getBarIcon(), switchButtonGraphic, 1.25);
+        } else {
+            rl.setIconImage1x1(rl.getRadarIcon(), switchButtonGraphic, 1.25);
+        }
     }
 
     public void notifyPerksReset() {

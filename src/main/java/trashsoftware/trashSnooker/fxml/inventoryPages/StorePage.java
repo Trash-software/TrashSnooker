@@ -16,15 +16,13 @@ import trashsoftware.trashSnooker.fxml.widgets.FixedCueList;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class StorePage extends AbsInvPage {
 
     @FXML
     FixedCueList cueList;
+    private final Map<CueBrand, CueSelection.CueAndBrand> cachedInstances = new HashMap<>();
 
     private final HumanCareer humanCareer;
 
@@ -36,12 +34,11 @@ public class StorePage extends AbsInvPage {
         super("storePage.fxml", strings);
 
         humanCareer = CareerManager.getInstance().getHumanPlayerCareer();
-
-        reload();
     }
 
     private void fill() {
         cueList.clear();
+        cueList.setViewSlots(inventoryView.getNumRows());
         cueList.setDisplayComparator(Comparator.comparingInt(a -> a.brand.getPrice()));
         
         List<Cue> haves = inventoryManager.getAllCues();
@@ -50,7 +47,7 @@ public class StorePage extends AbsInvPage {
         for (CueSelection.CueAndBrand cab : notHaves) {
             cab.initInstanceForViewing();
             cueList.addCue(cab,
-                    900,
+                    inventoryView.getCueWidth(),
                     strings.getString("buy") + " - " + cab.brand.getPrice(),
                     () -> askBuyCue(cab),
                     false);
@@ -59,7 +56,7 @@ public class StorePage extends AbsInvPage {
     }
 
     @NotNull
-    private static List<CueSelection.CueAndBrand> getNotHavingCues(List<Cue> haves) {
+    private List<CueSelection.CueAndBrand> getNotHavingCues(List<Cue> haves) {
         List<CueSelection.CueAndBrand> notHaves = new ArrayList<>();
         OUT_LOOP:
         for (CueBrand cueBrand : DataLoader.getInstance().getCues().values()) {
@@ -70,7 +67,9 @@ public class StorePage extends AbsInvPage {
                     }
                 }
                 // todo: 预览版instance
-                CueSelection.CueAndBrand cab = new CueSelection.CueAndBrand(cueBrand);
+                CueSelection.CueAndBrand cab = cachedInstances.computeIfAbsent(
+                        cueBrand, CueSelection.CueAndBrand::new
+                );
                 notHaves.add(cab);
             }
         }
