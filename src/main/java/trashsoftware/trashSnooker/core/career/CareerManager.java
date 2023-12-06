@@ -892,9 +892,11 @@ public class CareerManager {
         
         for (int rank = 0; rank < chineseEightRanking.size(); rank++) {
             CareerRanker.ByTier byTier = chineseEightRanking.get(rank);
-            int winRateTier = CareerRanker.ByTier.computeTier(rank, byTier.getWinRate(), haveTiers);
-            winRateTier -= LetBall.magicScore(byTier.career.getPlayerPerson());
-            byTier.setTier(winRateTier);
+            if (byTier.canHaveTier()) {
+                int winRateTier = CareerRanker.ByTier.computeTier(rank, byTier.getWinRate(), haveTiers);
+                winRateTier -= LetBall.magicScore(byTier.career.getPlayerPerson());
+                byTier.setTier(winRateTier);
+            }
         }
         chineseEightRanking.sort(CareerRanker.ByTier::compareWithTierSet);
         

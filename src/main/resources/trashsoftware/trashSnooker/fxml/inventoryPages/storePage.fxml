@@ -24,6 +24,6 @@
             <Font size="18.0"/>
         </font>
     </Label>
-    <FixedCueList fx:id="cueList"/>
+    <FixedCueList fx:id="cueList" VBox.vgrow="ALWAYS"/>
 
 </fx:root>

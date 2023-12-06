@@ -2,13 +2,18 @@ package trashsoftware.trashSnooker.fxml;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
@@ -26,8 +31,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
 
-    public static final String VERSION_NAME = "0.6-BETA-1";
-    public static final int VERSION_CODE = 50;
+    public static final String VERSION_NAME = "0.6-BETA-2";
+    public static final int VERSION_CODE = 51;
     public static final String CLASSIFIER = "win";
     public static final String FONT_STYLE = CLASSIFIER.equals("mac") ?
             "-fx-font-family: 'serif'" :
@@ -39,7 +44,8 @@ public class App extends Application {
     private static final String CONFIG = "user" + File.separator + "config.cfg";
     private static ResourceBundle strings;
     private static ResourceBundle achievementStrings;
-    
+
+    private static VBox appRoot;
     private static Stage fullScreenStage;
 
     public static void startApp() {
@@ -80,6 +86,13 @@ public class App extends Application {
 
         stage.setX(0);
         stage.setY(0);
+
+        boolean wasMax = stage.isMaximized();
+        stage.sizeToScene();
+        if (wasMax) {
+            stage.setMaximized(false);
+            stage.setMaximized(true);
+        }
     }
 
     public static void resolutionChanged() {
@@ -194,9 +207,15 @@ public class App extends Application {
             primaryStage.setTitle(strings.getString("appName"));
             primaryStage.getIcons().add(ResourcesLoader.getInstance().getIcon());
             Parent parent = loader.load();
-
-            parent.setStyle(FONT_STYLE);
-            Scene scene = new Scene(parent);
+            
+            appRoot = new VBox();
+            appRoot.setAlignment(Pos.CENTER);
+            appRoot.setStyle(FONT_STYLE);
+            
+            appRoot.getChildren().add(parent);
+            
+//            Scene scene = new Scene(appRoot);
+            Scene scene = createScene(appRoot);
             primaryStage.setScene(scene);
 
             EntryView entryView = loader.getController();
@@ -205,6 +224,21 @@ public class App extends Application {
             primaryStage.show();
         } catch (Exception e) {
             EventLogger.crash(e);
+        }
+    }
+
+    public static Pane getAppRoot() {
+        return appRoot;
+    }
+
+    public static void setRoot(Node root) {
+        appRoot.getChildren().clear();
+        appRoot.getChildren().add(root);
+        appRoot.setVgrow(root, Priority.ALWAYS);
+        
+        Stage stage = (Stage) root.getScene().getWindow();
+        if (!stage.isMaximized()) {
+            stage.sizeToScene();
         }
     }
 }

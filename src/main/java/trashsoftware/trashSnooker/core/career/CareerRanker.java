@@ -229,6 +229,9 @@ public abstract class CareerRanker {
                 if (rankFrom0 < 36) return 8;
                 else return 7;
             }
+//            if (winRate > 0.4) {
+//                return 7;
+//            }
             return 7;
 //            
 //            

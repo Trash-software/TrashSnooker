@@ -29,7 +29,7 @@
             <Label fx:id="moneyLabel"/>
         </HBox>
     </HBox>
-    <TabPane fx:id="baseTabPane" tabClosingPolicy="UNAVAILABLE">
+    <TabPane fx:id="baseTabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         <Tab text="%inventory">
             <graphic>
                 <ImageView fx:id="inventoryImage"/>

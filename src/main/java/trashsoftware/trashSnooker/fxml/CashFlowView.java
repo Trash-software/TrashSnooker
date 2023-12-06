@@ -5,8 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -18,6 +17,7 @@ import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampionshipData;
 import trashsoftware.trashSnooker.core.career.ChampionshipScore;
 import trashsoftware.trashSnooker.core.career.HumanCareer;
+import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeManager;
 import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
@@ -33,6 +33,13 @@ import java.util.*;
 
 public class CashFlowView extends ChildInitializable {
 
+    public static final String[] ALL_TYPES = {
+            "all",
+            "championshipEarn", "challengeEarn", "achievementAward", "invitation",
+            "participation", "purchase", "upgrade", "fees",
+//            "lifeFee", "oweInterest"
+    };
+
     @FXML
     GridPane listPane;
     @FXML
@@ -40,15 +47,35 @@ public class CashFlowView extends ChildInitializable {
     @FXML
     ImageView moneyImage;
     @FXML
+    MenuButton typeFilterMenu;
+    @FXML
+    Button filterButton;
+    @FXML
     Label cumIncomeLabel, cumExpenditureLabel;
     @FXML
     PieChart incomeChart, expenditureChart;
 
     private Stage stage;
     private final List<InvoiceObject> invoiceObjects = new ArrayList<>();
-
     private HumanCareer humanCareer;
     private ResourceBundle strings;
+
+    private final Map<String, Integer> incomes = new HashMap<>(
+            Map.of("initMoney", CareerManager.INIT_MONEY,
+                    "championshipEarn", 0,
+                    "challengeEarn", 0,
+                    "invitation", 0,
+                    "achievementAward", 0)
+    );
+    private final Map<String, Integer> expenditures = new HashMap<>(
+            Map.of("registry", 0,
+                    "travel", 0,
+                    "hotel", 0,
+                    "purchase", 0,
+                    "upgrade", 0,
+                    "lifeFee", 0,
+                    "oweInterest", 0)
+    );
 
     public void setup(Stage stage, HumanCareer humanCareer) {
         this.stage = stage;
@@ -56,13 +83,13 @@ public class CashFlowView extends ChildInitializable {
 
         createObjects(humanCareer);
 
-        fill();
+        fill(true);
     }
 
-    @Override
-    public Stage getStage() {
-        return stage;
-    }
+//    @Override
+//    public Stage getStage() {
+//        return stage;
+//    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -70,6 +97,69 @@ public class CashFlowView extends ChildInitializable {
 
         ResourcesLoader rl = ResourcesLoader.getInstance();
         rl.setIconImage(rl.getMoneyImg(), moneyImage);
+
+        ImageView btnImg = new ImageView();
+        rl.setIconImage1x1(rl.getFilterImage(), btnImg);
+
+        filterButton.setGraphic(btnImg);
+
+        setFilterMenu();
+    }
+
+    @FXML
+    void typeFilterAction() {
+        if (getAllCheckMenu().isSelected()) {
+            typeFilterMenu.setText(strings.getString("all"));
+        }
+        List<String> selectedNames = selectedTypeNames();
+        if (selectedNames.isEmpty()) {
+            typeFilterMenu.setText(strings.getString("none"));
+        } else if (selectedNames.size() == 1) {
+            typeFilterMenu.setText(selectedNames.get(0));
+        } else {
+            typeFilterMenu.setText(strings.getString("multipleSelection"));
+        }
+        fill(false);
+    }
+
+    private void setFilterMenu() {
+        typeFilterMenu.setText(strings.getString("all"));
+        for (String type : ALL_TYPES) {
+            TypeMenuItem tmi = new TypeMenuItem(type);
+            tmi.setSelected(true);
+            CustomMenuItem cmi = new CustomMenuItem(tmi);
+            cmi.setHideOnClick(false);
+            typeFilterMenu.getItems().add(cmi);
+        }
+    }
+
+    private TypeMenuItem getAllCheckMenu() {
+        CustomMenuItem cmi = (CustomMenuItem) typeFilterMenu.getItems().get(0);
+        return (TypeMenuItem) cmi.getContent();
+    }
+
+    private List<String> selectedTypeNames() {
+        List<String> result = new ArrayList<>();
+        for (MenuItem mi : typeFilterMenu.getItems()) {
+            CustomMenuItem cmi = (CustomMenuItem) mi;
+            TypeMenuItem tmi = (TypeMenuItem) cmi.getContent();
+            if (!tmi.isAll()) {
+                if (tmi.isSelected()) {
+                    result.add(tmi.getText());
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean isTypeSelected(String typeKey) {
+        for (MenuItem mi : typeFilterMenu.getItems()) {
+            CustomMenuItem cmi = (CustomMenuItem) mi;
+            TypeMenuItem tmi = (TypeMenuItem) cmi.getContent();
+            if (tmi.isAll() && tmi.isSelected()) return true;
+            if (tmi.key.equals(typeKey) && tmi.isSelected()) return true;
+        }
+        return false;
     }
 
     private void createObjects(HumanCareer humanCareer) {
@@ -77,14 +167,10 @@ public class CashFlowView extends ChildInitializable {
         Calendar current = CareerManager.getInstance().getBeginTimestamp();
         for (JSONObject object : invoices) {
             try {
-                boolean timeIsReal = false;
+                String type = object.getString("type");
                 if (object.has("inGameDate")) {
                     current = CareerManager.stringToCalendar(object.getString("inGameDate"));
-                    timeIsReal = true;
-                }
-
-                String type = object.getString("type");
-                if (!timeIsReal && "championshipEarn".equals(type)) {
+                } else if ("championshipEarn".equals(type)) {
                     int year = object.getInt("year");
                     String match = object.getString("match");
                     ChampionshipData data = CareerManager.getInstance().getChampDataManager().findDataById(match);
@@ -103,23 +189,22 @@ public class CashFlowView extends ChildInitializable {
     }
 
     private void fill() {
+        fill(false);
+    }
+
+    private void fill(boolean initFill) {
         listPane.getChildren().clear();
 
-        Map<String, Integer> incomes = new HashMap<>(
-                Map.of("initMoney", CareerManager.INIT_MONEY,
-                        "championshipEarn", 0,
-                        "challengeEarn", 0,
-                        "invitation", 0)
-        );
-        Map<String, Integer> expenditures = new HashMap<>(
-                Map.of("registry", 0,
-                        "travel", 0,
-                        "hotel", 0,
-                        "purchase", 0,
-                        "upgrade", 0,
-                        "lifeFee", 0,
-                        "oweInterest", 0)
-        );
+        Map<String, Integer> incomes;
+        Map<String, Integer> expenditures;
+
+        if (initFill) {
+            incomes = this.incomes;
+            expenditures = this.expenditures;
+        } else {
+            incomes = new HashMap<>();
+            expenditures = new HashMap<>();
+        }
 
         int cumIncome = 0;
         int cumExpenditure = 0;
@@ -141,6 +226,11 @@ public class CashFlowView extends ChildInitializable {
                     listPane.add(monthLabel, 0, row++);
                 }
 
+                if (!isTypeSelected(io.type)) {
+                    last = io.inGameDate;
+                    continue;
+                }
+
                 Integer typeExpend = expenditures.get(io.type);
                 if (typeExpend != null) {
                     expenditures.put(io.type, typeExpend - io.getMoneyChange());
@@ -153,7 +243,11 @@ public class CashFlowView extends ChildInitializable {
                 String date = CareerManager.calendarToString(io.inGameDate);
                 listPane.add(new Label(date), 0, row++);
                 listPane.add(new Label(io.getShownType()), 0, row);
-                listPane.add(new Label(io.getItemDes()), 1, row++);
+
+                Label desLabel = new Label(io.getItemDes());
+                desLabel.setWrapText(true);
+                desLabel.setMaxWidth(180.0);
+                listPane.add(desLabel, 1, row++);
 
                 listPane.add(new Separator(Orientation.HORIZONTAL), 1, row++, 2, 1);
 
@@ -253,21 +347,22 @@ public class CashFlowView extends ChildInitializable {
             }
         }
 
-        int money = humanCareer.getMoney();
-        moneyLabel.setText(Util.moneyToReadable(money));
-        if (money < 0) {
-            moneyLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
-        } else {
-            moneyLabel.setTextFill(Color.BLACK);
+        if (initFill) {
+            int money = humanCareer.getMoney();
+            moneyLabel.setText(Util.moneyToReadable(money));
+            if (money < 0) {
+                moneyLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
+            } else {
+                moneyLabel.setTextFill(Color.BLACK);
+            }
+            cumIncomeLabel.setTextFill(CareerView.EARN_MONEY_COLOR);
+            cumIncomeLabel.setText(Util.moneyToReadable(cumIncome, true));
+            cumExpenditureLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
+            cumExpenditureLabel.setText(Util.moneyToReadable(cumExpenditure, true));
+
+            drawPieChart(incomeChart, incomes);
+            drawPieChart(expenditureChart, expenditures);
         }
-
-        cumIncomeLabel.setTextFill(CareerView.EARN_MONEY_COLOR);
-        cumIncomeLabel.setText(Util.moneyToReadable(cumIncome, true));
-        cumExpenditureLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
-        cumExpenditureLabel.setText(Util.moneyToReadable(cumExpenditure, true));
-
-        drawPieChart(incomeChart, incomes);
-        drawPieChart(expenditureChart, expenditures);
     }
 
     private String formatType(String typeKey) {
@@ -283,13 +378,21 @@ public class CashFlowView extends ChildInitializable {
         return sKey;
     }
 
+    private String typeMenuItemToString(String key) {
+        if ("all".equals(key)) {
+            return strings.getString("all");
+        } else {
+            return formatType(key);
+        }
+    }
+
     private void drawPieChart(PieChart chart, Map<String, Integer> map) {
         ObservableList<PieChart.Data> pieChartData =
                 FXCollections.observableArrayList();
 
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             pieChartData.add(new PieChart.Data(
-                    formatType(entry.getKey()) + 
+                    formatType(entry.getKey()) +
                             " " + Util.moneyToReadable(entry.getValue()),
                     entry.getValue()));
         }
@@ -359,6 +462,11 @@ public class CashFlowView extends ChildInitializable {
                     }
                 }
                 case "fees" -> strings.getString("fixedExpenditure");
+                case "achievementAward" -> {
+                    int level = others.getInt("level");
+                    Achievement achievement = Achievement.valueOf(others.getString("item"));
+                    yield achievement.getDescriptionOfLevel(level);
+                }
                 default -> "";
             };
         }
@@ -373,6 +481,46 @@ public class CashFlowView extends ChildInitializable {
 
         public int getMoneyChange() {
             return getMoneyAfter() - getMoneyBefore();
+        }
+    }
+
+    public class TypeMenuItem extends CheckBox {
+        private final String key;
+
+        TypeMenuItem(String key) {
+            super(typeMenuItemToString(key));
+
+            this.key = key;
+
+            selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != oldValue) {
+                    if (newValue) {
+                        if (isAll()) {
+                            for (MenuItem mi : typeFilterMenu.getItems()) {
+                                CustomMenuItem cmi = (CustomMenuItem) mi;
+                                TypeMenuItem tmi = (TypeMenuItem) cmi.getContent();
+                                if (!tmi.isAll() && !tmi.isSelected()) tmi.setSelected(true);
+                            }
+                        } else {
+                            for (MenuItem mi : typeFilterMenu.getItems()) {
+                                CustomMenuItem cmi = (CustomMenuItem) mi;
+                                TypeMenuItem tmi = (TypeMenuItem) cmi.getContent();
+                                if (!tmi.isAll())
+                                    if (!tmi.isSelected()) return;
+                            }
+                            getAllCheckMenu().setSelected(true);
+                        }
+                    } else {
+                        if (!isAll()) {
+                            getAllCheckMenu().setSelected(false);
+                        }
+                    }
+                }
+            });
+        }
+
+        boolean isAll() {
+            return "all".equals(key);
         }
     }
 }

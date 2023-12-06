@@ -131,8 +131,10 @@
 
     <RadarChart fx:id="radarChartRoot" visible="false" managed="false" alignment="TOP_CENTER"/>
 
-    <HBox spacing="5.0">
-        <Button fx:id="switchButton" text="%radarChart" onAction="#switchChart"/>
+    <HBox spacing="20.0">
+        <Button fx:id="switchButton" onAction="#switchChart"/>
+        
+        <HBox fx:id="extraField" HBox.hgrow="ALWAYS"/>
     </HBox>
 
 </fx:root>

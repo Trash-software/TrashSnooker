@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
@@ -79,19 +80,17 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double whiteY = game.getCueBall().getY();
         
         double[] cornerBallPos = leftBreak ? game.getCornerRedBallPosGreenSide() : game.getCornerRedBallPosYellowSide();
-        double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 2.0;  // 主要有个加塞瞄点偏移的事情
+        double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 3.0;  // 主要有个加塞瞄点偏移的事情
         double[] thinVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thinY - whiteY);
-        double thickY = cornerBallPos[1];
+        double thickY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 0.5;
         double[] thickVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thickY - whiteY);
         
         double beginDeg = Math.toDegrees(Algebra.thetaOf(thinVec));
-        int nTicks = 20;
+        int nTicks = 25;
         double totalAng = Math.toDegrees(Algebra.thetaBetweenVectors(thickVec, thinVec));
         double tickDeg = totalAng / nTicks * -sign;
         
-        double selectedSideSpin = 0.6 * sign;
-//        double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin,
-//                aiPlayer.getInGamePlayer().getCurrentCue(game));
+        double selectedSideSpin = 0.5 * sign;
         
         List<Ball> legalList = game.getAllLegalBalls(1, false, false);
         Set<Ball> legalSet = new HashSet<>(legalList);
@@ -294,6 +293,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
+                            0.0,
                             game.getGameValues().table,
                             pp
                     )
@@ -302,12 +302,14 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             System.out.println("Big power!");
             int index = random.nextInt(ATTACK_SPIN_POINTS.length);
             double[] spin = ATTACK_SPIN_POINTS[index];
+            Cue cue = aiPlayer.getInGamePlayer().getCueSelection().getSelected().getNonNullInstance();
+            double[] aiSpin = cue.aiCuePoint(spin, game.getGameValues().ball);
             double powerLow = pp.getControllablePowerPercentage() * 0.7;
             double interval = pp.getControllablePowerPercentage() - powerLow;
             cueParams = CueParams.createBySelected(
                     random.nextDouble() * interval + powerLow,
-                    spin[0],
-                    spin[1],
+                    aiSpin[0],
+                    aiSpin[1],
                     game,
                     aiPlayer.getInGamePlayer(),
                     CuePlayParams.getPlayableHand(
@@ -315,6 +317,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
+                            0.0,
                             game.getGameValues().table,
                             pp
                     )

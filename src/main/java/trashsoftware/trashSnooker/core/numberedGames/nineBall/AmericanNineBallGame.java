@@ -129,7 +129,8 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
         curResult = new NineBallScoreResult(
                 thinkTime,
                 getCuingPlayer().getInGamePlayer().getPlayerNumber(),
-                getBalls());
+                getBalls(),
+                getCuingPlayer().getSinglePoleCount());
     }
 
     @Override

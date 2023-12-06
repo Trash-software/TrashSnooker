@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 58920,
+    "money": 51220,
     "invoices": [
       {
         "match": "pool-full-regular",
@@ -77,13 +77,241 @@
           }
         ],
         "timestamp": "2023-11-28 16:41:45"
+      },
+      {
+        "inGameDate": "2024/10/18",
+        "year": 2024,
+        "match": "eight_master_tour_hebei",
+        "moneyBefore": 58920,
+        "moneyAfter": 62920,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 4000,
+          "raw": 5000
+        }},
+        "timestamp": "2023-12-04 02:22:56"
+      },
+      {
+        "inGameDate": "2024/10/18",
+        "moneyBefore": 62920,
+        "moneyAfter": 62260,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 660
+        }],
+        "timestamp": "2023-12-04 02:25:30"
+      },
+      {
+        "inGameDate": "2024/10/29",
+        "moneyBefore": 62260,
+        "moneyAfter": 61420,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 840
+        }],
+        "timestamp": "2023-12-04 02:25:34"
+      },
+      {
+        "inGameDate": "2024/11/12",
+        "moneyBefore": 61420,
+        "moneyAfter": 59740,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1680
+        }],
+        "timestamp": "2023-12-04 02:25:36"
+      },
+      {
+        "inGameDate": "2024/12/10",
+        "match": "custom_E8BDBBE69DBEE58FB7+2024+eight_weilin_open",
+        "moneyBefore": 59740,
+        "moneyAfter": 59240,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 100
+          },
+          {
+            "item": "travel",
+            "moneyCost": 200
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 200
+          }
+        ],
+        "timestamp": "2023-12-04 02:25:36"
+      },
+      {
+        "inGameDate": "2024/12/10",
+        "year": 2024,
+        "match": "eight_weilin_open",
+        "moneyBefore": 59240,
+        "moneyAfter": 59240,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_2": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-12-04 02:28:47"
+      },
+      {
+        "inGameDate": "2024/12/10",
+        "moneyBefore": 59240,
+        "moneyAfter": 57080,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2160
+        }],
+        "timestamp": "2023-12-04 02:28:52"
+      },
+      {
+        "inGameDate": "2025/1/15",
+        "moneyBefore": 57080,
+        "moneyAfter": 56660,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 420
+        }],
+        "timestamp": "2023-12-04 02:28:54"
+      },
+      {
+        "inGameDate": "2025/1/22",
+        "match": "custom_E8BDBBE69DBEE58FB7+2025+eight_red_pocket_open",
+        "moneyBefore": 56660,
+        "moneyAfter": 55660,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-04 02:28:54"
+      },
+      {
+        "inGameDate": "2025/1/22",
+        "year": 2025,
+        "match": "eight_red_pocket_open",
+        "moneyBefore": 55660,
+        "moneyAfter": 56060,
+        "type": "championshipEarn",
+        "items": {"TOP_32": {
+          "actual": 400,
+          "raw": 500
+        }},
+        "timestamp": "2023-12-04 02:36:04"
+      },
+      {
+        "inGameDate": "2025/1/22",
+        "moneyBefore": 56060,
+        "moneyAfter": 55880,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 180
+        }],
+        "timestamp": "2023-12-06 17:22:04"
+      },
+      {
+        "inGameDate": "2025/1/25",
+        "match": "custom_E8BDBBE69DBEE58FB7+2025+fresh_hand_open",
+        "moneyBefore": 55880,
+        "moneyAfter": 53180,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 500
+          }
+        ],
+        "timestamp": "2023-12-06 17:22:04"
+      },
+      {
+        "inGameDate": "2025/1/25",
+        "year": 2025,
+        "match": "fresh_hand_open",
+        "moneyBefore": 53180,
+        "moneyAfter": 53180,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_1": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-12-06 17:22:09"
+      },
+      {
+        "inGameDate": "2025/1/25",
+        "moneyBefore": 53180,
+        "moneyAfter": 52760,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 420
+        }],
+        "timestamp": "2023-12-06 17:22:14"
+      },
+      {
+        "inGameDate": "2025/2/1",
+        "moneyBefore": 52760,
+        "moneyAfter": 52220,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 540
+        }],
+        "timestamp": "2023-12-06 17:22:17"
+      },
+      {
+        "inGameDate": "2025/2/10",
+        "match": "custom_E8BDBBE69DBEE58FB7+2025+eight_northeast_open",
+        "moneyBefore": 52220,
+        "moneyAfter": 51220,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-06 17:22:17"
       }
     ],
     "level": 8,
-    "expInThisLevel": 2324,
+    "expInThisLevel": 2449,
     "availPerks": 53,
     "totalPerks": 24,
-    "totalExp": 3217
+    "totalExp": 3342
   },
-  "checksum": "9679B4E17D8D7CB2520CCF5DDC8E3C56"
+  "checksum": "FD3C46F5D908EA39D42907D499C039E6"
 }

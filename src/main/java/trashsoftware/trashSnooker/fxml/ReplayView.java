@@ -280,10 +280,10 @@ public class ReplayView extends ChildInitializable {
         thread.start();
     }
 
-    @Override
-    public Stage getStage() {
-        return stage;
-    }
+//    @Override
+//    public Stage getStage() {
+//        return stage;
+//    }
 
     public abstract static class Item implements Comparable<Item> {
         Item() {

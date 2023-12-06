@@ -58,6 +58,9 @@ public abstract class AchManager {
 
     public abstract void cumulateAchievement(Achievement achievement, int newAdd, InGamePlayer igp);
     
+    public void saveToDisk() {
+    }
+    
     public void showAchievementPopup() {
     }
     

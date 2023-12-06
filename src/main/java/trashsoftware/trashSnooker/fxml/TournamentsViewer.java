@@ -47,10 +47,10 @@ public class TournamentsViewer extends ChildInitializable {
         this.stage = stage;
     }
 
-    @Override
-    public Stage getStage() {
-        return stage;
-    }
+//    @Override
+//    public Stage getStage() {
+//        return stage;
+//    }
 
     public void initialSelection(ChampionshipData initialSelection) {
         this.initSel = initialSelection;

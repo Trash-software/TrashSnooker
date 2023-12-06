@@ -30,6 +30,20 @@ public record CueTipBrand(
         );
     }
 
+    public static CueTipBrand createDefaultBreak(double diameter, double thickness) {
+        return new CueTipBrand(
+                "fastBreakTip",
+                "Fast Break Tip",
+                thickness,
+                diameter / 2,
+                diameter / 2,
+                0.5,
+                1.2,
+                5000,
+                100
+        );
+    }
+
     public static CueTipBrand createCrossRest() {
         return new CueTipBrand(
                 "crossRest",

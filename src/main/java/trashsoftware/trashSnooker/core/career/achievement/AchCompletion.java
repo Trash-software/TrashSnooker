@@ -10,12 +10,15 @@ import trashsoftware.trashSnooker.util.Util;
 
 import java.text.ParseException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class AchCompletion {
     public final Achievement achievement;
     protected final SortedMap<Integer, Date> levelFirstCompletions = new TreeMap<>();  // level index
+    /**
+     * 跟上面这个map结合起来
+     */
+    protected final SortedMap<Integer, AWARD_STATUS> levelAwardReceived = new TreeMap<>();
     protected int times;
 
     AchCompletion(Achievement achievement, int times) {
@@ -67,6 +70,46 @@ public class AchCompletion {
                 ac.levelFirstCompletions.put(levelIndex, date);
             }
         }
+
+        if (json.has("levelAwardReceived")) {
+            JSONObject lar = json.getJSONObject("levelAwardReceived");
+            for (String key : lar.keySet()) {
+                String val = lar.getString(key);
+                AWARD_STATUS status;
+                int levelIndex;
+                try {
+                    levelIndex = Integer.parseInt(key);
+                    status = AWARD_STATUS.valueOf(val);
+                } catch (IllegalArgumentException e) {
+                    EventLogger.error(e);
+                    continue;
+                }
+                ac.levelAwardReceived.put(levelIndex, status);
+            }
+            for (int lvi = 0; lvi < ac.achievement.getLevels().length; lvi++) {
+                // 查找漏网之鱼
+                if (!ac.levelAwardReceived.containsKey(lvi)) {
+                    AWARD_STATUS status;
+                    if (ac.levelFirstCompletions.containsKey(lvi)) {
+                        status = AWARD_STATUS.NOT_RECEIVED;
+                    } else {
+                        status = AWARD_STATUS.NOT_COMPLETED;
+                    }
+                    ac.levelAwardReceived.put(lvi, status);
+                }
+            }
+        } else {
+            for (int lvi = 0; lvi < ac.achievement.getLevels().length; lvi++) {
+                // 初始化
+                AWARD_STATUS status;
+                if (ac.levelFirstCompletions.containsKey(lvi)) {
+                    status = AWARD_STATUS.NOT_RECEIVED;
+                } else {
+                    status = AWARD_STATUS.NOT_COMPLETED;
+                }
+                ac.levelAwardReceived.put(lvi, status);
+            }
+        }
     }
 
     public JSONObject toJson() {
@@ -76,6 +119,11 @@ public class AchCompletion {
             comp.put(String.valueOf(levelCmp.getKey()), Util.TIME_FORMAT_SEC.format(levelCmp.getValue()));
         }
         object.put("levelDates", comp);
+        JSONObject awardRec = new JSONObject();
+        for (Map.Entry<Integer, AWARD_STATUS> levelAwd : levelAwardReceived.entrySet()) {
+            awardRec.put(String.valueOf(levelAwd.getKey()), levelAwd.getValue().name());
+        }
+        object.put("levelAwardReceived", awardRec);
         object.put("completions", times);
         return object;
     }
@@ -115,7 +163,7 @@ public class AchCompletion {
     public int getNCompleted() {
         return levelFirstCompletions.size();
     }
-    
+
     public Image getImage() {
         return ResourcesLoader.getInstance().getAwardImgByLevel(getNCompleted(), achievement.getNLevels());
     }
@@ -151,6 +199,30 @@ public class AchCompletion {
     public Date getFirstCompletion() {
         if (levelFirstCompletions.isEmpty()) return null;
         return levelFirstCompletions.get(levelFirstCompletions.lastKey());
+    }
+
+    /**
+     * @return 等级index, 钱
+     */
+    public SortedMap<Integer, Integer> getUnreceivedAwards() {
+        SortedMap<Integer, Integer> result = new TreeMap<>();
+        for (Map.Entry<Integer, AWARD_STATUS> entry : levelAwardReceived.entrySet()) {
+            if (entry.getValue() == AWARD_STATUS.NOT_RECEIVED) {
+                result.put(entry.getKey(), achievement.getMoneyByCompLevel(entry.getKey()));
+            }
+        }
+        return result;
+    }
+    
+    public boolean receiveAward(int levelIndex) {
+        AWARD_STATUS as = levelAwardReceived.get(levelIndex);
+        if (as == AWARD_STATUS.NOT_RECEIVED) {
+            levelAwardReceived.put(levelIndex, AWARD_STATUS.RECEIVED);
+            AchManager.getInstance().saveToDisk();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public int getTimes() {
@@ -272,12 +344,18 @@ public class AchCompletion {
         public Sub getIndividual(String key) {
             return collection.get(key);
         }
-        
+
         public List<String> getKeys() {
             List<Sub> people = new ArrayList<>(collection.values());
             // 最晚战胜的在最前
-            people.sort((a,b) -> -a.getFirstCompletion().compareTo(b.getFirstCompletion()));
+            people.sort((a, b) -> -a.getFirstCompletion().compareTo(b.getFirstCompletion()));
             return people.stream().map(s -> s.key).collect(Collectors.toList());
         }
+    }
+    
+    public enum AWARD_STATUS {
+        RECEIVED,  // 收了
+        NOT_RECEIVED,  // 达成了，但没收
+        NOT_COMPLETED  // 没达成
     }
 }

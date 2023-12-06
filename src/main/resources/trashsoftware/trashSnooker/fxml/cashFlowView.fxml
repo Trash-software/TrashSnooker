@@ -24,6 +24,9 @@
             <ImageView fx:id="moneyImage"/>
             <Label fx:id="moneyLabel"/>
         </HBox>
+        
+        <MenuButton fx:id="typeFilterMenu"/>
+        <Button fx:id="filterButton" onAction="#typeFilterAction"/>
     </HBox>
     
     <HBox VBox.vgrow="ALWAYS" spacing="10.0">

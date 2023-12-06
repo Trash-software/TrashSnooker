@@ -145,7 +145,7 @@ public class CueViewer extends Pane {
                 strings.getString("cueRingDiameter"), cueAndBrand.brand.getCueTipWidth(),
                 strings.getString("cuePower"), cue.getOrigPowerMultiplier() * 100,
                 strings.getString("cueAiming"), cue.getAccuracyMultiplier() * 100,
-                strings.getString("cueSpin"), cue.getOrigSpinMultiplier() * 100
+                strings.getString("cueSpin"), cueAndBrand.brand.theoreticalSpinStrength() * 100
         );
         cueInfoSecondRow.getChildren().add(new Label(cueInfo));
         cueInfoBox.getChildren().add(cueInfoSecondRow);

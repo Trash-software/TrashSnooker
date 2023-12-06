@@ -40,14 +40,18 @@ public class AlertShower {
             Alert view = loader.getController();
             view.setupInfo(newStage, header, content);
 
-            if (autoCloseMs > 0) {
-                Thread autoClose = getThread(autoCloseMs, view);
-                autoClose.start();
-            }
+            setAutoClose(autoCloseMs, view);
 
             newStage.showAndWait();
         } catch (IOException e) {
             EventLogger.error(e);
+        }
+    }
+    
+    public static void setAutoClose(long autoCloseMs, Alert view) {
+        if (autoCloseMs > 0) {
+            Thread autoClose = getThread(autoCloseMs, view);
+            autoClose.start();
         }
     }
 

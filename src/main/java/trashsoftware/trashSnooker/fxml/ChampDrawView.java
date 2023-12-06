@@ -54,11 +54,6 @@ public class ChampDrawView extends ChildInitializable {
     Label currentStageLabel, humanOpponentLabel, savedRoundLabel;
     @FXML
     Button opponentInfoBtn;
-    //    @FXML
-//    ComboBox<FastGameView.CueItem> cueBox;
-//    @FXML
-//    Button cueButton;
-//    FastGameView.CueSelection cueSelection;
     @FXML
     LabelTable<MatchResItem> matchResTable;
     @FXML
@@ -123,10 +118,10 @@ public class ChampDrawView extends ChildInitializable {
         treeShowingBox.getSelectionModel().select(0);
     }
 
-    @Override
-    public Stage getStage() {
-        return selfStage;
-    }
+//    @Override
+//    public Stage getStage() {
+//        return selfStage;
+//    }
 
     private void setupCheckbox() {
         treeShowingBox.getItems().addAll(TreeShowing.values());
@@ -448,25 +443,28 @@ public class ChampDrawView extends ChildInitializable {
                 match = championship.continueSavedRound();
             } else {
                 match = championship.startNextRound();
-                if (match == null) {
+                if (championship.isHumanAlive()) {
+                    if (match == null) {
+                        // human的比赛还未开始
+                        updateGui();
+                        return;
+                    } else {
+                        // 是human的比赛
+                        startGameInNewRound(match);
+                    }
+                } else {
+                    // human已经寄了
                     if (!championship.isFinished()) {
                         nextRound();
                     }
                     updateGui();
                     return;
-                } else {
-                    startGameInNewRound(match);
                 }
             }
             match.setGuiCallback(this::pveMatchFinish, this::pveMatchFinish);
             startGame(match);
         }
     }
-
-//    @FXML
-//    void changeCueAction() {
-////        FastGameView.showCueSelectionView(cueSelection, selfStage);
-//    }
 
     private void startGameInNewRound(PlayerVsAiMatch match) {
         TableSpec tableSpec = match.getChampionship().getData().getTableSpec();

@@ -6,6 +6,7 @@ import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public class CuePlayParams {
 
@@ -19,17 +20,17 @@ public class CuePlayParams {
     public double xSpin;
     public double ySpin;
     public double sideSpin;
-    
+
     private final boolean miscued;
 
     /**
-     * @param vx          x speed, in real, mm/s
-     * @param vy          y speed, in real, mm/s
-     * @param xSpin       由旋转产生的横向最大速度，mm/s
-     * @param ySpin       由旋转产生的纵向最大速度，mm/s
-     * @param sideSpin    由侧旋产生的最大速度，mm/s
-     * @param miscued     是否滑杆
-     * @param cueParams   记录
+     * @param vx        x speed, in real, mm/s
+     * @param vy        y speed, in real, mm/s
+     * @param xSpin     由旋转产生的横向最大速度，mm/s
+     * @param ySpin     由旋转产生的纵向最大速度，mm/s
+     * @param sideSpin  由侧旋产生的最大速度，mm/s
+     * @param miscued   是否滑杆
+     * @param cueParams 记录
      */
     protected CuePlayParams(double vx, double vy, double xSpin, double ySpin,
                             double sideSpin, boolean miscued, CueParams cueParams) {
@@ -58,12 +59,12 @@ public class CuePlayParams {
      * @param directionX selected x direction
      * @param directionY selected y direction
      */
-    public static CuePlayParams makeIdealParams(double directionX, 
+    public static CuePlayParams makeIdealParams(double directionX,
                                                 double directionY,
                                                 CueParams cueParams,
                                                 double cueAngleDeg,
                                                 boolean slideCue) {
-        
+
         double directionalPower = cueParams.actualPower();
         double directionalSideSpin = cueParams.actualSideSpin();  // 参与击球方向计算的sideSpin
         if (slideCue) {
@@ -78,8 +79,25 @@ public class CuePlayParams {
         double vx = unitXYWithSpin[0] * speed;
         double vy = unitXYWithSpin[1] * speed;
 
+        // 用于计算旋转 的球速
+        double origSpeed = getSpeedOfPower(cueParams.actualPower(), 0.0);
+        double powerGenSpeed;
+        if (cueAngleDeg < 30) {
+            powerGenSpeed = origSpeed * Algebra.shiftRangeSafe(0, 30,
+                    1, 0.75,
+                    cueAngleDeg);
+        } else {
+            // 抬得够高了，再高差不多了，反正都不舒服
+            powerGenSpeed = origSpeed * 0.75;
+        }
+
         // 重新计算，因为unitSideSpin有呲杆补偿
-        double[] spins = calculateSpins(vx, vy, cueParams.actualFrontBackSpin(), cueParams.actualSideSpin(), cueAngleDeg);
+        double[] spins = calculateSpins(vx,
+                vy,
+                powerGenSpeed,
+                cueParams.actualFrontBackSpin(),
+                cueParams.actualSideSpin(),
+                cueAngleDeg);
 //        System.out.println(cueParams);
 //        System.out.println("spins: " + Arrays.toString(spins));
         return new CuePlayParams(vx, vy, spins[0], spins[1], spins[2], slideCue, cueParams);
@@ -95,13 +113,13 @@ public class CuePlayParams {
     }
 
     public static double getSelectedFrontBackSpin(double actualFbSpin,
-                                           PlayerPerson playerPerson,
-                                           Cue cue) {
+                                                  PlayerPerson playerPerson,
+                                                  Cue cue) {
         return actualFbSpin / cue.getSpinMultiplier() /
                 (playerPerson.getMaxSpinPercentage() / 100.0);
     }
 
-    public static double unitFrontBackSpin(double unitCuePoint, 
+    public static double unitFrontBackSpin(double unitCuePoint,
                                            PlayerPerson playerPerson,
                                            Cue cue) {
         return unitCuePoint * cue.getSpinMultiplier() *
@@ -118,14 +136,14 @@ public class CuePlayParams {
 
     public static double[] unitXYWithSpins(double unitSideSpin, double power,
                                            double cueDirX, double cueDirY) {
-        double offsetAngleRad = -unitSideSpin * power / 2800.0;
+        double offsetAngleRad = -unitSideSpin * power / 2400.0;
 //        offsetAngleRad = 0;
         return Algebra.rotateVector(cueDirX, cueDirY, offsetAngleRad);
     }
 
     public static double[] aimingUnitXYIfSpin(double unitSideSpin, double power,
                                               double cueDirX, double cueDirY) {
-        double offsetAngleRad = -unitSideSpin * power / 2800.0;
+        double offsetAngleRad = -unitSideSpin * power / 2400.0;
 //        offsetAngleRad = 0;
         return Algebra.rotateVector(cueDirX, cueDirY, -offsetAngleRad);
     }
@@ -135,6 +153,7 @@ public class CuePlayParams {
      */
     public static List<PlayerPerson.Hand> getPlayableHands(double whiteX, double whiteY,
                                                            double aimingX, double aimingY,
+                                                           double cueAngleDeg,
                                                            TableMetrics tableMetrics,
                                                            PlayerPerson person) {
         List<PlayerPerson.Hand> result = new ArrayList<>();
@@ -142,6 +161,7 @@ public class CuePlayParams {
 
         double[][] standingPosLeft = personStandingPosition(whiteX, whiteY,
                 aimingX, aimingY,
+                cueAngleDeg,
                 person, PlayerPerson.Hand.LEFT);
 
         if (!tableMetrics.isInOuterTable(standingPosLeft[0][0], standingPosLeft[0][1]) ||
@@ -151,6 +171,7 @@ public class CuePlayParams {
 
         double[][] standingPosRight = personStandingPosition(whiteX, whiteY,
                 aimingX, aimingY,
+                cueAngleDeg,
                 person, PlayerPerson.Hand.RIGHT);
 
         if (!tableMetrics.isInOuterTable(standingPosRight[0][0], standingPosRight[0][1]) ||
@@ -165,6 +186,7 @@ public class CuePlayParams {
 
     public static PlayerPerson.HandSkill getPlayableHand(double whiteX, double whiteY,
                                                          double aimingX, double aimingY,
+                                                         double cueAngleDeg,
                                                          TableMetrics tableMetrics,
                                                          PlayerPerson person) {
         PlayerPerson.HandSkill primary = person.handBody.getPrimary();
@@ -174,6 +196,7 @@ public class CuePlayParams {
 
         double[][] standingPosPri = personStandingPosition(whiteX, whiteY,
                 aimingX, aimingY,
+                cueAngleDeg,
                 person, primary.hand);
 
         if (!tableMetrics.isInOuterTable(standingPosPri[0][0], standingPosPri[0][1]) ||
@@ -187,6 +210,7 @@ public class CuePlayParams {
         }
         double[][] standingPosSec = personStandingPosition(whiteX, whiteY,
                 aimingX, aimingY,
+                cueAngleDeg,
                 person, secondary.hand);
 
         if (!tableMetrics.isInOuterTable(standingPosSec[0][0], standingPosSec[0][1]) ||
@@ -201,10 +225,11 @@ public class CuePlayParams {
 
     public static double[][] personStandingPosition(double whiteX, double whiteY,
                                                     double aimingX, double aimingY,
+                                                    double cueAngleDeg,
                                                     PlayerPerson person,
                                                     PlayerPerson.Hand hand) {
         double upBodyLength = person.handBody.height * 10 - 851;
-        double heightMul = 1.75;
+        double heightMul = 1.75 * Math.cos(Math.toRadians(cueAngleDeg));
         double personLengthX = upBodyLength * -aimingX * heightMul;
         double personLengthY = upBodyLength * -aimingY * heightMul;
 
@@ -227,13 +252,17 @@ public class CuePlayParams {
     /**
      * @param vx
      * @param vy
-     * @param frontBackSpin 高杆正，低杆负
-     * @param sideSpin      右塞正（顶视的逆时针），左塞负
+     * @param personPowerSpeed 考虑抬高杆尾之后，球员发力产生的杆法效果
+     * @param frontBackSpin    高杆正，低杆负
+     * @param sideSpin         右塞正（顶视的逆时针），左塞负
      * @param cueAngleDeg
      * @return
      */
-    public static double[] calculateSpins(double vx, double vy,
-                                          double frontBackSpin, double sideSpin,
+    public static double[] calculateSpins(double vx,
+                                          double vy,
+                                          double personPowerSpeed,
+                                          double frontBackSpin,
+                                          double sideSpin,
                                           double cueAngleDeg) {
         double speed = Math.hypot(vx, vy);
 
@@ -243,14 +272,16 @@ public class CuePlayParams {
             // 高杆补偿
             double factor = Algebra.shiftRangeSafe(
                     0, 1,
-                    1, Values.FRONT_SPIN_FACTOR, 
+                    1, Values.FRONT_SPIN_FACTOR,
                     frontBackSpin);
             frontBackSpin *= factor;
         }
 
         // 小力高低杆补偿，pow越小，补偿越多
-        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SPIN_EXP);
-        double sideSpinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
+//        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SPIN_EXP);
+//        double sideSpinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
+        double spinRatio = Math.pow(personPowerSpeed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SPIN_EXP);
+        double sideSpinRatio = Math.pow(personPowerSpeed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
 
         double side = sideSpinRatio * sideSpin * Values.MAX_SIDE_SPIN_SPEED;
         // 旋转产生的总目标速度
@@ -261,19 +292,14 @@ public class CuePlayParams {
         double spinY = vy * (spinSpeed / speed);
 //        System.out.printf("x %f, y %f, total %f, side %f\n", spinX, spinY, spinSpeed, side);
 
-        double mbummeMag = cueAngleDeg / 90.0 / 1600;  // 扎杆强度
+        double cosMbu = Math.cos(Math.toRadians(cueAngleDeg));
+        double mbummeMag = (1 - cosMbu) / 2000;  // 扎杆强度
         double[] norm = Algebra.normalVector(vx, vy);  // 法线，扎杆就在这个方向
         double mbummeX = side * -norm[0] * mbummeMag;
         double mbummeY = side * -norm[1] * mbummeMag;
-
-        if (cueAngleDeg > 5) {
-            // 扎杆在一定程度上减弱其他杆法
-//            double mul = (95 - cueAngleDeg) / 90.0;
-            double mul = Math.cos(Math.toRadians(cueAngleDeg - 5));
-            side *= mul;
-            spinX *= mul;
-            spinY *= mul;
-        }
+        
+        // 扎杆使侧旋转化为普通旋转
+        side *= cosMbu;
 
 //        System.out.printf("spin x: %f, spin y: %f, mx: %f, my: %f\n",
 //                spinX, spinY, mbummeX, mbummeY);

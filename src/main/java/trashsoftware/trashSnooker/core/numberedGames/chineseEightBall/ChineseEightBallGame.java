@@ -119,11 +119,13 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     private void createScoreResult() {
+        ChineseEightBallPlayer justCuedPlayer = getCuingPlayer();
         curResult = new ChineseEightScoreResult(
                 thinkTime,
-                getCuingPlayer().getInGamePlayer().getPlayerNumber(),
+                justCuedPlayer.getInGamePlayer().getPlayerNumber(),
                 ChineseEightTable.filterRemainingTargetOfPlayer(player1.getBallRange(), this),
-                ChineseEightTable.filterRemainingTargetOfPlayer(player2.getBallRange(), this));
+                ChineseEightTable.filterRemainingTargetOfPlayer(player2.getBallRange(), this),
+                justCuedPlayer.getSinglePoleCount());
     }
 
     @Override

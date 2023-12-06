@@ -16,8 +16,8 @@ public class CueTip {
     private final String instanceId;
     private final CueTipBrand brand;
     public final boolean isRest;
-    private double radius;
-    private double totalHp;
+    private final double radius;  // 真实的半径
+    private final double totalHp;
     private double hp;
     
     CueTip(String instanceId, CueTipBrand brand, double radius, double totalHp, double hp, boolean isRest) {
@@ -62,9 +62,21 @@ public class CueTip {
     public static CueTip createDefault(double diameter, double thickness) {
         var brand = CueTipBrand.createDefault(diameter, thickness);
         return new CueTip(
-                "universalTip-" + PermanentCounters.getInstance().nextTipInstance(),
+                brand.id() + "-" + PermanentCounters.getInstance().nextTipInstance(),
                 brand,
                 brand.maxRadius(), 
+                brand.totalHp(),
+                calculateTotalHp(brand.totalHp(), brand.maxRadius() * 2, diameter),
+                false
+        );
+    }
+
+    public static CueTip createDefaultBreak(double diameter, double thickness) {
+        var brand = CueTipBrand.createDefaultBreak(diameter, thickness);
+        return new CueTip(
+                brand.id() + "-" + PermanentCounters.getInstance().nextTipInstance(),
+                brand,
+                brand.maxRadius(),
                 brand.totalHp(),
                 calculateTotalHp(brand.totalHp(), brand.maxRadius() * 2, diameter),
                 false

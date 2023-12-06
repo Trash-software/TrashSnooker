@@ -10,6 +10,7 @@ import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class SnookerPlayer extends Player {
 
@@ -47,6 +48,14 @@ public class SnookerPlayer extends Player {
                 add, 
                 getInGamePlayer());
         score += add;
+    }
+
+    public int getSinglePoleScore() {
+        int singlePoleScore = 0;
+        for (Map.Entry<Ball, Integer> entry : singlePole.entrySet()) {
+            singlePoleScore += entry.getKey().getValue() * entry.getValue();
+        }
+        return singlePoleScore;
     }
 
     @Override

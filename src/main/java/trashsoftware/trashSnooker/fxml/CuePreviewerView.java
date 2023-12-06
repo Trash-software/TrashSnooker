@@ -188,7 +188,7 @@ public class CuePreviewerView implements Initializable {
             }
         }
         
-        Cue instance = Cue.createForReplay(cueBrand);
+        Cue instance = Cue.createForTempView(cueBrand);
         model = (CueModel3D) CueModel.createCueModel(instance, 0.5);
         
         basePane.getChildren().add(model);
