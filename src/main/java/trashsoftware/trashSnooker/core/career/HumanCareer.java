@@ -307,13 +307,14 @@ public class HumanCareer extends Career {
 
         Set<String> remSnookerTripleCrown = new HashSet<>(Set.of(ChampDataManager.getSnookerTripleCrownIds()));
 
+        int cumMainTimes = 0;
         int cumAwards = 0;
         for (ChampionshipScore score : getChampionshipScores()) {
             for (ChampionshipScore.Rank rank : score.ranks) {
                 int award = score.data.getAwardByRank(rank);
                 cumAwards += award;
-                if (award > 0) {
-                    achManager.addAchievement(Achievement.EARNED_MONEY, null);
+                if (rank.isMain) {
+                    cumMainTimes += 1;
                 }
 
                 if (rank == ChampionshipScore.Rank.CHAMPION) {
@@ -341,9 +342,15 @@ public class HumanCareer extends Career {
             achManager.addAchievement(Achievement.SNOOKER_TRIPLE_CROWN, null);
         }
 
+        if (cumMainTimes > 0) {
+            achManager.addAchievement(Achievement.FIRST_MAIN_OF_TOURNAMENT, cumMainTimes, null);
+        }
+        achManager.addAchievement(Achievement.PARTICIPATE_TOURNAMENTS, getChampionshipScores().size(), null);
+        achManager.addAchievement(Achievement.MAIN_OF_TOURNAMENTS, cumMainTimes, null);
+
         System.out.println("awards: " + finance.cumulativeAwards + ", " + cumAwards);
         finance.cumulativeAwards = cumAwards;
-        achManager.addAchievement(Achievement.EARN_MONEY_CUMULATIVE, finance.cumulativeAwards, null);
+        checkFinancialAch();
     }
 
     public int getLevel() {
@@ -538,6 +545,8 @@ public class HumanCareer extends Career {
             }
         }
         if (award > 0) {
+            AchManager.getInstance().addAchievement(Achievement.GET_INVITED, null);
+            
             int moneyBefore = finance.money;
             finance.money += award;
                     
@@ -693,7 +702,43 @@ public class HumanCareer extends Career {
     }
     
     public void saveFinance() {
+        checkFinancialAch();
+        
         finance.writeToDisk();
+    }
+    
+    private void checkFinancialAch() {
+        AchManager achManager = AchManager.getInstance();
+        if (finance.cumulativeAwards > 0) {
+            achManager.addAchievement(Achievement.EARNED_MONEY, null);
+        }
+        achManager.addAchievement(Achievement.CHAMP_EARN_CUMULATIVE, finance.cumulativeAwards, null);
+        achManager.addAchievement(Achievement.SAVE_MONEY, finance.money, null);
+        if (finance.money < 0) {
+            achManager.addAchievement(Achievement.OWE_MONEY, null);
+        }
+        
+        int cumPurchase = 0;
+        int cumExpenditure = 0;
+        for (JSONObject invoice: finance.invoices) {
+            try {
+                String type = invoice.getString("type");
+                int moneyBefore = invoice.getInt("moneyBefore");
+                int moneyAfter = invoice.getInt("moneyAfter");
+                int moneyChange = moneyAfter - moneyBefore;
+                if (moneyChange < 0) {
+                    cumExpenditure -= moneyChange;
+                }
+                
+                if ("purchase".equals(type)) {
+                    cumPurchase += 1;
+                }
+            } catch (IllegalArgumentException | JSONException e) {
+                EventLogger.warning(e);
+            }
+        }
+        achManager.addAchievement(Achievement.BUY_ITEMS, cumPurchase, null);
+        achManager.addAchievement(Achievement.EXPENDITURE, cumExpenditure, null);
     }
 
     public static class FinancialManager {

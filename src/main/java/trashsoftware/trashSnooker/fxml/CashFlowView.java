@@ -39,27 +39,7 @@ public class CashFlowView extends ChildInitializable {
             "participation", "purchase", "upgrade", "fees",
 //            "lifeFee", "oweInterest"
     };
-
-    @FXML
-    GridPane listPane;
-    @FXML
-    Label moneyLabel;
-    @FXML
-    ImageView moneyImage;
-    @FXML
-    MenuButton typeFilterMenu;
-    @FXML
-    Button filterButton;
-    @FXML
-    Label cumIncomeLabel, cumExpenditureLabel;
-    @FXML
-    PieChart incomeChart, expenditureChart;
-
-    private Stage stage;
     private final List<InvoiceObject> invoiceObjects = new ArrayList<>();
-    private HumanCareer humanCareer;
-    private ResourceBundle strings;
-
     private final Map<String, Integer> incomes = new HashMap<>(
             Map.of("initMoney", CareerManager.INIT_MONEY,
                     "championshipEarn", 0,
@@ -76,6 +56,23 @@ public class CashFlowView extends ChildInitializable {
                     "lifeFee", 0,
                     "oweInterest", 0)
     );
+    @FXML
+    GridPane listPane;
+    @FXML
+    Label moneyLabel;
+    @FXML
+    ImageView moneyImage;
+    @FXML
+    MenuButton typeFilterMenu;
+    @FXML
+    Button filterButton;
+    @FXML
+    Label cumIncomeLabel, cumExpenditureLabel;
+    @FXML
+    PieChart incomeChart, expenditureChart;
+    private Stage stage;
+    private HumanCareer humanCareer;
+    private ResourceBundle strings;
 
     public void setup(Stage stage, HumanCareer humanCareer) {
         this.stage = stage;
@@ -115,7 +112,7 @@ public class CashFlowView extends ChildInitializable {
         if (selectedNames.isEmpty()) {
             typeFilterMenu.setText(strings.getString("none"));
         } else if (selectedNames.size() == 1) {
-            typeFilterMenu.setText(selectedNames.get(0));
+            typeFilterMenu.setText(selectedNames.getFirst());
         } else {
             typeFilterMenu.setText(strings.getString("multipleSelection"));
         }

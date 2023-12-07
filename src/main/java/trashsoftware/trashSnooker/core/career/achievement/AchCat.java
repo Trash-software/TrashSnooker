@@ -7,7 +7,7 @@ import java.util.MissingResourceException;
 
 public enum AchCat {
     GENERAL_HIDDEN,
-    UNIQUE_DEFEATS,  // todo: 完全没做
+    UNIQUE_DEFEATS,
     GENERAL_TABLE,
     GENERAL_MATCH,
     FOUL,
@@ -18,7 +18,8 @@ public enum AchCat {
     TOUR,
     SNOOKER_TOUR,
     CHINESE_EIGHT_TOUR,
-    AMERICAN_NINE_TOUR;
+    AMERICAN_NINE_TOUR,
+    FINANCIAL;
     
     private Achievement[] allAchInCat;
     

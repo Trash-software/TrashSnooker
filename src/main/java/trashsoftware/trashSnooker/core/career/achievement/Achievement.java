@@ -109,6 +109,10 @@ public enum Achievement {
     UNSOLVABLE_SNOOKER(AchCat.SNOOKER, true),  // 已完成 
     COME_BACK_BEHIND_65(AchCat.SNOOKER),  // 已完成
     COME_BACK_BEHIND_OVER_SCORE(AchCat.SNOOKER),  // 已完成
+    BLACK_BATTLE(AchCat.SNOOKER),  // 已完成
+    LAST_GASP_WIN(AchCat.SNOOKER),  // 已完成
+    LAST_GASP_LOST(AchCat.SNOOKER),  // 已完成
+    NOT_CONCEDE(AchCat.SNOOKER),  // 已完成
     NOT_RESPECT(AchCat.SNOOKER),  // 已完成
     SUM_BELOW(AchCat.SNOOKER),  // 已完成
     SUM_BELOW_2(AchCat.SNOOKER, true),  // 已完成
@@ -131,6 +135,7 @@ public enum Achievement {
     CEB_CUMULATIVE_CLEAR(AchCat.CHINESE_EIGHT, Type.CUMULATIVE, 5, 10, 20),  // 已完成
     CHINESE_EIGHT_NO_POT(AchCat.CHINESE_EIGHT, true),  // 已完成
 
+    // 九球
     GOLDEN_NINE(AchCat.AMERICAN_NINE),  // 已完成
     WHITE_GOLDEN_NINE(AchCat.AMERICAN_NINE, true),  // 已完成
     BALL_WORKER(AchCat.AMERICAN_NINE),  // 已完成
@@ -138,12 +143,14 @@ public enum Achievement {
     AMERICAN_NINE_NO_POT(AchCat.AMERICAN_NINE, true),  // 已完成
 
     // 巡回赛
-    EARNED_MONEY(AchCat.TOUR),  // 已完成
-    EARN_MONEY_CUMULATIVE(AchCat.TOUR, Type.CUMULATIVE, 50000, 200000, 1000000),  // 已完成
     CHAMPION(AchCat.TOUR),  // 已完成
     SECOND_PLACE(AchCat.TOUR),  // 已完成
     BEST_FOUR(AchCat.TOUR),  // 已完成
-    DEFEAT_BY_CHAMPION(AchCat.TOUR, true),
+    DEFEAT_BY_CHAMPION(AchCat.TOUR, true),  // 已完成
+    FIRST_MAIN_OF_TOURNAMENT(AchCat.TOUR),  // 已完成
+    PARTICIPATE_TOURNAMENTS(AchCat.TOUR, Type.CUMULATIVE, 3, 10, 50),  // 已完成
+    MAIN_OF_TOURNAMENTS(AchCat.TOUR, Type.CUMULATIVE, 3, 10, 50),  // 已完成
+    GET_INVITED(AchCat.TOUR),  // 已完成
     PLAY_ONE_YEAR(AchCat.TOUR),  // 已完成
     PLAY_TWO_YEARS(AchCat.TOUR),  // 已完成
     PLAY_FIVE_YEARS(AchCat.TOUR ,true),  // 已完成
@@ -175,6 +182,14 @@ public enum Achievement {
     DEFEAT_SAME_OPPONENT_CONTINUOUS_AMERICAN(AchCat.AMERICAN_NINE_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_1(AchCat.AMERICAN_NINE_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_2(AchCat.AMERICAN_NINE_TOUR),  // 已完成
+    
+    // 赚钱
+    EARNED_MONEY(AchCat.FINANCIAL),  // 已完成
+    CHAMP_EARN_CUMULATIVE(AchCat.FINANCIAL, Type.CUMULATIVE, 50000, 200000, 1000000),  // 已完成
+    SAVE_MONEY(AchCat.FINANCIAL, Type.HIGH_RECORD, 50000, 200000, 100000),  // 已完成
+    OWE_MONEY(AchCat.FINANCIAL),  // 已完成
+    EXPENDITURE(AchCat.FINANCIAL, Type.CUMULATIVE, 10000, 50000, 200000),  // 已完成
+    BUY_ITEMS(AchCat.FINANCIAL, Type.CUMULATIVE, 1, 5, 20),  // 已完成
     ;
 
     public final AchCat category;

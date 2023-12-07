@@ -18,12 +18,14 @@ public class AchCompletion {
     /**
      * 跟上面这个map结合起来
      */
-    protected final SortedMap<Integer, AWARD_STATUS> levelAwardReceived = new TreeMap<>();
+    protected final SortedMap<Integer, AwardStatus> levelAwardReceived = new TreeMap<>();
     protected int times;
 
     AchCompletion(Achievement achievement, int times) {
         this.achievement = achievement;
         this.times = times;
+        
+        initLevelAwards();
     }
 
     AchCompletion(Achievement achievement) {
@@ -75,11 +77,11 @@ public class AchCompletion {
             JSONObject lar = json.getJSONObject("levelAwardReceived");
             for (String key : lar.keySet()) {
                 String val = lar.getString(key);
-                AWARD_STATUS status;
+                AwardStatus status;
                 int levelIndex;
                 try {
                     levelIndex = Integer.parseInt(key);
-                    status = AWARD_STATUS.valueOf(val);
+                    status = AwardStatus.valueOf(val);
                 } catch (IllegalArgumentException e) {
                     EventLogger.error(e);
                     continue;
@@ -89,25 +91,14 @@ public class AchCompletion {
             for (int lvi = 0; lvi < ac.achievement.getLevels().length; lvi++) {
                 // 查找漏网之鱼
                 if (!ac.levelAwardReceived.containsKey(lvi)) {
-                    AWARD_STATUS status;
+                    AwardStatus status;
                     if (ac.levelFirstCompletions.containsKey(lvi)) {
-                        status = AWARD_STATUS.NOT_RECEIVED;
+                        status = AwardStatus.NOT_RECEIVED;
                     } else {
-                        status = AWARD_STATUS.NOT_COMPLETED;
+                        status = AwardStatus.NOT_COMPLETED;
                     }
                     ac.levelAwardReceived.put(lvi, status);
                 }
-            }
-        } else {
-            for (int lvi = 0; lvi < ac.achievement.getLevels().length; lvi++) {
-                // 初始化
-                AWARD_STATUS status;
-                if (ac.levelFirstCompletions.containsKey(lvi)) {
-                    status = AWARD_STATUS.NOT_RECEIVED;
-                } else {
-                    status = AWARD_STATUS.NOT_COMPLETED;
-                }
-                ac.levelAwardReceived.put(lvi, status);
             }
         }
     }
@@ -120,12 +111,30 @@ public class AchCompletion {
         }
         object.put("levelDates", comp);
         JSONObject awardRec = new JSONObject();
-        for (Map.Entry<Integer, AWARD_STATUS> levelAwd : levelAwardReceived.entrySet()) {
+        for (Map.Entry<Integer, AwardStatus> levelAwd : levelAwardReceived.entrySet()) {
             awardRec.put(String.valueOf(levelAwd.getKey()), levelAwd.getValue().name());
         }
         object.put("levelAwardReceived", awardRec);
         object.put("completions", times);
         return object;
+    }
+    
+    private void initLevelAwards() {
+        for (int lvi = 0; lvi < achievement.getLevels().length; lvi++) {
+            // 初始化
+            levelAwardReceived.put(lvi, AwardStatus.NOT_COMPLETED);
+        }
+    }
+    
+    private void updateLevelAwards() {
+        for (int lvi = 0; lvi < achievement.getLevels().length; lvi++) {
+            AwardStatus current = levelAwardReceived.get(lvi);
+            if (current == AwardStatus.NOT_COMPLETED) {
+                if (levelFirstCompletions.containsKey(lvi)) {
+                    levelAwardReceived.put(lvi, AwardStatus.NOT_RECEIVED);
+                }
+            }
+        }
     }
 
     /**
@@ -137,6 +146,7 @@ public class AchCompletion {
         int curLevelIndex = achievement.getCompletedLevelIndex(this);
         if (curLevelIndex != pastLevelIndex) {
             levelFirstCompletions.put(curLevelIndex, new Date());
+            updateLevelAwards();
             return true;
         }
         return false;
@@ -155,6 +165,7 @@ public class AchCompletion {
             for (int i = pastLevelIndex + 1; i <= curLevelIndex; i++) {
                 levelFirstCompletions.put(i, new Date());
             }
+            updateLevelAwards();
             return true;
         }
         return false;
@@ -206,8 +217,8 @@ public class AchCompletion {
      */
     public SortedMap<Integer, Integer> getUnreceivedAwards() {
         SortedMap<Integer, Integer> result = new TreeMap<>();
-        for (Map.Entry<Integer, AWARD_STATUS> entry : levelAwardReceived.entrySet()) {
-            if (entry.getValue() == AWARD_STATUS.NOT_RECEIVED) {
+        for (Map.Entry<Integer, AwardStatus> entry : levelAwardReceived.entrySet()) {
+            if (entry.getValue() == AwardStatus.NOT_RECEIVED) {
                 result.put(entry.getKey(), achievement.getMoneyByCompLevel(entry.getKey()));
             }
         }
@@ -215,9 +226,9 @@ public class AchCompletion {
     }
     
     public boolean receiveAward(int levelIndex) {
-        AWARD_STATUS as = levelAwardReceived.get(levelIndex);
-        if (as == AWARD_STATUS.NOT_RECEIVED) {
-            levelAwardReceived.put(levelIndex, AWARD_STATUS.RECEIVED);
+        AwardStatus as = levelAwardReceived.get(levelIndex);
+        if (as == AwardStatus.NOT_RECEIVED) {
+            levelAwardReceived.put(levelIndex, AwardStatus.RECEIVED);
             AchManager.getInstance().saveToDisk();
             return true;
         } else {
@@ -353,7 +364,7 @@ public class AchCompletion {
         }
     }
     
-    public enum AWARD_STATUS {
+    public enum AwardStatus {
         RECEIVED,  // 收了
         NOT_RECEIVED,  // 达成了，但没收
         NOT_COMPLETED  // 没达成

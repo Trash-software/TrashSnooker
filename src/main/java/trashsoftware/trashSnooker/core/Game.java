@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AttackChoice;
+import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.metrics.*;
@@ -1457,6 +1458,21 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     protected void end() {
         ended = true;
+
+        if (!gameValues.isTraining()) {
+            AchManager achManager = AchManager.getInstance();
+            InGamePlayer human = getP1().isHuman() ? getP1() : getP2();
+            boolean humanWin = getWiningPlayer().getInGamePlayer().isHuman();
+            if (humanWin) {
+                achManager.addAchievement(Achievement.WIN_A_FRAME, human);
+                achManager.addAchievement(Achievement.WIN_FRAMES, human);
+
+                CareerManager cm = CareerManager.getInstance();
+                if (cm.getAiGoodness() >= 1.0 && cm.getPlayerGoodness() <= 1.0) {
+                    achManager.addAchievement(Achievement.WIN_FRAMES_NORMAL_DIFFICULTY, human);
+                }
+            }
+        }
     }
 
     @Override

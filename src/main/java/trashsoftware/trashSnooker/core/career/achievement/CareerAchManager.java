@@ -4,7 +4,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -34,7 +33,6 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.fxml.App;
-import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.JsonChecksum;
 import trashsoftware.trashSnooker.util.db.DBAccess;
@@ -168,32 +166,9 @@ public class CareerAchManager extends AchManager {
 
         if (justCuedPlayer.isHuman()) {
 
-//        Set<Achievement> notCompleted = notCompleted(all);
-
             if (game.isEnded() && game.getWiningPlayer() != null) {
                 humanContinuousPotFail = 0;
                 // 一局结束后的更新
-                if (!game.getGameValues().isTraining() && game.getWiningPlayer().getInGamePlayer().isHuman()) {
-                    addAchievement(Achievement.WIN_A_FRAME, justCuedPlayer);
-                    addAchievement(Achievement.WIN_FRAMES, justCuedPlayer);
-                    
-                    CareerManager cm = CareerManager.getInstance();
-                    if (cm.getAiGoodness() >= 1.0 && cm.getPlayerGoodness() <= 1.0) {
-                        addAchievement(Achievement.WIN_FRAMES_NORMAL_DIFFICULTY, justCuedPlayer);
-                    }
-
-                    if (game instanceof AbstractSnookerGame asg) {
-                        int maxAhead = asg.getMaxScoreDiff(justCuedPlayer.getPlayerNumber());
-                        if (maxAhead <= -65) {
-                            addAchievement(Achievement.COME_BACK_BEHIND_65, justCuedPlayer);
-                        }
-                        if ((justCuedPlayer.getPlayerNumber() == 1 && asg.isP2EverOver()) ||
-                                (justCuedPlayer.getPlayerNumber() == 2 && asg.isP1EverOver())) {
-                            // 从被超分逆转胜利
-                            addAchievement(Achievement.COME_BACK_BEHIND_OVER_SCORE, justCuedPlayer);
-                        }
-                    }
-                }
             }
 
             if (game.isThisCueFoul()) {
@@ -343,6 +318,11 @@ public class CareerAchManager extends AchManager {
                 NumberedBallGame<?> nbg = (NumberedBallGame<?>) game;
             }
         } else {
+            if (game.isEnded() && game.getWiningPlayer() != null) {
+                humanContinuousPotFail = 0;
+                // 一局结束后的更新
+            }
+            
             InGamePlayer opponent = game.getAnotherIgp(justCuedPlayer);
             if (opponent.isHuman()) {  // 保险措施，实际上一定是true
                 if (defenseAttempt != null) {
@@ -534,6 +514,7 @@ public class CareerAchManager extends AchManager {
      */
     private void showAchievement(Pane owner, Deque<AchCompletion> achievements) {
         if (achievements.isEmpty()) return;
+        if (!App.isMainWindowShowing()) return;
 
         AchCompletion ac = achievements.removeFirst();
         Image icon = ac.getImage();

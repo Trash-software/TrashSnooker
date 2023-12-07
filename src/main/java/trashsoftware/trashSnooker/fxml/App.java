@@ -47,6 +47,7 @@ public class App extends Application {
 
     private static VBox appRoot;
     private static Stage fullScreenStage;
+    private static boolean mainWindowShowing;
 
     public static void startApp() {
         launch();
@@ -220,11 +221,21 @@ public class App extends Application {
 
             EntryView entryView = loader.getController();
             entryView.setup(primaryStage);
+            
+            mainWindowShowing = true;
 
             primaryStage.show();
         } catch (Exception e) {
             EventLogger.crash(e);
         }
+    }
+
+    public static boolean isMainWindowShowing() {
+        return mainWindowShowing;
+    }
+
+    static void setMainWindowShowing(boolean mainWindowShowing) {
+        App.mainWindowShowing = mainWindowShowing;
     }
 
     public static Pane getAppRoot() {

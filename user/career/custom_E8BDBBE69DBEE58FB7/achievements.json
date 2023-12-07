@@ -1,5 +1,14 @@
 {
   "achievements": {
+    "expenditure": {
+      "levelDates": {"0": "2023-12-08 01:44:50"},
+      "completions": 16600,
+      "levelAwardReceived": {
+        "0": "NOT_RECEIVED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
     "miscuePot": {
       "levelDates": {"0": "2023-11-20 05:50:03"},
       "completions": 1,
@@ -10,20 +19,32 @@
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
-    "gainBySnooker": {
-      "levelDates": {"0": "2023-07-09 00:51:43"},
+    "lieDownWin": {
+      "levelDates": {"0": "2023-11-27 02:57:03"},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
-    "lieDownWin": {
-      "levelDates": {"0": "2023-11-27 02:57:03"},
+    "gainBySnooker": {
+      "levelDates": {"0": "2023-07-09 00:51:43"},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "secondPlace": {
       "levelDates": {"0": "2023-11-27 02:57:15"},
       "completions": 1,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+      "levelAwardReceived": {"0": "RECEIVED"}
+    },
+    "participateTournaments": {
+      "levelDates": {
+        "0": "2023-12-08 01:44:50",
+        "1": "2023-12-08 01:44:50"
+      },
+      "completions": 27,
+      "levelAwardReceived": {
+        "0": "RECEIVED",
+        "1": "RECEIVED",
+        "2": "NOT_COMPLETED"
+      }
     },
     "finalStage": {
       "levelDates": {"0": "2023-11-27 02:53:02"},
@@ -43,7 +64,7 @@
     "playOneYear": {
       "levelDates": {"0": "2023-08-14 03:32:21"},
       "completions": 1,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "snookerCumulateFoulGain": {
       "levelDates": {"0": "2023-09-02 05:41:24"},
@@ -78,6 +99,15 @@
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
+    "champEarnCumulative": {
+      "levelDates": {"0": "2023-12-08 01:44:50"},
+      "completions": 103150,
+      "levelAwardReceived": {
+        "0": "NOT_RECEIVED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
     "missedShot": {
       "levelDates": {"0": "2023-09-02 05:41:20"},
       "completions": 1,
@@ -86,12 +116,16 @@
     "winAFrame": {
       "levelDates": {"0": "2023-12-06 17:25:38"},
       "completions": 1,
-      "levelAwardReceived": {}
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
     },
     "winFrames": {
       "levelDates": {},
       "completions": 1,
-      "levelAwardReceived": {}
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
     },
     "miscued": {
       "levelDates": {"0": "2023-09-02 05:42:20"},
@@ -131,20 +165,20 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "positioningMaster": {
-      "levelDates": {"0": "2023-07-09 00:46:39"},
-      "completions": 19,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
-    },
     "solveSnookerSuccess": {
       "levelDates": {"0": "2023-07-03 02:40:47"},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
-    "oneRoundTour": {
-      "levelDates": {"0": "2023-12-04 02:22:54"},
-      "completions": 1,
+    "positioningMaster": {
+      "levelDates": {"0": "2023-07-09 00:46:39"},
+      "completions": 19,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
+    "firstMainOfTournament": {
+      "levelDates": {"0": "2023-12-08 01:44:50"},
+      "completions": 11,
+      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "defeatUniqueOpponentsAmerican": {
       "levelDates": {},
@@ -154,6 +188,11 @@
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
+    },
+    "oneRoundTour": {
+      "levelDates": {"0": "2023-12-04 02:22:54"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "cueBallPot": {
       "levelDates": {"0": "2023-08-31 19:59:41"},
@@ -180,11 +219,6 @@
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
-    "defeatSameOpponentContinuousSnooker": {
-      "levelDates": {"0": "2023-08-14 03:32:21"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
-    },
     "potBallsRest": {
       "levelDates": {
         "0": "2023-08-31 19:53:41",
@@ -196,6 +230,11 @@
         "1": "NOT_RECEIVED",
         "2": "NOT_COMPLETED"
       }
+    },
+    "defeatSameOpponentContinuousSnooker": {
+      "levelDates": {"0": "2023-08-14 03:32:21"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "uniqueDefeat": {"collection": {
       "Mark Allen": {
@@ -241,6 +280,18 @@
         "key": "custom_player_166"
       }
     }},
+    "mainOfTournaments": {
+      "levelDates": {
+        "0": "2023-12-08 01:44:50",
+        "1": "2023-12-08 01:44:50"
+      },
+      "completions": 11,
+      "levelAwardReceived": {
+        "0": "RECEIVED",
+        "1": "RECEIVED",
+        "2": "NOT_COMPLETED"
+      }
+    },
     "multiCushionPosition1": {
       "levelDates": {"0": "2023-08-19 22:47:22"},
       "completions": 1,
@@ -249,7 +300,16 @@
     "playTwoYears": {
       "levelDates": {"0": "2023-12-04 02:30:09"},
       "completions": 1,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+      "levelAwardReceived": {"0": "RECEIVED"}
+    },
+    "saveMoney": {
+      "levelDates": {"0": "2023-12-08 01:44:50"},
+      "completions": 53420,
+      "levelAwardReceived": {
+        "0": "NOT_RECEIVED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
     },
     "winMatches": {
       "levelDates": {"0": "2023-11-27 02:49:55"},
@@ -260,17 +320,17 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "earnMoneyCumulative": {
-      "levelDates": {"0": "2023-11-27 02:57:15"},
-      "completions": 103150,
+    "buyItems": {
+      "levelDates": {},
+      "completions": 0,
       "levelAwardReceived": {
-        "0": "NOT_RECEIVED",
+        "0": "NOT_COMPLETED",
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
     },
-    "shakePocket": {
-      "levelDates": {"0": "2023-08-19 22:45:44"},
+    "continuousLongPot": {
+      "levelDates": {"0": "2023-09-02 05:40:13"},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
@@ -279,8 +339,8 @@
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
-    "continuousLongPot": {
-      "levelDates": {"0": "2023-09-02 05:40:13"},
+    "shakePocket": {
+      "levelDates": {"0": "2023-08-19 22:45:44"},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
@@ -299,5 +359,5 @@
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
     }
   },
-  "checksum": "F56421911CBE92ACA19520707746E6FA"
+  "checksum": "B294A33D0D202B5DD92619E1970DB94C"
 }

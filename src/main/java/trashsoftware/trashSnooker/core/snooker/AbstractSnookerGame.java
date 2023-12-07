@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SnookerAiCue;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
+import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.Movement;
@@ -177,6 +178,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return Math.abs(player1.getScore() - player2.getScore());
     }
 
+    /**
+     * 领先正，落后负
+     */
     public int getScoreDiff(SnookerPlayer player) {
         SnookerPlayer another = player == player1 ? player2 : player1;
         return player.getScore() - another.getScore();
@@ -248,6 +252,17 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (!isSolvable) {
             AchManager.getInstance().addAchievement(Achievement.UNSOLVABLE_SNOOKER, getP1().isHuman() ? getP1() : getP2());
         }
+        SnookerPlayer cuing = getCuingPlayer();
+        if (cuing.getInGamePlayer().isHuman()) {
+            int scoreDiff = getScoreDiff(cuing);
+            if (scoreDiff < 0) {
+                int rem = getRemainingScore(isDoingFreeBall());
+                if (-scoreDiff >= rem + 20) {
+                    AchManager.getInstance().addAchievement(Achievement.NOT_CONCEDE, 
+                            cuing.getInGamePlayer());
+                }
+            }
+        }
         return super.cue(params, phy);
     }
 
@@ -262,6 +277,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 currentTarget = 7;
                 pickupColorBall(getBallOfValue(7));
                 System.out.println("Black battle!");
+                AchManager.getInstance().addAchievement(Achievement.BLACK_BATTLE, null);
                 ballInHand = true;
                 if (Math.random() < 0.5) {
                     currentPlayer = player1;
@@ -553,20 +569,56 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     @Override
     protected void end() {
-        checkScoreSumAchievement();
         super.end();
+        
+        if (!gameValues.isTraining()) {
+            checkScoreSumAchievement();
+        }
     }
 
     private void checkScoreSumAchievement() {
+        AchManager achManager = AchManager.getInstance();
         InGamePlayer human = getP1().isHuman() ? getP1() : getP2();
         if (getScoreSum(false) > 147) {
             if (getScoreDiffAbs() <= 50) {
-                AchManager.getInstance().addAchievement(Achievement.SUM_OVER_147, human);
+                achManager.addAchievement(Achievement.SUM_OVER_147, human);
             }
         } else if (getScoreSum(true) < 75) {
-            AchManager.getInstance().addAchievement(Achievement.SUM_BELOW, human);
+            achManager.addAchievement(Achievement.SUM_BELOW, human);
         } else if (getScoreSum(true) < 50) {
-            AchManager.getInstance().addAchievement(Achievement.SUM_BELOW_2, human);
+            achManager.addAchievement(Achievement.SUM_BELOW_2, human);
+        }
+
+        boolean humanWin = getWiningPlayer().getInGamePlayer().isHuman();
+        if (humanWin) {
+            int maxAhead = getMaxScoreDiff(human.getPlayerNumber());
+            if (maxAhead <= -65) {
+                achManager.addAchievement(Achievement.COME_BACK_BEHIND_65, human);
+            }
+            if ((human.getPlayerNumber() == 1 && isP2EverOver()) ||
+                    (human.getPlayerNumber() == 2 && isP1EverOver())) {
+                // 从被超分逆转胜利
+                achManager.addAchievement(Achievement.COME_BACK_BEHIND_OVER_SCORE, human);
+            }
+            if (getRemainingScore(false) == 0) {
+                // 是打完了，不是有人认输了
+                int scoreDiff = getScoreDiffAbs();
+                if (scoreDiff <= 13) {
+                    // 1. human必定领先，因为是human赢了
+                    // 2. 在打进黑球之前，如领先6分及以下，则黑球为决定胜负的球
+                    //    如果正好是领先7分，那对手打进就是延分，不算决定胜负的球
+                    achManager.addAchievement(Achievement.LAST_GASP_WIN, human);
+                }
+            }
+        } else {
+            if (getRemainingScore(false) == 0) {
+                // 是打完了，不是有人认输了
+                int scoreDiff = getScoreDiffAbs();
+                if (scoreDiff <= 13) {
+                    // 同上
+                    achManager.addAchievement(Achievement.LAST_GASP_LOST, human);
+                }
+            }
         }
     }
 

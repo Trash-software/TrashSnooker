@@ -99,7 +99,7 @@ public class EntryView implements Initializable {
 
         this.selfStage.setOnCloseRequest(e -> {
             try {
-                Node currentShowing = App.getAppRoot().getChildren().get(0);
+                Node currentShowing = App.getAppRoot().getChildren().getFirst();
                 if (currentShowing != entryRoot) {
                     e.consume();
                     AlertShower.askConfirmation(
@@ -117,6 +117,7 @@ public class EntryView implements Initializable {
         this.selfStage.setOnHidden(e -> {
 //                Recorder.save();
 //                ConfigLoader.stopLoader();
+            App.setMainWindowShowing(false);
             DBAccess.closeDB();
         });
 

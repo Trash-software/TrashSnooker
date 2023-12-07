@@ -218,6 +218,7 @@ public class AchievementsView extends ChildInitializable {
 
     private void showMoneyReceived() {
         if (popupsToShow.isEmpty()) return;
+        if (!App.isMainWindowShowing()) return;
 
         int money = popupsToShow.removeFirst();
         popupShowing = true;
