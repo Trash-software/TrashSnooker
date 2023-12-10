@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.career.aiMatch;
 
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.InGamePlayer;
 import trashsoftware.trashSnooker.core.PlayerPerson;
@@ -48,8 +49,8 @@ public class ChineseAiVsAi extends AiVsAi {
         LetBall.chineseEightLetBall(p1.getPlayerPerson(), p1Letted,
                 p2.getPlayerPerson(), p2Letted);
         
-        sp1.remCount -= p1Letted.values().stream().reduce(0, Integer::sum);
-        sp2.remCount -= p2Letted.values().stream().reduce(0, Integer::sum);
+        sp1.remCount -= p1Letted.getOrDefault(LetBall.FRONT, 0);
+        sp2.remCount -= p2Letted.getOrDefault(LetBall.FRONT, 0);
 
         SimPlayer playing = p1break ? sp1 : sp2;
         
@@ -69,6 +70,13 @@ public class ChineseAiVsAi extends AiVsAi {
         while (sp1.remCount > 0 && sp2.remCount > 0) {
             if (cuesCount > 1000) {
                 break;  // 打累了，拜拜
+            }
+            
+            if (sp1.remCount == p1Letted.getOrDefault(LetBall.BACK, 0) + 1) {
+                sp1.remCount = 1;
+            }
+            if (sp2.remCount == p2Letted.getOrDefault(LetBall.BACK, 0) + 1) {
+                sp2.remCount = 1;
             }
 
             SimPlayer oppo = playing == sp1 ? sp2 : sp1;
@@ -93,7 +101,11 @@ public class ChineseAiVsAi extends AiVsAi {
                 }
             } else {
                 // 连续进攻
-                double position = random.nextDouble() * 100;
+                // 剩余球越多，走位难度越小
+                double position = random.nextDouble() * Algebra.shiftRangeSafe(
+                        2, 8, 120, 80, 
+                        playing.remCount
+                );
                 double powerNeed = random.nextDouble() * 90;
                 if (position < playing.goodPosition) {
                     goodPos = true;

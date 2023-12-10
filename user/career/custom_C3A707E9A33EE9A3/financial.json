@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": -10978,
+    "money": 3912,
     "invoices": [
       {
         "perkUsed": 6,
@@ -1740,7 +1740,7 @@
         "timestamp": "2023-12-04 21:56:41"
       },
       {
-        "item": "EARN_MONEY_CUMULATIVE",
+        "item": "CHAMP_EARN_CUMULATIVE",
         "inGameDate": "2024/1/25",
         "level": 0,
         "moneyBefore": -18329,
@@ -2425,13 +2425,510 @@
         "type": "achievementAward",
         "moneyEarn": 500,
         "timestamp": "2023-12-08 01:37:09"
+      },
+      {
+        "item": "CONTINUOUS_LONG_POT",
+        "inGameDate": "2024/4/17",
+        "level": 0,
+        "moneyBefore": -10978,
+        "moneyAfter": -10778,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-08 17:48:26"
+      },
+      {
+        "inGameDate": "2024/4/17",
+        "year": 2024,
+        "match": "world_champ",
+        "moneyBefore": -10778,
+        "moneyAfter": 29222,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 40000,
+          "raw": 50000
+        }},
+        "timestamp": "2023-12-08 22:27:47"
+      },
+      {
+        "inGameDate": "2024/4/17",
+        "perkUsed": 20,
+        "moneyBefore": 29222,
+        "moneyCost": 14700,
+        "moneyAfter": 14522,
+        "ability": {
+          "rest": [
+            70.83192614806406,
+            77.93056681043731
+          ],
+          "powerControl": [
+            85.19421430018316,
+            90.15838948561954
+          ],
+          "cuePrecision": [
+            83.79751808811959,
+            90.51285221726145
+          ],
+          "normalPower": [
+            80.33483562085534,
+            87.6924757059093
+          ],
+          "spin": [
+            88.37546463646021,
+            89.9566914046372
+          ],
+          "antiHand": [
+            62.9845625,
+            68.54356765625
+          ],
+          "spinControl": [
+            83.23794439042803,
+            90.05707594315606
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2023-12-08 23:23:03"
+      },
+      {
+        "inGameDate": "2024/4/17",
+        "perkUsed": 0,
+        "moneyBefore": 14522,
+        "moneyCost": 0,
+        "moneyAfter": 14522,
+        "ability": {},
+        "type": "upgrade",
+        "timestamp": "2023-12-08 23:23:09"
+      },
+      {
+        "inGameDate": "2024/4/17",
+        "perkUsed": 11,
+        "moneyBefore": 14522,
+        "moneyCost": 8000,
+        "moneyAfter": 6522,
+        "ability": {
+          "rest": [
+            77.93056681043731,
+            81.08577429965452
+          ],
+          "powerControl": [
+            90.15838948561954,
+            91.65047001133856
+          ],
+          "cuePrecision": [
+            90.51285221726145,
+            91.98720960639838
+          ],
+          "normalPower": [
+            87.6924757059093,
+            89.30785192061384
+          ],
+          "spin": [
+            89.9566914046372,
+            91.45885683440534
+          ],
+          "antiHand": [
+            68.54356765625,
+            80.1839935406478
+          ],
+          "spinControl": [
+            90.05707594315606,
+            91.55422214599827
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2023-12-08 23:46:15"
+      },
+      {
+        "inGameDate": "2024/4/17",
+        "moneyBefore": 6522,
+        "moneyAfter": 4622,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1900
+        }],
+        "timestamp": "2023-12-08 23:47:11"
+      },
+      {
+        "inGameDate": "2024/5/25",
+        "match": "custom_C3A707E9A33EE9A3+2024+space_grand_prix",
+        "moneyBefore": 4622,
+        "moneyAfter": 1422,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1800
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 900
+          }
+        ],
+        "timestamp": "2023-12-08 23:47:11"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_C3A707E9A33EE9A3-272",
+        "inGameDate": "2024/5/25",
+        "moneyBefore": 1422,
+        "moneyCost": 80,
+        "moneyAfter": 1342,
+        "type": "purchase",
+        "timestamp": "2023-12-08 23:49:39"
+      },
+      {
+        "item": "NOT_CONCEDE",
+        "inGameDate": "2024/5/25",
+        "level": 0,
+        "moneyBefore": 1342,
+        "moneyAfter": 1542,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-09 03:52:38"
+      },
+      {
+        "item": "COME_BACK_BEHIND_65",
+        "inGameDate": "2024/5/25",
+        "level": 0,
+        "moneyBefore": 1542,
+        "moneyAfter": 1742,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-09 03:52:39"
+      },
+      {
+        "inGameDate": "2024/5/25",
+        "year": 2024,
+        "match": "space_grand_prix",
+        "moneyBefore": 1742,
+        "moneyAfter": 13742,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 12000,
+          "raw": 15000
+        }},
+        "timestamp": "2023-12-09 04:03:26"
+      },
+      {
+        "inGameDate": "2024/5/25",
+        "moneyBefore": 13742,
+        "moneyAfter": 12542,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1200
+        }],
+        "timestamp": "2023-12-09 04:04:31"
+      },
+      {
+        "item": 11,
+        "inGameDate": "2024/6/18",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_master_tour_xian",
+        "moneyBefore": 12542,
+        "moneyAfter": 12742,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-09 04:04:31"
+      },
+      {
+        "inGameDate": "2024/6/18",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_master_tour_xian",
+        "moneyBefore": 12742,
+        "moneyAfter": 11742,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-09 04:04:31"
+      },
+      {
+        "inGameDate": "2024/6/18",
+        "year": 2024,
+        "match": "eight_master_tour_xian",
+        "moneyBefore": 11742,
+        "moneyAfter": 15742,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 4000,
+          "raw": 5000
+        }},
+        "timestamp": "2023-12-09 04:15:23"
+      },
+      {
+        "inGameDate": "2024/6/18",
+        "perkUsed": 8,
+        "moneyBefore": 15742,
+        "moneyCost": 6650,
+        "moneyAfter": 9092,
+        "ability": {
+          "rest": [
+            81.08577429965452,
+            84.00434122718043
+          ],
+          "powerControl": [
+            91.65047001133856,
+            93.06794651077163
+          ],
+          "normalPower": [
+            89.30785192061384,
+            90.84245932458315
+          ],
+          "spin": [
+            91.45885683440534,
+            92.88591399268508
+          ],
+          "antiHand": [
+            80.1839935406478,
+            82.17479386361542
+          ],
+          "spinControl": [
+            91.55422214599827,
+            92.97651103869835
+          ],
+          "aiming": [
+            76.22877199232258,
+            80.49646672307114
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2023-12-09 04:16:37"
+      },
+      {
+        "inGameDate": "2024/6/18",
+        "moneyBefore": 9092,
+        "moneyAfter": 8592,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 500
+        }],
+        "timestamp": "2023-12-09 04:18:16"
+      },
+      {
+        "inGameDate": "2024/6/28",
+        "match": "custom_C3A707E9A33EE9A3+2024+american_nine_sydney_burwood_cup",
+        "moneyBefore": 8592,
+        "moneyAfter": 7592,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-09 04:18:16"
+      },
+      {
+        "inGameDate": "2024/6/28",
+        "year": 2024,
+        "match": "american_nine_sydney_burwood_cup",
+        "moneyBefore": 7592,
+        "moneyAfter": 7592,
+        "type": "championshipEarn",
+        "items": {"TOP_32": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-12-09 07:24:11"
+      },
+      {
+        "inGameDate": "2024/6/28",
+        "moneyBefore": 7592,
+        "moneyAfter": 6992,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 600
+        }],
+        "timestamp": "2023-12-09 07:32:58"
+      },
+      {
+        "inGameDate": "2024/7/10",
+        "moneyBefore": 6992,
+        "moneyAfter": 6442,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 550
+        }],
+        "timestamp": "2023-12-09 07:32:59"
+      },
+      {
+        "item": 10,
+        "inGameDate": "2024/7/21",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_duck_goose_open",
+        "moneyBefore": 6442,
+        "moneyAfter": 7242,
+        "type": "invitation",
+        "moneyEarn": 800,
+        "timestamp": "2023-12-09 07:32:59"
+      },
+      {
+        "inGameDate": "2024/7/21",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_duck_goose_open",
+        "moneyBefore": 7242,
+        "moneyAfter": 4742,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1800
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 500
+          }
+        ],
+        "timestamp": "2023-12-09 07:32:59"
+      },
+      {
+        "inGameDate": "2024/7/21",
+        "year": 2024,
+        "match": "eight_duck_goose_open",
+        "moneyBefore": 4742,
+        "moneyAfter": 5542,
+        "type": "championshipEarn",
+        "items": {"TOP_32": {
+          "actual": 800,
+          "raw": 1000
+        }},
+        "timestamp": "2023-12-09 07:39:46"
+      },
+      {
+        "inGameDate": "2024/7/21",
+        "perkUsed": 1,
+        "moneyBefore": 5542,
+        "moneyCost": 550,
+        "moneyAfter": 4992,
+        "ability": {"aiming": [
+          80.49646672307114,
+          82.47164338691758
+        ]},
+        "type": "upgrade",
+        "timestamp": "2023-12-09 07:40:24"
+      },
+      {
+        "inGameDate": "2024/7/21",
+        "moneyBefore": 4992,
+        "moneyAfter": 4242,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 750
+        }],
+        "timestamp": "2023-12-09 18:06:52"
+      },
+      {
+        "inGameDate": "2024/8/5",
+        "match": "custom_C3A707E9A33EE9A3+2024+american_nine_give_power_open",
+        "moneyBefore": 4242,
+        "moneyAfter": 1642,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1800
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 600
+          }
+        ],
+        "timestamp": "2023-12-09 18:06:52"
+      },
+      {
+        "inGameDate": "2024/8/5",
+        "year": 2024,
+        "match": "american_nine_give_power_open",
+        "moneyBefore": 1642,
+        "moneyAfter": 5642,
+        "type": "championshipEarn",
+        "items": {"TOP_32": {
+          "actual": 4000,
+          "raw": 5000
+        }},
+        "timestamp": "2023-12-09 18:14:13"
+      },
+      {
+        "inGameDate": "2024/8/5",
+        "moneyBefore": 5642,
+        "moneyAfter": 4792,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 850
+        }],
+        "timestamp": "2023-12-09 18:15:01"
+      },
+      {
+        "inGameDate": "2024/8/22",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_master",
+        "moneyBefore": 4792,
+        "moneyAfter": 3992,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 0
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-09 18:15:01"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_C3A707E9A33EE9A3-273",
+        "inGameDate": "2024/8/22",
+        "moneyBefore": 3992,
+        "moneyCost": 80,
+        "moneyAfter": 3912,
+        "type": "purchase",
+        "timestamp": "2023-12-10 20:05:30"
       }
     ],
-    "level": 15,
-    "expInThisLevel": 243,
-    "availPerks": 24,
-    "totalPerks": 53,
-    "totalExp": 2665
+    "level": 21,
+    "expInThisLevel": 82,
+    "availPerks": 12,
+    "totalPerks": 81,
+    "totalExp": 4660
   },
-  "checksum": "2626EC00C2ADED42558468764A43A254"
+  "checksum": "5F504EBCEFE60FF3A489FF9551495BEF"
 }

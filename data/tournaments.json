@@ -486,6 +486,42 @@
       }
     },
     {
+      "id": "eight_noob_open",
+      "names": {
+        "zh": "中式台球劳动节杯",
+        "en": "Chinese eight worker's day cup"
+      },
+      "type": "chinese_eight",
+      "seeds": 0,
+      "places": 64,
+      "pre_matches": [
+      ],
+      "frames": [
+        9, 7, 5, 5, 3, 3
+      ],
+      "awards": [
+        100000, 40000, 20000, 8000, 5000, 2500, 1000
+      ],
+      "frameExp": 25,
+      "ranked": true,
+      "professional": false,
+      "date": "05/01",
+      "fees": {
+        "registry": 200,
+        "flight": 400,
+        "hotel": 600
+      },
+      "invite": {
+        "16": 200
+      },
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
+      }
+    },
+    {
       "id": "space_grand_prix",
       "names": {
         "zh": "斯诺克太空国大奖赛",
@@ -634,6 +670,38 @@
       }
     },
     {
+      "id": "eight_duck_goose_open",
+      "names": {
+        "zh": "中式台球Duck Goose杯",
+        "en": "Chinese eight Duck Goose Cup"
+      },
+      "type": "chinese_eight",
+      "seeds": 16,
+      "places": 32,
+      "pre_matches": [
+        32
+      ],
+      "frames": [
+        9, 7, 5, 3, 3, 3
+      ],
+      "awards": [
+        50000, 20000, 8000, 5000, 2500, 1000, 0
+      ],
+      "frameExp": 25,
+      "ranked": true,
+      "professional": false,
+      "date": "07/21",
+      "fees": {
+        "registry": 200,
+        "flight": 1800,
+        "hotel": 500
+      },
+      "invite": {
+        "16": 800
+      },
+      "tablePreset": "duckGooseGreenTable"
+    },
+    {
       "id": "american_nine_give_power_open",
       "names": {
         "zh": "美式九球给力国公开赛",
@@ -681,7 +749,7 @@
         13, 9, 9, 9
       ],
       "awards": [
-        250000, 100000, 60000, 30000, 15000
+        500000, 120000, 60000, 30000, 15000
       ],
       "frameExp": 30,
       "ranked": false,

@@ -343,7 +343,7 @@ public class HumanCareer extends Career {
         }
 
         if (cumMainTimes > 0) {
-            achManager.addAchievement(Achievement.FIRST_MAIN_OF_TOURNAMENT, cumMainTimes, null);
+            achManager.addAchievement(Achievement.FIRST_MAIN_OF_TOURNAMENT, null);
         }
         achManager.addAchievement(Achievement.PARTICIPATE_TOURNAMENTS, getChampionshipScores().size(), null);
         achManager.addAchievement(Achievement.MAIN_OF_TOURNAMENTS, cumMainTimes, null);

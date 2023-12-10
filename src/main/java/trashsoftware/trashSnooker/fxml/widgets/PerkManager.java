@@ -5,6 +5,7 @@ import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.fxml.CareerView;
 import trashsoftware.trashSnooker.util.DataLoader;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,12 +22,12 @@ public class PerkManager {
 
     public static final int N_CATEGORIES = 8;
 
-    private CareerView parent;
+    private final CareerView parent;
     private PlayerPerson.ReadableAbility ability;
     private PlayerPerson.ReadableAbility previewAbility;
     private int availPerks;
     private int cost;
-    private int[] addedPerks = new int[8];
+    private final int[] addedPerks = new int[8];
 
     public PerkManager(CareerView parent, int availPerks, PlayerPerson.ReadableAbility ability) {
         this.availPerks = availPerks;
@@ -78,6 +79,10 @@ public class PerkManager {
 
     public int getPerksAddedTo(int cat) {
         return addedPerks[categoryToIndex(cat)];
+    }
+    
+    public int getPerksSelected() {
+        return Arrays.stream(addedPerks).sum();
     }
 
     public void clearSelections() {

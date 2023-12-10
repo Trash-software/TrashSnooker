@@ -4,13 +4,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.CareerManager;
@@ -29,6 +33,9 @@ import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CashFlowView extends ChildInitializable {
@@ -39,6 +46,8 @@ public class CashFlowView extends ChildInitializable {
             "participation", "purchase", "upgrade", "fees",
 //            "lifeFee", "oweInterest"
     };
+    public static final DateFormat MONTH_FMT = new SimpleDateFormat("yyyy-MM");
+    
     private final List<InvoiceObject> invoiceObjects = new ArrayList<>();
     private final Map<String, Integer> incomes = new HashMap<>(
             Map.of("initMoney", CareerManager.INIT_MONEY,
@@ -70,6 +79,10 @@ public class CashFlowView extends ChildInitializable {
     Label cumIncomeLabel, cumExpenditureLabel;
     @FXML
     PieChart incomeChart, expenditureChart;
+    @FXML
+    LineChart<Number, Number> moneyHistoryChart;
+    @FXML
+    NumberAxis dateAxis;
     private Stage stage;
     private HumanCareer humanCareer;
     private ResourceBundle strings;
@@ -79,6 +92,22 @@ public class CashFlowView extends ChildInitializable {
         this.humanCareer = humanCareer;
 
         createObjects(humanCareer);
+        
+        dateAxis.setTickLabelFormatter(new StringConverter<>() {
+            @Override
+            public String toString(Number object) {
+                return MONTH_FMT.format(new Date(object.longValue()));
+            }
+
+            @Override
+            public Number fromString(String string) {
+                try {
+                    return MONTH_FMT.parse(string).getTime();
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
         fill(true);
     }
@@ -167,6 +196,13 @@ public class CashFlowView extends ChildInitializable {
                 String type = object.getString("type");
                 if (object.has("inGameDate")) {
                     current = CareerManager.stringToCalendar(object.getString("inGameDate"));
+                } else if ("participation".equals(type)) {
+                    String champInsId = object.getString("match");
+                    MetaMatchInfo mmi = MatchTreeNode.analyzeMatchId(champInsId);
+                    
+                    current.set(Calendar.YEAR, mmi.year);
+                    current.set(Calendar.MONTH, mmi.data.getMonth() - 1);
+                    current.set(Calendar.DAY_OF_MONTH, mmi.data.getDay());
                 } else if ("championshipEarn".equals(type)) {
                     int year = object.getInt("year");
                     String match = object.getString("match");
@@ -194,6 +230,7 @@ public class CashFlowView extends ChildInitializable {
 
         Map<String, Integer> incomes;
         Map<String, Integer> expenditures;
+        SortedMap<Calendar, Integer> dateMoneyMap = new TreeMap<>();
 
         if (initFill) {
             incomes = this.incomes;
@@ -207,11 +244,27 @@ public class CashFlowView extends ChildInitializable {
         int cumExpenditure = 0;
 
         int row = 0;
-        Calendar last = null;
-        for (InvoiceObject io : invoiceObjects) {
+        Calendar last = CareerManager.getInstance().getBeginTimestamp();
+        
+        for (int idx = 0; idx < invoiceObjects.size(); idx++) {
+            InvoiceObject io = invoiceObjects.get(idx);
             try {
-                if (last == null ||
-                        io.inGameDate.get(Calendar.YEAR) != last.get(Calendar.YEAR) ||
+                if (dateMoneyMap.isEmpty()) {
+                    // 初始资金
+                    dateMoneyMap.put(last, io.getMoneyBefore());
+                }
+                if ("fees".equals(io.type)) {
+                    // 因为一些早期失误，fees的时间是上一场比赛的时间
+                    if (idx < invoiceObjects.size() - 1) {
+                        dateMoneyMap.put(invoiceObjects.get(idx + 1).inGameDate, io.getMoneyAfter());
+                    } else {
+                        dateMoneyMap.put(io.inGameDate, io.getMoneyAfter());
+                    }
+                } else {
+                    dateMoneyMap.put(io.inGameDate, io.getMoneyAfter());
+                }
+                
+                if (io.inGameDate.get(Calendar.YEAR) != last.get(Calendar.YEAR) ||
                         io.inGameDate.get(Calendar.MONTH) != last.get(Calendar.MONTH)) {
                     String month = String.format("%s.%s",
                             io.inGameDate.get(Calendar.YEAR),
@@ -359,6 +412,8 @@ public class CashFlowView extends ChildInitializable {
 
             drawPieChart(incomeChart, incomes);
             drawPieChart(expenditureChart, expenditures);
+            
+            drawLineChart(dateMoneyMap);
         }
     }
 
@@ -395,6 +450,21 @@ public class CashFlowView extends ChildInitializable {
         }
 
         chart.setData(pieChartData);
+    }
+    
+    private void drawLineChart(SortedMap<Calendar, Integer> dateMoneyMap) {
+        dateAxis.setLowerBound(dateMoneyMap.firstKey().getTime().getTime());
+        dateAxis.setUpperBound(dateMoneyMap.lastKey().getTime().getTime());
+        dateAxis.setTickUnit(365.25 * 24 * 60 * 60 * 1000 / 12);
+        
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+//        series.setName("");
+        
+        for (Map.Entry<Calendar, Integer> entry : dateMoneyMap.entrySet()) {
+            series.getData().add(new XYChart.Data<>(entry.getKey().getTime().getTime(), entry.getValue()));
+        }
+        
+        moneyHistoryChart.getData().add(series);
     }
 
     class InvoiceObject {

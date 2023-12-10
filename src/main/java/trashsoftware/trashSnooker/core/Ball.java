@@ -1038,6 +1038,12 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         ball.nextX = x2 + ball.vx;
         ball.nextY = y2 + ball.vy;
 
+        // 弹走了来再减速
+        vx *= values.ball.ballBounceRatio;
+        vy *= values.ball.ballBounceRatio;
+        ball.vx *= values.ball.ballBounceRatio;
+        ball.vy *= values.ball.ballBounceRatio;
+
         if (Algebra.distanceToPoint(nextX, nextY, ball.nextX, ball.nextY) < Algebra.distanceToPoint(x, y, ball.x, ball.y)) {
             if (!phy.isPrediction)
                 System.err.printf("Ball %d@%f,%f->%f,%f and ball %d@%f,%f->%f,%f not collide properly\n",

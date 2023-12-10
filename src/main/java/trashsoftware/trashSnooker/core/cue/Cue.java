@@ -17,6 +17,7 @@ public class Cue {
 
     public static double BOTTOM_SUE_POINT = 0.8;
     private static int oneTimeInstanceCounter;
+    private static Cue placeHolderCue;  // 有的时候没办法，确实需要一根杆
     
     public static final String BRAND_SEPARATOR = ":";
     
@@ -92,6 +93,13 @@ public class Cue {
                 cueBrand.getName() + BRAND_SEPARATOR + owner.getPlayerName(),
                 true
         );
+    }
+    
+    public static Cue getPlaceHolderCue() {
+        if (placeHolderCue == null) {
+            placeHolderCue = createForTempView(DataLoader.getInstance().getCueById("stdSnookerCue"));
+        }
+        return placeHolderCue;
     }
     
     public static Cue fromJson(JSONObject jsonObject,

@@ -110,7 +110,7 @@ public enum Achievement {
     COME_BACK_BEHIND_65(AchCat.SNOOKER),  // 已完成
     COME_BACK_BEHIND_OVER_SCORE(AchCat.SNOOKER),  // 已完成
     BLACK_BATTLE(AchCat.SNOOKER),  // 已完成
-    LAST_GASP_WIN(AchCat.SNOOKER),  // 已完成
+    LAST_GASP_WIN(AchCat.SNOOKER),  // 已完成  todo: 可能有bug
     LAST_GASP_LOST(AchCat.SNOOKER),  // 已完成
     NOT_CONCEDE(AchCat.SNOOKER),  // 已完成
     NOT_RESPECT(AchCat.SNOOKER),  // 已完成

@@ -140,7 +140,10 @@ if __name__ == '__main__':
     print("请确认该文件已放置在游戏根目录或存档目录下")
     file_list = os.listdir()
     if "career.json" in file_list:
-        analyze(career_file="career.json")
+        try:
+            analyze(career_file="career.json")
+        except Exception as e:
+            print(e)
     else:
         try:
             car_list = os.listdir("user/career")

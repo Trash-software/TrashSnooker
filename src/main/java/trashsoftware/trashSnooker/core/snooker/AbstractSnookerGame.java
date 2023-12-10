@@ -195,6 +195,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             return remainingRedCount() * 8 + 27;
         } else if (currentTarget == RAW_COLORED_REP) {
             return remainingRedCount() * 8 + 34;
+        } else if (currentTarget == END_REP) {
+            return 0;
         } else {
             int scoreSum = 0;
             for (int sc = currentTarget; sc <= 7; sc++) {

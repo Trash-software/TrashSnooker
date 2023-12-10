@@ -137,7 +137,8 @@ public class CareerView extends ChildInitializable {
         clearPerkBtn = new Button(strings.getString("restorePerks"));
         clearPerkBtn.setOnAction(e -> clearUsedPerks());
         confirmAddPerkBtn = new Button(strings.getString("applyPerks"));
-        confirmAddPerkBtn.setOnAction(e -> applyPerks());
+        confirmAddPerkBtn.setDisable(true);
+        confirmAddPerkBtn.setOnAction(e -> applyPerksAction());
         
         box.getChildren().addAll(availPerksLabel, clearPerkBtn, confirmAddPerkBtn);
         return box;
@@ -731,7 +732,28 @@ public class CareerView extends ChildInitializable {
     }
 
     @FXML
-    public void applyPerks() {
+    public void applyPerksAction() {
+        int curMoney = careerManager.getHumanPlayerCareer().getMoney();
+        int price = perkManager.getCost();
+        int moneyAfterBuy = curMoney - price;
+        int perksUse = perkManager.getPerksSelected();
+        if (perksUse > 0) {
+            AlertShower.askConfirmation(
+                    selfStage,
+                    String.format(strings.getString("balanceAfterApplyPerk"),
+                            Util.moneyToReadable(curMoney),
+                            Util.moneyToReadable(price),
+                            Util.moneyToReadable(moneyAfterBuy)
+                    ),
+                    String.format(strings.getString("confirmApplyPerk"),
+                            perksUse),
+                    this::applyPerks,
+                    null
+            );
+        }
+    }
+    
+    private void applyPerks() {
         PerkManager.UpgradeRec used = perkManager.applyPerks();  // 在getCost之后
 
         careerManager.getHumanPlayerCareer().recordUpgradeAndUsePerk(used);
@@ -943,7 +965,7 @@ public class CareerView extends ChildInitializable {
         int moneyCost = perkManager.getCost();
         updateMoneyLabel(money, moneyCost);
 
-        confirmAddPerkBtn.setDisable(moneyCost > money);
+        confirmAddPerkBtn.setDisable(moneyCost > money || perkManager.getPerksSelected() == 0);
     }
 
     public enum CareerAwardTime {

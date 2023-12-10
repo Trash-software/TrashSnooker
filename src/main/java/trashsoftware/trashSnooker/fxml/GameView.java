@@ -1945,6 +1945,14 @@ public class GameView implements Initializable {
                 }
             }
         }
+        if (cuing == null) {
+            if (replay != null) {
+                // 回放的第一杆，这肯定是前期渲染，所以说不重要
+            } else {
+                EventLogger.warning("Cuing cue is null");
+            }
+            return Cue.getPlaceHolderCue();
+        }
         return cuing.getCueSelection().getSelected().getNonNullInstance();
     }
 
@@ -3188,9 +3196,15 @@ public class GameView implements Initializable {
                         
                         Map<LetBall, Integer> p1Letted = p1.getLettedBalls();
                         Map<LetBall, Integer> p2Letted = p2.getLettedBalls();
-                        if (!p1Letted.isEmpty()) {
-                            if (!p2Letted.isEmpty()) {
-                                EventLogger.warning("Both players have been let ball. This is not reasonable");
+                        int p1Sum = p1Letted.values().stream().reduce(0, Integer::sum);
+                        int p2Sum = p2Letted.values().stream().reduce(0, Integer::sum);
+                        if (p1Sum > 0) {
+                            if (p2Sum > 0) {
+                                EventLogger.warning("Both players %s: %s and %s: %s have been let ball. This is not reasonable"
+                                        .formatted(p1.getPlayerPerson().getPlayerId(), 
+                                                p1Letted,
+                                                p2.getPlayerPerson().getPlayerId(),
+                                                p2Letted));
                             }
                             player1ScoreLabel.setText(getLetBallText(p1Letted));
                         }
@@ -4043,9 +4057,8 @@ public class GameView implements Initializable {
 //                cuePointCanvasGc.setFill(Color.GRAY);
 //                cuePointCanvasGc.fillRect(0, lineY, cueCanvasWH, cueCanvasWH - lineY);
 //            }
-        } else if (obstacleProjection instanceof BallProjection) {
+        } else if (obstacleProjection instanceof BallProjection projection) {
             // 后斯诺
-            BallProjection projection = (BallProjection) obstacleProjection;
             cuePointCanvasGc.setFill(Color.GRAY);
             cuePointCanvasGc.fillOval(padding + cueAreaRadius * projection.getCenterHor(),
                     padding + cueAreaRadius * projection.getCenterVer(),
