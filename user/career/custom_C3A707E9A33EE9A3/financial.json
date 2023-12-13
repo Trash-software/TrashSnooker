@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 3912,
+    "money": 65332,
     "invoices": [
       {
         "perkUsed": 6,
@@ -2922,13 +2922,458 @@
         "moneyAfter": 3912,
         "type": "purchase",
         "timestamp": "2023-12-10 20:05:30"
+      },
+      {
+        "inGameDate": "2024/8/22",
+        "year": 2024,
+        "match": "eight_master",
+        "moneyBefore": 3912,
+        "moneyAfter": 27912,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 24000,
+          "raw": 30000
+        }},
+        "timestamp": "2023-12-11 01:46:48"
+      },
+      {
+        "inGameDate": "2024/8/22",
+        "moneyBefore": 27912,
+        "moneyAfter": 26212,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1700
+        }],
+        "timestamp": "2023-12-11 02:45:02"
+      },
+      {
+        "inGameDate": "2024/9/25",
+        "moneyBefore": 26212,
+        "moneyAfter": 25112,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1100
+        }],
+        "timestamp": "2023-12-11 02:45:11"
+      },
+      {
+        "item": 11,
+        "inGameDate": "2024/10/18",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_master_tour_hebei",
+        "moneyBefore": 25112,
+        "moneyAfter": 25312,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-11 02:45:11"
+      },
+      {
+        "inGameDate": "2024/10/18",
+        "match": "custom_C3A707E9A33EE9A3+2024+eight_master_tour_hebei",
+        "moneyBefore": 25312,
+        "moneyAfter": 24312,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2023-12-11 02:45:11"
+      },
+      {
+        "inGameDate": "2024/10/18",
+        "perkUsed": 4,
+        "moneyBefore": 24312,
+        "moneyCost": 5050,
+        "moneyAfter": 19262,
+        "ability": {
+          "cuePrecision": [
+            91.98720960639838,
+            95.98253383628581
+          ],
+          "spin": [
+            92.88591399268508,
+            94.24161829305082
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2023-12-11 03:20:06"
+      },
+      {
+        "inGameDate": "2024/10/18",
+        "perkUsed": 5,
+        "moneyBefore": 19262,
+        "moneyCost": 4100,
+        "moneyAfter": 15162,
+        "ability": {"aiming": [
+          82.47164338691758,
+          90.96127303709477
+        ]},
+        "type": "upgrade",
+        "timestamp": "2023-12-11 03:20:17"
+      },
+      {
+        "inGameDate": "2024/10/18",
+        "perkUsed": 3,
+        "moneyBefore": 15162,
+        "moneyCost": 2150,
+        "moneyAfter": 13012,
+        "ability": {
+          "rest": [
+            84.00434122718043,
+            86.7040156351419
+          ],
+          "antiHand": [
+            82.17479386361542,
+            85.86275146191292
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2023-12-11 03:20:41"
+      },
+      {
+        "inGameDate": "2024/10/18",
+        "year": 2024,
+        "match": "eight_master_tour_hebei",
+        "moneyBefore": 13012,
+        "moneyAfter": 77012,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 64000,
+          "raw": 80000
+        }},
+        "timestamp": "2023-12-11 06:36:47"
+      },
+      {
+        "inGameDate": "2024/10/18",
+        "perkUsed": 3,
+        "moneyBefore": 77012,
+        "moneyCost": 2400,
+        "moneyAfter": 74612,
+        "ability": {
+          "rest": [
+            86.7040156351419,
+            89.20121446250626
+          ],
+          "antiHand": [
+            85.86275146191292,
+            89.1911331943764
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2023-12-11 06:37:06"
+      },
+      {
+        "itemType": "cue",
+        "item": "trashCue2:custom_C3A707E9A33EE9A3-321",
+        "inGameDate": "2024/10/18",
+        "moneyBefore": 74612,
+        "moneyCost": 2000,
+        "moneyAfter": 72612,
+        "type": "purchase",
+        "timestamp": "2023-12-11 06:37:59"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_C3A707E9A33EE9A3-322",
+        "inGameDate": "2024/10/18",
+        "moneyBefore": 72612,
+        "moneyCost": 80,
+        "moneyAfter": 72532,
+        "type": "purchase",
+        "timestamp": "2023-12-11 06:38:18"
+      },
+      {
+        "inGameDate": "2024/10/18",
+        "moneyBefore": 72532,
+        "moneyAfter": 71872,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 660
+        }],
+        "timestamp": "2023-12-11 15:53:13"
+      },
+      {
+        "inGameDate": "2024/10/29",
+        "moneyBefore": 71872,
+        "moneyAfter": 71032,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 840
+        }],
+        "timestamp": "2023-12-11 15:53:28"
+      },
+      {
+        "inGameDate": "2024/11/12",
+        "match": "custom_C3A707E9A33EE9A3+2024+united_kingdom_champ",
+        "moneyBefore": 71032,
+        "moneyAfter": 67832,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          }
+        ],
+        "timestamp": "2023-12-11 15:53:28"
+      },
+      {
+        "inGameDate": "2024/11/12",
+        "match": "snooker-hendry-tough-table-challenge",
+        "moneyBefore": 67832,
+        "moneyAfter": 69032,
+        "type": "challengeEarn",
+        "items": {
+          ">=,score,70": {
+            "actual": 800,
+            "raw": 1000
+          },
+          ">=,score,50": {
+            "actual": 400,
+            "raw": 500
+          }
+        },
+        "timestamp": "2023-12-13 03:13:25"
+      },
+      {
+        "inGameDate": "2024/11/12",
+        "perkUsed": 8,
+        "moneyBefore": 69032,
+        "moneyCost": 10100,
+        "moneyAfter": 58932,
+        "ability": {
+          "rest": [
+            89.20121446250626,
+            91.5111233778183
+          ],
+          "powerControl": [
+            93.06794651077163,
+            94.41454918523306
+          ],
+          "cuePrecision": [
+            95.98253383628581,
+            97.18340714447152
+          ],
+          "normalPower": [
+            90.84245932458315,
+            92.30033635835399
+          ],
+          "spin": [
+            94.24161829305082,
+            95.52953737839827
+          ],
+          "antiHand": [
+            89.1911331943764,
+            90.73157653465759
+          ],
+          "spinControl": [
+            92.97651103869835,
+            94.32768548676343
+          ],
+          "aiming": [
+            90.96127303709477,
+            92.41320938524004
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2023-12-13 04:49:14"
+      },
+      {
+        "item": "CHAMPION",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 58932,
+        "moneyAfter": 59132,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:48:38"
+      },
+      {
+        "item": "GET_INVITED",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 59132,
+        "moneyAfter": 59332,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:48:39"
+      },
+      {
+        "item": "PLAY_ONE_YEAR",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 59332,
+        "moneyAfter": 59532,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:48:40"
+      },
+      {
+        "item": "EXPENDITURE",
+        "inGameDate": "2024/11/12",
+        "level": 2,
+        "moneyBefore": 59532,
+        "moneyAfter": 60532,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2023-12-13 17:48:42"
+      },
+      {
+        "item": "SAVE_MONEY",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 60532,
+        "moneyAfter": 60732,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:48:43"
+      },
+      {
+        "item": "CHAMP_EARN_CUMULATIVE",
+        "inGameDate": "2024/11/12",
+        "level": 1,
+        "moneyBefore": 60732,
+        "moneyAfter": 61232,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2023-12-13 17:48:43"
+      },
+      {
+        "item": "DEFEAT_SAME_OPPONENT_CONTINUOUS_CEB",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 61232,
+        "moneyAfter": 61432,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:48:45"
+      },
+      {
+        "item": "DEFEAT_SAME_OPPONENT_MULTI_SNOOKER_1",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 61432,
+        "moneyAfter": 61632,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:48:47"
+      },
+      {
+        "item": "CEB_CUMULATIVE_CLEAR",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 61632,
+        "moneyAfter": 61832,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:48:50"
+      },
+      {
+        "item": "CEB_CUMULATIVE_CLEAR",
+        "inGameDate": "2024/11/12",
+        "level": 1,
+        "moneyBefore": 61832,
+        "moneyAfter": 62332,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2023-12-13 17:48:51"
+      },
+      {
+        "item": "SUICIDE",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 62332,
+        "moneyAfter": 62532,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:48:53"
+      },
+      {
+        "item": "SNOOKER_CUMULATE_FOUL_GAIN",
+        "inGameDate": "2024/11/12",
+        "level": 2,
+        "moneyBefore": 62532,
+        "moneyAfter": 63532,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2023-12-13 17:48:56"
+      },
+      {
+        "item": "FINAL_STAGE",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 63532,
+        "moneyAfter": 63732,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:48:58"
+      },
+      {
+        "item": "FINAL_FRAME_USUAL_GUEST",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 63732,
+        "moneyAfter": 63932,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:48:59"
+      },
+      {
+        "item": "POT_BALLS_ANTI",
+        "inGameDate": "2024/11/12",
+        "level": 2,
+        "moneyBefore": 63932,
+        "moneyAfter": 64932,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2023-12-13 17:49:01"
+      },
+      {
+        "item": "ACCURACY_WIN",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 64932,
+        "moneyAfter": 65132,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:49:02"
+      },
+      {
+        "item": "BIG_HEART",
+        "inGameDate": "2024/11/12",
+        "level": 0,
+        "moneyBefore": 65132,
+        "moneyAfter": 65332,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2023-12-13 17:49:06"
       }
     ],
-    "level": 21,
-    "expInThisLevel": 82,
-    "availPerks": 12,
-    "totalPerks": 81,
-    "totalExp": 4660
+    "level": 23,
+    "expInThisLevel": 283,
+    "availPerks": 0,
+    "totalPerks": 92,
+    "totalExp": 5830
   },
-  "checksum": "5F504EBCEFE60FF3A489FF9551495BEF"
+  "checksum": "883817A9BB6A4D29F169276EBF23709C"
 }

@@ -758,7 +758,7 @@ public class PlayerPerson {
             ra.name = playerPerson.name;
             ra.shownName = playerPerson.shownName;
             ra.category = playerPerson.category;
-            ra.aiming = playerPerson.getPrecisionPercentage();
+            ra.aiming = playerPerson.getPrecisionPercentage() * handFeelEffort;
             ra.cuePrecision =
                     Math.max(0,
                             100.0 - (playerPerson.getCuePointMuSigmaXY()[0] +

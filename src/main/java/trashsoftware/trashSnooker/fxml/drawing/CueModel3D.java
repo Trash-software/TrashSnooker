@@ -10,7 +10,7 @@ import trashsoftware.trashSnooker.util.DataLoader;
 
 public class CueModel3D extends CueModel {
     
-    public static final int CIRCLE_DIVISION = 24;
+    public static final int CIRCLE_DIVISION = 32;
 
     private final Cue cue;
     private final TexturedCueBrand brand;
@@ -88,16 +88,19 @@ public class CueModel3D extends CueModel {
         double position = ringThickness;
 
         for (TexturedCueBrand.Segment segment : brand.getSegments()) {
-            double len = segment.length() * scale;
-            TruncateCone cone = new TruncateCone(conePoly,
-                    (float) (segment.diameter1() * 0.5 * scale),
-                    (float) (segment.diameter2() * 0.5 * scale),
-                    (float) len,
-                    segment.getMaterial()
-            );
-            cone.setTranslateY(position);
-            getChildren().add(cone);
-            position += len;
+            for (TexturedCueBrand.GraphicSegment gs : segment.getGraphicSegments()) {
+                double len = gs.getLength() * scale;
+                TruncateCone cone = new TruncateCone(conePoly,
+                        1,
+                        (float) (gs.getDiameter1() * 0.5 * scale),
+                        (float) (gs.getDiameter2() * 0.5 * scale),
+                        (float) len,
+                        gs.getMaterial()
+                );
+                cone.setTranslateY(position);
+                getChildren().add(cone);
+                position += len;
+            }
         }
 
         base.setTranslateY(position);

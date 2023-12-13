@@ -897,6 +897,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     public int getPossibleBreak(int alreadySinglePole) {
+        // todo: 这里有个bug
+        // todo: bug成因未知，但大概是因为这个method在更新target之前就被call了
         int rem = getRemainingScore(false);
         return alreadySinglePole + rem;
     }

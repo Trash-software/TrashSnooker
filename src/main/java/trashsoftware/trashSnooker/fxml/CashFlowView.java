@@ -136,14 +136,15 @@ public class CashFlowView extends ChildInitializable {
     void typeFilterAction() {
         if (getAllCheckMenu().isSelected()) {
             typeFilterMenu.setText(strings.getString("all"));
-        }
-        List<String> selectedNames = selectedTypeNames();
-        if (selectedNames.isEmpty()) {
-            typeFilterMenu.setText(strings.getString("none"));
-        } else if (selectedNames.size() == 1) {
-            typeFilterMenu.setText(selectedNames.getFirst());
         } else {
-            typeFilterMenu.setText(strings.getString("multipleSelection"));
+            List<String> selectedNames = selectedTypeNames();
+            if (selectedNames.isEmpty()) {
+                typeFilterMenu.setText(strings.getString("none"));
+            } else if (selectedNames.size() == 1) {
+                typeFilterMenu.setText(selectedNames.getFirst());
+            } else {
+                typeFilterMenu.setText(strings.getString("multipleSelection"));
+            }
         }
         fill(false);
     }
@@ -152,10 +153,13 @@ public class CashFlowView extends ChildInitializable {
         typeFilterMenu.setText(strings.getString("all"));
         for (String type : ALL_TYPES) {
             TypeMenuItem tmi = new TypeMenuItem(type);
-            tmi.setSelected(true);
             CustomMenuItem cmi = new CustomMenuItem(tmi);
             cmi.setHideOnClick(false);
             typeFilterMenu.getItems().add(cmi);
+        }
+        for (var v : typeFilterMenu.getItems()) {
+            TypeMenuItem tmi = (TypeMenuItem) ((CustomMenuItem) v).getContent();
+            tmi.setSelected(true);
         }
     }
 
@@ -578,7 +582,14 @@ public class CashFlowView extends ChildInitializable {
                             getAllCheckMenu().setSelected(true);
                         }
                     } else {
-                        if (!isAll()) {
+                        if (isAll()) {
+                            for (MenuItem mi : typeFilterMenu.getItems()) {
+                                CustomMenuItem cmi = (CustomMenuItem) mi;
+                                TypeMenuItem tmi = (TypeMenuItem) cmi.getContent();
+                                if (!tmi.isAll())
+                                    tmi.setSelected(false);
+                            }
+                        } else {
                             getAllCheckMenu().setSelected(false);
                         }
                     }
