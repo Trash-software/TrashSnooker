@@ -36,7 +36,7 @@ public class NaiveGameReplay extends GameReplay {
                     b.setX(x);
                     b.setY(y);
                 }
-                case SNOOKER, MINI_SNOOKER -> {
+                case SNOOKER, MINI_SNOOKER, SNOOKER_TEN -> {
                     b = new SnookerBall(val, new double[]{x, y}, gameValues);
                     b.setPotted(potted);
                 }

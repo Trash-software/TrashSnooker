@@ -5,6 +5,8 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import trashsoftware.trashSnooker.util.EventLogger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,8 +26,8 @@ public class AnimationGameLoop extends AnimationTimer implements GameLoop {
     long longestNanoBtw1s;
     private long animationBeginTime;
 
-    Timer fpsRefreshTimer = new Timer();
-
+    Timer eachSecondRefresher = new Timer();
+    
     public AnimationGameLoop(Runnable frame, Label fpsLabel) {
         this.frame = frame;
         this.fpsLabel = fpsLabel;
@@ -49,7 +51,7 @@ public class AnimationGameLoop extends AnimationTimer implements GameLoop {
     public void start() {
         super.start();
 
-        fpsRefreshTimer.scheduleAtFixedRate(new TimerTask() {
+        eachSecondRefresher.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> updatePerSecond());
@@ -61,7 +63,7 @@ public class AnimationGameLoop extends AnimationTimer implements GameLoop {
     public void stop() {
         super.stop();
         
-        fpsRefreshTimer.cancel();
+        eachSecondRefresher.cancel();
     }
 
     @Override

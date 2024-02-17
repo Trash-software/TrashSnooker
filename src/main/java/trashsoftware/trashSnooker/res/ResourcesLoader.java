@@ -23,6 +23,7 @@ public class ResourcesLoader {
     private final Image filterIcon;
     private final Image radarIcon;
     private final Image barIcon;
+    private final Image lineIcon;
 
     private ResourcesLoader() {
         icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.png")),
@@ -40,6 +41,8 @@ public class ResourcesLoader {
         radarIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("radar.png")),
                 0, 0, true, true);
         barIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("bar-chart.png")),
+                0, 0, true, true);
+        lineIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("line-chart.png")),
                 0, 0, true, true);
 
         awardIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("ach_gold.png")),
@@ -118,6 +121,10 @@ public class ResourcesLoader {
 
     public Image getBarIcon() {
         return barIcon;
+    }
+
+    public Image getLineIcon() {
+        return lineIcon;
     }
 
     public void setIconImage1x1(Image image, ImageView imageView) {

@@ -1,0 +1,575 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Yan Bingtao": 14,
+    "custom_player_1": 19,
+    "custom_C3A707E9A33EE9A3": 2,
+    "custom_player_3": 27,
+    "custom_195B277334903CE5": 28,
+    "custom_player_2": 21,
+    "Jack Lisowski": 5,
+    "Glass Heart": 6,
+    "Mark Allen": 11,
+    "Selby": 13,
+    "custom_A7727D597A40BCB9": 7,
+    "Zhao Xintong": 10,
+    "Neil Robertson": 3,
+    "Stephen Maguire": 18,
+    "Murphy": 15,
+    "John Wizard": 1,
+    "Matthew Stevens": 25,
+    "Fat Guy": 26,
+    "Ding Junhui": 9,
+    "Smart": 4,
+    "Trump": 17,
+    "High Stick": 20,
+    "Mark Williams": 16,
+    "Lolita": 24,
+    "O_Sullivan": 8,
+    "Luca Brecel": 23,
+    "custom_player_160": 22,
+    "custom_E5B08FE4BB99E5A5B3": 12
+  },
+  "championshipId": "challenger_open",
+  "matchTree": {"root": {
+    "p1wins": 3,
+    "p1": {
+      "p1wins": 2,
+      "p1": {
+        "p1wins": 2,
+        "p1": {"winner": "John Wizard"},
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "Zhao Xintong"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Murphy"},
+              "p2": {"winner": "Mark Williams"},
+              "winner": "Mark Williams",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-0",
+              "p2wins": 2
+            },
+            "winner": "Mark Williams",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-8",
+            "p2wins": 2
+          },
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "Jack Lisowski"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Stephen Maguire"},
+              "p2": {"winner": "custom_player_3"},
+              "winner": "Stephen Maguire",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-1",
+              "p2wins": 0
+            },
+            "winner": "Stephen Maguire",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-9",
+            "p2wins": 2
+          },
+          "winner": "Mark Williams",
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_3-16",
+          "p2wins": 0
+        },
+        "winner": "John Wizard",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2023+challenger_open-QUARTER_FINAL-20",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 0,
+        "p1": {"winner": "Smart"},
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "O_Sullivan"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "High Stick"},
+              "p2": {"winner": "Matthew Stevens"},
+              "winner": "Matthew Stevens",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-2",
+              "p2wins": 2
+            },
+            "winner": "O_Sullivan",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-10",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "Ding Junhui"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "custom_195B277334903CE5"},
+              "p2": {"winner": "Luca Brecel"},
+              "winner": "custom_195B277334903CE5",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-3",
+              "p2wins": 1
+            },
+            "winner": "custom_195B277334903CE5",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-11",
+            "p2wins": 2
+          },
+          "winner": "O_Sullivan",
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_3-17",
+          "p2wins": 0
+        },
+        "winner": "O_Sullivan",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2023+challenger_open-QUARTER_FINAL-21",
+        "p2wins": 2
+      },
+      "winner": "John Wizard",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-SEMI_FINAL-24",
+      "p2wins": 0
+    },
+    "p2": {
+      "p1wins": 2,
+      "p1": {
+        "p1wins": 0,
+        "p1": {"winner": "custom_C3A707E9A33EE9A3"},
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 1,
+            "p1": {"winner": "Mark Allen"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "custom_player_2"},
+              "p2": {"winner": "Trump"},
+              "winner": "Trump",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-4",
+              "p2wins": 2
+            },
+            "winner": "Trump",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-12",
+            "p2wins": 2
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+            "p2": {
+              "p1wins": 1,
+              "p1": {"winner": "Fat Guy"},
+              "p2": {"winner": "Selby"},
+              "winner": "Selby",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-5",
+              "p2wins": 2
+            },
+            "winner": "custom_E5B08FE4BB99E5A5B3",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-13",
+            "p2wins": 0
+          },
+          "winner": "Trump",
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_3-18",
+          "p2wins": 1
+        },
+        "winner": "Trump",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2023+challenger_open-QUARTER_FINAL-22",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {"winner": "Neil Robertson"},
+        "p2": {
+          "p1wins": 2,
+          "p1": {
+            "p1wins": 2,
+            "p1": {"winner": "custom_A7727D597A40BCB9"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Yan Bingtao"},
+              "p2": {"winner": "custom_player_1"},
+              "winner": "Yan Bingtao",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-6",
+              "p2wins": 0
+            },
+            "winner": "custom_A7727D597A40BCB9",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-14",
+            "p2wins": 0
+          },
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Glass Heart"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Lolita"},
+              "p2": {"winner": "custom_player_160"},
+              "winner": "Lolita",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-7",
+              "p2wins": 0
+            },
+            "winner": "Glass Heart",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-15",
+            "p2wins": 0
+          },
+          "winner": "custom_A7727D597A40BCB9",
+          "stage": "PRE_ROUND_3",
+          "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_3-19",
+          "p2wins": 0
+        },
+        "winner": "Neil Robertson",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2023+challenger_open-QUARTER_FINAL-23",
+        "p2wins": 0
+      },
+      "winner": "Trump",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-SEMI_FINAL-25",
+      "p2wins": 1
+    },
+    "winner": "John Wizard",
+    "stage": "FINAL",
+    "matchId": "custom_195B277334903CE5+2023+challenger_open-FINAL-26",
+    "p2wins": 2
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 134,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-SEMI_FINAL-25",
+      "playerId": "Trump"
+    },
+    {
+      "score": 134,
+      "stage": "PRE_ROUND_3",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_3-16",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 130,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-FINAL-26",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 130,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-10",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 130,
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-4",
+      "playerId": "Trump"
+    },
+    {
+      "score": 126,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-SEMI_FINAL-25",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 126,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-QUARTER_FINAL-20",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 126,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-14",
+      "playerId": "custom_A7727D597A40BCB9"
+    },
+    {
+      "score": 122,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-12",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 121,
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-0",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 120,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-QUARTER_FINAL-22",
+      "playerId": "Trump"
+    },
+    {
+      "score": 119,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-QUARTER_FINAL-20",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 118,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-8",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 116,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-FINAL-26",
+      "playerId": "Trump"
+    },
+    {
+      "score": 115,
+      "stage": "PRE_ROUND_3",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_3-16",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 114,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-9",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 110,
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-0",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 105,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-QUARTER_FINAL-21",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 98,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-FINAL-26",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 95,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-9",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 92,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-QUARTER_FINAL-22",
+      "playerId": "Trump"
+    },
+    {
+      "score": 92,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-8",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 90,
+      "stage": "PRE_ROUND_3",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_3-19",
+      "playerId": "custom_A7727D597A40BCB9"
+    },
+    {
+      "score": 90,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-10",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 89,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-12",
+      "playerId": "Trump"
+    },
+    {
+      "score": 88,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-12",
+      "playerId": "Trump"
+    },
+    {
+      "score": 86,
+      "stage": "PRE_ROUND_3",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_3-19",
+      "playerId": "custom_A7727D597A40BCB9"
+    },
+    {
+      "score": 82,
+      "stage": "PRE_ROUND_2",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-11",
+      "playerId": "custom_195B277334903CE5"
+    },
+    {
+      "score": 79,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-QUARTER_FINAL-23",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 75,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-QUARTER_FINAL-23",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 75,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-8",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 74,
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-13",
+      "playerId": "custom_E5B08FE4BB99E5A5B3"
+    },
+    {
+      "score": 71,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-FINAL-26",
+      "playerId": "Trump"
+    },
+    {
+      "score": 68,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-FINAL-26",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 67,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-SEMI_FINAL-25",
+      "playerId": "Trump"
+    },
+    {
+      "score": 64,
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-4",
+      "playerId": "Trump"
+    },
+    {
+      "score": 62,
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-0",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 56,
+      "stage": "PRE_ROUND_3",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_3-18",
+      "playerId": "Trump"
+    },
+    {
+      "score": 51,
+      "stage": "PRE_ROUND_2",
+      "sim": false,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_2-11",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 50,
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2023+challenger_open-PRE_ROUND_1-5",
+      "playerId": "Selby"
+    }
+  ],
+  "timestamp": "2023/9/25"
+}

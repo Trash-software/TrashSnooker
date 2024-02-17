@@ -9,6 +9,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 import trashsoftware.trashSnooker.util.db.EntireGameRecord;
 import trashsoftware.trashSnooker.util.db.EntireGameTitle;
@@ -181,7 +182,9 @@ public class GameTypeTree extends RecordTree {
         int thisWinMatches = 0;
         int finalFrames = 0;  // 决胜局
         int finalFrameWins = 0;
+        int durations = 0;
         for (EntireGameRecord egr : entireRecords) {
+            durations += egr.getFrameDurations().values().stream().reduce(0, Integer::sum);
             boolean thisIsP1 = egr.getTitle().player1Id.equals(pai.playerId);
             int[] playerWinsInThisMatchSize =
                     playerWinsByTotalFrames.computeIfAbsent(
@@ -217,6 +220,7 @@ public class GameTypeTree extends RecordTree {
         final int thisWinMatchesFinal = thisWinMatches;
         final int finalFrames1 = finalFrames;
         final int finalFrameWins1 = finalFrameWins;
+        final int totalDuration = durations;
 
         System.out.println("db time: " + (System.currentTimeMillis() - st));
 
@@ -286,6 +290,10 @@ public class GameTypeTree extends RecordTree {
                 resultPane.add(new Label(String.format("%.1f%%", pRate)), 2, rowIndex);
                 rowIndex++;
             }
+            
+            // 时长
+            resultPane.add(new Label(strings.getString("totalDuration")), 0, rowIndex);
+            resultPane.add(new Label(Util.secondsToString(totalDuration)), 1, rowIndex++);
         });
     }
 }

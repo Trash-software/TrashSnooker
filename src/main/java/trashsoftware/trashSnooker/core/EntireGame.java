@@ -21,6 +21,8 @@ import trashsoftware.trashSnooker.util.db.EntireGameTitle;
 
 import java.io.File;
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -388,7 +390,15 @@ public class EntireGame {
                 .player1Breaks(p1Breaks)
                 .players(p1, p2)
                 .build();
-        game = Game.createGame(gameSettings, gameValues, this);
+        
+        Collection<SubRule> subRules;
+        if (metaMatchInfo == null) {
+            subRules = List.of();
+        } else {
+            subRules = metaMatchInfo.data.getSubRules();
+        }
+        
+        game = Game.createGame(gameSettings, gameValues, this, subRules);
         
         if (totalFrames >= 5 && p1Wins + p2Wins + 1 == totalFrames) {
             // 决胜局

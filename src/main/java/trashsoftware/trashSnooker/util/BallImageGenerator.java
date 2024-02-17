@@ -13,6 +13,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -41,7 +42,7 @@ public class BallImageGenerator extends Application {
     }
 
     private static void makeSnookerBall(int value) {
-        Color baseColor = Ball.snookerColor(value);
+        Color baseColor = SnookerBall.snookerColor(value);
         Canvas canvas = generateBasic(256, baseColor, false, null, null);
 
         File file = new File("images/snooker/snooker" + value + ".png");
@@ -76,7 +77,7 @@ public class BallImageGenerator extends Application {
         gc2d.fillRect(0, 0, width, height);
 
         if (text != null) {
-            gc2d.setFill(Ball.poolBallBaseColor(0));
+            gc2d.setFill(PoolBall.poolBallBaseColor(0));
             gc2d.fillOval(0, ccTopLeftY, centerCircleW, centerCircleH);
             gc2d.fillOval(width / 2, ccTopLeftY, centerCircleW, centerCircleH);
         }

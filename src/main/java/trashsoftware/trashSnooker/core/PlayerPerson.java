@@ -367,7 +367,7 @@ public class PlayerPerson {
                 isCustom,
                 new PlayerPerson.HandBody(
                         height,
-                        1.0,
+                        sex == Sex.M ? 1.0 : 0.9,
                         left,
                         right,
                         Math.max(10, Math.min(90, generateDouble(random, abilityLow * restMul, abilityHigh * restMul)))
@@ -708,7 +708,7 @@ public class PlayerPerson {
 
     public enum Sex {
         M("sexM", 155, 205, 180, 1.0),
-        F("sexF", 145, 190, 168, 0.85);
+        F("sexF", 145, 190, 168, 0.88);
 
         public final String key;
         public final double minHeight;
@@ -807,33 +807,33 @@ public class PlayerPerson {
 
         public double addPerksHowMany(int addWhat) {
             double unit;
-            double minimum = 0.25;
+            double minimum = 0.2;
 
             switch (addWhat) {
                 case PerkManager.AIMING:
-                    unit = (120 - aiming) * 0.05;
+                    unit = (120 - aiming) * 0.04;
                     break;
                 case PerkManager.CUE_PRECISION:
-                    unit = (120 - cuePrecision) * 0.05;
+                    unit = (120 - cuePrecision) * 0.04;
                     break;
                 case PerkManager.POWER:
                     double sexPowerMax = 120 * getSex().powerMul;
-                    unit = (sexPowerMax - normalPower) * 0.05;
+                    unit = (sexPowerMax - normalPower) * 0.04;
                     break;
                 case PerkManager.POWER_CONTROL:
-                    unit = (120 - powerControl) * 0.05;
+                    unit = (120 - powerControl) * 0.04;
                     break;
                 case PerkManager.SPIN:
-                    unit = (120 - spin) * 0.05;
+                    unit = (120 - spin) * 0.04;
                     break;
                 case PerkManager.SPIN_CONTROL:
-                    unit = (120 - spinControl) * 0.05;
+                    unit = (120 - spinControl) * 0.04;
                     break;
                 case PerkManager.ANTI_HAND:
-                    unit = (120 - handBody.getAntiHand().skill) * 0.05;
+                    unit = (120 - handBody.getAntiHand().skill) * 0.04;
                     break;
                 case PerkManager.REST:
-                    unit = (120 - handBody.getRest().skill) * 0.075;
+                    unit = (120 - handBody.getRest().skill) * 0.06;
                     minimum = 0.3;
                     break;
                 default:
@@ -890,7 +890,7 @@ public class PlayerPerson {
                         normalPower += many;
                         maxPower += many / 0.9;
                         maxPower = Math.min(maxPower, 100.0 * getSex().powerMul);
-                        normalPower = Math.min(normalPower, 100.0);
+                        normalPower = Math.min(normalPower, maxPower);
                     }
                     case PerkManager.POWER_CONTROL -> {
                         powerControl += many;

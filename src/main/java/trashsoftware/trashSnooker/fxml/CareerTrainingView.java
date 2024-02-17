@@ -30,10 +30,7 @@ import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class CareerTrainingView extends ChildInitializable {
     @FXML
@@ -217,7 +214,10 @@ public class CareerTrainingView extends ChildInitializable {
 
             double[] resolution = ConfigLoader.getInstance().getEffectiveResolution();
             previewPane.setupPane(challengeSet.getGameValues(), 0.32 * 1536 / resolution[0]);
-            Game<?, ?> fakeGame = Game.createGame(null, challengeSet.getGameValues(), null);
+            Game<?, ?> fakeGame = Game.createGame(null, 
+                    challengeSet.getGameValues(), 
+                    null,
+                    List.of());
             previewPane.setupBalls(fakeGame, false);
             previewPane.drawTable(fakeGame);
             previewPane.drawStoppedBalls(fakeGame.getTable(), fakeGame.getAllBalls(), null);

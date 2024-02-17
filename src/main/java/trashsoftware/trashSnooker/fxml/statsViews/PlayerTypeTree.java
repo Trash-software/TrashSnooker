@@ -44,6 +44,7 @@ public class PlayerTypeTree extends RecordTree {
 
             appendToPane(GameRule.SNOOKER, gridPane);
             appendToPane(GameRule.MINI_SNOOKER, gridPane);
+            appendToPane(GameRule.SNOOKER_TEN, gridPane);
             appendToPane(GameRule.CHINESE_EIGHT, gridPane);
             appendToPane(GameRule.LIS_EIGHT, gridPane);
             appendToPane(GameRule.AMERICAN_NINE, gridPane);

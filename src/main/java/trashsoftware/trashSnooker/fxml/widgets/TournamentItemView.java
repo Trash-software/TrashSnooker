@@ -11,6 +11,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
 import trashsoftware.trashSnooker.fxml.App;
@@ -71,6 +72,15 @@ public class TournamentItemView extends ScrollPane {
 
         HBox tourTypeBox = new HBox();
         tourTypeBox.setSpacing(10.0);
+        
+        StringBuilder gameTypeBuilder = new StringBuilder();
+        gameTypeBuilder.append(data.getType().toString());
+        
+        for (SubRule sr : data.getSubRules()) {
+            gameTypeBuilder.append('-').append(sr.toString());
+        }
+        tourTypeBox.getChildren().add(new Label(gameTypeBuilder.toString()));
+        
         tourTypeBox.getChildren().add(new Label(strings.getString("isRanked") + (data.isRanked() ?
                         strings.getString("yes") :
                         strings.getString("no"))));

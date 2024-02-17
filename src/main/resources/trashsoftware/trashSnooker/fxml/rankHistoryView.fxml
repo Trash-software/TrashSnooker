@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.CategoryAxis?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="trashsoftware.trashSnooker.fxml.RankHistoryView"
+      prefHeight="720.0" prefWidth="1080.0">
+
+    <padding>
+        <Insets topRightBottomLeft="10.0"/>
+    </padding>
+
+    <HBox spacing="10.0" alignment="CENTER_LEFT">
+        <Button text="%backIcon" onAction="#backAction"/>
+        <Label fx:id="nameLabel"/>
+        <ComboBox fx:id="rankTypeBox"/>
+    </HBox>
+    
+    <HBox spacing="10.0">
+        <LineChart fx:id="scoreChart" legendVisible="false" prefHeight="560">
+            <xAxis>
+                <CategoryAxis fx:id="matchAxis" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis fx:id="scoreAxis" side="LEFT"/>
+            </yAxis>
+        </LineChart>
+
+        <LineChart fx:id="rankChart" legendVisible="false" prefHeight="560">
+            <xAxis>
+                <CategoryAxis fx:id="matchAxis2" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis fx:id="rankAxis" side="LEFT"/>
+            </yAxis>
+        </LineChart>
+    </HBox>
+    
+</VBox>

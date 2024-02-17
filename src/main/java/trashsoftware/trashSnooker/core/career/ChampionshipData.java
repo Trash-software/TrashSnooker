@@ -1,8 +1,10 @@
 package trashsoftware.trashSnooker.core.career;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
+import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.fxml.App;
@@ -41,6 +43,7 @@ public class ChampionshipData {
     TablePreset tablePreset;
     TableSpec tableSpec;
     BallMetrics ballMetrics;
+    Collection<SubRule> subRules;
     private int registryFee;
     private int flightFee;
     private int hotelFee;
@@ -79,6 +82,16 @@ public class ChampionshipData {
         data.preMatchNewAdded = new int[preNewAdd.length()];
         for (int i = 0; i < data.preMatchNewAdded.length; i++) {
             data.preMatchNewAdded[i] = preNewAdd.getInt(i);
+        }
+        
+        if (jsonObject.has("subRules")) {
+            data.subRules = new ArrayList<>();
+            JSONArray subRuleJson = jsonObject.getJSONArray("subRules");
+            for (int i = 0; i < subRuleJson.length(); i++) {
+                data.subRules.add(SubRule.valueOf(subRuleJson.getString(i)));
+            }
+        } else {
+            data.subRules = List.of();
         }
 
         data.selection = jsonObject.has("selection") ?
@@ -207,6 +220,7 @@ public class ChampionshipData {
         switch (getType()) {
             case SNOOKER:
             case MINI_SNOOKER:
+            case SNOOKER_TEN:
                 ballMetrics = BallMetrics.SNOOKER_BALL;
                 break;
             case CHINESE_EIGHT:
@@ -342,6 +356,10 @@ public class ChampionshipData {
         return awards;
     }
 
+    public Collection<SubRule> getSubRules() {
+        return subRules;
+    }
+
     public int getRegistryFee() {
         return registryFee;
     }
@@ -428,6 +446,10 @@ public class ChampionshipData {
     public String getSponsor() {
         return sponsor;
     }
+    
+    public WithYear getWithYear(int year) {
+        return new WithYear(this, year);
+    }
 
     public enum Selection {
         REGULAR,
@@ -440,7 +462,7 @@ public class ChampionshipData {
         }
     }
 
-    public static class WithYear {
+    public static class WithYear implements Comparable<WithYear> {
         public final ChampionshipData data;
         public final int year;
 
@@ -448,13 +470,35 @@ public class ChampionshipData {
             this.data = data;
             this.year = year;
         }
-        
+
+        @Override
+        public int compareTo(@NotNull ChampionshipData.WithYear o) {
+            int yearCmp = Integer.compare(year, o.year);
+            if (yearCmp != 0) return yearCmp;
+            int monthCmp = Integer.compare(data.month, o.data.month);
+            if (monthCmp != 0) return monthCmp;
+            return Integer.compare(data.day, o.data.day);
+        }
+
         public Calendar toCalendar() {
             return data.toCalendar(year);
         }
 
         public String fullName() {
             return year + " " + data.getName();
+        }
+        
+        public String fullId() {
+            return year + "+" + data.getId();
+        }
+        
+        public static WithYear fromFullId(String fullId, ChampDataManager cdm) {
+            String[] split = fullId.split("\\+");
+            if (split.length != 2) throw new RuntimeException("Invalid full id: " + fullId);
+            
+            int year = Integer.parseInt(split[0]);
+            ChampionshipData data1 = cdm.findDataById(split[1]);
+            return new WithYear(data1, year);
         }
     }
 }

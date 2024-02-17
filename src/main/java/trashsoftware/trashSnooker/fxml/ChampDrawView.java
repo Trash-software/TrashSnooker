@@ -45,6 +45,8 @@ public class ChampDrawView extends ChildInitializable {
 
     private static final Color WINNER_COLOR = Color.BLACK;
     private static final Color LOSER_COLOR = Color.GRAY;
+    private static final Color WINNER_BACKGROUND_COLOR = Color.LIGHTBLUE;
+    private static final Color LOSER_BACKGROUND_COLOR = Color.LIGHTGRAY;
 
     @FXML
     Label champNameLabel;
@@ -113,7 +115,7 @@ public class ChampDrawView extends ChildInitializable {
         setupCheckbox();
 //        refreshCueBox();
         initTable();
-        updateGui();
+        updateGui(false);
 
         treeShowingBox.getSelectionModel().select(0);
     }
@@ -199,6 +201,10 @@ public class ChampDrawView extends ChildInitializable {
     }
 
     private void updateGui() {
+        updateGui(true);
+    }
+
+    private void updateGui(boolean redrawTree) {
         if (championship.isFinished()) {
             nextRoundButton.setText(strings.getString("close"));
             savedRoundLabel.setText("");
@@ -213,7 +219,7 @@ public class ChampDrawView extends ChildInitializable {
                 EntireGame eg = championship.getSavedRound().getGame();
                 savedRoundLabel.setText(eg.getP1Wins() + " (" + eg.getTotalFrames() + ") " + eg.getP2Wins());
                 savedRoundLabel.setManaged(true);
-                
+
                 setOpponentText(championship.findHumanNextOpponent());
             } else {
                 if (championship.isHumanAlive()) {
@@ -236,7 +242,7 @@ public class ChampDrawView extends ChildInitializable {
             currentStageLabel.setText(championship.getCurrentStage().getShown());
         }
         showResults();
-        buildTreeGraph();
+        if (redrawTree) buildTreeGraph();
     }
 
     private void showResults() {
@@ -686,16 +692,20 @@ public class ChampDrawView extends ChildInitializable {
         double y = node.y;
 
         Color color = isAlive ? WINNER_COLOR : LOSER_COLOR;
-        gc2d.setFill(color);
+        Color bg = isAlive ? WINNER_BACKGROUND_COLOR : LOSER_BACKGROUND_COLOR;
+//        gc2d.setFill(color);
+        gc2d.setFill(bg);
         gc2d.setStroke(color);
 
         double y1 = y - nodeHeight / 2;
-        strokeRect(x,
+        fillRect(x,
                 y1,
                 nodeWidth + leftBlockWidth + rightBlockWidth,
                 nodeHeight);
         strokeLine(x + leftBlockWidth, y1, x + leftBlockWidth, y1 + nodeHeight);
         strokeLine(x + leftBlockWidth + nodeWidth, y1, x + leftBlockWidth + nodeWidth, y1 + nodeHeight);
+
+        gc2d.setFill(color);
         if (parent != null) {
 //            gc2d.strokeLine(x + nodeWidth + nodeBlockWidth, y, parent.x, parent.y);
             connectLineTo(x, y, parent.x, parent.y);
@@ -714,7 +724,9 @@ public class ChampDrawView extends ChildInitializable {
             if (rankSeed != null) {
                 fillText(String.valueOf(rankSeed), x + 3, y + 3);
             }
+//            System.out.println(person.getName() + " " + x + " / " + width);
         } else {
+//            System.out.println("und " + x + " / " + width);
             fillText(strings.getString("undetermined"), x + leftBlockWidth + 3, y + 3);
         }
 
@@ -745,6 +757,13 @@ public class ChampDrawView extends ChildInitializable {
 
     private void strokeRect(double x, double y, double w, double h) {
         gc2d.strokeRect(x * zoomRatio,
+                y * zoomRatio,
+                w * zoomRatio,
+                h * zoomRatio);
+    }
+
+    private void fillRect(double x, double y, double w, double h) {
+        gc2d.fillRect(x * zoomRatio,
                 y * zoomRatio,
                 w * zoomRatio,
                 h * zoomRatio);

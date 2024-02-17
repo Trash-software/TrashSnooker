@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.fxml;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -75,6 +76,7 @@ import trashsoftware.trashSnooker.recorder.*;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.PointInPoly;
+import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.IOException;
@@ -149,6 +151,8 @@ public class GameView implements Initializable {
     @FXML
     Label snookerScoreDiffLabel, snookerScoreRemainingLabel;
     @FXML
+    Label timerLabel;
+    @FXML
     Label fpsLabel;
     @FXML
     Canvas player1TarCanvas, player2TarCanvas;
@@ -193,6 +197,8 @@ public class GameView implements Initializable {
     //    private Timeline timeline;
     VideoCapture videoCapture;  // 录制视频用
     GameLoop gameLoop;
+    int cueTimeCounter;
+    Timer cueTimer;
     //    AnimationTimer animationTimer;
     private double minPredictLengthPotDt = 2000;
     private double maxPredictLengthPotDt = 100;
@@ -795,6 +801,7 @@ public class GameView implements Initializable {
             System.out.println("Hide");
 //            DataLoader.getInstance().invalidate();
 //            basePane.getChildren().clear();
+            stopCueTimer();
 
             if (replay != null) {
                 try {
@@ -1118,6 +1125,8 @@ public class GameView implements Initializable {
         recalculateUiRestrictions();
 
         tableGraphicsChanged = true;
+        
+        startCueTimer();
     }
 
     private void updateChampionshipBreaks(SnookerChampionship sc,
@@ -1168,6 +1177,7 @@ public class GameView implements Initializable {
     }
 
     private void endFrame() {
+        stopCueTimer();
         hideCue();
         tracedMovement = null;
         tableGraphicsChanged = true;
@@ -1358,7 +1368,7 @@ public class GameView implements Initializable {
             if (obstacleProjection == null
                     || obstacleProjection.cueAble(
                     newX, newY, ratioCueAndBall)) {
-                
+
                 if (byButton) {
                     if (newInArea || !curInArea) {
                         cuePointX = x;
@@ -1368,7 +1378,7 @@ public class GameView implements Initializable {
                     cuePointX = x;
                     cuePointY = y;
                 }
-                
+
                 recalculateUiRestrictions();
             } else if (byButton) {
                 // obstacleProjection 一定!= null
@@ -1515,6 +1525,7 @@ public class GameView implements Initializable {
 
                 replaceBallInHandMenu.setDisable(false);
                 cursorDrawer.synchronizeGame();
+                startCueTimer();
             } else if (!game.getGame().isCalculating() && movement == null) {
                 Ball whiteBall = game.getGame().getCueBall();
                 double[] unit = Algebra.unitVector(
@@ -1769,6 +1780,7 @@ public class GameView implements Initializable {
                 showThreeNoHitWarning();
             }
         }
+        startCueTimer();
         if (aiAutoPlay &&
                 game.getGame().getCuingPlayer().getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
 //                                Platform.runLater(() -> aiCue(game.getGame().getCuingPlayer()));
@@ -1825,6 +1837,8 @@ public class GameView implements Initializable {
         game.getGame().setBallInHand();
 
         cursorDrawer.synchronizeGame();
+        
+        startCueTimer();
     }
 
     @FXML
@@ -2098,10 +2112,10 @@ public class GameView implements Initializable {
 
 //        double[] unitXYWithSpin = getUnitXYWithSpins(unitSideSpin, power);
 
-        return generateCueParams(selPower, 
-                getSelectedFrontBackSpin(cpy), 
-                getSelectedSideSpin(cpx), 
-                cueAngleDeg, 
+        return generateCueParams(selPower,
+                getSelectedFrontBackSpin(cpy),
+                getSelectedSideSpin(cpx),
+                cueAngleDeg,
                 slidedCue);
     }
 
@@ -2450,6 +2464,7 @@ public class GameView implements Initializable {
     }
 
     private void updateBeforeCue() {
+        stopCueTimer();
         Toggle sel1 = player1SpeedToggle.getSelectedToggle();
         if (sel1 != null) {
             double newSpeed = Double.parseDouble(sel1.getUserData().toString());
@@ -2868,6 +2883,30 @@ public class GameView implements Initializable {
         gameLoop = new AnimationGameLoop(this::oneFrame, fpsLabel);
         gameLoop.start();
     }
+    
+    private void startCueTimer() {
+        stopCueTimer();
+        
+        cueTimeCounter = 0;
+        cueTimer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    timerLabel.setText(Util.timeToReadable(cueTimeCounter * 1000L));
+                    cueTimeCounter++;
+                });
+            }
+        };
+        cueTimer.schedule(timerTask, 0, 1000);
+    }
+    
+    private void stopCueTimer() {
+        if (cueTimer != null) {
+            cueTimer.cancel();
+            cueTimer = null;
+        }
+    }
 
     private void videoOneFrame() {
         oneFrame();
@@ -3132,8 +3171,8 @@ public class GameView implements Initializable {
 //                    List<PoolBall> rems = ChineseEightTable.filterRemainingTargetOfPlayer(replay.getCueRecord().targetRep, replay);
                     List<PoolBall> rems = replay.getCueRecord().cuePlayer.getPlayerNumber() == 1 ?
                             csr.getP1Rems() : csr.getP2Rems();
-                    singlePoleLabel.setText(csr.getSinglePoleBallCount() == 0 ? 
-                            "" : 
+                    singlePoleLabel.setText(csr.getSinglePoleBallCount() == 0 ?
+                            "" :
                             String.valueOf(csr.getSinglePoleBallCount()));
                     drawChineseEightAllTargets(rems);
                 } else if (gameValues.rule == GameRule.AMERICAN_NINE) {
@@ -3155,10 +3194,10 @@ public class GameView implements Initializable {
                 if (gameValues.rule.snookerLike()) {
                     AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
                     SnookerPlayer snookerPlayer = (SnookerPlayer) cuePlayer;
-                    
+
                     player1ScoreLabel.setText(String.valueOf(asg.getPlayer1().getScore()));
                     player2ScoreLabel.setText(String.valueOf(asg.getPlayer2().getScore()));
-                    
+
                     drawSnookerSinglePoles(snookerPlayer.getSinglePole());
 
                     int singlePoleScore = snookerPlayer.getSinglePoleScore();
@@ -3188,12 +3227,12 @@ public class GameView implements Initializable {
                                 (NumberedBallPlayer) game.getGame().getCuingPlayer());
                     }
                     singlePoleLabel.setText(singlePole);
-                    
+
                     if (gameValues.rule == GameRule.CHINESE_EIGHT) {
                         // 让球
                         ChineseEightBallPlayer p1 = (ChineseEightBallPlayer) game.getGame().getPlayer1();
                         ChineseEightBallPlayer p2 = (ChineseEightBallPlayer) game.getGame().getPlayer2();
-                        
+
                         Map<LetBall, Integer> p1Letted = p1.getLettedBalls();
                         Map<LetBall, Integer> p2Letted = p2.getLettedBalls();
                         int p1Sum = p1Letted.values().stream().reduce(0, Integer::sum);
@@ -3201,7 +3240,7 @@ public class GameView implements Initializable {
                         if (p1Sum > 0) {
                             if (p2Sum > 0) {
                                 EventLogger.warning("Both players %s: %s and %s: %s have been let ball. This is not reasonable"
-                                        .formatted(p1.getPlayerPerson().getPlayerId(), 
+                                        .formatted(p1.getPlayerPerson().getPlayerId(),
                                                 p1Letted,
                                                 p2.getPlayerPerson().getPlayerId(),
                                                 p2Letted));
@@ -3216,7 +3255,7 @@ public class GameView implements Initializable {
             });
         }
     }
-    
+
     private String getLetBallText(Map<LetBall, Integer> letBalls) {
         StringBuilder builder = new StringBuilder();
         for (Map.Entry<LetBall, Integer> entry : letBalls.entrySet()) {
@@ -3373,7 +3412,7 @@ public class GameView implements Initializable {
                     ballDiameter * 0.6,
                     ballDiameter * 0.6,
                     ballDiameter,
-                    Ball.poolBallBaseColor(value),
+                    PoolBall.poolBallBaseColor(value),
                     value,
                     canvas.getGraphicsContext2D()
             );
@@ -3673,7 +3712,9 @@ public class GameView implements Initializable {
         double errMulWithPower = playerPerson.getErrorMultiplierOfPower(selectedPower);
         double maxPullDt = pullDtOf(playerPerson, personPower);
         double handDt = maxPullDt + HAND_DT_TO_MAX_PULL;
+        
         double[] handXY = handPosition(handDt, cueAngleDeg, whiteStartingX, whiteStartingY, directionX, directionY);
+        double handBallDistance = Math.hypot(whiteStartingX - handXY[0], whiteStartingY - handXY[1]);
 
         Cue cue;
         if (replay != null) {
@@ -3689,12 +3730,14 @@ public class GameView implements Initializable {
             double restCueAngleOffset = playerPerson.handBody.isLeftHandRest() ? -0.1 : 0.1;
             double restAngleWithOffset = trueAimingAngle - restCueAngleOffset;
             restCuePointing = Algebra.unitVectorOfAngle(restAngleWithOffset);
+            maxPullDt *= 0.75;
         }
 
         // 出杆速度与白球球速算法相同
         try {
             cueAnimationPlayer = new CueAnimationPlayer(
                     MIN_CUE_BALL_DT,
+                    handBallDistance,
                     maxPullDt,
                     selectedPower,
                     errMulWithPower,
@@ -3828,7 +3871,7 @@ public class GameView implements Initializable {
                     pointingVec[0],
                     pointingVec[1],
                     cueAnimationPlayer.cueDtToWhite -
-                            cueAnimationPlayer.maxPullDistance - HAND_DT_TO_MAX_PULL +
+                            cueAnimationPlayer.handBallDistance +
                             gameValues.ball.ballRadius,
                     cueAnimationPlayer.cue,
                     false);
@@ -4092,15 +4135,21 @@ public class GameView implements Initializable {
         cuePointCanvasGc.setLineDashes();
 
         double cueRadius = getCuingCue().getCueTip().getRadius();
+        double cueRelRadius = cueRadius / gameValues.ball.ballRadius * cueAreaRadius;
         // 画打点
         if (intentCuePointX >= 0 && intentCuePointY >= 0) {
             cuePointCanvasGc.setFill(INTENT_CUE_POINT);
-            cuePointCanvasGc.fillOval(intentCuePointX - cueRadius, intentCuePointY - cueRadius,
-                    cueRadius * 2, cueRadius * 2);
+            cuePointCanvasGc.fillOval(intentCuePointX - cueRelRadius,
+                    intentCuePointY - cueRelRadius,
+                    cueRelRadius * 2,
+                    cueRelRadius * 2);
         }
 
         cuePointCanvasGc.setFill(CUE_POINT);
-        cuePointCanvasGc.fillOval(cuePointX - cueRadius, cuePointY - cueRadius, cueRadius * 2, cueRadius * 2);
+        cuePointCanvasGc.fillOval(cuePointX - cueRelRadius,
+                cuePointY - cueRelRadius,
+                cueRelRadius * 2,
+                cueRelRadius * 2);
 
         if (miscued) {
             cuePointCanvasGc.setFill(BLACK);
@@ -4171,7 +4220,8 @@ public class GameView implements Initializable {
         private final CueAnimationRec cueAnimationRec;
         private final long holdMs;  // 拉至满弓的停顿时间
         private final long endHoldMs;  // 出杆完成后的停顿时间
-        private final double initDistance, maxPullDistance;
+        private final double maxPullDistance;
+        private final double handBallDistance;
         private final double cueBeforeSpeed;  // 出杆前半段的速度，毫米/ms
         private final double cueMaxSpeed;  // 杆速最快时每毫秒运动的距离，毫米/ms
         //        private final double
@@ -4201,11 +4251,14 @@ public class GameView implements Initializable {
         private double framesPlayed = 0;
 
         CueAnimationPlayer(double initDistance,
+                           double handBallDistance,
                            double maxPullDt,
                            double selectedPower,
                            double errMulWithPower,
-                           double handX, double handY,
-                           double pointingUnitX, double pointingUnitY,
+                           double handX, 
+                           double handY,
+                           double pointingUnitX, 
+                           double pointingUnitY,
                            Cue cue,
                            InGamePlayer igp,
                            PlayerPerson.HandSkill handSkill,
@@ -4228,9 +4281,10 @@ public class GameView implements Initializable {
                 }
             }
 
-            this.initDistance = Math.min(initDistance, maxPullDt);
+            this.handBallDistance = handBallDistance;
+            double initDistance1 = Math.min(initDistance, maxPullDt);
             this.maxPullDistance = maxPullDt;
-            this.cueDtToWhite = this.initDistance;
+            this.cueDtToWhite = initDistance1;
             this.maxExtension = -extensionDtOf(playerPerson, personPower);
 
             this.cueMaxSpeed = selectedPower *
@@ -4240,7 +4294,10 @@ public class GameView implements Initializable {
                     Algebra.shiftRange(0, 100, 1, 0.5,
                             playerPerson.getMaxSpinPercentage());  // 杆法差的人白用功比较多（无用的杆速快）
 
-            System.out.println("Animation max speed: " + cueMaxSpeed + ", before speed: " + cueBeforeSpeed);
+            System.out.println("Animation max speed: " + cueMaxSpeed +
+                    ", before speed: " + cueBeforeSpeed +
+                    ", init distance: " + cueDtToWhite +
+                    ", max pull distance: " + maxPullDistance);
 
             this.errMulWithPower = errMulWithPower;
 

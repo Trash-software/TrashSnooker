@@ -35,6 +35,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     public ChineseEightBallGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
         super(entireGame, gameSettings, gameValues, new ChineseEightTable(gameValues.table), frameIndex);
 
+        subRules.add(SubRule.CHINESE_EIGHT_STD);
+
         initBalls();
     }
 
@@ -226,7 +228,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
         InGamePlayer p1 = gameSettings.getPlayer1();
         InGamePlayer p2 = gameSettings.getPlayer2();
-        
+
         LetBall.chineseEightLetBall(p1.getPlayerPerson(), p1Letted,
                 p2.getPlayerPerson(), p2Letted);
 
@@ -335,8 +337,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     protected Collection<PoolBall> halfBallsOf(Set<PoolBall> balls) {
         return balls.stream().filter(this::isHalfBall).collect(Collectors.toSet());
     }
-    
-    protected int countFullBalls(Set<PoolBall> balls){
+
+    protected int countFullBalls(Set<PoolBall> balls) {
         int count = 0;
         for (PoolBall ball : balls) {
             if (isFullBall(ball)) count++;
@@ -344,7 +346,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         return count;
     }
 
-    protected int countHalfBalls(Set<PoolBall> balls){
+    protected int countHalfBalls(Set<PoolBall> balls) {
         int count = 0;
         for (PoolBall ball : balls) {
             if (isHalfBall(ball)) count++;
@@ -377,12 +379,12 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     @Override
     public boolean isInLineHandBall() {
 //        System.out.println(isJustAfterBreak() + " " + lastCueFoul);
-        return isJustAfterBreak() && lastCueFoul.isFoul();
+        return isJustAfterBreak() && lastCueFoul.isFoul() && !lastCueFoul.isIllegal();
     }
 
     @Override
     public boolean isInLineHandBallForAi() {
-        return isJustAfterBreak() && thisCueFoul.isFoul();  // 主要区别就是，ai计算的时候是在lastCueFoul=thisCueFoul之前
+        return isJustAfterBreak() && thisCueFoul.isFoul() && !thisCueFoul.isIllegal();  // 主要区别就是，ai计算的时候是在lastCueFoul=thisCueFoul之前
     }
 
     private void backLet(ChineseEightBallPlayer player) {
@@ -420,7 +422,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                 switchPlayer();
                 return;
             }
-            
+
             AchManager.getInstance().addAchievement(Achievement.SUICIDE, getCuingIgp());
             winingPlayer = getAnotherPlayer();
             end();
@@ -475,31 +477,52 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         if (isBreaking) {
             updateBreakStats(newPotted);
             int playerNum = getPlayerNum(currentPlayer);
-            if (isBreakLoseChance(currentPlayer.getPlayerPerson())) {
-                getEntireGame().addBreakLoseChance(playerNum);
-                
-                thisCueFoul.setHeaderReason(strings.getString("breakLoseChance"));
-                thisCueFoul.addFoul(String.format(
-                        strings.getString("breakLoseChanceDes"),
-                        getBreakStats().nBallsPot,
-                        getBreakStats().nBallTimesEnterBreakArea) + "\n" +
-                        String.format(
-                                strings.getString("cumulatedLoseChance"),
-                                getEntireGame().getBreakLoseChance(playerNum)
-                        ));
-                if (getEntireGame().getBreakLoseChance(playerNum) >= 3) {
-                    // 累计失机三次，判负一局
-                    getEntireGame().clearBreakLoseChance(playerNum);
-                    winingPlayer = getAnotherPlayer();
-                    end();
-                }
+            if (hasSubRule(SubRule.CHINESE_EIGHT_STD)) {
+                if (isStdIllegalBreak(currentPlayer.getPlayerPerson())) {
+                    getEntireGame().addBreakLoseChance(playerNum);
 
-                if (pottedBalls.contains(getEightBall())) {
-                    // 开球失机但进了黑八
-                    pickupCriticalBall(getEightBall());
+                    thisCueFoul.setIllegal(true);
+                    thisCueFoul.setHeaderReason(strings.getString("illegalBreak"));
+                    thisCueFoul.addFoul(String.format(
+                            strings.getString("breakFoulDes"),
+                            getBreakStats().nBallsPot,
+                            getBreakStats().nBallsHitCushion));
+
+                    if (pottedBalls.contains(getEightBall())) {
+                        // 开球失机但进了黑八
+                        pickupCriticalBall(getEightBall());
+                    }
+                    switchPlayer();
+                    return;
                 }
-                switchPlayer();
-                return;
+            } else if (hasSubRule(SubRule.CHINESE_EIGHT_JOE)) {
+                if (isJoeBreakLoseChance(currentPlayer.getPlayerPerson())) {
+                    getEntireGame().addBreakLoseChance(playerNum);
+
+                    thisCueFoul.setIllegal(true);
+                    thisCueFoul.setHeaderReason(strings.getString("breakLoseChance"));
+                    thisCueFoul.addFoul(String.format(
+                            strings.getString("breakLoseChanceDes"),
+                            getBreakStats().nBallsPot,
+                            getBreakStats().nBallTimesEnterBreakArea) + "\n" +
+                            String.format(
+                                    strings.getString("cumulatedLoseChance"),
+                                    getEntireGame().getBreakLoseChance(playerNum)
+                            ));
+                    if (getEntireGame().getBreakLoseChance(playerNum) >= 3) {
+                        // 累计失机三次，判负一局
+                        getEntireGame().clearBreakLoseChance(playerNum);
+                        winingPlayer = getAnotherPlayer();
+                        end();
+                    }
+
+                    if (pottedBalls.contains(getEightBall())) {
+                        // 开球失机但进了黑八
+                        pickupCriticalBall(getEightBall());
+                    }
+                    switchPlayer();
+                    return;
+                }
             }
         }
 
@@ -512,7 +535,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                             ChineseEightBallPlayer opponent = getAnotherPlayer(currentPlayer);
                             if (getRemainingBallsOfPlayer(opponent) <= 2) {
                                 // 剩一必输
-                                CareerAchManager.getInstance().addAchievement(Achievement.REMAIN_ONE_MUST_LOSE, 
+                                CareerAchManager.getInstance().addAchievement(Achievement.REMAIN_ONE_MUST_LOSE,
                                         currentPlayer.getInGamePlayer());
                             }
                         }
@@ -605,10 +628,17 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         currentTarget = getTargetOfPlayer(currentPlayer);  // 在switchPlayer之后
     }
 
-    private boolean isBreakLoseChance(PlayerPerson breakPlayer) {
+    private boolean isJoeBreakLoseChance(PlayerPerson breakPlayer) {
         int limit = breakPlayer.getSex() == PlayerPerson.Sex.M ? 4 : 3;
 
         wasBreakLoseChance = breakStats.nBallsPot + breakStats.nBallTimesEnterBreakArea < limit;
+        return wasBreakLoseChance;
+    }
+
+    private boolean isStdIllegalBreak(PlayerPerson breakPlayer) {
+        int limit = 4;
+
+        wasBreakLoseChance = breakStats.nBallsHitCushion < limit;
         return wasBreakLoseChance;
     }
 

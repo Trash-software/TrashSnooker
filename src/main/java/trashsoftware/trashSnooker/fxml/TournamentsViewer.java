@@ -31,7 +31,6 @@ public class TournamentsViewer extends ChildInitializable {
     
     private ResourceBundle strings;
     private ChampionshipData initSel;
-    private Stage stage;
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -41,10 +40,6 @@ public class TournamentsViewer extends ChildInitializable {
         
         initTable();
         fillTable();
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 
 //    @Override

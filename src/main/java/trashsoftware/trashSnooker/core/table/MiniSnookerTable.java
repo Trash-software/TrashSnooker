@@ -10,6 +10,6 @@ public class MiniSnookerTable extends AbstractSnookerTable {
 
     @Override
     public int nBalls() {
-        return 14;
+        return 13;
     }
 }

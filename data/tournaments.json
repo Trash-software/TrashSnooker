@@ -71,7 +71,10 @@
         "smoothness": "normal",
         "pocketSize": "std",
         "pocketDifficulty": "normal"
-      }
+      },
+      "subRules": [
+        "CHINESE_EIGHT_STD"
+      ]
     },
     {
       "id": "fresh_hand_open",
@@ -149,7 +152,10 @@
         "smoothness": "medium",
         "pocketSize": "large",
         "pocketDifficulty": "loose"
-      }
+      },
+      "subRules": [
+        "CHINESE_EIGHT_STD"
+      ]
     },
     {
       "id": "eight_northeast_open",
@@ -186,7 +192,10 @@
         "smoothness": "normal",
         "pocketSize": "std",
         "pocketDifficulty": "tight"
-      }
+      },
+      "subRules": [
+        "CHINESE_EIGHT_JOE"
+      ]
     },
     {
       "id": "professional_champ",
@@ -293,7 +302,10 @@
         "smoothness": "medium",
         "pocketSize": "large",
         "pocketDifficulty": "loose"
-      }
+      },
+      "subRules": [
+        "CHINESE_EIGHT_STD"
+      ]
     },
     {
       "id": "cat_give_power_champ",
@@ -371,7 +383,10 @@
         "smoothness": "normal",
         "pocketSize": "std",
         "pocketDifficulty": "normal"
-      }
+      },
+      "subRules": [
+        "CHINESE_EIGHT_JOE"
+      ]
     },
     {
       "id": "china_open",
@@ -443,7 +458,10 @@
         "smoothness": "normal",
         "pocketSize": "std",
         "pocketDifficulty": "loose"
-      }
+      },
+      "subRules": [
+        "CHINESE_EIGHT_STD"
+      ]
     },
     {
       "id": "world_champ",
@@ -519,7 +537,10 @@
         "smoothness": "normal",
         "pocketSize": "std",
         "pocketDifficulty": "normal"
-      }
+      },
+      "subRules": [
+        "CHINESE_EIGHT_STD"
+      ]
     },
     {
       "id": "space_grand_prix",
@@ -598,7 +619,10 @@
         "smoothness": "normal",
         "pocketSize": "std",
         "pocketDifficulty": "normal"
-      }
+      },
+      "subRules": [
+        "CHINESE_EIGHT_JOE"
+      ]
     },
     {
       "id": "american_nine_sydney_burwood_cup",
@@ -699,7 +723,10 @@
       "invite": {
         "16": 800
       },
-      "tablePreset": "duckGooseGreenTable"
+      "tablePreset": "duckGooseGreenTable",
+      "subRules": [
+        "CHINESE_EIGHT_STD"
+      ]
     },
     {
       "id": "american_nine_give_power_open",
@@ -765,7 +792,10 @@
         "smoothness": "normal",
         "pocketSize": "std",
         "pocketDifficulty": "tight"
-      }
+      },
+      "subRules": [
+        "CHINESE_EIGHT_JOE"
+      ]
     },
     {
       "id": "challenger_open",
@@ -844,7 +874,10 @@
         "smoothness": "normal",
         "pocketSize": "std",
         "pocketDifficulty": "normal"
-      }
+      },
+      "subRules": [
+        "CHINESE_EIGHT_JOE"
+      ]
     },
     {
       "id": "champ_of_champ",
@@ -961,7 +994,10 @@
         "smoothness": "normal",
         "pocketSize": "std",
         "pocketDifficulty": "normal"
-      }
+      },
+      "subRules": [
+        "CHINESE_EIGHT_STD"
+      ]
     }
   ]
 }

@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 
 public class Values {
     public static final double MIN_SELECTED_POWER = 1.0;
@@ -31,7 +32,7 @@ public class Values {
     public static final Color BROWN = Color.CHOCOLATE;
     public static final Color BLUE = Color.CORNFLOWERBLUE;
     public static final Color PINK = Color.PALEVIOLETRED;
-    public static final Color BLACK = Color.BLACK;
+    public static final Color BLACK = Color.rgb(31, 31, 31);
     public static final Color COLORED = Color.GRAY;
 
     // 十六球的颜色
@@ -46,6 +47,6 @@ public class Values {
 
     public static Color getColorOfTarget(int value) {
         if (value == 0) return COLORED;
-        else return Ball.snookerColor(value);
+        else return SnookerBall.snookerColor(value);
     }
 }

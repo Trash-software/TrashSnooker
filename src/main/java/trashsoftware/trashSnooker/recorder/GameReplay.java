@@ -76,6 +76,10 @@ public abstract class GameReplay implements GameHolder {
                 table = new MiniSnookerTable(gameValues.table);
                 scoreFactory = new SnookerScoreFactory();
             }
+            case SNOOKER_TEN -> {
+                table = new SnookerTenTable(gameValues.table);
+                scoreFactory = new SnookerScoreFactory();
+            }
             case CHINESE_EIGHT, LIS_EIGHT -> {
                 table = new ChineseEightTable(gameValues.table);
                 scoreFactory = new ChineseEightScoreFactory();
@@ -218,6 +222,7 @@ public abstract class GameReplay implements GameHolder {
             currentScoreResult = actualStep.scoreResult;
             thisTarget = actualStep.thisTarget;
             nextTarget = actualStep.nextTarget;
+            animationRec = actualStep.animationRec;
             currentFlag = ActualRecorder.FLAG_CUE;
 
             if (explicit) {

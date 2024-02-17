@@ -27,9 +27,9 @@ public class Alert implements Initializable {
     }
 
     private void setOnClose(Stage stage) {
-        stage.setOnCloseRequest(e -> {  // 点关闭等于点确定
+        stage.setOnCloseRequest(e -> {  // 点关闭等于点取消
             if (active) {
-                yesButton.fire();
+                noButton.fire();
             }
         });
         stage.setOnHidden(e -> active = false);

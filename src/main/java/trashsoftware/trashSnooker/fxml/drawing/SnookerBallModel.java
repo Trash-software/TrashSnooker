@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.fxml.drawing;
 import javafx.scene.paint.PhongMaterial;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
+import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 
 public class SnookerBallModel extends BallModel {
     
@@ -10,7 +11,7 @@ public class SnookerBallModel extends BallModel {
         super();
 
         PhongMaterial material = new PhongMaterial();
-        material.setDiffuseColor(Ball.snookerColor(value));
+        material.setDiffuseColor(SnookerBall.snookerColor(value));
         sphere.setMaterial(material);
     }
 

@@ -29,7 +29,7 @@ public class GameValues {
     public double midHoleBestAngleWidth;  // 中袋对正的容错空间
     public double cornerHoldBestAngleWidth;  // 底袋对正的容错空间
     double ballHoleRatio;
-    
+
     private double maxPowerMoveDistance;
     private TrainType trainType;
     private Challenge trainChallenge;
@@ -44,7 +44,7 @@ public class GameValues {
 
         build();
     }
-    
+
     public static GameValues fromJson(JSONObject jsonObject, TableCloth cloth) {
         GameRule rule = GameRule.valueOf(jsonObject.getString("gameRule"));
         BallMetrics ballMetrics = BallMetrics.valueOf(jsonObject.getString("ball"));
@@ -72,25 +72,25 @@ public class GameValues {
                     .holeSize(pocketSize)
                     .build();
         }
-        
+
         GameValues gameValues = new GameValues(rule, tableMetrics, ballMetrics);
         gameValues.setTablePreset(tablePreset);
-        
+
         boolean devMode = jsonObject.has("devMode") && jsonObject.getBoolean("devMode");
         gameValues.setDevMode(devMode);
-        
+
         return gameValues;
     }
-    
+
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();
-        
+
         // 似乎不需要考虑training/challenge的问题：谁存这个啊
-        
+
         jsonObject.put("gameRule", rule.name());
         jsonObject.put("ball", ball.name());
         jsonObject.put("devMode", devMode);
-        
+
         if (tablePreset == null) {
             JSONObject tableObj = new JSONObject();
             tableObj.put("tableOrdinal", table.getOrdinal());
@@ -100,7 +100,7 @@ public class GameValues {
         } else {
             jsonObject.put("tablePreset", tablePreset.id);
         }
-        
+
         return jsonObject;
     }
 
@@ -162,27 +162,29 @@ public class GameValues {
     public boolean isStandard() {
         return !isTraining() &&
                 !devMode &&
-                ((rule == GameRule.SNOOKER && TableMetrics.SNOOKER.equals(table.tableName) && ball == BallMetrics.SNOOKER_BALL) ||
-                (rule == GameRule.MINI_SNOOKER && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.SNOOKER_BALL) ||
-                (rule == GameRule.CHINESE_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
-                (rule == GameRule.LIS_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
-                (rule == GameRule.AMERICAN_NINE && table.tableName.equals(TableMetrics.AMERICAN_NINE) && ball == BallMetrics.POOL_BALL));
+                (
+                        (rule == GameRule.SNOOKER && TableMetrics.SNOOKER.equals(table.tableName) && ball == BallMetrics.SNOOKER_BALL) ||
+                                (rule == GameRule.MINI_SNOOKER && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.SNOOKER_BALL) ||
+                                (rule == GameRule.SNOOKER_TEN && TableMetrics.CHINESE_EIGHT.equals(table.tableName) && ball == BallMetrics.SNOOKER_BALL) ||
+                                (rule == GameRule.CHINESE_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
+                                (rule == GameRule.LIS_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
+                                (rule == GameRule.AMERICAN_NINE && table.tableName.equals(TableMetrics.AMERICAN_NINE) && ball == BallMetrics.POOL_BALL));
     }
-    
+
     public boolean isInTable(double x, double y, double r) {
-        if (x >= table.leftX + r && 
-                x < table.rightX - r && 
-                y >= table.topY + r && 
+        if (x >= table.leftX + r &&
+                x < table.rightX - r &&
+                y >= table.topY + r &&
                 y < table.botY - r) {
             return true;
         }
-        if (x < table.leftX - table.cushionClothWidth || 
-                x >= table.rightX + table.cushionClothWidth || 
-                y < table.topY - table.cushionClothWidth || 
+        if (x < table.leftX - table.cushionClothWidth ||
+                x >= table.rightX + table.cushionClothWidth ||
+                y < table.topY - table.cushionClothWidth ||
                 y >= table.botY + table.cushionClothWidth) {
             return false;
         }
-        
+
         double[] pos = new double[]{x, y};
 
         if (y < r + table.topY) {
@@ -238,10 +240,12 @@ public class GameValues {
         double[] probHole = null;
         if (y < table.topCornerHoleAreaDownY) {
             if (x < table.leftCornerHoleAreaRightX) probHole = table.topLeft.fallCenter;  // 左上底袋
-            else if (x >= table.rightCornerHoleAreaLeftX) probHole = table.topRight.fallCenter;  // 右上底袋
+            else if (x >= table.rightCornerHoleAreaLeftX)
+                probHole = table.topRight.fallCenter;  // 右上底袋
         } else if (y >= table.botCornerHoleAreaUpY) {
             if (x < table.leftCornerHoleAreaRightX) probHole = table.botLeft.fallCenter;  // 左下底袋
-            else if (x >= table.rightCornerHoleAreaLeftX) probHole = table.botRight.fallCenter;  // 右下底袋
+            else if (x >= table.rightCornerHoleAreaLeftX)
+                probHole = table.botRight.fallCenter;  // 右下底袋
         }
 
         if (probHole != null) {
@@ -253,13 +257,13 @@ public class GameValues {
                 }
             }
 //            if (!table.isStraightHole()) {
-                for (Cushion.CushionArc cornerArc : table.allCornerArcs) {
-                    if (Algebra.distanceToPoint(pos, cornerArc.getCenter()) < table.cornerArcRadius + r) {
-                        return false;
-                    }
+            for (Cushion.CushionArc cornerArc : table.allCornerArcs) {
+                if (Algebra.distanceToPoint(pos, cornerArc.getCenter()) < table.cornerArcRadius + r) {
+                    return false;
                 }
+            }
 //            }
-            
+
             return true;
         }
         return false;
@@ -293,7 +297,7 @@ public class GameValues {
 //        System.out.println("Full stop t: " + fullT + ", pocket t: " + t0 + ", full dt: " + fullDt + ", speed: " + initSpeed);
         return t0;  // 我不确定这对不对
     }
-    
+
     public double estimateMaxPowerMoveDistance(Phy phy) {
         if (maxPowerMoveDistance == 0) {
             maxPowerMoveDistance = estimatedMoveDistance(phy, Values.MAX_POWER_SPEED);
@@ -306,7 +310,7 @@ public class GameValues {
         double t2 = distance * 2 / acceleration;
         return Math.sqrt(t2);
     }
-    
+
     public double[] getOpenCenter(TableMetrics.Hole hole) {
         return switch (hole) {
             case TOP_LEFT -> topLeftHoleOpenCenter;

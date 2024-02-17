@@ -462,7 +462,6 @@ public class CashFlowView extends ChildInitializable {
         dateAxis.setTickUnit(365.25 * 24 * 60 * 60 * 1000 / 12);
         
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
-//        series.setName("");
         
         for (Map.Entry<Calendar, Integer> entry : dateMoneyMap.entrySet()) {
             series.getData().add(new XYChart.Data<>(entry.getKey().getTime().getTime(), entry.getValue()));

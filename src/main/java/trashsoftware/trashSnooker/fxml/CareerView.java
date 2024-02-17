@@ -97,7 +97,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     Button skipChampBtn;
     @FXML
-    ImageView expImage, moneyImage, inventoryImage, storeImage, achIconImage;
+    ImageView expImage, moneyImage, inventoryImage, storeImage, achIconImage, lineChartImg;
     CareerManager careerManager;
     private PerkManager perkManager;
     private Stage selfStage;
@@ -178,6 +178,7 @@ public class CareerView extends ChildInitializable {
         rl.setIconImage(rl.getInventoryIcon(), inventoryImage, 1.0, 1.25);
         rl.setIconImage(rl.getStoreIcon(), storeImage, 1.0, 1.25);
         rl.setIconImage(rl.getAwardIcon(), achIconImage, 1.0, 1.25);
+        rl.setIconImage(rl.getLineIcon(), lineChartImg, 1.0, 1.25);
     }
 
     private void refreshPersonalAwardsTable() {
@@ -365,7 +366,11 @@ public class CareerView extends ChildInitializable {
         rankTypeBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             refreshRanks();
         }));
-        rankTypeBox.getItems().addAll(GameRule.values());
+        rankTypeBox.getItems().addAll(
+                GameRule.SNOOKER,
+                GameRule.CHINESE_EIGHT,
+                GameRule.AMERICAN_NINE
+        );
 
         rankMethodBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue == ChampionshipData.Selection.ALL_CHAMP) {
@@ -594,7 +599,7 @@ public class CareerView extends ChildInitializable {
 
         GameRule selected = rankTypeBox.getValue();
         int type = switch (selected) {
-            case SNOOKER, MINI_SNOOKER, AMERICAN_NINE -> 1;
+            case SNOOKER, MINI_SNOOKER, SNOOKER_TEN, AMERICAN_NINE -> 1;
             case CHINESE_EIGHT, LIS_EIGHT -> 2;
         };
         setRankTable(type);
@@ -852,13 +857,35 @@ public class CareerView extends ChildInitializable {
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
 
             TournamentsViewer viewer = loader.getController();
-            viewer.setStage(selfStage);
             viewer.setParent(selfStage.getScene());
             viewer.initialSelection(activeOrNext);
 
             App.setRoot(root);
         } catch (IOException e) {
             EventLogger.error(e);
+        }
+    }
+    
+    @FXML
+    public void showCareerRankHistory() {
+        RankedCareer selected = rankingTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("rankHistoryView.fxml"),
+                        strings
+                );
+                Parent root = loader.load();
+                root.setStyle(App.FONT_STYLE);
+
+                RankHistoryView viewer = loader.getController();
+                viewer.setParent(selfStage.getScene());
+                viewer.setup(selected.getCareer(), rankTypeBox.getValue());
+
+                App.setRoot(root);
+            } catch (IOException e) {
+                EventLogger.error(e);
+            }
         }
     }
 

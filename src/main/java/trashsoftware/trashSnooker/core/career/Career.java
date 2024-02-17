@@ -164,6 +164,26 @@ public class Career {
             System.out.println("Hand feel: " + playerPerson.getPlayerId() + " " + handFeel);
         }
     }
+    
+    public SortedMap<ChampionshipData.WithYear, CareerRanker> getHistoryRank(GameRule rule) {
+        var map = careerManager.getRankingHistory();
+        SortedMap<ChampionshipData.WithYear, CareerRanker> res = new TreeMap<>();
+        Calendar careerBegin = careerManager.getBeginTimestamp();
+        for (var entry : map.entrySet()) {
+            if (careerBegin.after(entry.getKey().toCalendar())) {
+                continue;
+            }
+            if (entry.getKey().data.getType() == rule) {
+                for (var cr : entry.getValue()) {
+                    if (cr.career.playerPerson.getPlayerId().equals(playerPerson.getPlayerId())) {
+                        res.put(entry.getKey(), cr);
+                        break;
+                    }
+                }
+            }
+        }
+        return res;
+    }
 
     public PlayerPerson getPlayerPerson() {
         return playerPerson;

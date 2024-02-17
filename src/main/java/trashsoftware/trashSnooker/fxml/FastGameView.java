@@ -206,6 +206,10 @@ public class FastGameView extends ChildInitializable {
                     tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.SNOOKER);
                     ballMetricsBox.getSelectionModel().select(BallMetrics.SNOOKER_BALL);
                 }
+                case SNOOKER_TEN -> {
+                    tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.CHINESE_EIGHT);
+                    ballMetricsBox.getSelectionModel().select(BallMetrics.SNOOKER_BALL);
+                }
                 case CHINESE_EIGHT, LIS_EIGHT -> {
                     tableMetricsBox.getSelectionModel().select(TableMetrics.TableBuilderFactory.CHINESE_EIGHT);
                     ballMetricsBox.getSelectionModel().select(BallMetrics.POOL_BALL);
@@ -439,8 +443,7 @@ public class FastGameView extends ChildInitializable {
 
             CueBrand stdBreakCue = DataLoader.getInstance().getStdBreakCueBrand();
             if (stdBreakCue == null ||
-                    gameValues.rule == GameRule.SNOOKER ||
-                    gameValues.rule == GameRule.MINI_SNOOKER) {
+                    gameValues.rule.snookerLike()) {
                 igp1 = new InGamePlayer(p1.person,
                         player1Player.getValue(),
                         null,

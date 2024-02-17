@@ -62,9 +62,22 @@ public class MatchTreeNode {
     public static MatchTreeNode fromJsonObject(JSONObject object) {
         if (object.has("stage")) {
             ChampionshipStage stage = ChampionshipStage.valueOf(object.getString("stage"));
-            MatchTreeNode p1 = MatchTreeNode.fromJsonObject(object.getJSONObject("p1"));
-            MatchTreeNode p2 = MatchTreeNode.fromJsonObject(object.getJSONObject("p2"));
-
+            MatchTreeNode p1, p2;
+            try {
+                p1 = MatchTreeNode.fromJsonObject(object.getJSONObject("p1"));
+                try {
+                    p2 = MatchTreeNode.fromJsonObject(object.getJSONObject("p2"));
+                } catch (CareerNotPresentException e) {
+                    return p1;
+                }
+            } catch (CareerNotPresentException e) {
+                try {
+                    p2 = MatchTreeNode.fromJsonObject(object.getJSONObject("p2"));
+                    return p2;
+                } catch (CareerNotPresentException e2) {
+                    return null;
+                }
+            }
             String matchId;
             if (object.has("matchId")) {
                 // 这里用if是为了向下兼容，本来每个有stage的都是比赛，都应该有matchId
@@ -196,13 +209,32 @@ public class MatchTreeNode {
         ChampionshipData data = championship.getData();
         AiVsAi aiVsAi;
         switch (championship.getData().getType()) {
+            case MINI_SNOOKER:
+                aiVsAi = new SnookerAiVsAi(
+                        player1Position.winner,
+                        player2Position.winner,
+                        championship,
+                        metaMatchInfo.toString(),
+                        data.getNFramesOfStage(stage),
+                        6);
+                break;
+            case SNOOKER_TEN:
+                aiVsAi = new SnookerAiVsAi(
+                        player1Position.winner,
+                        player2Position.winner,
+                        championship,
+                        metaMatchInfo.toString(),
+                        data.getNFramesOfStage(stage),
+                        10);
+                break;
             case SNOOKER:
                 aiVsAi = new SnookerAiVsAi(
                         player1Position.winner,
                         player2Position.winner,
                         championship,
                         metaMatchInfo.toString(),
-                        data.getNFramesOfStage(stage));
+                        data.getNFramesOfStage(stage),
+                        15);
                 break;
             case CHINESE_EIGHT:
                 aiVsAi = new ChineseAiVsAi(
@@ -214,7 +246,6 @@ public class MatchTreeNode {
                 );
                 break;
             case LIS_EIGHT:
-            case MINI_SNOOKER:
             case AMERICAN_NINE:
                 aiVsAi = new AmericanNineAiVsAi(
                         player1Position.winner,

@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.career;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
@@ -22,7 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.ParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CareerManager {
 
@@ -30,7 +30,7 @@ public class CareerManager {
     private static final int DEFAULT_YEAR = 2023;
     private static final int DEFAULT_MONTH = Calendar.JANUARY;
     private static final int DEFAULT_DAY = 20;
-    
+
     public static final int TIER_LIMIT = 64;
 
     public static final String LEVEL_INFO = "data/level.dat";
@@ -38,6 +38,8 @@ public class CareerManager {
     public static final String CAREER_JSON = "career.json";
     public static final String PROGRESS_FILE = "progress.json";
     public static final String HISTORY_DIR = "history";
+    public static final String RANKING_HISTORY_FILE = "rankingHistory.json";
+    public static final String MISC_FILE = "misc.json";
     public static final String CACHE = "cache.json";
     //    public static final int PROFESSIONAL_LIMIT = 32;
     public static final int INIT_PERKS = 6;
@@ -56,6 +58,11 @@ public class CareerManager {
     private final List<CareerRanker.ByAwards> snookerRankingSingleSeason = new ArrayList<>();
     private final List<CareerRanker.ByTier> chineseEightRanking = new ArrayList<>();
     private final List<CareerRanker.ByAwards> americanNineRanking = new ArrayList<>();
+
+    /**
+     * 记录每一场排名赛之后的排名
+     */
+    private SortedMap<ChampionshipData.WithYear, List<? extends CareerRanker>> rankingHistory;
     private final InventoryManager inventoryManager;
     private HumanCareer humanPlayerCareer;  // 玩家的career
     private Championship inProgress;
@@ -72,7 +79,7 @@ public class CareerManager {
         this.timestamp.set(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY);  // 初始日期
         this.beginTimestamp = Calendar.getInstance();
         this.beginTimestamp.set(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY);
-        
+
         inventoryManager = InventoryManager.createInstance(save);
     }
 
@@ -248,16 +255,16 @@ public class CareerManager {
             begin.set(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY);
         }
         CareerManager careerManager = new CareerManager(careerSave, stringToCalendar(time), begin);
-        
+
         Date careerCreationTime = null;
         if (jsonObject.has("careerCreationTime")) {
             try {
-                careerCreationTime = 
+                careerCreationTime =
                         Util.TIME_FORMAT_SEC.parse(jsonObject.getString("careerCreationTime"));
             } catch (ParseException e) {
                 EventLogger.error(e);
             }
-        } 
+        }
         if (careerCreationTime == null) {
             Path path = careerSave.getDir().toPath();
             try {
@@ -269,14 +276,14 @@ public class CareerManager {
             }
         }
         careerManager.careerCreationTime = careerCreationTime;
-        
+
         if (jsonObject.has("version")) {
             careerManager.lastSavedVersion = jsonObject.getInt("version");
         } else {
             careerManager.lastSavedVersion = 39;
         }
         System.out.println("Save file version: " + careerManager.lastSavedVersion);
-        
+
         if (jsonObject.has("playerGoodness")) {
             careerManager.playerGoodness = jsonObject.getDouble("playerGoodness");
         } else {
@@ -287,7 +294,7 @@ public class CareerManager {
         } else {
             careerManager.aiGoodness = 1.0;
         }
-        
+
         if (jsonObject.has("settingsHistory")) {
             JSONArray setHis = jsonObject.getJSONArray("settingsHistory");
             for (int i = 0; i < setHis.length(); i++) {
@@ -295,9 +302,9 @@ public class CareerManager {
                 careerManager.settingsHistories.add(SettingsHistory.fromJson(hisObj));
             }
         }
-        
+
         AchManager.setCareerInstance(careerSave);
-        
+
         Map<String, PlayerPerson> newPlayers = DataLoader.getInstance().getPlayerPeopleCopy();
 
         for (int i = 0; i < rootArr.length(); i++) {
@@ -327,11 +334,11 @@ public class CareerManager {
         }
 
         careerManager.updateRanking();
-        
+
         careerManager.cache = DataLoader.loadFromDisk(new File(careerSave.getDir(), CACHE).getAbsolutePath());
-        
+
         careerManager.saveCacheInfo();
-        
+
         return careerManager;
     }
 
@@ -381,7 +388,7 @@ public class CareerManager {
         }
         return res;
     }
-    
+
     public static void closeInstance() {
         instance = null;
         currentSave = null;
@@ -492,7 +499,11 @@ public class CareerManager {
                 return career;
             }
         }
-        throw new RuntimeException("Career " + playerId + " does not exist");
+        throw new CareerNotPresentException("Career " + playerId + " does not exist");
+    }
+    
+    public int getNCareers() {
+        return playerCareers.size();
     }
 
     /**
@@ -501,7 +512,7 @@ public class CareerManager {
     public boolean humanPlayerQualifiedToJoin(ChampionshipData championshipData,
                                               ChampionshipData.Selection selection) {
         if (!championshipData.isProfessionalOnly()) return true;  // 公开赛，游戏设定让玩家参加
-        
+
         if (championshipData.getType() == GameRule.SNOOKER && selection == ChampionshipData.Selection.ALL_CHAMP) {
             List<RankedCareer> qualifiedPlayers = snookerChampOfChampsRanking(championshipData.getTotalPlaces());
             for (RankedCareer cr : qualifiedPlayers) {
@@ -546,7 +557,7 @@ public class CareerManager {
      * 前提条件是球员已经有资格参赛了
      */
     public List<TourCareer> participants(ChampionshipData data,
-                                         boolean humanJoin, 
+                                         boolean humanJoin,
                                          boolean humanQualified) {
         if (data.getType() == GameRule.SNOOKER &&
                 data.getSelection() == ChampionshipData.Selection.ALL_CHAMP) {
@@ -573,6 +584,7 @@ public class CareerManager {
                 return americanNineRanking;
             case LIS_EIGHT:
             case MINI_SNOOKER:
+            case SNOOKER_TEN:
             default:
                 return new ArrayList<>();
         }
@@ -691,13 +703,13 @@ public class CareerManager {
         }
         return result;
     }
-    
+
     public List<TourCareer> snookerChampOfChampParticipants(int n,
                                                             boolean humanJoin,
                                                             boolean humanQualified) {
         int realN = humanQualified && !humanJoin ? n + 1 : n;  // human占了位又不来，顺延一位
         List<RankedCareer> champOfChampPlayers = snookerChampOfChampsRanking(realN);
-        
+
         List<TourCareer> result = new ArrayList<>();
 
         for (RankedCareer cr : champOfChampPlayers) {
@@ -706,12 +718,12 @@ public class CareerManager {
             }
             result.add(new TourCareer(cr.career, result.size() + 1));
         }
-        
+
         if (result.size() != n) {
             // 就是说human不在这里面
             throw new RuntimeException("Champ of Champ position mismatch!");
         }
-        
+
         return result;
     }
 
@@ -865,55 +877,202 @@ public class CareerManager {
         return championship;
     }
 
-    public void updateRanking() {
-        snookerRanking.clear();
+    private void createRankingHistory() {
+        System.out.println("Creating rank history");
+        Calendar time = Calendar.getInstance();
+        time.setTimeInMillis(beginTimestamp.getTimeInMillis());
+        while (time.before(timestamp)) {
+            ChampionshipData.WithYear cdy = champDataManager.getNextChampionship(
+                    time.get(Calendar.YEAR),
+                    time.get(Calendar.MONTH) + 1,
+                    time.get(Calendar.DAY_OF_MONTH)
+            );
+
+            time = cdy.toCalendar();
+            
+            putToRankingHistory(cdy, time);
+        }
+        writeRankingHistory();
+    }
+    
+    private void putToRankingHistory(ChampionshipData.WithYear cdy, Calendar time) {
+        if (cdy.data.isRanked()) {
+            switch (cdy.data.getType()) {
+                case SNOOKER, MINI_SNOOKER, SNOOKER_TEN ->
+                        rankingHistory.put(cdy, computeSnookerRankings(time));
+                case CHINESE_EIGHT ->
+                        rankingHistory.put(cdy, computeChineseEightRanking(time));
+                case AMERICAN_NINE ->
+                        rankingHistory.put(cdy, computeAmericanNineRankings(time));
+            }
+        }
+    }
+
+    private void writeRankingHistory() {
+        JSONObject rankingJson = rankingHistoryToJson();
+        File file = new File(careerSave.getDir(), RANKING_HISTORY_FILE);
+        DataLoader.saveToDisk(rankingJson, file.getAbsolutePath());
+    }
+
+    private void loadRankingHistory(JSONObject historyJson) {
+        rankingHistory.clear();
+        JSONObject object = historyJson.getJSONObject("history");
+        String checksum = historyJson.getString("checksum");
+        
+        JSONArray historyArray = object.getJSONArray("historyArray");
+        for (int i = 0; i < historyArray.length(); i++) {
+            JSONObject item = historyArray.getJSONObject(i);
+            
+            String champId = item.getString("championship");
+            ChampionshipData.WithYear withYear = ChampionshipData.WithYear.fromFullId(champId, champDataManager);
+
+            JSONArray ranking = item.getJSONArray("ranking");
+            
+            List<CareerRanker> rankings = new ArrayList<>();
+            for (int j = 0; j < ranking.length(); j++) {
+                try {
+                    CareerRanker cr = CareerRanker.fromJson(ranking.getJSONObject(j), this);
+                    rankings.add(cr);
+                } catch (CareerNotPresentException e) {
+                    EventLogger.warning("Career deleted");
+                }
+            }
+            rankingHistory.put(withYear, rankings);
+        }
+        System.out.println("Rank history loaded!");
+    }
+    
+    private JSONObject rankingHistoryToJson() {
+        JSONObject root = new JSONObject();
+        JSONObject object = new JSONObject();
+        
+        JSONArray historyArray = new JSONArray();
+        for (Map.Entry<ChampionshipData.WithYear, List<? extends CareerRanker>> entry : getRankingHistory().entrySet()) {
+            JSONObject item = new JSONObject();
+            item.put("championship", entry.getKey().fullId());
+            JSONArray ranking = new JSONArray();
+            
+            for (CareerRanker cr : entry.getValue()) {
+                JSONObject rankObj = cr.toJson();
+                ranking.put(rankObj);
+            }
+            
+            item.put("ranking", ranking);
+            historyArray.put(item);
+        }
+        
+        object.put("historyArray", historyArray);
+        
+        root.put("history", object);
+        root.put("checksum", JsonChecksum.checksum(object));
+        return root;
+    }
+
+    SortedMap<ChampionshipData.WithYear, List<? extends CareerRanker>> getRankingHistory() {
+        if (rankingHistory == null) {
+            rankingHistory = new TreeMap<>();
+            File file = new File(careerSave.getDir(), RANKING_HISTORY_FILE);
+            if (file.exists()) {
+                try {
+                    JSONObject historyJson = DataLoader.loadFromDisk(file.getAbsolutePath());
+                    loadRankingHistory(historyJson);
+                } catch (JSONException je) {
+                    EventLogger.error(je);
+                    createRankingHistory();
+                }
+            } else {
+                createRankingHistory();
+            }
+        }
+        return rankingHistory;
+    }
+
+    private List<CareerRanker.ByAwards> computeSnookerRankings(Calendar timestamp) {
+        List<CareerRanker.ByAwards> ranking = new ArrayList<>();
         for (Career career : playerCareers) {
             if (career.getPlayerPerson().isPlayerOf(GameRule.SNOOKER)) {
-                snookerRanking.add(new CareerRanker.ByAwards(GameRule.SNOOKER, career, timestamp));
+                ranking.add(new CareerRanker.ByAwards(GameRule.SNOOKER, career, timestamp));
             }
         }
+        ranking.sort(CareerRanker.ByAwards::twoSeasonsCompare);
+        assignRanks(ranking);
+        return ranking;
+    }
 
-        snookerRankingSingleSeason.clear();
-        snookerRankingSingleSeason.addAll(snookerRanking);
-
-        snookerRanking.sort(CareerRanker.ByAwards::twoSeasonsCompare);
-        snookerRankingSingleSeason.sort(CareerRanker.ByAwards::oneSeasonCompare);
-
-        // 黑八两年
-        chineseEightRanking.clear();
+    private List<CareerRanker.ByTier> computeChineseEightRanking(Calendar timestamp) {
+        List<CareerRanker.ByTier> ranking = new ArrayList<>();
         for (Career career : playerCareers) {
             if (career.getPlayerPerson().isPlayerOf(GameRule.CHINESE_EIGHT)) {
-                chineseEightRanking.add(new CareerRanker.ByTier(GameRule.CHINESE_EIGHT, career));
+                ranking.add(new CareerRanker.ByTier(GameRule.CHINESE_EIGHT, career, timestamp));
             }
         }
 
-        chineseEightRanking.sort(CareerRanker.ByTier::roughCompare);
-        int haveTiers = (int) chineseEightRanking.stream().filter(CareerRanker.ByTier::canHaveTier).count();
-        
-        for (int rank = 0; rank < chineseEightRanking.size(); rank++) {
-            CareerRanker.ByTier byTier = chineseEightRanking.get(rank);
+        ranking.sort(CareerRanker.ByTier::roughCompare);
+        int haveTiers = (int) ranking.stream().filter(CareerRanker.ByTier::canHaveTier).count();
+
+        for (int rank = 0; rank < ranking.size(); rank++) {
+            CareerRanker.ByTier byTier = ranking.get(rank);
             if (byTier.canHaveTier()) {
                 int winRateTier = CareerRanker.ByTier.computeTier(rank, byTier.getWinRate(), haveTiers);
                 winRateTier -= LetBall.magicScore(byTier.career.getPlayerPerson());
                 byTier.setTier(winRateTier);
             }
         }
-        chineseEightRanking.sort(CareerRanker.ByTier::compareWithTierSet);
-        
-        // 美式九球两年
-        americanNineRanking.clear();
+        ranking.sort(CareerRanker.ByTier::compareWithTierSet);
+        assignRanks(ranking);
+        return ranking;
+    }
+
+    private List<CareerRanker.ByAwards> computeAmericanNineRankings(Calendar timestamp) {
+        List<CareerRanker.ByAwards> ranking = new ArrayList<>();
         for (Career career : playerCareers) {
             if (career.getPlayerPerson().isPlayerOf(GameRule.AMERICAN_NINE)) {
-                americanNineRanking.add(new CareerRanker.ByAwards(GameRule.AMERICAN_NINE, career, timestamp));
+                ranking.add(new CareerRanker.ByAwards(GameRule.AMERICAN_NINE, career, timestamp));
             }
         }
 
-        americanNineRanking.sort(CareerRanker.ByAwards::twoSeasonsCompare);
+        ranking.sort(CareerRanker.ByAwards::twoSeasonsCompare);
+        assignRanks(ranking);
+        return ranking;
     }
     
+    private void assignRanks(List<? extends CareerRanker> rankings) {
+        int rank = 1;
+        for (CareerRanker cr : rankings) {
+            cr.setRankFrom1(rank++);
+        }
+    }
+
+    public void updateRanking() {
+        getRankingHistory();
+
+        // 斯诺克两年及一年
+        snookerRanking.clear();
+        snookerRanking.addAll(computeSnookerRankings(timestamp));
+
+        snookerRankingSingleSeason.clear();
+        snookerRankingSingleSeason.addAll(snookerRanking);
+
+        snookerRankingSingleSeason.sort(CareerRanker.ByAwards::oneSeasonCompare);
+
+        // 黑八生涯
+        chineseEightRanking.clear();
+        chineseEightRanking.addAll(computeChineseEightRanking(timestamp));
+
+        // 美式九球两年
+        americanNineRanking.clear();
+        americanNineRanking.addAll(computeAmericanNineRankings(timestamp));
+    }
+    
+    public void oneChampionshipEnds(ChampionshipData.WithYear champ) {
+        putToRankingHistory(champ, champ.toCalendar());
+        
+        writeRankingHistory();
+    }
+
     public void checkRankingAchievements() {
         RankedCareer humanSnooker = humanPlayerRanking(GameRule.SNOOKER, ChampionshipData.Selection.REGULAR);
-        
+
         if (humanSnooker.rank < 64) {
             AchManager.getInstance().addAchievement(Achievement.SNOOKER_TOP_64, null);
             if (humanSnooker.rank < 16) {
@@ -923,20 +1082,20 @@ public class CareerManager {
                 }
             }
         }
-        
+
         Calendar check = Calendar.getInstance();
         check.setTimeInMillis(beginTimestamp.getTimeInMillis());
-        
+
         // 一年
         check.add(Calendar.YEAR, 1);
         if (check.before(timestamp)) {
             AchManager.getInstance().addAchievement(Achievement.PLAY_ONE_YEAR, null);
-            
+
             // 两年
             check.add(Calendar.YEAR, 1);
             if (check.before(timestamp)) {
                 AchManager.getInstance().addAchievement(Achievement.PLAY_TWO_YEARS, null);
-                
+
                 // 五年
                 check.add(Calendar.YEAR, 3);
                 if (check.before(timestamp)) {
@@ -1016,7 +1175,7 @@ public class CareerManager {
         if (cache == null) cache = new JSONObject();
         return cache;
     }
-    
+
     public void saveCache() {
         DataLoader.saveToDisk(cache, new File(careerSave.getDir(), CACHE).getAbsolutePath());
     }
@@ -1094,7 +1253,7 @@ public class CareerManager {
 
         root.put("playerGoodness", playerGoodness);
         root.put("aiGoodness", aiGoodness);
-        
+
         JSONArray setHis = new JSONArray();
         for (SettingsHistory sh : settingsHistories) {
             setHis.put(sh.toJson());
@@ -1109,10 +1268,10 @@ public class CareerManager {
         }
 
         root.put("careers", rootArr);
-        
+
         String checksum = JsonChecksum.checksum(root);
         root.put("checksum", checksum);
-        
+
         String str = root.toString(2);
 
         try (BufferedWriter bw = new BufferedWriter(
@@ -1123,15 +1282,15 @@ public class CareerManager {
             EventLogger.error(e);
         }
     }
-    
+
     public void changeDifficulty(double playerGoodness, double aiGoodness) {
         this.playerGoodness = playerGoodness;
         this.aiGoodness = aiGoodness;
     }
-    
+
     public void saveSettings() {
         settingsHistories.add(new SettingsHistory(
-                getHumanPlayerCareer().getLevel(), 
+                getHumanPlayerCareer().getLevel(),
                 App.VERSION_CODE,
                 new Date(),
                 playerGoodness,
@@ -1151,18 +1310,18 @@ public class CareerManager {
     public int getLastSavedVersion() {
         return lastSavedVersion;
     }
-    
+
     public static class SettingsHistory {
-        
+
         private final int level;
         private final int version;
         private final Date date;
         private final double playerGoodness, aiGoodness;
-        
-        SettingsHistory(int level, 
-                        int version, 
-                        Date date, 
-                        double playerGoodness, 
+
+        SettingsHistory(int level,
+                        int version,
+                        Date date,
+                        double playerGoodness,
                         double aiGoodness) {
             this.level = level;
             this.version = version;
@@ -1170,7 +1329,7 @@ public class CareerManager {
             this.playerGoodness = playerGoodness;
             this.aiGoodness = aiGoodness;
         }
-        
+
         static SettingsHistory fromJson(JSONObject json) {
             int level = json.getInt("level");
             int version = json.getInt("version");
@@ -1190,7 +1349,7 @@ public class CareerManager {
                     aiGoodness
             );
         }
-        
+
         JSONObject toJson() {
             JSONObject json = new JSONObject();
             json.put("version", version);

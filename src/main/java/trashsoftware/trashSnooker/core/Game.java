@@ -17,6 +17,7 @@ import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
+import trashsoftware.trashSnooker.core.snooker.SnookerTenGame;
 import trashsoftware.trashSnooker.core.table.Table;
 import trashsoftware.trashSnooker.core.training.PoolTraining;
 import trashsoftware.trashSnooker.core.training.SnookerTraining;
@@ -95,6 +96,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     private PhysicsCalculator physicsCalculator;
     protected FrameAchievementRecorder achievementRecorder = new FrameAchievementRecorder();
     protected Ball specifiedTarget;
+    protected final Set<SubRule> subRules = new HashSet<>();
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
@@ -119,7 +121,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public static Game<? extends Ball, ? extends Player> createGame(
             GameSettings gameSettings,
             GameValues gameValues,
-            EntireGame entireGame) {
+            EntireGame entireGame,
+            Collection<SubRule> subRules) {
         int frameIndex = entireGame == null ? 1 : (entireGame.getP1Wins() + entireGame.getP2Wins() + 1);
         Game<? extends Ball, ? extends Player> game;
         if (gameValues.rule == GameRule.SNOOKER) {
@@ -137,6 +140,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         gameValues.getTrainChallenge());
             } else {
                 game = new MiniSnookerGame(entireGame, gameSettings, gameValues, frameIndex);
+            }
+        } else if (gameValues.rule == GameRule.SNOOKER_TEN) {
+            if (gameValues.isTraining()) {
+                game = new SnookerTraining(entireGame, gameSettings, gameValues,
+                        gameValues.getTrainType(),
+                        gameValues.getTrainChallenge());
+            } else {
+                game = new SnookerTenGame(entireGame, gameSettings, gameValues, frameIndex);
             }
         } else if (gameValues.rule == GameRule.CHINESE_EIGHT) {
             if (gameValues.isTraining()) {
@@ -157,6 +168,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 game = new AmericanNineBallGame(entireGame, gameSettings, gameValues, frameIndex);
             }
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
+        
+        for (SubRule subRule : subRules) {
+            game.addSubRule(subRule);
+        }
 
         try {
             if (DBAccess.RECORD && entireGame != null) {
@@ -1458,15 +1473,17 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     protected void end() {
         ended = true;
+        
+        boolean isCareerGame = getEntireGame().getMetaMatchInfo() != null;
 
         if (!gameValues.isTraining()) {
             AchManager achManager = AchManager.getInstance();
             InGamePlayer human = getP1().isHuman() ? getP1() : getP2();
             boolean humanWin = getWiningPlayer().getInGamePlayer().isHuman();
-            if (humanWin) {
+            if (isCareerGame && humanWin) {
                 achManager.addAchievement(Achievement.WIN_A_FRAME, human);
                 achManager.addAchievement(Achievement.WIN_FRAMES, human);
-
+                
                 CareerManager cm = CareerManager.getInstance();
                 if (cm.getAiGoodness() >= 1.0 && cm.getPlayerGoodness() <= 1.0) {
                     achManager.addAchievement(Achievement.WIN_FRAMES_NORMAL_DIFFICULTY, human);
@@ -1483,6 +1500,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     @Override
     public InGamePlayer getP2() {
         return player2.getInGamePlayer();
+    }
+    
+    public void addSubRule(SubRule subRule) {
+        subRules.add(subRule);
+    }
+    
+    protected boolean hasSubRule(SubRule subRule) {
+        return subRules.contains(subRule);
     }
 
     public static class SeeAble {

@@ -248,6 +248,7 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
                     // 非法开球但进了九号
                     pickupCriticalBall(getNineBall());
                 }
+                thisCueFoul.setIllegal(true);
                 thisCueFoul.setHeaderReason(strings.getString("illegalBreak"));
                 thisCueFoul.addFoul(String.format(
                         strings.getString("breakLoseChanceDes"),

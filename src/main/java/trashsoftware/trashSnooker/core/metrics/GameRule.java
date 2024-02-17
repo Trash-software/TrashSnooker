@@ -44,6 +44,16 @@ public enum GameRule {
             return true;
         }
     },
+    SNOOKER_TEN(17, "SnookerTen",
+            new CueSize[]{CueSize.VERY_SMALL, CueSize.SMALL},
+            new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF, TrainType.SNAKE_CROSS, TrainType.CLEAR_COLOR},
+            BreakRule.ALTERNATE,
+            Set.of(Rule.HIT_CUSHION, Rule.FOUL_BALL_IN_HAND)) {
+        @Override
+        public boolean snookerLike() {
+            return true;
+        }
+    },
     CHINESE_EIGHT(16, "ChineseEight",
             new CueSize[]{CueSize.MEDIUM, CueSize.SMALL, CueSize.BIG},
             new TrainType[]{TrainType.SNAKE_FULL, TrainType.SNAKE_HALF,
@@ -122,13 +132,10 @@ public enum GameRule {
     }
     
     public static BallMetrics getDefaultBall(GameRule rule) {
-        switch (rule) {
-            case SNOOKER:
-            case MINI_SNOOKER:
-                return BallMetrics.SNOOKER_BALL;
-            default:
-                return BallMetrics.POOL_BALL;
-        }
+        return switch (rule) {
+            case SNOOKER, MINI_SNOOKER, SNOOKER_TEN -> BallMetrics.SNOOKER_BALL;
+            default -> BallMetrics.POOL_BALL;
+        };
     }
 
     public boolean snookerLike() {

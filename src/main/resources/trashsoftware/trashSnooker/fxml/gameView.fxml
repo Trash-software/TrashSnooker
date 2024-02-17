@@ -183,6 +183,9 @@
                     </HBox>
                     <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="2"
                           GridPane.rowIndex="1">
+<!--                        <ProgressBar fx:id="timerBar"/>-->
+                        <Label fx:id="timerLabel"/>
+                        
                         <Label text="FPS"/>
                         <Label fx:id="fpsLabel" text="0"/>
                     </HBox>

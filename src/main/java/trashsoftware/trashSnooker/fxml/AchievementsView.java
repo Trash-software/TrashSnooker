@@ -142,15 +142,6 @@ public class AchievementsView extends ChildInitializable {
             return new ReadOnlyObjectWrapper<>(imageView);
         });
 
-//        awdCol.setCellFactory(new Callback<TableColumn<AchItem, VBox>, TableCell<AchItem, VBox>>() {
-//            @Override
-//            public TableCell<AchItem, VBox> call(TableColumn<AchItem, VBox> param) {
-//                TableCell<AchItem, VBox> cell = new TableCell<>();
-//                VBox vBox = param.getCellData()
-//                if (vBox == null) return null;
-//            }
-//        });
-
         awdCol.setCellValueFactory(cell -> {
             VBox vBox = cell.getValue().getUnreceivedAwards();
             if (vBox == null) return null;

@@ -4,6 +4,7 @@ import java.util.*;
 
 public class FoulInfo {
     private boolean miss = false;
+    private boolean illegal = false;  // 失机/违例一类的东西，且在本不犯规的前提下
     private String headerReason;  // 为null时应该就是“犯规”
     private final Map<String, Integer> foulReasonAndScore = new LinkedHashMap<>();
 
@@ -38,6 +39,14 @@ public class FoulInfo {
 
     public void setMiss(boolean miss) {
         this.miss = miss;
+    }
+
+    public void setIllegal(boolean illegal) {
+        this.illegal = illegal;
+    }
+
+    public boolean isIllegal() {
+        return illegal;
     }
 
     public String getAllReasons() {

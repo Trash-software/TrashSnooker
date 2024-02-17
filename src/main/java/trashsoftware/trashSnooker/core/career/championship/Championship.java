@@ -43,9 +43,7 @@ public abstract class Championship {
         }
         
         championship.currentStageIndex = jsonObject.getInt("stageIndex");
-//        ChampionshipStage curStage = 
         championship.matchTree = MatchTree.fromJson(jsonObject.getJSONObject("matchTree"), championship);
-//        championship.matchTree.getRoot().slCheck();
         championship.checkFinish();
 
         if (championship.finished != jsonObject.getBoolean("finished")) {
@@ -349,6 +347,7 @@ public abstract class Championship {
         matchTree.distributeAwards(data, timestamp, extra);
         CareerManager cm = CareerManager.getInstance();
         cm.updateRanking();
+        cm.oneChampionshipEnds(data.getWithYear(timestamp.get(Calendar.YEAR)));
         cm.checkRankingAchievements();
         cm.saveToDisk();
     }

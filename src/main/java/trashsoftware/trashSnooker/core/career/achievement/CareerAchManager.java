@@ -502,7 +502,9 @@ public class CareerAchManager extends AchManager {
     protected final synchronized void showAchievement(Pane owner) {
         if (!thisTimeComplete.isEmpty()) {
             saveToDisk();
-            showAchievement(owner, thisTimeComplete);
+            if (!popupShowing) {
+                showAchievement(owner, thisTimeComplete);
+            }
         }
     }
 
@@ -602,9 +604,10 @@ public class CareerAchManager extends AchManager {
         SequentialTransition st = new SequentialTransition(shower, keeper, fader);
         st.setOnFinished(event -> {
             stage.hide();
-            popupShowing = false;
             if (!achievements.isEmpty()) {
                 showAchievement(owner, achievements);
+            } else {
+                popupShowing = false;
             }
         });
 

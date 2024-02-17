@@ -124,5 +124,17 @@ public class ChampionshipScore {
         public String getShown() {
             return App.getStrings().getString(Util.toLowerCamelCase(name()));
         }
+        
+        public static Rank[] getAllRanked() {
+            int count = 0;
+            for (Rank rank : values()) if (rank.ranked) count++;
+            
+            Rank[] res = new Rank[count];
+            int i = 0;
+            for (Rank rank : values()) {
+                if (rank.ranked) res[i++] = rank;
+            }
+            return res;
+        }
     }
 }

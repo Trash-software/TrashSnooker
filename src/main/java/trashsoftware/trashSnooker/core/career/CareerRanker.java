@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.career;
 
+import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.aiMatch.AiVsAi;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
@@ -11,10 +12,53 @@ public abstract class CareerRanker {
     
     public final Career career;
     public final GameRule type;
+    private int rankFrom1;
     
     protected CareerRanker(GameRule type, Career career) {
         this.career = career;
         this.type = type;
+    }
+    
+    public static CareerRanker fromJson(JSONObject jsonObject, CareerManager careerManager) {
+        int rank = jsonObject.getInt("rank");
+        GameRule gameRule = GameRule.valueOf(jsonObject.getString("type"));
+        Career career1 = careerManager.findCareerByPlayerId(jsonObject.getString("career"));  // todo: O(k*m*n) 循环
+        String className = jsonObject.getString("ranker");
+
+        CareerRanker ranker;
+        if (ByTier.class.getSimpleName().equals(className)) {
+            ranker = new ByTier(
+                    gameRule, 
+                    career1,
+                    jsonObject.getInt("rankScore"),
+                    jsonObject.getInt("totalWins"),
+                    jsonObject.getInt("totalMatches"),
+                    jsonObject.getInt("tier"),
+                    jsonObject.getDouble("winRate")
+            );
+        } else if (ByAwards.class.getSimpleName().equals(className)) {
+            ranker = new ByAwards(
+                    gameRule,
+                    career1,
+                    jsonObject.getInt("oneSeasonAwards"),
+                    jsonObject.getInt("twoSeasonsAwards"),
+                    jsonObject.getInt("totalAwards")
+            );
+        } else {
+            throw new RuntimeException("No such ranker: " + className);
+        }
+        
+        ranker.setRankFrom1(rank);
+        
+        return ranker;
+    }
+
+    public void setRankFrom1(int rankFrom1) {
+        this.rankFrom1 = rankFrom1;
+    }
+
+    public int getRankFrom1() {
+        return rankFrom1;
     }
 
     /**
@@ -62,6 +106,20 @@ public abstract class CareerRanker {
      */
     public abstract int rankedScore();
     
+    protected abstract void fillJson(JSONObject json);
+    
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("career", career.getPlayerPerson().getPlayerId());
+        json.put("type", type.name());
+        json.put("ranker", getClass().getSimpleName());
+        json.put("rank", rankFrom1);
+        
+        fillJson(json);
+        
+        return json;
+    }
+    
     public int rankedScore(ChampionshipData.Selection selection) {
         return rankedScore();
     }
@@ -85,6 +143,17 @@ public abstract class CareerRanker {
             super(type, career);
             
             calculateAwards(timestamp);
+        }
+
+        private ByAwards(GameRule type, Career career, 
+                         int oneSeasonAwards,
+                         int twoSeasonsAwards,
+                         int totalAwards) {
+            super(type, career);
+
+            this.oneSeasonAwards = oneSeasonAwards;
+            this.twoSeasonsAwards = twoSeasonsAwards;
+            this.totalAwards = totalAwards;
         }
 
         public static int twoSeasonsCompare(ByAwards t, ByAwards o) {
@@ -121,6 +190,13 @@ public abstract class CareerRanker {
         @Override
         public int rankedScore(ChampionshipData.Selection selection) {
             return getEffectiveAward(selection);
+        }
+
+        @Override
+        protected void fillJson(JSONObject json) {
+            json.put("oneSeasonAwards", oneSeasonAwards);
+            json.put("twoSeasonsAwards", twoSeasonsAwards);
+            json.put("totalAwards", totalAwards);
         }
 
         private void calculateAwards(Calendar timestamp) {
@@ -198,10 +274,21 @@ public abstract class CareerRanker {
         private int tier;
         private double winRate;
         
-        protected ByTier(GameRule type, Career career) {
+        protected ByTier(GameRule type, Career career, Calendar endTime) {
             super(type, career);
             
-            calculate();
+            calculate(endTime);
+        }
+
+        private ByTier(GameRule type, Career career, 
+                       int rankScore, int totalWins, int totalMatches, int tier, double winRate) {
+            super(type, career);
+
+            this.rankScore = rankScore;
+            this.totalWins = totalWins;
+            this.totalMatches = totalMatches;
+            this.tier = tier;
+            this.winRate = winRate;
         }
 
         @Override
@@ -209,23 +296,32 @@ public abstract class CareerRanker {
             return rankScore;
         }
 
+        @Override
+        protected void fillJson(JSONObject json) {
+            json.put("rankScore", rankScore);
+            json.put("totalWins", totalWins);
+            json.put("totalMatches", totalMatches);
+            json.put("tier", tier);
+            json.put("winRate", winRate);
+        }
+
         /**
          * 仅对职业7档以上生效
          */
         public static int computeTier(int rankFrom0, double winRate, int totalTierPlayers) {
-            if (winRate > 0.75) {
+            if (winRate >= 0.7) {
                 if (rankFrom0 < 3) return 11;
                 else return 10;
             }
-            if (winRate > 0.7) {
+            if (winRate >= 0.6) {
                 if (rankFrom0 < 8) return 10;
                 else return 9;
             }
-            if (winRate > 0.6) {
+            if (winRate >= 0.55) {
                 if (rankFrom0 < 18) return 9;
                 else return 8;
             }
-            if (winRate > 0.5) {
+            if (winRate >= 0.5) {
                 if (rankFrom0 < 36) return 8;
                 else return 7;
             }
@@ -272,13 +368,18 @@ public abstract class CareerRanker {
             return -Double.compare(t.winScore(), o.winScore());
         }
         
-        private void calculate() {
+        private void calculate(Calendar endTime) {
             rankScore = 0;
             totalWins = 0;
             totalMatches = 0;
             
             for (ChampionshipScore score : career.getChampionshipScores()) {
                 if (!score.data.ranked) continue;
+                if (endTime != null) {
+                    var withYear = score.data.getWithYear(score.getYear());
+                    Calendar champTime = withYear.toCalendar();
+                    if (champTime.after(endTime)) continue;  // 不算到这么晚的比赛
+                }
                 
                 ChampionshipScore.Rank[] allRanks = score.data.ranksOfLosers;
                 int mainRounds = 0;

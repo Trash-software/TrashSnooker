@@ -66,35 +66,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         this(value, true, values);
     }
 
-    public static Color snookerColor(int value) {
-        return switch (value) {
-            case 0 -> Values.WHITE;
-            case 1 -> Values.RED;
-            case 2 -> Values.YELLOW;
-            case 3 -> Values.GREEN;
-            case 4 -> Values.BROWN;
-            case 5 -> Values.BLUE;
-            case 6 -> Values.PINK;
-            case 7 -> Values.BLACK;
-            default -> throw new RuntimeException("Unexpected ball.");
-        };
-    }
-
-    public static Color poolBallBaseColor(int number) {
-        return switch (number) {
-            case 0 -> Values.WHITE;
-            case 1, 9, 16, 17 -> Values.YELLOW;
-            case 2, 10 -> Values.BLUE;
-            case 3, 11 -> Values.RED;
-            case 4, 12 -> Values.PURPLE;
-            case 5, 13 -> Values.ORANGE;
-            case 6, 14 -> Values.GREEN;
-            case 7, 15 -> Values.DARK_RED;
-            case 8 -> Values.BLACK;
-            default -> throw new RuntimeException("Unexpected ball.");
-        };
-    }
-
     public static double midHolePowerFactor(double speed) {
         return 1.2 - (speed / Values.MAX_POWER_SPEED) * 0.6;
     }

@@ -17,12 +17,15 @@ public class SnookerAiVsAi extends AiVsAi {
     private static final int[] COLORED_BALL_POOL = {
             2, 3, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7, 7
     };
+    private final int nReds;
     private final List<Integer> p1SinglePoles = new ArrayList<>();
     private final List<Integer> p2SinglePoles = new ArrayList<>();
     private final List<int[]> frameScores = new ArrayList<>();
 
-    public SnookerAiVsAi(Career p1, Career p2, Championship championship, String matchId, int totalFrames) {
+    public SnookerAiVsAi(Career p1, Career p2, Championship championship, String matchId, int totalFrames, int nReds) {
         super(p1, p2, championship, matchId, totalFrames);
+        
+        this.nReds = nReds;
     }
 
     @Override
@@ -35,7 +38,7 @@ public class SnookerAiVsAi extends AiVsAi {
     }
 
     private void roughSimulateWholeGame() {
-        int redRem = 15;
+        int redRem = nReds;
         int singlePoleScore = 0;
 
         double ballTypeBadness = (random.nextDouble() + 1) / 2;  // 球形好不好，越小越好

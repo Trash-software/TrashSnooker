@@ -12,7 +12,7 @@ public class PocketSize {
                     84.15, 
                     82.55),
             new PocketSize("pocketSmall", 
-                    80, 
+                    80.01, 
                     78.74),
             new PocketSize("pocketLittle", 
                     77.47, 
@@ -25,7 +25,7 @@ public class PocketSize {
             new PocketSize("pocketHuge", 92.71, 90.17),
             new PocketSize("pocketLarge", 88.9, 86.36),
             new PocketSize("pocketStd", 84.15, 82.55),
-            new PocketSize("pocketSmall", 82.55, 80),
+            new PocketSize("pocketSmall", 82.55, 80.01),
             new PocketSize("pocketLittle", 77.47, 74.93)
     };
     public static final PocketSize[] AMERICAN_NINE_POCKETS = {

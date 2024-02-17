@@ -448,8 +448,9 @@ public class DBAccess {
                 if (highInResult >= 100) {
                     rtn[3]++;
                 }
-                if ((gameRule == GameRule.SNOOKER && highInResult >= 147)
-                        || (gameRule == GameRule.MINI_SNOOKER && highInResult >= 75)) {
+                if ((gameRule == GameRule.SNOOKER && highInResult >= 147) ||
+                        (gameRule == GameRule.MINI_SNOOKER && highInResult >= 75) ||
+                        (gameRule == GameRule.SNOOKER_TEN && highInResult >= 107)) {
                     rtn[4]++;
                 }
             }
@@ -597,8 +598,9 @@ public class DBAccess {
                     if (scores[1] >= 100) {
                         scores[3]++;
                     }
-                    if ((title.gameRule == GameRule.SNOOKER && scores[1] >= 147)
-                            || (title.gameRule == GameRule.MINI_SNOOKER && scores[1] >= 75)) {
+                    if ((title.gameRule == GameRule.SNOOKER && scores[1] >= 147) || 
+                            (title.gameRule == GameRule.MINI_SNOOKER && scores[1] >= 75) || 
+                            (title.gameRule == GameRule.SNOOKER_TEN && scores[1] >= 107)) {
                         scores[4]++;
                     }
                     PlayerFrameRecord.Snooker snooker = new PlayerFrameRecord.Snooker(
