@@ -363,6 +363,7 @@ public class ChampDrawView extends ChildInitializable {
 
     @Override
     public void backAction() {
+        selfStage.setTitle(strings.getString("appName"));
         parent.refreshGui();
 
         super.backAction();

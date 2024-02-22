@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 234210,
+    "money": 302080,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -3709,13 +3709,129 @@
           "raw": 1000
         }},
         "timestamp": "2024-02-16 07:06:55"
+      },
+      {
+        "inGameDate": "2024/7/21",
+        "moneyBefore": 234210,
+        "moneyAfter": 232860,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1350
+        }],
+        "timestamp": "2024-02-19 14:43:48"
+      },
+      {
+        "inGameDate": "2024/8/5",
+        "match": "custom_195B277334903CE5+2024+american_nine_give_power_open",
+        "moneyBefore": 232860,
+        "moneyAfter": 230260,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1800
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 600
+          }
+        ],
+        "timestamp": "2024-02-19 14:43:48"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_195B277334903CE5-373",
+        "inGameDate": "2024/8/5",
+        "moneyBefore": 230260,
+        "moneyCost": 80,
+        "moneyAfter": 230180,
+        "type": "purchase",
+        "timestamp": "2024-02-20 06:56:11"
+      },
+      {
+        "inGameDate": "2024/8/5",
+        "year": 2024,
+        "match": "american_nine_give_power_open",
+        "moneyBefore": 230180,
+        "moneyAfter": 310180,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 80000,
+          "raw": 100000
+        }},
+        "timestamp": "2024-02-21 02:28:02"
+      },
+      {
+        "inGameDate": "2024/8/5",
+        "perkUsed": 5,
+        "moneyBefore": 310180,
+        "moneyCost": 5600,
+        "moneyAfter": 304580,
+        "ability": {
+          "rest": [
+            97.90561484444747,
+            99.23127795378062
+          ],
+          "powerControl": [
+            86.83174157063544,
+            89.43213303149763
+          ],
+          "antiHand": [
+            86.42776652391652,
+            87.77065586295986
+          ],
+          "spinControl": [
+            95.13146420843367,
+            96.12620564009632
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2024-02-21 02:30:17"
+      },
+      {
+        "inGameDate": "2024/8/5",
+        "moneyBefore": 304580,
+        "moneyAfter": 302880,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1700
+        }],
+        "timestamp": "2024-02-21 02:30:21"
+      },
+      {
+        "inGameDate": "2024/8/22",
+        "match": "custom_195B277334903CE5+2024+eight_master",
+        "moneyBefore": 302880,
+        "moneyAfter": 302080,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 0
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2024-02-21 02:30:21"
       }
     ],
-    "level": 29,
-    "expInThisLevel": 99,
+    "level": 30,
+    "expInThisLevel": 286,
     "availPerks": 0,
-    "totalPerks": 125,
-    "totalExp": 9635
+    "totalPerks": 130,
+    "totalExp": 10685
   },
-  "checksum": "C908E6DE267F62E2DA641FF2B0982743"
+  "checksum": "BA32CEDAA406BCF36C16D6419A99C56E"
 }
