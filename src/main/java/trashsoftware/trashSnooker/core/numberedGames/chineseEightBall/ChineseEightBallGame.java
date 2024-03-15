@@ -659,6 +659,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
 
     @Override
     protected double criticalBallX() {
-        return eightBallPosX;
+        return getTable().firstBallPlacementX();
+//        return eightBallPosX;
     }
 }

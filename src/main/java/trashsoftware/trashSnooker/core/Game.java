@@ -97,6 +97,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected FrameAchievementRecorder achievementRecorder = new FrameAchievementRecorder();
     protected Ball specifiedTarget;
     protected final Set<SubRule> subRules = new HashSet<>();
+    protected BreakStats breakStats;
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
@@ -1207,6 +1208,26 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return player2;
     }
 
+    protected void updateBreakStats(Set<B> newPotted) {
+        int uniqueBallsHitCushion = 0;
+        int acrossBreakLine = 0;
+        for (B ball : getAllBalls()) {
+            if (!ball.isWhite()) {
+                int[] stats = computeCushionAndAcrossLineOfBall(ball);
+                acrossBreakLine += stats[1];
+                if (stats[0] > 0) {
+                    uniqueBallsHitCushion++;
+                }
+            }
+        }
+
+        breakStats = new BreakStats(newPotted.size(), uniqueBallsHitCushion, acrossBreakLine);
+    }
+
+    public BreakStats getBreakStats() {
+        return breakStats;
+    }
+
     protected int[] computeCushionAndAcrossLineOfBall(B ball) {
         return ballCushionCountAndCrossLine.computeIfAbsent(ball, b -> new int[2]);
     }
@@ -1503,6 +1524,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
     
     public void addSubRule(SubRule subRule) {
+        subRules.removeIf(subRule::isRepellent);
         subRules.add(subRule);
     }
     

@@ -28,6 +28,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public final double redGapDt;
     protected final SnookerBall[] redBalls = new SnookerBall[numRedBalls()];
     protected final SnookerBall[] coloredBalls = new SnookerBall[6];
+    protected SnookerBall goldenBall;
     /*
     球堆两侧的倒数第一颗球
      */
@@ -57,6 +58,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                                   Table table,
                                   int frameIndex) {
         super(entireGame, gameSettings, gameValues, table, frameIndex);
+        
+        subRules.add(SubRule.SNOOKER_STD);
 
         redRowOccupyX = gameValues.ball.ballDiameter * Math.sin(Math.toRadians(60.0)) +
                 Game.MIN_PLACE_DISTANCE * 0.8;
@@ -493,6 +496,19 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 ballInHand = true;
             }
         }
+        
+        if (isBreaking()) {
+            updateBreakStats(newPotted);
+            if (!newPotted.isEmpty() && !thisCueFoul.isFoul()) {
+                AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_POT, 
+                        newPotted.size(), getCuingIgp());
+            }
+            if (breakStats.nBallsHitCushion >= 10) {
+                AchManager.getInstance().addAchievement(Achievement.SNOOKER_BIG_POWER_BREAK,
+                        breakStats.nBallsHitCushion, getCuingIgp());
+            }
+        }
+        
         if (thisCueFoul.isFoul()) {
             if (thisCueFoul.isMiss()) {
                 // 看有没有解，如果无解，那就不算miss

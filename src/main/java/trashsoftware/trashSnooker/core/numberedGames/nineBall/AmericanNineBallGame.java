@@ -27,7 +27,6 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
     protected boolean pushingOut;
     private boolean pushedOut;
     private boolean wasIllegalBreak;
-    private double nineBallPosX;
 
     public AmericanNineBallGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
         super(entireGame, gameSettings, gameValues, new SidePocketTable(gameValues.table), frameIndex);
@@ -109,10 +108,6 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
             for (int col = 0; col < rowBalls; ++col) {
                 PoolBall ball = placeOrder.get(index++);
                 ball.setXY(curX, y);
-                if (ball.getValue() == 9) {
-                    nineBallPosX = curX;
-                }
-                
                 y += gameValues.ball.ballDiameter + Game.MIN_PLACE_DISTANCE;
             }
 
@@ -263,15 +258,14 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
         }
 
         if (thisCueFoul.isFoul()) {
-            if (nineBall.isPotted()) {
-                // 疑问：违例开球但是进了9号，怎么办
-                winingPlayer = getAnotherPlayer();
-                end();
-                return;
-            }
-
             cueBall.pot();
             ballInHand = true;
+
+            if (nineBall.isPotted()) {
+                // 在cueBall.pot之后
+                pickupCriticalBall(getNineBall());
+            }
+            
             switchPlayer();
             forceUpdateTarget();
             System.out.println(thisCueFoul.getAllReasons());
@@ -380,6 +374,6 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
 
     @Override
     protected double criticalBallX() {
-        return nineBallPosX;
+        return getTable().firstBallPlacementX();
     }
 }

@@ -67,9 +67,10 @@
     </HBox>
 
     <HBox spacing="10.0" alignment="CENTER">
+        <Label text="%subRules"/>
+        <ComboBox fx:id="subRuleBox"/>
         <Label text="%totalFrames"/>
-        <ComboBox fx:id="totalFramesBox">
-        </ComboBox>
+        <ComboBox fx:id="totalFramesBox"/>
     </HBox>
 
     <HBox spacing="10.0" alignment="CENTER">

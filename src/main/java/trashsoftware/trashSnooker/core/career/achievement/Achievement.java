@@ -114,6 +114,8 @@ public enum Achievement {
     LAST_GASP_LOST(AchCat.SNOOKER),  // 已完成
     NOT_CONCEDE(AchCat.SNOOKER),  // 已完成
     NOT_RESPECT(AchCat.SNOOKER),  // 已完成
+    SNOOKER_BIG_POWER_BREAK(AchCat.SNOOKER, Type.HIGH_RECORD, 5),  // 已完成
+    SNOOKER_BREAK_POT(AchCat.SNOOKER, Type.HIGH_RECORD, 1),  // 已完成
     SUM_BELOW(AchCat.SNOOKER),  // 已完成
     SUM_BELOW_2(AchCat.SNOOKER, true),  // 已完成
     SNOOKER_NO_POT(AchCat.SNOOKER, true),  // 已完成

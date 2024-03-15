@@ -1,4 +1,4 @@
-package trashsoftware.trashSnooker.core.numberedGames;
+package trashsoftware.trashSnooker.core;
 
 public class BreakStats {
     

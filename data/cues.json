@@ -373,6 +373,60 @@
         }
       ]
     },
+    "GirlSnookerCarbonCue": {
+      "names": {
+        "zh": "少女粉斯诺克杆-黑科技",
+        "en": "Girl's Carbon Snooker Cue"
+      },
+      "ringThickness": 8.0,
+      "power": 0.95,
+      "elasticity": 1.06,
+      "accuracy": 1.0,
+      "ringColor": "LIGHTPINK",
+      "backColor": "GOLD+",
+      "privacy": true,
+      "available": true,
+      "price": 5000,
+      "textured": true,
+      "segments": [
+        {
+          "length": 100,
+          "diameter1": 9.2,
+          "diameter2": 10.0,
+          "texture": "ALICEBLUE"
+        },
+        {
+          "length": 350,
+          "diameter1": 10.0,
+          "diameter2": 11.5,
+          "texture": "ALICEBLUE"
+        },
+        {
+          "length": 275,
+          "diameter1": 11.5,
+          "diameter2": 16.0,
+          "texture": "ALICEBLUE"
+        },
+        {
+          "length": 8.0,
+          "diameter1": 16.0,
+          "diameter2": 16.0,
+          "texture": "WHITE"
+        },
+        {
+          "length": 725,
+          "diameter1": 16.0,
+          "diameter2": 24.0,
+          "texture": "girlPoolCueBack.png"
+        },
+        {
+          "length": 5,
+          "diameter1": 24.0,
+          "diameter2": 12.0,
+          "texture": "BLUEVIOLET+"
+        }
+      ]
+    },
     "MasterCue": {
       "names": {
         "zh": "Master的杆",

@@ -1,0 +1,387 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 7,
+    "custom_C3A707E9A33EE9A3": 2,
+    "Ding Junhui": 15,
+    "Jack Lisowski": 13,
+    "Glass Heart": 8,
+    "Trump": 5,
+    "Mark Allen": 6,
+    "Mark Williams": 11,
+    "Selby": 14,
+    "Karen Wilson": 4,
+    "custom_A7727D597A40BCB9": 9,
+    "O_Sullivan": 12,
+    "Zhao Xintong": 10,
+    "Neil Robertson": 1,
+    "Stephen Maguire": 16,
+    "John Wizard": 3
+  },
+  "championshipId": "champ_of_champ",
+  "matchTree": {"root": {
+    "p1wins": 0,
+    "p1": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {"winner": "Zhao Xintong"},
+          "winner": "Zhao Xintong",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-0",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "custom_A7727D597A40BCB9"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-1",
+          "p2wins": 1
+        },
+        "winner": "Neil Robertson",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-8",
+        "p2wins": 3
+      },
+      "p2": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Karen Wilson"},
+          "p2": {"winner": "Ding Junhui"},
+          "winner": "Karen Wilson",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-2",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "custom_C3A707E9A33EE9A3"},
+          "p2": {"winner": "Mark Williams"},
+          "winner": "custom_C3A707E9A33EE9A3",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-3",
+          "p2wins": 0
+        },
+        "winner": "Karen Wilson",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-9",
+        "p2wins": 1
+      },
+      "winner": "Neil Robertson",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-SEMI_FINAL-12",
+      "p2wins": 2
+    },
+    "p2": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Stuart Bingham"},
+          "p2": {"winner": "Jack Lisowski"},
+          "winner": "Stuart Bingham",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-4",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Stephen Maguire"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-5",
+          "p2wins": 0
+        },
+        "winner": "John Wizard",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-10",
+        "p2wins": 3
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "Glass Heart"},
+          "p2": {"winner": "O_Sullivan"},
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-6",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 1,
+          "p1": {"winner": "Trump"},
+          "p2": {"winner": "Selby"},
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-7",
+          "p2wins": 2
+        },
+        "winner": "Selby",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-11",
+        "p2wins": 3
+      },
+      "winner": "John Wizard",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-SEMI_FINAL-13",
+      "p2wins": 0
+    },
+    "winner": "John Wizard",
+    "stage": "FINAL",
+    "matchId": "custom_195B277334903CE5+2024+champ_of_champ-FINAL-14",
+    "p2wins": 4
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 133,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-10",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 129,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-10",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 128,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-10",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 128,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-4",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 127,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-FINAL-14",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 127,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-8",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 126,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-FINAL-14",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 125,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-9",
+      "playerId": "custom_C3A707E9A33EE9A3"
+    },
+    {
+      "score": 124,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-SEMI_FINAL-12",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 123,
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-FINAL-14",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 122,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-5",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 120,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-SEMI_FINAL-13",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 118,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-SEMI_FINAL-13",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 114,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-SEMI_FINAL-12",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 100,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-SEMI_FINAL-12",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 98,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-SEMI_FINAL-12",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 97,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-3",
+      "playerId": "custom_C3A707E9A33EE9A3"
+    },
+    {
+      "score": 95,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-2",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 94,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-9",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 94,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-1",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 92,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-7",
+      "playerId": "Trump"
+    },
+    {
+      "score": 84,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-8",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 83,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-3",
+      "playerId": "custom_C3A707E9A33EE9A3"
+    },
+    {
+      "score": 79,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-0",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 65,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-6",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 62,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-0",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 60,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-8",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 59,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-10",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 51,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Selby"
+    },
+    {
+      "score": 50,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2024+champ_of_champ-ROUND_1-2",
+      "playerId": "Karen Wilson"
+    }
+  ],
+  "timestamp": "2024/10/29"
+}

@@ -59,7 +59,8 @@ public class FastGameView extends ChildInitializable {
 
     @FXML
     ComboBox<PocketDifficulty> pocketDifficultyBox;
-
+    @FXML
+    ComboBox<SubRule> subRuleBox;
     @FXML
     ComboBox<PersonItem> player1Box, player2Box;
 
@@ -331,7 +332,7 @@ public class FastGameView extends ChildInitializable {
 
                 AbilityView controller = loader.getController();
                 controller.setup(scene, person.person);
-                
+
                 if (another != null) {
                     controller.setOpponent(another.person);
                 }
