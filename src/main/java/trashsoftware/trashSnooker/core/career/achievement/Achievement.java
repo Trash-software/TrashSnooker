@@ -39,7 +39,7 @@ public enum Achievement {
             return getNCompleted(completion) >= 1;
         }
     },
-    
+
     POT_A_BALL(AchCat.GENERAL_TABLE),  // 已完成
     POT_BALLS(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 10, 50, 500),  // 已完成
     POT_BALLS_REST(AchCat.GENERAL_TABLE, Type.CUMULATIVE, 3, 20, 100),  // 已完成
@@ -101,6 +101,9 @@ public enum Achievement {
     SNOOKER_BREAK_100(AchCat.SNOOKER),  // 已完成
     SNOOKER_BREAK_100_BIG(AchCat.SNOOKER),  // 已完成
     SNOOKER_BREAK_147(AchCat.SNOOKER, true), // 已完成
+    SNOOKER_BREAK_167(AchCat.SNOOKER, true),
+    SNOOKER_TEN_BREAK_107(AchCat.SNOOKER, true),
+    MINI_SNOOKER_BREAK_75(AchCat.SNOOKER, true),
     SNOOKER_CUMULATE_SCORE(AchCat.SNOOKER, Type.CUMULATIVE, 200, 1000, 10000),  // 已完成
     SNOOKER_CUMULATE_FOUL_GAIN(AchCat.SNOOKER, Type.CUMULATIVE, 10, 50, 200),  // 已完成
     THREE_MISS_LOST(AchCat.SNOOKER),  // 已完成
@@ -114,8 +117,9 @@ public enum Achievement {
     LAST_GASP_LOST(AchCat.SNOOKER),  // 已完成
     NOT_CONCEDE(AchCat.SNOOKER),  // 已完成
     NOT_RESPECT(AchCat.SNOOKER),  // 已完成
-    SNOOKER_BIG_POWER_BREAK(AchCat.SNOOKER, Type.HIGH_RECORD, 5),  // 已完成
-    SNOOKER_BREAK_POT(AchCat.SNOOKER, Type.HIGH_RECORD, 1),  // 已完成
+    SNOOKER_BREAK_SNOOKER(AchCat.SNOOKER, true),  // todo: 开球斯诺克
+    SNOOKER_BIG_POWER_BREAK(AchCat.SNOOKER, Type.HIGH_RECORD, true, 5),  // 已完成
+    SNOOKER_BREAK_POT(AchCat.SNOOKER, Type.HIGH_RECORD, true, 1),  // 已完成
     SUM_BELOW(AchCat.SNOOKER),  // 已完成
     SUM_BELOW_2(AchCat.SNOOKER, true),  // 已完成
     SNOOKER_NO_POT(AchCat.SNOOKER, true),  // 已完成
@@ -155,7 +159,7 @@ public enum Achievement {
     GET_INVITED(AchCat.TOUR),  // 已完成
     PLAY_ONE_YEAR(AchCat.TOUR),  // 已完成
     PLAY_TWO_YEARS(AchCat.TOUR),  // 已完成
-    PLAY_FIVE_YEARS(AchCat.TOUR ,true),  // 已完成
+    PLAY_FIVE_YEARS(AchCat.TOUR, true),  // 已完成
     PLAY_TEN_YEARS(AchCat.TOUR, true),  // 已完成
     PLAY_TWENTY_YEARS(AchCat.TOUR, true),  // 已完成
 
@@ -172,7 +176,7 @@ public enum Achievement {
     DEFEAT_SAME_OPPONENT_CONTINUOUS_SNOOKER(AchCat.SNOOKER_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_SNOOKER_1(AchCat.SNOOKER_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_SNOOKER_2(AchCat.SNOOKER_TOUR),  // 已完成
-    
+
     // 中式台球巡回赛
     DEFEAT_UNIQUE_OPPONENTS_CEB(AchCat.CHINESE_EIGHT_TOUR, Type.CUMULATIVE, 5, 10, 25),
     DEFEAT_SAME_OPPONENT_CONTINUOUS_CEB(AchCat.CHINESE_EIGHT_TOUR),  // 已完成
@@ -184,7 +188,7 @@ public enum Achievement {
     DEFEAT_SAME_OPPONENT_CONTINUOUS_AMERICAN(AchCat.AMERICAN_NINE_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_1(AchCat.AMERICAN_NINE_TOUR),  // 已完成
     DEFEAT_SAME_OPPONENT_MULTI_AMERICAN_2(AchCat.AMERICAN_NINE_TOUR),  // 已完成
-    
+
     // 赚钱
     EARNED_MONEY(AchCat.FINANCIAL),  // 已完成
     CHAMP_EARN_CUMULATIVE(AchCat.FINANCIAL, Type.CUMULATIVE, 50000, 200000, 1000000),  // 已完成
@@ -237,18 +241,18 @@ public enum Achievement {
     public boolean isFullyComplete(AchCompletion completion) {
         return completion != null && getNCompleted(completion) == getNLevels();
     }
-    
+
     public int[] getLevels() {
         return requiredTimes;
     }
-    
+
     public int getNLevels() {
         return requiredTimes.length;
     }
 
     public int getCompletedLevelIndex(AchCompletion completion) {
         if (completion == null) return -1;
-        
+
         for (int i = requiredTimes.length - 1; i >= 0; i--) {
             if (requiredTimes[i] <= completion.getTimes()) {
                 return i;
@@ -256,18 +260,18 @@ public enum Achievement {
         }
         return -1;
     }
-    
+
     public int getNCompleted(AchCompletion completion) {
         return getCompletedLevelIndex(completion) + 1;
     }
-    
+
     public int getMoneyByCompLevel(int levelIndex) {
         return switch (levelIndex) {
             default -> 200;
             case 1 -> 500;
             case 2 -> 1000;
         };
-    } 
+    }
 
     public String toKey() {
         return Util.toLowerCamelCase(name());
@@ -290,7 +294,7 @@ public enum Achievement {
             return name();
         }
     }
-    
+
     public String getDescriptionOfLevel(int levelIndex) {
         String s = description();
         if (s.contains("%d")) {
@@ -299,7 +303,7 @@ public enum Achievement {
             return s;
         }
     }
-    
+
     public enum Type {
         ONE_TIME,
         HIGH_RECORD,

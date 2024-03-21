@@ -304,7 +304,8 @@ public class ReplayView extends ChildInitializable {
         public String typeString() {
             String res;
             if (getValue() == null) res = "";
-            else res = GameRule.toReadable(getValue().gameValues.rule);
+//            else res = GameRule.toReadable(getValue().gameValues.rule);
+            else res = getValue().getGameTypeName();
             return res;
         }
 

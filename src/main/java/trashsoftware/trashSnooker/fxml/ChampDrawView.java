@@ -478,6 +478,7 @@ public class ChampDrawView extends ChildInitializable {
         BallMetrics ballMetrics = match.getChampionship().getData().getBallMetrics();
 
         GameValues values = new GameValues(match.getChampionship().getData().getType(),
+                match.getChampionship().getData().getSubRules(),
                 tableSpec.tableMetrics,
                 ballMetrics);
         values.setTablePreset(match.getChampionship().getData().getTablePreset());

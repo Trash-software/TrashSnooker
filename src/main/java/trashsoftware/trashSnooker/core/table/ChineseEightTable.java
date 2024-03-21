@@ -61,8 +61,8 @@ public class ChineseEightTable extends NumberedBallTable {
         return list;
     }
 
-    @Override
-    public int nBalls() {
-        return 16;
-    }
+//    @Override
+//    public int nBalls() {
+//        return 16;
+//    }
 }

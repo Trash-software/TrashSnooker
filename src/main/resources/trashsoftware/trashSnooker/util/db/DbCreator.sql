@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS EntireGame (
     Player1IsAI INTEGER,
     Player2IsAI INTEGER,
     TotalFrames INTEGER DEFAULT 1,
-    MatchID TEXT DEFAULT NULL
+    MatchID TEXT DEFAULT NULL,
+    SubRule TEXT DEFAULT NULL
 );
 
 -- Actually a 'Frame'
@@ -54,6 +55,7 @@ CREATE TABLE IF NOT EXISTS SnookerRecord (
     TotalScore INTEGER DEFAULT 0,
     Breaks50 INTEGER DEFAULT 0,
     Highest INTEGER DEFAULT 0,
+    IsMaximum INTEGER DEFAULT 0,
     PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName, PlayerIsAI)
 );
 

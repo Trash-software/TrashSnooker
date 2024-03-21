@@ -5,7 +5,6 @@ import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SnookerAiCue;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
-import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.Movement;
@@ -27,7 +26,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public final double redRowOccupyX;
     public final double redGapDt;
     protected final SnookerBall[] redBalls = new SnookerBall[numRedBalls()];
-    protected final SnookerBall[] coloredBalls = new SnookerBall[6];
+    protected SnookerBall[] coloredBalls;
     protected SnookerBall goldenBall;
     /*
     球堆两侧的倒数第一颗球
@@ -51,6 +50,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private int maxScoreDiff;  // 最大分差，p1的分减p2的分
     private boolean p1EverOver;  // p1 p2分别是否曾经超了分
     private boolean p2EverOver;
+    private boolean isOnMaximum = true;  // 是否还有机会冲击147
 
     protected AbstractSnookerGame(EntireGame entireGame,
                                   GameSettings gameSettings,
@@ -58,8 +58,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                                   Table table,
                                   int frameIndex) {
         super(entireGame, gameSettings, gameValues, table, frameIndex);
-        
-        subRules.add(SubRule.SNOOKER_STD);
+
+//        subRules.add(SubRule.SNOOKER_STD);
 
         redRowOccupyX = gameValues.ball.ballDiameter * Math.sin(Math.toRadians(60.0)) +
                 Game.MIN_PLACE_DISTANCE * 0.8;
@@ -76,17 +76,30 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
         initRedBalls();
 
-        allBalls = new SnookerBall[redBalls.length + 7];
-        System.arraycopy(redBalls, 0, allBalls, 0, redBalls.length);
-        allBalls[redBalls.length] = yellowBall;
-        allBalls[redBalls.length + 1] = greenBall;
-        allBalls[redBalls.length + 2] = brownBall;
-        allBalls[redBalls.length + 3] = blueBall;
-        allBalls[redBalls.length + 4] = pinkBall;
-        allBalls[redBalls.length + 5] = blackBall;
-        allBalls[redBalls.length + 6] = cueBall;
+        int nColorBalls = 6;
+        if (gameValues.hasSubRule(SubRule.SNOOKER_GOLDEN)) {
+            nColorBalls = 7;
+            goldenBall = new SnookerBall(20,
+                    new double[]{gameValues.table.leftX + gameValues.ball.ballRadius, gameValues.table.midY},
+                    gameValues);
+        }
 
-        System.arraycopy(allBalls, redBalls.length, coloredBalls, 0, 6);
+        coloredBalls = new SnookerBall[6];
+        allBalls = new SnookerBall[redBalls.length + nColorBalls + 1];
+        allBalls[0] = cueBall;
+        System.arraycopy(redBalls, 0, allBalls, 1, redBalls.length);
+        allBalls[redBalls.length + 1] = yellowBall;
+        allBalls[redBalls.length + 2] = greenBall;
+        allBalls[redBalls.length + 3] = brownBall;
+        allBalls[redBalls.length + 4] = blueBall;
+        allBalls[redBalls.length + 5] = pinkBall;
+        allBalls[redBalls.length + 6] = blackBall;
+
+        System.arraycopy(allBalls, redBalls.length + 1, coloredBalls, 0, 6);
+        
+        if (goldenBall != null) {
+            allBalls[redBalls.length + 7] = goldenBall;
+        }
     }
 
     public static String ballValueToColorName(int ballValue, ResourceBundle strings) {
@@ -98,6 +111,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             case 5 -> strings.getString("blueBall");
             case 6 -> strings.getString("pinkBall");
             case 7 -> strings.getString("blackBall");
+            case 20 -> strings.getString("goldBall");
             case 0 -> strings.getString("coloredBall");
             default -> throw new RuntimeException();
         };
@@ -144,25 +158,42 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return new SnookerBall(0, gameValues);
     }
 
+//    @Override
+//    public void addSubRule(SubRule subRule) {
+//        super.addSubRule(subRule);
+//        
+//        if (subRule == SubRule.SNOOKER_GOLDEN) {
+//            if (goldenBall == null) {
+//                goldenBall = new SnookerBall(20, 
+//                        new double[]{gameValues.table.leftX + gameValues.ball.ballRadius, gameValues.table.midY}, 
+//                        gameValues);
+//                SnookerBall[] newAllBalls = new SnookerBall[allBalls.length + 1];
+//                System.arraycopy(allBalls, 0, newAllBalls, 0, allBalls.length);
+//                newAllBalls[newAllBalls.length - 1] = goldenBall;
+//                allBalls = newAllBalls;
+//
+//                SnookerBall[] newColoredBalls = new SnookerBall[coloredBalls.length + 1];
+//                System.arraycopy(coloredBalls, 0, newColoredBalls, 0, coloredBalls.length);
+//                newColoredBalls[newColoredBalls.length - 1] = goldenBall;
+//                coloredBalls = newColoredBalls;
+//            } else {
+//                throw new RuntimeException("Golden ball already specified");
+//            }
+//        }
+//    }
+
     public SnookerBall getBallOfValue(int score) {
-        switch (score) {
-            case 1:
-                return redBalls[0];
-            case 2:
-                return allBalls[numRedBalls()];
-            case 3:
-                return allBalls[numRedBalls() + 1];
-            case 4:
-                return allBalls[numRedBalls() + 2];
-            case 5:
-                return allBalls[numRedBalls() + 3];
-            case 6:
-                return allBalls[numRedBalls() + 4];
-            case 7:
-                return allBalls[numRedBalls() + 5];
-            default:
-                throw new RuntimeException("没有这种彩球。");
-        }
+        return switch (score) {
+            case 1 -> redBalls[1];
+            case 2 -> allBalls[numRedBalls() + 1];
+            case 3 -> allBalls[numRedBalls() + 2];
+            case 4 -> allBalls[numRedBalls() + 3];
+            case 5 -> allBalls[numRedBalls() + 4];
+            case 6 -> allBalls[numRedBalls() + 5];
+            case 7 -> allBalls[numRedBalls() + 6];
+            case 20 -> allBalls[numRedBalls() + 7];  // 金球
+            default -> throw new RuntimeException("没有这种彩球。");
+        };
     }
 
     @Override
@@ -234,6 +265,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             if (hasRed()) return 1;
             else return 2;  // 最后一颗红球附带的彩球打完
         } else if (currentTarget == 7) {  // 黑球进了
+            if (goldenBall != null && !goldenBall.isPotted()) {
+                currentTarget = 20;
+            } else {
+                return END_REP;
+            }
+        } else if (currentTarget == 20) {
             return END_REP;
         } else if (!isFreeBall) {
             return currentTarget + 1;
@@ -263,7 +300,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             if (scoreDiff < 0) {
                 int rem = getRemainingScore(isDoingFreeBall());
                 if (-scoreDiff >= rem + 20) {
-                    AchManager.getInstance().addAchievement(Achievement.NOT_CONCEDE, 
+                    AchManager.getInstance().addAchievement(Achievement.NOT_CONCEDE,
                             cuing.getInGamePlayer());
                 }
             }
@@ -337,7 +374,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private int getFoulScore(Set<SnookerBall> pottedBalls) {
         int foul = getDefaultFoulValue();
         for (SnookerBall ball : pottedBalls) {
-            if (ball.getValue() > foul) foul = ball.getValue();
+            int ballFoulScore = getBallFoulScore(ball);
+            if (ballFoulScore > foul) foul = ballFoulScore;
         }
 //        if (foul == 0) throw new RuntimeException("No foul, why call this method");
         return foul;
@@ -388,7 +426,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 }
             }
         } else if (currentTarget == 1) {
-            if (whiteFirstCollide.isRed()) {
+            if (whiteFirstCollide.getValue() == 1) {
                 boolean wrongPot = false;
                 for (SnookerBall ball : pottedBalls) {
                     if (ball.isRed()) {
@@ -404,13 +442,15 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                     AchManager.getInstance().addAchievement(Achievement.POT_WRONG_COLOR, getCuingIgp());
                 } else if (!wrongPot) {
                     if (score == 2) {
+                        noHopeMaximum();
                         AchManager.getInstance().addAchievement(Achievement.POT_TWO_LEGAL, getCuingIgp());
                     } else if (score >= 3) {
+                        noHopeMaximum();
                         AchManager.getInstance().addAchievement(Achievement.POT_THREE_LEGAL, getCuingIgp());
                     }
                 }
             } else {  // 该打红球时打了彩球
-                int foul = Math.max(4, whiteFirstCollide.getValue());
+                int foul = getBallFoulScore(whiteFirstCollide);
                 thisCueFoul.addFoul(String.format(strings.getString("targetRedHitX"),
                                 ballValueToColorName(whiteFirstCollide.getValue(), strings)),
                         foul,
@@ -434,6 +474,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                     // 任意彩球
                     if (indicatedTarget == RAW_COLORED_REP) {
                         System.err.println("Program error");
+                    } else if (indicatedTarget == 20 || realTarget == 20) {
+                        int foul = 4;
+                        thisCueFoul.addFoul(String.format(strings.getString("targetColorXHit"),
+                                        ballValueToColorName(20, strings)),
+                                foul,
+                                true);
                     } else if (indicatedTarget != realTarget) {
                         int foul = Math.max(4, Math.max(realTarget, indicatedTarget));
                         thisCueFoul.addFoul(String.format(strings.getString("indicateXHitY"),
@@ -442,9 +488,13 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                                 foul,
                                 true);
                     }
+                    if (indicatedTarget != 7) noHopeMaximum();
                 }
                 if (currentTarget != RAW_COLORED_REP && realTarget != currentTarget) {  // 打了非目标球的彩球
-                    int foul = Math.max(4, Math.max(realTarget, currentTarget));
+                    int realTarFoul = realTarget == 20 ? 4 : realTarget;
+                    int curTarFoul = currentTarget == 20 ? 4 : currentTarget;
+                    
+                    int foul = Math.max(4, Math.max(realTarFoul, curTarFoul));
                     thisCueFoul.addFoul(String.format(strings.getString("targetXOtherHit"),
                                     ballValueToColorName(currentTarget, strings)),
                             foul,
@@ -455,7 +505,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         for (Ball onlyBall : pottedBalls) {
                             if (onlyBall == whiteFirstCollide) score = onlyBall.getValue();
                             else {
-                                int foul = Math.max(4, onlyBall.getValue());
+                                int foul = getBallFoulScore(onlyBall);
                                 thisCueFoul.addFoul(strings.getString("targetColorOtherPot"),
                                         foul,
                                         false);
@@ -488,6 +538,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                             AchManager.getInstance().addAchievement(Achievement.POT_WRONG_COLOR, getCuingIgp());
                         }
                     }
+                    noHopeMaximum();
                 }
             }
             if (cueBall.isPotted()) {
@@ -496,11 +547,11 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 ballInHand = true;
             }
         }
-        
+
         if (isBreaking()) {
             updateBreakStats(newPotted);
             if (!newPotted.isEmpty() && !thisCueFoul.isFoul()) {
-                AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_POT, 
+                AchManager.getInstance().addAchievement(Achievement.SNOOKER_BREAK_POT,
                         newPotted.size(), getCuingIgp());
             }
             if (breakStats.nBallsHitCushion >= 10) {
@@ -508,7 +559,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         breakStats.nBallsHitCushion, getCuingIgp());
             }
         }
-        
+
         if (thisCueFoul.isFoul()) {
             if (thisCueFoul.isMiss()) {
                 // 看有没有解，如果无解，那就不算miss
@@ -576,6 +627,27 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
 //        System.out.println("Potted: " + pottedBalls + ", first: " + whiteFirstCollide + " score: " + score + ", foul: " + foul);
     }
+    
+    protected int getBallFoulScore(Ball ball) {
+        if (ball.getValue() > 7) return 4;
+        else return Math.max(4, ball.getValue());
+    }
+    
+    protected void noHopeMaximum() {
+        isOnMaximum = false;
+        if (goldenBall != null && !goldenBall.isPotted()) {
+            goldenBall.pot();
+        }
+    }
+
+    @Override
+    public void switchPlayer() {
+        super.switchPlayer();
+        
+        int nReds = numRedBalls();
+        int remReds = remainingRedCount();
+        if (nReds != remReds) noHopeMaximum();
+    }
 
     protected void addFoulScore() {
         int score = thisCueFoul.getFoulScore();
@@ -588,7 +660,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     @Override
     protected void end() {
         super.end();
-        
+
         if (!gameValues.isTraining()) {
             checkScoreSumAchievement();
         }

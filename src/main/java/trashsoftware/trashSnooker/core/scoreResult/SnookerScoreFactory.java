@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.scoreResult;
 
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.util.Util;
 

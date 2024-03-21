@@ -3,17 +3,14 @@ package trashsoftware.trashSnooker.recorder;
 import org.json.JSONObject;
 import org.tukaani.xz.LZMA2Options;
 import org.tukaani.xz.XZOutputStream;
-import trashsoftware.trashSnooker.core.Game;
-import trashsoftware.trashSnooker.core.InGamePlayer;
-import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.core.PlayerType;
+import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.fxml.GameView;
-import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -25,7 +22,7 @@ import java.util.zip.GZIPOutputStream;
 
 public abstract class ActualRecorder implements GameRecorder {
     public static final int RECORD_PRIMARY_VERSION = 14;
-    public static final int RECORD_SECONDARY_VERSION = 1;
+    public static final int RECORD_SECONDARY_VERSION = 2;
     public static final int HEADER_LENGTH = 64;
     public static final int PLAYER_HEADER_LENGTH = 40;
     public static final int TOTAL_HEADER_LENGTH = HEADER_LENGTH + PLAYER_HEADER_LENGTH * 2;
@@ -68,7 +65,9 @@ public abstract class ActualRecorder implements GameRecorder {
         if (metaMatchInfo != null) {
             this.extraBlocks.add(new ExtraBlock(ExtraBlock.TYPE_META_MATCH, metaMatchInfo));
         }
-        
+        Collection<SubRule> subRules = game.getGameValues().getSubRules();
+        this.extraBlocks.add(new ExtraBlock(ExtraBlock.TYPE_SUB_RULES, subRules));
+
         createDirIfNotExist();
 
         setCompression(ConfigLoader.getInstance().getString("recordCompression", "xz"));
@@ -83,14 +82,14 @@ public abstract class ActualRecorder implements GameRecorder {
 
     public static boolean isSecondaryCompatible(int replayPrimary, int replaySecondary) {
         if (replaySecondary == ActualRecorder.RECORD_SECONDARY_VERSION) return true;
-        
+
         if (ActualRecorder.RECORD_PRIMARY_VERSION == 12 && replayPrimary == 12) {
-            if ((ActualRecorder.RECORD_SECONDARY_VERSION == 8 || ActualRecorder.RECORD_SECONDARY_VERSION == 9) 
+            if ((ActualRecorder.RECORD_SECONDARY_VERSION == 8 || ActualRecorder.RECORD_SECONDARY_VERSION == 9)
                     && (replaySecondary >= 7 && replaySecondary <= 9)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -134,7 +133,7 @@ public abstract class ActualRecorder implements GameRecorder {
 //        System.out.println(movement.getMovementMap().get(game.getCueBall()).size());
         this.movement = movement;
     }
-    
+
     public final void recordCueAnimation(CueAnimationRec cueAnimationRec) throws RecordingException {
         if (this.animationRec != null) throw new RecordingException("Repeated recording");
 //        System.out.println(movement.getMovementMap().get(game.getCueBall()).size());
@@ -152,7 +151,7 @@ public abstract class ActualRecorder implements GameRecorder {
     }
 
     public void writeCueToStream() throws RecordingException {
-        if (cueRecord == null || movement == null || scoreResult == null || 
+        if (cueRecord == null || movement == null || scoreResult == null ||
                 thisTarget == null || nextTarget == null) {
             throw new RecordingException(String.format("Score not filled: %s, %s, %s, %s\n",
                     cueRecord, movement, scoreResult, nextTarget));
@@ -160,7 +159,7 @@ public abstract class ActualRecorder implements GameRecorder {
         if (animationRec == null) {
             EventLogger.warning("Animation record is null");
         }
-        
+
         try {
             outputStream.write(FLAG_CUE);
             writeCue(cueRecord, movement, thisTarget, nextTarget, animationRec);
@@ -217,8 +216,8 @@ public abstract class ActualRecorder implements GameRecorder {
         header[11] = (byte) game.getGameValues().table.getOrdinal();
         header[12] = (byte) game.getGameValues().table.getHoleSizeOrdinal();
         header[13] = (byte) game.getGameValues().ball.ordinal();
-        header[14] = (byte) game.getGameValues().table.getPocketDifficultyOrdinal(); 
-        
+        header[14] = (byte) game.getGameValues().table.getPocketDifficultyOrdinal();
+
         Util.intToBytesN(GameView.productionFrameRate, header, 15, 2);
 
         header[20] = (byte) game.getEntireGame().getTotalFrames();  // todo
@@ -295,6 +294,19 @@ public abstract class ActualRecorder implements GameRecorder {
                 Util.int32ToBytes(blockContent.length, blockContent, 1);
                 byte[] bid = block.blockContent.toString().getBytes(StandardCharsets.UTF_8);
                 System.arraycopy(bid, 0, blockContent, 5, bid.length);
+                contents.add(blockContent);
+            } else if (block.blockType == ExtraBlock.TYPE_SUB_RULES) {
+                Collection<SubRule> subRules = (Collection<SubRule>) block.blockContent;
+                byte[] blockContent = new byte[6 + subRules.size() * 32];  // 名字最多32字节
+                blockContent[0] = (byte) block.blockType;
+                Util.int32ToBytes(blockContent.length, blockContent, 1);
+                blockContent[5] = (byte) subRules.size();
+                int index = 6;
+                for (SubRule subRule : subRules) {
+                    byte[] bName = subRule.name().getBytes(StandardCharsets.UTF_8);
+                    System.arraycopy(bName, 0, blockContent, index, bName.length);
+                    index += 32;
+                }
                 contents.add(blockContent);
             }
         }
@@ -413,7 +425,7 @@ public abstract class ActualRecorder implements GameRecorder {
                 raf.write(buffer4);
                 Util.int32ToBytes(totalBeforeCueMs, buffer4, 0);
                 raf.write(buffer4);
-                
+
             } catch (IOException e) {
                 EventLogger.error(e);
             }

@@ -8,6 +8,7 @@ import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.snooker.MaximumType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,12 +178,14 @@ public class SnookerAiVsAi extends AiVsAi {
         sc.updateBreakScore(sp1.career.getPlayerPerson().getPlayerId(),
                 championship.getCurrentStage(),
                 sp1.maxSinglePole,
+                MaximumType.inferFromScore(nReds, sp1.maxSinglePole),
                 true,
                 matchId,
                 currentFrameNumberFrom1() - 1);  // 因为上面已经更新了
         sc.updateBreakScore(sp2.career.getPlayerPerson().getPlayerId(),
                 championship.getCurrentStage(),
                 sp2.maxSinglePole,
+                MaximumType.inferFromScore(nReds, sp2.maxSinglePole),
                 true,
                 matchId,
                 currentFrameNumberFrom1() - 1);

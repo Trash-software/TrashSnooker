@@ -14,10 +14,10 @@ public class SidePocketTable extends NumberedBallTable {
         super(tableMetrics);
     }
 
-    @Override
-    public int nBalls() {
-        return 10;
-    }
+//    @Override
+//    public int nBalls() {
+//        return 10;
+//    }
     
     public static List<PoolBall> getRemBalls(GameHolder holder) {
         List<PoolBall> rems = new ArrayList<>();

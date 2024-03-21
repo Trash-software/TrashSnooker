@@ -1,0 +1,355 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 5,
+    "custom_C3A707E9A33EE9A3": 1,
+    "custom_195B277334903CE5": 10,
+    "Ding Junhui": 15,
+    "Jack Lisowski": 13,
+    "Trump": 6,
+    "Mark Allen": 4,
+    "Mark Williams": 9,
+    "Selby": 14,
+    "Karen Wilson": 3,
+    "custom_A7727D597A40BCB9": 11,
+    "O_Sullivan": 16,
+    "Zhao Xintong": 8,
+    "Neil Robertson": 7,
+    "Stephen Maguire": 12,
+    "John Wizard": 2
+  },
+  "championshipId": "professional_champ",
+  "matchTree": {"root": {
+    "p1wins": 4,
+    "p1": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "custom_C3A707E9A33EE9A3"},
+          "p2": {"winner": "Stephen Maguire"},
+          "winner": "Stephen Maguire",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-0",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 0,
+          "p1": {"winner": "Zhao Xintong"},
+          "p2": {"winner": "custom_195B277334903CE5"},
+          "winner": "custom_195B277334903CE5",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-1",
+          "p2wins": 2
+        },
+        "winner": "custom_195B277334903CE5",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2025+professional_champ-QUARTER_FINAL-8",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Stuart Bingham"},
+          "p2": {"winner": "Selby"},
+          "winner": "Stuart Bingham",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-2",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Karen Wilson"},
+          "p2": {"winner": "Ding Junhui"},
+          "winner": "Karen Wilson",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-3",
+          "p2wins": 1
+        },
+        "winner": "Stuart Bingham",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2025+professional_champ-QUARTER_FINAL-9",
+        "p2wins": 0
+      },
+      "winner": "custom_195B277334903CE5",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-SEMI_FINAL-12",
+      "p2wins": 2
+    },
+    "p2": {
+      "p1wins": 1,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "custom_A7727D597A40BCB9"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-4",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Trump"},
+          "p2": {"winner": "O_Sullivan"},
+          "winner": "Trump",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-5",
+          "p2wins": 0
+        },
+        "winner": "Neil Robertson",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2025+professional_champ-QUARTER_FINAL-10",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {"winner": "Jack Lisowski"},
+          "winner": "Mark Allen",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-6",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Mark Williams"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-7",
+          "p2wins": 0
+        },
+        "winner": "John Wizard",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_195B277334903CE5+2025+professional_champ-QUARTER_FINAL-11",
+        "p2wins": 2
+      },
+      "winner": "John Wizard",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-SEMI_FINAL-13",
+      "p2wins": 3
+    },
+    "winner": "custom_195B277334903CE5",
+    "stage": "FINAL",
+    "matchId": "custom_195B277334903CE5+2025+professional_champ-FINAL-14",
+    "p2wins": 0
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 129,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-SEMI_FINAL-13",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 129,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-QUARTER_FINAL-9",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 127,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-QUARTER_FINAL-11",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 124,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-7",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 123,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-SEMI_FINAL-13",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 122,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-SEMI_FINAL-13",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 122,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-QUARTER_FINAL-10",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 120,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-4",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 111,
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-SEMI_FINAL-13",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 104,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-3",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 101,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-6",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 100,
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-QUARTER_FINAL-9",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 95,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-2",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 81,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-0",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 78,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-2",
+      "playerId": "Selby"
+    },
+    {
+      "score": 74,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-6",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 73,
+      "stage": "FINAL",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-FINAL-14",
+      "playerId": "custom_195B277334903CE5"
+    },
+    {
+      "score": 72,
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-1",
+      "playerId": "custom_195B277334903CE5"
+    },
+    {
+      "score": 66,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-7",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 62,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-5",
+      "playerId": "Trump"
+    },
+    {
+      "score": 59,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-4",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 56,
+      "stage": "FINAL",
+      "sim": false,
+      "numFrame": 4,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-FINAL-14",
+      "playerId": "custom_195B277334903CE5"
+    },
+    {
+      "score": 56,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-7",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 55,
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 4,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-SEMI_FINAL-12",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 52,
+      "stage": "FINAL",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-FINAL-14",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 51,
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_195B277334903CE5+2025+professional_champ-ROUND_1-5",
+      "playerId": "Trump"
+    }
+  ],
+  "timestamp": "2025/2/22"
+}

@@ -84,7 +84,7 @@ public abstract class Table {
 
     public abstract void drawTableMarks(GamePane view, GraphicsContext graphicsContext, double scale);
 
-    public abstract int nBalls();
+//    public abstract int nBalls();
 
     /**
      * 在指定的位置强行绘制一颗球，无论球是否已经落袋

@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.scoreResult;
 
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.util.Map;
@@ -83,7 +84,12 @@ public class SnookerScoreResult extends ScoreResult {
         Util.int32ToBytes(p2AddedScore, res, 20);
 
         for (Map.Entry<Ball, Integer> entry : singlePoleMap.entrySet()) {
-            singlePoles[entry.getKey().getValue() - 1] = entry.getValue().byteValue();
+            SnookerBall ball = (SnookerBall) entry.getKey();
+            if (ball.isGold()) {
+                res[31] = 1;
+            } else {
+                singlePoles[ball.getValue() - 1] = entry.getValue().byteValue();
+            }
         }
         System.arraycopy(singlePoles, 0, res, 24, singlePoles.length);
         

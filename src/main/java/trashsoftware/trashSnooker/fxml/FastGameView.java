@@ -23,10 +23,7 @@ import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class FastGameView extends ChildInitializable {
 
@@ -147,6 +144,10 @@ public class FastGameView extends ChildInitializable {
         trainingItemBox.getSelectionModel().select(0);
     }
 
+    private void initSubRuleBox() {
+
+    }
+
     private void initTotalFramesBox() {
         for (int i = 1; i <= 41; i += 2) {
             totalFramesBox.getItems().add(i);
@@ -220,6 +221,15 @@ public class FastGameView extends ChildInitializable {
                     ballMetricsBox.getSelectionModel().select(BallMetrics.POOL_BALL);
                 }
             }
+            subRuleBox.getItems().clear();
+            switch (newValue) {
+                case SNOOKER -> 
+                        subRuleBox.getItems().addAll(SubRule.SNOOKER_STD, SubRule.SNOOKER_GOLDEN);
+                case CHINESE_EIGHT ->
+                        subRuleBox.getItems().addAll(SubRule.CHINESE_EIGHT_STD, SubRule.CHINESE_EIGHT_JOE);
+                default -> subRuleBox.getItems().add(SubRule.RAW_STD);
+            }
+            subRuleBox.getSelectionModel().select(0);
             reloadTrainingItemByGameType(newValue);
         }));
 
@@ -365,11 +375,13 @@ public class FastGameView extends ChildInitializable {
                 .build();
 
         GameRule rule = gameRuleBox.getValue();
+        SubRule subRule = subRuleBox.getValue();
+        Collection<SubRule> subRules = List.of(subRule);
         BallMetrics ballMetrics = ballMetricsBox.getValue();
 
         // todo: 检查规则兼容性
-
-        GameValues values = new GameValues(rule, tableMetrics, ballMetrics);
+        // todo: subRules多选
+        GameValues values = new GameValues(rule, subRules, tableMetrics, ballMetrics);
 
         TrainType trainType = getTrainType();
         if (trainType != null) {
@@ -411,6 +423,7 @@ public class FastGameView extends ChildInitializable {
         InGamePlayer igp2;
 
         GameRule gameRule = gameValues.rule;
+//        gameValues.
 
 //        CueAndBrand p1CueSel = p1CueSelection.getSelected();
 //

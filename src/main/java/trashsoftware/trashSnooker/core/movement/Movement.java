@@ -115,7 +115,7 @@ public class Movement {
     public Map<Ball, MovementFrame> getEndingPositions() {
         Map<Ball, MovementFrame> pos = new HashMap<>();
         for (Map.Entry<Ball, List<MovementFrame>> entry : movementMap.entrySet()) {
-            pos.put(entry.getKey(), entry.getValue().get(entry.getValue().size() - 1));
+            pos.put(entry.getKey(), entry.getValue().getLast());
         }
         return pos;
     }
@@ -123,7 +123,7 @@ public class Movement {
     @Override
     public String toString() {
         return "Movement{balls=" + movementMap.size() + "," +
-                "frames=" + new ArrayList<>(movementMap.values()).get(0).size() + "}";
+                "frames=" + new ArrayList<>(movementMap.values()).getFirst().size() + "}";
     }
 
     public void setWhiteFirstCollide(Ball whiteFirstCollide) {
@@ -153,7 +153,7 @@ public class Movement {
         }
         
         public Ball getFirstCollision() {
-            return collisions.isEmpty() ? null : collisions.get(0);
+            return collisions.isEmpty() ? null : collisions.getFirst();
         }
 
         public void setDistanceMoved(double distanceMoved) {

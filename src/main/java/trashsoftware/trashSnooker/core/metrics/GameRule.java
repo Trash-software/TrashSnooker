@@ -99,7 +99,7 @@ public enum GameRule {
     };
 
     public final String sqlKey;
-    public final int nBalls;
+//    public final int nBalls;
     public final CueSize[] suggestedCues;
     public final TrainType[] supportedTrainings;
     public final BreakRule breakRule;
@@ -111,7 +111,7 @@ public enum GameRule {
              TrainType[] supportedTrainings,
              BreakRule breakRule,
              Set<Rule> ruleSet) {
-        this.nBalls = nBalls;
+//        this.nBalls = nBalls;
         this.sqlKey = sqlKey;
         this.suggestedCues = suggestedCues;
         this.supportedTrainings = supportedTrainings;

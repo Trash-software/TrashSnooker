@@ -31,7 +31,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
     private void makeAliveMap() {
         for (Ball ball : game.getAllBalls()) {
-            if (ball.isRed() && !ball.isPotted()) {
+            if (ball.getValue() == 1 && !ball.isPotted()) {
                 allRedCount++;
                 double aliveScore = ballAlivePrice(game, ball);
                 if (aliveScore > ALIVE_THRESHOLD) aliveRedCount++;
@@ -96,8 +96,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         Set<Ball> legalSet = new HashSet<>(legalList);
         
         double clothSlowFactor = phy.cloth.smoothness.speedReduceFactor / TableCloth.Smoothness.FAST.speedReduceFactor;
-        double selPowerLow = 20.0 * clothSlowFactor;
-        double selPowerHigh = 38.0 * clothSlowFactor;
+        double selPowerLow = 28.0 * clothSlowFactor;
+        double selPowerHigh = 46.0 * clothSlowFactor;
         double selPowerTick = 2.0;
         
         double allowedYLow = game.getTable().greenBallPos()[1];

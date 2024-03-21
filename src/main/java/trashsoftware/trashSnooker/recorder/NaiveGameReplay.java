@@ -53,7 +53,7 @@ public class NaiveGameReplay extends GameReplay {
 
     @Override
     protected void loadBallPositions() throws IOException {
-        if (balls == null) balls = new Ball[gameValues.rule.nBalls];
+        if (balls == null) balls = new Ball[gameValues.nBalls()];
 
         for (int i = 0; i < balls.length; i++) {
             Ball b = loadOneBallPos(balls[i]);
@@ -120,7 +120,7 @@ public class NaiveGameReplay extends GameReplay {
         byte[] ballValueBuf = new byte[1];
 
         Movement movement = new Movement(balls);
-        for (int ballIndex = 0; ballIndex < gameValues.rule.nBalls; ballIndex++) {
+        for (int ballIndex = 0; ballIndex < gameValues.nBalls(); ballIndex++) {
             if (inputStream.read(ballValueBuf) != ballValueBuf.length) {
                 throw new IOException();
             }

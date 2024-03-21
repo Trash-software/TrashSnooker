@@ -91,7 +91,7 @@ public class ChampionshipData {
                 data.subRules.add(SubRule.valueOf(subRuleJson.getString(i)));
             }
         } else {
-            data.subRules = List.of();
+            data.subRules = SubRule.defaultSubRule(data.type);
         }
 
         data.selection = jsonObject.has("selection") ?
@@ -148,8 +148,11 @@ public class ChampionshipData {
                 jsonObject.has("best_single") ?
                         jsonObject.getInt("best_single") :
                         0);
-        if (jsonObject.has("147")) {
-            data.awards.put(ChampionshipScore.Rank.MAXIMUM, jsonObject.getInt("147"));
+        if (jsonObject.has("maximum")) {
+            data.awards.put(ChampionshipScore.Rank.MAXIMUM, jsonObject.getInt("maximum"));
+        }
+        if (jsonObject.has("167")) {
+            data.awards.put(ChampionshipScore.Rank.GOLD_MAXIMUM, jsonObject.getInt("167"));
         }
         
         if (jsonObject.has("fees")) {

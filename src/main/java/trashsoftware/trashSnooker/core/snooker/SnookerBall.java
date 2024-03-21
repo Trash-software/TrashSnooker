@@ -13,6 +13,14 @@ public class SnookerBall extends Ball {
     public SnookerBall(int value, double[] pos, GameValues values) {
         super(value, pos, values);
     }
+    
+    public boolean isRed() {
+        return getValue() == 1;
+    }
+    
+    public boolean isGold() {
+        return getValue() == 20;
+    }
 
     @Override
     protected Color generateColor(int value) {
@@ -29,6 +37,7 @@ public class SnookerBall extends Ball {
             case 5 -> Values.BLUE;
             case 6 -> Values.PINK;
             case 7 -> Values.BLACK;
+            case 20 -> Values.GOLD;
             default -> throw new RuntimeException("Unexpected ball.");
         };
     }

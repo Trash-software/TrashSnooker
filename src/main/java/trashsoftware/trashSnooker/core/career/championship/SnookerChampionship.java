@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.career.championship;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.*;
+import trashsoftware.trashSnooker.core.snooker.MaximumType;
 import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.util.*;
@@ -28,6 +29,7 @@ public class SnookerChampionship extends Championship {
     protected Map<ChampionshipScore.Rank, List<String>> extraAwardsMap() {
         Map<ChampionshipScore.Rank, List<String>> res = new HashMap<>();
         res.put(ChampionshipScore.Rank.MAXIMUM, new ArrayList<>());
+        res.put(ChampionshipScore.Rank.GOLD_MAXIMUM, new ArrayList<>());
         res.put(ChampionshipScore.Rank.BEST_SINGLE, new ArrayList<>());
         if (breaksOver50.isEmpty()) return res;
         
@@ -37,7 +39,16 @@ public class SnookerChampionship extends Championship {
                 break;
             }
             res.get(ChampionshipScore.Rank.BEST_SINGLE).add(sbs.playerId);
-            if (sbs.score >= 147) res.get(ChampionshipScore.Rank.MAXIMUM).add(sbs.playerId);
+//            if (sbs.score >= 147) res.get(ChampionshipScore.Rank.MAXIMUM).add(sbs.playerId);
+            if (sbs.maximumType == MaximumType.MAXIMUM_167) {
+                res.get(ChampionshipScore.Rank.MAXIMUM).add(sbs.playerId);
+                res.get(ChampionshipScore.Rank.GOLD_MAXIMUM).add(sbs.playerId);
+            }
+            if (sbs.maximumType == MaximumType.MAXIMUM_147 
+                    || sbs.maximumType == MaximumType.MAXIMUM_107 
+                    || sbs.maximumType == MaximumType.MAXIMUM_75) {
+                res.get(ChampionshipScore.Rank.MAXIMUM).add(sbs.playerId);
+            }
             if (best == null) best = sbs;
         }
         return res;
@@ -46,12 +57,14 @@ public class SnookerChampionship extends Championship {
     public void updateBreakScore(String playerId, 
                                  ChampionshipStage matchStage, 
                                  int score,
+                                 MaximumType maximumType,
                                  boolean isSim,
                                  String matchId,
                                  int numFrame) {
         if (score >= 50) {
             SnookerBreakScore sbs = new SnookerBreakScore(playerId,
                     score,
+                    maximumType,
                     matchStage,
                     isSim,
                     matchId,

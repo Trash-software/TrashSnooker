@@ -13,14 +13,17 @@ import trashsoftware.trashSnooker.util.Util;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class BriefReplayItem {
     
     private final File file;
     final int replayType;
     public final GameValues gameValues;
+    private Collection<SubRule> subRules = List.of();
     public final int primaryVersion;
     public final int secondaryVersion;
 //    private final int totalCues;
@@ -75,7 +78,6 @@ public class BriefReplayItem {
                     .pocketDifficulty(pocketDifficulty)
                     .holeSize(pocketSize)
                     .build();
-            gameValues = new GameValues(gameRule, tableMetrics, ballMetrics);
             
             if (primaryVersion == 12 && secondaryVersion <= 8) {
                 frameRate = 50;  // 以前就是50帧
@@ -95,7 +97,8 @@ public class BriefReplayItem {
             
             nMovementFrames = Util.bytesToInt32(header, 52);
             totalBeforeCueMs = Util.bytesToInt32(header, 56);
-            
+
+            gameValues = new GameValues(gameRule, null, tableMetrics, ballMetrics);
             p1 = readOnePlayer(raf, 1);
             p2 = readOnePlayer(raf, 2);
             
@@ -115,6 +118,9 @@ public class BriefReplayItem {
             } else {
                 extraLength = 0;
             }
+            
+            // 读了extraField才有
+            gameValues.setSubRules(subRules);
         }
     }
 
@@ -198,6 +204,14 @@ public class BriefReplayItem {
                 String matchId = new String(matchIdBuf, 0, Util.indexOf((byte) 0, matchIdBuf), StandardCharsets.UTF_8);
                 MetaMatchInfo mmi = MetaMatchInfo.fromString(matchId);
                 extraBlocks.add(new ExtraBlock(nextBlockType, mmi));
+            } else if (nextBlockType == ExtraBlock.TYPE_SUB_RULES) {
+                int nSubRules = pureExtra[index + 5] & 0xff;
+                subRules = new ArrayList<>();
+                for (int i = 0; i < nSubRules; i += 32) {
+                    int sri = index + 6 + i * 32;
+                    String srName = Util.decodeStringFromArr(pureExtra, sri, 32);
+                    subRules.add(SubRule.valueOf(srName));
+                }
             }
             
             index += nextBlockLen;
@@ -247,7 +261,14 @@ public class BriefReplayItem {
 
     @FXML
     public String getGameTypeName() {
-        return GameRule.toReadable(getGameType());
+        String rule = GameRule.toReadable(getGameType());
+        
+        String subRuleNames = subRules.stream().map(sr -> {
+            if (sr == SubRule.RAW_STD) return "";
+            else return sr.toString();
+        }).collect(Collectors.joining(" "));
+        if (subRuleNames.isBlank()) return rule;
+        else return rule + " - " + subRuleNames;
     }
     
     @FXML

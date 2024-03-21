@@ -291,7 +291,7 @@
       "frameExp": 10,
       "ranked": false,
       "professional": false,
-      "date": "03/02",
+      "date": "03/01",
       "fees": {
         "registry": 20,
         "flight": 200,
@@ -306,6 +306,46 @@
       "subRules": [
         "CHINESE_EIGHT_STD"
       ]
+    },
+    {
+      "id": "saudi_arabia_masters",
+      "names": {
+        "zh": "斯诺克沙特大师赛",
+        "en": "Snooker Saudi Arabia Masters"
+      },
+      "type": "snooker",
+      "seeds": 8,
+      "places": 8,
+      "pre_matches": [
+      ],
+      "frames": [
+        7, 5, 3
+      ],
+      "awards": [
+        350000, 200000, 100000, 60000
+      ],
+      "frameExp": 80,
+      "best_single": 15000,
+      "maximum": 60000,
+      "167": 167000,
+      "ranked": false,
+      "professional": true,
+      "class": 1,
+      "date": "03/04",
+      "fees": {
+        "registry": 0,
+        "flight": 2000,
+        "hotel": 1000
+      },
+      "invite": {
+        "8": 3000
+      },
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "pocketSize": "std",
+        "pocketDifficulty": "tight"
+      }
     },
     {
       "id": "cat_give_power_champ",
@@ -483,7 +523,7 @@
       ],
       "frameExp": 75,
       "best_single": 15000,
-      "147": 55000,
+      "maximum": 55000,
       "ranked": true,
       "professional": true,
       "class": 1,

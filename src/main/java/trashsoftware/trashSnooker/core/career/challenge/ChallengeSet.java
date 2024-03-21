@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.career.challenge;
 
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.training.Challenge;
@@ -41,7 +42,7 @@ public class ChallengeSet {
         GameRule rule = GameRule.valueOf(ruleKey);
         BallMetrics ballMetrics = GameRule.getDefaultBall(rule);
 
-        GameValues values = new GameValues(rule, tableMetrics, ballMetrics);
+        GameValues values = new GameValues(rule, SubRule.defaultSubRule(rule), tableMetrics, ballMetrics);
         TrainType trainType = TrainType.valueOf(Util.toAllCapsUnderscoreCase(object.getString("type")));
         Challenge challenge;
         if (trainType == TrainType.CUSTOM) {

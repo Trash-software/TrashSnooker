@@ -138,6 +138,8 @@ public class TableMetrics {
 
     public double midPocketThroatWidth;
     private double midPocketMouthWidth;  // 中袋口的宽度
+    
+    private ClothType clothType;
 
     private TableMetrics(TableBuilderFactory factory, String tableName) {
         this.tableName = tableName;
@@ -215,8 +217,13 @@ public class TableMetrics {
 
         return stars;
     }
+    
+    public ClothType getClothType() {
+        return clothType;
+    }
 
     private void build() {
+        if (clothType == null) throw new RuntimeException("Incomplete builder");
 //        double[] topLeftHoleXY = new double[]
 //                {leftX - cornerHoleDt, topY - cornerHoleDt};
 //        double[] botLeftHoleXY = new double[]
@@ -591,6 +598,7 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.SNOOKER)
+                        .clothType(ClothType.NYLON)
                         .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 36.0)
                         .tableDimension(3568.7,  // 140.5"
                                 1788.0,
@@ -599,7 +607,7 @@ public class TableMetrics {
                                 33.34)
 //                        .supportedHoles(SNOOKER_HOLES)
                         .resistanceAndCushionBounce(1.0,
-                                0.86,
+                                0.96,
                                 0.85,
                                 0.8,
                                 0.35);
@@ -611,6 +619,7 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.CHINESE_EIGHT)
+                        .clothType(ClothType.NYLON)
                         .tableColorLeather(Color.GREEN, Color.SADDLEBROWN, GREEN_TABLE_POCKET_LEATHER, 36.0)
                         .tableDimension(2540.0,  // 100"
                                 1270.0,
@@ -619,7 +628,7 @@ public class TableMetrics {
                                 42.0)
 //                        .supportedHoles(CHINESE_EIGHT_HOLES)
                         .resistanceAndCushionBounce(1.05,
-                                0.84,
+                                0.95,
                                 0.8,
                                 0.8,
                                 0.35);
@@ -631,6 +640,7 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.POOL_TABLE_10)
+                        .clothType(ClothType.CLOTH)
                         .tableColorHard(Color.STEELBLUE, Color.BLACK.brighter().brighter(), Color.SLATEGREY)
                         .tableDimension(2844.8,  // 112"
                                 1422.4,
@@ -639,7 +649,7 @@ public class TableMetrics {
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
                         .resistanceAndCushionBounce(1.0,
-                                0.8,
+                                0.9,
                                 1.15,
                                 0.9,
                                 0.8);
@@ -651,6 +661,7 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.AMERICAN_NINE)
+                        .clothType(ClothType.CLOTH)
                         .tableColorHard(Color.STEELBLUE, Color.BLACK.brighter().brighter(), Color.SLATEGREY)
                         .tableDimension(2540.0,
                                 1270.0,
@@ -659,7 +670,7 @@ public class TableMetrics {
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
                         .resistanceAndCushionBounce(1.0,
-                                0.8,
+                                0.9,
                                 1.15,
                                 0.9,
                                 0.8);
@@ -671,6 +682,7 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.POOL_TABLE_8)
+                        .clothType(ClothType.CLOTH)
                         .tableColorHard(Color.STEELBLUE, Color.BLACK.brighter().brighter(), Color.SLATEGREY)
                         .tableDimension(2235.2,  // 88"
                                 1117.6,
@@ -679,7 +691,7 @@ public class TableMetrics {
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
                         .resistanceAndCushionBounce(1.0,
-                                0.8,
+                                0.9,
                                 1.15,
                                 0.9,
                                 0.8);
@@ -691,6 +703,7 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.POOL_TABLE_7)
+                        .clothType(ClothType.CLOTH)
                         .tableColorHard(Color.STEELBLUE,
                                 Color.BLACK.brighter().brighter(),
                                 Color.SLATEGREY,
@@ -702,7 +715,7 @@ public class TableMetrics {
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
                         .resistanceAndCushionBounce(1.0,
-                                0.7,
+                                0.8,
                                 1.15,
                                 0.9,
                                 0.8);
@@ -714,6 +727,7 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.POOL_TABLE_6)
+                        .clothType(ClothType.CLOTH)
                         .tableColorHard(Color.STEELBLUE,
                                 Color.BLACK.brighter().brighter(),
                                 Color.SLATEGREY,
@@ -725,7 +739,7 @@ public class TableMetrics {
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
                         .resistanceAndCushionBounce(1.0,
-                                0.7,
+                                0.8,
                                 1.15,
                                 0.9,
                                 0.8);
@@ -737,6 +751,7 @@ public class TableMetrics {
             @Override
             public Builder create() {
                 return new Builder(this, TableMetrics.RUSSIAN)
+                        .clothType(ClothType.NYLON)
                         .tableColorLeather(Color.GREEN, 
                                 Color.SADDLEBROWN, 
                                 GREEN_TABLE_POCKET_LEATHER, 
@@ -748,7 +763,7 @@ public class TableMetrics {
                                 33.34)
 //                        .supportedHoles(SNOOKER_HOLES)
                         .resistanceAndCushionBounce(1.0,
-                                0.86,
+                                0.95,
                                 0.85,
                                 0.8,
                                 0.35);
@@ -759,7 +774,9 @@ public class TableMetrics {
         public final PocketSize[] supportedHoles;
         public final PocketDifficulty[] supportedDifficulties;
 
-        TableBuilderFactory(String name, PocketSize[] supportedHoles, PocketDifficulty[] supportedDifficulties) {
+        TableBuilderFactory(String name, 
+                            PocketSize[] supportedHoles, 
+                            PocketDifficulty[] supportedDifficulties) {
             this.key = name;
             this.supportedHoles = supportedHoles;
             this.supportedDifficulties = supportedDifficulties;
@@ -825,6 +842,11 @@ public class TableMetrics {
             }
             return radiusHigh + radiusLow;
         }
+        
+        Builder clothType(ClothType clothType) {
+            this.values.clothType = clothType;
+            return this;
+        } 
 
         Builder tableColorHard(Color color, Color borderColor, Color pocketBaseColor) {
             return tableColorHard(color, borderColor, pocketBaseColor, pocketBaseColor);
@@ -1023,6 +1045,17 @@ public class TableMetrics {
         public TableMetrics build() {
             values.build();
             return values;
+        }
+    }
+    
+    public enum ClothType {
+        NYLON(1.0),
+        CLOTH(0.0);
+
+        public final double backNylonEffect;  // 逆毛效应强度
+        
+        ClothType(double backNylonEffect) {
+            this.backNylonEffect = backNylonEffect;
         }
     }
 }

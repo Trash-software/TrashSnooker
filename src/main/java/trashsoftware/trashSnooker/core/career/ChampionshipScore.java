@@ -89,7 +89,8 @@ public class ChampionshipScore {
         PRE_GAMES_2(false, true),
         PRE_GAMES_1(false, true),
         BEST_SINGLE(false, false),
-        MAXIMUM(false, false);
+        MAXIMUM(false, false),
+        GOLD_MAXIMUM(false, false);
 
         public final boolean isMain;
         public final boolean ranked;  // 是否计入排名

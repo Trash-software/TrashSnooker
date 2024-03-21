@@ -1,7 +1,9 @@
 package trashsoftware.trashSnooker.core.metrics;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
+import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
@@ -10,10 +12,12 @@ import trashsoftware.trashSnooker.core.training.TrainType;
 import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 public class GameValues {
 
     public final GameRule rule;
+    public Collection<SubRule> subRules;
     public final TableMetrics table;
     public final BallMetrics ball;
     private TablePreset tablePreset;  // 不管太多，只管画
@@ -36,9 +40,11 @@ public class GameValues {
     private boolean devMode = false;
 
     public GameValues(GameRule rule,
+                      Collection<SubRule> subRules,
                       TableMetrics tableMetrics,
                       BallMetrics ballMetrics) {
         this.rule = rule;
+        this.subRules = subRules;
         this.table = tableMetrics;
         this.ball = ballMetrics;
 
@@ -73,7 +79,11 @@ public class GameValues {
                     .build();
         }
 
-        GameValues gameValues = new GameValues(rule, tableMetrics, ballMetrics);
+        JSONArray subRulesArray = jsonObject.getJSONArray("subRules");
+        GameValues gameValues = new GameValues(rule, 
+                SubRule.jsonToSubRules(subRulesArray), 
+                tableMetrics, 
+                ballMetrics);
         gameValues.setTablePreset(tablePreset);
 
         boolean devMode = jsonObject.has("devMode") && jsonObject.getBoolean("devMode");
@@ -88,6 +98,7 @@ public class GameValues {
         // 似乎不需要考虑training/challenge的问题：谁存这个啊
 
         jsonObject.put("gameRule", rule.name());
+        jsonObject.put("subRules", SubRule.subRulesToJson(subRules));
         jsonObject.put("ball", ball.name());
         jsonObject.put("devMode", devMode);
 
@@ -169,6 +180,31 @@ public class GameValues {
                                 (rule == GameRule.CHINESE_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
                                 (rule == GameRule.LIS_EIGHT && table.tableName.equals(TableMetrics.CHINESE_EIGHT) && ball == BallMetrics.POOL_BALL) ||
                                 (rule == GameRule.AMERICAN_NINE && table.tableName.equals(TableMetrics.AMERICAN_NINE) && ball == BallMetrics.POOL_BALL));
+    }
+
+    public void setSubRules(Collection<SubRule> subRules) {
+        this.subRules = subRules;
+    }
+
+    public Collection<SubRule> getSubRules() {
+        return subRules;
+    }
+
+    public boolean hasSubRule(SubRule subRule) {
+        return subRules.contains(subRule);
+    }
+    
+    public int nBalls() {
+        return switch (rule) {
+            case SNOOKER -> {
+                if (hasSubRule(SubRule.SNOOKER_GOLDEN)) yield 23;
+                else yield 22;
+            } 
+            case SNOOKER_TEN -> 17;
+            case MINI_SNOOKER -> 13;
+            case CHINESE_EIGHT, LIS_EIGHT -> 16;
+            case AMERICAN_NINE -> 10;
+        };
     }
 
     public boolean isInTable(double x, double y, double r) {

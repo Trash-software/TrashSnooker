@@ -1,7 +1,6 @@
 package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.*;
-import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
@@ -104,11 +103,42 @@ public class DBAccess {
     private void updateDbStructure() {
         addDbColumn("ALTER TABLE EntireGame ADD COLUMN MatchID TEXT DEFAULT null;");
         addDbColumn("ALTER TABLE SidePocketRecord ADD COLUMN GoldNine INTEGER DEFAULT 0;");
+
+        addDbColumn("ALTER TABLE EntireGame ADD COLUMN SubRule TEXT DEFAULT NULL;");
+        addDbColumn("ALTER TABLE SnookerRecord ADD COLUMN IsMaximum INTEGER DEFAULT 0;",
+                () -> {
+                    // 推测可能的满分杆数量
+                    String[] names = {"Snooker", "SnookerTen", "MiniSnooker"};
+                    int[] values = {147, 107, 75};
+                    for (int i = 0; i < 3; i++) {
+                        String updater = String.format("""
+                                UPDATE SnookerRecord
+                                SET IsMaximum = 1
+                                WHERE (Highest >= %d
+                                AND EntireBeginTime IN (
+                                    SELECT EntireBeginTime
+                                    FROM EntireGame
+                                    WHERE GameType = '%s'
+                                ))""", values[i], names[i]);
+                        try (Statement stmt = connection.createStatement()) {
+                            stmt.execute(updater);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     private void addDbColumn(String query) {
+        addDbColumn(query, null);
+    }
+
+    private void addDbColumn(String query, Runnable successCallback) {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(query);
+            if (successCallback != null) {
+                successCallback.run();
+            }
         } catch (SQLException ex) {
             System.out.println("Not executed: " + query);
         }
@@ -232,7 +262,7 @@ public class DBAccess {
                 // 应该就是2，保险起见，万一以后有平局呢
                 totalWinLossAgainst[i] += winLoss[i];
             }
-            
+
             if (winLoss[0] >= 3 && winLoss[1] == 0) {
                 cam.addAchievement(ruleAchMap.get("DEFEAT_SAME_MULTI_1"), null);
             }
@@ -245,8 +275,8 @@ public class DBAccess {
         return uniqueWins;
     }
 
-    private void storeAttemptsForOnePlayer(EntireGame entireGame, 
-                                           Game<?, ?> frame, 
+    private void storeAttemptsForOnePlayer(EntireGame entireGame,
+                                           Game<?, ?> frame,
                                            Player player,
                                            boolean isWinner) {
         // attempts, successes, 
@@ -292,7 +322,7 @@ public class DBAccess {
                 }
             }
         }
-        
+
         // 添加成就
         if (data[0] == 0) {
             if (!isWinner) {
@@ -304,7 +334,7 @@ public class DBAccess {
                 AchManager.getInstance().addAchievement(Achievement.LIE_DOWN_WIN, player.getInGamePlayer());
             }
         }
-        
+
         if (player.getScore() == 0) {
             int threshold = 5;
             Achievement achievement = null;
@@ -348,11 +378,11 @@ public class DBAccess {
     }
 
     public void storeAttempts(EntireGame entireGame, Game<?, ?> frame, InGamePlayer frameWinner) {
-        storeAttemptsForOnePlayer(entireGame, 
+        storeAttemptsForOnePlayer(entireGame,
                 frame,
                 frame.getPlayer1(),
                 frameWinner == frame.getPlayer1().getInGamePlayer());
-        storeAttemptsForOnePlayer(entireGame, 
+        storeAttemptsForOnePlayer(entireGame,
                 frame,
                 frame.getPlayer2(),
                 frameWinner == frame.getPlayer2().getInGamePlayer());
@@ -598,11 +628,14 @@ public class DBAccess {
                     if (scores[1] >= 100) {
                         scores[3]++;
                     }
-                    if ((title.gameRule == GameRule.SNOOKER && scores[1] >= 147) || 
-                            (title.gameRule == GameRule.MINI_SNOOKER && scores[1] >= 75) || 
-                            (title.gameRule == GameRule.SNOOKER_TEN && scores[1] >= 107)) {
+                    if (snRes.getInt("IsMaximum") == 1) {
                         scores[4]++;
                     }
+//                    if ((title.gameRule == GameRule.SNOOKER && scores[1] >= 147) || 
+//                            (title.gameRule == GameRule.MINI_SNOOKER && scores[1] >= 75) || 
+//                            (title.gameRule == GameRule.SNOOKER_TEN && scores[1] >= 107)) {
+//                        scores[4]++;
+//                    }
                     PlayerFrameRecord.Snooker snooker = new PlayerFrameRecord.Snooker(
                             index, framesPotMap.get(index)[playerIndex],
                             framesWinnerMap.get(index), scores
@@ -734,7 +767,7 @@ public class DBAccess {
                 breakClear + ", " +
                 continueClear + ", " +
                 highest +
-                (gameRule == GameRule.AMERICAN_NINE ? (", " + goldNine + "") : "") +
+                (gameRule == GameRule.AMERICAN_NINE ? (", " + goldNine) : "") +
                 ");";
         try {
             executeStatement(query);
@@ -744,7 +777,8 @@ public class DBAccess {
     }
 
     public void recordSnookerBreaks(EntireGame entireGame, Game<?, ?> frame,
-                                    SnookerPlayer player, List<Integer> breakScores) {
+                                    SnookerPlayer player, List<Integer> breakScores,
+                                    boolean isMaximum) {
         System.out.println("Snooker breaks: " + breakScores);
         int highBreak = 0;
         int breaks50 = 0;  // 一局最多两个50+，最多一个100+
@@ -756,6 +790,7 @@ public class DBAccess {
                 highBreak = b;
             }
         }
+        int maximum = isMaximum ? 1 : 0;
         String query = "INSERT INTO SnookerRecord VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
                 frame.frameIndex + ", " +
@@ -763,8 +798,9 @@ public class DBAccess {
                 (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) + ", " +
                 player.getScore() + ", " +
                 breaks50 + ", " +
-                highBreak + ");";
-
+                highBreak + ", " +
+                maximum +
+                ");";
         try {
             executeStatement(query);
         } catch (SQLException e) {
@@ -896,7 +932,8 @@ public class DBAccess {
                         p1t + ", " +
                         p2t + ", " +
                         entireGame.getTotalFrames() + ", " +
-                        (metaMatchInfo == null ? null : ("'" + metaMatchInfo + "'")) +
+                        (metaMatchInfo == null ? null : ("'" + metaMatchInfo + "'")) + ", " +
+                        "'" + SubRule.subRulesToCommaString(entireGame.gameValues.subRules) + "', " +
                         ");";
         try {
             executeStatement(command);

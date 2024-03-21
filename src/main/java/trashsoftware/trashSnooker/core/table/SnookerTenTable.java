@@ -8,8 +8,8 @@ public class SnookerTenTable extends AbstractSnookerTable {
         super(tableMetrics);
     }
 
-    @Override
-    public int nBalls() {
-        return 17;
-    }
+//    @Override
+//    public int nBalls() {
+//        return 17;
+//    }
 }

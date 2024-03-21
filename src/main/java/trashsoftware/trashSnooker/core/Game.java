@@ -96,7 +96,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     private PhysicsCalculator physicsCalculator;
     protected FrameAchievementRecorder achievementRecorder = new FrameAchievementRecorder();
     protected Ball specifiedTarget;
-    protected final Set<SubRule> subRules = new HashSet<>();
+//    protected final Set<SubRule> subRules = new HashSet<>();
     protected BreakStats breakStats;
 
     protected Game(EntireGame entireGame,
@@ -122,8 +122,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public static Game<? extends Ball, ? extends Player> createGame(
             GameSettings gameSettings,
             GameValues gameValues,
-            EntireGame entireGame,
-            Collection<SubRule> subRules) {
+            EntireGame entireGame) {
         int frameIndex = entireGame == null ? 1 : (entireGame.getP1Wins() + entireGame.getP2Wins() + 1);
         Game<? extends Ball, ? extends Player> game;
         if (gameValues.rule == GameRule.SNOOKER) {
@@ -170,9 +169,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
         
-        for (SubRule subRule : subRules) {
-            game.addSubRule(subRule);
-        }
+//        for (SubRule subRule : subRules) {
+//            game.addSubRule(subRule);
+//        }
 
         try {
             if (DBAccess.RECORD && entireGame != null) {
@@ -505,6 +504,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public B getCueBall() {
         return cueBall;
+    }
+    
+    public int nBalls() {
+        return getAllBalls().length;
     }
 
     public void quitGame() {
@@ -1522,15 +1525,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public InGamePlayer getP2() {
         return player2.getInGamePlayer();
     }
-    
-    public void addSubRule(SubRule subRule) {
-        subRules.removeIf(subRule::isRepellent);
-        subRules.add(subRule);
-    }
-    
-    protected boolean hasSubRule(SubRule subRule) {
-        return subRules.contains(subRule);
-    }
+
+//    public void addSubRule(SubRule subRule) {
+//        subRules.removeIf(subRule::isRepellent);
+//        subRules.add(subRule);
+//    }
 
     public static class SeeAble {
         public final int seeAbleTargets;
@@ -1856,8 +1855,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public class PhysicsCalculator {
 
         private final Phy phy;
-        private final int[] movementTypes = new int[getTable().nBalls()];
-        private final double[] movementValues = new double[getTable().nBalls()];
+        private final int[] movementTypes = new int[nBalls()];
+        private final double[] movementValues = new double[nBalls()];
         private Movement movement;
         private double cumulatedPhysicalTime = 0.0;
         private boolean notTerminated = true;

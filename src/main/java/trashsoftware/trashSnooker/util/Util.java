@@ -51,6 +51,16 @@ public class Util {
             return String.format("%d:%s", sec / 3600, secondsToString(sec % 3600));
         }
     }
+    
+    public static String decodeStringFromArr(byte[] arr, int startIndex, int maxLen) {
+        int stop = startIndex;
+        int mustStop = startIndex + maxLen;
+        while (stop < mustStop) {
+            if (arr[stop] == 0) break;
+            stop++;
+        }
+        return new String(arr, startIndex, stop - startIndex);
+    }
 
     public static boolean deleteFile(File file) {
         if (file == null || !file.exists()) return true;

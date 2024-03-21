@@ -32,10 +32,11 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     protected ChineseEightScoreResult curResult;
     private boolean wasBreakLoseChance;
 
-    public ChineseEightBallGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
+    public ChineseEightBallGame(EntireGame entireGame, 
+                                GameSettings gameSettings, 
+                                GameValues gameValues, 
+                                int frameIndex) {
         super(entireGame, gameSettings, gameValues, new ChineseEightTable(gameValues.table), frameIndex);
-
-        subRules.add(SubRule.CHINESE_EIGHT_STD);
 
         initBalls();
     }
@@ -477,7 +478,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         if (isBreaking) {
             updateBreakStats(newPotted);
             int playerNum = getPlayerNum(currentPlayer);
-            if (hasSubRule(SubRule.CHINESE_EIGHT_STD)) {
+            if (gameValues.hasSubRule(SubRule.CHINESE_EIGHT_STD)) {
                 if (isStdIllegalBreak(currentPlayer.getPlayerPerson())) {
                     getEntireGame().addBreakLoseChance(playerNum);
 
@@ -495,7 +496,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                     switchPlayer();
                     return;
                 }
-            } else if (hasSubRule(SubRule.CHINESE_EIGHT_JOE)) {
+            } else if (gameValues.hasSubRule(SubRule.CHINESE_EIGHT_JOE)) {
                 if (isJoeBreakLoseChance(currentPlayer.getPlayerPerson())) {
                     getEntireGame().addBreakLoseChance(playerNum);
 

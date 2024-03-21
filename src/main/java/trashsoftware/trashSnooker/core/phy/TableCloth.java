@@ -7,11 +7,11 @@ import trashsoftware.trashSnooker.util.Util;
 public class TableCloth {
 
     public static final double RANDOM_ERROR_FACTOR = 1.0 / 1.2;
-    public static final double FIXED_ERROR_FACTOR = 1.0 / 180.0;
+    public static final double FIXED_ERROR_FACTOR = 1.0 / 60.0;
     
-    private static final double baseSpeedReducer = 90;
-    private static final double baseSpinReducer = 5200;
-    private static final double baseSpinEffect = 1650;
+    private static final double baseSpeedReducer = 85;
+    private static final double baseSpinReducer = 3500;
+    private static final double baseSpinEffect = 920;
     public final Goodness goodness;
     public final Smoothness smoothness;
     

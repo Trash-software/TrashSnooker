@@ -99,7 +99,7 @@ public class GameView implements Initializable {
     public static final double HAND_DT_TO_MAX_PULL = 30.0;
     public static final double MIN_CUE_BALL_DT = 30.0;  // 运杆时杆头离白球的最小距离
     public static final double MAX_CUE_ANGLE = 75.0;
-    private static final double DEFAULT_POWER = 30.0;
+    private static final double DEFAULT_POWER = 35.0;
     private static final double WHITE_PREDICT_LEN_AFTER_WALL = 1000.0;  // todo: 根据球员
     private static final long DEFAULT_REPLAY_GAP = 1000;
     //    public static double scale;
@@ -1137,7 +1137,9 @@ public class GameView implements Initializable {
             if (pva.metaMatchInfo == null) {
                 System.err.println("Match too old! No meta info!");
             } else {
-                sc.updateBreakScore(player.getPlayerPerson().getPlayerId(), pva.stage, breakScore, false,
+                sc.updateBreakScore(player.getPlayerPerson().getPlayerId(), pva.stage, breakScore, 
+                        player.getMaximumType(),
+                        false,
                         pva.metaMatchInfo.toString(), nFrameFrom1);
             }
         }

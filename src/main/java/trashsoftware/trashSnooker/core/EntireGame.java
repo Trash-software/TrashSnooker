@@ -334,7 +334,8 @@ public class EntireGame {
                 DBAccess.getInstance().recordSnookerBreaks(this,
                         getGame(),
                         snookerPlayer,
-                        snookerPlayer.getSinglePolesInThisGame());
+                        snookerPlayer.getSinglePolesInThisGame(),
+                        snookerPlayer.hasMaximumInThisGame());
         } else if (framePlayer instanceof NumberedBallPlayer numberedBallPlayer) {
             // 炸清和接清
             numberedBallPlayer.flushSinglePoles();
@@ -391,14 +392,7 @@ public class EntireGame {
                 .players(p1, p2)
                 .build();
         
-        Collection<SubRule> subRules;
-        if (metaMatchInfo == null) {
-            subRules = List.of();
-        } else {
-            subRules = metaMatchInfo.data.getSubRules();
-        }
-        
-        game = Game.createGame(gameSettings, gameValues, this, subRules);
+        game = Game.createGame(gameSettings, gameValues, this);
         
         if (totalFrames >= 5 && p1Wins + p2Wins + 1 == totalFrames) {
             // 决胜局

@@ -15,7 +15,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public static final double GEAR_EFFECT_MAX_POWER = 0.25;  // 大于这个球速就没有齿轮效应了
     public static final double CUSHION_COLLISION_SPIN_FACTOR = 0.5;
     public static final double CUSHION_DIRECT_SPIN_APPLY = 0.4;
-    public static final double SUCK_CUSHION_FACTOR = 0.8;
+    public static final double SUCK_CUSHION_FACTOR = 0.7;
     public static final double MAXIMUM_SPIN_PASS = 0.2;  // 齿轮效应传递旋转的上限
     private static final Random ERROR_GENERATOR = new Random();
     private static boolean gearOffsetEnabled = true;  // 齿轮/投掷效应造成的球线路偏差
@@ -82,49 +82,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         gearOffsetEnabled = false;
     }
 
-    static void threeBallHits(Ball ball1, Ball ball2, Ball ball3, GameValues values, Phy phy) {
-        // todo: 老子今天就非要研究出来到底谁先撞谁！
-        // fixme: 算了，研究不出来
-
-        double dia = values.ball.ballDiameter;
-
-        double x1 = ball1.x, x2 = ball2.x, x3 = ball3.x;
-        double y1 = ball1.y, y2 = ball2.y, y3 = ball3.y;
-
-        double dt12, dt13, dt23;
-
-        double tolerance = 0.05;
-
-        while (
-                (dt12 = Algebra.distanceToPoint(x1, y1, x2, y2)) > dia
-                        || (dt13 = Algebra.distanceToPoint(x1, y1, x3, y3)) > dia
-                        || (dt23 = Algebra.distanceToPoint(x2, y2, x3, y3)) > dia
-        ) {
-            x1 -= ball1.vx;
-            x2 -= ball2.vx;
-            x3 -= ball3.vx;
-            y1 -= ball1.vy;
-            y2 -= ball2.vy;
-            y3 -= ball3.vy;
-        }
-
-        double relSpeed12 = Math.hypot(ball1.vx - ball2.vx, ball1.vy - ball2.vy);
-        double relSpeed13 = Math.hypot(ball1.vx - ball3.vx, ball1.vy - ball3.vy);
-        double relSpeed23 = Math.hypot(ball2.vx - ball3.vx, ball2.vy - ball3.vy);
-
-        double time12 = dt12 / relSpeed12;
-        double time13 = dt13 / relSpeed13;
-        double time23 = dt23 / relSpeed23;
-
-        if (time12 < time13) {
-            if (time12 < time23) {
-                // 1，2最先撞
-                ball1.tryHitBall(ball2, true, false, phy);
-
-            }
-        }
-    }
-
     @Override
     public Ball clone() {
         try {
@@ -156,10 +113,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public void pickup() {
         setPotted(false);
         clearMovement();
-    }
-
-    public boolean isRed() {
-        return value == 1;
     }
 
     public boolean isWhite() {
@@ -204,7 +157,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         // 每个动画帧算一次，而不是物理帧
         axisX = ySpin;
         axisY = -xSpin;
-        double ss = sideSpin * Math.PI * 1.2;  // 不要误会，没有这么神，只是3.14刚好看起来差不多
+        double ss = sideSpin * Math.PI;  // 不要误会，没有这么神，只是3.14刚好看起来差不多
 //        if (isWhite()) System.out.println(xSpin + " " + ySpin + " " + sideSpin);
         if (Double.isNaN(ss)) ss = 0.0;
         axisZ = -ss;
@@ -230,32 +183,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         }
     }
 
-    protected void transformPhy(Phy srcPhy, Phy dstPhy) {
-        double vMul = dstPhy.calculateMs / srcPhy.calculateMs;
-        double accMul = vMul * vMul;
-
-        vx *= vMul;
-        vy *= vMul;
-        xSpin *= vMul;
-        ySpin *= vMul;
-        sideSpin *= vMul;
-    }
-
-    protected void simpleMove(Phy phy) {
-        double vMul = phy.accelerationMultiplier();
-
-        double rvx = vx / vMul;
-        double rvy = vy / vMul;
-
-        distance += Math.hypot(rvx, rvy);
-        nextX = x + rvx;
-        nextY = y + rvy;
-        setX(nextX);
-        setY(nextY);
-
-        msSinceCue += 1 / vMul;  // 啊？
-    }
-
     protected void normalMove(Phy phy) {
         distance += Math.hypot(vx, vy);
         setX(nextX);
@@ -278,9 +205,18 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
         if (!phy.isPrediction) {
             // 这部分是台泥造成的线路偏差
+            
+            // 逆毛效应
+            double[] direction = Algebra.unitVector(vx, vy);
+            double fixedError = Math.max(-direction[0], 0);  // 从右到左的球(vx<0的)才有逆毛效应
+            fixedError *= Math.abs(direction[1]);  // 希望在斜45度时逆毛效应达到最大
+            fixedError *= phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec * 
+                    TableCloth.FIXED_ERROR_FACTOR * table.getClothType().backNylonEffect;
+//            System.out.println("Fixed error: " + fixedError);
+            
             double xErr = ERROR_GENERATOR.nextGaussian() * 
                     phy.cloth.goodness.errorFactor / phy.calculationsPerSec * TableCloth.RANDOM_ERROR_FACTOR +
-                    phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec * TableCloth.FIXED_ERROR_FACTOR;
+                    fixedError;
             double yErr = ERROR_GENERATOR.nextGaussian() * 
                     phy.cloth.goodness.errorFactor / phy.calculationsPerSec * TableCloth.RANDOM_ERROR_FACTOR;
             vx += xErr / values.ball.ballWeightRatio;  // 重球相对稳定
@@ -664,20 +600,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return null;
     }
 
-    void threeBallHit(Ball ball2, Ball ball3, Phy phy) {
-        double dt12 = predictedDtTo(ball2);  // 12，13都小于直径
-        double dt13 = predictedDtTo(ball3);
-//        double dt23 = ball2.predictedDtTo(ball3);
-
-        if (dt12 < dt13) {
-            tryHitBall(ball2, true, false, phy);
-            if (isHitting(ball3, phy)) tryHitBall(ball3, true, false, phy);
-        } else {
-            tryHitBall(ball3, true, false, phy);
-            if (isHitting(ball2, phy)) tryHitBall(ball2, true, false, phy);
-        }
-    }
-
     /**
      * 返回:
      * 0: 真的没有三颗球撞一起（包括没有球碰撞和纯二球碰撞）
@@ -755,46 +677,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             tryHitBall(ball2, false, false, phy);
             if (isHitting(ball1, phy)) tryHitBall(ball1, false, false, phy);
         }
-    }
-
-    private double msNeededToHit(Ball other, Phy phy) {
-        // 可以返回负数
-        double precisionMm = 0.00001 / phy.calculationsPerSecSqr;
-
-        double x1 = x;
-        double y1 = y;
-        double x2 = other.x;
-        double y2 = other.y;
-
-        double result;
-        double high = phy.calculateMs * 1;
-        double low = -high;
-
-        double dt;
-
-        int count = 0;
-        while (count < 100) {
-            result = (high + low) / 2;
-            dt = Algebra.distanceToPoint(
-                    x1 + vx * result,
-                    y1 + vy * result,
-                    x2 + other.vx * result,
-                    y2 + other.vy * result
-            ) - values.ball.ballDiameter;
-            if (Math.abs(dt) < precisionMm) {
-                System.out.println("Count: " + count + ", dt: " + dt);
-                return result;
-            }
-
-            if (dt < 0) {  // 过了
-                low = result;
-            } else {  // 没到
-                high = result;
-            }
-
-            count++;
-        }
-        throw new RuntimeException("Cannot find collision point!");
     }
 
     boolean isHitting(Ball other, Phy phy) {
@@ -886,7 +768,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         collisionThickness -= Algebra.HALF_PI;  // 减去90度，正撞为0，擦右边为-90
 //        System.out.println("Thick: " + Math.toDegrees(collisionThickness));
         double relSpeed = Math.hypot(this.vx - ball.vx, this.vy - ball.vy);
-        double totalSpeed = (Math.hypot(this.vx, this.vy) + Math.hypot(ball.vx, ball.vy)) * phy.calculationsPerSec;
+//        double totalSpeed = (Math.hypot(this.vx, this.vy) + Math.hypot(ball.vx, ball.vy)) * phy.calculationsPerSec;
 
         double[] thisVCob = Algebra.matrixMultiplyVector(changeOfBasis, thisV);
         double[] ballVCob = Algebra.matrixMultiplyVector(changeOfBasis, ballV);
@@ -914,29 +796,29 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         
         double spinProj = 0.0;
         
-        if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
-            // 实为投掷效应
-            double powerGear = Math.min(1.0,
-                    totalSpeed / GEAR_EFFECT_MAX_POWER / Values.MAX_POWER_SPEED * 
-                            values.ball.ballWeightRatio);  // 25的力就没有效应了(高低杆要打出25的球速，起码要35的力)
-            double throwEffect = (1 - powerGear) * MAX_GEAR_EFFECT;
-            double gearEffect = 1 - throwEffect;
-
-            spinProj = Algebra.projectionLengthOn(thisV,
-                    new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
-
-            double gearRemain = throwEffect * spinProj;
-
-            ballOutVer *= gearEffect;
-            thisOutVer = thisVerV * gearRemain;
-            
-            if (gearOffsetEnabled) {
-                double ratio = thisHorV / thisVerV;
-                int sign = ratio < 0 ? -1 : 1;
-                double offsetRatio = Math.sqrt(Math.abs(ratio * sign)) * sign;
-                ballOutHor = ballOutVer * offsetRatio * (gearRemain * 0.2);  // 目标球身上的投掷效应。AI不会算，所以我们只给玩家搞这个
-            }
-        }
+//        if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
+//            // 实为投掷效应
+//            double powerGear = Math.min(1.0,
+//                    totalSpeed / GEAR_EFFECT_MAX_POWER / Values.MAX_POWER_SPEED * 
+//                            values.ball.ballWeightRatio);  // 25的力就没有效应了(高低杆要打出25的球速，起码要35的力)
+//            double throwEffect = (1 - powerGear) * MAX_GEAR_EFFECT;
+//            double gearEffect = 1 - throwEffect;
+//
+//            spinProj = Algebra.projectionLengthOn(thisV,
+//                    new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
+//
+//            double gearRemain = throwEffect * spinProj;
+//
+//            ballOutVer *= gearEffect;
+//            thisOutVer = thisVerV * gearRemain;
+//            
+//            if (gearOffsetEnabled) {
+//                double ratio = thisHorV / thisVerV;
+//                int sign = ratio < 0 ? -1 : 1;
+//                double offsetRatio = Math.sqrt(Math.abs(ratio * sign)) * sign;
+//                ballOutHor = ballOutVer * offsetRatio * (gearRemain * 0.2);  // 目标球身上的投掷效应。AI不会算，所以我们只给玩家搞这个
+//            }
+//        }
 
         // 碰撞后，两球平行于切线的速率不变，垂直于切线的速率互换
         double[] thisOutAtRelAxis = new double[]{
@@ -996,11 +878,23 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 ball.vy = ballOutSpeed * ballOutGeared[1];
             }
 
-            // 薄边造成的旋转
+            // 薄边造成的侧旋
             double gearStrengthFactor = 0.15;
-            double spinChange = gearStrengthFactor * Math.cos(Algebra.HALF_PI - collisionThickness) * relSpeed;
+            double angleSpinChange = gearStrengthFactor * Math.cos(Algebra.HALF_PI - collisionThickness);
+            double spinChange = angleSpinChange * relSpeed;
             this.sideSpin += spinChange;
             ball.sideSpin -= spinChange;
+            
+            // 薄边造成的纵向旋转
+            double[] thisOrth = new double[]{-thisOut[1], thisOut[0]};
+            // todo: phy.calculationsPerSec
+            double thisXySpinChange = angleSpinChange * 
+                    (Values.MAX_SPIN_SPEED / Values.MAX_SIDE_SPIN_SPEED) * 0.5;
+            double thisSpinXChange = thisXySpinChange * thisOrth[0];
+            double thisSpinYChange = thisXySpinChange * thisOrth[1];
+            this.xSpin += thisSpinXChange;
+            this.ySpin += thisSpinYChange;
+            // ball也该变，但会影响目标球走势，AI不会瞄，辅助瞄准线也做不了
         }
 
         // update
