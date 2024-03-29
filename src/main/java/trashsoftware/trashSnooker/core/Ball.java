@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.Cushion;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
@@ -17,6 +18,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public static final double CUSHION_DIRECT_SPIN_APPLY = 0.4;
     public static final double SUCK_CUSHION_FACTOR = 0.7;
     public static final double MAXIMUM_SPIN_PASS = 0.2;  // 齿轮效应传递旋转的上限
+    public static final double NEAR_CUSHION_AREA = 2.5;
+    public static final double NEAR_CUSHION_ACC = 10.0;
     private static final Random ERROR_GENERATOR = new Random();
     private static boolean gearOffsetEnabled = true;  // 齿轮/投掷效应造成的球线路偏差
     private static int idCounter = 0;
@@ -35,7 +38,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private long msSinceCue;
     private long msRemainInPocket;
     private Pocket pottedPocket;
-//    private Ball justHit;
+    //    private Ball justHit;
     int pocketHitCount = 0;  // 本杆撞击袋角的次数
 
     private double lastCollisionX, lastCollisionY;  // 记录一下上次碰撞所在的位置
@@ -105,7 +108,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return !potted && (x < 0 || x >= values.table.outerWidth ||
                 y < 0 || y >= values.table.outerHeight);
     }
-    
+
     public boolean isNotOnTable() {
         return isPotted() || isOutOfTable();
     }
@@ -205,19 +208,19 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
         if (!phy.isPrediction) {
             // 这部分是台泥造成的线路偏差
-            
+
             // 逆毛效应
             double[] direction = Algebra.unitVector(vx, vy);
             double fixedError = Math.max(-direction[0], 0);  // 从右到左的球(vx<0的)才有逆毛效应
             fixedError *= Math.abs(direction[1]);  // 希望在斜45度时逆毛效应达到最大
-            fixedError *= phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec * 
+            fixedError *= phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec *
                     TableCloth.FIXED_ERROR_FACTOR * table.getClothType().backNylonEffect;
 //            System.out.println("Fixed error: " + fixedError);
-            
-            double xErr = ERROR_GENERATOR.nextGaussian() * 
+
+            double xErr = ERROR_GENERATOR.nextGaussian() *
                     phy.cloth.goodness.errorFactor / phy.calculationsPerSec * TableCloth.RANDOM_ERROR_FACTOR +
                     fixedError;
-            double yErr = ERROR_GENERATOR.nextGaussian() * 
+            double yErr = ERROR_GENERATOR.nextGaussian() *
                     phy.cloth.goodness.errorFactor / phy.calculationsPerSec * TableCloth.RANDOM_ERROR_FACTOR;
             vx += xErr / values.ball.ballWeightRatio;  // 重球相对稳定
             vy += yErr / values.ball.ballWeightRatio;
@@ -260,6 +263,31 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             ySpin -= ySpinReducer * dynamicDragFactor;
         } else {
             ySpin = vy;
+        }
+
+        if (!phy.isPrediction) {
+            nearCushionChangePath(phy);
+        }
+    }
+
+    private void nearCushionChangePath(Phy phy) {
+        BallMetrics ballMetrics = values.ball;
+        if (x >= table.leftX + ballMetrics.ballRadius
+                && x < table.leftX + ballMetrics.ballRadius + NEAR_CUSHION_AREA
+                && vx > 0) {
+            vx -= NEAR_CUSHION_ACC / phy.calculationsPerSecSqr;
+        } else if (x < table.rightX - ballMetrics.ballRadius
+                && x >= table.rightX - ballMetrics.ballRadius - NEAR_CUSHION_AREA
+                && vx < 0) {
+            vx += NEAR_CUSHION_ACC / phy.calculationsPerSecSqr;
+        } else if (y >= table.topY + ballMetrics.ballRadius
+                && y < table.topY + ballMetrics.ballRadius + NEAR_CUSHION_AREA
+                && vy > 0) {
+            vy -= NEAR_CUSHION_ACC / phy.calculationsPerSecSqr;
+        } else if (y < table.botY - ballMetrics.ballRadius
+                && y >= table.botY - ballMetrics.ballRadius - NEAR_CUSHION_AREA
+                && vy < 0) {
+            vy += NEAR_CUSHION_ACC / phy.calculationsPerSecSqr;
         }
     }
 
@@ -455,18 +483,18 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         if (currentBounce instanceof ArcBounce) {
             ((ArcBounce) currentBounce).setDesiredLeaveSideSpin(sideSpin + sideSpinChange);
         }
-        
+
         pocketHitCount++;
     }
 
     protected void hitHoleLineArea(double[][] line, double[] lineNormalVec, Phy phy) {
         vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
         vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
-        
+
         double[] tanUnitVec = Algebra.unitVector(new double[]{line[1][0] - line[0][0], line[1][1] - line[0][1]});
         applySpin(lineNormalVec, tanUnitVec, phy, 0.8);
         super.hitHoleLineArea(line, lineNormalVec, phy);
-        
+
         pocketHitCount++;
 
         // 袋角直线撞得出来个屁的塞，反正我是没见过
@@ -503,12 +531,12 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
         double[] spins = new double[]{xSpin, ySpin};
         double[] spinCob = Algebra.matrixMultiplyVector(cob, spins);
-        
+
         vCob[1] += spinCob[1] * (1 - table.wallSpinPreserveRatio) * CUSHION_DIRECT_SPIN_APPLY;  // 一部分高低杆旋转直接生效了
-        
+
         spinCob[0] *= 1 - (1 - table.wallSpinPreserveRatio) * 0.5;
         spinCob[1] *= table.wallSpinPreserveRatio * SUCK_CUSHION_FACTOR;
-        
+
         double[] inverse = Algebra.matrixMultiplyVector(cobInverse, vCob);
 
         vx = inverse[0];
@@ -524,6 +552,18 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         sideSpin *= table.wallSpinPreserveRatio;
     }
 
+    protected double cushionBounceFactor(Phy phy, double[] direction, boolean isEndCushion) {
+        double base = phy.cloth.smoothness.cushionBounceFactor;
+
+        double variable;
+        if (isEndCushion) {
+            variable = Math.abs(direction[0]);
+        } else {
+            variable = Math.abs(direction[1]);
+        }
+        return Algebra.shiftRangeSafe(0, 1, 1, base, variable);
+    }
+
     /**
      * 该方法不检测袋口
      */
@@ -532,9 +572,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 nextX >= table.rightX - values.ball.ballRadius) {
             // 顶库(屏幕两边)
 
+            double[] direction = Algebra.unitVector(vx, vy);
             // 先减速，算是对时间复杂度的一种妥协
-            vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
-            vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+            double bounceFactor = cushionBounceFactor(phy, direction, true);
+            vx *= table.wallBounceRatio * bounceFactor;
+            vy *= table.wallBounceRatio * bounceFactor;
 
             boolean isLeft = nextX < values.table.midX;
             Cushion.EdgeCushion cushion = isLeft ? table.leftCushion : table.rightCushion;
@@ -546,10 +588,19 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             double[] hitCushionPos = getCushionHitPos(cushion.getPosition());
 
             double leaveY = hitCushionPos[1] + nFrames * vy;
-            double hSpeedLoss = values.table.cushionPowerSpinFactor * (getSpeedPerSecond(phy) / Values.MAX_POWER_SPEED) * 0.25;
+            double hSpeedLoss = values.table.cushionPowerSpinFactor *
+                    Math.abs(direction[0]) *
+                    (getSpeedPerSecond(phy) / Values.MAX_POWER_SPEED) * 0.5;
             // 撞库撞出来的塞
             double sideSpinChangeFactor = Algebra.projectionLengthOn(cushion.getVector(), new double[]{vx, vy});
             double sideSpinChange = sideSpinChangeFactor * values.table.cushionPowerSpinFactor * CUSHION_COLLISION_SPIN_FACTOR;
+            double bouncedSideSpin;
+            if (sideSpin * 3.14 > sideSpinChangeFactor) {
+                bouncedSideSpin = sideSpin;
+            } else {
+                bouncedSideSpin = sideSpin + sideSpinChange;
+            }
+
             currentBounce = new CushionBounce(
                     effectiveAcc,
                     0,
@@ -559,14 +610,17 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     leaveY,
                     -vx,
                     vy * (1 - hSpeedLoss),
-                    sideSpin + sideSpinChange);
+//                    vy,
+                    bouncedSideSpin);
             return cushion;
         }
         if (nextY < values.ball.ballRadius + table.topY ||
                 nextY >= table.botY - values.ball.ballRadius) {
             // 边库
-            vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
-            vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
+            double[] direction = Algebra.unitVector(vx, vy);
+            double bounceFactor = cushionBounceFactor(phy, direction, false);
+            vx *= table.wallBounceRatio * bounceFactor;
+            vy *= table.wallBounceRatio * bounceFactor;
 
             boolean isTop = nextY < table.midY;
             boolean isLeft = nextX < values.table.midX;
@@ -581,10 +635,19 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             double[] hitCushionPos = getCushionHitPos(cushion.getPosition());
 
             double leaveX = hitCushionPos[0] + nFrames * vx;
-            double hSpeedLoss = values.table.cushionPowerSpinFactor * (getSpeedPerSecond(phy) / Values.MAX_POWER_SPEED) * 0.25;
+            double hSpeedLoss = values.table.cushionPowerSpinFactor *
+                    Math.abs(direction[1]) *
+                    (getSpeedPerSecond(phy) / Values.MAX_POWER_SPEED) * 0.5;
             // 撞库撞出来的塞
             double sideSpinChangeFactor = Algebra.projectionLengthOn(cushion.getVector(), new double[]{vx, vy});
             double sideSpinChange = sideSpinChangeFactor * values.table.cushionPowerSpinFactor * CUSHION_COLLISION_SPIN_FACTOR;
+            double bouncedSideSpin;
+            if (sideSpin * 3.14 > sideSpinChangeFactor) {
+                bouncedSideSpin = sideSpin;
+            } else {
+                bouncedSideSpin = sideSpin + sideSpinChange;
+            }
+            
             currentBounce = new CushionBounce(
                     0,
                     effectiveAcc,
@@ -593,8 +656,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     leaveX,
                     hitCushionPos[1],
                     vx * (1 - hSpeedLoss),
+//                    vx,
                     -vy,
-                    sideSpin + sideSpinChange);
+                    bouncedSideSpin);
             return cushion;
         }
         return null;
@@ -793,9 +857,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double thisOutVer = ballVerV;
         double ballOutHor = ballHorV;
         double ballOutVer = thisVerV;
-        
+
         double spinProj = 0.0;
-        
+
 //        if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
 //            // 实为投掷效应
 //            double powerGear = Math.min(1.0,
@@ -849,7 +913,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
             this.sideSpin -= passed;  // 自己的塞会减少，动量守恒嘛
             ball.sideSpin -= passed;  // 右塞传到球上就是左塞了
-            
+
             // 前后旋转的传递
             // 这里并没有考虑自身的旋转损失，因为可以理解为已经在其他地方实现了这个效果了
             double factor = spinProj >= 0.0 ? 0.18 : 0.36;  // 只希望强烈的前向传递
@@ -869,7 +933,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 double[] thisOutGeared = Algebra.unitVectorOfAngle(thisOutAng - deviation);
                 this.vx = thisOutSpeed * thisOutGeared[0];
                 this.vy = thisOutSpeed * thisOutGeared[1];
-                
+
                 double ballOutAng = Algebra.thetaOf(ball.vx, ball.vy);
                 double deviation2 = passed * angularRate / ballOutSpeed;
                 deviation2 *= Algebra.shiftRangeSafe(0, phy.maxPowerSpeed(), 1, 0.5, relSpeed);
@@ -884,11 +948,11 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             double spinChange = angleSpinChange * relSpeed;
             this.sideSpin += spinChange;
             ball.sideSpin -= spinChange;
-            
+
             // 薄边造成的纵向旋转
             double[] thisOrth = new double[]{-thisOut[1], thisOut[0]};
             // todo: phy.calculationsPerSec
-            double thisXySpinChange = angleSpinChange * 
+            double thisXySpinChange = angleSpinChange *
                     (Values.MAX_SPIN_SPEED / Values.MAX_SIDE_SPIN_SPEED) * 0.5;
             double thisSpinXChange = thisXySpinChange * thisOrth[0];
             double thisSpinYChange = thisXySpinChange * thisOrth[1];
@@ -982,7 +1046,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public Color getColor() {
         return color;
     }
-    
+
     public Color getTraceColor() {
         return traceColor;
     }

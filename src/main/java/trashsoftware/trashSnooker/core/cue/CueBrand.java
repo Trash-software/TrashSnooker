@@ -23,6 +23,11 @@ public abstract class CueBrand {
      */
     final double elasticity;
 
+    /**
+     * 前段的硬度，影响发力准确度
+     */
+    final double hardness;
+
     public Color tipRingColor;
     public Color backColor;
 
@@ -42,6 +47,7 @@ public abstract class CueBrand {
                        Color backColor,
                        double powerMultiplier,
                        double elasticity,
+                       double hardness,
                        double accuracyMultiplier,
                        boolean privacy,
                        boolean availability,
@@ -58,6 +64,7 @@ public abstract class CueBrand {
         this.powerMultiplier = powerMultiplier;
 //        this.spinMultiplier = spinMultiplier;
         this.elasticity = elasticity;
+        this.hardness = hardness;
         this.accuracyMultiplier = accuracyMultiplier;
         this.privacy = privacy;
         this.available = availability;

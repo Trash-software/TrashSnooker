@@ -159,12 +159,12 @@ public class GamePane extends StackPane {
             if (x < values.leftX + gameValues.ball.ballRadius)
                 x = values.leftX + gameValues.ball.ballRadius;
             else if (x >= values.rightX - gameValues.ball.ballRadius)
-                x = values.rightX - gameValues.ball.ballRadius;
+                x = values.rightX - gameValues.ball.ballRadius - Double.MIN_VALUE;
 
             if (y < values.topY + gameValues.ball.ballRadius)
                 y = values.topY + gameValues.ball.ballRadius;
             else if (y >= values.botY - gameValues.ball.ballRadius)
-                y = values.botY - gameValues.ball.ballRadius;
+                y = values.botY - gameValues.ball.ballRadius - Double.MIN_VALUE;
         }
         return new double[]{x, y};
     }

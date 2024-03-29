@@ -526,16 +526,11 @@ public class CareerView extends ChildInitializable {
 
         // 更新赛事奖金表
         champAwardsTable.clearItems();
-        champAwardsTable.getColumns().get(0).setTitleText(data.isRanked() ?
+        champAwardsTable.getColumns().getFirst().setTitleText(data.isRanked() ?
                 strings.getString("rankedGame") :
                 strings.getString("nonRankedGame"));
-        ChampionshipScore.Rank[] ranks = data.getRanksOfLosers();
-        champAwardsTable.addItem(new AwardItem(data, ChampionshipScore.Rank.CHAMPION, ChampionshipStage.FINAL));
-        for (int i = 0; i < ranks.length; i++) {
-            ChampionshipScore.Rank rank = ranks[i];
-            ChampionshipStage stage = i == ranks.length - 1 ? null : data.getStages()[i + 1];
-            champAwardsTable.addItem(new AwardItem(data, rank, stage));
-        }
+
+        fillChampionshipAwardTable(champAwardsTable, data);
 
         // 更新加点界面
         perkManager.synchronizePerks();
@@ -547,6 +542,30 @@ public class CareerView extends ChildInitializable {
         HumanCareer.AwardDistributionHint awd = myCareer.getAndRemoveUnShownAwd();
         if (awd != null) {
             showAwardAlert(awd);
+        }
+    }
+    
+    public static void fillChampionshipAwardTable(LabelTable<AwardItem> table, ChampionshipData data) {
+        ChampionshipScore.Rank[] ranks = data.getRanksOfLosers();
+        table.addItem(new CareerView.AwardItem(data, ChampionshipScore.Rank.CHAMPION, ChampionshipStage.FINAL));
+        for (int i = 0; i < ranks.length; i++) {
+            ChampionshipScore.Rank rank = ranks[i];
+            ChampionshipStage stage = i == ranks.length - 1 ? null : data.getStages()[i + 1];
+            table.addItem(new CareerView.AwardItem(data, rank, stage));
+        }
+
+        // 额外奖励
+        int highestBreakAwd = data.getAwardByRank(ChampionshipScore.Rank.BEST_SINGLE);
+        if (highestBreakAwd != 0) {
+            table.addItem(new CareerView.AwardItem(data, ChampionshipScore.Rank.BEST_SINGLE, null));
+        }
+        int maximumAwd = data.getAwardByRank(ChampionshipScore.Rank.MAXIMUM);
+        if (maximumAwd != 0) {
+            table.addItem(new CareerView.AwardItem(data, ChampionshipScore.Rank.MAXIMUM, null));
+        }
+        int goldMaximumAwd = data.getAwardByRank(ChampionshipScore.Rank.GOLD_MAXIMUM);
+        if (goldMaximumAwd != 0) {
+            table.addItem(new CareerView.AwardItem(data, ChampionshipScore.Rank.GOLD_MAXIMUM, null));
         }
     }
 

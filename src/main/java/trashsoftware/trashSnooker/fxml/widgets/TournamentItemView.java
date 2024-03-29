@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.fxml.widgets;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
@@ -11,6 +12,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.util.Callback;
 import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
@@ -128,11 +130,15 @@ public class TournamentItemView extends ScrollPane {
                         ResourcesLoader.getInstance().createMoneyIcon(), 
                         param ->
                         new ReadOnlyObjectWrapper<>(param.data.getAwardByRank(param.rank)));
-        LabelTableColumn<CareerView.AwardItem, Integer> perkCol =
+        LabelTableColumn<CareerView.AwardItem, String> perkCol =
                 new LabelTableColumn<>(awardPerkTable,
-                        ResourcesLoader.getInstance().createExpIcon(), 
-                        param ->
-                        new ReadOnlyObjectWrapper<>(param.data.getExpByRank(param.rank)));
+                        ResourcesLoader.getInstance().createExpIcon(),
+                        param -> {
+                            int awd = param.data.getExpByRank(param.rank);
+                            if (awd == 0) return new ReadOnlyStringWrapper("-");
+                            return new ReadOnlyStringWrapper(String.valueOf(awd));
+                        }
+                );
         LabelTableColumn<CareerView.AwardItem, String> framesCol =
                 new LabelTableColumn<>(awardPerkTable, strings.getString("totalFrames"), param ->
                         new ReadOnlyStringWrapper(param.winnerStage == null ? 
@@ -141,13 +147,7 @@ public class TournamentItemView extends ScrollPane {
 
         awardPerkTable.addColumns(titleCol, awardCol, perkCol, framesCol);
 
-        ChampionshipScore.Rank[] ranks = data.getRanksOfLosers();
-        awardPerkTable.addItem(new CareerView.AwardItem(data, ChampionshipScore.Rank.CHAMPION, ChampionshipStage.FINAL));
-        for (int i = 0; i < ranks.length; i++) {
-            ChampionshipScore.Rank rank = ranks[i];
-            ChampionshipStage stage = i == ranks.length - 1 ? null : data.getStages()[i + 1];
-            awardPerkTable.addItem(new CareerView.AwardItem(data, rank, stage));
-        }
+        CareerView.fillChampionshipAwardTable(awardPerkTable, data);
         
         // 赛事报名费表
         LabelTable<ChampionshipData> feesTable = new LabelTable<>();

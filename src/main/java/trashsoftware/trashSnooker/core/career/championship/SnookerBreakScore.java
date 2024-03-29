@@ -28,10 +28,18 @@ public class SnookerBreakScore implements Comparable<SnookerBreakScore> {
     }
     
     public static SnookerBreakScore fromJson(JSONObject object) {
+        int score = object.getInt("score");
+        MaximumType maximumType;
+        if (object.has("maximumType")) {
+            maximumType = MaximumType.valueOf(object.getString("maximumType"));
+        } else {
+            maximumType = MaximumType.NONE;
+        }
+        
         return new SnookerBreakScore(
                 object.getString("playerId"),
-                object.getInt("score"),
-                MaximumType.valueOf(object.getString("maximumType")),
+                score,
+                maximumType,
                 ChampionshipStage.valueOf(object.getString("stage")),
                 object.getBoolean("sim"),
                 object.getString("matchId"),

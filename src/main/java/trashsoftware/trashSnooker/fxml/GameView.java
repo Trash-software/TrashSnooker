@@ -2170,6 +2170,7 @@ public class GameView implements Initializable {
 
     private void playerCue(Player player) {
         updateBeforeCue();
+        stopCueTimer();
         if (game.gameValues.rule.snookerLike()) {
             AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
             System.out.println(asg.getCurrentTarget() + " " + predictedTargetBall);
@@ -2466,7 +2467,6 @@ public class GameView implements Initializable {
     }
 
     private void updateBeforeCue() {
-        stopCueTimer();
         Toggle sel1 = player1SpeedToggle.getSelectedToggle();
         if (sel1 != null) {
             double newSpeed = Double.parseDouble(sel1.getUserData().toString());
@@ -2579,7 +2579,7 @@ public class GameView implements Initializable {
                     }
                 }
             }
-
+            
             AiCueResult cueResult0 = null;
             try {
                 cueResult0 = game.getGame().aiCue(player, game.predictPhy);
@@ -2588,6 +2588,7 @@ public class GameView implements Initializable {
             }
             final AiCueResult cueResult = cueResult0;
             System.out.println("Ai calculation ends in " + (System.currentTimeMillis() - st) + " ms");
+            stopCueTimer();
 //            System.out.println(cueResult);
             if (cueResult == null) {
                 aiCalculating = false;
@@ -2887,6 +2888,7 @@ public class GameView implements Initializable {
     }
     
     private void startCueTimer() {
+        if (replay != null) return;
         stopCueTimer();
         
         cueTimeCounter = 0;
@@ -2904,6 +2906,7 @@ public class GameView implements Initializable {
     }
     
     private void stopCueTimer() {
+        if (replay != null) return;
         if (cueTimer != null) {
             cueTimer.cancel();
             cueTimer = null;

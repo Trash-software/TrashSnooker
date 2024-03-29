@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 553350,
+    "money": 540770,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -4582,13 +4582,474 @@
           }
         ],
         "timestamp": "2024-03-20 07:28:30"
+      },
+      {
+        "inGameDate": "2025/2/27",
+        "year": 2025,
+        "match": "dog_give_power_open",
+        "moneyBefore": 553350,
+        "moneyAfter": 555350,
+        "type": "championshipEarn",
+        "items": {"TOP_32": {
+          "actual": 2000,
+          "raw": 2500
+        }},
+        "timestamp": "2024-03-22 06:23:12"
+      },
+      {
+        "inGameDate": "2025/2/27",
+        "moneyBefore": 555350,
+        "moneyAfter": 555090,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 260
+        }],
+        "timestamp": "2024-03-22 06:23:54"
+      },
+      {
+        "inGameDate": "2025/3/1",
+        "match": "custom_195B277334903CE5+2025+eight_bsc_heiba_open",
+        "moneyBefore": 555090,
+        "moneyAfter": 554770,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 20
+          },
+          {
+            "item": "travel",
+            "moneyCost": 200
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 100
+          }
+        ],
+        "timestamp": "2024-03-22 06:23:55"
+      },
+      {
+        "inGameDate": "2025/3/1",
+        "year": 2025,
+        "match": "eight_bsc_heiba_open",
+        "moneyBefore": 554770,
+        "moneyAfter": 555730,
+        "type": "championshipEarn",
+        "items": {"TOP_4": {
+          "actual": 960,
+          "raw": 1200
+        }},
+        "timestamp": "2024-03-22 21:12:41"
+      },
+      {
+        "inGameDate": "2025/3/1",
+        "moneyBefore": 555730,
+        "moneyAfter": 555340,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 390
+        }],
+        "timestamp": "2024-03-23 06:24:18"
+      },
+      {
+        "inGameDate": "2025/3/4",
+        "moneyBefore": 555340,
+        "moneyAfter": 554560,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 780
+        }],
+        "timestamp": "2024-03-23 06:24:28"
+      },
+      {
+        "inGameDate": "2025/3/10",
+        "match": "custom_195B277334903CE5+2025+cat_give_power_champ",
+        "moneyBefore": 554560,
+        "moneyAfter": 551660,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          }
+        ],
+        "timestamp": "2024-03-23 06:24:28"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_195B277334903CE5-382",
+        "inGameDate": "2025/3/10",
+        "moneyBefore": 551660,
+        "moneyCost": 80,
+        "moneyAfter": 551580,
+        "type": "purchase",
+        "timestamp": "2024-03-23 06:32:26"
+      },
+      {
+        "inGameDate": "2025/3/10",
+        "year": 2025,
+        "match": "cat_give_power_champ",
+        "moneyBefore": 551580,
+        "moneyAfter": 563580,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 12000,
+          "raw": 15000
+        }},
+        "timestamp": "2024-03-24 03:54:03"
+      },
+      {
+        "inGameDate": "2025/3/10",
+        "moneyBefore": 563580,
+        "moneyAfter": 562540,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1040
+        }],
+        "timestamp": "2024-03-24 03:55:14"
+      },
+      {
+        "inGameDate": "2025/3/18",
+        "perkUsed": 7,
+        "moneyBefore": 562540,
+        "moneyCost": 10300,
+        "moneyAfter": 552240,
+        "ability": {
+          "powerControl": [
+            91.82865380182821,
+            97.02985345537316
+          ],
+          "antiHand": [
+            95.78134062714116,
+            96.75008700205552
+          ],
+          "spinControl": [
+            97.99791111791276,
+            98.87799467319626
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2024-03-24 04:00:40"
+      },
+      {
+        "inGameDate": "2025/3/18",
+        "perkUsed": 9,
+        "moneyBefore": 552240,
+        "moneyCost": 12800,
+        "moneyAfter": 539440,
+        "ability": {
+          "powerControl": [
+            97.02985345537316,
+            99.67748442669303
+          ],
+          "cuePrecision": [
+            98.84820565660185,
+            99.69427743033778
+          ],
+          "normalPower": [
+            87.18756502078189,
+            88
+          ],
+          "antiHand": [
+            96.75008700205552,
+            97.6800835219733
+          ],
+          "spinControl": [
+            98.87799467319626,
+            99.7228748862684
+          ],
+          "aiming": [
+            98.91645926897199,
+            99.75980089821311
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2024-03-24 04:01:04"
+      },
+      {
+        "inGameDate": "2025/3/18",
+        "perkUsed": 2,
+        "moneyBefore": 539440,
+        "moneyCost": 3200,
+        "moneyAfter": 536240,
+        "ability": {"antiHand": [
+          97.6800835219733,
+          99.4299649738506
+        ]},
+        "type": "upgrade",
+        "timestamp": "2024-03-24 04:01:10"
+      },
+      {
+        "inGameDate": "2025/3/18",
+        "moneyBefore": 536240,
+        "moneyAfter": 535330,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 910
+        }],
+        "timestamp": "2024-03-24 04:01:16"
+      },
+      {
+        "item": 5,
+        "inGameDate": "2025/3/25",
+        "match": "custom_195B277334903CE5+2025+china_open",
+        "moneyBefore": 535330,
+        "moneyAfter": 536330,
+        "type": "invitation",
+        "moneyEarn": 1000,
+        "timestamp": "2024-03-24 04:01:16"
+      },
+      {
+        "inGameDate": "2025/3/25",
+        "match": "custom_195B277334903CE5+2025+china_open",
+        "moneyBefore": 536330,
+        "moneyAfter": 535330,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2024-03-24 04:01:16"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_195B277334903CE5-383",
+        "inGameDate": "2025/3/25",
+        "moneyBefore": 535330,
+        "moneyCost": 80,
+        "moneyAfter": 535250,
+        "type": "purchase",
+        "timestamp": "2024-03-24 19:16:05"
+      },
+      {
+        "inGameDate": "2025/3/25",
+        "year": 2025,
+        "match": "china_open",
+        "moneyBefore": 535250,
+        "moneyAfter": 551250,
+        "type": "championshipEarn",
+        "items": {"TOP_4": {
+          "actual": 16000,
+          "raw": 20000
+        }},
+        "timestamp": "2024-03-25 06:20:54"
+      },
+      {
+        "inGameDate": "2025/3/25",
+        "perkUsed": 3,
+        "moneyBefore": 551250,
+        "moneyCost": 6450,
+        "moneyAfter": 544800,
+        "ability": {
+          "rest": [
+            99.23127795378062,
+            100
+          ],
+          "cuePrecision": [
+            99.69427743033778,
+            100
+          ],
+          "aiming": [
+            99.75980089821311,
+            100
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2024-03-25 06:21:21"
+      },
+      {
+        "inGameDate": "2025/3/25",
+        "moneyBefore": 544800,
+        "moneyAfter": 544150,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 650
+        }],
+        "timestamp": "2024-03-25 06:21:27"
+      },
+      {
+        "inGameDate": "2025/3/30",
+        "moneyBefore": 544150,
+        "moneyAfter": 541810,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2340
+        }],
+        "timestamp": "2024-03-25 06:21:32"
+      },
+      {
+        "item": 11,
+        "inGameDate": "2025/4/17",
+        "match": "custom_195B277334903CE5+2025+world_champ",
+        "moneyBefore": 541810,
+        "moneyAfter": 542010,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2024-03-25 06:21:32"
+      },
+      {
+        "inGameDate": "2025/4/17",
+        "match": "custom_195B277334903CE5+2025+world_champ",
+        "moneyBefore": 542010,
+        "moneyAfter": 537810,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          }
+        ],
+        "timestamp": "2024-03-25 06:21:32"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_195B277334903CE5-384",
+        "inGameDate": "2025/4/17",
+        "moneyBefore": 537810,
+        "moneyCost": 80,
+        "moneyAfter": 537730,
+        "type": "purchase",
+        "timestamp": "2024-03-25 06:30:21"
+      },
+      {
+        "item": "MULTIPLE_EASY_FAILS",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 537730,
+        "moneyAfter": 537930,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-03-26 05:54:41"
+      },
+      {
+        "item": "SNOOKER_CUMULATE_SCORE",
+        "inGameDate": "2025/4/17",
+        "level": 2,
+        "moneyBefore": 537930,
+        "moneyAfter": 538930,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2024-03-26 05:54:44"
+      },
+      {
+        "item": "HARD_SNOOKER_BY_HUMAN",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 538930,
+        "moneyAfter": 539130,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-03-26 05:54:45"
+      },
+      {
+        "item": "COME_BACK_BEHIND_OVER_SCORE",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 539130,
+        "moneyAfter": 539330,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-03-26 05:54:45"
+      },
+      {
+        "item": "SNOOKER_TOP_16",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 539330,
+        "moneyAfter": 539530,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-03-26 05:54:52"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_195B277334903CE5-385",
+        "inGameDate": "2025/4/17",
+        "moneyBefore": 539530,
+        "moneyCost": 80,
+        "moneyAfter": 539450,
+        "type": "purchase",
+        "timestamp": "2024-03-26 06:12:19"
+      },
+      {
+        "item": "MULTI_CUSHION_ESCAPE",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 539450,
+        "moneyAfter": 539650,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-03-29 04:36:20"
+      },
+      {
+        "item": "SNOOKER_CUMULATE_FOUL_GAIN",
+        "inGameDate": "2025/4/17",
+        "level": 2,
+        "moneyBefore": 539650,
+        "moneyAfter": 540650,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2024-03-29 04:37:30"
+      },
+      {
+        "item": "SUM_OVER_147",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 540650,
+        "moneyAfter": 540850,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-03-29 04:37:33"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_195B277334903CE5-386",
+        "inGameDate": "2025/4/17",
+        "moneyBefore": 540850,
+        "moneyCost": 80,
+        "moneyAfter": 540770,
+        "type": "purchase",
+        "timestamp": "2024-03-29 06:54:44"
       }
     ],
-    "level": 34,
-    "expInThisLevel": 732,
-    "availPerks": 18,
-    "totalPerks": 159,
-    "totalExp": 15330
+    "level": 35,
+    "expInThisLevel": 594,
+    "availPerks": 0,
+    "totalPerks": 162,
+    "totalExp": 16460
   },
-  "checksum": "43217EA3A4CFADF65E4470FC9C6798F2"
+  "checksum": "2A2CBF85A6FA5F86EEB51B9FD4B13FB8"
 }

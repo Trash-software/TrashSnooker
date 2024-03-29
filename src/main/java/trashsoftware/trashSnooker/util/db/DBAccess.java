@@ -933,7 +933,7 @@ public class DBAccess {
                         p2t + ", " +
                         entireGame.getTotalFrames() + ", " +
                         (metaMatchInfo == null ? null : ("'" + metaMatchInfo + "'")) + ", " +
-                        "'" + SubRule.subRulesToCommaString(entireGame.gameValues.subRules) + "', " +
+                        "'" + SubRule.subRulesToCommaString(entireGame.gameValues.subRules) + "'" +
                         ");";
         try {
             executeStatement(command);

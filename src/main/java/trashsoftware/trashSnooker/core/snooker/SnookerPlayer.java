@@ -107,21 +107,24 @@ public class SnookerPlayer extends Player {
             default -> throw new RuntimeException();
         };
         Map<Ball, Integer> singlePole = getSinglePole();
-        int pottedReds = singlePole.get(game.getBallOfValue(1));
+        Integer pottedReds = singlePole.get(game.getBallOfValue(1));
         if (pottedReds == nReds || pottedReds == nReds + 1) {
             for (int i = 2; i < 7; i++) {
                 // 每个彩球各有一个
-                if (singlePole.get(game.getBallOfValue(i)) != 1) {
+                Integer thisColorCount = singlePole.get(game.getBallOfValue(i));
+                if (thisColorCount == null || thisColorCount != 1) {
                     return MaximumType.NONE;
                 }
             }
-            int blackCount = singlePole.get(game.getBallOfValue(7));
+            Integer blackCount = singlePole.get(game.getBallOfValue(7));
+            if (blackCount == null) return MaximumType.NONE;
             if ((pottedReds == nReds && blackCount == nReds + 1) ||
                     (pottedReds == nReds + 1 && blackCount == nReds + 2)) {
                 return switch (gameValues.rule) {
                     case SNOOKER -> {
                         if (gameValues.hasSubRule(SubRule.SNOOKER_GOLDEN)) {
-                            if (singlePole.get(game.getBallOfValue(20)) == 1) {
+                            Integer goldCount = singlePole.get(game.getBallOfValue(20));
+                            if (goldCount != null && goldCount == 1) {
                                 yield MaximumType.MAXIMUM_167;
                             }
                         }

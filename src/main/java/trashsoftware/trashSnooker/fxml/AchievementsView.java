@@ -162,9 +162,14 @@ public class AchievementsView extends ChildInitializable {
             int comp = 0;
             for (Achievement achievement : achievements) {
                 AchCompletion completion = allCompleted.get(achievement);
-                if (!achievement.isHidden()) showing += achievement.getNLevels();
-                comp += achievement.getNCompleted(completion);
-//                if (achievement.isComplete(completion)) comp++;
+                int thisCmp = achievement.getNCompleted(completion);
+                if (achievement.isHidden()) {
+                    if (thisCmp > 0) {
+                        showing += achievement.getNLevels();
+                    }
+                } else 
+                    showing += achievement.getNLevels();
+                comp += thisCmp;
                 bundles.add(new AchievementBundle(achievement, completion));
             }
             completed.put(cat, bundles);

@@ -209,15 +209,15 @@ public class GameValues {
 
     public boolean isInTable(double x, double y, double r) {
         if (x >= table.leftX + r &&
-                x < table.rightX - r &&
+                x <= table.rightX - r &&
                 y >= table.topY + r &&
-                y < table.botY - r) {
+                y <= table.botY - r) {
             return true;
         }
         if (x < table.leftX - table.cushionClothWidth ||
-                x >= table.rightX + table.cushionClothWidth ||
+                x > table.rightX + table.cushionClothWidth ||
                 y < table.topY - table.cushionClothWidth ||
-                y >= table.botY + table.cushionClothWidth) {
+                y > table.botY + table.cushionClothWidth) {
             return false;
         }
 
