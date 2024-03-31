@@ -335,7 +335,7 @@ public class EntireGame {
                         getGame(),
                         snookerPlayer,
                         snookerPlayer.getSinglePolesInThisGame(),
-                        snookerPlayer.hasMaximumInThisGame());
+                        snookerPlayer.getMaximumType());
         } else if (framePlayer instanceof NumberedBallPlayer numberedBallPlayer) {
             // 炸清和接清
             numberedBallPlayer.flushSinglePoles();

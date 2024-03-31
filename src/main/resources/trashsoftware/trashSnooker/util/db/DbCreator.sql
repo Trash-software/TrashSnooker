@@ -55,7 +55,8 @@ CREATE TABLE IF NOT EXISTS SnookerRecord (
     TotalScore INTEGER DEFAULT 0,
     Breaks50 INTEGER DEFAULT 0,
     Highest INTEGER DEFAULT 0,
-    IsMaximum INTEGER DEFAULT 0,
+--    IsMaximum INTEGER DEFAULT 0,
+    MaximumType TEXT DEFAULT NULL,
     PRIMARY KEY (EntireBeginTime, FrameIndex, PlayerName, PlayerIsAI)
 );
 

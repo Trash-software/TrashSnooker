@@ -870,6 +870,14 @@ public class PlayerPerson {
             };
         }
 
+        public double maxAbilityByCat(int what) {
+            if (what == PerkManager.POWER) {
+                return getSex().powerMul * 100;
+            } else {
+                return 100;
+            }
+        }
+
         public void addPerks(int addWhat, int perks) {
             if (perks == 0) return;
             System.out.println("Add " + addWhat + " " + perks);

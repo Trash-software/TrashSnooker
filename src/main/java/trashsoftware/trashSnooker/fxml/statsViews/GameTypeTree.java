@@ -52,9 +52,9 @@ public class GameTypeTree extends RecordTree {
         int potAttempts = potRecords[0];
         int potSuccesses = potRecords[1];
         resultPane.add(new Label(strings.getString("statsAttacks1")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(potAttempts)), 1, rowIndex);
+        resultPane.add(new Label(showNumber(potAttempts)), 1, rowIndex);
 //        resultPane.add(new Label(strings.getString("statsAttacksSuc")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(potSuccesses)), 2, rowIndex);
+        resultPane.add(new Label(showNumber(potSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
         resultPane.add(new Label(
                 showPercent(potSuccesses, potAttempts)), 3, rowIndex++);
@@ -62,9 +62,9 @@ public class GameTypeTree extends RecordTree {
         int longPotAttempts = potRecords[2];
         int longPotSuccesses = potRecords[3];
         resultPane.add(new Label(strings.getString("statsLongAttacks1")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(longPotAttempts)), 1, rowIndex);
+        resultPane.add(new Label(showNumber(longPotAttempts)), 1, rowIndex);
 //        resultPane.add(new Label(strings.getString("statsLongAttacksSuc")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(longPotSuccesses)), 2, rowIndex);
+        resultPane.add(new Label(showNumber(longPotSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("长台进攻成功率"), 0, rowIndex);
         resultPane.add(new Label(
                 showPercent(longPotSuccesses, longPotAttempts)), 3, rowIndex++);
@@ -72,9 +72,9 @@ public class GameTypeTree extends RecordTree {
         int restAttempts = potRecords[8];
         int restSuccesses = potRecords[9];
         resultPane.add(new Label(strings.getString("statsRestAttacks1")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(restAttempts)), 1, rowIndex);
+        resultPane.add(new Label(showNumber(restAttempts)), 1, rowIndex);
 //        resultPane.add(new Label(strings.getString("statsRestAttacksSuc")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(restSuccesses)), 2, rowIndex);
+        resultPane.add(new Label(showNumber(restSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
         resultPane.add(new Label(
                 showPercent(restSuccesses, restAttempts)), 3, rowIndex++);
@@ -82,9 +82,9 @@ public class GameTypeTree extends RecordTree {
         int positionAttempts = potRecords[6];
         int positionSuccesses = potRecords[7];
         resultPane.add(new Label(strings.getString("statsPositions1")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(positionAttempts)), 1, rowIndex);
+        resultPane.add(new Label(showNumber(positionAttempts)), 1, rowIndex);
 //        resultPane.add(new Label(strings.getString("statsPositionsSuc")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(positionSuccesses)), 2, rowIndex);
+        resultPane.add(new Label(showNumber(positionSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("进攻成功率"), 0, rowIndex);
         resultPane.add(new Label(
                 showPercent(positionSuccesses, positionAttempts)), 3, rowIndex++);
@@ -92,9 +92,9 @@ public class GameTypeTree extends RecordTree {
         int defAttempts = potRecords[4];
         int defSuccesses = potRecords[5];
         resultPane.add(new Label(strings.getString("statsDefenses1")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(defAttempts)), 1, rowIndex);
+        resultPane.add(new Label(showNumber(defAttempts)), 1, rowIndex);
 //        resultPane.add(new Label(strings.getString("statsDefensesSuc")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(defSuccesses)), 2, rowIndex);
+        resultPane.add(new Label(showNumber(defSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("防守成功率"), 0, rowIndex);
         resultPane.add(new Label(
                 showPercent(defSuccesses, defAttempts)), 3, rowIndex++);
@@ -102,9 +102,9 @@ public class GameTypeTree extends RecordTree {
         int solves = potRecords[10];
         int solveSuccesses = potRecords[11];
         resultPane.add(new Label(strings.getString("statsEscapes1")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(solves)), 1, rowIndex);
+        resultPane.add(new Label(showNumber(solves)), 1, rowIndex);
 //        resultPane.add(new Label(strings.getString("statsEscapesSuc")), 0, rowIndex);
-        resultPane.add(new Label(String.valueOf(solveSuccesses)), 2, rowIndex);
+        resultPane.add(new Label(showNumber(solveSuccesses)), 2, rowIndex);
 //            resultPane.add(new Label("防守成功率"), 0, rowIndex);
         resultPane.add(new Label(
                showPercent(solveSuccesses, solves)), 3, rowIndex++);
@@ -114,38 +114,38 @@ public class GameTypeTree extends RecordTree {
         if (gameRule.snookerLike()) {
             breaksScores = db.getSnookerBreaksTotal(gameRule, pai.playerId, pai.isAi);
             resultPane.add(new Label(strings.getString("totalPoints")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex++);
+            resultPane.add(new Label(showNumber(breaksScores[0])), 1, rowIndex++);
             resultPane.add(new Label(strings.getString("highestBreak")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(breaksScores[1])), 1, rowIndex++);
+            resultPane.add(new Label(showNumber(breaksScores[1])), 1, rowIndex++);
 
             resultPane.add(new Label(strings.getString("single50")), 0, rowIndex);
             breaksFiftyRow = rowIndex;
-            resultPane.add(new Label(String.valueOf(breaksScores[2])), 1, rowIndex++);
+            resultPane.add(new Label(showNumber(breaksScores[2])), 1, rowIndex++);
 
             resultPane.add(new Label(strings.getString("single100")), 0, rowIndex);
             breaksCenturyRow = rowIndex;
-            resultPane.add(new Label(String.valueOf(breaksScores[3])), 1, rowIndex++);
+            resultPane.add(new Label(showNumber(breaksScores[3])), 1, rowIndex++);
 
             resultPane.add(new Label(strings.getString("single147")), 0, rowIndex);
             breaks147Row = rowIndex;
-            resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
+            resultPane.add(new Label(showNumber(breaksScores[4])), 1, rowIndex++);
         } else if (gameRule == GameRule.CHINESE_EIGHT || gameRule == GameRule.AMERICAN_NINE) {
             breaksScores = db.getNumberedBallGamesTotal(gameRule, pai.playerId, pai.isAi);
             resultPane.add(new Label(strings.getString("numBreaks")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(breaksScores[0])), 1, rowIndex);
-            resultPane.add(new Label(String.valueOf(breaksScores[1])), 2, rowIndex);
+            resultPane.add(new Label(showNumber(breaksScores[0])), 1, rowIndex);
+            resultPane.add(new Label(showNumber(breaksScores[1])), 2, rowIndex);
             resultPane.add(new Label(showPercent(breaksScores[1], breaksScores[0])),
                     3, rowIndex++);
             resultPane.add(new Label(strings.getString("breakClears")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(breaksScores[2])), 1, rowIndex++);
+            resultPane.add(new Label(showNumber(breaksScores[2])), 1, rowIndex++);
             resultPane.add(new Label(strings.getString("continueClears")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(breaksScores[3])), 1, rowIndex++);
+            resultPane.add(new Label(showNumber(breaksScores[3])), 1, rowIndex++);
             resultPane.add(new Label(strings.getString("highestSingleBalls")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(breaksScores[4])), 1, rowIndex++);
+            resultPane.add(new Label(showNumber(breaksScores[4])), 1, rowIndex++);
             
             if (gameRule == GameRule.AMERICAN_NINE) {
                 resultPane.add(new Label(strings.getString("goldNines")), 0, rowIndex);
-                resultPane.add(new Label(String.valueOf(breaksScores[5])), 1, rowIndex++);
+                resultPane.add(new Label(showNumber(breaksScores[5])), 1, rowIndex++);
             }
         }
         resultPane.add(new Separator(), 0, rowIndex++, 4, 1);
@@ -237,29 +237,24 @@ public class GameTypeTree extends RecordTree {
             resultPane.add(new Label(strings.getString("statsWinRate")), 3, rowIndex++);
 
             resultPane.add(new Label(strings.getString("totalMatches")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(allMatches.size())), 1, rowIndex);
-            resultPane.add(new Label(String.valueOf(thisWinMatchesFinal)), 2, rowIndex);
+            resultPane.add(new Label(showNumber(allMatches.size())), 1, rowIndex);
+            resultPane.add(new Label(showNumber(thisWinMatchesFinal)), 2, rowIndex);
             resultPane.add(new Label(
-                            String.format("%.1f%%",
-                                    (double) thisWinMatchesFinal / allMatches.size() * 100)),
+                    showPercent(thisWinMatchesFinal, allMatches.size())),
                     3, rowIndex++);
 
             resultPane.add(new Label(strings.getString("totalFramesLife")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(totalFramesFinal)), 1, rowIndex);
-            resultPane.add(new Label(String.valueOf(thisWinFramesFinal)), 2, rowIndex);
+            resultPane.add(new Label(showNumber(totalFramesFinal)), 1, rowIndex);
+            resultPane.add(new Label(showNumber(thisWinFramesFinal)), 2, rowIndex);
             resultPane.add(new Label(
-                            String.format("%.1f%%",
-                                    (double) thisWinFramesFinal / totalFramesFinal * 100)),
+                    showPercent(thisWinFramesFinal, totalFramesFinal)),
                     3, rowIndex++);
 
             resultPane.add(new Label(strings.getString("statsFinalsOver3")), 0, rowIndex);
-            resultPane.add(new Label(String.valueOf(finalFrames1)), 1, rowIndex);
-            resultPane.add(new Label(String.valueOf(finalFrameWins1)), 2, rowIndex);
+            resultPane.add(new Label(showNumber(finalFrames1)), 1, rowIndex);
+            resultPane.add(new Label(showNumber(finalFrameWins1)), 2, rowIndex);
             resultPane.add(new Label(
-                            finalFrames1 == 0 ?
-                                    "--" :
-                                    String.format("%.1f%%",
-                                            (double) finalFrameWins1 / finalFrames1 * 100)),
+                    showPercent(finalFrameWins1, finalFrames1)),
                     3, rowIndex++);
 
             resultPane.add(new Separator(), 0, rowIndex++, 4, 1);
@@ -267,13 +262,13 @@ public class GameTypeTree extends RecordTree {
             // 更新各种率
             if (gameRule.snookerLike()) {
                 // 50+
-                resultPane.add(new Label(String.format("%.2f%%", breaksScores[2] * 100.0 / totalFramesFinal)),
+                resultPane.add(new Label(showPercent(breaksScores[2], totalFramesFinal, 2)),
                         2, breaksFiftyRow);
                 // 100+
-                resultPane.add(new Label(String.format("%.2f%%", breaksScores[3] * 100.0 / totalFramesFinal)),
+                resultPane.add(new Label(showPercent(breaksScores[3], totalFramesFinal, 2)),
                         2, breaksCenturyRow);
-                // 147
-                resultPane.add(new Label(String.format("%.2f‱", breaksScores[4] * 10000.0 / totalFramesFinal)),
+                // Maximum
+                resultPane.add(new Label(showOneOver10000(breaksScores[4], totalFramesFinal, 2)),
                         2, breaks147Row);
             }
 

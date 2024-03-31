@@ -72,6 +72,7 @@ public class CareerManager {
 
     private double playerGoodness;
     private double aiGoodness;
+    private boolean includeCustomPlayers = true;
 
     private CareerManager(CareerSave save) {
         this.careerSave = save;
@@ -184,7 +185,10 @@ public class CareerManager {
         }
     }
 
-    public static CareerSave createNew(PlayerPerson playerPlayer, double playerGoodness, double aiGoodness) {
+    public static CareerSave createNew(PlayerPerson playerPlayer, 
+                                       double playerGoodness, 
+                                       double aiGoodness,
+                                       boolean includeCustomPlayers) {
 //        if (getInstance() != null) throw new RuntimeException("Shouldn't be");
         CareerSave save = new CareerSave(new File(CAREER_DIR, playerPlayer.getPlayerId()));
         try {
@@ -199,7 +203,9 @@ public class CareerManager {
         cm.lastSavedVersion = App.VERSION_CODE;
         cm.playerGoodness = playerGoodness;
         cm.aiGoodness = aiGoodness;
+        cm.includeCustomPlayers = includeCustomPlayers;
         for (PlayerPerson person : DataLoader.getInstance().getAllPlayers()) {
+            if (!includeCustomPlayers && person.isCustom()) continue;
             Career career;
             if (person.getPlayerId().equals(playerPlayer.getPlayerId())) {
                 career = Career.createByPerson(person, true, cm);
@@ -294,6 +300,11 @@ public class CareerManager {
         } else {
             careerManager.aiGoodness = 1.0;
         }
+        if (jsonObject.has("includeCustomPlayers")) {
+            careerManager.includeCustomPlayers = jsonObject.getBoolean("includeCustomPlayers");
+        } else {
+            careerManager.includeCustomPlayers = true;
+        }
 
         if (jsonObject.has("settingsHistory")) {
             JSONArray setHis = jsonObject.getJSONArray("settingsHistory");
@@ -328,6 +339,8 @@ public class CareerManager {
 
         // 把可能存在的新增球员加进生涯管理器中
         for (PlayerPerson newPlayer : newPlayers.values()) {
+            if (!careerManager.includeCustomPlayers && newPlayer.isCustom()) continue;
+            
             Career career = Career.createByPerson(newPlayer, false, careerManager);
             // 新球员初始就0分吧
             careerManager.playerCareers.add(career);
@@ -1253,6 +1266,7 @@ public class CareerManager {
 
         root.put("playerGoodness", playerGoodness);
         root.put("aiGoodness", aiGoodness);
+        root.put("includeCustomPlayers", includeCustomPlayers);
 
         JSONArray setHis = new JSONArray();
         for (SettingsHistory sh : settingsHistories) {

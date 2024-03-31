@@ -11,6 +11,7 @@ import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEig
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallPlayer;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
+import trashsoftware.trashSnooker.core.snooker.MaximumType;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
@@ -101,25 +102,31 @@ public class DBAccess {
     }
 
     private void updateDbStructure() {
-        addDbColumn("ALTER TABLE EntireGame ADD COLUMN MatchID TEXT DEFAULT null;");
-        addDbColumn("ALTER TABLE SidePocketRecord ADD COLUMN GoldNine INTEGER DEFAULT 0;");
+        alterTable("ALTER TABLE EntireGame ADD COLUMN MatchID TEXT DEFAULT null;");
+        alterTable("ALTER TABLE SidePocketRecord ADD COLUMN GoldNine INTEGER DEFAULT 0;");
 
-        addDbColumn("ALTER TABLE EntireGame ADD COLUMN SubRule TEXT DEFAULT NULL;");
-        addDbColumn("ALTER TABLE SnookerRecord ADD COLUMN IsMaximum INTEGER DEFAULT 0;",
+        alterTable("ALTER TABLE EntireGame ADD COLUMN SubRule TEXT DEFAULT NULL;");
+        alterTable("ALTER TABLE SnookerRecord DROP COLUMN IsMaximum;");
+        alterTable("ALTER TABLE SnookerRecord ADD COLUMN MaximumType TEXT DEFAULT NULL;",
                 () -> {
                     // 推测可能的满分杆数量
+                    MaximumType[] types = {
+                            MaximumType.MAXIMUM_147,
+                            MaximumType.MAXIMUM_107, 
+                            MaximumType.MAXIMUM_75
+                    };
                     String[] names = {"Snooker", "SnookerTen", "MiniSnooker"};
                     int[] values = {147, 107, 75};
                     for (int i = 0; i < 3; i++) {
                         String updater = String.format("""
                                 UPDATE SnookerRecord
-                                SET IsMaximum = 1
+                                SET MaximumType = '%s'
                                 WHERE (Highest >= %d
                                 AND EntireBeginTime IN (
                                     SELECT EntireBeginTime
                                     FROM EntireGame
                                     WHERE GameType = '%s'
-                                ))""", values[i], names[i]);
+                                ))""", types[i], values[i], names[i]);
                         try (Statement stmt = connection.createStatement()) {
                             stmt.execute(updater);
                         } catch (SQLException e) {
@@ -129,13 +136,14 @@ public class DBAccess {
                 });
     }
 
-    private void addDbColumn(String query) {
-        addDbColumn(query, null);
+    private void alterTable(String query) {
+        alterTable(query, null);
     }
 
-    private void addDbColumn(String query, Runnable successCallback) {
+    private void alterTable(String query, Runnable successCallback) {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(query);
+            System.out.println("Executed: " + query);
             if (successCallback != null) {
                 successCallback.run();
             }
@@ -628,7 +636,9 @@ public class DBAccess {
                     if (scores[1] >= 100) {
                         scores[3]++;
                     }
-                    if (snRes.getInt("IsMaximum") == 1) {
+                    String mtStr = snRes.getString("MaximumType");
+                    MaximumType mt = mtStr == null ? MaximumType.NONE : MaximumType.valueOf(mtStr);
+                    if (mt != MaximumType.NONE) {
                         scores[4]++;
                     }
 //                    if ((title.gameRule == GameRule.SNOOKER && scores[1] >= 147) || 
@@ -778,7 +788,7 @@ public class DBAccess {
 
     public void recordSnookerBreaks(EntireGame entireGame, Game<?, ?> frame,
                                     SnookerPlayer player, List<Integer> breakScores,
-                                    boolean isMaximum) {
+                                    MaximumType maximumType) {
         System.out.println("Snooker breaks: " + breakScores);
         int highBreak = 0;
         int breaks50 = 0;  // 一局最多两个50+，最多一个100+
@@ -790,7 +800,7 @@ public class DBAccess {
                 highBreak = b;
             }
         }
-        int maximum = isMaximum ? 1 : 0;
+//        int maximum = isMaximum ? 1 : 0;
         String query = "INSERT INTO SnookerRecord VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
                 frame.frameIndex + ", " +
@@ -799,7 +809,7 @@ public class DBAccess {
                 player.getScore() + ", " +
                 breaks50 + ", " +
                 highBreak + ", " +
-                maximum +
+                maximumType.name() +
                 ");";
         try {
             executeStatement(query);

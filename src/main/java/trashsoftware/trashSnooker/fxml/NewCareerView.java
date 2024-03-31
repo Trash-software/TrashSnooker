@@ -6,13 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.ChampDataManager;
@@ -36,7 +35,7 @@ public class NewCareerView extends ChildInitializable {
     @FXML
     ComboBox<PlayerPerson> existingPlayersBox;
     @FXML
-    Button usePlayerButton, playerInfoBtn;
+    Button playerInfoBtn;
     @FXML
     Label promptLabel;
     @FXML
@@ -47,6 +46,14 @@ public class NewCareerView extends ChildInitializable {
     ComboBox<Difficulty> aiGoodnessBox;
     @FXML
     ComboBox<Difficulty> playerGoodnessBox;
+    @FXML
+    CheckBox includeCustomPlayerBox;
+    @FXML
+    RadioButton createPlayerCheck, usePlayerCheck;
+    @FXML
+    GridPane createPlayerPane, usePlayerPane;
+    @FXML
+    ToggleGroup paneToggle;
 
     private EntryView entryView;
     private Stage owner;
@@ -73,22 +80,22 @@ public class NewCareerView extends ChildInitializable {
         );
         comboBox.getSelectionModel().select(1);
     }
-    
+
     public static int getGoodnessIndex(List<Difficulty> difficulties, double multiplier) {
         double first = difficulties.get(0).multiplier;
         double last = difficulties.get(difficulties.size() - 1).multiplier;
-        
+
         int sign = first < last ? 1 : -1;  // 从小到大是1，从大到小是-1
         double mul = multiplier * sign;
-        
+
         if (mul <= first * sign) return 0;
         if (mul >= last * sign) return difficulties.size() - 1;
-        
+
         for (int index = 1; index < difficulties.size() - 1; index++) {
             double low = difficulties.get(index - 1).multiplier * sign;
             double mid = difficulties.get(index).multiplier * sign;
             double high = difficulties.get(index + 1).multiplier * sign;
-            
+
             double tick1 = (low + mid) / 2;
             double tick2 = (mid + high) / 2;
             if (mul >= tick1 && mul < tick2) {
@@ -105,7 +112,21 @@ public class NewCareerView extends ChildInitializable {
         handBox.getItems().addAll(Hand.values());
         handBox.getSelectionModel().select(1);
 
+        existingPlayersBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(PlayerPerson object) {
+                return object == null ? null : object.getName();
+            }
+
+            @Override
+            public PlayerPerson fromString(String string) {
+                throw new RuntimeException("Should not convert string to player person");
+            }
+        });
+
         fillBox();
+        setListeners();
+        triggerPaneToggle();
 
         ChampDataManager.getInstance();
     }
@@ -122,10 +143,8 @@ public class NewCareerView extends ChildInitializable {
 
     private void fillBox() {
         existingPlayersBox.getItems().addAll(DataLoader.getInstance().getActualPlayers());
-        existingPlayersBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            usePlayerButton.setDisable(newValue == null);
-            playerInfoBtn.setDisable(newValue == null);
-        }));
+        existingPlayersBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) ->
+                playerInfoBtn.setDisable(newValue == null)));
 
         sexBox.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -139,6 +158,21 @@ public class NewCareerView extends ChildInitializable {
         fillAiDifficulty(aiGoodnessBox);
     }
 
+    private void setListeners() {
+        paneToggle.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
+                triggerPaneToggle());
+    }
+
+    private void triggerPaneToggle() {
+        if (createPlayerCheck.isSelected()) {
+            createPlayerPane.setDisable(false);
+            usePlayerPane.setDisable(true);
+        } else {
+            createPlayerPane.setDisable(true);
+            usePlayerPane.setDisable(false);
+        }
+    }
+
     private void heightValues(double from, double to, double select) {
         heightBox.getItems().clear();
         for (double i = from; i <= to; i += 1) {
@@ -149,15 +183,26 @@ public class NewCareerView extends ChildInitializable {
     }
 
     @FXML
-    public void createPlayer() {
+    public void createCareerAction() {
+        if (createPlayerCheck.isSelected()) {
+            createPlayer();
+        } else {
+            usePlayer();
+        }
+    }
+
+    private void createPlayer() {
         String name = nameField.getText();
-        if (name.isBlank()) return;
+        if (name.isBlank()) {
+            promptLabel.setText(strings.getString("pleaseInputName"));
+            return;
+        }
 
         String generatedId;
         do {
             generatedId = DataLoader.generateIdByName(name);
         } while (DataLoader.getInstance().hasPlayer(generatedId));
-        
+
         promptLabel.setText("");
 
         boolean leftHanded = handBox.getValue() == Hand.LEFT;
@@ -177,9 +222,14 @@ public class NewCareerView extends ChildInitializable {
         createCareerInfo(playerPerson);
     }
 
-    @FXML
-    public void usePlayerAction() {
-        createCareerInfo(existingPlayersBox.getValue());
+    private void usePlayer() {
+        PlayerPerson person = existingPlayersBox.getValue();
+        if (person == null) {
+            promptLabel.setText(strings.getString("pleaseSelectAPlayer"));
+            return;
+        }
+        promptLabel.setText("");
+        createCareerInfo(person);
     }
 
     @FXML
@@ -216,6 +266,7 @@ public class NewCareerView extends ChildInitializable {
     }
 
     private void createCareerInfo(PlayerPerson person) {
+        assert person != null;
         Service<Void> service = new Service<>() {
             @Override
             protected Task<Void> createTask() {
@@ -224,12 +275,13 @@ public class NewCareerView extends ChildInitializable {
                     protected Void call() {
                         CareerManager.createNew(person,
                                 playerGoodnessBox.getValue().multiplier,
-                                aiGoodnessBox.getValue().multiplier);
+                                aiGoodnessBox.getValue().multiplier,
+                                includeCustomPlayerBox.isSelected());
                         System.out.println("Start simulating");
                         long st = System.currentTimeMillis();
                         CareerManager.getInstance().simulateMatchesInPastTwoYears();
                         AchManager.newCareerInstance(CareerManager.getInstance().getCareerSave());
-                        
+
                         // 一定要在simulateMatches之后
                         System.out.println("Simulation ends in " + (System.currentTimeMillis() - st) + " ms");
                         return null;

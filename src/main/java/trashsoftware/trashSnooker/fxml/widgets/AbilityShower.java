@@ -294,7 +294,8 @@ public class AbilityShower extends VBox {
         src.setText(added + "+");
 
         double afterAdd = perkManager.getShownAbility().getAbilityByCat(combo.cat);
-        if (afterAdd >= 99.95) src.setDisable(true);
+        double max = perkManager.getShownAbility().maxAbilityByCat(combo.cat);
+        if (afterAdd >= max * 0.999) src.setDisable(true);
 
         setupTexts();
         setupRadar();
@@ -342,7 +343,8 @@ public class AbilityShower extends VBox {
             for (Button button : buttons) {
                 Combo combo = btnMap.get(button);
                 double curPerk = perkManager.getShownAbility().getAbilityByCat(combo.cat);
-                button.setDisable(curPerk >= 99.95);
+                double max = perkManager.getShownAbility().maxAbilityByCat(combo.cat);
+                button.setDisable(curPerk >= max * 0.999);
                 button.setText("+");
             }
         }

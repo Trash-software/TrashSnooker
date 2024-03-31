@@ -139,6 +139,5 @@ public class PerkManager {
     }
 
     public record UpgradeRec(int perkUsed, int moneyCost, Map<String, double[]> abilityUpdated) {
-
     }
 }

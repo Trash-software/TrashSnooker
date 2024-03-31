@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 540770,
+    "money": 930260,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -5043,13 +5043,125 @@
         "moneyAfter": 540770,
         "type": "purchase",
         "timestamp": "2024-03-29 06:54:44"
+      },
+      {
+        "inGameDate": "2025/4/17",
+        "year": 2025,
+        "match": "world_champ",
+        "moneyBefore": 540770,
+        "moneyAfter": 940770,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 400000,
+          "raw": 500000
+        }},
+        "timestamp": "2024-03-29 22:16:02"
+      },
+      {
+        "inGameDate": "2025/4/17",
+        "perkUsed": 3,
+        "moneyBefore": 940770,
+        "moneyCost": 6450,
+        "moneyAfter": 934320,
+        "ability": {
+          "powerControl": [
+            99.67748442669303,
+            100
+          ],
+          "antiHand": [
+            99.4299649738506,
+            100
+          ],
+          "spinControl": [
+            99.7228748862684,
+            100
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2024-03-29 22:16:33"
+      },
+      {
+        "item": "UNSOLVABLE_SNOOKER",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 934320,
+        "moneyAfter": 934520,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-03-29 22:16:44"
+      },
+      {
+        "item": "SNOOKER_WORLD_CHAMPION",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 934520,
+        "moneyAfter": 934720,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-03-29 22:16:50"
+      },
+      {
+        "inGameDate": "2025/4/17",
+        "moneyBefore": 934720,
+        "moneyAfter": 932060,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2660
+        }],
+        "timestamp": "2024-03-30 00:08:19"
+      },
+      {
+        "item": 6,
+        "inGameDate": "2025/5/1",
+        "match": "custom_195B277334903CE5+2025+eight_noob_open",
+        "moneyBefore": 932060,
+        "moneyAfter": 932260,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2024-03-30 00:08:19"
+      },
+      {
+        "inGameDate": "2025/5/1",
+        "match": "custom_195B277334903CE5+2025+eight_noob_open",
+        "moneyBefore": 932260,
+        "moneyAfter": 931060,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 600
+          }
+        ],
+        "timestamp": "2024-03-30 00:08:19"
+      },
+      {
+        "inGameDate": "2025/5/1",
+        "perkUsed": 1,
+        "moneyBefore": 931060,
+        "moneyCost": 800,
+        "moneyAfter": 930260,
+        "ability": {"normalPower": [
+          88,
+          88
+        ]},
+        "type": "upgrade",
+        "timestamp": "2024-03-31 23:09:38"
       }
     ],
-    "level": 35,
-    "expInThisLevel": 594,
-    "availPerks": 0,
-    "totalPerks": 162,
-    "totalExp": 16460
+    "level": 37,
+    "expInThisLevel": 1346,
+    "availPerks": 5,
+    "totalPerks": 171,
+    "totalExp": 20060
   },
-  "checksum": "2A2CBF85A6FA5F86EEB51B9FD4B13FB8"
+  "checksum": "CC8F927990E1887FFC0D203C476123FC"
 }

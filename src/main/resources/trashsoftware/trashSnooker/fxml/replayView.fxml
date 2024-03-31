@@ -24,7 +24,7 @@
         <columns>
             <TreeTableColumn fx:id="replayCol" text="回放" prefWidth="120.0"/>
             <TreeTableColumn fx:id="eventCol" text="%gameEvent" prefWidth="180.0"/>
-            <TreeTableColumn fx:id="typeCol" text="类型" prefWidth="90.0"/>
+            <TreeTableColumn fx:id="typeCol" text="类型" prefWidth="100.0"/>
             <TreeTableColumn fx:id="p1Col" text="玩家1" prefWidth="120.0"/>
             <TreeTableColumn fx:id="p2Col" text="玩家2" prefWidth="120.0"/>
             <TreeTableColumn fx:id="beginTimeCol" text="开始时间" prefWidth="120.0"/>

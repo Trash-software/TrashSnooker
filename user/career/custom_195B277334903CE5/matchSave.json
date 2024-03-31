@@ -1,51 +1,49 @@
 {
-  "p1": "Trump",
+  "p1": "Zheng Yubo",
   "game": {
     "p1": {
       "playerNumber": 1,
-      "gameRule": "SNOOKER",
-      "handFeelEffort": 1.072937267639292,
-      "person": "Trump",
+      "gameRule": "CHINESE_EIGHT",
+      "handFeelEffort": 1.0145179616558688,
+      "person": "Zheng Yubo",
       "playerType": "COMPUTER"
     },
-    "p1Wins": 0,
+    "p1Wins": 2,
     "p2": {
       "playerNumber": 2,
-      "gameRule": "SNOOKER",
+      "gameRule": "CHINESE_EIGHT",
       "handFeelEffort": 1,
       "person": "custom_195B277334903CE5",
       "playerType": "PLAYER"
     },
     "p2BreakLoseChance": 0,
     "gameValues": {
-      "ball": "SNOOKER_BALL",
-      "gameRule": "SNOOKER",
-      "subRules": ["SNOOKER_STD"],
+      "ball": "POOL_BALL",
+      "gameRule": "CHINESE_EIGHT",
+      "subRules": ["CHINESE_EIGHT_STD"],
       "devMode": false,
       "table": {
-        "tableOrdinal": 0,
+        "tableOrdinal": 1,
         "pocketDifficultyOrdinal": 2,
-        "holeSizeOrdinal": 1
+        "holeSizeOrdinal": 2
       }
     },
     "winRecords": {
-      "1": 2,
+      "1": 1,
       "2": 2,
-      "3": 2,
-      "4": 2,
-      "5": 2
+      "3": 1
     },
-    "p2Wins": 5,
-    "startTime": 1711654698451,
+    "p2Wins": 1,
+    "startTime": 1711827137670,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_195B277334903CE5+2025+world_champ-FINAL-110",
-    "totalFrames": 11,
+    "matchId": "custom_195B277334903CE5+2025+eight_noob_open-SEMI_FINAL-61",
+    "totalFrames": 7,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
-    "p1Breaks": true
+    "p1Breaks": false
   },
   "p2": "custom_195B277334903CE5",
-  "stage": "FINAL"
+  "stage": "SEMI_FINAL"
 }
