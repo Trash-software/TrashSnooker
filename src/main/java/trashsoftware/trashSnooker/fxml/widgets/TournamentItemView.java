@@ -2,7 +2,6 @@ package trashsoftware.trashSnooker.fxml.widgets;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
@@ -12,9 +11,11 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
-import javafx.util.Callback;
 import trashsoftware.trashSnooker.core.SubRule;
-import trashsoftware.trashSnooker.core.career.*;
+import trashsoftware.trashSnooker.core.career.Career;
+import trashsoftware.trashSnooker.core.career.CareerManager;
+import trashsoftware.trashSnooker.core.career.ChampionshipData;
+import trashsoftware.trashSnooker.core.career.TournamentStats;
 import trashsoftware.trashSnooker.core.career.championship.SnookerBreakScore;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.CareerView;
@@ -22,7 +23,10 @@ import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.NavigableMap;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 public class TournamentItemView extends ScrollPane {
 
@@ -74,21 +78,25 @@ public class TournamentItemView extends ScrollPane {
 
         HBox tourTypeBox = new HBox();
         tourTypeBox.setSpacing(10.0);
-        
+
         StringBuilder gameTypeBuilder = new StringBuilder();
         gameTypeBuilder.append(data.getType().toString());
-        
+
         for (SubRule sr : data.getSubRules()) {
             gameTypeBuilder.append('-').append(sr.toString());
         }
         tourTypeBox.getChildren().add(new Label(gameTypeBuilder.toString()));
-        
+
         tourTypeBox.getChildren().add(new Label(strings.getString("isRanked") + (data.isRanked() ?
-                        strings.getString("yes") :
-                        strings.getString("no"))));
-        tourTypeBox.getChildren().add(new Label(strings.getString("isProfessional") + (data.isProfessionalOnly() ? 
-                strings.getString("yes") : 
+                strings.getString("yes") :
                 strings.getString("no"))));
+        tourTypeBox.getChildren().add(new Label(strings.getString("isProfessional") + (data.isProfessionalOnly() ?
+                strings.getString("yes") :
+                strings.getString("no"))));
+        if (data.hasForbidden()) {
+            tourTypeBox.getChildren().add(new Label(String.format(strings.getString("forbiddenRankFmt"),
+                    data.getForbidden())));
+        }
 
         rootPane.add(tourTypeBox, 0, row++);
 
@@ -102,10 +110,10 @@ public class TournamentItemView extends ScrollPane {
             sponsor.setWrapText(true);
             rootPane.add(sponsor, 0, row++);
         }
-        
+
         LabelTable<ChampionshipData> positionsTable = new LabelTable<>();
-        LabelTableColumn<ChampionshipData, Integer> col1 = 
-                new LabelTableColumn<>(positionsTable, strings.getString("mainPlaces"), 
+        LabelTableColumn<ChampionshipData, Integer> col1 =
+                new LabelTableColumn<>(positionsTable, strings.getString("mainPlaces"),
                         params -> new ReadOnlyObjectWrapper<>(params.getMainPlaces()));
         LabelTableColumn<ChampionshipData, Integer> col2 =
                 new LabelTableColumn<>(positionsTable, strings.getString("seedPlaces"),
@@ -113,12 +121,12 @@ public class TournamentItemView extends ScrollPane {
         LabelTableColumn<ChampionshipData, Integer> col3 =
                 new LabelTableColumn<>(positionsTable, strings.getString("preMatchPlaces"),
                         params -> new ReadOnlyObjectWrapper<>(Arrays.stream(params.getPreMatchNewAdded()).sum()));
-        
+
         positionsTable.addColumns(col1, col2, col3);
         positionsTable.addItem(data);
 
         rootPane.add(positionsTable, 0, row++);
-        
+
         rootPane.add(awardPerkTable, 0, row++);
 
         // 赛事奖金表
@@ -127,9 +135,9 @@ public class TournamentItemView extends ScrollPane {
                         new ReadOnlyStringWrapper(param.rank.getShown()));
         LabelTableColumn<CareerView.AwardItem, Integer> awardCol =
                 new LabelTableColumn<>(awardPerkTable,
-                        ResourcesLoader.getInstance().createMoneyIcon(), 
+                        ResourcesLoader.getInstance().createMoneyIcon(),
                         param ->
-                        new ReadOnlyObjectWrapper<>(param.data.getAwardByRank(param.rank)));
+                                new ReadOnlyObjectWrapper<>(param.data.getAwardByRank(param.rank)));
         LabelTableColumn<CareerView.AwardItem, String> perkCol =
                 new LabelTableColumn<>(awardPerkTable,
                         ResourcesLoader.getInstance().createExpIcon(),
@@ -141,14 +149,14 @@ public class TournamentItemView extends ScrollPane {
                 );
         LabelTableColumn<CareerView.AwardItem, String> framesCol =
                 new LabelTableColumn<>(awardPerkTable, strings.getString("totalFrames"), param ->
-                        new ReadOnlyStringWrapper(param.winnerStage == null ? 
-                                "" : 
+                        new ReadOnlyStringWrapper(param.winnerStage == null ?
+                                "" :
                                 String.valueOf(param.data.getNFramesOfStage(param.winnerStage))));
 
         awardPerkTable.addColumns(titleCol, awardCol, perkCol, framesCol);
 
         CareerView.fillChampionshipAwardTable(awardPerkTable, data);
-        
+
         // 赛事报名费表
         LabelTable<ChampionshipData> feesTable = new LabelTable<>();
         LabelTableColumn<ChampionshipData, Integer> feesCol1 =
@@ -163,10 +171,10 @@ public class TournamentItemView extends ScrollPane {
 
         feesTable.addColumns(feesCol1, feesCol2, feesCol3);
         feesTable.addItem(data);
-        
+
         rootPane.add(feesTable, 0, row++);
         rootPane.add(new Separator(Orientation.HORIZONTAL), 0, row++, 1, 1);
-        
+
         // 历届冠军
         LabelTableColumn<HistoryChamp, Integer> yearCol =
                 new LabelTableColumn<>(champsTable, strings.getString("historyChampions"), param ->
@@ -177,15 +185,15 @@ public class TournamentItemView extends ScrollPane {
 
         champsTable.addColumns(yearCol, personCol);
         rootPane.add(champsTable, 0, row++);
-        
+
         TournamentStats stats = CareerManager.getInstance().tournamentHistory(data);
 
         NavigableMap<Integer, Career> historyChamps = stats.getHistoricalChampions();
-        
+
         for (int year : historyChamps.descendingKeySet()) {
             champsTable.addItem(new HistoryChamp(year, historyChamps.get(year)));
         }
-        
+
         if (data.getType().snookerLike()) {
             LabelTable<SnookerBreakScore> sbsTable = new LabelTable<>();
             Set<SnookerBreakScore> bestBreaks = stats.getHighestBreak();
@@ -197,7 +205,7 @@ public class TournamentItemView extends ScrollPane {
                 sbsTable.addItem(null);
             } else {
                 sbsTable.addColumns(
-                        new LabelTableColumn<>(sbsTable, strings.getString("tournamentHighest"), 
+                        new LabelTableColumn<>(sbsTable, strings.getString("tournamentHighest"),
                                 param -> new ReadOnlyStringWrapper(DataLoader.getInstance().getPlayerPerson(param.playerId).getName())),
                         new LabelTableColumn<>(sbsTable,
                                 param -> new ReadOnlyObjectWrapper<>(param.score)),
@@ -209,11 +217,11 @@ public class TournamentItemView extends ScrollPane {
             rootPane.add(sbsTable, 0, row++);
         }
     }
-    
+
     public static class HistoryChamp {
         final int year;
         final Career career;
-        
+
         HistoryChamp(int year, Career career) {
             this.year = year;
             this.career = career;

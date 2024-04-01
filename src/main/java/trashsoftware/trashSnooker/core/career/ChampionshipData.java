@@ -30,6 +30,7 @@ public class ChampionshipData {
     Map<ChampionshipStage, Integer> stageNewAdd;  // 每一轮新加的选手的数量
     boolean professionalOnly;  // 是否仅允许职业选手参加
     boolean ranked;  // 是否为排名赛
+    int forbidden;  // 排名前多少的球员不允许参加
     int month;  // 真实的month，从1开始的，注意和calendar转化
     int day;
     Selection selection;
@@ -100,6 +101,12 @@ public class ChampionshipData {
 
         data.ranked = jsonObject.getBoolean("ranked");
         data.professionalOnly = jsonObject.getBoolean("professional");
+        if (jsonObject.has("forbidden")) {
+            data.forbidden = jsonObject.getInt("forbidden");
+        } else {
+            data.forbidden = 0;
+        }
+        
         if (jsonObject.has("class")) {
             data.classLevel = jsonObject.getInt("class");
         } else {
@@ -321,6 +328,14 @@ public class ChampionshipData {
 
     public int getClassLevel() {
         return classLevel;
+    }
+    
+    public boolean hasForbidden() {
+        return forbidden > 0;
+    }
+
+    public int getForbidden() {
+        return forbidden;
     }
 
     public int getTotalPlaces() {

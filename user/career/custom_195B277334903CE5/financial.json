@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 930260,
+    "money": 1010180,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -5155,13 +5155,36 @@
         ]},
         "type": "upgrade",
         "timestamp": "2024-03-31 23:09:38"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_195B277334903CE5-387",
+        "inGameDate": "2025/5/1",
+        "moneyBefore": 930260,
+        "moneyCost": 80,
+        "moneyAfter": 930180,
+        "type": "purchase",
+        "timestamp": "2024-04-01 21:18:29"
+      },
+      {
+        "inGameDate": "2025/5/1",
+        "year": 2025,
+        "match": "eight_noob_open",
+        "moneyBefore": 930180,
+        "moneyAfter": 1010180,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 80000,
+          "raw": 100000
+        }},
+        "timestamp": "2024-04-01 21:26:26"
       }
     ],
-    "level": 37,
-    "expInThisLevel": 1346,
-    "availPerks": 5,
-    "totalPerks": 171,
-    "totalExp": 20060
+    "level": 38,
+    "expInThisLevel": 549,
+    "availPerks": 15,
+    "totalPerks": 181,
+    "totalExp": 20860
   },
-  "checksum": "CC8F927990E1887FFC0D203C476123FC"
+  "checksum": "4B474D59B8AA5C1E4D1C2A8E74B0FEBA"
 }
