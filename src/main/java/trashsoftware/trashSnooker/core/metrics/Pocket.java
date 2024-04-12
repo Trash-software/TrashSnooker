@@ -9,6 +9,7 @@ public class Pocket {
     public final double graphicalRadius;
     public final double extraSlopeWidth;
     public final TableMetrics.Hole hole;
+    public final double[] facingDir;  // 袋口正朝向
 
     Pocket(TableMetrics.Hole hole,
            boolean isMid,
@@ -16,7 +17,8 @@ public class Pocket {
            double fallRadius,
            double[] graphicalCenter,
            double graphicalRadius,
-           double extraSlopeWidth) {
+           double extraSlopeWidth,
+           double[] facingDir) {
         this.hole = hole;
         this.isMid = isMid;
         this.fallCenter = fallCenter;
@@ -24,6 +26,7 @@ public class Pocket {
         this.graphicalCenter = graphicalCenter;
         this.graphicalRadius = graphicalRadius;
         this.extraSlopeWidth = extraSlopeWidth;
+        this.facingDir = facingDir;
     }
 
     public boolean isMid() {
@@ -52,5 +55,9 @@ public class Pocket {
 
     public double[] getOpenCenter(GameValues gameValues) {
         return gameValues.getOpenCenter(hole);
+    }
+
+    public double[] getFacingDir() {
+        return facingDir;
     }
 }

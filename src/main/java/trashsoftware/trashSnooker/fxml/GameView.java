@@ -31,7 +31,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.audio.GameAudio;
+import trashsoftware.trashSnooker.audio.AudioPlayerManager;
+import trashsoftware.trashSnooker.audio.SoundInfo;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
@@ -73,6 +74,7 @@ import trashsoftware.trashSnooker.fxml.projection.CushionProjection;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 import trashsoftware.trashSnooker.recorder.*;
+import trashsoftware.trashSnooker.res.WavInfo;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.PointInPoly;
@@ -223,6 +225,7 @@ public class GameView implements Initializable {
     private Movement movement;
     private Movement tracedMovement;
     private boolean playingMovement = false;
+    private int lastMovementPlayingIndex = 0;
     private int movementPlayingIndex = 0;  // 第几帧
     private double movementPercentageInIndex = 0.0;  // 这一帧放了多少
     private GamePlayStage currentPlayStage;  // 只对game有效, 并且不要直接access这个变量, 请用getter
@@ -2069,7 +2072,7 @@ public class GameView implements Initializable {
 
             xError = xError * xSig + muSigXy[0];
             yError = yError * ySig + muSigXy[2];
-            xError = xError * mulWithPower * cueAreaRadius / 240;
+            xError = xError * mulWithPower * cueAreaRadius / 160;  // xError可以大点，因为球员数据里给得太保守了
             yError = yError * mulWithPower * cueAreaRadius / 240;
             cpx = intentCuePointX + xError;
             cpy = intentCuePointY + yError;
@@ -2385,6 +2388,7 @@ public class GameView implements Initializable {
         movement = calculatedMovement;
         tracedMovement = movement;
         movementPlayingIndex = 0;
+        lastMovementPlayingIndex = 0;
         movementPercentageInIndex = 0.0;
     }
 
@@ -2463,6 +2467,7 @@ public class GameView implements Initializable {
         movement = calculatedMovement;
         tracedMovement = movement;
         movementPlayingIndex = 0;
+        lastMovementPlayingIndex = 0;
         movementPercentageInIndex = 0.0;
     }
 
@@ -2661,6 +2666,7 @@ public class GameView implements Initializable {
             movement = replay.getMovement();
             tracedMovement = movement;
             movementPlayingIndex = 0;
+            lastMovementPlayingIndex = 0;
             movementPercentageInIndex = 0.0;
             System.out.println(movement.getMovementMap().get(replay.getCueBall()).size());
 
@@ -2990,8 +2996,8 @@ public class GameView implements Initializable {
         int end = Math.min(movementPlayingIndex, frames.size());
         if (end > 1) {
             gamePane.getLineGraphics().setStroke(ball.getTraceColor());
-            double x = gamePane.canvasX(frames.get(0).x);
-            double y = gamePane.canvasY(frames.get(0).y);
+            double x = gamePane.canvasX(frames.getFirst().x);
+            double y = gamePane.canvasY(frames.getFirst().y);
             for (int i = 1; i < end; i++) {
                 MovementFrame frame = frames.get(i);
                 if (frame.potted) break;
@@ -3097,16 +3103,56 @@ public class GameView implements Initializable {
                     entry.getKey().model.sphere.setVisible(false);
                 }
 //                if (Math.random() < 0.05) throw new RuntimeException();
-
-                switch (frame.movementType) {
-                    case MovementFrame.COLLISION -> {
+                
+            }
+            // 放音效，只放这一动画帧权重最高的音效
+            int mediaType = MovementFrame.NORMAL;
+            double mediaValue = 0.0;
+            for (int fi = lastMovementPlayingIndex + 1; fi <= movementPlayingIndex; fi++) {
+//                System.out.println(fi);
+                for (Map.Entry<Ball, List<MovementFrame>> entry :
+                        movement.getMovementMap().entrySet()) {
+                    List<MovementFrame> list = entry.getValue();
+                    MovementFrame frame = list.get(fi);
+                    if (!frame.potted) {
+                        int old = mediaType;
+                        mediaType = MovementFrame.replaceMovementType(mediaType, frame.movementType);
+                        if (old != mediaType) {
+                            mediaValue = frame.movementValue;
+                        }
                     }
-                    case MovementFrame.EDGE_CUSHION ->
-                            GameAudio.hitCushion(gameValues.table, frame.movementValue);
-                    // todo
-                    case MovementFrame.POT -> GameAudio.pot(gameValues.table, frame.movementValue);
                 }
             }
+            switch (mediaType) {
+                case MovementFrame.COLLISION -> {
+                    System.out.println("Collision sound: " + mediaValue);
+                    AudioPlayerManager.getInstance().play(
+                            SoundInfo.bySpeed(SoundInfo.SoundType.BALL_COLLISION, mediaValue),
+                            gameValues,
+                            null
+                    );
+                }
+                case MovementFrame.POCKET_BACK -> {
+                    System.out.println("Pocket back sound: " + mediaValue);
+                    AudioPlayerManager.getInstance().play(
+                            SoundInfo.bySpeed(SoundInfo.SoundType.POCKET_BACK, mediaValue),
+                            gameValues,
+                            null
+                    );
+                }
+                case MovementFrame.EDGE_CUSHION, 
+                        MovementFrame.CUSHION_LINE, 
+                        MovementFrame.CUSHION_ARC -> {
+                    System.out.println("Cushion sound: " + mediaValue);
+                    AudioPlayerManager.getInstance().play(
+                            SoundInfo.bySpeed(SoundInfo.SoundType.CUSHION, mediaValue),
+                            gameValues,
+                            null
+                    );
+                }
+            }
+            lastMovementPlayingIndex = movementPlayingIndex;
+            
             if (isLast) {
                 playingMovement = false;
                 movement = null;
@@ -3710,7 +3756,8 @@ public class GameView implements Initializable {
                 cursorDirectionUnitX, cursorDirectionUnitY);
     }
 
-    private void beginCueAnimation(InGamePlayer cuingPlayer, double whiteStartingX, double whiteStartingY,
+    private void beginCueAnimation(InGamePlayer cuingPlayer, 
+                                   double whiteStartingX, double whiteStartingY,
                                    double selectedPower, double directionX, double directionY) {
         PlayerPerson playerPerson = cuingPlayer.getPlayerPerson();
         double personPower = getPersonPower(playerPerson);  // 球手的用力程度
@@ -3737,6 +3784,15 @@ public class GameView implements Initializable {
             restCuePointing = Algebra.unitVectorOfAngle(restAngleWithOffset);
             maxPullDt *= 0.75;
         }
+        
+        double speedRatio = selectedPower *
+                PlayerPerson.HandBody.getPowerMulOfHand(currentHand) / 100.0;
+        SoundInfo soundInfo;
+        if (miscued) {
+            soundInfo = SoundInfo.bySpeed(SoundInfo.SoundType.MISCUE_SOUND, speedRatio);
+        } else {
+            soundInfo = SoundInfo.bySpeed(SoundInfo.SoundType.CUE_SOUND, speedRatio);
+        }
 
         // 出杆速度与白球球速算法相同
         try {
@@ -3753,7 +3809,8 @@ public class GameView implements Initializable {
                     cue,
                     cuingPlayer,
                     currentHand,
-                    restCuePointing
+                    restCuePointing,
+                    soundInfo
             );
         } catch (RuntimeException re) {
             EventLogger.error(re);
@@ -4254,6 +4311,7 @@ public class GameView implements Initializable {
         private long hideTime;
 
         private double framesPlayed = 0;
+        private final SoundInfo soundInfo;
 
         CueAnimationPlayer(double initDistance,
                            double handBallDistance,
@@ -4267,9 +4325,11 @@ public class GameView implements Initializable {
                            Cue cue,
                            InGamePlayer igp,
                            PlayerPerson.HandSkill handSkill,
-                           double[] restCuePointing) {
+                           double[] restCuePointing,
+                           SoundInfo soundInfo) {
 
             cueAnimationRec = new CueAnimationRec(cue);
+            this.soundInfo = soundInfo;
 
             playerPerson = igp.getPlayerPerson();
             double personPower = getPersonPower(selectedPower, playerPerson);
@@ -4415,9 +4475,16 @@ public class GameView implements Initializable {
 
                 if (!touched) {
                     if (cueDtToWhite < 0 && lastCueDtToWhite >= 0) {
+                        // 就是这一帧碰球！
                         touched = true;
                         touchTime = gameLoop.currentTimeMillis();
                         cueAnimationRec.setBeforeCueMs((int) ((touchTime - beginTime) * playSpeedMultiplier));
+                        
+                        AudioPlayerManager.getInstance().play(
+                                soundInfo,
+                                gameValues,
+                                getCuingCue()
+                        );
                         playMovement();
                     }
                 } else if (cueDtToWhite <= maxExtension) {

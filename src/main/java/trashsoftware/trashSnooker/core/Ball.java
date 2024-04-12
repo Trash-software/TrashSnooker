@@ -38,10 +38,12 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private long msSinceCue;
     private long msRemainInPocket;
     private Pocket pottedPocket;
+    private double maxInPocketSpeed;  // 本杆在袋内的最大速度，m/s
     //    private Ball justHit;
     int pocketHitCount = 0;  // 本杆撞击袋角的次数
 
     private double lastCollisionX, lastCollisionY;  // 记录一下上次碰撞所在的位置
+    private double lastCollisionRelSpeed;
 
     protected Ball(int value, boolean initPotted, GameValues values) {
         super(values, values.ball.ballRadius);
@@ -295,13 +297,31 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return !isPotted() || msRemainInPocket > 0;
     }
 
-    private void oneFrameInPocket(Phy phy) {
+    /**
+     * @return 未碰撞0，碰撞但不是最大的一次1，最大碰撞2
+     */
+    private int oneFrameInPocket(Phy phy) {
         double pocketRange = pottedPocket.graphicalRadius - values.ball.ballRadius;
         double nextDt = predictedDtToPoint(pottedPocket.graphicalCenter);
         double curDt = currentDtToPoint(pottedPocket.graphicalCenter);
+        int rtn = 0;
 //        System.out.printf("%f, %f");
         if (nextDt > pocketRange
                 && nextDt > curDt) {
+            rtn = 1;
+            // todo: pocket sound
+            double[] pocketBottomDir = new double[]{
+                    -pottedPocket.facingDir[0], 
+                    -pottedPocket.facingDir[1]
+            };
+            double[] ballDir = new double[]{vx, vy};
+            double proj = Algebra.projectionLengthOn(pocketBottomDir, ballDir);  // 球的方向往袋底方向的投影
+            double hitSpeed = proj * phy.calculationsPerSec;
+            if (hitSpeed > maxInPocketSpeed) {
+                maxInPocketSpeed = hitSpeed;
+                rtn = 2;
+            }
+            
             innerBounce(pottedPocket.graphicalCenter, 0.6);
         }
 //        tryEnterGravityArea(phy, pottedPocket.graphicalCenter, pottedPocket.isMid);
@@ -309,6 +329,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         y = nextY;
         nextX = x + vx;
         nextY = y + vy;
+        return rtn;
     }
 
     private void innerBounce(double[] center, double factor) {
@@ -324,27 +345,27 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //        nextY = y + vy;
     }
 
-    public boolean tryFrameInPocket(Phy phy) {
+    public int tryFrameInPocket(Phy phy) {
         if (isPotted()) {
             if (msRemainInPocket > 0) {
                 msRemainInPocket -= phy.calculateMs;
 
-                oneFrameInPocket(phy);
+                int stat = oneFrameInPocket(phy);
                 if (getSpeedPerSecond(phy) < 100) {
                     // 球已经停了，别放了
                     msRemainInPocket = 0;
                     pot();
-                    return false;
+                    return 0;
                 }
 
-                return true;
+                return stat;
             } else {
                 msRemainInPocket = 0;
                 pot();
-                return false;
+                return 0;
             }
         } else {
-            return false;
+            return 0;
         }
     }
 
@@ -647,7 +668,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             } else {
                 bouncedSideSpin = sideSpin + sideSpinChange;
             }
-            
+
             currentBounce = new CushionBounce(
                     0,
                     effectiveAcc,
@@ -770,6 +791,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             return;
         }
 
+        this.lastCollisionRelSpeed = Math.hypot(vx - ball.vx, vy - ball.vy);
+        ball.lastCollisionRelSpeed = this.lastCollisionRelSpeed;
+
         // 离岸位置发生改变，又懒得重新算了
         clearBounceDesiredLeavePos();
         ball.clearBounceDesiredLeavePos();
@@ -859,7 +883,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double ballOutVer = thisVerV;
 
         double spinProj = 0.0;
-
+        if (ball.vx == 0 && ball.vy == 0) {
+            spinProj = Algebra.projectionLengthOn(thisV,
+                    new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
+        }
 //        if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
 //            // 实为投掷效应
 //            double powerGear = Math.min(1.0,
@@ -1028,6 +1055,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //        justHit = null;
         frameDegChange = 0.0;
         pocketHitCount = 0;
+        maxInPocketSpeed = 0.0;
     }
 
     protected void prepareMove(Phy phy) {
@@ -1104,5 +1132,13 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
     public double getLastCollisionY() {
         return lastCollisionY;
+    }
+
+    public double getLastCollisionRelSpeed() {
+        return lastCollisionRelSpeed;
+    }
+
+    public double getMaxInPocketSpeed() {
+        return maxInPocketSpeed;
     }
 }

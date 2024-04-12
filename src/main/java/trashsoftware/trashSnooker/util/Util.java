@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Values;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -372,5 +373,35 @@ public class Util {
             json.put(d);
         }
         return json;
+    }
+
+    public static long readInt4Little(InputStream stream) throws IOException {
+        byte[] buf = stream.readNBytes(4);
+        return (buf[0] & 0xffL) | ((buf[1] & 0xffL) << 8) | ((buf[2] & 0xffL) << 16) | ((buf[3] & 0xffL) << 24);
+    }
+
+    public static void writeInt4Little(OutputStream stream, long value) throws IOException {
+        stream.write(new byte[]{(byte) value, (byte) (value >> 8), (byte) (value >> 16), (byte) (value >> 24)});
+    }
+
+    public static int readInt2Little(InputStream stream) throws IOException {
+        byte[] buf = stream.readNBytes(2);
+        return (buf[0] & 0xff) | ((buf[1] & 0xff) << 8);
+    }
+
+    public static void writeInt2Little(OutputStream stream, int value) throws IOException {
+        stream.write(new byte[]{(byte) value, (byte) (value >> 8)});
+    }
+
+    public static String readString(InputStream stream, int len) throws IOException {
+        return new String(stream.readNBytes(len));
+    }
+
+    public static void writeString(OutputStream stream, String s) throws IOException {
+        stream.write(s.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static class IntList extends ArrayList<Integer> {
+
     }
 }

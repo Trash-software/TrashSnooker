@@ -37,6 +37,7 @@ public abstract class CueBrand {
     public final int price;
 
     public final CueSize tipSize;
+    public final Material material;
 
     protected CueBrand(String cueId,
                        String name,
@@ -45,6 +46,7 @@ public abstract class CueBrand {
                        double cueTipWidth,
                        Color tipRingColor,
                        Color backColor,
+                       Material material,
                        double powerMultiplier,
                        double elasticity,
                        double hardness,
@@ -59,6 +61,7 @@ public abstract class CueBrand {
         this.endWidth = endWidth;
         this.cueTipWidth = cueTipWidth;
         this.tipRingColor = tipRingColor;
+        this.material = material;
 
         this.backColor = backColor;
         this.powerMultiplier = powerMultiplier;
@@ -139,5 +142,11 @@ public abstract class CueBrand {
     @Override
     public String toString() {
         return "CueBrand-" + cueId;
+    }
+    
+    public enum Material {
+        HARD_WOOD,
+        SOFT_WOOD,
+        CARBON
     }
 }

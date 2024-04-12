@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.metrics;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.fxml.App;
 
 import java.util.ArrayList;
@@ -305,7 +306,8 @@ public class TableMetrics {
                 pocketDifficulty.cornerPocketFallRadius,
                 topLeftHoleGraXY,
                 cornerGraphicalRadius,
-                pocketDifficulty.cornerPocketGravityZone
+                pocketDifficulty.cornerPocketGravityZone,
+                Algebra.unitVector(new double[]{1, 1})
         );
         topRight = new Pocket(
                 Hole.TOP_RIGHT,
@@ -314,7 +316,8 @@ public class TableMetrics {
                 pocketDifficulty.cornerPocketFallRadius,
                 topRightHoleGraXY,
                 cornerGraphicalRadius,
-                pocketDifficulty.cornerPocketGravityZone
+                pocketDifficulty.cornerPocketGravityZone,
+                Algebra.unitVector(new double[]{-1, 1})
         );
         botLeft = new Pocket(
                 Hole.BOT_LEFT,
@@ -323,7 +326,8 @@ public class TableMetrics {
                 pocketDifficulty.cornerPocketFallRadius,
                 botLeftHoleGraXY,
                 cornerGraphicalRadius,
-                pocketDifficulty.cornerPocketGravityZone
+                pocketDifficulty.cornerPocketGravityZone,
+                Algebra.unitVector(new double[]{1, -1})
         );
         botRight = new Pocket(
                 Hole.BOT_RIGHT,
@@ -332,7 +336,8 @@ public class TableMetrics {
                 pocketDifficulty.cornerPocketFallRadius,
                 botRightHoleGraXY,
                 cornerGraphicalRadius,
-                pocketDifficulty.cornerPocketGravityZone
+                pocketDifficulty.cornerPocketGravityZone,
+                Algebra.unitVector(new double[]{-1, -1})
         );
         topMid = new Pocket(
                 Hole.TOP_MID,
@@ -341,7 +346,8 @@ public class TableMetrics {
                 pocketDifficulty.midPocketFallRadius,
                 topMidHoleGraXY,
                 midGraphicalRadius,
-                pocketDifficulty.midPocketGravityZone
+                pocketDifficulty.midPocketGravityZone,
+                Algebra.unitVector(new double[]{0, 1})
         );
         botMid = new Pocket(
                 Hole.BOT_MID,
@@ -350,7 +356,8 @@ public class TableMetrics {
                 pocketDifficulty.midPocketFallRadius,
                 botMidHoleGraXY,
                 midGraphicalRadius,
-                pocketDifficulty.midPocketGravityZone
+                pocketDifficulty.midPocketGravityZone,
+                Algebra.unitVector(new double[]{0, -1})
         );
         pockets = new Pocket[]{
                 topLeft, topMid, topRight, botRight, botMid, botLeft

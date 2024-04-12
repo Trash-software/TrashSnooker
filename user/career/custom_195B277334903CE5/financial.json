@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 1010180,
+    "money": 1104600,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -5178,13 +5178,189 @@
           "raw": 100000
         }},
         "timestamp": "2024-04-01 21:26:26"
+      },
+      {
+        "inGameDate": "2025/5/1",
+        "moneyBefore": 1010180,
+        "moneyAfter": 1005380,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 4800
+        }],
+        "timestamp": "2024-04-02 04:33:24"
+      },
+      {
+        "item": 2,
+        "inGameDate": "2025/5/25",
+        "match": "custom_195B277334903CE5+2025+space_grand_prix",
+        "moneyBefore": 1005380,
+        "moneyAfter": 1005880,
+        "type": "invitation",
+        "moneyEarn": 500,
+        "timestamp": "2024-04-02 04:33:25"
+      },
+      {
+        "inGameDate": "2025/5/25",
+        "match": "custom_195B277334903CE5+2025+space_grand_prix",
+        "moneyBefore": 1005880,
+        "moneyAfter": 1002680,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1800
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 900
+          }
+        ],
+        "timestamp": "2024-04-02 04:33:25"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_195B277334903CE5-388",
+        "inGameDate": "2025/5/25",
+        "moneyBefore": 1002680,
+        "moneyCost": 80,
+        "moneyAfter": 1002600,
+        "type": "purchase",
+        "timestamp": "2024-04-03 05:56:37"
+      },
+      {
+        "inGameDate": "2025/5/25",
+        "year": 2025,
+        "match": "space_grand_prix",
+        "moneyBefore": 1002600,
+        "moneyAfter": 1098600,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 96000,
+          "raw": 120000
+        }},
+        "timestamp": "2024-04-03 19:27:02"
+      },
+      {
+        "item": "PARTICIPATE_TOURNAMENTS",
+        "inGameDate": "2025/5/25",
+        "level": 2,
+        "moneyBefore": 1098600,
+        "moneyAfter": 1099600,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2024-04-03 19:27:19"
+      },
+      {
+        "item": "SNOOKER_TOP_1",
+        "inGameDate": "2025/5/25",
+        "level": 0,
+        "moneyBefore": 1099600,
+        "moneyAfter": 1099800,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-04-03 19:27:25"
+      },
+      {
+        "inGameDate": "2025/5/25",
+        "moneyBefore": 1099800,
+        "moneyAfter": 1095000,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 4800
+        }],
+        "timestamp": "2024-04-03 22:26:35"
+      },
+      {
+        "inGameDate": "2025/6/18",
+        "moneyBefore": 1095000,
+        "moneyAfter": 1093000,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2000
+        }],
+        "timestamp": "2024-04-03 22:26:39"
+      },
+      {
+        "inGameDate": "2025/6/28",
+        "match": "custom_195B277334903CE5+2025+american_nine_sydney_burwood_cup",
+        "moneyBefore": 1093000,
+        "moneyAfter": 1092000,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2024-04-03 22:26:39"
+      },
+      {
+        "inGameDate": "2025/6/28",
+        "year": 2025,
+        "match": "american_nine_sydney_burwood_cup",
+        "moneyBefore": 1092000,
+        "moneyAfter": 1108000,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 16000,
+          "raw": 20000
+        }},
+        "timestamp": "2024-04-05 17:24:22"
+      },
+      {
+        "inGameDate": "2025/6/28",
+        "moneyBefore": 1108000,
+        "moneyAfter": 1105600,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2400
+        }],
+        "timestamp": "2024-04-05 17:24:39"
+      },
+      {
+        "inGameDate": "2025/7/10",
+        "match": "custom_195B277334903CE5+2025+chongqing_open",
+        "moneyBefore": 1105600,
+        "moneyAfter": 1104600,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2024-04-05 17:24:39"
       }
     ],
-    "level": 38,
-    "expInThisLevel": 549,
-    "availPerks": 15,
-    "totalPerks": 181,
-    "totalExp": 20860
+    "level": 39,
+    "expInThisLevel": 4,
+    "availPerks": 20,
+    "totalPerks": 186,
+    "totalExp": 22040
   },
-  "checksum": "4B474D59B8AA5C1E4D1C2A8E74B0FEBA"
+  "checksum": "88F92854B7937B6584164CDD9BEAF27E"
 }

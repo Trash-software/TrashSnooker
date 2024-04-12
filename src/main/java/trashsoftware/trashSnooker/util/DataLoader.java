@@ -356,6 +356,15 @@ public class DataLoader {
                     int price = cueObject.has("price") ?
                             cueObject.getInt("price") :
                             100;
+
+                    CueBrand.Material material;
+                    if (cueObject.has("material")) {
+                        material = CueBrand.Material.valueOf(Util.toAllCapsUnderscoreCase(
+                                cueObject.getString("material")
+                        ));
+                    } else {
+                        material = CueBrand.Material.HARD_WOOD;
+                    }
                     
                     CueBrand cue;
                     if (cueObject.has("textured") && cueObject.getBoolean("textured")) {
@@ -378,6 +387,7 @@ public class DataLoader {
                                 cueObject.getDouble("ringThickness"),
                                 parseColor(cueObject.getString("ringColor")),
                                 parseColor(cueObject.getString("backColor")),
+                                material,
                                 cueObject.getDouble("power"),
                                 cueObject.getDouble("elasticity"),
                                 cueObject.getDouble("hardness"),
@@ -401,6 +411,7 @@ public class DataLoader {
                                 parseColor(cueObject.getString("frontColor")),
                                 parseColor(cueObject.getString("midColor")),
                                 parseColor(cueObject.getString("backColor")),
+                                material,
                                 cueObject.getDouble("power"),
                                 cueObject.getDouble("elasticity"),
                                 cueObject.getDouble("hardness"),

@@ -24,6 +24,16 @@ public class ResourcesLoader {
     private final Image radarIcon;
     private final Image barIcon;
     private final Image lineIcon;
+    
+    private final WavInfo cueSoundSmallMidPower;
+    private final WavInfo cueSoundCarbonMidPower;
+    private final WavInfo miscueSoundGeneral;
+    
+    private final WavInfo[] ballSoundsSnookerLoud = new WavInfo[4];  // 噼里啪啦
+    private int ballSoundsSnookerLoudIndex = 0;
+    
+    private final WavInfo cushionSnooker;
+    private final WavInfo pocketBackGeneral;
 
     private ResourcesLoader() {
         icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.png")),
@@ -53,6 +63,17 @@ public class ResourcesLoader {
                 0, 0, true, true);
         awardBronze = new Image(Objects.requireNonNull(getClass().getResourceAsStream("ach_bronze.png")),
                 0, 0, true, true);
+        
+        cueSoundSmallMidPower = WavInfo.load("data/sound/cue_wood_small_mid.wav");
+        miscueSoundGeneral = WavInfo.load("data/sound/cue_wood_small_miscue.wav");
+        cueSoundCarbonMidPower = WavInfo.load("data/sound/cue_carbon_mid.wav");
+        
+        for (int i = 0; i < ballSoundsSnookerLoud.length; i++) {
+            ballSoundsSnookerLoud[i] = WavInfo.load("data/sound/ball_snooker_collision.wav");
+        }
+        
+        cushionSnooker = WavInfo.load("data/sound/cushion_snooker.wav", 0.5f);
+        pocketBackGeneral = WavInfo.load("data/sound/pocket_back_mid.wav", 1.5f);
     }
 
     public static ResourcesLoader getInstance() {
@@ -165,5 +186,29 @@ public class ResourcesLoader {
 
     public ImageView createMoneyIcon() {
         return createIconImage(getMoneyImg());
+    }
+
+    public WavInfo getBallSoundSnookerLoud() {
+        return ballSoundsSnookerLoud[ballSoundsSnookerLoudIndex++ % ballSoundsSnookerLoud.length];
+    }
+
+    public WavInfo getMiscueSoundGeneral() {
+        return miscueSoundGeneral;
+    }
+
+    public WavInfo getCueSoundCarbonMidPower() {
+        return cueSoundCarbonMidPower;
+    }
+
+    public WavInfo getCueSoundSmallMidPower() {
+        return cueSoundSmallMidPower;
+    }
+
+    public WavInfo getCushionSnooker() {
+        return cushionSnooker;
+    }
+
+    public WavInfo getPocketBackGeneral() {
+        return pocketBackGeneral;
     }
 }

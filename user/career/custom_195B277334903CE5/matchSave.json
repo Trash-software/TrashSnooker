@@ -1,0 +1,48 @@
+{
+  "p1": "custom_195B277334903CE5",
+  "game": {
+    "p1": {
+      "playerNumber": 1,
+      "gameRule": "SNOOKER",
+      "handFeelEffort": 1,
+      "person": "custom_195B277334903CE5",
+      "playerType": "PLAYER"
+    },
+    "p1Wins": 1,
+    "p2": {
+      "playerNumber": 2,
+      "gameRule": "SNOOKER",
+      "handFeelEffort": 0.9252411834138777,
+      "person": "custom_player_1",
+      "playerType": "COMPUTER"
+    },
+    "p2BreakLoseChance": 0,
+    "gameValues": {
+      "ball": "SNOOKER_BALL",
+      "gameRule": "SNOOKER",
+      "subRules": ["SNOOKER_STD"],
+      "devMode": false,
+      "table": {
+        "tableOrdinal": 0,
+        "pocketDifficultyOrdinal": 1,
+        "holeSizeOrdinal": 0
+      }
+    },
+    "winRecords": {
+      "1": 2,
+      "2": 1
+    },
+    "p2Wins": 1,
+    "startTime": 1712318321950,
+    "p1BreakLoseChance": 0,
+    "matchId": "custom_195B277334903CE5+2025+chongqing_open-ROUND_1-47",
+    "totalFrames": 3,
+    "cloth": {
+      "smoothness": "NORMAL",
+      "goodness": "NORMAL"
+    },
+    "p1Breaks": false
+  },
+  "p2": "custom_player_1",
+  "stage": "ROUND_1"
+}

@@ -1859,6 +1859,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private final double[] movementValues = new double[nBalls()];
         private Movement movement;
         private double cumulatedPhysicalTime = 0.0;
+//        private int physicalIndex = 0;
+//        private int lastVisualFramePhysicalIndex = 0;  // 上一个动画帧对应的物理帧index
         private boolean notTerminated = true;
 
         private B[] randomOrderBallPool1;
@@ -1923,8 +1925,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             for (int i = 0; i < allBalls.length; i++) {
                 B ball = allBalls[i];
                 if (ball.isPotted()) {
-                    if (ball.tryFrameInPocket(phy)) {
+                    int stat = ball.tryFrameInPocket(phy);
+                    if (stat != 0) {
                         noBallMoving = false;
+                        if (stat == 2) {
+                            movementTypes[i] = MovementFrame.POCKET_BACK;
+                            movementValues[i] = ball.getMaxInPocketSpeed() / Values.MAX_POWER_SPEED;
+                        }
                     }
                     continue;
                 }
@@ -1937,7 +1944,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (ball.tryHitPocketsBack(phy)) {
 //                        ball.normalMove(phy);
                         movementTypes[i] = MovementFrame.POT;
-                        movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
+                        movementValues[i] = Math.hypot(ball.vx, ball.vy) 
+                                * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
                         ball.naturalPot(1000);
                         newPotted.add(ball);
                         continue;
@@ -1945,7 +1953,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
                     if (ball.willPot(phy)) {
                         movementTypes[i] = MovementFrame.POT;
-                        movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
+                        movementValues[i] = Math.hypot(ball.vx, ball.vy) 
+                                * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
                         ball.naturalPot(1000);
                         newPotted.add(ball);
                         continue;
@@ -1954,6 +1963,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         ball.processBounce(App.PRINT_DEBUG);
                         if (tryHitBall(ball, true)) {
                             ball.normalMove(phy);
+                        } else {
+                            movementTypes[i] = MovementFrame.COLLISION;
+                            movementValues[i] = ball.getLastCollisionRelSpeed() 
+                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
                         }
                         continue;
                     }
@@ -1961,7 +1974,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     ObjectOnTable.CushionHitResult holeAreaResult = ball.tryHitHoleArea(phy);
                     if (holeAreaResult != null && holeAreaResult.result() != 0) {
                         // 袋口区域
-                        tryHitBall(ball, true);
+                        if (!tryHitBall(ball, true)) {
+                            movementTypes[i] = MovementFrame.COLLISION;
+                            movementValues[i] = ball.getLastCollisionRelSpeed() 
+                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
+                        }
                         if (holeAreaResult.result() == 2) {
                             collidesWall = true;
                             recordHitCushion(ball);
@@ -1970,7 +1987,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             else
                                 movement.getTraceOfBallNotNull(ball).hitCushion(holeAreaResult.cushion());
                             movementTypes[i] = holeAreaResult.cushion().movementType();
-                            movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
+                            movementValues[i] = Math.hypot(ball.vx, ball.vy) 
+                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
                         }
                         continue;
                     }
@@ -1982,7 +2000,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         if (ball.isWhite()) movement.getWhiteTrace().hitCushion(cushion);
                         else movement.getTraceOfBallNotNull(ball).hitCushion(cushion);
                         movementTypes[i] = cushion.movementType();
-                        movementValues[i] = Math.hypot(ball.vx, ball.vy) * phy.calculationsPerSec;
+                        movementValues[i] = Math.hypot(ball.vx, ball.vy) 
+                                * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
                         continue;
                     }
 
@@ -1997,7 +2016,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                 recordCrossLine(ball);
                             }
                             ball.normalMove(phy);
+                        } else {
+                            movementTypes[i] = MovementFrame.COLLISION;
+                            movementValues[i] = ball.getLastCollisionRelSpeed() 
+                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
                         }
+                    } else {
+                        movementTypes[i] = MovementFrame.COLLISION;
+                        movementValues[i] = ball.getLastCollisionRelSpeed() 
+                                * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
                     }
                 } else {
                     if (!ball.sideSpinAtPosition(phy)) {
@@ -2022,7 +2049,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     ball.clearMovement();
                 }
             }
-
+            
             if (Math.floor(cumulatedPhysicalTime / GameView.frameTimeMs) !=
                     Math.floor(lastPhysicalTime / GameView.frameTimeMs)) {
                 // 一个动画帧执行一次
@@ -2038,6 +2065,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     movementValues[i] = 0.0;
                 }
             }
+//            physicalIndex++;
             return noBallMoving;
 //            if (noBallMoving) {
 //                endMove();

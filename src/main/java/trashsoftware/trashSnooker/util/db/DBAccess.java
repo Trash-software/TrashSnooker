@@ -14,6 +14,7 @@ import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.MaximumType;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.io.BufferedReader;
@@ -809,12 +810,12 @@ public class DBAccess {
                 player.getScore() + ", " +
                 breaks50 + ", " +
                 highBreak + ", " +
-                maximumType.name() +
+                "'" + maximumType.name() + "'" +
                 ");";
         try {
             executeStatement(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.error(e);
         }
     }
 

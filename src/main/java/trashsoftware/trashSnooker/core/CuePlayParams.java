@@ -136,14 +136,14 @@ public class CuePlayParams {
 
     public static double[] unitXYWithSpins(double unitSideSpin, double power,
                                            double cueDirX, double cueDirY) {
-        double offsetAngleRad = -unitSideSpin * power / 2400.0;
+        double offsetAngleRad = -unitSideSpin * power / 3600.0;
 //        offsetAngleRad = 0;
         return Algebra.rotateVector(cueDirX, cueDirY, offsetAngleRad);
     }
 
     public static double[] aimingUnitXYIfSpin(double unitSideSpin, double power,
                                               double cueDirX, double cueDirY) {
-        double offsetAngleRad = -unitSideSpin * power / 2400.0;
+        double offsetAngleRad = -unitSideSpin * power / 3600.0;
 //        offsetAngleRad = 0;
         return Algebra.rotateVector(cueDirX, cueDirY, -offsetAngleRad);
     }
