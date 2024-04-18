@@ -13,7 +13,9 @@ import java.util.*;
 
 public class SettingsView extends ChildInitializable {
     private final List<ComboBox<?>> allBoxes = new ArrayList<>();
+    private final List<Slider> allSliders = new ArrayList<>();
     private final Map<ComboBox<?>, Integer> lastSavedSelections = new HashMap<>();
+    private final Map<Slider, Double> lastSavedValues = new HashMap<>();
     @FXML
     ComboBox<Double> aimLingBox, aiStrengthBox;
     @FXML
@@ -28,6 +30,10 @@ public class SettingsView extends ChildInitializable {
     ComboBox<SystemZoom> systemZoomComboBox;
     @FXML
     ComboBox<AntiAliasing> antiAliasingComboBox;
+    @FXML
+    Slider effectSoundSlider;
+    @FXML
+    Label effectSoundLabel;
     @FXML
     ComboBox<PredictionQuality> performanceBox;
     @FXML
@@ -56,9 +62,12 @@ public class SettingsView extends ChildInitializable {
                 performanceBox,
                 antiAliasingComboBox,
                 displayBox));
+        
+        allSliders.add(effectSoundSlider);
 
         configLoader = ConfigLoader.getInstance();
         setupBoxes();
+        setupSliders();
 
         storeSelectionsToMap();
         addGeneralChangeListeners();
@@ -106,6 +115,13 @@ public class SettingsView extends ChildInitializable {
         displayBox.getItems().addAll(Display.values());
         displayBox.getSelectionModel().select(Display.fromKey(configLoader.getString("display",
                 "windowed")));
+    }
+    
+    private void setupSliders() {
+        effectSoundSlider.valueProperty().addListener((observable, oldValue, newValue) -> 
+                effectSoundLabel.setText(String.format("%.0f", (double) newValue)));
+        
+        effectSoundSlider.setValue(100 * configLoader.getDouble("effectVolume", 1.0));
     }
 
     private void setupLanguageBox() {
@@ -171,17 +187,35 @@ public class SettingsView extends ChildInitializable {
                 }
             });
         }
+        for (Slider slider : allSliders) {
+            slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+                Double lastSaved = lastSavedValues.get(slider);
+                if (!Objects.equals(newValue, lastSaved)) {
+                    confirmBtn.setDisable(false);
+                } else if (!anyHasChanged()) {
+                    confirmBtn.setDisable(true);
+                }
+            });
+        }
     }
 
     private void storeSelectionsToMap() {
         for (ComboBox<?> box : allBoxes) {
             lastSavedSelections.put(box, box.getSelectionModel().getSelectedIndex());
         }
+        for (Slider slider : allSliders) {
+            lastSavedValues.put(slider, slider.getValue());
+        }
     }
 
     private boolean hasChanged(ComboBox<?> box) {
         Integer lastIndex = lastSavedSelections.get(box);
         return box.getSelectionModel().getSelectedIndex() != lastIndex;  // null也是changed
+    }
+
+    private boolean hasChanged(Slider slider) {
+        Double lastValue = lastSavedValues.get(slider);
+        return slider.getValue() != lastValue;  // null也是changed
     }
 
 //    @Override
@@ -250,6 +284,10 @@ public class SettingsView extends ChildInitializable {
 
         if (hasChanged(displayBox)) {
             configLoader.put("display", displayBox.getValue().toKey());
+        }
+        
+        if (hasChanged(effectSoundSlider)) {
+            configLoader.put("effectVolume", effectSoundSlider.getValue() / 100.0);
         }
 
         configLoader.save();

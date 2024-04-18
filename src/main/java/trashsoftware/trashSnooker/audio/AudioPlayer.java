@@ -1,30 +1,27 @@
 package trashsoftware.trashSnooker.audio;
 
-import trashsoftware.trashSnooker.res.WavFile;
-import trashsoftware.trashSnooker.res.WavInfo;
+import trashsoftware.trashSnooker.res.SoundFile;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import javax.sound.sampled.*;
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 
 public class AudioPlayer {
 
-    private final WavInfo wavInfo;
+    private final SoundFile soundFile;
     private final SoundInfo soundInfo;
     private boolean playing = false;
 
-    public AudioPlayer(WavInfo wavInfo, SoundInfo soundInfo) {
-        this.wavInfo = wavInfo;
+    public AudioPlayer(SoundFile soundFile, SoundInfo soundInfo) {
+        this.soundFile = soundFile;
         this.soundInfo = soundInfo;
     }
 
     public void play() throws IOException, UnsupportedAudioFileException {
-        Clip clip = wavInfo.getClip();
+        Clip clip = soundFile.getClip();
         
         float volume = (float) ConfigLoader.getInstance().getDouble("effectVolume", 1.0);
-        volume *= wavInfo.getDefaultVolume();
+        volume *= soundFile.getDefaultVolume();
         
         if (soundInfo != null) {
             float dynamicVolume = (float) soundInfo.getVolume();

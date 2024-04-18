@@ -1,20 +1,20 @@
 {
-  "p1": "custom_195B277334903CE5",
+  "p1": "Stuart Bingham",
   "game": {
     "p1": {
       "playerNumber": 1,
       "gameRule": "SNOOKER",
-      "handFeelEffort": 1,
-      "person": "custom_195B277334903CE5",
-      "playerType": "PLAYER"
+      "handFeelEffort": 1.0282340854362677,
+      "person": "Stuart Bingham",
+      "playerType": "COMPUTER"
     },
     "p1Wins": 1,
     "p2": {
       "playerNumber": 2,
       "gameRule": "SNOOKER",
-      "handFeelEffort": 0.9252411834138777,
-      "person": "custom_player_1",
-      "playerType": "COMPUTER"
+      "handFeelEffort": 1,
+      "person": "custom_195B277334903CE5",
+      "playerType": "PLAYER"
     },
     "p2BreakLoseChance": 0,
     "gameValues": {
@@ -28,21 +28,18 @@
         "holeSizeOrdinal": 0
       }
     },
-    "winRecords": {
-      "1": 2,
-      "2": 1
-    },
-    "p2Wins": 1,
-    "startTime": 1712318321950,
+    "winRecords": {"1": 1},
+    "p2Wins": 0,
+    "startTime": 1713462848263,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_195B277334903CE5+2025+chongqing_open-ROUND_1-47",
+    "matchId": "custom_195B277334903CE5+2025+chongqing_open-SEMI_FINAL-61",
     "totalFrames": 3,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "NORMAL"
     },
-    "p1Breaks": false
+    "p1Breaks": true
   },
-  "p2": "custom_player_1",
-  "stage": "ROUND_1"
+  "p2": "custom_195B277334903CE5",
+  "stage": "SEMI_FINAL"
 }

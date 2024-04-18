@@ -69,19 +69,29 @@
                   visible="false" managed="false"/>
         <ComboBox fx:id="prodFrameRateBox" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
 
-        <Label text="%settingsGeneral" GridPane.rowIndex="13">
+        <Label text="%settingsSound" GridPane.rowIndex="13">
             <font>
                 <Font size="16.0"/>
             </font>
         </Label>
         <Separator GridPane.rowIndex="13" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+        <Label text="%effectSound" GridPane.rowIndex="14"/>
+        <Slider fx:id="effectSoundSlider" GridPane.rowIndex="14" GridPane.columnIndex="1"/>
+        <Label fx:id="effectSoundLabel" GridPane.rowIndex="14" GridPane.columnIndex="2"/>
 
-        <Label text="%language" GridPane.rowIndex="14"/>
-        <ComboBox fx:id="languageBox" GridPane.rowIndex="14" GridPane.columnIndex="1"/>
+        <Label text="%settingsGeneral" GridPane.rowIndex="16">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Label>
+        <Separator GridPane.rowIndex="16" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
 
-        <Label text="%numAiThreads" GridPane.rowIndex="15"/>
-        <ComboBox fx:id="aiThreadNumBox" GridPane.rowIndex="15" GridPane.columnIndex="1"/>
-        <Label fx:id="cpuActualThreadNumLabel" GridPane.rowIndex="15" GridPane.columnIndex="2"/>
+        <Label text="%language" GridPane.rowIndex="17"/>
+        <ComboBox fx:id="languageBox" GridPane.rowIndex="17" GridPane.columnIndex="1"/>
+
+        <Label text="%numAiThreads" GridPane.rowIndex="18"/>
+        <ComboBox fx:id="aiThreadNumBox" GridPane.rowIndex="18" GridPane.columnIndex="1"/>
+        <Label fx:id="cpuActualThreadNumLabel" GridPane.rowIndex="18" GridPane.columnIndex="2"/>
 
     </GridPane>
 

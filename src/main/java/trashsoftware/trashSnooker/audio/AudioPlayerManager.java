@@ -4,7 +4,7 @@ import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
-import trashsoftware.trashSnooker.res.WavInfo;
+import trashsoftware.trashSnooker.res.SoundFile;
 import trashsoftware.trashSnooker.util.EventLogger;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -32,13 +32,13 @@ public class AudioPlayerManager {
     public void play(SoundInfo soundInfo,
                      GameValues gameValues,
                      Cue cue) {
-        WavInfo info = createSound(soundInfo, gameValues, cue);
+        SoundFile info = createSound(soundInfo, gameValues, cue);
         playSound(info, soundInfo);
     }
 
-    public WavInfo createSound(SoundInfo soundInfo,
-                               GameValues gameValues,
-                               Cue cue) {
+    public SoundFile createSound(SoundInfo soundInfo,
+                                 GameValues gameValues,
+                                 Cue cue) {
         return switch (soundInfo.soundType) {
             case CUE_SOUND -> {
                 // todo
@@ -56,6 +56,9 @@ public class AudioPlayerManager {
                 yield ResourcesLoader.getInstance().getMiscueSoundGeneral();
             }
             case BALL_COLLISION -> {
+                if (soundInfo.powerType == SoundInfo.PowerType.SMALL) {
+                    yield ResourcesLoader.getInstance().getBallSoundSnookerLight();
+                }
                 yield ResourcesLoader.getInstance().getBallSoundSnookerLoud();
             }
             case POT -> {
@@ -74,10 +77,10 @@ public class AudioPlayerManager {
         };
     }
 
-    public void playSound(WavInfo wavInfo, SoundInfo soundInfo) {
-        if (wavInfo != null) {
+    public void playSound(SoundFile soundFile, SoundInfo soundInfo) {
+        if (soundFile != null) {
 //            long t0 = System.currentTimeMillis();
-            AudioPlayer audioPlayer = new AudioPlayer(wavInfo, soundInfo);
+            AudioPlayer audioPlayer = new AudioPlayer(soundFile, soundInfo);
 //            long t1 = System.currentTimeMillis();
 //            System.out.println("Thread time: " + (t1 - t0));
             Thread thread = new Thread(() -> {

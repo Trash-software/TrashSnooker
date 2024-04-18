@@ -25,15 +25,18 @@ public class ResourcesLoader {
     private final Image barIcon;
     private final Image lineIcon;
     
-    private final WavInfo cueSoundSmallMidPower;
-    private final WavInfo cueSoundCarbonMidPower;
-    private final WavInfo miscueSoundGeneral;
+    private final SoundFile cueSoundSmallMidPower;
+    private final SoundFile cueSoundCarbonMidPower;
+    private final SoundFile miscueSoundGeneral;
     
-    private final WavInfo[] ballSoundsSnookerLoud = new WavInfo[4];  // 噼里啪啦
+    private final SoundFile[] ballSoundsSnookerLoud = new SoundFile[4];  // 噼里啪啦
     private int ballSoundsSnookerLoudIndex = 0;
+    private final SoundFile[] ballSoundsSnookerLight = new SoundFile[4];  // 噼里啪啦
+    private int ballSoundsSnookerLightIndex = 0;
     
-    private final WavInfo cushionSnooker;
-    private final WavInfo pocketBackGeneral;
+    private final SoundFile[] cushionsSnooker = new SoundFile[4];  // 咚咚咚咚
+    private int cushionsSnookerIndex = 0;
+    private final SoundFile pocketBackGeneral;
 
     private ResourcesLoader() {
         icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.png")),
@@ -64,16 +67,21 @@ public class ResourcesLoader {
         awardBronze = new Image(Objects.requireNonNull(getClass().getResourceAsStream("ach_bronze.png")),
                 0, 0, true, true);
         
-        cueSoundSmallMidPower = WavInfo.load("data/sound/cue_wood_small_mid.wav");
-        miscueSoundGeneral = WavInfo.load("data/sound/cue_wood_small_miscue.wav");
-        cueSoundCarbonMidPower = WavInfo.load("data/sound/cue_carbon_mid.wav");
+        cueSoundSmallMidPower = SoundFile.load("data/sound/cue_wood_small_mid.wav", 2.0f);
+        miscueSoundGeneral = SoundFile.load("data/sound/cue_wood_small_miscue.wav", 1.5f);
+        cueSoundCarbonMidPower = SoundFile.load("data/sound/cue_carbon_mid.wav", 1.5f);
         
         for (int i = 0; i < ballSoundsSnookerLoud.length; i++) {
-            ballSoundsSnookerLoud[i] = WavInfo.load("data/sound/ball_snooker_collision.wav");
+            ballSoundsSnookerLoud[i] = SoundFile.load("data/sound/ball_snooker_collision.wav");
+        }
+        for (int i = 0; i < ballSoundsSnookerLight.length; i++) {
+            ballSoundsSnookerLight[i] = SoundFile.load("data/sound/ball_snooker_collision_light.wav", 0.25f);
         }
         
-        cushionSnooker = WavInfo.load("data/sound/cushion_snooker.wav", 0.5f);
-        pocketBackGeneral = WavInfo.load("data/sound/pocket_back_mid.wav", 1.5f);
+        for (int i = 0; i < cushionsSnooker.length; i++) {
+            cushionsSnooker[i] = SoundFile.load("data/sound/cushion_snooker.wav", 0.3f);
+        }
+        pocketBackGeneral = SoundFile.load("data/sound/pocket_back_mid.wav", 2.0f);
     }
 
     public static ResourcesLoader getInstance() {
@@ -188,27 +196,31 @@ public class ResourcesLoader {
         return createIconImage(getMoneyImg());
     }
 
-    public WavInfo getBallSoundSnookerLoud() {
+    public SoundFile getBallSoundSnookerLoud() {
         return ballSoundsSnookerLoud[ballSoundsSnookerLoudIndex++ % ballSoundsSnookerLoud.length];
     }
 
-    public WavInfo getMiscueSoundGeneral() {
+    public SoundFile getBallSoundSnookerLight() {
+        return ballSoundsSnookerLight[ballSoundsSnookerLightIndex++ % ballSoundsSnookerLight.length];
+    }
+
+    public SoundFile getMiscueSoundGeneral() {
         return miscueSoundGeneral;
     }
 
-    public WavInfo getCueSoundCarbonMidPower() {
+    public SoundFile getCueSoundCarbonMidPower() {
         return cueSoundCarbonMidPower;
     }
 
-    public WavInfo getCueSoundSmallMidPower() {
+    public SoundFile getCueSoundSmallMidPower() {
         return cueSoundSmallMidPower;
     }
 
-    public WavInfo getCushionSnooker() {
-        return cushionSnooker;
+    public SoundFile getCushionSnooker() {
+        return cushionsSnooker[cushionsSnookerIndex++ % cushionsSnooker.length];
     }
 
-    public WavInfo getPocketBackGeneral() {
+    public SoundFile getPocketBackGeneral() {
         return pocketBackGeneral;
     }
 }

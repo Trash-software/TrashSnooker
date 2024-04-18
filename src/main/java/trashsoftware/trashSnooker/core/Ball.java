@@ -309,13 +309,18 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         if (nextDt > pocketRange
                 && nextDt > curDt) {
             rtn = 1;
-            // todo: pocket sound
-            double[] pocketBottomDir = new double[]{
-                    -pottedPocket.facingDir[0], 
-                    -pottedPocket.facingDir[1]
-            };
             double[] ballDir = new double[]{vx, vy};
-            double proj = Algebra.projectionLengthOn(pocketBottomDir, ballDir);  // 球的方向往袋底方向的投影
+            double[] ballAwayFromPocketCenter = new double[]{
+                    nextX - pottedPocket.graphicalCenter[0],
+                    nextY - pottedPocket.graphicalCenter[1]
+            };
+//            
+//            double[] pocketBottomDir = new double[]{
+//                    -pottedPocket.facingDir[0], 
+//                    -pottedPocket.facingDir[1]
+//            };
+//            double proj = Algebra.projectionLengthOn(pocketBottomDir, ballDir);  // 球的方向往袋底方向的投影
+            double proj = Algebra.projectionLengthOn(ballAwayFromPocketCenter, ballDir);  // 球的方向往袋底方向的投影
             double hitSpeed = proj * phy.calculationsPerSec;
             if (hitSpeed > maxInPocketSpeed) {
                 maxInPocketSpeed = hitSpeed;
