@@ -8,41 +8,46 @@ public class PocketDifficulty {
             new PocketDifficulty("veryLoose",
                     20.0, 2.21, -2.0, 95.25,
                     1.0,
-                    18.0, 1.3, 0.0,
-                    53.1875, 3.96),
+                    18.0, 79.375, 0.0,
+                    53.1876, 3.96, 
+                    110.34, 53.1876),
             new PocketDifficulty("loose",
                     14.0, 2.21, 0.0, 88.9,
                     0.75,
-                    13.0, 1.3, 0.0,
-                    53.1875, 3.96),
+                    13.0, 79.375, 0.0,
+                    53.1876, 3.96, 
+                    110.34, 53.1876),
             new PocketDifficulty("normal",
-                    10.0, 2.21, 1.0, 82.55, 
+                    10.0, 2.21, 1.0, 82.55,
                     0.5,
-                    9.0, 1.3, 0.0,
-                    53.1875, 3.96),
+                    10.0, 79.375, 0.0,
+                    53.1876, 3.96, 
+                    110.34, 53.1876),
             new PocketDifficulty("tight",
-                    8.0, 2.21, 2.0, 76.2, 
+                    8.0, 2.21, 2.0, 76.2,
                     0.25,
-                    7.5, 1.25, 0.0,
-                    53.1875, 3.96),
+                    8.0, 79.375, 0.0,
+                    53.1876, 3.96, 
+                    110.34, 53.1876),
             new PocketDifficulty("veryTight",
                     6.0, 2.21, 3.0, 69.85,
                     0.0,
-                    5.0, 1.2, 0.0,
-                    53.1875, 3.96)
+                    5.0, 79.375, 0.0,
+                    53.1876, 3.96, 
+                    110.34, 53.1876)
     };
     public static PocketDifficulty[] BLUE_TABLE_DIFFICULTIES = {
             new PocketDifficulty("normal",
                     12.0, 0.5, 5.0, 101.6,
                     0.5,
-                    12.0, 0.25, 12.5,
+                    12.0, 15, 12.5,
                     76.2, 19.05)
     };
     public static PocketDifficulty[] RUSSIAN_TABLE_DIFFICULTIES = {
             new PocketDifficulty("normal",
                     10.0, 0.25, -7.5, 80.0,
-                    0.5, 
-                    10.0, 0.25, -7.5,
+                    0.5,
+                    10.0, 15, -7.5,
                     53.0, 10.0)
     };
 
@@ -50,7 +55,7 @@ public class PocketDifficulty {
     public final double cornerPocketGravityZone;
     public final double cornerPocketArcSize;  // currently useless
     public final double cornerPocketAngle;
-//    public final double cornetPocketOut;
+    //    public final double cornetPocketOut;
     public final double cornerPocketFallRadius;  // 底袋的外围，真实的下落半径
     public final double arcBounceAngleRate;
     public final double midPocketGravityZone;
@@ -58,6 +63,8 @@ public class PocketDifficulty {
     public final double midPocketAngle;
     public final double midPocketFallRadius;
     public final double midCenterToSlate;
+    public final double halfDtBtwMidArcCenters;
+    public final double midInnerArcSize;
 
     public PocketDifficulty(String key,
                             double cornerPocketGravityZone,
@@ -69,7 +76,9 @@ public class PocketDifficulty {
                             double midPocketArcSize,
                             double midPocketAngle,
                             double midPocketFallRadius,
-                            double midCenterToSlate) {
+                            double midCenterToSlate,
+                            double halfDtBtwMidArcCenters,
+                            double midInnerArcSize) {
         this.key = key;
         this.cornerPocketGravityZone = cornerPocketGravityZone;
         this.cornerPocketArcSize = cornerPocketArcSize;
@@ -82,8 +91,36 @@ public class PocketDifficulty {
         this.midPocketAngle = midPocketAngle;
         this.midPocketFallRadius = midPocketFallRadius;
         this.midCenterToSlate = midCenterToSlate;
+        this.halfDtBtwMidArcCenters = halfDtBtwMidArcCenters;
+        this.midInnerArcSize = midInnerArcSize;
     }
-    
+
+    public PocketDifficulty(String key,
+                            double cornerPocketGravityZone,
+                            double cornerPocketArcSize,
+                            double cornerPocketAngle,
+                            double cornerPocketFallRadius,
+                            double arcBounceAngleRate,
+                            double midPocketGravityZone,
+                            double midPocketArcSize,
+                            double midPocketAngle,
+                            double midPocketFallRadius,
+                            double midCenterToSlate) {
+        this(key,
+                cornerPocketGravityZone,
+                cornerPocketArcSize,
+                cornerPocketAngle,
+                cornerPocketFallRadius,
+                arcBounceAngleRate,
+                midPocketGravityZone,
+                midPocketArcSize,
+                midPocketAngle,
+                midPocketFallRadius,
+                midCenterToSlate, 
+                0.0, 
+                0.0);
+    }
+
     public static PocketDifficulty valueOf(TableMetrics.TableBuilderFactory factory, String jsonString) {
         String camelString = Util.toLowerCamelCase(jsonString);
         for (PocketDifficulty pd : factory.supportedDifficulties) {

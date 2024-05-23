@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.fxml.statsViews;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -20,6 +21,9 @@ import java.util.*;
 
 public class StatsView extends ChildInitializable {
     @FXML
+    CheckBox careerOnlyBox;
+    
+    @FXML
     TreeView<RecordTree> treeView;
 
     @FXML
@@ -35,6 +39,10 @@ public class StatsView extends ChildInitializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.strings = resources;
 
+        careerOnlyBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            initTree();
+            rightPane.getChildren().clear();
+        });
         initTree();
     }
 
@@ -48,15 +56,17 @@ public class StatsView extends ChildInitializable {
     }
 
     private void initTree() {
+        boolean careerOnly = careerOnlyBox.isSelected();
+        
         TreeItem<RecordTree> root = new TreeItem<>(new RecordTree(strings.getString("recordMenu"), strings));
         DBAccess db = DBAccess.getInstance();
 
-        TreeItem<RecordTree> humanRoot = new TreeItem<>(new PlayerTypeTree(false, strings));
-        TreeItem<RecordTree> aiRoot = new TreeItem<>(new PlayerTypeTree(true, strings));
+        TreeItem<RecordTree> humanRoot = new TreeItem<>(new PlayerTypeTree(false, careerOnly, strings));
+        TreeItem<RecordTree> aiRoot = new TreeItem<>(new PlayerTypeTree(true, careerOnly, strings));
         root.getChildren().add(humanRoot);
         root.getChildren().add(aiRoot);
 
-        List[] humanComputerIds = db.listPlayerIdsHumanComputer();
+        List[] humanComputerIds = db.listPlayerIdsHumanComputer(careerOnly);
         for (Object s : humanComputerIds[0]) {
             PlayerAi paiHuman = new PlayerAi((String) s, false);
             humanRoot.getChildren().add(new PersonTreeItem(paiHuman, strings));
@@ -69,7 +79,7 @@ public class StatsView extends ChildInitializable {
         TreeItem<RecordTree> matchesRoot = new TreeItem<>(new RecordTree(strings.getString("statsMatches"), strings));
 
         for (GameRule gameRule : GameRule.values()) {
-            List<EntireGameTitle> matchesOfType = db.getAllMatches(gameRule);
+            List<EntireGameTitle> matchesOfType = db.getAllMatches(gameRule, careerOnly);
             TreeItem<RecordTree> typeRoot = new TreeItem<>(new AllMatchesTree(gameRule, strings));
 
             for (EntireGameTitle egt : matchesOfType) {
@@ -92,7 +102,7 @@ public class StatsView extends ChildInitializable {
         root.setExpanded(true);
     }
 
-    public static class PersonTreeItem extends TreeItem<RecordTree> {
+    public class PersonTreeItem extends TreeItem<RecordTree> {
         private final PlayerAi playerAi;
         private final ResourceBundle strings;
         private boolean firstTimeChildren = true;
@@ -104,10 +114,11 @@ public class StatsView extends ChildInitializable {
             setValue(new RecordTree(this.playerAi.toString(), strings));
         }
 
-        private static ObservableList<TreeItem<RecordTree>> buildChildren(PlayerAi playerAi, ResourceBundle strings) {
+        private ObservableList<TreeItem<RecordTree>> buildChildren(PlayerAi playerAi, ResourceBundle strings) {
             ObservableList<TreeItem<RecordTree>> children = FXCollections.observableArrayList();
             for (GameRule gameRule : GameRule.values()) {
-                TreeItem<RecordTree> typeItem = new TreeItem<>(new GameTypeTree(playerAi, gameRule, strings));
+                TreeItem<RecordTree> typeItem = new TreeItem<>(new GameTypeTree(playerAi, gameRule, 
+                        careerOnlyBox.isSelected(), strings));
                 typeItem.getChildren().add(new RecordSorting(gameRule, playerAi, "time", strings));
                 typeItem.getChildren().add(new RecordSorting(gameRule, playerAi, "opponent", strings));
                 children.add(typeItem);
@@ -147,7 +158,7 @@ public class StatsView extends ChildInitializable {
         }
     }
 
-    public static class RecordSorting extends TreeItem<RecordTree> {
+    public class RecordSorting extends TreeItem<RecordTree> {
         private final String shown;
         private final PlayerAi playerAi;
         private final GameRule gameRule;
@@ -163,11 +174,14 @@ public class StatsView extends ChildInitializable {
             setValue(new RecordTree(getShowingStr(), strings));
         }
 
-        private static ObservableList<TreeItem<RecordTree>> buildChildren(
+        private ObservableList<TreeItem<RecordTree>> buildChildren(
                 GameRule gameRule, PlayerAi playerAi, String type, ResourceBundle strings) {
             ObservableList<TreeItem<RecordTree>> children = FXCollections.observableArrayList();
             DBAccess dbAccess = DBAccess.getInstance();
-            List<EntireGameTitle> gameRecords = dbAccess.getAllPveMatches(gameRule, playerAi.playerId, playerAi.isAi);
+            List<EntireGameTitle> gameRecords = dbAccess.getAllPveMatches(gameRule, 
+                    playerAi.playerId, 
+                    playerAi.isAi,
+                    careerOnlyBox.isSelected());
             if ("time".equals(type)) {
                 // 按照比赛
                 for (EntireGameTitle egt : gameRecords) {

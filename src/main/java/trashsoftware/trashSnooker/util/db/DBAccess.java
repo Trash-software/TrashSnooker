@@ -177,7 +177,7 @@ public class DBAccess {
             Map<String, int[]> totalWinLosses = new HashMap<>();  // 对每个球员的胜负，不管什么规则
             for (GameRule gameRule : List.of(GameRule.SNOOKER, GameRule.CHINESE_EIGHT, GameRule.AMERICAN_NINE)) {
                 Map<String, Achievement> ruleAchMap = ACHIEVEMENT_MAP.get(gameRule);
-                List<EntireGameTitle> titles = getAllPveMatches(gameRule, playerId, false);
+                List<EntireGameTitle> titles = getAllPveMatches(gameRule, playerId, false, true);
                 List<EntireGameRecord> entireRecords = new ArrayList<>();  // 是有序的
                 for (EntireGameTitle egt : titles) {
                     if (MetaMatchInfo.matchIdIsByCareer(egt.matchId, playerId)) {
@@ -397,26 +397,40 @@ public class DBAccess {
                 frameWinner == frame.getPlayer2().getInGamePlayer());
     }
 
-    public List<EntireGameTitle> getAllMatches(GameRule gameRule) {
-        String query = "SELECT * FROM EntireGame WHERE GameType = '" + gameRule.toSqlKey() + "';";
+    public List<EntireGameTitle> getAllMatches(GameRule gameRule, boolean careerOnly) {
+        String optional = "";
+        if (careerOnly) {
+            optional = " AND MatchID IS NOT NULL";
+        }
+        
+        String query = "SELECT * FROM EntireGame WHERE (GameType = '" + gameRule.toSqlKey() + "'" +
+                optional +
+                ");";
         return getMatchesBy(gameRule, query);
     }
 
-    public List<EntireGameTitle> getAllPveMatches(GameRule gameRule) {
+    public List<EntireGameTitle> getAllPveMatches(GameRule gameRule, boolean careerOnly) {
         String typeStr = "'" + gameRule.toSqlKey() + "'";
+        String career = careerOnly ? " MatchID IS NOT NULL AND " : " ";
         String query = "SELECT * FROM EntireGame " +
                 "WHERE GameType = " + typeStr + " AND " +
+                career +
                 "((Player1IsAI = 1 AND Player2IsAI = 0) OR (Player1IsAI = 0 AND Player2IsAI = 1))" +
                 "ORDER BY EntireBeginTime;";
         return getMatchesBy(gameRule, query);
     }
 
-    public List<EntireGameTitle> getAllPveMatches(GameRule gameRule, String playerName, boolean playerIsAi) {
+    public List<EntireGameTitle> getAllPveMatches(GameRule gameRule, 
+                                                  String playerName, 
+                                                  boolean playerIsAi, 
+                                                  boolean careerOnly) {
         String typeStr = "'" + gameRule.toSqlKey() + "'";
         String playerStr = "'" + playerName + "'";
         int aiRep = playerIsAi ? 1 : 0;
+        String career = careerOnly ? " MatchID IS NOT NULL AND " : " ";
         String query = "SELECT * FROM EntireGame " +
                 "WHERE GameType = " + typeStr + " AND " +
+                career + 
                 "((Player1Name = " + playerStr + " AND " +
                 "Player1IsAI = " + aiRep +
                 ") OR (Player2Name = " + playerStr + " AND " +
@@ -440,7 +454,8 @@ public class DBAccess {
                         resultSet.getInt("Player1IsAI") == 1,
                         resultSet.getInt("Player2IsAI") == 1,
                         resultSet.getInt("TotalFrames"),
-                        resultSet.getString("MatchID")
+                        resultSet.getString("MatchID"),
+                        SubRule.commaStringToSubRules(resultSet.getString("SubRule"))
                 );
                 if (isValidPlayer(egr.player1Id) && isValidPlayer(egr.player2Id)) {
                     rtn.add(egr);
@@ -819,11 +834,15 @@ public class DBAccess {
         }
     }
 
-    public List<String>[] listPlayerIdsHumanComputer() {
+    public List<String>[] listPlayerIdsHumanComputer(boolean careerOnly) {
         Set<String> humanIds = new TreeSet<>();
         Set<String> computerIds = new TreeSet<>();
 
-        String query = "SELECT * FROM EntireGame";
+        String extra = "";
+        if (careerOnly) {
+            extra += " WHERE MatchID IS NOT NULL";
+        }
+        String query = "SELECT * FROM EntireGame" + extra + ";";
         try {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(query);

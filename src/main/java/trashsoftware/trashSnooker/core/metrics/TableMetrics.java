@@ -60,6 +60,7 @@ public class TableMetrics {
     public double cornerPocketGravityRadius;  // 袋口处的坡宽度。球进入这个区域后会开始有往袋里掉的意思
     public double midPocketGravityRadius;
     public double midArcRadius;
+    public double midArcDtToMidX;
     public double cornerHoleDt, cornerHoleTan,
             cornerArcHeight, cornerArcWidth, cornerArcRadius, cornerArcDiameter,
             cornerLineLonger, cornerLineShorter,  // 底袋角直线的占地长宽
@@ -79,6 +80,9 @@ public class TableMetrics {
     public double leftCornerHoleAreaRightX;  // 左顶袋右袋角
     public double midHoleAreaLeftX;  // 中袋左袋角
     public double midHoleAreaRightX;  // 中袋右袋角
+    public double topMidArcMinY;  // 中袋袋角弧线最深的判定点
+    public double botMidArcMaxY;
+    
     public double rightCornerHoleAreaLeftX;  // 右顶袋左袋角
     public double topCornerHoleAreaDownY;  // 上底袋下袋角
     public double botCornerHoleAreaUpY;  // 下底袋上袋角
@@ -367,9 +371,16 @@ public class TableMetrics {
         rightCornerHoleAreaLeftX = rightX - cornerArcWidth - cornerLineLonger + cornerHoleDrift;  // 右顶袋左袋角
         topCornerHoleAreaDownY = topY + cornerArcWidth + cornerLineLonger - cornerHoleDrift;  // 上底袋下袋角
         botCornerHoleAreaUpY = botY - cornerArcWidth - cornerLineLonger + cornerHoleDrift;  // 下底袋上袋角
-
-        midHoleAreaLeftX = midX - midPocketThroatWidth / 2 - midLineWidth - midArcRadius;
-        midHoleAreaRightX = midX + midPocketThroatWidth / 2 + midLineWidth + midArcRadius;
+        
+        topMidArcMinY = topY - cushionClothWidth;
+        botMidArcMaxY = botY + cushionClothWidth;
+        if (midArcDtToMidX == 0) {
+            midHoleAreaLeftX = midX - midPocketThroatWidth / 2 - midLineWidth - midArcRadius;
+            midHoleAreaRightX = midX + midPocketThroatWidth / 2 + midLineWidth + midArcRadius;
+        } else {
+            midHoleAreaLeftX = midX - midArcDtToMidX;
+            midHoleAreaRightX = midX + midArcDtToMidX;
+        }
 
         // 中袋袋角弧线，圆心的位置
         topMidHoleLeftArcXy =
@@ -819,7 +830,7 @@ public class TableMetrics {
         private final TableMetrics values;
         //        private String name = "Table";
         private double cornerHoleArcSizeMul;
-        private double midHoleArcSizeMul;
+        private double midHoleArcSize;
 //        private double cornerPocketOut;
 
         public Builder(TableBuilderFactory factory, String tableName) {
@@ -916,7 +927,8 @@ public class TableMetrics {
                     pocketDifficulty.cornerPocketAngle,
                     pocketDifficulty.midPocketGravityZone,
                     pocketDifficulty.midPocketArcSize,
-                    pocketDifficulty.midPocketAngle
+                    pocketDifficulty.midPocketAngle,
+                    pocketDifficulty.halfDtBtwMidArcCenters
             );
         }
 
@@ -925,7 +937,8 @@ public class TableMetrics {
                                          double cornerPocketAngle,
                                          double midPocketGravityZone,
                                          double midPocketArcSize,
-                                         double midPocketAngle) {
+                                         double midPocketAngle,
+                                         double halfDtBtwMidArcCenters) {
             values.cornerPocketGravityRadius = cornerPocketGravityZone;
             values.cornerHoleOpenAngle = cornerPocketAngle;
             values.midPocketGravityRadius = midPocketGravityZone;
@@ -934,7 +947,8 @@ public class TableMetrics {
 //            this.cornerPocketOut = cornerPocketOut;
 
 //            if (!values.straightHole) {
-            this.midHoleArcSizeMul = midPocketArcSize;
+            this.midHoleArcSize = midPocketArcSize;
+            values.midArcDtToMidX = halfDtBtwMidArcCenters;
 //            }
             return this;
         }
@@ -986,13 +1000,15 @@ public class TableMetrics {
             values.midHoleDiameter = pocketSize.midHoleDiameter;
             values.midHoleRadius = values.midHoleDiameter / 2;
 
-            values.midArcRadius = pocketSize.midArcRadius * midHoleArcSizeMul;
+//            values.midArcRadius = pocketSize.midArcRadius * midHoleArcSizeMul;
+            values.midArcRadius = midHoleArcSize;
         }
 
         private void setupMidHoleByMouth(PocketSize pocketSize) {
             double midHoleMouthWidth = pocketSize.midHoleDiameter;
             values.midPocketMouthWidth = midHoleMouthWidth;
-            values.midArcRadius = pocketSize.midArcRadius * midHoleArcSizeMul;
+//            values.midArcRadius = pocketSize.midArcRadius * midHoleArcSizeMul;
+            values.midArcRadius = midHoleArcSize;
 
             double midArcCos = Math.cos(Math.toRadians(values.midHoleOpenAngle)) * values.midArcRadius;
             double midArcSin = Math.sin(Math.toRadians(values.midHoleOpenAngle)) * values.midArcRadius;

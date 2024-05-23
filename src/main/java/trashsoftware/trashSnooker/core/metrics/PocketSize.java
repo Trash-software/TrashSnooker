@@ -11,6 +11,9 @@ public class PocketSize {
             new PocketSize("pocketStd", 
                     84.15, 
                     82.55),
+            new PocketSize("pocketStdS",
+                    82.55,
+                    80.01),
             new PocketSize("pocketSmall", 
                     80.01, 
                     78.74),
@@ -68,7 +71,8 @@ public class PocketSize {
     }
 
     public static PocketSize valueOf(TableMetrics.TableBuilderFactory factory, String jsonString) {
-        String camelString = Util.toLowerCamelCase("POCKET_" + jsonString);
+        String resString = Util.toAllCapsUnderscoreCase(jsonString);
+        String camelString = Util.toLowerCamelCase("POCKET_" + resString);
         for (PocketSize pd : factory.supportedHoles) {
             if (pd.key.equals(camelString) || pd.key.equals(jsonString)) return pd;
         }

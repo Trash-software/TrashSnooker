@@ -1,10 +1,12 @@
 package trashsoftware.trashSnooker.util.db;
 
+import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 
 public class EntireGameTitle {
 
@@ -16,6 +18,7 @@ public class EntireGameTitle {
     public final boolean player2isAi;
     public final int totalFrames;
     public final String matchId;  // 在生涯模式中这场比赛的唯一ID；为null in快速游戏
+    private final Collection<SubRule> subRules;
 
     public EntireGameTitle(Timestamp startTime,
                            GameRule gameRule,
@@ -24,7 +27,8 @@ public class EntireGameTitle {
                            boolean player1isAi,
                            boolean player2isAi,
                            int totalFrames,
-                           String matchId) {
+                           String matchId,
+                           Collection<SubRule> subRules) {
         this.startTime = startTime;
         this.gameRule = gameRule;
         this.player1Id = player1Id;
@@ -33,6 +37,7 @@ public class EntireGameTitle {
         this.player2isAi = player2isAi;
         this.totalFrames = totalFrames;
         this.matchId = matchId;
+        this.subRules = subRules;
     }
 
     @Override
@@ -58,5 +63,9 @@ public class EntireGameTitle {
 
     public String getP2Name() {
         return DataLoader.getInstance().getPlayerPerson(player2Id).getName();
+    }
+
+    public Collection<SubRule> getSubRules() {
+        return subRules;
     }
 }

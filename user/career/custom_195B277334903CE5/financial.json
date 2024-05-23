@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 1104520,
+    "money": 1146920,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -5364,13 +5364,32 @@
         "moneyAfter": 1104520,
         "type": "purchase",
         "timestamp": "2024-04-19 03:47:42"
+      },
+      {
+        "inGameDate": "2025/7/10",
+        "year": 2025,
+        "match": "chongqing_open",
+        "moneyBefore": 1104520,
+        "moneyAfter": 1146920,
+        "type": "championshipEarn",
+        "items": {
+          "CHAMPION": {
+            "actual": 40000,
+            "raw": 50000
+          },
+          "BEST_SINGLE": {
+            "actual": 2400,
+            "raw": 3000
+          }
+        },
+        "timestamp": "2024-04-20 14:35:35"
       }
     ],
     "level": 39,
-    "expInThisLevel": 4,
+    "expInThisLevel": 724,
     "availPerks": 20,
     "totalPerks": 186,
-    "totalExp": 22040
+    "totalExp": 22760
   },
-  "checksum": "2A128188A9AA2E92C476A278AFD93EB8"
+  "checksum": "A4AD75688BA844F40438D298DFCFC00A"
 }

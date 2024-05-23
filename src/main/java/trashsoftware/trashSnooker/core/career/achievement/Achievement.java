@@ -193,7 +193,7 @@ public enum Achievement {
     EARNED_MONEY(AchCat.FINANCIAL),  // 已完成
     CHAMP_EARN_CUMULATIVE(AchCat.FINANCIAL, Type.CUMULATIVE, 50000, 200000, 1000000),  // 已完成
     SAVE_MONEY(AchCat.FINANCIAL, Type.HIGH_RECORD, 50000, 200000, 100000),  // 已完成
-    OWE_MONEY(AchCat.FINANCIAL),  // 已完成
+    OWE_MONEY(AchCat.FINANCIAL, true),  // 已完成
     EXPENDITURE(AchCat.FINANCIAL, Type.CUMULATIVE, 10000, 50000, 200000),  // 已完成
     BUY_ITEMS(AchCat.FINANCIAL, Type.CUMULATIVE, 1, 5, 20),  // 已完成
     ;

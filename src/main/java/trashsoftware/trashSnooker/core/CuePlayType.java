@@ -14,6 +14,7 @@ public class CuePlayType {
     private long pullHoldMs = 800;
     private long endHoldMs = 500;
     private final List<Double> sequence = new ArrayList<>();
+    private final String swingSeq;
     private SpecialAction specialAction;  // 暂定就0到1个
 
     public CuePlayType(String s) {
@@ -30,7 +31,9 @@ public class CuePlayType {
                 endHoldMs = Long.parseLong(part.substring(1));
             }
         }
-
+        
+        this.swingSeq = arr[1];
+        
         for (String part : playSeq) {
             switch (part) {
                 case "s":
@@ -44,6 +47,14 @@ public class CuePlayType {
                     break;
             }
         }
+    }
+    
+    public static CuePlayType createBySwing(String swing) {
+        return new CuePlayType("p1.0,h800,e500;" + swing);
+    }
+    
+    public String toJsonStr() {
+        return String.format("p%.1f,h%d,e%d;%s", pullSpeedMul, pullHoldMs, endHoldMs, swingSeq);
     }
 
     public void setSpecialAction(SpecialAction specialAction) {

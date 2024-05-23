@@ -205,7 +205,7 @@ public class CareerManager {
         cm.aiGoodness = aiGoodness;
         cm.includeCustomPlayers = includeCustomPlayers;
         for (PlayerPerson person : DataLoader.getInstance().getAllPlayers()) {
-            if (!includeCustomPlayers && person.isCustom()) continue;
+            if (!person.equals(playerPlayer) && !includeCustomPlayers && person.isCustom()) continue;
             Career career;
             if (person.getPlayerId().equals(playerPlayer.getPlayerId())) {
                 career = Career.createByPerson(person, true, cm);

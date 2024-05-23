@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.CheckBox?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.statsViews.StatsView"
@@ -14,8 +15,10 @@
         <Insets topRightBottomLeft="10.0"/>
     </padding>
 
-    <HBox>
+    <HBox spacing="10.0" alignment="CENTER_LEFT">
         <Button text="%backIcon" onAction="#backAction"/>
+        
+        <CheckBox fx:id="careerOnlyBox" text="%statsCareerGameOnly"/>
     </HBox>
 
     <HBox VBox.vgrow="ALWAYS">

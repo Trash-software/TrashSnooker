@@ -552,40 +552,59 @@ public class GamePane extends StackPane {
     }
 
     private void fillMidPocketArc(Cushion.CushionArc arcCenter, boolean isTop, double extentDirection) {
-        TableMetrics metrics = gameValues.table;
+        TableMetrics values = gameValues.table;
+
+        double arcDiameter = values.midArcRadius * 2 * scale;
+        double x1 = canvasX(values.topMidHoleLeftArcXy.getCenter()[0] - values.midArcRadius);
+        double x2 = canvasX(values.topMidHoleRightArcXy.getCenter()[0] - values.midArcRadius);
+        double y1 = canvasY(values.topMidHoleLeftArcXy.getCenter()[1] - values.midArcRadius);
+        double y2 = canvasY(values.botMidHoleLeftArcXy.getCenter()[1] - values.midArcRadius);
+
+        double[] startExtent = getMidArcStartExtent(values);
+        double arcStart = startExtent[0];
+        double arcExtent = startExtent[1];
+
+        graphicsContext.fillArc(x1, y1, arcDiameter, arcDiameter,
+                270, arcExtent, ArcType.CHORD);
+        graphicsContext.fillArc(x2, y1, arcDiameter, arcDiameter,
+                180 + arcStart, arcExtent, ArcType.CHORD);
+        graphicsContext.fillArc(x1, y2, arcDiameter, arcDiameter,
+                0 + arcStart, arcExtent, ArcType.CHORD);
+        graphicsContext.fillArc(x2, y2, arcDiameter, arcDiameter,
+                90, arcExtent, ArcType.CHORD);
 
         double verDeg = isTop ? 270 : 90;
 
-        double radius = metrics.midArcRadius;
+        double radius = values.midArcRadius;
 
-        double centerDiff = metrics.midArcRadius - metrics.cushionClothWidth;
-        double overshootDeg = Math.toDegrees(Math.asin(centerDiff / radius));
-        double arcExtent = (90 + overshootDeg);
-        ArcType arcType = arcExtent < 90 ? ArcType.ROUND : ArcType.CHORD;
-        arcExtent = Math.max(90, arcExtent);
-        arcExtent *= extentDirection;
-        graphicsContext.fillArc(
-                canvasX(arcCenter.getCenter()[0] - radius),
-                canvasY(arcCenter.getCenter()[1] - radius),
-                radius * 2 * scale,
-                radius * 2 * scale,
-                verDeg,
-                arcExtent,
-                arcType
-        );
+//        double centerDiff = metrics.midArcRadius - metrics.cushionClothWidth;
+//        double overshootDeg = Math.toDegrees(Math.asin(centerDiff / radius));
+//        double arcExtent = (90 + overshootDeg);
+//        ArcType arcType = arcExtent < 90 ? ArcType.ROUND : ArcType.CHORD;
+//        arcExtent = Math.max(90, arcExtent);
+//        arcExtent *= extentDirection;
+//        graphicsContext.fillArc(
+//                canvasX(arcCenter.getCenter()[0] - radius),
+//                canvasY(arcCenter.getCenter()[1] - radius),
+//                radius * 2 * scale,
+//                radius * 2 * scale,
+//                verDeg,
+//                arcExtent,
+//                arcType
+//        );
 
         // 如果洞口大小与洞底半径差得比较远，就需要这个来补缺
         double triangleWidth = radius;
 
-        if (metrics.cushionClothWidth < radius) {
-            double h1 = radius - metrics.cushionClothWidth;  // 短直角边
+        if (values.cushionClothWidth < radius) {
+            double h1 = radius - values.cushionClothWidth;  // 短直角边
             triangleWidth = Math.sqrt(radius * radius - h1 * h1);  // 长直角边
         }
-        double yEnd = isTop ? metrics.topY : metrics.botY;
-        double yBase = yEnd + (isTop ? -metrics.cushionClothWidth : metrics.cushionClothWidth);
+        double yEnd = isTop ? values.topY : values.botY;
+        double yBase = yEnd + (isTop ? -values.cushionClothWidth : values.cushionClothWidth);
 
         double xSide = arcCenter.getCenter()[0];
-        double xSharp = xSide < metrics.midX ? xSide + triangleWidth : xSide - triangleWidth;
+        double xSharp = xSide < values.midX ? xSide + triangleWidth : xSide - triangleWidth;
 
         double[] xs = new double[]{
                 canvasX(xSharp),
@@ -794,11 +813,18 @@ public class GamePane extends StackPane {
         double y1 = canvasY(values.topMidHoleLeftArcXy.getCenter()[1] - values.midArcRadius);
         double y2 = canvasY(values.botMidHoleLeftArcXy.getCenter()[1] - values.midArcRadius);
 
-        double arcExtent = 90 - values.midHoleOpenAngle;
-        graphicsContext.strokeArc(x1, y1, arcDiameter, arcDiameter, 270, arcExtent, ArcType.OPEN);
-        graphicsContext.strokeArc(x2, y1, arcDiameter, arcDiameter, 180 + values.midHoleOpenAngle, arcExtent, ArcType.OPEN);
-        graphicsContext.strokeArc(x1, y2, arcDiameter, arcDiameter, 0 + values.midHoleOpenAngle, arcExtent, ArcType.OPEN);
-        graphicsContext.strokeArc(x2, y2, arcDiameter, arcDiameter, 90, arcExtent, ArcType.OPEN);
+        double[] startExtent = getMidArcStartExtent(values);
+        double arcStart = startExtent[0];
+        double arcExtent = startExtent[1];
+        
+        graphicsContext.strokeArc(x1, y1, arcDiameter, arcDiameter, 
+                270, arcExtent, ArcType.OPEN);
+        graphicsContext.strokeArc(x2, y1, arcDiameter, arcDiameter, 
+                180 + arcStart, arcExtent, ArcType.OPEN);
+        graphicsContext.strokeArc(x1, y2, arcDiameter, arcDiameter, 
+                0 + arcStart, arcExtent, ArcType.OPEN);
+        graphicsContext.strokeArc(x2, y2, arcDiameter, arcDiameter, 
+                90, arcExtent, ArcType.OPEN);
 
         // 袋内直线
 //        if (values.isStraightHole()) {
@@ -806,6 +832,22 @@ public class GamePane extends StackPane {
             drawHoleLine(line.getPosition());
         }
 //        }
+    }
+    
+    private double[] getMidArcStartExtent(TableMetrics values){
+        double arcExtent = 90 - values.midHoleOpenAngle;
+        double arcStart = values.midHoleOpenAngle;
+        
+        if (values.midArcDtToMidX != 0) {
+            double arcHeight = Math.min(values.cushionClothWidth, values.midArcDtToMidX - values.midPocketThroatWidth / 2);
+            if (values.midArcRadius > arcHeight) {
+                double delta = values.midArcRadius - arcHeight;
+                double alpha = Math.asin(delta / values.midArcRadius);
+                arcStart = Math.toDegrees(alpha);
+                arcExtent = 90 - arcStart;
+            }
+        }
+        return new double[]{arcStart, arcExtent};
     }
 
     public void drawPredictedWhitePath(List<double[]> path) {

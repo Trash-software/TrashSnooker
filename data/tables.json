@@ -13,8 +13,24 @@
       "type": "snookerTable",
       "goodness": "good",
       "smoothness": "normal",
-      "pocketSize": "small",
+      "pocketSize": "stdS",
       "pocketDifficulty": "tight"
+    },
+    {
+      "id": "worldChampionTable",
+      "name": {
+        "zh": "星牌",
+        "en": "Star"
+      },
+      "meshes": "",
+      "logo": "",
+      "text": "星牌 Star",
+      "textColor": "GOLDENROD",
+      "type": "snookerTable",
+      "goodness": "good",
+      "smoothness": "normal",
+      "pocketSize": "stdS",
+      "pocketDifficulty": "loose"
     },
     {
       "id": "duckGooseSnookerTable",

@@ -1313,7 +1313,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             } else if (attackChoice instanceof AttackChoice.DoubleAttackChoice doubleAc) {
                 // 稍微给高点
                 // 除数越大，AI越倾向打翻袋
-                double targetDifficultyMm = targetAimingOffset * (105 - aps.doubleAbility) / 400;
+                double targetDifficultyMm = targetAimingOffset * (105 - aps.doubleAbility) / 300;
 
                 tarDevHoleSdMm += targetDifficultyMm;
 

@@ -37,6 +37,8 @@ public class NewCareerView extends ChildInitializable {
     @FXML
     Button playerInfoBtn;
     @FXML
+    Button createBtn;
+    @FXML
     Label promptLabel;
     @FXML
     ComboBox<PlayerPerson.Sex> sexBox;
@@ -294,6 +296,7 @@ public class NewCareerView extends ChildInitializable {
 
         basePane.setDisable(true);
         promptLabel.setText(strings.getString("initializingCareer"));
+//        createBtn.setDisable(true);
 
         service.start();
     }

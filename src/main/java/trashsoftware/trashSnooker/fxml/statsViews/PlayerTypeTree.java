@@ -16,12 +16,14 @@ import java.util.*;
 
 public class PlayerTypeTree extends RecordTree {
     final boolean isAi;
+    final boolean careerOnly;
     boolean expand = false;
 
-    PlayerTypeTree(boolean isAi, ResourceBundle strings) {
+    PlayerTypeTree(boolean isAi, boolean careerOnly, ResourceBundle strings) {
         super(isAi ? strings.getString("typeComputer") : strings.getString("typePlayer"), strings);
 
         this.isAi = isAi;
+        this.careerOnly = careerOnly;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class PlayerTypeTree extends RecordTree {
     }
 
     private void appendToPane(GameRule gameRule, GridPane gridPane) {
-        List<EntireGameTitle> egtList = DBAccess.getInstance().getAllPveMatches(gameRule);
+        List<EntireGameTitle> egtList = DBAccess.getInstance().getAllPveMatches(gameRule, careerOnly);
         List<EntireGameRecord> entireRecords = new ArrayList<>();
         for (EntireGameTitle egt : egtList) {
             entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));

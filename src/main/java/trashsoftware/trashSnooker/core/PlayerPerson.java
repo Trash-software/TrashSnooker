@@ -127,6 +127,7 @@ public class PlayerPerson {
                         double powerControl,
                         double spinControl,  // 出杆挑不挑
                         double psy,
+                        CuePlayType cuePlayType,
                         AiPlayStyle aiPlayStyle,
                         boolean isCustom,
                         HandBody handBody,
@@ -146,11 +147,11 @@ public class PlayerPerson {
                 (aimingPercentage + spinControl) / 2,
                 new double[]{50, 200, 50, 150},
                 0.0,
-                0.0,
+                calculateSwingMag(cuePrecision),
                 estimateCuePoint(cuePrecision, spinControl),
                 powerControl,
                 psy,
-                CuePlayType.DEFAULT_PERFECT,
+                cuePlayType,
                 aiPlayStyle,
                 handBody == null ? HandBody.DEFAULT : handBody,
                 sex,
@@ -349,6 +350,18 @@ public class PlayerPerson {
 
         double heightPercentage = (height - sex.minHeight) / (sex.maxHeight - sex.minHeight);
         double restMul = (2 - heightPercentage) / 1.6;
+        
+        String cueSwingStr;
+        double rnd = Math.random();
+        if (rnd < 0.25) {
+            cueSwingStr = "l,l,r,r,l,l,r,r";
+        } else if (rnd < 0.5) {
+            cueSwingStr = "r,r,l,l,r,r,l,l";
+        } else if (rnd < 0.75) {
+            cueSwingStr = "l,l,l,l,r,r,r,r";
+        } else {
+            cueSwingStr = "r,r,r,r,l,l,l,l";
+        }
 
         PlayerPerson person = new PlayerPerson(
                 id,
@@ -363,6 +376,7 @@ public class PlayerPerson {
                 generateDouble(random, abilityLow, abilityHigh),
                 generateDouble(random, abilityLow, abilityHigh),
                 sex == Sex.M ? 90.0 : 75.0,
+                CuePlayType.createBySwing(cueSwingStr),
                 null,
                 isCustom,
                 new PlayerPerson.HandBody(
@@ -408,6 +422,10 @@ public class PlayerPerson {
             return CuePlayType.DoubleAction.fromJson(object);
         }
         return null;
+    }
+    
+    private static double calculateSwingMag(double cuePrecision) {
+        return Math.min((100 - cuePrecision), 25);
     }
 
     private static double[] estimateCuePoint(double cuePrecision, double spinControl) {
@@ -499,6 +517,8 @@ public class PlayerPerson {
             games.put(Util.toLowerCamelCase(gameRule.name()), participates.get(gameRule));
         }
         obj.put("games", games);
+        
+        obj.put("cuePlayType", cuePlayType.toJsonStr());
 
         if (cuePlayType.hasAnySpecialAction()) {
             JSONObject spe = cuePlayType.specialActionsJson();
@@ -742,6 +762,7 @@ public class PlayerPerson {
         private String playerId;
         private String name;
         private String shownName;
+        private CuePlayType cuePlayType;
         private HandBody handBody;
         private PlayerPerson originalPerson;  // 记录与复现用，不参与数值计算
         private double multiplier;
@@ -757,6 +778,7 @@ public class PlayerPerson {
             ra.playerId = playerPerson.playerId;
             ra.name = playerPerson.name;
             ra.shownName = playerPerson.shownName;
+            ra.cuePlayType = playerPerson.cuePlayType;
             ra.category = playerPerson.category;
             ra.aiming = playerPerson.getPrecisionPercentage() * handFeelEffort;
             ra.cuePrecision =
@@ -942,6 +964,7 @@ public class PlayerPerson {
                     powerControl,
                     spinControl,
                     getSex() == Sex.M ? 90.0 : 75.0,
+                    cuePlayType,
                     null,
                     true,
                     handBody,

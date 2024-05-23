@@ -305,7 +305,8 @@ public class EntireGame {
                 !p1.isHuman(),
                 !p2.isHuman(),
                 totalFrames,
-                metaMatchInfo == null ? null : metaMatchInfo.toString()
+                metaMatchInfo == null ? null : metaMatchInfo.toString(),
+                gameValues.getSubRules()
         );
     }
 

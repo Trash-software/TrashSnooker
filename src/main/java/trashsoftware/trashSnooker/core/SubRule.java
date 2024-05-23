@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.App;
@@ -62,7 +63,8 @@ public enum SubRule {
         return subRules.stream().map(SubRule::name).collect(Collectors.joining(","));
     }
 
-    public static Collection<SubRule> commaStringToSubRules(String commaString) {
+    public static Collection<SubRule> commaStringToSubRules(@Nullable String commaString) {
+        if (commaString == null) return List.of();
         String[] arr = commaString.split(",");
         return Arrays.stream(arr).map(SubRule::valueOf).collect(Collectors.toList());
     }

@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS EntireGame (
     Player1IsAI INTEGER,
     Player2IsAI INTEGER,
     TotalFrames INTEGER DEFAULT 1,
-    MatchID TEXT DEFAULT NULL,
+    MatchID TEXT DEFAULT NULL,  -- Career game ID
     SubRule TEXT DEFAULT NULL
 );
 

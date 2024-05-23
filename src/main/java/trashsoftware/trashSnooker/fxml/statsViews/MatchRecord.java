@@ -4,6 +4,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
@@ -17,6 +18,7 @@ import trashsoftware.trashSnooker.util.db.PlayerFrameRecord;
 
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class MatchRecord extends RecordTree {
     final EntireGameTitle egt;
@@ -42,6 +44,11 @@ public class MatchRecord extends RecordTree {
             page.add(new Label(careerMatchInfo.data.getName()), 4, rowIndex);
             page.add(new Label(careerMatchInfo.stage.getShown()), 5, rowIndex);
             rowIndex++;
+        }
+        var subRules = egt.getSubRules();
+        if (!subRules.isEmpty()) {
+            String subRuleStr = subRules.stream().map(SubRule::toString).collect(Collectors.joining(" "));
+            page.add(new Label(subRuleStr), 4, rowIndex++);
         }
 
         String[] winLost;

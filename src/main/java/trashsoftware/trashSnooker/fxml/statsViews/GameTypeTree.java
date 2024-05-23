@@ -19,16 +19,18 @@ import java.util.*;
 public class GameTypeTree extends RecordTree {
     private final StatsView.PlayerAi pai;
     private final GameRule gameRule;
+    final boolean careerOnly;
 
     private int breaksFiftyRow;
     private int breaksCenturyRow;
     private int breaks147Row;
     private int[] breaksScores;
 
-    GameTypeTree(StatsView.PlayerAi pai, GameRule gameRule, ResourceBundle strings) {
+    GameTypeTree(StatsView.PlayerAi pai, GameRule gameRule, boolean careerOnly, ResourceBundle strings) {
         super(GameRule.toReadable(gameRule), strings);
         this.pai = pai;
         this.gameRule = gameRule;
+        this.careerOnly = careerOnly;
     }
 
     @Override
@@ -168,7 +170,7 @@ public class GameTypeTree extends RecordTree {
                                final Button button, final int startRowIndex) {
         long st = System.currentTimeMillis();
         List<EntireGameTitle> allMatches =
-                DBAccess.getInstance().getAllPveMatches(gameRule, pai.playerId, pai.isAi);
+                DBAccess.getInstance().getAllPveMatches(gameRule, pai.playerId, pai.isAi, careerOnly);
         List<EntireGameRecord> entireRecords = new ArrayList<>();
         for (EntireGameTitle egt : allMatches) {
             entireRecords.add(DBAccess.getInstance().getMatchDetail(egt));

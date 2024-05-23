@@ -237,7 +237,7 @@ public abstract class ObjectOnTable implements Cloneable {
             }
 
             double accMag = supporter[0] * gravity;
-            double resist = 0.2;  // 摩擦力
+            double resist = 0.0;  // 摩擦力
             accMag *= (1 - resist);
             
             accMag /= phy.calculationsPerSecSqr;
@@ -269,12 +269,14 @@ public abstract class ObjectOnTable implements Cloneable {
         if (nextY < radius + table.topY) {
             if (nextX < table.midHoleAreaRightX && nextX >= table.midHoleAreaLeftX) {
                 // 上方中袋在袋角范围内
-                if (predictedDtToPoint(table.topMidHoleLeftArcXy.getCenter()) < table.midArcRadius + radius &&
+                if (nextY > table.topMidArcMinY &&  // 进入袋里面的不算
+                        predictedDtToPoint(table.topMidHoleLeftArcXy.getCenter()) < table.midArcRadius + radius &&
                         currentDtToPoint(table.topMidHoleLeftArcXy.getCenter()) >= table.midArcRadius + radius) {
                     // 击中上方中袋左侧
                     hitHoleArcArea(table.topMidHoleLeftArcXy.getCenter(), phy, table.midArcRadius);
                     return new CushionHitResult(table.topMidHoleLeftArcXy, 2);
-                } else if (predictedDtToPoint(table.topMidHoleRightArcXy.getCenter()) < table.midArcRadius + radius &&
+                } else if (nextY > table.topMidArcMinY &&
+                        predictedDtToPoint(table.topMidHoleRightArcXy.getCenter()) < table.midArcRadius + radius &&
                         currentDtToPoint(table.topMidHoleRightArcXy.getCenter()) >= table.midArcRadius + radius) {
                     // 击中上方中袋右侧
                     hitHoleArcArea(table.topMidHoleRightArcXy.getCenter(), phy, table.midArcRadius);
@@ -315,12 +317,14 @@ public abstract class ObjectOnTable implements Cloneable {
         } else if (nextY >= table.botY - radius) {
             if (nextX < table.midHoleAreaRightX && nextX >= table.midHoleAreaLeftX) {
                 // 下方中袋袋角范围内
-                if (predictedDtToPoint(table.botMidHoleLeftArcXy.getCenter()) < table.midArcRadius + radius &&
+                if (nextY <= table.botMidArcMaxY && 
+                        predictedDtToPoint(table.botMidHoleLeftArcXy.getCenter()) < table.midArcRadius + radius &&
                         currentDtToPoint(table.botMidHoleLeftArcXy.getCenter()) >= table.midArcRadius + radius) {
                     // 击中下方中袋左侧
                     hitHoleArcArea(table.botMidHoleLeftArcXy.getCenter(), phy, table.midArcRadius);
                     return new CushionHitResult(table.botMidHoleLeftArcXy, 2);
-                } else if (predictedDtToPoint(table.botMidHoleRightArcXy.getCenter()) < table.midArcRadius + radius &&
+                } else if (nextY <= table.botMidArcMaxY && 
+                        predictedDtToPoint(table.botMidHoleRightArcXy.getCenter()) < table.midArcRadius + radius &&
                         currentDtToPoint(table.botMidHoleRightArcXy.getCenter()) >= table.midArcRadius + radius) {
                     // 击中下方中袋右侧
                     hitHoleArcArea(table.botMidHoleRightArcXy.getCenter(), phy, table.midArcRadius);
