@@ -2074,14 +2074,14 @@ public class GameView implements Initializable {
             yError = yError * mulWithPower * cueAreaRadius / 240;
             cpx = intentCuePointX + xError;
             cpy = intentCuePointY + yError;
-            if (mutate) {
-                cuePointX = cpx;
-                cuePointY = cpy;
-            }
 
             if (obstacleProjection == null || obstacleProjection.cueAble(
                     getCuePointRelX(cpx), getCuePointRelY(cpy),
                     getRatioOfCueAndBall())) {
+                if (mutate) {
+                    cuePointX = cpx;
+                    cuePointY = cpy;
+                }
                 break;
             }
 

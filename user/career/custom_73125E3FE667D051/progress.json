@@ -1,267 +1,129 @@
 {
-  "stageIndex": 3,
+  "stageIndex": 1,
   "seedRanks": {
+    "Selby": 2,
     "custom_73125E3FE667D051": 7,
-    "Stuart Bingham": 9,
-    "Brown": 15,
-    "Yan Bingtao": 4,
-    "random_player_67": 11,
-    "Fat Guy": 5,
-    "Ding Junhui": 14,
-    "Smart": 12,
-    "Trump": 16,
-    "Selby": 1,
-    "Mark Williams": 13,
-    "Karen Wilson": 10,
-    "O_Sullivan": 8,
+    "Stuart Bingham": 1,
+    "Yan Bingtao": 8,
+    "Karen Wilson": 5,
     "Luca Brecel": 6,
-    "Neil Robertson": 3,
-    "John Wizard": 2
+    "Neil Robertson": 4,
+    "John Wizard": 3
   },
-  "championshipId": "masters",
+  "championshipId": "saudi_arabia_masters",
   "matchTree": {"root": {
     "p1": {
       "p1": {
-        "p1": {
-          "p1wins": 2,
-          "p1": {"winner": "Yan Bingtao"},
-          "p2": {"winner": "Ding Junhui"},
-          "winner": "Yan Bingtao",
-          "stage": "ROUND_1",
-          "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-0",
-          "p2wins": 0
-        },
-        "p2": {
-          "p1wins": 2,
-          "p1": {"winner": "John Wizard"},
-          "p2": {"winner": "Karen Wilson"},
-          "winner": "John Wizard",
-          "stage": "ROUND_1",
-          "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-1",
-          "p2wins": 1
-        },
+        "p1wins": 2,
+        "p1": {"winner": "Stuart Bingham"},
+        "p2": {"winner": "custom_73125E3FE667D051"},
+        "winner": "Stuart Bingham",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_73125E3FE667D051+2024+masters-QUARTER_FINAL-8"
+        "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-QUARTER_FINAL-0",
+        "p2wins": 1
       },
       "p2": {
-        "p1": {
-          "p1wins": 2,
-          "p1": {"winner": "Selby"},
-          "p2": {"winner": "Brown"},
-          "winner": "Selby",
-          "stage": "ROUND_1",
-          "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-2",
-          "p2wins": 0
-        },
-        "p2": {
-          "p1": {"winner": "custom_73125E3FE667D051"},
-          "p2": {"winner": "Mark Williams"},
-          "stage": "ROUND_1",
-          "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-3"
-        },
+        "p1wins": 0,
+        "p1": {"winner": "Selby"},
+        "p2": {"winner": "Yan Bingtao"},
+        "winner": "Yan Bingtao",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_73125E3FE667D051+2024+masters-QUARTER_FINAL-9"
+        "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-QUARTER_FINAL-1",
+        "p2wins": 2
       },
       "stage": "SEMI_FINAL",
-      "matchId": "custom_73125E3FE667D051+2024+masters-SEMI_FINAL-12"
+      "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-SEMI_FINAL-4"
     },
     "p2": {
       "p1": {
-        "p1": {
-          "p1wins": 0,
-          "p1": {"winner": "Neil Robertson"},
-          "p2": {"winner": "Stuart Bingham"},
-          "winner": "Stuart Bingham",
-          "stage": "ROUND_1",
-          "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-4",
-          "p2wins": 2
-        },
-        "p2": {
-          "p1wins": 0,
-          "p1": {"winner": "Fat Guy"},
-          "p2": {"winner": "random_player_67"},
-          "winner": "random_player_67",
-          "stage": "ROUND_1",
-          "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-5",
-          "p2wins": 2
-        },
+        "p1wins": 0,
+        "p1": {"winner": "Neil Robertson"},
+        "p2": {"winner": "Luca Brecel"},
+        "winner": "Luca Brecel",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_73125E3FE667D051+2024+masters-QUARTER_FINAL-10"
+        "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-QUARTER_FINAL-2",
+        "p2wins": 2
       },
       "p2": {
-        "p1": {
-          "p1wins": 1,
-          "p1": {"winner": "O_Sullivan"},
-          "p2": {"winner": "Smart"},
-          "winner": "Smart",
-          "stage": "ROUND_1",
-          "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-6",
-          "p2wins": 2
-        },
-        "p2": {
-          "p1wins": 2,
-          "p1": {"winner": "Luca Brecel"},
-          "p2": {"winner": "Trump"},
-          "winner": "Luca Brecel",
-          "stage": "ROUND_1",
-          "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-7",
-          "p2wins": 1
-        },
+        "p1wins": 0,
+        "p1": {"winner": "John Wizard"},
+        "p2": {"winner": "Karen Wilson"},
+        "winner": "Karen Wilson",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_73125E3FE667D051+2024+masters-QUARTER_FINAL-11"
+        "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-QUARTER_FINAL-3",
+        "p2wins": 2
       },
       "stage": "SEMI_FINAL",
-      "matchId": "custom_73125E3FE667D051+2024+masters-SEMI_FINAL-13"
+      "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-SEMI_FINAL-5"
     },
     "stage": "FINAL",
-    "matchId": "custom_73125E3FE667D051+2024+masters-FINAL-14"
+    "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-FINAL-6"
   }},
   "finished": false,
   "snookerBreaks": [
     {
-      "score": 129,
+      "score": 104,
       "maximumType": "NONE",
-      "stage": "ROUND_1",
+      "stage": "QUARTER_FINAL",
       "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-2",
-      "playerId": "Selby"
-    },
-    {
-      "score": 127,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-1",
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-QUARTER_FINAL-3",
       "playerId": "Karen Wilson"
     },
     {
-      "score": 121,
+      "score": 101,
       "maximumType": "NONE",
-      "stage": "ROUND_1",
+      "stage": "QUARTER_FINAL",
       "sim": true,
       "numFrame": 1,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-2",
-      "playerId": "Selby"
-    },
-    {
-      "score": 118,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-6",
-      "playerId": "Smart"
-    },
-    {
-      "score": 98,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-6",
-      "playerId": "Smart"
-    },
-    {
-      "score": 88,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-1",
-      "playerId": "John Wizard"
-    },
-    {
-      "score": 86,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-1",
-      "playerId": "John Wizard"
-    },
-    {
-      "score": 82,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-6",
-      "playerId": "O_Sullivan"
-    },
-    {
-      "score": 79,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-7",
+      "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-QUARTER_FINAL-2",
       "playerId": "Luca Brecel"
     },
     {
-      "score": 76,
+      "score": 97,
       "maximumType": "NONE",
-      "stage": "ROUND_1",
+      "stage": "QUARTER_FINAL",
       "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-0",
-      "playerId": "Yan Bingtao"
-    },
-    {
-      "score": 75,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-4",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 70,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-7",
-      "playerId": "Trump"
-    },
-    {
-      "score": 68,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 3,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-7",
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-QUARTER_FINAL-2",
       "playerId": "Luca Brecel"
     },
     {
-      "score": 66,
+      "score": 84,
       "maximumType": "NONE",
-      "stage": "ROUND_1",
+      "stage": "QUARTER_FINAL",
       "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-4",
-      "playerId": "Stuart Bingham"
-    },
-    {
-      "score": 60,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-4",
-      "playerId": "Neil Robertson"
-    },
-    {
-      "score": 52,
-      "maximumType": "NONE",
-      "stage": "ROUND_1",
-      "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_73125E3FE667D051+2024+masters-ROUND_1-0",
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-QUARTER_FINAL-1",
       "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 81,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-QUARTER_FINAL-3",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 71,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-QUARTER_FINAL-1",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 50,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+saudi_arabia_masters-QUARTER_FINAL-3",
+      "playerId": "John Wizard"
     }
   ],
-  "timestamp": "2024/1/15"
+  "timestamp": "2024/3/4"
 }

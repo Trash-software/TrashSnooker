@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 540480,
+    "money": 819440,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -2909,13 +2909,431 @@
           }
         ],
         "timestamp": "2024-05-24 06:45:32"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_73125E3FE667D051-468",
+        "inGameDate": "2024/1/15",
+        "moneyBefore": 540480,
+        "moneyCost": 80,
+        "moneyAfter": 540400,
+        "type": "purchase",
+        "timestamp": "2024-05-25 01:15:31"
+      },
+      {
+        "item": "FINAL_STAGE_FINAL_FRAME_WIN",
+        "inGameDate": "2024/1/15",
+        "level": 0,
+        "moneyBefore": 540400,
+        "moneyAfter": 540600,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-05-26 16:33:05"
+      },
+      {
+        "item": "SNOOKER_TOP_16",
+        "inGameDate": "2024/1/15",
+        "level": 0,
+        "moneyBefore": 540600,
+        "moneyAfter": 540800,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-05-26 16:33:09"
+      },
+      {
+        "item": "WIN_MATCHES",
+        "inGameDate": "2024/1/15",
+        "level": 2,
+        "moneyBefore": 540800,
+        "moneyAfter": 541800,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2024-05-26 16:33:15"
+      },
+      {
+        "item": "FINAL_STAGE_FINAL_FRAME",
+        "inGameDate": "2024/1/15",
+        "level": 0,
+        "moneyBefore": 541800,
+        "moneyAfter": 542000,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-05-26 16:33:16"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_73125E3FE667D051-469",
+        "inGameDate": "2024/1/15",
+        "moneyBefore": 542000,
+        "moneyCost": 80,
+        "moneyAfter": 541920,
+        "type": "purchase",
+        "timestamp": "2024-05-29 20:14:00"
+      },
+      {
+        "inGameDate": "2024/1/15",
+        "year": 2024,
+        "match": "masters",
+        "moneyBefore": 541920,
+        "moneyAfter": 753920,
+        "type": "championshipEarn",
+        "items": {
+          "CHAMPION": {
+            "actual": 200000,
+            "raw": 250000
+          },
+          "BEST_SINGLE": {
+            "actual": 12000,
+            "raw": 15000
+          }
+        },
+        "timestamp": "2024-05-29 20:19:57"
+      },
+      {
+        "inGameDate": "2024/1/15",
+        "perkUsed": 4,
+        "moneyBefore": 753920,
+        "moneyCost": 7500,
+        "moneyAfter": 746420,
+        "ability": {
+          "powerControl": [
+            99.71479182494376,
+            100
+          ],
+          "normalPower": [
+            95.69162276901015,
+            96.66395785824974
+          ],
+          "spin": [
+            98.61185346887146,
+            100
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2024-05-29 20:22:37"
+      },
+      {
+        "inGameDate": "2024/1/15",
+        "perkUsed": 4,
+        "moneyBefore": 746420,
+        "moneyCost": 6950,
+        "moneyAfter": 739470,
+        "ability": {"cuePrecision": [
+          96.92354909703165,
+          100
+        ]},
+        "type": "upgrade",
+        "timestamp": "2024-05-29 20:22:45"
+      },
+      {
+        "inGameDate": "2024/1/15",
+        "moneyBefore": 739470,
+        "moneyAfter": 738350,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1120
+        }],
+        "timestamp": "2024-05-29 20:24:15"
+      },
+      {
+        "inGameDate": "2024/1/22",
+        "moneyBefore": 738350,
+        "moneyAfter": 737870,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 480
+        }],
+        "timestamp": "2024-05-29 20:24:24"
+      },
+      {
+        "inGameDate": "2024/1/25",
+        "moneyBefore": 737870,
+        "moneyAfter": 736750,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1120
+        }],
+        "timestamp": "2024-05-29 20:24:25"
+      },
+      {
+        "inGameDate": "2024/2/1",
+        "match": "custom_73125E3FE667D051+2024+eight_yangjiaping_mid_cup",
+        "moneyBefore": 736750,
+        "moneyAfter": 736450,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 100
+          },
+          {
+            "item": "travel",
+            "moneyCost": 200
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 0
+          }
+        ],
+        "timestamp": "2024-05-29 20:24:25"
+      },
+      {
+        "inGameDate": "2024/2/1",
+        "year": 2024,
+        "match": "eight_yangjiaping_mid_cup",
+        "moneyBefore": 736450,
+        "moneyAfter": 736450,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_1": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2024-05-29 20:25:28"
+      },
+      {
+        "inGameDate": "2024/2/1",
+        "moneyBefore": 736450,
+        "moneyAfter": 735010,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1440
+        }],
+        "timestamp": "2024-05-29 20:25:34"
+      },
+      {
+        "item": 3,
+        "inGameDate": "2024/2/10",
+        "match": "custom_73125E3FE667D051+2024+eight_northeast_open",
+        "moneyBefore": 735010,
+        "moneyAfter": 735210,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2024-05-29 20:25:34"
+      },
+      {
+        "inGameDate": "2024/2/10",
+        "match": "custom_73125E3FE667D051+2024+eight_northeast_open",
+        "moneyBefore": 735210,
+        "moneyAfter": 734210,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2024-05-29 20:25:34"
+      },
+      {
+        "inGameDate": "2024/2/10",
+        "year": 2024,
+        "match": "eight_northeast_open",
+        "moneyBefore": 734210,
+        "moneyAfter": 814210,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 80000,
+          "raw": 100000
+        }},
+        "timestamp": "2024-05-30 04:32:38"
+      },
+      {
+        "inGameDate": "2024/2/10",
+        "perkUsed": 3,
+        "moneyBefore": 814210,
+        "moneyCost": 4800,
+        "moneyAfter": 809410,
+        "ability": {"normalPower": [
+          96.66395785824974,
+          99.35376341967644
+        ]},
+        "type": "upgrade",
+        "timestamp": "2024-05-30 04:32:55"
+      },
+      {
+        "inGameDate": "2024/2/10",
+        "moneyBefore": 809410,
+        "moneyAfter": 807370,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2040
+        }],
+        "timestamp": "2024-05-30 04:32:58"
+      },
+      {
+        "inGameDate": "2024/2/22",
+        "match": "custom_73125E3FE667D051+2024+professional_champ",
+        "moneyBefore": 807370,
+        "moneyAfter": 804370,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 0
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          }
+        ],
+        "timestamp": "2024-05-30 04:32:58"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_73125E3FE667D051-470",
+        "inGameDate": "2024/2/22",
+        "moneyBefore": 804370,
+        "moneyCost": 80,
+        "moneyAfter": 804290,
+        "type": "purchase",
+        "timestamp": "2024-05-30 04:33:47"
+      },
+      {
+        "inGameDate": "2024/2/22",
+        "year": 2024,
+        "match": "professional_champ",
+        "moneyBefore": 804290,
+        "moneyAfter": 816290,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 12000,
+          "raw": 15000
+        }},
+        "timestamp": "2024-05-30 19:46:19"
+      },
+      {
+        "inGameDate": "2024/2/22",
+        "moneyBefore": 816290,
+        "moneyAfter": 815440,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 850
+        }],
+        "timestamp": "2024-06-03 23:08:42"
+      },
+      {
+        "inGameDate": "2024/2/27",
+        "match": "custom_73125E3FE667D051+2024+dog_give_power_open",
+        "moneyBefore": 815440,
+        "moneyAfter": 812540,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          }
+        ],
+        "timestamp": "2024-06-03 23:08:42"
+      },
+      {
+        "inGameDate": "2024/2/27",
+        "year": 2024,
+        "match": "dog_give_power_open",
+        "moneyBefore": 812540,
+        "moneyAfter": 820540,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 8000,
+          "raw": 10000
+        }},
+        "timestamp": "2024-06-10 06:08:39"
+      },
+      {
+        "inGameDate": "2024/2/27",
+        "moneyBefore": 820540,
+        "moneyAfter": 820030,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 510
+        }],
+        "timestamp": "2024-06-10 06:08:44"
+      },
+      {
+        "inGameDate": "2024/3/1",
+        "moneyBefore": 820030,
+        "moneyAfter": 819520,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 510
+        }],
+        "timestamp": "2024-06-10 06:08:50"
+      },
+      {
+        "item": 7,
+        "inGameDate": "2024/3/4",
+        "match": "custom_73125E3FE667D051+2024+saudi_arabia_masters",
+        "moneyBefore": 819520,
+        "moneyAfter": 822520,
+        "type": "invitation",
+        "moneyEarn": 3000,
+        "timestamp": "2024-06-10 06:08:50"
+      },
+      {
+        "inGameDate": "2024/3/4",
+        "match": "custom_73125E3FE667D051+2024+saudi_arabia_masters",
+        "moneyBefore": 822520,
+        "moneyAfter": 819520,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 0
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          }
+        ],
+        "timestamp": "2024-06-10 06:08:50"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_73125E3FE667D051-471",
+        "inGameDate": "2024/3/4",
+        "moneyBefore": 819520,
+        "moneyCost": 80,
+        "moneyAfter": 819440,
+        "type": "purchase",
+        "timestamp": "2024-06-11 05:34:56"
       }
     ],
-    "level": 28,
-    "expInThisLevel": 288,
+    "level": 31,
+    "expInThisLevel": 529,
     "availPerks": 0,
-    "totalPerks": 108,
-    "totalExp": 9025
+    "totalPerks": 119,
+    "totalExp": 11860
   },
-  "checksum": "ABA27E798586899C7C8BD741A5A051A5"
+  "checksum": "D2814C1C8B20555AAB6D735F904D1EBF"
 }

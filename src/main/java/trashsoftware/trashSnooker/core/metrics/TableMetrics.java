@@ -60,7 +60,7 @@ public class TableMetrics {
     public double cornerPocketGravityRadius;  // 袋口处的坡宽度。球进入这个区域后会开始有往袋里掉的意思
     public double midPocketGravityRadius;
     public double midArcRadius;
-    public double midArcDtToMidX;
+    public double midArcWidth, midArcExtentDeg;
     public double cornerHoleDt, cornerHoleTan,
             cornerArcHeight, cornerArcWidth, cornerArcRadius, cornerArcDiameter,
             cornerLineLonger, cornerLineShorter,  // 底袋角直线的占地长宽
@@ -374,12 +374,16 @@ public class TableMetrics {
         
         topMidArcMinY = topY - cushionClothWidth;
         botMidArcMaxY = botY + cushionClothWidth;
-        if (midArcDtToMidX == 0) {
+        if (midArcRadius < cushionClothWidth) {
             midHoleAreaLeftX = midX - midPocketThroatWidth / 2 - midLineWidth - midArcRadius;
             midHoleAreaRightX = midX + midPocketThroatWidth / 2 + midLineWidth + midArcRadius;
         } else {
-            midHoleAreaLeftX = midX - midArcDtToMidX;
-            midHoleAreaRightX = midX + midArcDtToMidX;
+            double arcToSlate = Algebra.HALF_PI - Math.asin((midArcRadius - cushionClothWidth) / midArcRadius);
+            midArcExtentDeg = Math.toDegrees(arcToSlate);
+            midArcWidth = Math.sin(arcToSlate) * midArcRadius;
+            
+            midHoleAreaLeftX = midX - midPocketThroatWidth / 2 - midLineWidth - midArcWidth;
+            midHoleAreaRightX = midX + midPocketThroatWidth / 2 + midLineWidth + midArcWidth;
         }
 
         // 中袋袋角弧线，圆心的位置
@@ -919,36 +923,27 @@ public class TableMetrics {
             return this;
         }
 
-        public Builder pocketDifficulty(PocketDifficulty pocketDifficulty) {
-            values.pocketDifficulty = pocketDifficulty;
-            return pocketDifficulty(
-                    pocketDifficulty.cornerPocketGravityZone,
-                    pocketDifficulty.cornerPocketArcSize,
-                    pocketDifficulty.cornerPocketAngle,
-                    pocketDifficulty.midPocketGravityZone,
-                    pocketDifficulty.midPocketArcSize,
-                    pocketDifficulty.midPocketAngle,
-                    pocketDifficulty.halfDtBtwMidArcCenters
-            );
-        }
-
-        private Builder pocketDifficulty(double cornerPocketGravityZone,
-                                         double cornerPocketArcSize,
-                                         double cornerPocketAngle,
-                                         double midPocketGravityZone,
-                                         double midPocketArcSize,
-                                         double midPocketAngle,
-                                         double halfDtBtwMidArcCenters) {
-            values.cornerPocketGravityRadius = cornerPocketGravityZone;
-            values.cornerHoleOpenAngle = cornerPocketAngle;
-            values.midPocketGravityRadius = midPocketGravityZone;
-            values.midHoleOpenAngle = midPocketAngle;
-            this.cornerHoleArcSizeMul = cornerPocketArcSize;
+        public Builder pocketDifficulty(PocketDifficulty pd) {
+            values.pocketDifficulty = pd;
+//            return pocketDifficulty(
+//                    pocketDifficulty.cornerPocketGravityZone,
+//                    pocketDifficulty.cornerPocketArcSize,
+//                    pocketDifficulty.cornerPocketAngle,
+//                    pocketDifficulty.midPocketGravityZone,
+//                    pocketDifficulty.midPocketArcRadius,
+//                    pocketDifficulty.midPocketAngle,
+//                    pocketDifficulty.halfDtBtwMidArcCenters
+//            );
+            values.cornerPocketGravityRadius = pd.cornerPocketGravityZone;
+            values.cornerHoleOpenAngle = pd.cornerPocketAngle;
+            values.midPocketGravityRadius = pd.midPocketGravityZone;
+            values.midHoleOpenAngle = pd.midPocketAngle;
+            this.cornerHoleArcSizeMul = pd.cornerPocketArcSize;
 //            this.cornerPocketOut = cornerPocketOut;
 
 //            if (!values.straightHole) {
-            this.midHoleArcSize = midPocketArcSize;
-            values.midArcDtToMidX = halfDtBtwMidArcCenters;
+            this.midHoleArcSize = pd.midPocketArcRadius;
+//            values.midArcWidth = pd.midPocketArcWidth;
 //            }
             return this;
         }
@@ -1002,6 +997,9 @@ public class TableMetrics {
 
 //            values.midArcRadius = pocketSize.midArcRadius * midHoleArcSizeMul;
             values.midArcRadius = midHoleArcSize;
+            
+//            values.midLineHeight = 20.0;  // 随手写一个
+//            values.midLineWidth = 0.0;
         }
 
         private void setupMidHoleByMouth(PocketSize pocketSize) {

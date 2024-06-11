@@ -8,33 +8,33 @@ public class PocketDifficulty {
             new PocketDifficulty("veryLoose",
                     20.0, 2.21, -2.0, 95.25,
                     1.0,
-                    18.0, 79.375, 0.0,
-                    53.1876, 3.96, 
-                    110.34, 53.1876),
+                    18.0, 
+                    79.375, 53.1876, 0.0,
+                    53.1876, 3.96),
             new PocketDifficulty("loose",
                     14.0, 2.21, 0.0, 88.9,
                     0.75,
-                    13.0, 79.375, 0.0,
-                    53.1876, 3.96, 
-                    110.34, 53.1876),
+                    13.0, 
+                    79.375, 53.1876, 0.0,
+                    53.1876, 3.96),
             new PocketDifficulty("normal",
                     10.0, 2.21, 1.0, 82.55,
                     0.5,
-                    10.0, 79.375, 0.0,
-                    53.1876, 3.96, 
-                    110.34, 53.1876),
+                    10.0, 
+                    79.375, 53.1876, 0.0,
+                    53.1876, 3.96),
             new PocketDifficulty("tight",
                     8.0, 2.21, 2.0, 76.2,
                     0.25,
-                    8.0, 79.375, 0.0,
-                    53.1876, 3.96, 
-                    110.34, 53.1876),
+                    8.0, 
+                    74.5, 53.1876, 0.0,
+                    53.1876, 3.96),
             new PocketDifficulty("veryTight",
                     6.0, 2.21, 3.0, 69.85,
                     0.0,
-                    5.0, 79.375, 0.0,
-                    53.1876, 3.96, 
-                    110.34, 53.1876)
+                    5.0, 
+                    69.85, 53.1876, 0.0,
+                    53.1876, 3.96)
     };
     public static PocketDifficulty[] BLUE_TABLE_DIFFICULTIES = {
             new PocketDifficulty("normal",
@@ -59,12 +59,13 @@ public class PocketDifficulty {
     public final double cornerPocketFallRadius;  // 底袋的外围，真实的下落半径
     public final double arcBounceAngleRate;
     public final double midPocketGravityZone;
-    public final double midPocketArcSize;
+    public final double midPocketArcRadius;
+//    public final double midPocketArcWidth;
+    public final double midInnerArcRadius;
+    
     public final double midPocketAngle;
     public final double midPocketFallRadius;
     public final double midCenterToSlate;
-    public final double halfDtBtwMidArcCenters;
-    public final double midInnerArcSize;
 
     public PocketDifficulty(String key,
                             double cornerPocketGravityZone,
@@ -73,12 +74,12 @@ public class PocketDifficulty {
                             double cornerPocketFallRadius,
                             double arcBounceAngleRate,
                             double midPocketGravityZone,
-                            double midPocketArcSize,
+                            double midPocketArcRadius,
+//                            double midPocketArcWidth,
+                            double midInnerArcRadius,
                             double midPocketAngle,
                             double midPocketFallRadius,
-                            double midCenterToSlate,
-                            double halfDtBtwMidArcCenters,
-                            double midInnerArcSize) {
+                            double midCenterToSlate) {
         this.key = key;
         this.cornerPocketGravityZone = cornerPocketGravityZone;
         this.cornerPocketArcSize = cornerPocketArcSize;
@@ -87,12 +88,13 @@ public class PocketDifficulty {
         this.arcBounceAngleRate = arcBounceAngleRate;
 
         this.midPocketGravityZone = midPocketGravityZone;
-        this.midPocketArcSize = midPocketArcSize;
+        this.midPocketArcRadius = midPocketArcRadius;
+//        this.midPocketArcWidth = midPocketArcWidth;
+        this.midInnerArcRadius = midInnerArcRadius;
+        
         this.midPocketAngle = midPocketAngle;
         this.midPocketFallRadius = midPocketFallRadius;
         this.midCenterToSlate = midCenterToSlate;
-        this.halfDtBtwMidArcCenters = halfDtBtwMidArcCenters;
-        this.midInnerArcSize = midInnerArcSize;
     }
 
     public PocketDifficulty(String key,
@@ -102,7 +104,7 @@ public class PocketDifficulty {
                             double cornerPocketFallRadius,
                             double arcBounceAngleRate,
                             double midPocketGravityZone,
-                            double midPocketArcSize,
+                            double midPocketArcRadius,
                             double midPocketAngle,
                             double midPocketFallRadius,
                             double midCenterToSlate) {
@@ -113,12 +115,11 @@ public class PocketDifficulty {
                 cornerPocketFallRadius,
                 arcBounceAngleRate,
                 midPocketGravityZone,
-                midPocketArcSize,
+                midPocketArcRadius,
+                0.0,
                 midPocketAngle,
                 midPocketFallRadius,
-                midCenterToSlate, 
-                0.0, 
-                0.0);
+                midCenterToSlate);
     }
 
     public static PocketDifficulty valueOf(TableMetrics.TableBuilderFactory factory, String jsonString) {

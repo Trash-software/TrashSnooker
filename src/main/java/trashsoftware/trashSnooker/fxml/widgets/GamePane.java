@@ -4,12 +4,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
-import javafx.scene.CacheHint;
 import javafx.scene.DirectionalLight;
 import javafx.scene.LightBase;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -43,10 +41,10 @@ public class GamePane extends StackPane {
     Font tableTextFont;
     @FXML
     Canvas tableCanvas;
-//    @FXML
+    //    @FXML
 //    Canvas lineCanvas;
     GraphicsContext graphicsContext;
-//    GraphicsContext lineGraphics;
+    //    GraphicsContext lineGraphics;
     private double scale;
     private GameValues gameValues;
     private double canvasWidth, canvasHeight;
@@ -76,7 +74,7 @@ public class GamePane extends StackPane {
 
         graphicsContext = tableCanvas.getGraphicsContext2D();
         graphicsContext.setTextAlign(TextAlignment.CENTER);
-        
+
 //        lineGraphics = lineCanvas.getGraphicsContext2D();
 
         boolean antiAliasing = ConfigLoader.getInstance().getAntiAliasing().canvasAA;
@@ -132,7 +130,7 @@ public class GamePane extends StackPane {
 
     public void setupBalls(GameHolder gameHolder, boolean randomRotate) {
         clear();
-        
+
 //        setCache(true);
 //        setCacheHint(CacheHint.SCALE_AND_ROTATE);
 
@@ -187,11 +185,11 @@ public class GamePane extends StackPane {
     public double canvasY(double realY) {
         return realY * scale;
     }
-    
+
     public double paneX(double realX) {
         return realX * scale - canvasWidth / 2;
     }
-    
+
     public double paneY(double realY) {
         return realY * scale - canvasHeight / 2;
     }
@@ -213,7 +211,7 @@ public class GamePane extends StackPane {
 //        graphicsContext.setGlobalAlpha(0.5);
 //        lineGraphics.setGlobalAlpha(0.5);
 //        lineGraphics.setGlobalBlendMode();
-        
+
         setPrefWidth(canvasWidth);
         setPrefHeight(canvasHeight);
 
@@ -463,10 +461,13 @@ public class GamePane extends StackPane {
         // 因为新的洞口占据了一些中袋角的空间，在此补上
         graphicsContext.setFill(values.tableColor);
         fillMidPocketArc(values.topMidHoleLeftArcXy, true, 1);
-        fillMidPocketArc(values.topMidHoleRightArcXy, true, -1);
-        fillMidPocketArc(values.botMidHoleLeftArcXy, false, -1);
-        fillMidPocketArc(values.botMidHoleRightArcXy, false, 1);
+//        fillMidPocketArc(values.topMidHoleRightArcXy, true, -1);
+//        fillMidPocketArc(values.botMidHoleLeftArcXy, false, -1);
+//        fillMidPocketArc(values.botMidHoleRightArcXy, false, 1);
 
+//        if (values.midArcHeight != 0 && values.midArcHeight < values.cushionClothWidth) {
+//            fillMidPocketLinesForRoundPocket();
+//        } else 
         if (values.midArcRadius < values.cushionClothWidth) {
             // 补充中袋口直线
             fillMidPocketLineSide(values.topMidHoleLeftArcXy, values.midArcRadius, true, true);
@@ -484,6 +485,12 @@ public class GamePane extends StackPane {
         fillCornerLineCushionCloth(values.botRightHoleSideLine, true, false);
         fillCornerLineCushionCloth(values.botLeftHoleSideLine, false, true);
         fillCornerLineCushionCloth(values.botLeftHoleEndLine, true, true);
+
+        // 修复中袋袋角后的桌子本体
+        if (values.midArcRadius > values.cushionClothWidth) {
+            graphicsContext.setFill(values.tableBorderColor);
+            fillWoodBehindMidPockets();
+        }
 
         // 画边线
         // 库边
@@ -529,6 +536,27 @@ public class GamePane extends StackPane {
         drawTableLogo();
     }
 
+//    private void fillMidPocketLinesForRoundPocket() {
+//        TableMetrics metrics = gameValues.table;
+//
+//        double height = metrics.cushionClothWidth - metrics.midArcHeight;
+//        if (height <= 0) return;  // no need to fill
+//        
+//        double x1 = metrics.midX - metrics.midPocketThroatWidth / 2;
+//        double x2 = metrics.midX + metrics.midPocketThroatWidth / 2;
+//        double y1 = metrics.topY - metrics.cushionClothWidth;
+//        double y2 = metrics.botY + metrics.cushionClothWidth;
+//        
+//        double graphicH = height * scale;
+//        double graphicW = metrics.midArcWidth * scale;
+//        
+//        graphicsContext.fillRect(canvasX(x1) - graphicW, canvasY(y1), graphicW, graphicH);
+//        graphicsContext.fillRect(canvasX(x2), canvasY(y1), graphicW, graphicH);
+//
+//        graphicsContext.fillRect(canvasX(x1) - graphicW, canvasY(y2) - graphicH, graphicW, graphicH);
+//        graphicsContext.fillRect(canvasX(x2), canvasY(y2) - graphicH, graphicW, graphicH);
+//    }
+
     private void fillMidPocketLineSide(Cushion.CushionArc arcCenter, double arcRadius, boolean isTop, boolean isLeft) {
         double sign = isLeft ? 1 : -1;
 
@@ -551,72 +579,71 @@ public class GamePane extends StackPane {
         );
     }
 
+    private void fillWoodBehindMidPockets() {
+        TableMetrics metrics = gameValues.table;
+        double x1 = canvasX(metrics.topMidHoleLeftArcXy.getCenter()[0]);
+        double x2 = canvasX(metrics.topMidHoleRightArcXy.getCenter()[0] - metrics.midArcWidth);
+        double y2 = canvasY(metrics.botY + metrics.cushionClothWidth);
+
+        double w = metrics.midArcWidth * scale;
+        double h = (metrics.topY - metrics.cushionClothWidth) * scale;  // 直接到最顶端
+
+        graphicsContext.fillRect(x1, 0, w, h);
+        graphicsContext.fillRect(x2, 0, w, h);
+        graphicsContext.fillRect(x1, y2, w, h);
+        graphicsContext.fillRect(x2, y2, w, h);
+    }
+
     private void fillMidPocketArc(Cushion.CushionArc arcCenter, boolean isTop, double extentDirection) {
-        TableMetrics values = gameValues.table;
+        TableMetrics metrics = gameValues.table;
 
-        double arcDiameter = values.midArcRadius * 2 * scale;
-        double x1 = canvasX(values.topMidHoleLeftArcXy.getCenter()[0] - values.midArcRadius);
-        double x2 = canvasX(values.topMidHoleRightArcXy.getCenter()[0] - values.midArcRadius);
-        double y1 = canvasY(values.topMidHoleLeftArcXy.getCenter()[1] - values.midArcRadius);
-        double y2 = canvasY(values.botMidHoleLeftArcXy.getCenter()[1] - values.midArcRadius);
+        double arcDiameter = metrics.midArcRadius * 2 * scale;
+        double x1 = canvasX(metrics.topMidHoleLeftArcXy.getCenter()[0] - metrics.midArcRadius);
+        double x2 = canvasX(metrics.topMidHoleRightArcXy.getCenter()[0] - metrics.midArcRadius);
+        double y1 = canvasY(metrics.topMidHoleLeftArcXy.getCenter()[1] - metrics.midArcRadius);
+        double y2 = canvasY(metrics.botMidHoleLeftArcXy.getCenter()[1] - metrics.midArcRadius);
 
-        double[] startExtent = getMidArcStartExtent(values);
+        double[] startExtent = getMidArcStartExtent(metrics);
         double arcStart = startExtent[0];
         double arcExtent = startExtent[1];
 
         graphicsContext.fillArc(x1, y1, arcDiameter, arcDiameter,
-                270, arcExtent, ArcType.CHORD);
+                270, arcExtent, ArcType.ROUND);
         graphicsContext.fillArc(x2, y1, arcDiameter, arcDiameter,
-                180 + arcStart, arcExtent, ArcType.CHORD);
+                180 + arcStart, arcExtent, ArcType.ROUND);
         graphicsContext.fillArc(x1, y2, arcDiameter, arcDiameter,
-                0 + arcStart, arcExtent, ArcType.CHORD);
+                0 + arcStart, arcExtent, ArcType.ROUND);
         graphicsContext.fillArc(x2, y2, arcDiameter, arcDiameter,
-                90, arcExtent, ArcType.CHORD);
+                90, arcExtent, ArcType.ROUND);
 
-        double verDeg = isTop ? 270 : 90;
+//        double verDeg = isTop ? 270 : 90;
+//
+//        double radius = values.midArcRadius;
 
-        double radius = values.midArcRadius;
-
-//        double centerDiff = metrics.midArcRadius - metrics.cushionClothWidth;
-//        double overshootDeg = Math.toDegrees(Math.asin(centerDiff / radius));
-//        double arcExtent = (90 + overshootDeg);
-//        ArcType arcType = arcExtent < 90 ? ArcType.ROUND : ArcType.CHORD;
-//        arcExtent = Math.max(90, arcExtent);
-//        arcExtent *= extentDirection;
-//        graphicsContext.fillArc(
-//                canvasX(arcCenter.getCenter()[0] - radius),
-//                canvasY(arcCenter.getCenter()[1] - radius),
-//                radius * 2 * scale,
-//                radius * 2 * scale,
-//                verDeg,
-//                arcExtent,
-//                arcType
-//        );
-
-        // 如果洞口大小与洞底半径差得比较远，就需要这个来补缺
-        double triangleWidth = radius;
-
-        if (values.cushionClothWidth < radius) {
-            double h1 = radius - values.cushionClothWidth;  // 短直角边
-            triangleWidth = Math.sqrt(radius * radius - h1 * h1);  // 长直角边
-        }
-        double yEnd = isTop ? values.topY : values.botY;
-        double yBase = yEnd + (isTop ? -values.cushionClothWidth : values.cushionClothWidth);
-
-        double xSide = arcCenter.getCenter()[0];
-        double xSharp = xSide < values.midX ? xSide + triangleWidth : xSide - triangleWidth;
-
-        double[] xs = new double[]{
-                canvasX(xSharp),
-                canvasX(xSide),
-                canvasX(xSide)
-        };
-        double[] ys = new double[]{
-                canvasY(yBase),
-                canvasY(yBase),
-                canvasY(yEnd)
-        };
-        graphicsContext.fillPolygon(xs, ys, 3);
+//        // 如果洞口大小与洞底半径差得比较远，就需要这个来补缺
+//        double triangleWidth = radius;
+//
+//        if (values.cushionClothWidth < radius) {
+//            double h1 = radius - values.cushionClothWidth;  // 短直角边
+//            triangleWidth = Math.sqrt(radius * radius - h1 * h1);  // 长直角边
+//        }
+//        double yEnd = isTop ? values.topY : values.botY;
+//        double yBase = yEnd + (isTop ? -values.cushionClothWidth : values.cushionClothWidth);
+//
+//        double xSide = arcCenter.getCenter()[0];
+//        double xSharp = xSide < values.midX ? xSide + triangleWidth : xSide - triangleWidth;
+//
+//        double[] xs = new double[]{
+//                canvasX(xSharp),
+//                canvasX(xSide),
+//                canvasX(xSide)
+//        };
+//        double[] ys = new double[]{
+//                canvasY(yBase),
+//                canvasY(yBase),
+//                canvasY(yEnd)
+//        };
+//        graphicsContext.fillPolygon(xs, ys, 3);
     }
 
     private void drawMidPocketInnerPart(double[] center,
@@ -816,38 +843,42 @@ public class GamePane extends StackPane {
         double[] startExtent = getMidArcStartExtent(values);
         double arcStart = startExtent[0];
         double arcExtent = startExtent[1];
-        
-        graphicsContext.strokeArc(x1, y1, arcDiameter, arcDiameter, 
+
+        graphicsContext.strokeArc(x1, y1, arcDiameter, arcDiameter,
                 270, arcExtent, ArcType.OPEN);
-        graphicsContext.strokeArc(x2, y1, arcDiameter, arcDiameter, 
+        graphicsContext.strokeArc(x2, y1, arcDiameter, arcDiameter,
                 180 + arcStart, arcExtent, ArcType.OPEN);
-        graphicsContext.strokeArc(x1, y2, arcDiameter, arcDiameter, 
+        graphicsContext.strokeArc(x1, y2, arcDiameter, arcDiameter,
                 0 + arcStart, arcExtent, ArcType.OPEN);
-        graphicsContext.strokeArc(x2, y2, arcDiameter, arcDiameter, 
+        graphicsContext.strokeArc(x2, y2, arcDiameter, arcDiameter,
                 90, arcExtent, ArcType.OPEN);
 
         // 袋内直线
-//        if (values.isStraightHole()) {
-        for (Cushion.CushionLine line : values.allMidHoleLines) {
-            drawHoleLine(line.getPosition());
-        }
-//        }
-    }
-    
-    private double[] getMidArcStartExtent(TableMetrics values){
-        double arcExtent = 90 - values.midHoleOpenAngle;
-        double arcStart = values.midHoleOpenAngle;
-        
-        if (values.midArcDtToMidX != 0) {
-            double arcHeight = Math.min(values.cushionClothWidth, values.midArcDtToMidX - values.midPocketThroatWidth / 2);
-            if (values.midArcRadius > arcHeight) {
-                double delta = values.midArcRadius - arcHeight;
-                double alpha = Math.asin(delta / values.midArcRadius);
-                arcStart = Math.toDegrees(alpha);
-                arcExtent = 90 - arcStart;
+        if (values.midArcRadius < values.cushionClothWidth) {
+            for (Cushion.CushionLine line : values.allMidHoleLines) {
+                drawHoleLine(line.getPosition());
             }
         }
-        return new double[]{arcStart, arcExtent};
+    }
+
+    private double[] getMidArcStartExtent(TableMetrics values) {
+        double arcExtent = 90 - values.midHoleOpenAngle;
+        double arcStart = values.midHoleOpenAngle;
+        double arcRemHeight = 0;
+
+        if (values.midArcWidth != 0) {
+            arcExtent = values.midArcExtentDeg;
+            arcStart = 90 - arcExtent;
+//            System.out.println("Arc start: " + arcStart + ", extent: " + arcExtent);
+//            double arcHeight = Math.min(values.cushionClothWidth, values.midArcWidth);
+//            if (values.midArcRadius > arcHeight) {
+//                double delta = values.midArcRadius - arcHeight;
+//                double alpha = Math.asin(delta / values.midArcRadius);
+//                arcStart = Math.toDegrees(alpha);
+//                arcExtent = 90 - arcStart;
+//            }
+        }
+        return new double[]{arcStart, arcExtent, arcRemHeight};
     }
 
     public void drawPredictedWhitePath(List<double[]> path) {
@@ -890,7 +921,7 @@ public class GamePane extends StackPane {
     public GraphicsContext getLineGraphics() {
         return graphicsContext;
     }
-    
+
     public void wipeLines() {
 //        lineGraphics.setFill(TRANSPARENT);
 //        lineGraphics.fillRect(0, 0, canvasWidth, canvasHeight);
