@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.recorder;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,8 +18,21 @@ import org.jcodec.common.io.FileChannelWrapper;
 import org.jcodec.common.io.SeekableByteChannel;
 import org.jcodec.common.model.Picture;
 import org.jcodec.common.model.Rational;
+import trashsoftware.trashSnooker.audio.SoundRecorder;
 import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
+import ws.schild.jave.Encoder;
+import ws.schild.jave.EncoderException;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.encode.AudioAttributes;
+import ws.schild.jave.encode.EncodingAttributes;
+import ws.schild.jave.encode.VideoAttributes;
+
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 
 import static org.jcodec.common.model.ColorSpace.RGB;
 
@@ -28,6 +42,8 @@ public class VideoConverter {
     FileOutputStream baseOut;
     SeekableByteChannel channel;
 
+    private final File tempVideoFile;
+    private final File tempAudioFile;
     private final File outFile;
 
     BufferedImage buffer;
@@ -40,21 +56,25 @@ public class VideoConverter {
     private int leftBorder;
     private int centerWidth;  // 视频中央有画面部分的长宽
     private int centerHeight;
-    private boolean finished;
+    private boolean captureFinished;
 
     public VideoConverter(File outFile, Params params) throws IOException {
         this.params = params;
         this.outFile = outFile;
-        this.baseOut = new FileOutputStream(outFile);
+        this.tempVideoFile = new File(outFile.getAbsolutePath() + ".temp.mp4");
+        this.tempAudioFile = new File(outFile.getAbsolutePath() + ".temp.wav");
+        
+        this.baseOut = new FileOutputStream(tempVideoFile);
         channel = new FileChannelWrapper(baseOut.getChannel());
-        encoder = new SequenceEncoder(channel, Rational.R1(params.fps()), Format.MOV, Codec.H264, null);
+        
+        encoder = new SequenceEncoder(channel, Rational.R1(params.fps()), Format.MOV, Codec.H264, Codec.AAC);
 
         picture = Picture.create(params.width(), params.height(), RGB);
         fillDstBackground(picture);
     }
 
     public void writeOneFrame(WritableImage image) throws IOException {
-        if (finished) return;
+        if (captureFinished) return;
         if (buffer == null) {
             calculateScales(image.getWidth(), image.getHeight());
             buffer = new BufferedImage((int) image.getWidth(), (int) image.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -152,21 +172,87 @@ public class VideoConverter {
             }
         }
     }
+    
+    private void writeAudioTemp(SoundRecorder soundRecorder) throws IOException {
+        AudioFormat format = soundRecorder.audioFormat;
+        byte[] audioBytes = soundRecorder.toByteArray();
 
-    public void finish() throws IOException {
-        System.out.println("Finished!");
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
+             AudioInputStream audioInputStream = new AudioInputStream(bais, 
+                     format, 
+                     audioBytes.length / format.getFrameSize())) {
+
+            AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, tempAudioFile);
+        }
+    }
+
+    private void combineAudio(SoundRecorder soundRecorder) throws IOException {
+        writeAudioTemp(soundRecorder);
+
+        AudioAttributes audioAttributes = new AudioAttributes();
+        audioAttributes.setCodec("aac");
+        audioAttributes.setBitRate(128000);
+        audioAttributes.setChannels(2);
+        audioAttributes.setSamplingRate(44100);
+        
+        VideoAttributes videoAttributes = new VideoAttributes();
+        videoAttributes.setCodec("copy");
+
+        EncodingAttributes attrs = new EncodingAttributes();
+        attrs.setOutputFormat("mp4");
+        attrs.setAudioAttributes(audioAttributes);
+        attrs.setVideoAttributes(videoAttributes);
+
+        Encoder encoder = new Encoder();
+        try {
+            encoder.encode(new MultimediaObject(tempVideoFile), outFile, attrs);
+            encoder.encode(new MultimediaObject(tempAudioFile), outFile, attrs);
+        } catch (EncoderException e) {
+            EventLogger.error(e);
+        }
+    }
+    
+    public void finishRecordAndMuxAudio(SoundRecorder soundRecorder) throws IOException {
+        System.out.println("Capture finish, muxing audio");
         encoder.finish();
         channel.close();
         baseOut.close();
-        finished = true;
+        captureFinished = true;
+        
+        long st = System.currentTimeMillis();
+        combineAudio(soundRecorder);
+        long end = System.currentTimeMillis();
+        System.out.println("Mux time: " + (end - st));
     }
 
-    public boolean isFinished() {
-        return finished;
+    public void finish() throws IOException {
+        System.out.println("Finished!");
+        
+        if (!captureFinished) {
+            encoder.finish();
+            channel.close();
+            baseOut.close();
+            captureFinished = true;
+        }
+        
+//        if (!tempVideoFile.delete()) {
+//            EventLogger.warning("Failed to delete: " + tempVideoFile);
+//        }
+//        if (!tempAudioFile.delete()) {
+//            EventLogger.warning("Failed to delete: " + tempAudioFile);
+//        }
+    }
+
+    public boolean isCaptureFinished() {
+        return captureFinished;
     }
 
     public File getOutFile() {
         return outFile;
+    }
+
+    public File getTempVideoFile() {
+        return tempVideoFile;
     }
 
     public int getFps() {

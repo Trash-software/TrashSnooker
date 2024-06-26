@@ -9,30 +9,39 @@ import java.util.Locale;
 
 public class SoundFile {
 
+    public static final float SAMPLE_RATE = 44100f;
+    public static final int CHANNELS = 2;
+
+    public static final AudioFormat STD_FMT = new AudioFormat(
+            AudioFormat.Encoding.PCM_SIGNED,
+            SAMPLE_RATE,
+            16,
+            CHANNELS,
+            2 * CHANNELS,
+            SAMPLE_RATE,
+            false
+    );
+    
     private String fmt;  // "mp3" or "wav"
     private final File file;
     private final AudioFormat audioFormat;
+    private final AudioInputStream audioInputStream;
     private final Clip clip;
     private final float defaultVolume;
 
     private SoundFile(File file, String fmt, float defaultVolume) throws Exception {
         this.file = file;
         this.defaultVolume = defaultVolume;
-
-        AudioInputStream audioInputStream;
+        
         if ("wav".equals(fmt.toLowerCase(Locale.ROOT))) {
-            audioInputStream = AudioSystem.getAudioInputStream(file);
-            audioFormat = audioInputStream.getFormat();
+            AudioInputStream orig = AudioSystem.getAudioInputStream(file);
+//            AudioFormat baseFormat = orig.getFormat();
+            audioFormat = STD_FMT;
+            audioInputStream = AudioSystem.getAudioInputStream(audioFormat, orig);
         } else if ("mp3".equals(fmt.toLowerCase(Locale.ROOT))) {
-            AudioInputStream in= AudioSystem.getAudioInputStream(file);
+            AudioInputStream in = AudioSystem.getAudioInputStream(file);
             AudioFormat baseFormat = in.getFormat();
-            audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-                    baseFormat.getSampleRate(),
-                    16,
-                    baseFormat.getChannels(),
-                    baseFormat.getChannels() * 2,
-                    baseFormat.getSampleRate(),
-                    false);
+            audioFormat = STD_FMT;
             audioInputStream = AudioSystem.getAudioInputStream(audioFormat, in);
         } else {
             throw new RuntimeException("Unsupported format " + fmt);
@@ -56,7 +65,7 @@ public class SoundFile {
             try {
                 return new SoundFile(f, fmt, defaultVolume);
             } catch (Exception e) {
-                EventLogger.error(e);   
+                EventLogger.error(e);
             }
         }
         EventLogger.warning("Sound file '" + path + "' does not exist");
@@ -78,5 +87,9 @@ public class SoundFile {
 
     public File getFile() {
         return file;
+    }
+
+    public AudioInputStream getAudioInputStream() {
+        return audioInputStream;
     }
 }

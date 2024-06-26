@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 819440,
+    "money": 1083720,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -3327,13 +3327,422 @@
         "moneyAfter": 819440,
         "type": "purchase",
         "timestamp": "2024-06-11 05:34:56"
+      },
+      {
+        "inGameDate": "2024/3/4",
+        "year": 2024,
+        "match": "saudi_arabia_masters",
+        "moneyBefore": 819440,
+        "moneyAfter": 867440,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 48000,
+          "raw": 60000
+        }},
+        "timestamp": "2024-06-12 00:46:22"
+      },
+      {
+        "inGameDate": "2024/3/4",
+        "moneyBefore": 867440,
+        "moneyAfter": 866360,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1080
+        }],
+        "timestamp": "2024-06-12 00:46:56"
+      },
+      {
+        "item": 7,
+        "inGameDate": "2024/3/10",
+        "match": "custom_73125E3FE667D051+2024+cat_give_power_champ",
+        "moneyBefore": 866360,
+        "moneyAfter": 866860,
+        "type": "invitation",
+        "moneyEarn": 500,
+        "timestamp": "2024-06-12 00:46:56"
+      },
+      {
+        "inGameDate": "2024/3/10",
+        "match": "custom_73125E3FE667D051+2024+cat_give_power_champ",
+        "moneyBefore": 866860,
+        "moneyAfter": 863960,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          }
+        ],
+        "timestamp": "2024-06-12 00:46:56"
+      },
+      {
+        "item": "SNOOKER_NO_POT",
+        "inGameDate": "2024/3/10",
+        "level": 0,
+        "moneyBefore": 863960,
+        "moneyAfter": 864160,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-06-15 22:14:30"
+      },
+      {
+        "item": "CEB_CUMULATIVE_CLEAR",
+        "inGameDate": "2024/3/10",
+        "level": 1,
+        "moneyBefore": 864160,
+        "moneyAfter": 864660,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2024-06-15 22:14:33"
+      },
+      {
+        "item": "PLAY_ONE_YEAR",
+        "inGameDate": "2024/3/10",
+        "level": 0,
+        "moneyBefore": 864660,
+        "moneyAfter": 864860,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-06-15 22:14:37"
+      },
+      {
+        "item": "DEFEAT_UNIQUE_OPPONENTS_SNOOKER",
+        "inGameDate": "2024/3/10",
+        "level": 2,
+        "moneyBefore": 864860,
+        "moneyAfter": 865860,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2024-06-15 22:14:39"
+      },
+      {
+        "item": "DEFEAT_UNIQUE_OPPONENTS_CEB",
+        "inGameDate": "2024/3/10",
+        "level": 1,
+        "moneyBefore": 865860,
+        "moneyAfter": 866360,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2024-06-15 22:14:41"
+      },
+      {
+        "item": "DEFEAT_SAME_OPPONENT_CONTINUOUS_CEB",
+        "inGameDate": "2024/3/10",
+        "level": 0,
+        "moneyBefore": 866360,
+        "moneyAfter": 866560,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2024-06-15 22:14:41"
+      },
+      {
+        "item": "CHAMP_EARN_CUMULATIVE",
+        "inGameDate": "2024/3/10",
+        "level": 2,
+        "moneyBefore": 866560,
+        "moneyAfter": 867560,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2024-06-15 22:14:44"
+      },
+      {
+        "item": "EXPENDITURE",
+        "inGameDate": "2024/3/10",
+        "level": 2,
+        "moneyBefore": 867560,
+        "moneyAfter": 868560,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2024-06-15 22:14:44"
+      },
+      {
+        "inGameDate": "2024/3/10",
+        "year": 2024,
+        "match": "cat_give_power_champ",
+        "moneyBefore": 868560,
+        "moneyAfter": 980560,
+        "type": "championshipEarn",
+        "items": {
+          "CHAMPION": {
+            "actual": 100000,
+            "raw": 125000
+          },
+          "BEST_SINGLE": {
+            "actual": 12000,
+            "raw": 15000
+          }
+        },
+        "timestamp": "2024-06-17 05:05:48"
+      },
+      {
+        "inGameDate": "2024/3/10",
+        "perkUsed": 5,
+        "moneyBefore": 980560,
+        "moneyCost": 6200,
+        "moneyAfter": 974360,
+        "ability": {"aiming": [
+          90.08033409175016,
+          95.60432129709957
+        ]},
+        "type": "upgrade",
+        "timestamp": "2024-06-17 05:06:06"
+      },
+      {
+        "inGameDate": "2024/3/10",
+        "moneyBefore": 974360,
+        "moneyAfter": 972760,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1600
+        }],
+        "timestamp": "2024-06-17 23:17:03"
+      },
+      {
+        "item": 3,
+        "inGameDate": "2024/3/18",
+        "match": "custom_73125E3FE667D051+2024+eight_master_tour_beijing",
+        "moneyBefore": 972760,
+        "moneyAfter": 972960,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2024-06-17 23:17:03"
+      },
+      {
+        "inGameDate": "2024/3/18",
+        "match": "custom_73125E3FE667D051+2024+eight_master_tour_beijing",
+        "moneyBefore": 972960,
+        "moneyAfter": 971960,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2024-06-17 23:17:03"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_73125E3FE667D051-472",
+        "inGameDate": "2024/3/18",
+        "moneyBefore": 971960,
+        "moneyCost": 80,
+        "moneyAfter": 971880,
+        "type": "purchase",
+        "timestamp": "2024-06-17 23:21:43"
+      },
+      {
+        "inGameDate": "2024/3/18",
+        "year": 2024,
+        "match": "eight_master_tour_beijing",
+        "moneyBefore": 971880,
+        "moneyAfter": 1035880,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 64000,
+          "raw": 80000
+        }},
+        "timestamp": "2024-06-18 03:15:22"
+      },
+      {
+        "inGameDate": "2024/3/18",
+        "moneyBefore": 1035880,
+        "moneyAfter": 1034480,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1400
+        }],
+        "timestamp": "2024-06-18 04:54:54"
+      },
+      {
+        "item": 2,
+        "inGameDate": "2024/3/25",
+        "match": "custom_73125E3FE667D051+2024+china_open",
+        "moneyBefore": 1034480,
+        "moneyAfter": 1035480,
+        "type": "invitation",
+        "moneyEarn": 1000,
+        "timestamp": "2024-06-18 04:54:54"
+      },
+      {
+        "inGameDate": "2024/3/25",
+        "match": "custom_73125E3FE667D051+2024+china_open",
+        "moneyBefore": 1035480,
+        "moneyAfter": 1034480,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2024-06-18 04:54:54"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_73125E3FE667D051-473",
+        "inGameDate": "2024/3/25",
+        "moneyBefore": 1034480,
+        "moneyCost": 80,
+        "moneyAfter": 1034400,
+        "type": "purchase",
+        "timestamp": "2024-06-20 17:21:51"
+      },
+      {
+        "inGameDate": "2024/3/25",
+        "year": 2024,
+        "match": "china_open",
+        "moneyBefore": 1034400,
+        "moneyAfter": 1098400,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 64000,
+          "raw": 80000
+        }},
+        "timestamp": "2024-06-20 17:28:39"
+      },
+      {
+        "inGameDate": "2024/3/25",
+        "moneyBefore": 1098400,
+        "moneyAfter": 1097400,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1000
+        }],
+        "timestamp": "2024-06-20 18:10:19"
+      },
+      {
+        "inGameDate": "2024/3/30",
+        "match": "custom_73125E3FE667D051+2024+eight_spadina_open",
+        "moneyBefore": 1097400,
+        "moneyAfter": 1096400,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2024-06-20 18:10:19"
+      },
+      {
+        "inGameDate": "2024/3/30",
+        "year": 2024,
+        "match": "eight_spadina_open",
+        "moneyBefore": 1096400,
+        "moneyAfter": 1096400,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_1": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2024-06-22 05:46:10"
+      },
+      {
+        "inGameDate": "2024/3/30",
+        "moneyBefore": 1096400,
+        "moneyAfter": 1092800,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 3600
+        }],
+        "timestamp": "2024-06-22 05:46:15"
+      },
+      {
+        "item": 3,
+        "inGameDate": "2024/4/17",
+        "match": "custom_73125E3FE667D051+2024+world_champ",
+        "moneyBefore": 1092800,
+        "moneyAfter": 1093000,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2024-06-22 05:46:15"
+      },
+      {
+        "inGameDate": "2024/4/17",
+        "match": "custom_73125E3FE667D051+2024+world_champ",
+        "moneyBefore": 1093000,
+        "moneyAfter": 1088800,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          }
+        ],
+        "timestamp": "2024-06-22 05:46:15"
+      },
+      {
+        "itemType": "cue",
+        "item": "GirlSnookerCarbonCue:custom_73125E3FE667D051-475",
+        "inGameDate": "2024/4/17",
+        "moneyBefore": 1088800,
+        "moneyCost": 5000,
+        "moneyAfter": 1083800,
+        "type": "purchase",
+        "timestamp": "2024-06-23 04:53:12"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_73125E3FE667D051-476",
+        "inGameDate": "2024/4/17",
+        "moneyBefore": 1083800,
+        "moneyCost": 80,
+        "moneyAfter": 1083720,
+        "type": "purchase",
+        "timestamp": "2024-06-23 04:53:25"
       }
     ],
-    "level": 31,
-    "expInThisLevel": 529,
-    "availPerks": 0,
-    "totalPerks": 119,
-    "totalExp": 11860
+    "level": 33,
+    "expInThisLevel": 1071,
+    "availPerks": 12,
+    "totalPerks": 136,
+    "totalExp": 14495
   },
-  "checksum": "D2814C1C8B20555AAB6D735F904D1EBF"
+  "checksum": "C3C1B33B44354D4A03EA1137C698BDE2"
 }

@@ -12,6 +12,9 @@ module TrashSnooker {
     requires java.desktop;
     requires commons.math3;
     requires jcodec;
+//    requires jave.all.deps;
+    requires jave.core;
+//    requires org.bytedeco.ffmpeg;
 //    requires jcodec.javase;
 
     exports trashsoftware.trashSnooker;
@@ -29,6 +32,7 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.core.career.championship;
     exports trashsoftware.trashSnooker.core.training;
     exports trashsoftware.trashSnooker.core.career.achievement;
+    exports trashsoftware.trashSnooker.audio;
 
     opens trashsoftware.trashSnooker.fxml;
     opens trashsoftware.trashSnooker.fxml.alert;

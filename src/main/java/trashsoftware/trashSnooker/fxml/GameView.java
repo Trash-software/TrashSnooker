@@ -3127,7 +3127,9 @@ public class GameView implements Initializable {
                     AudioPlayerManager.getInstance().play(
                             SoundInfo.bySpeed(SoundInfo.SoundType.BALL_COLLISION, mediaValue),
                             gameValues,
-                            null
+                            null,
+                            videoCapture == null ? null : videoCapture.getSoundRecorder(),
+                            (int) gameLoop.currentTimeMillis()
                     );
                 }
                 case MovementFrame.POCKET_BACK -> {
@@ -3135,7 +3137,9 @@ public class GameView implements Initializable {
                     AudioPlayerManager.getInstance().play(
                             SoundInfo.bySpeed(SoundInfo.SoundType.POCKET_BACK, mediaValue),
                             gameValues,
-                            null
+                            null,
+                            videoCapture == null ? null : videoCapture.getSoundRecorder(),
+                            (int) gameLoop.currentTimeMillis()
                     );
                 }
                 case MovementFrame.EDGE_CUSHION, 
@@ -3145,7 +3149,9 @@ public class GameView implements Initializable {
                     AudioPlayerManager.getInstance().play(
                             SoundInfo.bySpeed(SoundInfo.SoundType.CUSHION, mediaValue),
                             gameValues,
-                            null
+                            null,
+                            videoCapture == null ? null : videoCapture.getSoundRecorder(),
+                            (int) gameLoop.currentTimeMillis()
                     );
                 }
             }
@@ -4481,7 +4487,9 @@ public class GameView implements Initializable {
                         AudioPlayerManager.getInstance().play(
                                 soundInfo,
                                 gameValues,
-                                getCuingCue()
+                                getCuingCue(),
+                                videoCapture == null ? null : videoCapture.getSoundRecorder(),
+                                (int) gameLoop.currentTimeMillis()
                         );
                         playMovement();
                     }

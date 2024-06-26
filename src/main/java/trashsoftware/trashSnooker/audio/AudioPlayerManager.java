@@ -31,9 +31,11 @@ public class AudioPlayerManager {
 
     public void play(SoundInfo soundInfo,
                      GameValues gameValues,
-                     Cue cue) {
+                     Cue cue,
+                     SoundRecorder soundRecorder,
+                     int timeInMs) {
         SoundFile info = createSound(soundInfo, gameValues, cue);
-        playSound(info, soundInfo);
+        playSound(info, soundInfo, soundRecorder, timeInMs);
     }
 
     public SoundFile createSound(SoundInfo soundInfo,
@@ -77,7 +79,10 @@ public class AudioPlayerManager {
         };
     }
 
-    public void playSound(SoundFile soundFile, SoundInfo soundInfo) {
+    public void playSound(SoundFile soundFile, 
+                          SoundInfo soundInfo, 
+                          SoundRecorder soundRecorder,
+                          int timeInMs) {
         if (soundFile != null) {
 //            long t0 = System.currentTimeMillis();
             AudioPlayer audioPlayer = new AudioPlayer(soundFile, soundInfo);
@@ -86,7 +91,11 @@ public class AudioPlayerManager {
             Thread thread = new Thread(() -> {
                 try {
 //                    System.out.println("Sound time: " + (System.currentTimeMillis() - t1));
-                    audioPlayer.play();
+                    if (soundRecorder == null) {
+                        audioPlayer.play();
+                    } else {
+                        audioPlayer.playToStream(soundRecorder, timeInMs);
+                    }
                 } catch (IOException | UnsupportedAudioFileException e) {
                     EventLogger.error(e);
                 }
