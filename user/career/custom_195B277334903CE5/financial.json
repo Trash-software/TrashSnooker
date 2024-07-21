@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 1146920,
+    "money": 1137520,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -5383,6 +5383,61 @@
           }
         },
         "timestamp": "2024-04-20 14:35:35"
+      },
+      {
+        "inGameDate": "2025/7/10",
+        "moneyBefore": 1146920,
+        "moneyAfter": 1144720,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2024-07-19 05:55:25"
+      },
+      {
+        "inGameDate": "2025/7/21",
+        "moneyBefore": 1144720,
+        "moneyAfter": 1141720,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 3000
+        }],
+        "timestamp": "2024-07-19 05:55:28"
+      },
+      {
+        "inGameDate": "2025/8/5",
+        "moneyBefore": 1141720,
+        "moneyAfter": 1138320,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 3400
+        }],
+        "timestamp": "2024-07-19 05:55:31"
+      },
+      {
+        "inGameDate": "2025/8/22",
+        "match": "custom_195B277334903CE5+2025+eight_master",
+        "moneyBefore": 1138320,
+        "moneyAfter": 1137520,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 0
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2024-07-19 05:55:31"
       }
     ],
     "level": 39,
@@ -5391,5 +5446,5 @@
     "totalPerks": 186,
     "totalExp": 22760
   },
-  "checksum": "A4AD75688BA844F40438D298DFCFC00A"
+  "checksum": "28FDED9B519312196F346A013EC94AA4"
 }

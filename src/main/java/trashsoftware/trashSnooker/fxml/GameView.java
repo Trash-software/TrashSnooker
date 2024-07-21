@@ -3261,10 +3261,16 @@ public class GameView implements Initializable {
                     if (singlePoleScore < 3) {  // 至少一红一彩再显吧？
                         singlePoleText = String.valueOf(singlePoleScore);
                     } else {
-                        singlePoleText = singlePoleScore +
-                                String.format(" (%s)",
-                                        String.format(strings.getString("possibleBreak"),
-                                                asg.getPossibleBreak(singlePoleScore)));
+                        int possible = asg.getPossibleBreak(singlePoleScore);
+                        if (possible == singlePoleScore) {
+                            singlePoleText = String.format(strings.getString("breakScore"),
+                                    singlePoleScore);
+                        } else {
+                            singlePoleText = singlePoleScore +
+                                    String.format(" (%s)",
+                                            String.format(strings.getString("possibleBreak"),
+                                                    asg.getPossibleBreak(singlePoleScore)));
+                        }
                     }
 
                     singlePoleLabel.setText(singlePoleText);

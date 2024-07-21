@@ -38,6 +38,7 @@ public class SnookerBall extends Ball {
             case 6 -> Values.PINK;
             case 7 -> Values.BLACK;
             case 20 -> Values.GOLD;
+            case AbstractSnookerGame.END_REP -> Values.WHITE;
             default -> throw new RuntimeException("Unexpected ball.");
         };
     }

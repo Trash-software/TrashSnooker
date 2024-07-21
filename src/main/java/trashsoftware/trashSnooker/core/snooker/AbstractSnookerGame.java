@@ -96,7 +96,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         allBalls[redBalls.length + 6] = blackBall;
 
         System.arraycopy(allBalls, redBalls.length + 1, coloredBalls, 0, 6);
-        
+
         if (goldenBall != null) {
             allBalls[redBalls.length + 7] = goldenBall;
         }
@@ -311,8 +311,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     protected void updateTargetPotSuccess(boolean isFreeBall) {
         int nextTarget = getTargetAfterPotSuccess(null, isFreeBall);
         if (nextTarget == END_REP) {
-            if (player1.getScore() != player2.getScore()) end();
-            else {
+            if (player1.getScore() != player2.getScore()) {
+                currentTarget = nextTarget;
+                end();
+            } else {
                 // 延分，争黑球
                 blackBattle = true;
                 cueBall.pot();
@@ -493,7 +495,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 if (currentTarget != RAW_COLORED_REP && realTarget != currentTarget) {  // 打了非目标球的彩球
                     int realTarFoul = realTarget == 20 ? 4 : realTarget;
                     int curTarFoul = currentTarget == 20 ? 4 : currentTarget;
-                    
+
                     int foul = Math.max(4, Math.max(realTarFoul, curTarFoul));
                     thisCueFoul.addFoul(String.format(strings.getString("targetXOtherHit"),
                                     ballValueToColorName(currentTarget, strings)),
@@ -627,12 +629,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
 //        System.out.println("Potted: " + pottedBalls + ", first: " + whiteFirstCollide + " score: " + score + ", foul: " + foul);
     }
-    
+
     protected int getBallFoulScore(Ball ball) {
         if (ball.getValue() > 7) return 4;
         else return Math.max(4, ball.getValue());
     }
-    
+
     protected void noHopeMaximum() {
         isOnMaximum = false;
         if (goldenBall != null && !goldenBall.isPotted()) {
@@ -643,7 +645,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     @Override
     public void switchPlayer() {
         super.switchPlayer();
-        
+
         int nReds = numRedBalls();
         int remReds = remainingRedCount();
         if (nReds != remReds) noHopeMaximum();
