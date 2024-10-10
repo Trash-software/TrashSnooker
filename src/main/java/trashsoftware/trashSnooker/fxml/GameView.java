@@ -8,6 +8,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -114,6 +115,8 @@ public class GameView implements Initializable {
     private static double defaultMaxPredictLength = 1200;
     private final List<Node> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
     private final Map<Cue, CueModel> cueModelMap = new HashMap<>();
+    @FXML
+    SubScene gameScene;
     @FXML
     GamePane gamePane;  // 球和桌子画在这里
     @FXML
@@ -302,6 +305,9 @@ public class GameView implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.strings = resources;
+        
+//        gameScene.widthProperty().bind(gamePane.widthProperty());
+//        gameScene.heightProperty().bind(gamePane.heightProperty());
 
         cueModelMap.clear();
 

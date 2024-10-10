@@ -1,0 +1,471 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "custom_73125E3FE667D051": 1,
+    "Stuart Bingham": 6,
+    "Brown": 16,
+    "Yan Bingtao": 9,
+    "random_player_31": 15,
+    "random_player_67": 7,
+    "Ding Junhui": 12,
+    "Smart": 10,
+    "Glass Heart": 13,
+    "Trump": 11,
+    "Selby": 3,
+    "Karen Wilson": 4,
+    "O_Sullivan": 8,
+    "Luca Brecel": 5,
+    "Neil Robertson": 14,
+    "John Wizard": 2
+  },
+  "championshipId": "masters",
+  "matchTree": {"root": {
+    "p1wins": 1,
+    "p1": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Yan Bingtao"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-0",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 1,
+          "p1": {"winner": "Stuart Bingham"},
+          "p2": {"winner": "Ding Junhui"},
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-1",
+          "p2wins": 2
+        },
+        "winner": "John Wizard",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-8",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "random_player_67"},
+          "p2": {"winner": "Brown"},
+          "winner": "random_player_67",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-2",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Selby"},
+          "p2": {"winner": "Smart"},
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-3",
+          "p2wins": 0
+        },
+        "winner": "Selby",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-9",
+        "p2wins": 3
+      },
+      "winner": "Selby",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_73125E3FE667D051+2025+masters-SEMI_FINAL-12",
+      "p2wins": 3
+    },
+    "p2": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "Luca Brecel"},
+          "p2": {"winner": "Glass Heart"},
+          "winner": "Glass Heart",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-4",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Karen Wilson"},
+          "p2": {"winner": "random_player_31"},
+          "winner": "Karen Wilson",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-5",
+          "p2wins": 0
+        },
+        "winner": "Glass Heart",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-10",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "Trump"},
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-6",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "custom_73125E3FE667D051"},
+          "p2": {"winner": "Neil Robertson"},
+          "winner": "custom_73125E3FE667D051",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-7",
+          "p2wins": 0
+        },
+        "winner": "custom_73125E3FE667D051",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-11",
+        "p2wins": 3
+      },
+      "winner": "custom_73125E3FE667D051",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_73125E3FE667D051+2025+masters-SEMI_FINAL-13",
+      "p2wins": 3
+    },
+    "winner": "custom_73125E3FE667D051",
+    "stage": "FINAL",
+    "matchId": "custom_73125E3FE667D051+2025+masters-FINAL-14",
+    "p2wins": 4
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 134,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-8",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 131,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2025+masters-SEMI_FINAL-13",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 126,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-3",
+      "playerId": "Selby"
+    },
+    {
+      "score": 125,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2025+masters-SEMI_FINAL-12",
+      "playerId": "Selby"
+    },
+    {
+      "score": 125,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-9",
+      "playerId": "Selby"
+    },
+    {
+      "score": 125,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-5",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 124,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-4",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-9",
+      "playerId": "Selby"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-3",
+      "playerId": "Selby"
+    },
+    {
+      "score": 120,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-10",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 119,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-8",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 116,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-SEMI_FINAL-12",
+      "playerId": "Selby"
+    },
+    {
+      "score": 115,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-5",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 114,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-2",
+      "playerId": "random_player_67"
+    },
+    {
+      "score": 109,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-8",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 97,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-1",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 91,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-2",
+      "playerId": "random_player_67"
+    },
+    {
+      "score": 87,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2025+masters-SEMI_FINAL-12",
+      "playerId": "Selby"
+    },
+    {
+      "score": 81,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-7",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 79,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-8",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 79,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-1",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 77,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-6",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 74,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-4",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 70,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": false,
+      "numFrame": 5,
+      "matchId": "custom_73125E3FE667D051+2025+masters-FINAL-14",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 70,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-10",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 67,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-FINAL-14",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 65,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": false,
+      "numFrame": 4,
+      "matchId": "custom_73125E3FE667D051+2025+masters-FINAL-14",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 64,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-9",
+      "playerId": "Selby"
+    },
+    {
+      "score": 62,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-8",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 61,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-10",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 58,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-10",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 57,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-1",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 54,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-QUARTER_FINAL-9",
+      "playerId": "random_player_67"
+    },
+    {
+      "score": 52,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-1",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-0",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 50,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2025+masters-ROUND_1-0",
+      "playerId": "John Wizard"
+    }
+  ],
+  "timestamp": "2025/1/15"
+}

@@ -6,10 +6,11 @@ import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 public class CuePlayParams {
 
+    public static final double SIDE_SPIN_DEVIATION_DIVISOR = 4000.0;  // 加塞的方向偏差，这个值越大，加塞偏移越小。
+    
     public final double vx;
     public final double vy;
 
@@ -136,14 +137,14 @@ public class CuePlayParams {
 
     public static double[] unitXYWithSpins(double unitSideSpin, double power,
                                            double cueDirX, double cueDirY) {
-        double offsetAngleRad = -unitSideSpin * power / 3600.0;
+        double offsetAngleRad = -unitSideSpin * power / SIDE_SPIN_DEVIATION_DIVISOR;
 //        offsetAngleRad = 0;
         return Algebra.rotateVector(cueDirX, cueDirY, offsetAngleRad);
     }
 
     public static double[] aimingUnitXYIfSpin(double unitSideSpin, double power,
                                               double cueDirX, double cueDirY) {
-        double offsetAngleRad = -unitSideSpin * power / 3600.0;
+        double offsetAngleRad = -unitSideSpin * power / SIDE_SPIN_DEVIATION_DIVISOR;
 //        offsetAngleRad = 0;
         return Algebra.rotateVector(cueDirX, cueDirY, -offsetAngleRad);
     }

@@ -320,6 +320,14 @@ public class Algebra {
         return crossProduct(a[0], a[1], b[0], b[1]);
     }
     
+    public static double[] vectorScale(double[] a, double x) {
+        double[] res = new double[a.length];
+        for (int i = 0; i < a.length; i++) {
+            res[i] = a[i] * x;
+        }
+        return res;
+    }
+    
     public static int log2(int powerOf2) {
         int bit = powerOf2 - 1;
         int count = 0;

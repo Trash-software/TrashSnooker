@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import trashsoftware.trashSnooker.fxml.widgets.GamePane?>
+<?import javafx.scene.SubScene?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.GameView">
@@ -143,7 +144,11 @@
             </VBox>
 
             <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="4">
-                <GamePane fx:id="gamePane"/>
+<!--                <SubScene fx:id="gameScene">-->
+<!--                    <root>-->
+                        <GamePane fx:id="gamePane"/>
+<!--                    </root>-->
+<!--                </SubScene>-->
 
                 <GridPane>
                     <columnConstraints>

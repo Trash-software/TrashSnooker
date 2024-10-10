@@ -1250,6 +1250,11 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 radDevOfHighPower = Algebra.TWO_PI - radDevOfHighPower;
 
             double sideDevRad = (radDevOfHighPower - radDevOfLowPower) / 2;
+            sideDevRad *= 1.25;  // 稍微多惩罚一点
+            
+            // 若球手不喜欢加塞，加大sideDevRad
+            double likeSideMul = 110 / (aps.likeSide + 10);
+            sideDevRad *= likeSideMul;
 
             // 太小的力有惩罚
 //            if (actualPower < 15.0) {
@@ -1313,7 +1318,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             } else if (attackChoice instanceof AttackChoice.DoubleAttackChoice doubleAc) {
                 // 稍微给高点
                 // 除数越大，AI越倾向打翻袋
-                double targetDifficultyMm = targetAimingOffset * (105 - aps.doubleAbility) / 300;
+                double targetDifficultyMm = targetAimingOffset * (105 - aps.doubleAbility) / 150;
 
                 tarDevHoleSdMm += targetDifficultyMm;
 
@@ -1336,7 +1341,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             potProb = nd.cumulativeProbability(allowedDev) - nd.cumulativeProbability(-allowedDev);
             if (potProb < 0) potProb = 0.0;  // 虽然我不知道为什么prob会是负的
             price = potProb * attackChoice.targetPrice;
-
+            
 //            System.out.println("Est dev: " + tarDevHoleSdMm +
 //                    ", allow dev: " + allowedDev +
 //                    ", prob: " + potProb +

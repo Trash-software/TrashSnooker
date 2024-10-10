@@ -462,6 +462,7 @@ public class PlayerPerson {
                 Math.min(100, precisionPercentage),
                 50,
                 new double[]{15.0, Math.min(60, controllablePowerPercentage * 0.8)},
+                75,
                 precisionPercentage * 0.9,
                 "right",
                 maxPowerPercentage * 0.9 < 80.0,  // 不化简是为了易读

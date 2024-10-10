@@ -4,24 +4,26 @@ import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
 
 public enum BallMetrics {
-    SNOOKER_BALL(52.5, 0.95, 145.0),
-    POOL_BALL(57.15, 0.93, 170.0),
-    CAROM_BALL(61.5, 0.92, 220.0),
-    RUSSIAN_BALL(66.675, 0.91, 255.0);
+    SNOOKER_BALL(52.5, 0.95, 0.05, 145.0),
+    POOL_BALL(57.15, 0.93, 0.07, 170.0),
+    CAROM_BALL(61.5, 0.92, 0.08, 220.0),
+    RUSSIAN_BALL(66.675, 0.91, 0.09, 255.0);
     public final double ballDiameter;
     public final double ballRadius;
     public final double ballWeightRatio;
     public final double ballBounceRatio;
+    public final double frictionRatio;
 
-    BallMetrics(double ballDiameter, double ballBounceRatio, double ballWeightGrams) {
+    BallMetrics(double ballDiameter, double ballBounceRatio, double frictionRatio, double ballWeightGrams) {
         this.ballDiameter = ballDiameter;
         this.ballRadius = ballDiameter / 2;
         this.ballWeightRatio = ballWeightGrams / 145.0;
         this.ballBounceRatio = ballBounceRatio;
+        this.frictionRatio = frictionRatio;
     }
 
-    BallMetrics(double ballDiameter, double ballBounceRatio) {
-        this(ballDiameter, ballBounceRatio, Math.pow(ballDiameter, 3) / Math.pow(52.5, 3) * 145.0);
+    BallMetrics(double ballDiameter, double ballBounceRatio, double frictionRatio) {
+        this(ballDiameter, ballBounceRatio, frictionRatio, Math.pow(ballDiameter, 3) / Math.pow(52.5, 3) * 145.0);
     }
 
     @Override

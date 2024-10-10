@@ -1,0 +1,480 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "custom_73125E3FE667D051": 1,
+    "Stuart Bingham": 7,
+    "Brown": 11,
+    "random_player_49": 4,
+    "Yan Bingtao": 12,
+    "random_player_67": 8,
+    "Ding Junhui": 15,
+    "Smart": 9,
+    "Glass Heart": 16,
+    "Trump": 13,
+    "Selby": 3,
+    "Karen Wilson": 2,
+    "O_Sullivan": 10,
+    "Luca Brecel": 5,
+    "Neil Robertson": 14,
+    "John Wizard": 6
+  },
+  "championshipId": "champ_of_champ",
+  "matchTree": {"root": {
+    "p1wins": 4,
+    "p1": {
+      "p1wins": 1,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 1,
+          "p1": {"winner": "random_player_67"},
+          "p2": {"winner": "Smart"},
+          "winner": "Smart",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-0",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "random_player_49"},
+          "p2": {"winner": "O_Sullivan"},
+          "winner": "random_player_49",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-1",
+          "p2wins": 0
+        },
+        "winner": "Smart",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-8",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "custom_73125E3FE667D051"},
+          "p2": {"winner": "Yan Bingtao"},
+          "winner": "custom_73125E3FE667D051",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-2",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 0,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Brown"},
+          "winner": "Brown",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-3",
+          "p2wins": 2
+        },
+        "winner": "custom_73125E3FE667D051",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-9",
+        "p2wins": 0
+      },
+      "winner": "custom_73125E3FE667D051",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-SEMI_FINAL-12",
+      "p2wins": 3
+    },
+    "p2": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 1,
+          "p1": {"winner": "Selby"},
+          "p2": {"winner": "Glass Heart"},
+          "winner": "Glass Heart",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-4",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Karen Wilson"},
+          "p2": {"winner": "Neil Robertson"},
+          "winner": "Karen Wilson",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-5",
+          "p2wins": 0
+        },
+        "winner": "Glass Heart",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-10",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 1,
+          "p1": {"winner": "Luca Brecel"},
+          "p2": {"winner": "Ding Junhui"},
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-6",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Stuart Bingham"},
+          "p2": {"winner": "Trump"},
+          "winner": "Stuart Bingham",
+          "stage": "ROUND_1",
+          "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-7",
+          "p2wins": 0
+        },
+        "winner": "Ding Junhui",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-11",
+        "p2wins": 2
+      },
+      "winner": "Glass Heart",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-SEMI_FINAL-13",
+      "p2wins": 1
+    },
+    "winner": "custom_73125E3FE667D051",
+    "stage": "FINAL",
+    "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-FINAL-14",
+    "p2wins": 0
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 134,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-10",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 132,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-4",
+      "playerId": "Selby"
+    },
+    {
+      "score": 130,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-10",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 129,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-7",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 127,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-0",
+      "playerId": "Smart"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-SEMI_FINAL-13",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-5",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 122,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-10",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 122,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-5",
+      "playerId": "Karen Wilson"
+    },
+    {
+      "score": 121,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-2",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 118,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-4",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 117,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-FINAL-14",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 101,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 91,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-SEMI_FINAL-12",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 90,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-SEMI_FINAL-13",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 87,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-8",
+      "playerId": "Smart"
+    },
+    {
+      "score": 78,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 75,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-10",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 72,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-0",
+      "playerId": "Smart"
+    },
+    {
+      "score": 71,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-3",
+      "playerId": "Brown"
+    },
+    {
+      "score": 69,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 68,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 68,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-6",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 64,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-SEMI_FINAL-13",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 64,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-9",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 63,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-SEMI_FINAL-13",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 62,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-9",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 62,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 61,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-4",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 60,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-4",
+      "playerId": "Selby"
+    },
+    {
+      "score": 59,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-11",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 58,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-8",
+      "playerId": "Smart"
+    },
+    {
+      "score": 54,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-3",
+      "playerId": "Brown"
+    },
+    {
+      "score": 53,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-6",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-SEMI_FINAL-12",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-ROUND_1-1",
+      "playerId": "random_player_49"
+    },
+    {
+      "score": 50,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_73125E3FE667D051+2024+champ_of_champ-QUARTER_FINAL-8",
+      "playerId": "Smart"
+    }
+  ],
+  "timestamp": "2024/10/29"
+}

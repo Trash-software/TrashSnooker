@@ -11,7 +11,7 @@ public class AiPlayStyle {
     public static final AiPlayStyle PERFECT =
             new AiPlayStyle(100.0, 100.0, 100.0, 100.0, 
                     80.0, 50,
-                    new double[]{15.0, 60.0}, 100,
+                    new double[]{15.0, 60.0}, 75, 100,
                     "right", false, 2);
 
     public final double precision;
@@ -20,6 +20,7 @@ public class AiPlayStyle {
     public final double defense;
     public final double attackPrivilege;  // 进攻偏好
     public final double likeShow;  // 偏好大力及杆法
+    public final double likeSide;  // 偏好加塞
     public final double[] likePowerRange;  // 舒适的力度区间，0-100
     public final double doubleAbility;  // 翻袋能力
     public final SnookerBreakMethod snookerBreakMethod;
@@ -28,7 +29,9 @@ public class AiPlayStyle {
 
     public AiPlayStyle(double precision, double stability, double position, double defense,
                        double attackPrivilege, double likeShow,
-                       double[] likePowerRange, double doubleAbility,
+                       double[] likePowerRange, 
+                       double likeSide,
+                       double doubleAbility,
                        String snookerBreakMethod, boolean cebSideBreak,
                        int snookerWithdrawLimit) {
         this.precision = precision;
@@ -38,6 +41,7 @@ public class AiPlayStyle {
         this.attackPrivilege = attackPrivilege;  // 权重100的选手只要有下就会进攻
         this.likeShow = likeShow;
         this.likePowerRange = likePowerRange;
+        this.likeSide = likeSide;
         this.doubleAbility = doubleAbility;
         this.snookerBreakMethod = SnookerBreakMethod.valueOf(snookerBreakMethod.toUpperCase(Locale.ROOT));
         this.cebSideBreak = cebSideBreak;
@@ -114,6 +118,7 @@ public class AiPlayStyle {
                 aiObject.getDouble("attackPri"),
                 aiObject.getDouble("likeShow"),
                 likePwrRng,
+                aiObject.optDouble("likeSide", 75),
                 doubleAbi,
                 aiObject.getString("snookerBreak"),
                 aiObject.getBoolean("cebSideBreak"),
@@ -135,6 +140,7 @@ public class AiPlayStyle {
         obj.put("attackPri", attackPrivilege);
         obj.put("likeShow", likeShow);
         obj.put("likePowerRange", likePwrRng);
+        obj.put("likeSide", likeSide);
         obj.put("doubleAbility", doubleAbility);
         obj.put("snookerBreak", snookerBreakMethod.name());
         obj.put("cebSideBreak", cebSideBreak);

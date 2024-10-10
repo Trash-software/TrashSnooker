@@ -45,6 +45,7 @@
         "defense": 100,
         "attackPri": 80,
         "likeShow": 80,
+        "likeSide": 75,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -96,6 +97,7 @@
         "defense": 100,
         "attackPri": 80,
         "likeShow": 80,
+        "likeSide": 75,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -144,6 +146,7 @@
         "defense": 96,
         "attackPri": 90,
         "likeShow": 50,
+        "likeSide": 90,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -194,6 +197,7 @@
         "defense": 75,
         "attackPri": 90,
         "likeShow": 30,
+        "likeSide": 30,
         "snookerBreak": "right",
         "cebSideBreak": true,
         "withdrawAfter": 2
@@ -247,6 +251,7 @@
         "defense": 75,
         "attackPri": 80,
         "likeShow": 40,
+        "likeSide": 75,
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 3
@@ -297,6 +302,7 @@
         "defense": 95,
         "attackPri": 77,
         "likeShow": 40,
+        "likeSide": 75,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -360,6 +366,7 @@
         "defense": 97,
         "attackPri": 75,
         "likeShow": 35,
+        "likeSide": 75,
         "doubleAbility": 98,
         "snookerBreak": "left",
         "cebSideBreak": false,
@@ -413,6 +420,7 @@
         "defense": 82,
         "attackPri": 90,
         "likeShow": 65,
+        "likeSide": 75,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -465,6 +473,7 @@
         "defense": 87,
         "attackPri": 90,
         "likeShow": 75,
+        "likeSide": 60,
         "doubleAbility": 95,
         "snookerBreak": "left",
         "cebSideBreak": false,
@@ -518,6 +527,7 @@
         "defense": 86,
         "attackPri": 80,
         "likeShow": 60,
+        "likeSide": 50,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -568,6 +578,7 @@
         "defense": 60,
         "attackPri": 96,
         "likeShow": 85,
+        "likeSide": 20,
         "doubleAbility": 90,
         "snookerBreak": "left",
         "cebSideBreak": false,
@@ -676,6 +687,7 @@
         "defense": 90,
         "attackPri": 87,
         "likeShow": 70,
+        "likeSide": 85,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 1
@@ -690,13 +702,13 @@
     },
     "Selby": {
       "spin": 93.0,
-      "precision": 88.0,
-      "anglePrecision": 1.0,
-      "longPrecision": 1.0,
+      "precision": 91.0,
+      "anglePrecision": 1.2,
+      "longPrecision": 0.98,
       "name": "Mark Selby",
       "maxPower": 96,
       "controllablePower": 84,
-      "solving": 92,
+      "solving": 96,
       "pullDt": [
         70.0,
         210.0
@@ -724,12 +736,13 @@
         "rest": 87
       },
       "ai": {
-        "precision": 91,
+        "precision": 92,
         "stable": 96,
         "position": 95,
         "defense": 98,
         "attackPri": 60,
         "likeShow": 40,
+        "likeSide": 75,
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 4
@@ -781,6 +794,7 @@
         "defense": 84,
         "attackPri": 92,
         "likeShow": 60,
+        "likeSide": 55,
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -797,7 +811,7 @@
       "name": "Neil Robertson",
       "maxPower": 99.5,
       "controllablePower": 95,
-      "solving": 82,
+      "solving": 78,
       "pullDt": [
         60.0,
         240.0,
@@ -833,6 +847,7 @@
         "defense": 85,
         "attackPri": 90,
         "likeShow": 65,
+        "likeSide": 50,
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 3
@@ -884,6 +899,7 @@
         "defense": 90,
         "attackPri": 87,
         "likeShow": 60,
+        "likeSide": 60,
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 3
@@ -934,6 +950,7 @@
         "defense": 85,
         "attackPri": 70,
         "likeShow": 65,
+        "likeSide": 80,
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 3
@@ -984,6 +1001,7 @@
         "defense": 80,
         "attackPri": 91,
         "likeShow": 70,
+        "likeSide": 55,
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -1035,6 +1053,7 @@
         "defense": 84,
         "attackPri": 92,
         "likeShow": 70,
+        "likeSide": 40,
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -1088,6 +1107,7 @@
         "defense": 97,
         "attackPri": 60,
         "likeShow": 50,
+        "likeSide": 50,
         "snookerBreak": "left",
         "cebSideBreak": false,
         "withdrawAfter": 3
@@ -1141,6 +1161,7 @@
         "defense": 82,
         "attackPri": 88,
         "likeShow": 70,
+        "likeSide": 60,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -1191,6 +1212,7 @@
         "defense": 83,
         "attackPri": 85,
         "likeShow": 75,
+        "likeSide": 75,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -1204,7 +1226,7 @@
       "precision": 90,
       "anglePrecision": 1.0,
       "longPrecision": 1.0,
-      "name": "Karen Wilson",
+      "name": "Kyren Wilson",
       "maxPower": 94,
       "controllablePower": 82,
       "solving": 89,
@@ -1241,6 +1263,7 @@
         "defense": 86,
         "attackPri": 75,
         "likeShow": 60,
+        "likeSide": 25,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -1301,6 +1324,7 @@
         "defense": 88,
         "attackPri": 85,
         "likeShow": 80,
+        "likeSide": 90,
         "doubleAbility": 95,
         "snookerBreak": "right",
         "cebSideBreak": false,
@@ -1356,6 +1380,7 @@
         "defense": 90,
         "attackPri": 85,
         "likeShow": 50,
+        "likeSide": 80,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -1408,6 +1433,7 @@
         "defense": 85,
         "attackPri": 80,
         "likeShow": 40,
+        "likeSide": 80,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -1461,6 +1487,7 @@
         "defense": 77,
         "attackPri": 70,
         "likeShow": 40,
+        "likeSide": 70,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2
@@ -1512,6 +1539,7 @@
         "defense": 92,
         "attackPri": 65,
         "likeShow": 30,
+        "likeSide": 85,
         "snookerBreak": "right",
         "cebSideBreak": false,
         "withdrawAfter": 2

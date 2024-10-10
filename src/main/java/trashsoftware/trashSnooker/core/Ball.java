@@ -13,7 +13,7 @@ import java.util.Random;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cloneable {
     public static final double MAX_GEAR_EFFECT = 0.25;  // 齿轮效应造成的最严重分离角损耗
-    public static final double GEAR_EFFECT_MAX_POWER = 0.25;  // 大于这个球速就没有齿轮效应了
+    public static final double GEAR_EFFECT_MAX_POWER = 0.3;  // 大于这个球速就没有齿轮效应了
     public static final double CUSHION_COLLISION_SPIN_FACTOR = 0.5;
     public static final double CUSHION_DIRECT_SPIN_APPLY = 0.4;
     public static final double SUCK_CUSHION_FACTOR = 0.7;
@@ -326,7 +326,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 maxInPocketSpeed = hitSpeed;
                 rtn = 2;
             }
-            
+
             innerBounce(pottedPocket.graphicalCenter, 0.6);
         }
 //        tryEnterGravityArea(phy, pottedPocket.graphicalCenter, pottedPocket.isMid);
@@ -859,9 +859,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         // 为齿轮效应计算做准备
         double collisionThickness = Algebra.thetaBetweenVectors(thisV, tangentVec);  // 90度是正撞，0度是球1擦球2的右边，180度是擦左边
         collisionThickness -= Algebra.HALF_PI;  // 减去90度，正撞为0，擦右边为-90
+        double thicknessCos = Math.cos(Algebra.HALF_PI - collisionThickness);
 //        System.out.println("Thick: " + Math.toDegrees(collisionThickness));
         double relSpeed = Math.hypot(this.vx - ball.vx, this.vy - ball.vy);
-//        double totalSpeed = (Math.hypot(this.vx, this.vy) + Math.hypot(ball.vx, ball.vy)) * phy.calculationsPerSec;
+        double totalSpeed = (Math.hypot(this.vx, this.vy) + Math.hypot(ball.vx, ball.vy)) * phy.calculationsPerSec;
 
         double[] thisVCob = Algebra.matrixMultiplyVector(changeOfBasis, thisV);
         double[] ballVCob = Algebra.matrixMultiplyVector(changeOfBasis, ballV);
@@ -887,15 +888,22 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double ballOutHor = ballHorV;
         double ballOutVer = thisVerV;
 
+        double frictionStrength = values.ball.frictionRatio / 0.05;
         double spinProj = 0.0;
+        boolean wasBallStopped = false;
         if (ball.vx == 0 && ball.vy == 0) {
+            wasBallStopped = true;
             spinProj = Algebra.projectionLengthOn(thisV,
                     new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
         }
+//        if (gearOffsetEnabled && wasBallStopped) {
+//            
+//        }
+
 //        if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
 //            // 实为投掷效应
 //            double powerGear = Math.min(1.0,
-//                    totalSpeed / GEAR_EFFECT_MAX_POWER / Values.MAX_POWER_SPEED * 
+//                    relSpeed / GEAR_EFFECT_MAX_POWER / Values.MAX_POWER_SPEED * 
 //                            values.ball.ballWeightRatio);  // 25的力就没有效应了(高低杆要打出25的球速，起码要35的力)
 //            double throwEffect = (1 - powerGear) * MAX_GEAR_EFFECT;
 //            double gearEffect = 1 - throwEffect;
@@ -907,7 +915,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //
 //            ballOutVer *= gearEffect;
 //            thisOutVer = thisVerV * gearRemain;
-//            
+//
 //            if (gearOffsetEnabled) {
 //                double ratio = thisHorV / thisVerV;
 //                int sign = ratio < 0 ? -1 : 1;
@@ -936,7 +944,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double ballOutSpeed = Math.hypot(ball.vx, ball.vy);
         if (considerGearSpin && relSpeed != 0.0 && (thisOutSpeed != 0.0 || ballOutSpeed != 0.0)) {
             // 侧旋的传递
-            double gearPassFactor = 0.18;
+            double gearPassFactor = 0.15 * frictionStrength;
             double passRate = Math.cos(Math.abs(collisionThickness));  // 越厚传得越多。
             double speedPassRate = Math.abs(this.sideSpin) / relSpeed;  // 球速越慢，塞越大，传得越多
             double passPercentage = gearPassFactor * passRate * speedPassRate;
@@ -950,6 +958,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             // 这里并没有考虑自身的旋转损失，因为可以理解为已经在其他地方实现了这个效果了
             double factor = spinProj >= 0.0 ? 0.18 : 0.36;  // 只希望强烈的前向传递
 //            System.out.println("Fact: " + factor + ", proj: " + spinProj);
+            factor *= frictionStrength;
             double xSpinPassed = this.xSpin * factor;
             double ySpinPassed = this.ySpin * factor;
             ball.xSpin -= xSpinPassed;
@@ -957,7 +966,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
             if (gearOffsetEnabled) {
                 // 相当于整个坐标系往一个方向扭一点点
-                double angularRate = 0.18;
+                double angularRate = 0.15 * frictionStrength;
                 double thisOutAng = Algebra.thetaOf(this.vx, this.vy);
                 double deviation = passed * angularRate / thisOutSpeed;
                 // 弱化大力的效果
@@ -972,25 +981,48 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 double[] ballOutGeared = Algebra.unitVectorOfAngle(ballOutAng - deviation2);
                 ball.vx = ballOutSpeed * ballOutGeared[0];
                 ball.vy = ballOutSpeed * ballOutGeared[1];
+                if (wasBallStopped) {
+                    // 投掷效应
+                    double powerGear = Math.min(1.0,
+                            totalSpeed / GEAR_EFFECT_MAX_POWER / Values.MAX_POWER_SPEED *
+                                    values.ball.ballWeightRatio);  // 30的力就没有效应了(高低杆要打出30的球速，起码要40的力)
+                    double throwEffect = (1 - powerGear) * values.ball.frictionRatio;
+//                    System.out.println("power gear: " + powerGear);
+                    double sideSpinFactor = -this.sideSpin * 0.5;
+                    // 理解为加顺赛抵消投掷效应
+                    double throwStrength;
+                    if (thicknessCos * sideSpinFactor > 0) {
+                        // 顺赛
+                        throwStrength = Math.max(0, Math.abs(thicknessCos - sideSpinFactor));
+                    } else {
+                        throwStrength = Math.abs(thicknessCos);
+                    }
+                    throwStrength *= throwEffect;
+//                    System.out.println("Throw: " + throwStrength + ", thick cos: " + thicknessCos + ", side spin: " + this.sideSpin);
+                    double[] directionOffset = Algebra.vectorScale(thisV, throwStrength);
+
+                    ball.vx += directionOffset[0];
+                    ball.vy += directionOffset[1];
+                }
             }
 
             // 薄边造成的侧旋
-            double gearStrengthFactor = 0.15;
-            double angleSpinChange = gearStrengthFactor * Math.cos(Algebra.HALF_PI - collisionThickness);
+            double gearStrengthFactor = 0.15 * frictionStrength;
+            double angleSpinChange = gearStrengthFactor * thicknessCos;
             double spinChange = angleSpinChange * relSpeed;
             this.sideSpin += spinChange;
             ball.sideSpin -= spinChange;
 
-            // 薄边造成的纵向旋转
-            double[] thisOrth = new double[]{-thisOut[1], thisOut[0]};
-            // todo: phy.calculationsPerSec
-            double thisXySpinChange = angleSpinChange *
-                    (Values.MAX_SPIN_SPEED / Values.MAX_SIDE_SPIN_SPEED) * 0.5;
-            double thisSpinXChange = thisXySpinChange * thisOrth[0];
-            double thisSpinYChange = thisXySpinChange * thisOrth[1];
-            this.xSpin += thisSpinXChange;
-            this.ySpin += thisSpinYChange;
-            // ball也该变，但会影响目标球走势，AI不会瞄，辅助瞄准线也做不了
+//            // 薄边造成的纵向旋转
+//            double[] thisOrth = new double[]{-thisOut[1], thisOut[0]};
+//            // todo: phy.calculationsPerSec
+//            double thisXySpinChange = angleSpinChange *
+//                    (Values.MAX_SPIN_SPEED / Values.MAX_SIDE_SPIN_SPEED) * 0.5;
+//            double thisSpinXChange = thisXySpinChange * thisOrth[0];
+//            double thisSpinYChange = thisXySpinChange * thisOrth[1];
+//            this.xSpin += thisSpinXChange;
+//            this.ySpin += thisSpinYChange;
+//            // ball也该变，但会影响目标球走势，AI不会瞄，辅助瞄准线也做不了
         }
 
         // update
