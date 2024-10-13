@@ -1,90 +1,185 @@
 {
   "achievements": {
-    "defeatUniqueOpponentsSnooker": {
+    "expenditure": {
       "levelDates": {},
-      "completions": 1
+      "completions": 0,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
     },
-    "positioningMaster": {
-      "levelDates": {"0": "2023-06-27 03:40:45"},
-      "completions": 9
-    },
-    "cueBallPot": {
-      "levelDates": {"0": "2023-06-23 22:22:02"},
-      "completions": 1
-    },
-    "oneRoundTour": {
-      "levelDates": {"0": "2023-06-25 03:49:23"},
-      "completions": 1
-    },
-    "defeatUniqueOpponentsAmerican": {
-      "levelDates": {},
-      "completions": 0
-    },
-    "bigHeart": {
-      "levelDates": {},
-      "completions": 2
-    },
-    "keyBallFail": {
-      "levelDates": {"0": "2023-06-27 03:56:06"},
-      "completions": 1
-    },
-    "threeBallsInARow": {
-      "levelDates": {"0": "2023-06-27 03:35:16"},
-      "completions": 1
+    "participateTournaments": {
+      "levelDates": {
+        "0": "2024-10-14 05:01:31",
+        "1": "2024-10-14 05:01:31"
+      },
+      "completions": 14,
+      "levelAwardReceived": {
+        "0": "NOT_RECEIVED",
+        "1": "NOT_RECEIVED",
+        "2": "NOT_COMPLETED"
+      }
     },
     "winAMatch": {
       "levelDates": {"0": "2023-06-24 01:45:18"},
-      "completions": 1
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
     },
     "playOneYear": {
       "levelDates": {"0": "2023-11-27 02:59:20"},
-      "completions": 1
-    },
-    "potFailThree": {
-      "levelDates": {"0": "2023-06-27 03:52:05"},
-      "completions": 1
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
     },
     "longThink": {
       "levelDates": {"0": "2023-06-25 03:48:31"},
-      "completions": 1
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "potABall": {
+      "levelDates": {"0": "2023-06-23 22:18:08"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "champEarnCumulative": {
+      "levelDates": {},
+      "completions": 5800,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
+    "missedShot": {
+      "levelDates": {"0": "2023-06-23 22:18:41"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "winAFrame": {
+      "levelDates": {"0": "2023-06-24 02:08:43"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "poolBreakPot": {
+      "levelDates": {"0": "2023-06-24 02:13:45"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "defeatUniqueOpponentsSnooker": {
+      "levelDates": {},
+      "completions": 1,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
+    "positioningMaster": {
+      "levelDates": {"0": "2023-06-27 03:40:45"},
+      "completions": 9,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "firstMainOfTournament": {
+      "levelDates": {"0": "2024-10-14 05:01:31"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
+    "defeatUniqueOpponentsAmerican": {
+      "levelDates": {},
+      "completions": 0,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
+    "cueBallPot": {
+      "levelDates": {"0": "2023-06-23 22:22:02"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "oneRoundTour": {
+      "levelDates": {"0": "2023-06-25 03:49:23"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "bigHeart": {
+      "levelDates": {},
+      "completions": 2,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "keyBallFail": {
+      "levelDates": {"0": "2023-06-27 03:56:06"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "threeBallsInARow": {
+      "levelDates": {"0": "2023-06-27 03:35:16"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "potFailThree": {
+      "levelDates": {"0": "2023-06-27 03:52:05"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
+    },
+    "oweMoney": {
+      "levelDates": {"0": "2024-10-14 05:01:31"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "uniqueDefeat": {"collection": {"High Stick": {
       "levelDates": {"0": "2023-11-27 02:59:20"},
       "completions": 1,
+      "levelAwardReceived": {},
       "key": "High Stick"
     }}},
-    "potABall": {
-      "levelDates": {"0": "2023-06-23 22:18:08"},
-      "completions": 1
-    },
-    "missedShot": {
-      "levelDates": {"0": "2023-06-23 22:18:41"},
-      "completions": 1
-    },
-    "winAFrame": {
-      "levelDates": {"0": "2023-06-24 02:08:43"},
-      "completions": 1
-    },
-    "earnMoneyCumulative": {
+    "mainOfTournaments": {
       "levelDates": {},
-      "completions": 5800
+      "completions": 2,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
     },
-    "poolBreakPot": {
-      "levelDates": {"0": "2023-06-24 02:13:45"},
-      "completions": 1
+    "saveMoney": {
+      "levelDates": {},
+      "completions": 0,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
+    "buyItems": {
+      "levelDates": {},
+      "completions": 0,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
     },
     "earnedMoney": {
       "levelDates": {"0": "2023-06-30 05:45:27"},
-      "completions": 1
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
     },
     "defeatUniqueOpponentsCeb": {
       "levelDates": {},
-      "completions": 0
+      "completions": 0,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
     },
     "lostAllMatches": {
       "levelDates": {"0": "2023-06-24 02:03:17"},
-      "completions": 1
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_COMPLETED"}
     }
   },
-  "checksum": "FC41DBAF69E06BAAF4EE4E7A80498F9E"
+  "checksum": "30C8B118524F5FACE883F44DD44491B7"
 }

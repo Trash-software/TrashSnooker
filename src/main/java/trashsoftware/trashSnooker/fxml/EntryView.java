@@ -64,7 +64,7 @@ public class EntryView implements Initializable {
 //            scene.getStylesheets().add(getClass().getResource("/trashsoftware/trashSnooker/css/font.css").toExternalForm());
 
         CareerView mainView = loader.getController();
-        mainView.setParent(thisScene);
+        mainView.setParent(entryRoot);
         mainView.setup(this, stage);
 
         App.setRoot(root);

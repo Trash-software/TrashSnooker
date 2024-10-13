@@ -52,7 +52,7 @@ public class PotAttempt extends CueAttempt {
     }
 
     public boolean isRestPot() {
-        return handSkill.hand == PlayerPerson.Hand.REST;
+        return handSkill.hand == PlayerHand.Hand.REST;
     }
 
     public GameRule getGameType() {

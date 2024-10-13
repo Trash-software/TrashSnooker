@@ -26,7 +26,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
     protected double[] cueDirectionUnitVector;
     protected double[] collisionPos;
     protected double[] holeOpenPos;  // 洞口瞄准点的坐标，非洞底
-    protected PlayerPerson.HandSkill handSkill;
+    protected PlayerHand handSkill;
 
     int attackTarget;
     double targetPrice;
@@ -78,7 +78,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
 
             double[] ballOrigPos = aiming.targetPos;
 
-            PlayerPerson.HandSkill handSkill = CuePlayParams.getPlayableHand(
+            PlayerHand handSkill = CuePlayParams.getPlayableHand(
                     whitePos[0], whitePos[1],
                     cueDirUnit[0], cueDirUnit[1],
                     0.0,
@@ -224,7 +224,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
                 ballOrigPos = new double[]{ball.getX(), ball.getY()};
             }
 
-            PlayerPerson.HandSkill handSkill = CuePlayParams.getPlayableHand(
+            PlayerHand handSkill = CuePlayParams.getPlayableHand(
                     whitePos[0], whitePos[1],
                     cueDirUnit[0], cueDirUnit[1],
                     0.0,

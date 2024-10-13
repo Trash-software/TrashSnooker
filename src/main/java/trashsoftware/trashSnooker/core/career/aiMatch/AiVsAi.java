@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.career.aiMatch;
 
+import trashsoftware.trashSnooker.core.PlayerHand;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.career.Career;
@@ -71,9 +72,10 @@ public abstract class AiVsAi {
                                                      AiPlayStyle aps,
                                                      PlayerPerson.ReadableAbility ability,
                                                      boolean isFinalFrame) {
-        return ability.aiming * ability.cuePrecision / 100 +
-                ability.normalPower * ability.powerControl / 10000 * 0.4 +
-                ability.spin * ability.spinControl / 100 * 0.7 +
+        PlayerPerson.ReadableAbilityHand primary = ability.primary();
+        return ability.aiming * primary.cuePrecision / 100 +
+                primary.normalPower * primary.powerControl / 10000 * 0.4 +
+                primary.spin * primary.spinControl / 100 * 0.7 +
                 aps.position / 100 +
                 aps.defense / 100 * 0.5 +
                 aps.stability / 100 +
@@ -151,7 +153,7 @@ public abstract class AiVsAi {
             psyFactor *= person.psy / 100;
         }
         double difficulty = potDifficulty * (goodPosition ? 1 : 3);
-        double failRatio = 10000 - ra.aiming * ra.cuePrecision * Math.pow(psyFactor, 0.75);
+        double failRatio = 10000 - ra.aiming * ra.primary().cuePrecision * Math.pow(psyFactor, 0.75);
         failRatio /= 10000;
         failRatio *= 0.15;
         failRatio *= difficulty;

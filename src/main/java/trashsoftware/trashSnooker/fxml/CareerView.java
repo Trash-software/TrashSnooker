@@ -27,10 +27,7 @@ import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.alert.Alert;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
-import trashsoftware.trashSnooker.fxml.widgets.AbilityShower;
-import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
-import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
-import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
+import trashsoftware.trashSnooker.fxml.widgets.*;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
@@ -59,7 +56,7 @@ public class CareerView extends ChildInitializable {
     @FXML
     ProgressBar levelExpBar;
     @FXML
-    AbilityShower abilityShower;
+    PerkAdder abilityShower;
     @FXML
     LabelTable<PlayerAward> allAwardsTable;
     @FXML

@@ -155,7 +155,7 @@ public abstract class FinalChoice {
     public static class DefenseChoice extends FinalChoice implements Comparable<DefenseChoice> {
 
         final double penalty;
-        protected PlayerPerson.HandSkill handSkill;
+        protected PlayerHand handSkill;
         protected Ball ball;
         protected double snookerPrice;
         protected double opponentAttackPrice;
