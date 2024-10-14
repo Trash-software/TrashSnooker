@@ -323,8 +323,12 @@ public class EntryView implements Initializable {
 
         CheckBox deletePerson = new CheckBox(strings.getString("deletePlayerWithCareer"));
         PlayerPerson person = DataLoader.getInstance().getPlayerPerson(selected.getPlayerId());
-        if (!person.isCustom()) deletePerson.setDisable(true);
-
+        if (person == null) {
+            System.err.println("Person is null");
+        } else {
+            if (!person.isCustom()) deletePerson.setDisable(true);
+        }
+        
         AlertShower.askConfirmation(
                 selfStage,
                 String.format(strings.getString("confirmDeleteCareer"), selected.getPlayerName()),

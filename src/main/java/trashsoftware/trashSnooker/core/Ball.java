@@ -859,7 +859,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         // 为齿轮效应计算做准备
         double collisionThickness = Algebra.thetaBetweenVectors(thisV, tangentVec);  // 90度是正撞，0度是球1擦球2的右边，180度是擦左边
         collisionThickness -= Algebra.HALF_PI;  // 减去90度，正撞为0，擦右边为-90
-        double thicknessCos = Math.cos(Algebra.HALF_PI - collisionThickness);
+        double thinnessCos = Math.cos(Algebra.HALF_PI - collisionThickness);
 //        System.out.println("Thick: " + Math.toDegrees(collisionThickness));
         double relSpeed = Math.hypot(this.vx - ball.vx, this.vy - ball.vy);
         double totalSpeed = (Math.hypot(this.vx, this.vy) + Math.hypot(ball.vx, ball.vy)) * phy.calculationsPerSec;
@@ -946,6 +946,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             // 侧旋的传递
             double gearPassFactor = 0.15 * frictionStrength;
             double passRate = Math.cos(Math.abs(collisionThickness));  // 越厚传得越多。
+//            double passRate = 1 - Math.abs(thinnessCos);  // 越厚传得越多，而且初始衰减要多
             double speedPassRate = Math.abs(this.sideSpin) / relSpeed;  // 球速越慢，塞越大，传得越多
             double passPercentage = gearPassFactor * passRate * speedPassRate;
             passPercentage = Math.min(passPercentage, MAXIMUM_SPIN_PASS);  // 最多传1/4
@@ -959,10 +960,15 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             double factor = spinProj >= 0.0 ? 0.18 : 0.36;  // 只希望强烈的前向传递
 //            System.out.println("Fact: " + factor + ", proj: " + spinProj);
             factor *= frictionStrength;
-            double xSpinPassed = this.xSpin * factor;
-            double ySpinPassed = this.ySpin * factor;
-            ball.xSpin -= xSpinPassed;
-            ball.ySpin -= ySpinPassed;
+            double effSpinMag = Algebra.projectionLengthOn(thisOut, new double[]{xSpin, ySpin});
+            double passedSpin = effSpinMag * factor * passRate;
+            ball.xSpin -= ballOut[0] * passedSpin;
+            ball.ySpin -= ballOut[1] * passedSpin;
+            
+//            double xSpinPassed = this.xSpin * factor * passRate;
+//            double ySpinPassed = this.ySpin * factor * passRate;
+//            ball.xSpin -= xSpinPassed;
+//            ball.ySpin -= ySpinPassed;
 
             if (gearOffsetEnabled) {
                 // 相当于整个坐标系往一个方向扭一点点
@@ -991,14 +997,14 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     double sideSpinFactor = -this.sideSpin * 0.5;
                     // 理解为加顺赛抵消投掷效应
                     double throwStrength;
-                    if (thicknessCos * sideSpinFactor > 0) {
+                    if (thinnessCos * sideSpinFactor > 0) {
                         // 顺赛
-                        throwStrength = Math.max(0, Math.abs(thicknessCos - sideSpinFactor));
+                        throwStrength = Math.max(0, Math.abs(thinnessCos - sideSpinFactor));
                     } else {
-                        throwStrength = Math.abs(thicknessCos);
+                        throwStrength = Math.abs(thinnessCos);
                     }
                     throwStrength *= throwEffect;
-//                    System.out.println("Throw: " + throwStrength + ", thick cos: " + thicknessCos + ", side spin: " + this.sideSpin);
+//                    System.out.println("Throw: " + throwStrength + ", thick cos: " + thinnessCos + ", side spin: " + this.sideSpin);
                     double[] directionOffset = Algebra.vectorScale(thisV, throwStrength);
 
                     ball.vx += directionOffset[0];
@@ -1008,7 +1014,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
             // 薄边造成的侧旋
             double gearStrengthFactor = 0.15 * frictionStrength;
-            double angleSpinChange = gearStrengthFactor * thicknessCos;
+            double angleSpinChange = gearStrengthFactor * thinnessCos;
             double spinChange = angleSpinChange * relSpeed;
             this.sideSpin += spinChange;
             ball.sideSpin -= spinChange;

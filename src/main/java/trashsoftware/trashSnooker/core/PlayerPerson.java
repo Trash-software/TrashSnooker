@@ -384,10 +384,10 @@ public class PlayerPerson {
                                             double height,
                                             Sex sex) {
         Random random = new Random();
-        double left = leftHanded ?
-                100.0 : 50.0;
-        double right = leftHanded ?
-                50.0 : 100.0;
+//        double left = leftHanded ?
+//                100.0 : 50.0;
+//        double right = leftHanded ?
+//                50.0 : 100.0;
 
         double power = generateDouble(random, abilityLow, Math.min(abilityHigh + 5.0, 99.5));
         power *= sex.powerMul;
@@ -427,8 +427,10 @@ public class PlayerPerson {
         );
         double restAbility = Math.max(10, Math.min(90, generateDouble(random, abilityLow * restMul, abilityHigh * restMul))) / 100.0;
         HandBody handBody = HandBody.createFromPrimary(
-                180, sex == Sex.F ? 0.9 : 1,
-                primaryHand, random.nextDouble(0.5, 0.7), restAbility
+                height, 
+                sex == Sex.F ? 0.9 : 1,
+                primaryHand, 
+                random.nextDouble(0.5, 0.7), restAbility
         );
 
         PlayerPerson person = new PlayerPerson(

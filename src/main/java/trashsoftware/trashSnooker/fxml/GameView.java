@@ -4501,12 +4501,13 @@ public class GameView implements Initializable {
                     double changeRatio = (lastCueDtToWhite - cueDtToWhite) / maxPullDistance;
                     pointingAngle += aimingOffset * changeRatio;
                 }
+                double swingMag = baseSwingMag * errMulWithPower / 2000;
+//                System.out.println(swingMag);
+                swingMag = Math.min(swingMag, 0.015);  // 别扭得太夸张
                 if (stage < 0) {  // 向左扭
-                    pointingAngle = pointingAngle + baseSwingMag *
-                            errMulWithPower / 2000 * frameRateRatio;
+                    pointingAngle = pointingAngle + swingMag * frameRateRatio;
                 } else if (stage > 0) {  // 向右扭
-                    pointingAngle = pointingAngle - baseSwingMag *
-                            errMulWithPower / 2000 * frameRateRatio;
+                    pointingAngle = pointingAngle - swingMag * frameRateRatio;
                 }
 
                 if (!touched) {

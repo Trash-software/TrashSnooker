@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 
 import static trashsoftware.trashSnooker.fxml.widgets.AbilityShower.numToString;
 
@@ -56,6 +57,7 @@ public class PerkAdder extends VBox {
     private int handIndex;
 
     private final Map<Button, Combo> btnMap = new HashMap<>();
+    private final Map<Integer, Button> catBtnMap = new TreeMap<>();
     private final Button[] buttons;
     private final Button[] handButtons;
     //    private PlayerPerson.ReadableAbility ability;
@@ -100,6 +102,9 @@ public class PerkAdder extends VBox {
                 spinBtn, new PerkAdder.Combo(PerkManager.SPIN, spinLabel),
                 spinControlBtn, new PerkAdder.Combo(PerkManager.SPIN_CONTROL, spinControlLabel)
         ));
+        for (var entry : btnMap.entrySet()) {
+            catBtnMap.put(entry.getValue().cat, entry.getKey());
+        }
         
 //        setSpinner();
 
@@ -149,6 +154,16 @@ public class PerkAdder extends VBox {
         extraField.getChildren().add(node);
     }
     
+    void setButtonNumbers() {
+        PlayerHand.Hand hand = getHand();
+        for (int cat : PerkManager.CATEGORIES) {
+            int added = perkManager.getPerksAddedTo(cat, hand);
+            Button button = catBtnMap.get(cat);
+            if (added == 0) button.setText("+");
+            else button.setText("+" + added);
+        }
+    }
+    
     void setByHand(PlayerHand.Hand hand) {
         handIndex = hand.ordinal();
         loadHand();
@@ -159,6 +174,7 @@ public class PerkAdder extends VBox {
         currentHandLabel.setText(hand.shownName(strings));
         
         setValuesHand();
+        setButtonNumbers();
     }
 
     @FXML
@@ -199,7 +215,7 @@ public class PerkAdder extends VBox {
 
         Combo combo = btnMap.get(src);
         int added = perkManager.addPerkTo(combo.cat, hand);
-        src.setText(added + "+");
+//        src.setText(added + "+");
 
 //        double afterAdd = perkManager.getShownAbility().getAbilityByCat(combo.cat);
         double afterAdd;
@@ -213,6 +229,7 @@ public class PerkAdder extends VBox {
 
         setValuesBasic();
         setValuesHand();
+        setButtonNumbers();
 //        setupRadar();
 
         if (perkManager.getAvailPerks() <= 0) {
@@ -255,6 +272,7 @@ public class PerkAdder extends VBox {
 //        setupRadar();
         setValuesBasic();
         setValuesHand();
+        setButtonNumbers();
     }
 
     private void setValuesBasic() {

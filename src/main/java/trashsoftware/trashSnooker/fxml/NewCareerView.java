@@ -213,8 +213,8 @@ public class NewCareerView extends ChildInitializable {
                 generatedId,
                 name,
                 leftHanded,
-                70.0,
-                80.0,
+                65.0,
+                75.0,
                 true,
                 heightBox.getValue(),
                 sexBox.getValue()

@@ -20,8 +20,12 @@ public class PerkManager {
     public static final int SPIN_CONTROL = 6;
 //    public static final int ANTI_HAND = 7;
 //    public static final int REST = 8;
+    
+    public static final int[] CATEGORIES = {
+            AIMING, CUE_PRECISION, POWER, POWER_CONTROL, SPIN, SPIN_CONTROL
+    };
 
-    public static final int N_CATEGORIES = 8;
+    public static final int N_CATEGORIES = 16;
 
     private final CareerView parent;
     private PlayerPerson.ReadableAbility ability;
