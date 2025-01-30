@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>TrashSnooker</artifactId>
-    <version>0.6-BETA-6</version>
+    <version>0.6.0</version>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
@@ -84,12 +84,11 @@
 <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/ws.schild/jave-all-deps -->
-        <dependency>
-            <groupId>ws.schild</groupId>
-            <artifactId>jave-all-deps</artifactId>
-            <version>3.5.0</version>
-        </dependency>
-
+<!--        <dependency>-->
+<!--            <groupId>ws.schild</groupId>-->
+<!--            <artifactId>jave-all-deps</artifactId>-->
+<!--            <version>3.5.0</version>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
         <dependency>
@@ -109,7 +108,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.21</version>
+            <version>1.26.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.tukaani/xz -->

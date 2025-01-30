@@ -19,7 +19,7 @@
             <MenuItem text="%settingsMenu" onAction="#settingsAction"/>
         </Menu>
         <Menu text="%helpMenu">
-            <MenuItem text="%changelogMenu" onAction="#changelogAction"/>
+            <MenuItem text="%changelogMenu" onAction="#changelogAction" visible="false"/>
             <SeparatorMenuItem/>
             <MenuItem text="%aboutMenu" onAction="#aboutAction"/>
         </Menu>
@@ -41,6 +41,9 @@
                 <TableColumn text="%career" fx:id="playerColumn"/>
                 <TableColumn text="%level" fx:id="levelColumn"/>
             </columns>
+            <placeholder>
+                <Label text="%entryCareerPlaceHolder"/>
+            </placeholder>
         </TableView>
 
         <GridPane hgap="10.0" vgap="10.0" alignment="CENTER">

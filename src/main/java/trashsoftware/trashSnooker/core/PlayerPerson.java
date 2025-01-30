@@ -89,64 +89,9 @@ public class PlayerPerson {
         this.participates = participates;
     }
 
-//    public static PlayerPerson createNormal(String playerId,
-//                                            String name,
-//                                            double maxPowerPercentage,
-//                                            double controllablePowerPercentage,
-//                                            double maxSpinPercentage,
-//                                            double aimingPercentage,
-//                                            double cuePrecision,  // 出杆歪不歪
-//                                            double anglePrecision,
-//                                            double longPrecision,
-//                                            double powerControl,
-//                                            double spinControl,  // 出杆挑不挑
-//                                            double psy,
-//                                            CuePlayType cuePlayType,
-//                                            AiPlayStyle aiPlayStyle,
-//                                            boolean isCustom,
-//                                            Sex sex,
-//                                            boolean underage,
-//                                            Map<GameRule, Double> participateGames) {
-//
-//        PlayerHand primaryHand = new PlayerHand(
-//                PlayerHand.Hand.RIGHT,
-//                maxPowerPercentage,
-//                controllablePowerPercentage,
-//                maxSpinPercentage,
-//                new double[]{50, 200, 50, 150},
-//                calculateSwingMag(cuePrecision),
-//                estimateCuePoint(cuePrecision, spinControl),
-//                powerControl,
-//                cuePlayType
-//        );
-//        HandBody handBody = HandBody.createFromPrimary(
-//                180, sex == Sex.F ? 0.9 : 1,
-//                primaryHand, 0.5, 0.8
-//        );
-//
-//        PlayerPerson pp = new PlayerPerson(
-//                playerId,
-//                name,
-//                estimateCategory(aimingPercentage, powerControl, spinControl),
-//                aimingPercentage,
-//                anglePrecision,
-//                longPrecision,
-//                (aimingPercentage + spinControl) / 2,
-//                0.0,
-//                psy,
-//                aiPlayStyle,
-//                handBody,
-//                sex,
-//                underage,
-//                participateGames
-//        );
-//
-//        pp.setCustom(isCustom);
-//        return pp;
-//    }
-
     public static PlayerPerson fromJson(String playerId, JSONObject personObj) {
         String name = personObj.getString("name");
+        System.out.println(name);
 
         AiPlayStyle aiPlayStyle;
         if (personObj.has("ai")) {
@@ -764,7 +709,8 @@ public class PlayerPerson {
         }
 
         double average() {
-            return toPlayerHand().average();
+            PlayerHand ph = toPlayerHand();
+            return ph.average() / ph.hand.nativePowerMul;
         }
         
         PlayerHand toPlayerHand() {
@@ -793,7 +739,7 @@ public class PlayerPerson {
                     unit = (120 - cuePrecision) * 0.04;
                     break;
                 case PerkManager.POWER:
-                    double sexPowerMax = 120 * parent.getSex().powerMul;
+                    double sexPowerMax = 120 * parent.getSex().powerMul * hand.nativePowerMul;
                     unit = (sexPowerMax - normalPower) * 0.04;
                     break;
                 case PerkManager.POWER_CONTROL:
@@ -1028,9 +974,9 @@ public class PlayerPerson {
             };
         }
 
-        public double maxAbilityByCat(int what) {
+        public double maxAbilityByCat(int what, PlayerHand.Hand hand) {
             if (what == PerkManager.POWER) {
-                return getSex().powerMul * 100;
+                return getSex().powerMul * 100 * hand.nativePowerMul;
             } else {
                 return 100;
             }
@@ -1199,6 +1145,9 @@ public class PlayerPerson {
 
         private PlayerHand[] precedence = new PlayerHand[3];
 
+        transient double nonDominantGeneral;
+        transient double restGeneral;
+
         public HandBody(double height, double bodyWidth,
                         PlayerHand left, PlayerHand right, PlayerHand rest) {
             this.height = height;
@@ -1214,6 +1163,21 @@ public class PlayerPerson {
 
             Arrays.sort(precedence);
             this.leftHandRest = precedence[0].hand == PlayerHand.Hand.RIGHT;
+
+//            System.out.println("---Precedence:");
+//            for (PlayerHand ph : precedence) {
+//                System.out.println(ph.hand + ": " + ph.average());
+//            }
+            
+            PlayerHand dominant = getDominantHand();
+            double dominantAvg = dominant.average();
+            PlayerHand nonDominant = getAntiHand();
+            double nonDomAvg = nonDominant.average();
+            PlayerHand restHand = getRest();
+            double restAvg = restHand.average();
+            
+            this.nonDominantGeneral = nonDomAvg / dominantAvg;
+            this.restGeneral = restAvg / dominantAvg;
         }
 
         public static HandBody createFromPrimary(double height, double bodyWidth,
@@ -1253,18 +1217,6 @@ public class PlayerPerson {
                     leftHandPrimary ? secondary : primary,
                     rest);
         }
-
-//        public static double getPowerMulOfHand(@Nullable PlayerHand handSkill) {
-//            return handSkill == null ? 1.0 : (handSkill.skill * handSkill.hand.powerMul / 100);
-//        }
-//
-//        public static double getPrecisionOfHand(@Nullable PlayerHand handSkill) {
-//            return handSkill == null ? 1.0 : (handSkill.skill / 100);
-//        }
-//
-//        public static double getSdOfHand(@Nullable PlayerHand handSkill) {
-//            return handSkill == null ? 1.0 : (100.0 / handSkill.skill);
-//        }
 
         public int precedenceOfHand(PlayerHand.Hand hand) {
             for (int i = 0; i < precedence.length; i++) {
@@ -1321,6 +1273,20 @@ public class PlayerPerson {
                 if (hs.hand == PlayerHand.Hand.LEFT) return hs;
             }
             throw new RuntimeException("Precedences are: " + Arrays.stream(precedence).map(k -> k.hand).toList());
+        }
+
+        public double getNonDominantGeneral() {
+            return nonDominantGeneral;
+        }
+
+        public double getRestGeneral() {
+            return restGeneral;
+        }
+        
+        public double getHandGeneralMultiplier(PlayerHand hand) {
+            if (hand == getDominantHand()) return 1.0;
+            else if (hand == getAntiHand()) return nonDominantGeneral;
+            else return restGeneral;
         }
 
         public PlayerHand getRight() {

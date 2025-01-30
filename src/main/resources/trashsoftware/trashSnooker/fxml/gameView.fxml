@@ -40,6 +40,7 @@
                 <!--                <CheckMenuItem fx:id="predictPlayerPathItem" text="%drawPredictionLinePlayer"/>-->
                 <SeparatorMenuItem/>
 
+                <CheckMenuItem fx:id="aimingExtensionMenu" text="%drawAimingExtension"/>
                 <CheckMenuItem fx:id="potInspectionMenu" text="%potInspectionTool"/>
                 <SeparatorMenuItem/>
 

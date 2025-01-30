@@ -426,6 +426,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
                 isSnookerFreeBall,
                 false);  // 不可能，没有谁会给自己摆杆斯诺克
+        System.out.println(legalBalls);
 
         PlayerPerson aps = aiPlayer.getPlayerPerson();
         double degreesTick = 100.0 / 2 / aps.getSolving();
@@ -770,26 +771,32 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         if (!aiOnlyDefense) {
             FinalChoice.IntegratedAttackChoice attackChoice = standardAttack(phy, currentMustAttack());
             if (attackChoice != null) {
+                System.out.println("AI attack");
                 return makeAttackCue(attackChoice);
             }
         }
         FinalChoice.DefenseChoice stdDefense = standardDefense();
         if (stdDefense != null) {
+            System.out.println("AI standard defense");
             return makeDefenseCue(stdDefense, AiCueResult.CueType.DEFENSE);
         }
         FinalChoice.DefenseChoice defenseChoice = getBestDefenseChoice(phy);
         if (defenseChoice != null) {
+            System.out.println("AI defense");
             return makeDefenseCue(defenseChoice, AiCueResult.CueType.DEFENSE);
         }
         FinalChoice.DefenseChoice solveSnooker = solveSnooker(phy, false);
         if (solveSnooker != null) {
+            System.out.println("AI solve snooker");
             return makeDefenseCue(solveSnooker, AiCueResult.CueType.SOLVE);
         }
         FinalChoice.DefenseChoice solveSnooker2 = solveSnooker(phy, true);  // 只能说是逼急了，来个袋角解斯诺克
         System.out.println("Cannot solve snooker! Try pocket arc!");
         if (solveSnooker2 != null) {
+            System.out.println("AI solve snooker by pocket arc");
             return makeDefenseCue(solveSnooker2, AiCueResult.CueType.SOLVE);
         }
+        System.out.println("Ai random angry cue");
         return randomAngryCue();
     }
 
@@ -1432,7 +1439,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             int threadIndex = (int) (Thread.currentThread().getId() % gameClonesPool.length);
             Game<?, ?> copy = gameClonesPool[threadIndex];
             //        System.out.print(selectedPower);
-            double actualFbSpin = attackParams.cueParams.actualFrontBackSpin();
+//            double actualFbSpin = attackParams.cueParams.actualFrontBackSpin();
             double actualSideSpin = attackParams.cueParams.actualSideSpin();
             double actualPower = attackParams.cueParams.actualPower();
 

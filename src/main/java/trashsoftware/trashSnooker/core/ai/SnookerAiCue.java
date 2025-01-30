@@ -241,10 +241,23 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 //                return makeAttackCue(doublePotChoice, AiCueResult.CueType.DOUBLE_POT);
 //            }
         }
-        if (-behind > rem + 7 && currentTarget == 7) {
-            FinalChoice.IntegratedAttackChoice exhibition = lastExhibitionShot(phy);
-            if (exhibition != null) {
-                return makeAttackCue(exhibition);
+        Ball targetBallMaybe = null;
+        if (currentTarget != AbstractSnookerGame.RAW_COLORED_REP) {
+            targetBallMaybe = game.getBallOfValue(currentTarget);
+        }
+        GamePlayStage gps = game.getGamePlayStage(targetBallMaybe, false);
+        
+        if (gps == GamePlayStage.NO_PRESSURE) {
+            if (currentTarget == 7) {
+                FinalChoice.IntegratedAttackChoice exhibition = lastExhibitionShot(phy);
+                if (exhibition != null) {
+                    return makeAttackCue(exhibition);
+                }
+            }
+            System.out.println("Big over score, free show");
+            FinalChoice.IntegratedAttackChoice iac = standardAttack(phy, true);
+            if (iac != null) {
+                return makeAttackCue(iac);
             }
         }
         return regularCueDecision(phy);

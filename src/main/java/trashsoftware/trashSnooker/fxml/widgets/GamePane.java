@@ -16,6 +16,7 @@ import javafx.scene.text.TextAlignment;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.GameHolder;
+import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.table.Table;
@@ -25,6 +26,7 @@ import trashsoftware.trashSnooker.fxml.drawing.CurvedPolygonDrawer;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -49,6 +51,8 @@ public class GamePane extends StackPane {
     private GameValues gameValues;
     private double canvasWidth, canvasHeight;
     private final LightBase lighting;
+    
+    private Color aimingExtensionColor;
 
     private final ResourceBundle strings;
 
@@ -92,6 +96,8 @@ public class GamePane extends StackPane {
 
     public void setupPane(GameValues gameValues, double scaleMul) {
         this.gameValues = gameValues;
+        
+        aimingExtensionColor = gameValues.table.tableColor.interpolate(Values.WHITE, 0.5);
 
         generateScales(scaleMul);
     }
@@ -906,6 +912,115 @@ public class GamePane extends StackPane {
             lastX = canvasX;
             lastY = canvasY;
         }
+    }
+
+    public void drawAimingExtension(double[] touchXY, double[] cuePointing, double handDt) {
+        graphicsContext.setStroke(aimingExtensionColor);
+
+//        System.out.println(Arrays.toString(touchXY));
+//        System.out.println(canvasX());
+        
+        double tableL = canvasX(gameValues.table.leftX);
+        double tableR = canvasX(gameValues.table.rightX);
+        double tableTop = canvasY(gameValues.table.topY);
+        double tableBot = canvasY(gameValues.table.botY);
+        
+        double startX = touchXY[0];
+        double startY = touchXY[1];
+        
+        boolean outside = startX <= tableL || startX >= tableR || startY <= tableTop || startY >= tableBot;
+
+        double[] intersection = findIntersection(
+                touchXY[0], 
+                touchXY[1],
+                cuePointing[0],
+                cuePointing[1],
+                tableL,
+                tableR,
+                tableBot,  // 调换了top和bot，因为这函数是gpt写的，但是javafx的y翻转了
+                tableTop
+        );
+        
+        if (intersection == null) return;
+        
+        if (outside) {
+            double xSign = Math.signum(cuePointing[0]);
+            double ySign = Math.signum(cuePointing[1]);
+            intersection = findIntersection(
+                    intersection[0] + xSign,
+                    intersection[1] - ySign,
+                    cuePointing[0],
+                    cuePointing[1],
+                    tableL,
+                    tableR,
+                    tableBot,  // 调换了top和bot，因为这函数是gpt写的，但是javafx的y翻转了
+                    tableTop
+            );
+        }
+
+        graphicsContext.strokeLine(
+                startX,
+                startY,
+                intersection[0],
+                intersection[1]
+        );
+    }
+
+    private static double[] findIntersection(double x0, double y0, double dx, double dy,
+                                             double rectLeft, double rectRight, double rectTop, double rectBottom) {
+        // chatGPT写的，top和bottom是反过来的
+        double tMin = Double.POSITIVE_INFINITY;
+        double[] intersection = null;
+
+        // Check left edge (x = rectLeft)
+        if (dx != 0) {
+            double tLeft = (rectLeft - x0) / dx;
+            if (tLeft > 0) {
+                double yLeft = y0 + tLeft * dy;
+                if (yLeft >= rectBottom && yLeft <= rectTop && tLeft < tMin) {
+                    tMin = tLeft;
+                    intersection = new double[]{rectLeft, yLeft};
+                }
+            }
+        }
+
+        // Check right edge (x = rectRight)
+        if (dx != 0) {
+            double tRight = (rectRight - x0) / dx;
+            if (tRight > 0) {
+                double yRight = y0 + tRight * dy;
+                if (yRight >= rectBottom && yRight <= rectTop && tRight < tMin) {
+                    tMin = tRight;
+                    intersection = new double[]{rectRight, yRight};
+                }
+            }
+        }
+
+        // Check top edge (y = rectTop)
+        if (dy != 0) {
+            double tTop = (rectTop - y0) / dy;
+            if (tTop > 0) {
+                double xTop = x0 + tTop * dx;
+                if (xTop >= rectLeft && xTop <= rectRight && tTop < tMin) {
+                    tMin = tTop;
+                    intersection = new double[]{xTop, rectTop};
+                }
+            }
+        }
+
+        // Check bottom edge (y = rectBottom)
+        if (dy != 0) {
+            double tBottom = (rectBottom - y0) / dy;
+            if (tBottom > 0) {
+                double xBottom = x0 + tBottom * dx;
+                if (xBottom >= rectLeft && xBottom <= rectRight && tBottom < tMin) {
+                    tMin = tBottom;
+                    intersection = new double[]{xBottom, rectBottom};
+                }
+            }
+        }
+
+        return intersection;
     }
 
     public void drawStoppedBalls(Table table,

@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 31910,
+    "money": 26630,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
@@ -617,13 +617,113 @@
         "type": "achievementAward",
         "moneyEarn": 500,
         "timestamp": "2024-01-13 20:38:18"
+      },
+      {
+        "inGameDate": "2023/2/1",
+        "moneyBefore": 31910,
+        "moneyAfter": 31460,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 450
+        }],
+        "timestamp": "2025-01-24 18:26:35"
+      },
+      {
+        "inGameDate": "2023/2/10",
+        "match": "custom_37AA1BE174409ED5+2023+eight_northeast_open",
+        "moneyBefore": 31460,
+        "moneyAfter": 30460,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2025-01-24 18:26:35"
+      },
+      {
+        "inGameDate": "2023/2/10",
+        "year": 2023,
+        "match": "eight_northeast_open",
+        "moneyBefore": 30460,
+        "moneyAfter": 30460,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_2": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2025-01-24 18:35:06"
+      },
+      {
+        "inGameDate": "2023/2/10",
+        "moneyBefore": 30460,
+        "moneyAfter": 29860,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 600
+        }],
+        "timestamp": "2025-01-24 18:36:55"
+      },
+      {
+        "inGameDate": "2023/2/22",
+        "moneyBefore": 29860,
+        "moneyAfter": 29610,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 250
+        }],
+        "timestamp": "2025-01-24 18:37:00"
+      },
+      {
+        "inGameDate": "2023/2/27",
+        "match": "custom_37AA1BE174409ED5+2023+dog_give_power_open",
+        "moneyBefore": 29610,
+        "moneyAfter": 26710,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          }
+        ],
+        "timestamp": "2025-01-24 18:37:00"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_37AA1BE174409ED5-594",
+        "inGameDate": "2023/2/27",
+        "moneyBefore": 26710,
+        "moneyCost": 80,
+        "moneyAfter": 26630,
+        "type": "purchase",
+        "timestamp": "2025-01-24 18:42:46"
       }
     ],
     "level": 3,
-    "expInThisLevel": 52,
+    "expInThisLevel": 77,
     "availPerks": 0,
     "totalPerks": 9,
-    "totalExp": 260
+    "totalExp": 285
   },
-  "checksum": "916F2F8CB3E31A0961CF40B9ED5019B5"
+  "checksum": "93115BAC914AC9DD1A7F8B4F681FC1C6"
 }

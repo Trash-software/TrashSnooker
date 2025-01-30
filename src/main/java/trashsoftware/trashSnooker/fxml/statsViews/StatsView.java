@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.ChildInitializable;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.db.DBAccess;
@@ -227,8 +228,8 @@ public class StatsView extends ChildInitializable {
         }
 
         public String getShowingStr() {
-            if ("time".equals(shown)) return "比赛";
-            else return "对手";
+            if ("time".equals(shown)) return App.getStrings().getString("statsByMatches");
+            else return App.getStrings().getString("statsByOpponents");
         }
     }
 
@@ -244,7 +245,10 @@ public class StatsView extends ChildInitializable {
         PlayerAi(String playerId, boolean isAi) {
             this.playerId = playerId;
             this.isAi = isAi;
-            this.shown = DataLoader.getInstance().getPlayerPerson(playerId).getName() + (isAi ? "(电脑)" : "(玩家)");
+            
+            String typeStr = isAi ? "typeComputer" : "typePlayer";
+            this.shown = DataLoader.getInstance().getPlayerPerson(playerId).getName() + 
+                    "(" + App.getStrings().getString(typeStr) + ")";
         }
 
         @Override

@@ -22,12 +22,12 @@ import trashsoftware.trashSnooker.audio.SoundRecorder;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
-import ws.schild.jave.Encoder;
-import ws.schild.jave.EncoderException;
-import ws.schild.jave.MultimediaObject;
-import ws.schild.jave.encode.AudioAttributes;
-import ws.schild.jave.encode.EncodingAttributes;
-import ws.schild.jave.encode.VideoAttributes;
+//import ws.schild.jave.Encoder;
+//import ws.schild.jave.EncoderException;
+//import ws.schild.jave.MultimediaObject;
+//import ws.schild.jave.encode.AudioAttributes;
+//import ws.schild.jave.encode.EncodingAttributes;
+//import ws.schild.jave.encode.VideoAttributes;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -189,27 +189,27 @@ public class VideoConverter {
     private void combineAudio(SoundRecorder soundRecorder) throws IOException {
         writeAudioTemp(soundRecorder);
 
-        AudioAttributes audioAttributes = new AudioAttributes();
-        audioAttributes.setCodec("aac");
-        audioAttributes.setBitRate(128000);
-        audioAttributes.setChannels(2);
-        audioAttributes.setSamplingRate(44100);
-        
-        VideoAttributes videoAttributes = new VideoAttributes();
-        videoAttributes.setCodec("copy");
-
-        EncodingAttributes attrs = new EncodingAttributes();
-        attrs.setOutputFormat("mp4");
-        attrs.setAudioAttributes(audioAttributes);
-        attrs.setVideoAttributes(videoAttributes);
-
-        Encoder encoder = new Encoder();
-        try {
-            encoder.encode(new MultimediaObject(tempVideoFile), outFile, attrs);
-            encoder.encode(new MultimediaObject(tempAudioFile), outFile, attrs);
-        } catch (EncoderException e) {
-            EventLogger.error(e);
-        }
+//        AudioAttributes audioAttributes = new AudioAttributes();
+//        audioAttributes.setCodec("aac");
+//        audioAttributes.setBitRate(128000);
+//        audioAttributes.setChannels(2);
+//        audioAttributes.setSamplingRate(44100);
+//        
+//        VideoAttributes videoAttributes = new VideoAttributes();
+//        videoAttributes.setCodec("copy");
+//
+//        EncodingAttributes attrs = new EncodingAttributes();
+//        attrs.setOutputFormat("mp4");
+//        attrs.setAudioAttributes(audioAttributes);
+//        attrs.setVideoAttributes(videoAttributes);
+//
+//        Encoder encoder = new Encoder();
+//        try {
+//            encoder.encode(new MultimediaObject(tempVideoFile), outFile, attrs);
+//            encoder.encode(new MultimediaObject(tempAudioFile), outFile, attrs);
+//        } catch (EncoderException e) {
+//            EventLogger.error(e);
+//        }
     }
     
     public void finishRecordAndMuxAudio(SoundRecorder soundRecorder) throws IOException {

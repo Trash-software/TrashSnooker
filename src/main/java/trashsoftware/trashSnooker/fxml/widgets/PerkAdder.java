@@ -224,7 +224,7 @@ public class PerkAdder extends VBox {
         } else {
             afterAdd = perkManager.getShownOf(hand).getAbilityByCat(combo.cat);
         }
-        double max = perkManager.getShownAbility().maxAbilityByCat(combo.cat);
+        double max = perkManager.getShownAbility().maxAbilityByCat(combo.cat, hand);
         if (afterAdd >= max * 0.999) src.setDisable(true);
 
         setValuesBasic();
@@ -253,18 +253,18 @@ public class PerkAdder extends VBox {
                 button.setText("+");
             }
         } else {
+            PlayerHand.Hand hand =getHand();
             for (Button button : buttons) {
                 Combo combo = btnMap.get(button);
                 double curPerk = perkManager.getShownAbility().getAbilityByCat(combo.cat);
-                double max = perkManager.getShownAbility().maxAbilityByCat(combo.cat);
+                double max = perkManager.getShownAbility().maxAbilityByCat(combo.cat, hand);
                 button.setDisable(curPerk >= max * 0.999);
                 button.setText("+");
             }
-            PlayerHand.Hand hand = getHand();
             for (Button button : handButtons) {
                 Combo combo = btnMap.get(button);
                 double curPerk = perkManager.getShownOf(hand).getAbilityByCat(combo.cat);
-                double max = perkManager.getShownAbility().maxAbilityByCat(combo.cat);
+                double max = perkManager.getShownAbility().maxAbilityByCat(combo.cat, hand);
                 button.setDisable(curPerk >= max * 0.999);
                 button.setText("+");
             }

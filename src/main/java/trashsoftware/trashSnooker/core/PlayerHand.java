@@ -269,8 +269,9 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
     }
     
     public double average() {
+//        double powerScore = (controllablePowerPercentage + maxPowerPercentage) / 2 / hand.nativePowerMul;
         double powerScore = (controllablePowerPercentage + maxPowerPercentage) / 2;
-        if (hand == Hand.REST) powerScore /= REST_NATIVE_POWER_MUL;
+//        if (hand == Hand.REST) powerScore /= REST_NATIVE_POWER_MUL;
         
         double sum = powerScore + 
                 maxSpinPercentage + 
@@ -295,7 +296,12 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
 
     @Override
     public int compareTo(@NotNull PlayerHand o) {
-        return -Double.compare(this.average(), o.average());
+        int cmp = Double.compare(this.average(), o.average());
+        if (cmp == 0) {
+            if (this.hand == Hand.REST) return 1;
+            if (o.hand == Hand.REST) return -1;
+        }
+        return -cmp;
     }
 
     @Override
@@ -317,9 +323,15 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
     }
 
     public enum Hand {
-        LEFT,
-        RIGHT,
-        REST;
+        LEFT(1.0),
+        RIGHT(1.0),
+        REST(REST_NATIVE_POWER_MUL);
+        
+        public final double nativePowerMul;
+        
+        Hand(double nativePowerMul) {
+            this.nativePowerMul = nativePowerMul;
+        }
         
         public Hand getAnother() {
             return switch (this) {

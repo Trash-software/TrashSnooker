@@ -64,10 +64,11 @@
         <ComboBox fx:id="performanceBox" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
 
         <Label text="%frameRate" GridPane.rowIndex="11" visible="false" managed="false"/>
-        <Label text="%productionFrameRate" GridPane.rowIndex="11"/>
+        <Label text="%productionFrameRate" GridPane.rowIndex="11" visible="false" managed="false"/>
         <ComboBox fx:id="frameRateBox" GridPane.rowIndex="11" GridPane.columnIndex="1"
                   visible="false" managed="false"/>
-        <ComboBox fx:id="prodFrameRateBox" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="prodFrameRateBox" GridPane.rowIndex="11" GridPane.columnIndex="1" 
+                  visible="false" managed="false"/>
 
         <Label text="%settingsSound" GridPane.rowIndex="13">
             <font>
