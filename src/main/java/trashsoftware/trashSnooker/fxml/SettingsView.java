@@ -19,6 +19,8 @@ public class SettingsView extends ChildInitializable {
     @FXML
     ComboBox<Double> aimLingBox, aiStrengthBox;
     @FXML
+    ComboBox<YesNo> autoChangeBreakCueBox;
+    @FXML
     ComboBox<LocaleName> languageBox;
     @FXML
     ComboBox<Integer> frameRateBox, prodFrameRateBox;
@@ -53,6 +55,7 @@ public class SettingsView extends ChildInitializable {
         allBoxes.addAll(List.of(
                 aimLingBox,
                 aiStrengthBox,
+                autoChangeBreakCueBox,
                 frameRateBox,
                 prodFrameRateBox,
                 languageBox,
@@ -82,6 +85,11 @@ public class SettingsView extends ChildInitializable {
         );
         aimLingBox.getSelectionModel().select(configLoader.getDouble("fastGameAiming", 1.0));
         aiStrengthBox.getSelectionModel().select(configLoader.getDouble("fastGameAiStrength", 1.0));
+        
+        autoChangeBreakCueBox.getItems().addAll(YesNo.values());
+        autoChangeBreakCueBox.getSelectionModel().select(YesNo.fromBoolean(
+                configLoader.getBoolean("autoChangeBreakCue", false)
+        ));
 
         setupLanguageBox();
         setupScreenParams();
@@ -273,6 +281,9 @@ public class SettingsView extends ChildInitializable {
         if (hasChanged(aiStrengthBox)) {
             configLoader.put("fastGameAiStrength", aiStrengthBox.getSelectionModel().getSelectedItem());
         }
+        if (hasChanged(autoChangeBreakCueBox)) {
+            configLoader.put("autoChangeBreakCue", autoChangeBreakCueBox.getSelectionModel().getSelectedItem().toBoolean());
+        }
 
         if (hasChanged(performanceBox)) {
             configLoader.put("performance", performanceBox.getValue().toKey());
@@ -312,6 +323,28 @@ public class SettingsView extends ChildInitializable {
     @Override
     public void backAction() {
         cancelAction();
+    }
+    
+    public enum YesNo {
+        YES,
+        NO;
+        
+        public static YesNo fromBoolean(Boolean value) {
+            if (value == null || !value) {
+                return NO;
+            }
+            return YES;
+        }
+        
+        public boolean toBoolean() {
+            return this == YES;
+        }
+
+        @Override
+        public String toString() {
+            String key = this == YES ? "yes" : "no";
+            return App.getStrings().getString(key);
+        }
     }
 
     public enum Resolution {

@@ -1,39 +1,39 @@
 {
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "custom_player_1",
+    "person": "custom_player_159",
     "playerType": "PLAYER"
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "custom_73125E3FE667D051",
+    "person": "custom_player_3",
     "playerType": "COMPUTER"
   },
-  "startTime": 1737549878107,
+  "startTime": 1738937846656,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
-    "subRules": ["SNOOKER_GOLDEN"],
-    "devMode": true,
+    "subRules": ["SNOOKER_STD"],
+    "devMode": false,
     "table": {
       "tableOrdinal": 0,
-      "pocketDifficultyOrdinal": 1,
-      "holeSizeOrdinal": 1
+      "pocketDifficultyOrdinal": 3,
+      "holeSizeOrdinal": 4
     }
   },
   "totalFrames": 1,
   "cloth": {
-    "smoothness": "NORMAL",
-    "goodness": "EXCELLENT"
+    "smoothness": "SLOW",
+    "goodness": "TERRIBLE"
   },
   "p1Breaks": true
 }

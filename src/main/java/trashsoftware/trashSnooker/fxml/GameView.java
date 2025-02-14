@@ -67,7 +67,6 @@ import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.core.table.ChineseEightTable;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
-import trashsoftware.trashSnooker.core.table.SnookerTable;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.drawing.*;
 import trashsoftware.trashSnooker.fxml.projection.BallProjection;
@@ -245,7 +244,7 @@ public class GameView implements Initializable {
     private double cueAngleBaseHor = 10.0;
     private CueAnimationPlayer cueAnimationPlayer;
     private boolean isDragging;
-    private double lastDragAngle;
+//    private double lastDragAngle;
     //    private double predictionMultiplier = 2000.0;
     private double maxRealPredictLength = defaultMaxPredictLength;
     private boolean enablePsy = true;  // 由游戏决定心理影响
@@ -264,6 +263,8 @@ public class GameView implements Initializable {
     private CareerMatch careerMatch;
     private PredictionDrawing cursorDrawer;
     private PotInspection potInspection;
+    private CueSelection.CueAndBrand lastUsedCue;
+
     private ResourceBundle strings;
     private double p1PlaySpeed = 1.0;
     private double p2PlaySpeed = 1.0;
@@ -312,26 +313,7 @@ public class GameView implements Initializable {
 
         cueModelMap.clear();
 
-        player1SpeedToggle.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
-            if (t1 != null)
-                player1SpeedMenu.setText(strings.getString("p1PlaySpeedMenu") + " " + t1.getUserData() + "x");
-        });
-        player2SpeedToggle.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
-            if (t1 != null)
-                player2SpeedMenu.setText(strings.getString("p2PlaySpeedMenu") + " " + t1.getUserData() + "x");
-        });
-
-        potInspectionMenu.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                potInspection = new PotInspection();
-                cursorDirectionUnitX = 0.0;
-                cursorDirectionUnitY = 0.0;
-                aimingChanged();
-            } else {
-                potInspection = null;
-            }
-            tableGraphicsChanged = true;
-        });
+        menuListeners();
 
         player1SpeedToggle.selectToggle(player1SpeedToggle.getToggles().get(3));
         player2SpeedToggle.selectToggle(player2SpeedToggle.getToggles().get(3));
@@ -369,6 +351,68 @@ public class GameView implements Initializable {
         ));
 
         powerSlider.setShowTickLabels(true);
+    }
+
+    private void menuListeners() {
+        player1SpeedToggle.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
+            if (t1 != null)
+                player1SpeedMenu.setText(strings.getString("p1PlaySpeedMenu") + " " + t1.getUserData() + "x");
+        });
+        player2SpeedToggle.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
+            if (t1 != null)
+                player2SpeedMenu.setText(strings.getString("p2PlaySpeedMenu") + " " + t1.getUserData() + "x");
+        });
+
+        potInspectionMenu.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                potInspection = new PotInspection();
+                cursorDirectionUnitX = 0.0;
+                cursorDirectionUnitY = 0.0;
+                aimingChanged();
+            } else {
+                potInspection = null;
+            }
+            tableGraphicsChanged = true;
+        });
+
+        ConfigLoader cl = ConfigLoader.getInstance();
+
+        aimingExtensionMenu.selectedProperty().setValue(
+                cl.getBoolean("aimingExtension", false)
+        );
+        drawAiPathItem.selectedProperty().setValue(
+                cl.getBoolean("drawAiPath", false)
+        );
+        traceWhiteItem.selectedProperty().setValue(
+                cl.getBoolean("traceWhite", false)
+        );
+        traceTargetItem.selectedProperty().setValue(
+                cl.getBoolean("traceTarget", false)
+        );
+        traceAllItem.selectedProperty().setValue(
+                cl.getBoolean("traceAll", false)
+        );
+
+        aimingExtensionMenu.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            cl.put("aimingExtension", newValue);
+            cl.save();
+        });
+        drawAiPathItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            cl.put("drawAiPath", newValue);
+            cl.save();
+        });
+        traceWhiteItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            cl.put("traceWhite", newValue);
+            cl.save();
+        });
+        traceTargetItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            cl.put("traceTarget", newValue);
+            cl.save();
+        });
+        traceAllItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            cl.put("traceAll", newValue);
+            cl.save();
+        });
     }
 
     private void generateScales(GameValues gameValues) {
@@ -987,6 +1031,13 @@ public class GameView implements Initializable {
         restoreCuePoint();
         restoreCueAngle();
         updateScoreDiffLabels();
+
+        if (game.getGame() instanceof NeedBigBreak nbb) {
+            if (nbb.isJustAfterBreak()) {
+                tryAutoChangeBreakCueBack(justCuedPlayer);
+            }
+        }
+
         Platform.runLater(() -> updatePowerSlider(nextCuePlayer.getPlayerPerson().getPrimaryHand()));
         setButtonsCueEnd(nextCuePlayer);
         obstacleProjection = null;
@@ -1111,10 +1162,10 @@ public class GameView implements Initializable {
                 askReposition();
             }
             if (game.getGame() instanceof NeedBigBreak nbb) {
-                if (nbb.isJustAfterBreak() && nbb.wasIllegalBreak()) {
-//                    autoAim = false;  // 把autoAim交给askAfterBreakLoseChance的不复位分支
-//                    askAfterBreakLoseChance();
-                    letOtherPlayMenu.setDisable(false);
+                if (nbb.isJustAfterBreak()) {
+                    if (nbb.wasIllegalBreak()) {
+                        letOtherPlayMenu.setDisable(false);
+                    }
                 }
             }
             if (game.getGame().getThisCueFoul().isFoul()) {
@@ -1189,6 +1240,7 @@ public class GameView implements Initializable {
         updatePowerSlider(breakPlayer.getPlayerPerson().getPrimaryHand());
         if (breakPlayer.getInGamePlayer().isHuman()) {
             changeCueButton.setDisable(false);
+            tryAutoChangeBreakCue(breakPlayer);
         } else {
             changeCueButton.setDisable(true);
         }
@@ -1317,6 +1369,43 @@ public class GameView implements Initializable {
     private void setupBalls() {
         GameHolder gameHolder = getActiveHolder();
         gamePane.setupBalls(gameHolder, true);
+    }
+
+    private void tryAutoChangeBreakCue(Player breaker) {
+        if (game.getGame() instanceof NeedBigBreak nbb && nbb.isBreaking()) {
+
+            ConfigLoader cl = ConfigLoader.getInstance();
+            if (cl.getBoolean("autoChangeBreakCue", false)) {
+                InGamePlayer cuingIgp = breaker.getInGamePlayer();
+                if (!cuingIgp.isHuman()) return;
+                CueSelection cueSelection = cuingIgp.getCueSelection();
+                CueSelection.CueAndBrand bestBreakCue = null;
+                for (CueSelection.CueAndBrand cab : cueSelection.getAvailableCues()) {
+                    if (cab.brand.isBreakCue()) {
+                        bestBreakCue = cab;
+                    }
+                }
+                if (bestBreakCue == null) return;
+
+                lastUsedCue = cueSelection.getSelected();
+                cueSelection.select(bestBreakCue);
+            }
+        }
+    }
+
+    private void tryAutoChangeBreakCueBack(Player breakedPlayer) {
+        InGamePlayer breakedIgp = breakedPlayer.getInGamePlayer();
+        if (!breakedIgp.isHuman()) return;
+
+        ConfigLoader cl = ConfigLoader.getInstance();
+        if (cl.getBoolean("autoChangeBreakCue", false)) {
+            CueSelection cueSelection = breakedIgp.getCueSelection();
+            if (lastUsedCue != null &&
+                    cueSelection.getSelected().brand.isBreakCue() &&
+                    cueSelection.hasThisBrand(lastUsedCue.brand)) {
+                cueSelection.select(lastUsedCue);
+            }
+        }
     }
 
     private void askReposition() {
@@ -1591,7 +1680,7 @@ public class GameView implements Initializable {
         isDragging = true;
         double xDiffToWhite = gamePane.realX(mouseEvent.getX()) - white.getX();
         double yDiffToWhite = gamePane.realY(mouseEvent.getY()) - white.getY();
-        lastDragAngle = Algebra.thetaOf(new double[]{xDiffToWhite, yDiffToWhite});
+//        lastDragAngle = Algebra.thetaOf(new double[]{xDiffToWhite, yDiffToWhite});
         if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) {
             double[] unitVec = Algebra.unitVector(xDiffToWhite, yDiffToWhite);
             cursorDirectionUnitX = unitVec[0];
@@ -1602,33 +1691,48 @@ public class GameView implements Initializable {
     }
 
     private void onDragging(MouseEvent mouseEvent) {
-        if (!isDragging) {
-            return;
-        }
+        if (!isDragging) return;
+
         Ball white = game.getGame().getCueBall();
         if (white.isPotted()) return;
+
         double xDiffToWhite = gamePane.realX(mouseEvent.getX()) - white.getX();
         double yDiffToWhite = gamePane.realY(mouseEvent.getY()) - white.getY();
-        double distanceToWhite = Math.hypot(xDiffToWhite, yDiffToWhite);  // 光标离白球越远，移动越慢
-        double currentAngle =
-                Algebra.thetaOf(new double[]{xDiffToWhite, yDiffToWhite});
-        double changedAngle =
-                Algebra.normalizeAngle
-                        (currentAngle - lastDragAngle) / (distanceToWhite / 500.0);
-
-        double aimingAngle = Algebra.thetaOf(new double[]{cursorDirectionUnitX, cursorDirectionUnitY});
-        double resultAngle = aimingAngle + changedAngle;
-        double[] newUnitVector = Algebra.unitVectorOfAngle(resultAngle);
-        cursorDirectionUnitX = newUnitVector[0];
-        cursorDirectionUnitY = newUnitVector[1];
+        double[] unitDir = Algebra.unitVector(xDiffToWhite, yDiffToWhite);
+        
+        cursorDirectionUnitX = unitDir[0];
+        cursorDirectionUnitY = unitDir[1];
         recalculateUiRestrictions();
-
-        lastDragAngle = currentAngle;
     }
+
+//    private void onDragging(MouseEvent mouseEvent) {
+//        if (!isDragging) {
+//            return;
+//        }
+//        Ball white = game.getGame().getCueBall();
+//        if (white.isPotted()) return;
+//        double xDiffToWhite = gamePane.realX(mouseEvent.getX()) - white.getX();
+//        double yDiffToWhite = gamePane.realY(mouseEvent.getY()) - white.getY();
+//        double distanceToWhite = Math.hypot(xDiffToWhite, yDiffToWhite);  // 光标离白球越远，移动越慢
+//        double currentAngle =
+//                Algebra.thetaOf(new double[]{xDiffToWhite, yDiffToWhite});
+//        double changedAngle =
+//                Algebra.normalizeAngle
+//                        (currentAngle - lastDragAngle) / (distanceToWhite / 500.0);
+//
+//        double aimingAngle = Algebra.thetaOf(new double[]{cursorDirectionUnitX, cursorDirectionUnitY});
+//        double resultAngle = aimingAngle + changedAngle;
+//        double[] newUnitVector = Algebra.unitVectorOfAngle(resultAngle);
+//        cursorDirectionUnitX = newUnitVector[0];
+//        cursorDirectionUnitY = newUnitVector[1];
+//        recalculateUiRestrictions();
+//
+//        lastDragAngle = currentAngle;
+//    }
 
     private void onDragEnd(MouseEvent mouseEvent) {
         isDragging = false;
-        lastDragAngle = 0.0;
+//        lastDragAngle = 0.0;
         stage.getScene().setCursor(Cursor.DEFAULT);
     }
 
@@ -2645,7 +2749,7 @@ public class GameView implements Initializable {
                 cuePointX = cueCanvasWH / 2 + cueResult.getCueParams().selectedSideSpin() * cueAreaRadius;
                 cuePointY = cueCanvasWH / 2 - cueResult.getCueParams().selectedFrontBackSpin() * cueAreaRadius;
                 cueAngleDeg = 0.0;
-                
+
                 aimingChanged();
 
                 CuePlayParams realParams = applyRandomCueError(player);
@@ -3557,7 +3661,7 @@ public class GameView implements Initializable {
                 double leftX = isP1 ?
                         ballDiameter * 1.3 :
                         ballDiameter * 0.1;
-                
+
                 Color color = Values.getColorOfTarget(indicatedTarget);
                 canvas.getGraphicsContext2D().setFill(color);
                 canvas.getGraphicsContext2D().fillOval(leftX, ballDiameter * 0.1, ballDiameter, ballDiameter);
@@ -3734,7 +3838,7 @@ public class GameView implements Initializable {
                     wh,
                     wh
             );
-            
+
             // draw hit point
             gamePane.getLineGraphics().setStroke(game.getGame().getCueBall().getColor());
             gamePane.getLineGraphics().strokeOval(
@@ -4197,7 +4301,7 @@ public class GameView implements Initializable {
         changeCueButton.setDisable(!cuingIgp.isHuman());
 
         createPathPrediction();
-        
+
         aimingChanged();
     }
 

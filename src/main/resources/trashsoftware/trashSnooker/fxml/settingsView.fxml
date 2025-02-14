@@ -40,6 +40,9 @@
         <Label text="%fastGameAiStrength" GridPane.rowIndex="3"/>
         <ComboBox fx:id="aiStrengthBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
+        <Label text="%autoChangeBreakCue" GridPane.rowIndex="4"/>
+        <ComboBox fx:id="autoChangeBreakCueBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
         <Label text="%settingsGraphics" GridPane.rowIndex="6">
             <font>
                 <Font size="16.0"/>

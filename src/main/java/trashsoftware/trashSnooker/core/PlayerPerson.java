@@ -708,9 +708,12 @@ public class PlayerPerson {
             return rah;
         }
 
+        /**
+         * @see PlayerHand#average() 
+         */
         double average() {
             PlayerHand ph = toPlayerHand();
-            return ph.average() / ph.hand.nativePowerMul;
+            return ph.average() / (1 - (1 - ph.hand.nativePowerMul) / 5);  // 只有1/5来自力量
         }
         
         PlayerHand toPlayerHand() {
