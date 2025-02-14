@@ -37,7 +37,7 @@
     <HBox alignment="BOTTOM_RIGHT" spacing="10.0">
         <Button text="%replayPlay" onAction="#playAction" fx:id="playBtn" disable="true"/>
         <Button text="%exportAsVideo" onAction="#exportVideoAction" fx:id="exportBtn"
-                disable="true"/>
+                disable="true" visible="false" managed="false"/>
     </HBox>
 
 </VBox>

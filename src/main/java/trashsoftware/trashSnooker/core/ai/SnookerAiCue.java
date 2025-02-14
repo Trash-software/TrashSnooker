@@ -105,7 +105,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double allowedX = game.getTable().breakLineX();
         
         Set<Ball> suggestedTarget = game.getSuggestedRegularBreakBalls();
-        PlayerPerson.HandSkill handSkill = aiPlayer.getPlayerPerson().handBody.getPrimary();
+        PlayerHand handSkill = aiPlayer.getPlayerPerson().handBody.getPrimary();
         List<FinalChoice.DefenseChoice> legalChoices = new ArrayList<>();
         for (double deg = beginDeg, i = 0; i < nTicks; deg += tickDeg, i++) {
             double rad = Math.toRadians(deg);
@@ -241,10 +241,23 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 //                return makeAttackCue(doublePotChoice, AiCueResult.CueType.DOUBLE_POT);
 //            }
         }
-        if (-behind > rem + 7 && currentTarget == 7) {
-            FinalChoice.IntegratedAttackChoice exhibition = lastExhibitionShot(phy);
-            if (exhibition != null) {
-                return makeAttackCue(exhibition);
+        Ball targetBallMaybe = null;
+        if (currentTarget != AbstractSnookerGame.RAW_COLORED_REP) {
+            targetBallMaybe = game.getBallOfValue(currentTarget);
+        }
+        GamePlayStage gps = game.getGamePlayStage(targetBallMaybe, false);
+        
+        if (gps == GamePlayStage.NO_PRESSURE) {
+            if (currentTarget == 7) {
+                FinalChoice.IntegratedAttackChoice exhibition = lastExhibitionShot(phy);
+                if (exhibition != null) {
+                    return makeAttackCue(exhibition);
+                }
+            }
+            System.out.println("Big over score, free show");
+            FinalChoice.IntegratedAttackChoice iac = standardAttack(phy, true);
+            if (iac != null) {
+                return makeAttackCue(iac);
             }
         }
         return regularCueDecision(phy);
@@ -304,8 +317,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             double[] spin = ATTACK_SPIN_POINTS[index];
             Cue cue = aiPlayer.getInGamePlayer().getCueSelection().getSelected().getNonNullInstance();
             double[] aiSpin = cue.aiCuePoint(spin, game.getGameValues().ball);
-            double powerLow = pp.getControllablePowerPercentage() * 0.7;
-            double interval = pp.getControllablePowerPercentage() - powerLow;
+            double powerLow = choice.handSkill.getControllablePowerPercentage() * 0.7;
+            double interval = choice.handSkill.getControllablePowerPercentage() - powerLow;
             cueParams = CueParams.createBySelected(
                     random.nextDouble() * interval + powerLow,
                     aiSpin[0],

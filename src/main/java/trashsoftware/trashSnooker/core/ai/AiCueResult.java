@@ -84,7 +84,7 @@ public class AiCueResult {
         return targetDirHole;
     }
 
-    public PlayerPerson.HandSkill getHandSkill() {
+    public PlayerHand getHandSkill() {
         return cueParams.getHandSkill();
     }
 
@@ -149,7 +149,8 @@ public class AiCueResult {
             sd = (100 - person.getAiPlayStyle().defense) / precisionFactor;
         }
 
-        double handSdMul = PlayerPerson.HandBody.getSdOfHand(getHandSkill());
+//        double handSdMul = PlayerPerson.HandBody.getSdOfHand(getHandSkill());
+        double handSdMul = 1.0;
         sd *= handSdMul;
 
         // 手感差时偏差大

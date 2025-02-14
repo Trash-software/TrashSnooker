@@ -7,7 +7,7 @@ import java.util.Set;
 public abstract class CueAttempt {
 
     protected Movement movement;
-    protected PlayerPerson.HandSkill handSkill;
+    protected PlayerHand handSkill;
     protected boolean success;
     protected Set<Ball> legalPots;  // 合法打进的球
     protected final CuePlayParams playParams;
@@ -28,7 +28,7 @@ public abstract class CueAttempt {
         return success;
     }
 
-    public void setAfterFinish(PlayerPerson.HandSkill handSkill, 
+    public void setAfterFinish(PlayerHand handSkill, 
                                Movement movement) {
         this.handSkill = handSkill;
         this.movement = movement;
@@ -52,7 +52,7 @@ public abstract class CueAttempt {
         return movement.getTargetTrace();
     }
 
-    public PlayerPerson.HandSkill getHandSkill() {
+    public PlayerHand getHandSkill() {
         return handSkill;
     }
 }

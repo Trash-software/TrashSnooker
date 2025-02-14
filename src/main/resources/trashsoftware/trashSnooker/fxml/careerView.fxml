@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import trashsoftware.trashSnooker.fxml.widgets.AbilityShower?>
 <?import trashsoftware.trashSnooker.fxml.widgets.LabelTable?>
+<?import trashsoftware.trashSnooker.fxml.widgets.PerkAdder?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="trashsoftware.trashSnooker.fxml.CareerView"
@@ -65,7 +66,7 @@
         </HBox>
     </HBox>
     
-    <AbilityShower fx:id="abilityShower" GridPane.rowIndex="2"/>
+    <PerkAdder fx:id="abilityShower" GridPane.rowIndex="2"/>
 
     <HBox GridPane.rowIndex="3" spacing="10.0" alignment="CENTER_LEFT">
         <Label fx:id="currentDateLabel"/>

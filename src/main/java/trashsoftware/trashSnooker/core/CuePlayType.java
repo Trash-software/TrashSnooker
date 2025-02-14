@@ -61,12 +61,12 @@ public class CuePlayType {
         this.specialAction = specialAction;
     }
     
-    public boolean willApplySpecial(double selectedPower, PlayerPerson.Hand hand) {
+    public boolean willApplySpecial(double selectedPower, PlayerHand.Hand hand) {
         return specialAction != null && specialAction.willApply(selectedPower, hand);
     }
 
     /**
-     * 在 {@link CuePlayType#willApplySpecial(double, PlayerPerson.Hand)} 返回true之后调用
+     * 在 {@link CuePlayType#willApplySpecial(double, PlayerHand.Hand)} 返回true之后调用
      */
     public SpecialAction getSpecialAction() {
         return specialAction;
@@ -118,7 +118,7 @@ public class CuePlayType {
     }
     
     public static abstract class SpecialAction {
-        abstract boolean willApply(double selectedPower, PlayerPerson.Hand hand);
+        abstract boolean willApply(double selectedPower, PlayerHand.Hand hand);
         
         abstract JSONObject toJson();
     }
@@ -168,8 +168,8 @@ public class CuePlayType {
         }
 
         @Override
-        boolean willApply(double selectedPower, PlayerPerson.Hand hand) {
-            return (hand == PlayerPerson.Hand.LEFT || hand == PlayerPerson.Hand.RIGHT) && 
+        boolean willApply(double selectedPower, PlayerHand.Hand hand) {
+            return (hand == PlayerHand.Hand.LEFT || hand == PlayerHand.Hand.RIGHT) && 
                     (selectedPower >= minPower && selectedPower <= maxPower);
         }
         

@@ -42,7 +42,7 @@ public class AmericanNineAiVsAi extends AiVsAi {
 
         int tar = 1;
         // 开球
-        boolean breakSuc = random.nextDouble() * 75.0 < playing.ra.maxPower;
+        boolean breakSuc = random.nextDouble() * 75.0 < playing.raPrimary.maxPower;
         if (breakSuc) {
             tar = 2;
         } else {
@@ -92,10 +92,10 @@ public class AmericanNineAiVsAi extends AiVsAi {
                     attack = false;
                 }
                 if (attack) {
-                    if (powerNeed > playing.career.getPlayerPerson().getMaxPowerPercentage()) {
+                    if (powerNeed > playing.career.getPlayerPerson().getPrimaryHand().getMaxPowerPercentage()) {
                         attack = false;
                     } else if (goodPos) {
-                        if (powerNeed > playing.career.getPlayerPerson().getControllablePowerPercentage()) {
+                        if (powerNeed > playing.career.getPlayerPerson().getPrimaryHand().getControllablePowerPercentage()) {
                             goodPos = false;
                         }
                     }
@@ -143,6 +143,7 @@ public class AmericanNineAiVsAi extends AiVsAi {
     private static class SimPlayer {
         final Career career;
         final PlayerPerson.ReadableAbility ra;
+        final PlayerPerson.ReadableAbilityHand raPrimary;
         final AiPlayStyle aiPlayStyle;
         final double goodPosition;
         final double position;
@@ -156,8 +157,9 @@ public class AmericanNineAiVsAi extends AiVsAi {
             this.career = career;
             this.playerNum = playerNum;
             this.ra = ra;
+            this.raPrimary = ra.primary();
             this.aiPlayStyle = career.getPlayerPerson().getAiPlayStyle();
-            double posDif = 100 - (aiPlayStyle.position * (ra.spinControl + ra.powerControl) / 200);
+            double posDif = 100 - (aiPlayStyle.position * (raPrimary.spinControl + raPrimary.powerControl) / 200);
             this.goodPosition = 100 - posDif * ballBadness;
             this.position = 100 - (100 - goodPosition) / 3;
             this.framePsyDivisor = framePsyDivisor;

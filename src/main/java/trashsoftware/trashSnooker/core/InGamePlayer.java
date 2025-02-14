@@ -18,7 +18,7 @@ public class InGamePlayer {
 //    private final Cue playCue;
     private final PlayerType playerType;
     private final GameRule gameRule;
-    private final int playerNumber;
+    private final int playerNumber;  // 1 or 2
     private final double handFeelEffort;
 
     private final CueSelection cueSelection;

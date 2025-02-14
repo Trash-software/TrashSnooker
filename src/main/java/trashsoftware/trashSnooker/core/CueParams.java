@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -14,7 +16,7 @@ public class CueParams {
     private double actualPower;
     private double actualFrontBackSpin;
     private double actualSideSpin;
-    private final PlayerPerson.HandSkill handSkill;
+    private final PlayerHand handSkill;
 
     private CueParams(double selectedPower,
                       double actualPower,
@@ -22,7 +24,7 @@ public class CueParams {
                       double actualFrontBackSpin,
                       double selectedSideSpin,
                       double actualSideSpin,
-                      PlayerPerson.HandSkill handSkill) {
+                      PlayerHand handSkill) {
         this.selectedPower = selectedPower;
         this.selectedFrontBackSpin = selectedFrontBackSpin;
         this.selectedSideSpin = selectedSideSpin;
@@ -40,17 +42,18 @@ public class CueParams {
                                              double selectedSideSpin,
                                              Game<?, ?> game,
                                              InGamePlayer inGamePlayer,
-                                             PlayerPerson.HandSkill handSkill) {
+                                             @Nullable PlayerHand handSkill) {
 //        Cue cue = inGamePlayer.getCurrentCue(game);
         Cue cue = inGamePlayer.getCueSelection().getSelected().getNonNullInstance();
         double cuePowerMul = cue.getPowerMultiplier();
 
-        double actualFbSpin = CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin, inGamePlayer.getPlayerPerson(), cue);
+        double actualFbSpin = CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin, handSkill, cue);
         double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin, cue);
 
         double mul = Util.powerMultiplierOfCuePoint(actualSideSpin, actualFbSpin);
-        double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
-
+//        double handMul = handSkill == null ? 1.0 : handSkill.po;
+        double handMul = 1.0;
+        
         double actualPower = selectedPower * handMul * mul * cuePowerMul /
                 game.getGameValues().ball.ballWeightRatio;
 
@@ -68,19 +71,20 @@ public class CueParams {
                                            double actualSideSpin,
                                            Game<?, ?> game,
                                            InGamePlayer inGamePlayer,
-                                           PlayerPerson.HandSkill handSkill) {
+                                           PlayerHand handSkill) {
 //        Cue cue = inGamePlayer.getCurrentCue(game);
         Cue cue = inGamePlayer.getCueSelection().getSelected().getNonNullInstance();
         double cuePowerMul = cue.getPowerMultiplier();
 
         double mul = Util.powerMultiplierOfCuePoint(actualSideSpin, actualFrontBackSpin);
-        double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
+//        double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
+        double handMul = 1.0;
 
         double selectedPower = actualPower / handMul / mul / cuePowerMul *
                 game.getGameValues().ball.ballWeightRatio;
         
         double selectedFrontBackSpin = CuePlayParams.getSelectedFrontBackSpin(actualFrontBackSpin,
-                inGamePlayer.getPlayerPerson(),
+                handSkill,
                 cue);
         double selectedSideSpin = CuePlayParams.getSelectedSideSpin(actualSideSpin,
                 cue);
@@ -99,9 +103,10 @@ public class CueParams {
                                                     double selectedPower,
                                                     double unitCuePointX,
                                                     double unitCuePointY,
-                                                    PlayerPerson.HandSkill handSkill) {
+                                                    PlayerHand handSkill) {
         double mul = Util.powerMultiplierOfCuePoint(unitCuePointX, unitCuePointY);
-        double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
+//        double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
+        double handMul = 1.0;
         return selectedPower * handMul * mul *
                 igp.getCueSelection().getSelected().getNonNullInstance().getPowerMultiplier() /
                 game.getGameValues().ball.ballWeightRatio;
@@ -112,9 +117,10 @@ public class CueParams {
                                                     double actualPower,
                                                     double unitCuePointX,
                                                     double unitCuePointY,
-                                                    PlayerPerson.HandSkill handSkill) {
+                                                    PlayerHand handSkill) {
         double mul = Util.powerMultiplierOfCuePoint(unitCuePointX, unitCuePointY);
-        double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
+//        double handMul = handSkill == null ? 1.0 : PlayerPerson.HandBody.getPowerMulOfHand(handSkill);
+        double handMul = 1.0;
         return actualPower / handMul / mul /
                 igp.getCueSelection().getSelected().getNonNullInstance().getPowerMultiplier() *
                 game.getGameValues().ball.ballWeightRatio;
@@ -169,7 +175,7 @@ public class CueParams {
         this.actualSideSpin = actualSideSpin;
     }
 
-    public PlayerPerson.HandSkill getHandSkill() {
+    public PlayerHand getHandSkill() {
         return handSkill;
     }
 }

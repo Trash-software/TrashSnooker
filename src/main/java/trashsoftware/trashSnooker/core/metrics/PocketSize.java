@@ -27,7 +27,12 @@ public class PocketSize {
     public static final PocketSize[] CHINESE_EIGHT_HOLES = {
             new PocketSize("pocketHuge", 92.71, 90.17),
             new PocketSize("pocketLarge", 88.9, 86.36),
-            new PocketSize("pocketStd", 84.15, 82.55),
+            new PocketSize("pocketStd",
+                    86.36,
+                    84.15),
+            new PocketSize("pocketStdS",
+                    84.15,
+                    82.55),
             new PocketSize("pocketSmall", 82.55, 80.01),
             new PocketSize("pocketLittle", 77.47, 74.93)
     };
@@ -81,6 +86,6 @@ public class PocketSize {
 
     @Override
     public String toString() {
-        return String.format("%s (%d mm)", App.getStrings().getString(key), (int) cornerHoleDiameter);
+        return String.format("%s (%.0f mm)", App.getStrings().getString(key), cornerHoleDiameter);
     }
 }

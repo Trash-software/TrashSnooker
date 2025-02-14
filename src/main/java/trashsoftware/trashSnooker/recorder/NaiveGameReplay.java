@@ -173,7 +173,7 @@ public class NaiveGameReplay extends GameReplay {
                 Util.bytesToDouble(buf, 64),
                 Util.bytesToDouble(buf, 72),
                 GamePlayStage.values()[buf[80] & 0xff],
-                PlayerPerson.Hand.values()[buf[81] & 0xff]
+                PlayerHand.Hand.values()[buf[81] & 0xff]
         );
 
         thisTarget = new TargetRecord(

@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.snooker;
 
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.SnookerAiCue;
@@ -46,6 +47,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private boolean willLoseBecauseThisFoul;
     private boolean isSolvable;  // 球形是否有解
     private int indicatedTarget;
+    private boolean targetManualIndicated = false;
 
     private int maxScoreDiff;  // 最大分差，p1的分减p2的分
     private boolean p1EverOver;  // p1 p2分别是否曾经超了分
@@ -80,7 +82,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (gameValues.hasSubRule(SubRule.SNOOKER_GOLDEN)) {
             nColorBalls = 7;
             goldenBall = new SnookerBall(20,
-                    new double[]{gameValues.table.leftX + gameValues.ball.ballRadius, gameValues.table.midY},
+                    new double[]{gameValues.table.leftX + gameValues.ball.ballRadius + 1.0, gameValues.table.midY},
                     gameValues);
         }
 
@@ -184,7 +186,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     public SnookerBall getBallOfValue(int score) {
         return switch (score) {
-            case 1 -> redBalls[1];
+            case 1 -> {
+                for (int i = 0; i < numRedBalls(); i++) {
+                    if (!redBalls[i].isPotted()) yield redBalls[i];
+                }
+                yield redBalls[0];  // all reds potted
+            }
             case 2 -> allBalls[numRedBalls() + 1];
             case 3 -> allBalls[numRedBalls() + 2];
             case 4 -> allBalls[numRedBalls() + 3];
@@ -204,8 +211,15 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     /**
      * 斯诺克击打彩球时（target=0），需要指定目标球
      */
-    public void setIndicatedTarget(int indicatedTarget) {
-        this.indicatedTarget = indicatedTarget;
+    public void setIndicatedTarget(int indicatedTarget, boolean manualIndication) {
+           if ((!this.targetManualIndicated) || manualIndication) {
+            this.indicatedTarget = indicatedTarget;
+        }
+        this.targetManualIndicated |= manualIndication;
+    }
+
+    public int getIndicatedTarget() {
+        return indicatedTarget;
     }
 
     public int getScoreDiffAbs() {
@@ -266,7 +280,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             else return 2;  // 最后一颗红球附带的彩球打完
         } else if (currentTarget == 7) {  // 黑球进了
             if (goldenBall != null && !goldenBall.isPotted()) {
-                currentTarget = 20;
+                return 20;
             } else {
                 return END_REP;
             }
@@ -969,6 +983,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             p2EverOver = true;
         }
         indicatedTarget = 0;
+        targetManualIndicated = false;
         if (!isEnded())
             pickupPottedBalls(currentTarget);
     }
@@ -1080,7 +1095,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             int curSinglePole = snookerPlayer.getSinglePoleScore();
             if (lastPotting != null) curSinglePole += 1;
 //            System.out.println(curSinglePole + " " + remMax);
-            if (curSinglePole > 24 && curSinglePole + remMax == 147) {
+//            if (curSinglePole > 24 && curSinglePole + remMax == 147) {
+            if (curSinglePole > 24 && isOnMaximum) {
                 // 有机会冲击147
                 if (ball.getValue() == 7) return 1.0;
                 if (curSinglePole > -scoreBehind) {
@@ -1098,21 +1114,36 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     }
 
     @Override
-    public GamePlayStage getGamePlayStage(Ball predictedTargetBall, boolean printPlayStage) {
+    public GamePlayStage getGamePlayStage(@Nullable Ball predictedTargetBall, boolean printPlayStage) {
 //        printPlayStage = true;
         if (isBreaking()) return GamePlayStage.BREAK;
         int targetValue = getCurrentTarget();
-        int singlePoleScore = getCuingPlayer().getSinglePoleScore();
-        if (singlePoleScore >= 140 && targetValue == 7) {
-            // 打进黑球就是147
-            if (printPlayStage) System.out.println("This ball 147!");
-            return GamePlayStage.THIS_BALL_WIN;
+//        int singlePoleScore = getCuingPlayer().getSinglePoleScore();
+        boolean isGolden = gameValues.hasSubRule(SubRule.SNOOKER_GOLDEN);
+        if (isOnMaximum) {
+            if (isGolden) {
+                if (targetValue == 20) {
+                    // 打进金球就是167
+                    if (printPlayStage) System.out.println("This ball 167!");
+                    return GamePlayStage.THIS_BALL_WIN;
+                } else if (targetValue == 7) {
+                    // 打进黑球再打进金球就是167
+                    if (printPlayStage) System.out.println("Going 167!");
+                    return GamePlayStage.NEXT_BALL_WIN;
+                }
+            } else {
+                if (targetValue == 7) {
+                    // 打进黑球就是147
+                    if (printPlayStage) System.out.println("This ball 147!");
+                    return GamePlayStage.THIS_BALL_WIN;
+                } else if (targetValue == 6) {
+                    // 打进粉球再打进黑球就是147
+                    if (printPlayStage) System.out.println("Going 147!");
+                    return GamePlayStage.NEXT_BALL_WIN;
+                }
+            }
         }
-        if (singlePoleScore >= 134 && targetValue == 6) {
-            // 打进粉球再打进黑球就是147
-            if (printPlayStage) System.out.println("Going 147!");
-            return GamePlayStage.NEXT_BALL_WIN;
-        }
+
 
         int ahead = getScoreDiff(getCuingPlayer());
         int remaining = getRemainingScore(isDoingSnookerFreeBll());
@@ -1168,7 +1199,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             return GamePlayStage.NORMAL;
         } else if (ahead > remaining) {
             // todo: 需检查
-            if (singlePoleScore + remaining >= 147) {
+//            if (singlePoleScore + remaining >= 147) {
+            if (isOnMaximum) {
                 if (printPlayStage) System.out.println("Way on 147");
                 return GamePlayStage.NORMAL;
             }

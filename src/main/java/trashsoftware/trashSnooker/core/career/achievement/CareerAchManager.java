@@ -198,8 +198,8 @@ public class CareerAchManager extends AchManager {
                     addAchievement(Achievement.POT_A_BALL, justCuedPlayer);
                     addAchievement(Achievement.POT_BALLS, justCuedPlayer);
 
-                    PlayerPerson.HandSkill handSkill = potAttempt.getHandSkill();
-                    if (handSkill.hand == PlayerPerson.Hand.REST) {
+                    PlayerHand handSkill = potAttempt.getHandSkill();
+                    if (handSkill.hand == PlayerHand.Hand.REST) {
                         addAchievement(Achievement.POT_BALLS_REST, justCuedPlayer);
                     } else if (handSkill.hand == justCuedPlayer.getPlayerPerson().handBody.getAntiHand().hand) {
                         addAchievement(Achievement.POT_BALLS_ANTI, justCuedPlayer);

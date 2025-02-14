@@ -33,7 +33,7 @@ public abstract class TargetOrientedCueBallPlacer<G extends Game<?, ?>, P extend
         int targetRep = game.getCurrentTarget();
         Ball cueBall = game.getCueBall();  // 肯定是pot了
 
-        double maxPower = player.getPlayerPerson().getControllablePowerPercentage();
+        double maxPower = player.getPlayerPerson().getPrimaryHand().getControllablePowerPercentage();
 
         double attackProbThreshold = AiCue.attackProbThreshold(AiCue.PURE_ATTACK_PROB,
                 player.getPlayerPerson().getAiPlayStyle());

@@ -17,10 +17,10 @@ public abstract class ChildInitializable implements Initializable {
         this.parentRoot = parentRoot;
 //        this.parentController = parentController;
     }
-    
-    public void setParent(Window window) {
-        setParent(window.getScene());
-    }
+//    
+//    public void setParent(Window window) {
+//        setParent(window.getScene());
+//    }
 
     public void setParent(Scene scene) {
         parentRoot = (Parent) scene.getRoot().getChildrenUnmodifiable().get(0);

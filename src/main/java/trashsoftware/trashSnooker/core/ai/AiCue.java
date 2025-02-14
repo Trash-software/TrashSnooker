@@ -426,6 +426,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
                 isSnookerFreeBall,
                 false);  // 不可能，没有谁会给自己摆杆斯诺克
+        System.out.println(legalBalls);
 
         PlayerPerson aps = aiPlayer.getPlayerPerson();
         double degreesTick = 100.0 / 2 / aps.getSolving();
@@ -465,7 +466,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                                       List<Ball> nextStepLegalBalls,
                                                       Phy phy,
                                                       boolean mustAttack) {
-        double powerLimit = aiPlayer.getPlayerPerson().getControllablePowerPercentage();
+        double powerLimit = choice.handSkill.getControllablePowerPercentage();
 
         double minPower;
         double tick;
@@ -770,26 +771,32 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         if (!aiOnlyDefense) {
             FinalChoice.IntegratedAttackChoice attackChoice = standardAttack(phy, currentMustAttack());
             if (attackChoice != null) {
+                System.out.println("AI attack");
                 return makeAttackCue(attackChoice);
             }
         }
         FinalChoice.DefenseChoice stdDefense = standardDefense();
         if (stdDefense != null) {
+            System.out.println("AI standard defense");
             return makeDefenseCue(stdDefense, AiCueResult.CueType.DEFENSE);
         }
         FinalChoice.DefenseChoice defenseChoice = getBestDefenseChoice(phy);
         if (defenseChoice != null) {
+            System.out.println("AI defense");
             return makeDefenseCue(defenseChoice, AiCueResult.CueType.DEFENSE);
         }
         FinalChoice.DefenseChoice solveSnooker = solveSnooker(phy, false);
         if (solveSnooker != null) {
+            System.out.println("AI solve snooker");
             return makeDefenseCue(solveSnooker, AiCueResult.CueType.SOLVE);
         }
         FinalChoice.DefenseChoice solveSnooker2 = solveSnooker(phy, true);  // 只能说是逼急了，来个袋角解斯诺克
         System.out.println("Cannot solve snooker! Try pocket arc!");
         if (solveSnooker2 != null) {
+            System.out.println("AI solve snooker by pocket arc");
             return makeDefenseCue(solveSnooker2, AiCueResult.CueType.SOLVE);
         }
+        System.out.println("Ai random angry cue");
         return randomAngryCue();
     }
 
@@ -877,16 +884,16 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         System.out.println("Shit! No way to deal this!");
         Random random = new Random();
         double directionRad = random.nextDouble() * Math.PI * 2;
-        double power = random.nextDouble() *
-                (aiPlayer.getPlayerPerson().getMaxPowerPercentage() - 20.0) + 20.0;
         double[] directionVec = Algebra.unitVectorOfAngle(directionRad);
-        PlayerPerson.HandSkill handSkill = CuePlayParams.getPlayableHand(
+        PlayerHand handSkill = CuePlayParams.getPlayableHand(
                 game.getCueBall().getX(), game.getCueBall().getY(),
                 directionVec[0], directionVec[1],
                 0.0,
                 game.getGameValues().table,
                 game.getCuingPlayer().getPlayerPerson()
         );
+        double power = random.nextDouble() *
+                (handSkill.getMaxPowerPercentage() - 20.0) + 20.0;
         CueParams cueParams = CueParams.createBySelected(
                 power,
                 0.0,
@@ -1104,9 +1111,11 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
 
         double realPowerTick = smallPower ? powerTick / 3.0 : powerTick;
+        double ctrlPower = aiPlayer.getPlayerPerson().handBody.getPrimary().getControllablePowerPercentage();
+        
         double powerLimit = smallPower ?
-                Math.min(45.0, aiPlayer.getPlayerPerson().getControllablePowerPercentage()) :
-                aiPlayer.getPlayerPerson().getControllablePowerPercentage();
+                Math.min(45.0, ctrlPower) :
+                ctrlPower;
         List<AngleSnookerSolver> angleSolvers = new ArrayList<>();
 
         for (double deg = 0.0; deg < 360; deg += degreesTick) {
@@ -1176,7 +1185,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 CueParams.selectedPowerToActualPower(
                         game,
                         aiPlayer.getInGamePlayer(),
-                        aiPlayer.getPlayerPerson().getControllablePowerPercentage(),
+                        aiPlayer.getPlayerPerson().handBody.getPrimary().getControllablePowerPercentage(),
                         0, 0, null),
                 phy
         );
@@ -1221,13 +1230,15 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             GameValues gameValues = game.getGameValues();
 
             PlayerPerson playerPerson = attackChoice.attackingPlayer.getPlayerPerson();
+            PlayerHand playerHand = attackChoice.handSkill;
             AiPlayStyle aps = playerPerson.getAiPlayStyle();
-            double handSdMul = PlayerPerson.HandBody.getSdOfHand(attackChoice.handSkill);
+//            double handSdMul = PlayerPerson.HandBody.getSdOfHand(attackChoice.handSkill);
+            double handSdMul = 1.0;
 
 //            double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
 //            double sideSpinSd = muSigXy[1];  // 左右打点的标准差，mm
-            double powerErrorFactor = playerPerson.getErrorMultiplierOfPower(cueParams.selectedPower());
-            double powerSd = (100.0 - playerPerson.getPowerControl()) / 100.0;
+            double powerErrorFactor = playerHand.getErrorMultiplierOfPower(cueParams.selectedPower());
+            double powerSd = (100.0 - playerHand.getPowerControl()) / 100.0;
             powerSd *= attackChoice.attackingPlayer.getInGamePlayer()
                     .getCueSelection().getSelected().getNonNullInstance().getPowerMultiplier();
             powerSd *= handSdMul;
@@ -1428,7 +1439,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             int threadIndex = (int) (Thread.currentThread().getId() % gameClonesPool.length);
             Game<?, ?> copy = gameClonesPool[threadIndex];
             //        System.out.print(selectedPower);
-            double actualFbSpin = attackParams.cueParams.actualFrontBackSpin();
+//            double actualFbSpin = attackParams.cueParams.actualFrontBackSpin();
             double actualSideSpin = attackParams.cueParams.actualSideSpin();
             double actualPower = attackParams.cueParams.actualPower();
 
@@ -1479,9 +1490,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //            }
 
             double estBallSpeed = wp.getBallInitSpeed();
-            double errorLow = aiPlayer.getPlayerPerson().getPowerSd(
-                    attackParams.cueParams.selectedPower(),
-                    attackParams.attackChoice.handSkill) * 1.96;
+            double errorLow = attackParams.attackChoice.handSkill.getPowerSd(
+                    attackParams.cueParams.selectedPower()) * 1.96;
             double estBallSpeedLow = estBallSpeed * (1 - errorLow);  //  95%置信区间下界，没有考虑旋转这些
 
             double targetCanMove = values.estimatedMoveDistance(phy, estBallSpeedLow) * 0.95;  // 补偿：球的初始旋转是0，一开始的滑动摩擦会让目标球比预期的少跑一点
@@ -1562,7 +1572,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
             double[] unitXY = Algebra.unitVectorOfAngle(rad);
 
-            PlayerPerson.HandSkill handSkill = CuePlayParams.getPlayableHand(
+            PlayerHand handSkill = CuePlayParams.getPlayableHand(
                     whitePos[0],
                     whitePos[1],
                     unitXY[0],  // fixme: 这里存疑

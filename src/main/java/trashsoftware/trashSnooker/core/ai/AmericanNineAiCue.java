@@ -47,7 +47,7 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
         System.out.println("Cue ball at " + cueBall.getX() + " " + cueBall.getY());
         double[] unitXY = Algebra.unitVector(dirX, dirY);
 
-        double selectedPower = aiPlayer.getPlayerPerson().getMaxPowerPercentage();
+        double selectedPower = aiPlayer.getPlayerPerson().getPrimaryHand().getMaxPowerPercentage();
         CueParams cueParams = CueParams.createBySelected(
                 selectedPower,
                 0.0,

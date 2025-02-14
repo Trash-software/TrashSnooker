@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 
@@ -10,7 +11,7 @@ import java.util.List;
 public class CuePlayParams {
 
     public static final double SIDE_SPIN_DEVIATION_DIVISOR = 4000.0;  // 加塞的方向偏差，这个值越大，加塞偏移越小。
-    
+
     public final double vx;
     public final double vy;
 
@@ -114,17 +115,19 @@ public class CuePlayParams {
     }
 
     public static double getSelectedFrontBackSpin(double actualFbSpin,
-                                                  PlayerPerson playerPerson,
+                                                  @Nullable PlayerHand hand,
                                                   Cue cue) {
+        double percentage = hand == null ? 100 : hand.getMaxSpinPercentage();
         return actualFbSpin / cue.getSpinMultiplier() /
-                (playerPerson.getMaxSpinPercentage() / 100.0);
+                (percentage / 100.0);
     }
 
     public static double unitFrontBackSpin(double unitCuePoint,
-                                           PlayerPerson playerPerson,
+                                           @Nullable PlayerHand hand,
                                            Cue cue) {
+        double percentage = hand == null ? 100 : hand.getMaxSpinPercentage();
         return unitCuePoint * cue.getSpinMultiplier() *
-                playerPerson.getMaxSpinPercentage() / 100.0;
+                percentage / 100.0;
     }
 
     public static double getSelectedSideSpin(double actualSideSpin, Cue cue) {
@@ -152,32 +155,32 @@ public class CuePlayParams {
     /**
      * 返回这个位置可用的所有手，以优先级排序
      */
-    public static List<PlayerPerson.Hand> getPlayableHands(double whiteX, double whiteY,
-                                                           double aimingX, double aimingY,
-                                                           double cueAngleDeg,
-                                                           TableMetrics tableMetrics,
-                                                           PlayerPerson person) {
-        List<PlayerPerson.Hand> result = new ArrayList<>();
-        result.add(PlayerPerson.Hand.REST);
+    public static List<PlayerHand.Hand> getPlayableHands(double whiteX, double whiteY,
+                                                         double aimingX, double aimingY,
+                                                         double cueAngleDeg,
+                                                         TableMetrics tableMetrics,
+                                                         PlayerPerson person) {
+        List<PlayerHand.Hand> result = new ArrayList<>();
+        result.add(PlayerHand.Hand.REST);
 
         double[][] standingPosLeft = personStandingPosition(whiteX, whiteY,
                 aimingX, aimingY,
                 cueAngleDeg,
-                person, PlayerPerson.Hand.LEFT);
+                person, PlayerHand.Hand.LEFT);
 
         if (!tableMetrics.isInOuterTable(standingPosLeft[0][0], standingPosLeft[0][1]) ||
                 !tableMetrics.isInOuterTable(standingPosLeft[1][0], standingPosLeft[1][1])) {
-            result.add(PlayerPerson.Hand.LEFT);
+            result.add(PlayerHand.Hand.LEFT);
         }
 
         double[][] standingPosRight = personStandingPosition(whiteX, whiteY,
                 aimingX, aimingY,
                 cueAngleDeg,
-                person, PlayerPerson.Hand.RIGHT);
+                person, PlayerHand.Hand.RIGHT);
 
         if (!tableMetrics.isInOuterTable(standingPosRight[0][0], standingPosRight[0][1]) ||
                 !tableMetrics.isInOuterTable(standingPosRight[1][0], standingPosRight[1][1])) {
-            result.add(PlayerPerson.Hand.RIGHT);
+            result.add(PlayerHand.Hand.RIGHT);
         }
 
         result.sort(Comparator.comparingInt(person.handBody::precedenceOfHand));
@@ -185,13 +188,13 @@ public class CuePlayParams {
         return result;
     }
 
-    public static PlayerPerson.HandSkill getPlayableHand(double whiteX, double whiteY,
-                                                         double aimingX, double aimingY,
-                                                         double cueAngleDeg,
-                                                         TableMetrics tableMetrics,
-                                                         PlayerPerson person) {
-        PlayerPerson.HandSkill primary = person.handBody.getPrimary();
-        if (primary.hand == PlayerPerson.Hand.REST) {
+    public static PlayerHand getPlayableHand(double whiteX, double whiteY,
+                                             double aimingX, double aimingY,
+                                             double cueAngleDeg,
+                                             TableMetrics tableMetrics,
+                                             PlayerPerson person) {
+        PlayerHand primary = person.handBody.getPrimary();
+        if (primary.hand == PlayerHand.Hand.REST) {
             return primary;
         }
 
@@ -205,8 +208,8 @@ public class CuePlayParams {
             return primary;
         }
 
-        PlayerPerson.HandSkill secondary = person.handBody.getSecondary();
-        if (secondary.hand == PlayerPerson.Hand.REST) {
+        PlayerHand secondary = person.handBody.getSecondary();
+        if (secondary.hand == PlayerHand.Hand.REST) {
             return secondary;
         }
         double[][] standingPosSec = personStandingPosition(whiteX, whiteY,
@@ -219,8 +222,8 @@ public class CuePlayParams {
             return secondary;
         }
 
-        PlayerPerson.HandSkill third = person.handBody.getThird();
-        assert third.hand == PlayerPerson.Hand.REST;
+        PlayerHand third = person.handBody.getThird();
+        assert third.hand == PlayerHand.Hand.REST;
         return third;
     }
 
@@ -228,13 +231,13 @@ public class CuePlayParams {
                                                     double aimingX, double aimingY,
                                                     double cueAngleDeg,
                                                     PlayerPerson person,
-                                                    PlayerPerson.Hand hand) {
+                                                    PlayerHand.Hand hand) {
         double upBodyLength = person.handBody.height * 10 - 851;
         double heightMul = 1.75 * Math.cos(Math.toRadians(cueAngleDeg));
         double personLengthX = upBodyLength * -aimingX * heightMul;
         double personLengthY = upBodyLength * -aimingY * heightMul;
 
-        int mul = hand == PlayerPerson.Hand.LEFT ? -1 : 1;
+        int mul = hand == PlayerHand.Hand.LEFT ? -1 : 1;
         double widthMulMin = person.handBody.bodyWidth * 280.0 * mul;
         double widthMulMax = upBodyLength * 0.68 * mul;
         double personWidthX1 = aimingY * widthMulMin;
@@ -298,7 +301,7 @@ public class CuePlayParams {
         double[] norm = Algebra.normalVector(vx, vy);  // 法线，扎杆就在这个方向
         double mbummeX = side * -norm[0] * mbummeMag;
         double mbummeY = side * -norm[1] * mbummeMag;
-        
+
         // 扎杆使侧旋转化为普通旋转
         side *= cosMbu;
 

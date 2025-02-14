@@ -13,7 +13,7 @@ module TrashSnooker {
     requires commons.math3;
     requires jcodec;
 //    requires jave.all.deps;
-    requires jave.core;
+//    requires jave.core;
 //    requires org.bytedeco.ffmpeg;
 //    requires jcodec.javase;
 

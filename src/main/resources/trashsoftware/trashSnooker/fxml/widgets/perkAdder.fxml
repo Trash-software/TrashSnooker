@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import trashsoftware.trashSnooker.fxml.widgets.PerkAdder?>
+<?import trashsoftware.trashSnooker.fxml.widgets.RadarChart?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.shape.Rectangle?>
+<fx:root type="trashsoftware.trashSnooker.fxml.widgets.PerkAdder"
+         xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         spacing="10">
+
+    <AnchorPane>
+        <VBox fx:id="selfBox" spacing="5.0" AnchorPane.leftAnchor="0.0">
+            <Label fx:id="nameLabel" text="Name" GridPane.columnSpan="3" alignment="CENTER">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+
+            <HBox spacing="10.0">
+                <Label fx:id="categoryLabel" text="%catProf"/>
+                <Rectangle fx:id="colorRect" width="16.0" height="16.0" visible="false"/>
+            </HBox>
+
+            <HBox spacing="10.0">
+                <Label fx:id="sexLabel"/>
+                <Label fx:id="heightLabel"/>
+            </HBox>
+        </VBox>
+
+<!--        <VBox fx:id="opponentBox" spacing="5.0" alignment="TOP_RIGHT" visible="false"-->
+<!--              managed="false" AnchorPane.rightAnchor="0.0">-->
+<!--            <Label fx:id="nameLabel2" text="Name" GridPane.columnSpan="3" alignment="CENTER"-->
+<!--                   textFill="gray">-->
+<!--                <font>-->
+<!--                    <Font size="18.0"/>-->
+<!--                </font>-->
+<!--            </Label>-->
+
+<!--            <HBox spacing="10.0" alignment="TOP_RIGHT">-->
+<!--                <Rectangle fx:id="colorRect2" width="16.0" height="16.0"/>-->
+<!--                <Label fx:id="categoryLabel2" text="%catProf" textFill="gray"/>-->
+<!--            </HBox>-->
+
+<!--            <HBox spacing="10.0" alignment="TOP_RIGHT">-->
+<!--                <Label fx:id="heightLabel2" textFill="gray"/>-->
+<!--                <Label fx:id="sexLabel2" textFill="gray"/>-->
+<!--            </HBox>-->
+<!--        </VBox>-->
+    </AnchorPane>
+
+    <GridPane fx:id="barChartRoot" vgap="10.0" hgap="20.0">
+        <columnConstraints>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints fx:id="buttonsCol"/>
+        </columnConstraints>
+
+        <Label text="%aiming" GridPane.rowIndex="0"/>
+        <ProgressBar fx:id="aimingBar" prefWidth="240.0"
+                     GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label fx:id="aimingLabel" text="99" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+        <Button fx:id="aimingBtn" onAction="#addPerk" text="+" GridPane.rowIndex="0"
+                GridPane.columnIndex="3"/>
+
+        <Label text="%cuePrecision" GridPane.rowIndex="1">
+            <tooltip>
+                <Tooltip text="%cuePrecisionTooltip"/>
+            </tooltip>
+        </Label>
+        <ProgressBar fx:id="cuePrecisionBar" prefWidth="240.0"
+                     GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label fx:id="cuePrecisionLabel" text="99" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+        <Button fx:id="cuePrecisionBtn" onAction="#addPerk" text="+" GridPane.rowIndex="1"
+                GridPane.columnIndex="3"/>
+
+        <Label text="%powerAndMaxPower" GridPane.rowIndex="2">
+            <tooltip>
+                <Tooltip text="%powerTooltip"/>
+            </tooltip>
+        </Label>
+        <ProgressBar fx:id="powerBar" prefWidth="240.0"
+                     GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label fx:id="powerLabel" text="99/99" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+        <Button fx:id="powerBtn" onAction="#addPerk" text="+" GridPane.rowIndex="2"
+                GridPane.columnIndex="3"/>
+
+        <Label text="%powerControl" GridPane.rowIndex="3">
+            <tooltip>
+                <Tooltip text="%powerControlTooltip"/>
+            </tooltip>
+        </Label>
+        <ProgressBar fx:id="powerControlBar" prefWidth="240.0"
+                     GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label fx:id="powerControlLabel" text="99" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+        <Button fx:id="powerControlBtn" onAction="#addPerk" text="+" GridPane.rowIndex="3"
+                GridPane.columnIndex="3"/>
+
+        <Label text="%spinText" GridPane.rowIndex="4"/>
+        <ProgressBar fx:id="spinBar" prefWidth="240.0"
+                     GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label fx:id="spinLabel" text="99" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+        <Button fx:id="spinBtn" onAction="#addPerk" text="+" GridPane.rowIndex="4"
+                GridPane.columnIndex="3"/>
+
+        <Label text="%spinControlText" GridPane.rowIndex="5"/>
+        <ProgressBar fx:id="spinControlBar" prefWidth="240.0"
+                     GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        <Label fx:id="spinControlLabel" text="99" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
+        <Button fx:id="spinControlBtn" onAction="#addPerk" text="+" GridPane.rowIndex="5"
+                GridPane.columnIndex="3"/>
+    </GridPane>
+    
+<!--    <Pane fx:id="handRoot">-->
+        
+<!--    </Pane>-->
+
+<!--    <RadarChart fx:id="radarChartRoot" visible="false" managed="false" alignment="TOP_CENTER"/>-->
+
+    <HBox spacing="20.0">
+<!--        <Button fx:id="switchButton" onAction="#switchChart"/>-->
+        
+<!--        <Spinner fx:id="handSpinner"/>-->
+        <HBox spacing="3.0" alignment="CENTER">
+            <Button text="&lt;" fx:id="prevHandBtn" onAction="#prevHandAction"/>
+            <Label fx:id="currentHandLabel"/>
+            <Button text="&gt;" fx:id="nextHandBtn" onAction="#nextHandAction"/>
+        </HBox>
+
+        <HBox fx:id="extraField" HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+</fx:root>

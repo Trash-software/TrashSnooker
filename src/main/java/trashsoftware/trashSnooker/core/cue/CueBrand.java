@@ -15,7 +15,6 @@ public abstract class CueBrand {
     protected final double cueTipWidth;
 
     final double powerMultiplier;
-//    final double spinMultiplier;
     final double accuracyMultiplier;
 
     /**
@@ -103,7 +102,7 @@ public abstract class CueBrand {
     }
     
     public double getHardness() {
-        return powerMultiplier;
+        return hardness;
     }
 
     public boolean isBreakCue() {
