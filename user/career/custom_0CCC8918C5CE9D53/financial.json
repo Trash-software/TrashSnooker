@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 381510,
+    "money": 376040,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -4549,13 +4549,300 @@
         "moneyAfter": 381510,
         "type": "purchase",
         "timestamp": "2025-02-09 05:11:26"
+      },
+      {
+        "inGameDate": "2024/7/10",
+        "year": 2024,
+        "match": "chongqing_open",
+        "moneyBefore": 381510,
+        "moneyAfter": 391110,
+        "type": "championshipEarn",
+        "items": {"TOP_4": {
+          "actual": 9600,
+          "raw": 12000
+        }},
+        "timestamp": "2025-02-14 23:45:37"
+      },
+      {
+        "inGameDate": "2024/7/10",
+        "moneyBefore": 391110,
+        "moneyAfter": 389900,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1210
+        }],
+        "timestamp": "2025-02-15 05:07:41"
+      },
+      {
+        "inGameDate": "2024/7/21",
+        "moneyBefore": 389900,
+        "moneyAfter": 388250,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1650
+        }],
+        "timestamp": "2025-02-15 05:07:43"
+      },
+      {
+        "inGameDate": "2024/8/5",
+        "moneyBefore": 388250,
+        "moneyAfter": 386380,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1870
+        }],
+        "timestamp": "2025-02-15 05:07:46"
+      },
+      {
+        "inGameDate": "2024/8/22",
+        "moneyBefore": 386380,
+        "moneyAfter": 382640,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 3740
+        }],
+        "timestamp": "2025-02-15 05:07:47"
+      },
+      {
+        "inGameDate": "2024/9/25",
+        "match": "custom_0CCC8918C5CE9D53+2024+challenger_open",
+        "moneyBefore": 382640,
+        "moneyAfter": 378640,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 1000
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          }
+        ],
+        "timestamp": "2025-02-15 05:07:47"
+      },
+      {
+        "inGameDate": "2024/9/25",
+        "perkUsed": 7,
+        "moneyBefore": 378640,
+        "moneyCost": 4350,
+        "moneyAfter": 374290,
+        "ability": {
+          "powerControl-RIGHT": [
+            94.4937156248381,
+            94.4937156248381
+          ],
+          "spinControl-REST": [
+            83.12886080765433,
+            84.60370637534817
+          ],
+          "normalPower-RIGHT": [
+            80.92912367510637,
+            80.92912367510637
+          ],
+          "cuePrecision-REST": [
+            83.65525785558313,
+            86.50468563970541
+          ],
+          "powerControl-REST": [
+            86.85928188495977,
+            88.18491060956138
+          ],
+          "spin-LEFT": [
+            49.96687818584839,
+            49.96687818584839
+          ],
+          "normalPower-REST": [
+            63.75016533325232,
+            64.57935871992223
+          ],
+          "cuePrecision-LEFT": [
+            52.73356446548919,
+            52.73356446548919
+          ],
+          "cuePrecision-RIGHT": [
+            94.3016301644104,
+            94.3016301644104
+          ],
+          "spin-RIGHT": [
+            94.90149846223278,
+            94.90149846223278
+          ],
+          "normalPower-LEFT": [
+            48.99464106898296,
+            48.99464106898296
+          ],
+          "spin-REST": [
+            80.42396115053249,
+            82.0070027045112
+          ],
+          "spinControl-LEFT": [
+            49.271219082841455,
+            49.271219082841455
+          ],
+          "aiming": [
+            80.15749782928332,
+            81.75119791611198
+          ],
+          "powerControl-LEFT": [
+            48.24454877101384,
+            48.24454877101384
+          ],
+          "spinControl-RIGHT": [
+            94.30753670983313,
+            94.30753670983313
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-02-15 05:25:38"
+      },
+      {
+        "inGameDate": "2024/9/25",
+        "year": 2024,
+        "match": "challenger_open",
+        "moneyBefore": 374290,
+        "moneyAfter": 374290,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_3": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2025-02-15 05:39:55"
+      },
+      {
+        "inGameDate": "2024/9/25",
+        "moneyBefore": 374290,
+        "moneyAfter": 371870,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2420
+        }],
+        "timestamp": "2025-02-16 03:30:43"
+      },
+      {
+        "inGameDate": "2024/10/18",
+        "moneyBefore": 371870,
+        "moneyAfter": 370660,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1210
+        }],
+        "timestamp": "2025-02-16 03:30:45"
+      },
+      {
+        "item": 3,
+        "inGameDate": "2024/10/29",
+        "match": "custom_0CCC8918C5CE9D53+2024+champ_of_champ",
+        "moneyBefore": 370660,
+        "moneyAfter": 373660,
+        "type": "invitation",
+        "moneyEarn": 3000,
+        "timestamp": "2025-02-16 03:30:45"
+      },
+      {
+        "inGameDate": "2024/10/29",
+        "match": "custom_0CCC8918C5CE9D53+2024+champ_of_champ",
+        "moneyBefore": 373660,
+        "moneyAfter": 370660,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 0
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          }
+        ],
+        "timestamp": "2025-02-16 03:30:45"
+      },
+      {
+        "inGameDate": "2024/10/29",
+        "year": 2024,
+        "match": "champ_of_champ",
+        "moneyBefore": 370660,
+        "moneyAfter": 380660,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 10000,
+          "raw": 12500
+        }},
+        "timestamp": "2025-02-16 03:51:33"
+      },
+      {
+        "inGameDate": "2024/10/29",
+        "moneyBefore": 380660,
+        "moneyAfter": 379120,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1540
+        }],
+        "timestamp": "2025-02-16 03:57:35"
+      },
+      {
+        "item": 7,
+        "inGameDate": "2024/11/12",
+        "match": "custom_0CCC8918C5CE9D53+2024+united_kingdom_champ",
+        "moneyBefore": 379120,
+        "moneyAfter": 379320,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2025-02-16 03:57:35"
+      },
+      {
+        "inGameDate": "2024/11/12",
+        "match": "custom_0CCC8918C5CE9D53+2024+united_kingdom_champ",
+        "moneyBefore": 379320,
+        "moneyAfter": 376120,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          }
+        ],
+        "timestamp": "2025-02-16 03:57:35"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_0CCC8918C5CE9D53-604",
+        "inGameDate": "2024/11/12",
+        "moneyBefore": 376120,
+        "moneyCost": 80,
+        "moneyAfter": 376040,
+        "type": "purchase",
+        "timestamp": "2025-02-16 04:00:09"
       }
     ],
-    "level": 29,
-    "expInThisLevel": 849,
+    "level": 30,
+    "expInThisLevel": 766,
     "availPerks": 0,
-    "totalPerks": 132,
-    "totalExp": 10385
+    "totalPerks": 139,
+    "totalExp": 11165
   },
-  "checksum": "C2B9E44E1AB69D7700859501762286ED"
+  "checksum": "07739328BD7287683F2CDF062A92A4F1"
 }

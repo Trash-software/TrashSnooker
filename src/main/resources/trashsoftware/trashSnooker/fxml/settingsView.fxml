@@ -43,59 +43,62 @@
         <Label text="%autoChangeBreakCue" GridPane.rowIndex="4"/>
         <ComboBox fx:id="autoChangeBreakCueBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-        <Label text="%settingsGraphics" GridPane.rowIndex="6">
+        <Label text="%mouseDragMethod" GridPane.rowIndex="5"/>
+        <ComboBox fx:id="mouseDragMethodBox" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+        <Label text="%settingsGraphics" GridPane.rowIndex="8">
             <font>
                 <Font size="16.0"/>
             </font>
         </Label>
-        <Separator GridPane.rowIndex="6" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+        <Separator GridPane.rowIndex="8" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
 
-        <Label text="%displaySetting" GridPane.rowIndex="7"/>
-        <ComboBox fx:id="displayBox" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+        <Label text="%displaySetting" GridPane.rowIndex="9"/>
+        <ComboBox fx:id="displayBox" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
 
-        <Label text="%resolution" GridPane.rowIndex="8"/>
-        <ComboBox fx:id="resolutionComboBox" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+        <Label text="%resolution" GridPane.rowIndex="10"/>
+        <ComboBox fx:id="resolutionComboBox" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
 
-        <Label text="%systemZoom" GridPane.rowIndex="8" visible="false" managed="false"/>
-        <ComboBox fx:id="systemZoomComboBox" GridPane.rowIndex="8" GridPane.columnIndex="1"
+        <Label text="%systemZoom" GridPane.rowIndex="10" visible="false" managed="false"/>
+        <ComboBox fx:id="systemZoomComboBox" GridPane.rowIndex="10" GridPane.columnIndex="1"
                   visible="false" managed="false"/>
 
-        <Label text="%antiAliasing" GridPane.rowIndex="9"/>
-        <ComboBox fx:id="antiAliasingComboBox" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+        <Label text="%antiAliasing" GridPane.rowIndex="11"/>
+        <ComboBox fx:id="antiAliasingComboBox" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
 
-        <Label text="%performanceMode" GridPane.rowIndex="10"/>
-        <ComboBox fx:id="performanceBox" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+        <Label text="%performanceMode" GridPane.rowIndex="12"/>
+        <ComboBox fx:id="performanceBox" GridPane.rowIndex="12" GridPane.columnIndex="1"/>
 
-        <Label text="%frameRate" GridPane.rowIndex="11" visible="false" managed="false"/>
-        <Label text="%productionFrameRate" GridPane.rowIndex="11" visible="false" managed="false"/>
-        <ComboBox fx:id="frameRateBox" GridPane.rowIndex="11" GridPane.columnIndex="1"
+        <Label text="%frameRate" GridPane.rowIndex="13" visible="false" managed="false"/>
+        <Label text="%productionFrameRate" GridPane.rowIndex="13" visible="false" managed="false"/>
+        <ComboBox fx:id="frameRateBox" GridPane.rowIndex="13" GridPane.columnIndex="1"
                   visible="false" managed="false"/>
-        <ComboBox fx:id="prodFrameRateBox" GridPane.rowIndex="11" GridPane.columnIndex="1" 
+        <ComboBox fx:id="prodFrameRateBox" GridPane.rowIndex="13" GridPane.columnIndex="1" 
                   visible="false" managed="false"/>
 
-        <Label text="%settingsSound" GridPane.rowIndex="13">
+        <Label text="%settingsSound" GridPane.rowIndex="15">
             <font>
                 <Font size="16.0"/>
             </font>
         </Label>
         <Separator GridPane.rowIndex="13" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
-        <Label text="%effectSound" GridPane.rowIndex="14"/>
-        <Slider fx:id="effectSoundSlider" GridPane.rowIndex="14" GridPane.columnIndex="1"/>
-        <Label fx:id="effectSoundLabel" GridPane.rowIndex="14" GridPane.columnIndex="2"/>
+        <Label text="%effectSound" GridPane.rowIndex="16"/>
+        <Slider fx:id="effectSoundSlider" GridPane.rowIndex="16" GridPane.columnIndex="1"/>
+        <Label fx:id="effectSoundLabel" GridPane.rowIndex="16" GridPane.columnIndex="2"/>
 
-        <Label text="%settingsGeneral" GridPane.rowIndex="16">
+        <Label text="%settingsGeneral" GridPane.rowIndex="18">
             <font>
                 <Font size="16.0"/>
             </font>
         </Label>
-        <Separator GridPane.rowIndex="16" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+        <Separator GridPane.rowIndex="18" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
 
-        <Label text="%language" GridPane.rowIndex="17"/>
-        <ComboBox fx:id="languageBox" GridPane.rowIndex="17" GridPane.columnIndex="1"/>
+        <Label text="%language" GridPane.rowIndex="19"/>
+        <ComboBox fx:id="languageBox" GridPane.rowIndex="19" GridPane.columnIndex="1"/>
 
-        <Label text="%numAiThreads" GridPane.rowIndex="18"/>
-        <ComboBox fx:id="aiThreadNumBox" GridPane.rowIndex="18" GridPane.columnIndex="1"/>
-        <Label fx:id="cpuActualThreadNumLabel" GridPane.rowIndex="18" GridPane.columnIndex="2"/>
+        <Label text="%numAiThreads" GridPane.rowIndex="20"/>
+        <ComboBox fx:id="aiThreadNumBox" GridPane.rowIndex="20" GridPane.columnIndex="1"/>
+        <Label fx:id="cpuActualThreadNumLabel" GridPane.rowIndex="20" GridPane.columnIndex="2"/>
 
     </GridPane>
 

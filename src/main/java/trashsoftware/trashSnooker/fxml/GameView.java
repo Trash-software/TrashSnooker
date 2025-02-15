@@ -244,7 +244,7 @@ public class GameView implements Initializable {
     private double cueAngleBaseHor = 10.0;
     private CueAnimationPlayer cueAnimationPlayer;
     private boolean isDragging;
-//    private double lastDragAngle;
+        private double lastDragAngle;
     //    private double predictionMultiplier = 2000.0;
     private double maxRealPredictLength = defaultMaxPredictLength;
     private boolean enablePsy = true;  // 由游戏决定心理影响
@@ -269,6 +269,7 @@ public class GameView implements Initializable {
     private double p1PlaySpeed = 1.0;
     private double p2PlaySpeed = 1.0;
     private boolean aiHelpPlay = false;
+    private boolean absoluteDragAngle = false;
     private List<double[]> aiWhitePath;  // todo: debug用的
     private List<double[]> suggestedPlayerWhitePath;
 
@@ -351,6 +352,10 @@ public class GameView implements Initializable {
         ));
 
         powerSlider.setShowTickLabels(true);
+        
+        ConfigLoader configLoader = ConfigLoader.getInstance();
+        String mouseDragMethod = configLoader.getString("mouseDragMethod");
+        absoluteDragAngle = "position".equals(mouseDragMethod);
     }
 
     private void menuListeners() {
@@ -396,22 +401,27 @@ public class GameView implements Initializable {
         aimingExtensionMenu.selectedProperty().addListener((observable, oldValue, newValue) -> {
             cl.put("aimingExtension", newValue);
             cl.save();
+            tableGraphicsChanged = true;
         });
         drawAiPathItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             cl.put("drawAiPath", newValue);
             cl.save();
+            tableGraphicsChanged = true;
         });
         traceWhiteItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             cl.put("traceWhite", newValue);
             cl.save();
+            tableGraphicsChanged = true;
         });
         traceTargetItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             cl.put("traceTarget", newValue);
             cl.save();
+            tableGraphicsChanged = true;
         });
         traceAllItem.selectedProperty().addListener((observable, oldValue, newValue) -> {
             cl.put("traceAll", newValue);
             cl.save();
+            tableGraphicsChanged = true;
         });
     }
 
@@ -1680,7 +1690,7 @@ public class GameView implements Initializable {
         isDragging = true;
         double xDiffToWhite = gamePane.realX(mouseEvent.getX()) - white.getX();
         double yDiffToWhite = gamePane.realY(mouseEvent.getY()) - white.getY();
-//        lastDragAngle = Algebra.thetaOf(new double[]{xDiffToWhite, yDiffToWhite});
+        lastDragAngle = Algebra.thetaOf(new double[]{xDiffToWhite, yDiffToWhite});
         if (cursorDirectionUnitX == 0.0 && cursorDirectionUnitY == 0.0) {
             double[] unitVec = Algebra.unitVector(xDiffToWhite, yDiffToWhite);
             cursorDirectionUnitX = unitVec[0];
@@ -1699,40 +1709,31 @@ public class GameView implements Initializable {
         double xDiffToWhite = gamePane.realX(mouseEvent.getX()) - white.getX();
         double yDiffToWhite = gamePane.realY(mouseEvent.getY()) - white.getY();
         double[] unitDir = Algebra.unitVector(xDiffToWhite, yDiffToWhite);
-        
-        cursorDirectionUnitX = unitDir[0];
-        cursorDirectionUnitY = unitDir[1];
+
+        if (absoluteDragAngle) {
+            cursorDirectionUnitX = unitDir[0];
+            cursorDirectionUnitY = unitDir[1];
+            
+            lastDragAngle = Algebra.thetaOf(unitDir);  // 没用，只是为了统一
+        } else {
+            double distanceToWhite = Math.hypot(xDiffToWhite, yDiffToWhite);  // 光标离白球越远，移动越慢
+            double aimingAngle = Algebra.thetaOf(cursorDirectionUnitX, cursorDirectionUnitY);
+            double curAngle = Algebra.thetaOf(unitDir);
+            double delta = Algebra.normalizeAngle(curAngle - lastDragAngle);
+            double change = delta / Math.max(1, distanceToWhite / 500);  // 避免鬼畜地转
+            double resultAngle = aimingAngle + change;
+            double[] newUnitVector = Algebra.unitVectorOfAngle(resultAngle);
+            cursorDirectionUnitX = newUnitVector[0];
+            cursorDirectionUnitY = newUnitVector[1];
+
+            lastDragAngle = curAngle;
+        }
         recalculateUiRestrictions();
     }
 
-//    private void onDragging(MouseEvent mouseEvent) {
-//        if (!isDragging) {
-//            return;
-//        }
-//        Ball white = game.getGame().getCueBall();
-//        if (white.isPotted()) return;
-//        double xDiffToWhite = gamePane.realX(mouseEvent.getX()) - white.getX();
-//        double yDiffToWhite = gamePane.realY(mouseEvent.getY()) - white.getY();
-//        double distanceToWhite = Math.hypot(xDiffToWhite, yDiffToWhite);  // 光标离白球越远，移动越慢
-//        double currentAngle =
-//                Algebra.thetaOf(new double[]{xDiffToWhite, yDiffToWhite});
-//        double changedAngle =
-//                Algebra.normalizeAngle
-//                        (currentAngle - lastDragAngle) / (distanceToWhite / 500.0);
-//
-//        double aimingAngle = Algebra.thetaOf(new double[]{cursorDirectionUnitX, cursorDirectionUnitY});
-//        double resultAngle = aimingAngle + changedAngle;
-//        double[] newUnitVector = Algebra.unitVectorOfAngle(resultAngle);
-//        cursorDirectionUnitX = newUnitVector[0];
-//        cursorDirectionUnitY = newUnitVector[1];
-//        recalculateUiRestrictions();
-//
-//        lastDragAngle = currentAngle;
-//    }
-
     private void onDragEnd(MouseEvent mouseEvent) {
         isDragging = false;
-//        lastDragAngle = 0.0;
+        lastDragAngle = 0.0;
         stage.getScene().setCursor(Cursor.DEFAULT);
     }
 

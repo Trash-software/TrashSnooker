@@ -28,8 +28,8 @@ public class PlayerPerson {
     public final double psy;
     public final boolean isRandom;
     private final String playerId;
-    private final String name;  // 名字的原版
-    private transient final String shownName;
+    private String name;  // 名字的原版
+    private transient String shownName;
     private final double precisionPercentage;
     private final double anglePrecision;
     private final double longPrecision;
@@ -603,6 +603,20 @@ public class PlayerPerson {
      */
     public String getName() {
         return shownName;
+    }
+
+    /**
+     * 为球员更名。请注意：更名成功后需要保存至文件
+     * 
+     * @return rename is successful or not
+     */
+    public boolean rename(String name) {
+        if (isRandom || !isCustom) return false;
+        
+        this.name = name;
+        this.shownName = name;
+        
+        return true;
     }
 
     public String getPlayerId() {

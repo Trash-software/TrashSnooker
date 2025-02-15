@@ -94,6 +94,8 @@ public class CareerView extends ChildInitializable {
     @FXML
     Button skipChampBtn;
     @FXML
+    Button careerRankHistoryBtn;
+    @FXML
     ImageView expImage, moneyImage, inventoryImage, storeImage, achIconImage, lineChartImg;
     CareerManager careerManager;
     private PerkManager perkManager;
@@ -202,6 +204,7 @@ public class CareerView extends ChildInitializable {
         selectedPlayerInfoTable.setManaged(show);
         selectedPlayerAchBox.setVisible(show);
         selectedPlayerAchBox.setManaged(show);
+        careerRankHistoryBtn.setVisible(show);
     }
 
     private void refreshSelectedPlayerTable(RankedCareer selected) {

@@ -21,6 +21,8 @@ public class SettingsView extends ChildInitializable {
     @FXML
     ComboBox<YesNo> autoChangeBreakCueBox;
     @FXML
+    ComboBox<MouseDragMethod> mouseDragMethodBox;
+    @FXML
     ComboBox<LocaleName> languageBox;
     @FXML
     ComboBox<Integer> frameRateBox, prodFrameRateBox;
@@ -56,6 +58,7 @@ public class SettingsView extends ChildInitializable {
                 aimLingBox,
                 aiStrengthBox,
                 autoChangeBreakCueBox,
+                mouseDragMethodBox,
                 frameRateBox,
                 prodFrameRateBox,
                 languageBox,
@@ -89,6 +92,11 @@ public class SettingsView extends ChildInitializable {
         autoChangeBreakCueBox.getItems().addAll(YesNo.values());
         autoChangeBreakCueBox.getSelectionModel().select(YesNo.fromBoolean(
                 configLoader.getBoolean("autoChangeBreakCue", false)
+        ));
+        
+        mouseDragMethodBox.getItems().addAll(MouseDragMethod.values());
+        mouseDragMethodBox.getSelectionModel().select(MouseDragMethod.fromKey(
+                configLoader.getString("mouseDragMethod", "movement")
         ));
 
         setupLanguageBox();
@@ -284,6 +292,9 @@ public class SettingsView extends ChildInitializable {
         if (hasChanged(autoChangeBreakCueBox)) {
             configLoader.put("autoChangeBreakCue", autoChangeBreakCueBox.getSelectionModel().getSelectedItem().toBoolean());
         }
+        if (hasChanged(mouseDragMethodBox)) {
+            configLoader.put("mouseDragMethod", mouseDragMethodBox.getSelectionModel().getSelectedItem().toKey());
+        }
 
         if (hasChanged(performanceBox)) {
             configLoader.put("performance", performanceBox.getValue().toKey());
@@ -344,6 +355,34 @@ public class SettingsView extends ChildInitializable {
         public String toString() {
             String key = this == YES ? "yes" : "no";
             return App.getStrings().getString(key);
+        }
+    }
+    
+    public enum MouseDragMethod {
+        POSITION("mouseDragAbsolute"),
+        MOVEMENT("mouseDragRelative");
+        
+        private final String stringKey;
+        
+        MouseDragMethod(String stringKey) {
+            this.stringKey = stringKey;
+        }
+
+        @Override
+        public String toString() {
+            return App.getStrings().getString(stringKey);
+        }
+        
+        static MouseDragMethod fromKey(String key) {
+            try {
+                return valueOf(Util.toAllCapsUnderscoreCase(key));
+            } catch (IllegalArgumentException e) {
+                return MOVEMENT;
+            }
+        }
+        
+        String toKey() {
+            return Util.toLowerCamelCase(name());
         }
     }
 
@@ -436,7 +475,11 @@ public class SettingsView extends ChildInitializable {
         }
 
         static AntiAliasing fromKey(String key) {
-            return valueOf(Util.toAllCapsUnderscoreCase(key));
+            try {
+                return valueOf(Util.toAllCapsUnderscoreCase(key));
+            } catch (IllegalArgumentException e) {
+                return DISABLED;
+            }
         }
 
         String toKey() {
@@ -454,7 +497,11 @@ public class SettingsView extends ChildInitializable {
         }
 
         static Display fromKey(String key) {
-            return valueOf(Util.toAllCapsUnderscoreCase(key));
+            try {
+                return valueOf(Util.toAllCapsUnderscoreCase(key));
+            } catch (IllegalArgumentException e) {
+                return WINDOWED;
+            }
         }
 
         String toKey() {

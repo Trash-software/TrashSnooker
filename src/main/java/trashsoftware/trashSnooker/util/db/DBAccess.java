@@ -446,25 +446,34 @@ public class DBAccess {
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
-                EntireGameTitle egr = new EntireGameTitle(
-                        resultSet.getTimestamp("EntireBeginTime"),
-                        gameRule,
-                        resultSet.getString("Player1Name"),
-                        resultSet.getString("Player2Name"),
-                        resultSet.getInt("Player1IsAI") == 1,
-                        resultSet.getInt("Player2IsAI") == 1,
-                        resultSet.getInt("TotalFrames"),
-                        resultSet.getString("MatchID"),
-                        SubRule.commaStringToSubRules(resultSet.getString("SubRule"))
-                );
-                if (isValidPlayer(egr.player1Id) && isValidPlayer(egr.player2Id)) {
-                    rtn.add(egr);
+                try {
+                    EntireGameTitle egr = new EntireGameTitle(
+                            resultSet.getTimestamp("EntireBeginTime"),
+                            gameRule,
+                            resultSet.getString("Player1Name"),
+                            resultSet.getString("Player2Name"),
+                            resultSet.getInt("Player1IsAI") == 1,
+                            resultSet.getInt("Player2IsAI") == 1,
+                            resultSet.getInt("TotalFrames"),
+                            resultSet.getString("MatchID"),
+                            SubRule.commaStringToSubRules(resultSet.getString("SubRule"))
+                    );
+                    if (isValidPlayer(egr.player1Id) && isValidPlayer(egr.player2Id)) {
+                        rtn.add(egr);
+                    }
+                } catch (SQLException e) {
+                    System.err.println("Cannot load a game");
+//                    System.err.println("Cannot load game:");
+//                    System.err.println(resultSet.getString("EntireBeginTime"));
+//                    System.err.println(resultSet.getString("Player1Name"));
+//                    System.err.println(resultSet.getString("Player2Name"));
+//                    e.printStackTrace();
                 }
             }
 
             resultSet.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.error(e);
         }
         Collections.reverse(rtn);
         return rtn;

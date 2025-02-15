@@ -139,7 +139,8 @@
                 GridPane.rowSpan="2"
                 visible="false" managed="false" prefWidth="360.0" prefHeight="360.0"/>
     
-    <Button GridPane.rowIndex="3" GridPane.columnIndex="2" onAction="#showCareerRankHistory">
+    <Button fx:id="careerRankHistoryBtn" GridPane.rowIndex="3" GridPane.columnIndex="2" 
+            visible="false" onAction="#showCareerRankHistory">
         <graphic>
             <ImageView fx:id="lineChartImg"/>
         </graphic>

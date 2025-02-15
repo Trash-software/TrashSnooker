@@ -55,7 +55,7 @@
             
             <Button text="%continueCareer" onAction="#continueCareer" fx:id="continueCareerBtn"
                     disable="true"/>
-            <Button text="%deleteCareer" fx:id="deleteCareerBtn" onAction="#deleteCareer"
+            <Button text="%deleteCareer" fx:id="deleteCareerBtn" onAction="#deleteCareerAction"
                     disable="true" GridPane.columnIndex="1"/>
             <Button text="%createCareer" onAction="#newCareer" GridPane.columnIndex="2"/>
             <Button text="%fastGame" onAction="#fastGame" GridPane.rowIndex="1"

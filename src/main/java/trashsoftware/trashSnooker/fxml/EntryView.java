@@ -78,12 +78,45 @@ public class EntryView implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.strings = resourceBundle;
 
+        setupTable();
+    }
+    
+    private void setupTable() {
         playerColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getPlayerName()));
         levelColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getLevel()));
         careersTable.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             continueCareerBtn.setDisable(newValue == null);
             deleteCareerBtn.setDisable(newValue == null);
         }));
+        
+        careersTable.setRowFactory(tv -> {
+            TableRow<CareerSave> row = new TableRow<>();
+            ContextMenu contextMenu = new ContextMenu();
+
+            // Create menu items
+            MenuItem editItem = new MenuItem(strings.getString("renameCareer"));
+            MenuItem deleteItem = new MenuItem(strings.getString("deleteCareer"));
+
+            // Set action for the menu items
+            editItem.setOnAction(event -> renameCareer(row.getItem()));
+
+            deleteItem.setOnAction(event -> deleteCareer(row.getItem()));
+
+            // Add items to the context menu
+            contextMenu.getItems().addAll(editItem, deleteItem);
+
+            // Show context menu on right-click
+            row.setOnContextMenuRequested(event -> {
+                if (!row.isEmpty()) {
+                    PlayerPerson person = DataLoader.getInstance().getPlayerPerson(row.getItem().getPlayerId());
+                    if (person == null || !person.isCustom()) editItem.setDisable(true);
+                    
+                    contextMenu.show(row, event.getScreenX(), event.getScreenY());
+                }
+            });
+
+            return row;
+        });
     }
 
     public void refreshGui() {
@@ -315,20 +348,55 @@ public class EntryView implements Initializable {
         thread.setDaemon(true);
         thread.start();
     }
+    
+    private void renameCareer(CareerSave selected) {
+        PlayerPerson person = DataLoader.getInstance().getPlayerPerson(selected.getPlayerId());
+        if (person == null) {
+            System.err.println("Person is null");
+            return;
+        } else {
+            if (!person.isCustom()) System.err.println("Cannot delete non-custom player.");
+        }
+        
+        TextField newNameField = new TextField();
+        newNameField.setText(person.getName());
+        
+        AlertShower.askConfirmation(
+                selfStage,
+                "",
+                strings.getString("renameCareerText"),
+                strings.getString("confirm"),
+                strings.getString("cancel"),
+                () -> {
+                    String newName = newNameField.getText();
+                    if (newName.isBlank()) {
+                        return;
+                    }
+                    boolean suc = person.rename(newName);
+                    if (suc) {
+                        DataLoader.getInstance().updatePlayer(person);
+                        System.out.println("Rename successful!");
+                    } else {
+                        System.out.println("Rename failed!");
+                    }
 
-    @FXML
-    void deleteCareer() {
-        CareerSave selected = careersTable.getSelectionModel().getSelectedItem();
-        if (selected == null) return;
-
+                    refreshGui();
+                },
+                null,
+                newNameField
+        );
+    }
+    
+    private void deleteCareer(CareerSave selected) {
         CheckBox deletePerson = new CheckBox(strings.getString("deletePlayerWithCareer"));
         PlayerPerson person = DataLoader.getInstance().getPlayerPerson(selected.getPlayerId());
         if (person == null) {
             System.err.println("Person is null");
+            return;
         } else {
             if (!person.isCustom()) deletePerson.setDisable(true);
         }
-        
+
         AlertShower.askConfirmation(
                 selfStage,
                 String.format(strings.getString("confirmDeleteCareer"), selected.getPlayerName()),
@@ -347,6 +415,14 @@ public class EntryView implements Initializable {
                 null,
                 deletePerson
         );
+    }
+
+    @FXML
+    void deleteCareerAction() {
+        CareerSave selected = careersTable.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        deleteCareer(selected);
     }
 
     @FXML

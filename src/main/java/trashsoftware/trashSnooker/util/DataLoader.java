@@ -489,6 +489,10 @@ public class DataLoader {
         playerPeople.remove(playerId);
         actualPlayers.remove(playerId);
 
+        saveCustomPlayers();
+    }
+    
+    void saveCustomPlayers() {
         saveToDisk(makeCustomJson(), CUSTOM_PLAYER_LIST_FILE);
     }
 
@@ -505,6 +509,9 @@ public class DataLoader {
     }
 
     public void updatePlayer(PlayerPerson playerPerson) {
+        if (playerPerson.isRandom || !playerPerson.isCustom()) {
+            System.err.println("Cannot update player " + playerPerson.getPlayerId());
+        }
         // assert isCustom and is not random
         String id = playerPerson.getPlayerId();
         playerPeople.put(id, playerPerson);
@@ -513,7 +520,7 @@ public class DataLoader {
             actualPlayers.put(id, playerPerson);
         }
 
-        saveToDisk(makeCustomJson(), CUSTOM_PLAYER_LIST_FILE);
+        saveCustomPlayers();
     }
 
     /**

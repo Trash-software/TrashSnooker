@@ -1,22 +1,22 @@
 {
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "custom_player_159",
+    "person": "Neil Robertson",
     "playerType": "PLAYER"
   },
-  "p1Wins": 1,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "custom_player_3",
+    "person": "Trump",
     "playerType": "COMPUTER"
   },
-  "startTime": 1738937846656,
+  "startTime": 1739608480836,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
@@ -26,14 +26,14 @@
     "devMode": false,
     "table": {
       "tableOrdinal": 0,
-      "pocketDifficultyOrdinal": 3,
-      "holeSizeOrdinal": 4
+      "pocketDifficultyOrdinal": 4,
+      "holeSizeOrdinal": 5
     }
   },
   "totalFrames": 1,
   "cloth": {
-    "smoothness": "SLOW",
-    "goodness": "TERRIBLE"
+    "smoothness": "NORMAL",
+    "goodness": "GOOD"
   },
   "p1Breaks": true
 }
