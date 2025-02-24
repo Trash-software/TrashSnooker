@@ -28,6 +28,7 @@ import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.*;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.metrics.TablePreset;
 import trashsoftware.trashSnooker.core.metrics.TableSpec;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
@@ -481,7 +482,18 @@ public class ChampDrawView extends ChildInitializable {
                 match.getChampionship().getData().getSubRules(),
                 tableSpec.tableMetrics,
                 ballMetrics);
-        values.setTablePreset(match.getChampionship().getData().getTablePreset());
+        TablePreset preset = match.getChampionship().getData().getTablePreset();
+        values.setTablePreset(preset);
+
+        values.setTablePreset(preset);  // 可以是null
+        if (preset != null) {
+            if (preset.tableBorderColor != null) {
+                values.table.tableBorderColor = preset.tableBorderColor;
+            }
+            if (preset.clothColor != null) {
+                values.table.tableColor = preset.clothColor;
+            }
+        }
 
         CareerManager careerManager = CareerManager.getInstance();
 

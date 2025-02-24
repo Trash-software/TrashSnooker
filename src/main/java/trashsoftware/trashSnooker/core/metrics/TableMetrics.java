@@ -1,9 +1,11 @@
 package trashsoftware.trashSnooker.core.metrics;
 
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.fxml.App;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class TableMetrics {
     public PocketDifficulty pocketDifficulty;
 
     public Color tableColor;
+//    public Image tableMesh;
     public Color gravityAreaColor;
     public Color tableBorderColor;
     public Color cornerPocketBaseColor;
@@ -1057,9 +1060,10 @@ public class TableMetrics {
             values.cushionPowerSpinFactor = cushionPowerSpin;
             return this;
         }
-
-//        public Builder ballBounce(double ballBounceRatio) {
-//            values.ballBounceRatio = ballBounceRatio;
+        
+//        public Builder tableClothMesh(File meshFile) {
+//            if (meshFile == null) return this;
+//            
 //            return this;
 //        }
 

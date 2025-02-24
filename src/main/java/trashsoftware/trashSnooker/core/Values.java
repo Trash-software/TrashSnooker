@@ -17,7 +17,7 @@ public class Values {
     public static final double MAX_SIDE_SPIN_SPEED = 8000.0;
     public static final double SMALL_POWER_SPIN_EXP = 0.5;  // 小力高低杆补偿，pow越小，补偿越多
     public static final double SMALL_POWER_SIDE_SPIN_EXP = 0.5;
-    public static final double BEST_KICK_SPEED = MAX_POWER_SPEED / 10.0;
+    public static final double BEST_KICK_SPEED = MAX_POWER_SPEED / 5.0;
     
     public static final int DETAILED_PHYSICAL = 12;
     // 每两次物理碰撞运算之间的最大间隔距离

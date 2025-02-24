@@ -79,6 +79,25 @@
       "smoothness": "normal",
       "pocketSize": "std",
       "pocketDifficulty": "tight"
+    },
+    {
+      "id": "helloKittySnookerTable",
+      "name": {
+        "zh": "Hello Kitty",
+        "en": "Hello Kitty"
+      },
+      "meshes": "",
+      "logo": "",
+      "text": "Hello Kitty",
+      "textColor": "GOLDENROD",
+      "type": "snookerTable",
+      "goodness": "good",
+      "smoothness": "normal",
+      "pocketSize": "stdS",
+      "pocketDifficulty": "tight",
+      "clothMesh": "helloKittyCloth.jpg",
+      "clothColor": "pink",
+      "tableOutColor": "#db7093"
     }
   ]
 }

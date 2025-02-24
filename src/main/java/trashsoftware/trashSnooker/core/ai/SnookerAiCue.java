@@ -43,7 +43,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
     @Override
     protected KickPriceCalculator kickPriceCalculator() {
         return (kickedBall, kickSpeed, dtFromFirst) -> {
-            if (aliveRedCount >= 2) return kickUselessBallPrice(dtFromFirst);  // 剩的多，不急着k
+            if (aliveRedCount > 2) return kickUselessBallPrice(dtFromFirst);  // 剩的多，不急着k
 
             Double alivePrice = selfBallAlivePrices.get(kickedBall);
             if (alivePrice == null) return kickUselessBallPrice(dtFromFirst);

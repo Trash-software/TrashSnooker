@@ -8,6 +8,7 @@ import javafx.scene.DirectionalLight;
 import javafx.scene.LightBase;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -403,14 +404,24 @@ public class GamePane extends StackPane {
         }
 
         double actualCornerHoleSize = values.cornerHoleRadius * 2 * scale;
-        graphicsContext.setFill(values.tableColor);  // 台泥/台布
-        graphicsContext.fillRoundRect(  // 防止特别小的袋口遮不完台泥的边角
-                canvasX(values.leftX - values.cushionClothWidth),
-                canvasY(values.topY - values.cushionClothWidth),
-                (values.innerWidth + values.cushionClothWidth * 2) * scale,
-                (values.innerHeight + values.cushionClothWidth * 2) * scale,
-                actualCornerHoleSize,
-                actualCornerHoleSize);
+        TablePreset preset = gameValues.getTablePreset();
+        if (preset == null || preset.getClothMesh() == null) {
+            graphicsContext.setFill(values.tableColor);  // 台泥/台布
+            graphicsContext.fillRoundRect(  // 防止特别小的袋口遮不完台泥的边角
+                    canvasX(values.leftX - values.cushionClothWidth),
+                    canvasY(values.topY - values.cushionClothWidth),
+                    (values.innerWidth + values.cushionClothWidth * 2) * scale,
+                    (values.innerHeight + values.cushionClothWidth * 2) * scale,
+                    actualCornerHoleSize,
+                    actualCornerHoleSize);
+        } else {
+            Image clothMesh = preset.getClothMesh();
+            graphicsContext.drawImage(clothMesh,
+                    canvasX(values.leftX - values.cushionClothWidth),
+                    canvasY(values.topY - values.cushionClothWidth),
+                    (values.innerWidth + values.cushionClothWidth * 2) * scale,
+                    (values.innerHeight + values.cushionClothWidth * 2) * scale);
+        }
 
 //        // 袋口附近重力区域
 //        graphicsContext.setFill(values.gravityAreaColor);

@@ -99,6 +99,7 @@ public class BriefReplayItem {
             totalBeforeCueMs = Util.bytesToInt32(header, 56);
 
             gameValues = new GameValues(gameRule, null, tableMetrics, ballMetrics);
+            // fixme: table preset
             p1 = readOnePlayer(raf, 1);
             p2 = readOnePlayer(raf, 2);
             

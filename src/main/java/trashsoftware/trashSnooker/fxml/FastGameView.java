@@ -393,7 +393,17 @@ public class FastGameView extends ChildInitializable {
             values.setTrain(getTrainType(), challenge);
         }
 
-        values.setTablePreset(tablePresetBox.getValue().preset);  // 可以是null
+        TablePreset preset = tablePresetBox.getValue().preset;
+        values.setTablePreset(preset);  // 可以是null
+        if (preset != null) {
+            if (preset.tableBorderColor != null) {
+                values.table.tableBorderColor = preset.tableBorderColor;
+            }
+            if (preset.clothColor != null) {
+                values.table.tableColor = preset.clothColor;
+            }
+        }
+        
         values.setDevMode(devModeBox.isSelected());
         showGame(values, cloth);
     }
