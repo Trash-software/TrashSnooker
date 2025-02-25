@@ -27,6 +27,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
@@ -45,10 +46,7 @@ import trashsoftware.trashSnooker.core.career.challenge.ChallengeMatch;
 import trashsoftware.trashSnooker.core.career.championship.PlayerVsAiMatch;
 import trashsoftware.trashSnooker.core.career.championship.SnookerChampionship;
 import trashsoftware.trashSnooker.core.cue.Cue;
-import trashsoftware.trashSnooker.core.metrics.BallMetrics;
-import trashsoftware.trashSnooker.core.metrics.GameRule;
-import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.metrics.Rule;
+import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
@@ -157,6 +155,8 @@ public class GameView implements Initializable {
     Label timerLabel;
     @FXML
     Label fpsLabel;
+    @FXML
+    Pane player1TarPane, player2TarPane;
     @FXML
     Canvas player1TarCanvas, player2TarCanvas;
     @FXML
@@ -2313,7 +2313,9 @@ public class GameView implements Initializable {
                     toggleGroup.getToggles().add(rb);
 
                     // 是弹出框，只运行一次，不用担心
+                    Pane tarPane = new Pane();
                     Canvas tarCan = new Canvas();
+                    tarPane.getChildren().add(tarCan);
                     tarCan.setHeight(ballDiameter * 1.2);
                     tarCan.setWidth(ballDiameter * 1.2);
                     tarCan.getGraphicsContext2D().setFill(GLOBAL_BACKGROUND);
@@ -2321,7 +2323,7 @@ public class GameView implements Initializable {
                     drawSnookerTargetBall(tarCan, i, asg.getIndicatedTarget(), false,
                             player.getInGamePlayer().getPlayerNumber() == 1);
 
-                    container.add(tarCan, 0, i - 2);
+                    container.add(tarPane, 0, i - 2);
                     container.add(rb, 1, i - 2);
 
                     buttonVal.put(rb, i);
@@ -3603,6 +3605,9 @@ public class GameView implements Initializable {
     }
 
     private void wipeCanvas(Canvas canvas) {
+        Pane pane = (Pane) canvas.getParent();
+        pane.getChildren().removeIf(n -> n != canvas);
+        
         canvas.getGraphicsContext2D().setFill(GLOBAL_BACKGROUND);
         canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
@@ -3618,9 +3623,21 @@ public class GameView implements Initializable {
             drawTargetColoredBall(canvas, indicatedTarget, isP1);
         } else {
             double x = isP1 ? ballDiameter * 0.1 : ballDiameter * 1.3;
-            Color color = Values.getColorOfTarget(value);
-            canvas.getGraphicsContext2D().setFill(color);
-            canvas.getGraphicsContext2D().fillOval(x, ballDiameter * 0.1, ballDiameter, ballDiameter);
+
+            BallsGroupPreset bgp = gameValues.getBallsGroupPreset();
+            if (bgp == null) {
+                Color color = Values.getColorOfTarget(value);
+                canvas.getGraphicsContext2D().setFill(color);
+                canvas.getGraphicsContext2D().fillOval(x, ballDiameter * 0.1, ballDiameter, ballDiameter);
+            } else {
+                BallModel bm = getActiveHolder().getBallByValue(value).model;
+                Pane tarPane = (Pane) canvas.getParent();
+                NonStretchSphere ballShape = bm.getStaticSphere();
+                ballShape.getTransforms().clear();
+                ballShape.getTransforms().add(new Translate(x, ballDiameter * 0.8));
+                tarPane.getChildren().add(ballShape);
+            }
+            
             if (isFreeBall)
                 canvas.getGraphicsContext2D().strokeText("F", x + ballDiameter * 0.5, ballDiameter * 0.8);
         }
@@ -3634,14 +3651,43 @@ public class GameView implements Initializable {
         if (value == 0) {
             drawTargetColoredBall(canvas, 0, isP1);
         } else {
-            NumberedBallTable.drawPoolBallEssential(
-                    isP1 ? ballDiameter * 0.6 : ballDiameter * 1.8,
-                    ballDiameter * 0.6,
-                    ballDiameter,
-                    PoolBall.poolBallBaseColor(value),
-                    value,
-                    canvas.getGraphicsContext2D()
-            );
+            double x = isP1 ? ballDiameter * 0.6 : ballDiameter * 1.8;
+            
+            BallsGroupPreset bgp = gameValues.getBallsGroupPreset();
+            Ball ball = getActiveHolder().getBallByValue(value);
+            boolean chineseEightDivision = gameValues.rule.eightBallLike() && 
+                    (value == ChineseEightBallGame.FULL_BALL_REP || value == ChineseEightBallGame.HALF_BALL_REP);
+            
+            // fixme: 差一个分支
+            if (bgp == null) {
+                NumberedBallTable.drawPoolBallEssential(
+                        x,
+                        ballDiameter * 0.6,
+                        ballDiameter,
+                        PoolBall.poolBallBaseColor(value),
+                        value,
+                        canvas.getGraphicsContext2D()
+                );
+            } else if (chineseEightDivision) {
+                BallModel bm;
+                if (value == ChineseEightBallGame.HALF_BALL_REP) {
+                    bm = getActiveHolder().getBallByValue(9).model;
+                } else {
+                    bm = getActiveHolder().getBallByValue(1).model;
+                }
+                Pane tarPane = (Pane) canvas.getParent();
+                NonStretchSphere ballShape = bm.getStaticSphere();
+                ballShape.getTransforms().clear();
+                ballShape.getTransforms().add(new Translate(x, ballDiameter * 0.6));
+                tarPane.getChildren().add(ballShape);
+            } else {
+                BallModel bm = ball.model;
+                Pane tarPane = (Pane) canvas.getParent();
+                NonStretchSphere ballShape = bm.getStaticSphere();
+                ballShape.getTransforms().clear();
+                ballShape.getTransforms().add(new Translate(x, ballDiameter * 0.6));
+                tarPane.getChildren().add(ballShape);
+            }
         }
     }
 
@@ -3662,10 +3708,23 @@ public class GameView implements Initializable {
                 double leftX = isP1 ?
                         ballDiameter * 1.3 :
                         ballDiameter * 0.1;
+                double sphereCenterX = isP1 ?
+                        ballDiameter * 1.8 :
+                        ballDiameter * 0.6;
 
-                Color color = Values.getColorOfTarget(indicatedTarget);
-                canvas.getGraphicsContext2D().setFill(color);
-                canvas.getGraphicsContext2D().fillOval(leftX, ballDiameter * 0.1, ballDiameter, ballDiameter);
+                BallsGroupPreset bgp = gameValues.getBallsGroupPreset();
+                if (bgp == null) {
+                    Color color = Values.getColorOfTarget(indicatedTarget);
+                    canvas.getGraphicsContext2D().setFill(color);
+                    canvas.getGraphicsContext2D().fillOval(leftX, ballDiameter * 0.1, ballDiameter, ballDiameter);
+                } else {
+                    BallModel bm = getActiveHolder().getBallByValue(indicatedTarget).model;
+                    Pane tarPane = (Pane) canvas.getParent();
+                    NonStretchSphere ballShape = bm.getStaticSphere();
+                    ballShape.getTransforms().clear();
+                    ballShape.getTransforms().add(new Translate(sphereCenterX, ballDiameter * 0.6));
+                    tarPane.getChildren().add(ballShape);
+                }
             }
         }
 //        else {

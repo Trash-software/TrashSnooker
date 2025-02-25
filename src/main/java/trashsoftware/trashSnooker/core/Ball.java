@@ -56,7 +56,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         this.colorTransparent = colorWithOpa.deriveColor(0, 1, 1, 0);
         this.traceColor = this.color.deriveColor(0, 1, 0.75, 1);
 
-        model = BallModel.createModel(this);
+        model = BallModel.createModel(this, values.getBallsGroupPreset());
         setPotted(initPotted);
     }
 

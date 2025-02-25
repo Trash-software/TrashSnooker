@@ -27,7 +27,6 @@ import trashsoftware.trashSnooker.fxml.drawing.CurvedPolygonDrawer;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -405,7 +404,7 @@ public class GamePane extends StackPane {
 
         double actualCornerHoleSize = values.cornerHoleRadius * 2 * scale;
         TablePreset preset = gameValues.getTablePreset();
-        if (preset == null || preset.getClothMesh() == null) {
+        if (preset == null || preset.getClothTexture() == null) {
             graphicsContext.setFill(values.tableColor);  // 台泥/台布
             graphicsContext.fillRoundRect(  // 防止特别小的袋口遮不完台泥的边角
                     canvasX(values.leftX - values.cushionClothWidth),
@@ -415,8 +414,8 @@ public class GamePane extends StackPane {
                     actualCornerHoleSize,
                     actualCornerHoleSize);
         } else {
-            Image clothMesh = preset.getClothMesh();
-            graphicsContext.drawImage(clothMesh,
+            Image clothTexture = preset.getClothTexture();
+            graphicsContext.drawImage(clothTexture,
                     canvasX(values.leftX - values.cushionClothWidth),
                     canvasY(values.topY - values.cushionClothWidth),
                     (values.innerWidth + values.cushionClothWidth * 2) * scale,

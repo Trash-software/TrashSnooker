@@ -165,7 +165,10 @@
                     <HBox alignment="CENTER_LEFT" spacing="20.0">
                         <Label fx:id="player1Label" text="Player 1"/>
                         <Label fx:id="player1ScoreLabel"/>
-                        <Canvas fx:id="player1TarCanvas"/>
+                        <Pane fx:id="player1TarPane">
+                            <Canvas fx:id="player1TarCanvas"/>
+                        </Pane>
+                        
                     </HBox>
                     <HBox GridPane.columnIndex="1" alignment="CENTER" spacing="5.0">
                         <Label fx:id="player1FramesLabel" text="0"/>
@@ -178,7 +181,9 @@
                         <Canvas fx:id="singlePoleCanvas"/>
                     </HBox>
                     <HBox alignment="CENTER_RIGHT" spacing="20.0" GridPane.columnIndex="2">
-                        <Canvas fx:id="player2TarCanvas"/>
+                        <Pane fx:id="player2TarPane">
+                            <Canvas fx:id="player2TarCanvas"/>
+                        </Pane>
                         <Label fx:id="player2ScoreLabel"/>
                         <Label fx:id="player2Label" text="Player 2"/>
                     </HBox>

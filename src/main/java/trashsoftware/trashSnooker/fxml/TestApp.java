@@ -20,7 +20,6 @@ import trashsoftware.trashSnooker.fxml.drawing.CueModel3D;
 import trashsoftware.trashSnooker.fxml.drawing.CueTipModel;
 import trashsoftware.trashSnooker.fxml.drawing.NonStretchSphere;
 import trashsoftware.trashSnooker.fxml.drawing.TipModel;
-import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.util.Objects;
 
@@ -106,7 +105,7 @@ public class TestApp extends Application {
     private void testBallRotate(Pane group) {
         Sphere sphere = new Sphere(ballRadius);
         Image img = new Image(getClass().getResource(
-                "/trashsoftware/trashSnooker/res/img/256/pool/pool0.png").toExternalForm());
+                "/trashsoftware/trashSnooker/res/img/256/ball/pool/std/pool0.png").toExternalForm());
         PhongMaterial material = new PhongMaterial();
 //        PhongMaterial material = new PhongMaterial(Color.RED, img, null, null, null);
         material.setDiffuseMap(img);

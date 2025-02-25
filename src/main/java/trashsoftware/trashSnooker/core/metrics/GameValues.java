@@ -21,6 +21,7 @@ public class GameValues {
     public final TableMetrics table;
     public final BallMetrics ball;
     private TablePreset tablePreset;  // 不管太多，只管画
+    private BallsGroupPreset ballsGroupPreset;
     // 袋的正中央，最易进球的位置
     public double[] topLeftHoleOpenCenter;
     public double[] botLeftHoleOpenCenter;
@@ -111,6 +112,10 @@ public class GameValues {
         } else {
             jsonObject.put("tablePreset", tablePreset.id);
         }
+        
+        if (ballsGroupPreset != null) {
+            jsonObject.put("ballsGroupPreset", ballsGroupPreset.id);
+        }
 
         return jsonObject;
     }
@@ -143,6 +148,10 @@ public class GameValues {
 
     public void setTablePreset(TablePreset tablePreset) {
         this.tablePreset = tablePreset;
+    }
+
+    public void setBallsGroupPreset(BallsGroupPreset ballsGroupPreset) {
+        this.ballsGroupPreset = ballsGroupPreset;
     }
 
     public void setTrain(TrainType trainType, Challenge challenge) {
@@ -370,6 +379,10 @@ public class GameValues {
 
     public TablePreset getTablePreset() {
         return tablePreset;
+    }
+
+    public BallsGroupPreset getBallsGroupPreset() {
+        return ballsGroupPreset;
     }
 
     @Override

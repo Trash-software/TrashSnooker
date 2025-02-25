@@ -17,6 +17,16 @@ public class NonStretchSphere extends MeshView {
         build();
     }
 
+    public NonStretchSphere copyNoTrans() {
+        NonStretchSphere copy = new NonStretchSphere(sep, radius);
+        copy.mesh = mesh;
+        copy.setMaterial(getMaterial());
+        copy.setTranslateX(0);
+        copy.setTranslateY(0);
+        copy.setTranslateZ(0);
+        return copy;
+    }
+
     private void build() {
         mesh = new TriangleMesh();
 

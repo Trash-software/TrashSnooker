@@ -2,21 +2,19 @@ package trashsoftware.trashSnooker.fxml.drawing;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
+import trashsoftware.trashSnooker.core.metrics.BallsGroupPreset;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.util.Objects;
 
 public class PoolBallModel extends BallModel {
     
-    protected PoolBallModel(int number) {
-        super();
+    protected PoolBallModel(BallsGroupPreset preset, int number) {
+        super(preset);
         
-        String fileName = "/trashsoftware/trashSnooker/res/img/" 
-                + ConfigLoader.getInstance().getBallMaterialResolution() + "/pool/pool" + number + ".png";
-        Image img = new Image(Objects.requireNonNull(getClass().getResource(fileName)).toExternalForm());
-        PhongMaterial material = new PhongMaterial();
-        material.setDiffuseMap(img);
-//        material.setSpecularMap(img);
+        PhongMaterial material;
+        if (preset == null) material = loadDefaultMaterial(number);
+        else material = loadPresetMaterial(preset, number);
         
         sphere.setMaterial(material);
         
@@ -28,7 +26,12 @@ public class PoolBallModel extends BallModel {
     }
 
     @Override
-    public boolean textured() {
-        return true;
+    protected PhongMaterial loadDefaultMaterial(int value) {
+        String fileName = "/trashsoftware/trashSnooker/res/img/"
+                + ConfigLoader.getInstance().getBallMaterialResolution() + "/ball/stdPool/pool" + value + ".png";
+        Image img = new Image(Objects.requireNonNull(getClass().getResource(fileName)).toExternalForm());
+        PhongMaterial material = new PhongMaterial();
+        material.setDiffuseMap(img);
+        return material;
     }
 }

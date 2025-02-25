@@ -67,6 +67,8 @@ public class FastGameView extends ChildInitializable {
     ComboBox<CategoryItem> player1CatBox, player2CatBox;
     @FXML
     ComboBox<TablePresetWrapper> tablePresetBox;
+    @FXML
+    ComboBox<BallsPresetWrapper> ballsPresetBox;
 
     @FXML
     CheckBox devModeBox;
@@ -104,7 +106,7 @@ public class FastGameView extends ChildInitializable {
         loadPlayerList();
         loadCueList();
 
-        initTablePresentBox();
+        initPresetBoxes();
 
         resumeButton.setDisable(!GeneralSaveManager.getInstance().hasSavedGame());
 
@@ -162,7 +164,7 @@ public class FastGameView extends ChildInitializable {
         clothGoodBox.getSelectionModel().select(1);
     }
 
-    private void initTablePresentBox() {
+    private void initPresetBoxes() {
         tableMetricsBox.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> fillTablePresetBox(newValue));
 
@@ -186,6 +188,17 @@ public class FastGameView extends ChildInitializable {
             tablePresetBox.getItems().add(new TablePresetWrapper(tp.name, tp));
         }
         tablePresetBox.getSelectionModel().select(0);
+    }
+    
+    private void fillBallsPresetBox(GameRule rule) {
+        ballsPresetBox.getItems().clear();
+        
+        ballsPresetBox.getItems().add(new BallsPresetWrapper(strings.getString("ballsStandard"), null));
+        Map<String, BallsGroupPreset> balls = DataLoader.getInstance().getBallsPresetsOfType(rule);
+        for (BallsGroupPreset bgp : balls.values()) {
+            ballsPresetBox.getItems().add(new BallsPresetWrapper(bgp.name, bgp));
+        }
+        ballsPresetBox.getSelectionModel().select(0);
     }
 
     private void initGameTypeBox() {
@@ -230,6 +243,7 @@ public class FastGameView extends ChildInitializable {
                 default -> subRuleBox.getItems().add(SubRule.RAW_STD);
             }
             subRuleBox.getSelectionModel().select(0);
+            fillBallsPresetBox(newValue);
             reloadTrainingItemByGameType(newValue);
         }));
 
@@ -403,6 +417,9 @@ public class FastGameView extends ChildInitializable {
                 values.table.tableColor = preset.clothColor;
             }
         }
+        
+        BallsGroupPreset ballsGroupPreset = ballsPresetBox.getValue().preset;
+        values.setBallsGroupPreset(ballsGroupPreset);  // 可以是null
         
         values.setDevMode(devModeBox.isSelected());
         showGame(values, cloth);
@@ -581,6 +598,21 @@ public class FastGameView extends ChildInitializable {
         public TablePreset preset;
 
         TablePresetWrapper(String shown, TablePreset preset) {
+            this.shown = shown;
+            this.preset = preset;
+        }
+
+        @Override
+        public String toString() {
+            return shown;
+        }
+    }
+
+    public static class BallsPresetWrapper {
+        public String shown;
+        public BallsGroupPreset preset;
+
+        BallsPresetWrapper(String shown, BallsGroupPreset preset) {
             this.shown = shown;
             this.preset = preset;
         }

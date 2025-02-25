@@ -1,0 +1,49 @@
+{
+  "balls": [
+    {
+      "id": "helloKittySnooker",
+      "name": {
+        "zh": "Hello Kitty",
+        "en": "Hello Kitty"
+      },
+      "types": [
+        "Snooker",
+        "MiniSnooker",
+        "SnookerTen"
+      ],
+      "textureMap": {
+        "1": "ball1.jpg"
+      },
+      "colorMap": {
+        "0": "snow",
+        "2": "#fedd7f",
+        "3": "palegreen",
+        "4": "sienna",
+        "5": "lightskyblue"
+      }
+    },
+    {
+      "id": "helloKittyEight",
+      "name": {
+        "zh": "Hello Kitty Uniform",
+        "en": "Hello Kitty Uniform"
+      },
+      "types": [
+        "ChineseEight",
+        "LisEight"
+      ],
+      "textureMap": {
+        "1": "ball1.jpg",
+        "2": "ball1.jpg",
+        "3": "ball1.jpg",
+        "4": "ball1.jpg",
+        "5": "ball1.jpg",
+        "6": "ball1.jpg",
+        "7": "ball1.jpg"
+      },
+      "colorMap": {
+
+      }
+    }
+  ]
+}

@@ -76,6 +76,8 @@
     <HBox spacing="10.0" alignment="CENTER">
         <Label text="%tablePreset"/>
         <ComboBox fx:id="tablePresetBox"/>
+        <Label text="%ballsPreset"/>
+        <ComboBox fx:id="ballsPresetBox"/>
     </HBox>
 
     <HBox spacing="10.0" alignment="CENTER">

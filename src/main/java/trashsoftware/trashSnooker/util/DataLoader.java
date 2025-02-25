@@ -6,6 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.cue.*;
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.metrics.BallsGroupPreset;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.TablePreset;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
@@ -28,6 +30,7 @@ public class DataLoader {
     private static final String CUE_LIST_FILE = "data/cues.json";
     private static final String CUE_TIP_LIST_FILE = "data/cue_tips.json";
     private static final String TABLE_PRESETS_FILE = "data/tables.json";
+    private static final String BALLS_PRESETS_FILE = "data/balls.json";
 
     private static DataLoader instance;
 
@@ -38,6 +41,7 @@ public class DataLoader {
     private final Map<String, CueTipBrand> cueTips = new HashMap<>();
 //    private final Map<String, Cue> cueInstances = new HashMap<>();
     private final Map<String, Map<String, TablePreset>> tablePresets = new HashMap<>();
+    private final Map<GameRule, Map<String, BallsGroupPreset>> ballsPresets = new HashMap<>();
     
     private Cue stdRestCue;
 
@@ -63,7 +67,7 @@ public class DataLoader {
         return instance;
     }
 
-    public static Color parseColor(String colorStr) {
+    public static Color parseColor(String colorStr) throws IllegalArgumentException {
         if (colorStr.startsWith("#")) {
             return Color.valueOf(colorStr);
         }
@@ -270,6 +274,8 @@ public class DataLoader {
         loadCueTips(tipsRoot);
         JSONObject tablesRoot = loadFromDisk(TABLE_PRESETS_FILE);
         loadTablePresets(tablesRoot);
+        JSONObject ballsPresetRoot = loadFromDisk(BALLS_PRESETS_FILE);
+        loadBallPresets(ballsPresetRoot);
 
 //        JSONObject cueInstancesRoot = loadFromDisk(CUE_INSTANCES_FILE);
 //        loadCueInstances(cueInstancesRoot);
@@ -433,6 +439,27 @@ public class DataLoader {
             }
         }
     }
+    
+    private void loadBallPresets(JSONObject root) {
+        if (root.has("balls")) {
+            JSONArray array = root.getJSONArray("balls");
+            for (Object obj : array) {
+                JSONObject object = (JSONObject) obj;
+                String id = object.getString("id");
+                BallsGroupPreset bgp = BallsGroupPreset.fromJson(object);
+                Set<GameRule> supportedRules = bgp.types;
+
+                System.out.println(id + " " + bgp.name);
+                
+                for (GameRule rule : supportedRules) {
+                    Map<String, BallsGroupPreset> ballsOfType = ballsPresets.computeIfAbsent(
+                            rule, k -> new HashMap<>()
+                    );
+                    ballsOfType.put(id, bgp);
+                }
+            }
+        }
+    }
 
     private void loadTablePresets(JSONObject root) {
         if (root.has("tables")) {
@@ -454,8 +481,8 @@ public class DataLoader {
     }
 
     public TablePreset getTablePresetById(String id) {
-        for (Map<String, TablePreset> entry : tablePresets.values()) {
-            for (Map.Entry<String, TablePreset> presetEntry : entry.entrySet()) {
+        for (Map<String, TablePreset> typeTables : tablePresets.values()) {
+            for (Map.Entry<String, TablePreset> presetEntry : typeTables.entrySet()) {
                 if (presetEntry.getKey().equals(id)) return presetEntry.getValue();
             }
         }
@@ -464,6 +491,19 @@ public class DataLoader {
 
     public Map<String, TablePreset> getTablesOfType(String type) {
         return tablePresets.getOrDefault(type, new HashMap<>());
+    }
+
+    public BallsGroupPreset getBallsPresetById(String id) {
+        for (Map<String, BallsGroupPreset> typeBalls : ballsPresets.values()) {
+            for (Map.Entry<String, BallsGroupPreset> presetEntry : typeBalls.entrySet()) {
+                if (presetEntry.getKey().equals(id)) return presetEntry.getValue();
+            }
+        }
+        throw new RuntimeException("Cannot find table " + id);
+    }
+
+    public Map<String, BallsGroupPreset> getBallsPresetsOfType(GameRule type) {
+        return ballsPresets.getOrDefault(type, new HashMap<>());
     }
 
     public void addPlayerPerson(PlayerPerson playerPerson) {

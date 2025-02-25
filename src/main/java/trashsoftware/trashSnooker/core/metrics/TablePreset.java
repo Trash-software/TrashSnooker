@@ -9,15 +9,14 @@ import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Objects;
 
 public class TablePreset {
     
     public final String id;
     public final String name;
     private final TableMetrics.TableBuilderFactory factory;
-    private String clothMeshName;
-    private Image clothMesh;
+    private final String clothTextureName;
+    private Image clothTexture;
     private final File logo;
     private final String nameOnTable;
     private final Color nameOnTableColor;
@@ -30,7 +29,7 @@ public class TablePreset {
                        TableSpec tableSpec,
                        String nameOnTable,
                        Color nameOnTableColor,
-                       String clothMeshName, 
+                       String clothTextureName, 
                        File logo,
                        Color tableBorderColor,
                        Color clothColor) {
@@ -42,28 +41,28 @@ public class TablePreset {
         this.nameOnTableColor = nameOnTableColor;
         this.logo = logo;
         
-        this.clothMeshName = clothMeshName;
+        this.clothTextureName = clothTextureName;
         this.tableBorderColor = tableBorderColor;
         this.clothColor = clothColor;
     }
     
     private void loadMeshes() {
-        if (clothMeshName == null) return;
+        if (clothTextureName == null) return;
 
         String fileName = "/trashsoftware/trashSnooker/res/img/"
-                + ConfigLoader.getInstance().getBallMaterialResolution() + "/table/" + clothMeshName;
+                + ConfigLoader.getInstance().getBallMaterialResolution() + "/table/" + clothTextureName;
         URL url = getClass().getResource(fileName);
         if (url == null) {
             EventLogger.error("Cannot load resource: " + fileName);
             return;
         }
-        clothMesh = new Image(url.toExternalForm());
+        clothTexture = new Image(url.toExternalForm());
     }
     
     public static TablePreset fromJson(JSONObject jsonObject) {
         TableMetrics.TableBuilderFactory factory = TableMetrics.fromFactoryName(jsonObject.getString("type"));
         
-        String mesh = jsonObject.has("clothMesh") ? jsonObject.getString("clothMesh") : null;
+        String texture = jsonObject.has("clothTexture") ? jsonObject.getString("clothTexture") : null;
         File logo = jsonObject.has("logo") ? new File(jsonObject.getString("logo")) : null;
         if (logo != null && !logo.exists()) logo = null;
         
@@ -76,7 +75,7 @@ public class TablePreset {
                 jsonObject.has("textColor") ? 
                         DataLoader.parseColor(jsonObject.getString("textColor")) : 
                         Color.BLACK.brighter(),
-                mesh,
+                texture,
                 logo,
                 jsonObject.has("tableOutColor") ?
                         DataLoader.parseColor(jsonObject.getString("tableOutColor")) :
@@ -103,10 +102,10 @@ public class TablePreset {
         return nameOnTableColor;
     }
 
-    public Image getClothMesh() {
-        if (clothMesh == null) loadMeshes();
+    public Image getClothTexture() {
+        if (clothTexture == null) loadMeshes();
         
-        return clothMesh;
+        return clothTexture;
     }
 
     @Override
