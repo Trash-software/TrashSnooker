@@ -70,6 +70,11 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
     }
 
     @Override
+    protected boolean isBallPlacedInHeap(Ball ball) {
+        return !ball.isWhite();
+    }
+
+    @Override
     public NumberedBallTable getTable() {
         return (NumberedBallTable) table;
     }

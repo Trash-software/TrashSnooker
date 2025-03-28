@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.movement;
 
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
@@ -33,7 +34,7 @@ public class WhitePrediction {
     private double firstBallX;
     private double firstBallY;
     private boolean firstBallWillPot;
-    private boolean firstBallCollidesOther;
+    private Ball firstBallCollidesOther;
     private int firstBallCushionCount;
     
     private boolean hitWallBeforeHitBall;
@@ -157,11 +158,15 @@ public class WhitePrediction {
         this.firstBallWillPot = true;
     }
     
-    public void setFirstBallCollidesOther() {
-        this.firstBallCollidesOther = true;
+    public void setFirstBallCollidesOther(Ball firstBallCollision) {
+        this.firstBallCollidesOther = firstBallCollision;
     }
 
     public boolean isFirstBallCollidesOther() {
+        return firstBallCollidesOther != null;
+    }
+
+    public Ball getFirstBallCollidesOther() {
         return firstBallCollidesOther;
     }
 

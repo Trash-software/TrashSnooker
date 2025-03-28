@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.metrics;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
 
+import java.util.MissingResourceException;
+
 public class PocketDifficulty {
     public static PocketDifficulty[] GREEN_TABLE_DIFFICULTIES = {
             new PocketDifficulty("veryLoose",
@@ -34,7 +36,13 @@ public class PocketDifficulty {
                     0.0,
                     5.0, 
                     69.85, 53.1876, 0.0,
-                    53.1876, 3.96)
+                    53.1876, 3.96),
+            new PocketDifficulty("extremeTight",
+                    5.0, 2.21, 3.0, 53.1875,
+                    0.0,
+                    5.0,
+                    45.7, 40.64, 0.0,
+                    40.64, 3.96)
     };
     public static PocketDifficulty[] BLUE_TABLE_DIFFICULTIES = {
             new PocketDifficulty("normal",
@@ -133,6 +141,10 @@ public class PocketDifficulty {
     @Override
     public String toString() {
         String langKey = Util.toLowerCamelCase("POCKET_DIFF_" + Util.toAllCapsUnderscoreCase(key));
-        return App.getStrings().getString(langKey);
+        try {
+            return App.getStrings().getString(langKey);
+        } catch (MissingResourceException e) {
+            return key;
+        }
     }
 }

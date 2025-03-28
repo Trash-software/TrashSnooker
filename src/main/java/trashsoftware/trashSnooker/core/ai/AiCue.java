@@ -61,8 +61,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         Arrays.sort(DOUBLE_POT_SPIN_POINTS, Comparator.comparingDouble(a -> Math.abs(a[0]) + Math.abs(a[1])));
     }
 
-    private final double opponentPureAtkProb;  // 对手会直接进攻的界限
-    private final double opponentDefAtkProb;
+    final double opponentPureAtkProb;  // 对手会直接进攻的界限
+    final double opponentDefAtkProb;
     protected int nThreads;
     protected G game;
     protected P aiPlayer;
@@ -78,304 +78,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                         ConfigLoader.getInstance().getInt("nThreads", 4)));
 
         P opponent = game.getAnotherPlayer(aiPlayer);
-        opponentPureAtkProb = attackProbThreshold(0.4, opponent.getPlayerPerson().getAiPlayStyle());
-        opponentDefAtkProb = defensiveAttackProbThreshold(opponent.getPlayerPerson().getAiPlayStyle());
-    }
-
-    private static <G extends Game<?, ?>> List<AttackChoice.DoubleAttackChoice> doubleAttackChoices(
-            G game,
-            int attackTarget,
-            Player attackingPlayer,
-            Ball lastPottingBall,
-            List<Ball> legalBalls,
-            double[] whitePos,
-            boolean isPositioning
-    ) {
-        List<Game.DoublePotAiming> doublePots = game.doublePotAble(
-                whitePos[0],
-                whitePos[1],
-                legalBalls,
-                1
-        );
-//        System.out.println(doublePots.size() + " double possibilities");
-
-        List<AttackChoice.DoubleAttackChoice> choices = new ArrayList<>();
-        for (Game.DoublePotAiming aiming : doublePots) {
-            AttackChoice.DoubleAttackChoice dac = AttackChoice.DoubleAttackChoice.createChoice(
-                    game,
-                    game.getEntireGame().predictPhy,
-                    attackingPlayer,
-                    whitePos,
-                    aiming,
-                    lastPottingBall,
-                    attackTarget,
-                    isPositioning
-            );
-            if (dac != null) {
-                choices.add(dac);
-            }
-        }
-        return choices;
-    }
-
-//    protected List<DoubleAttackChoice> getCurrentDoubleAttackChoices() {
-//        int curTarget = game.getCurrentTarget();
-//        boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
-//        List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
-//                isSnookerFreeBall,
-//                game.isInLineHandBallForAi());
-//
-//        Ball cueBall = game.getCueBall();
-//
-//        List<DoubleAttackChoice> doubleAttackChoices = getDoubleAttackChoices(
-//                game,
-//                curTarget,
-//                aiPlayer,
-//                null,
-//                legalBalls,
-//                new double[]{cueBall.getX(), cueBall.getY()},
-//                false
-//        );
-//        System.out.println(doubleAttackChoices.size() + " double attacks");
-//        return doubleAttackChoices;
-//    }
-
-    private static <G extends Game<?, ?>> List<AttackChoice.DirectAttackChoice> directAttackChoices(
-            G game,
-            int attackTarget,
-            Player attackingPlayer,
-            Ball lastPottingBall,
-            List<Ball> legalBalls,
-            double[] whitePos,
-            boolean isPositioning
-    ) {
-        List<AttackChoice.DirectAttackChoice> directAttackChoices = new ArrayList<>();
-        for (Ball ball : legalBalls) {
-            if (ball.isPotted() || ball == lastPottingBall) continue;  // todo: 潜在bug：斯诺克清彩阶段自由球
-            List<double[][]> dirHoles = game.directionsToAccessibleHoles(ball);
-//            System.out.println("dirHoles: " + dirHoles.size());
-//            double[] ballPos = new double[]{ball.getX(), ball.getY()};
-
-            for (double[][] dirHole : dirHoles) {
-                double collisionPointX = dirHole[2][0];
-                double collisionPointY = dirHole[2][1];
-
-                if (game.pointToPointCanPassBall(whitePos[0], whitePos[1],
-                        collisionPointX, collisionPointY, game.getCueBall(), ball, true,
-                        true)) {
-                    // 从白球处看得到进球点
-                    AttackChoice.DirectAttackChoice directAttackChoice = AttackChoice.DirectAttackChoice.createChoice(
-                            game,
-                            game.getEntireGame().predictPhy,
-                            attackingPlayer,
-                            whitePos,
-                            ball,
-                            lastPottingBall,
-                            attackTarget,
-                            isPositioning,
-                            dirHole,
-                            null
-                    );
-                    if (directAttackChoice != null) {
-                        directAttackChoices.add(directAttackChoice);
-                    }
-                }
-            }
-        }
-        return directAttackChoices;
-    }
-
-    public static <G extends Game<?, ?>> List<AttackChoice> getAttackChoices(
-            G game,
-            int attackTarget,
-            Player attackingPlayer,
-            Ball lastPottingBall,
-            List<Ball> legalBalls,
-            double[] whitePos,
-            boolean isPositioning,
-            boolean considerDoublePot
-    ) {
-        List<AttackChoice> attackChoices = new ArrayList<>();
-        if (!aiOnlyDouble) {
-            attackChoices.addAll(directAttackChoices(
-                    game,
-                    attackTarget,
-                    attackingPlayer,
-                    lastPottingBall,
-                    legalBalls,
-                    whitePos,
-                    isPositioning
-            ));
-        }
-        if (considerDoublePot) {
-            attackChoices.addAll(doubleAttackChoices(
-                    game,
-                    attackTarget,
-                    attackingPlayer,
-                    lastPottingBall,
-                    legalBalls,
-                    whitePos,
-                    isPositioning
-            ));
-        }
-        Collections.sort(attackChoices);
-        return attackChoices;
-    }
-
-    static double attackProbThreshold(double base, AiPlayStyle aps) {
-        if (aps.attackPrivilege == 100) return 0.000001;  // 管他娘的
-        else {
-            double room = 1.0 - base;
-            double playerNotWantAttack = 1 - aps.attackPrivilege / 100;
-            playerNotWantAttack = Math.pow(playerNotWantAttack, 0.75);  // 无奈之举。次幂越小，进攻权重低的球手越不进攻
-            double realAttackProb = base + playerNotWantAttack * room;
-            double mul = Math.pow(aps.precision / 100.0, 1.5);  // 补偿由于AI打不准造成的进球概率低，进而不进攻的问题
-            return realAttackProb * mul;  // 这里不像下面用了Math.max。原因：太菜的选手只会无脑进攻，哈哈哈
-        }
-    }
-
-    static double defensiveAttackProbThreshold(AiPlayStyle aps) {
-        double room = 1 - DEFENSIVE_ATTACK_PROB;
-        double realProb = DEFENSIVE_ATTACK_PROB + (1 - aps.attackPrivilege / 100) * room;
-        double mul = Math.pow(aps.precision / 100.0, 1.5);  // 补偿由于AI打不准造成的进球概率低，进而不进攻的问题
-        double res = realProb * mul;
-        return Math.max(DEFENSIVE_ATTACK_PROB / 5, res);
-    }
-
-    /**
-     * 返回的都得是有效的防守。
-     * 但吃库不会在这里检查。
-     */
-    protected static FinalChoice.DefenseChoice analyseDefense(
-            AiCue<?, ?> aiCue,
-            CuePlayParams cpp,
-            CueParams cueParams,
-            Phy phy,
-            Game<?, ?> copy,
-            Set<Ball> legalSet,
-            Player aiPlayer,
-            double[] unitXY,
-            boolean attackAble,  // 可不可以进
-            double nativePrice,
-            boolean allowPocketCorner
-    ) {
-        WhitePrediction wp = copy.predictWhite(cpp, phy, 50000.0,
-                true,
-                true, true, false,
-                false);  // 这里不用clone，因为整个game都是clone的
-        double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
-
-        if (!allowPocketCorner && wp.isWhiteHitsHoleArcs()) {
-            wp.resetToInit();
-            return null;
-        }
-
-        Ball firstCollide = wp.getFirstCollide();
-        if (firstCollide != null && legalSet.contains(firstCollide)) {
-            if (wp.willCueBallPot()) {
-                wp.resetToInit();
-                return null;
-            }
-            if (!attackAble && wp.willFirstBallPot()) {
-                wp.resetToInit();
-                return null;
-            }
-
-            int opponentTarget = copy.getTargetAfterPotFailed();
-            List<Ball> opponentBalls = copy.getAllLegalBalls(opponentTarget, false,
-                    copy.isInLineHandBall());
-
-            Game.SeeAble seeAble = copy.countSeeAbleTargetBalls(
-                    whiteStopPos[0], whiteStopPos[1],
-                    opponentBalls,
-                    1
-            );
-            double penalty = 1.0;
-//            double opponentAttackPrice = 1.0;
-            double opponentAttackPrice = AttackChoice.DirectAttackChoice.priceOfDistance(seeAble.avgTargetDistance);
-//            double opponentAttackPrice2 = AttackChoice.priceOfDistance(seeAble.avgTargetDistance);
-            double snookerPrice = 1.0;
-
-            if (wp.isFirstBallCollidesOther()) {
-                penalty *= 16;
-            }
-            if (wp.getSecondCollide() != null) {
-                penalty *= 30;
-            }
-            if (wp.isCueBallFirstBallTwiceColl()) {
-                penalty *= 2;  // 二次碰撞
-            }
-
-            AttackChoice oppoEasiest = null;
-            if (seeAble.seeAbleTargets == 0) {
-                // 这个权重如果太大，AI会不计惩罚地去做斯诺克
-                // 如果太小，AI会不做斯诺克
-                snookerPrice = Math.sqrt(seeAble.maxShadowAngle) * 50.0;
-            } else {
-                List<AttackChoice> directAttackChoices = getAttackChoices(
-                        copy,
-                        opponentTarget,
-                        copy.getAnotherPlayer(aiPlayer),
-                        null,
-                        opponentBalls,
-                        whiteStopPos,
-                        false,
-                        false  // 防守还是别考虑对手翻袋了
-                );
-
-                for (AttackChoice ac : directAttackChoices) {
-                    // ac.defaultRef.price一般在1以下
-                    // 这个权重一般最后的合也就几十，可能二三十最多了
-//                    opponentAttackPrice += ac.defaultRef.price * 3.0;
-//                    opponentAttackPrice2 += ac.price;
-
-                    double potProb = ac.defaultRef.potProb;
-                    if (potProb > aiCue.opponentPureAtkProb) {
-                        opponentAttackPrice += 15.0 * potProb;  // 大卖
-                    } else if (potProb > aiCue.opponentDefAtkProb) {
-                        opponentAttackPrice += 5.0 * potProb;  // 小卖
-                    } else {
-                        opponentAttackPrice += potProb;
-                    }
-
-                    if (oppoEasiest == null || potProb > oppoEasiest.defaultRef.potProb) {
-                        oppoEasiest = ac;
-                    }
-                }
-            }
-
-            if (wp.getWhiteCushionCountBefore() > 2) {
-                penalty *= (wp.getWhiteCushionCountBefore() - 1.5);
-            }
-            if (wp.getWhiteCushionCountAfter() > 3) {
-                penalty *= (wp.getWhiteCushionCountAfter() - 2.5);
-            }
-            if (wp.getFirstBallCushionCount() > 3) {
-                penalty *= (wp.getFirstBallCushionCount() - 2.5);
-            }
-            if (wp.isWhiteHitsHoleArcs()) {
-                penalty /= WHITE_HIT_CORNER_PENALTY;
-            }
-            wp.resetToInit();
-//            System.out.printf("%f %f %f %f\n", snookerPrice, opponentAttackPrice, opponentAttackPrice2, penalty);
-            return new FinalChoice.DefenseChoice(
-                    firstCollide,
-                    nativePrice,
-                    snookerPrice,
-                    opponentAttackPrice,
-                    penalty,
-                    unitXY,
-                    cueParams,
-                    wp,
-                    cpp,
-//                    handSkill,
-                    oppoEasiest,
-                    wp.getSecondCollide() != null,
-                    wp.isFirstBallCollidesOther()
-            );
-        }
-        wp.resetToInit();
-        return null;
+        opponentPureAtkProb = Analyzer.attackProbThreshold(0.4, opponent.getPlayerPerson().getAiPlayStyle());
+        opponentDefAtkProb = Analyzer.defensiveAttackProbThreshold(opponent.getPlayerPerson().getAiPlayStyle());
     }
 
     public abstract AiCueResult makeCue(Phy phy);
@@ -493,8 +197,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         long t0 = System.currentTimeMillis();
 
-        double pureAttackThreshold = attackProbThreshold(PURE_ATTACK_PROB, aps);  // 进球概率高于这个值，AI就纯进攻
-        double defensiveAttackThreshold = defensiveAttackProbThreshold(aps);
+        double pureAttackThreshold = Analyzer.attackProbThreshold(PURE_ATTACK_PROB, aps);  // 进球概率高于这个值，AI就纯进攻
+        double defensiveAttackThreshold = Analyzer.defensiveAttackProbThreshold(aps);
 
         List<AttackParam> pureAttacks = new ArrayList<>();
         List<AttackParam> defensiveAttacks = new ArrayList<>();  // 连打带防
@@ -610,7 +314,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
 
         if (!choiceList.isEmpty()) {
-            double pureAttackThresh = attackProbThreshold(PURE_ATTACK_PROB, aps);
+            double pureAttackThresh = Analyzer.attackProbThreshold(PURE_ATTACK_PROB, aps);
 
             choiceList.sort(FinalChoice.IntegratedAttackChoice::normalCompareTo);
             for (FinalChoice.IntegratedAttackChoice iac : choiceList) {
@@ -702,6 +406,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     bestDefense.attackParam,
                     nextTarget,
                     bestDefense.result.cuePlayParams,
+                    phy,
                     stage,
                     bestDefense.result.price
             );
@@ -783,6 +488,9 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         FinalChoice.DefenseChoice defenseChoice = getBestDefenseChoice(phy);
         if (defenseChoice != null) {
             System.out.println("AI defense");
+//            System.out.printf("Best defense choice: %f %f %f %f %f\n", 
+//                    defenseChoice.price, defenseChoice.snookerPrice, defenseChoice.opponentAttackPrice,
+//                    defenseChoice.penalty, defenseChoice.tolerancePenalty);
             return makeDefenseCue(defenseChoice, AiCueResult.CueType.DEFENSE);
         }
         FinalChoice.DefenseChoice solveSnooker = solveSnooker(phy, false);
@@ -806,7 +514,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         if (presetTarget == null) {
             all = getCurrentAttackChoices();
         } else {
-            all = getAttackChoices(game, 
+            all = Analyzer.getAttackChoices(game, 
                     game.getCurrentTarget(),
                     aiPlayer,
                     null,
@@ -917,14 +625,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         );
     }
 
-    private List<AttackChoice> getAttackChoices(int attackTarget,
+    List<AttackChoice> getAttackChoices(int attackTarget,
                                                 Ball lastPottingBall,
                                                 boolean isSnookerFreeBall,
                                                 double[] whitePos,
                                                 boolean isPositioning,
                                                 boolean isLineInHandBall,
                                                 boolean considerDoublePot) {
-        return getAttackChoices(game,
+        return Analyzer.getAttackChoices(game,
                 attackTarget,
                 aiPlayer,
                 lastPottingBall,
@@ -1230,52 +938,54 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             GameValues gameValues = game.getGameValues();
 
             PlayerPerson playerPerson = attackChoice.attackingPlayer.getPlayerPerson();
-            PlayerHand playerHand = attackChoice.handSkill;
+//            PlayerHand playerHand = attackChoice.handSkill;
             AiPlayStyle aps = playerPerson.getAiPlayStyle();
-//            double handSdMul = PlayerPerson.HandBody.getSdOfHand(attackChoice.handSkill);
-            double handSdMul = 1.0;
-
-//            double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
-//            double sideSpinSd = muSigXy[1];  // 左右打点的标准差，mm
-            double powerErrorFactor = playerHand.getErrorMultiplierOfPower(cueParams.selectedPower());
-            double powerSd = (100.0 - playerHand.getPowerControl()) / 100.0;
-            powerSd *= attackChoice.attackingPlayer.getInGamePlayer()
-                    .getCueSelection().getSelected().getNonNullInstance().getPowerMultiplier();
-            powerSd *= handSdMul;
-            powerSd *= powerErrorFactor;  // 力量的标准差
-
-            // 和杆还是有关系的，拿着大头杆打斯诺克就不会去想很难的球
-            double actualSideSpin = cueParams.actualSideSpin();
-
-            // dev=deviation, 由于力量加上塞造成的1倍标准差偏差角，应为小于PI的正数
-            double[] devOfLowPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
-                    cueParams.actualPower() * (1 - powerSd), 1, 0);
-            double radDevOfLowPower = Algebra.thetaOf(devOfLowPower);
-            if (radDevOfLowPower > Math.PI)
-                radDevOfLowPower = Algebra.TWO_PI - radDevOfLowPower;
-
-            double[] devOfHighPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
-                    cueParams.actualPower() * (1 + powerSd), 1, 0);
-            double radDevOfHighPower = Algebra.thetaOf(devOfHighPower);
-            if (radDevOfHighPower > Math.PI)
-                radDevOfHighPower = Algebra.TWO_PI - radDevOfHighPower;
-
-            double sideDevRad = (radDevOfHighPower - radDevOfLowPower) / 2;
-            sideDevRad *= 1.25;  // 稍微多惩罚一点
+////            double handSdMul = PlayerPerson.HandBody.getSdOfHand(attackChoice.handSkill);
+//            double handSdMul = 1.0;
+//
+////            double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
+////            double sideSpinSd = muSigXy[1];  // 左右打点的标准差，mm
+//            double powerErrorFactor = playerHand.getErrorMultiplierOfPower(cueParams.selectedPower());
+//            double powerSd = (100.0 - playerHand.getPowerControl()) / 100.0;
+//            powerSd *= attackChoice.attackingPlayer.getInGamePlayer()
+//                    .getCueSelection().getSelected().getNonNullInstance().getPowerMultiplier();
+//            powerSd *= handSdMul;
+//            powerSd *= powerErrorFactor;  // 力量的标准差
+//
+//            // 和杆还是有关系的，拿着大头杆打斯诺克就不会去想很难的球
+//            double actualSideSpin = cueParams.actualSideSpin();
+//
+//            // dev=deviation, 由于力量加上塞造成的1倍标准差偏差角，应为小于PI的正数
+//            double[] devOfLowPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
+//                    cueParams.actualPower() * (1 - powerSd), 1, 0);
+//            double radDevOfLowPower = Algebra.thetaOf(devOfLowPower);
+//            if (radDevOfLowPower > Math.PI)
+//                radDevOfLowPower = Algebra.TWO_PI - radDevOfLowPower;
+//
+//            double[] devOfHighPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
+//                    cueParams.actualPower() * (1 + powerSd), 1, 0);
+//            double radDevOfHighPower = Algebra.thetaOf(devOfHighPower);
+//            if (radDevOfHighPower > Math.PI)
+//                radDevOfHighPower = Algebra.TWO_PI - radDevOfHighPower;
+//
+//            double sideDevRad = (radDevOfHighPower - radDevOfLowPower) / 2;
+//            sideDevRad *= 1.25;  // 稍微多惩罚一点
+//            
+//            // 若球手不喜欢加塞，加大sideDevRad
+//            double likeSideMul = 110 / (aps.likeSide + 10);
+//            sideDevRad *= likeSideMul;
+//
+//            // 瞄准的1倍标准差偏差角
+//            double aimingSd = (105 - aps.precision) * handSdMul /
+//                    AiCueResult.DEFAULT_AI_PRECISION;  // 这里用default是因为，我们不希望把AI精确度调低之后它就觉得打不进，一直防守
             
-            // 若球手不喜欢加塞，加大sideDevRad
-            double likeSideMul = 110 / (aps.likeSide + 10);
-            sideDevRad *= likeSideMul;
-
-            // 太小的力有惩罚
-//            if (actualPower < 15.0) {
-//                double penalty = Algebra.shiftRange(0, 15, 2, 1, actualPower);
-//                sideDevRad *= penalty;
-//            }
-
-            // 瞄准的1倍标准差偏差角
-            double aimingSd = (105 - aps.precision) * handSdMul /
-                    AiCueResult.DEFAULT_AI_PRECISION;  // 这里用default是因为，我们不希望把AI精确度调低之后它就觉得打不进，一直防守
+            double[] devs = Analyzer.aiStandardDeviation(
+                    cueParams,
+                    attackChoice.attackingPlayer,
+                    true
+            );
+            double sideDevRad = devs[0];
+            double aimingSd = devs[1];
 
             double totalDt = attackChoice.targetHoleDistance + attackChoice.whiteCollisionDistance;
             double whiteInitSpeed = CuePlayParams.getSpeedOfPower(cueParams.actualPower(), 0);
@@ -1505,12 +1215,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 // 进白球也太蠢了吧
                 return;
             }
-            double[] whiteStopPos = wp.getWhitePath().get(wp.getWhitePath().size() - 1);
+            double[] whiteStopPos = wp.stopPoint();
             if (copy instanceof AbstractSnookerGame asg) {
                 asg.pickupPottedBallsLast(correctedChoice.attackTarget);
             }
             List<AttackChoice> nextStepDirectAttackChoices =
-                    getAttackChoices(copy,
+                    Analyzer.getAttackChoices(copy,
                             nextTarget,
                             aiPlayer,
                             wp.getFirstCollide(),
@@ -1528,6 +1238,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     nextTarget,
                     params,
                     wp,
+                    phy,
                     stage,
                     kickPriceCalculator
             );
@@ -1597,7 +1308,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     cueParams,
                     0.0
             );
-            result = analyseDefense(
+            result = Analyzer.analyseDefense(
                     AiCue.this,
                     cpp,
                     cueParams,
@@ -1608,7 +1319,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     unitXY,
                     false,
                     nativePrice,
-                    allowPocketCorner
+                    allowPocketCorner,
+                    true
             );
         }
     }
@@ -1668,7 +1380,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     0.0
             );
 
-            result = analyseDefense(
+            result = Analyzer.analyseDefense(
                     AiCue.this,
                     params,
                     attackParam.cueParams,
@@ -1679,7 +1391,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     correctedChoice.cueDirectionUnitVector,
                     true,
                     1.0,  // 进攻杆，AI应该不会吃屎去擦最薄边
-                    false
+                    false,
+                    true
             );
 
             if (result != null) {

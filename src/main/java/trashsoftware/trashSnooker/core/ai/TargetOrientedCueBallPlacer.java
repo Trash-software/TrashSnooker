@@ -35,7 +35,7 @@ public abstract class TargetOrientedCueBallPlacer<G extends Game<?, ?>, P extend
 
         double maxPower = player.getPlayerPerson().getPrimaryHand().getControllablePowerPercentage();
 
-        double attackProbThreshold = AiCue.attackProbThreshold(AiCue.PURE_ATTACK_PROB,
+        double attackProbThreshold = Analyzer.attackProbThreshold(AiCue.PURE_ATTACK_PROB,
                 player.getPlayerPerson().getAiPlayStyle());
 
         Game[] pool = new Game[]{game};

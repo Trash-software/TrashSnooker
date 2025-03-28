@@ -1259,6 +1259,11 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 null;
     }
 
+    @Override
+    protected boolean isBallPlacedInHeap(Ball ball) {
+        return ((SnookerBall) ball).isRed();
+    }
+
     public Set<Ball> getSuggestedRegularBreakBalls() {
         return suggestedRegularBreakBalls;
     }

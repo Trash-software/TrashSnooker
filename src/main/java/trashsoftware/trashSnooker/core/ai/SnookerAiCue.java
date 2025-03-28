@@ -126,7 +126,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         cueParams,
                         0.0
                 );
-                FinalChoice.DefenseChoice dc = analyseDefense(
+                FinalChoice.DefenseChoice dc = Analyzer.analyseDefense(
                         this,
                         cpp,
                         cueParams,
@@ -137,6 +137,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         unitXy,
                         false,
                         0.0,
+                        false,
                         false
                 );
                 if (dc != null) {

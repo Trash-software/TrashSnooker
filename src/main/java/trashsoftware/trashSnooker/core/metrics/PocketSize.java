@@ -22,7 +22,10 @@ public class PocketSize {
                     74.93),
             new PocketSize("pocketTiny", 
                     72.39, 
-                    69.85)
+                    69.85),
+            new PocketSize("pocketMicro",
+                    60.96,
+                    55.88)
     };
     public static final PocketSize[] CHINESE_EIGHT_HOLES = {
             new PocketSize("pocketHuge", 92.71, 90.17),

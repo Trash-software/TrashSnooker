@@ -68,7 +68,7 @@ public abstract class AiCueBallPlacer<G extends Game<?, ?>, P extends Player> {
         double[] bestPos = null;
         double maxPrice = 0;
         for (double[] pos : legalPositions) {
-            List<AttackChoice> attackChoices = AiCue.getAttackChoices(
+            List<AttackChoice> attackChoices = Analyzer.getAttackChoices(
                     game,
                     target,
                     player,

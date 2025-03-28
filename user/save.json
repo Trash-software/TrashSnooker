@@ -6,24 +6,24 @@
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
     "person": "Neil Robertson",
-    "playerType": "PLAYER"
+    "playerType": "COMPUTER"
   },
   "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "Trump",
+    "person": "O_Sullivan",
     "playerType": "COMPUTER"
   },
-  "startTime": 1739608480836,
+  "startTime": 1743180329468,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
     "subRules": ["SNOOKER_STD"],
-    "devMode": false,
+    "devMode": true,
     "table": {
       "tableOrdinal": 0,
       "pocketDifficultyOrdinal": 4,

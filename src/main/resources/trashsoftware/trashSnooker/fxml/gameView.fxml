@@ -5,7 +5,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import trashsoftware.trashSnooker.fxml.widgets.GamePane?>
-<?import javafx.scene.SubScene?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.GameView">
@@ -145,11 +144,11 @@
             </VBox>
 
             <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="4">
-<!--                <SubScene fx:id="gameScene">-->
-<!--                    <root>-->
-                        <GamePane fx:id="gamePane"/>
-<!--                    </root>-->
-<!--                </SubScene>-->
+                <!--                <SubScene fx:id="gameScene">-->
+                <!--                    <root>-->
+                <GamePane fx:id="gamePane"/>
+                <!--                    </root>-->
+                <!--                </SubScene>-->
 
                 <GridPane>
                     <columnConstraints>
@@ -168,7 +167,7 @@
                         <Pane fx:id="player1TarPane">
                             <Canvas fx:id="player1TarCanvas"/>
                         </Pane>
-                        
+
                     </HBox>
                     <HBox GridPane.columnIndex="1" alignment="CENTER" spacing="5.0">
                         <Label fx:id="player1FramesLabel" text="0"/>
@@ -177,7 +176,7 @@
                     </HBox>
                     <HBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="1"
                           GridPane.rowIndex="1">
-                        <Label fx:id="singlePoleLabel" />
+                        <Label fx:id="singlePoleLabel"/>
                         <Canvas fx:id="singlePoleCanvas"/>
                     </HBox>
                     <HBox alignment="CENTER_RIGHT" spacing="20.0" GridPane.columnIndex="2">
@@ -194,9 +193,9 @@
                     </HBox>
                     <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="2"
                           GridPane.rowIndex="1">
-<!--                        <ProgressBar fx:id="timerBar"/>-->
+                        <!--                        <ProgressBar fx:id="timerBar"/>-->
                         <Label fx:id="timerLabel"/>
-                        
+
                         <Label text="FPS"/>
                         <Label fx:id="fpsLabel" text="0"/>
                     </HBox>

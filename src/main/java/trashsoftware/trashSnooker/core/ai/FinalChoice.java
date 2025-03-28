@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
+import trashsoftware.trashSnooker.core.phy.Phy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public abstract class FinalChoice {
         final List<AttackChoice> nextStepAttackChoices;  // Sorted from good to bad
         final WhitePrediction whitePrediction;
         final GamePlayStage stage;
+        final Phy phy;
         protected double price;
         int nextStepTarget;
         CuePlayParams params;
@@ -35,6 +37,7 @@ public abstract class FinalChoice {
                 int nextStepTarget,
                 CuePlayParams params,
                 WhitePrediction whitePrediction,
+                Phy phy,
                 GamePlayStage stage,
                 AiCue.KickPriceCalculator kickPriceCalculator
         ) {
@@ -43,6 +46,7 @@ public abstract class FinalChoice {
             this.nextStepAttackChoices = nextStepAttackChoices;
             this.nextStepTarget = nextStepTarget;
             this.whitePrediction = whitePrediction;
+            this.phy = phy;
             this.stage = stage;
             this.params = params;
             this.kickPriceCalculator = kickPriceCalculator;
@@ -58,6 +62,7 @@ public abstract class FinalChoice {
                                          AiCue.AttackParam attackParams,
                                          int nextStepTarget,
                                          CuePlayParams params,
+                                         Phy phy,
                                          GamePlayStage stage,
                                          double price) {
             this.game = game;
@@ -66,6 +71,7 @@ public abstract class FinalChoice {
             this.whitePrediction = null;  // fixme: 可以有
             this.params = params;
             this.nextStepTarget = nextStepTarget;
+            this.phy = phy;
             this.stage = stage;
             this.kickPriceCalculator = null;
 
@@ -121,26 +127,63 @@ public abstract class FinalChoice {
 //                int cushions = whitePrediction.getWhiteCushionCountAfter();
 //                double cushionDiv = Math.max(2, cushions) / 4.0 + 0.5;  // Math.max(x, cushions) / y + (1 - x / y)
 //                price /= cushionDiv;
+                
+                boolean isDirect = attackParams.attackChoice instanceof AttackChoice.DoubleAttackChoice;
 
-                // 根据走位目标位置的容错空间，结合白球的行进距离，对长距离低容错的路线予以惩罚
-                if (firstChoice instanceof AttackChoice.DirectAttackChoice direct) {
-                    double[] posTolerance = direct.leftRightTolerance();
-                    positionErrorTolerance = Math.min(posTolerance[0], posTolerance[1]);
-                } else {
-                    positionErrorTolerance = game.getGameValues().ball.ballDiameter * 2;  // 随手输的
+                // todo: 新的算法
+                WhitePrediction[] tolerances = Analyzer.toleranceAnalysis(
+                        game,
+                        attackParams.attackChoice.attackingPlayer, 
+                        params,
+                        phy,
+                        0.0,
+                        true,
+                        true,
+                        !isDirect,
+                        true,
+                        false
+                );
+//                tolerances
+                
+                double tolerancePenalty = 1.0;
+                for (WhitePrediction tor : tolerances) {
+                    if (whitePrediction.getSecondCollide() != tor.getSecondCollide()) {
+                        tolerancePenalty *= 2.0;
+                    }
+                    
+                    double[] sp = tor.stopPoint();
+                    boolean canHit = game.pointToPointCanPassBall(sp[0], sp[1],
+                            firstChoice.collisionPos[0], firstChoice.collisionPos[1],
+                            game.getCueBall(), firstChoice.ball, 
+                            true, 
+                            true);
+                    if (!canHit) {
+                        tolerancePenalty *= 3.0;
+                    }
                 }
-
-                double dtTravel = whitePrediction.getDistanceTravelledAfterCollision();
-                double ratio = dtTravel / positionErrorTolerance;
-                double decisionWeight = 10.0;  // 权重
-
-                if (Double.isInfinite(ratio) || Double.isNaN(ratio)) {
-                    penalty = dtTravel / 100;
-                    price /= 1 + penalty;
-                } else if (ratio > decisionWeight) {
-                    penalty = Math.pow((ratio - decisionWeight) / 5.0, 1.25) * 2.0;  // 随便编的
-                    price /= 1 + penalty;
-                }
+                
+                penalty = tolerancePenalty;
+                price /= penalty;
+                
+//                // 根据走位目标位置的容错空间，结合白球的行进距离，对长距离低容错的路线予以惩罚
+//                if (firstChoice instanceof AttackChoice.DirectAttackChoice direct) {
+//                    double[] posTolerance = direct.leftRightTolerance();
+//                    positionErrorTolerance = Math.min(posTolerance[0], posTolerance[1]);
+//                } else {
+//                    positionErrorTolerance = game.getGameValues().ball.ballDiameter * 2;  // 随手输的
+//                }
+//
+//                double dtTravel = whitePrediction.getDistanceTravelledAfterCollision();
+//                double ratio = dtTravel / positionErrorTolerance;
+//                double decisionWeight = 10.0;  // 权重
+//
+//                if (Double.isInfinite(ratio) || Double.isNaN(ratio)) {
+//                    penalty = dtTravel / 100;
+//                    price /= 1 + penalty;
+//                } else if (ratio > decisionWeight) {
+//                    penalty = Math.pow((ratio - decisionWeight) / 5.0, 1.25) * 2.0;  // 随便编的
+//                    price /= 1 + penalty;
+//                }
 
                 // 正常情况下少跑点
 //                AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
@@ -155,6 +198,7 @@ public abstract class FinalChoice {
     public static class DefenseChoice extends FinalChoice implements Comparable<DefenseChoice> {
 
         final double penalty;
+        final double tolerancePenalty;
         protected PlayerHand handSkill;
         protected Ball ball;
         protected double snookerPrice;
@@ -176,6 +220,7 @@ public abstract class FinalChoice {
                                 double snookerPrice,
                                 double opponentAttackPrice,
                                 double penalty,
+                                double tolerancePenalty,
                                 double[] cueDirectionUnitVector,
                                 CueParams cueParams,
                                 WhitePrediction wp,
@@ -187,6 +232,7 @@ public abstract class FinalChoice {
             this.snookerPrice = snookerPrice;
             this.opponentAttackPrice = opponentAttackPrice;
             this.penalty = penalty;
+            this.tolerancePenalty = tolerancePenalty;
 
 //            this.collideOtherBall = collideOtherBall;
             this.cueDirectionUnitVector = cueDirectionUnitVector;
@@ -213,6 +259,7 @@ public abstract class FinalChoice {
                     0.0,
                     0.0,
                     0.0,
+                    1.0,
                     cueDirectionUnitVector,
                     cueParams,
                     null,
@@ -223,7 +270,9 @@ public abstract class FinalChoice {
         }
 
         private void generatePrice(double nativePrice) {
-            this.price = snookerPrice / penalty - opponentAttackPrice * penalty / nativePrice;
+            double totalPen = penalty * tolerancePenalty;
+            this.price = snookerPrice / totalPen 
+                    - opponentAttackPrice * totalPen / nativePrice;
 
             if (wp != null && wp.isHitWallBeforeHitBall()) {
                 // 应该是在解斯诺克
@@ -239,11 +288,12 @@ public abstract class FinalChoice {
 
         @Override
         public String toString() {
-            return String.format("price %f, snk %f, oppo atk %f, pen %f, white col: %b, tar col: %b",
+            return String.format("price %f, snk %f, oppo atk %f, pen %f, torPen %f, white col: %b, tar col: %b",
                     price,
                     snookerPrice,
                     opponentAttackPrice,
                     penalty,
+                    tolerancePenalty,
                     whiteCollidesOther,
                     targetCollidesOther);
         }

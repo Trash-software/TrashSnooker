@@ -45,6 +45,16 @@ public class CuePlayParams {
 
         this.cueParams = cueParams;
     }
+    
+    public CuePlayParams deviated(double newVx, double newVy) {
+        return new CuePlayParams(newVx,
+                newVy,
+                xSpin,
+                ySpin,
+                sideSpin,
+                miscued, 
+                cueParams);
+    }
 
     public static CuePlayParams makeIdealParams(double directionX, double directionY,
                                                 CueParams cueParams,

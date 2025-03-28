@@ -203,6 +203,13 @@ public class GameValues {
         return subRules.contains(subRule);
     }
     
+    public boolean hasSubRuleDetail(SubRule.Detail detail) {
+        for (SubRule subRule : subRules) {
+            if (subRule.hasDetail(detail)) return true;
+        }
+        return false;
+    }
+    
     public int nBalls() {
         return switch (rule) {
             case SNOOKER -> {

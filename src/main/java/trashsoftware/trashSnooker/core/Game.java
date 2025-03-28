@@ -83,6 +83,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected boolean isBreaking = true;
     protected boolean placedHandBallButNoHit;
     protected boolean firstCueAfterHandBall;
+    protected boolean ballHeapIntact = true;  // 球堆是否没被动过
     protected GameValues gameValues;
     //    protected String foulReason;
     protected int thinkTime;
@@ -260,6 +261,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected abstract void initPlayers();
 
     protected abstract B createWhiteBall();
+    
+    protected abstract boolean isBallPlacedInHeap(Ball ball);
 
     protected abstract AiCue<?, ?> createAiCue(P aiPlayer);
 
@@ -629,6 +632,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     /**
+     * 时间复杂度: O(n), n=台上的球数
+     * 
      * @param checkFullBall 如true，检查是否能过全球；如false，检查是否有薄边
      * @param checkPotPoint 如true，检查进球点，因为进球点是个虚拟的球，不会碰撞
      * @return 两点之间能不能过球
@@ -1530,6 +1535,103 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //        subRules.removeIf(subRule::isRepellent);
 //        subRules.add(subRule);
 //    }
+    
+    public void paperBreak(Phy phy) {
+        new PaperBreakHandler().handle(phy);
+    }
+    
+    public class PaperBreakHandler {
+        
+        void handle(Phy phy) {
+            if (!ballHeapIntact) {
+                System.err.println("Ball heap not intact, should not reach this point");
+                return;
+            }
+            B movingBall = null;
+            B hitBall = null;
+            OUTER:
+            for (B ball : getAllBalls()) {
+                if (!isBallPlacedInHeap(ball) && !ball.isNotMoving(phy)) {
+                    for (B tar : getAllBalls()) {
+                        if (tar != ball && isBallPlacedInHeap(tar)) {
+                            double dt = Algebra.distanceToPoint(ball.x, ball.y, tar.x, tar.y);
+                            if (Math.abs(dt - gameValues.ball.ballDiameter) < 1e-4 && ball.isMovingTowards(tar)) {
+                                movingBall = ball;
+                                hitBall = tar;
+                                break OUTER;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 解除这个anyway
+            ballHeapIntact = false;
+
+            if (movingBall == null) {
+                System.err.println("Cannot find paper break ball");
+                return;
+            }
+
+            System.out.println("Paper break, moving: " + movingBall + ", tar: " + hitBall);
+            
+            List<B> heapBalls = Arrays.stream(getAllBalls()).filter(Game.this::isBallPlacedInHeap).toList();
+
+            double dx = hitBall.x - movingBall.x;
+            double dy = hitBall.y - movingBall.y;
+            double dist = Math.sqrt(dx * dx + dy * dy);
+            double nx = dx / dist;
+            double ny = dy / dist;
+
+            // Project cueBall's velocity onto collision normal
+            double dot = movingBall.vx * nx + movingBall.vy * ny;
+
+            // Apply to head ball
+            hitBall.setVx(dot * nx);
+            hitBall.setVy(dot * ny);
+
+            // Cue ball loses that component (or zero it out if you prefer)
+            movingBall.vx -= dot * nx;
+            movingBall.vy -= dot * ny;
+            
+            propagateImpulse(hitBall, heapBalls, new HashSet<>(), 0.01);
+        }
+        
+        private void propagateImpulse(B current, 
+                                      List<B> allBalls, 
+                                      Set<B> processed,
+                                      double minDotThreshold) {
+            processed.add(current);
+
+            for (B neighbor : allBalls) {
+                if (neighbor == current || processed.contains(neighbor)) continue;
+
+                // Are they touching?
+                double dx = neighbor.x - current.x;
+                double dy = neighbor.y - current.y;
+                double dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > current.radius * 2 + 1e-4) continue; // Not touching
+
+                // Direction from current to neighbor
+                double nx = dx / dist;
+                double ny = dy / dist;
+
+                // Project current's velocity onto the direction to neighbor
+                double dot = current.vx * nx + current.vy * ny;
+
+                if (dot > minDotThreshold) {
+                    // Transfer only the forward momentum
+//                    neighbor.setVelocity(dot * nx, dot * ny);
+                    neighbor.setVx(dot * nx);
+                    neighbor.setVy(dot * ny);
+
+                    // Recurse — this ball now continues the chain
+                    propagateImpulse(neighbor, allBalls, processed, minDotThreshold);
+                }
+            }
+        }
+    }
 
     public static class SeeAble {
         public final int seeAbleTargets;
@@ -1795,7 +1897,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             gameValues.ball.ballDiameter) {
                         Ball ballClone = ball.clone();
 //                        System.out.println("second: " + ballClone.getValue());
-                        cueBallClone.twoMovingBallsHitCore(ballClone, phy, true);
+                        cueBallClone.twoMovingBallsHitCore(null, ballClone, phy, true);
                         prediction.setSecondCollide(ball,
                                 Math.hypot(cueBallClone.vx, cueBallClone.vy) * phy.calculationsPerSec);
                     }
@@ -1808,7 +1910,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 if (b != firstHit && !b.isPotted()) {
                     if (firstHit.predictedDtToPoint(b.x, b.y) <
                             gameValues.ball.ballDiameter) {
-                        prediction.setFirstBallCollidesOther();
+                        prediction.setFirstBallCollidesOther(b);
                     }
                 }
             }
@@ -1821,7 +1923,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             gameValues.ball.ballDiameter) {
                         double whiteVx = cueBallClone.vx;
                         double whiteVy = cueBallClone.vy;
-                        cueBallClone.twoMovingBallsHitCore(ball, phy, true);
+                        cueBallClone.twoMovingBallsHitCore(null, ball, phy, true);
                         double[] rawBallUnitVec = Algebra.unitVector(
                                 ball.getLastCollisionX() - cueBallClone.getLastCollisionX(),
                                 ball.getLastCollisionY() - cueBallClone.getLastCollisionY());
@@ -2084,7 +2186,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 if (ball != secondBall) {
                     for (Ball thirdBall : randomOrderBallPool2) {
                         if (ball != thirdBall && secondBall != thirdBall) {
-                            int res = ball.tryHitTwoBalls(secondBall, thirdBall, phy);
+                            int res = ball.tryHitTwoBalls(Game.this, secondBall, thirdBall, phy);
                             if (res == 1) {
                                 // 同时撞到两颗球
                                 result = 1;
@@ -2114,7 +2216,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             for (B otherBall : randomOrderBallPool1) {
                 if (ball != otherBall && !otherBall.isPotted()) {
                     // 因为球会在袋内滞留约1秒，滞留期间当然是不会碰撞的
-                    if (ball.tryHitBall(otherBall, true, applyComplexCal, phy)) {
+                    if (ball.tryHitBall(Game.this, otherBall, true, applyComplexCal, phy)) {
                         // hit ball
                         noHit = false;
                         if (ball.isWhite()) whiteCollide(otherBall);  // 记录白球撞到的球

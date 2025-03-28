@@ -478,7 +478,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         if (isBreaking) {
             updateBreakStats(newPotted);
             int playerNum = getPlayerNum(currentPlayer);
-            if (gameValues.hasSubRule(SubRule.CHINESE_EIGHT_STD)) {
+            if (gameValues.hasSubRuleDetail(SubRule.Detail.ILLEGAL_BREAK_CUSHION)) {
                 if (isStdIllegalBreak(currentPlayer.getPlayerPerson())) {
                     getEntireGame().addBreakLoseChance(playerNum);
 
@@ -496,7 +496,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                     switchPlayer();
                     return;
                 }
-            } else if (gameValues.hasSubRule(SubRule.CHINESE_EIGHT_JOE)) {
+            } else if (gameValues.hasSubRuleDetail(SubRule.Detail.LOSE_CHANCE_ACROSS_LINE)) {
                 if (isJoeBreakLoseChance(currentPlayer.getPlayerPerson())) {
                     getEntireGame().addBreakLoseChance(playerNum);
 
