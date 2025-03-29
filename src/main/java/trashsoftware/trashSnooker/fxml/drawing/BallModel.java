@@ -4,7 +4,6 @@ import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +18,18 @@ import java.util.Random;
 public abstract class BallModel {
 
     public final BallsGroupPreset preset;
-    public final NonStretchSphere sphere;
-    private NonStretchSphere staticSphere;
+    public final CustomSphere sphere;
+    private CustomSphere staticSphere;
+    private double[] initRotateAngle = new double[3];  // x,y,z
     protected boolean textured;
 
-    protected BallModel(BallsGroupPreset preset) {
+    protected BallModel(BallsGroupPreset preset, boolean equirectangular) {
         this.preset = preset;
-        sphere = new NonStretchSphere(64, 1.0);
+        if (equirectangular) {
+            sphere = new EquirectangularSphere(64, 1.0);
+        } else {
+            sphere = new NonStretchSphere(64, 1.0);
+        }
 
         sphere.getTransforms().add(new Rotate());
     }
@@ -39,28 +43,33 @@ public abstract class BallModel {
             throw new RuntimeException("No such ball type");
         }
     }
-    
+
     protected PhongMaterial loadPresetMaterial(@NotNull BallsGroupPreset preset, int value) {
         PhongMaterial material = new PhongMaterial();
-        Image image = preset.getImageByBallValue(value);
-        if (image == null) {
+        BallsGroupPreset.TextureBall textureBall = preset.getImageByBallValue(value);
+        if (textureBall == null) {
             Color color = preset.getColorByBallValue(value);
 //            System.err.println("bALL " + value + " is " + color);
             if (color == null) return loadDefaultMaterial(value);
             material.setDiffuseColor(color);
         } else {
+            Image image = textureBall.image();
             material.setDiffuseMap(image);
+
+            initRotateAngle = new double[]{textureBall.xRotate(), 0.0, 0.0};
         }
         return material;
     }
-    
+
     protected abstract PhongMaterial loadDefaultMaterial(int value);
-    
-    public NonStretchSphere getStaticSphere() {
+
+    public CustomSphere getStaticSphere() {
         if (staticSphere == null) {
             staticSphere = sphere.copyNoTrans();
+            staticSphere.getTransforms().add(new Rotate(initRotateAngle[0],
+                    0, 0, 0, new Point3D(0, 1, 0)));
         }
-        
+
         return staticSphere;
     }
 

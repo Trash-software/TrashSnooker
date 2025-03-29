@@ -5,7 +5,7 @@
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "Neil Robertson",
+    "person": "custom_player_4",
     "playerType": "COMPUTER"
   },
   "p1Wins": 0,
@@ -13,21 +13,22 @@
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "O_Sullivan",
+    "person": "custom_player_3",
     "playerType": "COMPUTER"
   },
-  "startTime": 1743180329468,
+  "startTime": 1743241144280,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
+    "ballsGroupPreset": "helloKittySnooker",
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
     "subRules": ["SNOOKER_STD"],
     "devMode": true,
     "table": {
       "tableOrdinal": 0,
-      "pocketDifficultyOrdinal": 4,
-      "holeSizeOrdinal": 5
+      "pocketDifficultyOrdinal": 3,
+      "holeSizeOrdinal": 3
     }
   },
   "totalFrames": 1,

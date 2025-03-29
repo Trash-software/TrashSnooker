@@ -3637,8 +3637,9 @@ public class GameView implements Initializable {
             } else {
                 BallModel bm = getActiveHolder().getBallByValue(value).model;
                 Pane tarPane = (Pane) canvas.getParent();
-                NonStretchSphere ballShape = bm.getStaticSphere();
-                ballShape.getTransforms().clear();
+                CustomSphere ballShape = bm.getStaticSphere();
+                ballShape.getTransforms().removeIf(transform -> transform instanceof Translate);
+//                ballShape.getTransforms().clear();
                 ballShape.getTransforms().add(new Translate(x, ballDiameter * 0.8));
                 tarPane.getChildren().add(ballShape);
             }
@@ -3681,15 +3682,17 @@ public class GameView implements Initializable {
                     bm = getActiveHolder().getBallByValue(1).model;
                 }
                 Pane tarPane = (Pane) canvas.getParent();
-                NonStretchSphere ballShape = bm.getStaticSphere();
-                ballShape.getTransforms().clear();
+                CustomSphere ballShape = bm.getStaticSphere();
+                ballShape.getTransforms().removeIf(transform -> transform instanceof Translate);
+//                ballShape.getTransforms().clear();
                 ballShape.getTransforms().add(new Translate(x, ballDiameter * 0.6));
                 tarPane.getChildren().add(ballShape);
             } else {
                 BallModel bm = ball.model;
                 Pane tarPane = (Pane) canvas.getParent();
-                NonStretchSphere ballShape = bm.getStaticSphere();
-                ballShape.getTransforms().clear();
+                CustomSphere ballShape = bm.getStaticSphere();
+                ballShape.getTransforms().removeIf(transform -> transform instanceof Translate);
+//                ballShape.getTransforms().clear();
                 ballShape.getTransforms().add(new Translate(x, ballDiameter * 0.6));
                 tarPane.getChildren().add(ballShape);
             }
@@ -3725,8 +3728,9 @@ public class GameView implements Initializable {
                 } else {
                     BallModel bm = getActiveHolder().getBallByValue(indicatedTarget).model;
                     Pane tarPane = (Pane) canvas.getParent();
-                    NonStretchSphere ballShape = bm.getStaticSphere();
-                    ballShape.getTransforms().clear();
+                    CustomSphere ballShape = bm.getStaticSphere();
+                    ballShape.getTransforms().removeIf(transform -> transform instanceof Translate);
+//                    ballShape.getTransforms().clear();
                     ballShape.getTransforms().add(new Translate(sphereCenterX, ballDiameter * 0.6));
                     tarPane.getChildren().add(ballShape);
                 }

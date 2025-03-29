@@ -41,8 +41,8 @@ public class PocketDifficulty {
                     5.0, 2.21, 3.0, 53.1875,
                     0.0,
                     5.0,
-                    45.7, 40.64, 0.0,
-                    40.64, 3.96)
+                    40.64, 38.1, 0.0,
+                    38.1, 3.96)
     };
     public static PocketDifficulty[] BLUE_TABLE_DIFFICULTIES = {
             new PocketDifficulty("normal",

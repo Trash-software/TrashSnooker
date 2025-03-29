@@ -12,10 +12,19 @@
         "SnookerTen"
       ],
       "textureMap": {
-        "1": "ball1.jpg"
+        "0": {
+          "path": "ball0.jpg",
+          "xRotate": 0.0,
+          "equirectangular": true
+        },
+        "1": {
+          "path": "ball1.jpg",
+          "xRotate": 45.0,
+          "equirectangular": true
+        }
       },
       "colorMap": {
-        "0": "snow",
+        "0": "white",
         "2": "#fedd7f",
         "3": "palegreen",
         "4": "sienna",
@@ -33,13 +42,40 @@
         "LisEight"
       ],
       "textureMap": {
-        "1": "ball1.jpg",
-        "2": "ball1.jpg",
-        "3": "ball1.jpg",
-        "4": "ball1.jpg",
-        "5": "ball1.jpg",
-        "6": "ball1.jpg",
-        "7": "ball1.jpg"
+        "0": {
+          "path": "ball0.jpg",
+          "xRotate": 0.0,
+          "equirectangular": true
+        },
+        "1": {
+          "path": "ball1.jpg",
+          "xRotate": 45.0,
+          "equirectangular": true
+        },
+        "2": {
+          "path": "ball2.jpg",
+          "xRotate": 90.0
+        },
+        "3": {
+          "path": "ball3.jpg",
+          "xRotate": 90.0
+        },
+        "4": {
+          "path": "ball4.jpg",
+          "xRotate": 90.0
+        },
+        "5": {
+          "path": "ball5.jpg",
+          "xRotate": 90.0
+        },
+        "6": {
+          "path": "ball6.jpg",
+          "xRotate": 90.0
+        },
+        "7": {
+          "path": "ball7.jpg",
+          "xRotate": 90.0
+        }
       },
       "colorMap": {
 

@@ -10,7 +10,7 @@ import java.util.Objects;
 public class PoolBallModel extends BallModel {
     
     protected PoolBallModel(BallsGroupPreset preset, int number) {
-        super(preset);
+        super(preset, preset != null && preset.isEquirectangular(number));
         
         PhongMaterial material;
         if (preset == null) material = loadDefaultMaterial(number);
@@ -18,10 +18,12 @@ public class PoolBallModel extends BallModel {
         
         sphere.setMaterial(material);
         
-        if (number == 0) {
-            sphere.setPolarLimit(45);
-        } else {
-            sphere.setPolarLimit(75);
+        if (sphere instanceof NonStretchSphere nss) {
+            if (number == 0) {
+                nss.setPolarLimit(45);
+            } else {
+                nss.setPolarLimit(75);
+            }
         }
     }
 

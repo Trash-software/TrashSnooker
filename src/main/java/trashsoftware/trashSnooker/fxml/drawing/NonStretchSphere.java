@@ -1,9 +1,8 @@
 package trashsoftware.trashSnooker.fxml.drawing;
 
-import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
-public class NonStretchSphere extends MeshView {
+public class NonStretchSphere extends CustomSphere {
 
     private final int sep;
     private double radius;  // 整个球的半径，无关底座
@@ -17,6 +16,7 @@ public class NonStretchSphere extends MeshView {
         build();
     }
 
+    @Override
     public NonStretchSphere copyNoTrans() {
         NonStretchSphere copy = new NonStretchSphere(sep, radius);
         copy.mesh = mesh;
@@ -154,6 +154,7 @@ public class NonStretchSphere extends MeshView {
         setMesh(mesh);
     }
 
+    @Override
     public void setRadius(double radius) {
         this.radius = radius;
         

@@ -9,7 +9,7 @@ import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 public class SnookerBallModel extends BallModel {
     
     protected SnookerBallModel(BallsGroupPreset preset, int value) {
-        super(preset);
+        super(preset, preset != null && preset.isEquirectangular(value));
 
         PhongMaterial material;
         if (preset == null) material = loadDefaultMaterial(value);

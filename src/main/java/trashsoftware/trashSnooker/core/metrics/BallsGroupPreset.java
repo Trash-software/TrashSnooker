@@ -25,14 +25,14 @@ public class BallsGroupPreset {
     private final Map<Integer, Color> valueColorMap;
 
     // For textured presets
-    private final Map<Integer, String> valueImageNameMap;
-    private Map<Integer, Image> valueImageMap;
+    private final Map<Integer, TextureBallName> valueImageNameMap;
+    private Map<Integer, TextureBall> valueImageMap;
 
     public BallsGroupPreset(String id,
                             String name,
                             Set<GameRule> types,
                             @Nullable Map<Integer, Color> valueColorMap,
-                            @Nullable Map<Integer, String> valueImageNameMap
+                            @Nullable Map<Integer, TextureBallName> valueImageNameMap
     ) {
         this.id = id;
         this.name = name;
@@ -64,13 +64,19 @@ public class BallsGroupPreset {
             }
         }
         JSONObject textureJson = json.has("textureMap") ? json.getJSONObject("textureMap") : null;
-        Map<Integer, String> valueImageNameMap = null;
+        Map<Integer, TextureBallName> valueImageNameMap = null;
         if (textureJson != null) {
             valueImageNameMap = new HashMap<>();
             for (String key : textureJson.keySet()) {
                 try {
                     Integer val = Integer.parseInt(key);
-                    valueImageNameMap.put(val, textureJson.getString(key));
+
+                    JSONObject textObj = textureJson.getJSONObject(key);
+                    String name = textObj.getString("path");
+                    double xRotate = textObj.optDouble("xRotate", 0.0);
+                    boolean equirectangular = textObj.optBoolean("equirectangular", false);
+
+                    valueImageNameMap.put(val, new TextureBallName(name, xRotate, equirectangular));
                 } catch (IllegalArgumentException e) {
                     EventLogger.warning(e);
                 }
@@ -91,12 +97,18 @@ public class BallsGroupPreset {
         return valueColorMap.get(value);
     }
 
-    public Image getImageByBallValue(int value) {
+    public TextureBall getImageByBallValue(int value) {
         if (valueImageNameMap == null) return null;
 
         if (valueImageMap == null) loadTextures();
 
         return valueImageMap.get(value);
+    }
+    
+    public boolean isEquirectangular(int value) {
+        return valueImageNameMap != null && 
+                valueImageNameMap.containsKey(value) && 
+                valueImageNameMap.get(value).equirectangular;
     }
 
     private void loadTextures() {
@@ -107,15 +119,28 @@ public class BallsGroupPreset {
                 .formatted(ConfigLoader.getInstance().getBallMaterialResolution(),
                         id
                 );
-        for (Map.Entry<Integer, String> entry : valueImageNameMap.entrySet()) {
-            String fileName = path + entry.getValue();
+        for (Map.Entry<Integer, TextureBallName> entry : valueImageNameMap.entrySet()) {
+            TextureBallName tbn = entry.getValue();
+            String fileName = path + tbn.imageName;
             URL url = getClass().getResource(fileName);
             if (url == null) {
                 EventLogger.error("Cannot load resource: " + fileName);
                 return;
             }
             Image image = new Image(url.toExternalForm());
-            valueImageMap.put(entry.getKey(), image);
+            valueImageMap.put(entry.getKey(), new TextureBall(image, tbn.xRotate, tbn.equirectangular));
         }
+    }
+
+    public record TextureBallName(String imageName,
+                                  double xRotate,
+                                  boolean equirectangular) {
+
+    }
+    
+    public record TextureBall(Image image,
+                              double xRotate,
+                              boolean equirectangular) {
+        
     }
 }
