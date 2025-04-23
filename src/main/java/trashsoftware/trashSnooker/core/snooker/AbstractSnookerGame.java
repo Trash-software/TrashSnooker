@@ -336,7 +336,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 pickupColorBall(getBallOfValue(7));
                 System.out.println("Black battle!");
                 AchManager.getInstance().addAchievement(Achievement.BLACK_BATTLE, null);
-                ballInHand = true;
+                setBallInHand();
                 if (Math.random() < 0.5) {
                     currentPlayer = player1;
                 } else {
@@ -475,7 +475,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             if (cueBall.isPotted()) {
                 System.err.println("Should not enter this branch");
                 thisCueFoul.addFoul(strings.getString("cueBallPot"), getFoulScore(pottedBalls), false);
-                ballInHand = true;
+                setBallInHand();
             }
         } else {
             int realTarget = whiteFirstCollide.getValue();
@@ -560,7 +560,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             if (cueBall.isPotted()) {
                 System.err.println("Should not enter this branch");
                 thisCueFoul.addFoul(strings.getString("cueBallPot"), getFoulScore(pottedBalls), false);
-                ballInHand = true;
+                setBallInHand();
             }
         }
 
@@ -614,8 +614,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             updateTargetPotFailed();
             switchPlayer();
             if (gameValues.rule.hasRule(Rule.FOUL_BALL_IN_HAND)) {
-                cueBall.pot();
-                ballInHand = true;
+                setBallInHand();
             } else if (!cueBall.isPotted() && hasFreeBall()) {
                 // todo: 要在pickup colored之后检查
                 doingFreeBall = true;

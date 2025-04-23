@@ -195,8 +195,7 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
             if (isBreaking) {
                 AchManager.getInstance().addAchievement(Achievement.WHITE_GOLDEN_NINE, getCuingIgp());
                 pickupCriticalBall(getNineBall());
-                cueBall.pot();
-                ballInHand = true;
+                setBallInHand();
                 switchPlayer();
                 return;
             }
@@ -258,8 +257,7 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
         }
 
         if (thisCueFoul.isFoul()) {
-            cueBall.pot();
-            ballInHand = true;
+            setBallInHand();
 
             if (nineBall.isPotted()) {
                 // 在cueBall.pot之后

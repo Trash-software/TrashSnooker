@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.table.Table;
 
 public interface GameHolder {
@@ -17,4 +18,6 @@ public interface GameHolder {
     InGamePlayer getP2();
     
     InGamePlayer getCuingIgp();
+    
+    GameValues getGameValues();
 }

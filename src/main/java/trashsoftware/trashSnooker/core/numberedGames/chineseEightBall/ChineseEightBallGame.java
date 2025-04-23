@@ -418,8 +418,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             if (isBreaking) {
                 // 开球犯规但进黑八不算输
                 pickupCriticalBall(getEightBall());
-                cueBall.pot();
-                ballInHand = true;
+                setBallInHand();
                 switchPlayer();
                 return;
             }
@@ -467,8 +466,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         }
 
         if (thisCueFoul.isFoul() && !getEightBall().isNotOnTable()) {
-            cueBall.pot();
-            ballInHand = true;
+            setBallInHand();
             switchPlayer();
             currentTarget = getTargetOfPlayer(currentPlayer);  // 在switchPlayer之后
             System.out.println(thisCueFoul.getAllReasons());
@@ -547,8 +545,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                     if (isBreaking) {
                         pickupCriticalBall(getEightBall());
                         if (thisCueFoul.isFoul()) {
-                            cueBall.pot();
-                            ballInHand = true;
+                            setBallInHand();
                             switchPlayer();
                             System.out.println(thisCueFoul.getAllReasons());
                         } else {

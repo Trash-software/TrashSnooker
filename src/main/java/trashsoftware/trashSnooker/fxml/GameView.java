@@ -1382,7 +1382,7 @@ public class GameView implements Initializable {
 
     private void setupBalls() {
         GameHolder gameHolder = getActiveHolder();
-        gamePane.setupBalls(gameHolder, true);
+        gamePane.setupBalls(gameHolder, !gameHolder.getGameValues().isTraining());
     }
 
     private void tryAutoChangeBreakCue(Player breaker) {
@@ -1938,7 +1938,7 @@ public class GameView implements Initializable {
 
         if (game.getGame().isPlacedHandBallButNoHit()) {
             // 哪有自己摆好球再让对手打的
-            game.getGame().setBallInHand();
+            game.getGame().forceSetBallInHand();
         }
 
         curDefAttempt = null;
@@ -1965,7 +1965,7 @@ public class GameView implements Initializable {
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
         hideCue();
-        game.getGame().setBallInHand();
+        game.getGame().forceSetBallInHand();
 
         cursorDrawer.synchronizeGame();
 

@@ -300,6 +300,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return newPotted;
     }
 
+    @Override
     public GameValues getGameValues() {
         return gameValues;
     }
@@ -1101,9 +1102,16 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return finishedCuesCount == 1;
     }
 
-    public void setBallInHand() {
+    public void forceSetBallInHand() {
+        setBallInHand();
+    }
+
+    protected void setBallInHand() {
         ballInHand = true;
-        cueBall.pot();
+        if (!cueBall.isPotted()) {
+            cueBall.pot();
+        }
+        cueBall.model.initRotation(false);
     }
 
     public boolean isSnookered() {
@@ -1284,12 +1292,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         if (whiteFirstCollide == null) {
             // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
             thisCueFoul.addFoul(strings.getString("emptyCue"), foulScoreCalculator.get(), true);
-            if (cueBall.isPotted()) ballInHand = true;
+            if (cueBall.isPotted()) setBallInHand();
             AchManager.getInstance().addAchievement(Achievement.MISSED_SHOT, getCuingIgp());
         }
         if (cueBall.isPotted()) {
             thisCueFoul.addFoul(strings.getString("cueBallPot"), foulScoreCalculator.get(), false);
-            ballInHand = true;
+            setBallInHand();
             AchManager.getInstance().addAchievement(Achievement.CUE_BALL_POT, getCuingIgp());
         }
         if (rule.hasRule(Rule.HIT_CUSHION)) {

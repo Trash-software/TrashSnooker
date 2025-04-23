@@ -7,12 +7,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9884008068626697,
+      "handFeel": 1.0372357613028704,
       "human": false,
       "playerId": "random_player_87"
     },
@@ -21,8 +21,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -65,9 +65,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.9355684590254827,
+      "handFeel": 0.9796236823725977,
       "human": false,
       "playerId": "random_player_86"
     },
@@ -76,12 +81,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.869076723939447,
+      "handFeel": 0.8812041987568068,
       "human": false,
       "playerId": "random_player_89"
     },
@@ -90,8 +95,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -285,9 +290,23 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 72,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_1-13",
+            "playerId": "random_player_88"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0617903534600233,
+      "handFeel": 1.054971385929676,
       "human": false,
       "playerId": "random_player_88"
     },
@@ -296,8 +315,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -808,9 +827,38 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 74,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-42",
+            "playerId": "custom_player_1"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 0.9742026247419624,
+      "handFeel": 0.9724069530214183,
       "human": false,
       "playerId": "custom_player_1"
     },
@@ -819,12 +867,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0200512407976903,
+      "handFeel": 1.0345377691081457,
       "human": false,
       "playerId": "random_player_1"
     },
@@ -833,8 +881,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -1183,9 +1231,28 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 138,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-ROUND_1-93",
+            "playerId": "random_player_0"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 1.0458003859733194,
+      "handFeel": 0.9643537511630428,
       "human": false,
       "playerId": "random_player_0"
     },
@@ -1194,8 +1261,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -1573,9 +1640,24 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 0.9654327131237753,
+      "handFeel": 0.9420326157310374,
       "human": false,
       "playerId": "custom_player_3"
     },
@@ -1584,8 +1666,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -1992,9 +2074,47 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 96,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_3",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_3-71",
+            "playerId": "custom_player_2"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 76,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-PRE_ROUND_1-1",
+            "playerId": "custom_player_2"
+          },
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.149571730935355,
+      "handFeel": 1.136677440689268,
       "human": false,
       "playerId": "custom_player_2"
     },
@@ -2003,8 +2123,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -2410,9 +2530,29 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 0.9003966993041624,
+      "handFeel": 0.8664614396434059,
       "human": false,
       "playerId": "custom_player_4"
     },
@@ -2421,8 +2561,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -2752,9 +2892,28 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "china_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 125,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-QUARTER_FINAL-40",
+            "playerId": "Mark Allen"
+          },
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 0.9871287580690702,
+      "handFeel": 1.0224270376532218,
       "human": false,
       "playerId": "Mark Allen"
     },
@@ -2763,8 +2922,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -2886,9 +3045,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.1199288956690816,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "random_player_9"
     },
@@ -2897,8 +3061,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -3073,9 +3237,19 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.8772434191897177,
+      "handFeel": 0.954827756548569,
       "human": false,
       "playerId": "random_player_8"
     },
@@ -3084,12 +3258,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0611735331298036,
+      "handFeel": 0.9960509393945939,
       "human": false,
       "playerId": "random_player_7"
     },
@@ -3098,8 +3272,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -3161,9 +3335,23 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 74,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_3",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_3-74",
+            "playerId": "random_player_6"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.1482132161983636,
+      "handFeel": 1.1190396282492778,
       "human": false,
       "playerId": "random_player_6"
     },
@@ -3172,8 +3360,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -3753,9 +3941,43 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 91,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-55",
+            "playerId": "custom_A7727D597A40BCB9"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.1020149709981983,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "custom_A7727D597A40BCB9"
     },
@@ -3764,12 +3986,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0170226293170104,
+      "handFeel": 1.0543795890542074,
       "human": false,
       "playerId": "random_player_5"
     },
@@ -3778,12 +4000,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1253140460208064,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "random_player_4"
     },
@@ -3792,12 +4014,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9591261088365415,
+      "handFeel": 0.9256001821127293,
       "human": false,
       "playerId": "random_player_3"
     },
@@ -3806,8 +4028,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -3864,9 +4086,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.1336288336335343,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "random_player_2"
     },
@@ -3875,8 +4102,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -3901,7 +4128,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0672395045411578,
+      "handFeel": 1.0610989389130063,
       "human": false,
       "playerId": "random_player_94"
     },
@@ -3910,8 +4137,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -3954,9 +4181,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.1456489404398447,
+      "handFeel": 1.0389277819163851,
       "human": false,
       "playerId": "random_player_93"
     },
@@ -3965,12 +4197,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9302686007541088,
+      "handFeel": 0.8999126334571608,
       "human": false,
       "playerId": "random_player_96"
     },
@@ -3979,12 +4211,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.85,
+      "handFeel": 0.8929172200718078,
       "human": false,
       "playerId": "random_player_95"
     },
@@ -3993,12 +4225,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9938514115861687,
+      "handFeel": 0.994704641583427,
       "human": false,
       "playerId": "random_player_90"
     },
@@ -4007,8 +4239,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -4139,9 +4371,14 @@
           "ranks": ["TOP_16"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.031340148898169,
+      "handFeel": 1.1346544344520846,
       "human": false,
       "playerId": "random_player_92"
     },
@@ -4150,12 +4387,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0751213688191223,
+      "handFeel": 1.029282077615984,
       "human": false,
       "playerId": "random_player_91"
     },
@@ -4164,12 +4401,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.149983170182526,
+      "handFeel": 1.137531108942033,
       "human": false,
       "playerId": "random_player_79"
     },
@@ -4178,12 +4415,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8887920744956348,
+      "handFeel": 0.9506480722050595,
       "human": false,
       "playerId": "random_player_76"
     },
@@ -4192,8 +4429,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -4218,7 +4455,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9313695886422821,
+      "handFeel": 0.9876190955766876,
       "human": false,
       "playerId": "random_player_75"
     },
@@ -4227,12 +4464,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0457311369689184,
+      "handFeel": 1.0735027844935265,
       "human": false,
       "playerId": "random_player_78"
     },
@@ -4241,8 +4478,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -4267,7 +4504,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.944133237021667,
+      "handFeel": 0.9392777128189432,
       "human": false,
       "playerId": "random_player_77"
     },
@@ -4276,12 +4513,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0443152370348663,
+      "handFeel": 0.9824307876590452,
       "human": false,
       "playerId": "random_player_83"
     },
@@ -4290,12 +4527,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0712696079830146,
+      "handFeel": 1.0029739449460175,
       "human": false,
       "playerId": "random_player_82"
     },
@@ -4304,12 +4541,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1229409182042966,
+      "handFeel": 1.106351649546166,
       "human": false,
       "playerId": "random_player_85"
     },
@@ -4318,8 +4555,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -4700,9 +4937,29 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.1025103334785338,
+      "handFeel": 1.0985637049277028,
       "human": false,
       "playerId": "Wang Xu"
     },
@@ -4711,8 +4968,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -4775,9 +5032,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.9430633966142329,
+      "handFeel": 0.9763819922908298,
       "human": false,
       "playerId": "random_player_84"
     },
@@ -4786,8 +5048,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -4812,7 +5074,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9684985199241685,
+      "handFeel": 1.0067786401409304,
       "human": false,
       "playerId": "random_player_81"
     },
@@ -4821,8 +5083,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -4902,9 +5164,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.8698454280919506,
+      "handFeel": 0.8592164638579225,
       "human": false,
       "playerId": "random_player_80"
     },
@@ -4913,12 +5180,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.086564662316838,
+      "handFeel": 1.1462996297561396,
       "human": false,
       "playerId": "random_player_98"
     },
@@ -4927,12 +5194,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8881846288899408,
+      "handFeel": 0.8585828596910061,
       "human": false,
       "playerId": "random_player_97"
     },
@@ -4941,8 +5208,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -5350,9 +5617,29 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.1201837701889394,
+      "handFeel": 1.100453295326079,
       "human": false,
       "playerId": "custom_E8BDBBE69DBEE58FB7"
     },
@@ -5361,8 +5648,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -5405,9 +5692,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0176854089018996,
+      "handFeel": 1.009145266256693,
       "human": false,
       "playerId": "random_player_99"
     },
@@ -5416,12 +5708,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.119739527512702,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "Master"
     },
@@ -5430,8 +5722,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -5832,6 +6124,43 @@
             "playerId": "custom_0CCC8918C5CE9D53"
           },
           "id": "china_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 121,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": false,
+            "numFrame": 4,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-QUARTER_FINAL-107",
+            "playerId": "custom_0CCC8918C5CE9D53"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": [
+            "TOP_8",
+            "MAXIMUM",
+            "BEST_SINGLE"
+          ],
+          "year": 2025,
+          "highestBreak": {
+            "score": 147,
+            "maximumType": "MAXIMUM_147",
+            "stage": "ROUND_2",
+            "sim": false,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-ROUND_2-39",
+            "playerId": "custom_0CCC8918C5CE9D53"
+          },
+          "id": "space_grand_prix"
         }
       ],
       "completedChallenges": [
@@ -5908,7 +6237,9 @@
         "12": {"perks": 6},
         "34": {"perks": 3},
         "13": {"perks": 6},
+        "35": {"perks": 6},
         "14": {"perks": 3},
+        "36": {"perks": 9},
         "15": {"perks": 4},
         "16": {"perks": 3},
         "17": {"perks": 2},
@@ -5925,7 +6256,7 @@
         "20": {"perks": 8},
         "21": {"perks": 3}
       },
-      "handFeel": 0.85,
+      "handFeel": 0.908206648389414,
       "human": true,
       "playerId": "custom_0CCC8918C5CE9D53"
     },
@@ -5934,8 +6265,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6012,9 +6343,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.8615163059755607,
+      "handFeel": 0.8598626578328205,
       "human": false,
       "playerId": "random_player_47"
     },
@@ -6023,8 +6359,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6049,7 +6385,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.113665933581692,
+      "handFeel": 1.047900513897515,
       "human": false,
       "playerId": "random_player_107"
     },
@@ -6058,8 +6394,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6130,9 +6466,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.8873084565552266,
+      "handFeel": 0.9391175886860089,
       "human": false,
       "playerId": "random_player_46"
     },
@@ -6141,8 +6482,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6307,9 +6648,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0632603502680855,
+      "handFeel": 1.09131892784082,
       "human": false,
       "playerId": "random_player_108"
     },
@@ -6318,8 +6664,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6476,9 +6822,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2025,
           "id": "china_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.9880989021008331,
+      "handFeel": 0.9636676117093006,
       "human": false,
       "playerId": "random_player_49"
     },
@@ -6487,12 +6838,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.85,
+      "handFeel": 0.9003455666410195,
       "human": false,
       "playerId": "random_player_105"
     },
@@ -6501,8 +6852,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6560,9 +6911,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.8876128249567452,
+      "handFeel": 0.8755921435441747,
       "human": false,
       "playerId": "random_player_48"
     },
@@ -6571,12 +6927,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9445557400285052,
+      "handFeel": 0.888022546301255,
       "human": false,
       "playerId": "random_player_106"
     },
@@ -6585,8 +6941,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6703,9 +7059,19 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.9714391576934897,
+      "handFeel": 0.9848692310556068,
       "human": false,
       "playerId": "random_player_43"
     },
@@ -6714,8 +7080,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6891,9 +7257,19 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.8617098757650203,
+      "handFeel": 0.8582697816869037,
       "human": false,
       "playerId": "random_player_103"
     },
@@ -6902,12 +7278,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0113705601365388,
+      "handFeel": 1.0541306126246741,
       "human": false,
       "playerId": "random_player_42"
     },
@@ -6916,12 +7292,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9573376264813126,
+      "handFeel": 0.9539866155654505,
       "human": false,
       "playerId": "random_player_104"
     },
@@ -6930,8 +7306,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -7129,9 +7505,19 @@
           "ranks": ["TOP_16"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
         }
       ],
-      "handFeel": 1.0733231135433925,
+      "handFeel": 1.1326005217231647,
       "human": false,
       "playerId": "Tang Chunxiao"
     },
@@ -7140,12 +7526,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0266194681626022,
+      "handFeel": 0.9603819599586536,
       "human": false,
       "playerId": "random_player_45"
     },
@@ -7154,12 +7540,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8575056393161542,
+      "handFeel": 0.8711089076185914,
       "human": false,
       "playerId": "random_player_101"
     },
@@ -7168,8 +7554,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -7217,9 +7603,14 @@
           "ranks": ["TOP_8"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 1.1283183502442597,
+      "handFeel": 1.1146307625155696,
       "human": false,
       "playerId": "random_player_44"
     },
@@ -7228,12 +7619,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0887317276092938,
+      "handFeel": 1.0515298479840285,
       "human": false,
       "playerId": "random_player_102"
     },
@@ -7242,12 +7633,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1255556123236539,
+      "handFeel": 1.035220359680799,
       "human": false,
       "playerId": "random_player_109"
     },
@@ -7256,12 +7647,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.962813033152377,
+      "handFeel": 1.0019352286920582,
       "human": false,
       "playerId": "random_player_50"
     },
@@ -7270,8 +7661,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -7627,9 +8018,29 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.1127601718583764,
+      "handFeel": 1.0700537542980129,
       "human": false,
       "playerId": "Summer Brave"
     },
@@ -7638,8 +8049,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -7654,7 +8065,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.990732806244615,
+      "handFeel": 1.0220049171734888,
       "human": false,
       "playerId": "random_player_100"
     },
@@ -7663,8 +8074,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8031,9 +8442,24 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.0600126744125042,
+      "handFeel": 1.0351863076594323,
       "human": false,
       "playerId": "Lao Youtiao"
     },
@@ -8042,8 +8468,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8068,7 +8494,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.8656116240918217,
+      "handFeel": 0.9732086064477513,
       "human": false,
       "playerId": "random_player_52"
     },
@@ -8077,12 +8503,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1353273262295829,
+      "handFeel": 1.1355923606137293,
       "human": false,
       "playerId": "random_player_51"
     },
@@ -8091,12 +8517,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9475635060298588,
+      "handFeel": 0.916891012790669,
       "human": false,
       "playerId": "Master2"
     },
@@ -8105,12 +8531,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1112918663268996,
+      "handFeel": 1.0927357008129266,
       "human": false,
       "playerId": "random_player_36"
     },
@@ -8119,8 +8545,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8192,9 +8618,14 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0621696652920218,
+      "handFeel": 1.0644941884925039,
       "human": false,
       "playerId": "random_player_118"
     },
@@ -8203,12 +8634,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0762551480035165,
+      "handFeel": 1.1403437501297953,
       "human": false,
       "playerId": "random_player_35"
     },
@@ -8217,12 +8648,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9861059132388652,
+      "handFeel": 0.908455694401049,
       "human": false,
       "playerId": "random_player_119"
     },
@@ -8231,12 +8662,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.107256358572218,
+      "handFeel": 1.1361729021411737,
       "human": false,
       "playerId": "random_player_38"
     },
@@ -8245,12 +8676,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1454845542111995,
+      "handFeel": 1.1174571759001608,
       "human": false,
       "playerId": "random_player_116"
     },
@@ -8259,8 +8690,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8327,9 +8758,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.8984029046412074,
+      "handFeel": 0.85,
       "human": false,
       "playerId": "random_player_37"
     },
@@ -8338,8 +8774,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8427,9 +8863,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.9917848909459701,
+      "handFeel": 1.0484511236455323,
       "human": false,
       "playerId": "random_player_117"
     },
@@ -8438,8 +8879,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8797,9 +9238,19 @@
           "ranks": ["TOP_16"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.9892200947653698,
+      "handFeel": 1.0445681174985655,
       "human": false,
       "playerId": "random_player_32"
     },
@@ -8808,12 +9259,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9298981869233626,
+      "handFeel": 0.8886402697039728,
       "human": false,
       "playerId": "random_player_114"
     },
@@ -8822,8 +9273,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8875,9 +9326,23 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 78,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-33",
+            "playerId": "random_player_31"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0593415196755416,
+      "handFeel": 1.0679612281149138,
       "human": false,
       "playerId": "random_player_31"
     },
@@ -8886,8 +9351,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8935,9 +9400,23 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 50,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_1-18",
+            "playerId": "random_player_115"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.9095334901381634,
+      "handFeel": 0.9418382534304898,
       "human": false,
       "playerId": "random_player_115"
     },
@@ -8946,12 +9425,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1184966452851164,
+      "handFeel": 1.1367650999765075,
       "human": false,
       "playerId": "random_player_34"
     },
@@ -8960,12 +9439,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9999151043794516,
+      "handFeel": 0.9880419292135444,
       "human": false,
       "playerId": "random_player_112"
     },
@@ -8974,8 +9453,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -9313,9 +9792,24 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 1.0564980592825242,
+      "handFeel": 1.0018416090180693,
       "human": false,
       "playerId": "Kid"
     },
@@ -9324,8 +9818,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -9402,9 +9896,23 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 80,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_1-14",
+            "playerId": "random_player_33"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.1068039420090907,
+      "handFeel": 1.1003226737143386,
       "human": false,
       "playerId": "random_player_33"
     },
@@ -9413,8 +9921,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -9457,9 +9965,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.8730791865800439,
+      "handFeel": 0.85,
       "human": false,
       "playerId": "random_player_113"
     },
@@ -9468,8 +9981,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -9863,9 +10376,33 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 59,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-38",
+            "playerId": "custom_player_177"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 1.0929472848150414,
+      "handFeel": 1.1415683543859907,
       "human": false,
       "playerId": "custom_player_177"
     },
@@ -9874,8 +10411,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -10041,9 +10578,19 @@
           "ranks": ["TOP_16"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.952405242073504,
+      "handFeel": 0.984982163745971,
       "human": false,
       "playerId": "random_player_39"
     },
@@ -10052,8 +10599,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -10411,9 +10958,38 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 86,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-PRE_ROUND_1-11",
+            "playerId": "custom_player_178"
+          },
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.1410144220193246,
+      "handFeel": 1.0994776773552417,
       "human": false,
       "playerId": "custom_player_178"
     },
@@ -10422,8 +10998,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -10880,9 +11456,28 @@
             "playerId": "Mark Williams"
           },
           "id": "china_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 121,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-ROUND_1-83",
+            "playerId": "Mark Williams"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 1.1329483599568726,
+      "handFeel": 1.0892165840017158,
       "human": false,
       "playerId": "Mark Williams"
     },
@@ -10891,8 +11486,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -11050,9 +11645,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.8977487385498716,
+      "handFeel": 0.9810572068741552,
       "human": false,
       "playerId": "Wang Sinuo"
     },
@@ -11061,8 +11661,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -11403,9 +12003,24 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 1.053610425827712,
+      "handFeel": 1.0236864122924687,
       "human": false,
       "playerId": "custom_player_180"
     },
@@ -11414,8 +12029,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -11776,9 +12391,28 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "china_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 53,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-52",
+            "playerId": "Luca Brecel"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 0.9651552224840256,
+      "handFeel": 0.9240002271537022,
       "human": false,
       "playerId": "Luca Brecel"
     },
@@ -11787,8 +12421,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -12198,9 +12832,29 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.011943788046639,
+      "handFeel": 1.0442117570023617,
       "human": false,
       "playerId": "custom_player_181"
     },
@@ -12209,8 +12863,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -12314,9 +12968,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.9168718012281964,
+      "handFeel": 0.9985365344198959,
       "human": false,
       "playerId": "random_player_110"
     },
@@ -12325,8 +12984,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -12351,7 +13010,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.8841338117767927,
+      "handFeel": 0.85,
       "human": false,
       "playerId": "random_player_111"
     },
@@ -12360,12 +13019,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0705502930991289,
+      "handFeel": 1.1218790377673524,
       "human": false,
       "playerId": "random_player_41"
     },
@@ -12374,12 +13033,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8873100003371022,
+      "handFeel": 0.951882775887276,
       "human": false,
       "playerId": "random_player_40"
     },
@@ -12388,8 +13047,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -12414,7 +13073,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.8817374419270112,
+      "handFeel": 0.9510816689730996,
       "human": false,
       "playerId": "random_player_69"
     },
@@ -12423,8 +13082,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -12649,9 +13308,37 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "china_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 93,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-50",
+            "playerId": "Brown"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 116,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-PRE_ROUND_1-5",
+            "playerId": "Brown"
+          },
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 0.986463225600898,
+      "handFeel": 0.9963570534929929,
       "human": false,
       "playerId": "Brown"
     },
@@ -12660,8 +13347,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -13043,9 +13730,29 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.0321595878071572,
+      "handFeel": 1.0564221015967503,
       "human": false,
       "playerId": "custom_0058101B8277B65D"
     },
@@ -13054,8 +13761,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -13108,9 +13815,23 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 61,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_1-18",
+            "playerId": "random_player_68"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0964938529426536,
+      "handFeel": 1.1222111685504925,
       "human": false,
       "playerId": "random_player_68"
     },
@@ -13119,8 +13840,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -13704,9 +14425,47 @@
           "ranks": ["TOP_8"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 59,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_3",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_3-66",
+            "playerId": "Yan Bingtao"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 66,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-PRE_ROUND_1-4",
+            "playerId": "Yan Bingtao"
+          },
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
         }
       ],
-      "handFeel": 1.118574190005147,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "Yan Bingtao"
     },
@@ -13715,8 +14474,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -13835,9 +14594,19 @@
           "ranks": ["TOP_16"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 1.0933422424664077,
+      "handFeel": 1.1084097862272264,
       "human": false,
       "playerId": "random_player_127"
     },
@@ -13846,12 +14615,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9790679116192361,
+      "handFeel": 0.9086851197449227,
       "human": false,
       "playerId": "random_player_65"
     },
@@ -13860,12 +14629,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.006948152813393,
+      "handFeel": 0.967433700868805,
       "human": false,
       "playerId": "random_player_125"
     },
@@ -13874,8 +14643,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -13918,9 +14687,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0872554784201376,
+      "handFeel": 1.0860231675540943,
       "human": false,
       "playerId": "random_player_64"
     },
@@ -13929,12 +14703,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8644636284749084,
+      "handFeel": 0.8981341115066438,
       "human": false,
       "playerId": "random_player_126"
     },
@@ -13943,12 +14717,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9945266727290457,
+      "handFeel": 0.9569665754525821,
       "human": false,
       "playerId": "random_player_67"
     },
@@ -13957,12 +14731,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8842780233893939,
+      "handFeel": 0.9833797663896824,
       "human": false,
       "playerId": "random_player_123"
     },
@@ -13971,8 +14745,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -14098,9 +14872,23 @@
           "ranks": ["TOP_4"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 51,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_1-4",
+            "playerId": "random_player_66"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0896859429894494,
+      "handFeel": 1.0970114195078906,
       "human": false,
       "playerId": "random_player_66"
     },
@@ -14109,8 +14897,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -14301,9 +15089,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0072575654182783,
+      "handFeel": 1.0124398491569337,
       "human": false,
       "playerId": "random_player_124"
     },
@@ -14312,8 +15105,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -15249,9 +16042,41 @@
           "ranks": ["SECOND_PLACE"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": [
+            "SECOND_PLACE",
+            "BEST_SINGLE"
+          ],
+          "year": 2025,
+          "highestBreak": {
+            "score": 145,
+            "maximumType": "NONE",
+            "stage": "SEMI_FINAL",
+            "sim": false,
+            "numFrame": 4,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-SEMI_FINAL-109",
+            "playerId": "custom_195B277334903CE5"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.15,
+      "handFeel": 1.1471806450442992,
       "human": false,
       "playerId": "custom_195B277334903CE5"
     },
@@ -15260,8 +16085,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -15927,9 +16752,47 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 60,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-ROUND_2-101",
+            "playerId": "Glass Heart"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 94,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-ROUND_2-35",
+            "playerId": "Glass Heart"
+          },
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
         }
       ],
-      "handFeel": 1.0146463129611945,
+      "handFeel": 0.9319228541755578,
       "human": false,
       "playerId": "Glass Heart"
     },
@@ -15938,8 +16801,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -16595,9 +17458,29 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
         }
       ],
-      "handFeel": 0.8755676533642215,
+      "handFeel": 0.8750446514662559,
       "human": false,
       "playerId": "Selby"
     },
@@ -16606,12 +17489,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0726077253744188,
+      "handFeel": 1.1000695478176437,
       "human": false,
       "playerId": "random_player_72"
     },
@@ -16620,12 +17503,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9081479372454547,
+      "handFeel": 0.8609195281280765,
       "human": false,
       "playerId": "random_player_121"
     },
@@ -16634,12 +17517,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0269391592250416,
+      "handFeel": 0.9844156030016215,
       "human": false,
       "playerId": "random_player_71"
     },
@@ -16648,8 +17531,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -16674,7 +17557,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0622871851126257,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "random_player_122"
     },
@@ -16683,12 +17566,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0817569950872183,
+      "handFeel": 1.1026098788841314,
       "human": false,
       "playerId": "random_player_74"
     },
@@ -16697,8 +17580,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -17117,9 +18000,37 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "china_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 55,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-48",
+            "playerId": "Stephen Maguire"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 99,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-PRE_ROUND_1-3",
+            "playerId": "Stephen Maguire"
+          },
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 0.8939423023236729,
+      "handFeel": 0.9099800150266387,
       "human": false,
       "playerId": "Stephen Maguire"
     },
@@ -17128,12 +18039,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9637801414190825,
+      "handFeel": 1.0271576547027728,
       "human": false,
       "playerId": "random_player_73"
     },
@@ -17142,12 +18053,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8677685028876548,
+      "handFeel": 0.8990959159416424,
       "human": false,
       "playerId": "random_player_120"
     },
@@ -17156,12 +18067,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8857969100436207,
+      "handFeel": 0.9163155114663468,
       "human": false,
       "playerId": "random_player_70"
     },
@@ -17170,12 +18081,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.85,
+      "handFeel": 0.9750544278537295,
       "human": false,
       "playerId": "random_player_58"
     },
@@ -17184,8 +18095,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -17483,9 +18394,19 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.9241756288250728,
+      "handFeel": 0.876930703752513,
       "human": false,
       "playerId": "Mang Zi"
     },
@@ -17494,12 +18415,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9757321871531108,
+      "handFeel": 1.0150346505352812,
       "human": false,
       "playerId": "random_player_57"
     },
@@ -17508,12 +18429,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0824562769045452,
+      "handFeel": 1.050657862145331,
       "human": false,
       "playerId": "random_player_59"
     },
@@ -17522,12 +18443,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9118119969251659,
+      "handFeel": 0.8845443717389725,
       "human": false,
       "playerId": "random_player_54"
     },
@@ -17536,8 +18457,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -17572,7 +18493,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9397169349417135,
+      "handFeel": 0.9998816144350693,
       "human": false,
       "playerId": "random_player_53"
     },
@@ -17581,12 +18502,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0033853207601962,
+      "handFeel": 1.0269062763980341,
       "human": false,
       "playerId": "random_player_56"
     },
@@ -17595,12 +18516,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1297122732444076,
+      "handFeel": 1.129744120367585,
       "human": false,
       "playerId": "random_player_55"
     },
@@ -17609,8 +18530,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -17798,9 +18719,19 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
         }
       ],
-      "handFeel": 1.0324399535382605,
+      "handFeel": 0.9213706977353956,
       "human": false,
       "playerId": "Chu Bingjie"
     },
@@ -17809,12 +18740,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.051575703369967,
+      "handFeel": 1.021261331188966,
       "human": false,
       "playerId": "random_player_61"
     },
@@ -17823,8 +18754,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -17952,9 +18883,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.904107640122969,
+      "handFeel": 0.8836223854850033,
       "human": false,
       "playerId": "random_player_60"
     },
@@ -17963,8 +18899,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -18168,9 +19104,19 @@
           "ranks": ["TOP_8"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.9234581701226234,
+      "handFeel": 0.9221207827406871,
       "human": false,
       "playerId": "random_player_63"
     },
@@ -18179,8 +19125,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -18307,19 +19253,33 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 57,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_1-22",
+            "playerId": "random_player_62"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.9991451921223764,
+      "handFeel": 1.0300323339804007,
       "human": false,
       "playerId": "random_player_62"
     },
     {
       "efforts": {
         "LIS_EIGHT": 1,
-        "SNOOKER": 0.9354375896700144,
+        "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -19055,9 +20015,38 @@
           "ranks": ["TOP_16"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 132,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-ROUND_2-102",
+            "playerId": "custom_73125E3FE667D051"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.0409953119206015,
+      "handFeel": 1.0207222179696223,
       "human": false,
       "playerId": "custom_73125E3FE667D051"
     },
@@ -19066,8 +20055,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -19652,9 +20641,33 @@
             "playerId": "Neil Robertson"
           },
           "id": "china_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 115,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-ROUND_1-87",
+            "playerId": "Neil Robertson"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.039740535174942,
+      "handFeel": 1.11442464297296,
       "human": false,
       "playerId": "Neil Robertson"
     },
@@ -19663,8 +20676,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -20256,9 +21269,37 @@
             "playerId": "Stuart Bingham"
           },
           "id": "china_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 132,
+            "maximumType": "NONE",
+            "stage": "SEMI_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-SEMI_FINAL-108",
+            "playerId": "Stuart Bingham"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 126,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-QUARTER_FINAL-41",
+            "playerId": "Stuart Bingham"
+          },
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 1.1337431022543951,
+      "handFeel": 1.0588533418267987,
       "human": false,
       "playerId": "Stuart Bingham"
     },
@@ -20267,8 +21308,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -20610,9 +21651,19 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.9634108120912563,
+      "handFeel": 0.9668717960229298,
       "human": false,
       "playerId": "Mou Moumou"
     },
@@ -20621,8 +21672,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -20882,9 +21933,28 @@
           "ranks": ["TOP_16"],
           "year": 2025,
           "id": "china_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 114,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-62",
+            "playerId": "Lolita"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 1.1241403080168757,
+      "handFeel": 1.105287537550708,
       "human": false,
       "playerId": "Lolita"
     },
@@ -20893,8 +21963,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -21456,9 +22526,23 @@
             "playerId": "O_Sullivan"
           },
           "id": "china_open"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 130,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 5,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-QUARTER_FINAL-104",
+            "playerId": "O_Sullivan"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.1175704756377611,
+      "handFeel": 1.0701921284409759,
       "human": false,
       "playerId": "O_Sullivan"
     },
@@ -21467,12 +22551,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9775701226773333,
+      "handFeel": 1.0223885762816638,
       "human": false,
       "playerId": "random_player_25"
     },
@@ -21481,8 +22565,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -21525,9 +22609,14 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.1072520999457471,
+      "handFeel": 1.143148229096771,
       "human": false,
       "playerId": "random_player_24"
     },
@@ -21536,8 +22625,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -21687,9 +22776,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.9056309179474666,
+      "handFeel": 0.9952380699977647,
       "human": false,
       "playerId": "random_player_27"
     },
@@ -21698,12 +22792,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8808852344875505,
+      "handFeel": 0.9022508113904731,
       "human": false,
       "playerId": "random_player_26"
     },
@@ -21712,12 +22806,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1136721406706998,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "random_player_21"
     },
@@ -21726,12 +22820,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0940998668207316,
+      "handFeel": 1.059591317961384,
       "human": false,
       "playerId": "random_player_20"
     },
@@ -21740,8 +22834,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -21841,9 +22935,23 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 76,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-ROUND_1-80",
+            "playerId": "random_player_23"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.9819353356661666,
+      "handFeel": 0.8970782653941106,
       "human": false,
       "playerId": "random_player_23"
     },
@@ -21852,12 +22960,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1037138090634016,
+      "handFeel": 1.072255236691373,
       "human": false,
       "playerId": "random_player_22"
     },
@@ -21866,8 +22974,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -22150,9 +23258,19 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.8856690404233145,
+      "handFeel": 0.8960952132487917,
       "human": false,
       "playerId": "custom_player_169"
     },
@@ -22161,8 +23279,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -22568,9 +23686,29 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.1128809751862296,
+      "handFeel": 1.1318597246313484,
       "human": false,
       "playerId": "custom_player_166"
     },
@@ -22579,12 +23717,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8941279874813305,
+      "handFeel": 0.85,
       "human": false,
       "playerId": "random_player_29"
     },
@@ -22593,8 +23731,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -22930,9 +24068,19 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 1.0400708151558558,
+      "handFeel": 1.0520767825651178,
       "human": false,
       "playerId": "custom_player_165"
     },
@@ -22941,12 +24089,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8594426746166656,
+      "handFeel": 0.8550377607578437,
       "human": false,
       "playerId": "random_player_28"
     },
@@ -22955,8 +24103,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -23346,9 +24494,24 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.0884929115252642,
+      "handFeel": 1.081722705390332,
       "human": false,
       "playerId": "custom_player_168"
     },
@@ -23357,8 +24520,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -23651,9 +24814,24 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.080969337048907,
+      "handFeel": 1.1412388173612482,
       "human": false,
       "playerId": "custom_player_167"
     },
@@ -23662,8 +24840,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -24048,9 +25226,24 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 0.9264426689873616,
+      "handFeel": 0.904106052960707,
       "human": false,
       "playerId": "custom_player_173"
     },
@@ -24059,8 +25252,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -24323,9 +25516,19 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 1.0500370729363648,
+      "handFeel": 1.028147446745207,
       "human": false,
       "playerId": "Noob"
     },
@@ -24334,8 +25537,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -24658,9 +25861,29 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.0866459424649129,
+      "handFeel": 1.0511869299452308,
       "human": false,
       "playerId": "custom_player_172"
     },
@@ -24669,8 +25892,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -25034,9 +26257,29 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.0597403313618587,
+      "handFeel": 1.1400783972110171,
       "human": false,
       "playerId": "custom_player_174"
     },
@@ -25045,8 +26288,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -25367,9 +26610,19 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.8878766904325609,
+      "handFeel": 0.8744143729197869,
       "human": false,
       "playerId": "custom_player_171"
     },
@@ -25378,8 +26631,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -25719,9 +26972,19 @@
           "ranks": ["TOP_16"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 1.0538752861065461,
+      "handFeel": 1.022354346990474,
       "human": false,
       "playerId": "custom_player_170"
     },
@@ -25730,8 +26993,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -25794,9 +27057,14 @@
           "ranks": ["TOP_32"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.9344826574410496,
+      "handFeel": 0.9402257419981896,
       "human": false,
       "playerId": "random_player_30"
     },
@@ -25805,8 +27073,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -25906,9 +27174,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 0.9864407597430654,
+      "handFeel": 0.8915740565303585,
       "human": false,
       "playerId": "random_player_14"
     },
@@ -25917,12 +27190,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.912150773370552,
+      "handFeel": 0.9226614808878484,
       "human": false,
       "playerId": "random_player_13"
     },
@@ -25931,8 +27204,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -26075,9 +27348,19 @@
           "ranks": ["TOP_4"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 0.9353863907306448,
+      "handFeel": 0.9460857374302091,
       "human": false,
       "playerId": "random_player_16"
     },
@@ -26086,12 +27369,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.901204313845833,
+      "handFeel": 0.8758463726785974,
       "human": false,
       "playerId": "random_player_15"
     },
@@ -26100,12 +27383,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1437090754203973,
+      "handFeel": 1.1350897554260553,
       "human": false,
       "playerId": "random_player_10"
     },
@@ -26114,8 +27397,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -26158,9 +27441,23 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 86,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_1-8",
+            "playerId": "random_player_12"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0458849540430468,
+      "handFeel": 1.108260704089601,
       "human": false,
       "playerId": "random_player_12"
     },
@@ -26169,12 +27466,12 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9302905595729076,
+      "handFeel": 0.85,
       "human": false,
       "playerId": "random_player_11"
     },
@@ -26183,8 +27480,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -26705,9 +28002,43 @@
           "ranks": ["TOP_4"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 62,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_3",
+            "sim": true,
+            "numFrame": 4,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_3-76",
+            "playerId": "Fat Guy"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 0.8929632550917805,
+      "handFeel": 0.8986556430692718,
       "human": false,
       "playerId": "Fat Guy"
     },
@@ -26716,8 +28047,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -27091,9 +28422,38 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 55,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-ROUND_1-85",
+            "playerId": "custom_player_159"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.0923326016362467,
+      "handFeel": 1.0417791087752644,
       "human": false,
       "playerId": "custom_player_159"
     },
@@ -27102,8 +28462,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -27781,9 +29141,38 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 52,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-ROUND_1-80",
+            "playerId": "Ding Junhui"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
         }
       ],
-      "handFeel": 0.8744002238509122,
+      "handFeel": 0.9000706924259554,
       "human": false,
       "playerId": "Ding Junhui"
     },
@@ -27792,8 +29181,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -27938,9 +29327,23 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_bsc_heiba_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 60,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_1-28",
+            "playerId": "random_player_18"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0468195851308124,
+      "handFeel": 1.1315005544981664,
       "human": false,
       "playerId": "random_player_18"
     },
@@ -27949,8 +29352,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -28278,9 +29681,24 @@
             "playerId": "Smart"
           },
           "id": "china_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 0.8963603478051414,
+      "handFeel": 0.8678580301582892,
       "human": false,
       "playerId": "Smart"
     },
@@ -28289,8 +29707,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -28352,9 +29770,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.15,
+      "handFeel": 1.1049796644225462,
       "human": false,
       "playerId": "random_player_17"
     },
@@ -28363,8 +29786,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -28416,9 +29839,23 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2024,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 63,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-41",
+            "playerId": "random_player_19"
+          },
+          "id": "world_champ"
         }
       ],
-      "handFeel": 1.0879823084316929,
+      "handFeel": 1.020470430890001,
       "human": false,
       "playerId": "random_player_19"
     },
@@ -28427,8 +29864,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -28782,9 +30219,33 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 51,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-51",
+            "playerId": "Give Emperor"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 1.0803205407581833,
+      "handFeel": 1.1072189656316174,
       "human": false,
       "playerId": "Give Emperor"
     },
@@ -28793,8 +30254,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -29443,9 +30904,43 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 109,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_3",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_3-75",
+            "playerId": "custom_player_160"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.0624570446184571,
+      "handFeel": 1.0421177070760452,
       "human": false,
       "playerId": "custom_player_160"
     },
@@ -29454,8 +30949,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -30083,9 +31578,29 @@
           "ranks": ["TOP_16"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 0.9843482561233103,
+      "handFeel": 0.9775735287088475,
       "human": false,
       "playerId": "Worst Professional"
     },
@@ -30094,8 +31609,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -30537,9 +32052,28 @@
             "playerId": "Murphy"
           },
           "id": "china_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 131,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-QUARTER_FINAL-42",
+            "playerId": "Murphy"
+          },
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 1.131470794283803,
+      "handFeel": 1.0593756662409615,
       "human": false,
       "playerId": "Murphy"
     },
@@ -30548,8 +32082,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -31234,9 +32768,47 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 127,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-ROUND_2-101",
+            "playerId": "John Wizard"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 137,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-ROUND_2-32",
+            "playerId": "John Wizard"
+          },
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
         }
       ],
-      "handFeel": 1.0866626834216357,
+      "handFeel": 1.093417590039949,
       "human": false,
       "playerId": "John Wizard"
     },
@@ -31245,8 +32817,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -31713,9 +33285,42 @@
             "playerId": "Trump"
           },
           "id": "china_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 132,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-39",
+            "playerId": "Trump"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 131,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-ROUND_2-37",
+            "playerId": "Trump"
+          },
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.140016553324448,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "Trump"
     },
@@ -31724,8 +33329,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -32176,9 +33781,29 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 0.8584686279975497,
+      "handFeel": 0.8769277727322512,
       "human": false,
       "playerId": "High Stick"
     },
@@ -32187,8 +33812,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -32863,9 +34488,43 @@
           "ranks": ["TOP_8"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 137,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": false,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-QUARTER_FINAL-43",
+            "playerId": "custom_E5B08FE4BB99E5A5B3"
+          },
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.0966152562229634,
+      "handFeel": 1.0437666793586335,
       "human": false,
       "playerId": "custom_E5B08FE4BB99E5A5B3"
     },
@@ -32874,8 +34533,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -33188,9 +34847,24 @@
           "ranks": ["TOP_16"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 0.8831500295059852,
+      "handFeel": 0.8723523072556479,
       "human": false,
       "playerId": "custom_8EFB7C78CA9027CF"
     },
@@ -33199,8 +34873,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -33653,9 +35327,33 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 64,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_2-33",
+            "playerId": "Liu Mang"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 0.9887115009991261,
+      "handFeel": 0.9385746501605756,
       "human": false,
       "playerId": "Liu Mang"
     },
@@ -33664,8 +35362,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -34402,9 +36100,52 @@
           "ranks": ["CHAMPION"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 71,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-ROUND_1-84",
+            "playerId": "custom_C3A707E9A33EE9A3"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 92,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-QUARTER_FINAL-41",
+            "playerId": "custom_C3A707E9A33EE9A3"
+          },
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 0.8769807739025454,
+      "handFeel": 0.8718991551209078,
       "human": false,
       "playerId": "custom_C3A707E9A33EE9A3"
     },
@@ -34413,8 +36154,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -34607,9 +36348,19 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
         }
       ],
-      "handFeel": 0.932321206850035,
+      "handFeel": 0.9631791017672541,
       "human": false,
       "playerId": "Zheng Yubo"
     },
@@ -34618,8 +36369,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -35216,9 +36967,33 @@
             "playerId": "Jack Lisowski"
           },
           "id": "china_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 125,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-ROUND_1-81",
+            "playerId": "Jack Lisowski"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.145106658437529,
+      "handFeel": 1.1054469230976733,
       "human": false,
       "playerId": "Jack Lisowski"
     },
@@ -35227,8 +37002,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -35614,9 +37389,37 @@
             "playerId": "Karen Wilson"
           },
           "id": "china_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 92,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_3",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_3-78",
+            "playerId": "Karen Wilson"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 84,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-PRE_ROUND_1-14",
+            "playerId": "Karen Wilson"
+          },
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 0.9726075442472335,
+      "handFeel": 0.9009191650586581,
       "human": false,
       "playerId": "Karen Wilson"
     },
@@ -35625,8 +37428,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -36196,9 +37999,29 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "id": "eight_master_tour_xian"
         }
       ],
-      "handFeel": 0.85,
+      "handFeel": 0.8541524352629769,
       "human": false,
       "playerId": "Zhao Xintong"
     },
@@ -36207,8 +38030,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -36516,9 +38339,24 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 1.1106360776868955,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "Mang Dali"
     },
@@ -36527,8 +38365,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -36774,9 +38612,37 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "china_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 73,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_3",
+            "sim": true,
+            "numFrame": 5,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+world_champ-PRE_ROUND_3-73",
+            "playerId": "Matthew Stevens"
+          },
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2025,
+          "highestBreak": {
+            "score": 85,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_0CCC8918C5CE9D53+2025+space_grand_prix-ROUND_1-26",
+            "playerId": "Matthew Stevens"
+          },
+          "id": "space_grand_prix"
         }
       ],
-      "handFeel": 0.8942309383158156,
+      "handFeel": 0.9355007913618351,
       "human": false,
       "playerId": "Matthew Stevens"
     },
@@ -36785,8 +38651,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -37104,9 +38970,24 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2025,
+          "id": "american_nine_sydney_burwood_cup"
         }
       ],
-      "handFeel": 0.9867550251314634,
+      "handFeel": 0.9102842385634763,
       "human": false,
       "playerId": "custom_37AA1BE174409ED5"
     },
@@ -37115,8 +38996,8 @@
         "LIS_EIGHT": 1,
         "SNOOKER": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -37379,9 +39260,19 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2025,
           "id": "eight_spadina_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2025,
+          "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_64"],
+          "year": 2025,
+          "id": "eight_noob_open"
         }
       ],
-      "handFeel": 1.0329694428502896,
+      "handFeel": 1.0070761975733726,
       "human": false,
       "playerId": "Baggage Brother"
     }
@@ -37389,9 +39280,9 @@
   "settingsHistory": [],
   "beginTimestamp": "2023/1/20",
   "aiGoodness": 1,
-  "checksum": "32E5EE7E4BC47E305F26CED78AE397D7",
+  "checksum": "6B6C04617B0EE6D49C64C98A9269755A",
   "playerGoodness": 1,
   "includeCustomPlayers": true,
   "version": 57,
-  "timestamp": "2025/4/17"
+  "timestamp": "2025/7/10"
 }

@@ -35,7 +35,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     protected double axisX, axisY, axisZ,
             frameDegChange;  // 全部都是针对一个动画帧
     private boolean potted;
-    private long msSinceCue;
+    private long phyFramesSinceCue;
     private long msRemainInPocket;
     private Pocket pottedPocket;
     private double maxInPocketSpeed;  // 本杆在袋内的最大速度，m/s
@@ -125,7 +125,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     public void setSpin(double xSpin, double ySpin, double sideSpin) {
-        msSinceCue = 0;
+        phyFramesSinceCue = 0;
         this.xSpin = xSpin;
         this.ySpin = ySpin;
         this.sideSpin = sideSpin;
@@ -183,7 +183,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
      * 原地转
      */
     protected boolean sideSpinAtPosition(Phy phy) {
-        msSinceCue++;
+        phyFramesSinceCue++;
         if (sideSpin >= phy.sideSpinReducer) {
             sideSpin -= phy.sideSpinReducer;
             return true;
@@ -199,10 +199,82 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         distance += Math.hypot(vx, vy);
         setX(nextX);
         setY(nextY);
+        phyFramesSinceCue++;
+
+        // 球的质量会抵消
+        double slidingFriction = values.ball.frictionRatio * phy.cloth.smoothness.speedReduceFactor / 
+                phy.calculationsPerSec * 0.2;
+        double sideSpinReducer = phy.sideSpinReducer * slidingFriction / phy.calculationsPerSec;
+
+        double rollingFriction = values.ball.frictionRatio * phy.cloth.smoothness.speedReduceFactor / 
+                phy.calculationsPerSec * 0.1;
+
+        if (Math.abs(sideSpin) < sideSpinReducer) {
+            sideSpin = 0;
+        } else if (sideSpin > 0) {
+            sideSpin -= sideSpinReducer;
+        } else {
+            sideSpin += sideSpinReducer;
+        }
+
+        // Compute slip vector
+        double slipX = vx - xSpin;
+        double slipY = vy - ySpin;
+
+        // Compute slip magnitude
+        double slipMag = Math.hypot(slipX, slipY);
+
+        if (slipMag < slidingFriction) {
+            // 滚动
+            double speed = Math.hypot(vx, vy);
+            if (speed > rollingFriction) {
+                double directionX = vx / speed;
+                double directionY = vy / speed;
+
+                // Apply friction against velocity
+                vx -= directionX * rollingFriction;
+                vy -= directionY * rollingFriction;
+
+                // Reduce spin in the same direction (rolling implies match)
+                xSpin = vx;
+                ySpin = vy;
+            } else {
+                vx = 0;
+                vy = 0;
+                xSpin = 0;
+                ySpin = 0;
+            }
+        } else {
+            // 滑动
+            double spinFriction = slidingFriction * 0.5;
+            // Normalize slip direction
+            double slipDirX = slipX / slipMag;
+            double slipDirY = slipY / slipMag;
+
+            // Apply friction against velocity (reduce slipping)
+            vx -= slipDirX * slidingFriction;
+            vy -= slipDirY * slidingFriction;
+
+            // Apply friction to spin in opposite direction (spin catches up)
+            xSpin += slipDirX * spinFriction;
+            ySpin += slipDirY * spinFriction;
+        }
+    }
+
+    private boolean areVelSpinAligned(double tolerance) {
+        double dx = vx - xSpin;
+        double dy = vy - ySpin;
+        return (dx * dx + dy * dy) <= (tolerance * tolerance);
+    }
+
+    protected void normalMove2(Phy phy) {
+        distance += Math.hypot(vx, vy);
+        setX(nextX);
+        setY(nextY);
 
 //        if (!phy.isPrediction) calculateAxis(phy);
 
-        msSinceCue++;
+        phyFramesSinceCue++;
         if (sideSpin >= phy.sideSpinReducer) {
             sideSpin -= phy.sideSpinReducer;
         } else if (sideSpin <= -phy.sideSpinReducer) {
@@ -217,22 +289,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
         if (!phy.isPrediction) {
             // 这部分是台泥造成的线路偏差
-
-            // 逆毛效应
-            double[] direction = Algebra.unitVector(vx, vy);
-            double fixedError = Math.max(-direction[0], 0);  // 从右到左的球(vx<0的)才有逆毛效应
-            fixedError *= Math.abs(direction[1]);  // 希望在斜45度时逆毛效应达到最大
-            fixedError *= phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec *
-                    TableCloth.FIXED_ERROR_FACTOR * table.getClothType().backNylonEffect;
-//            System.out.println("Fixed error: " + fixedError);
-
-            double xErr = ERROR_GENERATOR.nextGaussian() *
-                    phy.cloth.goodness.errorFactor / phy.calculationsPerSec * TableCloth.RANDOM_ERROR_FACTOR +
-                    fixedError;
-            double yErr = ERROR_GENERATOR.nextGaussian() *
-                    phy.cloth.goodness.errorFactor / phy.calculationsPerSec * TableCloth.RANDOM_ERROR_FACTOR;
-            vx += xErr / values.ball.ballWeightRatio;  // 重球相对稳定
-            vy += yErr / values.ball.ballWeightRatio;
+            clothPathChange(phy);
         }
 
         double xSpinDiff = xSpin - vx;
@@ -277,6 +334,24 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         if (!phy.isPrediction) {
             nearCushionChangePath(phy);
         }
+    }
+
+    private void clothPathChange(Phy phy) {
+        // 逆毛效应
+        double[] direction = Algebra.unitVector(vx, vy);
+        double fixedError = Math.max(-direction[0], 0);  // 从右到左的球(vx<0的)才有逆毛效应
+        fixedError *= Math.abs(direction[1]);  // 希望在斜45度时逆毛效应达到最大
+        fixedError *= phy.cloth.goodness.fixedErrorFactor / phy.calculationsPerSec *
+                TableCloth.FIXED_ERROR_FACTOR * table.getClothType().backNylonEffect;
+//            System.out.println("Fixed error: " + fixedError);
+
+        double xErr = ERROR_GENERATOR.nextGaussian() *
+                phy.cloth.goodness.errorFactor / phy.calculationsPerSec * TableCloth.RANDOM_ERROR_FACTOR +
+                fixedError;
+        double yErr = ERROR_GENERATOR.nextGaussian() *
+                phy.cloth.goodness.errorFactor / phy.calculationsPerSec * TableCloth.RANDOM_ERROR_FACTOR;
+        vx += xErr / values.ball.ballWeightRatio;  // 重球相对稳定
+        vy += yErr / values.ball.ballWeightRatio;
     }
 
     private void nearCushionChangePath(Phy phy) {
@@ -782,8 +857,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return nextDt < values.ball.ballDiameter && nextDt < lastDt;
     }
 
-    static double[] getExactCollisionPoint(Ball a, double x1, double y1,
-                                           Ball b, double x2, double y2) {
+    private static double[] getExactCollisionPoint(Ball a, double x1, double y1,
+                                                   Ball b, double x2, double y2) {
         double dx = x1 - x2;
         double dy = y1 - y2;
         double dvx = a.vx - b.vx;
@@ -815,6 +890,39 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return new double[]{ax, ay, bx, by, t}; // Positions at collision and time
     }
 
+    private double[] findApproxCollisionPoint(double x1, double y1,
+                                              Ball ball,
+                                              double x2, double y2) {
+
+        int maxRound = 100;
+        int phyRounds = 0;
+        double tickDt;
+        double curDivider = 1.0;
+
+        double allowedDev = 0.01;  // 0.01 mm
+
+        // 类似二分搜索，找碰撞点
+        while (phyRounds < maxRound) {
+            tickDt = Algebra.distanceToPoint(x1, y1, x2, y2) - values.ball.ballDiameter;
+            if (Math.abs(tickDt) < allowedDev) break;
+            double mul;
+            if (tickDt > 0) {
+                mul = 1;
+            } else {
+                mul = -1;
+            }
+
+            x1 += vx / curDivider * mul;
+            y1 += vy / curDivider * mul;
+            x2 += ball.vx / curDivider * mul;
+            y2 += ball.vy / curDivider * mul;
+
+            curDivider *= 2;
+            phyRounds++;
+        }
+        return new double[]{x1, y1, x2, y2};
+    }
+
     void twoMovingBallsHitCore(Game<?, ?> game, Ball ball, Phy phy, boolean considerGearSpin) {
         double x1 = x;
         double y1 = y;
@@ -827,7 +935,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             x2 -= ball.vx;
             y2 -= ball.vy;
         }
-        
+
         if (Algebra.distanceToPoint(x1, y1, x2, y2) <= values.ball.ballDiameter) {
             x1 -= vx;
             y1 -= vy;
@@ -854,42 +962,17 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 ball, x2, y2);
         if (exactColPoint == null) {
             System.err.println("Cannot find exact collision point!");
-            return;
+            double[] approxColPoint = findApproxCollisionPoint(x1, y1, ball, x2, y2);
+            x1 = approxColPoint[0];
+            y1 = approxColPoint[1];
+            x2 = approxColPoint[2];
+            y2 = approxColPoint[3];
+        } else {
+            x1 = exactColPoint[0];
+            y1 = exactColPoint[1];
+            x2 = exactColPoint[2];
+            y2 = exactColPoint[3];
         }
-        
-        x1 = exactColPoint[0];
-        y1 = exactColPoint[1];
-        x2 = exactColPoint[2];
-        y2 = exactColPoint[3];
-        
-
-//        int maxRound = 100;
-//        int phyRounds = 0;
-//        double tickDt;
-//        double curDivider = 1.0;
-//
-//        double allowedDev = 0.01;  // 0.01 mm
-//
-//        // 类似二分搜索，找碰撞点
-//        while (phyRounds < maxRound) {
-//            tickDt = Algebra.distanceToPoint(x1, y1, x2, y2) - values.ball.ballDiameter;
-//            if (Math.abs(tickDt) < allowedDev) break;
-//            double mul;
-//            if (tickDt > 0) {
-//                mul = 1;
-//            } else {
-//                mul = -1;
-//            }
-//
-//            x1 += vx / curDivider * mul;
-//            y1 += vy / curDivider * mul;
-//            x2 += ball.vx / curDivider * mul;
-//            y2 += ball.vy / curDivider * mul;
-//
-//            curDivider *= 2;
-//            phyRounds++;
-//        }
-//        System.out.println("Rounds: " + phyRounds);
 
         if (!phy.isPrediction) {
             // AI考虑进攻时并不会clone目标球
