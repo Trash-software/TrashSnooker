@@ -4,10 +4,10 @@ import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
 
 public enum BallMetrics {
-    SNOOKER_BALL(52.5, 0.95, 0.05, 145.0),
-    POOL_BALL(57.15, 0.93, 0.07, 170.0),
-    CAROM_BALL(61.5, 0.92, 0.08, 220.0),
-    RUSSIAN_BALL(66.675, 0.91, 0.09, 255.0);
+    SNOOKER_BALL(52.5, 0.95, 1.0, 145.0),
+    POOL_BALL(57.15, 0.93, 1.05, 170.0),
+    CAROM_BALL(61.5, 0.92, 1.15, 220.0),
+    RUSSIAN_BALL(66.675, 0.91, 1.05, 255.0);
     public final double ballDiameter;
     public final double ballRadius;
     public final double ballWeightRatio;

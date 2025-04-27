@@ -132,7 +132,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     public boolean isNotMoving(Phy phy) {
-        return getSpeed() < phy.speedReducer;
+        double slippingFriction = values.ball.frictionRatio * phy.slippingFrictionTimed;
+        return getSpeed() < slippingFriction;
     }
 
     public boolean isMovingTowards(Ball other) {
@@ -143,9 +144,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     public boolean isLikelyStopped(Phy phy) {
-        if (getSpeed() < phy.speedReducer   // todo: 写不明白，旋转停
+        double slippingFriction = values.ball.frictionRatio * phy.slippingFrictionTimed;
+        if (getSpeed() < slippingFriction   // todo: 写不明白，旋转停
                 &&
-                getSpinTargetSpeed() < phy.spinReducer * 2
+                getSpinTargetSpeed() < slippingFriction * 2
 //                &&
 //                (!phy.isPrediction && Math.abs(sideSpin) < phy.sideSpinReducer)
         ) {
@@ -184,15 +186,17 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
      */
     protected boolean sideSpinAtPosition(Phy phy) {
         phyFramesSinceCue++;
-        if (sideSpin >= phy.sideSpinReducer) {
-            sideSpin -= phy.sideSpinReducer;
-            return true;
-        } else if (sideSpin <= -phy.sideSpinReducer) {
-            sideSpin += phy.sideSpinReducer;
-            return true;
-        } else {
+        double sideSpinReducer = values.ball.frictionRatio * phy.sideSpinFrictionTimed;
+
+        if (Math.abs(sideSpin) < sideSpinReducer) {
+            sideSpin = 0;
             return false;
+        } else if (sideSpin > 0) {
+            sideSpin -= sideSpinReducer;
+        } else {
+            sideSpin += sideSpinReducer;
         }
+        return true;
     }
 
     protected void normalMove(Phy phy) {
@@ -202,12 +206,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         phyFramesSinceCue++;
 
         // 球的质量会抵消
-        double slidingFriction = values.ball.frictionRatio * phy.cloth.smoothness.speedReduceFactor / 
-                phy.calculationsPerSec * 0.2;
-        double sideSpinReducer = phy.sideSpinReducer * slidingFriction / phy.calculationsPerSec;
+        double slippingFriction = values.ball.frictionRatio * phy.slippingFrictionTimed;
+        double sideSpinReducer = values.ball.frictionRatio * phy.sideSpinFrictionTimed;
 
-        double rollingFriction = values.ball.frictionRatio * phy.cloth.smoothness.speedReduceFactor / 
-                phy.calculationsPerSec * 0.1;
+        double rollingFriction = values.ball.frictionRatio * phy.rollingFrictionTimed;
 
         if (Math.abs(sideSpin) < sideSpinReducer) {
             sideSpin = 0;
@@ -224,7 +226,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         // Compute slip magnitude
         double slipMag = Math.hypot(slipX, slipY);
 
-        if (slipMag < slidingFriction) {
+        if (slipMag < slippingFriction) {
             // 滚动
             double speed = Math.hypot(vx, vy);
             if (speed > rollingFriction) {
@@ -246,95 +248,94 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             }
         } else {
             // 滑动
-            double spinFriction = slidingFriction * 0.5;
             // Normalize slip direction
             double slipDirX = slipX / slipMag;
             double slipDirY = slipY / slipMag;
 
+            double spinEffect = slippingFriction * TableCloth.SLIP_ACCELERATE_EFFICIENCY;  // 这个乘数是旋转的转化成动力的效率
             // Apply friction against velocity (reduce slipping)
-            vx -= slipDirX * slidingFriction;
-            vy -= slipDirY * slidingFriction;
+            vx -= slipDirX * spinEffect;
+            vy -= slipDirY * spinEffect;
 
             // Apply friction to spin in opposite direction (spin catches up)
-            xSpin += slipDirX * spinFriction;
-            ySpin += slipDirY * spinFriction;
+            xSpin += slipDirX * slippingFriction;
+            ySpin += slipDirY * slippingFriction;
         }
-    }
-
-    private boolean areVelSpinAligned(double tolerance) {
-        double dx = vx - xSpin;
-        double dy = vy - ySpin;
-        return (dx * dx + dy * dy) <= (tolerance * tolerance);
-    }
-
-    protected void normalMove2(Phy phy) {
-        distance += Math.hypot(vx, vy);
-        setX(nextX);
-        setY(nextY);
-
-//        if (!phy.isPrediction) calculateAxis(phy);
-
-        phyFramesSinceCue++;
-        if (sideSpin >= phy.sideSpinReducer) {
-            sideSpin -= phy.sideSpinReducer;
-        } else if (sideSpin <= -phy.sideSpinReducer) {
-            sideSpin += phy.sideSpinReducer;
-        }
-
-        double speed = getSpeed();
-        double reducedSpeed = speed - values.speedReducerPerInterval(phy);
-        double ratio = reducedSpeed / speed;
-        vx *= ratio;
-        vy *= ratio;
 
         if (!phy.isPrediction) {
             // 这部分是台泥造成的线路偏差
             clothPathChange(phy);
         }
-
-        double xSpinDiff = xSpin - vx;
-        double ySpinDiff = ySpin - vy;
-
-        // 对于滑的桌子，转速差越大，旋转reducer和effect反而越小
-        double spinDiffTotal = Math.hypot(xSpinDiff, ySpinDiff);
-        double spinDiffFactor = spinDiffTotal / Values.MAX_SPIN_DIFF * phy.calculationsPerSec;
-        spinDiffFactor = Math.min(1.0, spinDiffFactor);
-        double dynamicDragFactor = 1 - phy.cloth.smoothness.tailSpeedFactor * spinDiffFactor;
-
-//        if (isWhite() && !phy.isPrediction) System.out.println(dynamicDragFactor);
-
-        // 乘和除抵了，所以第一部分是线性的
-        double spinReduceRatio = phy.spinReducer / spinDiffTotal * dynamicDragFactor
-                * table.speedReduceMultiplier;  // fixme: 可能是平方
-        double xSpinReducer = Math.abs(xSpinDiff * spinReduceRatio);
-        double ySpinReducer = Math.abs(ySpinDiff * spinReduceRatio);
-
-//        if (isWhite()) System.out.printf("vx: %f, vy: %f, xr: %f, yr: %f, spin: %f\n", vx, vy, xSpinReducer, ySpinReducer, SnookerGame.spinReducer);
-
-        if (xSpinDiff < -xSpinReducer) {
-            vx += xSpinDiff / phy.spinEffect * dynamicDragFactor;
-            xSpin += xSpinReducer * dynamicDragFactor;
-        } else if (xSpinDiff >= xSpinReducer) {
-            vx += xSpinDiff / phy.spinEffect * dynamicDragFactor;
-            xSpin -= xSpinReducer * dynamicDragFactor;
-        } else {
-            xSpin = vx;
-        }
-
-        if (ySpinDiff < -ySpinReducer) {
-            vy += ySpinDiff / phy.spinEffect * dynamicDragFactor;
-            ySpin += ySpinReducer * dynamicDragFactor;
-        } else if (ySpinDiff >= ySpinReducer) {
-            vy += ySpinDiff / phy.spinEffect * dynamicDragFactor;
-            ySpin -= ySpinReducer * dynamicDragFactor;
-        } else {
-            ySpin = vy;
-        }
-
-        if (!phy.isPrediction) {
-            nearCushionChangePath(phy);
-        }
     }
+
+//    protected void normalMove2(Phy phy) {
+//        distance += Math.hypot(vx, vy);
+//        setX(nextX);
+//        setY(nextY);
+//
+////        if (!phy.isPrediction) calculateAxis(phy);
+//
+//        phyFramesSinceCue++;
+//        if (sideSpin >= phy.sideSpinReducer) {
+//            sideSpin -= phy.sideSpinReducer;
+//        } else if (sideSpin <= -phy.sideSpinReducer) {
+//            sideSpin += phy.sideSpinReducer;
+//        }
+//
+//        double speed = getSpeed();
+//        double reducedSpeed = speed - values.speedReducerPerInterval(phy);
+//        double ratio = reducedSpeed / speed;
+//        vx *= ratio;
+//        vy *= ratio;
+//
+//        if (!phy.isPrediction) {
+//            // 这部分是台泥造成的线路偏差
+//            clothPathChange(phy);
+//        }
+//
+//        double xSpinDiff = xSpin - vx;
+//        double ySpinDiff = ySpin - vy;
+//
+//        // 对于滑的桌子，转速差越大，旋转reducer和effect反而越小
+//        double spinDiffTotal = Math.hypot(xSpinDiff, ySpinDiff);
+//        double spinDiffFactor = spinDiffTotal / Values.MAX_SPIN_DIFF * phy.calculationsPerSec;
+//        spinDiffFactor = Math.min(1.0, spinDiffFactor);
+//        double dynamicDragFactor = 1 - phy.cloth.smoothness.tailSpeedFactor * spinDiffFactor;
+//
+////        if (isWhite() && !phy.isPrediction) System.out.println(dynamicDragFactor);
+//
+//        // 乘和除抵了，所以第一部分是线性的
+//        double spinReduceRatio = phy.spinReducer / spinDiffTotal * dynamicDragFactor
+//                * table.speedReduceMultiplier;  // fixme: 可能是平方
+//        double xSpinReducer = Math.abs(xSpinDiff * spinReduceRatio);
+//        double ySpinReducer = Math.abs(ySpinDiff * spinReduceRatio);
+//
+////        if (isWhite()) System.out.printf("vx: %f, vy: %f, xr: %f, yr: %f, spin: %f\n", vx, vy, xSpinReducer, ySpinReducer, SnookerGame.spinReducer);
+//
+//        if (xSpinDiff < -xSpinReducer) {
+//            vx += xSpinDiff / phy.spinEffect * dynamicDragFactor;
+//            xSpin += xSpinReducer * dynamicDragFactor;
+//        } else if (xSpinDiff >= xSpinReducer) {
+//            vx += xSpinDiff / phy.spinEffect * dynamicDragFactor;
+//            xSpin -= xSpinReducer * dynamicDragFactor;
+//        } else {
+//            xSpin = vx;
+//        }
+//
+//        if (ySpinDiff < -ySpinReducer) {
+//            vy += ySpinDiff / phy.spinEffect * dynamicDragFactor;
+//            ySpin += ySpinReducer * dynamicDragFactor;
+//        } else if (ySpinDiff >= ySpinReducer) {
+//            vy += ySpinDiff / phy.spinEffect * dynamicDragFactor;
+//            ySpin -= ySpinReducer * dynamicDragFactor;
+//        } else {
+//            ySpin = vy;
+//        }
+//
+//        if (!phy.isPrediction) {
+//            nearCushionChangePath(phy);
+//        }
+//    }
 
     private void clothPathChange(Phy phy) {
         // 逆毛效应
@@ -1040,7 +1041,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double ballOutHor = ballHorV;
         double ballOutVer = thisVerV;
 
-        double frictionStrength = values.ball.frictionRatio / 0.05;
+        double frictionStrength = values.ball.frictionRatio;
         double spinProj = 0.0;
         boolean wasBallStopped = false;
         if (ball.vx == 0 && ball.vy == 0) {
@@ -1048,33 +1049,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             spinProj = Algebra.projectionLengthOn(thisV,
                     new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
         }
-//        if (gearOffsetEnabled && wasBallStopped) {
-//            
-//        }
-
-//        if (ball.vx == 0 && ball.vy == 0) {  // 两颗动球碰撞考虑齿轮效应太麻烦了
-//            // 实为投掷效应
-//            double powerGear = Math.min(1.0,
-//                    relSpeed / GEAR_EFFECT_MAX_POWER / Values.MAX_POWER_SPEED * 
-//                            values.ball.ballWeightRatio);  // 25的力就没有效应了(高低杆要打出25的球速，起码要35的力)
-//            double throwEffect = (1 - powerGear) * MAX_GEAR_EFFECT;
-//            double gearEffect = 1 - throwEffect;
-//
-//            spinProj = Algebra.projectionLengthOn(thisV,
-//                    new double[]{this.xSpin, this.ySpin}) * phy.calculationsPerSec / 1500;  // 旋转方向在这颗球原本前进方向上的投影
-//
-//            double gearRemain = throwEffect * spinProj;
-//
-//            ballOutVer *= gearEffect;
-//            thisOutVer = thisVerV * gearRemain;
-//
-//            if (gearOffsetEnabled) {
-//                double ratio = thisHorV / thisVerV;
-//                int sign = ratio < 0 ? -1 : 1;
-//                double offsetRatio = Math.sqrt(Math.abs(ratio * sign)) * sign;
-//                ballOutHor = ballOutVer * offsetRatio * (gearRemain * 0.2);  // 目标球身上的投掷效应。AI不会算，所以我们只给玩家搞这个
-//            }
-//        }
 
         // 碰撞后，两球平行于切线的速率不变，垂直于切线的速率互换
         double[] thisOutAtRelAxis = new double[]{
@@ -1144,7 +1118,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     double powerGear = Math.min(1.0,
                             totalSpeed / GEAR_EFFECT_MAX_POWER / Values.MAX_POWER_SPEED *
                                     values.ball.ballWeightRatio);  // 30的力就没有效应了(高低杆要打出30的球速，起码要40的力)
-                    double throwEffect = (1 - powerGear) * values.ball.frictionRatio;
+                    double throwEffect = (1 - powerGear) * frictionStrength * 0.05;
 //                    System.out.println("power gear: " + powerGear);
                     double sideSpinFactor = -this.sideSpin * 0.5;
                     // 理解为加顺赛抵消投掷效应

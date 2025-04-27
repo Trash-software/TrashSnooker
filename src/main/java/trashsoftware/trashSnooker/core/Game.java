@@ -370,6 +370,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             AchManager.getInstance().addAchievement(Achievement.LONG_THINK, getCuingIgp());
         }
 
+        if (false) {
+            double speed = Math.hypot(params.vx, params.vy);
+            System.out.println("Speed: " + speed + ", Est move:");
+            double estDtMove = gameValues.estimatedMoveDistance(phy, speed);
+            System.out.println(gameValues.estimateMoveTime(phy, speed, estDtMove - 10));
+            System.out.println("SpeedNeed: " + gameValues.estimateSpeedNeeded(phy, estDtMove));
+        }
+
         whiteFirstCollide = null;
         collidesWall = false;
         lastPotSuccess = false;

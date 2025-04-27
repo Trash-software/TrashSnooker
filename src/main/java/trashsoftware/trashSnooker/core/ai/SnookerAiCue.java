@@ -95,7 +95,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         List<Ball> legalList = game.getAllLegalBalls(1, false, false);
         Set<Ball> legalSet = new HashSet<>(legalList);
         
-        double clothSlowFactor = phy.cloth.smoothness.speedReduceFactor / TableCloth.Smoothness.FAST.speedReduceFactor;
+        double clothSlowFactor = phy.cloth.smoothness.slippingFriction / TableCloth.Smoothness.FAST.slippingFriction;
         double selPowerLow = 28.0 * clothSlowFactor;
         double selPowerHigh = 46.0 * clothSlowFactor;
         double selPowerTick = 2.0;

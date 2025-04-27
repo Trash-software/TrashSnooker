@@ -13,10 +13,9 @@ public class Phy {
     public final double calculateMs;
     public final double calculationsPerSec;
     public final double calculationsPerSecSqr;
-    public final double speedReducer;
-    public final double spinReducer;  // 数值越大，旋转衰减越大
-    public final double sideSpinReducer;
-    public final double spinEffect;  // 数值越小影响越大
+    public final double slippingFrictionTimed;
+    public final double rollingFrictionTimed;
+    public final double sideSpinFrictionTimed;
     
     Phy(double calculateMs, TableCloth cloth, boolean isPrediction) {
         this.cloth = cloth;
@@ -25,10 +24,9 @@ public class Phy {
         
         calculationsPerSec = 1000.0 / calculateMs;
         calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
-        speedReducer = cloth.smoothness.speedReduceFactor / calculationsPerSecSqr;
-        spinReducer = cloth.smoothness.spinReduceFactor / calculationsPerSecSqr;
-        sideSpinReducer = 120.0 / calculationsPerSecSqr;
-        spinEffect = cloth.smoothness.spinEffectFactor / calculateMs;
+        slippingFrictionTimed = cloth.smoothness.slippingFriction / calculationsPerSecSqr * 1000;
+        rollingFrictionTimed = cloth.smoothness.rollingFriction / calculationsPerSecSqr * 1000;
+        sideSpinFrictionTimed = (slippingFrictionTimed + rollingFrictionTimed) * 0.075;
     }
     
     public double accelerationMultiplier() {

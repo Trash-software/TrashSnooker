@@ -2,12 +2,10 @@ package trashsoftware.trashSnooker.core.ai;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -514,7 +512,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         if (presetTarget == null) {
             all = getCurrentAttackChoices();
         } else {
-            all = Analyzer.getAttackChoices(game, 
+            all = Analyzer.getAttackChoices(game,
                     game.getCurrentTarget(),
                     aiPlayer,
                     null,
@@ -626,12 +624,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     }
 
     List<AttackChoice> getAttackChoices(int attackTarget,
-                                                Ball lastPottingBall,
-                                                boolean isSnookerFreeBall,
-                                                double[] whitePos,
-                                                boolean isPositioning,
-                                                boolean isLineInHandBall,
-                                                boolean considerDoublePot) {
+                                        Ball lastPottingBall,
+                                        boolean isSnookerFreeBall,
+                                        double[] whitePos,
+                                        boolean isPositioning,
+                                        boolean isLineInHandBall,
+                                        boolean considerDoublePot) {
         return Analyzer.getAttackChoices(game,
                 attackTarget,
                 aiPlayer,
@@ -820,7 +818,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         double realPowerTick = smallPower ? powerTick / 3.0 : powerTick;
         double ctrlPower = aiPlayer.getPlayerPerson().handBody.getPrimary().getControllablePowerPercentage();
-        
+
         double powerLimit = smallPower ?
                 Math.min(45.0, ctrlPower) :
                 ctrlPower;
@@ -978,7 +976,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //            // 瞄准的1倍标准差偏差角
 //            double aimingSd = (105 - aps.precision) * handSdMul /
 //                    AiCueResult.DEFAULT_AI_PRECISION;  // 这里用default是因为，我们不希望把AI精确度调低之后它就觉得打不进，一直防守
-            
+
             double[] devs = Analyzer.aiStandardDeviation(
                     cueParams,
                     attackChoice.attackingPlayer,
@@ -992,7 +990,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             double totalMove = gameValues.estimatedMoveDistance(phy, whiteInitSpeed);
 
             // 预估台泥变线偏差
-            double moveT = gameValues.estimateMoveTime(phy, whiteInitSpeed, totalDt);
+            double moveT = 0;
+            try {
+                moveT = gameValues.estimateMoveTime(phy, whiteInitSpeed, totalDt);
+            } catch (IllegalArgumentException iae) {
+                // do nothing
+            }
 //            double whiteT = gameValues.estimateMoveTime(phy, )
             double pathChange = moveT * phy.cloth.goodness.errorFactor * TableCloth.RANDOM_ERROR_FACTOR;  // 变线
 //            System.out.println("Path change " + pathChange);  
@@ -1062,7 +1065,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             potProb = nd.cumulativeProbability(allowedDev) - nd.cumulativeProbability(-allowedDev);
             if (potProb < 0) potProb = 0.0;  // 虽然我不知道为什么prob会是负的
             price = potProb * attackChoice.targetPrice;
-            
+
 //            System.out.println("Est dev: " + tarDevHoleSdMm +
 //                    ", allow dev: " + allowedDev +
 //                    ", prob: " + potProb +

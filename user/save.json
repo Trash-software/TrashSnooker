@@ -1,34 +1,33 @@
 {
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
-    "gameRule": "CHINESE_EIGHT",
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "Neil Robertson",
+    "person": "custom_player_4",
     "playerType": "PLAYER"
   },
-  "p1Wins": 1,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
-    "gameRule": "CHINESE_EIGHT",
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "High Stick",
+    "person": "Neil Robertson",
     "playerType": "COMPUTER"
   },
-  "startTime": 1744108696484,
+  "startTime": 1745763898356,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ballsGroupPreset": "helloKittyEight",
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
-    "subRules": ["CHINESE_EIGHT_STD"],
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
+    "subRules": ["SNOOKER_STD"],
     "devMode": true,
     "table": {
-      "tableOrdinal": 1,
+      "tableOrdinal": 0,
       "pocketDifficultyOrdinal": 3,
-      "holeSizeOrdinal": 3
+      "holeSizeOrdinal": 2
     }
   },
   "totalFrames": 1,

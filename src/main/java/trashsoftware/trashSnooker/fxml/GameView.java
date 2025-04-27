@@ -2449,11 +2449,11 @@ public class GameView implements Initializable {
                                        PotAttempt currentAttempt,
                                        PlayerHand usedHand,
                                        boolean snookered) {
-        gameValues.estimateMoveTime(
-                game.playPhy,
-                CuePlayParams.getSpeedOfPower(getActualPowerPercentage(), 0),
-                2000
-        );
+//        gameValues.estimateMoveTime(
+//                game.playPhy,
+//                CuePlayParams.getSpeedOfPower(getActualPowerPercentage(), 0),
+//                2000
+//        );
         Movement calculatedMovement = game.getGame().cue(params, game.playPhy);
         CueRecord cueRecord = makeCueRecord(player, params);  // 必须在randomCueError之后
         TargetRecord thisTarget = makeTargetRecord(player);
@@ -3282,7 +3282,7 @@ public class GameView implements Initializable {
             }
             switch (mediaType) {
                 case MovementFrame.COLLISION -> {
-                    System.out.println("Collision sound: " + mediaValue);
+//                    System.out.println("Collision sound: " + mediaValue);
                     AudioPlayerManager.getInstance().play(
                             SoundInfo.bySpeed(SoundInfo.SoundType.BALL_COLLISION, mediaValue),
                             gameValues,
@@ -3292,7 +3292,7 @@ public class GameView implements Initializable {
                     );
                 }
                 case MovementFrame.POCKET_BACK -> {
-                    System.out.println("Pocket back sound: " + mediaValue);
+//                    System.out.println("Pocket back sound: " + mediaValue);
                     AudioPlayerManager.getInstance().play(
                             SoundInfo.bySpeed(SoundInfo.SoundType.POCKET_BACK, mediaValue),
                             gameValues,
@@ -3304,7 +3304,7 @@ public class GameView implements Initializable {
                 case MovementFrame.EDGE_CUSHION,
                      MovementFrame.CUSHION_LINE,
                      MovementFrame.CUSHION_ARC -> {
-                    System.out.println("Cushion sound: " + mediaValue);
+//                    System.out.println("Cushion sound: " + mediaValue);
                     AudioPlayerManager.getInstance().play(
                             SoundInfo.bySpeed(SoundInfo.SoundType.CUSHION, mediaValue),
                             gameValues,

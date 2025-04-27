@@ -1,0 +1,45 @@
+{
+  "p1": "custom_0CCC8918C5CE9D53",
+  "game": {
+    "p1": {
+      "playerNumber": 1,
+      "gameRule": "SNOOKER",
+      "handFeelEffort": 1,
+      "person": "custom_0CCC8918C5CE9D53",
+      "playerType": "PLAYER"
+    },
+    "p1Wins": 1,
+    "p2": {
+      "playerNumber": 2,
+      "gameRule": "SNOOKER",
+      "handFeelEffort": 1.070775165962608,
+      "person": "John Wizard",
+      "playerType": "COMPUTER"
+    },
+    "p2BreakLoseChance": 0,
+    "gameValues": {
+      "ball": "SNOOKER_BALL",
+      "gameRule": "SNOOKER",
+      "subRules": ["SNOOKER_GOLDEN"],
+      "devMode": false,
+      "table": {
+        "tableOrdinal": 0,
+        "pocketDifficultyOrdinal": 3,
+        "holeSizeOrdinal": 4
+      }
+    },
+    "winRecords": {"1": 1},
+    "p2Wins": 0,
+    "startTime": 1745770501802,
+    "p1BreakLoseChance": 0,
+    "matchId": "custom_0CCC8918C5CE9D53+2025+challenger_open-QUARTER_FINAL-22",
+    "totalFrames": 3,
+    "cloth": {
+      "smoothness": "FAST",
+      "goodness": "GOOD"
+    },
+    "p1Breaks": true
+  },
+  "p2": "John Wizard",
+  "stage": "QUARTER_FINAL"
+}
