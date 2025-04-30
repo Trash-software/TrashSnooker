@@ -80,7 +80,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double whiteY = game.getCueBall().getY();
         
         double[] cornerBallPos = leftBreak ? game.getCornerRedBallPosGreenSide() : game.getCornerRedBallPosYellowSide();
-        double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 3.0;  // 主要有个加塞瞄点偏移的事情
+        double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 3.0;
         double[] thinVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thinY - whiteY);
         double thickY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 0.5;
         double[] thickVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thickY - whiteY);
@@ -115,6 +115,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         selectedPower,
                         0.0,
                         selectedSideSpin,
+                        5.0,
                         game,
                         aiPlayer.getInGamePlayer(),
                         handSkill
@@ -123,8 +124,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 CuePlayParams cpp = CuePlayParams.makeIdealParams(
                         unitXy[0],
                         unitXy[1],
-                        cueParams,
-                        0.0
+                        cueParams
                 );
                 FinalChoice.DefenseChoice dc = Analyzer.analyseDefense(
                         this,
@@ -300,6 +300,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                     minActualPower,
                     0.0,
                     0.0,
+                    5.0,
                     game,
                     aiPlayer.getInGamePlayer(),
                     CuePlayParams.getPlayableHand(
@@ -307,7 +308,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
-                            0.0,
+                            5.0,
                             game.getGameValues().table,
                             pp
                     )
@@ -324,6 +325,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                     random.nextDouble() * interval + powerLow,
                     aiSpin[0],
                     aiSpin[1],
+                    5.0,
                     game,
                     aiPlayer.getInGamePlayer(),
                     CuePlayParams.getPlayableHand(
@@ -331,7 +333,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
-                            0.0,
+                            5.0,
                             game.getGameValues().table,
                             pp
                     )

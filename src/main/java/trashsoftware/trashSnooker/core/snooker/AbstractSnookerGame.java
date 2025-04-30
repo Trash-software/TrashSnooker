@@ -837,6 +837,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                         50.0,
                         0.0,
                         0.0,
+                        5.0,
                         this,
                         getCuingIgp(),
                         null
@@ -844,13 +845,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 CuePlayParams cpp = CuePlayParams.makeIdealParams(
                         unitXy[0],
                         unitXy[1],
-                        cueParams,
-                        0.0
+                        cueParams
                 );
                 WhitePrediction wp = predictWhite(cpp, entireGame.predictPhy, 10000.0,
                         false,
                         false,
-                        false, true, false);
+                        false, 
+                        true,
+                        true, false);
                 if (legalSet.contains(wp.getFirstCollide())) {
                     System.out.println("Solvable! Check foul and miss in " + (System.currentTimeMillis() - st) + " ms, " +
                             "solve angle: " + deg);

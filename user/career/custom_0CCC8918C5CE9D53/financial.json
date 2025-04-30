@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 730650,
+    "money": 774030,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -7132,13 +7132,79 @@
         },
         "type": "upgrade",
         "timestamp": "2025-04-28 02:14:57"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_0CCC8918C5CE9D53-626",
+        "inGameDate": "2025/9/25",
+        "moneyBefore": 730650,
+        "moneyCost": 80,
+        "moneyAfter": 730570,
+        "type": "purchase",
+        "timestamp": "2025-04-28 05:09:22"
+      },
+      {
+        "inGameDate": "2025/9/25",
+        "year": 2025,
+        "match": "challenger_open",
+        "moneyBefore": 730570,
+        "moneyAfter": 778570,
+        "type": "championshipEarn",
+        "items": {"SECOND_PLACE": {
+          "actual": 48000,
+          "raw": 60000
+        }},
+        "timestamp": "2025-05-01 04:47:09"
+      },
+      {
+        "inGameDate": "2025/9/25",
+        "moneyBefore": 778570,
+        "moneyAfter": 774830,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 3740
+        }],
+        "timestamp": "2025-05-01 04:47:17"
+      },
+      {
+        "item": 6,
+        "inGameDate": "2025/10/18",
+        "match": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei",
+        "moneyBefore": 774830,
+        "moneyAfter": 775030,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-01 04:47:17"
+      },
+      {
+        "inGameDate": "2025/10/18",
+        "match": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei",
+        "moneyBefore": 775030,
+        "moneyAfter": 774030,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2025-05-01 04:47:17"
       }
     ],
     "level": 37,
-    "expInThisLevel": 386,
+    "expInThisLevel": 1136,
     "availPerks": 0,
     "totalPerks": 189,
-    "totalExp": 19100
+    "totalExp": 19850
   },
-  "checksum": "771600D456312C47AAF376976A5FD24A"
+  "checksum": "7A6CBE9FFEB1DE1A12D83624F0AC41E1"
 }

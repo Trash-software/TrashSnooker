@@ -2140,6 +2140,7 @@ public class GameView implements Initializable {
                 getSelectedPower(),
                 getSelectedFrontBackSpin(),
                 getSelectedSideSpin(),
+                cueAngleDeg,
                 game.getGame(),
                 player.getInGamePlayer(),
                 handSkill
@@ -2755,8 +2756,10 @@ public class GameView implements Initializable {
                 powerSlider.setValue(cueResult.getCueParams().selectedPower());
                 cuePointX = cueCanvasWH / 2 + cueResult.getCueParams().selectedSideSpin() * cueAreaRadius;
                 cuePointY = cueCanvasWH / 2 - cueResult.getCueParams().selectedFrontBackSpin() * cueAreaRadius;
-                cueAngleDeg = 0.0;
+                cueAngleDeg = cueResult.getCueParams().getCueAngleDeg();
+                setCueAngleLabel();
 
+                recalculateObstacles();
                 aimingChanged();
 
                 CuePlayParams realParams = applyRandomCueError(player);
@@ -2899,6 +2902,7 @@ public class GameView implements Initializable {
                 selectedPower,
                 selectedFrontBackSpin,
                 selectedSideSpin,
+                cueAngleDeg,
                 game.getGame(),
                 game.getGame().getCuingIgp(),
                 currentHand
@@ -2907,7 +2911,6 @@ public class GameView implements Initializable {
                 cursorDirectionUnitX,
                 cursorDirectionUnitY,
                 cueParams,
-                cueAngleDeg,
                 slideCue);
     }
 
@@ -2949,26 +2952,6 @@ public class GameView implements Initializable {
 
     private double getSelectedFrontBackSpin(double cpy) {
         return (cueCanvasWH / 2 - cpy) / cueAreaRadius;
-    }
-
-    @Deprecated
-    private double getActualPowerPercentage() {
-        return getActualPowerPercentage(getSelectedPower(), getSelectedSideSpin(), getSelectedFrontBackSpin());
-    }
-
-    @Deprecated
-    private double getActualPowerPercentage(double selectedPower,
-                                            double selectedSideSpin,
-                                            double selectedFrontBackSpin) {
-        CueParams cueParams = CueParams.createBySelected(
-                selectedPower,
-                selectedFrontBackSpin,
-                selectedSideSpin,
-                game.getGame(),
-                game.getGame().getCuingIgp(),
-                currentHand
-        );
-        return cueParams.actualPower();
     }
 
     private void restoreCuePoint() {
@@ -4321,6 +4304,27 @@ public class GameView implements Initializable {
     private void calculateCueAbleArea() {
         cueAbleArea = getCuingCue().getCueAbleArea(gameValues.ball, 32);
     }
+    
+    private void recalculateObstacles() {
+        if (game == null || game.getGame() == null) return;
+
+        Cue currentCue = getCuingCue();
+        CueBackPredictor.Result backPre =
+                game.getGame().getObstacleDtHeight(cursorDirectionUnitX, cursorDirectionUnitY,
+                        currentCue.getCueTipWidth());
+
+        obstacleProjection = ObstacleProjection.createProjection(
+                backPre,
+                cursorDirectionUnitX,
+                cursorDirectionUnitY,
+                cueAngleDeg,
+                game.getGame().getCueBall(),
+                gameValues,
+                currentCue.getCueTipWidth()
+        );
+
+        calculateCueAbleArea();
+    }
 
     private void recalculateUiRestrictions() {
         recalculateUiRestrictions(false);
@@ -4329,34 +4333,7 @@ public class GameView implements Initializable {
     private void recalculateUiRestrictions(boolean forceChangeHand) {
         if (game == null || game.getGame() == null) return;
 
-//        Cue currentCue = game.getGame().getCuingPlayer().getInGamePlayer()
-//                .getCurrentCue(game.getGame());
-        Cue currentCue = getCuingCue();
-        CueBackPredictor.Result backPre =
-                game.getGame().getObstacleDtHeight(cursorDirectionUnitX, cursorDirectionUnitY,
-                        currentCue.getCueTipWidth());
-        if (backPre != null) {
-            if (backPre instanceof CueBackPredictor.CushionObstacle cushionObstacle) {
-                // 影响来自裤边
-                obstacleProjection = new CushionProjection(
-                        gameValues,
-                        game.getGame().getCueBall(),
-                        cushionObstacle.distance,
-                        cushionObstacle.relativeAngle,
-                        cueAngleDeg,
-                        currentCue.getCueTipWidth());
-            } else if (backPre instanceof CueBackPredictor.BallObstacle ballObstacle) {
-                // 后斯诺
-                obstacleProjection = new BallProjection(
-                        ballObstacle.obstacle, game.getGame().getCueBall(),
-                        cursorDirectionUnitX, cursorDirectionUnitY,
-                        cueAngleDeg);
-            }
-        } else {
-            obstacleProjection = null;
-        }
-
-        calculateCueAbleArea();
+        recalculateObstacles();
 
         // 启用/禁用手
         updateHandSelection(forceChangeHand);
@@ -4844,6 +4821,7 @@ public class GameView implements Initializable {
                     predictionQuality != PredictionQuality.NONE,
                     predictionQuality.secondCollision,
                     false,
+                    false,
                     true,
                     false);
             if (center == null) {
@@ -4861,6 +4839,7 @@ public class GameView implements Initializable {
                             WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
                             predictionQuality != PredictionQuality.NONE,
                             predictionQuality.secondCollision,
+                            false,
                             false,
                             true,
                             false

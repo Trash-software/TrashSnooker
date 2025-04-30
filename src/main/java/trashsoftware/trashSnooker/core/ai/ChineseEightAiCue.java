@@ -75,6 +75,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 selectedPower,
                 0.0,
                 0.0,
+                5.0,
                 game,
                 aiPlayer.getInGamePlayer(),
                 aiPlayer.getPlayerPerson().handBody.getPrimary()
@@ -82,8 +83,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
         CuePlayParams cpp = CuePlayParams.makeIdealParams(
                 unitXY[0],
                 unitXY[1],
-                cueParams,
-                5.0
+                cueParams
         );
         return new FinalChoice.DefenseChoice(unitXY, cueParams, cpp);
     }

@@ -145,6 +145,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
                             30,
                             0,
                             0,
+                            5.0,
                             game, attackingPlayer.getInGamePlayer(),
                             handSkill
                     )
@@ -280,6 +281,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
                             30,
                             0,
                             0,
+                            5.0,
                             game, attackingPlayer.getInGamePlayer(),
                             handSkill
                     )

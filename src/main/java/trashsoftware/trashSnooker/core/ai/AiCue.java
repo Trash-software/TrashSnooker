@@ -11,6 +11,7 @@ import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
+import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
@@ -28,12 +29,15 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     public static final double PURE_ATTACK_PROB = 0.4;  // 进攻权重为99的球员只要prob高于这个值他就会进攻。越小，AI越倾向于无脑进攻
     public static final double DEFENSIVE_ATTACK_PROB = 0.2;  // 这个值是线性的，进攻权重为99的球员高于这个值就会尝试性进攻
 
-    public static final double NO_DIFFICULTY_ANGLE_RAD = 0.3;
-    public static final double EACH_BALL_SEE_PRICE = 0.5;
+    //    public static final double NO_DIFFICULTY_ANGLE_RAD = 0.3;
+//    public static final double EACH_BALL_SEE_PRICE = 0.5;
     public static final double WHITE_HIT_CORNER_PENALTY = 0.05;
     public static final double KICK_USELESS_BALL_MUL = 0.5;
     //    private static final double[] FRONT_BACK_SPIN_POINTS =
 //            {0.0, -0.27, 0.27, -0.54, 0.54, -0.81, 0.81};
+    protected static final double[] CUE_ANGLES = {
+            5.0, 15.0, 25.0
+    };
     protected static final double[][] ATTACK_SPIN_POINTS = {  // 高低杆，左右塞
             {0.0, 0.0}, {0.0, 0.35}, {0.0, -0.35}, {0.0, 0.7}, {0.0, -0.7},
             {-0.3, 0.0}, {-0.3, 0.3}, {-0.3, -0.3}, {-0.3, 0.6}, {-0.3, -0.6},
@@ -170,20 +174,20 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                                       boolean mustAttack) {
         double powerLimit = choice.handSkill.getControllablePowerPercentage();
 
-        double minPower;
-        double tick;
+//        double minPower;
+//        double tick;
         double[][] availSpins;
+        double[] powerValues;
+        
+        int totalTicks = (int) Math.round(aiPlayer.getPlayerPerson().getAiPlayStyle().position / 5);
 
         if (choice instanceof AttackChoice.DirectAttackChoice) {
-            tick = 300.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().position;
-            minPower = tick;
+            powerValues = Algebra.generateSkewedRange(100.0 / totalTicks, powerLimit, totalTicks, 1.35);
             availSpins = ATTACK_SPIN_POINTS;
-//            ranged = false;
         } else if (choice instanceof AttackChoice.DoubleAttackChoice) {
-            tick = 600.0 / aiPlayer.getPlayerPerson().getAiPlayStyle().position;
-            minPower = 12.0;
+            totalTicks /= 2;
+            powerValues = Algebra.generateSkewedRange(12.0, powerLimit, totalTicks, 1.35);
             availSpins = DOUBLE_POT_SPIN_POINTS;
-//            ranged = true;
         } else {
             throw new RuntimeException();
         }
@@ -201,44 +205,88 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         List<AttackParam> pureAttacks = new ArrayList<>();
         List<AttackParam> defensiveAttacks = new ArrayList<>();  // 连打带防
         Cue cue = aiPlayer.getInGamePlayer().getCueSelection().getSelected().getNonNullInstance();
+        double cueTipBallRatio = cue.getCueTipWidth() / game.getGameValues().ball.ballDiameter;
+
         double easiest = 0.0;
-        for (double selectedPower = minPower; selectedPower <= powerLimit; selectedPower += tick) {
-            for (double[] spins : availSpins) {
-                double[] aiSpins = cue.aiCuePoint(spins, game.getGameValues().ball);
-                CueParams cueParams = CueParams.createBySelected(
-                        selectedPower,
-                        aiSpins[0],
-                        aiSpins[1],
-                        game,
-                        aiPlayer.getInGamePlayer(),
-                        choice.handSkill
-                );
-                if (choice instanceof AttackChoice.DoubleAttackChoice dou) {
-                    // 目标球的
-                    double degreesTick = 100.0 / 2 / aps.doubleAbility;
-                    double realRadTick = Math.toRadians(degreesTick);
+        for (double cueAngle : CUE_ANGLES) {
+            double[] dirVec;
+            if (choice instanceof AttackChoice.DoubleAttackChoice dou) {
+                dirVec = new double[]{
+                        dou.collisionPos[0] - dou.whitePos[0],
+                        dou.collisionPos[1] - dou.whitePos[1]
+                };
+                dirVec = Algebra.unitVector(dirVec);
+            } else {
+                dirVec = choice.cueDirectionUnitVector;
+            }
+            CueBackPredictor.Result backPre =
+                    game.getObstacleDtHeight(dirVec[0], dirVec[1],
+                            cue.getCueTipWidth());
+            ObstacleProjection op = ObstacleProjection.createProjection(
+                    backPre,
+                    dirVec[0], dirVec[1],
+                    cueAngle,
+                    game.getCueBall(),
+                    game.getGameValues(),
+                    cue.getCueTipWidth()
+            );
+            System.out.println("Obstacle: " + op);
+            int availSpinCount = 0;
 
-                    double[] directionVec = new double[]{
-                            dou.collisionPos[0] - choice.whitePos[0],
-                            dou.collisionPos[1] - choice.whitePos[1]
-                    };
-                    double distance = Math.hypot(directionVec[0], directionVec[1]);
-                    double alpha = Algebra.thetaOf(directionVec);  // 白球到目标球球心连线的绝对角
-                    // 中心连线与最偏处的连线的夹角
-                    // 0.1倍球的直径的挑战范围
-                    double theta = Math.asin(game.getGameValues().ball.ballDiameter * 0.1 / distance);
+            for (double selectedPower : powerValues) {
+                for (double[] spins : availSpins) {
+                    double[] aiSpins = cue.aiCuePoint(spins, game.getGameValues().ball);
 
-                    int offsetTicks = (int) (theta / realRadTick);
-//            System.out.println(offsetTicks + " radians offsets to " + ball + realRadTick + theta);
+                    if (op == null || !op.cueAble(aiSpins[1], -aiSpins[0], cueTipBallRatio)) {
+                        // 注意是反过来的
+                        continue;
+                    }
+                    if (selectedPower == powerValues[0]) availSpinCount++;  // 只记一遍就行了，力量应该不影响打点
 
-//                    double halfOfTick = realRadTick / 2;
+                    CueParams cueParams = CueParams.createBySelected(
+                            selectedPower,
+                            aiSpins[0],
+                            aiSpins[1],
+                            cueAngle,
+                            game,
+                            aiPlayer.getInGamePlayer(),
+                            choice.handSkill
+                    );
+                    if (choice instanceof AttackChoice.DoubleAttackChoice dou) {
+                        // 目标球的
+                        double degreesTick = 100.0 / 2 / aps.doubleAbility;
+                        double realRadTick = Math.toRadians(degreesTick);
 
-                    for (int i = -offsetTicks; i <= offsetTicks; i++) {
-                        double angle = Algebra.normalizeAngle(alpha + i * realRadTick);
-                        double[] vec = Algebra.unitVectorOfAngle(angle);
-                        AttackChoice.DoubleAttackChoice attempted = dou.copyWithNewDirection(vec);
+                        double[] directionVec = new double[]{
+                                dou.collisionPos[0] - choice.whitePos[0],
+                                dou.collisionPos[1] - choice.whitePos[1]
+                        };
+
+                        double distance = Math.hypot(directionVec[0], directionVec[1]);
+                        double alpha = Algebra.thetaOf(directionVec);  // 白球到目标球球心连线的绝对角
+                        // 中心连线与最偏处的连线的夹角
+                        // 0.1倍球的直径的挑战范围
+                        double theta = Math.asin(game.getGameValues().ball.ballDiameter * 0.1 / distance);
+
+                        int offsetTicks = (int) (theta / realRadTick);
+
+                        for (int i = -offsetTicks; i <= offsetTicks; i++) {
+                            double angle = Algebra.normalizeAngle(alpha + i * realRadTick);
+                            double[] vec = Algebra.unitVectorOfAngle(angle);
+                            AttackChoice.DoubleAttackChoice attempted = dou.copyWithNewDirection(vec);
+                            AttackParam acp = new AttackParam(
+                                    attempted, game, phy, cueParams
+                            );
+                            if (acp.potProb > easiest) easiest = acp.potProb;
+                            if (mustAttack || acp.potProb > pureAttackThreshold) {
+                                pureAttacks.add(acp);
+                            } else if (acp.potProb > defensiveAttackThreshold) {
+                                defensiveAttacks.add(acp);
+                            }
+                        }
+                    } else {
                         AttackParam acp = new AttackParam(
-                                attempted, game, phy, cueParams
+                                choice, game, phy, cueParams
                         );
                         if (acp.potProb > easiest) easiest = acp.potProb;
                         if (mustAttack || acp.potProb > pureAttackThreshold) {
@@ -247,17 +295,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                             defensiveAttacks.add(acp);
                         }
                     }
-                } else {
-                    AttackParam acp = new AttackParam(
-                            choice, game, phy, cueParams
-                    );
-                    if (acp.potProb > easiest) easiest = acp.potProb;
-                    if (mustAttack || acp.potProb > pureAttackThreshold) {
-                        pureAttacks.add(acp);
-                    } else if (acp.potProb > defensiveAttackThreshold) {
-                        defensiveAttacks.add(acp);
-                    }
                 }
+            }
+
+            System.out.println("Avail points of " + cueAngle + ": " + availSpinCount + ", thresh " + (availSpins.length * 0.4));
+            if (availSpinCount == availSpins.length) {
+                break;
             }
         }
 
@@ -423,6 +466,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         AttackParam attackParam = iac.attackParams;
         AttackChoice attackChoice = attackParam.attackChoice;
 
+//        // todo: 有可能出现加了弧线就绕不过去那种情况
+//        double[] dirWithAngleCurve = Analyzer.estimateRealCueDirWithCurve(
+//                game,
+//                game.getEntireGame().predictPhy,
+//                attackParam.cueParams,
+//                attackChoice.cueDirectionUnitVector
+//        );
+
         AiCueResult acr = new AiCueResult(aiPlayer.getInGamePlayer(),
                 game.getGamePlayStage(attackChoice.ball, true),
                 cueType,
@@ -438,9 +489,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         if (iac.whitePrediction != null) {
             whitePath = iac.whitePrediction.getWhitePath();
         } else {
-            WhitePrediction wp = game.predictWhite(iac.params, game.getEntireGame().predictPhy, 0.0,
+            WhitePrediction wp = game.predictWhite(iac.params,
+                    game.getEntireGame().predictPhy,
+                    0.0,
                     true,
-                    true, false, true, true);
+                    true, false, false,
+                    true, true);
             whitePath = wp.getWhitePath();
         }
 
@@ -604,6 +658,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 power,
                 0.0,
                 0.0,
+                5.0,
                 game,
                 aiPlayer.getInGamePlayer(),
                 handSkill
@@ -936,46 +991,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             GameValues gameValues = game.getGameValues();
 
             PlayerPerson playerPerson = attackChoice.attackingPlayer.getPlayerPerson();
-//            PlayerHand playerHand = attackChoice.handSkill;
             AiPlayStyle aps = playerPerson.getAiPlayStyle();
-////            double handSdMul = PlayerPerson.HandBody.getSdOfHand(attackChoice.handSkill);
-//            double handSdMul = 1.0;
-//
-////            double[] muSigXy = playerPerson.getCuePointMuSigmaXY();
-////            double sideSpinSd = muSigXy[1];  // 左右打点的标准差，mm
-//            double powerErrorFactor = playerHand.getErrorMultiplierOfPower(cueParams.selectedPower());
-//            double powerSd = (100.0 - playerHand.getPowerControl()) / 100.0;
-//            powerSd *= attackChoice.attackingPlayer.getInGamePlayer()
-//                    .getCueSelection().getSelected().getNonNullInstance().getPowerMultiplier();
-//            powerSd *= handSdMul;
-//            powerSd *= powerErrorFactor;  // 力量的标准差
-//
-//            // 和杆还是有关系的，拿着大头杆打斯诺克就不会去想很难的球
-//            double actualSideSpin = cueParams.actualSideSpin();
-//
-//            // dev=deviation, 由于力量加上塞造成的1倍标准差偏差角，应为小于PI的正数
-//            double[] devOfLowPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
-//                    cueParams.actualPower() * (1 - powerSd), 1, 0);
-//            double radDevOfLowPower = Algebra.thetaOf(devOfLowPower);
-//            if (radDevOfLowPower > Math.PI)
-//                radDevOfLowPower = Algebra.TWO_PI - radDevOfLowPower;
-//
-//            double[] devOfHighPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
-//                    cueParams.actualPower() * (1 + powerSd), 1, 0);
-//            double radDevOfHighPower = Algebra.thetaOf(devOfHighPower);
-//            if (radDevOfHighPower > Math.PI)
-//                radDevOfHighPower = Algebra.TWO_PI - radDevOfHighPower;
-//
-//            double sideDevRad = (radDevOfHighPower - radDevOfLowPower) / 2;
-//            sideDevRad *= 1.25;  // 稍微多惩罚一点
-//            
-//            // 若球手不喜欢加塞，加大sideDevRad
-//            double likeSideMul = 110 / (aps.likeSide + 10);
-//            sideDevRad *= likeSideMul;
-//
-//            // 瞄准的1倍标准差偏差角
-//            double aimingSd = (105 - aps.precision) * handSdMul /
-//                    AiCueResult.DEFAULT_AI_PRECISION;  // 这里用default是因为，我们不希望把AI精确度调低之后它就觉得打不进，一直防守
 
             double[] devs = Analyzer.aiStandardDeviation(
                     cueParams,
@@ -1156,22 +1172,30 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             double actualSideSpin = attackParams.cueParams.actualSideSpin();
             double actualPower = attackParams.cueParams.actualPower();
 
-            double[] correctedDirection = CuePlayParams.aimingUnitXYIfSpin(
-                    actualSideSpin,
-                    actualPower,
-                    attackParams.attackChoice.cueDirectionUnitVector[0],
-                    attackParams.attackChoice.cueDirectionUnitVector[1]
+//            double[] correctedDirection = CuePlayParams.aimingUnitXYIfSpin(
+//                    actualSideSpin,
+//                    actualPower,
+//                    attackParams.attackChoice.cueDirectionUnitVector[0],
+//                    attackParams.attackChoice.cueDirectionUnitVector[1]
+//            );
+
+            // todo: 有可能出现加了弧线就绕不过去那种情况
+            double[] dirWithAngleCurve = Analyzer.estimateRealCueDirWithCurve(
+                    copy,
+                    copy.getEntireGame().predictPhy,
+                    attackParams.cueParams,
+                    attackParams.attackChoice.cueDirectionUnitVector,
+                    false
             );
 
             // 考虑上塞之后的修正出杆
             AttackChoice correctedChoice =
-                    attackParams.attackChoice.copyWithNewDirection(correctedDirection);
+                    attackParams.attackChoice.copyWithNewDirection(dirWithAngleCurve);
 
             CuePlayParams params = CuePlayParams.makeIdealParams(
                     correctedChoice.cueDirectionUnitVector[0],
                     correctedChoice.cueDirectionUnitVector[1],
-                    attackParams.cueParams,
-                    0.0
+                    attackParams.cueParams
             );
             boolean checkPot = attackParams.attackChoice instanceof AttackChoice.DoubleAttackChoice;
 //            game2 = checkPot ? game.clone() : game;
@@ -1181,6 +1205,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     true,
                     true,
                     checkPot,
+                    false,
                     true,
                     false);
             if (wp == null) {
@@ -1300,6 +1325,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     selectedPower,
                     0.0,
                     0.0,
+                    5.0,  // todo: 
                     game,
                     aiPlayer.getInGamePlayer(),
                     handSkill
@@ -1308,8 +1334,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             CuePlayParams cpp = CuePlayParams.makeIdealParams(
                     unitXY[0],
                     unitXY[1],
-                    cueParams,
-                    0.0
+                    cueParams
             );
             result = Analyzer.analyseDefense(
                     AiCue.this,
@@ -1379,8 +1404,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             CuePlayParams params = CuePlayParams.makeIdealParams(
                     correctedChoice.cueDirectionUnitVector[0],
                     correctedChoice.cueDirectionUnitVector[1],
-                    attackParam.cueParams,
-                    0.0
+                    attackParam.cueParams
             );
 
             result = Analyzer.analyseDefense(

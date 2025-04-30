@@ -157,6 +157,24 @@ public class Algebra {
     }
 
     /**
+     * 
+     * @param radA 方位角A，任意范围
+     * @param radB 方位角B，任意范围
+     * @return 若A在B之左，返回-1；若A在B之右，返回1；若A,B重合，返回0
+     */
+    public static int compareAngleDirection(double radA, double radB) {
+        // Normalize difference to [-PI, PI]
+        double diff = ((radB - radA + Math.PI) % (2 * Math.PI)) - Math.PI;
+
+        if (diff == 0) return 0;
+        return diff < 0 ? 1 : -1;
+    }
+
+    public static int compareAngleDirectionDeg(double degA, double degB) {
+        return compareAngleDirection(Math.toRadians(degA), Math.toRadians(degB));
+    }
+
+    /**
      * @param vector 二维向量
      * @return 向量的象限。如果在坐标轴上则返回其右上侧的象限。如果在原点，返回0
      */
@@ -366,5 +384,20 @@ public class Algebra {
      */
     public static double rateBetween(double a, double b, double rate) {
         return a + (b - a) * rate;
+    }
+
+    public static double[] generateSkewedRange(double a, double b, int n, double exponent) {
+        double[] result = new double[n];
+        for (int i = 0; i < n; i++) {
+            double t = (double) i / (n - 1);      // normalized [0, 1]
+            double skewedT = Math.pow(t, exponent); // apply exponent
+            result[i] = a + (b - a) * skewedT;      // map back to [a, b]
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        double[] skr = generateSkewedRange(10, 100, 10, 1.35);
+        System.out.println(Arrays.toString(skr));
     }
 }

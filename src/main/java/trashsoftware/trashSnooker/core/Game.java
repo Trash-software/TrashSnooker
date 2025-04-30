@@ -419,6 +419,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
      * @param predictPath              是否预测撞击之后的线路
      * @param checkCollisionAfterFirst 是否检查白球打到目标球后是否碰到下一颗球
      * @param predictTargetBall        是否记录对第一颗碰撞球进行模拟
+     * @param stopAtCollision          是否在白球撞上第一颗球时就结束模拟
      * @param wipe                     是否还原预测前的状态
      * @param useClone                 是否使用拷贝的白球，仅为多线程服务
      */
@@ -428,11 +429,19 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                         boolean predictPath,
                                         boolean checkCollisionAfterFirst,
                                         boolean predictTargetBall,
+                                        boolean stopAtCollision,
                                         boolean wipe,
                                         boolean useClone) {
         if (cueBall.isNotOnTable()) {
             return null;
         }
+        if (stopAtCollision) {
+            if (predictTargetBall || checkCollisionAfterFirst) {
+                throw new IllegalArgumentException("Argument 'stopAtCollision' is repulsive to" +
+                        "'checkCollisionAfterFirst' or 'predictTargetBall'.");
+            }
+        }
+        
         Ball cueBallClone = useClone ? cueBall.clone() : cueBall;
         cueBallClone.setVx(params.vx / phy.calculationsPerSec);
         cueBallClone.setVy(params.vy / phy.calculationsPerSec);
@@ -449,7 +458,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         lengthAfterWall,
                         predictPath,
                         checkCollisionAfterFirst,
-                        predictTargetBall);
+                        predictTargetBall,
+                        stopAtCollision);
 //        System.out.println("White prediction ms: " + (System.currentTimeMillis() - st));
 //        cueBall.setX(whiteX);
 //        cueBall.setY(whiteY);
@@ -1719,6 +1729,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private boolean predictPath;
         private boolean checkCollisionAfterFirst;
         private boolean predictTargetBall;
+        private boolean stopAtCollision;
         private Phy phy;
 
         WhitePredictor(Ball cueBallClone) {
@@ -1729,12 +1740,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                 double lenAfterWall,
                                 boolean predictPath,
                                 boolean checkCollisionAfterFirst,
-                                boolean predictTargetBall) {
+                                boolean predictTargetBall,
+                                boolean stopAtCollision) {
             this.phy = phy;
             this.lenAfterWall = lenAfterWall;
             this.predictPath = predictPath;
             this.checkCollisionAfterFirst = checkCollisionAfterFirst;
             this.predictTargetBall = predictTargetBall;
+            this.stopAtCollision = stopAtCollision;
 
 //            cueBallClone = cueBall.clone();
 
@@ -1763,6 +1776,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             cumulatedPhysicalTime += phy.calculateMs;
             boolean whiteRun = oneRunWhite();
             Ball firstBall = prediction.getFirstCollide();
+            if (stopAtCollision && firstBall != null) {
+                return true;
+            }
+            
             if (predictTargetBall && firstBall != null) {
                 boolean firstBallRun = oneRunFirstBall(firstBall);
                 return whiteRun && firstBallRun;
@@ -1878,7 +1895,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 return false;
             }
             if (prediction.getFirstCollide() == null) {
-                if (tryWhiteHitBall()) {
+                if (!tryWhiteHitBall()) {
                     cueBallClone.normalMove(phy);
                     return false;
                 }
@@ -1962,11 +1979,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                 ballInitVMmPerS,
                                 whiteDirectionUnitVec[0], whiteDirectionUnitVec[1],
                                 cueBallClone.getLastCollisionX(), cueBallClone.getLastCollisionY());
-                        return false;
+                        return true;
                     }
                 }
             }
-            return true;
+            return false;
         }
     }
 

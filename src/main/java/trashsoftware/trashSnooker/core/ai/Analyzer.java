@@ -4,7 +4,10 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class Analyzer {
 
@@ -45,28 +48,6 @@ public class Analyzer {
         }
         return choices;
     }
-
-//    protected List<DoubleAttackChoice> getCurrentDoubleAttackChoices() {
-//        int curTarget = game.getCurrentTarget();
-//        boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
-//        List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
-//                isSnookerFreeBall,
-//                game.isInLineHandBallForAi());
-//
-//        Ball cueBall = game.getCueBall();
-//
-//        List<DoubleAttackChoice> doubleAttackChoices = getDoubleAttackChoices(
-//                game,
-//                curTarget,
-//                aiPlayer,
-//                null,
-//                legalBalls,
-//                new double[]{cueBall.getX(), cueBall.getY()},
-//                false
-//        );
-//        System.out.println(doubleAttackChoices.size() + " double attacks");
-//        return doubleAttackChoices;
-//    }
 
     private static <G extends Game<?, ?>> List<AttackChoice.DirectAttackChoice> directAttackChoices(
             G game,
@@ -195,6 +176,7 @@ public class Analyzer {
                 true,
                 true,
                 true,
+                false,
                 false,
                 false);  // 这里不用clone，因为整个game都是clone的
         double[] whiteStopPos = wp.stopPoint();
@@ -423,6 +405,12 @@ public class Analyzer {
                     AiCueResult.DEFAULT_AI_PRECISION;
         }
 
+        if (cueParams.getCueAngleDeg() > 5.0) {
+            // 抬高杆尾导致瞄准困难
+            aimingSd *= Algebra.shiftRangeSafe(5.0, 45.0, 1.0, 3.0,
+                    cueParams.getCueAngleDeg());
+        }
+
         return new double[]{sideDevRad, aimingSd};
     }
 
@@ -463,6 +451,7 @@ public class Analyzer {
                 predictPath,
                 checkCollisionAfterFirst,
                 predictTargetBall,
+                false,
                 wipe,
                 useClone);
         left.resetToInit();
@@ -472,6 +461,7 @@ public class Analyzer {
                 predictPath,
                 checkCollisionAfterFirst,
                 predictTargetBall,
+                false,
                 wipe,
                 useClone);
         right.resetToInit();
@@ -479,5 +469,66 @@ public class Analyzer {
         return new WhitePrediction[]{
                 left, right
         };
+    }
+
+    public static double[] estimateRealCueDirWithCurve(
+            Game<?, ?> game,
+            Phy phy,
+            CueParams cueParams,
+            double[] whiteToCollisionDir,
+            boolean useClone) {
+
+        double[] whitePos = game.getCueBall().getPositionArray();
+
+        double preciseRad = Algebra.thetaOf(whiteToCollisionDir);
+        double radHigh = Algebra.normalizeAngle(preciseRad + 0.1);
+        double radLow = Algebra.normalizeAngle(preciseRad - 0.1);
+        double tolerance = Math.atan2(1.0, game.getGameValues().table.maxLength);  // 一毫米误差
+        int counter = 0;
+        while (radHigh - radLow > tolerance) {
+            double radMid = Algebra.normalizeAngle((radHigh + radLow) / 2);
+            double[] unit = Algebra.unitVectorOfAngle(radMid);
+            CuePlayParams cpp = CuePlayParams.makeIdealParams(
+                    unit[0],
+                    unit[1],
+                    cueParams
+            );
+            WhitePrediction wp = game.predictWhite(cpp,
+                    phy, 0.0,
+                    false, false, false, true,
+                    true, useClone);
+
+            double[] currentDir;
+            if (wp.getFirstCollide() != null) {
+                currentDir = new double[]{
+                        wp.getWhiteCollisionX() - whitePos[0],
+                        wp.getWhiteCollisionY() - whitePos[1]
+                };
+            } else {
+                // todo: 最好是让白球到一定距离就停止，不然万一画个巨大弧线，可能会反
+                double[] whiteLastPos = wp.getWhitePath().getLast();
+                currentDir = new double[]{
+                        whiteLastPos[0] - whitePos[0],
+                        whiteLastPos[1] - whitePos[1]
+                };
+            }
+            double dirRad = Algebra.thetaOf(currentDir);
+            int leftOrRight = Algebra.compareAngleDirection(dirRad, preciseRad);
+            if (leftOrRight == 0) return currentDir;
+            else if (leftOrRight < 0) {
+                // 瞄得太左
+                radLow = radMid;
+            } else {
+                // 瞄得太右
+                radHigh = radMid;
+            }
+            counter++;
+            if (counter > 16) {
+                System.err.println("Max binary search step exceed.");
+                return whiteToCollisionDir;
+            }
+        }
+
+        return Algebra.unitVectorOfAngle(Algebra.normalizeAngle((radHigh + radLow) / 2));
     }
 }

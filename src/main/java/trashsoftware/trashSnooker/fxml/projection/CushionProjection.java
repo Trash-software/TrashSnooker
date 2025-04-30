@@ -12,7 +12,6 @@ public class CushionProjection extends ObstacleProjection {
     private final double slope;
 
     public CushionProjection(GameValues gameValues,
-                             Ball whiteBall, 
                              double distance, 
                              double angleBtwCushionAndCue,
                              double cueAngleDeg,

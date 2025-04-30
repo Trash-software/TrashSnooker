@@ -57,11 +57,9 @@ public class CuePlayParams {
     }
 
     public static CuePlayParams makeIdealParams(double directionX, double directionY,
-                                                CueParams cueParams,
-                                                double cueAngleDeg) {
+                                                CueParams cueParams) {
         return makeIdealParams(directionX, directionY,
                 cueParams,
-                cueAngleDeg,
                 false);
     }
 
@@ -74,15 +72,14 @@ public class CuePlayParams {
     public static CuePlayParams makeIdealParams(double directionX,
                                                 double directionY,
                                                 CueParams cueParams,
-                                                double cueAngleDeg,
                                                 boolean slideCue) {
-
+        double cueAngleDeg = cueParams.getCueAngleDeg();
         double directionalPower = cueParams.actualPower();
         double directionalSideSpin = cueParams.actualSideSpin();  // 参与击球方向计算的sideSpin
         if (slideCue) {
-            cueParams.setActualPower(cueParams.actualPower() / 4.0);
+            cueParams.setAbsolutePower(cueParams.actualPower() / 4.0);
             directionalSideSpin = cueParams.actualSideSpin() * 10.0;
-            cueParams.setActualSideSpin(cueParams.actualSideSpin() / 4.0);
+            cueParams.setAbsoluteSideSpin(cueParams.actualSideSpin() / 4.0);
         }
 
         double[] unitXYWithSpin = unitXYWithSpins(directionalSideSpin, directionalPower, directionX, directionY);
