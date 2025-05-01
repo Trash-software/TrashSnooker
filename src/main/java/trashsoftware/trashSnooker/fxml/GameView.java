@@ -112,7 +112,7 @@ public class GameView implements Initializable {
     public static double frameTimeMs = 1000.0 / productionFrameRate;
 
     private static double uiFrameTimeMs = 10.0;
-    private static double defaultMaxPredictLength = 1200;
+    private static double defaultMaxPredictLength = 800;
     private final List<Node> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
     private final Map<Cue, CueModel> cueModelMap = new HashMap<>();
     @FXML
@@ -205,8 +205,8 @@ public class GameView implements Initializable {
     int cueTimeCounter;
     Timer cueTimer;
     //    AnimationTimer animationTimer;
-    private double minPredictLengthPotDt = 2000;
-    private double maxPredictLengthPotDt = 100;
+    private final double minPredictLengthPotDt = 2000;  // 多远的距离会让瞄准线最短
+    private final double maxPredictLengthPotDt = 100;
     private double ballDiameter;
     private double ballRadius;
     private double cueCanvasWH = 80.0;

@@ -198,11 +198,13 @@ public abstract class FinalChoice {
     public static class DefenseChoice extends FinalChoice implements Comparable<DefenseChoice> {
 
         final double penalty;
-        final double tolerancePenalty;
+        final double stabilityScore;
         protected PlayerHand handSkill;
         protected Ball ball;
-        protected double snookerPrice;
-        protected double opponentAttackPrice;
+//        protected double snookerScore;
+//        protected double opponentAttackChance;
+        protected DefenseResult defenseResult;
+//        protected double opponentAvailPrice;
         protected double price;  // price还是越大越好
         protected double[] cueDirectionUnitVector;  // selected
 
@@ -210,29 +212,27 @@ public abstract class FinalChoice {
 
         CuePlayParams cuePlayParams;
         WhitePrediction wp;
-        AttackChoice opponentEasiestChoice;
+//        AttackChoice opponentEasiestChoice;
 
         boolean whiteCollidesOther;
         boolean targetCollidesOther;
 
         protected DefenseChoice(Ball ball,
                                 double nativePrice,
-                                double snookerPrice,
-                                double opponentAttackPrice,
+                                DefenseResult defenseResult,
                                 double penalty,
-                                double tolerancePenalty,
+                                double stabilityScore,
                                 double[] cueDirectionUnitVector,
                                 CueParams cueParams,
                                 WhitePrediction wp,
                                 CuePlayParams cuePlayParams,
-                                AttackChoice opponentEasiestChoice,
                                 boolean whiteCollidesOther,
                                 boolean targetCollidesOther) {
             this.ball = ball;
-            this.snookerPrice = snookerPrice;
-            this.opponentAttackPrice = opponentAttackPrice;
+//            this.opponentAttackChance = opponentAttackChance;
+            this.defenseResult = defenseResult;
             this.penalty = penalty;
-            this.tolerancePenalty = tolerancePenalty;
+            this.stabilityScore = stabilityScore;
 
 //            this.collideOtherBall = collideOtherBall;
             this.cueDirectionUnitVector = cueDirectionUnitVector;
@@ -240,7 +240,7 @@ public abstract class FinalChoice {
             this.cuePlayParams = cuePlayParams;
             this.wp = wp;
 //            this.handSkill = handSkill;
-            this.opponentEasiestChoice = opponentEasiestChoice;
+//            this.opponentEasiestChoice = opponentEasiestChoice;
 
             this.whiteCollidesOther = whiteCollidesOther;
             this.targetCollidesOther = targetCollidesOther;
@@ -256,28 +256,32 @@ public abstract class FinalChoice {
                                 CuePlayParams cuePlayParams) {
             this(null,
                     1.0,
-                    0.0,
-                    0.0,
-                    0.0,
+                    null,
+                    1.0,
                     1.0,
                     cueDirectionUnitVector,
                     cueParams,
                     null,
                     cuePlayParams,
-                    null,
                     true,
                     true);
         }
 
         private void generatePrice(double nativePrice) {
-            double totalPen = penalty * tolerancePenalty;
-            this.price = snookerPrice / totalPen 
-                    - opponentAttackPrice * totalPen / nativePrice;
+//            double totalPen = penalty * stabilityScore;
+//            this.price = snookerScore / totalPen 
+//                    - opponentAttackChance * totalPen / nativePrice;
+            this.price = nativePrice * 100 
+                    + stabilityScore 
+                    + defenseResult.snookerScore 
+                    - defenseResult.opponentAvailPrice 
+                    - defenseResult.opponentAttackPrice 
+                    - penalty;
 
-            if (wp != null && wp.isHitWallBeforeHitBall()) {
-                // 应该是在解斯诺克
-                this.price /= (wp.getDistanceTravelledBeforeCollision() / 1000);  // 不希望白球跑太远
-            }
+//            if (wp != null && wp.isHitWallBeforeHitBall()) {
+//                // 应该是在解斯诺克
+//                this.price /= (wp.getDistanceTravelledBeforeCollision() / 1000);  // 不希望白球跑太远
+//            }
 
         }
 
@@ -288,14 +292,24 @@ public abstract class FinalChoice {
 
         @Override
         public String toString() {
-            return String.format("price %f, snk %f, oppo atk %f, pen %f, torPen %f, white col: %b, tar col: %b",
-                    price,
-                    snookerPrice,
-                    opponentAttackPrice,
-                    penalty,
-                    tolerancePenalty,
-                    whiteCollidesOther,
-                    targetCollidesOther);
+            return "DefenseChoice{" +
+                    "price=" + price +
+                    ", penalty=" + penalty +
+                    ", stabilityScore=" + stabilityScore +
+//                    ", handSkill=" + handSkill +
+                    ", ball=" + ball +
+                    ", snookerScore=" + defenseResult.snookerScore +
+                    ", opponentAttackChance=" + defenseResult.opponentAttackPrice +
+                    ", opponentAvailPrice=" + defenseResult.opponentAvailPrice +
+//                    ", cueDirectionUnitVector=" + Arrays.toString(cueDirectionUnitVector) +
+//                    ", cueParams=" + cueParams +
+//                    ", cuePlayParams=" + cuePlayParams +
+//                    ", wp=" + wp +
+//                    ", opponentEasiestChoice=" + opponentEasiestChoice +
+//                    ", opponentChances=" + defenseResult + 
+                    ", whiteCollidesOther=" + whiteCollidesOther +
+                    ", targetCollidesOther=" + targetCollidesOther +
+                    '}';
         }
     }
 }

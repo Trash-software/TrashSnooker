@@ -1,53 +1,49 @@
 {
-  "p1": "custom_0CCC8918C5CE9D53",
+  "p1": "Jack Lisowski",
   "game": {
     "p1": {
       "playerNumber": 1,
-      "gameRule": "CHINESE_EIGHT",
+      "gameRule": "SNOOKER",
+      "handFeelEffort": 1.1280500134252087,
+      "person": "Jack Lisowski",
+      "playerType": "COMPUTER"
+    },
+    "p1Wins": 2,
+    "p2": {
+      "playerNumber": 2,
+      "gameRule": "SNOOKER",
       "handFeelEffort": 1,
       "person": "custom_0CCC8918C5CE9D53",
       "playerType": "PLAYER"
     },
-    "p1Wins": 3,
-    "p2": {
-      "playerNumber": 2,
-      "gameRule": "CHINESE_EIGHT",
-      "handFeelEffort": 1.0134086337686594,
-      "person": "custom_73125E3FE667D051",
-      "playerType": "COMPUTER"
-    },
-    "p2BreakLoseChance": 1,
+    "p2BreakLoseChance": 0,
     "gameValues": {
-      "ball": "POOL_BALL",
-      "gameRule": "CHINESE_EIGHT",
-      "subRules": ["CHINESE_EIGHT_JOE"],
+      "ball": "SNOOKER_BALL",
+      "gameRule": "SNOOKER",
+      "subRules": ["SNOOKER_STD"],
       "devMode": false,
       "table": {
-        "tableOrdinal": 1,
-        "pocketDifficultyOrdinal": 2,
+        "tableOrdinal": 0,
+        "pocketDifficultyOrdinal": 3,
         "holeSizeOrdinal": 2
       }
     },
     "winRecords": {
-      "1": 2,
+      "1": 1,
       "2": 2,
-      "3": 1,
-      "4": 2,
-      "5": 2,
-      "6": 1,
-      "7": 1
+      "3": 1
     },
-    "p2Wins": 4,
-    "startTime": 1746089871715,
-    "p1BreakLoseChance": 1,
-    "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-FINAL-14",
-    "totalFrames": 9,
+    "p2Wins": 1,
+    "startTime": 1746123154594,
+    "p1BreakLoseChance": 0,
+    "matchId": "custom_0CCC8918C5CE9D53+2025+champ_of_champ-QUARTER_FINAL-10",
+    "totalFrames": 5,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
     "p1Breaks": true
   },
-  "p2": "custom_73125E3FE667D051",
-  "stage": "FINAL"
+  "p2": "custom_0CCC8918C5CE9D53",
+  "stage": "QUARTER_FINAL"
 }

@@ -979,6 +979,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         double maxShadowAngle = 0.0;
         double sumTargetDt = 0.0;
+        double weightedSumTargetDt = 0.0;
+        List<double[]> seeAbleBallIntervals = new ArrayList<>();
 
         for (Ball target : legalBalls) {
             double xDiff0 = target.x - whiteX;
@@ -986,6 +988,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             double whiteTarDt = Math.hypot(xDiff0, yDiff0);
             double angle = Algebra.thetaOf(xDiff0, yDiff0);
             sumTargetDt += whiteTarDt;
+            weightedSumTargetDt += Math.pow(whiteTarDt / gameValues.table.maxLength, 0.5);  // 近的权重高
 
             double extraShadowAngle;
             if (situation == 1) {
@@ -1052,12 +1055,53 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
             if (canSee) {
                 if (listToPut != null) listToPut.add(target);
+
+                // 研究能看到的角度
+                double angleToCenter = Algebra.thetaOf(xDiff0, yDiff0);
+                double angularRadius = Math.asin(gameValues.ball.ballRadius / whiteTarDt);
+                double start, end;
+                if (Double.isNaN(angularRadius)) {
+                    start = Algebra.normalizeAnglePositive(angleToCenter - Math.PI / 4);
+                    end = Algebra.normalizeAnglePositive(angleToCenter + Math.PI / 4);
+                } else {
+                    start = Algebra.normalizeAnglePositive(angleToCenter - angularRadius);
+                    end = Algebra.normalizeAnglePositive(angleToCenter + angularRadius);
+                }
+                if (start > end) { // crosses 2π wrap
+                    seeAbleBallIntervals.add(new double[]{start, 2 * Math.PI});
+                    seeAbleBallIntervals.add(new double[]{0, end});
+                } else {
+                    seeAbleBallIntervals.add(new double[]{start, end});
+                }
+                
                 result++;
             }
         }
+        
+        // 能看到的球的总角度，没考虑球被部分遮挡这种情况
+        seeAbleBallIntervals.sort(Comparator.comparingDouble(a -> a[0]));
+//        System.out.println(Arrays.deepToString(seeAbleBallIntervals.toArray()));
+        List<double[]> merged = new ArrayList<>();
+        for (double[] interval : seeAbleBallIntervals) {
+            if (merged.isEmpty() || merged.get(merged.size() - 1)[1] < interval[0]) {
+                merged.add(interval);
+            } else {
+                double[] last = merged.get(merged.size() - 1);
+                last[1] = Math.max(last[1], interval[1]);
+            }
+        }
+
+        // Sum merged arc lengths
+        double totalSeeAbleRads = 0.0;
+        for (double[] arc : merged) {
+            totalSeeAbleRads += arc[1] - arc[0];
+        }
+        
         return new SeeAble(
                 result,
                 sumTargetDt / legalBalls.size(),
+                weightedSumTargetDt / legalBalls.size(),
+                totalSeeAbleRads,
                 maxShadowAngle);
     }
 
@@ -1662,11 +1706,20 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public static class SeeAble {
         public final int seeAbleTargets;
         public final double avgTargetDistance;
+        public final double weightedMeanTargetDistance;
+        public final double totalSeeAbleRads;
+//        public final double 
         public final double maxShadowAngle;  // 那颗球离白球的距离
 
-        SeeAble(int seeAbleTargets, double avgTargetDistance, double maxShadowAngle) {
+        SeeAble(int seeAbleTargets, 
+                double avgTargetDistance, 
+                double weightedMeanTargetDistance,
+                double totalSeeAbleRads,
+                double maxShadowAngle) {
             this.seeAbleTargets = seeAbleTargets;
             this.avgTargetDistance = avgTargetDistance;
+            this.weightedMeanTargetDistance = weightedMeanTargetDistance;
+            this.totalSeeAbleRads = totalSeeAbleRads;
             this.maxShadowAngle = maxShadowAngle;
         }
     }

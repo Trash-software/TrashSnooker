@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.ai;
 
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
@@ -7,10 +8,7 @@ import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Analyzer {
 
@@ -154,6 +152,60 @@ public class Analyzer {
         return Math.max(AiCue.DEFENSIVE_ATTACK_PROB / 5, res);
     }
 
+    private static void addDefenseScores(
+            DefenseResult defenseResult,
+            Game<?, ?> copy,
+            AiCue<?, ?> aiCue,
+            Player aiPlayer,
+            Game.SeeAble seeAble,
+            double basePrice
+    ) {
+        List<AttackChoice> directAttackChoices = getAttackChoices(
+                copy,
+                defenseResult.opponentTarget,
+                copy.getAnotherPlayer(aiPlayer),
+                null,
+                defenseResult.opponentBalls,
+                copy.getCueBall().getPositionArray(),
+                false,
+                false  // 防守还是别考虑对手翻袋了
+        );
+
+        int i = defenseResult.opponentEasies.size();
+        defenseResult.opponentEasies.add(null);
+        for (AttackChoice ac : directAttackChoices) {
+            double potProb = ac.defaultRef.potProb;
+            defenseResult.opponentAttackPrice += potProb * basePrice * 100;
+//            if (potProb > aiCue.opponentPureAtkProb) {
+//                defenseResult.opponentAttackPrice += 200 * potProb * basePrice;  // 大卖
+//            } else if (potProb > aiCue.opponentDefAtkProb) {
+//                defenseResult.opponentAttackPrice += 100 * potProb * basePrice;  // 小卖
+//            } else {
+//                defenseResult.opponentAttackPrice += 50 * potProb * basePrice;
+//            }
+
+            if (defenseResult.opponentEasies.get(i) == null || 
+                    potProb > defenseResult.opponentEasies.get(i).defaultRef.potProb) {
+                defenseResult.opponentEasies.set(i, ac);
+                if (defenseResult.grossOpponentEasiest == null ||
+                        defenseResult.grossOpponentEasiest.defaultRef.potProb < potProb) {
+                    defenseResult.grossOpponentEasiest = ac;
+                }
+            }
+        }
+
+        if (seeAble.seeAbleTargets == 0) {
+            // 这个权重如果太大，AI会不计惩罚地去做斯诺克
+            // 如果太小，AI会不做斯诺克
+            double snookerScore = Math.sqrt(seeAble.maxShadowAngle) * 50.0;
+            if (defenseResult.isSolving) snookerScore /= 5;
+            defenseResult.snookerScore += snookerScore * basePrice;
+        } else {
+//                System.out.println(seeAble.totalSeeAbleRads);
+            defenseResult.opponentAvailPrice += Math.toDegrees(seeAble.totalSeeAbleRads) * 3 * basePrice;  // 一圈全能看见1080分
+        }
+    }
+
     /**
      * 返回的都得是有效的防守。
      * 但吃库不会在这里检查。
@@ -210,89 +262,55 @@ public class Analyzer {
                     opponentBalls,
                     1
             );
-            double penalty = 1.0;
-            penalty *= 1 + ((cueParams.getCueAngleDeg() - Values.DEFAULT_CUE_ANGLE) / 30.0);
-            double opponentAttackPrice = AttackChoice.DirectAttackChoice.priceOfDistance(seeAble.avgTargetDistance);
-            double snookerPrice = 1.0;
+            double penalty = 0.0;
+            penalty += (cueParams.getCueAngleDeg() - Values.DEFAULT_CUE_ANGLE);
 
-//            if (wp.isFirstBallCollidesOther()) {
-//                penalty *= 1.1;
-//            }
             if (wp.getSecondCollide() != null) {
-                penalty *= 10;
+                penalty += 50;
             }
             if (wp.isCueBallFirstBallTwiceColl()) {
-                penalty *= 2;  // 二次碰撞
+                penalty += 20;  // 二次碰撞
             }
 
-            AttackChoice oppoEasiest = null;
-            if (seeAble.seeAbleTargets == 0) {
-                // 这个权重如果太大，AI会不计惩罚地去做斯诺克
-                // 如果太小，AI会不做斯诺克
-                snookerPrice = Math.sqrt(seeAble.maxShadowAngle) * 50.0;
-                if (isSolving) snookerPrice /= 5;
-            } else {
-                List<AttackChoice> directAttackChoices = getAttackChoices(
-                        copy,
-                        opponentTarget,
-                        copy.getAnotherPlayer(aiPlayer),
-                        null,
-                        opponentBalls,
-                        whiteStopPos,
-                        false,
-                        false  // 防守还是别考虑对手翻袋了
-                );
-
-                for (AttackChoice ac : directAttackChoices) {
-                    // ac.defaultRef.price一般在1以下
-                    // 这个权重一般最后的合也就几十，可能二三十最多了
-//                    opponentAttackPrice += ac.defaultRef.price * 3.0;
-//                    opponentAttackPrice2 += ac.price;
-
-                    double potProb = ac.defaultRef.potProb;
-                    if (potProb > aiCue.opponentPureAtkProb) {
-                        opponentAttackPrice += 25.0 * potProb;  // 大卖
-                    } else if (potProb > aiCue.opponentDefAtkProb) {
-                        opponentAttackPrice += 10.0 * potProb;  // 小卖
-                    } else {
-                        opponentAttackPrice += potProb;
-                    }
-
-                    if (oppoEasiest == null || potProb > oppoEasiest.defaultRef.potProb) {
-                        oppoEasiest = ac;
-                    }
-                }
-            }
+            DefenseResult defenseResult = new DefenseResult(opponentTarget, opponentBalls, isSolving);
+            addDefenseScores(
+                    defenseResult,
+                    copy,
+                    aiCue,
+                    aiPlayer,
+                    seeAble,
+                    0.5
+            );
 
             if (wp.getWhiteCushionCountBefore() > 2) {
-                penalty *= (wp.getWhiteCushionCountBefore() - 1.5);
+                penalty += (wp.getWhiteCushionCountBefore() - 1.5) * 10;
             }
             if (wp.getWhiteCushionCountAfter() > 3) {
-                penalty *= (wp.getWhiteCushionCountAfter() - 2.5);
+                penalty += (wp.getWhiteCushionCountAfter() - 2.5) * 10;
             }
             if (wp.getFirstBallCushionCount() > 3) {
-                penalty *= (wp.getFirstBallCushionCount() - 2.5);
+                penalty += (wp.getFirstBallCushionCount() - 2.5) * 10;
             }
             if (wp.isWhiteHitsHoleArcs()) {
-                penalty /= AiCue.WHITE_HIT_CORNER_PENALTY;
+                penalty += 80;
             }
-            if (snookerPrice > 1.01) {
+            if (defenseResult.snookerScore > 1.01) {
                 if (wp.isFirstBallCollidesOther()) {  // 在做斯诺克
-                    penalty *= 8.0;
+                    penalty += 40;
                 }
             } else {
                 Ball firstBallCol = wp.getFirstBallCollidesOther();
                 if (firstBallCol != null) {
                     if (firstBallCol.getValue() != firstCollide.getValue()) {
                         // todo: 可能是检查目标球是否是同一种
-                        penalty *= 2.0;
+                        penalty += 15;
                     }
                 }
             }
             wp.resetToInit();
 //            System.out.printf("%f %f %f\n", snookerPrice, opponentAttackPrice, penalty);
 
-            double tolerancePenalty = 1.0;
+            double stabilityScore = 0.0;
             // analyze tolerance
             if (considerTolerance) {
                 WhitePrediction[] tolerances = toleranceAnalysis(
@@ -305,45 +323,48 @@ public class Analyzer {
                         true,
                         true,
                         false,
-                        false
+                        false,
+                        defenseResult,
+                        aiCue,
+                        opponentBalls
                 );
                 for (WhitePrediction devOne : tolerances) {
                     if (devOne == null) {
                         System.err.println("Deviation is null");
-                        tolerancePenalty *= 10.0;
+                        stabilityScore -= 50;
                         continue;
                     }
                     if (wp.getFirstCollide() != devOne.getFirstCollide()) {
-                        tolerancePenalty *= 10.0;
+                        stabilityScore -= 50;
                     }
-                    if (wp.isFirstBallCollidesOther() != devOne.isFirstBallCollidesOther()) {
-                        tolerancePenalty *= 1.2;
-                    }
-                    if (wp.getSecondCollide() != devOne.getSecondCollide()) {
-                        tolerancePenalty *= 2.0;
-                    }
-                    double[] devStopPos = devOne.stopPoint();
-                    double dt = Algebra.distanceToPoint(whiteStopPos, devStopPos);
-                    double allowed = copy.getGameValues().table.maxLength * 0.1;
-                    if (dt > allowed) {
-                        tolerancePenalty *= (dt / allowed);
-                    }
+//                    if (wp.isFirstBallCollidesOther() != devOne.isFirstBallCollidesOther()) {
+//                        stabilityScore -= 5;
+//                    }
+//                    if (wp.getSecondCollide() != devOne.getSecondCollide()) {
+//                        stabilityScore -= 10;
+//                    }
+//                    double[] devStopPos = devOne.stopPoint();
+//                    double dt = Algebra.distanceToPoint(whiteStopPos, devStopPos);
+//                    double allowed = copy.getGameValues().table.maxLength * 0.1;
+//                    if (dt > allowed) {
+//                        stabilityScore -= (dt / allowed) * 50;
+//                    }
                 }
             }
+//            System.out.printf("%f %f %f\n", snookerScore, opponentAttackPrice, penalty);
 
             return new FinalChoice.DefenseChoice(
                     firstCollide,
                     nativePrice,
-                    snookerPrice,
-                    opponentAttackPrice,
+                    defenseResult,
                     penalty,
-                    tolerancePenalty,
+                    stabilityScore,
                     unitXY,
                     cueParams,
                     wp,
                     cpp,
 //                    handSkill,
-                    oppoEasiest,
+//                    oppoEasiest,
                     wp.getSecondCollide() != null,
                     wp.isFirstBallCollidesOther()
             );
@@ -353,7 +374,7 @@ public class Analyzer {
     }
 
     /**
-     * @return {sideDevRad, aimingSd}
+     * @return {sideDevRad, aimingSd, powerSd}
      */
     static double[] aiStandardDeviation(
             CueParams cueParams,
@@ -415,7 +436,7 @@ public class Analyzer {
                     cueParams.getCueAngleDeg());
         }
 
-        return new double[]{sideDevRad, aimingSd};
+        return new double[]{sideDevRad, aimingSd, powerSd};
     }
 
     static WhitePrediction[] toleranceAnalysis(
@@ -429,6 +450,35 @@ public class Analyzer {
             boolean predictTargetBall,
             boolean wipe,
             boolean useClone) {
+        return toleranceAnalysis(
+                game,
+                aiPlayer,
+                origCpp,
+                phy,
+                lengthAfterWall,
+                predictPath,
+                checkCollisionAfterFirst,
+                predictTargetBall,
+                wipe,
+                useClone,
+                null, null, null
+        );
+    }
+
+    static WhitePrediction[] toleranceAnalysis(
+            Game<?, ?> game,
+            Player aiPlayer,
+            CuePlayParams origCpp,
+            Phy phy,
+            double lengthAfterWall,
+            boolean predictPath,
+            boolean checkCollisionAfterFirst,
+            boolean predictTargetBall,
+            boolean wipe,
+            boolean useClone,
+            @Nullable DefenseResult defenseResult,
+            @Nullable AiCue<?, ?> aiCue,
+            @Nullable List<Ball> opponentBalls) {
         double[] devs = aiStandardDeviation(
                 origCpp.cueParams,
                 aiPlayer,
@@ -448,31 +498,51 @@ public class Analyzer {
         CuePlayParams rightCpp = origCpp.deviated(
                 rightDir[0], rightDir[1]
         );
+        double light = 1 - devs[2];
+        CuePlayParams lightCpp = origCpp.deviated(
+                origCpp.vx * light,
+                origCpp.vy * light
+        );
+        double heavy = 1 + devs[2];
+        CuePlayParams heavyCpp = origCpp.deviated(
+                origCpp.vx * heavy,
+                origCpp.vy * heavy
+        );
 
-        WhitePrediction left = game.predictWhite(leftCpp,
-                phy,
-                STD_LENGTH_AFTER_WALL,
-                predictPath,
-                checkCollisionAfterFirst,
-                predictTargetBall,
-                false,
-                wipe,
-                useClone);
-        left.resetToInit();
-        WhitePrediction right = game.predictWhite(rightCpp,
-                phy,
-                lengthAfterWall,
-                predictPath,
-                checkCollisionAfterFirst,
-                predictTargetBall,
-                false,
-                wipe,
-                useClone);
-        right.resetToInit();
+        ArrayList<WhitePrediction> results = new ArrayList<>();
+        CuePlayParams[] allDev = new CuePlayParams[]{leftCpp, rightCpp, lightCpp, heavyCpp};
+        for (CuePlayParams devCpp : allDev) {
+            WhitePrediction devWp = game.predictWhite(devCpp,
+                    phy,
+                    STD_LENGTH_AFTER_WALL,
+                    predictPath,
+                    checkCollisionAfterFirst,
+                    predictTargetBall,
+                    false,
+                    wipe,
+                    useClone);
 
-        return new WhitePrediction[]{
-                left, right
-        };
+            if (defenseResult != null) {
+                double[] whiteStopPos = game.getCueBall().getPositionArray();
+                Game.SeeAble seeAble = game.countSeeAbleTargetBalls(
+                        whiteStopPos[0], whiteStopPos[1],
+                        opponentBalls,
+                        1
+                );
+                addDefenseScores(
+                        defenseResult,
+                        game,
+                        aiCue,
+                        aiPlayer,
+                        seeAble,
+                        0.5 / allDev.length
+                );
+            }
+            devWp.resetToInit();
+            results.add(devWp);
+        }
+
+        return results.toArray(new WhitePrediction[0]);
     }
 
     public static double[] estimateRealCueDirWithCurve(

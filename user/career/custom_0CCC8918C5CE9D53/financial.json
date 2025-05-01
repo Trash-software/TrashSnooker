@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 774030,
+    "money": 796160,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -7198,13 +7198,69 @@
           }
         ],
         "timestamp": "2025-05-01 04:47:17"
+      },
+      {
+        "inGameDate": "2025/10/18",
+        "year": 2025,
+        "match": "eight_master_tour_hebei",
+        "moneyBefore": 774030,
+        "moneyAfter": 798030,
+        "type": "championshipEarn",
+        "items": {"SECOND_PLACE": {
+          "actual": 24000,
+          "raw": 30000
+        }},
+        "timestamp": "2025-05-02 03:53:14"
+      },
+      {
+        "inGameDate": "2025/10/18",
+        "moneyBefore": 798030,
+        "moneyAfter": 796160,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1870
+        }],
+        "timestamp": "2025-05-02 03:53:20"
+      },
+      {
+        "item": 6,
+        "inGameDate": "2025/10/29",
+        "match": "custom_0CCC8918C5CE9D53+2025+champ_of_champ",
+        "moneyBefore": 796160,
+        "moneyAfter": 799160,
+        "type": "invitation",
+        "moneyEarn": 3000,
+        "timestamp": "2025-05-02 03:53:20"
+      },
+      {
+        "inGameDate": "2025/10/29",
+        "match": "custom_0CCC8918C5CE9D53+2025+champ_of_champ",
+        "moneyBefore": 799160,
+        "moneyAfter": 796160,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 0
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          }
+        ],
+        "timestamp": "2025-05-02 03:53:20"
       }
     ],
     "level": 37,
-    "expInThisLevel": 1136,
+    "expInThisLevel": 1511,
     "availPerks": 0,
     "totalPerks": 189,
-    "totalExp": 19850
+    "totalExp": 20225
   },
-  "checksum": "7A6CBE9FFEB1DE1A12D83624F0AC41E1"
+  "checksum": "FBCE4B4178AA2B954513A9CC5423FC39"
 }
