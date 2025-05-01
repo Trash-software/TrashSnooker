@@ -547,6 +547,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         FinalChoice.DefenseChoice defenseChoice = getBestDefenseChoice(phy);
         if (defenseChoice != null) {
             System.out.println("AI defense");
+            System.out.println(defenseChoice);
 //            System.out.printf("Best defense choice: %f %f %f %f %f\n", 
 //                    defenseChoice.price, defenseChoice.snookerPrice, defenseChoice.opponentAttackPrice,
 //                    defenseChoice.penalty, defenseChoice.tolerancePenalty);
@@ -555,6 +556,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         FinalChoice.DefenseChoice solveSnooker = solveSnooker(phy, false);
         if (solveSnooker != null) {
             System.out.println("AI solve snooker");
+            System.out.println(solveSnooker);
             return makeDefenseCue(solveSnooker, AiCueResult.CueType.SOLVE);
         }
         FinalChoice.DefenseChoice solveSnooker2 = solveSnooker(phy, true);  // 只能说是逼急了，来个袋角解斯诺克
@@ -824,7 +826,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         for (double selectedPower : selectedPowerArray) {
             for (DefenseAngle da : availableRads) {
                 DefenseThread thread = new DefenseThread(
-                        da.rad, da.price, whitePos, selectedPower, legalSet, phy, gameClonesPool, false
+                        da.rad, da.price, whitePos, selectedPower, false,
+                        legalSet, phy, gameClonesPool, false
                 );
                 defenseThreads.add(thread);
             }
@@ -911,12 +914,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         for (double deg = 0.0; deg < 360; deg += degreesTick) {
             AngleSnookerSolver ass = new AngleSnookerSolver(deg, smallPower);
             for (double selectedPower : selectedPowerArray) {
-
                 DefenseThread thread = new DefenseThread(
                         Math.toRadians(deg),
                         1.0,  // 这里我们根本无法判断，只能给1.0了
                         whitePos,
                         selectedPower,
+                        true,
                         legalSet,
                         phy,
                         gameClonesPool,
@@ -1199,8 +1202,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             Game<?, ?> copy = gameClonesPool[threadIndex];
             //        System.out.print(selectedPower);
 //            double actualFbSpin = attackParams.cueParams.actualFrontBackSpin();
-            double actualSideSpin = attackParams.cueParams.actualSideSpin();
-            double actualPower = attackParams.cueParams.actualPower();
+//            double actualSideSpin = attackParams.cueParams.actualSideSpin();
+//            double actualPower = attackParams.cueParams.actualPower();
 
 //            double[] correctedDirection = CuePlayParams.aimingUnitXYIfSpin(
 //                    actualSideSpin,
@@ -1309,6 +1312,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         double nativePrice;
         double[] whitePos;
         double selectedPower;
+        boolean solving;
         Set<Ball> legalSet;
         Phy phy;
         Game[] gameClonesPool;
@@ -1320,6 +1324,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                 double nativePrice,
                                 double[] whitePos,
                                 double selectedPower,
+                                boolean isSolving,
                                 Set<Ball> legalSet,
                                 Phy phy,
                                 Game[] gameClonesPool,
@@ -1328,6 +1333,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             this.nativePrice = nativePrice;
             this.whitePos = whitePos;
             this.selectedPower = selectedPower;
+            this.solving = isSolving;
             this.legalSet = legalSet;
             this.phy = phy;
             this.gameClonesPool = gameClonesPool;
@@ -1384,6 +1390,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     aiPlayer,
                     unitXY,
                     false,
+                    solving,
                     nativePrice,
                     allowPocketCorner,
                     true
@@ -1424,19 +1431,28 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             int threadIndex = (int) (Thread.currentThread().getId() % gameClonesPool.length);
             Game<?, P> copy = gameClonesPool[threadIndex];
 
-            double actualFbSpin = attackParam.cueParams.actualFrontBackSpin();
-            double actualSideSpin = attackParam.cueParams.actualSideSpin();
-            double actualPower = attackParam.cueParams.actualPower();
+//            double actualFbSpin = attackParam.cueParams.actualFrontBackSpin();
+//            double actualSideSpin = attackParam.cueParams.actualSideSpin();
+//            double actualPower = attackParam.cueParams.actualPower();
 
-            double[] correctedDirection = CuePlayParams.aimingUnitXYIfSpin(
-                    actualSideSpin,
-                    actualPower,
-                    attackParam.attackChoice.cueDirectionUnitVector[0],
-                    attackParam.attackChoice.cueDirectionUnitVector[1]
+//            double[] correctedDirection = CuePlayParams.aimingUnitXYIfSpin(
+//                    actualSideSpin,
+//                    actualPower,
+//                    attackParam.attackChoice.cueDirectionUnitVector[0],
+//                    attackParam.attackChoice.cueDirectionUnitVector[1]
+//            );
+
+            // todo: 有可能出现加了弧线就绕不过去那种情况
+            double[] dirWithAngleCurve = Analyzer.estimateRealCueDirWithCurve(
+                    copy,
+                    copy.getEntireGame().predictPhy,
+                    attackParam.cueParams,
+                    attackParam.attackChoice.cueDirectionUnitVector,
+                    false
             );
 
             // 考虑上塞之后的修正出杆
-            AttackChoice correctedChoice = attackParam.attackChoice.copyWithNewDirection(correctedDirection);
+            AttackChoice correctedChoice = attackParam.attackChoice.copyWithNewDirection(dirWithAngleCurve);
             attackParam = new AttackParam(attackParam, correctedChoice);
 
             CuePlayParams params = CuePlayParams.makeIdealParams(
@@ -1455,6 +1471,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     aiPlayer,
                     correctedChoice.cueDirectionUnitVector,
                     true,
+                    false,
                     1.0,  // 进攻杆，AI应该不会吃屎去擦最薄边
                     false,
                     true

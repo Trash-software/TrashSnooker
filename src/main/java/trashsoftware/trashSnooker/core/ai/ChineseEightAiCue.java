@@ -109,7 +109,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
 
     @Override
     public AiCueResult makeCue(Phy phy) {
-        if (game.getCurrentTarget() == ChineseEightBallGame.NOT_SELECTED_REP) {
+        if (!game.isBreaking() && game.getCurrentTarget() == ChineseEightBallGame.NOT_SELECTED_REP) {
             AiCueResult selection = selectBallCue(phy);
             if (selection != null) return selection;
         }

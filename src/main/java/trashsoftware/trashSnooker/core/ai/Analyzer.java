@@ -168,6 +168,7 @@ public class Analyzer {
             Player aiPlayer,
             double[] unitXY,
             boolean attackAble,  // 可不可以进
+            boolean isSolving,
             double nativePrice,
             boolean allowPocketCorner,
             boolean considerTolerance
@@ -229,6 +230,7 @@ public class Analyzer {
                 // 这个权重如果太大，AI会不计惩罚地去做斯诺克
                 // 如果太小，AI会不做斯诺克
                 snookerPrice = Math.sqrt(seeAble.maxShadowAngle) * 50.0;
+                if (isSolving) snookerPrice /= 5;
             } else {
                 List<AttackChoice> directAttackChoices = getAttackChoices(
                         copy,
@@ -308,11 +310,11 @@ public class Analyzer {
                 for (WhitePrediction devOne : tolerances) {
                     if (devOne == null) {
                         System.err.println("Deviation is null");
-                        tolerancePenalty *= 5.0;
+                        tolerancePenalty *= 10.0;
                         continue;
                     }
                     if (wp.getFirstCollide() != devOne.getFirstCollide()) {
-                        tolerancePenalty *= 5.0;
+                        tolerancePenalty *= 10.0;
                     }
                     if (wp.isFirstBallCollidesOther() != devOne.isFirstBallCollidesOther()) {
                         tolerancePenalty *= 1.2;

@@ -136,6 +136,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         aiPlayer,
                         unitXy,
                         false,
+                        false,
                         0.0,
                         false,
                         false
@@ -271,6 +272,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             return null;
         }
         System.out.println("Exhibition shot!");
+        // todo: 没处理贴库后斯诺的问题
 
         AttackChoice choice = choiceList.get(0);
         for (AttackChoice ac : choiceList.subList(1, choiceList.size())) {
