@@ -83,7 +83,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 3.0;
         double[] thinVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thinY - whiteY);
         double thickY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 0.5;
-        double[] thickVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thickY - whiteY);
+        double[] thickVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thickY - whiteY); 
         
         double beginDeg = Math.toDegrees(Algebra.thetaOf(thinVec));
         int nTicks = 25;
@@ -300,7 +300,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                     minActualPower,
                     0.0,
                     0.0,
-                    5.0,
+                    Values.DEFAULT_CUE_ANGLE,
                     game,
                     aiPlayer.getInGamePlayer(),
                     CuePlayParams.getPlayableHand(
@@ -308,7 +308,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
-                            5.0,
+                            Values.DEFAULT_CUE_ANGLE,
                             game.getGameValues().table,
                             pp
                     )
@@ -325,7 +325,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                     random.nextDouble() * interval + powerLow,
                     aiSpin[0],
                     aiSpin[1],
-                    5.0,
+                    Values.DEFAULT_CUE_ANGLE,
                     game,
                     aiPlayer.getInGamePlayer(),
                     CuePlayParams.getPlayableHand(
@@ -333,7 +333,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
-                            5.0,
+                            Values.DEFAULT_CUE_ANGLE,
                             game.getGameValues().table,
                             pp
                     )

@@ -75,7 +75,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 selectedPower,
                 0.0,
                 0.0,
-                5.0,
+                8.0,
                 game,
                 aiPlayer.getInGamePlayer(),
                 aiPlayer.getPlayerPerson().handBody.getPrimary()

@@ -1,36 +1,36 @@
 {
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
-    "gameRule": "SNOOKER",
+    "gameRule": "CHINESE_EIGHT",
     "handFeelEffort": 1,
-    "person": "Murphy",
+    "person": "custom_player_3",
     "playerType": "COMPUTER"
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
-    "gameRule": "SNOOKER",
+    "gameRule": "CHINESE_EIGHT",
     "handFeelEffort": 1,
-    "person": "Neil Robertson",
+    "person": "custom_player_4",
     "playerType": "COMPUTER"
   },
-  "startTime": 1746037898368,
+  "startTime": 1746090552085,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "SNOOKER_BALL",
-    "gameRule": "SNOOKER",
-    "subRules": ["SNOOKER_STD"],
+    "ball": "POOL_BALL",
+    "gameRule": "CHINESE_EIGHT",
+    "subRules": ["CHINESE_EIGHT_STD"],
     "devMode": true,
     "table": {
-      "tableOrdinal": 0,
+      "tableOrdinal": 1,
       "pocketDifficultyOrdinal": 3,
       "holeSizeOrdinal": 3
     }
   },
-  "totalFrames": 1,
+  "totalFrames": 3,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"

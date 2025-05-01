@@ -442,7 +442,7 @@ public class GameValues {
 
     public double estimateSpeedNeeded(Phy phy, double distance) {
         double low = 0;
-        double high = Values.MAX_POWER_SPEED;  // 虽然可能有更快的球速，但这里真不需要再快了，不会用到的
+        double high = Values.MAX_POWER_SPEED * 1.2;  // 虽然可能有更快的球速，但这里真不需要再快了，不会用到的
         double dtTolerance = ball.ballRadius;
 
         while (high - low > 1e-6) {

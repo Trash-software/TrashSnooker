@@ -12,12 +12,13 @@ public class Values {
     // 由旋转产生的理论最大瞬时速度（该速度不可能达到），mm/s
     public static final double MAX_SPIN_SPEED = 8000.0 / CUE_POINT_MULTIPLIER;
     // 因为ball的spin值是球想要达到的速度，范围
-    public static final double FRONT_SPIN_FACTOR = 0.8;
+    public static final double FRONT_SPIN_FACTOR = 0.75;
     // 由侧旋产生的最大瞬时速度，mm/s
     public static final double MAX_SIDE_SPIN_SPEED = 8000.0;
-    public static final double SMALL_POWER_SPIN_EXP = 0.5;  // 小力高低杆补偿，pow越小，补偿越多
+    public static final double SMALL_POWER_SPIN_EXP = 0.6;  // 小力高低杆补偿，pow越小，补偿越多
     public static final double SMALL_POWER_SIDE_SPIN_EXP = 0.5;
     public static final double BEST_KICK_SPEED = MAX_POWER_SPEED / 5.0;
+    public static final double DEFAULT_CUE_ANGLE = 5.0;
     
     public static final int DETAILED_PHYSICAL = 12;
     // 每两次物理碰撞运算之间的最大间隔距离

@@ -1,5 +1,5 @@
 {
-  "stageIndex": 2,
+  "stageIndex": 0,
   "seedRanks": {
     "custom_73125E3FE667D051": 2,
     "Tang Chunxiao": 9,
@@ -21,7 +21,9 @@
   "championshipId": "eight_master_tour_hebei",
   "matchTree": {"root": {
     "p1": {
+      "p1wins": 3,
       "p1": {
+        "p1wins": 3,
         "p1": {
           "p1wins": 3,
           "p1": {"winner": "custom_0CCC8918C5CE9D53"},
@@ -40,10 +42,13 @@
           "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-ROUND_1-1",
           "p2wins": 0
         },
+        "winner": "custom_0CCC8918C5CE9D53",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-QUARTER_FINAL-8"
+        "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-QUARTER_FINAL-8",
+        "p2wins": 0
       },
       "p2": {
+        "p1wins": 2,
         "p1": {
           "p1wins": 3,
           "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
@@ -62,14 +67,20 @@
           "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-ROUND_1-3",
           "p2wins": 0
         },
+        "winner": "custom_195B277334903CE5",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-QUARTER_FINAL-9"
+        "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-QUARTER_FINAL-9",
+        "p2wins": 3
       },
+      "winner": "custom_0CCC8918C5CE9D53",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-SEMI_FINAL-12"
+      "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-SEMI_FINAL-12",
+      "p2wins": 1
     },
     "p2": {
+      "p1wins": 1,
       "p1": {
+        "p1wins": 3,
         "p1": {
           "p1wins": 3,
           "p1": {"winner": "John Wizard"},
@@ -88,10 +99,13 @@
           "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-ROUND_1-5",
           "p2wins": 1
         },
+        "winner": "John Wizard",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-QUARTER_FINAL-10"
+        "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-QUARTER_FINAL-10",
+        "p2wins": 1
       },
       "p2": {
+        "p1wins": 0,
         "p1": {
           "p1wins": 2,
           "p1": {"winner": "Ding Junhui"},
@@ -110,11 +124,15 @@
           "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-ROUND_1-7",
           "p2wins": 0
         },
+        "winner": "custom_73125E3FE667D051",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-QUARTER_FINAL-11"
+        "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-QUARTER_FINAL-11",
+        "p2wins": 3
       },
+      "winner": "custom_73125E3FE667D051",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-SEMI_FINAL-13"
+      "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-SEMI_FINAL-13",
+      "p2wins": 3
     },
     "stage": "FINAL",
     "matchId": "custom_0CCC8918C5CE9D53+2025+eight_master_tour_hebei-FINAL-14"

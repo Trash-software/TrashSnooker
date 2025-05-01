@@ -1,8 +1,11 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.cue.Cue;
+import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -207,9 +210,8 @@ public class Analyzer {
                     1
             );
             double penalty = 1.0;
-//            double opponentAttackPrice = 1.0;
+            penalty *= 1 + ((cueParams.getCueAngleDeg() - Values.DEFAULT_CUE_ANGLE) / 30.0);
             double opponentAttackPrice = AttackChoice.DirectAttackChoice.priceOfDistance(seeAble.avgTargetDistance);
-//            double opponentAttackPrice2 = AttackChoice.priceOfDistance(seeAble.avgTargetDistance);
             double snookerPrice = 1.0;
 
 //            if (wp.isFirstBallCollidesOther()) {
@@ -530,5 +532,50 @@ public class Analyzer {
         }
 
         return Algebra.unitVectorOfAngle(Algebra.normalizeAngle((radHigh + radLow) / 2));
+    }
+
+    /**
+     * @param theoreticalCuePoints 纯的从-1到1的{高低杆，左右赛}
+     * @return 考虑了避免呲杆打点的{高低杆，左右赛，角度deg}
+     */
+    public static double[] findCueAblePointAndAngle(
+            Game<?, ?> game,
+            Cue cue,
+            double[] directionXY,
+            double[][] theoreticalCuePoints
+    ) {
+        BallMetrics ballMetrics = game.getGameValues().ball;
+        double cueTipBallRatio = cue.getCueTipWidth() / ballMetrics.ballDiameter;
+
+        CueBackPredictor.Result backPre = game.getObstacleDtHeight(
+                directionXY[0],
+                directionXY[1],
+                cue.getCueTipWidth()
+        );
+
+        double[] centerPoint = cue.aiCuePoint(theoreticalCuePoints[0], ballMetrics);
+
+        for (double cueAngle = Values.DEFAULT_CUE_ANGLE; cueAngle <= 60; cueAngle += 5.0) {
+            ObstacleProjection op = ObstacleProjection.createProjection(
+                    backPre,
+                    directionXY[0],
+                    directionXY[1],
+                    cueAngle,
+                    game.getCueBall(),
+                    game.getGameValues(),
+                    cue.getCueTipWidth()
+            );
+            if (op == null) {
+                return new double[]{centerPoint[0], centerPoint[1], cueAngle};
+            }
+            for (double[] cuePoint : theoreticalCuePoints) {
+                double[] realPoint = cue.aiCuePoint(cuePoint, ballMetrics);
+                if (op.cueAble(realPoint[1], -realPoint[0], cueTipBallRatio)) {
+                    return new double[]{realPoint[0], realPoint[1], cueAngle};
+                }
+            }
+        }
+        System.err.println("Cannot find a cue able point and angle!");
+        return new double[]{centerPoint[0], centerPoint[1], Values.DEFAULT_CUE_ANGLE};
     }
 }
