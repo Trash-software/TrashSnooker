@@ -1,20 +1,20 @@
 {
-  "p1": "Jack Lisowski",
+  "p1": "custom_0CCC8918C5CE9D53",
   "game": {
     "p1": {
       "playerNumber": 1,
       "gameRule": "SNOOKER",
-      "handFeelEffort": 1.1280500134252087,
-      "person": "Jack Lisowski",
-      "playerType": "COMPUTER"
-    },
-    "p1Wins": 2,
-    "p2": {
-      "playerNumber": 2,
-      "gameRule": "SNOOKER",
       "handFeelEffort": 1,
       "person": "custom_0CCC8918C5CE9D53",
       "playerType": "PLAYER"
+    },
+    "p1Wins": 1,
+    "p2": {
+      "playerNumber": 2,
+      "gameRule": "SNOOKER",
+      "handFeelEffort": 1.1159300980254447,
+      "person": "custom_195B277334903CE5",
+      "playerType": "COMPUTER"
     },
     "p2BreakLoseChance": 0,
     "gameValues": {
@@ -28,15 +28,11 @@
         "holeSizeOrdinal": 2
       }
     },
-    "winRecords": {
-      "1": 1,
-      "2": 2,
-      "3": 1
-    },
-    "p2Wins": 1,
-    "startTime": 1746123154594,
+    "winRecords": {"1": 1},
+    "p2Wins": 0,
+    "startTime": 1746133073687,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_0CCC8918C5CE9D53+2025+champ_of_champ-QUARTER_FINAL-10",
+    "matchId": "custom_0CCC8918C5CE9D53+2025+champ_of_champ-SEMI_FINAL-13",
     "totalFrames": 5,
     "cloth": {
       "smoothness": "NORMAL",
@@ -44,6 +40,6 @@
     },
     "p1Breaks": true
   },
-  "p2": "custom_0CCC8918C5CE9D53",
-  "stage": "QUARTER_FINAL"
+  "p2": "custom_195B277334903CE5",
+  "stage": "SEMI_FINAL"
 }
