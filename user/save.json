@@ -1,12 +1,18 @@
 {
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
+  "winRecords": {
+    "1": 2,
+    "2": 1,
+    "3": 2,
+    "4": 2
+  },
+  "p2Wins": 3,
   "p1": {
     "playerNumber": 1,
     "gameRule": "CHINESE_EIGHT",
     "handFeelEffort": 1,
-    "person": "custom_player_3",
-    "playerType": "COMPUTER"
+    "person": "Neil Robertson",
+    "playerType": "PLAYER",
+    "let": {"type": "notLet"}
   },
   "p1Wins": 1,
   "p2": {
@@ -14,9 +20,13 @@
     "gameRule": "CHINESE_EIGHT",
     "handFeelEffort": 1,
     "person": "custom_player_4",
-    "playerType": "COMPUTER"
+    "playerType": "COMPUTER",
+    "let": {
+      "lets": {"BACK": 2},
+      "type": "ball"
+    }
   },
-  "startTime": 1746090552085,
+  "startTime": 1746215694011,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
@@ -30,10 +40,10 @@
       "holeSizeOrdinal": 3
     }
   },
-  "totalFrames": 3,
+  "totalFrames": 5,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
   },
-  "p1Breaks": true
+  "p1Breaks": false
 }

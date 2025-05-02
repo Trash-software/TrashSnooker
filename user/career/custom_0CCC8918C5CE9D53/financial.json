@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 796080,
+    "money": 805150,
     "invoices": [
       {
         "inGameDate": "2023/1/20",
@@ -7264,13 +7264,219 @@
         "moneyAfter": 796080,
         "type": "purchase",
         "timestamp": "2025-05-02 07:07:01"
+      },
+      {
+        "inGameDate": "2025/10/29",
+        "year": 2025,
+        "match": "champ_of_champ",
+        "moneyBefore": 796080,
+        "moneyAfter": 820080,
+        "type": "championshipEarn",
+        "items": {"TOP_4": {
+          "actual": 24000,
+          "raw": 30000
+        }},
+        "timestamp": "2025-05-03 00:48:51"
+      },
+      {
+        "inGameDate": "2025/10/29",
+        "perkUsed": 3,
+        "moneyBefore": 820080,
+        "moneyCost": 3300,
+        "moneyAfter": 816780,
+        "ability": {
+          "powerControl-RIGHT": [
+            97.43367198705677,
+            97.43367198705677
+          ],
+          "spinControl-REST": [
+            94.46548264452426,
+            94.46548264452426
+          ],
+          "normalPower-RIGHT": [
+            82.86332037897803,
+            83.77278756381891
+          ],
+          "cuePrecision-REST": [
+            92.68883517308657,
+            92.68883517308657
+          ],
+          "powerControl-REST": [
+            94.05884473933293,
+            94.05884473933293
+          ],
+          "spin-LEFT": [
+            49.96687818584839,
+            49.96687818584839
+          ],
+          "normalPower-REST": [
+            66.13956899628032,
+            66.13956899628032
+          ],
+          "cuePrecision-LEFT": [
+            52.73356446548919,
+            52.73356446548919
+          ],
+          "cuePrecision-RIGHT": [
+            97.26372706513979,
+            98.1731779825342
+          ],
+          "spin-RIGHT": [
+            97.79445214348199,
+            97.79445214348199
+          ],
+          "normalPower-LEFT": [
+            48.99464106898296,
+            48.99464106898296
+          ],
+          "spin-REST": [
+            94.7410154588222,
+            94.7410154588222
+          ],
+          "spinControl-LEFT": [
+            49.271219082841455,
+            49.271219082841455
+          ],
+          "aiming": [
+            90.06045222229608,
+            91.25803413340424
+          ],
+          "powerControl-LEFT": [
+            48.24454877101384,
+            48.24454877101384
+          ],
+          "spinControl-RIGHT": [
+            97.26895279851092,
+            97.26895279851092
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-05-03 00:49:03"
+      },
+      {
+        "inGameDate": "2025/10/29",
+        "perkUsed": 5,
+        "moneyBefore": 816780,
+        "moneyCost": 6250,
+        "moneyAfter": 810530,
+        "ability": {
+          "powerControl-RIGHT": [
+            97.43367198705677,
+            97.43367198705677
+          ],
+          "spinControl-REST": [
+            94.46548264452426,
+            95.48686333874329
+          ],
+          "normalPower-RIGHT": [
+            83.77278756381891,
+            83.77278756381891
+          ],
+          "cuePrecision-REST": [
+            92.68883517308657,
+            93.7812817661631
+          ],
+          "powerControl-REST": [
+            94.05884473933293,
+            95.09649094975961
+          ],
+          "spin-LEFT": [
+            49.96687818584839,
+            49.96687818584839
+          ],
+          "normalPower-REST": [
+            66.13956899628032,
+            66.8731862364291
+          ],
+          "cuePrecision-LEFT": [
+            52.73356446548919,
+            52.73356446548919
+          ],
+          "cuePrecision-RIGHT": [
+            98.1731779825342,
+            98.1731779825342
+          ],
+          "spin-RIGHT": [
+            97.79445214348199,
+            97.79445214348199
+          ],
+          "normalPower-LEFT": [
+            48.99464106898296,
+            48.99464106898296
+          ],
+          "spin-REST": [
+            94.7410154588222,
+            95.75137484046931
+          ],
+          "spinControl-LEFT": [
+            49.271219082841455,
+            49.271219082841455
+          ],
+          "aiming": [
+            91.25803413340424,
+            91.25803413340424
+          ],
+          "powerControl-LEFT": [
+            48.24454877101384,
+            48.24454877101384
+          ],
+          "spinControl-RIGHT": [
+            97.26895279851092,
+            97.26895279851092
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-05-03 00:49:13"
+      },
+      {
+        "inGameDate": "2025/10/29",
+        "moneyBefore": 810530,
+        "moneyAfter": 808150,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2380
+        }],
+        "timestamp": "2025-05-03 02:35:07"
+      },
+      {
+        "item": 4,
+        "inGameDate": "2025/11/12",
+        "match": "custom_0CCC8918C5CE9D53+2025+united_kingdom_champ",
+        "moneyBefore": 808150,
+        "moneyAfter": 808350,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-03 02:35:07"
+      },
+      {
+        "inGameDate": "2025/11/12",
+        "match": "custom_0CCC8918C5CE9D53+2025+united_kingdom_champ",
+        "moneyBefore": 808350,
+        "moneyAfter": 805150,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          }
+        ],
+        "timestamp": "2025-05-03 02:35:07"
       }
     ],
-    "level": 37,
-    "expInThisLevel": 1511,
+    "level": 38,
+    "expInThisLevel": 554,
     "availPerks": 0,
-    "totalPerks": 189,
-    "totalExp": 20225
+    "totalPerks": 197,
+    "totalExp": 20865
   },
-  "checksum": "F7E9BEEAAC49F930D58521841F8B425C"
+  "checksum": "71E54ABBD0F56AF7D9C67EDB88CE312E"
 }

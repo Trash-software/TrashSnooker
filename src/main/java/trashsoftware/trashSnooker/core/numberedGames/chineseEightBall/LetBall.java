@@ -1,15 +1,18 @@
 package trashsoftware.trashSnooker.core.numberedGames.chineseEightBall;
 
+import trashsoftware.trashSnooker.core.InGamePlayer;
+import trashsoftware.trashSnooker.core.LetScoreOrBall;
 import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.util.Util;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
  * 让球，不知道怎么翻译
  */
-public enum LetBall {
+public enum LetBall implements Comparable<LetBall> {
     FRONT,  // todo: 让前和让中均未实装
     MID,
     BACK;
@@ -20,6 +23,17 @@ public enum LetBall {
         if (person.isUnderage()) magicScore += 1;
         
         return magicScore;
+    }
+    
+    public static LetScoreOrBall.LetBallFace[] chineseEightDefaultLetBalls(PlayerPerson p1,
+                                                                           PlayerPerson p2) {
+        Map<LetBall, Integer> p1Let = new HashMap<>();
+        Map<LetBall, Integer> p2Let = new HashMap<>();
+        chineseEightLetBall(p1, p1Let, p2, p2Let);
+        return new LetScoreOrBall.LetBallFace[]{
+                new LetScoreOrBall.LetBallFace(p1Let),
+                new LetScoreOrBall.LetBallFace(p2Let)
+        };
     }
     
     public static void chineseEightLetBall(PlayerPerson p1, Map<LetBall, Integer> p1Let,

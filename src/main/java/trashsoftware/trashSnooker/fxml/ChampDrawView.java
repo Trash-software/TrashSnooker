@@ -17,19 +17,14 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import trashsoftware.trashSnooker.core.EntireGame;
-import trashsoftware.trashSnooker.core.InGamePlayer;
-import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.core.PlayerType;
+import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.*;
-import trashsoftware.trashSnooker.core.metrics.BallMetrics;
-import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.metrics.TablePreset;
-import trashsoftware.trashSnooker.core.metrics.TableSpec;
+import trashsoftware.trashSnooker.core.metrics.*;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LetBall;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTableColumn;
@@ -503,9 +498,6 @@ public class ChampDrawView extends ChildInitializable {
         PlayerType p1t = match.p1.isHumanPlayer() ? PlayerType.PLAYER : PlayerType.COMPUTER;
         PlayerType p2t = p1t == PlayerType.PLAYER ? PlayerType.COMPUTER : PlayerType.PLAYER;
 
-        PlayerPerson aiPerson = p1t == PlayerType.COMPUTER ?
-                match.p1.getPlayerPerson() : match.p2.getPlayerPerson();
-
         double p1HandFeelEffort = match.p1.isHumanPlayer() ?
                 1.0 : match.p1.getHandFeelEffort(championship.getData().getType());
         double p2HandFeelEffort = match.p2.isHumanPlayer() ?
@@ -513,37 +505,7 @@ public class ChampDrawView extends ChildInitializable {
 
         InventoryManager p1Im = p1t == PlayerType.COMPUTER ? null : careerManager.getInventory();
         InventoryManager p2Im = p1Im == null ? careerManager.getInventory() : null;
-
-//        CueBrand aiCueBrand = aiPerson.getPreferredCue(championship.getData().getType());
-//        Cue aiCue = Cue.createForCareerGameAi(aiCueBrand);
-////        Cue playerCue = cueBox.getValue().cue;
-//        Cue playerCue = cueSelection.getSelected().getNonNullInstance();
-//
-//        Cue p1Cue;
-//        Cue p2Cue;
-//
-//        if (match.p1.isHumanPlayer()) {
-//            p1Cue = playerCue;
-//            p2Cue = aiCue;
-//        } else {
-//            p1Cue = aiCue;
-//            p2Cue = playerCue;
-//        }
-
-//        CueBrand stdBreakCueBrand = DataLoader.getInstance().getStdBreakCueBrand();
-////        Cue stdBreakCue = DataLoader.getInstance().getStdBreakCueBrand();
-//        if (stdBreakCueBrand == null ||
-//                values.rule == GameRule.SNOOKER ||
-//                values.rule == GameRule.MINI_SNOOKER) {
-//            igp1 = new InGamePlayer(match.p1.getPlayerPerson(),
-//                    p1t, 
-//                    1, 
-//                    p1HandFeelEffort);
-//            igp2 = new InGamePlayer(match.p2.getPlayerPerson(),
-//                    p2t, 
-//                    2, 
-//                    p2HandFeelEffort);
-//        } else {
+        
         // todo: 玩家也有可能买开球杆
 //            Cue stdBreakCue = Cue.createForCareerGameAi(stdBreakCueBrand);
         igp1 = new InGamePlayer(match.p1.getPlayerPerson(),
@@ -558,7 +520,14 @@ public class ChampDrawView extends ChildInitializable {
                 values.rule,
                 2,
                 p2HandFeelEffort);
-//        }
+        
+        if (values.rule == GameRule.CHINESE_EIGHT) {
+            LetScoreOrBall.LetBallFace[] defaultLets = LetBall.chineseEightDefaultLetBalls(
+                    igp1.getPlayerPerson(),
+                    igp2.getPlayerPerson());
+            igp1.setLetScoreOrBall(defaultLets[0]);
+            igp2.setLetScoreOrBall(defaultLets[1]);
+        }
 
         EntireGame newGame = new EntireGame(
                 igp1,

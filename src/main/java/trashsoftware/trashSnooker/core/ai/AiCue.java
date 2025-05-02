@@ -195,8 +195,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         } else {
             throw new RuntimeException();
         }
-
-        List<FinalChoice.IntegratedAttackChoice> choiceList = new ArrayList<>();
+        
         AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
 //        double likeShow = aiPlayer.getPlayerPerson().getAiPlayStyle().likeShow;  // 喜欢大力及杆法的程度
         GamePlayStage stage = game.getGamePlayStage(choice.ball, false);
@@ -355,11 +354,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             throw new RuntimeException(e);
         }
         long t2 = System.currentTimeMillis();
-        System.out.println("Ai calculated attacks of given choice in " + (t2 - t1) + " ms");
 
+        List<FinalChoice.IntegratedAttackChoice> choiceList = new ArrayList<>();
         for (AttackThread thread : attackThreads) {
             if (thread.result != null) choiceList.add(thread.result);
         }
+        System.out.println("Ai calculated attacks of given choice in " + (t2 - t1) + " ms, " + choiceList.size() + " valid results");
 
         if (!choiceList.isEmpty()) {
             double pureAttackThresh = Analyzer.attackProbThreshold(PURE_ATTACK_PROB, aps);
@@ -376,7 +376,10 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             }
 
             FinalChoice.IntegratedAttackChoice iac = choiceList.get(0);
-            if (iac.nextStepTarget == Game.END_REP || mustAttack) return iac;
+            if (iac.nextStepTarget == Game.END_REP || mustAttack) {
+                System.out.println("Attack a must attack one");
+                return iac;
+            }
 
             if (iac.priceOfKick >= 1.0) {  // 能K正确的球
                 double kickProbLow = 0.6;
@@ -472,14 +475,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     protected AiCueResult makeAttackCue(FinalChoice.IntegratedAttackChoice iac, AiCueResult.CueType cueType) {
         AttackParam attackParam = iac.attackParams;
         AttackChoice attackChoice = attackParam.attackChoice;
-
-//        // todo: 有可能出现加了弧线就绕不过去那种情况
-//        double[] dirWithAngleCurve = Analyzer.estimateRealCueDirWithCurve(
-//                game,
-//                game.getEntireGame().predictPhy,
-//                attackParam.cueParams,
-//                attackChoice.cueDirectionUnitVector
-//        );
 
         AiCueResult acr = new AiCueResult(aiPlayer.getInGamePlayer(),
                 game.getGamePlayStage(attackChoice.ball, true),
@@ -999,144 +994,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 5.0, actualPowerHigh, phy);
     }
 
-    public static class AttackParam {
-
-        double potProb;  // 正常情况下能打进的概率
-        double price;  // 对于球手来说的价值
-        AttackChoice attackChoice;
-
-        CueParams cueParams;
-
-        private AttackParam(AttackParam base, AttackChoice replacement) {
-            this.attackChoice = replacement;
-            this.price = base.price;
-            this.potProb = base.potProb;
-            this.cueParams = base.cueParams;
-        }
-
-        public AttackParam(AttackChoice attackChoice,
-                           Game<?, ?> game,
-                           Phy phy,
-                           CueParams cueParams) {
-            this.attackChoice = attackChoice;
-            this.cueParams = cueParams;
-
-            GameValues gameValues = game.getGameValues();
-
-            PlayerPerson playerPerson = attackChoice.attackingPlayer.getPlayerPerson();
-            AiPlayStyle aps = playerPerson.getAiPlayStyle();
-
-            double[] devs = Analyzer.aiStandardDeviation(
-                    cueParams,
-                    attackChoice.attackingPlayer,
-                    true
-            );
-            double sideDevRad = devs[0];
-            double aimingSd = devs[1];
-
-            double totalDt = attackChoice.targetHoleDistance + attackChoice.whiteCollisionDistance;
-            double whiteInitSpeed = CuePlayParams.getSpeedOfPower(cueParams.actualPower(), 0);
-            double totalMove = gameValues.estimatedMoveDistance(phy, whiteInitSpeed);
-
-            // 预估台泥变线偏差
-            double moveT = 0;
-            try {
-                moveT = gameValues.estimateMoveTime(phy, whiteInitSpeed, totalDt);
-            } catch (IllegalArgumentException iae) {
-                // do nothing
-            }
-//            double whiteT = gameValues.estimateMoveTime(phy, )
-            double pathChange = moveT * phy.cloth.goodness.errorFactor * TableCloth.RANDOM_ERROR_FACTOR;  // 变线
-//            System.out.println("Path change " + pathChange);  
-
-            // 白球的偏差标准差
-            double whiteBallDevRad = sideDevRad + aimingSd;
-            // 白球在撞击点时的偏差标准差，毫米
-            // 这里sin和tan应该差不多，都不准确，tan稍微好一点点
-            double sdCollisionMm = Math.tan(whiteBallDevRad) * attackChoice.whiteCollisionDistance +
-                    pathChange;  // todo: 这里把白球+目标球的变线全算给白球了
-
-            // 目标球出发角的大致偏差，标准差。 todo: 目前的算法导致了AI认为近乎90度的薄球不难
-            double tarDevSdRad = Math.asin(sdCollisionMm / gameValues.ball.ballDiameter);
-
-            // todo: 1 / cos是权宜之计
-            tarDevSdRad *= 1 / Math.cos(attackChoice.angleRad);
-            if (tarDevSdRad > Algebra.HALF_PI) {
-                tarDevSdRad = Algebra.HALF_PI;
-            }
-
-            // 目标球到袋时的大致偏差标准差，mm
-            double tarDevHoleSdMm = Math.tan(tarDevSdRad) * attackChoice.targetHoleDistance;
-
-            // 角度球的瞄准难度：从白球处看目标球和袋，在视线背景上的投影距离
-            double targetAimingOffset =
-                    Math.cos(Math.PI / 2 - attackChoice.angleRad) * attackChoice.targetHoleDistance;
-
-            double allowedDev;
-            NormalDistribution nd;
-            if (attackChoice instanceof AttackChoice.DirectAttackChoice dac) {
-                // 举个例子，瞄准为90的AI，白球在右顶袋打蓝球右底袋时，offset差不多1770，下面这个值在53毫米左右
-                double targetDifficultyMm = targetAimingOffset * (105 - aps.precision) / 500;
-
-                tarDevHoleSdMm += targetDifficultyMm;
-
-                // 从这个角度看袋允许的偏差
-                allowedDev = AttackChoice.DirectAttackChoice.allowedDeviationOfHole(
-                        gameValues,
-                        attackChoice.isMidHole(),
-                        dac.targetHoleVec,
-                        totalMove - totalDt  // 真就大概了，意思也就是不鼓励AI低搓去沙中袋
-                );
-                nd = new NormalDistribution(0.0, Math.max(tarDevHoleSdMm * 2, 0.00001));
-            } else if (attackChoice instanceof AttackChoice.DoubleAttackChoice doubleAc) {
-                // 稍微给高点
-                // 除数越大，AI越倾向打翻袋
-                double targetDifficultyMm = targetAimingOffset * (105 - aps.doubleAbility) / 150;
-
-                tarDevHoleSdMm += targetDifficultyMm;
-
-                allowedDev = AttackChoice.DirectAttackChoice.allowedDeviationOfHole(
-                        gameValues,
-                        attackChoice.isMidHole(),
-                        doubleAc.lastCushionToPocket,
-                        totalMove - totalDt  // 真就大概了，意思也就是不鼓励AI低搓去沙中袋
-                );
-//                System.out.println("Double sd: " + tarDevHoleSdMm * 2 + ", allow dev: " + allowedDev);
-//                System.out.println(targetDifficultyMm + " " + tarDevSdRad + " " + attackChoice.targetHoleDistance);
-                nd = new NormalDistribution(0.0, Math.max(tarDevHoleSdMm * 2, 0.00001));
-            } else {
-                EventLogger.error("Unknown attack choice: " + attackChoice);
-                potProb = 0.0;
-                price = 0.0;
-                return;
-            }
-
-            potProb = nd.cumulativeProbability(allowedDev) - nd.cumulativeProbability(-allowedDev);
-            if (potProb < 0) potProb = 0.0;  // 虽然我不知道为什么prob会是负的
-            price = potProb * attackChoice.targetPrice;
-
-//            System.out.println("Est dev: " + tarDevHoleSdMm +
-//                    ", allow dev: " + allowedDev +
-//                    ", prob: " + potProb +
-//                    ", price: " + price +
-//                    ", power: " + selectedPower +
-//                    ", spins: " + selectedFrontBackSpin + ", " + selectedSideSpin +
-//                    ", side dev: " + Math.toDegrees(sideDevRad));
-        }
-
-        protected AttackParam copyWithCorrectedChoice(AttackChoice corrected) {
-            return new AttackParam(this, corrected);
-        }
-
-        public double getPotProb() {
-            return potProb;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-    }
-
     private class AngleSnookerSolver implements Runnable {
 
         final List<DefenseThread> threadsOfAngle = new ArrayList<>();  // 力量必须从小到大
@@ -1201,16 +1058,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             int threadIndex = (int) (Thread.currentThread().getId() % gameClonesPool.length);
             Game<?, ?> copy = gameClonesPool[threadIndex];
             //        System.out.print(selectedPower);
-//            double actualFbSpin = attackParams.cueParams.actualFrontBackSpin();
-//            double actualSideSpin = attackParams.cueParams.actualSideSpin();
-//            double actualPower = attackParams.cueParams.actualPower();
-
-//            double[] correctedDirection = CuePlayParams.aimingUnitXYIfSpin(
-//                    actualSideSpin,
-//                    actualPower,
-//                    attackParams.attackChoice.cueDirectionUnitVector[0],
-//                    attackParams.attackChoice.cueDirectionUnitVector[1]
-//            );
 
             // todo: 有可能出现加了弧线就绕不过去那种情况
             double[] dirWithAngleCurve = Analyzer.estimateRealCueDirWithCurve(
@@ -1430,17 +1277,6 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         public void run() {
             int threadIndex = (int) (Thread.currentThread().getId() % gameClonesPool.length);
             Game<?, P> copy = gameClonesPool[threadIndex];
-
-//            double actualFbSpin = attackParam.cueParams.actualFrontBackSpin();
-//            double actualSideSpin = attackParam.cueParams.actualSideSpin();
-//            double actualPower = attackParam.cueParams.actualPower();
-
-//            double[] correctedDirection = CuePlayParams.aimingUnitXYIfSpin(
-//                    actualSideSpin,
-//                    actualPower,
-//                    attackParam.attackChoice.cueDirectionUnitVector[0],
-//                    attackParam.attackChoice.cueDirectionUnitVector[1]
-//            );
 
             // todo: 有可能出现加了弧线就绕不过去那种情况
             double[] dirWithAngleCurve = Analyzer.estimateRealCueDirWithCurve(

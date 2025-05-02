@@ -16,7 +16,7 @@ public abstract class FinalChoice {
         public final boolean isPureAttack;
         final Game<?, ?> game;
         final AiCue.KickPriceCalculator kickPriceCalculator;
-        final AiCue.AttackParam attackParams;
+        final AttackParam attackParams;
         final List<AttackChoice> nextStepAttackChoices;  // Sorted from good to bad
         final WhitePrediction whitePrediction;
         final GamePlayStage stage;
@@ -32,7 +32,7 @@ public abstract class FinalChoice {
 
         protected IntegratedAttackChoice(
                 Game<?, ?> game,
-                AiCue.AttackParam attackParams,
+                AttackParam attackParams,
                 List<AttackChoice> nextStepAttackChoices,
                 int nextStepTarget,
                 CuePlayParams params,
@@ -59,7 +59,7 @@ public abstract class FinalChoice {
          * 由defense转来的，连攻带防，但不能与纯进攻的一起比较，因为price完全是防守的price
          */
         protected IntegratedAttackChoice(Game<?, ?> game,
-                                         AiCue.AttackParam attackParams,
+                                         AttackParam attackParams,
                                          int nextStepTarget,
                                          CuePlayParams params,
                                          Phy phy,
@@ -143,7 +143,6 @@ public abstract class FinalChoice {
                         true,
                         false
                 );
-//                tolerances
                 
                 double tolerancePenalty = 1.0;
                 for (WhitePrediction tor : tolerances) {
@@ -164,33 +163,6 @@ public abstract class FinalChoice {
                 
                 penalty = tolerancePenalty;
                 price /= penalty;
-                
-//                // 根据走位目标位置的容错空间，结合白球的行进距离，对长距离低容错的路线予以惩罚
-//                if (firstChoice instanceof AttackChoice.DirectAttackChoice direct) {
-//                    double[] posTolerance = direct.leftRightTolerance();
-//                    positionErrorTolerance = Math.min(posTolerance[0], posTolerance[1]);
-//                } else {
-//                    positionErrorTolerance = game.getGameValues().ball.ballDiameter * 2;  // 随手输的
-//                }
-//
-//                double dtTravel = whitePrediction.getDistanceTravelledAfterCollision();
-//                double ratio = dtTravel / positionErrorTolerance;
-//                double decisionWeight = 10.0;  // 权重
-//
-//                if (Double.isInfinite(ratio) || Double.isNaN(ratio)) {
-//                    penalty = dtTravel / 100;
-//                    price /= 1 + penalty;
-//                } else if (ratio > decisionWeight) {
-//                    penalty = Math.pow((ratio - decisionWeight) / 5.0, 1.25) * 2.0;  // 随便编的
-//                    price /= 1 + penalty;
-//                }
-
-                // 正常情况下少跑点
-//                AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
-//                double divider = aps.likeShow * 50.0;
-//                double dtTravel = whitePrediction.getDistanceTravelledAfterCollision();
-//                double penalty = dtTravel < 1500 ? 0 : (dtTravel - 1500) / divider;
-//                price /= 1 + penalty;
             }
         }
     }
@@ -256,7 +228,7 @@ public abstract class FinalChoice {
                                 CuePlayParams cuePlayParams) {
             this(null,
                     1.0,
-                    null,
+                    new DefenseResult(0, new ArrayList<>(), false),
                     1.0,
                     1.0,
                     cueDirectionUnitVector,
@@ -271,11 +243,11 @@ public abstract class FinalChoice {
 //            double totalPen = penalty * stabilityScore;
 //            this.price = snookerScore / totalPen 
 //                    - opponentAttackChance * totalPen / nativePrice;
-            this.price = nativePrice * 100 
-                    + stabilityScore 
-                    + defenseResult.snookerScore 
-                    - defenseResult.opponentAvailPrice 
-                    - defenseResult.opponentAttackPrice 
+            this.price = nativePrice * 100
+                    + stabilityScore
+                    + defenseResult.snookerScore
+                    - defenseResult.opponentAvailPrice
+                    - defenseResult.opponentAttackPrice
                     - penalty;
 
 //            if (wp != null && wp.isHitWallBeforeHitBall()) {

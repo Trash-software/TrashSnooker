@@ -85,7 +85,7 @@ public abstract class TargetOrientedCueBallPlacer<G extends Game<?, ?>, P extend
                                     player.getInGamePlayer(),
                                     player.getPlayerPerson().handBody.getPrimary()
                             );
-                            AiCue.AttackParam attackParam = new AiCue.AttackParam(
+                            AttackParam attackParam = new AttackParam(
                                     ac,
                                     game,
                                     game.getEntireGame().predictPhy,

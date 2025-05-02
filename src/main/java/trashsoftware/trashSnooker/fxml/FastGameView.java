@@ -8,11 +8,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.*;
+import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LetBall;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.training.Challenge;
 import trashsoftware.trashSnooker.core.training.TrainType;
@@ -60,9 +62,12 @@ public class FastGameView extends ChildInitializable {
     ComboBox<SubRule> subRuleBox;
     @FXML
     ComboBox<PersonItem> player1Box, player2Box;
-
     @FXML
     ComboBox<PlayerType> player1Player, player2Player;
+    @FXML
+    ComboBox<LetScoreOrBall> player1LetScore, player2LetScore;
+    @FXML
+    Label letScoreOrBallLabel;
     @FXML
     ComboBox<CategoryItem> player1CatBox, player2CatBox;
     @FXML
@@ -104,7 +109,6 @@ public class FastGameView extends ChildInitializable {
         initTotalFramesBox();
         initClothBox();
         loadPlayerList();
-        loadCueList();
 
         initPresetBoxes();
 
@@ -138,16 +142,16 @@ public class FastGameView extends ChildInitializable {
         player2Player.setVisible(!isTrain);
 //        player2CueBtn.setVisible(!isTrain);
         player2CatBox.setVisible(!isTrain);
+        
+        player1LetScore.setVisible(!isTrain);
+        player1LetScore.setVisible(!isTrain);
+        letScoreOrBallLabel.setVisible(!isTrain);
     }
 
     private void reloadTrainingItemByGameType(GameRule rule) {
         trainingItemBox.getItems().clear();
         trainingItemBox.getItems().addAll(rule.supportedTrainings);
         trainingItemBox.getSelectionModel().select(0);
-    }
-
-    private void initSubRuleBox() {
-
     }
 
     private void initTotalFramesBox() {
@@ -172,7 +176,7 @@ public class FastGameView extends ChildInitializable {
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null && newValue.preset != null) {
                         holeSizeBox.setValue(newValue.preset.tableSpec.tableMetrics.pocketSize);
-                        pocketDifficultyBox.setValue(newValue.preset.tableSpec.tableMetrics.factory.defaultDifficulty());
+                        pocketDifficultyBox.setValue(newValue.preset.tableSpec.tableMetrics.pocketDifficulty);
                         clothSmoothBox.setValue(newValue.preset.tableSpec.tableCloth.smoothness);
                         clothGoodBox.setValue(newValue.preset.tableSpec.tableCloth.goodness);
                     }
@@ -245,36 +249,103 @@ public class FastGameView extends ChildInitializable {
             subRuleBox.getSelectionModel().select(0);
             fillBallsPresetBox(newValue);
             reloadTrainingItemByGameType(newValue);
+            loadLetScoreOrBallList(newValue);
         }));
 
         tableMetricsBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 holeSizeBox.getItems().clear();
                 holeSizeBox.getItems().addAll(newValue.supportedHoles);
-                holeSizeBox.getSelectionModel().select(newValue.supportedHoles.length / 2);
+                holeSizeBox.getSelectionModel().select(newValue.defaultPocketSize());
 
                 pocketDifficultyBox.getItems().clear();
                 pocketDifficultyBox.getItems().addAll(newValue.supportedDifficulties);
-                pocketDifficultyBox.getSelectionModel().select(newValue.supportedDifficulties.length / 2);
+                pocketDifficultyBox.getSelectionModel().select(newValue.defaultDifficulty());
             }
         });
     }
-
-    private void loadCueList() {
-//        refreshCueList(p1CueSelection);
-//        refreshCueList(p2CueSelection);
+    
+    private void loadLetScoreOrBallList(GameRule gameRule) {
+        player1LetScore.getItems().clear();
+        player2LetScore.getItems().clear();
+        switch (gameRule) {
+            case SNOOKER, SNOOKER_TEN, MINI_SNOOKER -> {
+                fillSnookerLikeLetScores(player1LetScore);
+                fillSnookerLikeLetScores(player2LetScore);
+            }
+            case CHINESE_EIGHT -> {
+                fillChineseEightLetScores(player1LetScore);
+                fillChineseEightLetScores(player2LetScore);
+            }
+            default -> {
+                player1LetScore.setEditable(false);
+                player1LetScore.getItems().add(LetScoreOrBall.NOT_LET);
+                player1LetScore.getSelectionModel().select(0);
+                player2LetScore.setEditable(false);
+                player2LetScore.getItems().add(LetScoreOrBall.NOT_LET);
+                player2LetScore.getSelectionModel().select(0);
+            }
+        }
     }
 
-//    private void refreshCueList(CueSelection cueSelection) {
-//        cueSelection.available.clear();
-//        for (CueBrand cue : DataLoader.getInstance().getCues().values()) {
-//            if (!cue.privacy) {
-//                CueAndBrand cab = new CueAndBrand(cue);
-//                cueSelection.available.add(cab);
-//            }
-//        }
-//        cueSelection.select(cueSelection.available.get(0));
-//    }
+    private void fillChineseEightLetScores(ComboBox<LetScoreOrBall> box) {
+        box.setEditable(false);
+        box.getItems().addAll(
+                LetScoreOrBall.NOT_LET,
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.FRONT, 1)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.MID, 1)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.BACK, 1)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.FRONT, 1, LetBall.BACK, 1)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.MID, 1, LetBall.BACK, 1)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.FRONT, 1, LetBall.MID, 1, LetBall.BACK, 1)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.FRONT, 2)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.FRONT, 2, LetBall.BACK, 1)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.BACK, 2)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.FRONT, 1, LetBall.BACK, 2)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.BACK, 3)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.FRONT, 2, LetBall.BACK, 2)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.BACK, 4)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.BACK, 5)),
+                new LetScoreOrBall.LetBallFace(Map.of(LetBall.BACK, 6))
+        );
+        box.getSelectionModel().select(0);
+    }
+    
+    private void fillSnookerLikeLetScores(ComboBox<LetScoreOrBall> box) {
+        box.setEditable(true);
+        box.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(LetScoreOrBall object) {
+                return object == null ? "" : object.toString();
+            }
+
+            @Override
+            public LetScoreOrBall fromString(String string) {
+                try {
+                    int score = Integer.parseInt(string);
+                    return new LetScoreOrBall.LetScoreFace(Math.max(0, Math.min(score, 147)));
+                } catch (IllegalArgumentException e) {
+                    //
+                }
+                return LetScoreOrBall.NOT_LET;
+            }
+        });
+        
+        box.getItems().addAll(
+                LetScoreOrBall.NOT_LET,
+                new LetScoreOrBall.LetScoreFace(15),
+                new LetScoreOrBall.LetScoreFace(20),
+                new LetScoreOrBall.LetScoreFace(30),
+                new LetScoreOrBall.LetScoreFace(40),
+                new LetScoreOrBall.LetScoreFace(50),
+                new LetScoreOrBall.LetScoreFace(60),
+                new LetScoreOrBall.LetScoreFace(70),
+                new LetScoreOrBall.LetScoreFace(80),
+                new LetScoreOrBall.LetScoreFace(100)
+        );
+        
+        box.getSelectionModel().select(0);
+    }
 
     private void loadPlayerList() {
         player1CatBox.getItems().addAll(CategoryItem.values());
@@ -313,11 +384,6 @@ public class FastGameView extends ChildInitializable {
                     infoButton.setDisable(newValue == null);
                 }));
     }
-
-//    @Override
-//    public Stage getStage() {
-//        return stage;
-//    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -450,11 +516,6 @@ public class FastGameView extends ChildInitializable {
         InGamePlayer igp2;
 
         GameRule gameRule = gameValues.rule;
-//        gameValues.
-
-//        CueAndBrand p1CueSel = p1CueSelection.getSelected();
-//
-//        Cue p1CueInstance = p1CueSel.getNonNullInstance();
 
         if (gameValues.isTraining()) {
             igp1 = new InGamePlayer(p1.person,
@@ -481,35 +542,20 @@ public class FastGameView extends ChildInitializable {
 
             double p1RuleProficiency = player1Player.getValue() == PlayerType.COMPUTER ? p1.person.skillLevelOfGame(gameValues.rule) : 1.0;
             double p2RuleProficiency = player2Player.getValue() == PlayerType.COMPUTER ? p2.person.skillLevelOfGame(gameValues.rule) : 1.0;
-
-            CueBrand stdBreakCue = DataLoader.getInstance().getStdBreakCueBrand();
-            if (stdBreakCue == null ||
-                    gameValues.rule.snookerLike()) {
-                igp1 = new InGamePlayer(p1.person,
-                        player1Player.getValue(),
-                        null,
-                        gameRule,
-                        1,
-                        p1RuleProficiency);
-                igp2 = new InGamePlayer(p2.person,
-                        player2Player.getValue(),
-                        null,
-                        gameRule, 2,
-                        p2RuleProficiency);
-            } else {
-                igp1 = new InGamePlayer(p1.person,
-                        player1Player.getValue(),
-                        null,
-                        gameRule,
-                        1,
-                        p1RuleProficiency);
-                igp2 = new InGamePlayer(p2.person,
-                        player2Player.getValue(),
-                        null,
-                        gameRule,
-                        2,
-                        p2RuleProficiency);
-            }
+            
+            igp1 = new InGamePlayer(p1.person,
+                    player1Player.getValue(),
+                    null,
+                    gameRule,
+                    1,
+                    p1RuleProficiency);
+            igp2 = new InGamePlayer(p2.person,
+                    player2Player.getValue(),
+                    null,
+                    gameRule, 2,
+                    p2RuleProficiency);
+            igp1.setLetScoreOrBall(player1LetScore.getValue());
+            igp2.setLetScoreOrBall(player2LetScore.getValue());
         }
 
         EntireGame game = new EntireGame(igp1, igp2, gameValues, totalFramesBox.getValue(), cloth, null);
@@ -622,4 +668,5 @@ public class FastGameView extends ChildInitializable {
             return shown;
         }
     }
+    
 }

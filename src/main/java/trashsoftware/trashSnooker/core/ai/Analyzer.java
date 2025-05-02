@@ -414,7 +414,7 @@ public class Analyzer {
             radDevOfHighPower = Algebra.TWO_PI - radDevOfHighPower;
 
         double sideDevRad = (radDevOfHighPower - radDevOfLowPower) / 2;
-        sideDevRad *= 1.25;  // 稍微多惩罚一点
+        sideDevRad *= 1.5;  // 稍微多惩罚一点
 
         // 若球手不喜欢加塞，加大sideDevRad
         double likeSideMul = 110 / (aps.likeSide + 10);
@@ -551,16 +551,21 @@ public class Analyzer {
             CueParams cueParams,
             double[] whiteToCollisionDir,
             boolean useClone) {
+        
+//        if (true) {
+//            return whiteToCollisionDir;
+//        }
 
         double[] whitePos = game.getCueBall().getPositionArray();
 
         double preciseRad = Algebra.thetaOf(whiteToCollisionDir);
-        double radHigh = Algebra.normalizeAngle(preciseRad + 0.1);
-        double radLow = Algebra.normalizeAngle(preciseRad - 0.1);
+//        System.out.print("Orig deg " + Math.toDegrees(preciseRad));
+        double radHigh = Algebra.normalizeAnglePositive(preciseRad + 0.1);
+        double radLow = Algebra.normalizeAnglePositive(preciseRad - 0.1);
         double tolerance = Math.atan2(1.0, game.getGameValues().table.maxLength);  // 一毫米误差
         int counter = 0;
-        while (radHigh - radLow > tolerance) {
-            double radMid = Algebra.normalizeAngle((radHigh + radLow) / 2);
+        while (Math.abs(radHigh - radLow) > tolerance) {
+            double radMid = Algebra.normalizeAnglePositive(Algebra.angularBisector(radLow, radHigh));
             double[] unit = Algebra.unitVectorOfAngle(radMid);
             CuePlayParams cpp = CuePlayParams.makeIdealParams(
                     unit[0],
@@ -603,7 +608,8 @@ public class Analyzer {
             }
         }
 
-        return Algebra.unitVectorOfAngle(Algebra.normalizeAngle((radHigh + radLow) / 2));
+//        System.out.println(", Res rad low: " + radLow + ", rad high: " + radHigh);
+        return Algebra.unitVectorOfAngle(Algebra.normalizeAnglePositive(Algebra.angularBisector(radLow, radHigh)));
     }
 
     /**

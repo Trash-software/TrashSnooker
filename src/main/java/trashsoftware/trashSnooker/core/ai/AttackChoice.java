@@ -30,7 +30,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
 
     int attackTarget;
     double targetPrice;
-    protected AiCue.AttackParam defaultRef;
+    protected AttackParam defaultRef;
 
     protected abstract AttackChoice copyWithNewDirection(double[] newDirection);
 
@@ -137,7 +137,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             ac.targetPrice = game.priceOfTarget(attackTarget, aiming.target, attackingPlayer, lastAiPottedBall);
 
             // 随便创建一个，用于评估难度
-            ac.defaultRef = new AiCue.AttackParam(
+            ac.defaultRef = new AttackParam(
                     ac,
                     game,
                     phy,
@@ -243,9 +243,9 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
                 return null;  // 不可能打进的球
             }
             double whiteDistance = Math.hypot(whiteToColl[0], whiteToColl[1]);
-            if (whiteDistance < game.getGameValues().ball.ballDiameter) {
-                return null;  // 白球和目标球挤在一起了
-            }
+//            if (whiteDistance < game.getGameValues().ball.ballDiameter) {
+//                return null;  // 白球和目标球挤在一起了
+//            }
             double targetHoleDistance = Math.hypot(
                     ballOrigPos[0] - holePos[0],
                     ballOrigPos[1] - holePos[1]
@@ -273,7 +273,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             directAttackChoice.targetPrice = game.priceOfTarget(attackTarget, ball, attackingPlayer, lastAiPottedBall);
 
             // 随便创建一个，用于评估难度
-            directAttackChoice.defaultRef = new AiCue.AttackParam(
+            directAttackChoice.defaultRef = new AttackParam(
                     directAttackChoice,
                     game,
                     phy,
@@ -446,7 +446,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
         }
 
         @NotNull
-        public AiCue.AttackParam getDefaultRef() {
+        public AttackParam getDefaultRef() {
             return defaultRef;
         }
 

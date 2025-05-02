@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AttackChoice;
+import trashsoftware.trashSnooker.core.ai.AttackParam;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
@@ -15,6 +16,7 @@ import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LisEightGa
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
+import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerTenGame;
@@ -173,6 +175,25 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //        for (SubRule subRule : subRules) {
 //            game.addSubRule(subRule);
 //        }
+        
+        if (!gameValues.isTraining()) {
+            if (game instanceof AbstractSnookerGame asg) {
+                if (asg.getP1().getLetScoreOrBall() instanceof LetScoreOrBall.LetScoreFace ls)
+                    asg.getPlayer1().addScore(ls.score);
+                else EventLogger.warning("Wrong let");
+                if (asg.getP2().getLetScoreOrBall() instanceof LetScoreOrBall.LetScoreFace ls)
+                    asg.getPlayer2().addScore(ls.score);
+                else EventLogger.warning("Wrong let");
+            }
+            else if (game instanceof ChineseEightBallGame ceb) {
+                if (ceb.getP1().getLetScoreOrBall() instanceof LetScoreOrBall.LetBallFace lb) {
+                    ceb.getPlayer1().getLettedBalls().putAll(lb.letBalls);
+                } else EventLogger.warning("Wrong let");
+                if (ceb.getP2().getLetScoreOrBall() instanceof LetScoreOrBall.LetBallFace lb) {
+                    ceb.getPlayer2().getLettedBalls().putAll(lb.letBalls);
+                } else EventLogger.warning("Wrong let");
+            }
+        }
 
         try {
             if (DBAccess.RECORD && entireGame != null) {
@@ -338,7 +359,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             );
             if (directAttackChoice != null) {
                 CuePlayParams cpp = potAttempt.getCuePlayParams();
-                AiCue.AttackParam attackParam = new AiCue.AttackParam(
+                AttackParam attackParam = new AttackParam(
                         directAttackChoice,
                         this,
                         entireGame.predictPhy,
@@ -1121,13 +1142,19 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         List<double[][]> list = new ArrayList<>();
         double x = targetBall.x;
         double y = targetBall.y;
+        double[] xy = new double[]{x, y};
 //        BIG_LOOP:
         for (int i = 0; i < 6; i++) {
-            double[] holeOpenCenter = gameValues.allHoleOpenCenters[i];
-//            double[] holeBottom = gameValues.table.allHoles[i];
             Pocket pocket = gameValues.table.pockets[i];
-            if (!pocket.isMid &&
-                    Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ball.ballRadius &&
+//            double[] holeOpenCenter = gameValues.allHoleOpenCenters[i];
+            double[] holeOpenCenter = pocket.getOpenCenter(gameValues);
+//            double[] holeBottom = gameValues.table.allHoles[i];
+
+            boolean onPocketMouth = !pocket.isMid &&
+                    Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ball.ballRadius;
+            boolean inPocketMouth = Algebra.isBetweenPerpendiculars(holeOpenCenter, pocket.fallCenter, xy);
+
+            if ((onPocketMouth || inPocketMouth) &&
                     pointToPointCanPassBall(x, y, pocket.fallCenter[0], pocket.fallCenter[1], targetBall,
                             null, true, true)) {
                 // 目标球离袋口瞄球点太近了，转而检查真正的袋口

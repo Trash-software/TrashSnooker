@@ -1790,11 +1790,13 @@ public class GameView implements Initializable {
     @FXML
     void p1AddScoreAction() {
         game.getGame().getPlayer1().addScore(10);
+        drawScoreBoard(game.getGame().getPlayer2(), false);
     }
 
     @FXML
     void p2AddScoreAction() {
         game.getGame().getPlayer2().addScore(10);
+        drawScoreBoard(game.getGame().getPlayer2(), false);
     }
 
     @FXML

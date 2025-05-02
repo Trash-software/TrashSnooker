@@ -46,6 +46,7 @@ public class ChineseAiVsAi extends AiVsAi {
         Map<LetBall, Integer> p1Letted = new HashMap<>();
         Map<LetBall, Integer> p2Letted = new HashMap<>();
 
+        // todo: 不一定对
         LetBall.chineseEightLetBall(p1.getPlayerPerson(), p1Letted,
                 p2.getPlayerPerson(), p2Letted);
         

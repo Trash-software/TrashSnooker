@@ -1,13 +1,13 @@
 package trashsoftware.trashSnooker.core.metrics;
 
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.util.Util;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class TableMetrics {
 
@@ -232,14 +232,6 @@ public class TableMetrics {
 
     private void build() {
         if (clothType == null) throw new RuntimeException("Incomplete builder");
-//        double[] topLeftHoleXY = new double[]
-//                {leftX - cornerHoleDt, topY - cornerHoleDt};
-//        double[] botLeftHoleXY = new double[]
-//                {leftX - cornerHoleDt, botY + cornerHoleDt};
-//        double[] topRightHoleXY = new double[]
-//                {rightX + cornerHoleDt, topY - cornerHoleDt};
-//        double[] botRightHoleXY = new double[]
-//                {rightX + cornerHoleDt, botY + cornerHoleDt};
         double[] topMidHoleXY = new double[]
                 {midX, topY - midHoleRadius};
         double[] botMidHoleXY = new double[]
@@ -258,20 +250,6 @@ public class TableMetrics {
                 {midX, topY - (cushionClothWidth + midHoleRadius) / 2};
         double[] botMidHoleGraXY = new double[]
                 {midX, botY + (cushionClothWidth + midHoleRadius) / 2};
-
-//        leftClothX = leftX - cornerHoleTan;
-//        rightClothX = rightX + cornerHoleTan;
-//        topClothY = topY - cornerHoleTan;
-//        botClothY = botY + cornerHoleTan;
-
-//        allHoles = new double[][]{
-//                topLeftHoleXY,
-//                botLeftHoleXY,
-//                topRightHoleXY,
-//                botRightHoleXY,
-//                topMidHoleXY,
-//                botMidHoleXY
-//        };
 
         double[] topLeftSlateXY = new double[]{
                 leftX - cushionClothWidth,
@@ -807,7 +785,11 @@ public class TableMetrics {
             this.supportedDifficulties = supportedDifficulties;
         }
 
-        public PocketSize defaultHole() {
+        public PocketSize defaultPocketSize() {
+            PocketSize stdS = Util.findInArray(supportedHoles, ps -> "pocketStdS".equals(ps.key));
+            if (stdS != null) return stdS;
+            PocketSize std = Util.findInArray(supportedHoles, ps -> "pocketStd".equals(ps.key));
+            if (std != null) return std;
             return supportedHoles[supportedHoles.length / 2];
         }
 
