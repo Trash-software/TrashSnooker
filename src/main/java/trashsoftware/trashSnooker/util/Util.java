@@ -42,6 +42,18 @@ public class Util {
         }
         return null;
     }
+    
+    public static <T> void randomShrinkTo(NavigableSet<T> set, int n) {
+        int currentSize = set.size();
+        if (currentSize <= n) return;
+        
+        List<T> keys = new ArrayList<>(set);
+        Collections.shuffle(keys);
+
+        for (int i = 0; i < currentSize - n; i++) {
+            set.remove(keys.get(i));
+        }
+    }
 
     public static String timeStampFmt(Timestamp timestamp) {
         String str = timestamp.toString();

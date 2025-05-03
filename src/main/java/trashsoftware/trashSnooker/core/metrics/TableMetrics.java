@@ -7,7 +7,6 @@ import trashsoftware.trashSnooker.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class TableMetrics {
 
@@ -55,7 +54,6 @@ public class TableMetrics {
     public double maxLength;  // 对角线长度
     public double cushionClothWidth;  // 库的视觉宽度
     public double cushionHeight;
-    public double speedReduceMultiplier;  // 台泥的阻力系数，值越大阻力越大
 
     // 角袋入口处的宽度，因为袋的边可能有角度
     public double cornerHoleDiameter, cornerHoleRadius;
@@ -136,7 +134,8 @@ public class TableMetrics {
     //    public double ballHoleRatio;
 //    public double cornerHoleAngleRatio;  // 打底袋最差的角度和最好的角度差多少
 //    public double midHoleBestAngleWidth;  // 中袋对正的容错空间
-    public double tableResistanceRatio;
+    public double slipResistanceRatio;
+    public double rollResistanceRatio;
     //    public double ballBounceRatio;
     public double wallBounceRatio;
     public double wallSpinPreserveRatio;
@@ -610,6 +609,7 @@ public class TableMetrics {
                                 33.34)
 //                        .supportedHoles(SNOOKER_HOLES)
                         .resistanceAndCushionBounce(1.0,
+                                1.0,
                                 0.96,
                                 0.85,
                                 0.8,
@@ -631,6 +631,7 @@ public class TableMetrics {
                                 42.0)
 //                        .supportedHoles(CHINESE_EIGHT_HOLES)
                         .resistanceAndCushionBounce(1.05,
+                                1.05,
                                 0.95,
                                 0.8,
                                 0.8,
@@ -651,7 +652,8 @@ public class TableMetrics {
                                 51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.0,
+                        .resistanceAndCushionBounce(1.2,
+                                0.95,
                                 0.9,
                                 1.15,
                                 0.9,
@@ -672,7 +674,8 @@ public class TableMetrics {
                                 51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.0,
+                        .resistanceAndCushionBounce(1.2,
+                                0.95,
                                 0.9,
                                 1.15,
                                 0.9,
@@ -693,7 +696,8 @@ public class TableMetrics {
                                 51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.0,
+                        .resistanceAndCushionBounce(1.2,
+                                0.95,
                                 0.9,
                                 1.15,
                                 0.9,
@@ -717,7 +721,8 @@ public class TableMetrics {
                                 51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.0,
+                        .resistanceAndCushionBounce(1.2,
+                                0.95,
                                 0.8,
                                 1.15,
                                 0.9,
@@ -741,7 +746,8 @@ public class TableMetrics {
                                 51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.0,
+                        .resistanceAndCushionBounce(1.2,
+                                0.95,
                                 0.8,
                                 1.15,
                                 0.9,
@@ -766,6 +772,7 @@ public class TableMetrics {
                                 33.34)
 //                        .supportedHoles(SNOOKER_HOLES)
                         .resistanceAndCushionBounce(1.0,
+                                1.0,
                                 0.95,
                                 0.85,
                                 0.8,
@@ -1029,13 +1036,14 @@ public class TableMetrics {
             return this;
         }
 
-        Builder resistanceAndCushionBounce(double tableResistance,
+        Builder resistanceAndCushionBounce(double slipResistanceRatio,
+                                           double rollResistanceRatio,
                                            double wallBounce,
                                            double wallSpinEffect,
                                            double wallSpinPreserve,
                                            double cushionPowerSpin) {
-            values.tableResistanceRatio = tableResistance;
-            values.speedReduceMultiplier = tableResistance;
+            values.slipResistanceRatio = slipResistanceRatio;
+            values.rollResistanceRatio = rollResistanceRatio;
             values.wallBounceRatio = wallBounce;
             values.wallSpinEffectRatio = wallSpinEffect;
             values.wallSpinPreserveRatio = wallSpinPreserve;

@@ -1,44 +1,41 @@
 {
-  "winRecords": {
-    "1": 1,
-    "2": 1
-  },
+  "winRecords": {"1": 1},
   "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
-    "gameRule": "SNOOKER",
+    "gameRule": "AMERICAN_NINE",
     "handFeelEffort": 1,
-    "person": "Trump",
-    "playerType": "COMPUTER",
+    "person": "Neil Robertson",
+    "playerType": "PLAYER",
     "let": {"type": "notLet"}
   },
-  "p1Wins": 2,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
-    "gameRule": "SNOOKER",
+    "gameRule": "AMERICAN_NINE",
     "handFeelEffort": 1,
-    "person": "Ding Junhui",
-    "playerType": "COMPUTER",
+    "person": "Mark Allen",
+    "playerType": "PLAYER",
     "let": {"type": "notLet"}
   },
-  "startTime": 1746264721172,
+  "startTime": 1746305783277,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "SNOOKER_BALL",
-    "gameRule": "SNOOKER",
-    "subRules": ["SNOOKER_STD"],
+    "ball": "POOL_BALL",
+    "gameRule": "AMERICAN_NINE",
+    "subRules": ["RAW_STD"],
     "devMode": true,
     "table": {
-      "tableOrdinal": 0,
-      "pocketDifficultyOrdinal": 3,
-      "holeSizeOrdinal": 2
+      "tableOrdinal": 3,
+      "pocketDifficultyOrdinal": 0,
+      "holeSizeOrdinal": 1
     }
   },
-  "totalFrames": 3,
+  "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
   },
-  "p1Breaks": false
+  "p1Breaks": true
 }

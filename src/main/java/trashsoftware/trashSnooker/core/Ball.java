@@ -132,7 +132,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     public boolean isNotMoving(Phy phy) {
-        double slippingFriction = values.ball.frictionRatio * phy.slippingFrictionTimed;
+        double slippingFriction = values.ball.frictionRatio * table.slipResistanceRatio * phy.slippingFrictionTimed;
         return getSpeed() < slippingFriction;
     }
 
@@ -144,7 +144,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     public boolean isLikelyStopped(Phy phy) {
-        double slippingFriction = values.ball.frictionRatio * phy.slippingFrictionTimed;
+        double slippingFriction = values.ball.frictionRatio * table.slipResistanceRatio * phy.slippingFrictionTimed;
         if (getSpeed() < slippingFriction   // todo: 写不明白，旋转停
                 &&
                 getSpinTargetSpeed() < slippingFriction * 2
@@ -206,10 +206,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         phyFramesSinceCue++;
 
         // 球的质量会抵消
-        double slippingFriction = values.ball.frictionRatio * phy.slippingFrictionTimed;
+        double slippingFriction = values.ball.frictionRatio * values.table.slipResistanceRatio * phy.slippingFrictionTimed;
         double sideSpinReducer = values.ball.frictionRatio * phy.sideSpinFrictionTimed;
 
-        double rollingFriction = values.ball.frictionRatio * phy.rollingFrictionTimed;
+        double rollingFriction = values.ball.frictionRatio * values.table.rollResistanceRatio * phy.rollingFrictionTimed;
 
         if (Math.abs(sideSpin) < sideSpinReducer) {
             sideSpin = 0;
@@ -370,7 +370,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 msRemainInPocket -= phy.calculateMs;
 
                 int stat = oneFrameInPocket(phy);
-                if (getSpeedPerSecond(phy) < 100) {
+                if (getSpeedPerSecond(phy) < 10) {
                     // 球已经停了，别放了
                     msRemainInPocket = 0;
                     pot();

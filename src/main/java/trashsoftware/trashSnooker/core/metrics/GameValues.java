@@ -333,8 +333,8 @@ public class GameValues {
      * @return 预估的直线移动距离，mm。
      */
     public double estimatedMoveDistance(Phy phy, double speed) {
-        double slippingFriction = ball.frictionRatio * phy.slippingFrictionTimed;
-        double rollingFriction = ball.frictionRatio * phy.rollingFrictionTimed;
+        double slippingFriction = ball.frictionRatio * table.slipResistanceRatio * phy.slippingFrictionTimed;
+        double rollingFriction = ball.frictionRatio * table.rollResistanceRatio * phy.rollingFrictionTimed;
 
         double efficiency = TableCloth.SLIP_ACCELERATE_EFFICIENCY;
         double initSpeed = speed / phy.calculationsPerSec;
@@ -362,8 +362,8 @@ public class GameValues {
      * @return 预估：以给定的初速度，跑一定距离需要多久。时间单位是秒
      */
     public double estimateMoveTime(Phy phy, double initSpeed, double distance) {
-        double slippingFriction = ball.frictionRatio * phy.slippingFrictionTimed;
-        double rollingFriction = ball.frictionRatio * phy.rollingFrictionTimed;
+        double slippingFriction = ball.frictionRatio * table.slipResistanceRatio * phy.slippingFrictionTimed;
+        double rollingFriction = ball.frictionRatio * table.rollResistanceRatio * phy.rollingFrictionTimed;
         double efficiency = TableCloth.SLIP_ACCELERATE_EFFICIENCY;
 
         double speed = initSpeed / phy.calculationsPerSec;

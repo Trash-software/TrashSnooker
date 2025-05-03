@@ -13,6 +13,7 @@ import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.util.*;
@@ -746,6 +747,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         NavigableSet<DefenseAngle> availableRads = new TreeSet<>();
         for (Ball ball : legalBalls) {
+            if (!game.pointToPointCanPassBall(whitePos[0], whitePos[1], 
+                    ball.getX(), ball.getY(), game.getCueBall(), ball, 
+                    false, false)) {
+                continue;
+            }
+            
             double[] directionVec = new double[]{ball.getX() - whitePos[0], ball.getY() - whitePos[1]};
             double distance = Math.hypot(directionVec[0], directionVec[1]);
             double alpha = Algebra.thetaOf(directionVec);  // 白球到目标球球心连线的绝对角
@@ -817,6 +824,10 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 totalTicks,
                 POWER_TICK_EXP
         );
+        
+        if (availableRads.size() > 180) {
+            Util.randomShrinkTo(availableRads, 180);
+        }
 
         for (double selectedPower : selectedPowerArray) {
             for (DefenseAngle da : availableRads) {
@@ -990,6 +1001,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
         double degreesTick = 100.0 / 2 / aps.defense;
 //        double powerTick = 1000.0 / aps.defense;
+//        double eachBallNTicks = aps.defense / 8.0;
         return directDefense(legalBalls, degreesTick,
                 5.0, actualPowerHigh, phy);
     }

@@ -308,7 +308,8 @@ public class Analyzer {
                     copy.isInLineHandBall());
 
             Game.SeeAble seeAble = copy.countSeeAbleTargetBalls(
-                    whiteStopPos[0], whiteStopPos[1],
+                    whiteStopPos[0], 
+                    whiteStopPos[1],
                     opponentBalls,
                     1
             );
@@ -316,10 +317,10 @@ public class Analyzer {
             penalty += (cueParams.getCueAngleDeg() - Values.DEFAULT_CUE_ANGLE);
 
             if (wp.getSecondCollide() != null) {
-                penalty += 50;
+                penalty += 90;
             }
             if (wp.isCueBallFirstBallTwiceColl()) {
-                penalty += 20;  // 二次碰撞
+                penalty += 40;  // 二次碰撞
             }
 
             DefenseResult defenseResult = new DefenseResult(opponentTarget, opponentBalls, isSolving);

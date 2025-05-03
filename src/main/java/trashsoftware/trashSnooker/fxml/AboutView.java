@@ -33,8 +33,8 @@ public class AboutView implements Initializable {
     );
 
     public static final Map<String, String[]> ART_DESIGNER_NAMES = Map.of(
-            "zh", new String[]{"KR"},
-            "en", new String[]{"KR"}
+            "zh", new String[]{"KR", "奥特曼"},
+            "en", new String[]{"KR", "Autumn"}
     );
 
     public static final Map<String, String[]> CONSULTANTS_NAME = Map.of(
