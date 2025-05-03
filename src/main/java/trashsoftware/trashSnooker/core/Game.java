@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AttackChoice;
@@ -754,11 +755,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public List<DoublePotAiming> doublePotAble(double whiteX,
                                                double whiteY,
                                                Collection<Ball> legalBalls,
-                                               int cushionLimit) {
+                                               int cushionLimit,
+                                               @Nullable Pocket[] legalPockets) {
+        if (legalPockets == null) legalPockets = gameValues.table.pockets;
         List<DoublePotAiming> list = new ArrayList<>();
         for (Ball ball : legalBalls) {
             double[] targetPos = new double[]{ball.x, ball.y};
-            for (Pocket pocket : gameValues.table.pockets) {
+            for (Pocket pocket : legalPockets) {
                 // 检查每个球去每个袋是否有翻袋线路
                 // 目前仅支持一库
                 Set<DoublePotAiming> c1 = singleCushionDouble(whiteX, whiteY, ball, targetPos, pocket);

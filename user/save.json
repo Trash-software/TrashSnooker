@@ -1,46 +1,41 @@
 {
   "winRecords": {
-    "1": 2,
-    "2": 1,
-    "3": 2,
-    "4": 2
+    "1": 1,
+    "2": 1
   },
-  "p2Wins": 3,
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
-    "gameRule": "CHINESE_EIGHT",
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "Neil Robertson",
-    "playerType": "PLAYER",
+    "person": "Trump",
+    "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "p1Wins": 1,
+  "p1Wins": 2,
   "p2": {
     "playerNumber": 2,
-    "gameRule": "CHINESE_EIGHT",
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "custom_player_4",
+    "person": "Ding Junhui",
     "playerType": "COMPUTER",
-    "let": {
-      "lets": {"BACK": 2},
-      "type": "ball"
-    }
+    "let": {"type": "notLet"}
   },
-  "startTime": 1746215694011,
+  "startTime": 1746264721172,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
-    "subRules": ["CHINESE_EIGHT_STD"],
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
+    "subRules": ["SNOOKER_STD"],
     "devMode": true,
     "table": {
-      "tableOrdinal": 1,
+      "tableOrdinal": 0,
       "pocketDifficultyOrdinal": 3,
-      "holeSizeOrdinal": 3
+      "holeSizeOrdinal": 2
     }
   },
-  "totalFrames": 5,
+  "totalFrames": 3,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"

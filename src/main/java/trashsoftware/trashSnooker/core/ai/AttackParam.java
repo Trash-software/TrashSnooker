@@ -40,6 +40,7 @@ public class AttackParam {
         );
         double sideDevRad = devs[0];
         double aimingSd = devs[1];
+        double mbummeSd = devs[2];
 
         double totalDt = attackChoice.targetHoleDistance + attackChoice.whiteCollisionDistance;
         double whiteInitSpeed = CuePlayParams.getSpeedOfPower(cueParams.actualPower(), 0);
@@ -57,7 +58,7 @@ public class AttackParam {
 //            System.out.println("Path change " + pathChange);  
 
         // 白球的偏差标准差
-        double whiteBallDevRad = sideDevRad + aimingSd;
+        double whiteBallDevRad = sideDevRad + aimingSd + mbummeSd;
         // 白球在撞击点时的偏差标准差，毫米
         // 这里sin和tan应该差不多，都不准确，tan稍微好一点点
         double sdCollisionMm = Math.tan(whiteBallDevRad) * attackChoice.whiteCollisionDistance +

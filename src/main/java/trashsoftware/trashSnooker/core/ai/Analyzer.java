@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
+import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
@@ -27,7 +28,8 @@ public class Analyzer {
                 whitePos[0],
                 whitePos[1],
                 legalBalls,
-                1
+                1,
+                null
         );
 //        System.out.println(doublePots.size() + " double possibilities");
 
@@ -130,6 +132,54 @@ public class Analyzer {
         }
         Collections.sort(attackChoices);
         return attackChoices;
+    }
+    
+    public static AttackChoice choiceFromDifferentWhitePos(
+            Game<?, ?> game,
+            double[] whitePos,
+            AttackChoice origChoice
+    ) {
+        if (origChoice instanceof AttackChoice.DirectAttackChoice direct) {
+            if (game.pointToPointCanPassBall(whitePos[0], whitePos[1],
+                    direct.collisionPos[0], direct.collisionPos[1], game.getCueBall(), direct.ball, true,
+                    true)) {
+                // 从白球处看得到进球点
+                // nullable
+                return AttackChoice.DirectAttackChoice.createChoice(
+                        game,
+                        game.getEntireGame().predictPhy,
+                        direct.attackingPlayer,
+                        whitePos,
+                        direct.ball,
+                        null,
+                        direct.attackTarget,
+                        direct.isPositioning,
+                        direct.dirHole,
+                        null
+                );
+            }
+        } else if (origChoice instanceof AttackChoice.DoubleAttackChoice dou) {
+            List<Game.DoublePotAiming> doublePots = game.doublePotAble(
+                    whitePos[0],
+                    whitePos[1],
+                    Set.of(dou.ball),
+                    1,
+                    new Pocket[]{dou.pocket}
+            );
+            if (doublePots.isEmpty()) return null;
+            Game.DoublePotAiming dpa = doublePots.get(0);
+            return AttackChoice.DoubleAttackChoice.createChoice(
+                    game,
+                    game.getEntireGame().predictPhy,
+                    dou.attackingPlayer,
+                    whitePos,
+                    dpa,
+                    null,
+                    dou.attackTarget,
+                    dou.isPositioning
+            );
+        }
+        return null;
     }
 
     static double attackProbThreshold(double base, AiPlayStyle aps) {
@@ -374,7 +424,7 @@ public class Analyzer {
     }
 
     /**
-     * @return {sideDevRad, aimingSd, powerSd}
+     * @return {sideDevRad, sideCurveDevRad, aimingSd, powerSd}
      */
     static double[] aiStandardDeviation(
             CueParams cueParams,
@@ -399,26 +449,42 @@ public class Analyzer {
 
         // 和杆还是有关系的，拿着大头杆打斯诺克就不会去想很难的球
         double actualSideSpin = cueParams.actualSideSpin();
+        
+        double lowActualPower = cueParams.actualPower() * (1 - powerSd);
+        double highActualPower = cueParams.actualPower() * (1 + powerSd);
 
         // dev=deviation, 由于力量加上塞造成的1倍标准差偏差角，应为小于PI的正数
         double[] devOfLowPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
-                cueParams.actualPower() * (1 - powerSd), 1, 0);
+                lowActualPower, 1, 0);
         double radDevOfLowPower = Algebra.thetaOf(devOfLowPower);
         if (radDevOfLowPower > Math.PI)
             radDevOfLowPower = Algebra.TWO_PI - radDevOfLowPower;
 
         double[] devOfHighPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
-                cueParams.actualPower() * (1 + powerSd), 1, 0);
+                highActualPower, 1, 0);
         double radDevOfHighPower = Algebra.thetaOf(devOfHighPower);
         if (radDevOfHighPower > Math.PI)
             radDevOfHighPower = Algebra.TWO_PI - radDevOfHighPower;
 
         double sideDevRad = (radDevOfHighPower - radDevOfLowPower) / 2;
-        sideDevRad *= 1.5;  // 稍微多惩罚一点
+        sideDevRad *= 1.25;  // 稍微多惩罚一点
+        
+        // 估算扎杆弧线的影响
+        double cosMbu = Math.cos(Math.toRadians(cueParams.getCueAngleDeg()));
+        double mbummeMag = CuePlayParams.mbummeMag(cosMbu);
+        double speedLow = CuePlayParams.getSpeedOfPower(lowActualPower, cueParams.getCueAngleDeg());
+        double sideSpinRatioLow = Math.pow(speedLow / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
+        double mbummeLow = sideSpinRatioLow * actualSideSpin * Values.MAX_SIDE_SPIN_SPEED * mbummeMag;
+        double speedHigh = CuePlayParams.getSpeedOfPower(highActualPower, cueParams.getCueAngleDeg());
+        double sideSpinRatioHigh = Math.pow(speedHigh / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
+        double mbummeHigh = sideSpinRatioHigh * actualSideSpin * Values.MAX_SIDE_SPIN_SPEED * mbummeMag;
+
+        double curveDevRad = Math.abs(mbummeHigh - mbummeLow) * 1;
 
         // 若球手不喜欢加塞，加大sideDevRad
         double likeSideMul = 110 / (aps.likeSide + 10);
         sideDevRad *= likeSideMul;
+        curveDevRad *= likeSideMul;
 
         // 瞄准的1倍标准差偏差角
         double aimingSd;
@@ -436,7 +502,8 @@ public class Analyzer {
                     cueParams.getCueAngleDeg());
         }
 
-        return new double[]{sideDevRad, aimingSd, powerSd};
+//        System.out.println("Devs: " + sideDevRad + " " + curveDevRad + " " + aimingSd);
+        return new double[]{sideDevRad, curveDevRad, aimingSd, powerSd};
     }
 
     static WhitePrediction[] toleranceAnalysis(
@@ -485,7 +552,7 @@ public class Analyzer {
                 false
         );
 
-        double whiteBallDevRad = (devs[0] + devs[1]) * 1.0;  // 这个值越小，AI越愿意尝试走钢丝
+        double whiteBallDevRad = (devs[0] + devs[1] + devs[2]) * 1.0;  // 这个值越小，AI越愿意尝试走钢丝
         double[] leftDir = Algebra.rotateVector(origCpp.vx, origCpp.vy, -whiteBallDevRad);
         double[] rightDir = Algebra.rotateVector(origCpp.vx, origCpp.vy, whiteBallDevRad);
 
@@ -498,12 +565,12 @@ public class Analyzer {
         CuePlayParams rightCpp = origCpp.deviated(
                 rightDir[0], rightDir[1]
         );
-        double light = 1 - devs[2];
+        double light = 1 - devs[3];
         CuePlayParams lightCpp = origCpp.deviated(
                 origCpp.vx * light,
                 origCpp.vy * light
         );
-        double heavy = 1 + devs[2];
+        double heavy = 1 + devs[3];
         CuePlayParams heavyCpp = origCpp.deviated(
                 origCpp.vx * heavy,
                 origCpp.vy * heavy
