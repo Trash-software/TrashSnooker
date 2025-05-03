@@ -222,7 +222,7 @@ public class ChampionshipData {
             metrics = factory
                     .create()
                     .pocketDifficulty(factory.defaultDifficulty())
-                    .holeSize(factory.defaultHole())
+                    .holeSize(factory.defaultPocketSize())
                     .build();
             tableSpec = new TableSpec(cloth, metrics);
         }

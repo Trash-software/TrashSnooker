@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Util {
 
@@ -32,6 +34,13 @@ public class Util {
     public static boolean arrayContains(int[] array, int value) {
         for (int ele : array) if (ele == value) return true;
         return false;
+    }
+    
+    public static <T> T findInArray(T[] array, Function<T, Boolean> predicate) {
+        for (T obj : array) {
+            if (predicate.apply(obj)) return obj;
+        }
+        return null;
     }
 
     public static String timeStampFmt(Timestamp timestamp) {

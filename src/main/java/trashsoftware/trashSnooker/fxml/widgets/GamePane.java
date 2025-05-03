@@ -142,7 +142,7 @@ public class GamePane extends StackPane {
 
         for (Ball ball : gameHolder.getAllBalls()) {
             ball.model.setVisualRadius(gameValues.ball.ballRadius * scale);
-            ball.model.initRotation(randomRotate);
+            ball.model.initRotation(randomRotate && (!ball.isWhite()));
             getChildren().add(ball.model.sphere);
             ball.model.sphere.setMouseTransparent(true);
         }

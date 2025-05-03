@@ -52,6 +52,7 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
                 selectedPower,
                 0.0,
                 0.0,
+                8.0,
                 game,
                 aiPlayer.getInGamePlayer(),
                 aiPlayer.getPlayerPerson().handBody.getPrimary()
@@ -59,8 +60,7 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
         CuePlayParams cpp = CuePlayParams.makeIdealParams(
                 unitXY[0],
                 unitXY[1],
-                cueParams,
-                5.0
+                cueParams
         );
         return new FinalChoice.DefenseChoice(unitXY, cueParams, cpp);
     }

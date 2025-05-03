@@ -230,11 +230,11 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         InGamePlayer p1 = gameSettings.getPlayer1();
         InGamePlayer p2 = gameSettings.getPlayer2();
 
-        LetBall.chineseEightLetBall(p1.getPlayerPerson(), p1Letted,
-                p2.getPlayerPerson(), p2Letted);
-
-        System.out.println("P1 letted balls: " + p1Letted);
-        System.out.println("P2 letted balls: " + p2Letted);
+//        LetBall.chineseEightLetBall(p1.getPlayerPerson(), p1Letted,
+//                p2.getPlayerPerson(), p2Letted);
+//
+//        System.out.println("P1 letted balls: " + p1Letted);
+//        System.out.println("P2 letted balls: " + p2Letted);
 
         player1 = new ChineseEightBallPlayer(p1, p1Letted);
         player2 = new ChineseEightBallPlayer(p2, p2Letted);
@@ -418,8 +418,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             if (isBreaking) {
                 // 开球犯规但进黑八不算输
                 pickupCriticalBall(getEightBall());
-                cueBall.pot();
-                ballInHand = true;
+                setBallInHand();
                 switchPlayer();
                 return;
             }
@@ -467,8 +466,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         }
 
         if (thisCueFoul.isFoul() && !getEightBall().isNotOnTable()) {
-            cueBall.pot();
-            ballInHand = true;
+            setBallInHand();
             switchPlayer();
             currentTarget = getTargetOfPlayer(currentPlayer);  // 在switchPlayer之后
             System.out.println(thisCueFoul.getAllReasons());
@@ -547,8 +545,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                     if (isBreaking) {
                         pickupCriticalBall(getEightBall());
                         if (thisCueFoul.isFoul()) {
-                            cueBall.pot();
-                            ballInHand = true;
+                            setBallInHand();
                             switchPlayer();
                             System.out.println(thisCueFoul.getAllReasons());
                         } else {

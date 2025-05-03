@@ -16,7 +16,7 @@ public abstract class FinalChoice {
         public final boolean isPureAttack;
         final Game<?, ?> game;
         final AiCue.KickPriceCalculator kickPriceCalculator;
-        final AiCue.AttackParam attackParams;
+        final AttackParam attackParams;
         final List<AttackChoice> nextStepAttackChoices;  // Sorted from good to bad
         final WhitePrediction whitePrediction;
         final GamePlayStage stage;
@@ -32,7 +32,7 @@ public abstract class FinalChoice {
 
         protected IntegratedAttackChoice(
                 Game<?, ?> game,
-                AiCue.AttackParam attackParams,
+                AttackParam attackParams,
                 List<AttackChoice> nextStepAttackChoices,
                 int nextStepTarget,
                 CuePlayParams params,
@@ -59,7 +59,7 @@ public abstract class FinalChoice {
          * 由defense转来的，连攻带防，但不能与纯进攻的一起比较，因为price完全是防守的price
          */
         protected IntegratedAttackChoice(Game<?, ?> game,
-                                         AiCue.AttackParam attackParams,
+                                         AttackParam attackParams,
                                          int nextStepTarget,
                                          CuePlayParams params,
                                          Phy phy,
@@ -143,8 +143,8 @@ public abstract class FinalChoice {
                         true,
                         false
                 );
-//                tolerances
                 
+                double acceptablePotProb = firstChoice.defaultRef.potProb - 0.15;
                 double tolerancePenalty = 1.0;
                 for (WhitePrediction tor : tolerances) {
                     if (whitePrediction.getSecondCollide() != tor.getSecondCollide()) {
@@ -152,45 +152,30 @@ public abstract class FinalChoice {
                     }
                     
                     double[] sp = tor.stopPoint();
-                    boolean canHit = game.pointToPointCanPassBall(sp[0], sp[1],
-                            firstChoice.collisionPos[0], firstChoice.collisionPos[1],
-                            game.getCueBall(), firstChoice.ball, 
-                            true, 
-                            true);
-                    if (!canHit) {
+//                    boolean canHit = game.pointToPointCanPassBall(sp[0], sp[1],
+//                            firstChoice.collisionPos[0], firstChoice.collisionPos[1],
+//                            game.getCueBall(), firstChoice.ball, 
+//                            true, 
+//                            true);
+//                    if (!canHit) {
+//                        tolerancePenalty *= 3.0;
+//                    }
+                    AttackChoice torChoice = Analyzer.choiceFromDifferentWhitePos(
+                            game,
+                            sp,
+                            firstChoice
+                    );
+                    if (torChoice == null) {
                         tolerancePenalty *= 3.0;
+                    } else {
+                        if (torChoice.defaultRef.potProb < acceptablePotProb) {
+                            tolerancePenalty += (acceptablePotProb - torChoice.defaultRef.potProb) * 10.0;
+                        }
                     }
                 }
                 
                 penalty = tolerancePenalty;
                 price /= penalty;
-                
-//                // 根据走位目标位置的容错空间，结合白球的行进距离，对长距离低容错的路线予以惩罚
-//                if (firstChoice instanceof AttackChoice.DirectAttackChoice direct) {
-//                    double[] posTolerance = direct.leftRightTolerance();
-//                    positionErrorTolerance = Math.min(posTolerance[0], posTolerance[1]);
-//                } else {
-//                    positionErrorTolerance = game.getGameValues().ball.ballDiameter * 2;  // 随手输的
-//                }
-//
-//                double dtTravel = whitePrediction.getDistanceTravelledAfterCollision();
-//                double ratio = dtTravel / positionErrorTolerance;
-//                double decisionWeight = 10.0;  // 权重
-//
-//                if (Double.isInfinite(ratio) || Double.isNaN(ratio)) {
-//                    penalty = dtTravel / 100;
-//                    price /= 1 + penalty;
-//                } else if (ratio > decisionWeight) {
-//                    penalty = Math.pow((ratio - decisionWeight) / 5.0, 1.25) * 2.0;  // 随便编的
-//                    price /= 1 + penalty;
-//                }
-
-                // 正常情况下少跑点
-//                AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
-//                double divider = aps.likeShow * 50.0;
-//                double dtTravel = whitePrediction.getDistanceTravelledAfterCollision();
-//                double penalty = dtTravel < 1500 ? 0 : (dtTravel - 1500) / divider;
-//                price /= 1 + penalty;
             }
         }
     }
@@ -198,11 +183,13 @@ public abstract class FinalChoice {
     public static class DefenseChoice extends FinalChoice implements Comparable<DefenseChoice> {
 
         final double penalty;
-        final double tolerancePenalty;
+        final double stabilityScore;
         protected PlayerHand handSkill;
         protected Ball ball;
-        protected double snookerPrice;
-        protected double opponentAttackPrice;
+//        protected double snookerScore;
+//        protected double opponentAttackChance;
+        protected DefenseResult defenseResult;
+//        protected double opponentAvailPrice;
         protected double price;  // price还是越大越好
         protected double[] cueDirectionUnitVector;  // selected
 
@@ -210,29 +197,27 @@ public abstract class FinalChoice {
 
         CuePlayParams cuePlayParams;
         WhitePrediction wp;
-        AttackChoice opponentEasiestChoice;
+//        AttackChoice opponentEasiestChoice;
 
         boolean whiteCollidesOther;
         boolean targetCollidesOther;
 
         protected DefenseChoice(Ball ball,
                                 double nativePrice,
-                                double snookerPrice,
-                                double opponentAttackPrice,
+                                DefenseResult defenseResult,
                                 double penalty,
-                                double tolerancePenalty,
+                                double stabilityScore,
                                 double[] cueDirectionUnitVector,
                                 CueParams cueParams,
                                 WhitePrediction wp,
                                 CuePlayParams cuePlayParams,
-                                AttackChoice opponentEasiestChoice,
                                 boolean whiteCollidesOther,
                                 boolean targetCollidesOther) {
             this.ball = ball;
-            this.snookerPrice = snookerPrice;
-            this.opponentAttackPrice = opponentAttackPrice;
+//            this.opponentAttackChance = opponentAttackChance;
+            this.defenseResult = defenseResult;
             this.penalty = penalty;
-            this.tolerancePenalty = tolerancePenalty;
+            this.stabilityScore = stabilityScore;
 
 //            this.collideOtherBall = collideOtherBall;
             this.cueDirectionUnitVector = cueDirectionUnitVector;
@@ -240,7 +225,7 @@ public abstract class FinalChoice {
             this.cuePlayParams = cuePlayParams;
             this.wp = wp;
 //            this.handSkill = handSkill;
-            this.opponentEasiestChoice = opponentEasiestChoice;
+//            this.opponentEasiestChoice = opponentEasiestChoice;
 
             this.whiteCollidesOther = whiteCollidesOther;
             this.targetCollidesOther = targetCollidesOther;
@@ -256,28 +241,32 @@ public abstract class FinalChoice {
                                 CuePlayParams cuePlayParams) {
             this(null,
                     1.0,
-                    0.0,
-                    0.0,
-                    0.0,
+                    new DefenseResult(0, new ArrayList<>(), false),
+                    1.0,
                     1.0,
                     cueDirectionUnitVector,
                     cueParams,
                     null,
                     cuePlayParams,
-                    null,
                     true,
                     true);
         }
 
         private void generatePrice(double nativePrice) {
-            double totalPen = penalty * tolerancePenalty;
-            this.price = snookerPrice / totalPen 
-                    - opponentAttackPrice * totalPen / nativePrice;
+//            double totalPen = penalty * stabilityScore;
+//            this.price = snookerScore / totalPen 
+//                    - opponentAttackChance * totalPen / nativePrice;
+            this.price = nativePrice * 100
+                    + stabilityScore
+                    + defenseResult.snookerScore
+                    - defenseResult.opponentAvailPrice
+                    - defenseResult.opponentAttackPrice
+                    - penalty;
 
-            if (wp != null && wp.isHitWallBeforeHitBall()) {
-                // 应该是在解斯诺克
-                this.price /= (wp.getDistanceTravelledBeforeCollision() / 1000);  // 不希望白球跑太远
-            }
+//            if (wp != null && wp.isHitWallBeforeHitBall()) {
+//                // 应该是在解斯诺克
+//                this.price /= (wp.getDistanceTravelledBeforeCollision() / 1000);  // 不希望白球跑太远
+//            }
 
         }
 
@@ -288,14 +277,24 @@ public abstract class FinalChoice {
 
         @Override
         public String toString() {
-            return String.format("price %f, snk %f, oppo atk %f, pen %f, torPen %f, white col: %b, tar col: %b",
-                    price,
-                    snookerPrice,
-                    opponentAttackPrice,
-                    penalty,
-                    tolerancePenalty,
-                    whiteCollidesOther,
-                    targetCollidesOther);
+            return "DefenseChoice{" +
+                    "price=" + price +
+                    ", penalty=" + penalty +
+                    ", stabilityScore=" + stabilityScore +
+//                    ", handSkill=" + handSkill +
+                    ", ball=" + ball +
+                    ", snookerScore=" + defenseResult.snookerScore +
+                    ", opponentAttackChance=" + defenseResult.opponentAttackPrice +
+                    ", opponentAvailPrice=" + defenseResult.opponentAvailPrice +
+//                    ", cueDirectionUnitVector=" + Arrays.toString(cueDirectionUnitVector) +
+//                    ", cueParams=" + cueParams +
+//                    ", cuePlayParams=" + cuePlayParams +
+//                    ", wp=" + wp +
+//                    ", opponentEasiestChoice=" + opponentEasiestChoice +
+//                    ", opponentChances=" + defenseResult + 
+                    ", whiteCollidesOther=" + whiteCollidesOther +
+                    ", targetCollidesOther=" + targetCollidesOther +
+                    '}';
         }
     }
 }

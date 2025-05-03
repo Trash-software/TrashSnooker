@@ -1,12 +1,168 @@
 {
   "financial": {
-    "money": 1651180,
-    "invoices": [],
+    "money": 1643780,
+    "invoices": [
+      {
+        "inGameDate": "2027/2/10",
+        "moneyBefore": 1651180,
+        "moneyAfter": 1648780,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2400
+        }],
+        "timestamp": "2025-05-03 05:50:47"
+      },
+      {
+        "inGameDate": "2027/2/22",
+        "moneyBefore": 1648780,
+        "moneyAfter": 1647780,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1000
+        }],
+        "timestamp": "2025-05-03 05:50:49"
+      },
+      {
+        "inGameDate": "2027/2/27",
+        "moneyBefore": 1647780,
+        "moneyAfter": 1647380,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 400
+        }],
+        "timestamp": "2025-05-03 05:50:51"
+      },
+      {
+        "inGameDate": "2027/3/1",
+        "moneyBefore": 1647380,
+        "moneyAfter": 1646780,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 600
+        }],
+        "timestamp": "2025-05-03 05:50:55"
+      },
+      {
+        "inGameDate": "2027/3/4",
+        "moneyBefore": 1646780,
+        "moneyAfter": 1645580,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1200
+        }],
+        "timestamp": "2025-05-03 05:50:57"
+      },
+      {
+        "inGameDate": "2027/3/10",
+        "moneyBefore": 1645580,
+        "moneyAfter": 1643980,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1600
+        }],
+        "timestamp": "2025-05-03 05:50:58"
+      },
+      {
+        "item": 5,
+        "inGameDate": "2027/3/18",
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing",
+        "moneyBefore": 1643980,
+        "moneyAfter": 1644180,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-03 05:50:58"
+      },
+      {
+        "inGameDate": "2027/3/18",
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing",
+        "moneyBefore": 1644180,
+        "moneyAfter": 1643180,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2025-05-03 05:50:58"
+      },
+      {
+        "inGameDate": "2027/3/18",
+        "year": 2027,
+        "match": "eight_master_tour_beijing",
+        "moneyBefore": 1643180,
+        "moneyAfter": 1647180,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 4000,
+          "raw": 5000
+        }},
+        "timestamp": "2025-05-03 05:51:14"
+      },
+      {
+        "inGameDate": "2027/3/18",
+        "moneyBefore": 1647180,
+        "moneyAfter": 1645780,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1400
+        }],
+        "timestamp": "2025-05-03 05:51:18"
+      },
+      {
+        "inGameDate": "2027/3/25",
+        "moneyBefore": 1645780,
+        "moneyAfter": 1644780,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1000
+        }],
+        "timestamp": "2025-05-03 05:51:21"
+      },
+      {
+        "inGameDate": "2027/3/30",
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+eight_spadina_open",
+        "moneyBefore": 1644780,
+        "moneyAfter": 1643780,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2025-05-03 05:51:21"
+      }
+    ],
     "level": 42,
-    "expInThisLevel": 1342,
+    "expInThisLevel": 1392,
     "availPerks": 0,
     "totalPerks": 44,
-    "totalExp": 29425
+    "totalExp": 29475
   },
-  "checksum": "E93B1FF1F7A17B5772977F30E792C1F3"
+  "checksum": "7678FE19429909AE1C65E4A5C5D4351D"
 }

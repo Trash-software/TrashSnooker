@@ -206,7 +206,10 @@ public class Cue {
     public void setLastSelectTime() {
         this.lastSelectTime = new Date();
     }
-    
+
+    /**
+     * 将[-1,1]范围的打点转化为不会呲杆的打点
+     */
     public double[] aiCuePoint(double[] aiCuePoint, BallMetrics ballMetrics) {
         double fb = aiCuePoint[0];
         double side = aiCuePoint[1];

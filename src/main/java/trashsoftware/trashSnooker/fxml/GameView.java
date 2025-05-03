@@ -112,7 +112,7 @@ public class GameView implements Initializable {
     public static double frameTimeMs = 1000.0 / productionFrameRate;
 
     private static double uiFrameTimeMs = 10.0;
-    private static double defaultMaxPredictLength = 1200;
+    private static double defaultMaxPredictLength = 800;
     private final List<Node> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
     private final Map<Cue, CueModel> cueModelMap = new HashMap<>();
     @FXML
@@ -205,8 +205,8 @@ public class GameView implements Initializable {
     int cueTimeCounter;
     Timer cueTimer;
     //    AnimationTimer animationTimer;
-    private double minPredictLengthPotDt = 2000;
-    private double maxPredictLengthPotDt = 100;
+    private final double minPredictLengthPotDt = 2000;  // 多远的距离会让瞄准线最短
+    private final double maxPredictLengthPotDt = 100;
     private double ballDiameter;
     private double ballRadius;
     private double cueCanvasWH = 80.0;
@@ -1382,7 +1382,7 @@ public class GameView implements Initializable {
 
     private void setupBalls() {
         GameHolder gameHolder = getActiveHolder();
-        gamePane.setupBalls(gameHolder, true);
+        gamePane.setupBalls(gameHolder, !gameHolder.getGameValues().isTraining());
     }
 
     private void tryAutoChangeBreakCue(Player breaker) {
@@ -1790,11 +1790,13 @@ public class GameView implements Initializable {
     @FXML
     void p1AddScoreAction() {
         game.getGame().getPlayer1().addScore(10);
+        drawScoreBoard(game.getGame().getPlayer2(), false);
     }
 
     @FXML
     void p2AddScoreAction() {
         game.getGame().getPlayer2().addScore(10);
+        drawScoreBoard(game.getGame().getPlayer2(), false);
     }
 
     @FXML
@@ -1938,7 +1940,7 @@ public class GameView implements Initializable {
 
         if (game.getGame().isPlacedHandBallButNoHit()) {
             // 哪有自己摆好球再让对手打的
-            game.getGame().setBallInHand();
+            game.getGame().forceSetBallInHand();
         }
 
         curDefAttempt = null;
@@ -1965,7 +1967,7 @@ public class GameView implements Initializable {
         cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
         hideCue();
-        game.getGame().setBallInHand();
+        game.getGame().forceSetBallInHand();
 
         cursorDrawer.synchronizeGame();
 
@@ -2140,6 +2142,7 @@ public class GameView implements Initializable {
                 getSelectedPower(),
                 getSelectedFrontBackSpin(),
                 getSelectedSideSpin(),
+                cueAngleDeg,
                 game.getGame(),
                 player.getInGamePlayer(),
                 handSkill
@@ -2449,11 +2452,11 @@ public class GameView implements Initializable {
                                        PotAttempt currentAttempt,
                                        PlayerHand usedHand,
                                        boolean snookered) {
-        gameValues.estimateMoveTime(
-                game.playPhy,
-                CuePlayParams.getSpeedOfPower(getActualPowerPercentage(), 0),
-                2000
-        );
+//        gameValues.estimateMoveTime(
+//                game.playPhy,
+//                CuePlayParams.getSpeedOfPower(getActualPowerPercentage(), 0),
+//                2000
+//        );
         Movement calculatedMovement = game.getGame().cue(params, game.playPhy);
         CueRecord cueRecord = makeCueRecord(player, params);  // 必须在randomCueError之后
         TargetRecord thisTarget = makeTargetRecord(player);
@@ -2755,8 +2758,10 @@ public class GameView implements Initializable {
                 powerSlider.setValue(cueResult.getCueParams().selectedPower());
                 cuePointX = cueCanvasWH / 2 + cueResult.getCueParams().selectedSideSpin() * cueAreaRadius;
                 cuePointY = cueCanvasWH / 2 - cueResult.getCueParams().selectedFrontBackSpin() * cueAreaRadius;
-                cueAngleDeg = 0.0;
+                cueAngleDeg = cueResult.getCueParams().getCueAngleDeg();
+                setCueAngleLabel();
 
+                recalculateObstacles();
                 aimingChanged();
 
                 CuePlayParams realParams = applyRandomCueError(player);
@@ -2899,6 +2904,7 @@ public class GameView implements Initializable {
                 selectedPower,
                 selectedFrontBackSpin,
                 selectedSideSpin,
+                cueAngleDeg,
                 game.getGame(),
                 game.getGame().getCuingIgp(),
                 currentHand
@@ -2907,7 +2913,6 @@ public class GameView implements Initializable {
                 cursorDirectionUnitX,
                 cursorDirectionUnitY,
                 cueParams,
-                cueAngleDeg,
                 slideCue);
     }
 
@@ -2949,26 +2954,6 @@ public class GameView implements Initializable {
 
     private double getSelectedFrontBackSpin(double cpy) {
         return (cueCanvasWH / 2 - cpy) / cueAreaRadius;
-    }
-
-    @Deprecated
-    private double getActualPowerPercentage() {
-        return getActualPowerPercentage(getSelectedPower(), getSelectedSideSpin(), getSelectedFrontBackSpin());
-    }
-
-    @Deprecated
-    private double getActualPowerPercentage(double selectedPower,
-                                            double selectedSideSpin,
-                                            double selectedFrontBackSpin) {
-        CueParams cueParams = CueParams.createBySelected(
-                selectedPower,
-                selectedFrontBackSpin,
-                selectedSideSpin,
-                game.getGame(),
-                game.getGame().getCuingIgp(),
-                currentHand
-        );
-        return cueParams.actualPower();
     }
 
     private void restoreCuePoint() {
@@ -3282,7 +3267,7 @@ public class GameView implements Initializable {
             }
             switch (mediaType) {
                 case MovementFrame.COLLISION -> {
-                    System.out.println("Collision sound: " + mediaValue);
+//                    System.out.println("Collision sound: " + mediaValue);
                     AudioPlayerManager.getInstance().play(
                             SoundInfo.bySpeed(SoundInfo.SoundType.BALL_COLLISION, mediaValue),
                             gameValues,
@@ -3292,7 +3277,7 @@ public class GameView implements Initializable {
                     );
                 }
                 case MovementFrame.POCKET_BACK -> {
-                    System.out.println("Pocket back sound: " + mediaValue);
+//                    System.out.println("Pocket back sound: " + mediaValue);
                     AudioPlayerManager.getInstance().play(
                             SoundInfo.bySpeed(SoundInfo.SoundType.POCKET_BACK, mediaValue),
                             gameValues,
@@ -3304,7 +3289,7 @@ public class GameView implements Initializable {
                 case MovementFrame.EDGE_CUSHION,
                      MovementFrame.CUSHION_LINE,
                      MovementFrame.CUSHION_ARC -> {
-                    System.out.println("Cushion sound: " + mediaValue);
+//                    System.out.println("Cushion sound: " + mediaValue);
                     AudioPlayerManager.getInstance().play(
                             SoundInfo.bySpeed(SoundInfo.SoundType.CUSHION, mediaValue),
                             gameValues,
@@ -4321,6 +4306,27 @@ public class GameView implements Initializable {
     private void calculateCueAbleArea() {
         cueAbleArea = getCuingCue().getCueAbleArea(gameValues.ball, 32);
     }
+    
+    private void recalculateObstacles() {
+        if (game == null || game.getGame() == null) return;
+
+        Cue currentCue = getCuingCue();
+        CueBackPredictor.Result backPre =
+                game.getGame().getObstacleDtHeight(cursorDirectionUnitX, cursorDirectionUnitY,
+                        currentCue.getCueTipWidth());
+
+        obstacleProjection = ObstacleProjection.createProjection(
+                backPre,
+                cursorDirectionUnitX,
+                cursorDirectionUnitY,
+                cueAngleDeg,
+                game.getGame().getCueBall(),
+                gameValues,
+                currentCue.getCueTipWidth()
+        );
+
+        calculateCueAbleArea();
+    }
 
     private void recalculateUiRestrictions() {
         recalculateUiRestrictions(false);
@@ -4329,34 +4335,7 @@ public class GameView implements Initializable {
     private void recalculateUiRestrictions(boolean forceChangeHand) {
         if (game == null || game.getGame() == null) return;
 
-//        Cue currentCue = game.getGame().getCuingPlayer().getInGamePlayer()
-//                .getCurrentCue(game.getGame());
-        Cue currentCue = getCuingCue();
-        CueBackPredictor.Result backPre =
-                game.getGame().getObstacleDtHeight(cursorDirectionUnitX, cursorDirectionUnitY,
-                        currentCue.getCueTipWidth());
-        if (backPre != null) {
-            if (backPre instanceof CueBackPredictor.CushionObstacle cushionObstacle) {
-                // 影响来自裤边
-                obstacleProjection = new CushionProjection(
-                        gameValues,
-                        game.getGame().getCueBall(),
-                        cushionObstacle.distance,
-                        cushionObstacle.relativeAngle,
-                        cueAngleDeg,
-                        currentCue.getCueTipWidth());
-            } else if (backPre instanceof CueBackPredictor.BallObstacle ballObstacle) {
-                // 后斯诺
-                obstacleProjection = new BallProjection(
-                        ballObstacle.obstacle, game.getGame().getCueBall(),
-                        cursorDirectionUnitX, cursorDirectionUnitY,
-                        cueAngleDeg);
-            }
-        } else {
-            obstacleProjection = null;
-        }
-
-        calculateCueAbleArea();
+        recalculateObstacles();
 
         // 启用/禁用手
         updateHandSelection(forceChangeHand);
@@ -4844,6 +4823,7 @@ public class GameView implements Initializable {
                     predictionQuality != PredictionQuality.NONE,
                     predictionQuality.secondCollision,
                     false,
+                    false,
                     true,
                     false);
             if (center == null) {
@@ -4861,6 +4841,7 @@ public class GameView implements Initializable {
                             WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
                             predictionQuality != PredictionQuality.NONE,
                             predictionQuality.secondCollision,
+                            false,
                             false,
                             true,
                             false

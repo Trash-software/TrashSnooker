@@ -1,8 +1,10 @@
 package trashsoftware.trashSnooker.core;
 
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AttackChoice;
+import trashsoftware.trashSnooker.core.ai.AttackParam;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
@@ -15,6 +17,7 @@ import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LisEightGa
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
+import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.MiniSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerTenGame;
@@ -173,6 +176,25 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //        for (SubRule subRule : subRules) {
 //            game.addSubRule(subRule);
 //        }
+        
+        if (!gameValues.isTraining()) {
+            if (game instanceof AbstractSnookerGame asg) {
+                if (asg.getP1().getLetScoreOrBall() instanceof LetScoreOrBall.LetScoreFace ls)
+                    asg.getPlayer1().addScore(ls.score);
+                else EventLogger.warning("Wrong let");
+                if (asg.getP2().getLetScoreOrBall() instanceof LetScoreOrBall.LetScoreFace ls)
+                    asg.getPlayer2().addScore(ls.score);
+                else EventLogger.warning("Wrong let");
+            }
+            else if (game instanceof ChineseEightBallGame ceb) {
+                if (ceb.getP1().getLetScoreOrBall() instanceof LetScoreOrBall.LetBallFace lb) {
+                    ceb.getPlayer1().getLettedBalls().putAll(lb.letBalls);
+                } else EventLogger.warning("Wrong let");
+                if (ceb.getP2().getLetScoreOrBall() instanceof LetScoreOrBall.LetBallFace lb) {
+                    ceb.getPlayer2().getLettedBalls().putAll(lb.letBalls);
+                } else EventLogger.warning("Wrong let");
+            }
+        }
 
         try {
             if (DBAccess.RECORD && entireGame != null) {
@@ -300,6 +322,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return newPotted;
     }
 
+    @Override
     public GameValues getGameValues() {
         return gameValues;
     }
@@ -337,7 +360,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             );
             if (directAttackChoice != null) {
                 CuePlayParams cpp = potAttempt.getCuePlayParams();
-                AiCue.AttackParam attackParam = new AiCue.AttackParam(
+                AttackParam attackParam = new AttackParam(
                         directAttackChoice,
                         this,
                         entireGame.predictPhy,
@@ -367,6 +390,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         System.out.println("Think time: " + thinkTime);
         if (thinkTime >= 60000) {
             AchManager.getInstance().addAchievement(Achievement.LONG_THINK, getCuingIgp());
+        }
+
+        if (false) {
+            double speed = Math.hypot(params.vx, params.vy);
+            System.out.println("Speed: " + speed + ", Est move:");
+            double estDtMove = gameValues.estimatedMoveDistance(phy, speed);
+            System.out.println(gameValues.estimateMoveTime(phy, speed, estDtMove - 10));
+            System.out.println("SpeedNeed: " + gameValues.estimateSpeedNeeded(phy, estDtMove));
         }
 
         whiteFirstCollide = null;
@@ -410,6 +441,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
      * @param predictPath              是否预测撞击之后的线路
      * @param checkCollisionAfterFirst 是否检查白球打到目标球后是否碰到下一颗球
      * @param predictTargetBall        是否记录对第一颗碰撞球进行模拟
+     * @param stopAtCollision          是否在白球撞上第一颗球时就结束模拟
      * @param wipe                     是否还原预测前的状态
      * @param useClone                 是否使用拷贝的白球，仅为多线程服务
      */
@@ -419,11 +451,19 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                         boolean predictPath,
                                         boolean checkCollisionAfterFirst,
                                         boolean predictTargetBall,
+                                        boolean stopAtCollision,
                                         boolean wipe,
                                         boolean useClone) {
         if (cueBall.isNotOnTable()) {
             return null;
         }
+        if (stopAtCollision) {
+            if (predictTargetBall || checkCollisionAfterFirst) {
+                throw new IllegalArgumentException("Argument 'stopAtCollision' is repulsive to" +
+                        "'checkCollisionAfterFirst' or 'predictTargetBall'.");
+            }
+        }
+        
         Ball cueBallClone = useClone ? cueBall.clone() : cueBall;
         cueBallClone.setVx(params.vx / phy.calculationsPerSec);
         cueBallClone.setVy(params.vy / phy.calculationsPerSec);
@@ -440,7 +480,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         lengthAfterWall,
                         predictPath,
                         checkCollisionAfterFirst,
-                        predictTargetBall);
+                        predictTargetBall,
+                        stopAtCollision);
 //        System.out.println("White prediction ms: " + (System.currentTimeMillis() - st));
 //        cueBall.setX(whiteX);
 //        cueBall.setY(whiteY);
@@ -714,11 +755,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public List<DoublePotAiming> doublePotAble(double whiteX,
                                                double whiteY,
                                                Collection<Ball> legalBalls,
-                                               int cushionLimit) {
+                                               int cushionLimit,
+                                               @Nullable Pocket[] legalPockets) {
+        if (legalPockets == null) legalPockets = gameValues.table.pockets;
         List<DoublePotAiming> list = new ArrayList<>();
         for (Ball ball : legalBalls) {
             double[] targetPos = new double[]{ball.x, ball.y};
-            for (Pocket pocket : gameValues.table.pockets) {
+            for (Pocket pocket : legalPockets) {
                 // 检查每个球去每个袋是否有翻袋线路
                 // 目前仅支持一库
                 Set<DoublePotAiming> c1 = singleCushionDouble(whiteX, whiteY, ball, targetPos, pocket);
@@ -960,6 +1003,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
         double maxShadowAngle = 0.0;
         double sumTargetDt = 0.0;
+        double weightedSumTargetDt = 0.0;
+        List<double[]> seeAbleBallIntervals = new ArrayList<>();
 
         for (Ball target : legalBalls) {
             double xDiff0 = target.x - whiteX;
@@ -967,6 +1012,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             double whiteTarDt = Math.hypot(xDiff0, yDiff0);
             double angle = Algebra.thetaOf(xDiff0, yDiff0);
             sumTargetDt += whiteTarDt;
+            weightedSumTargetDt += Math.pow(whiteTarDt / gameValues.table.maxLength, 0.5);  // 近的权重高
 
             double extraShadowAngle;
             if (situation == 1) {
@@ -1033,12 +1079,53 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
             if (canSee) {
                 if (listToPut != null) listToPut.add(target);
+
+                // 研究能看到的角度
+                double angleToCenter = Algebra.thetaOf(xDiff0, yDiff0);
+                double angularRadius = Math.asin(gameValues.ball.ballRadius / whiteTarDt);
+                double start, end;
+                if (Double.isNaN(angularRadius)) {
+                    start = Algebra.normalizeAnglePositive(angleToCenter - Math.PI / 4);
+                    end = Algebra.normalizeAnglePositive(angleToCenter + Math.PI / 4);
+                } else {
+                    start = Algebra.normalizeAnglePositive(angleToCenter - angularRadius);
+                    end = Algebra.normalizeAnglePositive(angleToCenter + angularRadius);
+                }
+                if (start > end) { // crosses 2π wrap
+                    seeAbleBallIntervals.add(new double[]{start, 2 * Math.PI});
+                    seeAbleBallIntervals.add(new double[]{0, end});
+                } else {
+                    seeAbleBallIntervals.add(new double[]{start, end});
+                }
+                
                 result++;
             }
         }
+        
+        // 能看到的球的总角度，没考虑球被部分遮挡这种情况
+        seeAbleBallIntervals.sort(Comparator.comparingDouble(a -> a[0]));
+//        System.out.println(Arrays.deepToString(seeAbleBallIntervals.toArray()));
+        List<double[]> merged = new ArrayList<>();
+        for (double[] interval : seeAbleBallIntervals) {
+            if (merged.isEmpty() || merged.get(merged.size() - 1)[1] < interval[0]) {
+                merged.add(interval);
+            } else {
+                double[] last = merged.get(merged.size() - 1);
+                last[1] = Math.max(last[1], interval[1]);
+            }
+        }
+
+        // Sum merged arc lengths
+        double totalSeeAbleRads = 0.0;
+        for (double[] arc : merged) {
+            totalSeeAbleRads += arc[1] - arc[0];
+        }
+        
         return new SeeAble(
                 result,
                 sumTargetDt / legalBalls.size(),
+                weightedSumTargetDt / legalBalls.size(),
+                totalSeeAbleRads,
                 maxShadowAngle);
     }
 
@@ -1058,13 +1145,19 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         List<double[][]> list = new ArrayList<>();
         double x = targetBall.x;
         double y = targetBall.y;
+        double[] xy = new double[]{x, y};
 //        BIG_LOOP:
         for (int i = 0; i < 6; i++) {
-            double[] holeOpenCenter = gameValues.allHoleOpenCenters[i];
-//            double[] holeBottom = gameValues.table.allHoles[i];
             Pocket pocket = gameValues.table.pockets[i];
-            if (!pocket.isMid &&
-                    Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ball.ballRadius &&
+//            double[] holeOpenCenter = gameValues.allHoleOpenCenters[i];
+            double[] holeOpenCenter = pocket.getOpenCenter(gameValues);
+//            double[] holeBottom = gameValues.table.allHoles[i];
+
+            boolean onPocketMouth = !pocket.isMid &&
+                    Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ball.ballRadius;
+            boolean inPocketMouth = Algebra.isBetweenPerpendiculars(holeOpenCenter, pocket.fallCenter, xy);
+
+            if ((onPocketMouth || inPocketMouth) &&
                     pointToPointCanPassBall(x, y, pocket.fallCenter[0], pocket.fallCenter[1], targetBall,
                             null, true, true)) {
                 // 目标球离袋口瞄球点太近了，转而检查真正的袋口
@@ -1101,9 +1194,16 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return finishedCuesCount == 1;
     }
 
-    public void setBallInHand() {
+    public void forceSetBallInHand() {
+        setBallInHand();
+    }
+
+    protected void setBallInHand() {
         ballInHand = true;
-        cueBall.pot();
+        if (!cueBall.isPotted()) {
+            cueBall.pot();
+        }
+        cueBall.model.initRotation(false);
     }
 
     public boolean isSnookered() {
@@ -1284,12 +1384,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         if (whiteFirstCollide == null) {
             // 没打到球，除了白球也不可能有球进，白球进不进也无所谓，分都一样
             thisCueFoul.addFoul(strings.getString("emptyCue"), foulScoreCalculator.get(), true);
-            if (cueBall.isPotted()) ballInHand = true;
+            if (cueBall.isPotted()) setBallInHand();
             AchManager.getInstance().addAchievement(Achievement.MISSED_SHOT, getCuingIgp());
         }
         if (cueBall.isPotted()) {
             thisCueFoul.addFoul(strings.getString("cueBallPot"), foulScoreCalculator.get(), false);
-            ballInHand = true;
+            setBallInHand();
             AchManager.getInstance().addAchievement(Achievement.CUE_BALL_POT, getCuingIgp());
         }
         if (rule.hasRule(Rule.HIT_CUSHION)) {
@@ -1636,11 +1736,20 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public static class SeeAble {
         public final int seeAbleTargets;
         public final double avgTargetDistance;
+        public final double weightedMeanTargetDistance;
+        public final double totalSeeAbleRads;
+//        public final double 
         public final double maxShadowAngle;  // 那颗球离白球的距离
 
-        SeeAble(int seeAbleTargets, double avgTargetDistance, double maxShadowAngle) {
+        SeeAble(int seeAbleTargets, 
+                double avgTargetDistance, 
+                double weightedMeanTargetDistance,
+                double totalSeeAbleRads,
+                double maxShadowAngle) {
             this.seeAbleTargets = seeAbleTargets;
             this.avgTargetDistance = avgTargetDistance;
+            this.weightedMeanTargetDistance = weightedMeanTargetDistance;
+            this.totalSeeAbleRads = totalSeeAbleRads;
             this.maxShadowAngle = maxShadowAngle;
         }
     }
@@ -1703,6 +1812,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private boolean predictPath;
         private boolean checkCollisionAfterFirst;
         private boolean predictTargetBall;
+        private boolean stopAtCollision;
         private Phy phy;
 
         WhitePredictor(Ball cueBallClone) {
@@ -1713,12 +1823,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                 double lenAfterWall,
                                 boolean predictPath,
                                 boolean checkCollisionAfterFirst,
-                                boolean predictTargetBall) {
+                                boolean predictTargetBall,
+                                boolean stopAtCollision) {
             this.phy = phy;
             this.lenAfterWall = lenAfterWall;
             this.predictPath = predictPath;
             this.checkCollisionAfterFirst = checkCollisionAfterFirst;
             this.predictTargetBall = predictTargetBall;
+            this.stopAtCollision = stopAtCollision;
 
 //            cueBallClone = cueBall.clone();
 
@@ -1747,6 +1859,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             cumulatedPhysicalTime += phy.calculateMs;
             boolean whiteRun = oneRunWhite();
             Ball firstBall = prediction.getFirstCollide();
+            if (stopAtCollision && firstBall != null) {
+                return true;
+            }
+            
             if (predictTargetBall && firstBall != null) {
                 boolean firstBallRun = oneRunFirstBall(firstBall);
                 return whiteRun && firstBallRun;
@@ -1862,7 +1978,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 return false;
             }
             if (prediction.getFirstCollide() == null) {
-                if (tryWhiteHitBall()) {
+                if (!tryWhiteHitBall()) {
                     cueBallClone.normalMove(phy);
                     return false;
                 }
@@ -1946,11 +2062,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                 ballInitVMmPerS,
                                 whiteDirectionUnitVec[0], whiteDirectionUnitVec[1],
                                 cueBallClone.getLastCollisionX(), cueBallClone.getLastCollisionY());
-                        return false;
+                        return true;
                     }
                 }
             }
-            return true;
+            return false;
         }
     }
 

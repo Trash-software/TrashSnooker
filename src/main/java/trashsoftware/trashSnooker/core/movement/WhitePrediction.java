@@ -69,12 +69,12 @@ public class WhitePrediction {
         }
     }
     
-    public double estimateTargetMoveDt(GameValues values, Phy phy) {
-        if (firstCollide != null) {
-            return values.estimatedMoveDistance(phy, getBallInitSpeed());
-        }
-        return -1;
-    }
+//    public double estimateTargetMoveDt(GameValues values, Phy phy) {
+//        if (firstCollide != null) {
+//            return values.estimatedMoveDistance(phy, getBallInitSpeed());
+//        }
+//        return -1;
+//    }
 
     public List<double[]> getWhitePath() {
         return whitePath;

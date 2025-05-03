@@ -57,11 +57,9 @@ public class CuePlayParams {
     }
 
     public static CuePlayParams makeIdealParams(double directionX, double directionY,
-                                                CueParams cueParams,
-                                                double cueAngleDeg) {
+                                                CueParams cueParams) {
         return makeIdealParams(directionX, directionY,
                 cueParams,
-                cueAngleDeg,
                 false);
     }
 
@@ -74,15 +72,14 @@ public class CuePlayParams {
     public static CuePlayParams makeIdealParams(double directionX,
                                                 double directionY,
                                                 CueParams cueParams,
-                                                double cueAngleDeg,
                                                 boolean slideCue) {
-
+        double cueAngleDeg = cueParams.getCueAngleDeg();
         double directionalPower = cueParams.actualPower();
         double directionalSideSpin = cueParams.actualSideSpin();  // 参与击球方向计算的sideSpin
         if (slideCue) {
-            cueParams.setActualPower(cueParams.actualPower() / 4.0);
+            cueParams.setAbsolutePower(cueParams.actualPower() / 4.0);
             directionalSideSpin = cueParams.actualSideSpin() * 10.0;
-            cueParams.setActualSideSpin(cueParams.actualSideSpin() / 4.0);
+            cueParams.setAbsoluteSideSpin(cueParams.actualSideSpin() / 4.0);
         }
 
         double[] unitXYWithSpin = unitXYWithSpins(directionalSideSpin, directionalPower, directionX, directionY);
@@ -92,21 +89,21 @@ public class CuePlayParams {
         double vy = unitXYWithSpin[1] * speed;
 
         // 用于计算旋转 的球速
-        double origSpeed = getSpeedOfPower(cueParams.actualPower(), 0.0);
-        double powerGenSpeed;
-        if (cueAngleDeg < 30) {
-            powerGenSpeed = origSpeed * Algebra.shiftRangeSafe(0, 30,
-                    1, 0.75,
-                    cueAngleDeg);
-        } else {
-            // 抬得够高了，再高差不多了，反正都不舒服
-            powerGenSpeed = origSpeed * 0.75;
-        }
+        double origSpeed = getSpeedOfPower(cueParams.actualPower(), cueAngleDeg);
+//        double powerGenSpeed;
+//        if (cueAngleDeg < 30) {
+//            powerGenSpeed = origSpeed * Algebra.shiftRangeSafe(0, 30,
+//                    1, 0.75,
+//                    cueAngleDeg);
+//        } else {
+//            // 抬得够高了，再高差不多了，反正都不舒服
+//            powerGenSpeed = origSpeed * 0.75;
+//        }
 
         // 重新计算，因为unitSideSpin有呲杆补偿
         double[] spins = calculateSpins(vx,
                 vy,
-                powerGenSpeed,
+                origSpeed,
                 cueParams.actualFrontBackSpin(),
                 cueParams.actualSideSpin(),
                 cueAngleDeg);
@@ -307,7 +304,7 @@ public class CuePlayParams {
 //        System.out.printf("x %f, y %f, total %f, side %f\n", spinX, spinY, spinSpeed, side);
 
         double cosMbu = Math.cos(Math.toRadians(cueAngleDeg));
-        double mbummeMag = (1 - cosMbu) / 2000;  // 扎杆强度
+        double mbummeMag = mbummeMag(cosMbu);  // 扎杆强度
         double[] norm = Algebra.normalVector(vx, vy);  // 法线，扎杆就在这个方向
         double mbummeX = side * -norm[0] * mbummeMag;
         double mbummeY = side * -norm[1] * mbummeMag;
@@ -319,6 +316,10 @@ public class CuePlayParams {
 //                spinX, spinY, mbummeX, mbummeY);
 
         return new double[]{spinX + mbummeX, spinY + mbummeY, side};
+    }
+    
+    public static double mbummeMag(double cosCueAngle) {
+        return (1 - cosCueAngle) / 2000;
     }
 
     public boolean isMiscued() {

@@ -321,46 +321,148 @@ public class GameValues {
         return false;
     }
 
-    public double speedReducerPerInterval(Phy phy) {
-        return (phy.speedReducer * table.speedReduceMultiplier / ball.ballWeightRatio);  // 重的球减速慢
-    }
+//    public double speedReducerPerInterval(Phy phy) {
+//        // todo
+//        double slippingFriction = ball.frictionRatio * phy.slippingFrictionTimed;
+//        return slippingFriction;
+////        return (phy.speedReducer * table.speedReduceMultiplier / ball.ballWeightRatio);  // 重的球减速慢
+//    }
 
     /**
      * @param speed 初始速度，mm/s
      * @return 预估的直线移动距离，mm。
      */
     public double estimatedMoveDistance(Phy phy, double speed) {
-        double acceleration = speedReducerPerInterval(phy) * phy.calculationsPerSecSqr;
-        double t = speed / acceleration;  // 加速时间，秒
-        return acceleration / 2 * t * t;  // S = 1/2at^2
+        double slippingFriction = ball.frictionRatio * phy.slippingFrictionTimed;
+        double rollingFriction = ball.frictionRatio * phy.rollingFrictionTimed;
+
+        double efficiency = TableCloth.SLIP_ACCELERATE_EFFICIENCY;
+        double initSpeed = speed / phy.calculationsPerSec;
+        // Step 1: Slipping Phase
+        double slipEndTime = initSpeed / (slippingFriction * (1 + efficiency));
+        double slipDistance = initSpeed * slipEndTime
+                - 0.5 * (slippingFriction * efficiency) * slipEndTime * slipEndTime;
+
+        double speedAtRollStart = initSpeed - (slippingFriction * efficiency) * slipEndTime;
+
+        // Step 2: Rolling Phase
+        double rollDistance = (speedAtRollStart * speedAtRollStart) / (2.0 * rollingFriction);
+
+//        System.out.println("Slip: " + slipDistance + ", roll: " + rollDistance);
+
+        // Total Distance
+        return slipDistance + rollDistance;
+        
+//        double acceleration = speedReducerPerInterval(phy) * phy.calculationsPerSecSqr;
+//        double t = speed / acceleration;  // 加速时间，秒
+//        return acceleration / 2 * t * t;  // S = 1/2at^2
     }
 
     /**
-     * @return 预估：以给定的初速度，跑一定距离需要多久
+     * @return 预估：以给定的初速度，跑一定距离需要多久。时间单位是秒
      */
     public double estimateMoveTime(Phy phy, double initSpeed, double distance) {
-        double acceleration = speedReducerPerInterval(phy) * phy.calculationsPerSecSqr;
-        double fullT = initSpeed / acceleration;
-        fullT *= 0.85;  // 因为种种原因，这个算出来总是偏大，于是强行减小
-        double fullDt = acceleration / 2 * fullT * fullT;
-        double ratio = fullDt / distance;
-        double timeRatio = ratio * ratio;
-        double t0 = fullT / timeRatio + distance / initSpeed;
-//        System.out.println("Full stop t: " + fullT + ", pocket t: " + t0 + ", full dt: " + fullDt + ", speed: " + initSpeed);
-        return t0;  // 我不确定这对不对
+        double slippingFriction = ball.frictionRatio * phy.slippingFrictionTimed;
+        double rollingFriction = ball.frictionRatio * phy.rollingFrictionTimed;
+        double efficiency = TableCloth.SLIP_ACCELERATE_EFFICIENCY;
+
+        double speed = initSpeed / phy.calculationsPerSec;
+
+        // Step 1: Slipping Phase
+        double slipEndTime = speed / (slippingFriction * (1 + efficiency));
+        double slipDistance = speed * slipEndTime
+                - 0.5 * (slippingFriction * efficiency) * slipEndTime * slipEndTime;
+
+        double speedAtRollStart = speed - (slippingFriction * efficiency) * slipEndTime;
+
+        double rollDistance = (speedAtRollStart * speedAtRollStart) / (2.0 * rollingFriction);
+
+        double totalDistance = slipDistance + rollDistance;
+
+        if (distance > totalDistance) {
+//            throw new IllegalArgumentException("Ball cannot travel the given distance before stopping.");
+            distance = totalDistance;
+        }
+
+        // Now find time:
+        if (distance <= slipDistance) {
+            // Still inside slipping phase
+            // Solve quadratic: distance = speed * t - 0.5 * (slippingFriction * efficiency) * t^2
+            double a = -0.5 * slippingFriction * efficiency;
+            double b = speed;
+            double c = -distance;
+
+            double discriminant = b * b - 4 * a * c;
+            if (discriminant < 0) {
+                throw new IllegalArgumentException("No real solution for time in slipping phase.");
+            }
+
+            double tSlipPartial = (-b + Math.sqrt(discriminant)) / (2 * a);
+            // usually positive root (-b + sqrt(discriminant)) / (2a), because a < 0
+
+            return tSlipPartial / phy.calculationsPerSec;
+        } else {
+            // Distance spans both slipping and rolling phases
+            double remainingDistance = distance - slipDistance;
+
+            // In rolling phase:
+            // Using: distance = v0 * t - 0.5 * rollingFriction * t^2
+            double a = -0.5 * rollingFriction;
+            double b = speedAtRollStart;
+            double c = -remainingDistance;
+
+            double discriminant = b * b - 4 * a * c;
+            if (discriminant < 0) {
+                throw new IllegalArgumentException("No real solution for time in rolling phase.");
+            }
+
+            double tRolling = (-b + Math.sqrt(discriminant)) / (2 * a);
+
+            return (slipEndTime + tRolling) / phy.calculationsPerSec;
+        }
+        
+        
+//        double acceleration = speedReducerPerInterval(phy) * phy.calculationsPerSecSqr;
+//        double fullT = initSpeed / acceleration;
+//        fullT *= 0.85;  // 因为种种原因，这个算出来总是偏大，于是强行减小
+//        double fullDt = acceleration / 2 * fullT * fullT;
+//        double ratio = fullDt / distance;
+//        double timeRatio = ratio * ratio;
+//        double t0 = fullT / timeRatio + distance / initSpeed;
+////        System.out.println("Full stop t: " + fullT + ", pocket t: " + t0 + ", full dt: " + fullDt + ", speed: " + initSpeed);
+//        return t0;  // 我不确定这对不对
     }
 
-    public double estimateMaxPowerMoveDistance(Phy phy) {
-        if (maxPowerMoveDistance == 0) {
-            maxPowerMoveDistance = estimatedMoveDistance(phy, Values.MAX_POWER_SPEED);
-        }
-        return maxPowerMoveDistance;
-    }
+//    public double estimateMaxPowerMoveDistance(Phy phy) {
+//        if (maxPowerMoveDistance == 0) {
+//            maxPowerMoveDistance = estimatedMoveDistance(phy, Values.MAX_POWER_SPEED);
+//        }
+//        return maxPowerMoveDistance;
+//    }
 
     public double estimateSpeedNeeded(Phy phy, double distance) {
-        double acceleration = speedReducerPerInterval(phy) * phy.calculationsPerSecSqr;
-        double t2 = distance * 2 / acceleration;
-        return Math.sqrt(t2);
+        double low = 0;
+        double high = Values.MAX_POWER_SPEED * 1.2;  // 虽然可能有更快的球速，但这里真不需要再快了，不会用到的
+        double dtTolerance = ball.ballRadius;
+
+        while (high - low > 1e-6) {
+            double midSpeed = (low + high) / 2.0;
+            double estimatedDistance = estimatedMoveDistance(phy, midSpeed);
+
+            if (estimatedDistance > distance + dtTolerance) {
+                high = midSpeed;
+            } else if (estimatedDistance < distance - dtTolerance) {
+                low = midSpeed;
+            } else {
+                return midSpeed;
+            }
+        }
+
+        return (low + high) / 2.0;
+        
+//        double acceleration = speedReducerPerInterval(phy) * phy.calculationsPerSecSqr;
+//        double t2 = distance * 2 / acceleration;
+//        return Math.sqrt(t2);
     }
 
     public double[] getOpenCenter(TableMetrics.Hole hole) {

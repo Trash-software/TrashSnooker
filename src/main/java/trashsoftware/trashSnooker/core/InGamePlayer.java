@@ -1,6 +1,8 @@
 package trashsoftware.trashSnooker.core;
 
 import javafx.scene.layout.Pane;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.InventoryManager;
@@ -9,6 +11,7 @@ import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.FastGameView;
 import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.EventLogger;
 
 public class InGamePlayer {
 
@@ -22,6 +25,7 @@ public class InGamePlayer {
     private final double handFeelEffort;
 
     private final CueSelection cueSelection;
+    private LetScoreOrBall letScoreOrBall;
 
     public InGamePlayer(PlayerPerson playerPerson,
                         PlayerType playerType,
@@ -84,7 +88,7 @@ public class InGamePlayer {
         int number = jsonObject.getInt("playerNumber");
         double handFeelEffort = jsonObject.getDouble("handFeelEffort");
 
-        return new InGamePlayer(
+        InGamePlayer igp = new InGamePlayer(
                 person,
                 playerType,
                 inventoryManager,
@@ -92,6 +96,17 @@ public class InGamePlayer {
                 number,
                 handFeelEffort
         );
+
+        if (jsonObject.has("let")) {
+            try {
+                JSONObject letObj = jsonObject.getJSONObject("let");
+                igp.letScoreOrBall = LetScoreOrBall.fromJson(letObj);
+            } catch (JSONException e) {
+                EventLogger.warning(e);
+            }
+        }
+        
+        return igp;
     }
 
     public JSONObject toJson() {
@@ -102,10 +117,21 @@ public class InGamePlayer {
         object.put("playerType", playerType.name());
         object.put("playerNumber", playerNumber);
         object.put("handFeelEffort", handFeelEffort);
+        if (letScoreOrBall != null) {
+            object.put("let", letScoreOrBall.toJson());
+        }
 
         return object;
     }
-    
+
+    public void setLetScoreOrBall(LetScoreOrBall letScoreOrBall) {
+        this.letScoreOrBall = letScoreOrBall;
+    }
+
+    public LetScoreOrBall getLetScoreOrBall() {
+        return letScoreOrBall;
+    }
+
     public void hideAllCues(Pane pane) {
 //        playCue.getCueModel(pane).hide();
 //        breakCue.getCueModel(pane).hide();

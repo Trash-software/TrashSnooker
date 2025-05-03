@@ -157,6 +157,32 @@ public class Algebra {
     }
 
     /**
+     * 
+     * @param radA 方位角A，任意范围
+     * @param radB 方位角B，任意范围
+     * @return 若A在B之左，返回-1；若A在B之右，返回1；若A,B重合，返回0
+     */
+    public static int compareAngleDirection(double radA, double radB) {
+        radA = normalizeAnglePositive(radA);
+        radB = normalizeAnglePositive(radB);
+
+        // Calculate the difference from A to B counter-clockwise
+        double diff = (radB - radA + TWO_PI) % TWO_PI;
+
+        if (diff == 0) {
+            return 0; // Same direction
+        } else if (diff < Math.PI) {
+            return -1; // A is to the left of B
+        } else {
+            return 1; // A is to the right of B
+        }
+    }
+
+    public static int compareAngleDirectionDeg(double degA, double degB) {
+        return compareAngleDirection(Math.toRadians(degA), Math.toRadians(degB));
+    }
+
+    /**
      * @param vector 二维向量
      * @return 向量的象限。如果在坐标轴上则返回其右上侧的象限。如果在原点，返回0
      */
@@ -259,6 +285,33 @@ public class Algebra {
 
     public static double distanceToPoint(double[] v1, double[] v2) {
         return distanceToPoint(v1[0], v1[1], v2[0], v2[1]);
+    }
+
+    /**
+     * @param a 点A
+     * @param b 点B
+     * @param p 要检查的点
+     * @return p是否投影在ab连线上
+     */
+    public static boolean isBetweenPerpendiculars(double[] a, double[] b, double[] p) {
+        double dx = b[0] - a[0];
+        double dy = b[1] - a[1];
+
+        double abSquared = dx * dx + dy * dy;
+
+        if (abSquared == 0) {
+            // A and B are the same point — treat as not between
+            return false;
+        }
+
+        // Vector from A to P
+        double apx = p[0] - a[0];
+        double apy = p[1] - a[1];
+
+        // Projection of AP onto AB (normalized to [0, 1])
+        double t = (apx * dx + apy * dy) / abSquared;
+
+        return t >= 0.0 && t <= 1.0;
     }
 
     public static double[] unitVector(double[] vec) {
@@ -366,5 +419,20 @@ public class Algebra {
      */
     public static double rateBetween(double a, double b, double rate) {
         return a + (b - a) * rate;
+    }
+
+    public static double[] generateSkewedRange(double a, double b, int n, double exponent) {
+        double[] result = new double[n];
+        for (int i = 0; i < n; i++) {
+            double t = (double) i / (n - 1);      // normalized [0, 1]
+            double skewedT = Math.pow(t, exponent); // apply exponent
+            result[i] = a + (b - a) * skewedT;      // map back to [a, b]
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        double[] skr = generateSkewedRange(10, 100, 10, 1.35);
+        System.out.println(Arrays.toString(skr));
     }
 }

@@ -1,0 +1,381 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 4,
+    "Yan Bingtao": 7,
+    "custom_player_1": 13,
+    "random_player_0": 16,
+    "Ding Junhui": 8,
+    "Jack Lisowski": 2,
+    "Trump": 9,
+    "Mark Allen": 1,
+    "Mark Williams": 10,
+    "Selby": 12,
+    "O_Sullivan": 5,
+    "Luca Brecel": 15,
+    "Neil Robertson": 6,
+    "Stephen Maguire": 14,
+    "Murphy": 3,
+    "John Wizard": 11
+  },
+  "championshipId": "professional_champ",
+  "matchTree": {"root": {
+    "p1wins": 1,
+    "p1": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "Murphy"},
+          "p2": {"winner": "random_player_0"},
+          "winner": "random_player_0",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-0",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "Luca Brecel"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-1",
+          "p2wins": 1
+        },
+        "winner": "random_player_0",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-QUARTER_FINAL-8",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "custom_player_1"},
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-2",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Stuart Bingham"},
+          "p2": {"winner": "Selby"},
+          "winner": "Stuart Bingham",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-3",
+          "p2wins": 0
+        },
+        "winner": "O_Sullivan",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-QUARTER_FINAL-9",
+        "p2wins": 0
+      },
+      "winner": "O_Sullivan",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-SEMI_FINAL-12",
+      "p2wins": 3
+    },
+    "p2": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Yan Bingtao"},
+          "p2": {"winner": "Stephen Maguire"},
+          "winner": "Yan Bingtao",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-4",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 1,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {"winner": "John Wizard"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-5",
+          "p2wins": 2
+        },
+        "winner": "Yan Bingtao",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-QUARTER_FINAL-10",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 1,
+          "p1": {"winner": "Ding Junhui"},
+          "p2": {"winner": "Trump"},
+          "winner": "Trump",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-6",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 0,
+          "p1": {"winner": "Jack Lisowski"},
+          "p2": {"winner": "Mark Williams"},
+          "winner": "Mark Williams",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-7",
+          "p2wins": 2
+        },
+        "winner": "Mark Williams",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-QUARTER_FINAL-11",
+        "p2wins": 2
+      },
+      "winner": "Yan Bingtao",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-SEMI_FINAL-13",
+      "p2wins": 1
+    },
+    "winner": "Yan Bingtao",
+    "stage": "FINAL",
+    "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-FINAL-14",
+    "p2wins": 4
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 133,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-SEMI_FINAL-12",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-SEMI_FINAL-12",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 122,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-4",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 121,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-FINAL-14",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 117,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-2",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 99,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-1",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 92,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-QUARTER_FINAL-9",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 88,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-FINAL-14",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 87,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-4",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 86,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-3",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 82,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-2",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 78,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-QUARTER_FINAL-10",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 70,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-QUARTER_FINAL-8",
+      "playerId": "random_player_0"
+    },
+    {
+      "score": 68,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-SEMI_FINAL-13",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 66,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-QUARTER_FINAL-8",
+      "playerId": "random_player_0"
+    },
+    {
+      "score": 65,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-1",
+      "playerId": "Luca Brecel"
+    },
+    {
+      "score": 63,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-FINAL-14",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 62,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-4",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 60,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-FINAL-14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 57,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-FINAL-14",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 55,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-0",
+      "playerId": "random_player_0"
+    },
+    {
+      "score": 53,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-3",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-SEMI_FINAL-13",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-QUARTER_FINAL-11",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 50,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-FINAL-14",
+      "playerId": "Yan Bingtao"
+    },
+    {
+      "score": 50,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+professional_champ-ROUND_1-3",
+      "playerId": "Selby"
+    }
+  ],
+  "timestamp": "2027/2/22"
+}

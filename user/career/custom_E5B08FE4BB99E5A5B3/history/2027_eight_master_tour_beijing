@@ -1,0 +1,145 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Yan Bingtao": 4,
+    "custom_E8BDBBE69DBEE58FB7": 16,
+    "custom_player_1": 10,
+    "Fat Guy": 11,
+    "Ding Junhui": 3,
+    "custom_195B277334903CE5": 8,
+    "custom_player_166": 13,
+    "custom_player_165": 15,
+    "Glass Heart": 6,
+    "Selby": 1,
+    "Zhao Xintong": 7,
+    "custom_player_160": 9,
+    "custom_player_181": 14,
+    "Worst Professional": 12,
+    "custom_E5B08FE4BB99E5A5B3": 5,
+    "John Wizard": 2
+  },
+  "championshipId": "eight_master_tour_beijing",
+  "matchTree": {"root": {
+    "p1wins": 5,
+    "p1": {
+      "p1wins": 1,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 3,
+          "p1": {"winner": "Selby"},
+          "p2": {"winner": "Worst Professional"},
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-ROUND_1-0",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 3,
+          "p1": {"winner": "custom_195B277334903CE5"},
+          "p2": {"winner": "custom_player_160"},
+          "winner": "custom_195B277334903CE5",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-ROUND_1-1",
+          "p2wins": 0
+        },
+        "winner": "Selby",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-QUARTER_FINAL-8",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 3,
+          "p1": {"winner": "Glass Heart"},
+          "p2": {"winner": "custom_player_166"},
+          "winner": "Glass Heart",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-ROUND_1-2",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 0,
+          "p1": {"winner": "custom_E5B08FE4BB99E5A5B3"},
+          "p2": {"winner": "custom_E8BDBBE69DBEE58FB7"},
+          "winner": "custom_E8BDBBE69DBEE58FB7",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-ROUND_1-3",
+          "p2wins": 3
+        },
+        "winner": "Glass Heart",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-QUARTER_FINAL-9",
+        "p2wins": 1
+      },
+      "winner": "Glass Heart",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-SEMI_FINAL-12",
+      "p2wins": 3
+    },
+    "p2": {
+      "p1wins": 2,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 3,
+          "p1": {"winner": "Yan Bingtao"},
+          "p2": {"winner": "custom_player_165"},
+          "winner": "Yan Bingtao",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-ROUND_1-4",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 3,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Fat Guy"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-ROUND_1-5",
+          "p2wins": 0
+        },
+        "winner": "Yan Bingtao",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-QUARTER_FINAL-10",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 3,
+          "p1": {"winner": "Ding Junhui"},
+          "p2": {"winner": "custom_player_181"},
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-ROUND_1-6",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 1,
+          "p1": {"winner": "Zhao Xintong"},
+          "p2": {"winner": "custom_player_1"},
+          "winner": "custom_player_1",
+          "stage": "ROUND_1",
+          "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-ROUND_1-7",
+          "p2wins": 3
+        },
+        "winner": "custom_player_1",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-QUARTER_FINAL-11",
+        "p2wins": 3
+      },
+      "winner": "custom_player_1",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-SEMI_FINAL-13",
+      "p2wins": 3
+    },
+    "winner": "Glass Heart",
+    "stage": "FINAL",
+    "matchId": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing-FINAL-14",
+    "p2wins": 3
+  }},
+  "finished": true,
+  "timestamp": "2027/3/18"
+}

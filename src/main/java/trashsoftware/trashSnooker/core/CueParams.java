@@ -1,6 +1,5 @@
 package trashsoftware.trashSnooker.core;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.util.Util;
@@ -13,33 +12,37 @@ public class CueParams {
     private final double selectedPower;
     private final double selectedFrontBackSpin;
     private final double selectedSideSpin;
-    private double actualPower;
-    private double actualFrontBackSpin;
-    private double actualSideSpin;
+    private double absolutePower;
+    private double absoluteFrontBackSpin;
+    private double absoluteSideSpin;
+    private final double cueAngleDeg;
     private final PlayerHand handSkill;
 
     private CueParams(double selectedPower,
-                      double actualPower,
+                      double absolutePower,
                       double selectedFrontBackSpin,
-                      double actualFrontBackSpin,
+                      double absoluteFrontBackSpin,
                       double selectedSideSpin,
-                      double actualSideSpin,
+                      double absoluteSideSpin,
+                      double cueAngleDeg,
                       PlayerHand handSkill) {
         this.selectedPower = selectedPower;
         this.selectedFrontBackSpin = selectedFrontBackSpin;
         this.selectedSideSpin = selectedSideSpin;
-        this.actualPower = actualPower;
-        this.actualFrontBackSpin = actualFrontBackSpin;
-        this.actualSideSpin = actualSideSpin;
+        this.absolutePower = absolutePower;
+        this.absoluteFrontBackSpin = absoluteFrontBackSpin;
+        this.absoluteSideSpin = absoluteSideSpin;
         this.handSkill = handSkill;
+        this.cueAngleDeg = cueAngleDeg;
 
-        if (this.actualPower < Values.MIN_SELECTED_POWER)
-            this.actualPower = Values.MIN_SELECTED_POWER;
+        if (this.absolutePower < Values.MIN_SELECTED_POWER)
+            this.absolutePower = Values.MIN_SELECTED_POWER;
     }
 
     public static CueParams createBySelected(double selectedPower,
                                              double selectedFrontBackSpin,
                                              double selectedSideSpin,
+                                             double cueAngleDeg,
                                              Game<?, ?> game,
                                              InGamePlayer inGamePlayer,
                                              @Nullable PlayerHand handSkill) {
@@ -63,12 +66,14 @@ public class CueParams {
                 actualFbSpin,
                 selectedSideSpin,
                 actualSideSpin,
+                cueAngleDeg,
                 handSkill);
     }
 
     public static CueParams createByActual(double actualPower,
                                            double actualFrontBackSpin,
                                            double actualSideSpin,
+                                           double cueAngleDeg,
                                            Game<?, ?> game,
                                            InGamePlayer inGamePlayer,
                                            PlayerHand handSkill) {
@@ -95,6 +100,7 @@ public class CueParams {
                 actualFrontBackSpin,
                 selectedSideSpin,
                 actualSideSpin,
+                cueAngleDeg,
                 handSkill);
     }
 
@@ -132,9 +138,9 @@ public class CueParams {
                 "selectedPower=" + selectedPower +
                 ", selectedFrontBackSpin=" + selectedFrontBackSpin +
                 ", selectedSideSpin=" + selectedSideSpin +
-                ", actualPower=" + actualPower +
-                ", actualFrontBackSpin=" + actualFrontBackSpin +
-                ", actualSideSpin=" + actualSideSpin +
+                ", actualPower=" + absolutePower +
+                ", actualFrontBackSpin=" + absoluteFrontBackSpin +
+                ", actualSideSpin=" + absoluteSideSpin +
                 ", handSkill=" + handSkill +
                 '}';
     }
@@ -144,7 +150,7 @@ public class CueParams {
     }
 
     public double actualPower() {
-        return actualPower;
+        return absolutePower;
     }
 
     public double selectedFrontBackSpin() {
@@ -152,7 +158,7 @@ public class CueParams {
     }
 
     public double actualFrontBackSpin() {
-        return actualFrontBackSpin;
+        return absoluteFrontBackSpin;
     }
 
     public double selectedSideSpin() {
@@ -160,19 +166,23 @@ public class CueParams {
     }
 
     public double actualSideSpin() {
-        return actualSideSpin;
+        return absoluteSideSpin;
     }
 
-    public void setActualPower(double actualPower) {
-        this.actualPower = actualPower;
+    public void setAbsolutePower(double absolutePower) {
+        this.absolutePower = absolutePower;
     }
 
-    public void setActualFrontBackSpin(double actualFrontBackSpin) {
-        this.actualFrontBackSpin = actualFrontBackSpin;
+    public void setAbsoluteFrontBackSpin(double absoluteFrontBackSpin) {
+        this.absoluteFrontBackSpin = absoluteFrontBackSpin;
     }
 
-    public void setActualSideSpin(double actualSideSpin) {
-        this.actualSideSpin = actualSideSpin;
+    public void setAbsoluteSideSpin(double absoluteSideSpin) {
+        this.absoluteSideSpin = absoluteSideSpin;
+    }
+
+    public double getCueAngleDeg() {
+        return cueAngleDeg;
     }
 
     public PlayerHand getHandSkill() {

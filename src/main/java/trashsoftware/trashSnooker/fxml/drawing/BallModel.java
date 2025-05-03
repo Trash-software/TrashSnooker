@@ -82,6 +82,12 @@ public abstract class BallModel {
             Random randomGen = new Random();
             rotateBy(randomGen.nextDouble(), randomGen.nextDouble(), randomGen.nextDouble(),
                     randomGen.nextDouble() * 360);
+        } else {
+            if (preset != null) {
+                sphere.getTransforms().clear();
+                sphere.getTransforms().add(new Rotate(initRotateAngle[0],
+                        0, 0, 0, new Point3D(0, 1, 0)));
+            }
         }
     }
 

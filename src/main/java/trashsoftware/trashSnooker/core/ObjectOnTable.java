@@ -59,6 +59,10 @@ public abstract class ObjectOnTable implements Cloneable {
         setX(x);
         setY(y);
     }
+    
+    public double[] getPositionArray() {
+        return new double[]{x, y};
+    }
 
     public void setVx(double vx) {
         this.vx = vx;

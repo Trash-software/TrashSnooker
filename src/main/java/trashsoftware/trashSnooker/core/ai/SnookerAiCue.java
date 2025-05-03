@@ -80,10 +80,10 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double whiteY = game.getCueBall().getY();
         
         double[] cornerBallPos = leftBreak ? game.getCornerRedBallPosGreenSide() : game.getCornerRedBallPosYellowSide();
-        double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 3.0;  // 主要有个加塞瞄点偏移的事情
+        double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 3.0;
         double[] thinVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thinY - whiteY);
         double thickY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 0.5;
-        double[] thickVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thickY - whiteY);
+        double[] thickVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thickY - whiteY); 
         
         double beginDeg = Math.toDegrees(Algebra.thetaOf(thinVec));
         int nTicks = 25;
@@ -95,7 +95,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         List<Ball> legalList = game.getAllLegalBalls(1, false, false);
         Set<Ball> legalSet = new HashSet<>(legalList);
         
-        double clothSlowFactor = phy.cloth.smoothness.speedReduceFactor / TableCloth.Smoothness.FAST.speedReduceFactor;
+        double clothSlowFactor = phy.cloth.smoothness.slippingFriction / TableCloth.Smoothness.FAST.slippingFriction;
         double selPowerLow = 28.0 * clothSlowFactor;
         double selPowerHigh = 46.0 * clothSlowFactor;
         double selPowerTick = 2.0;
@@ -115,6 +115,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         selectedPower,
                         0.0,
                         selectedSideSpin,
+                        5.0,
                         game,
                         aiPlayer.getInGamePlayer(),
                         handSkill
@@ -123,8 +124,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 CuePlayParams cpp = CuePlayParams.makeIdealParams(
                         unitXy[0],
                         unitXy[1],
-                        cueParams,
-                        0.0
+                        cueParams
                 );
                 FinalChoice.DefenseChoice dc = Analyzer.analyseDefense(
                         this,
@@ -135,6 +135,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         legalSet,
                         aiPlayer,
                         unitXy,
+                        false,
                         false,
                         0.0,
                         false,
@@ -271,6 +272,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             return null;
         }
         System.out.println("Exhibition shot!");
+        // todo: 没处理贴库后斯诺的问题
 
         AttackChoice choice = choiceList.get(0);
         for (AttackChoice ac : choiceList.subList(1, choiceList.size())) {
@@ -300,6 +302,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                     minActualPower,
                     0.0,
                     0.0,
+                    Values.DEFAULT_CUE_ANGLE,
                     game,
                     aiPlayer.getInGamePlayer(),
                     CuePlayParams.getPlayableHand(
@@ -307,7 +310,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
-                            0.0,
+                            Values.DEFAULT_CUE_ANGLE,
                             game.getGameValues().table,
                             pp
                     )
@@ -324,6 +327,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                     random.nextDouble() * interval + powerLow,
                     aiSpin[0],
                     aiSpin[1],
+                    Values.DEFAULT_CUE_ANGLE,
                     game,
                     aiPlayer.getInGamePlayer(),
                     CuePlayParams.getPlayableHand(
@@ -331,7 +335,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
-                            0.0,
+                            Values.DEFAULT_CUE_ANGLE,
                             game.getGameValues().table,
                             pp
                     )

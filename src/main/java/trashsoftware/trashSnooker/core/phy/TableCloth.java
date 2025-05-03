@@ -8,10 +8,10 @@ public class TableCloth {
 
     public static final double RANDOM_ERROR_FACTOR = 1.0 / 1.2;
     public static final double FIXED_ERROR_FACTOR = 1.0 / 60.0;
-    
-    private static final double baseSpeedReducer = 85;
-    private static final double baseSpinReducer = 3500;
-    private static final double baseSpinEffect = 920;
+    public static final double SLIP_ACCELERATE_EFFICIENCY = 0.333;
+
+    private static final double baseSlippingFriction = 2.75;
+    private static final double baseRollingFriction = 0.075;
     public final Goodness goodness;
     public final Smoothness smoothness;
     
@@ -66,40 +66,26 @@ public class TableCloth {
     public enum Smoothness {
         FAST(1.0,
                 1.0,
-                1.0,
-                0.75,
                 0.96),
         NORMAL(1.12,
                 1.12,
-                1.12,
-                0.65,
-                0.95),
+                0.96),
         MEDIUM(1.35,
                 1.3,
-                1.25,
-                0.4,
-                0.9),
+                0.92),
         SLOW(1.67,
                 1.5,
-                1.35,
-                0.1,
-                0.8);
+                0.85);
 
-        public final double speedReduceFactor;
-        public final double spinReduceFactor;  // 数值越大，旋转衰减越大
-        public final double spinEffectFactor;  // 数值越小影响越大
-        public final double tailSpeedFactor;  // 尾速相关
+        public final double slippingFriction;
+        public final double rollingFriction;
         public final double cushionBounceFactor;  // 库的硬度
 
-        Smoothness(double speedReduceFactor,
-                   double spinReduceFactor,
-                   double spinEffectFactor,
-                   double tailSpeedFactor,
+        Smoothness(double slippingFrictionFactor,
+                   double rollingFrictionFactor,
                    double cushionBounceFactor) {
-            this.speedReduceFactor = baseSpeedReducer * speedReduceFactor;
-            this.spinReduceFactor = baseSpinReducer * spinReduceFactor;
-            this.spinEffectFactor = baseSpinEffect / spinEffectFactor;
-            this.tailSpeedFactor = tailSpeedFactor;
+            this.slippingFriction = baseSlippingFriction * slippingFrictionFactor;
+            this.rollingFriction = baseRollingFriction * rollingFrictionFactor;
             this.cushionBounceFactor = cushionBounceFactor;
         }
 

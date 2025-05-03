@@ -1,26 +1,30 @@
 {
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
+  "winRecords": {
+    "1": 1,
+    "2": 1
+  },
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "custom_player_4",
-    "playerType": "COMPUTER"
+    "person": "Trump",
+    "playerType": "COMPUTER",
+    "let": {"type": "notLet"}
   },
-  "p1Wins": 0,
+  "p1Wins": 2,
   "p2": {
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "person": "custom_player_3",
-    "playerType": "COMPUTER"
+    "person": "Ding Junhui",
+    "playerType": "COMPUTER",
+    "let": {"type": "notLet"}
   },
-  "startTime": 1743241144280,
+  "startTime": 1746264721172,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ballsGroupPreset": "helloKittySnooker",
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
     "subRules": ["SNOOKER_STD"],
@@ -28,13 +32,13 @@
     "table": {
       "tableOrdinal": 0,
       "pocketDifficultyOrdinal": 3,
-      "holeSizeOrdinal": 3
+      "holeSizeOrdinal": 2
     }
   },
-  "totalFrames": 1,
+  "totalFrames": 3,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
   },
-  "p1Breaks": true
+  "p1Breaks": false
 }

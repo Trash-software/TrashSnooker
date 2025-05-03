@@ -353,6 +353,11 @@ public abstract class GameReplay implements GameHolder {
     protected abstract void loadBallInHand();
 
     protected abstract void loadNextRecordAndMovement() throws IOException;
+    
+    @Override
+    public GameValues getGameValues() {
+        return gameValues;
+    }
 
     protected void loadNextScoreResult() throws IOException {
         if (inputStream.read(scoreResBuf) != scoreResBuf.length) {
