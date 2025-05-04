@@ -132,7 +132,7 @@ public abstract class ObjectOnTable implements Cloneable {
 
     protected void clearBounceDesiredLeavePos() {
         if (currentBounce != null) {
-            System.out.println("Cleared bounce desired leave pos!");
+//            System.out.println("Cleared bounce desired leave pos!");
             currentBounce.clearDesireLeavePos();
         }
     }

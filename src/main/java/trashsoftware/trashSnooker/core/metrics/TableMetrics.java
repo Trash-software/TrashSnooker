@@ -652,7 +652,7 @@ public class TableMetrics {
                                 51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.2,
+                        .resistanceAndCushionBounce(1.1,
                                 0.95,
                                 0.9,
                                 1.15,
@@ -674,7 +674,7 @@ public class TableMetrics {
                                 51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.2,
+                        .resistanceAndCushionBounce(1.1,
                                 0.95,
                                 0.9,
                                 1.15,
@@ -696,7 +696,7 @@ public class TableMetrics {
                                 51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.2,
+                        .resistanceAndCushionBounce(1.1,
                                 0.95,
                                 0.9,
                                 1.15,
@@ -715,13 +715,13 @@ public class TableMetrics {
                                 Color.BLACK.brighter().brighter(),
                                 Color.SLATEGREY,
                                 Color.BLACK.brighter().brighter())
-                        .tableDimension(1981.2,  // 78"
+                        .tableDimension(1981.1,  // 78"
                                 990.6,
                                 165.1,
                                 51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.2,
+                        .resistanceAndCushionBounce(1.1,
                                 0.95,
                                 0.8,
                                 1.15,
@@ -746,7 +746,7 @@ public class TableMetrics {
                                 51.0,
                                 42.0)
 //                        .supportedHoles(SIDE_POCKET_HOLES)
-                        .resistanceAndCushionBounce(1.2,
+                        .resistanceAndCushionBounce(1.1,
                                 0.95,
                                 0.8,
                                 1.15,

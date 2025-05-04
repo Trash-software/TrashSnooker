@@ -69,6 +69,7 @@
   "championshipId": "united_kingdom_champ",
   "matchTree": {"root": {
     "p1": {
+      "p1wins": 3,
       "p1": {
         "p1wins": 1,
         "p1": {
@@ -311,8 +312,10 @@
         "matchId": "custom_0CCC8918C5CE9D53+2025+united_kingdom_champ-QUARTER_FINAL-57",
         "p2wins": 1
       },
+      "winner": "custom_73125E3FE667D051",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_0CCC8918C5CE9D53+2025+united_kingdom_champ-SEMI_FINAL-60"
+      "matchId": "custom_0CCC8918C5CE9D53+2025+united_kingdom_champ-SEMI_FINAL-60",
+      "p2wins": 1
     },
     "p2": {
       "p1": {
@@ -703,11 +706,38 @@
     {
       "score": 125,
       "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_0CCC8918C5CE9D53+2025+united_kingdom_champ-SEMI_FINAL-60",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 125,
+      "maximumType": "NONE",
       "stage": "ROUND_2",
       "sim": true,
       "numFrame": 2,
       "matchId": "custom_0CCC8918C5CE9D53+2025+united_kingdom_champ-ROUND_2-49",
       "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 124,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_0CCC8918C5CE9D53+2025+united_kingdom_champ-SEMI_FINAL-60",
+      "playerId": "custom_73125E3FE667D051"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_0CCC8918C5CE9D53+2025+united_kingdom_champ-SEMI_FINAL-60",
+      "playerId": "custom_195B277334903CE5"
     },
     {
       "score": 123,
