@@ -6,6 +6,7 @@ import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 public class CareerSave {
@@ -47,6 +48,14 @@ public class CareerSave {
     @FXML
     public String getLevel() {
         return cacheInfo.getOrDefault("level", "");
+    }
+    
+    public long getLastModified() {
+        try {
+            return Long.parseLong(cacheInfo.getOrDefault("lastModified", "1"));
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 
     public File getDir() {

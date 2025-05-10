@@ -109,7 +109,7 @@ public class AiCueResult {
         double precisionFactor = aiPrecisionFactor;
         if (gamePlayStage == GamePlayStage.THIS_BALL_WIN ||
                 gamePlayStage == GamePlayStage.ENHANCE_WIN) {
-            precisionFactor *= (person.psy / 100);
+            precisionFactor *= (person.psyNerve / 100);
             System.out.println(gamePlayStage + ", precision: " + precisionFactor);
         } else if (gamePlayStage == GamePlayStage.BREAK) {
             precisionFactor *= 5.0;
@@ -118,10 +118,10 @@ public class AiCueResult {
         if (rua) {
             // 打rua了，精度进一步降低
             System.out.println("Ai player ruaed!");
-            precisionFactor *= (person.psy / 100);
+            precisionFactor *= (person.psyRua / 100);
         }
 
-        precisionFactor /= calculateFramePsyDivisor(frameImportance, person.psy);
+        precisionFactor /= calculateFramePsyDivisor(frameImportance, person.avgPsy());
 
         double mistake = random.nextDouble() * 100;
         double mistakeFactor = 1.0;

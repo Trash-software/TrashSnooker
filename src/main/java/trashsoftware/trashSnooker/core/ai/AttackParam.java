@@ -43,18 +43,19 @@ public class AttackParam {
         double mbummeSd = devs[2];
 
         double totalDt = attackChoice.targetHoleDistance + attackChoice.whiteCollisionDistance;
-        double whiteInitSpeed = CuePlayParams.getSpeedOfPower(cueParams.actualPower(), 0);
+        double whiteInitSpeed = CuePlayParams.getHorizontalSpeed(cueParams.actualPower(), 0);
         double totalMove = gameValues.estimatedMoveDistance(phy, whiteInitSpeed);
 
         // 预估台泥变线偏差
-        double moveT = 0;
+        double moveT = 1.0;
         try {
             moveT = gameValues.estimateMoveTime(phy, whiteInitSpeed, totalDt);
         } catch (IllegalArgumentException iae) {
             // do nothing
         }
 //            double whiteT = gameValues.estimateMoveTime(phy, )
-        double pathChange = moveT * phy.cloth.goodness.errorFactor * TableCloth.RANDOM_ERROR_FACTOR;  // 变线
+        double pathChange = moveT * (phy.cloth.goodness.errorFactor * TableCloth.RANDOM_ERROR_FACTOR + 
+                phy.cloth.goodness.fixedErrorFactor * TableCloth.FIXED_ERROR_FACTOR);  // 变线
 //            System.out.println("Path change " + pathChange);  
 
         // 白球的偏差标准差

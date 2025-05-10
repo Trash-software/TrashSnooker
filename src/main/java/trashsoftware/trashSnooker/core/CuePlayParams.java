@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core;
 
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.cue.Cue;
+import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 
 import java.util.ArrayList;
@@ -45,14 +46,14 @@ public class CuePlayParams {
 
         this.cueParams = cueParams;
     }
-    
+
     public CuePlayParams deviated(double newVx, double newVy) {
         return new CuePlayParams(newVx,
                 newVy,
                 xSpin,
                 ySpin,
                 sideSpin,
-                miscued, 
+                miscued,
                 cueParams);
     }
 
@@ -84,12 +85,12 @@ public class CuePlayParams {
 
         double[] unitXYWithSpin = unitXYWithSpins(directionalSideSpin, directionalPower, directionX, directionY);
 
-        double speed = getSpeedOfPower(cueParams.actualPower(), cueAngleDeg);
+        double speed = getHorizontalSpeed(cueParams.actualPower(), cueAngleDeg);
         double vx = unitXYWithSpin[0] * speed;
         double vy = unitXYWithSpin[1] * speed;
 
         // 用于计算旋转 的球速
-        double origSpeed = getSpeedOfPower(cueParams.actualPower(), cueAngleDeg);
+        double origSpeed = getHorizontalSpeed(cueParams.actualPower(), cueAngleDeg);
 //        double powerGenSpeed;
 //        if (cueAngleDeg < 30) {
 //            powerGenSpeed = origSpeed * Algebra.shiftRangeSafe(0, 30,
@@ -112,12 +113,13 @@ public class CuePlayParams {
         return new CuePlayParams(vx, vy, spins[0], spins[1], spins[2], slideCue, cueParams);
     }
 
-    public static double getSpeedOfPower(double actualPower, double cueAngleDeg) {
+    public static double getHorizontalSpeed(double actualPower, double cueAngleDeg) {
         double speed = actualPower * Values.MAX_POWER_SPEED / 100.0;  // 常量，最大力白球速度
-        if (cueAngleDeg > 5) {
-            // 出杆越陡，球速越慢。这里我们不用三角函数，因为这不是传力的问题，这是人发力的问题
-            speed *= (95 - cueAngleDeg) / 90.0;
-        }
+        speed *= Math.cos(Math.toRadians(cueAngleDeg));
+//        if (cueAngleDeg > 5) {
+//            // 出杆越陡，球速越慢。这里我们不用三角函数，因为这不是传力的问题，这是人发力的问题
+//            speed *= (95 - cueAngleDeg) / 90.0;
+//        }
         return speed;
     }
 
@@ -234,6 +236,18 @@ public class CuePlayParams {
         return third;
     }
 
+    public static double powerWithCueAngle(PlayerPerson.HandBody handBody,
+                                           @Nullable CueBrand cueBrand,
+                                           double power, 
+                                           double cueAngleDeg) {
+        double handHeightAboveTable = handBody.height * 10 * 0.8 - 851;
+        handHeightAboveTable = Math.max(handHeightAboveTable, 200);
+        double cueLength = cueBrand == null ? 1450 : cueBrand.getWoodPartLength();
+        double cueEndWidth = cueBrand == null ? 30 : cueBrand.getEndWidth();
+        double cueTailHeight = Math.sin(Math.toRadians(cueAngleDeg)) * cueLength + cueEndWidth;
+        return Math.min(1.0, handHeightAboveTable / cueTailHeight) * power;
+    }
+
     public static double[][] personStandingPosition(double whiteX, double whiteY,
                                                     double aimingX, double aimingY,
                                                     double cueAngleDeg,
@@ -263,22 +277,22 @@ public class CuePlayParams {
     /**
      * @param vx
      * @param vy
-     * @param personPowerSpeed 考虑抬高杆尾之后，球员发力产生的杆法效果
-     * @param frontBackSpin    高杆正，低杆负
-     * @param sideSpin         右塞正（顶视的逆时针），左塞负
+     * @param horizontalSpeed 球的平移速度
+     * @param frontBackSpin   高杆正，低杆负
+     * @param sideSpin        右塞正（顶视的逆时针），左塞负
      * @param cueAngleDeg
      * @return
      */
     public static double[] calculateSpins(double vx,
                                           double vy,
-                                          double personPowerSpeed,
+                                          double horizontalSpeed,
                                           double frontBackSpin,
                                           double sideSpin,
                                           double cueAngleDeg) {
         double speed = Math.hypot(vx, vy);
+        double cosMbu = Math.cos(Math.toRadians(cueAngleDeg));
+        double cueSpeed = horizontalSpeed / cosMbu;
 
-//        double frontBackSpin = getUnitFrontBackSpin();  // 
-//        double leftRightSpin = getUnitSideSpin();  // 
         if (frontBackSpin > 0) {
             // 高杆补偿
             double factor = Algebra.shiftRangeSafe(
@@ -289,21 +303,11 @@ public class CuePlayParams {
         }
 
         // 小力高低杆补偿，pow越小，补偿越多
-//        double spinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SPIN_EXP);
-//        double sideSpinRatio = Math.pow(speed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
-        double spinRatio = Math.pow(personPowerSpeed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SPIN_EXP);
-        double sideSpinRatio = Math.pow(personPowerSpeed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
+        double spinRatio = Math.pow(horizontalSpeed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SPIN_EXP);
+        double sideSpinRatio = Math.pow(cueSpeed / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
 
         double side = sideSpinRatio * sideSpin * Values.MAX_SIDE_SPIN_SPEED;
-        // 旋转产生的总目标速度
-        double spinSpeed = spinRatio * frontBackSpin * Values.MAX_SPIN_SPEED;
 
-        // (spinX, spinY)是一个向量，指向球因为旋转想去的方向
-        double spinX = vx * (spinSpeed / speed);
-        double spinY = vy * (spinSpeed / speed);
-//        System.out.printf("x %f, y %f, total %f, side %f\n", spinX, spinY, spinSpeed, side);
-
-        double cosMbu = Math.cos(Math.toRadians(cueAngleDeg));
         double mbummeMag = mbummeMag(cosMbu);  // 扎杆强度
         double[] norm = Algebra.normalVector(vx, vy);  // 法线，扎杆就在这个方向
         double mbummeX = side * -norm[0] * mbummeMag;
@@ -312,12 +316,23 @@ public class CuePlayParams {
         // 扎杆使侧旋转化为普通旋转
         side *= cosMbu;
 
+        // 旋转产生的总目标速度
+        double spinSpeed = spinRatio * frontBackSpin * Values.MAX_SPIN_SPEED;
+        // 第一下打在台尼上阻力造成的前旋。出于简便，这里没有考虑台尼状况
+        double initialFrictionSpeed = Math.sin(Math.toRadians(cueAngleDeg)) * cueSpeed * 0.2;
+        spinSpeed += initialFrictionSpeed;
+
+        // (spinX, spinY)是一个向量，指向球因为旋转想去的方向
+        double spinX = vx * (spinSpeed / speed);
+        double spinY = vy * (spinSpeed / speed);
+//        System.out.printf("x %f, y %f, total %f, side %f\n", spinX, spinY, spinSpeed, side);
+
 //        System.out.printf("spin x: %f, spin y: %f, mx: %f, my: %f\n",
 //                spinX, spinY, mbummeX, mbummeY);
 
         return new double[]{spinX + mbummeX, spinY + mbummeY, side};
     }
-    
+
     public static double mbummeMag(double cosCueAngle) {
         return (1 - cosCueAngle) / 2000;
     }

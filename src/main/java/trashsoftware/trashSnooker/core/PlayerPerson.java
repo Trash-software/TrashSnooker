@@ -25,7 +25,8 @@ public class PlayerPerson {
 
     public final String category;
     public final HandBody handBody;
-    public final double psy;
+    public final double psyNerve;
+    public final double psyRua;
     public final boolean isRandom;
     private final String playerId;
     private String name;  // 名字的原版
@@ -51,7 +52,8 @@ public class PlayerPerson {
                         double longPrecision,
                         double solving,
                         double aimingOffset,
-                        double psy,
+                        double psyNerve,
+                        double psyRua,
                         @Nullable AiPlayStyle aiPlayStyle,
                         @NotNull HandBody handBody,
                         Sex sex,
@@ -79,7 +81,8 @@ public class PlayerPerson {
 
         this.aimingOffset = aimingOffset;
 
-        this.psy = psy;
+        this.psyNerve = psyNerve;
+        this.psyRua = psyRua;
 
         this.handBody = handBody;
         this.aiPlayStyle = aiPlayStyle == null ? deriveAiStyle() : aiPlayStyle;
@@ -217,6 +220,15 @@ public class PlayerPerson {
         PlayerPerson.Sex sex = personObj.has("sex") ?
                 PlayerPerson.Sex.valueOf(personObj.getString("sex")) :
                 PlayerPerson.Sex.M;
+        
+        double psyNerve, psyRua;
+        if (personObj.has("psyNerve") && personObj.has("psyRua")) {
+            psyNerve = personObj.getDouble("psyNerve");
+            psyRua = personObj.getDouble("psyRua");
+        } else {
+            psyNerve = personObj.getDouble("psy");
+            psyRua = psyNerve;
+        }
 
         playerPerson = new PlayerPerson(
                 playerId,
@@ -227,7 +239,8 @@ public class PlayerPerson {
                 personObj.getDouble("longPrecision"),
                 personObj.getDouble("solving"),
                 aimingOffset,
-                personObj.getDouble("psy"),
+                psyNerve,
+                psyRua,
                 aiPlayStyle,
                 handBody,
                 sex,
@@ -388,6 +401,7 @@ public class PlayerPerson {
                 generateDouble(random, abilityLow, abilityHigh),
                 0.0,
                 sex == Sex.M ? 90.0 : 75.0,
+                sex == Sex.M ? 90.0 : 75.0,
                 null,
                 handBody,
                 sex,
@@ -498,7 +512,8 @@ public class PlayerPerson {
 
         obj.put("privateCues", privateCues);
         obj.put("category", category);
-        obj.put("psy", psy);
+        obj.put("psyNerve", psyNerve);
+        obj.put("psyRua", psyRua);
 
         obj.put("ai", getAiPlayStyle().toJsonObject());
 
@@ -596,6 +611,10 @@ public class PlayerPerson {
     @Override
     public int hashCode() {
         return Objects.hash(playerId);
+    }
+    
+    public double avgPsy() {
+        return (psyRua + psyNerve) / 2;
     }
 
     /**
@@ -1075,6 +1094,7 @@ public class PlayerPerson {
                     (aiming + primary.spinControl) / 2,
                     originalPerson.aimingOffset,
                     getSex() == Sex.M ? 90.0 : 75.0,
+                    getSex() == Sex.M ? 90.0 : 75.0,
                     null,
                     handBody,
                     getSex(),
@@ -1082,28 +1102,6 @@ public class PlayerPerson {
                     originalPerson.isCustom,
                     originalPerson.participates
             );
-            
-//            PlayerPerson person = new PlayerPerson(
-//                    playerId,
-//                    name,
-//                    maxPower,
-//                    normalPower,
-//                    spin,
-//                    aiming,
-//                    cuePrecision,
-//                    1.0,
-//                    1.0,
-//                    powerControl,
-//                    spinControl,
-//                    getSex() == Sex.M ? 90.0 : 75.0,
-//                    cuePlayType,
-//                    null,
-//                    true,
-//                    handBody,
-//                    getSex(),
-//                    originalPerson.underage,
-//                    originalPerson.participates
-//            );
             person.privateCues.addAll(originalPerson.privateCues);
             return person;
         }
@@ -1123,34 +1121,6 @@ public class PlayerPerson {
             }
         }
     }
-
-//    public static class HandSkill implements Comparable<HandSkill>, Cloneable {
-//        public final Hand hand;
-//        public double skill;
-//
-//        HandSkill(Hand hand, double skill) {
-//            this.hand = hand;
-//            this.skill = skill;
-//        }
-//
-//        @Override
-//        protected Object clone() throws CloneNotSupportedException {
-//            return super.clone();
-//        }
-//
-//        @Override
-//        public int compareTo(@NotNull PlayerPerson.HandSkill o) {
-//            return -Double.compare(this.skill, o.skill);
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return "HandSkill{" +
-//                    "hand=" + hand +
-//                    ", skill=" + skill +
-//                    '}';
-//        }
-//    }
 
     public static class HandBody implements Cloneable {
 //        public static final HandBody DEFAULT =

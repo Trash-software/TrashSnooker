@@ -317,10 +317,11 @@ public class Analyzer {
             penalty += (cueParams.getCueAngleDeg() - Values.DEFAULT_CUE_ANGLE);
 
             if (wp.getSecondCollide() != null) {
-                penalty += 90;
+                double secondSpeed = wp.getWhiteSpeedWhenHitSecondBall();
+                penalty += (secondSpeed / Values.MAX_POWER_SPEED) * 200 + 30;  // 高速撞可扣200分 + 30基础分
             }
             if (wp.isCueBallFirstBallTwiceColl()) {
-                penalty += 40;  // 二次碰撞
+                penalty += 50;  // 二次碰撞
             }
 
             DefenseResult defenseResult = new DefenseResult(opponentTarget, opponentBalls, isSolving);
@@ -345,7 +346,7 @@ public class Analyzer {
             if (wp.isWhiteHitsHoleArcs()) {
                 penalty += 80;
             }
-            if (defenseResult.snookerScore > 1.01) {
+            if (defenseResult.snookerScore > 0.1) {
                 if (wp.isFirstBallCollidesOther()) {  // 在做斯诺克
                     penalty += 40;
                 }
@@ -473,10 +474,10 @@ public class Analyzer {
         // 估算扎杆弧线的影响
         double cosMbu = Math.cos(Math.toRadians(cueParams.getCueAngleDeg()));
         double mbummeMag = CuePlayParams.mbummeMag(cosMbu);
-        double speedLow = CuePlayParams.getSpeedOfPower(lowActualPower, cueParams.getCueAngleDeg());
+        double speedLow = CuePlayParams.getHorizontalSpeed(lowActualPower, cueParams.getCueAngleDeg());
         double sideSpinRatioLow = Math.pow(speedLow / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
         double mbummeLow = sideSpinRatioLow * actualSideSpin * Values.MAX_SIDE_SPIN_SPEED * mbummeMag;
-        double speedHigh = CuePlayParams.getSpeedOfPower(highActualPower, cueParams.getCueAngleDeg());
+        double speedHigh = CuePlayParams.getHorizontalSpeed(highActualPower, cueParams.getCueAngleDeg());
         double sideSpinRatioHigh = Math.pow(speedHigh / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
         double mbummeHigh = sideSpinRatioHigh * actualSideSpin * Values.MAX_SIDE_SPIN_SPEED * mbummeMag;
 

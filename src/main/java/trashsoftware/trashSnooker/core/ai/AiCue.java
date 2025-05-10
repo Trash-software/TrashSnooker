@@ -168,8 +168,26 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 KICK_USELESS_BALL_MUL,
                 dtFromFirst);
     }
-
-//    private List<>
+    
+    private double[] powerValuesOfCueAngle(double[] origValues, double origLimit, double cueAngleDeg) {
+        List<Double> availValues = new ArrayList<>();
+        double ctrlPower = CuePlayParams.powerWithCueAngle(
+                aiPlayer.getPlayerPerson().handBody, 
+                aiPlayer.getInGamePlayer().getCueSelection().getSelected().brand,
+                origLimit,
+                cueAngleDeg
+        );
+        for (double ov : origValues) {
+            if (ov <= ctrlPower) availValues.add(ov);
+            else {
+                availValues.add(ctrlPower);
+                break;
+            }
+        }
+        double[] res = new double[availValues.size()];
+        for (int i = 0; i < res.length; i++) res[i] = availValues.get(i);
+        return res;
+    }
 
     private FinalChoice.IntegratedAttackChoice attack(AttackChoice choice,
                                                       int nextTarget,
@@ -238,7 +256,11 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //            System.out.println("Obstacle: " + op);
             int availSpinCount = 0;
 
-            for (double selectedPower : powerValues) {
+            double[] availPowers = powerValuesOfCueAngle(powerValues,
+                    powerLimit, 
+                    cueAngle);
+
+            for (double selectedPower : availPowers) {
                 for (double[] spins : availSpins) {
                     double[] realSpins = cue.aiCuePoint(spins, game.getGameValues().ball);
 
@@ -666,8 +688,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 game.getGameValues().table,
                 game.getCuingPlayer().getPlayerPerson()
         );
-        double power = random.nextDouble() *
-                (handSkill.getMaxPowerPercentage() - 20.0) + 20.0;
+//        double power = random.nextDouble() *
+//                (handSkill.getMaxPowerPercentage() - 20.0) + 20.0;
+        double power = CuePlayParams.powerWithCueAngle(
+                aiPlayer.getPlayerPerson().handBody, 
+                cue.getBrand(),
+                handSkill.getMaxPowerPercentage(),
+                cuePointAngle[2]
+        );
         CueParams cueParams = CueParams.createBySelected(
                 power,
                 cuePointAngle[0],
@@ -1205,6 +1233,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
             double[] unitXY = Algebra.unitVectorOfAngle(rad);
 
+            PlayerPerson playerPerson = aiPlayer.getPlayerPerson();
             Cue cue = aiPlayer.getInGamePlayer().getCueSelection().getSelected().getNonNullInstance();
             double[] cuePointAngle = Analyzer.findCueAblePointAndAngle(
                     copy,
@@ -1220,8 +1249,19 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     unitXY[1],
                     cuePointAngle[2],
                     copy.getGameValues().table,
-                    copy.getCuingPlayer().getPlayerPerson()
+                    playerPerson
             );
+            
+            double ctrlPowerLimit = CuePlayParams.powerWithCueAngle(
+                    playerPerson.handBody,
+                    cue.getBrand(), 
+                    handSkill.getControllablePowerPercentage(),
+                    cuePointAngle[2]
+            );
+            if (selectedPower > ctrlPowerLimit) {
+                // 发不了这个力
+                return;
+            }
 
             CueParams cueParams = CueParams.createBySelected(
                     selectedPower,

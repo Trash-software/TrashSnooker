@@ -125,6 +125,10 @@ public abstract class CueBrand {
     public double getCueTipWidth() {
         return cueTipWidth;
     }
+    
+    public double getEndWidth() {
+        return endWidth;
+    }
 
     /**
      * @see Cue#getCueAbleRelRadius(BallMetrics) 

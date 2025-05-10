@@ -209,7 +209,14 @@ public class EntireGame {
      */
     public boolean rua(InGamePlayer igp) {
         int playerNum = igp == p1 ? 1 : 2;
-        return playerContinuousLoses(playerNum) >= 3;  // 连输3局以上，rua了
+        int ruaLimit;
+        double psyRua = igp.getPlayerPerson().psyRua;
+        if (psyRua > 90) ruaLimit = 4;
+        else if (psyRua > 60) ruaLimit = 3;
+        else if (psyRua > 30) ruaLimit = 2;
+        else ruaLimit = 1;
+
+        return playerContinuousLoses(playerNum) >= ruaLimit;  // 连输3局以上，rua了
     }
     
     public void quitMatch(PlayerPerson quitPerson) {

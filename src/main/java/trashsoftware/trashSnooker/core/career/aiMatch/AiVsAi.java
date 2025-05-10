@@ -80,7 +80,7 @@ public abstract class AiVsAi {
                 aps.defense / 100 * 0.5 +
                 aps.stability / 100 +
                 playerPerson.getSolving() / 100 * 0.2 +
-                (isFinalFrame ? (playerPerson.psy / 40) : (playerPerson.psy / 200));
+                (isFinalFrame ? (playerPerson.psyNerve / 40) : (playerPerson.psyNerve / 200));
     }
 
     protected void gaussianRandom(boolean isFinalFrame) {
@@ -146,11 +146,11 @@ public abstract class AiVsAi {
 
         double psyFactor = 1.0;
         if (isKeyBall) {
-            psyFactor = person.psy / 100;
+            psyFactor = person.psyNerve / 100;
         }
         psyFactor /= framePsyDivisor;
         if (rua(playerNum, person)) {
-            psyFactor *= person.psy / 100;
+            psyFactor *= person.psyRua / 100;
         }
         double difficulty = potDifficulty * (goodPosition ? 1 : 3);
         double failRatio = 10000 - ra.aiming * ra.primary().cuePrecision * Math.pow(psyFactor, 0.75);

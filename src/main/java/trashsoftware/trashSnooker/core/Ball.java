@@ -370,7 +370,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 msRemainInPocket -= phy.calculateMs;
 
                 int stat = oneFrameInPocket(phy);
-                if (getSpeedPerSecond(phy) < 10) {
+                if (getSpeedPerSecond(phy) < 50) {
                     // 球已经停了，别放了
                     msRemainInPocket = 0;
                     pot();
@@ -704,85 +704,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return null;
     }
 
-    /**
-     * 返回:
-     * 0: 真的没有三颗球撞一起（包括没有球碰撞和纯二球碰撞）
-     * 1: 发生了可以处理的三球碰撞
-     * 2: 发生了无法处理的三球碰撞
-     */
-    int tryHitTwoBalls(Game<?, ?> game, Ball ball1, Ball ball2, Phy phy) {
-        if (this.isNotMoving()) {
-            if (ball1.isNotMoving()) {
-                if (ball2.isNotMoving()) {
-                    return 0;  // 三颗球都没动
-                } else {
-                    return ball2.tryHitTwoBalls(game, this, ball1, phy);
-                }
-            } else {
-                if (ball2.isNotMoving()) {
-                    return ball1.tryHitTwoBalls(game, this, ball2, phy);
-                } else {
-                    if (isHitting(ball1, phy)) {
-                        if (isHitting(ball2, phy)) {
-                            threeBallHitCore(game, ball1, ball2, phy);
-                            return 1;
-                        }
-                    }
-                    return 0;
-                }
-            }
-        } else {
-            if (ball1.isNotMoving() && ball2.isNotMoving()) {
-                // this 去撞另外两颗
-                if (isHitting(ball1, phy) && isHitting(ball2, phy)) {
-
-                    threeBallHitCore(game, ball1, ball2, phy);
-
-                    return 1;
-                } else {
-                    return 0;  // 这三颗球没有贴在一起
-                }
-            } else {
-                if (isHitting(ball1, phy)) {
-                    if (isHitting(ball2, phy)) {
-                        threeBallHitCore(game, ball1, ball2, phy);
-                        return 1;
-                    }
-                }
-                return 0;
-            }
-        }
-    }
-
-    private void threeBallHitCore(Game<?, ?> game, Ball ball1, Ball ball2, Phy phy) {
-        double xPos = x;
-        double yPos = y;
-        double dx = vx / Values.DETAILED_PHYSICAL;
-        double dy = vy / Values.DETAILED_PHYSICAL;
-
-        boolean ball1First = true;
-
-        for (int i = 0; i < Values.DETAILED_PHYSICAL; ++i) {
-            if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball1.x, ball1.y) < values.ball.ballDiameter) {
-                break;
-            }
-            if (Algebra.distanceToPoint(xPos + dx, yPos + dy, ball2.x, ball2.y) < values.ball.ballDiameter) {
-                ball1First = false;
-                break;
-            }
-            xPos += dx;
-            yPos += dy;
-        }
-
-        if (ball1First) {
-            tryHitBall(game, ball1, false, false, phy);
-            if (isHitting(ball2, phy)) tryHitBall(game, ball2, false, false, phy);
-        } else {
-            tryHitBall(game, ball2, false, false, phy);
-            if (isHitting(ball1, phy)) tryHitBall(game, ball1, false, false, phy);
-        }
-    }
-
     boolean isHitting(Ball other, Phy phy) {
         double lastDt = currentDtTo(other);
         double nextDt = predictedDtTo(other);
@@ -822,6 +743,61 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return new double[]{ax, ay, bx, by, t}; // Positions at collision and time
     }
 
+    static double[][] findCollisionPoint(Ball a, Ball b, double ballRadius) {
+        final double minDist = 2 * ballRadius;
+        final double minDistSq = minDist * minDist;
+        final double tolerance = 0.000001;
+        final int maxIterations = 50;
+
+        double low = -2;
+        double high = 2;
+
+        int iterations = 0;
+        boolean valid = false;
+
+        while (high - low > tolerance && iterations < maxIterations) {
+            double mid = (low + high) / 2.0;
+
+            double ax = a.x + a.vx * mid;
+            double ay = a.y + a.vy * mid;
+            double bx = b.x + b.vx * mid;
+            double by = b.y + b.vy * mid;
+
+            double dx = bx - ax;
+            double dy = by - ay;
+            double distSq = dx * dx + dy * dy;
+
+            // Check direction of motion
+            double rvx = b.vx - a.vx;
+            double rvy = b.vy - a.vy;
+            double dot = dx * rvx + dy * rvy;
+
+            if (distSq > minDistSq) {
+                if (dot > 0) {
+                    // Balls are moving away and already too far → no collision
+                    return null;
+                } else {
+                    // Still closing → move forward in time
+                    low = mid;
+                }
+            } else {
+                // They're close enough or overlapping → try earlier time
+                valid = true;
+                high = mid;
+            }
+
+            iterations++;
+        }
+
+        if (!valid) return null; // fail-safe: never got close enough
+
+        double t = (low + high) / 2.0;
+        return new double[][] {
+                { a.x + a.vx * t, a.y + a.vy * t },
+                { b.x + b.vx * t, b.y + b.vy * t }
+        };
+    }
+
     private double[] findApproxCollisionPoint(double x1, double y1,
                                               Ball ball,
                                               double x2, double y2) {
@@ -856,24 +832,35 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     void twoMovingBallsHitCore(Game<?, ?> game, Ball ball, Phy phy, boolean considerGearSpin) {
-        double x1 = x;
-        double y1 = y;
-        double x2 = ball.x;
-        double y2 = ball.y;
-        if (Math.hypot(vx, vy) + Math.hypot(ball.vx, ball.vy) > values.ball.ballRadius) {
-            // 怕球速太快，它跑过了
-            x1 -= vx;
-            y1 -= vy;
-            x2 -= ball.vx;
-            y2 -= ball.vy;
-        }
+//        double x1 = x;
+//        double y1 = y;
+//        double x2 = ball.x;
+//        double y2 = ball.y;
+//        if (Math.hypot(vx, vy) + Math.hypot(ball.vx, ball.vy) > values.ball.ballRadius) {
+//            // 怕球速太快，它跑过了
+//            x1 -= vx;
+//            y1 -= vy;
+//            x2 -= ball.vx;
+//            y2 -= ball.vy;
+//        }
+//
+//        if (Algebra.distanceToPoint(x1, y1, x2, y2) <= values.ball.ballDiameter) {
+//            x1 -= vx;
+//            y1 -= vy;
+//            x2 -= ball.vx;
+//            y2 -= ball.vy;
+//        }
 
-        if (Algebra.distanceToPoint(x1, y1, x2, y2) <= values.ball.ballDiameter) {
-            x1 -= vx;
-            y1 -= vy;
-            x2 -= ball.vx;
-            y2 -= ball.vy;
+//        double[] colPoint = findApproxCollisionPoint(x1, y1, ball, x2, y2);
+        double[][] colPoints = findCollisionPoint(this, ball, values.ball.ballRadius);
+        if (colPoints == null) {
+            System.err.println("Cannot find collision point!");
+            return;
         }
+        double x1 = colPoints[0][0];
+        double y1 = colPoints[0][1];
+        double x2 = colPoints[1][0];
+        double y2 = colPoints[1][1];
 
         if (Algebra.distanceToPoint(x1, y1, x2, y2) <=
                 Algebra.distanceToPoint(x1 + vx, y1 + vy, x2 + ball.vx, y2 + ball.vy)) {
@@ -890,21 +877,21 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         clearBounceDesiredLeavePos();
         ball.clearBounceDesiredLeavePos();
 
-        double[] exactColPoint = getExactCollisionPoint(this, x1, y1,
-                ball, x2, y2);
-        if (exactColPoint == null) {
-            System.err.println("Cannot find exact collision point!");
-            double[] approxColPoint = findApproxCollisionPoint(x1, y1, ball, x2, y2);
-            x1 = approxColPoint[0];
-            y1 = approxColPoint[1];
-            x2 = approxColPoint[2];
-            y2 = approxColPoint[3];
-        } else {
-            x1 = exactColPoint[0];
-            y1 = exactColPoint[1];
-            x2 = exactColPoint[2];
-            y2 = exactColPoint[3];
-        }
+//        double[] exactColPoint = getExactCollisionPoint(this, x1, y1,
+//                ball, x2, y2);
+//        if (exactColPoint == null) {
+//            System.err.println("Cannot find exact collision point!");
+//            double[] approxColPoint = findApproxCollisionPoint(x1, y1, ball, x2, y2);
+//            x1 = approxColPoint[0];
+//            y1 = approxColPoint[1];
+//            x2 = approxColPoint[2];
+//            y2 = approxColPoint[3];
+//        } else {
+//            x1 = exactColPoint[0];
+//            y1 = exactColPoint[1];
+//            x2 = exactColPoint[2];
+//            y2 = exactColPoint[3];
+//        }
 
         if (!phy.isPrediction) {
             // AI考虑进攻时并不会clone目标球
@@ -1112,7 +1099,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     boolean tryHitBall(Game<?, ?> game,
-                       Ball ball, boolean checkMovingBall, boolean applyGearSpin, Phy phy) {
+                       Ball ball, boolean applyGearSpin, Phy phy) {
         if (this.isNotMoving(phy)) {
             if (ball.isNotMoving(phy)) return false;  // 两球都没动，怎么可能撞
         }
@@ -1122,21 +1109,6 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                 && currentDtTo(ball) > dt
 //                && justHit != ball && ball.justHit != this
         ) {
-//            if (this.isNotMoving()) {
-//                if (ball.isNotMoving()) {
-//                    if (checkMovingBall) {
-//                        throw new RuntimeException("他妈的两颗静止的球拿头撞？");
-//                    } else {
-//                        System.err.println("Complex collision scenario");
-//                        return false;
-//                    }
-//                } else {
-//                    return ball.tryHitBall(this, checkMovingBall, applyGearSpin, phy);
-//                }
-//            }
-//            if (!ball.isNotMoving()) {
-//                if (!checkMovingBall) return false;
-//            }
 
             twoMovingBallsHitCore(game, ball, phy, applyGearSpin);
 

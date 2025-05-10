@@ -1,35 +1,35 @@
 {
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
-    "gameRule": "AMERICAN_NINE",
-    "handFeelEffort": 1,
-    "person": "Neil Robertson",
-    "playerType": "PLAYER",
-    "let": {"type": "notLet"}
-  },
-  "p1Wins": 1,
-  "p2": {
-    "playerNumber": 2,
-    "gameRule": "AMERICAN_NINE",
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
     "person": "Mark Allen",
     "playerType": "PLAYER",
     "let": {"type": "notLet"}
   },
-  "startTime": 1746305783277,
+  "p1Wins": 0,
+  "p2": {
+    "playerNumber": 2,
+    "gameRule": "SNOOKER",
+    "handFeelEffort": 1,
+    "person": "Neil Robertson",
+    "playerType": "COMPUTER",
+    "let": {"type": "notLet"}
+  },
+  "startTime": 1746354895698,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "AMERICAN_NINE",
-    "subRules": ["RAW_STD"],
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
+    "subRules": ["SNOOKER_STD"],
     "devMode": true,
     "table": {
-      "tableOrdinal": 3,
-      "pocketDifficultyOrdinal": 0,
-      "holeSizeOrdinal": 1
+      "tableOrdinal": 0,
+      "pocketDifficultyOrdinal": 3,
+      "holeSizeOrdinal": 2
     }
   },
   "totalFrames": 1,
