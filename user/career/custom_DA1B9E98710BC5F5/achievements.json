@@ -5,20 +5,30 @@
         "0": "2025-05-06 04:23:40",
         "1": "2025-05-09 04:13:56"
       },
-      "completions": 64960,
+      "completions": 89760,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "NOT_RECEIVED",
         "2": "NOT_COMPLETED"
       }
     },
+    "poolClear": {
+      "levelDates": {"0": "2025-05-06 03:54:20"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
+    },
+    "accuracyWin": {
+      "levelDates": {"0": "2025-05-19 23:00:47"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
     "sumOver147": {
       "levelDates": {"0": "2025-05-06 03:42:37"},
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
-    "poolClear": {
-      "levelDates": {"0": "2025-05-06 03:54:20"},
+    "lieDownWin": {
+      "levelDates": {"0": "2025-05-06 06:16:50"},
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
@@ -26,11 +36,6 @@
       "levelDates": {},
       "completions": 2,
       "levelAwardReceived": {"0": "NOT_COMPLETED"}
-    },
-    "lieDownWin": {
-      "levelDates": {"0": "2025-05-06 06:16:50"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "winAMatch": {
       "levelDates": {"0": "2025-05-06 03:54:21"},
@@ -42,12 +47,17 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
+    "playOneYear": {
+      "levelDates": {"0": "2025-05-19 02:08:50"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
     "snookerCumulateScore": {
       "levelDates": {
         "0": "2025-05-06 04:42:44",
         "1": "2025-05-10 06:38:13"
       },
-      "completions": 1153,
+      "completions": 1573,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "NOT_RECEIVED",
@@ -64,6 +74,11 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
+    "snookerBreak100": {
+      "levelDates": {"0": "2025-05-19 23:00:05"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
     "poolBreakPot": {
       "levelDates": {"0": "2025-05-06 03:20:06"},
       "completions": 1,
@@ -75,17 +90,22 @@
       "levelAwardReceived": {"0": "RECEIVED"}
     },
     "cebCumulativeClear": {
-      "levelDates": {},
-      "completions": 4,
+      "levelDates": {"0": "2025-05-14 04:04:04"},
+      "completions": 5,
       "levelAwardReceived": {
-        "0": "NOT_COMPLETED",
+        "0": "NOT_RECEIVED",
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
     },
     "positioningMaster": {
       "levelDates": {"0": "2025-05-06 03:25:46"},
-      "completions": 15,
+      "completions": 32,
+      "levelAwardReceived": {"0": "RECEIVED"}
+    },
+    "firstMainOfTournament": {
+      "levelDates": {"0": "2025-05-06 03:22:48"},
+      "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
     "solveSnookerSuccessPot": {
@@ -93,8 +113,8 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
-    "firstMainOfTournament": {
-      "levelDates": {"0": "2025-05-06 03:22:48"},
+    "snookerBreak50": {
+      "levelDates": {"0": "2025-05-08 06:15:32"},
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
@@ -103,8 +123,13 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
-    "snookerBreak50": {
-      "levelDates": {"0": "2025-05-08 06:15:32"},
+    "cueBallPot": {
+      "levelDates": {"0": "2025-05-06 03:48:27"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
+    },
+    "winAllMatches": {
+      "levelDates": {"0": "2025-05-09 03:33:52"},
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
@@ -116,16 +141,6 @@
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
-    },
-    "winAllMatches": {
-      "levelDates": {"0": "2025-05-09 03:33:52"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
-    },
-    "cueBallPot": {
-      "levelDates": {"0": "2025-05-06 03:48:27"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "remainOneMustLose": {
       "levelDates": {"0": "2025-05-06 03:54:20"},
@@ -160,6 +175,12 @@
         "levelAwardReceived": {},
         "key": "Chu Bingjie"
       },
+      "Luca Brecel": {
+        "levelDates": {"0": "2025-05-19 23:00:50"},
+        "completions": 1,
+        "levelAwardReceived": {},
+        "key": "Luca Brecel"
+      },
       "Mang Dali": {
         "levelDates": {"0": "2025-05-06 04:36:55"},
         "completions": 1,
@@ -171,6 +192,12 @@
         "completions": 1,
         "levelAwardReceived": {},
         "key": "Worst Professional"
+      },
+      "Lao Youtiao": {
+        "levelDates": {"0": "2025-05-19 17:17:25"},
+        "completions": 1,
+        "levelAwardReceived": {},
+        "key": "Lao Youtiao"
       },
       "Wang Xu": {
         "levelDates": {"0": "2025-05-06 03:54:21"},
@@ -199,7 +226,7 @@
     }},
     "doublePot": {
       "levelDates": {"0": "2025-05-06 06:18:31"},
-      "completions": 4,
+      "completions": 5,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "NOT_COMPLETED",
@@ -211,7 +238,7 @@
         "0": "2025-05-06 04:23:20",
         "1": "2025-05-09 22:21:22"
       },
-      "completions": 12,
+      "completions": 13,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "NOT_RECEIVED",
@@ -220,11 +247,6 @@
     },
     "notConcede": {
       "levelDates": {"0": "2025-05-06 04:57:36"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
-    },
-    "finalFrame": {
-      "levelDates": {"0": "2025-05-06 06:16:52"},
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
@@ -237,13 +259,18 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "earnedMoney": {
-      "levelDates": {"0": "2025-05-06 03:22:48"},
+    "finalFrame": {
+      "levelDates": {"0": "2025-05-06 06:16:52"},
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
     "continuousLongPot": {
       "levelDates": {"0": "2025-05-06 03:59:31"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
+    },
+    "earnedMoney": {
+      "levelDates": {"0": "2025-05-06 03:22:48"},
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
@@ -256,15 +283,15 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "semifinalStage": {
-      "levelDates": {"0": "2025-05-07 02:47:51"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
-    },
     "lostAllMatches": {
       "levelDates": {"0": "2025-05-09 04:13:01"},
       "completions": 1,
       "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
+    "semifinalStage": {
+      "levelDates": {"0": "2025-05-07 02:47:51"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "snookerBreakPot": {
       "levelDates": {"0": "2025-05-08 03:48:50"},
@@ -291,12 +318,17 @@
         "0": "2025-05-06 04:09:24",
         "1": "2025-05-09 05:41:39"
       },
-      "completions": 14,
+      "completions": 17,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "NOT_RECEIVED",
         "2": "NOT_COMPLETED"
       }
+    },
+    "potWrongColor": {
+      "levelDates": {"0": "2025-05-19 17:08:47"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "passPot": {
       "levelDates": {"0": "2025-05-06 05:01:25"},
@@ -318,7 +350,7 @@
         "1": "2025-05-06 03:34:36",
         "2": "2025-05-10 06:36:50"
       },
-      "completions": 236,
+      "completions": 244,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "RECEIVED",
@@ -335,19 +367,19 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
+    "potABall": {
+      "levelDates": {"0": "2025-05-06 03:13:09"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "RECEIVED"}
+    },
     "champEarnCumulative": {
       "levelDates": {"0": "2025-05-09 05:41:39"},
-      "completions": 64300,
+      "completions": 74300,
       "levelAwardReceived": {
         "0": "NOT_RECEIVED",
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
-    },
-    "potABall": {
-      "levelDates": {"0": "2025-05-06 03:13:09"},
-      "completions": 1,
-      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "missedShot": {
       "levelDates": {"0": "2025-05-06 03:17:00"},
@@ -369,16 +401,21 @@
         "0": "2025-05-06 04:00:05",
         "1": "2025-05-08 03:32:29"
       },
-      "completions": 36,
+      "completions": 41,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "RECEIVED",
         "2": "NOT_COMPLETED"
       }
     },
-    "miscued": {
-      "levelDates": {"0": "2025-05-06 04:05:35"},
+    "comeBackBehindOverScore": {
+      "levelDates": {"0": "2025-05-10 06:39:44"},
       "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
+    "winFramesNormalDifficulty": {
+      "levelDates": {"0": "2025-05-06 03:19:50"},
+      "completions": 41,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
     "defeatSameOpponentContinuousCeb": {
@@ -386,15 +423,10 @@
       "completions": 1,
       "levelAwardReceived": {"0": "RECEIVED"}
     },
-    "winFramesNormalDifficulty": {
-      "levelDates": {"0": "2025-05-06 03:19:50"},
-      "completions": 36,
-      "levelAwardReceived": {"0": "RECEIVED"}
-    },
-    "comeBackBehindOverScore": {
-      "levelDates": {"0": "2025-05-10 06:39:44"},
+    "miscued": {
+      "levelDates": {"0": "2025-05-06 04:05:35"},
       "completions": 1,
-      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+      "levelAwardReceived": {"0": "RECEIVED"}
     },
     "bestFour": {
       "levelDates": {"0": "2025-05-08 03:33:44"},
@@ -406,7 +438,7 @@
         "0": "2025-05-06 03:37:21",
         "1": "2025-05-06 04:30:42"
       },
-      "completions": 86,
+      "completions": 92,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "RECEIVED",
@@ -429,7 +461,7 @@
         "1": "2025-05-06 03:47:19",
         "2": "2025-05-09 04:21:21"
       },
-      "completions": 645,
+      "completions": 784,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "RECEIVED",
@@ -438,7 +470,7 @@
     },
     "defeatUniqueOpponentsSnooker": {
       "levelDates": {"0": "2025-05-09 03:33:52"},
-      "completions": 7,
+      "completions": 9,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "NOT_COMPLETED",
@@ -470,7 +502,7 @@
         "0": "2025-05-06 03:32:59",
         "1": "2025-05-09 03:11:11"
       },
-      "completions": 26,
+      "completions": 35,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "RECEIVED",
@@ -487,7 +519,7 @@
         "0": "2025-05-06 04:13:07",
         "1": "2025-05-08 06:21:24"
       },
-      "completions": 15,
+      "completions": 17,
       "levelAwardReceived": {
         "0": "RECEIVED",
         "1": "RECEIVED",
@@ -513,7 +545,7 @@
     },
     "potBallsAnti": {
       "levelDates": {"0": "2025-05-09 05:46:36"},
-      "completions": 1,
+      "completions": 2,
       "levelAwardReceived": {
         "0": "NOT_RECEIVED",
         "1": "NOT_COMPLETED",
@@ -521,5 +553,5 @@
       }
     }
   },
-  "checksum": "E2A7D4043BA21AD97AA3D4F3230C3E18"
+  "checksum": "E861E47963C352E19781181313B1D370"
 }

@@ -36,7 +36,14 @@ public class ChineseEightBallPlayer extends NumberedBallPlayer {
         return ballRange;
     }
 
-    public void setBallRange(int ballRange) {
+    public void setBallRange(int ballRange, int initScore) {
         this.ballRange = ballRange;
+        if (initScore != -1) {
+            this.score = initScore;
+        }
+    }
+    
+    public void forceSetScore(int score) {
+        this.score = score;
     }
 }

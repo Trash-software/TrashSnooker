@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.ai;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.attempt.CueType;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -34,7 +35,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
 
     protected abstract AttackChoice copyWithNewDirection(double[] newDirection);
 
-    protected abstract AiCueResult.CueType cueType();
+    protected abstract CueType cueType();
 
     protected boolean isMidHole() {
         return holeOpenPos[0] == game.getGameValues().table.midX;
@@ -184,8 +185,8 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
         }
 
         @Override
-        protected AiCueResult.CueType cueType() {
-            return AiCueResult.CueType.DOUBLE_POT;
+        protected CueType cueType() {
+            return CueType.DOUBLE_POT;
         }
     }
 
@@ -486,8 +487,8 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
         }
 
         @Override
-        protected AiCueResult.CueType cueType() {
-            return AiCueResult.CueType.ATTACK;
+        protected CueType cueType() {
+            return CueType.ATTACK;
         }
 
         @Override

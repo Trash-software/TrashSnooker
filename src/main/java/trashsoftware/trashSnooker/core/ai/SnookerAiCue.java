@@ -1,6 +1,8 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.attempt.CueType;
+import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -215,12 +217,12 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 if (game.remainingRedCount() == 1) {
                     System.out.println("Last red, make snooker");
                     FinalChoice.DefenseChoice def = getBestDefenseChoice(phy);
-                    if (def != null) return makeDefenseCue(def, AiCueResult.CueType.DEFENSE);
+                    if (def != null) return makeDefenseCue(def, CueType.DEFENSE);
                 }
             } else if (currentTarget != AbstractSnookerGame.RAW_COLORED_REP) {
                 System.out.println("Ordered colors, make snooker");
                 FinalChoice.DefenseChoice def = getBestDefenseChoice(phy);
-                if (def != null) return makeDefenseCue(def, AiCueResult.CueType.DEFENSE);
+                if (def != null) return makeDefenseCue(def, CueType.DEFENSE);
             } else {
                 System.out.println("Being over score and target is colored, must attack");
                 FinalChoice.IntegratedAttackChoice iac = standardAttack(phy, true);

@@ -5,9 +5,13 @@ import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AttackChoice;
 import trashsoftware.trashSnooker.core.ai.AttackParam;
+import trashsoftware.trashSnooker.core.attempt.CueAttempt;
+import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
+import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
+import trashsoftware.trashSnooker.core.infoRec.CueInfoRec;
 import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
@@ -40,13 +44,6 @@ import java.util.function.Supplier;
 public abstract class Game<B extends Ball, P extends Player> implements GameHolder, Cloneable {
     public static final int END_REP = 31;
     public static final int CONGESTION_LIMIT = 30000;
-    //    public static final double calculateMs = 1.0;
-//    public static final double calculationsPerSec = 1000.0 / calculateMs;
-//    public static final double calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
-//    public static final double speedReducer = 120.0 / calculationsPerSecSqr;
-//    public static final double spinReducer = 4000.0 / calculationsPerSecSqr;  // 数值越大，旋转衰减越大
-//    public static final double sideSpinReducer = 100.0 / calculationsPerSecSqr;
-//    public static final double spinEffect = 1400.0 / calculateMs;  // 数值越小影响越大
     // 进攻球判定角
     // 如实际角度与可通过的袋口连线的夹角小于该值，判定为进攻球
     public static final double MAX_ATTACK_DECISION_ANGLE = Math.toRadians(5.0);
@@ -65,27 +62,28 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected B cueBall;
     protected P player1;
     protected P player2;
-    protected int recordedTarget;  // 记录上一杆时的目标球，复位用
     protected boolean wasDoingFreeBall;  // 记录上一杆是不是自由球，复位用
     protected int finishedCuesCount = 0;  // 击球的计数器
     protected double lastCueVx;
     protected P lastCuedPlayer;
     protected P currentPlayer;
+    protected CuePlayParams recordedCueParams;
     /**
      * {@link Game#getCurrentTarget()}
      */
     protected int currentTarget;
+    protected int recordedTarget;  // 记录上一杆时的目标球，复位用
     protected Ball whiteFirstCollide;  // 这一杆白球碰到的第一颗球
     protected boolean collidesWall;
     protected boolean ballInHand = true;
-    //    protected boolean thisCueFoul = false;
-//    protected boolean lastCueFoul = false;
     protected FoulInfo thisCueFoul = new FoulInfo();
     protected FoulInfo lastCueFoul;
     protected boolean lastPotSuccess;
     protected boolean isBreaking = true;
     protected boolean placedHandBallButNoHit;
     protected boolean firstCueAfterHandBall;
+    protected boolean playingRepositionBall;  // 是否在打复位的球
+    protected boolean playingLetBall;  // 是否在打对方的让杆
     protected boolean ballHeapIntact = true;  // 球堆是否没被动过
     protected GameValues gameValues;
     //    protected String foulReason;
@@ -395,6 +393,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public Movement cue(CuePlayParams params, Phy phy) {
         cueStartTime = System.currentTimeMillis();
         if (cueFinishTime != 0) thinkTime = (int) (cueStartTime - cueFinishTime);
+        recordedCueParams = params;
 
         System.out.println("Think time: " + thinkTime);
         if (thinkTime >= 60000) {
@@ -504,9 +503,38 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         System.out.println("Move end");
         physicsCalculator = null;
         cueFinishTime = System.currentTimeMillis();
+        
+        // record info, 在endMoveAndUpdate之前的部分
+        Map<Integer, Integer> newlyPot = new TreeMap<>();
+        for (Ball ball : newPotted) {
+            newlyPot.merge(ball.value, 1, Integer::sum);
+        }
+        int[] pScores = new int[]{player1.getScore(), player2.getScore()};
+        List<CueInfoRec.Special> specials = new ArrayList<>();
+        if (firstCueAfterHandBall) specials.add(CueInfoRec.Special.BALL_IN_HAND);
+        if (isDoingSnookerFreeBll()) specials.add(CueInfoRec.Special.SNOOKER_FREE_BALL);
+        if (playingRepositionBall) specials.add(CueInfoRec.Special.REPOSITION);
+        if (playingLetBall) specials.add(CueInfoRec.Special.LET_OTHER_PLAY);
+        // todo: 美式的pushout没做
 
         Player player = currentPlayer;
         endMoveAndUpdate();
+        playingRepositionBall = false;
+        playingLetBall = false;
+        
+        entireGame.getMatchInfoRec().recordACue(
+                lastCuedPlayer.getInGamePlayer().getPlayerNumber(),
+                recordedTarget,
+                specifiedTarget,
+                whiteFirstCollide == null ? 0 : whiteFirstCollide.value,
+                recordedCueParams == null ? PlayerHand.Hand.RIGHT : recordedCueParams.cueParams.getHandSkill().hand,
+                newlyPot,
+                new int[]{player1.getScore() - pScores[0], player2.getScore() - pScores[1]},
+                new int[]{player1.getScore(), player2.getScore()},
+                lastCuedPlayer.getAttempts().getLast().getAttemptBase(),
+                lastCueFoul,
+                specials
+        );
         isBreaking = false;
         finishedCuesCount++;
         gameView.finishCue(player, currentPlayer);
@@ -1375,7 +1403,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     protected void reposition(boolean isSimulate) {
-        if (!isSimulate) System.out.println("Reposition!");
+        if (!isSimulate) {
+            System.out.println("Reposition!");
+            playingRepositionBall = true;
+        }
         thisCueFoul = new FoulInfo();
         ballInHand = false;
         for (Map.Entry<B, double[]> entry : recordedPositions.entrySet()) {
@@ -1589,6 +1620,17 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public Set<Ball> getNewPottedLegal() {
         return newPottedLegal;
+    }
+    
+    public void letOtherPlay() {
+        switchPlayer();
+        
+        playingLetBall = true;
+
+        if (isPlacedHandBallButNoHit()) {
+            // 哪有自己摆好球再让对手打的
+            forceSetBallInHand();
+        }
     }
 
     public void switchPlayer() {

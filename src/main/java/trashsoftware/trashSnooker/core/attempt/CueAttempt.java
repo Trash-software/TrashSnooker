@@ -1,5 +1,8 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.attempt;
 
+import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.CuePlayParams;
+import trashsoftware.trashSnooker.core.PlayerHand;
 import trashsoftware.trashSnooker.core.movement.Movement;
 
 import java.util.Set;
@@ -8,11 +11,12 @@ public abstract class CueAttempt {
 
     protected Movement movement;
     protected PlayerHand handSkill;
-    protected boolean success;
+    protected AttemptBase attemptBase;
     protected Set<Ball> legalPots;  // 合法打进的球
     protected final CuePlayParams playParams;
     
-    protected CueAttempt(CuePlayParams playParams) {
+    protected CueAttempt(CueType type, CuePlayParams playParams) {
+        this.attemptBase = new AttemptBase(type);
         this.playParams = playParams;
     }
 
@@ -21,11 +25,11 @@ public abstract class CueAttempt {
     }
 
     public void setSuccess(boolean success) {
-        this.success = success;
+        this.attemptBase.setSuccess(success);
     }
 
     public boolean isSuccess() {
-        return success;
+        return attemptBase.isSuccess();
     }
 
     public void setAfterFinish(PlayerHand handSkill, 
@@ -34,6 +38,10 @@ public abstract class CueAttempt {
         this.movement = movement;
 
 //        System.out.println("Trace: before " + whiteTrace.getCushionBefore() + ", after " + whiteTrace.getCushionAfter());
+    }
+
+    public AttemptBase getAttemptBase() {
+        return attemptBase;
     }
 
     public boolean isPotLegalBall() {

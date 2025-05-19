@@ -1,8 +1,11 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.attempt;
 
+import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.CuePlayParams;
+import trashsoftware.trashSnooker.core.PlayerHand;
+import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.movement.Movement;
 
 public class PotAttempt extends CueAttempt {
 
@@ -17,14 +20,15 @@ public class PotAttempt extends CueAttempt {
     
     private PotAttempt positionToThis;  // 连续进攻中的上一杆
 
-    public PotAttempt(GameValues gameValues, 
+    public PotAttempt(CueType type,
+                      GameValues gameValues,
                       CuePlayParams cuePlayParams,
                       PlayerPerson playerPerson,
                       Ball targetBall,
-                      double[] cueBallOrigPos, 
+                      double[] cueBallOrigPos,
                       double[] targetBallOrigPos,
                       double[][] targetDirHole) {
-        super(cuePlayParams);
+        super(type, cuePlayParams);
         
         this.gameValues = gameValues;
         this.cuePlayParams = cuePlayParams;

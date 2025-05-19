@@ -435,10 +435,11 @@ public class FastGameView extends ChildInitializable {
     @FXML
     void resumeAction() {
         EntireGame game = GeneralSaveManager.getInstance().getSave();
-        if (game != null) {
+        if (game != null && !game.isFinished()) {
             startGame(game);
         } else {
-            throw new RuntimeException("???");
+            resumeButton.setDisable(true);
+//            throw new RuntimeException("???");
         }
     }
 

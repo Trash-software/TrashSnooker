@@ -23,6 +23,8 @@ public class InGamePlayer {
     private final GameRule gameRule;
     private final int playerNumber;  // 1 or 2
     private final double handFeelEffort;
+    // rua不rua
+    private double realTimePsy = 1.0;
 
     private final CueSelection cueSelection;
     private LetScoreOrBall letScoreOrBall;
@@ -105,6 +107,7 @@ public class InGamePlayer {
                 EventLogger.warning(e);
             }
         }
+        igp.realTimePsy = jsonObject.optDouble("realTimePsy", 1.0);
         
         return igp;
     }
@@ -117,6 +120,7 @@ public class InGamePlayer {
         object.put("playerType", playerType.name());
         object.put("playerNumber", playerNumber);
         object.put("handFeelEffort", handFeelEffort);
+        object.put("realTimePsy", realTimePsy);
         if (letScoreOrBall != null) {
             object.put("let", letScoreOrBall.toJson());
         }
@@ -135,6 +139,10 @@ public class InGamePlayer {
     public void hideAllCues(Pane pane) {
 //        playCue.getCueModel(pane).hide();
 //        breakCue.getCueModel(pane).hide();
+    }
+
+    public double getRealTimePsy() {
+        return realTimePsy;
     }
 
     public CueSelection getCueSelection() {

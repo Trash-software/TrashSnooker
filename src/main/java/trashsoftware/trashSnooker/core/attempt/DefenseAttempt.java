@@ -1,33 +1,31 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.attempt;
 
-import trashsoftware.trashSnooker.core.metrics.Cushion;
+import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.CuePlayParams;
+import trashsoftware.trashSnooker.core.Player;
 import trashsoftware.trashSnooker.core.movement.Movement;
 
 import java.util.Set;
 
 public class DefenseAttempt extends CueAttempt {
     public final Player defensePlayer;
-    private final boolean solvingSnooker;
     private boolean legal;
-    private boolean breaking;
 
-    public DefenseAttempt(Player player, CuePlayParams playParams, boolean solvingSnooker) {
-        super(playParams);
+    public DefenseAttempt(CueType type, 
+                          Player player, CuePlayParams playParams) {
+        super(type, playParams);
         
         this.defensePlayer = player;
-        this.solvingSnooker = solvingSnooker;
-        this.success = true;
+        this.setSuccess(true);
     }
 
     /**
      * 就在这一杆结束后调用，并非是下一杆
      * 
      * @param legalPots    打进的该进的球
-     * @param isBreaking   是否为开球
      * @param legal        是否未犯规
      */
-    public void setAfterScoreUpdate(Set<Ball> legalPots, 
-                                    boolean isBreaking, 
+    public void setAfterScoreUpdate(Set<Ball> legalPots,
                                     boolean legal) {
         setAfterScoreUpdate(legalPots);
         
@@ -35,7 +33,6 @@ public class DefenseAttempt extends CueAttempt {
             throw new RuntimeException("This method should not be called before setting trace");
         }
         
-        this.breaking = isBreaking;
         this.legal = legal;
     }
 
@@ -44,11 +41,15 @@ public class DefenseAttempt extends CueAttempt {
     }
 
     public boolean isSolvingSnooker() {
-        return solvingSnooker;
+        return attemptBase.type == CueType.SOLVE;
     }
 
     public boolean isLegal() {
         return legal;
+    }
+    
+    public boolean isBreaking() {
+        return attemptBase.type == CueType.BREAK;
     }
 
     /**
@@ -57,7 +58,7 @@ public class DefenseAttempt extends CueAttempt {
     public boolean isPassPot() {
         if (!legal) return false;
         if (legalPots.isEmpty()) return false;
-        if (breaking) return false;
+        if (isBreaking()) return false;
         if (movement.getTargetTrace() == null) {
             // 九球的push out会进这个分支
             System.out.println("Pushing out, legal but no target");
@@ -89,7 +90,7 @@ public class DefenseAttempt extends CueAttempt {
     public boolean isDoublePot() {
         if (!legal) return false;
         if (legalPots.isEmpty()) return false;
-        if (breaking) return false;
+        if (isBreaking()) return false;
         if (movement.getTargetTrace() == null) {
             // 九球的push out会进这个分支
             System.out.println("Pushing out, legal but no target");

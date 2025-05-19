@@ -33,6 +33,7 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.core.training;
     exports trashsoftware.trashSnooker.core.career.achievement;
     exports trashsoftware.trashSnooker.audio;
+    exports trashsoftware.trashSnooker.core.infoRec;
 
     opens trashsoftware.trashSnooker.fxml;
     opens trashsoftware.trashSnooker.fxml.alert;
@@ -57,4 +58,5 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.util.config;
     exports trashsoftware.trashSnooker.res;
     exports trashsoftware.trashSnooker.core.cue;
+    exports trashsoftware.trashSnooker.core.attempt;
 }

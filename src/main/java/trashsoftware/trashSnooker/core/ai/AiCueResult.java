@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.attempt.CueType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class AiCueResult {
     private final Ball targetBall;
     //    private final PlayerPerson.HandSkill handSkill;
     private final double frameImportance;
-    private final boolean rua;
+//    private final boolean rua;
     private double unitX, unitY;
     private List<double[]> whitePath = new ArrayList<>();
 
@@ -191,13 +192,5 @@ public class AiCueResult {
 
     public double getUnitY() {
         return unitY;
-    }
-
-    public enum CueType {
-        ATTACK,
-        DOUBLE_POT,
-        DEFENSE,
-        BREAK,
-        SOLVE
     }
 }

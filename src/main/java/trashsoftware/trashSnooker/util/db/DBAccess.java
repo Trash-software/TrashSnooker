@@ -1,6 +1,9 @@
 package trashsoftware.trashSnooker.util.db;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.attempt.CueAttempt;
+import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
+import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;

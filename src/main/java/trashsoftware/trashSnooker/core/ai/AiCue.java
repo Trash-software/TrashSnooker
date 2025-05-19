@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.ai;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.jetbrains.annotations.NotNull;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.attempt.CueType;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
@@ -494,7 +495,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return makeAttackCue(iac, iac.attackParams.attackChoice.cueType());
     }
 
-    protected AiCueResult makeAttackCue(FinalChoice.IntegratedAttackChoice iac, AiCueResult.CueType cueType) {
+    protected AiCueResult makeAttackCue(FinalChoice.IntegratedAttackChoice iac, CueType cueType) {
         AttackParam attackParam = iac.attackParams;
         AttackChoice attackChoice = attackParam.attackChoice;
 
@@ -526,7 +527,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return acr;
     }
 
-    protected AiCueResult makeDefenseCue(FinalChoice.DefenseChoice choice, AiCueResult.CueType cueType) {
+    protected AiCueResult makeDefenseCue(FinalChoice.DefenseChoice choice, CueType cueType) {
         AiCueResult acr = new AiCueResult(aiPlayer.getInGamePlayer(),
                 game.getGamePlayStage(choice.ball, true),
                 cueType,
@@ -546,7 +547,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         if (game.isBreaking()) {
             FinalChoice.DefenseChoice breakChoice = breakCue(phy);
             System.out.println("AI break: " + breakChoice);
-            if (breakChoice != null) return makeDefenseCue(breakChoice, AiCueResult.CueType.BREAK);
+            if (breakChoice != null) return makeDefenseCue(breakChoice, CueType.BREAK);
         }
 
         if (!aiOnlyDefense) {
@@ -559,7 +560,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         FinalChoice.DefenseChoice stdDefense = standardDefense();
         if (stdDefense != null) {
             System.out.println("AI standard defense");
-            return makeDefenseCue(stdDefense, AiCueResult.CueType.DEFENSE);
+            return makeDefenseCue(stdDefense, CueType.DEFENSE);
         }
         FinalChoice.DefenseChoice defenseChoice = getBestDefenseChoice(phy);
         if (defenseChoice != null) {
@@ -568,19 +569,19 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //            System.out.printf("Best defense choice: %f %f %f %f %f\n", 
 //                    defenseChoice.price, defenseChoice.snookerPrice, defenseChoice.opponentAttackPrice,
 //                    defenseChoice.penalty, defenseChoice.tolerancePenalty);
-            return makeDefenseCue(defenseChoice, AiCueResult.CueType.DEFENSE);
+            return makeDefenseCue(defenseChoice, CueType.DEFENSE);
         }
         FinalChoice.DefenseChoice solveSnooker = solveSnooker(phy, false);
         if (solveSnooker != null) {
             System.out.println("AI solve snooker");
             System.out.println(solveSnooker);
-            return makeDefenseCue(solveSnooker, AiCueResult.CueType.SOLVE);
+            return makeDefenseCue(solveSnooker, CueType.SOLVE);
         }
         FinalChoice.DefenseChoice solveSnooker2 = solveSnooker(phy, true);  // 只能说是逼急了，来个袋角解斯诺克
         System.out.println("Cannot solve snooker! Try pocket arc!");
         if (solveSnooker2 != null) {
             System.out.println("AI solve snooker by pocket arc");
-            return makeDefenseCue(solveSnooker2, AiCueResult.CueType.SOLVE);
+            return makeDefenseCue(solveSnooker2, CueType.SOLVE);
         }
         System.out.println("Ai random angry cue");
         return randomAngryCue();
@@ -708,7 +709,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return new AiCueResult(
                 aiPlayer.getInGamePlayer(),
                 GamePlayStage.NORMAL,
-                AiCueResult.CueType.DEFENSE,
+                CueType.DEFENSE,
                 null,
                 null,
                 null,

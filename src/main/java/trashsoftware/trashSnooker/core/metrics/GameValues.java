@@ -52,7 +52,7 @@ public class GameValues {
         build();
     }
 
-    public static GameValues fromJson(JSONObject jsonObject, TableCloth cloth) {
+    public static GameValues fromJson(JSONObject jsonObject) {
         GameRule rule = GameRule.valueOf(jsonObject.getString("gameRule"));
         BallMetrics ballMetrics = BallMetrics.valueOf(jsonObject.getString("ball"));
 

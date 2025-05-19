@@ -39,6 +39,9 @@ import trashsoftware.trashSnooker.audio.SoundInfo;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
+import trashsoftware.trashSnooker.core.attempt.CueType;
+import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
+import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerMatch;
@@ -1064,7 +1067,7 @@ public class GameView implements Initializable {
             }
         }
 
-        Platform.runLater(() -> updatePowerSlider(nextCuePlayer.getInGamePlayer(), 
+        Platform.runLater(() -> updatePowerSlider(nextCuePlayer.getInGamePlayer(),
                 nextCuePlayer.getPlayerPerson().getPrimaryHand()));
         setButtonsCueEnd(nextCuePlayer);
         obstacleProjection = null;
@@ -1073,9 +1076,11 @@ public class GameView implements Initializable {
         if (curDefAttempt != null) {
             curDefAttempt.setAfterScoreUpdate(
                     game.getGame().getNewPottedLegal(),
-                    game.getGame().isBreaking() || game.getGame().isJustAfterBreak(),  // 保险，免得改了更新顺序就G
                     !game.getGame().isThisCueFoul()
             );
+            if (curDefAttempt.isBreaking() && curDefAttempt.defensePlayer instanceof NeedBigBreakPlayer nbp) {
+                curDefAttempt.setSuccess(nbp.isBreakSuccess());
+            }
         }
 
         ScoreResult scoreResult = game.getGame().makeScoreResult(justCuedPlayer);
@@ -1947,16 +1952,7 @@ public class GameView implements Initializable {
 
         hideCue();
 
-        game.getGame().switchPlayer();
-
-        if (game.getGame() instanceof AbstractSnookerGame asg) {
-            asg.cancelFreeBall();  // 让杆了你还打自由球？
-        }
-
-        if (game.getGame().isPlacedHandBallButNoHit()) {
-            // 哪有自己摆好球再让对手打的
-            game.getGame().forceSetBallInHand();
-        }
+        game.getGame().letOtherPlay();
 
         curDefAttempt = null;
         lastPotAttempt = null;
@@ -2392,8 +2388,6 @@ public class GameView implements Initializable {
         if (careerMatch != null) {
             reduceCueHp(getCuingCue(), player, params);
         }
-//        CuePlayParams params = applyCueError(player, 0, 0, 0,true, currentHand);
-//        System.out.println("Final params: " + params.cueParams);
 
         if (!snookered && predictedTargetBall != null) {
             List<double[][]> holeDirectionsAndHoles =
@@ -2407,6 +2401,7 @@ public class GameView implements Initializable {
 
                 if (angleBtw <= Game.MAX_ATTACK_DECISION_ANGLE) {
                     currentAttempt = new PotAttempt(
+                            CueType.ATTACK,
                             gameValues,
                             params,
                             game.getGame().getCuingPlayer().getPlayerPerson(),
@@ -2462,16 +2457,14 @@ public class GameView implements Initializable {
         }
     }
 
+    /**
+     * 会在updateScore那些之前发生
+     */
     private void playerCueCalculations(CuePlayParams params,
                                        Player player,
                                        PotAttempt currentAttempt,
                                        PlayerHand usedHand,
                                        boolean snookered) {
-//        gameValues.estimateMoveTime(
-//                game.playPhy,
-//                CuePlayParams.getSpeedOfPower(getActualPowerPercentage(), 0),
-//                2000
-//        );
         Movement calculatedMovement = game.getGame().cue(params, game.playPhy);
         CueRecord cueRecord = makeCueRecord(player, params);  // 必须在randomCueError之后
         TargetRecord thisTarget = makeTargetRecord(player);
@@ -2487,13 +2480,17 @@ public class GameView implements Initializable {
         if (currentAttempt != null) {
             boolean success = currentAttempt.getTargetBall().isPotted() && !game.getGame().isThisCueFoul();
             if (curDefAttempt != null && curDefAttempt.defensePlayer != player) {
-                // 如进攻成功，则上一杆防守失败了
-                curDefAttempt.setSuccess(!success);
-                if (success) {
-                    System.out.println(curDefAttempt.defensePlayer.getPlayerPerson().getName() +
-                            " defense failed!");
+                // 大力开球之后下一杆对手打进了不归这里管
+                if (!(curDefAttempt.getAttemptBase().type == CueType.BREAK &&
+                        game.getGame() instanceof NeedBigBreak)) {
+                    // 如进攻成功，则上一杆防守失败了
+                    curDefAttempt.setSuccess(!success);
+                    if (success) {
+                        System.out.println(curDefAttempt.defensePlayer.getPlayerPerson().getName() +
+                                " defense failed!");
+                    }
+                    game.getGame().recordAttemptForAchievement(curDefAttempt, player);
                 }
-                game.getGame().recordAttemptForAchievement(curDefAttempt, player);
             }
             if (lastPotAttempt != null && lastPotAttempt.getPlayerPerson() == player.getPlayerPerson()) {
                 // 如上一杆也是进攻，则这一杆进不进就是上一杆走位成不成功
@@ -2505,6 +2502,7 @@ public class GameView implements Initializable {
                     calculatedMovement);
             currentAttempt.setSuccess(success);
             player.addAttempt(currentAttempt);
+
             if (success) {
                 System.out.println("Pot success!");
                 if (miscued) {
@@ -2517,16 +2515,31 @@ public class GameView implements Initializable {
             curDefAttempt = null;
             game.getGame().recordAttemptForAchievement(lastPotAttempt, player);
         } else {
+//            if (curDefAttempt != null && curDefAttempt.getAttemptBase().type == CueType.BREAK &&
+//                    curDefAttempt.defensePlayer == player) {
+//                // 上一杆的开了球还接着打，应该是开球成功了吧？
+//                curDefAttempt.setSuccess(true);
+//            }
+
             // 防守
             if (lastPotAttempt != null && lastPotAttempt.getPlayerPerson() == player.getPlayerPerson()) {
                 // 如上一杆是本人进攻，则走位失败
                 lastPotAttempt.setPositionSuccess(false);
             }
 
-            curDefAttempt = new DefenseAttempt(player, params, snookered);
+            CueType type;
+            if (game.getGame().isBreaking()) {
+                type = CueType.BREAK;
+            } else if (snookered) {
+                type = CueType.SOLVE;
+            } else {
+                type = CueType.DEFENSE;
+            }
+            curDefAttempt = new DefenseAttempt(type, player, params);
             curDefAttempt.setAfterFinish(
                     usedHand,
                     calculatedMovement);
+
             player.addAttempt(curDefAttempt);
             System.out.println("Defense!" + (snookered ? " Solving" : ""));
             lastPotAttempt = null;
@@ -2561,6 +2574,7 @@ public class GameView implements Initializable {
 
         if (cueResult.isAttack()) {
             PotAttempt currentAttempt = new PotAttempt(
+                    cueResult.getCueType(),
                     gameValues,
                     realParams,
                     game.getGame().getCuingPlayer().getPlayerPerson(),
@@ -2573,10 +2587,14 @@ public class GameView implements Initializable {
 //                     && !game.getGame().isLastCueFoul() todo: 想办法
             if (curDefAttempt != null && curDefAttempt.defensePlayer != player) {
                 // 如进攻成功，则上一杆防守失败了
-                curDefAttempt.setSuccess(!success);
-                if (success) {
-                    System.out.println(curDefAttempt.defensePlayer.getPlayerPerson().getName() +
-                            " player defense failed!");
+                // 大力开球之后下一杆对手打进了不归这里管
+                if (!(curDefAttempt.getAttemptBase().type == CueType.BREAK &&
+                        game.getGame() instanceof NeedBigBreak)) {
+                    curDefAttempt.setSuccess(!success);
+                    if (success) {
+                        System.out.println(curDefAttempt.defensePlayer.getPlayerPerson().getName() +
+                                " player defense failed!");
+                    }
                 }
             }
             if (lastPotAttempt != null && lastPotAttempt.getPlayerPerson() == player.getPlayerPerson()) {
@@ -2597,9 +2615,9 @@ public class GameView implements Initializable {
             lastPotAttempt = currentAttempt;
             curDefAttempt = null;
         } else {
-            curDefAttempt = new DefenseAttempt(player,
-                    realParams,
-                    cueResult.getCueType() == AiCueResult.CueType.SOLVE);
+            curDefAttempt = new DefenseAttempt(cueResult.getCueType(),
+                    player,
+                    realParams);
             curDefAttempt.setAfterFinish(
                     cueResult.getHandSkill(),
                     calculatedMovement);
@@ -2696,6 +2714,8 @@ public class GameView implements Initializable {
                 game.getGame().getRecorder().writeBallInHandPlacement();
                 if (cbp.getBallSpecified() != null) {
                     game.getGame().setSpecifiedTarget(cbp.getBallSpecified());
+                } else {
+                    game.getGame().setSpecifiedTarget(null);
                 }
                 aiCalculating = false;
                 Platform.runLater(() -> {
@@ -3096,7 +3116,7 @@ public class GameView implements Initializable {
                 }
                 InGamePlayer playingPlayer = game.getGame().getCuingIgp();
                 maxPower = CuePlayParams.powerWithCueAngle(
-                        playingPlayer.getPlayerPerson().handBody, 
+                        playingPlayer.getPlayerPerson().handBody,
                         playingPlayer.getCueSelection().getSelected().brand,
                         maxPower,
                         cueAngleDeg
@@ -4328,7 +4348,7 @@ public class GameView implements Initializable {
     private void calculateCueAbleArea() {
         cueAbleArea = getCuingCue().getCueAbleArea(gameValues.ball, 32);
     }
-    
+
     private void recalculateObstacles() {
         if (game == null || game.getGame() == null) return;
 

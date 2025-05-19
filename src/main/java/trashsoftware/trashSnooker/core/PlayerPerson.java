@@ -26,7 +26,7 @@ public class PlayerPerson {
     public final String category;
     public final HandBody handBody;
     public final double psyNerve;
-    public final double psyRua;
+    final double psyRua;
     public final boolean isRandom;
     private final String playerId;
     private String name;  // 名字的原版

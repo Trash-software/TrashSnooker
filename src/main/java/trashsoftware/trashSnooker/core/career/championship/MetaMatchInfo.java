@@ -7,15 +7,18 @@ import trashsoftware.trashSnooker.core.career.ChampionshipStage;
 
 public class MetaMatchInfo {
     
+    public final String matchId;
     public final String hostPlayerId;
     public final int year;
     public final ChampionshipData data;
     public final ChampionshipStage stage;
     public final int idNum;  // -1 if invalid
     
-    MetaMatchInfo(String hostPlayerId, int year, ChampionshipData data,
+    MetaMatchInfo(String matchId,
+                  String hostPlayerId, int year, ChampionshipData data,
                   ChampionshipStage stage,
                   int idNum) {
+        this.matchId = matchId;
         this.hostPlayerId = hostPlayerId;
         this.year = year;
         this.data = data;
@@ -39,16 +42,19 @@ public class MetaMatchInfo {
             ChampionshipData data = ChampDataManager.getInstance().findDataById(dataId);
             
             if (parts.length == 1) {
-                return new MetaMatchInfo(champInfo[0], year, data,
+                return new MetaMatchInfo(matchId,
+                        champInfo[0], year, data,
                         defaultStage,
                         -1);
             } else if (parts.length == 2) {
-                return new MetaMatchInfo(champInfo[0], year, data,
+                return new MetaMatchInfo(matchId,
+                        champInfo[0], year, data,
                         defaultStage,
                         Integer.parseInt(parts[1]));
             }
 
-            return new MetaMatchInfo(champInfo[0], year, data,
+            return new MetaMatchInfo(matchId,
+                    champInfo[0], year, data,
                     ChampionshipStage.valueOf(parts[1]),
                     Integer.parseInt(parts[2]));
         } catch (RuntimeException e) {

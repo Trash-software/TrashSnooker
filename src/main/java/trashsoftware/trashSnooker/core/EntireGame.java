@@ -7,6 +7,7 @@ import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
+import trashsoftware.trashSnooker.core.infoRec.MatchInfoRec;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -14,6 +15,7 @@ import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.GeneralSaveManager;
+import trashsoftware.trashSnooker.util.PermanentCounters;
 import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 import trashsoftware.trashSnooker.util.db.EntireGameRecord;
@@ -39,13 +41,15 @@ public class EntireGame {
     private final SortedMap<Integer, Integer> winRecords = new TreeMap<>();
     private final MetaMatchInfo metaMatchInfo;  // nullable
     Game<? extends Ball, ? extends Player> game;
-    private Timestamp startTime = new Timestamp(System.currentTimeMillis());
+    private final Timestamp startTime;
     private int p1Wins;
     private int p2Wins;
     private boolean p1Breaks;
     
     private int p1BreakLoseChance;
     private int p2BreakLoseChance;
+    
+    protected MatchInfoRec matchInfoRec;
 
     public EntireGame(InGamePlayer p1, 
                       InGamePlayer p2, 
@@ -53,7 +57,7 @@ public class EntireGame {
                       int totalFrames, 
                       TableCloth cloth,
                       MetaMatchInfo metaMatchInfo) {
-        this(p1, p2, gameValues, totalFrames, cloth, true, metaMatchInfo);
+        this(p1, p2, gameValues, totalFrames, cloth,true, System.currentTimeMillis(), metaMatchInfo);
     }
 
     private EntireGame(InGamePlayer p1, 
@@ -62,12 +66,14 @@ public class EntireGame {
                        int totalFrames, 
                        TableCloth cloth, 
                        boolean isNewCreate,
+                       long startTime,
                        MetaMatchInfo metaMatchInfo) {
         this.p1 = p1;
         this.p2 = p2;
         if (totalFrames % 2 != 1) {
             throw new RuntimeException("Total frames must be odd.");
         }
+        this.startTime = new Timestamp(startTime);
         this.gameValues = gameValues;
         this.totalFrames = totalFrames;
         this.cloth = cloth;
@@ -75,8 +81,12 @@ public class EntireGame {
         this.predictPhy = Phy.Factory.createAiPredictPhy(cloth);
         this.whitePhy = Phy.Factory.createWhitePredictPhy(cloth);
         this.metaMatchInfo = metaMatchInfo;
+
+        String careerMatchId = null;
         
         if (metaMatchInfo != null) {
+            careerMatchId = metaMatchInfo.matchId;
+            
             if (metaMatchInfo.stage == ChampionshipStage.SEMI_FINAL) {
                 AchManager.getInstance().addAchievement(Achievement.SEMIFINAL_STAGE,
                         p1.isHuman() ? p1 : p2);
@@ -86,8 +96,21 @@ public class EntireGame {
             }
         }
 
-        if (isNewCreate && gameValues.isStandard())
-            DBAccess.getInstance().recordAnEntireGameStarts(this, metaMatchInfo);
+        if (gameValues.isStandard()) {
+            String entireBeginTime = getEntireBeginTimeFileName();
+            if (isNewCreate) {
+                DBAccess.getInstance().recordAnEntireGameStarts(this, metaMatchInfo);
+                matchInfoRec = MatchInfoRec.createMatchRec(gameValues, 
+                        totalFrames,
+                        entireBeginTime, 
+                        careerMatchId,
+                        new String[]{p1.getPlayerPerson().getPlayerId(), p2.getPlayerPerson().getPlayerId()});
+            } else {
+                matchInfoRec = MatchInfoRec.loadMatchRec(entireBeginTime);
+            }
+        } else {
+            matchInfoRec = MatchInfoRec.INVALID;
+        }
 
 //        createNextFrame();
     }
@@ -97,7 +120,7 @@ public class EntireGame {
         JSONObject clothObj = jsonObject.getJSONObject("cloth");
         TableCloth cloth = TableCloth.fromJson(clothObj);
 
-        GameValues gameValues = GameValues.fromJson(jsonObject.getJSONObject("gameValues"), cloth);
+        GameValues gameValues = GameValues.fromJson(jsonObject.getJSONObject("gameValues"));
 
         InGamePlayer p1 = InGamePlayer.fromJson(jsonObject.getJSONObject("p1"));
         InGamePlayer p2 = InGamePlayer.fromJson(jsonObject.getJSONObject("p2"));
@@ -109,6 +132,7 @@ public class EntireGame {
                 frames,
                 cloth,
                 false,
+                jsonObject.getLong("startTime"),
                 jsonObject.has("matchId") ?
                         MetaMatchInfo.fromString(jsonObject.getString("matchId")) :
                         null
@@ -117,7 +141,6 @@ public class EntireGame {
         entireGame.p1Wins = jsonObject.getInt("p1Wins");
         entireGame.p2Wins = jsonObject.getInt("p2Wins");
         entireGame.p1Breaks = jsonObject.getBoolean("p1Breaks");
-        entireGame.startTime = new Timestamp(jsonObject.getLong("startTime"));
         
         if (jsonObject.has("p1BreakLoseChance") && jsonObject.has("p2BreakLoseChance")) {
             entireGame.p1BreakLoseChance = jsonObject.getInt("p1BreakLoseChance");
@@ -151,6 +174,7 @@ public class EntireGame {
             assert json != null;
             EntireGame eg = fromJson(json);
             if (eg.isFinished()) return null;
+            System.out.println("Found active fast game save!");
             return eg;
         } catch (JSONException e) {
             EventLogger.error(e);
@@ -167,6 +191,7 @@ public class EntireGame {
         object.put("cloth", cloth.toJson());
 
         object.put("startTime", startTime.getTime());
+//        object.put("entireBeginTime", Util.entireBeginTimeNoQuote(startTime));
         object.put("p1Wins", p1Wins);
         object.put("p2Wins", p2Wins);
         object.put("p1Breaks", p1Breaks);
@@ -204,20 +229,20 @@ public class EntireGame {
         return count;
     }
 
-    /**
-     * 这个球员是否被打rua了
-     */
-    public boolean rua(InGamePlayer igp) {
-        int playerNum = igp == p1 ? 1 : 2;
-        int ruaLimit;
-        double psyRua = igp.getPlayerPerson().psyRua;
-        if (psyRua > 90) ruaLimit = 4;
-        else if (psyRua > 60) ruaLimit = 3;
-        else if (psyRua > 30) ruaLimit = 2;
-        else ruaLimit = 1;
-
-        return playerContinuousLoses(playerNum) >= ruaLimit;  // 连输3局以上，rua了
-    }
+//    /**
+//     * 这个球员是否被打rua了
+//     */
+//    public boolean rua(InGamePlayer igp) {
+//        int playerNum = igp == p1 ? 1 : 2;
+//        int ruaLimit;
+//        double psyRua = igp.getPlayerPerson().psyRua;
+//        if (psyRua > 90) ruaLimit = 4;
+//        else if (psyRua > 60) ruaLimit = 3;
+//        else if (psyRua > 30) ruaLimit = 2;
+//        else ruaLimit = 1;
+//
+//        return playerContinuousLoses(playerNum) >= ruaLimit;  // 连输3局以上，rua了
+//    }
     
     public void quitMatch(PlayerPerson quitPerson) {
         InGamePlayer winner;
@@ -254,51 +279,52 @@ public class EntireGame {
     /**
      * 返回赢了这一局之后，比赛是不是就结束了
      */
-    public boolean playerWinsAframe(InGamePlayer player) {
-        return playerWinsAframe(player, true);
+    public boolean playerWinsAframe(InGamePlayer frameWinner) {
+        return playerWinsAframe(frameWinner, true);
     }
     
-    private boolean playerWinsAframe(InGamePlayer player, boolean record) {
+    private boolean playerWinsAframe(InGamePlayer frameWinner, boolean record) {
         if (game != null && record) {
             if (gameValues.isStandard()) {
                 DBAccess.getInstance().recordAFrameEnds(
-                        this, game, player);
+                        this, game, frameWinner);
             }
-            updateFrameRecords(game.getPlayer1(), player);
-            updateFrameRecords(game.getPlayer2(), player);
+            updateFrameRecords(game.getPlayer1(), frameWinner);
+            updateFrameRecords(game.getPlayer2(), frameWinner);
         }
 
         boolean end;
-        InGamePlayer winner = null;
+        InGamePlayer matchWinner = null;
         int frameIndex = p1Wins + p2Wins + 1;
-        if (player.getPlayerPerson().equals(p1.getPlayerPerson())) {
+        if (frameWinner.getPlayerPerson().equals(p1.getPlayerPerson())) {
             winRecords.put(frameIndex, 1);
             end = p1WinsAFrame();
-            if (end) winner = p1;
+            if (end) matchWinner = p1;
         } else {
             winRecords.put(frameIndex, 2);
             end = p2WinsAFrame();
-            if (end) winner = p2;
+            if (end) matchWinner = p2;
         }
         if (end && record && gameValues.isStandard()) {
             EntireGameRecord egr = DBAccess.getInstance().getMatchDetail(toEgt());
-            int winnerIndex = winner.getPlayerNumber() == 1 ? 0 : 1;
-            if (winner.isHuman()) {
+            int winnerIndex = matchWinner.getPlayerNumber() == 1 ? 0 : 1;
+            if (matchWinner.isHuman()) {
                 int[][] totalBasic = egr.totalBasicStats();
                 if (totalBasic[winnerIndex][0] >= 50) {
                     double potSuccessRate = (double) totalBasic[winnerIndex][1] / totalBasic[winnerIndex][0];
                     if (potSuccessRate >= 0.9) {
-                        CareerAchManager.getInstance().addAchievement(Achievement.ACCURACY_WIN, winner);
+                        CareerAchManager.getInstance().addAchievement(Achievement.ACCURACY_WIN, matchWinner);
                     }
                 }
                 if (totalBasic[winnerIndex][2] >= 8) {
                     double longPotSuccessRate = (double) totalBasic[winnerIndex][3] / totalBasic[winnerIndex][2];
                     if (longPotSuccessRate >= 0.75) {
-                        CareerAchManager.getInstance().addAchievement(Achievement.ACCURACY_WIN_LONG, winner);
+                        CareerAchManager.getInstance().addAchievement(Achievement.ACCURACY_WIN_LONG, matchWinner);
                     }
                 }
             }
         }
+        matchInfoRec.finishCurrentFrame(end, frameWinner.getPlayerNumber());
         
         return end;
     }
@@ -374,6 +400,10 @@ public class EntireGame {
     public String getStartTimeSqlString() {
         return Util.timeStampFmt(startTime);
     }
+    
+    public String getEntireBeginTimeFileName() {
+        return Util.entireBeginTimeToFileName(startTime);
+    }
 
     public long getBeginTime() {
         return startTime.getTime();
@@ -419,8 +449,14 @@ public class EntireGame {
         if (gameValues.isStandard())
             DBAccess.getInstance().recordAFrameStarts(
                     this, game);
+        
+        matchInfoRec.startNextFrame();
     }
-    
+
+    public MatchInfoRec getMatchInfoRec() {
+        return matchInfoRec;
+    }
+
     public void addBreakLoseChance(int playerNum) {
         if (playerNum == 2) {
             p2BreakLoseChance++;

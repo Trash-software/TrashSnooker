@@ -54,8 +54,8 @@ public class Util {
             set.remove(keys.get(i));
         }
     }
-
-    public static String timeStampFmt(Timestamp timestamp) {
+    
+    public static String entireBeginTimeNoQuote(Timestamp timestamp) {
         String str = timestamp.toString();
         int msDotIndex = str.lastIndexOf('.');
         String noMs = str.substring(0, msDotIndex);
@@ -63,7 +63,21 @@ public class Util {
         while (ms.startsWith("0")) {
             ms = ms.substring(1);
         }
-        return "'" + noMs + "." + ms + "'";
+        return noMs + "." + ms;
+    }
+    
+    public static String entireBeginTimeToFileName(Timestamp timestamp) {
+        String ebt = entireBeginTimeNoQuote(timestamp);
+        return ebt.replace(':', '_');
+    }
+    
+    public static String fromSqlFmtToEbtFileName(String sql) {
+        String noQuote = sql.substring(1, sql.length() - 1);
+        return noQuote.replace(':', '_');
+    }
+
+    public static String timeStampFmt(Timestamp timestamp) {
+        return "'" + entireBeginTimeNoQuote(timestamp) + "'";
     }
 
     public static String secondsToString(int sec) {
@@ -392,6 +406,46 @@ public class Util {
         JSONArray json = new JSONArray();
         for (double d : array) {
             json.put(d);
+        }
+        return json;
+    }
+
+    public static JSONArray arrayToJson(int[] array) {
+        JSONArray json = new JSONArray();
+        for (int d : array) {
+            json.put(d);
+        }
+        return json;
+    }
+    
+    public static double[] jsonToDoubleArray(JSONArray jsonArray) {
+        double[] result = new double[jsonArray.length()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = jsonArray.getDouble(i);
+        }
+        return result;
+    }
+
+    public static int[] jsonToIntArray(JSONArray jsonArray) {
+        int[] result = new int[jsonArray.length()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = jsonArray.getInt(i);
+        }
+        return result;
+    }
+
+    public static JSONObject stringMapToJson(Map<?, String> map) {
+        JSONObject json = new JSONObject();
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            json.put(String.valueOf(entry.getKey()), entry.getValue());
+        }
+        return json;
+    }
+    
+    public static JSONObject mapToJson(Map<?, ? extends Number> map) {
+        JSONObject json = new JSONObject();
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            json.put(String.valueOf(entry.getKey()), entry.getValue());
         }
         return json;
     }

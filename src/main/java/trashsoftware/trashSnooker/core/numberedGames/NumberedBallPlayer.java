@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.numberedGames;
 
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.InGamePlayer;
+import trashsoftware.trashSnooker.core.NeedBigBreakPlayer;
 import trashsoftware.trashSnooker.core.Player;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class NumberedBallPlayer extends Player {
+public abstract class NumberedBallPlayer extends Player implements NeedBigBreakPlayer {
 
     protected int playTimes = 0;  // 这一局打了几次球
     protected boolean isBreakingPlayer = false;
@@ -58,6 +59,7 @@ public abstract class NumberedBallPlayer extends Player {
         return isBreakingPlayer;
     }
 
+    @Override
     public boolean isBreakSuccess() {
         return breakSuccess;
     }

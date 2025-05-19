@@ -293,7 +293,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         else return 1;
     }
 
-    private int getRemFullBallOnTable() {
+    protected int getRemFullBallOnTable() {
         int count = 0;
         for (Ball ball : getAllBalls()) {
             if (!ball.isPotted() && isFullBall(ball)) count++;
@@ -301,7 +301,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         return count;
     }
 
-    private int getRemHalfBallOnTable() {
+    protected int getRemHalfBallOnTable() {
         int count = 0;
         for (Ball ball : getAllBalls()) {
             if (!ball.isPotted() && isHalfBall(ball)) count++;
@@ -399,12 +399,14 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                 for (Ball ball : getAllBalls()) {
                     if (!ball.isPotted() && isFullBall(ball)) {
                         ball.pot();
+                        player.forceSetScore(7);
                     }
                 }
             } else if (player.getBallRange() == HALF_BALL_REP) {
                 for (Ball ball : getAllBalls()) {
                     if (!ball.isPotted() && isHalfBall(ball)) {
                         ball.pot();
+                        player.forceSetScore(7);
                     }
                 }
             }
@@ -573,8 +575,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                 PoolBall firstCollide = (PoolBall) whiteFirstCollide;
                 if (isFullBall(firstCollide)) {
                     if (hasFullBalls(pottedBalls)) {
-                        currentPlayer.setBallRange(FULL_BALL_REP);
-                        getAnotherPlayer().setBallRange(HALF_BALL_REP);
+                        currentPlayer.setBallRange(FULL_BALL_REP, 7 - getRemFullBallOnTable());
+                        getAnotherPlayer().setBallRange(HALF_BALL_REP, 7 - getRemHalfBallOnTable());
                         currentTarget = getTargetOfPlayer(currentPlayer);
                         lastPotSuccess = true;
                         currentPlayer.correctPotBalls(this, fullBallsOf(pottedBalls));
@@ -582,8 +584,8 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
                 }
                 if (isHalfBall(firstCollide)) {
                     if (hasHalfBalls(pottedBalls)) {
-                        currentPlayer.setBallRange(HALF_BALL_REP);
-                        getAnotherPlayer().setBallRange(FULL_BALL_REP);
+                        currentPlayer.setBallRange(HALF_BALL_REP, 7 - getRemHalfBallOnTable());
+                        getAnotherPlayer().setBallRange(FULL_BALL_REP, 7 - getRemFullBallOnTable());
                         currentTarget = getTargetOfPlayer(currentPlayer);
                         lastPotSuccess = true;
                         currentPlayer.correctPotBalls(this, fullBallsOf(pottedBalls));

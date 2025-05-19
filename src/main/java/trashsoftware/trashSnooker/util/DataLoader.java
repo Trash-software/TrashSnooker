@@ -23,6 +23,7 @@ public class DataLoader {
             "data/players_prof.json",
             "data/players_amateur.json"
     };
+    public static final String INFO_REC_DIR = "user/infoRec";
     private static final String CUSTOM_PLAYER_LIST_FILE = "user/custom_players.json";
     private static final String RANDOM_PLAYERS_LIST_FILE = "user/players_random.json";
     public static final String COUNTERS_FILE = "user/counters.json";
