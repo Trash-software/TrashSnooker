@@ -498,6 +498,36 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //        System.out.println(canSeeBall(cueBall, getAllBalls()[20]));
         return prediction;
     }
+    
+    private void recordInfo(Map<Integer, Integer> newlyPot,
+                            int[] scoresBefore,
+                            List<CueInfoRec.Special> specials) {
+        
+        entireGame.getMatchInfoRec().recordACue(
+                lastCuedPlayer.getInGamePlayer().getPlayerNumber(),
+                recordedTarget,
+                specifiedTarget,
+                whiteFirstCollide == null ? 0 : whiteFirstCollide.value,
+                recordedCueParams == null ? PlayerHand.Hand.RIGHT : recordedCueParams.cueParams.getHandSkill().hand,
+                newlyPot,
+                new int[]{player1.getScore() - scoresBefore[0], player2.getScore() - scoresBefore[1]},
+                new int[]{player1.getScore(), player2.getScore()},
+                lastCuedPlayer.getAttempts().getLast(),
+                thisCueFoul,
+                specials
+        );
+    }
+    
+    private List<CueInfoRec.Special> getSpecials() {
+        List<CueInfoRec.Special> specials = new ArrayList<>();
+        if (firstCueAfterHandBall) specials.add(CueInfoRec.Special.BALL_IN_HAND);
+        if (isDoingSnookerFreeBll()) specials.add(CueInfoRec.Special.SNOOKER_FREE_BALL);
+        if (playingRepositionBall) specials.add(CueInfoRec.Special.REPOSITION);
+        if (playingLetBall) specials.add(CueInfoRec.Special.LET_OTHER_PLAY);
+        // todo: 八球让球和美式的pushout没做
+        
+        return specials;
+    }
 
     public void finishMove(GameView gameView) {
         System.out.println("Move end");
@@ -510,31 +540,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             newlyPot.merge(ball.value, 1, Integer::sum);
         }
         int[] pScores = new int[]{player1.getScore(), player2.getScore()};
-        List<CueInfoRec.Special> specials = new ArrayList<>();
-        if (firstCueAfterHandBall) specials.add(CueInfoRec.Special.BALL_IN_HAND);
-        if (isDoingSnookerFreeBll()) specials.add(CueInfoRec.Special.SNOOKER_FREE_BALL);
-        if (playingRepositionBall) specials.add(CueInfoRec.Special.REPOSITION);
-        if (playingLetBall) specials.add(CueInfoRec.Special.LET_OTHER_PLAY);
-        // todo: 美式的pushout没做
+        List<CueInfoRec.Special> specials = getSpecials();
 
         Player player = currentPlayer;
         endMoveAndUpdate();
         playingRepositionBall = false;
         playingLetBall = false;
-        
-        entireGame.getMatchInfoRec().recordACue(
-                lastCuedPlayer.getInGamePlayer().getPlayerNumber(),
-                recordedTarget,
-                specifiedTarget,
-                whiteFirstCollide == null ? 0 : whiteFirstCollide.value,
-                recordedCueParams == null ? PlayerHand.Hand.RIGHT : recordedCueParams.cueParams.getHandSkill().hand,
-                newlyPot,
-                new int[]{player1.getScore() - pScores[0], player2.getScore() - pScores[1]},
-                new int[]{player1.getScore(), player2.getScore()},
-                lastCuedPlayer.getAttempts().getLast().getAttemptBase(),
-                lastCueFoul,
-                specials
-        );
+        recordInfo(newlyPot, pScores, specials);
         isBreaking = false;
         finishedCuesCount++;
         gameView.finishCue(player, currentPlayer);
@@ -1814,7 +1826,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         public final double[] whiteAiming;  // 理论上的瞄球方向
         public final int cushionCount;
 
-        DoublePotAiming(Ball target,
+        public DoublePotAiming(Ball target,
                         double[] targetPos,
                         Pocket pocket,
                         double[] collisionPos,

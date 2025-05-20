@@ -144,4 +144,8 @@ public class AttackParam {
     public double getPrice() {
         return price;
     }
+
+    public AttackChoice getAttackChoice() {
+        return attackChoice;
+    }
 }

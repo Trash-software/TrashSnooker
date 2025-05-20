@@ -41,6 +41,22 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
         return holeOpenPos[0] == game.getGameValues().table.midX;
     }
 
+    public double[] getWhitePos() {
+        return whitePos;
+    }
+
+    public double[] getTargetOrigPos() {
+        return targetOrigPos;
+    }
+
+    public AttackParam getDefaultRef() {
+        return defaultRef;
+    }
+
+    public double getAngleRad() {
+        return angleRad;
+    }
+
     @Override
     public int compareTo(@NotNull AttackChoice o) {
         return -Double.compare(this.defaultRef.price, o.defaultRef.price);
@@ -289,6 +305,10 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             );
 
             return directAttackChoice;
+        }
+        
+        public double[][] getDirHole() {
+            return dirHole;
         }
 
         static double priceOfDistance(double distance) {

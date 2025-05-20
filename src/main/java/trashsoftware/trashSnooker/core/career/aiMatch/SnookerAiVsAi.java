@@ -47,12 +47,12 @@ public class SnookerAiVsAi extends AiVsAi {
         SimPlayer sp1 = new SimPlayer(p1, ability1, 1, ballTypeBadness,
                 AiCueResult.calculateFramePsyDivisor(
                         Game.frameImportance(1, totalFrames, getP1WinFrames(), getP2WinFrames(), GameRule.SNOOKER),
-                        p1.getPlayerPerson().psyRua
+                        p1.getPlayerPerson().getPsyRua()
                 ));
         SimPlayer sp2 = new SimPlayer(p2, ability2, 2, ballTypeBadness,
                 AiCueResult.calculateFramePsyDivisor(
                         Game.frameImportance(2, totalFrames, getP1WinFrames(), getP2WinFrames(), GameRule.SNOOKER),
-                        p2.getPlayerPerson().psyRua
+                        p2.getPlayerPerson().getPsyRua()
                 ));
 
         SimPlayer playing = sp1;

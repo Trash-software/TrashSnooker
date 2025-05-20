@@ -613,9 +613,9 @@ public class PlayerPerson {
         return Objects.hash(playerId);
     }
     
-    public double avgPsy() {
-        return (psyRua + psyNerve) / 2;
-    }
+//    public double avgPsy() {
+//        return (psyRua + psyNerve) / 2;
+//    }
 
     /**
      * @return 返回图形界面上显示的名字
@@ -636,6 +636,10 @@ public class PlayerPerson {
         this.shownName = name;
         
         return true;
+    }
+
+    public double getPsyRua() {
+        return psyRua;
     }
 
     public String getPlayerId() {

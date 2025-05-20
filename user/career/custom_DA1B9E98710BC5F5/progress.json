@@ -1,5 +1,5 @@
 {
-  "stageIndex": 2,
+  "stageIndex": 1,
   "seedRanks": {
     "random_player_47": 24,
     "random_player_69": 32,
@@ -38,6 +38,7 @@
   "matchTree": {"root": {
     "p1": {
       "p1": {
+        "p1wins": 0,
         "p1": {
           "p1wins": 2,
           "p1": {
@@ -88,10 +89,13 @@
           "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-ROUND_1-17",
           "p2wins": 1
         },
+        "winner": "Liu Mang",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-QUARTER_FINAL-24"
+        "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-QUARTER_FINAL-24",
+        "p2wins": 2
       },
       "p2": {
+        "p1wins": 2,
         "p1": {
           "p1wins": 1,
           "p1": {
@@ -142,14 +146,17 @@
           "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-ROUND_1-19",
           "p2wins": 1
         },
+        "winner": "random_player_63",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-QUARTER_FINAL-25"
+        "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-QUARTER_FINAL-25",
+        "p2wins": 1
       },
       "stage": "SEMI_FINAL",
       "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-SEMI_FINAL-28"
     },
     "p2": {
       "p1": {
+        "p1wins": 0,
         "p1": {
           "p1wins": 0,
           "p1": {
@@ -200,10 +207,13 @@
           "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-ROUND_1-21",
           "p2wins": 0
         },
+        "winner": "custom_DA1B9E98710BC5F5",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-QUARTER_FINAL-26"
+        "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-QUARTER_FINAL-26",
+        "p2wins": 2
       },
       "p2": {
+        "p1wins": 0,
         "p1": {
           "p1wins": 2,
           "p1": {
@@ -254,8 +264,10 @@
           "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-ROUND_1-23",
           "p2wins": 0
         },
+        "winner": "random_player_23",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-QUARTER_FINAL-27"
+        "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-QUARTER_FINAL-27",
+        "p2wins": 2
       },
       "stage": "SEMI_FINAL",
       "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-SEMI_FINAL-29"
@@ -390,6 +402,15 @@
       "numFrame": 3,
       "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-ROUND_1-19",
       "playerId": "random_player_88"
+    },
+    {
+      "score": 54,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-QUARTER_FINAL-25",
+      "playerId": "random_player_63"
     },
     {
       "score": 51,

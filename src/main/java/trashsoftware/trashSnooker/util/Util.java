@@ -5,6 +5,9 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Values;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.RecordComponent;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -448,6 +451,82 @@ public class Util {
             json.put(String.valueOf(entry.getKey()), entry.getValue());
         }
         return json;
+    }
+    
+    public static <T extends Record> JSONObject recordToJson(T record) {
+        JSONObject json = new JSONObject();
+        for (RecordComponent component : record.getClass().getRecordComponents()) {
+            Class<?> type = component.getType();
+            if (isSupportedType(type)) {
+                try {
+                    Method accessor = component.getAccessor();
+                    Object value = accessor.invoke(record);
+                    json.put(component.getName(), value);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to access record component: " + component.getName(), e);
+                }
+            } else {
+                throw new IllegalArgumentException("Unsupported field type: " + type.getName());
+            }
+        }
+
+        return json;
+    }
+
+    public static <T extends Record> T jsonToRecord(Class<T> recordClass, JSONObject json) {
+        RecordComponent[] components = recordClass.getRecordComponents();
+        Object[] args = new Object[components.length];
+
+        for (int i = 0; i < components.length; i++) {
+            RecordComponent component = components[i];
+            Class<?> type = component.getType();
+            String name = component.getName();
+
+            if (!json.has(name)) {
+                throw new IllegalArgumentException("Missing field in JSON: " + name);
+            }
+
+            if (!isSupportedType(type)) {
+                throw new IllegalArgumentException("Unsupported field type: " + type.getName());
+            }
+
+            Object value = json.get(name);
+            args[i] = convertValue(value, type);
+        }
+
+        try {
+            Constructor<T> constructor = recordClass.getDeclaredConstructor(Arrays.stream(components)
+                    .map(RecordComponent::getType).toArray(Class[]::new));
+            return constructor.newInstance(args);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create record instance from JSON.", e);
+        }
+    }
+
+    private static boolean isSupportedType(Class<?> type) {
+        return type.isPrimitive() || type.equals(String.class)
+                || type.equals(Boolean.class) || type.equals(Byte.class)
+                || type.equals(Short.class) || type.equals(Integer.class)
+                || type.equals(Long.class) || type.equals(Float.class)
+                || type.equals(Double.class);
+    }
+
+    private static Object convertValue(Object value, Class<?> targetType) {
+        if (targetType.isPrimitive()) {
+            if (targetType == int.class) return ((Number) value).intValue();
+            if (targetType == long.class) return ((Number) value).longValue();
+            if (targetType == double.class) return ((Number) value).doubleValue();
+            if (targetType == float.class) return ((Number) value).floatValue();
+            if (targetType == boolean.class) return value instanceof Boolean ? value : Boolean.parseBoolean(value.toString());
+            if (targetType == byte.class) return ((Number) value).byteValue();
+            if (targetType == short.class) return ((Number) value).shortValue();
+            if (targetType == char.class) return ((String) value).charAt(0);
+        } else if (targetType == String.class) {
+            return value.toString();
+        } else if (Number.class.isAssignableFrom(targetType) || targetType == Boolean.class) {
+            return value; // Already boxed
+        }
+        throw new IllegalArgumentException("Unsupported target type: " + targetType.getName());
     }
 
     public static long readInt4Little(InputStream stream) throws IOException {

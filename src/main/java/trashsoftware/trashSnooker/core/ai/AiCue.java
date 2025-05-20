@@ -508,8 +508,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 attackChoice.cueDirectionUnitVector[0],
                 attackChoice.cueDirectionUnitVector[1],
                 attackParam.cueParams,
-                game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()),
-                game.getEntireGame().rua(aiPlayer.getInGamePlayer()));
+                iac,
+                game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()));
         List<double[]> whitePath;
         if (iac.whitePrediction != null) {
             whitePath = iac.whitePrediction.getWhitePath();
@@ -537,8 +537,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 choice.cueDirectionUnitVector[0],
                 choice.cueDirectionUnitVector[1],
                 choice.cueParams,
-                game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()),
-                game.getEntireGame().rua(aiPlayer.getInGamePlayer()));
+                choice,
+                game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()));
         acr.setWhitePath(choice.wp != null ? choice.wp.getWhitePath() : null);
         return acr;
     }
@@ -716,8 +716,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 directionVec[0],
                 directionVec[1],
                 cueParams,
-                game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber()),
-                game.getEntireGame().rua(aiPlayer.getInGamePlayer())
+                null,
+                game.frameImportance(aiPlayer.getInGamePlayer().getPlayerNumber())
         );
     }
 

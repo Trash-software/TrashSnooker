@@ -4,6 +4,9 @@ import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.PlayerHand;
 import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.ai.AiCue;
+import trashsoftware.trashSnooker.core.ai.AttackChoice;
+import trashsoftware.trashSnooker.core.ai.AttackParam;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 
@@ -13,9 +16,10 @@ public class PotAttempt extends CueAttempt {
     private final CuePlayParams cuePlayParams;
     private final PlayerPerson playerPerson;
     private final Ball targetBall;
-    private final double[] cueBallOrigPos;
-    private final double[] targetBallOrigPos;
-    private final double[][] targetDirHole;
+//    private final double[] cueBallOrigPos;
+//    private final double[] targetBallOrigPos;
+//    private final double[][] targetDirHole;
+    public final AttackChoice attackChoice;
     private Position positionSuccess = Position.NOT_SET;
     
     private PotAttempt positionToThis;  // 连续进攻中的上一杆
@@ -25,18 +29,14 @@ public class PotAttempt extends CueAttempt {
                       CuePlayParams cuePlayParams,
                       PlayerPerson playerPerson,
                       Ball targetBall,
-                      double[] cueBallOrigPos,
-                      double[] targetBallOrigPos,
-                      double[][] targetDirHole) {
+                      AttackChoice attackChoice) {
         super(type, cuePlayParams);
         
         this.gameValues = gameValues;
         this.cuePlayParams = cuePlayParams;
         this.playerPerson = playerPerson;
         this.targetBall = targetBall;
-        this.cueBallOrigPos = cueBallOrigPos;
-        this.targetBallOrigPos = targetBallOrigPos;
-        this.targetDirHole = targetDirHole;
+        this.attackChoice = attackChoice;
     }
 
     public Position getPositionSuccess() {
@@ -72,26 +72,48 @@ public class PotAttempt extends CueAttempt {
     }
 
     public double[] getCueBallOrigPos() {
-        return cueBallOrigPos;
+        return attackChoice.getWhitePos();
     }
 
     public double[] getTargetBallOrigPos() {
-        return targetBallOrigPos;
+        return attackChoice.getTargetOrigPos();
     }
 
     public double[][] getTargetDirHole() {
-        return targetDirHole;
+        return attackChoice instanceof AttackChoice.DirectAttackChoice ?
+                ((AttackChoice.DirectAttackChoice) attackChoice).getDirHole() : null;
     }
 
     public CuePlayParams getCuePlayParams() {
         return cuePlayParams;
     }
-
-    public boolean isLongPot() {
+    
+    public boolean isDoubleShot() {
+        return attackChoice instanceof AttackChoice.DoubleAttackChoice;
+    }
+    
+    public boolean isEasyShot() {
+        double[][] targetDirHole = getTargetDirHole();
         if (targetDirHole == null) {
             // todo: 是翻袋
             return false;
         }
+        return attackChoice.getDefaultRef().getPotProb() >= 0.9;
+    }
+    
+    public boolean isDifficultShot() {
+        if (attackChoice instanceof AttackChoice.DoubleAttackChoice) return true;
+        return attackChoice.getDefaultRef().getPotProb() < 0.5;
+    }
+
+    public boolean isLongPot() {
+        double[][] targetDirHole = getTargetDirHole();
+        if (targetDirHole == null) {
+            // todo: 是翻袋
+            return false;
+        }
+        double[] targetBallOrigPos = getTargetBallOrigPos();
+        double[] cueBallOrigPos = getCueBallOrigPos();
         
         double whiteTargetDt = Math.hypot(
                 targetBallOrigPos[0] - cueBallOrigPos[0],

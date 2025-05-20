@@ -10,6 +10,8 @@ import java.util.Set;
 public class DefenseAttempt extends CueAttempt {
     public final Player defensePlayer;
     private boolean legal;
+    
+//    private PotAttempt doubleOrPass;
 
     public DefenseAttempt(CueType type, 
                           Player player, CuePlayParams playParams) {
@@ -34,7 +36,23 @@ public class DefenseAttempt extends CueAttempt {
         }
         
         this.legal = legal;
+        
+//        if (legal) {
+//            inferIfAttack(legalPots);
+//        }
     }
+    
+//    private void inferIfAttack() {
+//        if (isPass()) {
+//            doubleOrPass = new PotAttempt(
+//                    CueType.PASS_POT,
+//                    null,
+//                    playParams,
+//                    defensePlayer.getPlayerPerson(),
+//                    
+//            )
+//        }
+//    }
 
     public boolean isSolveSuccess() {
         return isSolvingSnooker() && isLegal();
@@ -51,11 +69,8 @@ public class DefenseAttempt extends CueAttempt {
     public boolean isBreaking() {
         return attemptBase.type == CueType.BREAK;
     }
-
-    /**
-     * @return 是否为传球进球
-     */
-    public boolean isPassPot() {
+    
+    private boolean isPass() {
         if (!legal) return false;
         if (legalPots.isEmpty()) return false;
         if (isBreaking()) return false;
@@ -64,7 +79,7 @@ public class DefenseAttempt extends CueAttempt {
             System.out.println("Pushing out, legal but no target");
             return false;
         }
-        
+
         for (Ball ball : legalPots) {
             if (ball != movement.getWhiteFirstCollide()) {
                 Movement.Trace trace = movement.getTraceOfBallNullable(ball);
@@ -82,6 +97,13 @@ public class DefenseAttempt extends CueAttempt {
             }
         }
         return false;
+    }
+
+    /**
+     * @return 是否为传球进球
+     */
+    public boolean isPassPot() {
+        return isPass();
     }
 
     /**

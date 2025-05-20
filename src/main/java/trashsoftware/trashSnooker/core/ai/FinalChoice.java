@@ -85,6 +85,10 @@ public abstract class FinalChoice {
             return normalCompareTo(o);
         }
 
+        public AttackParam getAttackParams() {
+            return attackParams;
+        }
+
         boolean betterThan(@Nullable IntegratedAttackChoice other) {
             if (other == null) return true;
             return normalCompareTo(other) < 0;

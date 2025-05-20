@@ -39,6 +39,8 @@ import trashsoftware.trashSnooker.audio.SoundInfo;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
+import trashsoftware.trashSnooker.core.ai.AttackChoice;
+import trashsoftware.trashSnooker.core.ai.FinalChoice;
 import trashsoftware.trashSnooker.core.attempt.CueType;
 import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
@@ -1093,6 +1095,20 @@ public class GameView implements Initializable {
             EventLogger.error(re);
             game.getGame().abortRecording();
         }
+        
+        InGamePlayer justCuedIgp = justCuedPlayer.getInGamePlayer();
+        InGamePlayer opponentIgp = game.getGame().getAnotherIgp(justCuedIgp);
+        
+        justCuedIgp.updatePsyStatusAfterSelfCue(
+                game.getGame().frameImportance(justCuedIgp.getPlayerNumber()),
+                lastPotAttempt,
+                curDefAttempt,
+                game.getGame().isThisCueFoul()
+        );
+        opponentIgp.updatePsyStatusAfterOpponentCue(
+                game.getGame().frameImportance(opponentIgp.getPlayerNumber()),
+                lastPotAttempt
+        );
 
         AchManager.getInstance().updateAfterCueFinish(gamePane, game.getGame(), scoreResult,
                 lastPotAttempt, curDefAttempt, gamePlayStage());
@@ -1276,6 +1292,10 @@ public class GameView implements Initializable {
         } else {
             changeCueButton.setDisable(true);
         }
+        
+        InGamePlayer igp1 = game.getPlayer1(), igp2 = game.getPlayer2();
+        igp1.adjustPsyStatusFrameBegin(game.getGame().frameImportance(igp1.getPlayerNumber()));
+        igp2.adjustPsyStatusFrameBegin(game.getGame().frameImportance(igp2.getPlayerNumber()));
 
         tableGraphicsChanged = true;
 
@@ -1289,6 +1309,13 @@ public class GameView implements Initializable {
         tableGraphicsChanged = true;
         Player p1 = game.getGame().getPlayer1();
         Player wonPlayer = game.getGame().getWiningPlayer();
+        
+        InGamePlayer wonIgp = wonPlayer.getInGamePlayer();
+        InGamePlayer lostIgp = game.getGame().getAnotherIgp(wonIgp);
+        // 在game.playerWinsAframe()之后，否则影响frameImportance的判断
+        wonIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(wonIgp.getPlayerNumber()), true);
+        lostIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(lostIgp.getPlayerNumber()), false);
+        
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
         drawScoreBoard(game.getGame().getCuingPlayer(), false);
         game.getGame().getRecorder().stopRecording(true);
@@ -2400,16 +2427,30 @@ public class GameView implements Initializable {
                 double angleBtw = Math.abs(pottingDirection - aimingDirection);
 
                 if (angleBtw <= Game.MAX_ATTACK_DECISION_ANGLE) {
+                    AttackChoice ac = AttackChoice.DirectAttackChoice.createChoice(
+                            game.getGame(),
+                            game.predictPhy,
+                            game.getGame().getCuingPlayer(),
+                            new double[]{game.getGame().getCueBall().getX(),
+                                    game.getGame().getCueBall().getY()},
+                            predictedTargetBall,
+                            null,
+                            game.getGame().getCurrentTarget(),
+                            false,
+                            directionHole,
+                            new double[]{predictedTargetBall.getX(), predictedTargetBall.getY()}
+                    );
                     currentAttempt = new PotAttempt(
                             CueType.ATTACK,
                             gameValues,
                             params,
                             game.getGame().getCuingPlayer().getPlayerPerson(),
                             predictedTargetBall,
-                            new double[]{game.getGame().getCueBall().getX(),
-                                    game.getGame().getCueBall().getY()},
-                            new double[]{predictedTargetBall.getX(), predictedTargetBall.getY()},
-                            directionHole
+                            ac
+//                            new double[]{game.getGame().getCueBall().getX(),
+//                                    game.getGame().getCueBall().getY()},
+//                            new double[]{predictedTargetBall.getX(), predictedTargetBall.getY()},
+//                            directionHole
                     );
                     System.out.printf("Angle is %f, attacking!\n",
                             Math.toDegrees(Math.abs(pottingDirection - aimingDirection)));
@@ -2573,15 +2614,29 @@ public class GameView implements Initializable {
         }
 
         if (cueResult.isAttack()) {
+//            AttackChoice ac;
+//                ac = AttackChoice.DirectAttackChoice.createChoice(
+//                        game.getGame(),
+//                        game.predictPhy,
+//                        game.getGame().getCuingPlayer(),
+//                        new double[]{game.getGame().getCueBall().getX(),
+//                                game.getGame().getCueBall().getY()},
+//                        cueResult.getTargetBall(),
+//                        null,
+//                        game.getGame().getCurrentTarget(),
+//                        false,
+//                        cueResult.getTargetDirHole(),
+//                        new double[]{cueResult.getTargetBall().getX(), cueResult.getTargetBall().getY()}
+//                );
+            FinalChoice.IntegratedAttackChoice iac = (FinalChoice.IntegratedAttackChoice) cueResult.getChoice();
+            AttackChoice ac = iac.getAttackParams().getAttackChoice();
             PotAttempt currentAttempt = new PotAttempt(
                     cueResult.getCueType(),
                     gameValues,
                     realParams,
                     game.getGame().getCuingPlayer().getPlayerPerson(),
                     cueResult.getTargetBall(),
-                    new double[]{whiteStartingX, whiteStartingY},
-                    cueResult.getTargetOrigPos(),
-                    cueResult.getTargetDirHole()
+                    ac
             );
             boolean success = currentAttempt.getTargetBall().isPotted();
 //                     && !game.getGame().isLastCueFoul() todo: 想办法

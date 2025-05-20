@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.FoulInfo;
 import trashsoftware.trashSnooker.core.PlayerHand;
 import trashsoftware.trashSnooker.core.attempt.AttemptBase;
+import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class CueInfoRec {
     int[] gainScores;
     int[] scoresAfter;
     AttemptBase attemptBase;
+    @Nullable PotInfo potInfo;
     @Nullable FoulInfo foulInfo;
     @Nullable List<Special> specials;
     
@@ -64,6 +66,10 @@ public class CueInfoRec {
             if (cir.foulInfo.isMiss()) cir.firstHit = 0;
             else cir.firstHit = cir.target;
         }
+        JSONObject potInfo = json.optJSONObject("potInfo", null);
+        if (potInfo != null) {
+            cir.potInfo = PotInfo.fromJson(potInfo);
+        }
         
         return cir;
     }
@@ -93,6 +99,9 @@ public class CueInfoRec {
                 specialArr.put(special.name());
             }
             out.put("specials", specialArr);
+        }
+        if (potInfo != null) {
+            out.put("potInfo", potInfo.toJson());
         }
         
         return out;
@@ -145,5 +154,51 @@ public class CueInfoRec {
         LET_OTHER_PLAY,
         BALL_IN_HAND,
         AMERICAN_PUSH_OUT
+    }
+    
+    public record PotInfo(
+            double whiteTarDt,
+            double tarPocketDt,
+            double angle,
+            double estPotProb,
+            boolean isDouble
+    ) {
+        
+        static PotInfo fromPotAttempt(PotAttempt potAttempt) {
+            double[] targetBallOrigPos = potAttempt.getTargetBallOrigPos();
+            double[] cueBallOrigPos =  potAttempt.getCueBallOrigPos();
+            double whiteTargetDt = Math.hypot(
+                    targetBallOrigPos[0] - cueBallOrigPos[0],
+                    targetBallOrigPos[1] - cueBallOrigPos[1]
+            );
+            
+            double targetHoleDt;
+            boolean isDouble = potAttempt.isDoubleShot();
+            if (isDouble) {
+                targetHoleDt = -1;
+            } else {
+                double[][] targetDirHole = potAttempt.getTargetDirHole();
+                targetHoleDt = Math.hypot(
+                        targetDirHole[1][0] - targetBallOrigPos[0],
+                        targetDirHole[1][1] - targetBallOrigPos[1]
+                );
+            }
+            return new PotInfo(
+                    whiteTargetDt,
+                    targetHoleDt,
+                    potAttempt.attackChoice.getAngleRad(),
+                    potAttempt.attackChoice.getDefaultRef().getPotProb(),
+                    isDouble
+            );
+
+        }
+        
+        static PotInfo fromJson(JSONObject json) {
+            return Util.jsonToRecord(PotInfo.class, json);
+        }
+        
+        JSONObject toJson() {
+            return Util.recordToJson(this);
+        }
     }
 }

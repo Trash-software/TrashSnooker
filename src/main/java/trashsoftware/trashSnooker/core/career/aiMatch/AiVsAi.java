@@ -128,11 +128,24 @@ public abstract class AiVsAi {
         return count;
     }
 
+//    /**
+//     * 这个球员是否被打rua了。暂时也只有这么来
+//     */
+//    public boolean rua(int playerNum, PlayerPerson person) {
+//        return playerContinuousLoses(playerNum) >= 3;  // 连输3局，rua了
+//    }
     /**
-     * 这个球员是否被打rua了
+     * 这个球员是否被打rua了。暂时也只有这么来
      */
     public boolean rua(int playerNum, PlayerPerson person) {
-        return playerContinuousLoses(playerNum) >= 3;  // 连输3局，rua了
+        int ruaLimit;
+        double psyRua = person.getPsyRua();
+        if (psyRua > 90) ruaLimit = 4;
+        else if (psyRua > 60) ruaLimit = 3;
+        else if (psyRua > 30) ruaLimit = 2;
+        else ruaLimit = 1;
+
+        return playerContinuousLoses(playerNum) >= ruaLimit;  // 连输3局以上，rua了
     }
 
     protected abstract void simulateOneFrame();
@@ -150,7 +163,7 @@ public abstract class AiVsAi {
         }
         psyFactor /= framePsyDivisor;
         if (rua(playerNum, person)) {
-            psyFactor *= person.psyRua / 100;
+            psyFactor *= person.getPsyRua() / 100;
         }
         double difficulty = potDifficulty * (goodPosition ? 1 : 3);
         double failRatio = 10000 - ra.aiming * ra.primary().cuePrecision * Math.pow(psyFactor, 0.75);

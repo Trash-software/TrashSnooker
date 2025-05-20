@@ -9,6 +9,7 @@ import trashsoftware.trashSnooker.core.attempt.AttemptBase;
 import trashsoftware.trashSnooker.core.attempt.CueAttempt;
 import trashsoftware.trashSnooker.core.FoulInfo;
 import trashsoftware.trashSnooker.core.PlayerHand;
+import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -164,7 +165,7 @@ public class MatchInfoRec {
                            Map<Integer, Integer> pots,
                            int[] gainScores,
                            int[] scoresAfter,
-                           AttemptBase attempt,
+                           CueAttempt attempt,
                            FoulInfo foulInfo,
                            List<CueInfoRec.Special> specials) {
         if (!valid) return;
@@ -181,9 +182,13 @@ public class MatchInfoRec {
         cir.gainScores = gainScores;
         cir.scoresAfter = scoresAfter;
         // 注意：这时候还不能写入json，因为defense attempt的success会因为下一杆的结果而改变
-        cir.attemptBase = attempt;
+        cir.attemptBase = attempt.getAttemptBase();
         cir.foulInfo = foulInfo;
         cir.specials = specials;
+        
+        if (attempt instanceof PotAttempt pa) {
+            cir.potInfo = CueInfoRec.PotInfo.fromPotAttempt(pa);
+        }
 
         fir.cueRecs.add(cir);
     }

@@ -1,9 +1,12 @@
 package trashsoftware.trashSnooker.core;
 
 import javafx.scene.layout.Pane;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.attempt.AttemptBase;
+import trashsoftware.trashSnooker.core.attempt.CueAttempt;
+import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
+import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.InventoryManager;
 import trashsoftware.trashSnooker.core.cue.Cue;
@@ -24,7 +27,7 @@ public class InGamePlayer {
     private final int playerNumber;  // 1 or 2
     private final double handFeelEffort;
     // rua不rua
-    private double realTimePsy = 1.0;
+    private double psyStatus = 1.0;
 
     private final CueSelection cueSelection;
     private LetScoreOrBall letScoreOrBall;
@@ -107,7 +110,7 @@ public class InGamePlayer {
                 EventLogger.warning(e);
             }
         }
-        igp.realTimePsy = jsonObject.optDouble("realTimePsy", 1.0);
+        igp.psyStatus = jsonObject.optDouble("psyStatus", 1.0);
         
         return igp;
     }
@@ -120,7 +123,7 @@ public class InGamePlayer {
         object.put("playerType", playerType.name());
         object.put("playerNumber", playerNumber);
         object.put("handFeelEffort", handFeelEffort);
-        object.put("realTimePsy", realTimePsy);
+        object.put("psyStatus", psyStatus);
         if (letScoreOrBall != null) {
             object.put("let", letScoreOrBall.toJson());
         }
@@ -141,10 +144,6 @@ public class InGamePlayer {
 //        breakCue.getCueModel(pane).hide();
     }
 
-    public double getRealTimePsy() {
-        return realTimePsy;
-    }
-
     public CueSelection getCueSelection() {
         return cueSelection;
     }
@@ -155,6 +154,71 @@ public class InGamePlayer {
 
     public double getHandFeelEffort() {
         return handFeelEffort;
+    }
+
+    public double getPsyStatus() {
+        return psyStatus;
+    }
+    
+    private double cuePsyChangeBase() {
+        return Algebra.shiftRangeSafe(0, 100, 
+                0.1, 0, playerPerson.psyRua);
+    }
+    
+    private void regularizePsyStatus() {
+        psyStatus = Math.max(playerPerson.psyRua / 100, Math.min(1.0, psyStatus));
+        System.out.println(playerPerson.getName() + " psy status: " + psyStatus);
+    }
+    
+    public void adjustPsyStatusFrameBegin(double frameImportance) {
+        double avg = (playerPerson.psyNerve + playerPerson.psyRua) / 2;
+        double reference = 100 - (100 - avg) * frameImportance;
+        if (psyStatus > reference) {
+            psyStatus = (psyStatus + reference) / 2;
+            System.out.println("Changed " + playerPerson.getName() + "'s psy status to " + psyStatus);
+        }
+    }
+    
+    public void updatePsyStatusAfterSelfCue(double frameImportance, 
+                                            PotAttempt potAttempt, 
+                                            DefenseAttempt defenseAttempt,
+                                            boolean foul) {
+//        double ruaFactor = Algebra.shiftRangeSafe(0, 100, 1.0, 1.0, playerPerson.psyRua);
+        double baseChange = cuePsyChangeBase();
+        double increase = 0;
+        double decrease = (foul ? (frameImportance + 1) : 0) * baseChange;
+        if (potAttempt != null) {
+            if (potAttempt.isSuccess()) {
+                increase += baseChange * 0.3 * (potAttempt.isDifficultShot() ? 3.0 : 1.0);
+            } else {
+                decrease += (frameImportance + 1) * baseChange * (potAttempt.isEasyShot() ? 3.0 : 1.0);
+            }
+        }
+        psyStatus += increase;
+        psyStatus -= decrease;
+        regularizePsyStatus();
+    }
+
+    public void updatePsyStatusAfterOpponentCue(double frameImportance, PotAttempt potAttempt) {
+        double baseChange = cuePsyChangeBase();
+        double decrease = 0;
+        if (potAttempt != null) {
+            if (potAttempt.isSuccess()) {
+                decrease += (frameImportance + 1) * baseChange * 0.05 * (potAttempt.isDifficultShot() ? 3.0 : 1.0);
+            }
+        }
+        psyStatus -= decrease;
+        regularizePsyStatus();
+    }
+    
+    public void updatePsyStatusAfterFrame(double frameImportance, boolean won) {
+        double baseChange = cuePsyChangeBase() * (frameImportance + 1) * 3.0;
+        if (won) {
+            psyStatus += baseChange;
+        } else {
+            psyStatus -= baseChange;
+        }
+        regularizePsyStatus();
     }
 
     public int getPlayerNumber() {

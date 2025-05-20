@@ -501,30 +501,46 @@ public class MatchRecord extends RecordTree {
             double y = (r + 1) * cellHeight - ballDiameter - margin;
             CueInfoRec cir = fir.getCueRecs().get(i);
             boolean drawn = false;
-            if (cir.getPlayer() == playerNumberFrom1 && cir.legallyPot()) {
-                if (cir.getPots().size() != 1) {
-                    System.err.println("? legal shot should contain multiple kinds of potted balls in snooker.");
-                    continue;
-                }
-                
-                for (var entry : cir.getPots().entrySet()) {
-                    // only iterates once
-                    Color color = SnookerBall.snookerColor(entry.getKey());
-                    gc.setFill(color);
-                    gc.fillOval(x, y, ballDiameter, ballDiameter);
-                    if (cir.isSnookerFreeBall()) {
-                        gc.setFill(Color.WHITE);
-                        gc.fillText("F",
-                                x + ballDiameter * 0.5,
-                                y + ballDiameter * 0.7);
-                    } else if (entry.getValue() > 1) {
-                        gc.setFill(Color.BLACK);
-                        gc.fillText(String.valueOf(entry.getValue()),
-                                x + ballDiameter * 0.5,
-                                y + ballDiameter * 0.7);
+            if (cir.getPlayer() == playerNumberFrom1) {
+                if (cir.legallyPot()) {
+                    if (cir.getPots().size() != 1) {
+                        System.err.println("? legal shot should contain multiple kinds of potted balls in snooker.");
+                        continue;
                     }
-                    drawn = true;
-                    break;
+
+                    for (var entry : cir.getPots().entrySet()) {
+                        // only iterates once
+                        Color color = SnookerBall.snookerColor(entry.getKey());
+                        gc.setFill(color);
+                        gc.fillOval(x, y, ballDiameter, ballDiameter);
+                        if (cir.isSnookerFreeBall()) {
+                            gc.setFill(Color.WHITE);
+                            gc.fillText("F",
+                                    x + ballDiameter * 0.5,
+                                    y + ballDiameter * 0.7);
+                        } else if (entry.getValue() > 1) {
+                            gc.setFill(Color.WHITE);
+                            gc.fillText(String.valueOf(entry.getValue()),
+                                    x + ballDiameter * 0.5,
+                                    y + ballDiameter * 0.7);
+                        }
+                        drawn = true;
+                        break;
+                    }
+                }
+                if (cir.isFoul()) {
+                    gc.setFill(Color.BLACK);
+                    gc.fillText("X",
+                            x + ballDiameter * 0.5,
+                            y + ballDiameter * 0.7);
+                }
+            } else {
+                // 对手打的
+                if (cir.getGainScores()[playerNumberFrom1 - 1] != 0) {
+                    gc.setFill(Color.BLACK);
+                    gc.fillText("+" + cir.getGainScores()[playerNumberFrom1 - 1],
+                            x + ballDiameter * 0.5,
+                            y + ballDiameter * 0.7);
                 }
             }
 
