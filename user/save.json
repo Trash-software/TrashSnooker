@@ -1,46 +1,43 @@
 {
-  "winRecords": {
-    "1": 1,
-    "2": 1
-  },
-  "p2Wins": 0,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
   "p1": {
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 1,
+    "psyStatus": 0.9138000000000006,
     "person": "Neil Robertson",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "p1Wins": 2,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 0.9496000000000029,
+    "psyStatus": 1,
     "person": "Mark Allen",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "startTime": 1747736455228,
+  "startTime": 1747936880827,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
     "subRules": ["SNOOKER_STD"],
-    "devMode": false,
+    "devMode": true,
     "table": {
       "tableOrdinal": 0,
       "pocketDifficultyOrdinal": 3,
       "holeSizeOrdinal": 2
     }
   },
-  "totalFrames": 3,
+  "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"
   },
-  "p1Breaks": false
+  "p1Breaks": true
 }

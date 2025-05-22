@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class AiCueResult {
 
-    public static final double DEFAULT_AI_PRECISION = 12500.0;
+    public static final double DEFAULT_AI_PRECISION = 12800.0;
     protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
     private final CueParams cueParams;
     private final CueType cueType;

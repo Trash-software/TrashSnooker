@@ -273,6 +273,11 @@ public abstract class FinalChoice {
 //            }
 
         }
+        
+        public boolean opponentCanPureAttack(AiPlayStyle opponent) {
+            double pureAttackThresh = Analyzer.attackProbThreshold(AiCue.PURE_ATTACK_PROB, opponent);
+            return defenseResult.opponentPotProb > pureAttackThresh;
+        }
 
         @Override
         public int compareTo(@NotNull DefenseChoice o) {

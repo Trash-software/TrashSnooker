@@ -226,13 +226,9 @@ public class Analyzer {
         for (AttackChoice ac : directAttackChoices) {
             double potProb = ac.defaultRef.potProb;
             defenseResult.opponentAttackPrice += potProb * basePrice * 100;
-//            if (potProb > aiCue.opponentPureAtkProb) {
-//                defenseResult.opponentAttackPrice += 200 * potProb * basePrice;  // 大卖
-//            } else if (potProb > aiCue.opponentDefAtkProb) {
-//                defenseResult.opponentAttackPrice += 100 * potProb * basePrice;  // 小卖
-//            } else {
-//                defenseResult.opponentAttackPrice += 50 * potProb * basePrice;
-//            }
+            if (potProb > defenseResult.opponentPotProb) {
+                defenseResult.opponentPotProb = potProb;
+            }
 
             if (defenseResult.opponentEasies.get(i) == null || 
                     potProb > defenseResult.opponentEasies.get(i).defaultRef.potProb) {

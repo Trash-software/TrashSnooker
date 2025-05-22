@@ -19,6 +19,9 @@ public class DefenseResult {
     double opponentAvailPrice = 0.0;
     double snookerScore = 0.0;
     
+    // 不参与price计算，但是要参与lastResortAttack判断
+    double opponentPotProb;
+    
     List<AttackChoice> opponentEasies = new ArrayList<>();
     
     AttackChoice grossOpponentEasiest;
