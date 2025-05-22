@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 66760,
+    "money": 63500,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
@@ -3433,6 +3433,39 @@
           "moneyCost": 180
         }],
         "timestamp": "2025-05-22 20:50:18"
+      },
+      {
+        "inGameDate": "2024/3/4",
+        "moneyBefore": 66760,
+        "moneyAfter": 66400,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 360
+        }],
+        "timestamp": "2025-05-23 05:38:54"
+      },
+      {
+        "inGameDate": "2024/3/10",
+        "match": "custom_DA1B9E98710BC5F5+2024+cat_give_power_champ",
+        "moneyBefore": 66400,
+        "moneyAfter": 63500,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          }
+        ],
+        "timestamp": "2025-05-23 05:38:54"
       }
     ],
     "level": 18,
@@ -3441,5 +3474,5 @@
     "totalPerks": 60,
     "totalExp": 3410
   },
-  "checksum": "DEB1A7117D2F61A1FD669EA483B3DE7B"
+  "checksum": "632E36972868CA48CA48900599306DAA"
 }

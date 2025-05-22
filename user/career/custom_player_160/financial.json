@@ -1,0 +1,68 @@
+{
+  "financial": {
+    "money": 662600,
+    "invoices": [
+      {
+        "inGameDate": "2026/1/25",
+        "moneyBefore": 669800,
+        "moneyAfter": 668750,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1050
+        }],
+        "timestamp": "2025-05-23 05:17:05"
+      },
+      {
+        "inGameDate": "2026/2/1",
+        "moneyBefore": 668750,
+        "moneyAfter": 667400,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1350
+        }],
+        "timestamp": "2025-05-23 05:17:07"
+      },
+      {
+        "inGameDate": "2026/2/10",
+        "moneyBefore": 667400,
+        "moneyAfter": 665600,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1800
+        }],
+        "timestamp": "2025-05-23 05:17:09"
+      },
+      {
+        "inGameDate": "2026/2/22",
+        "match": "custom_player_160+2026+professional_champ",
+        "moneyBefore": 665600,
+        "moneyAfter": 662600,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 0
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          }
+        ],
+        "timestamp": "2025-05-23 05:17:09"
+      }
+    ],
+    "level": 30,
+    "expInThisLevel": 38,
+    "availPerks": 0,
+    "totalPerks": 0,
+    "totalExp": 10437
+  },
+  "checksum": "3793BF86CBB29769B014380F260AFA1F"
+}

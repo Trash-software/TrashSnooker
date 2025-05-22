@@ -1,23 +1,175 @@
 {
   "financial": {
-    "money": -65720,
-    "invoices": [{
-      "year": 2024,
-      "match": "challenger_open",
-      "moneyBefore": -65720,
-      "moneyAfter": -65720,
-      "type": "championshipEarn",
-      "items": {"PRE_GAMES_2": {
-        "actual": 0,
-        "raw": 0
-      }},
-      "timestamp": "2023-11-27 02:59:27"
-    }],
-    "level": 3,
-    "expInThisLevel": 247,
-    "availPerks": 6,
-    "totalPerks": 4,
+    "money": 63270,
+    "invoices": [
+      {
+        "year": 2024,
+        "match": "challenger_open",
+        "moneyBefore": -65720,
+        "moneyAfter": -65720,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_2": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2023-11-27 02:59:27"
+      },
+      {
+        "inGameDate": "2024/9/25",
+        "perkUsed": 3,
+        "moneyBefore": 65720,
+        "moneyCost": 1900,
+        "moneyAfter": 63820,
+        "ability": {
+          "powerControl-RIGHT": [
+            75.38798956057826,
+            75.38798956057826
+          ],
+          "spinControl-REST": [
+            78.82534543816277,
+            78.82534543816277
+          ],
+          "normalPower-RIGHT": [
+            82.58474032864758,
+            82.58474032864758
+          ],
+          "cuePrecision-REST": [
+            72.52300486994469,
+            72.52300486994469
+          ],
+          "powerControl-REST": [
+            68.00213964148143,
+            68.00213964148143
+          ],
+          "spin-LEFT": [
+            50.21592683395661,
+            50.21592683395661
+          ],
+          "normalPower-REST": [
+            59.59505302442343,
+            59.59505302442343
+          ],
+          "cuePrecision-LEFT": [
+            46.2561964324786,
+            46.2561964324786
+          ],
+          "cuePrecision-RIGHT": [
+            80.39987510484235,
+            83.50452489662271
+          ],
+          "spin-RIGHT": [
+            87.28245201953527,
+            87.28245201953527
+          ],
+          "normalPower-LEFT": [
+            47.51320777533254,
+            47.51320777533254
+          ],
+          "spin-REST": [
+            78.73128763718968,
+            78.73128763718968
+          ],
+          "spinControl-LEFT": [
+            50.27591822738577,
+            50.27591822738577
+          ],
+          "aiming": [
+            84.06340059480685,
+            84.06340059480685
+          ],
+          "powerControl-LEFT": [
+            43.37272476128174,
+            43.37272476128174
+          ],
+          "spinControl-RIGHT": [
+            87.38672562850161,
+            88.69125660336154
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-05-23 04:50:48"
+      },
+      {
+        "inGameDate": "2024/9/25",
+        "perkUsed": 1,
+        "moneyBefore": 63820,
+        "moneyCost": 550,
+        "moneyAfter": 63270,
+        "ability": {
+          "powerControl-RIGHT": [
+            75.38798956057826,
+            75.38798956057826
+          ],
+          "spinControl-REST": [
+            78.82534543816277,
+            78.82534543816277
+          ],
+          "normalPower-RIGHT": [
+            82.58474032864758,
+            82.58474032864758
+          ],
+          "cuePrecision-REST": [
+            72.52300486994469,
+            72.52300486994469
+          ],
+          "powerControl-REST": [
+            68.00213964148143,
+            68.00213964148143
+          ],
+          "spin-LEFT": [
+            50.21592683395661,
+            50.21592683395661
+          ],
+          "normalPower-REST": [
+            59.59505302442343,
+            59.59505302442343
+          ],
+          "cuePrecision-LEFT": [
+            46.2561964324786,
+            46.2561964324786
+          ],
+          "cuePrecision-RIGHT": [
+            83.50452489662271,
+            84.9643439007578
+          ],
+          "spin-RIGHT": [
+            87.28245201953527,
+            87.28245201953527
+          ],
+          "normalPower-LEFT": [
+            47.51320777533254,
+            47.51320777533254
+          ],
+          "spin-REST": [
+            78.73128763718968,
+            78.73128763718968
+          ],
+          "spinControl-LEFT": [
+            50.27591822738577,
+            50.27591822738577
+          ],
+          "aiming": [
+            84.06340059480685,
+            84.06340059480685
+          ],
+          "powerControl-LEFT": [
+            43.37272476128174,
+            43.37272476128174
+          ],
+          "spinControl-RIGHT": [
+            88.69125660336154,
+            88.69125660336154
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-05-23 05:06:04"
+      }
+    ],
+    "level": 5,
+    "expInThisLevel": 4,
+    "availPerks": 8,
+    "totalPerks": 10,
     "totalExp": 455
   },
-  "checksum": "793364CE298885A880313B56033C9374"
+  "checksum": "2994AF02F9F6E0B0507F42FD1BCDAC77"
 }

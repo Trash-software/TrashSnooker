@@ -890,17 +890,6 @@ public class PlayerPerson {
 //            ra.cuePlayType = playerPerson.cuePlayType;
             ra.category = playerPerson.category;
             ra.aiming = playerPerson.getPrecisionPercentage() * handFeelEffort;
-//            ra.cuePrecision =
-//                    Math.max(0,
-//                            100.0 - (playerPerson.getCuePointMuSigmaXY()[0] +
-//                                    playerPerson.getCuePointMuSigmaXY()[1]) * CUE_PRECISION_FACTOR) * handFeelEffort;
-//            ra.normalPower = playerPerson.getControllablePowerPercentage();
-//            ra.maxPower = playerPerson.getMaxPowerPercentage();
-//            ra.powerControl = playerPerson.getPowerControl() * handFeelEffort;
-//            ra.spin = playerPerson.getMaxSpinPercentage();
-//            ra.spinControl = Math.max(0,
-//                    100.0 - (playerPerson.getCuePointMuSigmaXY()[2] +
-//                            playerPerson.getCuePointMuSigmaXY()[3]) * CUE_PRECISION_FACTOR) * handFeelEffort;
             
             ra.left = ReadableAbilityHand.fromPlayerHand(ra, playerPerson.handBody.getLeft(), handFeelEffort);
             ra.right = ReadableAbilityHand.fromPlayerHand(ra, playerPerson.handBody.getRight(), handFeelEffort);
@@ -957,29 +946,6 @@ public class PlayerPerson {
                 case PerkManager.AIMING:
                     unit = (120 - aiming) * 0.04;
                     break;
-//                case PerkManager.CUE_PRECISION:
-//                    unit = (120 - cuePrecision) * 0.04;
-//                    break;
-//                case PerkManager.POWER:
-//                    double sexPowerMax = 120 * getSex().powerMul;
-//                    unit = (sexPowerMax - normalPower) * 0.04;
-//                    break;
-//                case PerkManager.POWER_CONTROL:
-//                    unit = (120 - powerControl) * 0.04;
-//                    break;
-//                case PerkManager.SPIN:
-//                    unit = (120 - spin) * 0.04;
-//                    break;
-//                case PerkManager.SPIN_CONTROL:
-//                    unit = (120 - spinControl) * 0.04;
-//                    break;
-//                case PerkManager.ANTI_HAND:
-//                    unit = (120 - handBody.getAntiHand().skill) * 0.04;
-//                    break;
-//                case PerkManager.REST:
-//                    unit = (120 - handBody.getRest().skill) * 0.06;
-//                    minimum = 0.3;
-//                    break;
                 default:
                     throw new RuntimeException("Unknown type " + addWhat);
             }
@@ -989,13 +955,6 @@ public class PlayerPerson {
         public double getAbilityByCat(int what) {
             return switch (what) {
                 case PerkManager.AIMING -> aiming;
-//                case PerkManager.CUE_PRECISION -> cuePrecision;
-//                case PerkManager.POWER -> normalPower;
-//                case PerkManager.POWER_CONTROL -> powerControl;
-//                case PerkManager.SPIN -> spin;
-//                case PerkManager.SPIN_CONTROL -> spinControl;
-//                case PerkManager.ANTI_HAND -> handBody.getAntiHand().skill;
-//                case PerkManager.REST -> handBody.getRest().skill;
                 default -> throw new RuntimeException("Unknown type " + what);
             };
         }
@@ -1008,8 +967,6 @@ public class PlayerPerson {
                 case PerkManager.POWER_CONTROL -> "powerControl" + "-" + hand.name();
                 case PerkManager.SPIN -> "spin" + "-" + hand.name();
                 case PerkManager.SPIN_CONTROL -> "spinControl" + "-" + hand.name();
-//                case PerkManager.ANTI_HAND -> "antiHand";
-//                case PerkManager.REST -> "rest";
                 default -> throw new RuntimeException("Unknown type " + what);
             };
         }

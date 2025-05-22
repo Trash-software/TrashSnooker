@@ -197,6 +197,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         FinalChoice.IntegratedAttackChoice best = null;
 
         for (var entry : lastResortAttackChoices.entrySet()) {
+            System.out.println(entry.getValue().size() + " Last resort attacks");
             AttackChoice choice = entry.getKey();
             if (aiOnlyDouble && !(choice instanceof AttackChoice.DoubleAttackChoice)) continue;
             int nextTarget = game.getTargetAfterPotSuccess(choice.ball, game.isDoingSnookerFreeBll());

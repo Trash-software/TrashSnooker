@@ -1176,28 +1176,12 @@
       }
     },
     "Luca Brecel": {
-      "spin": 98,
       "precision": 89,
       "anglePrecision": 1.0,
       "longPrecision": 1.0,
       "name": "Luka Brecel",
-      "maxPower": 95,
-      "controllablePower": 85,
       "solving": 77,
-      "pullDt": [
-        70.0,
-        200.0
-      ],
       "aimingOffset": 0.0,
-      "cuePlayType": "p1,h800,e500;r,l,l,l,l,l,l,l",
-      "cueSwingMag": 6.5,
-      "cuePointMuSigma": [
-        0,
-        2,
-        0,
-        6.5
-      ],
-      "powerControl": 94.0,
       "privateCues": [
         "profSnookerCue"
       ],
@@ -1206,10 +1190,68 @@
       "psyRua": 65,
       "height": 164,
       "width": 1.15,
-      "hand": {
-        "left": 70,
-        "right": 100,
-        "rest": 91
+      "dominant": {
+        "hand": "right",
+        "maxPower": 95,
+        "controllablePower": 85,
+        "spin": 98,
+        "powerControl": 94.0,
+        "cuePlayType": "p1,h800,e500;r,l,l,l,l,l,l,l",
+        "cueSwingMag": 6.5,
+        "cuePrecisions": [
+          94.5,
+          84.0
+        ],
+        "cuePoints": [
+          0,
+          0
+        ],
+        "pullDt": [
+          70.0,
+          200.0
+        ]
+      },
+      "nonDominant": {
+        "hand": "left",
+        "maxPower": 70,
+        "controllablePower": 58,
+        "spin": 75,
+        "powerControl": 75.0,
+        "cuePlayType": "p1,h800,e500;l,l,l,l,l,r,r,r",
+        "cueSwingMag": 8.0,
+        "cuePrecisions": [
+          78.0,
+          78.0
+        ],
+        "cuePoints": [
+          0,
+          0
+        ],
+        "pullDt": [
+          70.0,
+          200.0
+        ]
+      },
+      "rest": {
+        "hand": "rest",
+        "maxPower": 80,
+        "controllablePower": 71,
+        "spin": 87,
+        "powerControl": 90.0,
+        "cuePlayType": "p1,h800,e500;r,r,r,r,l,l,l,l",
+        "cueSwingMag": 3.0,
+        "cuePrecisions": [
+          92.0,
+          82.0
+        ],
+        "cuePoints": [
+          0,
+          0
+        ],
+        "pullDt": [
+          70.0,
+          200.0
+        ]
       },
       "ai": {
         "precision": 92,
@@ -1286,12 +1328,6 @@
       "name": "Kyren Wilson",
       "solving": 89,
       "aimingOffset": 0.0,
-      "cuePointMuSigma": [
-        0,
-        2,
-        0,
-        3
-      ],
       "privateCues": [
         "profSnookerCue"
       ],
@@ -1355,7 +1391,7 @@
           150
         ],
         "cuePlayType": "p1,h800,e500;s,s,s,s,r,r,r,r",
-        "cueSwingMag": 3.0,
+        "cueSwingMag": 5.0,
         "cuePointMuSigma": [
           0,
           3.0,

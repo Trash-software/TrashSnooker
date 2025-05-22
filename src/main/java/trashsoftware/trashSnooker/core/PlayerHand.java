@@ -54,8 +54,10 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
         cuePointMuSigmaXY[3] = Math.max(cuePointMuSigmaXY[3], 0.1);
     }
     
-    public static PlayerHand fromJson(JSONObject json, @Nullable PlayerHand reference, 
-                                      double skillMul, double powerMul) {
+    public static PlayerHand fromJson(JSONObject json, 
+                                      @Nullable PlayerHand reference, 
+                                      double skillMul, 
+                                      double powerMul) {
         if (json == null) {
             if (reference == null) {
                 throw new IllegalArgumentException();
@@ -94,6 +96,14 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
             for (int i = 0; i < 4; ++i) {
                 muSigma[i] = muSigmaArray.getDouble(i);
             }
+        } else if (json.has("cuePoints") && json.has("cuePrecisions")) {
+            JSONArray cuePoints = json.getJSONArray("cuePoints");
+            JSONArray cuePrecisions = json.getJSONArray("cuePrecisions");
+            muSigma = PlayerPerson.estimateCuePoint(
+                    cuePrecisions.getDouble(0), 
+                    cuePrecisions.getDouble(1));
+            muSigma[0] = cuePoints.getDouble(0);
+            muSigma[2] = cuePoints.getDouble(1);
         } else if (reference != null) {
             muSigma = new double[]{-reference.cuePointMuSigmaXY[0],
                     reference.cuePointMuSigmaXY[1] * skillMul,
@@ -152,8 +162,19 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
 //        System.out.println("Swing mag " + getCueSwingMag());
         obj.put("cueSwingMag", getCueSwingMag());
 
-        JSONArray cuePoint = new JSONArray(cuePointMuSigmaXY);
-        obj.put("cuePointMuSigma", cuePoint);
+        JSONArray cuePoints = new JSONArray(new double[]{cuePointMuSigmaXY[0], cuePointMuSigmaXY[2]});
+        JSONArray cuePrecisions = new JSONArray(new double[]{
+                sigmaToCuePrecision(cuePointMuSigmaXY[1]),
+                sigmaToSpinControl(cuePointMuSigmaXY[3])
+        });
+        obj.put("cuePoints", cuePoints);
+        obj.put("cuePrecisions", cuePrecisions);
+
+//        System.out.println("===");
+//        System.out.println("Musig: " + Arrays.toString(cuePointMuSigmaXY));
+//        System.out.println("Cue pre: " + cuePrecisions);
+        
+//        obj.put("cuePointMuSigma", cuePoint);
         obj.put("powerControl", getPowerControl());
 
         obj.put("cuePlayType", cuePlayType.toJsonStr());
@@ -280,6 +301,14 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
                 computeSpinControl(1.0);
         
         return sum / 5.0;
+    }
+    
+    public static double sigmaToCuePrecision(double sigma0) {
+        return 100.0 - sigma0 * PlayerPerson.CUE_PRECISION_FACTOR;
+    }
+
+    public static double sigmaToSpinControl(double sigma1) {
+        return 100.0 - sigma1 * PlayerPerson.CUE_PRECISION_FACTOR;
     }
     
     public double computeCuePrecision(double handFeelEffort) {

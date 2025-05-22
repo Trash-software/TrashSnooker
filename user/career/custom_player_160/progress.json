@@ -1,307 +1,249 @@
 {
-  "stageIndex": 4,
+  "stageIndex": 3,
   "seedRanks": {
-    "Brown": 10,
-    "Yan Bingtao": 14,
-    "Liu Mang": 7,
-    "custom_player_1": 15,
-    "custom_player_3": 20,
-    "custom_player_2": 19,
-    "custom_player_166": 27,
-    "custom_player_4": 18,
-    "custom_player_165": 25,
-    "Glass Heart": 6,
-    "custom_player_167": 31,
-    "Selby": 4,
-    "Mark Allen": 5,
-    "custom_player_172": 29,
-    "custom_player_174": 26,
-    "Zhao Xintong": 9,
-    "Summer Brave": 28,
-    "Lao Youtiao": 24,
-    "Murphy": 8,
-    "John Wizard": 2,
-    "Mou Moumou": 23,
-    "Kid": 13,
-    "custom_player_159": 17,
-    "High Stick": 12,
-    "custom_player_178": 30,
-    "Mark Williams": 1,
-    "Give Emperor": 16,
-    "custom_player_180": 32,
-    "custom_player_160": 3,
-    "custom_player_181": 22,
-    "Worst Professional": 11,
-    "Wang Xu": 21
+    "Stuart Bingham": 9,
+    "Liu Mang": 16,
+    "Matthew Stevens": 11,
+    "Ding Junhui": 3,
+    "Jack Lisowski": 5,
+    "Smart": 6,
+    "Glass Heart": 14,
+    "Trump": 12,
+    "Mark Allen": 8,
+    "Selby": 10,
+    "Mark Williams": 13,
+    "O_Sullivan": 2,
+    "Zhao Xintong": 15,
+    "custom_player_160": 4,
+    "Neil Robertson": 7,
+    "John Wizard": 1
   },
-  "championshipId": "fresh_hand_open",
+  "championshipId": "professional_champ",
   "matchTree": {"root": {
     "p1": {
       "p1": {
         "p1": {
-          "p1": {
-            "p1wins": 1,
-            "p1": {"winner": "custom_player_172"},
-            "p2": {"winner": "Wang Xu"},
-            "winner": "Wang Xu",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_0",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_player_178"},
-            "p2": {"winner": "Kid"},
-            "winner": "Kid",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_1",
-            "p2wins": 2
-          },
+          "p1wins": 2,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {"winner": "Matthew Stevens"},
+          "winner": "Mark Allen",
           "stage": "ROUND_1",
-          "matchId": "custom_player_160_2026_fresh_hand_open_16"
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-0",
+          "p2wins": 1
         },
         "p2": {
-          "p1": {
-            "p1wins": 0,
-            "p1": {"winner": "Lao Youtiao"},
-            "p2": {"winner": "Glass Heart"},
-            "winner": "Glass Heart",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_2",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_player_165"},
-            "p2": {"winner": "custom_player_180"},
-            "winner": "custom_player_180",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_3",
-            "p2wins": 2
-          },
+          "p1wins": 2,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Liu Mang"},
+          "winner": "John Wizard",
           "stage": "ROUND_1",
-          "matchId": "custom_player_160_2026_fresh_hand_open_17"
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-1",
+          "p2wins": 0
         },
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_player_160_2026_fresh_hand_open_24"
+        "matchId": "custom_player_160+2026+professional_champ-QUARTER_FINAL-8"
       },
       "p2": {
         "p1": {
-          "p1": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_player_1"},
-            "p2": {"winner": "John Wizard"},
-            "winner": "John Wizard",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_4",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 1,
-            "p1": {"winner": "Murphy"},
-            "p2": {"winner": "Mark Allen"},
-            "winner": "Mark Allen",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_5",
-            "p2wins": 2
-          },
+          "p1wins": 2,
+          "p1": {"winner": "Smart"},
+          "p2": {"winner": "Stuart Bingham"},
+          "winner": "Smart",
           "stage": "ROUND_1",
-          "matchId": "custom_player_160_2026_fresh_hand_open_18"
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-2",
+          "p2wins": 1
         },
         "p2": {
-          "p1": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_player_174"},
-            "p2": {"winner": "Liu Mang"},
-            "winner": "Liu Mang",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_6",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "custom_player_159"},
-            "p2": {"winner": "custom_player_166"},
-            "winner": "custom_player_159",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_7",
-            "p2wins": 0
-          },
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "Trump"},
+          "winner": "Neil Robertson",
           "stage": "ROUND_1",
-          "matchId": "custom_player_160_2026_fresh_hand_open_19"
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-3",
+          "p2wins": 0
         },
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_player_160_2026_fresh_hand_open_25"
+        "matchId": "custom_player_160+2026+professional_champ-QUARTER_FINAL-9"
       },
       "stage": "SEMI_FINAL",
-      "matchId": "custom_player_160_2026_fresh_hand_open_28"
+      "matchId": "custom_player_160+2026+professional_champ-SEMI_FINAL-12"
     },
     "p2": {
       "p1": {
         "p1": {
-          "p1": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_player_181"},
-            "p2": {"winner": "Brown"},
-            "winner": "Brown",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_8",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_player_167"},
-            "p2": {"winner": "Give Emperor"},
-            "winner": "Give Emperor",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_9",
-            "p2wins": 2
-          },
+          "p1wins": 0,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "Selby"},
+          "winner": "Selby",
           "stage": "ROUND_1",
-          "matchId": "custom_player_160_2026_fresh_hand_open_20"
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-4",
+          "p2wins": 2
         },
         "p2": {
-          "p1": {
-            "p1": {"winner": "High Stick"},
-            "p2": {"winner": "custom_player_160"},
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_10"
-          },
-          "p2": {
-            "p1wins": 0,
-            "p1": {"winner": "Mou Moumou"},
-            "p2": {"winner": "Worst Professional"},
-            "winner": "Worst Professional",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_11",
-            "p2wins": 2
-          },
+          "p1wins": 2,
+          "p1": {"winner": "Ding Junhui"},
+          "p2": {"winner": "Glass Heart"},
+          "winner": "Ding Junhui",
           "stage": "ROUND_1",
-          "matchId": "custom_player_160_2026_fresh_hand_open_21"
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-5",
+          "p2wins": 0
         },
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_player_160_2026_fresh_hand_open_26"
+        "matchId": "custom_player_160+2026+professional_champ-QUARTER_FINAL-10"
       },
       "p2": {
         "p1": {
-          "p1": {
-            "p1wins": 1,
-            "p1": {"winner": "custom_player_4"},
-            "p2": {"winner": "Yan Bingtao"},
-            "winner": "Yan Bingtao",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_12",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 2,
-            "p1": {"winner": "Mark Williams"},
-            "p2": {"winner": "custom_player_2"},
-            "winner": "Mark Williams",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_13",
-            "p2wins": 0
-          },
+          "p1wins": 2,
+          "p1": {"winner": "Jack Lisowski"},
+          "p2": {"winner": "Zhao Xintong"},
+          "winner": "Jack Lisowski",
           "stage": "ROUND_1",
-          "matchId": "custom_player_160_2026_fresh_hand_open_22"
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-6",
+          "p2wins": 1
         },
         "p2": {
-          "p1": {
-            "p1wins": 0,
-            "p1": {"winner": "Summer Brave"},
-            "p2": {"winner": "Zhao Xintong"},
-            "winner": "Zhao Xintong",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_14",
-            "p2wins": 2
-          },
-          "p2": {
-            "p1wins": 0,
-            "p1": {"winner": "custom_player_3"},
-            "p2": {"winner": "Selby"},
-            "winner": "Selby",
-            "stage": "PRE_ROUND_1",
-            "matchId": "custom_player_160_2026_fresh_hand_open_15",
-            "p2wins": 2
-          },
+          "p1": {"winner": "custom_player_160"},
+          "p2": {"winner": "Mark Williams"},
           "stage": "ROUND_1",
-          "matchId": "custom_player_160_2026_fresh_hand_open_23"
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-7"
         },
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_player_160_2026_fresh_hand_open_27"
+        "matchId": "custom_player_160+2026+professional_champ-QUARTER_FINAL-11"
       },
       "stage": "SEMI_FINAL",
-      "matchId": "custom_player_160_2026_fresh_hand_open_29"
+      "matchId": "custom_player_160+2026+professional_champ-SEMI_FINAL-13"
     },
     "stage": "FINAL",
-    "matchId": "custom_player_160_2026_fresh_hand_open_30"
+    "matchId": "custom_player_160+2026+professional_champ-FINAL-14"
   }},
   "finished": false,
   "snookerBreaks": [
     {
-      "score": 81,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_player_160_2026_fresh_hand_open_11",
-      "playerId": "Worst Professional"
-    },
-    {
-      "score": 78,
-      "stage": "PRE_ROUND_1",
+      "score": 127,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
       "sim": true,
       "numFrame": 2,
-      "matchId": "custom_player_160_2026_fresh_hand_open_12",
-      "playerId": "Yan Bingtao"
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-3",
+      "playerId": "Neil Robertson"
     },
     {
-      "score": 73,
-      "stage": "PRE_ROUND_1",
-      "sim": true,
-      "numFrame": 1,
-      "matchId": "custom_player_160_2026_fresh_hand_open_14",
-      "playerId": "Zhao Xintong"
-    },
-    {
-      "score": 63,
-      "stage": "PRE_ROUND_1",
+      "score": 104,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
       "sim": true,
       "numFrame": 2,
-      "matchId": "custom_player_160_2026_fresh_hand_open_4",
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-0",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 101,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-3",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 99,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-1",
       "playerId": "John Wizard"
     },
     {
-      "score": 61,
-      "stage": "PRE_ROUND_1",
+      "score": 78,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
       "sim": true,
       "numFrame": 2,
-      "matchId": "custom_player_160_2026_fresh_hand_open_15",
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-4",
       "playerId": "Selby"
     },
     {
-      "score": 59,
-      "stage": "PRE_ROUND_1",
+      "score": 68,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
       "sim": true,
       "numFrame": 1,
-      "matchId": "custom_player_160_2026_fresh_hand_open_5",
-      "playerId": "Murphy"
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-2",
+      "playerId": "Stuart Bingham"
     },
     {
-      "score": 52,
-      "stage": "PRE_ROUND_1",
+      "score": 67,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
       "sim": true,
-      "numFrame": 2,
-      "matchId": "custom_player_160_2026_fresh_hand_open_14",
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-6",
       "playerId": "Zhao Xintong"
     },
     {
-      "score": 50,
-      "stage": "PRE_ROUND_1",
+      "score": 64,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-0",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 60,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-0",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 59,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-0",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 57,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-2",
+      "playerId": "Smart"
+    },
+    {
+      "score": 56,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-4",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 53,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-4",
+      "playerId": "Selby"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
       "sim": true,
       "numFrame": 2,
-      "matchId": "custom_player_160_2026_fresh_hand_open_6",
-      "playerId": "Liu Mang"
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-2",
+      "playerId": "Smart"
     }
   ],
-  "timestamp": "2026/1/25"
+  "timestamp": "2026/2/22"
 }
