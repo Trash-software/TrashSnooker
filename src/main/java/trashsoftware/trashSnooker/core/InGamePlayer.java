@@ -162,12 +162,22 @@ public class InGamePlayer {
     
     private double cuePsyChangeBase() {
         return Algebra.shiftRangeSafe(0, 100, 
-                0.1, 0, playerPerson.psyRua);
+                0.05, 0, playerPerson.psyRua);
     }
     
     private void regularizePsyStatus() {
         psyStatus = Math.max(playerPerson.psyRua / 100, Math.min(1.0, psyStatus));
         System.out.println(playerPerson.getName() + " psy status: " + psyStatus);
+    }
+    
+    private static double stagePsyEffect(GamePlayStage playStage) {
+        return switch (playStage) {
+            case BREAK -> 0.2;
+            case NORMAL, ENHANCE_WIN -> 1.0;
+            case NEXT_BALL_WIN -> 1.5;
+            case THIS_BALL_WIN -> 3.0;
+            case NO_PRESSURE -> 0.1;
+        };
     }
     
     public void adjustPsyStatusFrameBegin(double frameImportance) {
@@ -182,16 +192,20 @@ public class InGamePlayer {
     public void updatePsyStatusAfterSelfCue(double frameImportance, 
                                             PotAttempt potAttempt, 
                                             DefenseAttempt defenseAttempt,
-                                            boolean foul) {
+                                            boolean foul,
+                                            GamePlayStage playStage) {
 //        double ruaFactor = Algebra.shiftRangeSafe(0, 100, 1.0, 1.0, playerPerson.psyRua);
         double baseChange = cuePsyChangeBase();
         double increase = 0;
         double decrease = (foul ? (frameImportance + 1) : 0) * baseChange;
         if (potAttempt != null) {
             if (potAttempt.isSuccess()) {
-                increase += baseChange * 0.3 * (potAttempt.isDifficultShot() ? 3.0 : 1.0);
+                double diff = 1.0 - psyStatus;
+                increase += Math.max(0.005, diff * 0.1 * (potAttempt.isDifficultShot() ? 3.0 : 1.0));
             } else {
-                decrease += (frameImportance + 1) * baseChange * (potAttempt.isEasyShot() ? 3.0 : 1.0);
+                double importanceFactor = stagePsyEffect(playStage);
+                importanceFactor *= (frameImportance + 1) * 0.5;
+                decrease += importanceFactor * baseChange * (potAttempt.isEasyShot() ? 3.0 : 1.0);
             }
         }
         psyStatus += increase;
@@ -204,19 +218,20 @@ public class InGamePlayer {
         double decrease = 0;
         if (potAttempt != null) {
             if (potAttempt.isSuccess()) {
-                decrease += (frameImportance + 1) * baseChange * 0.05 * (potAttempt.isDifficultShot() ? 3.0 : 1.0);
+                decrease += (frameImportance + 1) * baseChange * 0.08 * (potAttempt.isDifficultShot() ? 3.0 : 1.0);
             }
         }
         psyStatus -= decrease;
         regularizePsyStatus();
     }
     
-    public void updatePsyStatusAfterFrame(double frameImportance, boolean won) {
-        double baseChange = cuePsyChangeBase() * (frameImportance + 1) * 3.0;
+    public void updatePsyStatusAfterFrame(double frameImportance, boolean won, EntireGame entireGame) {
+        double baseChange = cuePsyChangeBase() * (frameImportance + 1) * 3.5;
         if (won) {
             psyStatus += baseChange;
         } else {
-            psyStatus -= baseChange;
+            int contiLoss = entireGame.playerContinuousLoses(playerNumber) + 1;
+            psyStatus -= baseChange * contiLoss;  // 越输越糟糕
         }
         regularizePsyStatus();
     }

@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 15500,
+    "money": 66760,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
@@ -2773,13 +2773,673 @@
         "moneyAfter": 15500,
         "type": "purchase",
         "timestamp": "2025-05-20 05:33:22"
+      },
+      {
+        "inGameDate": "2024/1/25",
+        "year": 2024,
+        "match": "fresh_hand_open",
+        "moneyBefore": 15500,
+        "moneyAfter": 63500,
+        "type": "championshipEarn",
+        "items": {
+          "CHAMPION": {
+            "actual": 40000,
+            "raw": 50000
+          },
+          "BEST_SINGLE": {
+            "actual": 8000,
+            "raw": 10000
+          }
+        },
+        "timestamp": "2025-05-20 23:15:01"
+      },
+      {
+        "inGameDate": "2024/1/25",
+        "perkUsed": 5,
+        "moneyBefore": 63500,
+        "moneyCost": 5000,
+        "moneyAfter": 58500,
+        "ability": {
+          "powerControl-RIGHT": [
+            46.428114386431794,
+            46.428114386431794
+          ],
+          "spinControl-REST": [
+            47.87066660204599,
+            47.87066660204599
+          ],
+          "normalPower-RIGHT": [
+            45.73536529185294,
+            45.73536529185294
+          ],
+          "cuePrecision-REST": [
+            44.59496132629591,
+            44.59496132629591
+          ],
+          "powerControl-REST": [
+            48.98386299302046,
+            48.98386299302046
+          ],
+          "spin-LEFT": [
+            90.2717116049084,
+            92.60240941508359
+          ],
+          "normalPower-REST": [
+            38.60238387017628,
+            38.60238387017628
+          ],
+          "cuePrecision-LEFT": [
+            94.88530839233664,
+            95.88989605664318
+          ],
+          "cuePrecision-RIGHT": [
+            42.26820505787347,
+            42.26820505787347
+          ],
+          "spin-RIGHT": [
+            43.40845466879191,
+            43.40845466879191
+          ],
+          "normalPower-LEFT": [
+            83.35311569101019,
+            84.81899106336978
+          ],
+          "spin-REST": [
+            45.79797875349938,
+            45.79797875349938
+          ],
+          "spinControl-LEFT": [
+            81.35338371892058,
+            82.89924837016376
+          ],
+          "aiming": [
+            84.15287191068671,
+            84.15287191068671
+          ],
+          "powerControl-LEFT": [
+            77.87442947625011,
+            77.87442947625011
+          ],
+          "spinControl-RIGHT": [
+            45.372999370654256,
+            45.372999370654256
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-05-20 23:15:27"
+      },
+      {
+        "inGameDate": "2024/1/25",
+        "perkUsed": 1,
+        "moneyBefore": 58500,
+        "moneyCost": 300,
+        "moneyAfter": 58200,
+        "ability": {
+          "powerControl-RIGHT": [
+            46.428114386431794,
+            46.428114386431794
+          ],
+          "spinControl-REST": [
+            47.87066660204599,
+            47.87066660204599
+          ],
+          "normalPower-RIGHT": [
+            45.73536529185294,
+            45.73536529185294
+          ],
+          "cuePrecision-REST": [
+            44.59496132629591,
+            44.59496132629591
+          ],
+          "powerControl-REST": [
+            48.98386299302046,
+            48.98386299302046
+          ],
+          "spin-LEFT": [
+            92.60240941508359,
+            92.60240941508359
+          ],
+          "normalPower-REST": [
+            38.60238387017628,
+            38.60238387017628
+          ],
+          "cuePrecision-LEFT": [
+            95.88989605664318,
+            95.88989605664318
+          ],
+          "cuePrecision-RIGHT": [
+            42.26820505787347,
+            45.377476855558534
+          ],
+          "spin-RIGHT": [
+            43.40845466879191,
+            43.40845466879191
+          ],
+          "normalPower-LEFT": [
+            84.81899106336978,
+            84.81899106336978
+          ],
+          "spin-REST": [
+            45.79797875349938,
+            45.79797875349938
+          ],
+          "spinControl-LEFT": [
+            82.89924837016376,
+            82.89924837016376
+          ],
+          "aiming": [
+            84.15287191068671,
+            84.15287191068671
+          ],
+          "powerControl-LEFT": [
+            77.87442947625011,
+            77.87442947625011
+          ],
+          "spinControl-RIGHT": [
+            45.372999370654256,
+            45.372999370654256
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-05-20 23:15:34"
+      },
+      {
+        "item": "LOST_ALL_MATCHES",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 58200,
+        "moneyAfter": 58400,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:41"
+      },
+      {
+        "item": "POT_BALLS",
+        "inGameDate": "2024/1/25",
+        "level": 2,
+        "moneyBefore": 58400,
+        "moneyAfter": 59400,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2025-05-20 23:15:43"
+      },
+      {
+        "item": "POT_BALLS_ANTI",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 59400,
+        "moneyAfter": 59600,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:44"
+      },
+      {
+        "item": "CUMULATIVE_LONG_POTS_1",
+        "inGameDate": "2024/1/25",
+        "level": 2,
+        "moneyBefore": 59600,
+        "moneyAfter": 60600,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2025-05-20 23:15:44"
+      },
+      {
+        "item": "ACCURACY_WIN",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 60600,
+        "moneyAfter": 60800,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:45"
+      },
+      {
+        "item": "FINAL_STAGE",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 60800,
+        "moneyAfter": 61000,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:46"
+      },
+      {
+        "item": "COME_BACK_BEHIND_OVER_SCORE",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 61000,
+        "moneyAfter": 61200,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:48"
+      },
+      {
+        "item": "HARD_SNOOKER_BY_OPPONENT",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 61200,
+        "moneyAfter": 61400,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:48"
+      },
+      {
+        "item": "SNOOKER_CUMULATE_FOUL_GAIN",
+        "inGameDate": "2024/1/25",
+        "level": 2,
+        "moneyBefore": 61400,
+        "moneyAfter": 62400,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2025-05-20 23:15:49"
+      },
+      {
+        "item": "SNOOKER_CUMULATE_SCORE",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": 62400,
+        "moneyAfter": 62900,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2025-05-20 23:15:49"
+      },
+      {
+        "item": "SNOOKER_BREAK_100_BIG",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 62900,
+        "moneyAfter": 63100,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:50"
+      },
+      {
+        "item": "SNOOKER_BREAK_100",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 63100,
+        "moneyAfter": 63300,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:50"
+      },
+      {
+        "item": "POT_WRONG_COLOR",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 63300,
+        "moneyAfter": 63500,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:51"
+      },
+      {
+        "item": "CEB_CUMULATIVE_CLEAR",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 63500,
+        "moneyAfter": 63700,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:54"
+      },
+      {
+        "item": "PLAY_ONE_YEAR",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 63700,
+        "moneyAfter": 63900,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:55"
+      },
+      {
+        "item": "MAIN_OF_TOURNAMENTS",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": 63900,
+        "moneyAfter": 64400,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2025-05-20 23:15:55"
+      },
+      {
+        "item": "PARTICIPATE_TOURNAMENTS",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": 64400,
+        "moneyAfter": 64900,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2025-05-20 23:15:56"
+      },
+      {
+        "item": "CHAMPION",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 64900,
+        "moneyAfter": 65100,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:56"
+      },
+      {
+        "item": "SNOOKER_TOP_64",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 65100,
+        "moneyAfter": 65300,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:58"
+      },
+      {
+        "item": "SNOOKER_RANKED_CHAMPION",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 65300,
+        "moneyAfter": 65500,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:58"
+      },
+      {
+        "item": "POTTING_MACHINE",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 65500,
+        "moneyAfter": 65700,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:15:59"
+      },
+      {
+        "item": "DEFEAT_UNIQUE_OPPONENTS_SNOOKER",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": 65700,
+        "moneyAfter": 66200,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2025-05-20 23:15:59"
+      },
+      {
+        "item": "DEFEAT_UNIQUE_OPPONENTS_CEB",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 66200,
+        "moneyAfter": 66400,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:16:00"
+      },
+      {
+        "item": "CHAMP_EARN_CUMULATIVE",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 66400,
+        "moneyAfter": 66600,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:16:02"
+      },
+      {
+        "item": "SAVE_MONEY",
+        "inGameDate": "2024/1/25",
+        "level": 0,
+        "moneyBefore": 66600,
+        "moneyAfter": 66800,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-20 23:16:02"
+      },
+      {
+        "item": "EXPENDITURE",
+        "inGameDate": "2024/1/25",
+        "level": 1,
+        "moneyBefore": 66800,
+        "moneyAfter": 67300,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2025-05-20 23:16:03"
+      },
+      {
+        "inGameDate": "2024/1/25",
+        "moneyBefore": 67300,
+        "moneyAfter": 66880,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 420
+        }],
+        "timestamp": "2025-05-20 23:55:34"
+      },
+      {
+        "inGameDate": "2024/2/1",
+        "match": "custom_DA1B9E98710BC5F5+2024+eight_yangjiaping_mid_cup",
+        "moneyBefore": 66880,
+        "moneyAfter": 66580,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 100
+          },
+          {
+            "item": "travel",
+            "moneyCost": 200
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 0
+          }
+        ],
+        "timestamp": "2025-05-20 23:55:34"
+      },
+      {
+        "item": "BIG_HEART",
+        "inGameDate": "2024/2/1",
+        "level": 0,
+        "moneyBefore": 66580,
+        "moneyAfter": 66780,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-05-21 05:19:47"
+      },
+      {
+        "item": "DEFEAT_UNIQUE_OPPONENTS_CEB",
+        "inGameDate": "2024/2/1",
+        "level": 1,
+        "moneyBefore": 66780,
+        "moneyAfter": 67280,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2025-05-21 05:19:51"
+      },
+      {
+        "inGameDate": "2024/2/1",
+        "year": 2024,
+        "match": "eight_yangjiaping_mid_cup",
+        "moneyBefore": 67280,
+        "moneyAfter": 70480,
+        "type": "championshipEarn",
+        "items": {"SECOND_PLACE": {
+          "actual": 3200,
+          "raw": 4000
+        }},
+        "timestamp": "2025-05-22 02:58:18"
+      },
+      {
+        "inGameDate": "2024/2/1",
+        "moneyBefore": 70480,
+        "moneyAfter": 69940,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 540
+        }],
+        "timestamp": "2025-05-22 03:09:40"
+      },
+      {
+        "inGameDate": "2024/2/10",
+        "moneyBefore": 69940,
+        "moneyAfter": 69220,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 720
+        }],
+        "timestamp": "2025-05-22 03:09:42"
+      },
+      {
+        "inGameDate": "2024/2/22",
+        "moneyBefore": 69220,
+        "moneyAfter": 68920,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 300
+        }],
+        "timestamp": "2025-05-22 03:09:52"
+      },
+      {
+        "inGameDate": "2024/2/27",
+        "match": "custom_DA1B9E98710BC5F5+2024+dog_give_power_open",
+        "moneyBefore": 68920,
+        "moneyAfter": 66020,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          }
+        ],
+        "timestamp": "2025-05-22 03:09:52"
+      },
+      {
+        "inGameDate": "2024/2/27",
+        "year": 2024,
+        "match": "dog_give_power_open",
+        "moneyBefore": 66020,
+        "moneyAfter": 68020,
+        "type": "championshipEarn",
+        "items": {"TOP_32": {
+          "actual": 2000,
+          "raw": 2500
+        }},
+        "timestamp": "2025-05-22 20:49:56"
+      },
+      {
+        "inGameDate": "2024/2/27",
+        "perkUsed": 3,
+        "moneyBefore": 68020,
+        "moneyCost": 900,
+        "moneyAfter": 67120,
+        "ability": {
+          "powerControl-RIGHT": [
+            46.428114386431794,
+            46.428114386431794
+          ],
+          "spinControl-REST": [
+            47.87066660204599,
+            47.87066660204599
+          ],
+          "normalPower-RIGHT": [
+            45.73536529185294,
+            48.70595068017882
+          ],
+          "cuePrecision-REST": [
+            44.59496132629591,
+            44.59496132629591
+          ],
+          "powerControl-REST": [
+            48.98386299302046,
+            48.98386299302046
+          ],
+          "spin-LEFT": [
+            92.60240941508359,
+            92.60240941508359
+          ],
+          "normalPower-REST": [
+            38.60238387017628,
+            38.60238387017628
+          ],
+          "cuePrecision-LEFT": [
+            95.88989605664318,
+            95.88989605664318
+          ],
+          "cuePrecision-RIGHT": [
+            45.377476855558534,
+            48.36237778133619
+          ],
+          "spin-RIGHT": [
+            43.40845466879191,
+            46.472116482040235
+          ],
+          "normalPower-LEFT": [
+            84.81899106336978,
+            84.81899106336978
+          ],
+          "spin-REST": [
+            45.79797875349938,
+            45.79797875349938
+          ],
+          "spinControl-LEFT": [
+            82.89924837016376,
+            82.89924837016376
+          ],
+          "aiming": [
+            84.15287191068671,
+            84.15287191068671
+          ],
+          "powerControl-LEFT": [
+            77.87442947625011,
+            77.87442947625011
+          ],
+          "spinControl-RIGHT": [
+            45.372999370654256,
+            45.372999370654256
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-05-22 20:50:13"
+      },
+      {
+        "inGameDate": "2024/2/27",
+        "moneyBefore": 67120,
+        "moneyAfter": 66940,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 180
+        }],
+        "timestamp": "2025-05-22 20:50:16"
+      },
+      {
+        "inGameDate": "2024/3/1",
+        "moneyBefore": 66940,
+        "moneyAfter": 66760,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 180
+        }],
+        "timestamp": "2025-05-22 20:50:18"
       }
     ],
-    "level": 15,
-    "expInThisLevel": 58,
+    "level": 18,
+    "expInThisLevel": 34,
     "availPerks": 0,
-    "totalPerks": 51,
-    "totalExp": 2480
+    "totalPerks": 60,
+    "totalExp": 3410
   },
-  "checksum": "E0D1C82B4269C27B1510E391F6776C0F"
+  "checksum": "DEB1A7117D2F61A1FD669EA483B3DE7B"
 }

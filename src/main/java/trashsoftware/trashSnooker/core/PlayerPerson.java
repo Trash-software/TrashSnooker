@@ -94,7 +94,7 @@ public class PlayerPerson {
 
     public static PlayerPerson fromJson(String playerId, JSONObject personObj) {
         String name = personObj.getString("name");
-        System.out.println(name);
+//        System.out.println(name);
 
         AiPlayStyle aiPlayStyle;
         if (personObj.has("ai")) {

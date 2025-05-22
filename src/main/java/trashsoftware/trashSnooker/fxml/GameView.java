@@ -1103,7 +1103,8 @@ public class GameView implements Initializable {
                 game.getGame().frameImportance(justCuedIgp.getPlayerNumber()),
                 lastPotAttempt,
                 curDefAttempt,
-                game.getGame().isThisCueFoul()
+                game.getGame().isThisCueFoul(),
+                gamePlayStage()
         );
         opponentIgp.updatePsyStatusAfterOpponentCue(
                 game.getGame().frameImportance(opponentIgp.getPlayerNumber()),
@@ -1312,9 +1313,9 @@ public class GameView implements Initializable {
         
         InGamePlayer wonIgp = wonPlayer.getInGamePlayer();
         InGamePlayer lostIgp = game.getGame().getAnotherIgp(wonIgp);
-        // 在game.playerWinsAframe()之后，否则影响frameImportance的判断
-        wonIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(wonIgp.getPlayerNumber()), true);
-        lostIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(lostIgp.getPlayerNumber()), false);
+        // 在game.playerWinsAframe()之前，否则影响frameImportance的判断
+        wonIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(wonIgp.getPlayerNumber()), true, game);
+        lostIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(lostIgp.getPlayerNumber()), false, game);
         
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
         drawScoreBoard(game.getGame().getCuingPlayer(), false);

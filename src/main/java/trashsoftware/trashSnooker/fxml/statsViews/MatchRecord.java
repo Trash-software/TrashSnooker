@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import trashsoftware.trashSnooker.core.SubRule;
+import trashsoftware.trashSnooker.core.attempt.CueType;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.infoRec.*;
@@ -433,7 +434,9 @@ public class MatchRecord extends RecordTree {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.setFont(new Font(App.FONT.getName(), 8));
+        double fontSize = 8;
+        double textDown = fontSize * 0.36;
+        gc.setFont(new Font(App.FONT.getName(), fontSize));
 
         for (int i = 0; i < nCues; i++) {
             int r = i / eachRowBalls;
@@ -442,19 +445,33 @@ public class MatchRecord extends RecordTree {
             double y = (r + 0.5) * cellSize;
             CueInfoRec cir = fir.getCueRecs().get(i);
             boolean drawn = false;
-            if (cir.getPlayer() == playerNumberFrom1 && cir.legallyPot()) {
-                if (cir.getPots().isEmpty()) {
-                    System.err.println("Legal pot of ceb should have at least one pot ball");
-                    continue;
+            if (cir.getPlayer() == playerNumberFrom1) {
+                if (cir.getAttemptBase().type == CueType.BREAK && cir.getAttemptBase().isSuccess()) {
+                    gc.setFill(Color.DARKGREEN);
+                    gc.fillText("P",
+                            x,
+                            y + textDown);
                 }
-                for (var entry : cir.getPots().entrySet()) {
-                    // 目前只画第一个
-                    int num = entry.getKey();
-                    NumberedBallTable.drawPoolBallEssential(
-                            x, y, ballDiameter, PoolBall.poolBallBaseColor(num), num,
-                            gc);
-                    drawn = true;
-                    break;
+                if (cir.legallyPot()) {
+                    if (cir.getPots().isEmpty()) {
+                        System.err.println("Legal pot of ceb should have at least one pot ball");
+                        continue;
+                    }
+                    for (var entry : cir.getPots().entrySet()) {
+                        // 目前只画第一个
+                        int num = entry.getKey();
+                        NumberedBallTable.drawPoolBallEssential(
+                                x, y, ballDiameter, PoolBall.poolBallBaseColor(num), num,
+                                gc);
+                        drawn = true;
+                        break;
+                    }
+                }
+                if (cir.isFoul()) {
+                    gc.setFill(Color.BLACK);
+                    gc.fillText("X",
+                            x,
+                            y + textDown);
                 }
             }
             if (!drawn) {
@@ -492,6 +509,7 @@ public class MatchRecord extends RecordTree {
         gc.setLineWidth(1.0);
         gc.setTextAlign(TextAlignment.CENTER);
         double fontSize = 8;
+        double textDown = fontSize * 0.36;
         gc.setFont(new Font(App.FONT.getName(), fontSize));
 
         for (int i = 0; i < nCues; i++) {
@@ -499,6 +517,8 @@ public class MatchRecord extends RecordTree {
             int c = i % eachRowBalls;
             double x = c * cellWidth + margin;
             double y = (r + 1) * cellHeight - ballDiameter - margin;
+            double textX = x + ballDiameter * 0.5;
+            double textY = y + ballDiameter * 0.5 + textDown;
             CueInfoRec cir = fir.getCueRecs().get(i);
             boolean drawn = false;
             if (cir.getPlayer() == playerNumberFrom1) {
@@ -514,15 +534,18 @@ public class MatchRecord extends RecordTree {
                         gc.setFill(color);
                         gc.fillOval(x, y, ballDiameter, ballDiameter);
                         if (cir.isSnookerFreeBall()) {
+                            // 覆盖：用原本的目标
+                            gc.setFill(SnookerBall.snookerColor(cir.getTarget()));
+                            gc.fillOval(x, y, ballDiameter, ballDiameter);
                             gc.setFill(Color.WHITE);
                             gc.fillText("F",
-                                    x + ballDiameter * 0.5,
-                                    y + ballDiameter * 0.7);
+                                    textX,
+                                    textY);
                         } else if (entry.getValue() > 1) {
                             gc.setFill(Color.WHITE);
                             gc.fillText(String.valueOf(entry.getValue()),
-                                    x + ballDiameter * 0.5,
-                                    y + ballDiameter * 0.7);
+                                    textX,
+                                    textY);
                         }
                         drawn = true;
                         break;
@@ -531,16 +554,16 @@ public class MatchRecord extends RecordTree {
                 if (cir.isFoul()) {
                     gc.setFill(Color.BLACK);
                     gc.fillText("X",
-                            x + ballDiameter * 0.5,
-                            y + ballDiameter * 0.7);
+                            textX,
+                            textY);
                 }
             } else {
                 // 对手打的
                 if (cir.getGainScores()[playerNumberFrom1 - 1] != 0) {
                     gc.setFill(Color.BLACK);
                     gc.fillText("+" + cir.getGainScores()[playerNumberFrom1 - 1],
-                            x + ballDiameter * 0.5,
-                            y + ballDiameter * 0.7);
+                            textX,
+                            textY);
                 }
             }
 

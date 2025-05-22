@@ -124,6 +124,10 @@ public class CueInfoRec {
         return !isFoul() && gainScores[index] > 0 && pots != null && !pots.isEmpty();
     }
 
+    public AttemptBase getAttemptBase() {
+        return attemptBase;
+    }
+
     public int getPlayer() {
         return player;
     }

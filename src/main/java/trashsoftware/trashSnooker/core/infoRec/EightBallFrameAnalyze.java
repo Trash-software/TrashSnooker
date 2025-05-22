@@ -14,7 +14,11 @@ public class EightBallFrameAnalyze extends FrameAnalyze<FrameAnalyze.Break> {
 
         int winner = fir.winner;
         int winnerIndex = winner - 1;
-        int[] remBalls = new int[2];
+        int loserIndex = 1 - winnerIndex;
+        int[] remBalls = new int[]{7, 7};
+        int indexOnePlayBlack = -1;
+        int maxRemDiff = 0;
+        int breakPlayerIndex = fir.cueRecs.getFirst().player - 1;
 
         CueInfoRec lastCue = fir.cueRecs.getLast();
         // 分析单杆数据
@@ -27,38 +31,28 @@ public class EightBallFrameAnalyze extends FrameAnalyze<FrameAnalyze.Break> {
             int p = cue.player - 1;
             int score = cue.gainScores[p];
 
-            if (!cue.isFoul() && score > 0) {
+            if (!cue.isFoul() && (score > 0 || (i == 0 && !cue.pots.isEmpty()))) {
+                // 这里要处理开球进的情况，因为在现有算分体系下开球进球是不加分的
                 currentBreak.breakCues++;
             } else {
                 breaks[p].add(currentBreak);
-                currentBreak = new SnookerFrameAnalyze.SnookerBreak(i + 1);
+                currentBreak = new Break(i + 1);
             }
 
             if (cue.isFoul()) {
                 currentBreak.foul = true;
             }
 
-//            // 反正红球进了无论如何不捡出来
-//            remBalls -= cue.pots.getOrDefault(1, 0);
-//
-//            // 清彩
-//            if (cue.target >= 2 && !cue.isFoul() && !cue.isSnookerFreeBall()) {
-//                if (remBalls > 6) {
-//                    System.err.println("Something went wrong: when start clearing colors, remaining " +
-//                            "ball is still " + remBalls);
-//                    remBalls = 8 - cue.target;  // 这一杆开始时剩余的球数，比如黄球，8 - 2 = 6
-//                }
-//                remBalls -= cue.pots.getOrDefault(cue.target, 0);
-//            }
-//            if (remBalls == 7 && indexWhenOneRedRemain == -1) {
-//                indexWhenOneRedRemain = i;
-//            }
-//            remainingBallsCount[i] = remBalls;
-//
-//            int scoreDiff = cue.scoresAfter[0] - cue.scoresAfter[1];
-//            if (Math.abs(scoreDiff) > Math.abs(maxScoreDiff)) {
-//                maxScoreDiff = scoreDiff;
-//            }
+            for (int bi = 0; bi < 2; bi++) {
+                remBalls[bi] = 7 - cue.scoresAfter[bi];
+                if (remBalls[bi] == 0 && indexOnePlayBlack == -1) {
+                    indexOnePlayBlack = i;
+                }
+            }
+            int scoreDiff = cue.scoresAfter[0] - cue.scoresAfter[1];
+            if (Math.abs(scoreDiff) > Math.abs(maxRemDiff)) {
+                maxRemDiff = scoreDiff;
+            }
         }
 
         // catch last break, 0分的也算进来了
@@ -69,5 +63,15 @@ public class EightBallFrameAnalyze extends FrameAnalyze<FrameAnalyze.Break> {
 //            }
         }
         fillPotBreaks();
+        
+        if (breaks[winnerIndex].size() == 1 && breaks[loserIndex].isEmpty()) {
+            frameKinds.add(FrameKind.BREAK_CLEAR);
+        }
+        if (potBreaks[winnerIndex].size() == 1 && winnerIndex != breakPlayerIndex) {
+            frameKinds.add(FrameKind.CONTINUE_CLEAR);
+        }
+
+        System.out.println(breaks[0]);
+        System.out.println(breaks[1]);
     }
 }
