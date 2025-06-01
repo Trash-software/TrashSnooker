@@ -3,7 +3,7 @@ package trashsoftware.trashSnooker.core.career.championship;
 import javafx.application.Platform;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.EntireGame;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.util.Util;
 

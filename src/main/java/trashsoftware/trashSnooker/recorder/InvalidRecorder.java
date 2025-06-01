@@ -1,6 +1,5 @@
 package trashsoftware.trashSnooker.recorder;
 
-import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 
@@ -14,23 +13,22 @@ public class InvalidRecorder implements GameRecorder {
     }
 
     @Override
-    public void startRecoding() throws IOException {
-        
+    public void startRecoding() {
     }
 
     @Override
     public void stopRecording(boolean normalFinish) {
-        
+
     }
 
     @Override
     public void abort() {
-        
+
     }
 
     @Override
     public void deleteRecord() {
-        
+
     }
 
     @Override
@@ -40,11 +38,11 @@ public class InvalidRecorder implements GameRecorder {
 
     @Override
     public void recordCueAnimation(CueAnimationRec cueAnimationRec) {
-        
+
     }
 
     @Override
-    public void writeCue(CueRecord cueRecord, Movement movement, TargetRecord thisTarget, TargetRecord nextTarget, 
+    public void writeCue(CueRecord cueRecord, Movement movement, TargetRecord thisTarget, TargetRecord nextTarget,
                          CueAnimationRec cueAnimationRec) throws IOException {
 
     }
@@ -56,12 +54,12 @@ public class InvalidRecorder implements GameRecorder {
 
     @Override
     public void writeBallInHandPlacement() {
-        
+
     }
 
     @Override
     public void setCompression(int compression) {
-        
+
     }
 
     @Override
@@ -91,6 +89,6 @@ public class InvalidRecorder implements GameRecorder {
 
     @Override
     public void writeCueToStream() {
-        
+
     }
 }

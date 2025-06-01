@@ -2,11 +2,9 @@ package trashsoftware.trashSnooker.core.attempt;
 
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.CuePlayParams;
-import trashsoftware.trashSnooker.core.PlayerHand;
-import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.core.ai.AiCue;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AttackChoice;
-import trashsoftware.trashSnooker.core.ai.AttackParam;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 
@@ -56,7 +54,7 @@ public class PotAttempt extends CueAttempt {
     }
 
     public boolean isRestPot() {
-        return handSkill.hand == PlayerHand.Hand.REST;
+        return cuePlayerHand.playerHand.hand == PlayerHand.Hand.REST;
     }
 
     public GameRule getGameType() {

@@ -5,10 +5,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.attempt.AttemptBase;
 import trashsoftware.trashSnooker.core.attempt.CueAttempt;
 import trashsoftware.trashSnooker.core.FoulInfo;
-import trashsoftware.trashSnooker.core.PlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.fxml.App;
@@ -168,7 +167,7 @@ public class MatchInfoRec {
                            int target,
                            Ball specifiedTarget,
                            int firstHit,
-                           PlayerHand.Hand hand,
+                           PlayerHand.CueHand cueHand,
                            Map<Integer, Integer> pots,
                            int[] gainScores,
                            int[] scoresAfter,
@@ -184,7 +183,7 @@ public class MatchInfoRec {
             cir.specifiedTarget = specifiedTarget.getValue();
         }
         cir.firstHit = firstHit;
-        cir.hand = hand;
+        cir.hand = cueHand;
         cir.pots = pots;
         cir.gainScores = gainScores;
         cir.scoresAfter = scoresAfter;

@@ -2,7 +2,6 @@ package trashsoftware.trashSnooker.core.career.championship;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.util.EventLogger;
 

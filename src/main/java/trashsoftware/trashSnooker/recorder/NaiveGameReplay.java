@@ -6,6 +6,7 @@ import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -84,6 +85,8 @@ public class NaiveGameReplay extends GameReplay {
             EventLogger.warning("Replay cue is null: " + cueBrandId);
             cueBrand = DataLoader.getInstance().getStdBreakCueBrand();  // 随便选一个让它不是null
         }
+        
+        currentCueRecord.cueHand.setCueBrand(cueBrand);
         InGamePlayer cuing = getCuingIgp();
         cuing.getCueSelection().selectByBrand(cueBrand);
         
@@ -159,6 +162,9 @@ public class NaiveGameReplay extends GameReplay {
     private void readCueRecordAndTargets() throws IOException {
         byte[] buf = new byte[NaiveActualRecorder.CUE_RECORD_LENGTH];
         if (inputStream.read(buf) != buf.length) throw new IOException();
+        
+        PlayerHand.Hand hand = PlayerHand.Hand.values()[buf[81] & 0xff];
+        PlayerHand.CueExtension extension = PlayerHand.CueExtension.values()[buf[82] & 0xff];
 
         currentCueRecord = new CueRecord(
                 buf[0] == 1 ? p1 : p2,
@@ -173,7 +179,7 @@ public class NaiveGameReplay extends GameReplay {
                 Util.bytesToDouble(buf, 64),
                 Util.bytesToDouble(buf, 72),
                 GamePlayStage.values()[buf[80] & 0xff],
-                PlayerHand.Hand.values()[buf[81] & 0xff]
+                new PlayerHand.CueHand(hand, null, extension)
         );
 
         thisTarget = new TargetRecord(

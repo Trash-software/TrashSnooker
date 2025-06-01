@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.ai;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -47,11 +48,12 @@ public class AttackParam {
         double totalMove = gameValues.estimatedMoveDistance(phy, whiteInitSpeed);
 
         // 预估台泥变线偏差
-        double moveT = 1.0;
+        double moveT;
         try {
             moveT = gameValues.estimateMoveTime(phy, whiteInitSpeed, totalDt);
         } catch (IllegalArgumentException iae) {
             // do nothing
+            moveT = 10.0;
         }
 //            double whiteT = gameValues.estimateMoveTime(phy, )
         double pathChange = moveT * (phy.cloth.goodness.errorFactor * TableCloth.RANDOM_ERROR_FACTOR + 

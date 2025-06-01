@@ -1,9 +1,10 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.person;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.CuePlayType;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.cue.CueSize;
@@ -112,7 +113,7 @@ public class PlayerPerson {
             aiPlayStyle = null;
         }
 
-        PlayerPerson.HandBody handBody;
+        HandBody handBody;
         if (personObj.has("dominant")) {
             // 这里并不一定真的是
             JSONObject primaryObj = personObj.getJSONObject("dominant");
@@ -1091,180 +1092,5 @@ public class PlayerPerson {
             }
         }
     }
-
-    public static class HandBody implements Cloneable {
-//        public static final HandBody DEFAULT =
-//                new HandBody(180.0, 1.0, 50.0, 100.0, 80.0);
-
-        public final double height;
-        public final double bodyWidth;
-        private final boolean leftHandRest;    // 是否用左手拿架杆
-
-        private PlayerHand[] precedence = new PlayerHand[3];
-
-        transient double nonDominantGeneral;
-        transient double restGeneral;
-
-        public HandBody(double height, double bodyWidth,
-                        PlayerHand left, PlayerHand right, PlayerHand rest) {
-            this.height = height;
-            this.bodyWidth = bodyWidth;
-
-            if (left.hand != PlayerHand.Hand.LEFT || right.hand != PlayerHand.Hand.RIGHT || rest.hand != PlayerHand.Hand.REST) {
-                throw new IllegalArgumentException("Wrong hands");
-            }
-
-            precedence[0] = left;
-            precedence[1] = right;
-            precedence[2] = rest;
-
-            Arrays.sort(precedence);
-            this.leftHandRest = precedence[0].hand == PlayerHand.Hand.RIGHT;
-
-//            System.out.println("---Precedence:");
-//            for (PlayerHand ph : precedence) {
-//                System.out.println(ph.hand + ": " + ph.average());
-//            }
-
-            PlayerHand dominant = getDominantHand();
-            double dominantAvg = dominant.average();
-            PlayerHand nonDominant = getAntiHand();
-            double nonDomAvg = nonDominant.average();
-            PlayerHand restHand = getRest();
-            double restAvg = restHand.average();
-
-            this.nonDominantGeneral = nonDomAvg / dominantAvg;
-            this.restGeneral = restAvg / dominantAvg;
-        }
-
-        public static HandBody createFromPrimary(double height, double bodyWidth,
-                                                 PlayerHand primary, double secondarySkill, double restSkill) {
-            boolean leftHandPrimary = primary.hand == PlayerHand.Hand.LEFT;
-            PlayerHand secondary = primary.derive(
-                    leftHandPrimary ? PlayerHand.Hand.RIGHT : PlayerHand.Hand.LEFT,
-                    secondarySkill,
-                    secondarySkill
-            );
-            PlayerHand rest = primary.derive(PlayerHand.Hand.REST,
-                    restSkill,
-                    restSkill * PlayerHand.REST_NATIVE_POWER_MUL);
-            return new HandBody(height, bodyWidth,
-                    leftHandPrimary ? primary : secondary,
-                    leftHandPrimary ? secondary : primary,
-                    rest);
-        }
-
-        public static HandBody createFromLeftRight(double height, double bodyWidth,
-                                                   PlayerHand primary,
-                                                   double leftSkill, double rightSkill, double restSkill) {
-            boolean leftHandPrimary = primary.hand == PlayerHand.Hand.LEFT;
-
-            double secondarySkill = leftHandPrimary ? rightSkill : leftSkill;
-
-            PlayerHand secondary = primary.derive(
-                    leftHandPrimary ? PlayerHand.Hand.RIGHT : PlayerHand.Hand.LEFT,
-                    secondarySkill,
-                    secondarySkill
-            );
-            PlayerHand rest = primary.derive(PlayerHand.Hand.REST,
-                    restSkill,
-                    restSkill * 0.8);
-            return new HandBody(height, bodyWidth,
-                    leftHandPrimary ? primary : secondary,
-                    leftHandPrimary ? secondary : primary,
-                    rest);
-        }
-
-        public int precedenceOfHand(PlayerHand.Hand hand) {
-            for (int i = 0; i < precedence.length; i++) {
-                if (precedence[i].hand == hand) return i;
-            }
-            throw new IndexOutOfBoundsException();
-        }
-
-        @Override
-        protected HandBody clone() throws CloneNotSupportedException {
-            HandBody clone = (HandBody) super.clone();
-            clone.precedence = new PlayerHand[precedence.length];
-            for (int i = 0; i < clone.precedence.length; i++) {
-                clone.precedence[i] = precedence[i].clone();
-            }
-            return clone;
-        }
-
-        @NotNull
-        public PlayerHand getPrimary() {
-            return precedence[0];
-        }
-
-        @NotNull
-        public PlayerHand getSecondary() {
-            return precedence[1];
-        }
-
-        @NotNull
-        public PlayerHand getThird() {
-            return precedence[2];
-        }
-
-        public boolean isLeftHandRest() {
-            return leftHandRest;
-        }
-
-        @NotNull
-        public PlayerHand getDominantHand() {
-            PlayerHand left = getLeft();
-            PlayerHand right = getRight();
-            return left.average() > right.average() ? left : right;
-        }
-
-        @NotNull
-        public PlayerHand getAntiHand() {
-            PlayerHand left = getLeft();
-            PlayerHand right = getRight();
-            return left.average() <= right.average() ? left : right;
-        }
-
-        public PlayerHand getLeft() {
-            for (PlayerHand hs : precedence) {
-                if (hs.hand == PlayerHand.Hand.LEFT) return hs;
-            }
-            throw new RuntimeException("Precedences are: " + Arrays.stream(precedence).map(k -> k.hand).toList());
-        }
-
-        public double getNonDominantGeneral() {
-            return nonDominantGeneral;
-        }
-
-        public double getRestGeneral() {
-            return restGeneral;
-        }
-
-        public double getHandGeneralMultiplier(PlayerHand hand) {
-            if (hand == getDominantHand()) return 1.0;
-            else if (hand == getAntiHand()) return nonDominantGeneral;
-            else return restGeneral;
-        }
-
-        public PlayerHand getRight() {
-            for (PlayerHand hs : precedence) {
-                if (hs.hand == PlayerHand.Hand.RIGHT) return hs;
-            }
-            throw new RuntimeException("Precedences are: " + Arrays.stream(precedence).map(k -> k.hand).toList());
-        }
-
-        public PlayerHand getRest() {
-            for (PlayerHand hs : precedence) {
-                if (hs.hand == PlayerHand.Hand.REST) return hs;
-            }
-            throw new RuntimeException("Precedences are: " + Arrays.stream(precedence).map(k -> k.hand).toList());
-        }
-
-        public PlayerHand getHandSkillByHand(PlayerHand.Hand hand) {
-            for (PlayerHand handSkill : precedence) {
-                if (handSkill.hand == hand) return handSkill;
-            }
-            throw new RuntimeException("No such hand");
-        }
-    }
+    
 }

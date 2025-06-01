@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.fxml.widgets;
 
-import trashsoftware.trashSnooker.core.PlayerHand;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.fxml.CareerView;
 import trashsoftware.trashSnooker.util.DataLoader;

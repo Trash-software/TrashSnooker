@@ -6,6 +6,9 @@ import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 
@@ -430,7 +433,7 @@ public class Analyzer {
             boolean isAttack
     ) {
 
-        PlayerHand playerHand = cueParams.getHandSkill();
+        CuePlayerHand playerHand = cueParams.getCuePlayerHand();
         PlayerPerson playerPerson = aiPlayer.getPlayerPerson();
         AiPlayStyle aps = playerPerson.getAiPlayStyle();
 //            double handSdMul = PlayerPerson.HandBody.getSdOfHand(attackChoice.handSkill);

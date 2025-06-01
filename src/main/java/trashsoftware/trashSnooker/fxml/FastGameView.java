@@ -15,6 +15,7 @@ import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LetBall;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.training.Challenge;
 import trashsoftware.trashSnooker.core.training.TrainType;

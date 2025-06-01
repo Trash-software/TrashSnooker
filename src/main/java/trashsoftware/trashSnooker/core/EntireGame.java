@@ -10,12 +10,12 @@ import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.infoRec.MatchInfoRec;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.GeneralSaveManager;
-import trashsoftware.trashSnooker.util.PermanentCounters;
 import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 import trashsoftware.trashSnooker.util.db.EntireGameRecord;
@@ -23,8 +23,6 @@ import trashsoftware.trashSnooker.util.db.EntireGameTitle;
 
 import java.io.File;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 

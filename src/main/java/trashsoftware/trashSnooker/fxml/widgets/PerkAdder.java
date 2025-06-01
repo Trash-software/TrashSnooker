@@ -12,8 +12,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import trashsoftware.trashSnooker.core.PlayerHand;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
 

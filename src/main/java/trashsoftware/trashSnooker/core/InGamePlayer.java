@@ -3,8 +3,6 @@ package trashsoftware.trashSnooker.core;
 import javafx.scene.layout.Pane;
 import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.attempt.AttemptBase;
-import trashsoftware.trashSnooker.core.attempt.CueAttempt;
 import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.career.CareerManager;
@@ -12,6 +10,7 @@ import trashsoftware.trashSnooker.core.career.InventoryManager;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.FastGameView;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -162,11 +161,11 @@ public class InGamePlayer {
     
     private double cuePsyChangeBase() {
         return Algebra.shiftRangeSafe(0, 100, 
-                0.05, 0, playerPerson.psyRua);
+                0.05, 0, playerPerson.getPsyRua());
     }
     
     private void regularizePsyStatus() {
-        psyStatus = Math.max(playerPerson.psyRua / 100, Math.min(1.0, psyStatus));
+        psyStatus = Math.max(playerPerson.getPsyRua() / 100, Math.min(1.0, psyStatus));
         System.out.println(playerPerson.getName() + " psy status: " + psyStatus);
     }
     
@@ -181,7 +180,7 @@ public class InGamePlayer {
     }
     
     public void adjustPsyStatusFrameBegin(double frameImportance) {
-        double avg = (playerPerson.psyNerve + playerPerson.psyRua) / 2;
+        double avg = (playerPerson.psyNerve + playerPerson.getPsyRua()) / 2;
         double reference = 100 - (100 - avg) * frameImportance;
         if (psyStatus > reference) {
             psyStatus = (psyStatus + reference) / 2;

@@ -7,6 +7,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Scale;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.PlanarCueBrand;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public class CueModel2D extends CueModel {
@@ -172,7 +173,7 @@ public class CueModel2D extends CueModel {
     public void setCueRotation(double rotationDeg) {
     }
 
-    //    public static List<CueModel> getAllCueModels() {
-//        return allCueModels;
-//    }
+    @Override
+    public void setExtension(PlayerHand.CueExtension extension) {
+    }
 }

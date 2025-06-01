@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.cue;
 
 import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 
 import java.util.Objects;
 
@@ -141,6 +142,15 @@ public abstract class CueBrand {
     }
 
     public abstract double getWoodPartLength();
+    
+    public double getExtensionLength(PlayerHand.CueExtension cueExtension) {
+        return switch (cueExtension) {
+            case NO -> 0;
+            case SHORT -> 240;
+            case SOCKET -> 600;
+            case SOCKET_DOUBLE -> 1200;
+        };
+    }
 
     @Override
     public String toString() {

@@ -5,16 +5,16 @@
       "playerNumber": 1,
       "gameRule": "SNOOKER",
       "handFeelEffort": 1.15,
-      "psyStatus": 0.9475,
+      "psyStatus": 1,
       "person": "Neil Robertson",
       "playerType": "COMPUTER"
     },
-    "p1Wins": 0,
+    "p1Wins": 1,
     "p2": {
       "playerNumber": 2,
       "gameRule": "SNOOKER",
       "handFeelEffort": 1,
-      "psyStatus": 1,
+      "psyStatus": 0.967000000000001,
       "person": "custom_DA1B9E98710BC5F5",
       "playerType": "PLAYER"
     },
@@ -30,7 +30,10 @@
         "holeSizeOrdinal": 2
       }
     },
-    "winRecords": {"1": 2},
+    "winRecords": {
+      "1": 2,
+      "2": 1
+    },
     "p2Wins": 1,
     "startTime": 1748765377831,
     "p1BreakLoseChance": 0,
@@ -40,7 +43,7 @@
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
-    "p1Breaks": true
+    "p1Breaks": false
   },
   "p2": "custom_DA1B9E98710BC5F5",
   "stage": "QUARTER_FINAL"

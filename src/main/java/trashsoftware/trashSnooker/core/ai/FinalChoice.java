@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 import java.util.ArrayList;

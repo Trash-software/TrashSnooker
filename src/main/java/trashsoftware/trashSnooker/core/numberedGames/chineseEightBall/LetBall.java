@@ -1,9 +1,7 @@
 package trashsoftware.trashSnooker.core.numberedGames.chineseEightBall;
 
-import trashsoftware.trashSnooker.core.InGamePlayer;
 import trashsoftware.trashSnooker.core.LetScoreOrBall;
-import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 
 import java.util.HashMap;
 import java.util.Map;

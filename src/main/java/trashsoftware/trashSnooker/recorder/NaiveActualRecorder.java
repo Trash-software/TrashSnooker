@@ -60,7 +60,8 @@ public class NaiveActualRecorder extends ActualRecorder {
         Util.doubleToBytes(cueRecord.cueAngle, buf, 72);
 
         buf[80] = (byte) cueRecord.playStage.ordinal();
-        buf[81] = (byte) cueRecord.hand.ordinal();
+        buf[81] = (byte) cueRecord.cueHand.hand.ordinal();
+        buf[82] = (byte) cueRecord.cueHand.extension.ordinal();
 
         outputStream.write(buf);
     }

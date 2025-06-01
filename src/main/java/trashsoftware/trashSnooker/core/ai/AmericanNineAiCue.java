@@ -7,6 +7,7 @@ import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallPlayer;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineBallPlayer> {
@@ -55,7 +56,7 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
                 8.0,
                 game,
                 aiPlayer.getInGamePlayer(),
-                aiPlayer.getPlayerPerson().handBody.getPrimary()
+                CuePlayerHand.makeDefault(aiPlayer.getInGamePlayer())
         );
         CuePlayParams cpp = CuePlayParams.makeIdealParams(
                 unitXY[0],

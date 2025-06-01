@@ -20,6 +20,7 @@ import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LisEightGame;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
@@ -514,7 +515,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 recordedTarget,
                 specifiedTarget,
                 whiteFirstCollide == null ? 0 : whiteFirstCollide.value,
-                recordedCueParams == null ? PlayerHand.Hand.RIGHT : recordedCueParams.cueParams.getHandSkill().hand,
+                recordedCueParams == null ?
+                        PlayerHand.CueHand.makeDefault(PlayerHand.Hand.RIGHT, lastCuedPlayer.getInGamePlayer()) : 
+                        recordedCueParams.cueParams.getCuePlayerHand().toCueHand(),
                 newlyPot,
                 new int[]{player1.getScore() - scoresBefore[0], player2.getScore() - scoresBefore[1]},
                 new int[]{player1.getScore(), player2.getScore()},

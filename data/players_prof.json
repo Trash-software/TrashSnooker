@@ -474,30 +474,82 @@
       ]
     },
     "Trump": {
-      "spin": 98.5,
       "precision": 97,
       "anglePrecision": 1.05,
       "longPrecision": 1.15,
       "name": "Judd Trump",
-      "maxPower": 99,
-      "controllablePower": 92,
       "solving": 83,
-      "pullDt": [
-        60.0,
-        180.0,
-        60,
-        160
-      ],
+      "dominant": {
+        "hand": "left",
+        "spin": 98.5,
+        "maxPower": 99,
+        "controllablePower": 92,
+        "powerControl": 96.5,
+        "pullDt": [
+          60.0,
+          180.0,
+          60,
+          160
+        ],
+        "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
+        "cueSwingMag": 4,
+        "cuePoints": [
+          0,
+          0
+        ],
+        "cuePrecisions": [
+          94,
+          87
+        ]
+      },
+      "nonDominant": {
+        "hand": "right",
+        "spin": 87,
+        "maxPower": 75,
+        "controllablePower": 60,
+        "powerControl": 83.5,
+        "pullDt": [
+          50.0,
+          160.0,
+          50,
+          150
+        ],
+        "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
+        "cueSwingMag": 8,
+        "cuePoints": [
+          0,
+          0
+        ],
+        "cuePrecisions": [
+          85,
+          77
+        ]
+      },
+      "rest": {
+        "hand": "rest",
+        "useHand": "right",
+        "spin": 89.5,
+        "maxPower": 78,
+        "controllablePower": 68,
+        "powerControl": 86,
+        "pullDt": [
+          40.0,
+          140.0,
+          60,
+          150
+        ],
+        "cuePlayType": "p1,h500,e500;r,r,l,l,r,r,l,l",
+        "cueSwingMag": 4,
+        "cuePoints": [
+          0,
+          0
+        ],
+        "cuePrecisions": [
+          88,
+          80
+        ]
+      },
       "aimingOffset": -0.25,
-      "cuePlayType": "p1,h800,e500;r,r,l,l,r,r,l,l",
-      "cueSwingMag": 4,
-      "cuePointMuSigma": [
-        0,
-        2,
-        0,
-        5
-      ],
-      "powerControl": 96.5,
       "privateCues": [
         "profSnookerCue"
       ],
@@ -526,7 +578,7 @@
       },
       "games": {
         "snooker": 1.0,
-        "miniSnooker": 1.0,
+        "miniSnooker": 0.98,
         "americanNine": 0.9
       }
     },

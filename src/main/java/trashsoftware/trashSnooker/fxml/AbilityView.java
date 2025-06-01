@@ -3,11 +3,8 @@ package trashsoftware.trashSnooker.fxml;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.widgets.AbilityShower;
-import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
 
 import java.net.URL;
 import java.util.ResourceBundle;

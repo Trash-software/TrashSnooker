@@ -2,6 +2,8 @@ package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.attempt.CueType;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,8 +92,8 @@ public class AiCueResult {
         return targetDirHole;
     }
 
-    public PlayerHand getHandSkill() {
-        return cueParams.getHandSkill();
+    public CuePlayerHand getCuePlayerHand() {
+        return cueParams.getCuePlayerHand();
     }
 
     public CueType getCueType() {

@@ -1,9 +1,14 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.person;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.CuePlayType;
+import trashsoftware.trashSnooker.core.InGamePlayer;
+import trashsoftware.trashSnooker.core.cue.Cue;
+import trashsoftware.trashSnooker.core.cue.CueBrand;
+import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.util.*;
@@ -27,6 +32,8 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
     final double cueSwingMag;
     final CuePlayType cuePlayType;
     public final Hand hand;
+    
+    @Nullable private Hand restUseHand;  // 架杆用哪只手
     
     public PlayerHand(Hand hand,
                       double maxPowerPercentage,
@@ -54,7 +61,7 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
         cuePointMuSigmaXY[3] = Math.max(cuePointMuSigmaXY[3], 0.1);
     }
     
-    public static PlayerHand fromJson(JSONObject json, 
+    public static PlayerHand fromJson(@Nullable JSONObject json, 
                                       @Nullable PlayerHand reference, 
                                       double skillMul, 
                                       double powerMul) {
@@ -128,7 +135,7 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
         }
         
         try {
-            return new PlayerHand(
+            PlayerHand ph = new PlayerHand(
                     hand,
                     json.getDouble("maxPower"),
                     json.getDouble("controllablePower"),
@@ -139,6 +146,15 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
                     json.has("powerControl") ? json.getDouble("powerControl") : Objects.requireNonNull(reference).powerControl * skillMul,
                     cuePlayType
             );
+            if (hand == Hand.REST) {
+                if (json.has("useHand")) {
+                    ph.restUseHand = Hand.valueOf(json.getString("useHand").toUpperCase(Locale.ROOT));
+                } else if (reference != null) {
+                    ph.restUseHand = reference.hand;
+                }
+            }
+            
+            return ph;
         } catch (NullPointerException e) {
             throw new RuntimeException("Hand json has missing values, but reference object is not provided", e);
         }
@@ -154,6 +170,10 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
         obj.put("spin", getMaxSpinPercentage());
         obj.put("maxPower", getMaxPowerPercentage());
         obj.put("controllablePower", getControllablePowerPercentage());
+        
+        if (hand == Hand.REST && restUseHand != null) {
+            obj.put("useHand", restUseHand.name());
+        }
 
         JSONArray cueAction = new JSONArray(List.of(getMinPullDt(), getMaxPullDt(), getMinExtension(), getMaxExtension()));
         obj.put("pullDt", cueAction);
@@ -169,12 +189,7 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
         });
         obj.put("cuePoints", cuePoints);
         obj.put("cuePrecisions", cuePrecisions);
-
-//        System.out.println("===");
-//        System.out.println("Musig: " + Arrays.toString(cuePointMuSigmaXY));
-//        System.out.println("Cue pre: " + cuePrecisions);
         
-//        obj.put("cuePointMuSigma", cuePoint);
         obj.put("powerControl", getPowerControl());
 
         obj.put("cuePlayType", cuePlayType.toJsonStr());
@@ -216,6 +231,11 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
         copy.cuePointMuSigmaXY = cuePointMuSigmaXY.clone();
         
         return copy;
+    }
+
+    @Nullable
+    public Hand getRestUseHand() {
+        return restUseHand;
     }
 
     /**
@@ -374,6 +394,83 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
             String key = name() + "_" + "HAND";
             key = Util.toLowerCamelCase(key);
             return strings.getString(key);
+        }
+    }
+    
+    public static class CueHand {
+        public final Hand hand;
+        private CueBrand cueBrand;
+        public final CueExtension extension;
+        
+        public CueHand(Hand hand, CueBrand cueBrand, CueExtension cueExtension) {
+            this.hand = hand;
+            this.cueBrand = cueBrand;
+            this.extension = cueExtension;
+        }
+        
+        public static CueHand makeDefault(Hand hand, @Nullable InGamePlayer igp) {
+            CueBrand brand = igp == null ? 
+                    DataLoader.getInstance().getExampleCue() : 
+                    igp.getCueSelection().getSelected().brand;
+            
+            return new CueHand(
+                    hand,
+                    brand, 
+                    CueExtension.NO
+            );
+        }
+
+        public void setCueBrand(CueBrand cueBrand) {
+            if (this.cueBrand != null) {
+                System.err.println("Overriding CueBrand!");
+            }
+            this.cueBrand = cueBrand;
+        }
+
+        public CueBrand getCueBrand() {
+            return cueBrand;
+        }
+
+        public static CueHand fromJson(JSONObject json) {
+            return new CueHand(
+                    Hand.valueOf(json.getString("hand")),
+                    DataLoader.getInstance().getCueById(json.getString("brand")),
+                    CueExtension.valueOf(json.getString("extension"))
+            );
+        }
+        
+        public JSONObject toJson() {
+            JSONObject json = new JSONObject();
+            json.put("hand", hand.name());
+            json.put("extension", extension.name());
+            json.put("brand", cueBrand.getCueId());
+            return json;
+        }
+    }
+    
+    public enum CueExtension {
+        NO(1.0, false),
+        SHORT(0.92, false),
+        SOCKET(0.85, true),
+        SOCKET_DOUBLE(0.725, true) {
+            @Override
+            public String getReadable(ResourceBundle strings) {
+                return SOCKET.getReadable(strings) + " x2";
+            }
+        };
+        
+        public static final double SOCKET_COVER_LENGTH = 150.0;  // 套筒套多深
+        public final double factor;
+        public final boolean socketLike;
+        
+        CueExtension(double factor, boolean socketLike) {
+            this.factor = factor;
+            this.socketLike = socketLike;
+        }
+        
+        public String getReadable(ResourceBundle strings) {
+            String key = Util.toLowerCamelCase("EXTENSION_" + name());
+            return strings.containsKey(key) ? strings.getString(key) : key;
         }
     }
 }

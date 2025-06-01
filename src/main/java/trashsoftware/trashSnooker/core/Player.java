@@ -4,6 +4,7 @@ import trashsoftware.trashSnooker.core.attempt.CueAttempt;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 
 import java.util.*;
 

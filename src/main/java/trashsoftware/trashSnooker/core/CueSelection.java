@@ -60,7 +60,19 @@ public class CueSelection {
     }
 
     public CueAndBrand getSelected() {
+        if (selected == null) {
+            select(available.getFirst());
+        }
         return selected;
+    }
+    
+    public CueAndBrand getByBrand(CueBrand brand) {
+        for (CueAndBrand cab : available) {
+            if (cab.brand.equals(brand)) {
+                return cab;
+            }
+        }
+        throw new IllegalArgumentException("No brand '" + brand + "' of this player");
     }
     
     public boolean hasThisBrand(CueBrand brand) {

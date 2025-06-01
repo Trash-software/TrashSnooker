@@ -59,4 +59,5 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.res;
     exports trashsoftware.trashSnooker.core.cue;
     exports trashsoftware.trashSnooker.core.attempt;
+    exports trashsoftware.trashSnooker.core.person;
 }

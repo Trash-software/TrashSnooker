@@ -9,6 +9,10 @@ import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
+import trashsoftware.trashSnooker.core.person.HandBody;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
@@ -758,12 +762,13 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 DEFENSE_SPIN_POINTS
         );
 
-        PlayerHand handSkill = CuePlayParams.getPlayableHand(
+        CuePlayerHand handSkill = HandBody.getBestHandFromPosition(
                 game.getCueBall().getX(), game.getCueBall().getY(),
                 directionVec[0], directionVec[1],
                 cuePointAngle[2],
                 game.getGameValues().table,
-                game.getCuingPlayer().getPlayerPerson()
+                game.getCuingPlayer().getPlayerPerson(),
+                cue.getBrand()
         );
 //        double power = random.nextDouble() *
 //                (handSkill.getMaxPowerPercentage() - 20.0) + 20.0;
@@ -1314,14 +1319,15 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     DEFENSE_SPIN_POINTS
             );
 
-            PlayerHand handSkill = CuePlayParams.getPlayableHand(
+            CuePlayerHand handSkill = HandBody.getBestHandFromPosition(
                     whitePos[0],
                     whitePos[1],
                     unitXY[0],  // fixme: 这里存疑
                     unitXY[1],
                     cuePointAngle[2],
                     copy.getGameValues().table,
-                    playerPerson
+                    playerPerson,
+                    cue.getBrand()
             );
 
             double ctrlPowerLimit = CuePlayParams.powerWithCueAngle(

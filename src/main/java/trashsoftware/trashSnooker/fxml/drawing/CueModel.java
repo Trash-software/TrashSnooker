@@ -6,6 +6,7 @@ import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.PlanarCueBrand;
 import trashsoftware.trashSnooker.core.cue.TexturedCueBrand;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.fxml.GameView;
 
 public abstract class CueModel extends Group {
@@ -39,7 +40,8 @@ public abstract class CueModel extends Group {
                      double pointingUnitX,
                      double pointingUnitY,
                      double cueAngleDeg,
-                     double scale) {
+                     double scale,
+                     PlayerHand.CueExtension extension) {
         setTranslateX(correctedTipX);
         setTranslateY(correctedTipY);
 
@@ -49,6 +51,7 @@ public abstract class CueModel extends Group {
         baseRotate.setAngle(Math.toDegrees(angleRad));
 
         setCueAngle(cueAngleDeg);
+        setExtension(extension);
 
         setVisible(true);
     }
@@ -64,4 +67,6 @@ public abstract class CueModel extends Group {
     public abstract void redraw();
 
     public abstract void setCueRotation(double rotationDeg);
+    
+    public abstract void setExtension(PlayerHand.CueExtension extension);
 }

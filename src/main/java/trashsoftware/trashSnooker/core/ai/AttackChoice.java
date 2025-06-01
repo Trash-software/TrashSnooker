@@ -6,6 +6,9 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.attempt.CueType;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
+import trashsoftware.trashSnooker.core.person.HandBody;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 import java.util.Arrays;
@@ -27,7 +30,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
     protected double[] cueDirectionUnitVector;
     protected double[] collisionPos;
     protected double[] holeOpenPos;  // 洞口瞄准点的坐标，非洞底
-    protected PlayerHand handSkill;
+    protected CuePlayerHand handSkill;
 
     int attackTarget;
     double targetPrice;
@@ -60,6 +63,45 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
     @Override
     public int compareTo(@NotNull AttackChoice o) {
         return -Double.compare(this.defaultRef.price, o.defaultRef.price);
+    }
+
+    private static AttackParam createDefaultRef(AttackChoice attackChoice,
+                                                Game<?, ?> game,
+                                                Phy phy,
+                                                InGamePlayer igp,
+                                                CuePlayerHand playerHand) {
+        AttackParam drNormalPower = new AttackParam(
+                attackChoice,
+                game,
+                phy,
+                CueParams.createBySelected(
+                        45,
+                        0,
+                        0,
+                        Values.DEFAULT_CUE_ANGLE,
+                        game,
+                        igp,
+                        playerHand
+                )
+        );
+
+        AttackParam drSmallPower = new AttackParam(
+                attackChoice,
+                game,
+                phy,
+                CueParams.createBySelected(
+                        15,
+                        0,
+                        0,
+                        Values.DEFAULT_CUE_ANGLE,
+                        game,
+                        igp,
+                        playerHand
+                )
+        );
+
+        if (drSmallPower.potProb > drNormalPower.potProb) return drSmallPower;
+        else return drNormalPower;
     }
 
     public static class DoubleAttackChoice extends AttackChoice {
@@ -95,12 +137,13 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
 
             double[] ballOrigPos = aiming.targetPos;
 
-            PlayerHand handSkill = CuePlayParams.getPlayableHand(
+            CuePlayerHand handSkill = HandBody.getBestHandFromPosition(
                     whitePos[0], whitePos[1],
                     cueDirUnit[0], cueDirUnit[1],
                     Values.DEFAULT_CUE_ANGLE,  // todo
                     game.getGameValues().table,
-                    attackingPlayer.getPlayerPerson()
+                    attackingPlayer.getPlayerPerson(),
+                    attackingPlayer.getInGamePlayer().getCueSelection().getSelected().brand
             );
 
             double[] collisionPos = new double[]{collisionPointX, collisionPointY};
@@ -154,19 +197,8 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             ac.targetPrice = game.priceOfTarget(attackTarget, aiming.target, attackingPlayer, lastAiPottedBall);
 
             // 随便创建一个，用于评估难度
-            ac.defaultRef = new AttackParam(
-                    ac,
-                    game,
-                    phy,
-                    CueParams.createBySelected(
-                            30,
-                            0,
-                            0,
-                            5.0,
-                            game, attackingPlayer.getInGamePlayer(),
-                            handSkill
-                    )
-            );
+            ac.defaultRef = createDefaultRef(ac,
+                    game, phy, attackingPlayer.getInGamePlayer(), handSkill);
 
             return ac;
         }
@@ -242,12 +274,13 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
                 ballOrigPos = new double[]{ball.getX(), ball.getY()};
             }
 
-            PlayerHand handSkill = CuePlayParams.getPlayableHand(
+            CuePlayerHand handSkill = HandBody.getBestHandFromPosition(
                     whitePos[0], whitePos[1],
                     cueDirUnit[0], cueDirUnit[1],
                     Values.DEFAULT_CUE_ANGLE,  // todo
                     game.getGameValues().table,
-                    attackingPlayer.getPlayerPerson()
+                    attackingPlayer.getPlayerPerson(),
+                    attackingPlayer.getInGamePlayer().getCueSelection().getSelected().brand
             );
 
             double[] collisionPos = new double[]{collisionPointX, collisionPointY};
@@ -290,19 +323,8 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             directAttackChoice.targetPrice = game.priceOfTarget(attackTarget, ball, attackingPlayer, lastAiPottedBall);
 
             // 随便创建一个，用于评估难度
-            directAttackChoice.defaultRef = new AttackParam(
-                    directAttackChoice,
-                    game,
-                    phy,
-                    CueParams.createBySelected(
-                            30,
-                            0,
-                            0,
-                            5.0,
-                            game, attackingPlayer.getInGamePlayer(),
-                            handSkill
-                    )
-            );
+            directAttackChoice.defaultRef = createDefaultRef(directAttackChoice,
+                    game, phy, attackingPlayer.getInGamePlayer(), handSkill);
 
             return directAttackChoice;
         }

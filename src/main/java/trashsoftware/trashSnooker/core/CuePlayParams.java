@@ -4,6 +4,9 @@ import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.core.person.HandBody;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -161,84 +164,9 @@ public class CuePlayParams {
         return Algebra.rotateVector(cueDirX, cueDirY, -offsetAngleRad);
     }
 
-    /**
-     * 返回这个位置可用的所有手，以优先级排序
-     */
-    public static List<PlayerHand.Hand> getPlayableHands(double whiteX, double whiteY,
-                                                         double aimingX, double aimingY,
-                                                         double cueAngleDeg,
-                                                         TableMetrics tableMetrics,
-                                                         PlayerPerson person) {
-        List<PlayerHand.Hand> result = new ArrayList<>();
-        result.add(PlayerHand.Hand.REST);
-
-        double[][] standingPosLeft = personStandingPosition(whiteX, whiteY,
-                aimingX, aimingY,
-                cueAngleDeg,
-                person, PlayerHand.Hand.LEFT);
-
-        if (!tableMetrics.isInOuterTable(standingPosLeft[0][0], standingPosLeft[0][1]) ||
-                !tableMetrics.isInOuterTable(standingPosLeft[1][0], standingPosLeft[1][1])) {
-            result.add(PlayerHand.Hand.LEFT);
-        }
-
-        double[][] standingPosRight = personStandingPosition(whiteX, whiteY,
-                aimingX, aimingY,
-                cueAngleDeg,
-                person, PlayerHand.Hand.RIGHT);
-
-        if (!tableMetrics.isInOuterTable(standingPosRight[0][0], standingPosRight[0][1]) ||
-                !tableMetrics.isInOuterTable(standingPosRight[1][0], standingPosRight[1][1])) {
-            result.add(PlayerHand.Hand.RIGHT);
-        }
-
-        result.sort(Comparator.comparingInt(person.handBody::precedenceOfHand));
-
-        return result;
-    }
-
-    public static PlayerHand getPlayableHand(double whiteX, double whiteY,
-                                             double aimingX, double aimingY,
-                                             double cueAngleDeg,
-                                             TableMetrics tableMetrics,
-                                             PlayerPerson person) {
-        PlayerHand primary = person.handBody.getPrimary();
-        if (primary.hand == PlayerHand.Hand.REST) {
-            return primary;
-        }
-
-        double[][] standingPosPri = personStandingPosition(whiteX, whiteY,
-                aimingX, aimingY,
-                cueAngleDeg,
-                person, primary.hand);
-
-        if (!tableMetrics.isInOuterTable(standingPosPri[0][0], standingPosPri[0][1]) ||
-                !tableMetrics.isInOuterTable(standingPosPri[1][0], standingPosPri[1][1])) {
-            return primary;
-        }
-
-        PlayerHand secondary = person.handBody.getSecondary();
-        if (secondary.hand == PlayerHand.Hand.REST) {
-            return secondary;
-        }
-        double[][] standingPosSec = personStandingPosition(whiteX, whiteY,
-                aimingX, aimingY,
-                cueAngleDeg,
-                person, secondary.hand);
-
-        if (!tableMetrics.isInOuterTable(standingPosSec[0][0], standingPosSec[0][1]) ||
-                !tableMetrics.isInOuterTable(standingPosSec[1][0], standingPosSec[1][1])) {
-            return secondary;
-        }
-
-        PlayerHand third = person.handBody.getThird();
-        assert third.hand == PlayerHand.Hand.REST;
-        return third;
-    }
-
-    public static double powerWithCueAngle(PlayerPerson.HandBody handBody,
+    public static double powerWithCueAngle(HandBody handBody,
                                            @Nullable CueBrand cueBrand,
-                                           double power, 
+                                           double power,
                                            double cueAngleDeg) {
         double handHeightAboveTable = handBody.height * 10 * 0.8 - 851;
         handHeightAboveTable = Math.max(handHeightAboveTable, 200);
@@ -247,41 +175,12 @@ public class CuePlayParams {
         double cueTailHeight = Math.sin(Math.toRadians(cueAngleDeg)) * cueLength + cueEndWidth;
         return Math.min(1.0, handHeightAboveTable / cueTailHeight) * power;
     }
-
-    public static double[][] personStandingPosition(double whiteX, double whiteY,
-                                                    double aimingX, double aimingY,
-                                                    double cueAngleDeg,
-                                                    PlayerPerson person,
-                                                    PlayerHand.Hand hand) {
-        double upBodyLength = person.handBody.height * 10 - 851;
-        double heightMul = 1.75 * Math.cos(Math.toRadians(cueAngleDeg));
-        double personLengthX = upBodyLength * -aimingX * heightMul;
-        double personLengthY = upBodyLength * -aimingY * heightMul;
-
-        int mul = hand == PlayerHand.Hand.LEFT ? -1 : 1;
-        double widthMulMin = person.handBody.bodyWidth * 280.0 * mul;
-        double widthMulMax = upBodyLength * 0.68 * mul;
-        double personWidthX1 = aimingY * widthMulMin;
-        double personWidthY1 = -aimingX * widthMulMin;
-        double personWidthX2 = aimingY * widthMulMax;
-        double personWidthY2 = -aimingX * widthMulMax;
-
-        return new double[][]{
-                {whiteX + personLengthX + personWidthX1,
-                        whiteY + personLengthY + personWidthY1},
-                {whiteX + personLengthX + personWidthX2,
-                        whiteY + personLengthY + personWidthY2},
-        };
-    }
-
+    
     /**
-     * @param vx
-     * @param vy
      * @param horizontalSpeed 球的平移速度
      * @param frontBackSpin   高杆正，低杆负
      * @param sideSpin        右塞正（顶视的逆时针），左塞负
-     * @param cueAngleDeg
-     * @return
+     * @return 真实的{x旋转，y旋转,侧旋}
      */
     public static double[] calculateSpins(double vx,
                                           double vy,

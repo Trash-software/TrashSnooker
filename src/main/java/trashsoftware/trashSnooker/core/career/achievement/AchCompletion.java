@@ -2,7 +2,7 @@ package trashsoftware.trashSnooker.core.career.achievement;
 
 import javafx.scene.image.Image;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;

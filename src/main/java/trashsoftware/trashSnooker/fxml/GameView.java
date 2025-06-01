@@ -63,6 +63,10 @@ import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEig
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LetBall;
 import trashsoftware.trashSnooker.core.numberedGames.nineBall.AmericanNineBallGame;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
+import trashsoftware.trashSnooker.core.person.HandBody;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.NineBallScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
@@ -269,7 +273,9 @@ public class GameView implements Initializable {
     private boolean drawStandingPos = false;
     //    private boolean drawTargetRefLine = false;
     private boolean miscued = false;
-    private PlayerHand currentHand;
+    private CuePlayerHand currentHand;
+    private List<PlayerHand.CueHand> lastPlayableHands;
+    private final Map<PlayerHand.Hand, PlayerHand.CueHand> handCueHandMap = new TreeMap<>();
     private CareerMatch careerMatch;
     private PredictionDrawing cursorDrawer;
     private PotInspection potInspection;
@@ -311,7 +317,7 @@ public class GameView implements Initializable {
         return (playerAimingOffset * (selectedPower / 100.0) + playerAimingOffset) / 8.0;
     }
 
-    private static double getPersonPower(double selectedPower, PlayerHand person) {
+    private static double getPersonPower(double selectedPower, CuePlayerHand person) {
         return selectedPower / person.getMaxPowerPercentage();
     }
 
@@ -602,7 +608,7 @@ public class GameView implements Initializable {
 
         setupPowerSlider();
         InGamePlayer igp = game.getGame().getCuingPlayer().getInGamePlayer();
-        updatePowerSlider(igp, igp.getPlayerPerson().getPrimaryHand());
+        updatePowerSlider(igp, CuePlayerHand.makeDefault(igp));
         recalculateUiRestrictions();
 
         setupGameMenu();
@@ -697,8 +703,9 @@ public class GameView implements Initializable {
             handSelectionToggleGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
                 if (game == null || game.getGame() == null) return;
                 PlayerHand.Hand selected = PlayerHand.Hand.valueOf(String.valueOf(t1.getUserData()));
+                PlayerHand.CueHand cueHand = handCueHandMap.get(selected);
                 PlayerPerson person = game.getGame().getCuingPlayer().getPlayerPerson();
-                currentHand = person.handBody.getHandSkillByHand(selected);
+                currentHand = person.handBody.getHandSkillByHand(cueHand);
                 createPathPrediction();
             });
 
@@ -715,6 +722,28 @@ public class GameView implements Initializable {
 
         handSelectionToggleGroup.selectToggle(toggle);
     }
+    
+    private void updateHandButton(RadioButton radioButton, 
+                                  PlayerHand.Hand thisHand,
+                                  List<PlayerHand.CueHand> playAbles) {
+        for (PlayerHand.CueHand cueHand : playAbles) {
+            if (cueHand.hand == thisHand) {
+                String text;
+                if (cueHand.extension == PlayerHand.CueExtension.NO) {
+                    text = cueHand.hand.shownName(strings);
+                } else {
+                    text = String.format("%s (%s)", 
+                            cueHand.hand.shownName(strings),
+                            cueHand.extension.getReadable(strings));
+                }
+                radioButton.setText(text);
+                radioButton.setDisable(false);
+                handCueHandMap.put(thisHand, cueHand);
+                return;
+            }
+        }
+        radioButton.setDisable(true);
+    }
 
     private void updateHandSelection(boolean forceChangeHand) {
         Ball cueBall = game.getGame().getCueBall();
@@ -722,46 +751,52 @@ public class GameView implements Initializable {
         if (igp.getPlayerType() == PlayerType.COMPUTER) return;
         PlayerPerson playingPerson = igp.getPlayerPerson();
 
-        List<PlayerHand.Hand> playAbles = CuePlayParams.getPlayableHands(
+        List<PlayerHand.CueHand> playAbles = HandBody.getPlayableHands(
                 cueBall.getX(), cueBall.getY(),
                 cursorDirectionUnitX, cursorDirectionUnitY,
                 cueAngleDeg,
                 gameValues.table,
-                playingPerson
+                playingPerson,
+                igp.getCueSelection().getSelected().brand
         );
-
-        boolean leftWasUsable = !handSelectionLeft.isDisable();
-        boolean rightWasUsable = !handSelectionRight.isDisable();
-
-        handSelectionLeft.setDisable(!playAbles.contains(PlayerHand.Hand.LEFT));
-        handSelectionRight.setDisable(!playAbles.contains(PlayerHand.Hand.RIGHT));
-        handSelectionRest.setDisable(!playAbles.contains(PlayerHand.Hand.REST));  // 事实上架杆永远可用
-
+        
+        updateHandButton(handSelectionLeft, PlayerHand.Hand.LEFT, playAbles);
+        updateHandButton(handSelectionRight, PlayerHand.Hand.RIGHT, playAbles);
+        updateHandButton(handSelectionRest, PlayerHand.Hand.REST, playAbles);
+        
         boolean anyChange = forceChangeHand ||
-                (leftWasUsable == handSelectionLeft.isDisabled()) ||
-                (rightWasUsable == handSelectionRight.isDisabled());
+                lastPlayableHands == null || 
+                playAbles.size() != lastPlayableHands.size();  // 是null就必true
+        if (!anyChange) {
+            for (int i = 0; i < playAbles.size(); i++) {
+                PlayerHand.CueHand ch1 = playAbles.get(i);
+                PlayerHand.CueHand ch2 = lastPlayableHands.get(i);
+                if (ch1.hand != ch2.hand || ch1.extension != ch2.extension) {
+                    anyChange = true;
+                    break;
+                }
+            }
+        }
 
         if (anyChange) {
             // 如果这次update改变了任何“一只手”的可用性，刷新为可用的第一顺位手
             handSelectionToggleGroup.selectToggle(
                     handButtonOfHand(playAbles.getFirst())
             );
-            currentHand = playingPerson.handBody.getHandSkillByHand(playAbles.getFirst());  // 防止由于toggle没变的原因导致不触发换手
+            // 防止由于toggle没变的原因导致不触发换手
+            currentHand = playingPerson.handBody.getHandSkillByHand(playAbles.getFirst());
+            
+            lastPlayableHands = playAbles;
         }
         updatePowerSlider(igp, currentHand, false);
     }
 
-    private RadioButton handButtonOfHand(PlayerHand.Hand hand) {
-        switch (hand) {
-            case LEFT:
-                return handSelectionLeft;
-            case RIGHT:
-                return handSelectionRight;
-            case REST:
-                return handSelectionRest;
-            default:
-                throw new RuntimeException("If this happens then go fuck the developer");
-        }
+    private RadioButton handButtonOfHand(PlayerHand.CueHand hand) {
+        return switch (hand.hand) {
+            case LEFT -> handSelectionLeft;
+            case RIGHT -> handSelectionRight;
+            case REST -> handSelectionRest;
+        };
     }
 
     private void setupNameLabels(PlayerPerson p1, PlayerPerson p2) {
@@ -962,9 +997,9 @@ public class GameView implements Initializable {
             withdrawMenu.setDisable(!igp.isHuman());
         }
 
-        PlayerPerson playerPerson = igp.getPlayerPerson();
+//        PlayerPerson playerPerson = igp.getPlayerPerson();
 
-        updatePowerSlider(igp, playerPerson.getPrimaryHand());
+        updatePowerSlider(igp, CuePlayerHand.makeDefault(igp));
         if (replay == null) {
             cueButton.setDisable(false);
             if (igp.getPlayerType() == PlayerType.COMPUTER) {
@@ -1031,11 +1066,11 @@ public class GameView implements Initializable {
         showReplayCueStep();
     }
 
-    private void updatePowerSlider(InGamePlayer igp, PlayerHand cuingHand) {
+    private void updatePowerSlider(InGamePlayer igp, CuePlayerHand cuingHand) {
         updatePowerSlider(igp, cuingHand, true);
     }
 
-    private void updatePowerSlider(InGamePlayer igp, PlayerHand cuingHand, boolean resetPower) {
+    private void updatePowerSlider(InGamePlayer igp, CuePlayerHand cuingHand, boolean resetPower) {
         if (resetPower) {
             powerSlider.setValue(DEFAULT_POWER);
         }
@@ -1054,11 +1089,7 @@ public class GameView implements Initializable {
                 cuingHand.getControllablePowerPercentage(),
                 cueAngleDeg
         );
-//        powerSlider.setMajorTickUnit(
-//                ctrlPower);
-        
-//        double sliderHeight = powerSlider.getHeight() -
-//                powerSlider.getInsets().getTop() - powerSlider.getInsets().getBottom();
+
         double sliderHeight = powerSlider.getHeight() - 12;  // 可能的上下margin
         if (sliderHeight == -12) return;
         sliderCtrlLabel.setVisible(true);
@@ -1095,7 +1126,7 @@ public class GameView implements Initializable {
         }
 
         Platform.runLater(() -> updatePowerSlider(nextCuePlayer.getInGamePlayer(),
-                nextCuePlayer.getPlayerPerson().getPrimaryHand()));
+                CuePlayerHand.makeDefault(nextCuePlayer.getInGamePlayer())));
         setButtonsCueEnd(nextCuePlayer);
         obstacleProjection = null;
         printPlayStage = true;
@@ -1311,7 +1342,7 @@ public class GameView implements Initializable {
 
         Player breakPlayer = game.getGame().getCuingPlayer();
         updateHandSelection(true);
-        updatePowerSlider(breakPlayer.getInGamePlayer(), breakPlayer.getPlayerPerson().getPrimaryHand());
+        updatePowerSlider(breakPlayer.getInGamePlayer(), CuePlayerHand.makeDefault(breakPlayer.getInGamePlayer()));
         if (breakPlayer.getInGamePlayer().isHuman()) {
             changeCueButton.setDisable(false);
             tryAutoChangeBreakCue(breakPlayer);
@@ -1956,7 +1987,7 @@ public class GameView implements Initializable {
             drawScoreBoard(game.getGame().getCuingPlayer(), true);
             drawTargetBoard(true);
             InGamePlayer igp = game.getGame().getCuingPlayer().getInGamePlayer();
-            updatePowerSlider(igp, igp.getPlayerPerson().getPrimaryHand());
+            updatePowerSlider(igp, CuePlayerHand.makeDefault(igp));
             draw();
         } else {
             System.err.println("Game rule no push out!");
@@ -1979,7 +2010,7 @@ public class GameView implements Initializable {
         drawScoreBoard(game.getGame().getCuingPlayer(), true);
         drawTargetBoard(true);
         InGamePlayer igp = game.getGame().getCuingPlayer().getInGamePlayer();
-        updatePowerSlider(igp, igp.getPlayerPerson().getPrimaryHand());
+        updatePowerSlider(igp, CuePlayerHand.makeDefault(igp));
         draw();
         if (game.getGame() instanceof AbstractSnookerGame asg) {
             if (asg.isNoHitThreeWarning()) {
@@ -2011,7 +2042,7 @@ public class GameView implements Initializable {
         lastPotAttempt = null;
 
         Player willPlayPlayer = game.getGame().getCuingPlayer();
-        updatePowerSlider(willPlayPlayer.getInGamePlayer(), willPlayPlayer.getPlayerPerson().getPrimaryHand());
+        updatePowerSlider(willPlayPlayer.getInGamePlayer(), CuePlayerHand.makeDefault(willPlayPlayer.getInGamePlayer()));
         setButtonsCueEnd(willPlayPlayer);
         drawScoreBoard(willPlayPlayer, true);
         drawTargetBoard(true);
@@ -2182,7 +2213,7 @@ public class GameView implements Initializable {
                                         double frontBackSpinFactor,
                                         double sideSpinFactor,
                                         boolean mutate,
-                                        PlayerHand handSkill) {
+                                        CuePlayerHand cuePlayerHand) {
         Cue cue = getCuingCue();
         double ballDia = gameValues.ball.ballDiameter;
         // 越大的球，打点的比例偏差越小
@@ -2209,18 +2240,18 @@ public class GameView implements Initializable {
                 cueAngleDeg,
                 game.getGame(),
                 player.getInGamePlayer(),
-                handSkill
+                cuePlayerHand
         );
 //        System.out.println("FB spin: " + desiredParams.selectedFrontBackSpin());
 
-        double maxSelPower = handSkill.getMaxPowerPercentage();
+        double maxSelPower = cuePlayerHand.getMaxPowerPercentage();
 
         final double origSelPower = desiredParams.selectedPower();
         double selPower = origSelPower;
 //        double power = desiredParams.actualPower();
 
         // 因为力量控制导致的力量偏差
-        powerFactor = powerFactor * handSkill.getPowerSd(selPower);  // 用力越大误差越大
+        powerFactor = powerFactor * cuePlayerHand.getPowerSd(selPower);  // 用力越大误差越大
         powerFactor *= cue.getPowerMultiplier();  // 发力范围越大的杆控力越粗糙
         if (enablePsy) {
             double psyPowerMul = getPsyControlMultiplier(playerPerson);
@@ -2258,11 +2289,11 @@ public class GameView implements Initializable {
         while (counter < 10) {
             double xError = sideSpinFactor;
             double yError = frontBackSpinFactor;
-            double[] muSigXy = handSkill.getCuePointMuSigmaXY();
+            double[] muSigXy = cuePlayerHand.getCuePointMuSigmaXY();
             double xSig = muSigXy[1];
             double ySig = -muSigXy[3];
 
-            double mulWithPower = handSkill.getErrorMultiplierOfPower(origSelPower);
+            double mulWithPower = cuePlayerHand.getErrorMultiplierOfPower(origSelPower);
 
             xError = xError * xSig + muSigXy[0];
             yError = yError * ySig + muSigXy[2];
@@ -2344,7 +2375,7 @@ public class GameView implements Initializable {
                 getCuePointRelX(cuePointX),
                 cueAngleDeg,
                 gamePlayStage(),
-                currentHand.hand);
+                currentHand.toCueHand());
     }
 
     private TargetRecord makeTargetRecord(Player willCuePlayer) {
@@ -2433,7 +2464,7 @@ public class GameView implements Initializable {
         disableUiWhenCuing();
 
         // 判断是否为进攻杆
-        PlayerHand usedHand = currentHand;
+        CuePlayerHand usedHand = currentHand;
         PotAttempt currentAttempt = null;
         boolean snookered = game.getGame().isSnookered();
 
@@ -2473,10 +2504,6 @@ public class GameView implements Initializable {
                             game.getGame().getCuingPlayer().getPlayerPerson(),
                             predictedTargetBall,
                             ac
-//                            new double[]{game.getGame().getCueBall().getX(),
-//                                    game.getGame().getCueBall().getY()},
-//                            new double[]{predictedTargetBall.getX(), predictedTargetBall.getY()},
-//                            directionHole
                     );
                     System.out.printf("Angle is %f, attacking!\n",
                             Math.toDegrees(Math.abs(pottingDirection - aimingDirection)));
@@ -2530,7 +2557,7 @@ public class GameView implements Initializable {
     private void playerCueCalculations(CuePlayParams params,
                                        Player player,
                                        PotAttempt currentAttempt,
-                                       PlayerHand usedHand,
+                                       CuePlayerHand usedHand,
                                        boolean snookered) {
         Movement calculatedMovement = game.getGame().cue(params, game.playPhy);
         CueRecord cueRecord = makeCueRecord(player, params);  // 必须在randomCueError之后
@@ -2624,9 +2651,7 @@ public class GameView implements Initializable {
 
     private void aiCueCalculations(CuePlayParams realParams,
                                    Player player,
-                                   AiCueResult cueResult,
-                                   double whiteStartingX,
-                                   double whiteStartingY) {
+                                   AiCueResult cueResult) {
         Movement calculatedMovement = game.getGame().cue(realParams, game.playPhy);
 
         CueRecord cueRecord = makeCueRecord(player, realParams);  // 必须在randomCueError之后
@@ -2640,20 +2665,6 @@ public class GameView implements Initializable {
         }
 
         if (cueResult.isAttack()) {
-//            AttackChoice ac;
-//                ac = AttackChoice.DirectAttackChoice.createChoice(
-//                        game.getGame(),
-//                        game.predictPhy,
-//                        game.getGame().getCuingPlayer(),
-//                        new double[]{game.getGame().getCueBall().getX(),
-//                                game.getGame().getCueBall().getY()},
-//                        cueResult.getTargetBall(),
-//                        null,
-//                        game.getGame().getCurrentTarget(),
-//                        false,
-//                        cueResult.getTargetDirHole(),
-//                        new double[]{cueResult.getTargetBall().getX(), cueResult.getTargetBall().getY()}
-//                );
             FinalChoice.IntegratedAttackChoice iac = (FinalChoice.IntegratedAttackChoice) cueResult.getChoice();
             AttackChoice ac = iac.getAttackParams().getAttackChoice();
             PotAttempt currentAttempt = new PotAttempt(
@@ -2684,7 +2695,7 @@ public class GameView implements Initializable {
                 currentAttempt.setPositionToThis(lastPotAttempt);
             }
             currentAttempt.setAfterFinish(
-                    cueResult.getHandSkill(),
+                    cueResult.getCuePlayerHand(),
                     calculatedMovement);
             currentAttempt.setSuccess(success);
             player.addAttempt(currentAttempt);
@@ -2700,7 +2711,7 @@ public class GameView implements Initializable {
                     player,
                     realParams);
             curDefAttempt.setAfterFinish(
-                    cueResult.getHandSkill(),
+                    cueResult.getCuePlayerHand(),
                     calculatedMovement);
 
             player.addAttempt(curDefAttempt);
@@ -2869,9 +2880,9 @@ public class GameView implements Initializable {
                 cursorDirectionUnitX = cueResult.getUnitX();
                 cursorDirectionUnitY = cueResult.getUnitY();
                 System.out.printf("Ai direction: %f, %f\n", cursorDirectionUnitX, cursorDirectionUnitY);
-                currentHand = cueResult.getHandSkill();
-                updateHandSelectionToggleByData(currentHand.hand);
-                updatePowerSlider(player.getInGamePlayer(), cueResult.getHandSkill());
+                currentHand = cueResult.getCuePlayerHand();
+                updateHandSelectionToggleByData(currentHand.playerHand.hand);
+                updatePowerSlider(player.getInGamePlayer(), cueResult.getCuePlayerHand());
                 powerSlider.setValue(cueResult.getCueParams().selectedPower());
                 cuePointX = cueCanvasWH / 2 + cueResult.getCueParams().selectedSideSpin() * cueAreaRadius;
                 cuePointY = cueCanvasWH / 2 - cueResult.getCueParams().selectedFrontBackSpin() * cueAreaRadius;
@@ -2898,9 +2909,7 @@ public class GameView implements Initializable {
                 Thread thread = new Thread(() -> aiCueCalculations(
                         realParams,
                         player,
-                        cueResult,
-                        whiteStartingX,
-                        whiteStartingY
+                        cueResult
                 ));
                 thread.start();
             });
@@ -2934,7 +2943,7 @@ public class GameView implements Initializable {
             cuePointX = getCuePointCanvasX(cueRecord.actualHorPoint);
             cuePointY = getCuePointCanvasY(cueRecord.actualVerPoint);
             cueAngleDeg = cueRecord.cueAngle;
-            currentHand = cueRecord.cuePlayer.getPlayerPerson().handBody.getHandSkillByHand(cueRecord.hand);
+            currentHand = cueRecord.cuePlayer.getPlayerPerson().handBody.getHandSkillByHand(cueRecord.cueHand);
 
             miscued = isMiscue();
 
@@ -3942,22 +3951,38 @@ public class GameView implements Initializable {
     private void drawStandingPos() {
         Ball cueBall = game.getGame().getCueBall();
         PlayerPerson playerPerson = game.getGame().getCuingPlayer().getPlayerPerson();
-        double[][] standingPos = CuePlayParams.personStandingPosition(
-                cueBall.getX(), cueBall.getY(),
-                cursorDirectionUnitX, cursorDirectionUnitY,
-                cueAngleDeg,
-                playerPerson,
-                playerPerson.handBody.getPrimary().hand
-        );
+        double[] pos1, pos2 = null;
+        if (currentHand.playerHand.hand == PlayerHand.Hand.REST) {
+            pos1 = HandBody.restStandingPosition(
+                    cueBall.getX(), cueBall.getY(),
+                    cursorDirectionUnitX, cursorDirectionUnitY,
+                    cueAngleDeg,
+                    playerPerson,
+                    currentHand.cueBrand.getWoodPartLength() + currentHand.cueBrand.getExtensionLength(currentHand.extension)
+            );
+        } else {
+//            System.out.println(currentHand.extension);
+            double[][] standingPos = HandBody.personStandingPosition(
+                    cueBall.getX(), cueBall.getY(),
+                    cursorDirectionUnitX, cursorDirectionUnitY,
+                    cueAngleDeg,
+                    playerPerson,
+                    currentHand.playerHand.hand, 
+                    currentHand.cueBrand.getWoodPartLength() + currentHand.cueBrand.getExtensionLength(currentHand.extension)
+            );
+            pos1 = standingPos[0];
+            pos2 = standingPos[1];
+        }
 
-        double canvasX1 = gamePane.canvasX(standingPos[0][0]);
-        double canvasY1 = gamePane.canvasY(standingPos[0][1]);
-        double canvasX2 = gamePane.canvasX(standingPos[1][0]);
-        double canvasY2 = gamePane.canvasY(standingPos[1][1]);
-
+        double canvasX1 = gamePane.canvasX(pos1[0]);
+        double canvasY1 = gamePane.canvasY(pos1[1]);
         gamePane.getGraphicsContext().setStroke(WHITE);
         gamePane.getGraphicsContext().strokeOval(canvasX1 - 5, canvasY1 - 5, 10, 10);
-        gamePane.getGraphicsContext().strokeOval(canvasX2 - 5, canvasY2 - 5, 10, 10);
+        if (pos2 != null) {
+            double canvasX2 = gamePane.canvasX(pos2[0]);
+            double canvasY2 = gamePane.canvasY(pos2[1]);
+            gamePane.getGraphicsContext().strokeOval(canvasX2 - 5, canvasY2 - 5, 10, 10);
+        }
     }
 
     private void drawInspection() {
@@ -4133,7 +4158,7 @@ public class GameView implements Initializable {
         PlayerPerson playerPerson = cuingPlayer.getPlayerPerson();
         double personPower = getPersonPower(currentHand);  // 球手的用力程度
         double errMulWithPower = currentHand.getErrorMultiplierOfPower(selectedPower);
-        double maxPullDt = pullDtOf(currentHand, personPower);
+        double maxPullDt = pullDtOf(currentHand.playerHand, personPower);
         double handDt = maxPullDt + HAND_DT_TO_MAX_PULL;
 
         double[] handXY = handPosition(handDt, cueAngleDeg, whiteStartingX, whiteStartingY, directionX, directionY);
@@ -4148,7 +4173,7 @@ public class GameView implements Initializable {
         }
 
         double[] restCuePointing = null;
-        if (currentHand != null && currentHand.hand == PlayerHand.Hand.REST) {
+        if (currentHand != null && currentHand.playerHand.hand == PlayerHand.Hand.REST) {
             double trueAimingAngle = Algebra.thetaOf(cursorDirectionUnitX, cursorDirectionUnitY);
             double restCueAngleOffset = playerPerson.handBody.isLeftHandRest() ? -0.1 : 0.1;
             double restAngleWithOffset = trueAimingAngle - restCueAngleOffset;
@@ -4241,7 +4266,7 @@ public class GameView implements Initializable {
 
             PlayerPerson person = game.getGame().getCuingPlayer().getPlayerPerson();
             double personPower = getPersonPower(currentHand);  // 球手的用力程度
-            double maxPullDt = pullDtOf(currentHand, personPower);
+            double maxPullDt = pullDtOf(currentHand.playerHand, personPower);
             double handDt = maxPullDt + HAND_DT_TO_MAX_PULL;
 //            System.out.println(handDt);
             double[] handXY = handPosition(handDt,
@@ -4258,7 +4283,7 @@ public class GameView implements Initializable {
                 gamePane.drawAimingExtension(touchXY, cuePointing, handDt);
             }
 
-            if (currentHand != null && currentHand.hand == PlayerHand.Hand.REST) {
+            if (currentHand != null && currentHand.playerHand.hand == PlayerHand.Hand.REST) {
                 // 画架杆，要在画杆之前，让杆覆盖在架杆之上
                 double restCueAngleOffset = person.handBody.isLeftHandRest() ? -0.1 : 0.1;
                 double restAngleWithOffset = trueAimingAngle - restCueAngleOffset;
@@ -4288,7 +4313,7 @@ public class GameView implements Initializable {
                     false);
         } else {
 //            System.out.println("Drawing!");
-            if (currentHand != null && currentHand.hand == PlayerHand.Hand.REST) {
+            if (currentHand != null && currentHand.playerHand.hand == PlayerHand.Hand.REST) {
 //                if (cueAnimationPlayer.restCuePointing == null) {
 //                    System.err.println("RPNull");
 //                    return;
@@ -4396,7 +4421,8 @@ public class GameView implements Initializable {
                 pointingUnitX,
                 pointingUnitY,
                 isRest ? 0.0 : cueAngleDeg,
-                gamePane.getScale());
+                gamePane.getScale(),
+                currentHand.extension);
         if (!isRest) {
             if (getActiveHolder().getCuingIgp().getPlayerNumber() == 1) {
                 cueModel.setCueRotation(cueRollRotateDeg1);
@@ -4596,7 +4622,7 @@ public class GameView implements Initializable {
         }
     }
 
-    private double getPersonPower(PlayerHand person) {
+    private double getPersonPower(CuePlayerHand person) {
         return getPersonPower(getSelectedPower(), person);
     }
 
@@ -4672,7 +4698,7 @@ public class GameView implements Initializable {
         private final Cue cue;
         private final InGamePlayer igp;
         private final PlayerPerson playerPerson;
-        private final PlayerHand playerHand;
+        private final CuePlayerHand playerHand;
         private final double playSpeedMultiplier;
         private final long beginTime;
         private long heldMs = 0;
@@ -4702,7 +4728,7 @@ public class GameView implements Initializable {
                            double pointingUnitY,
                            Cue cue,
                            InGamePlayer igp,
-                           PlayerHand handSkill,
+                           CuePlayerHand handSkill,
                            double[] restCuePointing,
                            SoundInfo soundInfo) {
 
@@ -4716,8 +4742,8 @@ public class GameView implements Initializable {
             if (selectedPower < Values.MIN_SELECTED_POWER)
                 selectedPower = Values.MIN_SELECTED_POWER;
 
-            CuePlayType cuePlayType = handSkill.getCuePlayType();
-            if (cuePlayType.willApplySpecial(selectedPower, handSkill.hand)) {
+            CuePlayType cuePlayType = handSkill.playerHand.getCuePlayType();
+            if (cuePlayType.willApplySpecial(selectedPower, handSkill.playerHand.hand)) {
                 CuePlayType.SpecialAction sa = cuePlayType.getSpecialAction();
                 if (sa instanceof CuePlayType.DoubleAction) {
                     doubleAction = (CuePlayType.DoubleAction) sa;
@@ -4729,7 +4755,7 @@ public class GameView implements Initializable {
             double initDistance1 = Math.min(initDistance, maxPullDt);
             this.maxPullDistance = maxPullDt;
             this.cueDtToWhite = initDistance1;
-            this.maxExtension = -extensionDtOf(handSkill, personPower);
+            this.maxExtension = -extensionDtOf(handSkill.playerHand, personPower);
 
             this.cueMaxSpeed = selectedPower *
 //                    PlayerPerson.HandBody.getPowerMulOfHand(handSkill) *
@@ -4830,11 +4856,11 @@ public class GameView implements Initializable {
                 wholeDtPercentage = Math.max(0, Math.min(wholeDtPercentage, 0.9999));
 //                System.out.println(wholeDtPercentage);
 
-                List<Double> stages = playerHand.getCuePlayType().getSequence();
+                List<Double> stages = playerHand.playerHand.getCuePlayType().getSequence();
                 double stage = stages.isEmpty() ?
                         0 :
                         stages.get((int) (wholeDtPercentage * stages.size()));
-                double baseSwingMag = playerHand.getCueSwingMag();
+                double baseSwingMag = playerHand.playerHand.getCueSwingMag();
                 if (enablePsy) {
                     double psyFactor = 1.0 - getPsyAccuracyMultiplier(playerPerson);
                     baseSwingMag *= (1.0 + psyFactor * 5);
@@ -4874,7 +4900,7 @@ public class GameView implements Initializable {
                 }
             } else {
                 cueDtToWhite += gameLoop.lastAnimationFrameMs() / 3.0 *
-                        playerHand.getCuePlayType().getPullSpeedMul();  // 往后拉
+                        playerHand.playerHand.getCuePlayType().getPullSpeedMul();  // 往后拉
                 if (cueDtToWhite >= maxPullDistance) {
                     reachedMaxPull = true;
                 }

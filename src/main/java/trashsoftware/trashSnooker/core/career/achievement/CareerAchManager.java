@@ -31,6 +31,7 @@ import trashsoftware.trashSnooker.core.career.ChampionshipStage;
 import trashsoftware.trashSnooker.core.metrics.Cushion;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.fxml.App;
@@ -199,7 +200,7 @@ public class CareerAchManager extends AchManager {
                     addAchievement(Achievement.POT_A_BALL, justCuedPlayer);
                     addAchievement(Achievement.POT_BALLS, justCuedPlayer);
 
-                    PlayerHand handSkill = potAttempt.getHandSkill();
+                    PlayerHand handSkill = potAttempt.getCuePlayerHand().playerHand;
                     if (handSkill.hand == PlayerHand.Hand.REST) {
                         addAchievement(Achievement.POT_BALLS_REST, justCuedPlayer);
                     } else if (handSkill.hand == justCuedPlayer.getPlayerPerson().handBody.getAntiHand().hand) {

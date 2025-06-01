@@ -1,7 +1,6 @@
 package trashsoftware.trashSnooker.core.career.aiMatch;
 
-import trashsoftware.trashSnooker.core.PlayerHand;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.CareerManager;
@@ -10,7 +9,6 @@ import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.TableSpec;
 
-import java.util.Map;
 import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;

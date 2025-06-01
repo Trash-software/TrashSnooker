@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.ai;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 
 import java.util.*;
 
@@ -83,7 +84,7 @@ public abstract class TargetOrientedCueBallPlacer<G extends Game<?, ?>, P extend
                                     5.0,
                                     game,
                                     player.getInGamePlayer(),
-                                    player.getPlayerPerson().handBody.getPrimary()
+                                    CuePlayerHand.makeDefault(player.getInGamePlayer())
                             );
                             AttackParam attackParam = new AttackParam(
                                     ac,

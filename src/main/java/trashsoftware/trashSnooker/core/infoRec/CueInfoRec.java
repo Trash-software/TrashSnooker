@@ -4,7 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.FoulInfo;
-import trashsoftware.trashSnooker.core.PlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.attempt.AttemptBase;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.util.Util;
@@ -20,7 +20,7 @@ public class CueInfoRec {
     int target;
     int specifiedTarget;
     int firstHit;
-    PlayerHand.Hand hand;
+    PlayerHand.CueHand hand;
     Map<Integer, Integer> pots;  // 这一杆打进的球
     int[] gainScores;
     int[] scoresAfter;
@@ -38,7 +38,14 @@ public class CueInfoRec {
         }
         cir.gainScores = Util.jsonToIntArray(json.getJSONArray("gainScores"));
         cir.scoresAfter = Util.jsonToIntArray(json.getJSONArray("scoresAfter"));
-        cir.hand = PlayerHand.Hand.valueOf(json.getString("hand"));
+        if (json.has("cueHand")) {
+            cir.hand = PlayerHand.CueHand.fromJson(json.getJSONObject("cueHand"));
+        } else {
+            cir.hand = PlayerHand.CueHand.makeDefault(
+                    PlayerHand.Hand.valueOf(json.getString("hand")),
+                    null);
+        }
+        
         cir.attemptBase = AttemptBase.fromJson(json.getJSONObject("attemptBase"));
         cir.pots = new TreeMap<>();
         if (json.has("pots")) {
@@ -82,7 +89,7 @@ public class CueInfoRec {
             out.put("specifiedTarget", specifiedTarget);
         }
         out.put("firstHit", firstHit);
-        out.put("hand", hand.name());
+        out.put("cueHand", hand.toJson());
         out.put("gainScores", Util.arrayToJson(gainScores));
         out.put("scoresAfter", Util.arrayToJson(scoresAfter));
         out.put("attemptBase", attemptBase.toJson());

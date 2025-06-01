@@ -5,7 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.cue.*;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.metrics.BallsGroupPreset;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.TablePreset;
@@ -351,7 +351,7 @@ public class DataLoader {
                         List<TexturedCueBrand.Segment> segments = new ArrayList<>();
                         for (int i = 0; i < segmentArray.length(); i++) {
                             JSONObject segObj = segmentArray.getJSONObject(i);
-                            segments.add(new TexturedCueBrand.Segment(
+                            segments.add(TexturedCueBrand.Segment.fromTextureString(
                                     segObj.getString("texture"),
                                     segObj.getDouble("length"),
                                     segObj.getDouble("diameter1"),
@@ -572,6 +572,10 @@ public class DataLoader {
 
     public CueBrand getCueById(String cueId) {
         return cues.get(cueId);
+    }
+    
+    public CueBrand getExampleCue() {
+        return cues.get("stdSnookerCue");
     }
     
     public CueTipBrand getTipBrandById(String tipBrandId) {

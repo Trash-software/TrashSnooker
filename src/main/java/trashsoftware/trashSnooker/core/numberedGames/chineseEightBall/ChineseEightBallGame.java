@@ -11,6 +11,7 @@ import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
