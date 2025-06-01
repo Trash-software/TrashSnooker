@@ -71,6 +71,16 @@ public abstract class ObjectOnTable implements Cloneable {
     public void setVy(double vy) {
         this.vy = vy;
     }
+    
+    public void setVelocity(double[] vel) {
+        setVx(vel[0]);
+        setVy(vel[1]);
+    }
+    
+    public void setPosition(double[] pos) {
+        setX(pos[0]);
+        setY(pos[1]);
+    }
 
     protected double getSpeed() {
         return Math.hypot(vx, vy);

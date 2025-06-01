@@ -191,7 +191,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return res;
     }
 
-    private FinalChoice.IntegratedAttackChoice tryLastResortAttack() {
+    private FinalChoice.IntegratedAttackChoice tryLastResortAttack(Phy phy) {
         if (lastResortAttackChoices.isEmpty()) return null;
 
         FinalChoice.IntegratedAttackChoice best = null;
@@ -206,7 +206,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     entry.getValue(),
                     nextTarget,
                     nextStepLegalBalls(nextTarget, choice.ball),
-                    bestAttack.phy,
+                    phy,
                     game.getGamePlayStage(choice.ball, false),
                     true,
                     null
@@ -635,7 +635,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             if (!aiOnlyDefense && 
                     defenseChoice.opponentCanPureAttack(game.getAnotherPlayer(aiPlayer).getPlayerPerson().getAiPlayStyle())) {
                 System.out.println("Defense not good, try last resort");
-                FinalChoice.IntegratedAttackChoice iac = tryLastResortAttack();
+                FinalChoice.IntegratedAttackChoice iac = tryLastResortAttack(phy);
                 if (iac != null) {
                     return makeAttackCue(iac);
                 }

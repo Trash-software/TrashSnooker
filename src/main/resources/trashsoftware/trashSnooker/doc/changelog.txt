@@ -1,11 +1,16 @@
 ===== 0.7 =====
 --- Beta 3 ---
+20250601
 
+* 物理更新:
+    * 针对球堆的特殊算法
 * AI更新:
     * 优化了AI进攻杆的运算时间
     * AI在发现无法进行有效防守后会重新考虑进攻
 * 数据优化:
     * cuePointMuSigma -> cuePoints, cuePrecisions
+* 界面优化:
+    * 更合适的powerSlider
 * 代码优化
 
 --- Beta 2 ---

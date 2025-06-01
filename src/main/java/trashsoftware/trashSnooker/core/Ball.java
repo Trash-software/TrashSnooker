@@ -41,6 +41,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private double maxInPocketSpeed;  // 本杆在袋内的最大速度，m/s
     //    private Ball justHit;
     int pocketHitCount = 0;  // 本杆撞击袋角的次数
+    //    boolean visited;  // 某些东西会用这个
+    double nextVx, nextVy;  // 某些东西会用这个
 
     private double lastCollisionX, lastCollisionY;  // 记录一下上次碰撞所在的位置
     private double lastCollisionRelSpeed;
@@ -490,7 +492,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return false;
     }
 
-    private boolean isNotMoving() {
+    protected boolean isNotMoving() {
         return vx == 0.0 && vy == 0.0;
     }
 
@@ -743,8 +745,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return new double[]{ax, ay, bx, by, t}; // Positions at collision and time
     }
 
-    static double[][] findCollisionPoint(Ball a, Ball b, double ballRadius) {
-        final double minDist = 2 * ballRadius;
+    static double[][] findCollisionPoint(Ball a, Ball b) {
+        final double minDist = a.values.ball.ballDiameter;
         final double minDistSq = minDist * minDist;
         final double tolerance = 0.000001;
         final int maxIterations = 50;
@@ -792,9 +794,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         if (!valid) return null; // fail-safe: never got close enough
 
         double t = (low + high) / 2.0;
-        return new double[][] {
-                { a.x + a.vx * t, a.y + a.vy * t },
-                { b.x + b.vx * t, b.y + b.vy * t }
+        return new double[][]{
+                {a.x + a.vx * t, a.y + a.vy * t},
+                {b.x + b.vx * t, b.y + b.vy * t}
         };
     }
 
@@ -831,28 +833,21 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return new double[]{x1, y1, x2, y2};
     }
 
-    void twoMovingBallsHitCore(Game<?, ?> game, Ball ball, Phy phy, boolean considerGearSpin) {
-//        double x1 = x;
-//        double y1 = y;
-//        double x2 = ball.x;
-//        double y2 = ball.y;
-//        if (Math.hypot(vx, vy) + Math.hypot(ball.vx, ball.vy) > values.ball.ballRadius) {
-//            // 怕球速太快，它跑过了
-//            x1 -= vx;
-//            y1 -= vy;
-//            x2 -= ball.vx;
-//            y2 -= ball.vy;
-//        }
-//
-//        if (Algebra.distanceToPoint(x1, y1, x2, y2) <= values.ball.ballDiameter) {
-//            x1 -= vx;
-//            y1 -= vy;
-//            x2 -= ball.vx;
-//            y2 -= ball.vy;
-//        }
+    /**
+     * 仅判断，不改变任何值
+     */
+    public boolean willCollide(Ball ball) {
+        double nextDt = predictedDtTo(ball);
+        return nextDt <= values.ball.ballDiameter && currentDtTo(ball) > nextDt;
+    }
 
-//        double[] colPoint = findApproxCollisionPoint(x1, y1, ball, x2, y2);
-        double[][] colPoints = findCollisionPoint(this, ball, values.ball.ballRadius);
+    public boolean isTouching(Ball ball) {
+        double gap = currentDtTo(ball) - values.ball.ballDiameter;
+        return isNotMoving() && Math.abs(gap) < 1e-6;
+    }
+
+    void twoMovingBallsHitCore(Ball ball, Phy phy) {
+        double[][] colPoints = findCollisionPoint(this, ball);
         if (colPoints == null) {
             System.err.println("Cannot find collision point!");
             return;
@@ -986,7 +981,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         // 齿轮效应的旋转传递
         double thisOutSpeed = Math.hypot(this.vx, this.vy);
         double ballOutSpeed = Math.hypot(ball.vx, ball.vy);
-        if (considerGearSpin && relSpeed != 0.0 && (thisOutSpeed != 0.0 || ballOutSpeed != 0.0)) {
+        if (relSpeed != 0.0 && (thisOutSpeed != 0.0 || ballOutSpeed != 0.0)) {
             // 侧旋的传递
             double gearPassFactor = 0.15 * frictionStrength;
             double passRate = Math.cos(Math.abs(collisionThickness));  // 越厚传得越多。
@@ -1110,7 +1105,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //                && justHit != ball && ball.justHit != this
         ) {
 
-            twoMovingBallsHitCore(game, ball, phy, applyGearSpin);
+            twoMovingBallsHitCore(ball, phy);
 
 //            justHit = ball;
 //            ball.justHit = this;
@@ -1132,8 +1127,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     protected void prepareMove(Phy phy) {
+//        visited = false;
+        nextVx = 0;
+        nextVy = 0;
         super.prepareMove(phy);
-//        justHit = null;
     }
 
     public Color getColorTransparent() {

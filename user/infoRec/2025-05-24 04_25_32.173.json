@@ -1,0 +1,2029 @@
+{
+  "frames": [
+    {
+      "cueRecs": [
+        {
+          "scoresAfter": [
+            0,
+            0
+          ],
+          "specials": ["BALL_IN_HAND"],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "BREAK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.2469070596507752,
+            "tarPocketDt": 979.1637537925533,
+            "whiteTarDt": 2576.8153831987743,
+            "angle": 0.35441643588564914,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            6
+          ],
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "estPotProb": 0.6606783306741972,
+            "tarPocketDt": 1960.588093532142,
+            "whiteTarDt": 379.6084439877898,
+            "angle": 0.11157688765834861,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            5
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            7
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.7095667695453591,
+            "tarPocketDt": 906.5000922993011,
+            "whiteTarDt": 1029.9304566144444,
+            "angle": 0.03351393004568681,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            7
+          ],
+          "firstHit": 7,
+          "potInfo": {
+            "estPotProb": 0.19668952472834955,
+            "tarPocketDt": 1715.7309032282844,
+            "whiteTarDt": 126.68341844344833,
+            "angle": 0.5064487062904228,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            1,
+            7
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.572215631597186,
+            "tarPocketDt": -1,
+            "whiteTarDt": 792.9368999844639,
+            "angle": 0.023733452615418926,
+            "isDouble": true
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DOUBLE_POT"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            8,
+            7
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.6580038203722189,
+            "tarPocketDt": 910.845810845522,
+            "whiteTarDt": 708.0918023600623,
+            "angle": 0.8391854510071148,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            9,
+            7
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9582190589035857,
+            "tarPocketDt": 1245.906756056817,
+            "whiteTarDt": 334.9768711986789,
+            "angle": 0.25166333189474666,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "REST"
+        },
+        {
+          "scoresAfter": [
+            16,
+            7
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.7569739203739683,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 1048.3842798659223,
+            "angle": 0.3642364880642114,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            17,
+            7
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.851197696531417,
+            "tarPocketDt": 1282.2412506695086,
+            "whiteTarDt": 346.2146698607333,
+            "angle": 0.21422504278446786,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            24,
+            7
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9993698121499579,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 379.88400173367535,
+            "angle": 0.1305740556944892,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            7
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9511401898971794,
+            "tarPocketDt": 1065.5472643215821,
+            "whiteTarDt": 532.7954553971031,
+            "angle": 0.29870208409151133,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            7
+          ],
+          "firstHit": 5,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            7
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            7
+          ],
+          "firstHit": 1,
+          "potInfo": {
+            "estPotProb": 0.523372743166064,
+            "tarPocketDt": 1234.2562527013692,
+            "whiteTarDt": 1796.597821015196,
+            "angle": 0.02620715908197202,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            8
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.7320914539323569,
+            "tarPocketDt": 1122.2658214066485,
+            "whiteTarDt": 738.1967446917872,
+            "angle": 0.11759879603371282,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            14
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "estPotProb": 0.583857695145954,
+            "tarPocketDt": 1154.7586969833462,
+            "whiteTarDt": 368.6639099556438,
+            "angle": 0.331910759703272,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            6
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            15
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9675471882978715,
+            "tarPocketDt": 799.5265388083152,
+            "whiteTarDt": 252.08226340122135,
+            "angle": 0.30043009508519436,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            21
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "estPotProb": 0.41117418905563796,
+            "tarPocketDt": 1267.6707171151543,
+            "whiteTarDt": 556.1924621322695,
+            "angle": 0.28185053754961675,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            6
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            22
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.978727993904652,
+            "tarPocketDt": 358.47470034903176,
+            "whiteTarDt": 414.02313778556464,
+            "angle": 0.39765400075013213,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            25
+          ],
+          "firstHit": 3,
+          "pots": {"3": 1},
+          "potInfo": {
+            "estPotProb": 0.9439052910633914,
+            "tarPocketDt": 914.6384175459187,
+            "whiteTarDt": 587.8196581578014,
+            "angle": 0.04335011446664083,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            3
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            26
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.47455034446491995,
+            "tarPocketDt": 1064.261029933521,
+            "whiteTarDt": 1025.793593423836,
+            "angle": 0.30038788666596616,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            30
+          ],
+          "firstHit": 4,
+          "pots": {"4": 1},
+          "potInfo": {
+            "estPotProb": 0.7758209324294116,
+            "tarPocketDt": 515.0409766592574,
+            "whiteTarDt": 1018.0983955378442,
+            "angle": 0.22289619957653306,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            4
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            31
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.19148884494519297,
+            "tarPocketDt": 1253.3899103842377,
+            "whiteTarDt": 1364.104366149706,
+            "angle": 0.9120156276416551,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            31
+          ],
+          "firstHit": 4,
+          "potInfo": {
+            "estPotProb": 0.17189858753685933,
+            "tarPocketDt": 2936.6470303104015,
+            "whiteTarDt": 406.4492057574355,
+            "angle": 0.6488887460227928,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            35
+          ],
+          "foulInfo": {
+            "foulReasonAndScore": {"空杆": 4},
+            "illegal": false,
+            "miss": true
+          },
+          "firstHit": 0,
+          "gainScores": [
+            0,
+            4
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "SOLVE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "REST"
+        },
+        {
+          "scoresAfter": [
+            25,
+            36
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.7596437797259221,
+            "tarPocketDt": 709.0555075149553,
+            "whiteTarDt": 190.59300627016486,
+            "angle": 0.7001287558478051,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            43
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.7586102192215876,
+            "tarPocketDt": 902.7765853409697,
+            "whiteTarDt": 491.1832086639727,
+            "angle": 0.26719516451138425,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            7
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            44
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.6760033744821354,
+            "tarPocketDt": 501.56371481781684,
+            "whiteTarDt": 1071.7703101419597,
+            "angle": 0.1793122109843277,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            50
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "estPotProb": 0.6140763542401961,
+            "tarPocketDt": 1225.8940280974537,
+            "whiteTarDt": 548.3311341200814,
+            "angle": 0.3551600558733608,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            6
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            50
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            26,
+            50
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.7601711635997925,
+            "tarPocketDt": 376.285248424954,
+            "whiteTarDt": 3108.975740271777,
+            "angle": 0.1688553209840558,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            33,
+            50
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9482785741095787,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 477.557556398835,
+            "angle": 0.35318934591617346,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            34,
+            50
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.7491041661455007,
+            "tarPocketDt": 1245.0330667664887,
+            "whiteTarDt": 804.8439707736205,
+            "angle": 0.15344446043187834,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            41,
+            50
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9930987744368334,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 451.4835461801697,
+            "angle": 0.18222368338415684,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            43,
+            50
+          ],
+          "firstHit": 2,
+          "pots": {"2": 1},
+          "potInfo": {
+            "estPotProb": 0.7762965979419443,
+            "tarPocketDt": 915.0561928939615,
+            "whiteTarDt": 773.4330257378991,
+            "angle": 0.7030563850799276,
+            "isDouble": false
+          },
+          "gainScores": [
+            2,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 2,
+          "hand": "REST"
+        },
+        {
+          "scoresAfter": [
+            46,
+            50
+          ],
+          "firstHit": 3,
+          "pots": {"3": 1},
+          "potInfo": {
+            "estPotProb": 0.8613302891065575,
+            "tarPocketDt": 914.6384175459187,
+            "whiteTarDt": 1346.2098087440038,
+            "angle": 0.13246263745864395,
+            "isDouble": false
+          },
+          "gainScores": [
+            3,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 3,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            50,
+            50
+          ],
+          "firstHit": 4,
+          "pots": {"4": 1},
+          "potInfo": {
+            "estPotProb": 0.9999318343422698,
+            "tarPocketDt": 1258.2120369617676,
+            "whiteTarDt": 218.16712050037344,
+            "angle": 0.06484760322574168,
+            "isDouble": false
+          },
+          "gainScores": [
+            4,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 4,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            55,
+            50
+          ],
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "estPotProb": 0.8086989210374482,
+            "tarPocketDt": 2864.7636999823003,
+            "whiteTarDt": 158.21586883899647,
+            "angle": 0.21056371031026977,
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 5,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            61,
+            50
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "estPotProb": 0.7587763557739733,
+            "tarPocketDt": 1225.8940280974537,
+            "whiteTarDt": 425.52719494272026,
+            "angle": 0.7293321941810242,
+            "isDouble": false
+          },
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 6,
+          "hand": "REST"
+        },
+        {
+          "scoresAfter": [
+            68,
+            50
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9291917386999293,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 804.2510671645588,
+            "angle": 0.16537711402915245,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 7,
+          "hand": "LEFT"
+        }
+      ],
+      "winner": 1
+    },
+    {
+      "cueRecs": [
+        {
+          "scoresAfter": [
+            0,
+            1
+          ],
+          "specials": ["BALL_IN_HAND"],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "BREAK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            1
+          ],
+          "firstHit": 3,
+          "potInfo": {
+            "estPotProb": 0.09929966969603643,
+            "tarPocketDt": 3035.7743296613635,
+            "whiteTarDt": 479.57250517811724,
+            "angle": 1.1408386128053016,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            1
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "SOLVE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            1
+          ],
+          "firstHit": 1,
+          "potInfo": {
+            "estPotProb": 0.2505301271059799,
+            "tarPocketDt": 1669.8338320052635,
+            "whiteTarDt": 1227.9905264135634,
+            "angle": 0.39230146131657895,
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            1,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9646762025238333,
+            "tarPocketDt": 812.2446914678559,
+            "whiteTarDt": 732.8444167964835,
+            "angle": 0.16130544898402488,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            6,
+            1
+          ],
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "estPotProb": 0.9939980248067282,
+            "tarPocketDt": 900.5625,
+            "whiteTarDt": 364.7814852006111,
+            "angle": 0.3747008430594825,
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            7,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9699012670511746,
+            "tarPocketDt": 944.5021387071112,
+            "whiteTarDt": 552.4501715496913,
+            "angle": 0.3449256689522249,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            12,
+            1
+          ],
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "estPotProb": 0.995615103461245,
+            "tarPocketDt": 900.5625,
+            "whiteTarDt": 560.4251994761331,
+            "angle": 0.2055987245854256,
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            13,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.7221985706914711,
+            "tarPocketDt": 898.0874011960179,
+            "whiteTarDt": 1243.445899342936,
+            "angle": 0.552199711985347,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            1
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9653009082887036,
+            "tarPocketDt": 896.6484838197774,
+            "whiteTarDt": 370.62142845102284,
+            "angle": 0.15632000508039923,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            21,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9999999999850138,
+            "tarPocketDt": 635.8157201873277,
+            "whiteTarDt": 177.20052901702624,
+            "angle": 0.12265411163723972,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            28,
+            1
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9864859248219531,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 581.9590007422103,
+            "angle": 0.1314499385219574,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            29,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9999999999983809,
+            "tarPocketDt": 498.0224452673841,
+            "whiteTarDt": 473.6840466972717,
+            "angle": 0.07193709021118311,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            35,
+            1
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "estPotProb": 0.7815029554794068,
+            "tarPocketDt": 1262.5775299875254,
+            "whiteTarDt": 330.3726119909058,
+            "angle": 0.3379896455593978,
+            "isDouble": false
+          },
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            36,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9517494037177654,
+            "tarPocketDt": 1047.8391122193268,
+            "whiteTarDt": 341.2758464180668,
+            "angle": 0.43301719712206366,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            43,
+            1
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9993323964408947,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 396.83291278114973,
+            "angle": 0.11954242898684564,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            44,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9885012267460795,
+            "tarPocketDt": 1096.5468575641696,
+            "whiteTarDt": 131.94667737008294,
+            "angle": 0.4719689732639004,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            51,
+            1
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9761443333390296,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 469.47410597676014,
+            "angle": 0.26554451504373255,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            52,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.8710085319692671,
+            "tarPocketDt": 983.0808348766355,
+            "whiteTarDt": 293.05578883003153,
+            "angle": 0.6837319401495892,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            58,
+            1
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "estPotProb": 0.9742038472424157,
+            "tarPocketDt": 1225.8940280974537,
+            "whiteTarDt": 548.0225700067612,
+            "angle": 0.15863731770715628,
+            "isDouble": false
+          },
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            59,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9966410780039017,
+            "tarPocketDt": 1154.4690234963514,
+            "whiteTarDt": 222.03985801945558,
+            "angle": 0.30011050308160936,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            66,
+            1
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9317561055502395,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 654.8095004186608,
+            "angle": 0.2664120679510027,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            67,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.8974698054917427,
+            "tarPocketDt": 1101.3506353918735,
+            "whiteTarDt": 645.7309851137376,
+            "angle": 0.23986439486336764,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            74,
+            1
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9954606492088558,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 353.74894428650333,
+            "angle": 0.2322666258835473,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            75,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9899579161684933,
+            "tarPocketDt": 799.8440456669616,
+            "whiteTarDt": 356.6832356415675,
+            "angle": 0.2323230687272011,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            80,
+            1
+          ],
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "estPotProb": 0.9937821442921904,
+            "tarPocketDt": 1960.588093532142,
+            "whiteTarDt": 246.5753142808704,
+            "angle": 0.052714293361121545,
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            81,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.981591231506519,
+            "tarPocketDt": 824.2039297505131,
+            "whiteTarDt": 329.9670702138733,
+            "angle": 0.1493150557053271,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            88,
+            1
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9391570710722357,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 95.48316577523794,
+            "angle": 0.7320658385802006,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            89,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.45523000524590795,
+            "tarPocketDt": 1101.1135813413048,
+            "whiteTarDt": 1716.2675208089406,
+            "angle": 0.70127335818413,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            96,
+            1
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9625621673387796,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 794.2160981113037,
+            "angle": 0.07577139461793858,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            97,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "estPotProb": 0.9948225558021029,
+            "tarPocketDt": 1207.0673138240775,
+            "whiteTarDt": 593.7818280611955,
+            "angle": 0.009242940203485261,
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            103,
+            1
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "estPotProb": 0.999972932278957,
+            "tarPocketDt": 521.1449050019332,
+            "whiteTarDt": 944.0473555249057,
+            "angle": 0.025915643088811002,
+            "isDouble": false
+          },
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            105,
+            1
+          ],
+          "firstHit": 2,
+          "pots": {"2": 1},
+          "potInfo": {
+            "estPotProb": 0.9171025553448171,
+            "tarPocketDt": 914.6384175459187,
+            "whiteTarDt": 1188.99074456503,
+            "angle": 0.08809048700584077,
+            "isDouble": false
+          },
+          "gainScores": [
+            2,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 2,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            108,
+            1
+          ],
+          "firstHit": 3,
+          "pots": {"3": 1},
+          "potInfo": {
+            "estPotProb": 0.9589692184899357,
+            "tarPocketDt": 947.4393634744858,
+            "whiteTarDt": 359.82805338128327,
+            "angle": 0.5323254901550127,
+            "isDouble": false
+          },
+          "gainScores": [
+            3,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 3,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            112,
+            1
+          ],
+          "firstHit": 4,
+          "pots": {"4": 1},
+          "potInfo": {
+            "estPotProb": 0.9033080307323385,
+            "tarPocketDt": 1121.6351612047931,
+            "whiteTarDt": 967.0049562261678,
+            "angle": 0.10438383321572209,
+            "isDouble": false
+          },
+          "gainScores": [
+            4,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 4,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            117,
+            1
+          ],
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "estPotProb": 0.9494636948456836,
+            "tarPocketDt": 900.5625,
+            "whiteTarDt": 470.0126020323117,
+            "angle": 0.536792048401237,
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 5,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            123,
+            1
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "estPotProb": 0.9334493729228879,
+            "tarPocketDt": 1225.8940280974537,
+            "whiteTarDt": 210.63964511742577,
+            "angle": 0.5474577743911349,
+            "isDouble": false
+          },
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 6,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            130,
+            1
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "estPotProb": 0.9986574329014164,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 219.6113038442546,
+            "angle": 0.2811655434267788,
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 7,
+          "hand": "LEFT"
+        }
+      ],
+      "winner": 1
+    }
+  ],
+  "players": [
+    "Trump",
+    "custom_DA1B9E98710BC5F5"
+  ],
+  "careerMatchId": "custom_DA1B9E98710BC5F5+2024+cat_give_power_champ-ROUND_1-18",
+  "gameValues": {
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
+    "subRules": ["SNOOKER_STD"],
+    "devMode": false,
+    "tablePreset": "duckShellSnookerTable"
+  },
+  "entireBeginTime": "2025-05-24 04_25_32.173",
+  "totalFrames": 3
+}

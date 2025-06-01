@@ -11,6 +11,7 @@ import trashsoftware.trashSnooker.core.FoulInfo;
 import trashsoftware.trashSnooker.core.PlayerHand;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 
@@ -22,7 +23,7 @@ import java.util.Map;
 public class MatchInfoRec {
 
     public static final MatchInfoRec INVALID = new MatchInfoRec(null,
-            null, null, 0, null, false);
+            null, null, 0, null, false, App.VERSION_CODE);
     
     public final String entireBeginTime;  // 
     public final String careerMatchId;
@@ -31,12 +32,17 @@ public class MatchInfoRec {
     public final int totalFrames;
     protected final File recFile;
     public final boolean valid;
+    public final int saveVersion;
 
     protected final List<FrameInfoRec> frames = new ArrayList<>();
 
-    MatchInfoRec(String entireBeginTime, String careerMatchId, 
-                 GameValues gameValues, int totalFrames,
-                 String[] playerIds, boolean valid) {
+    MatchInfoRec(String entireBeginTime, 
+                 String careerMatchId, 
+                 GameValues gameValues, 
+                 int totalFrames,
+                 String[] playerIds, 
+                 boolean valid,
+                 int saveVersion) {
         this.careerMatchId = careerMatchId;
         this.entireBeginTime = entireBeginTime;
         this.gameValues = gameValues;
@@ -44,6 +50,7 @@ public class MatchInfoRec {
         this.playerIds = playerIds;
         this.valid = valid;
         this.recFile = getRecFile(entireBeginTime);
+        this.saveVersion = saveVersion;
     }
 
     static File getRecFile(String entireBeginTime) {
@@ -61,9 +68,8 @@ public class MatchInfoRec {
                                               String entireBeginTime,
                                               String careerMatchId,
                                               String[] playerIds) {
-        MatchInfoRec mir = new MatchInfoRec(entireBeginTime, careerMatchId, gameValues,
-                totalFrames, playerIds, true);
-        return mir;
+        return new MatchInfoRec(entireBeginTime, careerMatchId, gameValues,
+                totalFrames, playerIds, true, App.VERSION_CODE);
     }
 
     public static MatchInfoRec loadMatchRec(String entireBeginTime) {
@@ -83,9 +89,10 @@ public class MatchInfoRec {
                     playerIds[i] = playerArray.getString(i);
                 }
                 String careerMatchId = loaded.optString("careerMatchId", null);
+                int version = loaded.optInt("saveVersion", 58);  // 58是第一个引入的版本
 
                 MatchInfoRec mir = new MatchInfoRec(entireBeginTime, careerMatchId, gameValues,
-                        loaded.getInt("totalFrames"), playerIds, true);
+                        loaded.getInt("totalFrames"), playerIds, true, version);
                 
                 JSONArray frameArray = loaded.getJSONArray("frames");
                 for (int i = 0; i < frameArray.length(); i++) {

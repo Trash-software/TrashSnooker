@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.ai.AiCue;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
@@ -125,6 +126,54 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             GameSettings gameSettings,
             GameValues gameValues,
             EntireGame entireGame) {
+        Game<? extends Ball, ? extends Player> game = createGameInternal(gameSettings, gameValues, entireGame);
+
+        // 处理让球
+        if (gameValues.isTraining()) {
+            // todo: 可能有开球训练？
+            game.isBreaking = false;
+        } else {
+            LetScoreOrBall p1Let = game.getP1().getLetScoreOrBall();
+            LetScoreOrBall p2Let = game.getP2().getLetScoreOrBall();
+            if (game instanceof AbstractSnookerGame asg) {
+                if (p1Let instanceof LetScoreOrBall.LetScoreFace ls)
+                    asg.getPlayer1().addScore(ls.score);
+                else if (p1Let != null && p1Let != LetScoreOrBall.NOT_LET)
+                    EventLogger.warning("Wrong let");
+                if (p2Let instanceof LetScoreOrBall.LetScoreFace ls)
+                    asg.getPlayer2().addScore(ls.score);
+                else if (p2Let != null && p2Let != LetScoreOrBall.NOT_LET)
+                    EventLogger.warning("Wrong let");
+            } else if (game instanceof ChineseEightBallGame ceb) {
+                if (p1Let instanceof LetScoreOrBall.LetBallFace lb) {
+                    ceb.getPlayer1().getLettedBalls().putAll(lb.letBalls);
+                } else if (p1Let != null && p1Let != LetScoreOrBall.NOT_LET)
+                    EventLogger.warning("Wrong let");
+                if (p2Let instanceof LetScoreOrBall.LetBallFace lb) {
+                    ceb.getPlayer2().getLettedBalls().putAll(lb.letBalls);
+                } else if (p2Let != null && p2Let != LetScoreOrBall.NOT_LET)
+                    EventLogger.warning("Wrong let");
+            }
+        }
+
+        try {
+            if (DBAccess.RECORD && entireGame != null) {
+                game.recorder = new NaiveActualRecorder(game, entireGame.getMetaMatchInfo());
+            } else {
+                game.recorder = new InvalidRecorder();
+            }
+            game.recorder.startRecoding();
+        } catch (IOException e) {
+            EventLogger.warning(e);
+        }
+
+        return game;
+    }
+
+    private static @NotNull Game<? extends Ball, ? extends Player> createGameInternal(
+            GameSettings gameSettings, 
+            GameValues gameValues, 
+            EntireGame entireGame) {
         int frameIndex = entireGame == null ? 1 : (entireGame.getP1Wins() + entireGame.getP2Wins() + 1);
         Game<? extends Ball, ? extends Player> game;
         if (gameValues.rule == GameRule.SNOOKER) {
@@ -170,50 +219,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 game = new AmericanNineBallGame(entireGame, gameSettings, gameValues, frameIndex);
             }
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
-
-//        for (SubRule subRule : subRules) {
-//            game.addSubRule(subRule);
-//        }
-
-        // 处理让球
-        if (gameValues.isTraining()) {
-            // todo: 可能有开球训练？
-            game.isBreaking = false;
-        } else {
-            LetScoreOrBall p1Let = game.getP1().getLetScoreOrBall();
-            LetScoreOrBall p2Let = game.getP2().getLetScoreOrBall();
-            if (game instanceof AbstractSnookerGame asg) {
-                if (p1Let instanceof LetScoreOrBall.LetScoreFace ls)
-                    asg.getPlayer1().addScore(ls.score);
-                else if (p1Let != null && p1Let != LetScoreOrBall.NOT_LET)
-                    EventLogger.warning("Wrong let");
-                if (p2Let instanceof LetScoreOrBall.LetScoreFace ls)
-                    asg.getPlayer2().addScore(ls.score);
-                else if (p2Let != null && p2Let != LetScoreOrBall.NOT_LET)
-                    EventLogger.warning("Wrong let");
-            } else if (game instanceof ChineseEightBallGame ceb) {
-                if (p1Let instanceof LetScoreOrBall.LetBallFace lb) {
-                    ceb.getPlayer1().getLettedBalls().putAll(lb.letBalls);
-                } else if (p1Let != null && p1Let != LetScoreOrBall.NOT_LET)
-                    EventLogger.warning("Wrong let");
-                if (p2Let instanceof LetScoreOrBall.LetBallFace lb) {
-                    ceb.getPlayer2().getLettedBalls().putAll(lb.letBalls);
-                } else if (p2Let != null && p2Let != LetScoreOrBall.NOT_LET)
-                    EventLogger.warning("Wrong let");
-            }
-        }
-
-        try {
-            if (DBAccess.RECORD && entireGame != null) {
-                game.recorder = new NaiveActualRecorder(game, entireGame.getMetaMatchInfo());
-            } else {
-                game.recorder = new InvalidRecorder();
-            }
-            game.recorder.startRecoding();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         return game;
     }
 
@@ -254,6 +259,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected abstract void cloneBalls(B[] allBalls);
 
     @Override
+    @SuppressWarnings("unchecked")
     public Game<B, P> clone() {
         try {
             Game<B, P> copy = (Game<B, P>) super.clone();
@@ -768,11 +774,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 double connectionAngle = Algebra.thetaOf(xDiff, yDiff);  // 连线的绝对角度
 
                 double ballRadiusAngle = Math.asin(shadowRadius / dt);  // 从selfBall看ball占的的角
-//                if ()
-//                // 起始球与障碍球切线长度
-//                double tanDt = Math.sqrt(Math.pow(dt, 2) - Math.pow(gameValues.ballRadius, 2));
-//                // 起始球自己的半径占的角度
-//                double selfPassAngle = Math.asin(gameValues.ballRadius / tanDt);
 
                 double left = connectionAngle + ballRadiusAngle + extraShadowAngle;
                 double right = connectionAngle - ballRadiusAngle - extraShadowAngle;
@@ -1156,10 +1157,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //        System.out.println(Arrays.deepToString(seeAbleBallIntervals.toArray()));
         List<double[]> merged = new ArrayList<>();
         for (double[] interval : seeAbleBallIntervals) {
-            if (merged.isEmpty() || merged.get(merged.size() - 1)[1] < interval[0]) {
+            if (merged.isEmpty() || merged.getLast()[1] < interval[0]) {
                 merged.add(interval);
             } else {
-                double[] last = merged.get(merged.size() - 1);
+                double[] last = merged.getLast();
                 last[1] = Math.max(last[1], interval[1]);
             }
         }
@@ -1301,9 +1302,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public void clearRedBallsTest() {
-//        for (int i = 0; i < 14; ++i) {
-//            redBalls[i].pot();
-//        }
+
     }
 
     public boolean isEnded() {
@@ -1532,7 +1531,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         if (!directAttackChoices.isEmpty()) {
             // 如果有进攻机会，就返回最简单的那颗球
             Collections.sort(directAttackChoices);
-            AttackChoice.DirectAttackChoice easiest = directAttackChoices.get(0);
+            AttackChoice.DirectAttackChoice easiest = directAttackChoices.getFirst();
 //            double[] tole = easiest.leftRightTolerance();
 //            System.out.println("Tolerance: left " + tole[0] + ", right " + tole[1]);
             return easiest.getBall();
@@ -1575,13 +1574,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     private Movement physicalCalculate(Phy phy) {
-//        physicsTimer = new Timer();
         long st = System.currentTimeMillis();
-//        try {
-//            Thread.sleep(1500);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         physicsCalculator = new PhysicsCalculator(phy);
         Movement movement = physicsCalculator.calculate();
         System.out.println("Physical calculation ends in " + (System.currentTimeMillis() - st) + " ms");
@@ -1694,108 +1687,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return player2.getInGamePlayer();
     }
 
-//    public void addSubRule(SubRule subRule) {
-//        subRules.removeIf(subRule::isRepellent);
-//        subRules.add(subRule);
-//    }
-
-    public void paperBreak(Phy phy) {
-        new PaperBreakHandler().handle(phy);
-    }
-
-    public class PaperBreakHandler {
-
-        void handle(Phy phy) {
-            if (!ballHeapIntact) {
-                System.err.println("Ball heap not intact, should not reach this point");
-                return;
-            }
-            B movingBall = null;
-            B hitBall = null;
-            OUTER:
-            for (B ball : getAllBalls()) {
-                if (!isBallPlacedInHeap(ball) && !ball.isNotMoving(phy)) {
-                    for (B tar : getAllBalls()) {
-                        if (tar != ball && isBallPlacedInHeap(tar)) {
-                            double dt = Algebra.distanceToPoint(ball.x, ball.y, tar.x, tar.y);
-                            if (Math.abs(dt - gameValues.ball.ballDiameter) < 1e-4 && ball.isMovingTowards(tar)) {
-                                movingBall = ball;
-                                hitBall = tar;
-                                break OUTER;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 解除这个anyway
-            ballHeapIntact = false;
-
-            if (movingBall == null) {
-                System.err.println("Cannot find paper break ball");
-                return;
-            }
-
-            System.out.println("Paper break, moving: " + movingBall + ", tar: " + hitBall);
-
-            List<B> heapBalls = Arrays.stream(getAllBalls()).filter(Game.this::isBallPlacedInHeap).toList();
-
-            double dx = hitBall.x - movingBall.x;
-            double dy = hitBall.y - movingBall.y;
-            double dist = Math.sqrt(dx * dx + dy * dy);
-            double nx = dx / dist;
-            double ny = dy / dist;
-
-            // Project cueBall's velocity onto collision normal
-            double dot = movingBall.vx * nx + movingBall.vy * ny;
-
-            // Apply to head ball
-            hitBall.setVx(dot * nx);
-            hitBall.setVy(dot * ny);
-
-            // Cue ball loses that component (or zero it out if you prefer)
-            movingBall.vx -= dot * nx;
-            movingBall.vy -= dot * ny;
-
-            propagateImpulse(hitBall, heapBalls, new HashSet<>(), 0.01);
-        }
-
-        private void propagateImpulse(B current,
-                                      List<B> allBalls,
-                                      Set<B> processed,
-                                      double minDotThreshold) {
-            processed.add(current);
-
-            for (B neighbor : allBalls) {
-                if (neighbor == current || processed.contains(neighbor)) continue;
-
-                // Are they touching?
-                double dx = neighbor.x - current.x;
-                double dy = neighbor.y - current.y;
-                double dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist > current.radius * 2 + 1e-4) continue; // Not touching
-
-                // Direction from current to neighbor
-                double nx = dx / dist;
-                double ny = dy / dist;
-
-                // Project current's velocity onto the direction to neighbor
-                double dot = current.vx * nx + current.vy * ny;
-
-                if (dot > minDotThreshold) {
-                    // Transfer only the forward momentum
-//                    neighbor.setVelocity(dot * nx, dot * ny);
-                    neighbor.setVx(dot * nx);
-                    neighbor.setVy(dot * ny);
-
-                    // Recurse — this ball now continues the chain
-                    propagateImpulse(neighbor, allBalls, processed, minDotThreshold);
-                }
-            }
-        }
-    }
-
     public static class SeeAble {
         public final int seeAbleTargets;
         public final double avgTargetDistance;
@@ -1868,7 +1759,6 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private double lenAfterWall;
         private WhitePrediction prediction;
         private double cumulatedPhysicalTime = 0.0;
-        //        private double lastPhysicalTime = 0.0;
         private double dtWhenHitFirstWall = -1.0;
         private boolean notTerminated = true;
         private boolean hitWall;
@@ -2055,7 +1945,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             return false;
         }
 
-        private boolean checkTwiceCollision() {
+        private void checkTwiceCollision() {
             // assert true了应该
             if (whiteFirstCollide != null) {
 //                System.out.println("Twice Dt: " + cueBallClone.predictedDtToPoint(whiteFirstCollide.x, whiteFirstCollide.y));
@@ -2063,10 +1953,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         gameValues.ball.ballDiameter) {
 //                    System.out.println("Twice collision!");
                     prediction.setTwiceColl(true);
-                    return true;
+                    return;
                 }
             }
-            return false;
         }
 
         private void tryPassSecondBall() {
@@ -2076,7 +1965,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             gameValues.ball.ballDiameter) {
                         Ball ballClone = ball.clone();
 //                        System.out.println("second: " + ballClone.getValue());
-                        cueBallClone.twoMovingBallsHitCore(null, ballClone, phy, true);
+                        cueBallClone.twoMovingBallsHitCore( ballClone, phy);
                         prediction.setSecondCollide(ball,
                                 Math.hypot(cueBallClone.vx, cueBallClone.vy) * phy.calculationsPerSec);
                     }
@@ -2102,7 +1991,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             gameValues.ball.ballDiameter) {
                         double whiteVx = cueBallClone.vx;
                         double whiteVy = cueBallClone.vy;
-                        cueBallClone.twoMovingBallsHitCore(null, ball, phy, true);
+                        cueBallClone.twoMovingBallsHitCore(ball, phy);
                         double[] rawBallUnitVec = Algebra.unitVector(
                                 ball.getLastCollisionX() - cueBallClone.getLastCollisionX(),
                                 ball.getLastCollisionY() - cueBallClone.getLastCollisionY());
@@ -2140,9 +2029,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         private final double[] movementValues = new double[nBalls()];
         private Movement movement;
         private double cumulatedPhysicalTime = 0.0;
-        //        private int physicalIndex = 0;
-//        private int lastVisualFramePhysicalIndex = 0;  // 上一个动画帧对应的物理帧index
         private boolean notTerminated = true;
+        
+        private final List<TouchingBallsHandler> frameTouchingBallHandlers = new ArrayList<>();
 
         private B[] randomOrderBallPool1;
 //        private B[] randomOrderBallPool2;
@@ -2198,11 +2087,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             boolean noBallMoving = true;
 //            long st = System.nanoTime();
             reorderRandomPool();
+            frameTouchingBallHandlers.clear();
             B[] allBalls = getAllBalls();
             for (B ball : allBalls) {
                 ball.prepareMove(phy);
             }
 
+            OUT_LOOP:
             for (int i = 0; i < allBalls.length; i++) {
                 B ball = allBalls[i];
                 if (ball.isPotted()) {
@@ -2218,6 +2109,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 }
 
                 if (ball.isOutOfTable()) continue;
+                
+                if (!phy.isPrediction && !frameTouchingBallHandlers.isEmpty()) {
+                    for (TouchingBallsHandler tbh : frameTouchingBallHandlers) {
+                        if (tbh.affectedBalls.contains(ball)) {
+                            continue OUT_LOOP;
+                        }
+                    }
+                }
 
                 if (!ball.isLikelyStopped(phy)) {
                     noBallMoving = false;
@@ -2242,7 +2141,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
                     if (ball.currentBounce != null) {
                         ball.processBounce(App.PRINT_DEBUG);
-                        if (!tryHitBall(ball, true)) {
+                        if (!tryHitBall(ball)) {
                             ball.normalMove(phy);
                         } else {
                             movementTypes[i] = MovementFrame.COLLISION;
@@ -2255,7 +2154,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     ObjectOnTable.CushionHitResult holeAreaResult = ball.tryHitHoleArea(phy);
                     if (holeAreaResult != null && holeAreaResult.result() != 0) {
                         // 袋口区域
-                        if (tryHitBall(ball, true)) {
+                        if (tryHitBall(ball)) {
                             movementTypes[i] = MovementFrame.COLLISION;
                             movementValues[i] = ball.getLastCollisionRelSpeed()
                                     * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
@@ -2286,7 +2185,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         continue;
                     }
 
-                    if (tryHitBall(ball, true)) {
+                    if (tryHitBall(ball)) {
                         movementTypes[i] = MovementFrame.COLLISION;
                         movementValues[i] = ball.getLastCollisionRelSpeed()
                                 * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
@@ -2298,11 +2197,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         }
                         ball.normalMove(phy);
                     }
-                } else {
-                    if (!ball.sideSpinAtPosition(phy)) {
-
-                    }
-                }
+                } 
+//                else {
+//                    if (!ball.sideSpinAtPosition(phy)) {
+//
+//                    }
+//                }
             }
             double lastPhysicalTime = cumulatedPhysicalTime;
             cumulatedPhysicalTime += phy.calculateMs;
@@ -2337,12 +2237,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     movementValues[i] = 0.0;
                 }
             }
-//            physicalIndex++;
             return noBallMoving;
-//            if (noBallMoving) {
-//                endMove();
-//            }
-//            System.out.print((System.nanoTime() - st) + " ");
         }
 
         private void whiteCollide(Ball ball) {
@@ -2354,12 +2249,22 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             movement.getWhiteTrace().hitBall(ball);
         }
 
-        private boolean tryHitBall(B ball, boolean applyComplexCal) {
+        private boolean tryHitBall(B ball) {
             boolean hit = false;
             for (B otherBall : randomOrderBallPool1) {
+                // 因为球会在袋内滞留约1秒，滞留期间当然是不会碰撞的
                 if (ball != otherBall && !otherBall.isPotted()) {
-                    // 因为球会在袋内滞留约1秒，滞留期间当然是不会碰撞的
-                    if (ball.tryHitBall(Game.this, otherBall, applyComplexCal, phy)) {
+                    // 检查是否是撞上贴球堆
+                    if (!phy.isPrediction && ball.willCollide(otherBall)) {
+                        if (processHittingTouchingBalls(ball, otherBall)) {
+                            hit = true;
+                            if (ball.isWhite()) whiteCollide(otherBall);  // 记录白球撞到的球
+                            else if (otherBall.isWhite()) whiteCollide(ball);
+                            break;
+                        }
+                    }
+                    
+                    if (ball.tryHitBall(Game.this, otherBall, true, phy)) {
                         // hit ball
                         hit = true;
                         if (ball.isWhite()) whiteCollide(otherBall);  // 记录白球撞到的球
@@ -2370,9 +2275,173 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
             return hit;
         }
+        
+        private boolean processHittingTouchingBalls(B b1, B b2) {
+            B movingBall;
+            B staticBall;
+            if (b1.isNotMoving()) {
+                movingBall = b2;
+                staticBall = b1;
+            } else if (b2.isNotMoving()) {
+                movingBall = b1;
+                staticBall = b2;
+            } else {
+                // 两颗球都在动，不会是贴球的情况
+                return false;
+            }
+            
+            if (TouchingBallsHandler.hasTouching(movingBall, staticBall, randomOrderBallPool1)) {
+                TouchingBallsHandler tbh = new TouchingBallsHandler(movingBall, staticBall, randomOrderBallPool1);
+                tbh.handle(phy);
+                frameTouchingBallHandlers.add(tbh);
+                return true;
+            }
+            return false;
+        }
     }
 
-    public class FrameAchievementRecorder {
+    public static class FrameAchievementRecorder {
         int[] easyBallFails = new int[2];
+    }
+    
+    class TouchingBallsHandler {
+        private final B movingBall;
+        private final B firstBallInTouch;
+        private final Set<B> affectedBalls = new HashSet<>();
+        private final B[] pool;
+
+        TouchingBallsHandler(B movingBall, B firstBallInTouch, B[] pool) {
+            this.movingBall = movingBall;
+            this.firstBallInTouch = firstBallInTouch;
+            this.pool = pool;
+        }
+        
+        void handle(Phy phy) {
+            addToAffected(firstBallInTouch);
+            
+            double[] firstBallPos = firstBallInTouch.getPositionArray();
+            
+            movingBall.twoMovingBallsHitCore(firstBallInTouch, phy);
+            firstBallInTouch.setPosition(firstBallPos);
+            
+            double vx = firstBallInTouch.vx;
+            double vy = firstBallInTouch.vy;
+
+            propagateImpulse(new ArrayList<>(affectedBalls), firstBallInTouch, vx, vy, 
+                    gameValues.ball.ballBounceRatio);
+            
+            affectedBalls.add(movingBall);
+        }
+
+        @SuppressWarnings("SuspiciousMethodCalls")
+        void propagateImpulse(List<B> balls, Ball source, double vx, double vy, double restitution) {
+            int n = balls.size();
+            double[] initImpulse = new double[]{vx, vy};
+            int startIndex = balls.indexOf(source);
+            
+            // Initialize impulse map
+            Map<Ball, double[]> impulseMap = new HashMap<>();
+            for (Ball b : balls) {
+                impulseMap.put(b, new double[]{0.0, 0.0});
+            }
+            // Seed initial ball
+            impulseMap.put(balls.get(startIndex), new double[]{initImpulse[0], initImpulse[1]});
+
+            // Precompute neighbor list for tight packing
+            Map<Ball, List<Ball>> neighbors = new HashMap<>();
+            for (int i = 0; i < n; i++) {
+                Ball bi = balls.get(i);
+                neighbors.putIfAbsent(bi, new ArrayList<>());
+                for (int j = 0; j < n; j++) {
+                    if (i == j) continue;
+                    Ball bj = balls.get(j);
+                    double dx = bj.x - bi.x;
+                    double dy = bj.y - bi.y;
+                    if (Math.hypot(dx, dy) <= bi.radius + bj.radius + 1e-6) {
+                        neighbors.get(bi).add(bj);
+                    }
+                }
+            }
+
+            // BFS queue
+            Queue<Ball> queue = new LinkedList<>();
+            Set<Ball> visited = new HashSet<>();
+            queue.add(balls.get(startIndex));
+            visited.add(balls.get(startIndex));
+
+            // Propagate
+            while (!queue.isEmpty()) {
+                Ball bi = queue.poll();
+                double[] pi = impulseMap.get(bi);
+                for (Ball bj : neighbors.get(bi)) {
+                    // Compute unit normal from bi to bj
+                    double dx = bj.x - bi.x;
+                    double dy = bj.y - bi.y;
+                    double dist = Math.hypot(dx, dy);
+                    if (dist == 0) continue;
+                    double nx = dx / dist;
+                    double ny = dy / dist;
+                    // Project impulse onto that normal
+                    double magIn = pi[0] * nx + pi[1] * ny;
+                    if (magIn <= 0) continue; // no forward transfer
+                    double transferMag = magIn * restitution;
+                    // Transfer vector
+                    double tx = nx * transferMag;
+                    double ty = ny * transferMag;
+                    // Apply transfer
+                    pi[0] -= tx;
+                    pi[1] -= ty;
+                    double[] pj = impulseMap.get(bj);
+                    pj[0] += tx;
+                    pj[1] += ty;
+                    impulseMap.put(bi, pi);
+                    impulseMap.put(bj, pj);
+                    if (!visited.contains(bj)) {
+                        visited.add(bj);
+                        queue.add(bj);
+                    }
+                }
+            }
+            
+            for (var entry : impulseMap.entrySet()) {
+                entry.getKey().setVelocity(entry.getValue());
+            }
+        }
+        
+        private void addToAffected(B ball) {
+            if (affectedBalls.contains(ball)) return;
+            affectedBalls.add(ball);
+            
+            List<B> touching = listTouchings(ball);
+            for (B other : touching) {
+                addToAffected(other);
+            }
+        }
+        
+        private List<B> listTouchings(B ball) {
+            List<B> res = new ArrayList<>();
+            for (B other : pool) {
+                if (!other.isPotted() && other != ball) {
+                    if (ball.isTouching(other)) {
+                        res.add(other);
+                    }
+                }
+            }
+            return res;
+        }
+
+        /**
+         * 遍历球堆，找到所有贴球，并返回是否处理了
+         */
+        static <B extends Ball> boolean hasTouching(B movingBall, B firstBallInTouch, B[] pool) {
+            for (B other : pool) {
+                if (!other.isPotted() && other != firstBallInTouch && other != movingBall) {
+                    if (firstBallInTouch.isTouching(other)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

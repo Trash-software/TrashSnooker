@@ -1,6 +1,5 @@
 package trashsoftware.trashSnooker.core.ai;
 
-import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.attempt.CueType;
 
@@ -11,7 +10,7 @@ import java.util.Random;
 
 public class AiCueResult {
 
-    public static final double DEFAULT_AI_PRECISION = 12800.0;
+    public static final double DEFAULT_AI_PRECISION = 12500.0;
     protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
     private final CueParams cueParams;
     private final CueType cueType;
@@ -20,7 +19,7 @@ public class AiCueResult {
     private final Ball targetBall;
     //    private final PlayerPerson.HandSkill handSkill;
     private final double frameImportance;
-//    private final boolean rua;
+    //    private final boolean rua;
     private double unitX, unitY;
     private List<double[]> whitePath = new ArrayList<>();
     private final FinalChoice choice;  // 供记录
@@ -121,7 +120,7 @@ public class AiCueResult {
         } else if (gamePlayStage == GamePlayStage.BREAK) {
             precisionFactor *= 5.0;
         }
-        
+
         // rua不rua
 //        precisionFactor /= calculateFramePsyDivisor(frameImportance, );
         precisionFactor *= igp.getPsyStatus();

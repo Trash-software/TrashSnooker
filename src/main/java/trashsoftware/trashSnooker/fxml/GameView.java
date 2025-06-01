@@ -32,7 +32,6 @@ import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.StringConverter;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.audio.AudioPlayerManager;
 import trashsoftware.trashSnooker.audio.SoundInfo;
@@ -133,7 +132,11 @@ public class GameView implements Initializable {
     @FXML
     Canvas cuePointCanvas;
     @FXML
+    Pane powerSliderPane;
+    @FXML
     Slider powerSlider;
+    @FXML
+    Label sliderZeroLabel, sliderCtrlLabel, sliderMaxLabel;
     @FXML
     Label powerLabel;
     @FXML
@@ -741,9 +744,9 @@ public class GameView implements Initializable {
         if (anyChange) {
             // 如果这次update改变了任何“一只手”的可用性，刷新为可用的第一顺位手
             handSelectionToggleGroup.selectToggle(
-                    handButtonOfHand(playAbles.get(0))
+                    handButtonOfHand(playAbles.getFirst())
             );
-            currentHand = playingPerson.handBody.getHandSkillByHand(playAbles.get(0));  // 防止由于toggle没变的原因导致不触发换手
+            currentHand = playingPerson.handBody.getHandSkillByHand(playAbles.getFirst());  // 防止由于toggle没变的原因导致不触发换手
         }
         updatePowerSlider(igp, currentHand, false);
     }
@@ -880,7 +883,7 @@ public class GameView implements Initializable {
                 try {
                     replay.close();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    EventLogger.error(ex);
                 }
                 if (videoCapture != null && !videoCapture.isFinished()) {
                     videoCapture.fail();
@@ -891,17 +894,7 @@ public class GameView implements Initializable {
                 }
                 if (!game.isFinished() && !game.getGame().isEnded()) {
                     Player p1 = game.getGame().getPlayer1();
-//                    game.quitGame(careerMatch != null);
-                    InGamePlayer winner;
-                    if (careerMatch != null) {
-                        winner = player1.getPlayerType() == PlayerType.PLAYER ?
-                                player2 : player1;
-                    } else {
-                        winner =
-                                (game.getGame().getCuingPlayer() == game.getGame().getPlayer1() ?
-                                        game.getGame().getPlayer2() : game.getGame().getPlayer1())
-                                        .getInGamePlayer();
-                    }
+                    InGamePlayer winner = getFrameWinner();
 
                     if (careerMatch != null) {
 //                        game.saveTo(PlayerVsAiMatch.getMatchSave());
@@ -940,6 +933,20 @@ public class GameView implements Initializable {
 //            gameLoop.cancel();
             gameLoop.stop();
         });
+    }
+
+    private InGamePlayer getFrameWinner() {
+        InGamePlayer winner;
+        if (careerMatch != null) {
+            winner = player1.getPlayerType() == PlayerType.PLAYER ?
+                    player2 : player1;
+        } else {
+            winner =
+                    (game.getGame().getCuingPlayer() == game.getGame().getPlayer1() ?
+                            game.getGame().getPlayer2() : game.getGame().getPlayer1())
+                            .getInGamePlayer();
+        }
+        return winner;
     }
 
     private void setUiFrameStart() {
@@ -1047,8 +1054,26 @@ public class GameView implements Initializable {
                 cuingHand.getControllablePowerPercentage(),
                 cueAngleDeg
         );
-        powerSlider.setMajorTickUnit(
-                ctrlPower);
+//        powerSlider.setMajorTickUnit(
+//                ctrlPower);
+        
+//        double sliderHeight = powerSlider.getHeight() -
+//                powerSlider.getInsets().getTop() - powerSlider.getInsets().getBottom();
+        double sliderHeight = powerSlider.getHeight() - 12;  // 可能的上下margin
+        if (sliderHeight == -12) return;
+        sliderCtrlLabel.setVisible(true);
+        sliderMaxLabel.setVisible(true);
+        sliderZeroLabel.setVisible(true);
+
+        double sliderY = powerSlider.getLayoutY() + 6;
+        double labelH = sliderCtrlLabel.getHeight() / 2;
+        sliderCtrlLabel.setText(String.format("- %.1f", ctrlPower));
+        sliderMaxLabel.setText(String.format("- %.1f", maxPower));
+        sliderZeroLabel.setText("- 0.0");
+        
+        sliderCtrlLabel.setLayoutY(sliderHeight * (100 - ctrlPower) / 100 - labelH + sliderY);
+        sliderMaxLabel.setLayoutY(sliderHeight * (100 - maxPower) / 100 - labelH+ sliderY);
+        sliderZeroLabel.setLayoutY(sliderHeight - labelH+ sliderY);
     }
 
     public void finishCue(Player justCuedPlayer, Player nextCuePlayer) {
@@ -1095,10 +1120,10 @@ public class GameView implements Initializable {
             EventLogger.error(re);
             game.getGame().abortRecording();
         }
-        
+
         InGamePlayer justCuedIgp = justCuedPlayer.getInGamePlayer();
         InGamePlayer opponentIgp = game.getGame().getAnotherIgp(justCuedIgp);
-        
+
         justCuedIgp.updatePsyStatusAfterSelfCue(
                 game.getGame().frameImportance(justCuedIgp.getPlayerNumber()),
                 lastPotAttempt,
@@ -1293,7 +1318,7 @@ public class GameView implements Initializable {
         } else {
             changeCueButton.setDisable(true);
         }
-        
+
         InGamePlayer igp1 = game.getPlayer1(), igp2 = game.getPlayer2();
         igp1.adjustPsyStatusFrameBegin(game.getGame().frameImportance(igp1.getPlayerNumber()));
         igp2.adjustPsyStatusFrameBegin(game.getGame().frameImportance(igp2.getPlayerNumber()));
@@ -1310,13 +1335,13 @@ public class GameView implements Initializable {
         tableGraphicsChanged = true;
         Player p1 = game.getGame().getPlayer1();
         Player wonPlayer = game.getGame().getWiningPlayer();
-        
+
         InGamePlayer wonIgp = wonPlayer.getInGamePlayer();
         InGamePlayer lostIgp = game.getGame().getAnotherIgp(wonIgp);
         // 在game.playerWinsAframe()之前，否则影响frameImportance的判断
         wonIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(wonIgp.getPlayerNumber()), true, game);
         lostIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(lostIgp.getPlayerNumber()), false, game);
-        
+
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
         drawScoreBoard(game.getGame().getCuingPlayer(), false);
         game.getGame().getRecorder().stopRecording(true);
@@ -2846,6 +2871,7 @@ public class GameView implements Initializable {
                 System.out.printf("Ai direction: %f, %f\n", cursorDirectionUnitX, cursorDirectionUnitY);
                 currentHand = cueResult.getHandSkill();
                 updateHandSelectionToggleByData(currentHand.hand);
+                updatePowerSlider(player.getInGamePlayer(), cueResult.getHandSkill());
                 powerSlider.setValue(cueResult.getCueParams().selectedPower());
                 cuePointX = cueCanvasWH / 2 + cueResult.getCueParams().selectedSideSpin() * cueAreaRadius;
                 cuePointY = cueCanvasWH / 2 - cueResult.getCueParams().selectedFrontBackSpin() * cueAreaRadius;
@@ -3162,6 +3188,10 @@ public class GameView implements Initializable {
     }
 
     private void setupPowerSlider() {
+        powerSlider.setShowTickMarks(false);
+        powerSlider.setShowTickLabels(false);
+        powerSlider.setSnapToTicks(false);
+
         powerSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
             if (game != null) {
                 double maxPower;
@@ -3185,17 +3215,6 @@ public class GameView implements Initializable {
             }
             powerLabel.setText(String.format("%.1f", newValue.doubleValue()));
         }));
-        powerSlider.setLabelFormatter(new StringConverter<>() {
-            @Override
-            public String toString(Double aDouble) {
-                return String.format("%.1f", aDouble);
-            }
-
-            @Override
-            public Double fromString(String s) {
-                return Double.parseDouble(s);
-            }
-        });
 
         powerSlider.setValue(DEFAULT_POWER);
     }
