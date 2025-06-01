@@ -1,33 +1,33 @@
 {
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
+  "winRecords": {"1": 1},
+  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 0.7329300000000011,
+    "psyStatus": 1,
     "person": "custom_player_3",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "p1Wins": 0,
+  "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 1,
-    "person": "Kid",
+    "psyStatus": 0.75302269481425,
+    "person": "custom_player_2",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "startTime": 1748810170613,
+  "startTime": 1748813558215,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
     "subRules": ["SNOOKER_STD"],
-    "devMode": true,
+    "devMode": false,
     "table": {
       "tableOrdinal": 0,
       "pocketDifficultyOrdinal": 3,

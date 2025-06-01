@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 66830,
+    "money": 71530,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
@@ -4337,13 +4337,371 @@
         "moneyAfter": 66830,
         "type": "purchase",
         "timestamp": "2025-05-29 18:42:13"
+      },
+      {
+        "inGameDate": "2024/11/12",
+        "year": 2024,
+        "match": "united_kingdom_champ",
+        "moneyBefore": 66830,
+        "moneyAfter": 86830,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 20000,
+          "raw": 25000
+        }},
+        "timestamp": "2025-06-02 07:43:49"
+      },
+      {
+        "inGameDate": "2024/11/12",
+        "moneyBefore": 86830,
+        "moneyAfter": 85150,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1680
+        }],
+        "timestamp": "2025-06-02 07:44:09"
+      },
+      {
+        "inGameDate": "2024/12/10",
+        "moneyBefore": 85150,
+        "moneyAfter": 82990,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2160
+        }],
+        "timestamp": "2025-06-02 07:44:11"
+      },
+      {
+        "inGameDate": "2025/1/15",
+        "moneyBefore": 82990,
+        "moneyAfter": 82570,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 420
+        }],
+        "timestamp": "2025-06-02 07:44:12"
+      },
+      {
+        "inGameDate": "2025/1/22",
+        "moneyBefore": 82570,
+        "moneyAfter": 82390,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 180
+        }],
+        "timestamp": "2025-06-02 07:44:14"
+      },
+      {
+        "inGameDate": "2025/1/25",
+        "moneyBefore": 82390,
+        "moneyAfter": 81970,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 420
+        }],
+        "timestamp": "2025-06-02 07:44:16"
+      },
+      {
+        "inGameDate": "2025/2/1",
+        "moneyBefore": 81970,
+        "moneyAfter": 81430,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 540
+        }],
+        "timestamp": "2025-06-02 07:44:18"
+      },
+      {
+        "inGameDate": "2025/2/10",
+        "moneyBefore": 81430,
+        "moneyAfter": 80710,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 720
+        }],
+        "timestamp": "2025-06-02 07:44:21"
+      },
+      {
+        "inGameDate": "2025/2/22",
+        "perkUsed": 5,
+        "moneyBefore": 80710,
+        "moneyCost": 1500,
+        "moneyAfter": 79210,
+        "ability": {
+          "powerControl-RIGHT": [
+            49.37098981097452,
+            52.19615021853554
+          ],
+          "spinControl-REST": [
+            47.87066660204599,
+            47.87066660204599
+          ],
+          "normalPower-RIGHT": [
+            54.2954041468528,
+            56.92358798097869
+          ],
+          "cuePrecision-REST": [
+            44.59496132629591,
+            44.59496132629591
+          ],
+          "powerControl-REST": [
+            48.98386299302046,
+            48.98386299302046
+          ],
+          "spin-LEFT": [
+            93.69831303848024,
+            93.69831303848024
+          ],
+          "normalPower-REST": [
+            38.60238387017628,
+            38.60238387017628
+          ],
+          "cuePrecision-LEFT": [
+            96.85430021437746,
+            96.85430021437746
+          ],
+          "cuePrecision-RIGHT": [
+            53.97876736327944,
+            56.61961666874826
+          ],
+          "spin-RIGHT": [
+            52.23670254984828,
+            54.94723444785435
+          ],
+          "normalPower-LEFT": [
+            86.22623142083499,
+            86.22623142083499
+          ],
+          "spin-REST": [
+            45.79797875349938,
+            45.79797875349938
+          ],
+          "spinControl-LEFT": [
+            84.38327843535721,
+            84.38327843535721
+          ],
+          "aiming": [
+            88.28475528277332,
+            88.28475528277332
+          ],
+          "powerControl-LEFT": [
+            81.17707420531211,
+            81.17707420531211
+          ],
+          "spinControl-RIGHT": [
+            45.372999370654256,
+            48.358079395828085
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-06-02 07:44:35"
+      },
+      {
+        "inGameDate": "2025/2/22",
+        "perkUsed": 5,
+        "moneyBefore": 79210,
+        "moneyCost": 4100,
+        "moneyAfter": 75110,
+        "ability": {
+          "powerControl-RIGHT": [
+            52.19615021853554,
+            52.19615021853554
+          ],
+          "spinControl-REST": [
+            47.87066660204599,
+            47.87066660204599
+          ],
+          "normalPower-RIGHT": [
+            56.92358798097869,
+            56.92358798097869
+          ],
+          "cuePrecision-REST": [
+            44.59496132629591,
+            44.59496132629591
+          ],
+          "powerControl-REST": [
+            48.98386299302046,
+            48.98386299302046
+          ],
+          "spin-LEFT": [
+            93.69831303848024,
+            94.75038051694102
+          ],
+          "normalPower-REST": [
+            38.60238387017628,
+            38.60238387017628
+          ],
+          "cuePrecision-LEFT": [
+            96.85430021437746,
+            96.85430021437746
+          ],
+          "cuePrecision-RIGHT": [
+            56.61961666874826,
+            56.61961666874826
+          ],
+          "spin-RIGHT": [
+            54.94723444785435,
+            54.94723444785435
+          ],
+          "normalPower-LEFT": [
+            86.22623142083499,
+            87.5771821640016
+          ],
+          "spin-REST": [
+            45.79797875349938,
+            45.79797875349938
+          ],
+          "spinControl-LEFT": [
+            84.38327843535721,
+            85.80794729794292
+          ],
+          "aiming": [
+            88.28475528277332,
+            89.55336507146238
+          ],
+          "powerControl-LEFT": [
+            81.17707420531211,
+            82.72999123709963
+          ],
+          "spinControl-RIGHT": [
+            48.358079395828085,
+            48.358079395828085
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-06-02 07:44:44"
+      },
+      {
+        "inGameDate": "2025/2/22",
+        "perkUsed": 1,
+        "moneyBefore": 75110,
+        "moneyCost": 300,
+        "moneyAfter": 74810,
+        "ability": {
+          "powerControl-RIGHT": [
+            52.19615021853554,
+            52.19615021853554
+          ],
+          "spinControl-REST": [
+            47.87066660204599,
+            47.87066660204599
+          ],
+          "normalPower-RIGHT": [
+            56.92358798097869,
+            56.92358798097869
+          ],
+          "cuePrecision-REST": [
+            44.59496132629591,
+            44.59496132629591
+          ],
+          "powerControl-REST": [
+            48.98386299302046,
+            48.98386299302046
+          ],
+          "spin-LEFT": [
+            94.75038051694102,
+            94.75038051694102
+          ],
+          "normalPower-REST": [
+            38.60238387017628,
+            38.60238387017628
+          ],
+          "cuePrecision-LEFT": [
+            96.85430021437746,
+            96.85430021437746
+          ],
+          "cuePrecision-RIGHT": [
+            56.61961666874826,
+            56.61961666874826
+          ],
+          "spin-RIGHT": [
+            54.94723444785435,
+            54.94723444785435
+          ],
+          "normalPower-LEFT": [
+            87.5771821640016,
+            87.5771821640016
+          ],
+          "spin-REST": [
+            45.79797875349938,
+            45.79797875349938
+          ],
+          "spinControl-LEFT": [
+            85.80794729794292,
+            85.80794729794292
+          ],
+          "aiming": [
+            89.55336507146238,
+            89.55336507146238
+          ],
+          "powerControl-LEFT": [
+            82.72999123709963,
+            82.72999123709963
+          ],
+          "spinControl-RIGHT": [
+            48.358079395828085,
+            51.22375621999496
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-06-02 07:44:47"
+      },
+      {
+        "inGameDate": "2025/2/22",
+        "moneyBefore": 74810,
+        "moneyAfter": 74510,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 300
+        }],
+        "timestamp": "2025-06-02 07:44:49"
+      },
+      {
+        "inGameDate": "2025/2/27",
+        "match": "custom_DA1B9E98710BC5F5+2025+dog_give_power_open",
+        "moneyBefore": 74510,
+        "moneyAfter": 71610,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          }
+        ],
+        "timestamp": "2025-06-02 07:44:49"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_DA1B9E98710BC5F5-660",
+        "inGameDate": "2025/2/27",
+        "moneyBefore": 71610,
+        "moneyCost": 80,
+        "moneyAfter": 71530,
+        "type": "purchase",
+        "timestamp": "2025-06-02 07:52:27"
       }
     ],
-    "level": 22,
-    "expInThisLevel": 186,
+    "level": 24,
+    "expInThisLevel": 99,
     "availPerks": 0,
-    "totalPerks": 76,
-    "totalExp": 5230
+    "totalPerks": 87,
+    "totalExp": 6190
   },
-  "checksum": "409302DB321346329A7D663C8C0BCE92"
+  "checksum": "7882012A64D41E0820851D06685B33DC"
 }

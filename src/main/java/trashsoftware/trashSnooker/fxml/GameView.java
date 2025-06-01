@@ -1328,6 +1328,8 @@ public class GameView implements Initializable {
         predictedTargetBall = null;
         aiWhitePath = null;
         suggestedPlayerWhitePath = null;
+        cursorDirectionUnitX = 0.0; 
+        cursorDirectionUnitY = 0.0;
 
         drawScoreBoard(game.getGame().getCuingPlayer(), true);
         drawTargetBoard(true);
