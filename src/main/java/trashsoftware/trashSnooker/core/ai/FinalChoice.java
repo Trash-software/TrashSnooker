@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 import java.util.ArrayList;
@@ -83,6 +84,10 @@ public abstract class FinalChoice {
         @Override
         public int compareTo(@NotNull FinalChoice.IntegratedAttackChoice o) {
             return normalCompareTo(o);
+        }
+
+        public AttackParam getAttackParams() {
+            return attackParams;
         }
 
         boolean betterThan(@Nullable IntegratedAttackChoice other) {
@@ -268,6 +273,11 @@ public abstract class FinalChoice {
 //                this.price /= (wp.getDistanceTravelledBeforeCollision() / 1000);  // 不希望白球跑太远
 //            }
 
+        }
+        
+        public boolean opponentCanPureAttack(AiPlayStyle opponent) {
+            double pureAttackThresh = Analyzer.attackProbThreshold(AiCue.PURE_ATTACK_PROB, opponent);
+            return defenseResult.opponentPotProb > pureAttackThresh;
         }
 
         @Override

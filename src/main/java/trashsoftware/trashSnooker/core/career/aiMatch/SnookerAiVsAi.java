@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.core.career.aiMatch;
 
 import trashsoftware.trashSnooker.core.Game;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.career.Career;
@@ -47,12 +47,12 @@ public class SnookerAiVsAi extends AiVsAi {
         SimPlayer sp1 = new SimPlayer(p1, ability1, 1, ballTypeBadness,
                 AiCueResult.calculateFramePsyDivisor(
                         Game.frameImportance(1, totalFrames, getP1WinFrames(), getP2WinFrames(), GameRule.SNOOKER),
-                        p1.getPlayerPerson().psy
+                        p1.getPlayerPerson().getPsyRua()
                 ));
         SimPlayer sp2 = new SimPlayer(p2, ability2, 2, ballTypeBadness,
                 AiCueResult.calculateFramePsyDivisor(
                         Game.frameImportance(2, totalFrames, getP1WinFrames(), getP2WinFrames(), GameRule.SNOOKER),
-                        p2.getPlayerPerson().psy
+                        p2.getPlayerPerson().getPsyRua()
                 ));
 
         SimPlayer playing = sp1;
@@ -158,8 +158,8 @@ public class SnookerAiVsAi extends AiVsAi {
             p2WinsAFrame();
         } else {
             // 延分争黑
-            double total = sp1.career.getPlayerPerson().psy + sp2.career.getPlayerPerson().psy;
-            double p1psy = sp1.career.getPlayerPerson().psy / total;
+            double total = sp1.career.getPlayerPerson().psyNerve + sp2.career.getPlayerPerson().psyNerve;
+            double p1psy = sp1.career.getPlayerPerson().psyNerve / total;
             if (random.nextDouble() < p1psy) {
                 sp1.score += 7;
                 p1WinsAFrame();

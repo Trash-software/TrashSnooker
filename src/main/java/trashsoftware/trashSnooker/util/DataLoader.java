@@ -5,7 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.cue.*;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.metrics.BallsGroupPreset;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.TablePreset;
@@ -23,6 +23,7 @@ public class DataLoader {
             "data/players_prof.json",
             "data/players_amateur.json"
     };
+    public static final String INFO_REC_DIR = "user/infoRec";
     private static final String CUSTOM_PLAYER_LIST_FILE = "user/custom_players.json";
     private static final String RANDOM_PLAYERS_LIST_FILE = "user/players_random.json";
     public static final String COUNTERS_FILE = "user/counters.json";
@@ -140,19 +141,6 @@ public class DataLoader {
                             continue;
                         }
                         PlayerPerson playerPerson = PlayerPerson.fromJson(key, personObj);
-
-//                        if (personObj.has("privateCues")) {
-//                            JSONArray pCues = personObj.getJSONArray("privateCues");
-//                            for (Object cueObj : pCues) {
-//                                if (cueObj instanceof String pCue) {
-//                                    if (cues.containsKey(pCue)) {
-//                                        playerPerson.addPrivateCue(cues.get(pCue));
-//                                    } else {
-//                                        System.out.printf("%s没有%s\n", playerPerson.getPlayerId(), pCue);
-//                                    }
-//                                }
-//                            }
-//                        }
                         playerPerson.setCustom(isCustomPlayer);
                         result.put(key, playerPerson);
                     } catch (JSONException e) {
@@ -334,21 +322,6 @@ public class DataLoader {
             }
         }
     }
-    
-//    private void loadCueInstances(JSONObject root) {
-//        if (root.has("cueInstances")) {
-//            JSONObject object = root.getJSONObject("cueInstances");
-//            for (String key : object.keySet()) {
-//                try {
-//                    JSONObject cueInsObject = object.getJSONObject(key);
-//                    Cue cue = Cue.fromJson(cueInsObject, this);
-//                    cueInstances.put(key, cue);
-//                } catch (JSONException e) {
-//                    EventLogger.error(e);
-//                }
-//            }
-//        }
-//    }
 
     private void loadCues(JSONObject root) {
         if (root.has("cues")) {
@@ -378,7 +351,7 @@ public class DataLoader {
                         List<TexturedCueBrand.Segment> segments = new ArrayList<>();
                         for (int i = 0; i < segmentArray.length(); i++) {
                             JSONObject segObj = segmentArray.getJSONObject(i);
-                            segments.add(new TexturedCueBrand.Segment(
+                            segments.add(TexturedCueBrand.Segment.fromTextureString(
                                     segObj.getString("texture"),
                                     segObj.getDouble("length"),
                                     segObj.getDouble("diameter1"),
@@ -599,6 +572,10 @@ public class DataLoader {
 
     public CueBrand getCueById(String cueId) {
         return cues.get(cueId);
+    }
+    
+    public CueBrand getExampleCue() {
+        return cues.get("stdSnookerCue");
     }
     
     public CueTipBrand getTipBrandById(String tipBrandId) {

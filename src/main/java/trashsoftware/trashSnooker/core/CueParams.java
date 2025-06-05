@@ -2,6 +2,8 @@ package trashsoftware.trashSnooker.core;
 
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.cue.Cue;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.util.Util;
 
 /**
@@ -16,7 +18,7 @@ public class CueParams {
     private double absoluteFrontBackSpin;
     private double absoluteSideSpin;
     private final double cueAngleDeg;
-    private final PlayerHand handSkill;
+    private final CuePlayerHand cuePlayerHand;
 
     private CueParams(double selectedPower,
                       double absolutePower,
@@ -25,14 +27,14 @@ public class CueParams {
                       double selectedSideSpin,
                       double absoluteSideSpin,
                       double cueAngleDeg,
-                      PlayerHand handSkill) {
+                      CuePlayerHand cuePlayerHand) {
         this.selectedPower = selectedPower;
         this.selectedFrontBackSpin = selectedFrontBackSpin;
         this.selectedSideSpin = selectedSideSpin;
         this.absolutePower = absolutePower;
         this.absoluteFrontBackSpin = absoluteFrontBackSpin;
         this.absoluteSideSpin = absoluteSideSpin;
-        this.handSkill = handSkill;
+        this.cuePlayerHand = cuePlayerHand;
         this.cueAngleDeg = cueAngleDeg;
 
         if (this.absolutePower < Values.MIN_SELECTED_POWER)
@@ -45,12 +47,13 @@ public class CueParams {
                                              double cueAngleDeg,
                                              Game<?, ?> game,
                                              InGamePlayer inGamePlayer,
-                                             @Nullable PlayerHand handSkill) {
+                                             @Nullable CuePlayerHand handSkill) {
 //        Cue cue = inGamePlayer.getCurrentCue(game);
         Cue cue = inGamePlayer.getCueSelection().getSelected().getNonNullInstance();
         double cuePowerMul = cue.getPowerMultiplier();
 
-        double actualFbSpin = CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin, handSkill, cue);
+        double actualFbSpin = CuePlayParams.unitFrontBackSpin(selectedFrontBackSpin, 
+                handSkill == null ? null : handSkill.playerHand, cue);
         double actualSideSpin = CuePlayParams.unitSideSpin(selectedSideSpin, cue);
 
         double mul = Util.powerMultiplierOfCuePoint(actualSideSpin, actualFbSpin);
@@ -76,7 +79,7 @@ public class CueParams {
                                            double cueAngleDeg,
                                            Game<?, ?> game,
                                            InGamePlayer inGamePlayer,
-                                           PlayerHand handSkill) {
+                                           CuePlayerHand cuePlayerHand) {
 //        Cue cue = inGamePlayer.getCurrentCue(game);
         Cue cue = inGamePlayer.getCueSelection().getSelected().getNonNullInstance();
         double cuePowerMul = cue.getPowerMultiplier();
@@ -89,7 +92,7 @@ public class CueParams {
                 game.getGameValues().ball.ballWeightRatio;
         
         double selectedFrontBackSpin = CuePlayParams.getSelectedFrontBackSpin(actualFrontBackSpin,
-                handSkill,
+                cuePlayerHand == null ? null : cuePlayerHand.playerHand,
                 cue);
         double selectedSideSpin = CuePlayParams.getSelectedSideSpin(actualSideSpin,
                 cue);
@@ -101,7 +104,7 @@ public class CueParams {
                 selectedSideSpin,
                 actualSideSpin,
                 cueAngleDeg,
-                handSkill);
+                cuePlayerHand);
     }
 
     public static double selectedPowerToActualPower(Game<?, ?> game,
@@ -141,7 +144,7 @@ public class CueParams {
                 ", actualPower=" + absolutePower +
                 ", actualFrontBackSpin=" + absoluteFrontBackSpin +
                 ", actualSideSpin=" + absoluteSideSpin +
-                ", handSkill=" + handSkill +
+                ", handSkill=" + cuePlayerHand +
                 '}';
     }
 
@@ -185,7 +188,7 @@ public class CueParams {
         return cueAngleDeg;
     }
 
-    public PlayerHand getHandSkill() {
-        return handSkill;
+    public CuePlayerHand getCuePlayerHand() {
+        return cuePlayerHand;
     }
 }

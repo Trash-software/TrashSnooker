@@ -6,10 +6,15 @@ import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class Analyzer {
 
@@ -133,7 +138,7 @@ public class Analyzer {
         Collections.sort(attackChoices);
         return attackChoices;
     }
-    
+
     public static AttackChoice choiceFromDifferentWhitePos(
             Game<?, ?> game,
             double[] whitePos,
@@ -226,15 +231,11 @@ public class Analyzer {
         for (AttackChoice ac : directAttackChoices) {
             double potProb = ac.defaultRef.potProb;
             defenseResult.opponentAttackPrice += potProb * basePrice * 100;
-//            if (potProb > aiCue.opponentPureAtkProb) {
-//                defenseResult.opponentAttackPrice += 200 * potProb * basePrice;  // 大卖
-//            } else if (potProb > aiCue.opponentDefAtkProb) {
-//                defenseResult.opponentAttackPrice += 100 * potProb * basePrice;  // 小卖
-//            } else {
-//                defenseResult.opponentAttackPrice += 50 * potProb * basePrice;
-//            }
+            if (potProb > defenseResult.opponentPotProb) {
+                defenseResult.opponentPotProb = potProb;
+            }
 
-            if (defenseResult.opponentEasies.get(i) == null || 
+            if (defenseResult.opponentEasies.get(i) == null ||
                     potProb > defenseResult.opponentEasies.get(i).defaultRef.potProb) {
                 defenseResult.opponentEasies.set(i, ac);
                 if (defenseResult.grossOpponentEasiest == null ||
@@ -308,7 +309,7 @@ public class Analyzer {
                     copy.isInLineHandBall());
 
             Game.SeeAble seeAble = copy.countSeeAbleTargetBalls(
-                    whiteStopPos[0], 
+                    whiteStopPos[0],
                     whiteStopPos[1],
                     opponentBalls,
                     1
@@ -317,10 +318,11 @@ public class Analyzer {
             penalty += (cueParams.getCueAngleDeg() - Values.DEFAULT_CUE_ANGLE);
 
             if (wp.getSecondCollide() != null) {
-                penalty += 90;
+                double secondSpeed = wp.getWhiteSpeedWhenHitSecondBall();
+                penalty += (secondSpeed / Values.MAX_POWER_SPEED) * 200 + 30;  // 高速撞可扣200分 + 30基础分
             }
             if (wp.isCueBallFirstBallTwiceColl()) {
-                penalty += 40;  // 二次碰撞
+                penalty += 50;  // 二次碰撞
             }
 
             DefenseResult defenseResult = new DefenseResult(opponentTarget, opponentBalls, isSolving);
@@ -345,7 +347,7 @@ public class Analyzer {
             if (wp.isWhiteHitsHoleArcs()) {
                 penalty += 80;
             }
-            if (defenseResult.snookerScore > 1.01) {
+            if (defenseResult.snookerScore > 0.1) {
                 if (wp.isFirstBallCollidesOther()) {  // 在做斯诺克
                     penalty += 40;
                 }
@@ -433,7 +435,7 @@ public class Analyzer {
             boolean isAttack
     ) {
 
-        PlayerHand playerHand = cueParams.getHandSkill();
+        CuePlayerHand playerHand = cueParams.getCuePlayerHand();
         PlayerPerson playerPerson = aiPlayer.getPlayerPerson();
         AiPlayStyle aps = playerPerson.getAiPlayStyle();
 //            double handSdMul = PlayerPerson.HandBody.getSdOfHand(attackChoice.handSkill);
@@ -450,9 +452,11 @@ public class Analyzer {
 
         // 和杆还是有关系的，拿着大头杆打斯诺克就不会去想很难的球
         double actualSideSpin = cueParams.actualSideSpin();
-        
+
         double lowActualPower = cueParams.actualPower() * (1 - powerSd);
         double highActualPower = cueParams.actualPower() * (1 + powerSd);
+        // 这个东西不能是负值，否则会产生一系列怪bug，包括导致potProb为NaN的
+        lowActualPower = Math.max(lowActualPower, Values.MIN_SELECTED_POWER);
 
         // dev=deviation, 由于力量加上塞造成的1倍标准差偏差角，应为小于PI的正数
         double[] devOfLowPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
@@ -469,14 +473,14 @@ public class Analyzer {
 
         double sideDevRad = (radDevOfHighPower - radDevOfLowPower) / 2;
         sideDevRad *= 1.25;  // 稍微多惩罚一点
-        
+
         // 估算扎杆弧线的影响
         double cosMbu = Math.cos(Math.toRadians(cueParams.getCueAngleDeg()));
         double mbummeMag = CuePlayParams.mbummeMag(cosMbu);
-        double speedLow = CuePlayParams.getSpeedOfPower(lowActualPower, cueParams.getCueAngleDeg());
+        double speedLow = CuePlayParams.getHorizontalSpeed(lowActualPower, cueParams.getCueAngleDeg());
         double sideSpinRatioLow = Math.pow(speedLow / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
         double mbummeLow = sideSpinRatioLow * actualSideSpin * Values.MAX_SIDE_SPIN_SPEED * mbummeMag;
-        double speedHigh = CuePlayParams.getSpeedOfPower(highActualPower, cueParams.getCueAngleDeg());
+        double speedHigh = CuePlayParams.getHorizontalSpeed(highActualPower, cueParams.getCueAngleDeg());
         double sideSpinRatioHigh = Math.pow(speedHigh / Values.MAX_POWER_SPEED, Values.SMALL_POWER_SIDE_SPIN_EXP);
         double mbummeHigh = sideSpinRatioHigh * actualSideSpin * Values.MAX_SIDE_SPIN_SPEED * mbummeMag;
 
@@ -503,7 +507,10 @@ public class Analyzer {
                     cueParams.getCueAngleDeg());
         }
 
-//        System.out.println("Devs: " + sideDevRad + " " + curveDevRad + " " + aimingSd);
+//        if (Double.isNaN(curveDevRad)) {
+//            System.err.println("Devs: " + sideDevRad + " " + curveDevRad + " " + aimingSd);
+//            System.err.println("mbu: " + mbummeMag + ", " + mbummeHigh + ", " + mbummeLow);
+//        }
         return new double[]{sideDevRad, curveDevRad, aimingSd, powerSd};
     }
 
@@ -619,7 +626,7 @@ public class Analyzer {
             CueParams cueParams,
             double[] whiteToCollisionDir,
             boolean useClone) {
-        
+
 //        if (true) {
 //            return whiteToCollisionDir;
 //        }

@@ -1,14 +1,10 @@
 package trashsoftware.trashSnooker.core.numberedGames.chineseEightBall;
 
 import trashsoftware.trashSnooker.core.InGamePlayer;
-import trashsoftware.trashSnooker.core.PlayerPerson;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LetBall.BACK;
-import static trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LetBall.FRONT;
 
 public class ChineseEightBallPlayer extends NumberedBallPlayer {
     protected final Map<LetBall, Integer> letBalls = new HashMap<>(
@@ -36,7 +32,14 @@ public class ChineseEightBallPlayer extends NumberedBallPlayer {
         return ballRange;
     }
 
-    public void setBallRange(int ballRange) {
+    public void setBallRange(int ballRange, int initScore) {
         this.ballRange = ballRange;
+        if (initScore != -1) {
+            this.score = initScore;
+        }
+    }
+    
+    public void forceSetScore(int score) {
+        this.score = score;
     }
 }

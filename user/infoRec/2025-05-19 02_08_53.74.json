@@ -1,0 +1,1722 @@
+{
+  "frames": [
+    {
+      "cueRecs": [
+        {
+          "scoresAfter": [
+            0,
+            0
+          ],
+          "specials": ["BALL_IN_HAND"],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "BREAK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            8
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "gainScores": [
+            0,
+            7
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            9
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "REST"
+        },
+        {
+          "scoresAfter": [
+            0,
+            16
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "gainScores": [
+            0,
+            7
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            17
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            24
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "gainScores": [
+            0,
+            7
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            25
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            32
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "gainScores": [
+            0,
+            7
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            33
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            40
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "gainScores": [
+            0,
+            7
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            41
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            48
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "gainScores": [
+            0,
+            7
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            48
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            1,
+            48
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            1,
+            48
+          ],
+          "firstHit": 4,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            1,
+            48
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "SOLVE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            2,
+            48
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "REST"
+        },
+        {
+          "scoresAfter": [
+            9,
+            48
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            10,
+            48
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "REST"
+        },
+        {
+          "scoresAfter": [
+            17,
+            48
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            18,
+            48
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            24,
+            48
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            48
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "REST"
+        },
+        {
+          "scoresAfter": [
+            25,
+            48
+          ],
+          "firstHit": 5,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            49
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            56
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "gainScores": [
+            0,
+            7
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            57
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            62
+          ],
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "gainScores": [
+            0,
+            5
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            63
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            70
+          ],
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "gainScores": [
+            0,
+            7
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            70
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            25,
+            70
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "REST"
+        },
+        {
+          "scoresAfter": [
+            29,
+            70
+          ],
+          "firstHit": 1,
+          "pots": {"0": 1},
+          "gainScores": [
+            4,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "SOLVE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            29,
+            70
+          ],
+          "specials": ["BALL_IN_HAND"],
+          "foulInfo": {
+            "foulReasonAndScore": {"白球落袋": 4},
+            "illegal": false,
+            "miss": false
+          },
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            29,
+            70
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            29,
+            70
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            29,
+            70
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            29,
+            70
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            29,
+            70
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            29,
+            70
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            29,
+            71
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            29,
+            71
+          ],
+          "firstHit": 5,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        }
+      ],
+      "winner": 2
+    },
+    {
+      "cueRecs": [
+        {
+          "scoresAfter": [
+            0,
+            0
+          ],
+          "specials": ["BALL_IN_HAND"],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "BREAK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            0
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            0,
+            1
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            4,
+            1
+          ],
+          "firstHit": 0,
+          "gainScores": [
+            4,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "SOLVE"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            4,
+            1
+          ],
+          "foulInfo": {
+            "foulReasonAndScore": {"空杆": 4},
+            "illegal": false,
+            "miss": true
+          },
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            4,
+            2
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            4,
+            7
+          ],
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "gainScores": [
+            0,
+            5
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            4,
+            8
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            4,
+            13
+          ],
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "gainScores": [
+            0,
+            5
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            4,
+            14
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            9,
+            14
+          ],
+          "firstHit": 5,
+          "pots": {
+            "1": 1,
+            "5": 1
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            10,
+            14
+          ],
+          "foulInfo": {
+            "foulReasonAndScore": {"击打彩球时有非目标球落袋": 5},
+            "illegal": false,
+            "miss": false
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            15,
+            14
+          ],
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            15,
+            14
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            15,
+            15
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            19,
+            15
+          ],
+          "firstHit": 2,
+          "pots": {
+            "0": 1,
+            "2": 1
+          },
+          "gainScores": [
+            4,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            19,
+            15
+          ],
+          "specials": ["BALL_IN_HAND"],
+          "foulInfo": {
+            "foulReasonAndScore": {"白球落袋": 4},
+            "illegal": false,
+            "miss": false
+          },
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            19,
+            16
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            19,
+            16
+          ],
+          "firstHit": 6,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            16
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            16
+          ],
+          "firstHit": 6,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 0,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            16
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            16
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            17
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            23
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "gainScores": [
+            0,
+            6
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            24
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            30
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "gainScores": [
+            0,
+            6
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            31
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            37
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "gainScores": [
+            0,
+            6
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            38
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            44
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "gainScores": [
+            0,
+            6
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            45
+          ],
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            51
+          ],
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "gainScores": [
+            0,
+            6
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            51
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "REST"
+        },
+        {
+          "scoresAfter": [
+            20,
+            51
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            51
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            51
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            51
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            51
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            51
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            51
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "RIGHT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            51
+          ],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            55
+          ],
+          "firstHit": 0,
+          "gainScores": [
+            0,
+            4
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "SOLVE"
+          },
+          "player": 1,
+          "target": 1,
+          "hand": "REST"
+        },
+        {
+          "scoresAfter": [
+            20,
+            56
+          ],
+          "foulInfo": {
+            "foulReasonAndScore": {"空杆": 4},
+            "illegal": false,
+            "miss": true
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            61
+          ],
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "gainScores": [
+            0,
+            5
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0,
+          "hand": "LEFT"
+        },
+        {
+          "scoresAfter": [
+            20,
+            61
+          ],
+          "firstHit": 2,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 2,
+          "hand": "LEFT"
+        }
+      ],
+      "winner": 2
+    }
+  ],
+  "players": [
+    "Lao Youtiao",
+    "custom_DA1B9E98710BC5F5"
+  ],
+  "careerMatchId": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open-PRE_ROUND_1-10",
+  "gameValues": {
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
+    "subRules": ["SNOOKER_STD"],
+    "devMode": false,
+    "table": {
+      "tableOrdinal": 0,
+      "pocketDifficultyOrdinal": 2,
+      "holeSizeOrdinal": 0
+    }
+  },
+  "entireBeginTime": "2025-05-19 02_08_53.74",
+  "totalFrames": 3
+}

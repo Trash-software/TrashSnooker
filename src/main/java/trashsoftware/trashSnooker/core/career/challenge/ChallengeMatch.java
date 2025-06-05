@@ -1,8 +1,7 @@
 package trashsoftware.trashSnooker.core.career.challenge;
 
 import javafx.application.Platform;
-import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.core.career.Career;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerMatch;
 import trashsoftware.trashSnooker.core.career.HumanCareer;

@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.career;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.SubRule;
@@ -45,6 +46,7 @@ public class ChampionshipData {
     TableSpec tableSpec;
     BallMetrics ballMetrics;
     Collection<SubRule> subRules;
+    ChampionshipLocation location;
     private int registryFee;
     private int flightFee;
     private int hotelFee;
@@ -84,7 +86,7 @@ public class ChampionshipData {
         for (int i = 0; i < data.preMatchNewAdded.length; i++) {
             data.preMatchNewAdded[i] = preNewAdd.getInt(i);
         }
-        
+
         if (jsonObject.has("subRules")) {
             data.subRules = new ArrayList<>();
             JSONArray subRuleJson = jsonObject.getJSONArray("subRules");
@@ -106,7 +108,7 @@ public class ChampionshipData {
         } else {
             data.forbidden = 0;
         }
-        
+
         if (jsonObject.has("class")) {
             data.classLevel = jsonObject.getInt("class");
         } else {
@@ -116,6 +118,17 @@ public class ChampionshipData {
         String[] date = jsonObject.getString("date").split("/");
         data.month = Integer.parseInt(date[0]);
         data.day = Integer.parseInt(date[1]);
+
+        JSONObject location = jsonObject.optJSONObject("location", null);
+        ChampionshipLocation cl = ChampionshipLocation.CHN;
+        if (location != null) {
+            try {
+                cl = ChampionshipLocation.valueOf(location.optString("country"));
+            } catch (JSONException | IllegalArgumentException iae) {
+                System.err.println("Championship " + data.id + " cannot get country.");
+            }
+        }
+        data.location = cl;
 
         JSONArray frames = jsonObject.getJSONArray("frames");
         data.analyzeFramesStages(frames);
@@ -161,7 +174,7 @@ public class ChampionshipData {
         if (jsonObject.has("167")) {
             data.awards.put(ChampionshipScore.Rank.GOLD_MAXIMUM, jsonObject.getInt("167"));
         }
-        
+
         if (jsonObject.has("fees")) {
             JSONObject fees = jsonObject.getJSONObject("fees");
             data.registryFee = fees.getInt("registry");
@@ -170,7 +183,7 @@ public class ChampionshipData {
         } else {
             System.err.println("Championship " + data.id + " contains no fees.");
         }
-        
+
         if (jsonObject.has("invite")) {
             JSONObject invite = jsonObject.getJSONObject("invite");
             for (String key : invite.keySet()) {
@@ -178,7 +191,7 @@ public class ChampionshipData {
                 data.inviteAwardMap.put(Integer.parseInt(key), value);
             }
         }
-        
+
 //        System.out.println(data.id);
 //        System.out.println(Arrays.toString(data.stages));
 //        System.out.println(Arrays.toString(data.ranksOfLosers));
@@ -329,7 +342,7 @@ public class ChampionshipData {
     public int getClassLevel() {
         return classLevel;
     }
-    
+
     public boolean hasForbidden() {
         return forbidden > 0;
     }
@@ -464,7 +477,7 @@ public class ChampionshipData {
     public String getSponsor() {
         return sponsor;
     }
-    
+
     public WithYear getWithYear(int year) {
         return new WithYear(this, year);
     }
@@ -505,15 +518,15 @@ public class ChampionshipData {
         public String fullName() {
             return year + " " + data.getName();
         }
-        
+
         public String fullId() {
             return year + "+" + data.getId();
         }
-        
+
         public static WithYear fromFullId(String fullId, ChampDataManager cdm) {
             String[] split = fullId.split("\\+");
             if (split.length != 2) throw new RuntimeException("Invalid full id: " + fullId);
-            
+
             int year = Integer.parseInt(split[0]);
             ChampionshipData data1 = cdm.findDataById(split[1]);
             return new WithYear(data1, year);

@@ -1,5 +1,8 @@
 package trashsoftware.trashSnooker.core;
 
+import org.json.JSONObject;
+import trashsoftware.trashSnooker.util.Util;
+
 import java.util.*;
 
 public class FoulInfo {
@@ -65,5 +68,29 @@ public class FoulInfo {
     
     public Integer removeFoul(String reason) {
         return foulReasonAndScore.remove(reason);
+    }
+    
+    public JSONObject toJson() {
+        JSONObject out = new JSONObject();
+        out.put("miss", miss);
+        out.put("illegal", illegal);
+        out.put("headerReason", headerReason);
+        JSONObject reasons = Util.mapToJson(foulReasonAndScore);
+        out.put("foulReasonAndScore", reasons);
+        
+        return out;
+    }
+    
+    public static FoulInfo fromJson(JSONObject json) {
+        FoulInfo foulInfo = new FoulInfo();
+        foulInfo.miss = json.getBoolean("miss");
+        foulInfo.illegal = json.getBoolean("illegal");
+        foulInfo.headerReason = json.optString("headerReason", null);
+        JSONObject reasons = json.getJSONObject("foulReasonAndScore");
+        for (String key : reasons.keySet()) {
+            foulInfo.foulReasonAndScore.put(key, reasons.getInt(key));
+        }
+        
+        return foulInfo;
     }
 }

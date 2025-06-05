@@ -1,8 +1,14 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.attempt.CueType;
+import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
+import trashsoftware.trashSnooker.core.person.HandBody;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
@@ -105,7 +111,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double allowedX = game.getTable().breakLineX();
         
         Set<Ball> suggestedTarget = game.getSuggestedRegularBreakBalls();
-        PlayerHand handSkill = aiPlayer.getPlayerPerson().handBody.getPrimary();
+//        PlayerHand handSkill = aiPlayer.getPlayerPerson().handBody.getPrimary();
+        CuePlayerHand cuePlayerHand = CuePlayerHand.makeDefault(aiPlayer.getInGamePlayer());
         List<FinalChoice.DefenseChoice> legalChoices = new ArrayList<>();
         for (double deg = beginDeg, i = 0; i < nTicks; deg += tickDeg, i++) {
             double rad = Math.toRadians(deg);
@@ -118,7 +125,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         5.0,
                         game,
                         aiPlayer.getInGamePlayer(),
-                        handSkill
+                        cuePlayerHand
                 );
 
                 CuePlayParams cpp = CuePlayParams.makeIdealParams(
@@ -215,12 +222,12 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 if (game.remainingRedCount() == 1) {
                     System.out.println("Last red, make snooker");
                     FinalChoice.DefenseChoice def = getBestDefenseChoice(phy);
-                    if (def != null) return makeDefenseCue(def, AiCueResult.CueType.DEFENSE);
+                    if (def != null) return makeDefenseCue(def, CueType.DEFENSE);
                 }
             } else if (currentTarget != AbstractSnookerGame.RAW_COLORED_REP) {
                 System.out.println("Ordered colors, make snooker");
                 FinalChoice.DefenseChoice def = getBestDefenseChoice(phy);
-                if (def != null) return makeDefenseCue(def, AiCueResult.CueType.DEFENSE);
+                if (def != null) return makeDefenseCue(def, CueType.DEFENSE);
             } else {
                 System.out.println("Being over score and target is colored, must attack");
                 FinalChoice.IntegratedAttackChoice iac = standardAttack(phy, true);
@@ -305,14 +312,15 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                     Values.DEFAULT_CUE_ANGLE,
                     game,
                     aiPlayer.getInGamePlayer(),
-                    CuePlayParams.getPlayableHand(
+                    HandBody.getBestHandFromPosition(
                             cueBall.getX(),
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
                             Values.DEFAULT_CUE_ANGLE,
                             game.getGameValues().table,
-                            pp
+                            pp,
+                            aiPlayer.getInGamePlayer().getCueSelection().getSelected().brand
                     )
             );
         } else {
@@ -330,14 +338,15 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                     Values.DEFAULT_CUE_ANGLE,
                     game,
                     aiPlayer.getInGamePlayer(),
-                    CuePlayParams.getPlayableHand(
+                    HandBody.getBestHandFromPosition(
                             cueBall.getX(),
                             cueBall.getY(),
                             choice.cueDirectionUnitVector[0],
                             choice.cueDirectionUnitVector[1],
                             Values.DEFAULT_CUE_ANGLE,
                             game.getGameValues().table,
-                            pp
+                            pp,
+                            aiPlayer.getInGamePlayer().getCueSelection().getSelected().brand
                     )
             );
         }

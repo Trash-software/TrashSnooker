@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.championship.*;
@@ -133,6 +133,20 @@ public class CareerManager {
                 careerSaves.add(save);
             }
         }
+//        careerSaves = careerSaves
+//                .stream()
+//                .sorted(Comparator.comparingLong(CareerSave::getLastModified))
+//                .toList()
+//                .reversed();
+        careerSaves.sort((a, b) -> {
+            int timeCmp = Long.compare(b.getLastModified(), a.getLastModified());
+            if (timeCmp != 0) return timeCmp;
+            try {
+                return Integer.compare(Integer.parseInt(b.getLevel()), Integer.parseInt(a.getLevel()));
+            } catch (NumberFormatException nfe) {
+                return 0;
+            }
+        });
         return careerSaves;
     }
 

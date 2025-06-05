@@ -2,12 +2,10 @@ package trashsoftware.trashSnooker.core.career.aiMatch;
 
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.Game;
-import trashsoftware.trashSnooker.core.InGamePlayer;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.career.Career;
-import trashsoftware.trashSnooker.core.career.ChampionshipData;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.LetBall;
@@ -34,12 +32,12 @@ public class ChineseAiVsAi extends AiVsAi {
         SimPlayer sp1 = new SimPlayer(p1, ability1, 1, ballTypeBadness,
                 AiCueResult.calculateFramePsyDivisor(
                         Game.frameImportance(1, totalFrames, getP1WinFrames(), getP2WinFrames(), GameRule.CHINESE_EIGHT),
-                        p1.getPlayerPerson().psy
+                        p1.getPlayerPerson().getPsyRua()
                 ));
         SimPlayer sp2 = new SimPlayer(p2, ability2, 2, ballTypeBadness,
                 AiCueResult.calculateFramePsyDivisor(
                         Game.frameImportance(2, totalFrames, getP1WinFrames(), getP2WinFrames(), GameRule.CHINESE_EIGHT),
-                        p2.getPlayerPerson().psy
+                        p2.getPlayerPerson().getPsyRua()
                 ));
         
         // 让球安排起

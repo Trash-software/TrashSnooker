@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.core.career;
 
 import trashsoftware.trashSnooker.core.EntireGame;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 
 public abstract class CareerMatch {

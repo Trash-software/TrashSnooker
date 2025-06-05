@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.career.achievement;
 import javafx.scene.layout.Pane;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
+import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 

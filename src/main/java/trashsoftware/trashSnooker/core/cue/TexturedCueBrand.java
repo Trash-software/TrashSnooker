@@ -7,8 +7,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import org.jetbrains.annotations.NotNull;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -42,8 +44,9 @@ public class TexturedCueBrand extends CueBrand implements Cloneable {
         super(cueId,
                 name,
                 tipRingThickness,
-                segments.get(segments.size() - 1).diameter2,
-                segments.get(0).diameter1,
+                Math.max(segments.getLast().diameter2, segments.get(segments.size() - 2).diameter2),  // 最后一段一般是尖尖
+//                segments.getLast().diameter2,
+                segments.getFirst().diameter1,
                 tipRingColor,
                 backColor,
                 material,
@@ -80,7 +83,7 @@ public class TexturedCueBrand extends CueBrand implements Cloneable {
             // TODO: copy mutable state here, so the clone can't change the internals of the original
             clone.segments = new ArrayList<>();
             for (Segment segment : segments) {
-                clone.segments.add(new Segment(
+                clone.segments.add(Segment.fromTextureString(
                         segment.texture, 
                         segment.length, 
                         segment.diameter1, 
@@ -131,8 +134,7 @@ public class TexturedCueBrand extends CueBrand implements Cloneable {
 
         private final List<GraphicSegment> graphicSegments = new ArrayList<>();
 
-        public Segment(String texture, double length, double diameter1, double diameter2) {
-            this.texture = texture;
+        private Segment(double length, double diameter1, double diameter2) {
             this.length = length;
             this.diameter1 = diameter1;
             this.diameter2 = diameter2;
@@ -141,8 +143,21 @@ public class TexturedCueBrand extends CueBrand implements Cloneable {
                 double lwRatio = length / diameter2;
                 textureSep = (int) Math.max(1, Math.round(lwRatio));
             }
-            
-            refillGraphSegments();
+        }
+        
+        public static Segment fromTextureString(String texture, double length, double diameter1, double diameter2) {
+            Segment segment = new Segment(length, diameter1, diameter2);
+            segment.texture = texture;
+            segment.refillGraphSegments();
+            return segment;
+        }
+        
+        public static Segment fromPureColor(Color color, double length, double diameter1, double diameter2) {
+            Segment segment = new Segment(length, diameter1, diameter2);
+            segment.texture = "#" + color.toString().substring(2);
+            System.out.println(segment.texture);
+            segment.refillGraphSegments();
+            return segment;
         }
 
         public int getTextureSep() {
@@ -159,55 +174,39 @@ public class TexturedCueBrand extends CueBrand implements Cloneable {
             Image texture = readTextureImg();
             
             if (texture != null) {
-                Image[] separated = imageSegment(texture, textureSep);
-                for (int i = 0; i < textureSep; i++) {
-                    double d1 = diameter1 + (diameter2 - diameter1) * ((double) i / textureSep);
-                    double d2 = diameter1 + (diameter2 - diameter1) * ((double) (i + 1) / textureSep);
-                    
-                    PhongMaterial material = new PhongMaterial();
-                    material.setDiffuseMap(separated[i]);
-                    
-                    GraphicSegment gs = new GraphicSegment(material, 
-                            length / textureSep,
-                            d1, 
-                            d2);
-                    graphicSegments.add(gs);
-                }
+                fillGraphicsTextured(texture);
             } else {
                 textureSep = 1;
                 PhongMaterial material = getColorMaterial();
-                graphicSegments.add(new GraphicSegment(
-                        material,
-                        length,
-                        diameter1,
-                        diameter2
-                ));
+                fillGraphicsPureColor(material);
             }
         }
+        
+        private void fillGraphicsTextured(@NotNull Image textureNonNull) {
+            Image[] separated = imageSegment(textureNonNull, textureSep);
+            for (int i = 0; i < textureSep; i++) {
+                double d1 = diameter1 + (diameter2 - diameter1) * ((double) i / textureSep);
+                double d2 = diameter1 + (diameter2 - diameter1) * ((double) (i + 1) / textureSep);
 
-//        private Image skewTexture(Image srcImage) {
-//            double ratio = diameter1 / diameter2;
-//            double origW = srcImage.getWidth();
-//            double origH = srcImage.getHeight();
-//            
-//            double ulx = (0.5 - ratio / 2) * origW;
-//            double urx = (0.5 + ratio / 2) * origW;
-//            
-//            PerspectiveTransform transform = new PerspectiveTransform(
-//                    ulx, 0,
-//                    urx, 0,
-//                    origW, origH,
-//                    0, origH
-//            );
-//            ImageView imageView = new ImageView(srcImage);
-//            imageView.setEffect(transform);
-//            
-//            SnapshotParameters parameters = new SnapshotParameters();
-//            parameters.setFill(Color.TRANSPARENT);
-//            Image out = imageView.snapshot(parameters, null);
-//            
-//            return out;
-//        }
+                PhongMaterial material = new PhongMaterial();
+                material.setDiffuseMap(separated[i]);
+
+                GraphicSegment gs = new GraphicSegment(material,
+                        length / textureSep,
+                        d1,
+                        d2);
+                graphicSegments.add(gs);
+            }
+        }
+        
+        private void fillGraphicsPureColor(PhongMaterial colorMat) {
+            graphicSegments.add(new GraphicSegment(
+                    colorMat,
+                    length,
+                    diameter1,
+                    diameter2
+            ));
+        }
 
         public void setTexture(String texture) {
             this.texture = texture;

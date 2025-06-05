@@ -1,0 +1,114 @@
+{
+  "financial": {
+    "money": 683843,
+    "invoices": [
+      {
+        "inGameDate": "2026/1/25",
+        "moneyBefore": 669800,
+        "moneyAfter": 668750,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1050
+        }],
+        "timestamp": "2025-05-23 05:17:05"
+      },
+      {
+        "inGameDate": "2026/2/1",
+        "moneyBefore": 668750,
+        "moneyAfter": 667400,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1350
+        }],
+        "timestamp": "2025-05-23 05:17:07"
+      },
+      {
+        "inGameDate": "2026/2/10",
+        "moneyBefore": 667400,
+        "moneyAfter": 665600,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1800
+        }],
+        "timestamp": "2025-05-23 05:17:09"
+      },
+      {
+        "inGameDate": "2026/2/22",
+        "match": "custom_player_160+2026+professional_champ",
+        "moneyBefore": 665600,
+        "moneyAfter": 662600,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 0
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          }
+        ],
+        "timestamp": "2025-05-23 05:17:09"
+      },
+      {
+        "inGameDate": "2026/2/22",
+        "year": 2026,
+        "match": "professional_champ",
+        "moneyBefore": 662600,
+        "moneyAfter": 687493,
+        "type": "championshipEarn",
+        "items": {"TOP_4": {
+          "actual": 24893,
+          "raw": 30000
+        }},
+        "timestamp": "2025-06-05 01:21:08"
+      },
+      {
+        "inGameDate": "2026/2/22",
+        "moneyBefore": 687493,
+        "moneyAfter": 686743,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 750
+        }],
+        "timestamp": "2025-06-05 05:16:02"
+      },
+      {
+        "inGameDate": "2026/2/27",
+        "match": "custom_player_160+2026+dog_give_power_open",
+        "moneyBefore": 686743,
+        "moneyAfter": 683843,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          }
+        ],
+        "timestamp": "2025-06-05 05:16:02"
+      }
+    ],
+    "level": 30,
+    "expInThisLevel": 458,
+    "availPerks": 0,
+    "totalPerks": 0,
+    "totalExp": 10857
+  },
+  "checksum": "A8176EEA3C68EA5FBABAF072CD39074A"
+}

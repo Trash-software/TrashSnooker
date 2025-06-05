@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
 
 import java.util.ArrayList;
 import java.util.List;

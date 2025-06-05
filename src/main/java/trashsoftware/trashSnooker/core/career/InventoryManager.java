@@ -3,7 +3,7 @@ package trashsoftware.trashSnooker.core.career;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.cue.CueTip;

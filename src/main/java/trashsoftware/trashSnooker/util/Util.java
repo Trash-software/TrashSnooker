@@ -1,10 +1,14 @@
 package trashsoftware.trashSnooker.util;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Values;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.RecordComponent;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -54,8 +58,8 @@ public class Util {
             set.remove(keys.get(i));
         }
     }
-
-    public static String timeStampFmt(Timestamp timestamp) {
+    
+    public static String entireBeginTimeNoQuote(Timestamp timestamp) {
         String str = timestamp.toString();
         int msDotIndex = str.lastIndexOf('.');
         String noMs = str.substring(0, msDotIndex);
@@ -63,7 +67,21 @@ public class Util {
         while (ms.startsWith("0")) {
             ms = ms.substring(1);
         }
-        return "'" + noMs + "." + ms + "'";
+        return noMs + "." + ms;
+    }
+    
+    public static String entireBeginTimeToFileName(Timestamp timestamp) {
+        String ebt = entireBeginTimeNoQuote(timestamp);
+        return ebt.replace(':', '_');
+    }
+    
+    public static String fromSqlFmtToEbtFileName(String sql) {
+        String noQuote = sql.substring(1, sql.length() - 1);
+        return noQuote.replace(':', '_');
+    }
+
+    public static String timeStampFmt(Timestamp timestamp) {
+        return "'" + entireBeginTimeNoQuote(timestamp) + "'";
     }
 
     public static String secondsToString(int sec) {
@@ -394,6 +412,126 @@ public class Util {
             json.put(d);
         }
         return json;
+    }
+
+    public static JSONArray arrayToJson(int[] array) {
+        JSONArray json = new JSONArray();
+        for (int d : array) {
+            json.put(d);
+        }
+        return json;
+    }
+    
+    public static double[] jsonToDoubleArray(JSONArray jsonArray) {
+        double[] result = new double[jsonArray.length()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = jsonArray.getDouble(i);
+        }
+        return result;
+    }
+
+    public static int[] jsonToIntArray(JSONArray jsonArray) {
+        int[] result = new int[jsonArray.length()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = jsonArray.getInt(i);
+        }
+        return result;
+    }
+
+    public static JSONObject stringMapToJson(Map<?, String> map) {
+        JSONObject json = new JSONObject();
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            json.put(String.valueOf(entry.getKey()), entry.getValue());
+        }
+        return json;
+    }
+    
+    public static JSONObject mapToJson(Map<?, ? extends Number> map) {
+        JSONObject json = new JSONObject();
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            json.put(String.valueOf(entry.getKey()), entry.getValue());
+        }
+        return json;
+    }
+    
+    public static <T extends Record> JSONObject recordToJson(T record) throws JSONException {
+        JSONObject json = new JSONObject();
+        for (RecordComponent component : record.getClass().getRecordComponents()) {
+            Class<?> type = component.getType();
+            if (isSupportedType(type)) {
+                Object value = null;
+                try {
+                    Method accessor = component.getAccessor();
+                    value = accessor.invoke(record);
+                    json.put(component.getName(), value);
+                } catch (JSONException je) {
+                    throw new JSONException("Error when writing '" + component.getName() + "' because " +
+                            "its value is " + value, je);
+                } catch (Exception e) {
+                    throw new JSONException("Failed to access record component: " + component.getName(), e);
+                }
+            } else {
+                throw new JSONException("Unsupported field type: " + type.getName());
+            }
+        }
+
+        return json;
+    }
+
+    public static <T extends Record> T jsonToRecord(Class<T> recordClass, JSONObject json) {
+        RecordComponent[] components = recordClass.getRecordComponents();
+        Object[] args = new Object[components.length];
+
+        for (int i = 0; i < components.length; i++) {
+            RecordComponent component = components[i];
+            Class<?> type = component.getType();
+            String name = component.getName();
+
+            if (!json.has(name)) {
+                throw new IllegalArgumentException("Missing field in JSON: " + name);
+            }
+
+            if (!isSupportedType(type)) {
+                throw new IllegalArgumentException("Unsupported field type: " + type.getName());
+            }
+
+            Object value = json.get(name);
+            args[i] = convertValue(value, type);
+        }
+
+        try {
+            Constructor<T> constructor = recordClass.getDeclaredConstructor(Arrays.stream(components)
+                    .map(RecordComponent::getType).toArray(Class[]::new));
+            return constructor.newInstance(args);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create record instance from JSON.", e);
+        }
+    }
+
+    private static boolean isSupportedType(Class<?> type) {
+        return type.isPrimitive() || type.equals(String.class)
+                || type.equals(Boolean.class) || type.equals(Byte.class)
+                || type.equals(Short.class) || type.equals(Integer.class)
+                || type.equals(Long.class) || type.equals(Float.class)
+                || type.equals(Double.class);
+    }
+
+    private static Object convertValue(Object value, Class<?> targetType) {
+        if (targetType.isPrimitive()) {
+            if (targetType == int.class) return ((Number) value).intValue();
+            if (targetType == long.class) return ((Number) value).longValue();
+            if (targetType == double.class) return ((Number) value).doubleValue();
+            if (targetType == float.class) return ((Number) value).floatValue();
+            if (targetType == boolean.class) return value instanceof Boolean ? value : Boolean.parseBoolean(value.toString());
+            if (targetType == byte.class) return ((Number) value).byteValue();
+            if (targetType == short.class) return ((Number) value).shortValue();
+            if (targetType == char.class) return ((String) value).charAt(0);
+        } else if (targetType == String.class) {
+            return value.toString();
+        } else if (Number.class.isAssignableFrom(targetType) || targetType == Boolean.class) {
+            return value; // Already boxed
+        }
+        throw new IllegalArgumentException("Unsupported target type: " + targetType.getName());
     }
 
     public static long readInt4Little(InputStream stream) throws IOException {

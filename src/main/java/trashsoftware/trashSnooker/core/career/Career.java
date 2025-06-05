@@ -2,8 +2,7 @@ package trashsoftware.trashSnooker.core.career;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.PlayerPerson;
-import trashsoftware.trashSnooker.core.career.aiMatch.AiVsAi;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.util.DataLoader;
 

@@ -4,9 +4,8 @@ import javafx.fxml.FXML;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
-import trashsoftware.trashSnooker.core.cue.Cue;
-import trashsoftware.trashSnooker.core.cue.CueBrand;
 import trashsoftware.trashSnooker.core.metrics.*;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -15,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class BriefReplayItem {

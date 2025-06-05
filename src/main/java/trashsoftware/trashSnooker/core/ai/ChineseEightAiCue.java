@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.ai;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 import java.util.Collection;
@@ -78,7 +79,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
                 8.0,
                 game,
                 aiPlayer.getInGamePlayer(),
-                aiPlayer.getPlayerPerson().handBody.getPrimary()
+                CuePlayerHand.makeDefault(aiPlayer.getInGamePlayer())
         );
         CuePlayParams cpp = CuePlayParams.makeIdealParams(
                 unitXY[0],

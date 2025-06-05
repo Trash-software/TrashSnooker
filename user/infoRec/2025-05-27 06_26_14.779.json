@@ -1,0 +1,48 @@
+{
+  "frames": [{
+    "cueRecs": [{
+      "scoresAfter": [
+        0,
+        0
+      ],
+      "specials": ["BALL_IN_HAND"],
+      "foulInfo": {
+        "foulReasonAndScore": {"仅有0颗目标球进袋，2球次过线\n累计失机：1次。累计失机3次将判负一局。": 1},
+        "illegal": true,
+        "headerReason": "开球失机",
+        "miss": false
+      },
+      "firstHit": 4,
+      "gainScores": [
+        0,
+        0
+      ],
+      "attemptBase": {
+        "success": false,
+        "type": "BREAK"
+      },
+      "player": 1,
+      "target": 0,
+      "hand": "RIGHT"
+    }],
+    "winner": 1
+  }],
+  "players": [
+    "John Wizard",
+    "custom_DA1B9E98710BC5F5"
+  ],
+  "careerMatchId": "custom_DA1B9E98710BC5F5+2024+eight_master_tour_xian-ROUND_1-3",
+  "gameValues": {
+    "ball": "POOL_BALL",
+    "gameRule": "CHINESE_EIGHT",
+    "subRules": ["CHINESE_EIGHT_JOE"],
+    "devMode": false,
+    "table": {
+      "tableOrdinal": 1,
+      "pocketDifficultyOrdinal": 2,
+      "holeSizeOrdinal": 2
+    }
+  },
+  "entireBeginTime": "2025-05-27 06_26_14.779",
+  "totalFrames": 5
+}

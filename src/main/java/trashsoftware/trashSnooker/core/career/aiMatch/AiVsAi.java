@@ -1,7 +1,6 @@
 package trashsoftware.trashSnooker.core.career.aiMatch;
 
-import trashsoftware.trashSnooker.core.PlayerHand;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;
 import trashsoftware.trashSnooker.core.career.Career;
 import trashsoftware.trashSnooker.core.career.CareerManager;
@@ -10,7 +9,6 @@ import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.TableSpec;
 
-import java.util.Map;
 import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -80,7 +78,7 @@ public abstract class AiVsAi {
                 aps.defense / 100 * 0.5 +
                 aps.stability / 100 +
                 playerPerson.getSolving() / 100 * 0.2 +
-                (isFinalFrame ? (playerPerson.psy / 40) : (playerPerson.psy / 200));
+                (isFinalFrame ? (playerPerson.psyNerve / 40) : (playerPerson.psyNerve / 200));
     }
 
     protected void gaussianRandom(boolean isFinalFrame) {
@@ -128,11 +126,24 @@ public abstract class AiVsAi {
         return count;
     }
 
+//    /**
+//     * 这个球员是否被打rua了。暂时也只有这么来
+//     */
+//    public boolean rua(int playerNum, PlayerPerson person) {
+//        return playerContinuousLoses(playerNum) >= 3;  // 连输3局，rua了
+//    }
     /**
-     * 这个球员是否被打rua了
+     * 这个球员是否被打rua了。暂时也只有这么来
      */
     public boolean rua(int playerNum, PlayerPerson person) {
-        return playerContinuousLoses(playerNum) >= 3;  // 连输3局，rua了
+        int ruaLimit;
+        double psyRua = person.getPsyRua();
+        if (psyRua > 90) ruaLimit = 4;
+        else if (psyRua > 60) ruaLimit = 3;
+        else if (psyRua > 30) ruaLimit = 2;
+        else ruaLimit = 1;
+
+        return playerContinuousLoses(playerNum) >= ruaLimit;  // 连输3局以上，rua了
     }
 
     protected abstract void simulateOneFrame();
@@ -146,11 +157,11 @@ public abstract class AiVsAi {
 
         double psyFactor = 1.0;
         if (isKeyBall) {
-            psyFactor = person.psy / 100;
+            psyFactor = person.psyNerve / 100;
         }
         psyFactor /= framePsyDivisor;
         if (rua(playerNum, person)) {
-            psyFactor *= person.psy / 100;
+            psyFactor *= person.getPsyRua() / 100;
         }
         double difficulty = potDifficulty * (goodPosition ? 1 : 3);
         double failRatio = 10000 - ra.aiming * ra.primary().cuePrecision * Math.pow(psyFactor, 0.75);

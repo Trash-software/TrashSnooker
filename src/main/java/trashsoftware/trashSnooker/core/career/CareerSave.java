@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.core.career;
 
 import javafx.fxml.FXML;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.util.DataLoader;
 
 import java.io.File;
@@ -47,6 +47,14 @@ public class CareerSave {
     @FXML
     public String getLevel() {
         return cacheInfo.getOrDefault("level", "");
+    }
+    
+    public long getLastModified() {
+        try {
+            return Long.parseLong(cacheInfo.getOrDefault("lastModified", "1"));
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 
     public File getDir() {

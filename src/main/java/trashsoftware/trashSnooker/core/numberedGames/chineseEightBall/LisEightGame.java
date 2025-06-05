@@ -146,15 +146,15 @@ public class LisEightGame extends ChineseEightBallGame {
                     return;
                 }
                 if (allFullBalls(pottedBalls)) {
-                    currentPlayer.setBallRange(FULL_BALL_REP);
-                    getAnotherPlayer().setBallRange(HALF_BALL_REP);
+                    currentPlayer.setBallRange(FULL_BALL_REP, 7 - getRemFullBallOnTable());
+                    getAnotherPlayer().setBallRange(HALF_BALL_REP, 7 - getRemHalfBallOnTable());
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     lastPotSuccess = true;
                     currentPlayer.correctPotBalls(this, fullBallsOf(pottedBalls));
                 }
                 if (allHalfBalls(pottedBalls)) {
-                    currentPlayer.setBallRange(HALF_BALL_REP);
-                    getAnotherPlayer().setBallRange(FULL_BALL_REP);
+                    currentPlayer.setBallRange(HALF_BALL_REP, 7 - getRemHalfBallOnTable());
+                    getAnotherPlayer().setBallRange(FULL_BALL_REP, 7 - getRemFullBallOnTable());
                     currentTarget = getTargetOfPlayer(currentPlayer);
                     lastPotSuccess = true;
                     currentPlayer.correctPotBalls(this, fullBallsOf(pottedBalls));
@@ -192,13 +192,13 @@ public class LisEightGame extends ChineseEightBallGame {
 
     private void dealSwapTarget() {
         if (player1.getBallRange() == FULL_BALL_REP) {
-            player1.setBallRange(HALF_BALL_REP);
-            player2.setBallRange(FULL_BALL_REP);
+            player1.setBallRange(HALF_BALL_REP, -1);
+            player2.setBallRange(FULL_BALL_REP, -1);
             currentTarget = getTargetOfPlayer(currentPlayer);
             swapped = true;
         } else if (player1.getBallRange() == HALF_BALL_REP) {
-            player1.setBallRange(FULL_BALL_REP);
-            player2.setBallRange(HALF_BALL_REP);
+            player1.setBallRange(FULL_BALL_REP, -1);
+            player2.setBallRange(HALF_BALL_REP, -1);
             currentTarget = getTargetOfPlayer(currentPlayer);
             swapped = true;
         }

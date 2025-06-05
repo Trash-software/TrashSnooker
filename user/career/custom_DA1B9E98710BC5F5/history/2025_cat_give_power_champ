@@ -1,0 +1,813 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Yan Bingtao": 19,
+    "random_player_49": 25,
+    "Liu Mang": 30,
+    "random_player_103": 12,
+    "random_player_86": 26,
+    "random_player_23": 27,
+    "random_player_44": 24,
+    "random_player_124": 32,
+    "random_player_0": 7,
+    "Jack Lisowski": 15,
+    "Glass Heart": 18,
+    "Mark Allen": 5,
+    "Selby": 10,
+    "Karen Wilson": 11,
+    "Zhao Xintong": 9,
+    "Neil Robertson": 3,
+    "custom_DA1B9E98710BC5F5": 17,
+    "Stephen Maguire": 20,
+    "Murphy": 1,
+    "random_player_92": 21,
+    "John Wizard": 13,
+    "Stuart Bingham": 6,
+    "Matthew Stevens": 16,
+    "Ding Junhui": 2,
+    "Smart": 23,
+    "Trump": 8,
+    "Mark Williams": 14,
+    "O_Sullivan": 4,
+    "Luca Brecel": 29,
+    "Worst Professional": 22,
+    "random_player_63": 28,
+    "Wang Xu": 31
+  },
+  "championshipId": "cat_give_power_champ",
+  "matchTree": {"root": {
+    "p1wins": 3,
+    "p1": {
+      "p1wins": 2,
+      "p1": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Murphy"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "random_player_103"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "Wang Xu"},
+              "p2": {"winner": "Smart"},
+              "winner": "Smart",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-0",
+              "p2wins": 2
+            },
+            "winner": "random_player_103",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-8",
+            "p2wins": 1
+          },
+          "winner": "Murphy",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-16",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 1,
+          "p1": {"winner": "Trump"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Selby"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "random_player_124"},
+              "p2": {"winner": "random_player_44"},
+              "winner": "random_player_124",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-1",
+              "p2wins": 0
+            },
+            "winner": "Selby",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-9",
+            "p2wins": 0
+          },
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-17",
+          "p2wins": 2
+        },
+        "winner": "Selby",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-24",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "Jack Lisowski"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Stephen Maguire"},
+              "p2": {"winner": "random_player_63"},
+              "winner": "Stephen Maguire",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-2",
+              "p2wins": 1
+            },
+            "winner": "Stephen Maguire",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-10",
+            "p2wins": 2
+          },
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-18",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "random_player_0"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Zhao Xintong"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "random_player_23"},
+              "p2": {"winner": "random_player_86"},
+              "winner": "random_player_23",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-3",
+              "p2wins": 1
+            },
+            "winner": "Zhao Xintong",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-11",
+            "p2wins": 1
+          },
+          "winner": "random_player_0",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-19",
+          "p2wins": 1
+        },
+        "winner": "O_Sullivan",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-25",
+        "p2wins": 0
+      },
+      "winner": "Selby",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-SEMI_FINAL-28",
+      "p2wins": 1
+    },
+    "p2": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Ding Junhui"},
+          "p2": {
+            "p1wins": 1,
+            "p1": {"winner": "Karen Wilson"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Yan Bingtao"},
+              "p2": {"winner": "random_player_92"},
+              "winner": "Yan Bingtao",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-4",
+              "p2wins": 1
+            },
+            "winner": "Yan Bingtao",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-12",
+            "p2wins": 2
+          },
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-20",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "Mark Williams"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Worst Professional"},
+              "p2": {"winner": "custom_DA1B9E98710BC5F5"},
+              "winner": "Worst Professional",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-5",
+              "p2wins": 1
+            },
+            "winner": "Worst Professional",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-13",
+            "p2wins": 2
+          },
+          "winner": "Mark Allen",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-21",
+          "p2wins": 0
+        },
+        "winner": "Mark Allen",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-26",
+        "p2wins": 2
+      },
+      "p2": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {
+            "p1wins": 2,
+            "p1": {"winner": "Matthew Stevens"},
+            "p2": {
+              "p1wins": 0,
+              "p1": {"winner": "Liu Mang"},
+              "p2": {"winner": "random_player_49"},
+              "winner": "random_player_49",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-6",
+              "p2wins": 2
+            },
+            "winner": "Matthew Stevens",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-14",
+            "p2wins": 0
+          },
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-22",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Stuart Bingham"},
+          "p2": {
+            "p1wins": 0,
+            "p1": {"winner": "John Wizard"},
+            "p2": {
+              "p1wins": 2,
+              "p1": {"winner": "Luca Brecel"},
+              "p2": {"winner": "Glass Heart"},
+              "winner": "Luca Brecel",
+              "stage": "PRE_ROUND_1",
+              "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-7",
+              "p2wins": 1
+            },
+            "winner": "Luca Brecel",
+            "stage": "PRE_ROUND_2",
+            "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-15",
+            "p2wins": 2
+          },
+          "winner": "Stuart Bingham",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-23",
+          "p2wins": 1
+        },
+        "winner": "Neil Robertson",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-27",
+        "p2wins": 1
+      },
+      "winner": "Neil Robertson",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-SEMI_FINAL-29",
+      "p2wins": 2
+    },
+    "winner": "Selby",
+    "stage": "FINAL",
+    "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-FINAL-30",
+    "p2wins": 1
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 139,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-FINAL-30",
+      "playerId": "Selby"
+    },
+    {
+      "score": 133,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-25",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 133,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-5",
+      "playerId": "Worst Professional"
+    },
+    {
+      "score": 129,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-26",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 128,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-SEMI_FINAL-28",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 128,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-24",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 127,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-SEMI_FINAL-28",
+      "playerId": "Selby"
+    },
+    {
+      "score": 126,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-17",
+      "playerId": "Selby"
+    },
+    {
+      "score": 126,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-7",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 125,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-FINAL-30",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 125,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-24",
+      "playerId": "Selby"
+    },
+    {
+      "score": 124,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-FINAL-30",
+      "playerId": "Selby"
+    },
+    {
+      "score": 124,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-2",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-SEMI_FINAL-29",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 121,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-24",
+      "playerId": "Selby"
+    },
+    {
+      "score": 120,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-SEMI_FINAL-28",
+      "playerId": "Selby"
+    },
+    {
+      "score": 120,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-18",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 118,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-18",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 118,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-2",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 117,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-9",
+      "playerId": "Selby"
+    },
+    {
+      "score": 116,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-17",
+      "playerId": "Selby"
+    },
+    {
+      "score": 114,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-20",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 114,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-9",
+      "playerId": "Selby"
+    },
+    {
+      "score": 112,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-27",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 110,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-18",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 104,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-25",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 103,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-13",
+      "playerId": "Worst Professional"
+    },
+    {
+      "score": 97,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-6",
+      "playerId": "random_player_49"
+    },
+    {
+      "score": 95,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-26",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 94,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-10",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 91,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-0",
+      "playerId": "Smart"
+    },
+    {
+      "score": 90,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-SEMI_FINAL-29",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 89,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-27",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 88,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-11",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 77,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-11",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 74,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-6",
+      "playerId": "random_player_49"
+    },
+    {
+      "score": 71,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-7",
+      "playerId": "Glass Heart"
+    },
+    {
+      "score": 69,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-4",
+      "playerId": "random_player_92"
+    },
+    {
+      "score": 68,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-22",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 68,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-7",
+      "playerId": "Luca Brecel"
+    },
+    {
+      "score": 67,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-QUARTER_FINAL-27",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 67,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-22",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 67,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-2",
+      "playerId": "random_player_63"
+    },
+    {
+      "score": 66,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-16",
+      "playerId": "Murphy"
+    },
+    {
+      "score": 65,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-2",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 63,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-10",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 62,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-11",
+      "playerId": "random_player_23"
+    },
+    {
+      "score": 62,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-7",
+      "playerId": "Luca Brecel"
+    },
+    {
+      "score": 60,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-17",
+      "playerId": "Trump"
+    },
+    {
+      "score": 57,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-19",
+      "playerId": "random_player_0"
+    },
+    {
+      "score": 57,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-15",
+      "playerId": "Luca Brecel"
+    },
+    {
+      "score": 55,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-23",
+      "playerId": "Luca Brecel"
+    },
+    {
+      "score": 54,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-17",
+      "playerId": "Selby"
+    },
+    {
+      "score": 52,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-2",
+      "playerId": "random_player_63"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-ROUND_1-21",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-13",
+      "playerId": "Worst Professional"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_1-2",
+      "playerId": "Stephen Maguire"
+    },
+    {
+      "score": 50,
+      "maximumType": "NONE",
+      "stage": "PRE_ROUND_2",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ-PRE_ROUND_2-12",
+      "playerId": "Karen Wilson"
+    }
+  ],
+  "timestamp": "2025/3/10"
+}

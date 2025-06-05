@@ -1,6 +1,9 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.attempt.CueType;
+import trashsoftware.trashSnooker.core.person.CuePlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,9 +21,10 @@ public class AiCueResult {
     private final Ball targetBall;
     //    private final PlayerPerson.HandSkill handSkill;
     private final double frameImportance;
-    private final boolean rua;
+    //    private final boolean rua;
     private double unitX, unitY;
     private List<double[]> whitePath = new ArrayList<>();
+    private final FinalChoice choice;  // 供记录
 
     public AiCueResult(InGamePlayer inGamePlayer,
                        GamePlayStage gamePlayStage,
@@ -31,10 +35,11 @@ public class AiCueResult {
                        double unitX,
                        double unitY,
                        CueParams cueParams,
-                       double frameImportance,
-                       boolean rua) {
+                       FinalChoice finalChoice,
+                       double frameImportance) {
         this.unitX = unitX;
         this.unitY = unitY;
+        this.choice = finalChoice;
 
         if (Double.isNaN(unitX) || Double.isNaN(unitY)) {
             throw new RuntimeException("Direction is NaN");
@@ -47,7 +52,6 @@ public class AiCueResult {
         this.targetBall = targetBall;
 //        this.handSkill = handSkill;
         this.frameImportance = frameImportance;
-        this.rua = rua;
 
         applyRandomError(inGamePlayer, gamePlayStage);
     }
@@ -68,6 +72,10 @@ public class AiCueResult {
                 frameImportance * (90 - psy));
     }
 
+    public FinalChoice getChoice() {
+        return choice;
+    }
+
     public Ball getTargetBall() {
         return targetBall;
     }
@@ -84,8 +92,8 @@ public class AiCueResult {
         return targetDirHole;
     }
 
-    public PlayerHand getHandSkill() {
-        return cueParams.getHandSkill();
+    public CuePlayerHand getCuePlayerHand() {
+        return cueParams.getCuePlayerHand();
     }
 
     public CueType getCueType() {
@@ -109,19 +117,23 @@ public class AiCueResult {
         double precisionFactor = aiPrecisionFactor;
         if (gamePlayStage == GamePlayStage.THIS_BALL_WIN ||
                 gamePlayStage == GamePlayStage.ENHANCE_WIN) {
-            precisionFactor *= (person.psy / 100);
+            precisionFactor *= (person.psyNerve / 100) * (1.0 - frameImportance * -0.5);
             System.out.println(gamePlayStage + ", precision: " + precisionFactor);
         } else if (gamePlayStage == GamePlayStage.BREAK) {
             precisionFactor *= 5.0;
         }
 
-        if (rua) {
-            // 打rua了，精度进一步降低
-            System.out.println("Ai player ruaed!");
-            precisionFactor *= (person.psy / 100);
-        }
+        // rua不rua
+//        precisionFactor /= calculateFramePsyDivisor(frameImportance, );
+        precisionFactor *= igp.getPsyStatus();
 
-        precisionFactor /= calculateFramePsyDivisor(frameImportance, person.psy);
+//        if (rua) {
+//            // 打rua了，精度进一步降低
+//            System.out.println("Ai player ruaed!");
+//            precisionFactor *= (person.psyRua / 100);
+//        }
+
+//        precisionFactor /= calculateFramePsyDivisor(frameImportance, person.avgPsy());
 
         double mistake = random.nextDouble() * 100;
         double mistakeFactor = 1.0;
@@ -132,6 +144,7 @@ public class AiCueResult {
             System.out.println("Mistake");
         }
 
+        // AI还不会传球
         double sd;
         if (cueType == CueType.ATTACK) {
             sd = (100 - person.getAiPlayStyle().precision) / precisionFactor;  // 再歪也歪不了太多吧？
@@ -174,7 +187,6 @@ public class AiCueResult {
                 ", targetDirHole=" + Arrays.toString(targetDirHole) +
                 ", targetBall=" + targetBall +
                 ", frameImportance=" + frameImportance +
-                ", rua=" + rua +
                 ", unitX=" + unitX +
                 ", unitY=" + unitY +
                 ", whitePath=" + whitePath +
@@ -191,13 +203,5 @@ public class AiCueResult {
 
     public double getUnitY() {
         return unitY;
-    }
-
-    public enum CueType {
-        ATTACK,
-        DOUBLE_POT,
-        DEFENSE,
-        BREAK,
-        SOLVE
     }
 }

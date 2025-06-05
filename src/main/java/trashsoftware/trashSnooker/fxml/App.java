@@ -1,7 +1,9 @@
 package trashsoftware.trashSnooker.fxml;
 
 import javafx.application.Application;
+import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -10,15 +12,13 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -31,8 +31,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
 
-    public static final String VERSION_NAME = "0.7";
-    public static final int VERSION_CODE = 58;
+    public static final String VERSION_NAME = "0.7 beta 3";
+    public static final int VERSION_CODE = 59;
     public static final String CLASSIFIER = "win";
     public static final String FONT_STYLE = CLASSIFIER.equals("mac") ?
             "-fx-font-family: 'serif'" :
@@ -111,6 +111,14 @@ public class App extends Application {
             default -> false;
         };
 
+        // 防止杆把父节点挤大
+        Pane contentPane = gameView.getContentPane();
+        Rectangle clipBound = new Rectangle(contentPane.getWidth(), contentPane.getHeight());
+        clipBound.widthProperty().bind(stage.widthProperty());
+        clipBound.heightProperty().bind(stage.heightProperty());
+        System.out.println(clipBound.getWidth() + " " + clipBound.getHeight());
+        contentPane.setClip(clipBound);
+
         if (fullScreen) {
             Scene scene = stage.getScene();
             Parent root = scene.getRoot();
@@ -146,20 +154,57 @@ public class App extends Application {
 //            double[] systemResolution = ConfigLoader.getSystemResolution();
 //            stage.setWidth(systemResolution[0]);
 //            stage.setHeight(systemResolution[1]);
+        } else {
+            bindGamePaneToWindow(stage, gameView);
         }
 
-        // 防止杆把父节点挤大
-        Pane contentPane = gameView.getContentPane();
-        Rectangle clipBound = new Rectangle(contentPane.getWidth(), contentPane.getHeight());
-        System.out.println(clipBound.getWidth() + " " + clipBound.getHeight());
-        contentPane.setClip(clipBound);
-
-        stage.widthProperty().addListener(((observableValue, aBoolean, t1) -> {
-            stage.setX(0);
-            stage.setY(0);
-        }));
+//        stage.widthProperty().addListener(((observableValue, aBoolean, t1) -> {
+//            stage.setX(0);
+//            stage.setY(0);
+//        }));
 
 //        gameView.setupAfterShow();
+    }
+    
+    private static void bindGamePaneToWindow(Stage stage, GameView gameView) {
+        GameValues gameValues = gameView.gameValues;
+        
+        final double powerSliderH = gameView.powerSliderPane.getHeight();
+        double otherLeftHeights = gameView.leftToolbarPane.getHeight() - powerSliderH;
+        
+        Insets mainInsets = gameView.mainFramePane.getInsets();
+        double systemZoom = ConfigLoader.getInstance().getSystemZoom();
+        
+        double deadWidth = (gameView.leftToolbarPane.getWidth() + 
+                gameView.mainFramePane.getHgap() +
+                mainInsets.getLeft() + mainInsets.getRight()) * systemZoom;
+        
+        final double gamePaneOrigWidth = gameView.gamePane.getWidth();
+        double tableAspect = gameValues.table.outerWidth / gameValues.table.outerHeight;
+        
+        Scene scene = stage.getScene();
+
+        stage.widthProperty().addListener((observable, oldValue, newValue) -> {
+            double tableAreaW = newValue.doubleValue() - deadWidth;
+            double ratio = tableAreaW / gamePaneOrigWidth;
+            
+            double tableAreaH = tableAreaW / tableAspect;
+            double deadHeight = (gameView.menuBar.getHeight() +
+                    gameView.bottomPane.getHeight() +
+                    gameView.mainFramePane.getVgap() +
+                    mainInsets.getTop() + mainInsets.getBottom() + 30) * systemZoom;
+            stage.setHeight(tableAreaH + deadHeight);
+//            System.out.println("GP size: " + gameView.gamePane.getWidth() + ", " + gameView.gamePane.getHeight());
+
+            double newScale = tableAreaW / gameValues.table.outerWidth;
+            gameView.changeScale(newScale);
+//            System.out.println(scene.getWidth() + ", " + gameView.contentPane.getWidth());
+        });
+        
+        stage.heightProperty().addListener((observable, oldValue, newValue) -> {
+            // todo: powerSlider高度
+            // todo: 大概可以用最下面一个组件的y位置来判断？
+        });
     }
 
     public static ResourceBundle getStrings() {

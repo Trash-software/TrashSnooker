@@ -5,8 +5,9 @@
     "playerNumber": 1,
     "gameRule": "AMERICAN_NINE",
     "handFeelEffort": 1,
-    "person": "Neil Robertson",
-    "playerType": "PLAYER",
+    "psyStatus": 0.8385650000000001,
+    "person": "custom_player_3",
+    "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
   "p1Wins": 1,
@@ -14,11 +15,12 @@
     "playerNumber": 2,
     "gameRule": "AMERICAN_NINE",
     "handFeelEffort": 1,
-    "person": "Mark Allen",
-    "playerType": "PLAYER",
+    "psyStatus": 0.4360799999999998,
+    "person": "custom_player_4",
+    "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "startTime": 1746305783277,
+  "startTime": 1748975486389,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
@@ -27,9 +29,9 @@
     "subRules": ["RAW_STD"],
     "devMode": true,
     "table": {
-      "tableOrdinal": 3,
-      "pocketDifficultyOrdinal": 0,
-      "holeSizeOrdinal": 1
+      "tableOrdinal": 1,
+      "pocketDifficultyOrdinal": 3,
+      "holeSizeOrdinal": 3
     }
   },
   "totalFrames": 1,

@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
-import trashsoftware.trashSnooker.core.PlayerPerson;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
@@ -38,6 +38,7 @@ public class HumanCareer extends Career {
     private FinancialManager finance;
     private AwardDistributionHint unShownAwd;
     private final CareerManager careerManager;
+    private ChampionshipLocation liveLocation = ChampionshipLocation.CHN;  // 居住地
 
     HumanCareer(PlayerPerson playerPerson, CareerManager careerManager) {
         super(playerPerson, true, careerManager);
@@ -155,6 +156,10 @@ public class HumanCareer extends Career {
         }
     }
 
+    public void setLiveLocation(ChampionshipLocation liveLocation) {
+        this.liveLocation = liveLocation;
+    }
+
     public void completeChallenge(ChallengeSet challengeSet, boolean clearance, int score) {
         // 仅第一次完成给经验
         ChallengeHistory history = completedChallenges.computeIfAbsent(
@@ -181,7 +186,7 @@ public class HumanCareer extends Career {
                 finance.totalExp += cr.getExp();
                 finance.expInThisLevel += cr.getExp();
                 int raw = cr.getMoney();
-                earnMoney(raw, TAX_RATE);
+                earnMoney(raw, liveLocation);
                 int real = finance.money - before;
 
                 JSONObject subItem = new JSONObject();
@@ -208,11 +213,13 @@ public class HumanCareer extends Career {
      * 记录一笔合法收入
      * 
      * @param earned  标价
-     * @param taxRate 实行的税率
      */
-    public void earnMoney(int earned, double taxRate) {
+    public void earnMoney(int earned, ChampionshipLocation location) {
         finance.cumulativeAwards += earned;
-        finance.money += (int) Math.round(earned * (1 - taxRate));
+        
+        double tax = location.tax(earned);
+        
+        finance.money += (int) Math.round(earned - tax);
         // 这里不检查成就，因为earnMoney之后一般都跟着checkScoreAchievements()
     }
 
@@ -280,7 +287,7 @@ public class HumanCareer extends Career {
             
             int before = finance.money;
             int raw = score.data.getAwardByRank(rank);
-            earnMoney(raw, TAX_RATE);
+            earnMoney(raw, score.data.location);
             int real = finance.money - before;
             
             JSONObject subItem = new JSONObject();
