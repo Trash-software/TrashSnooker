@@ -7,12 +7,14 @@ import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.person.CuePlayerHand;
-import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class Analyzer {
 
@@ -136,7 +138,7 @@ public class Analyzer {
         Collections.sort(attackChoices);
         return attackChoices;
     }
-    
+
     public static AttackChoice choiceFromDifferentWhitePos(
             Game<?, ?> game,
             double[] whitePos,
@@ -233,7 +235,7 @@ public class Analyzer {
                 defenseResult.opponentPotProb = potProb;
             }
 
-            if (defenseResult.opponentEasies.get(i) == null || 
+            if (defenseResult.opponentEasies.get(i) == null ||
                     potProb > defenseResult.opponentEasies.get(i).defaultRef.potProb) {
                 defenseResult.opponentEasies.set(i, ac);
                 if (defenseResult.grossOpponentEasiest == null ||
@@ -307,7 +309,7 @@ public class Analyzer {
                     copy.isInLineHandBall());
 
             Game.SeeAble seeAble = copy.countSeeAbleTargetBalls(
-                    whiteStopPos[0], 
+                    whiteStopPos[0],
                     whiteStopPos[1],
                     opponentBalls,
                     1
@@ -450,9 +452,11 @@ public class Analyzer {
 
         // 和杆还是有关系的，拿着大头杆打斯诺克就不会去想很难的球
         double actualSideSpin = cueParams.actualSideSpin();
-        
+
         double lowActualPower = cueParams.actualPower() * (1 - powerSd);
         double highActualPower = cueParams.actualPower() * (1 + powerSd);
+        // 这个东西不能是负值，否则会产生一系列怪bug，包括导致potProb为NaN的
+        lowActualPower = Math.max(lowActualPower, Values.MIN_SELECTED_POWER);
 
         // dev=deviation, 由于力量加上塞造成的1倍标准差偏差角，应为小于PI的正数
         double[] devOfLowPower = CuePlayParams.unitXYWithSpins(actualSideSpin,
@@ -469,7 +473,7 @@ public class Analyzer {
 
         double sideDevRad = (radDevOfHighPower - radDevOfLowPower) / 2;
         sideDevRad *= 1.25;  // 稍微多惩罚一点
-        
+
         // 估算扎杆弧线的影响
         double cosMbu = Math.cos(Math.toRadians(cueParams.getCueAngleDeg()));
         double mbummeMag = CuePlayParams.mbummeMag(cosMbu);
@@ -503,7 +507,10 @@ public class Analyzer {
                     cueParams.getCueAngleDeg());
         }
 
-//        System.out.println("Devs: " + sideDevRad + " " + curveDevRad + " " + aimingSd);
+//        if (Double.isNaN(curveDevRad)) {
+//            System.err.println("Devs: " + sideDevRad + " " + curveDevRad + " " + aimingSd);
+//            System.err.println("mbu: " + mbummeMag + ", " + mbummeHigh + ", " + mbummeLow);
+//        }
         return new double[]{sideDevRad, curveDevRad, aimingSd, powerSd};
     }
 
@@ -619,7 +626,7 @@ public class Analyzer {
             CueParams cueParams,
             double[] whiteToCollisionDir,
             boolean useClone) {
-        
+
 //        if (true) {
 //            return whiteToCollisionDir;
 //        }

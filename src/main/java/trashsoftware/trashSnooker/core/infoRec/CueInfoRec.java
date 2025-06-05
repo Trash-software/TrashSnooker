@@ -194,6 +194,7 @@ public class CueInfoRec {
                         targetDirHole[1][1] - targetBallOrigPos[1]
                 );
             }
+            System.out.println("Pot prob is " + potAttempt.attackChoice.getDefaultRef().getPotProb());
             return new PotInfo(
                     whiteTargetDt,
                     targetHoleDt,

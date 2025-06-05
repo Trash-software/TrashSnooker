@@ -117,7 +117,7 @@ public class MatchInfoRec {
         return loadMatchRec(entireBeginTime, null);
     }
 
-    JSONObject toJson() {
+    JSONObject toJson() throws JSONException {
         JSONObject root = new JSONObject();
         root.put("entireBeginTime", entireBeginTime);
         root.put("careerMatchId", careerMatchId);
@@ -138,7 +138,7 @@ public class MatchInfoRec {
         return root;
     }
 
-    public void writeToDisk() {
+    public void writeToDisk() throws JSONException {
         JSONObject json = toJson();
         DataLoader.saveToDisk(json, recFile.getAbsolutePath());
     }
@@ -157,7 +157,7 @@ public class MatchInfoRec {
         return frames.getLast();
     }
 
-    public void finishCurrentFrame(boolean matchFinished, int frameWinnerNumber) {
+    public void finishCurrentFrame(boolean matchFinished, int frameWinnerNumber) throws JSONException {
         if (!valid) return;
         frames.getLast().winner = frameWinnerNumber;
         writeToDisk();

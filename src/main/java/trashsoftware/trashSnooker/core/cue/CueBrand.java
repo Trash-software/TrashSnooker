@@ -147,7 +147,7 @@ public abstract class CueBrand {
         return switch (cueExtension) {
             case NO -> 0;
             case SHORT -> 240;
-            case SOCKET -> 600;
+            case SOCKET -> 650;
             case SOCKET_DOUBLE -> 1200;
         };
     }

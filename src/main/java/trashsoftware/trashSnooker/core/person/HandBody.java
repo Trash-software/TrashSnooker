@@ -114,12 +114,12 @@ public class HandBody implements Cloneable {
         
         // 身体大约在斜后方。这里是横向的距离
         int sign = person.handBody.leftHandRest ? -1 : 1;
-        double waistToAssX = aimingY * upBodyLength * 0.5 * sign;
-        double waistToAssY = -aimingX * upBodyLength * 0.5 * sign;
+        double waistToAssX = aimingY * upBodyLength * 0.4 * sign;
+        double waistToAssY = -aimingX * upBodyLength * 0.4 * sign;
         
         return new double[]{
-                cueTailX - aimingX * upBodyLength * 0.9 + waistToAssX,
-                cueTailY - aimingY * upBodyLength * 0.9 + waistToAssY
+                cueTailX - aimingX * upBodyLength * 1.05 + waistToAssX,
+                cueTailY - aimingY * upBodyLength * 1.05 + waistToAssY
         };
     }
 

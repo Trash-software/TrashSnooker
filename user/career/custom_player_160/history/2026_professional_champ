@@ -1,0 +1,345 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 9,
+    "Liu Mang": 16,
+    "Matthew Stevens": 11,
+    "Ding Junhui": 3,
+    "Jack Lisowski": 5,
+    "Smart": 6,
+    "Glass Heart": 14,
+    "Trump": 12,
+    "Mark Allen": 8,
+    "Selby": 10,
+    "Mark Williams": 13,
+    "O_Sullivan": 2,
+    "Zhao Xintong": 15,
+    "custom_player_160": 4,
+    "Neil Robertson": 7,
+    "John Wizard": 1
+  },
+  "championshipId": "professional_champ",
+  "matchTree": {"root": {
+    "p1wins": 4,
+    "p1": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Allen"},
+          "p2": {"winner": "Matthew Stevens"},
+          "winner": "Mark Allen",
+          "stage": "ROUND_1",
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-0",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Liu Mang"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-1",
+          "p2wins": 0
+        },
+        "winner": "Mark Allen",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_player_160+2026+professional_champ-QUARTER_FINAL-8",
+        "p2wins": 1
+      },
+      "p2": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Smart"},
+          "p2": {"winner": "Stuart Bingham"},
+          "winner": "Smart",
+          "stage": "ROUND_1",
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-2",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "Trump"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-3",
+          "p2wins": 0
+        },
+        "winner": "Neil Robertson",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_player_160+2026+professional_champ-QUARTER_FINAL-9",
+        "p2wins": 2
+      },
+      "winner": "Neil Robertson",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_player_160+2026+professional_champ-SEMI_FINAL-12",
+      "p2wins": 3
+    },
+    "p2": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 2,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "Selby"},
+          "winner": "Selby",
+          "stage": "ROUND_1",
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-4",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Ding Junhui"},
+          "p2": {"winner": "Glass Heart"},
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-5",
+          "p2wins": 0
+        },
+        "winner": "Selby",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_player_160+2026+professional_champ-QUARTER_FINAL-10",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Jack Lisowski"},
+          "p2": {"winner": "Zhao Xintong"},
+          "winner": "Jack Lisowski",
+          "stage": "ROUND_1",
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-6",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "custom_player_160"},
+          "p2": {"winner": "Mark Williams"},
+          "winner": "custom_player_160",
+          "stage": "ROUND_1",
+          "matchId": "custom_player_160+2026+professional_champ-ROUND_1-7",
+          "p2wins": 1
+        },
+        "winner": "custom_player_160",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_player_160+2026+professional_champ-QUARTER_FINAL-11",
+        "p2wins": 2
+      },
+      "winner": "Selby",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_player_160+2026+professional_champ-SEMI_FINAL-13",
+      "p2wins": 0
+    },
+    "winner": "Neil Robertson",
+    "stage": "FINAL",
+    "matchId": "custom_player_160+2026+professional_champ-FINAL-14",
+    "p2wins": 0
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 127,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-3",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 126,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-SEMI_FINAL-12",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 124,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-QUARTER_FINAL-9",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 104,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-0",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 101,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-3",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 99,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-1",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 97,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_player_160+2026+professional_champ-SEMI_FINAL-12",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 94,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_player_160+2026+professional_champ-QUARTER_FINAL-9",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 81,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_player_160+2026+professional_champ-FINAL-14",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 78,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-4",
+      "playerId": "Selby"
+    },
+    {
+      "score": 71,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_player_160+2026+professional_champ-FINAL-14",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 68,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-2",
+      "playerId": "Stuart Bingham"
+    },
+    {
+      "score": 67,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-6",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 64,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-0",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 60,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_player_160+2026+professional_champ-SEMI_FINAL-12",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 60,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-0",
+      "playerId": "Matthew Stevens"
+    },
+    {
+      "score": 59,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-0",
+      "playerId": "Mark Allen"
+    },
+    {
+      "score": 57,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-2",
+      "playerId": "Smart"
+    },
+    {
+      "score": 56,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-4",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 53,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-4",
+      "playerId": "Selby"
+    },
+    {
+      "score": 52,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-7",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_player_160+2026+professional_champ-ROUND_1-2",
+      "playerId": "Smart"
+    }
+  ],
+  "timestamp": "2026/2/22"
+}

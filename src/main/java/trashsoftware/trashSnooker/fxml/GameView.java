@@ -705,7 +705,11 @@ public class GameView implements Initializable {
                 PlayerHand.Hand selected = PlayerHand.Hand.valueOf(String.valueOf(t1.getUserData()));
                 PlayerHand.CueHand cueHand = handCueHandMap.get(selected);
                 PlayerPerson person = game.getGame().getCuingPlayer().getPlayerPerson();
-                currentHand = person.handBody.getHandSkillByHand(cueHand);
+                if (cueHand == null) {
+                    currentHand = CuePlayerHand.makeDefault(game.getGame().getCuingIgp());
+                } else {
+                    currentHand = person.handBody.getHandSkillByHand(cueHand);
+                }
                 createPathPrediction();
             });
 

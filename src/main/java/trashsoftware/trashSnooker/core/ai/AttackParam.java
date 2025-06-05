@@ -8,6 +8,8 @@ import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.util.EventLogger;
 
+import java.util.Arrays;
+
 public class AttackParam {
     double potProb;  // 正常情况下能打进的概率
     double price;  // 对于球手来说的价值
@@ -40,8 +42,8 @@ public class AttackParam {
                 true
         );
         double sideDevRad = devs[0];
-        double aimingSd = devs[1];
-        double mbummeSd = devs[2];
+        double mbummeSd = devs[1];
+        double aimingSd = devs[2];
 
         double totalDt = attackChoice.targetHoleDistance + attackChoice.whiteCollisionDistance;
         double whiteInitSpeed = CuePlayParams.getHorizontalSpeed(cueParams.actualPower(), 0);
@@ -72,8 +74,8 @@ public class AttackParam {
 
         // todo: 1 / cos是权宜之计
         tarDevSdRad *= 1 / Math.cos(attackChoice.angleRad);
-        if (tarDevSdRad > Algebra.HALF_PI) {
-            tarDevSdRad = Algebra.HALF_PI;
+        if (tarDevSdRad >= Algebra.HALF_PI) {
+            tarDevSdRad = Algebra.HALF_PI - 0.01;  // 不能是90度
         }
 
         // 目标球到袋时的大致偏差标准差，mm
@@ -98,7 +100,7 @@ public class AttackParam {
                     dac.targetHoleVec,
                     totalMove - totalDt  // 真就大概了，意思也就是不鼓励AI低搓去沙中袋
             );
-            nd = new NormalDistribution(0.0, Math.max(tarDevHoleSdMm * 2, 0.00001));
+            nd = new NormalDistribution(0.0, Math.max(tarDevHoleSdMm * 2, 0.0001));
         } else if (attackChoice instanceof AttackChoice.DoubleAttackChoice doubleAc) {
             // 稍微给高点
             // 除数越大，AI越倾向打翻袋
@@ -114,7 +116,7 @@ public class AttackParam {
             );
 //                System.out.println("Double sd: " + tarDevHoleSdMm * 2 + ", allow dev: " + allowedDev);
 //                System.out.println(targetDifficultyMm + " " + tarDevSdRad + " " + attackChoice.targetHoleDistance);
-            nd = new NormalDistribution(0.0, Math.max(tarDevHoleSdMm * 2, 0.00001));
+            nd = new NormalDistribution(0.0, Math.max(tarDevHoleSdMm * 2, 0.0001));
         } else {
             EventLogger.error("Unknown attack choice: " + attackChoice);
             potProb = 0.0;
@@ -123,7 +125,19 @@ public class AttackParam {
         }
 
         potProb = nd.cumulativeProbability(allowedDev) - nd.cumulativeProbability(-allowedDev);
-        if (potProb < 0) potProb = 0.0;  // 虽然我不知道为什么prob会是负的
+//        if (potProb < 0) potProb = 0.0;  // 虽然我不知道为什么prob会是负的
+        if (Double.isNaN(potProb)) {
+            System.err.println("Pot prob is NaN. Allowed Dev is " + allowedDev + 
+                    ", std: " + nd.getStandardDeviation() +
+                    ", tarDevHoleSdMm: " + tarDevHoleSdMm + 
+                    ", tarDevSdRad: " + tarDevSdRad +
+                    ", sdCollisionMm: " + sdCollisionMm +
+                    ", devs: " + Arrays.toString(devs) + 
+                    ", moveT: " + moveT
+            );
+            potProb = 0.0;
+        }
+        potProb = Math.clamp(potProb, 0.0, 1.0);  // 就是不知道哪来的bug，保险一下
         price = potProb * attackChoice.targetPrice;
 
 //            System.out.println("Est dev: " + tarDevHoleSdMm +

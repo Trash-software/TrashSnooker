@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.util;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Values;
 
@@ -453,20 +454,24 @@ public class Util {
         return json;
     }
     
-    public static <T extends Record> JSONObject recordToJson(T record) {
+    public static <T extends Record> JSONObject recordToJson(T record) throws JSONException {
         JSONObject json = new JSONObject();
         for (RecordComponent component : record.getClass().getRecordComponents()) {
             Class<?> type = component.getType();
             if (isSupportedType(type)) {
+                Object value = null;
                 try {
                     Method accessor = component.getAccessor();
-                    Object value = accessor.invoke(record);
+                    value = accessor.invoke(record);
                     json.put(component.getName(), value);
+                } catch (JSONException je) {
+                    throw new JSONException("Error when writing '" + component.getName() + "' because " +
+                            "its value is " + value, je);
                 } catch (Exception e) {
-                    throw new RuntimeException("Failed to access record component: " + component.getName(), e);
+                    throw new JSONException("Failed to access record component: " + component.getName(), e);
                 }
             } else {
-                throw new IllegalArgumentException("Unsupported field type: " + type.getName());
+                throw new JSONException("Unsupported field type: " + type.getName());
             }
         }
 

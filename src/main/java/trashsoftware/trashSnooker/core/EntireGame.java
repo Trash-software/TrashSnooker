@@ -322,7 +322,11 @@ public class EntireGame {
                 }
             }
         }
-        matchInfoRec.finishCurrentFrame(end, frameWinner.getPlayerNumber());
+        try {
+            matchInfoRec.finishCurrentFrame(end, frameWinner.getPlayerNumber());
+        } catch (JSONException je) {
+            EventLogger.error(je);
+        }
         
         return end;
     }

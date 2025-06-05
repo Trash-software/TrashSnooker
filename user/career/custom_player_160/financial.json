@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 662600,
+    "money": 683843,
     "invoices": [
       {
         "inGameDate": "2026/1/25",
@@ -56,13 +56,59 @@
           }
         ],
         "timestamp": "2025-05-23 05:17:09"
+      },
+      {
+        "inGameDate": "2026/2/22",
+        "year": 2026,
+        "match": "professional_champ",
+        "moneyBefore": 662600,
+        "moneyAfter": 687493,
+        "type": "championshipEarn",
+        "items": {"TOP_4": {
+          "actual": 24893,
+          "raw": 30000
+        }},
+        "timestamp": "2025-06-05 01:21:08"
+      },
+      {
+        "inGameDate": "2026/2/22",
+        "moneyBefore": 687493,
+        "moneyAfter": 686743,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 750
+        }],
+        "timestamp": "2025-06-05 05:16:02"
+      },
+      {
+        "inGameDate": "2026/2/27",
+        "match": "custom_player_160+2026+dog_give_power_open",
+        "moneyBefore": 686743,
+        "moneyAfter": 683843,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          }
+        ],
+        "timestamp": "2025-06-05 05:16:02"
       }
     ],
     "level": 30,
-    "expInThisLevel": 38,
+    "expInThisLevel": 458,
     "availPerks": 0,
     "totalPerks": 0,
-    "totalExp": 10437
+    "totalExp": 10857
   },
-  "checksum": "3793BF86CBB29769B014380F260AFA1F"
+  "checksum": "A8176EEA3C68EA5FBABAF072CD39074A"
 }

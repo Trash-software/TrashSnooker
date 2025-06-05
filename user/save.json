@@ -3,9 +3,9 @@
   "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
-    "gameRule": "SNOOKER",
+    "gameRule": "AMERICAN_NINE",
     "handFeelEffort": 1,
-    "psyStatus": 1,
+    "psyStatus": 0.8385650000000001,
     "person": "custom_player_3",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
@@ -13,25 +13,25 @@
   "p1Wins": 1,
   "p2": {
     "playerNumber": 2,
-    "gameRule": "SNOOKER",
+    "gameRule": "AMERICAN_NINE",
     "handFeelEffort": 1,
-    "psyStatus": 0.75302269481425,
-    "person": "custom_player_2",
+    "psyStatus": 0.4360799999999998,
+    "person": "custom_player_4",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "startTime": 1748813558215,
+  "startTime": 1748975486389,
   "p2BreakLoseChance": 0,
   "p1BreakLoseChance": 0,
   "gameValues": {
-    "ball": "SNOOKER_BALL",
-    "gameRule": "SNOOKER",
-    "subRules": ["SNOOKER_STD"],
-    "devMode": false,
+    "ball": "POOL_BALL",
+    "gameRule": "AMERICAN_NINE",
+    "subRules": ["RAW_STD"],
+    "devMode": true,
     "table": {
-      "tableOrdinal": 0,
+      "tableOrdinal": 1,
       "pocketDifficultyOrdinal": 3,
-      "holeSizeOrdinal": 2
+      "holeSizeOrdinal": 3
     }
   },
   "totalFrames": 1,

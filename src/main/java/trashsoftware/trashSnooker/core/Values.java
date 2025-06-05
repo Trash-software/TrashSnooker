@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 
 public class Values {
-    public static final double MIN_SELECTED_POWER = 1.0;
+    public static final double MIN_SELECTED_POWER = 0.5;
     // 打中杆和打极限杆法球速的比例
     public static final double CUE_POINT_MULTIPLIER = 0.8;
     // 中杆击球最大速度，mm/s

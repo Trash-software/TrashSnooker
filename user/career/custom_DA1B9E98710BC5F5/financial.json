@@ -1,6 +1,6 @@
 {
   "financial": {
-    "money": 71530,
+    "money": 75590,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
@@ -4695,13 +4695,412 @@
         "moneyAfter": 71530,
         "type": "purchase",
         "timestamp": "2025-06-02 07:52:27"
+      },
+      {
+        "inGameDate": "2025/2/27",
+        "moneyBefore": 71530,
+        "moneyAfter": 71410,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 120
+        }],
+        "timestamp": "2025-06-02 19:52:33"
+      },
+      {
+        "inGameDate": "2025/3/1",
+        "moneyBefore": 71410,
+        "moneyAfter": 71230,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 180
+        }],
+        "timestamp": "2025-06-02 19:52:40"
+      },
+      {
+        "inGameDate": "2025/3/4",
+        "moneyBefore": 71230,
+        "moneyAfter": 70870,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 360
+        }],
+        "timestamp": "2025-06-02 19:52:42"
+      },
+      {
+        "inGameDate": "2025/3/10",
+        "match": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ",
+        "moneyBefore": 70870,
+        "moneyAfter": 67970,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          }
+        ],
+        "timestamp": "2025-06-02 19:52:42"
+      },
+      {
+        "inGameDate": "2025/3/10",
+        "year": 2025,
+        "match": "cat_give_power_champ",
+        "moneyBefore": 67970,
+        "moneyAfter": 67970,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_1": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2025-06-02 21:31:33"
+      },
+      {
+        "inGameDate": "2025/3/10",
+        "moneyBefore": 67970,
+        "moneyAfter": 67490,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 480
+        }],
+        "timestamp": "2025-06-03 02:03:15"
+      },
+      {
+        "item": 10,
+        "inGameDate": "2025/3/18",
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_beijing",
+        "moneyBefore": 67490,
+        "moneyAfter": 67690,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-03 02:03:15"
+      },
+      {
+        "inGameDate": "2025/3/18",
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_beijing",
+        "moneyBefore": 67690,
+        "moneyAfter": 66690,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2025-06-03 02:03:15"
+      },
+      {
+        "inGameDate": "2025/3/18",
+        "year": 2025,
+        "match": "eight_master_tour_beijing",
+        "moneyBefore": 66690,
+        "moneyAfter": 73890,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 7200,
+          "raw": 9000
+        }},
+        "timestamp": "2025-06-03 02:31:04"
+      },
+      {
+        "inGameDate": "2025/3/18",
+        "moneyBefore": 73890,
+        "moneyAfter": 73470,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 420
+        }],
+        "timestamp": "2025-06-03 21:17:24"
+      },
+      {
+        "item": 14,
+        "inGameDate": "2025/3/25",
+        "match": "custom_DA1B9E98710BC5F5+2025+china_open",
+        "moneyBefore": 73470,
+        "moneyAfter": 74470,
+        "type": "invitation",
+        "moneyEarn": 1000,
+        "timestamp": "2025-06-03 21:17:24"
+      },
+      {
+        "inGameDate": "2025/3/25",
+        "match": "custom_DA1B9E98710BC5F5+2025+china_open",
+        "moneyBefore": 74470,
+        "moneyAfter": 73470,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2025-06-03 21:17:24"
+      },
+      {
+        "inGameDate": "2025/3/25",
+        "year": 2025,
+        "match": "china_open",
+        "moneyBefore": 73470,
+        "moneyAfter": 77470,
+        "type": "championshipEarn",
+        "items": {"TOP_16": {
+          "actual": 4000,
+          "raw": 5000
+        }},
+        "timestamp": "2025-06-04 04:30:48"
+      },
+      {
+        "inGameDate": "2025/3/25",
+        "moneyBefore": 77470,
+        "moneyAfter": 77170,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 300
+        }],
+        "timestamp": "2025-06-04 05:32:04"
+      },
+      {
+        "inGameDate": "2025/3/30",
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_spadina_open",
+        "moneyBefore": 77170,
+        "moneyAfter": 76170,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2025-06-04 05:32:04"
+      },
+      {
+        "inGameDate": "2025/3/30",
+        "year": 2025,
+        "match": "eight_spadina_open",
+        "moneyBefore": 76170,
+        "moneyAfter": 76170,
+        "type": "championshipEarn",
+        "items": {"PRE_GAMES_1": {
+          "actual": 0,
+          "raw": 0
+        }},
+        "timestamp": "2025-06-04 05:34:41"
+      },
+      {
+        "inGameDate": "2025/3/30",
+        "moneyBefore": 76170,
+        "moneyAfter": 75090,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1080
+        }],
+        "timestamp": "2025-06-04 06:03:34"
+      },
+      {
+        "inGameDate": "2025/4/17",
+        "match": "custom_DA1B9E98710BC5F5+2025+world_champ",
+        "moneyBefore": 75090,
+        "moneyAfter": 70890,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          }
+        ],
+        "timestamp": "2025-06-04 06:03:34"
+      },
+      {
+        "item": "MULTI_CUSHION_ESCAPE",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 70890,
+        "moneyAfter": 71090,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-04 06:39:26"
+      },
+      {
+        "item": "WIN_FRAMES",
+        "inGameDate": "2025/4/17",
+        "level": 2,
+        "moneyBefore": 71090,
+        "moneyAfter": 72090,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2025-06-04 06:39:28"
+      },
+      {
+        "item": "FINAL_FRAME_USUAL_GUEST",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 72090,
+        "moneyAfter": 72290,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-04 06:39:29"
+      },
+      {
+        "item": "FINAL_STAGE_FINAL_FRAME",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 72290,
+        "moneyAfter": 72490,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-04 06:39:29"
+      },
+      {
+        "item": "COME_BACK_BEHIND_65",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 72490,
+        "moneyAfter": 72690,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-04 06:39:31"
+      },
+      {
+        "item": "NOT_RESPECT",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 72690,
+        "moneyAfter": 72890,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-04 06:39:33"
+      },
+      {
+        "item": "POOL_BREAK_CLEAR",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 72890,
+        "moneyAfter": 73090,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-04 06:39:35"
+      },
+      {
+        "item": "SECOND_PLACE",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 73090,
+        "moneyAfter": 73290,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-04 06:39:37"
+      },
+      {
+        "item": "DEFEAT_BY_CHAMPION",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 73290,
+        "moneyAfter": 73490,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-04 06:39:38"
+      },
+      {
+        "item": "PLAY_TWO_YEARS",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 73490,
+        "moneyAfter": 73690,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-04 06:39:38"
+      },
+      {
+        "item": "DEFEAT_UNIQUE_OPPONENTS_SNOOKER",
+        "inGameDate": "2025/4/17",
+        "level": 2,
+        "moneyBefore": 73690,
+        "moneyAfter": 74690,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2025-06-04 06:39:40"
+      },
+      {
+        "item": "DEFEAT_SAME_OPPONENT_CONTINUOUS_SNOOKER",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 74690,
+        "moneyAfter": 74890,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-04 06:39:41"
+      },
+      {
+        "item": "DEFEAT_SAME_OPPONENT_MULTI_CEB_1",
+        "inGameDate": "2025/4/17",
+        "level": 0,
+        "moneyBefore": 74890,
+        "moneyAfter": 75090,
+        "type": "achievementAward",
+        "moneyEarn": 200,
+        "timestamp": "2025-06-04 06:39:42"
+      },
+      {
+        "item": "CHAMP_EARN_CUMULATIVE",
+        "inGameDate": "2025/4/17",
+        "level": 1,
+        "moneyBefore": 75090,
+        "moneyAfter": 75590,
+        "type": "achievementAward",
+        "moneyEarn": 500,
+        "timestamp": "2025-06-04 06:39:44"
       }
     ],
     "level": 24,
-    "expInThisLevel": 99,
+    "expInThisLevel": 504,
     "availPerks": 0,
     "totalPerks": 87,
-    "totalExp": 6190
+    "totalExp": 6595
   },
-  "checksum": "7882012A64D41E0820851D06685B33DC"
+  "checksum": "DFA075314C55F4B18625F572F774A716"
 }

@@ -451,8 +451,8 @@ public class PlayerHand implements Cloneable, Comparable<PlayerHand> {
     public enum CueExtension {
         NO(1.0, false),
         SHORT(0.92, false),
-        SOCKET(0.85, true),
-        SOCKET_DOUBLE(0.725, true) {
+        SOCKET(0.875, true),
+        SOCKET_DOUBLE(0.75, true) {
             @Override
             public String getReadable(ResourceBundle strings) {
                 return SOCKET.getReadable(strings) + " x2";

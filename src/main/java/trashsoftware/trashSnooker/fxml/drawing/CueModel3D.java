@@ -227,7 +227,7 @@ public class CueModel3D extends CueModel {
         );
         TexturedCueBrand.Segment backPart = TexturedCueBrand.Segment.fromPureColor(
                 socketBaseColor,
-                isLast ? 300.0 : 300.0 - PlayerHand.CueExtension.SOCKET_COVER_LENGTH,
+                isLast ? 350.0 : 350.0 - PlayerHand.CueExtension.SOCKET_COVER_LENGTH,
                 29.0,
                 29.0
         );
