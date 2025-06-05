@@ -8,6 +8,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -124,15 +125,21 @@ public class GameView implements Initializable {
     private final List<Node> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
     private final Map<Cue, CueModel> cueModelMap = new HashMap<>();
     @FXML
-    SubScene gameScene;
+    MenuBar menuBar;
+    @FXML
+    Pane bottomPane;
     @FXML
     GamePane gamePane;  // 球和桌子画在这里
     @FXML
     Pane contentPane;
     @FXML
+    GridPane mainFramePane;
+    @FXML
     Canvas cueAngleCanvas;
     @FXML
     Label cueAngleLabel;
+    @FXML
+    Pane leftToolbarPane;
     @FXML
     Canvas cuePointCanvas;
     @FXML
@@ -226,13 +233,14 @@ public class GameView implements Initializable {
     //    private double cueRadius = 4.0;
     private GraphicsContext cuePointCanvasGc;
     private GraphicsContext cueAngleCanvasGc;
-    private Pane basePane;  // 杆是画在这个pane上的
+    @FXML
+    Pane windowRootPane;
     private Stage stage;
     private InGamePlayer player1;
     private InGamePlayer player2;
     private EntireGame game;
     private GameReplay replay;
-    private GameValues gameValues;
+    GameValues gameValues;
     private double cursorDirectionUnitX, cursorDirectionUnitY;
     private double targetPredictionUnitX, targetPredictionUnitY;
     private double mouseX, mouseY;
@@ -440,6 +448,15 @@ public class GameView implements Initializable {
             tableGraphicsChanged = true;
         });
     }
+    
+    public void changeScale(double newScale) {
+        gamePane.updateScale(newScale, getActiveHolder());
+        ballDiameter = gameValues.ball.ballDiameter * gamePane.getScale();
+        ballRadius = ballDiameter / 2;
+        
+        tableGraphicsChanged = true;
+        createPathPrediction();
+    }
 
     private void generateScales(GameValues gameValues) {
         gamePane.setupPane(gameValues);
@@ -488,6 +505,11 @@ public class GameView implements Initializable {
         player1TarCanvas.getGraphicsContext2D().setStroke(WHITE);
         player2TarCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
         player2TarCanvas.getGraphicsContext2D().setStroke(WHITE);
+    }
+    
+    public void checkScale() {
+        System.out.println("Game pane scale: " + gamePane.getWidth() + " " + gamePane.getHeight());
+        System.out.println("Left scale: " + leftToolbarPane.getWidth());
     }
 
     private void setupDebug() {
@@ -539,7 +561,7 @@ public class GameView implements Initializable {
         this.player1 = replay.getP1();
         this.player2 = replay.getP2();
 
-        this.basePane = (Pane) stage.getScene().getRoot();
+        this.windowRootPane = (Pane) stage.getScene().getRoot();
 
         gameButtonBox.setVisible(false);
         gameButtonBox.setManaged(false);
@@ -581,7 +603,7 @@ public class GameView implements Initializable {
         this.drawStandingPos = devMode;
         this.aiAutoPlay = !this.devMode;
 
-        this.basePane = (Pane) stage.getScene().getRoot();
+        this.windowRootPane = (Pane) stage.getScene().getRoot();
 
         setFrameRate(ConfigLoader.getInstance().getFrameRate());
         setKeyboardActions();
@@ -891,8 +913,8 @@ public class GameView implements Initializable {
     private void setKeyboardActions() {
         powerSlider.setBlockIncrement(1.0);
 
-        basePane.setOnKeyPressed(this::keyboardAction);
-        basePane.setOnKeyReleased(this::keyboardReleaseAction);
+        windowRootPane.setOnKeyPressed(this::keyboardAction);
+        windowRootPane.setOnKeyReleased(this::keyboardReleaseAction);
 
         for (Toggle toggle : handSelectionToggleGroup.getToggles()) {
             RadioButton rb = (RadioButton) toggle;
@@ -4087,6 +4109,7 @@ public class GameView implements Initializable {
                     ballDiameter,
                     ballDiameter);  // 绘制预测撞击点的白球
 
+            // 画瞄准线
             if (!center.isHitWallBeforeHitBall() && predictedTargetBall != null) {
                 gamePane.getLineGraphics().setFill(cursorDrawer.fill);
                 gamePane.getLineGraphics().fillPolygon(
@@ -4094,16 +4117,6 @@ public class GameView implements Initializable {
                         cursorDrawer.targetPredictionPoly[1],
                         4
                 );
-
-                // todo: 不知道这个是干嘛的
-//                if (drawTargetRefLine) {
-//                    double tarCanvasX = gamePane.canvasX(cursorDrawer.tarX);
-//                    double tarCanvasY = gamePane.canvasY(cursorDrawer.tarY);
-//                    gamePane.getLineGraphics().setStroke(center.getFirstCollide().getColor().brighter().brighter());
-//                    gamePane.getLineGraphics().strokeLine(tarCanvasX, tarCanvasY,
-//                            tarCanvasX + cursorDrawer.lineX * gamePane.getScale(),
-//                            tarCanvasY + cursorDrawer.lineY * gamePane.getScale());
-//                }
             }
         }
     }
@@ -4410,6 +4423,8 @@ public class GameView implements Initializable {
         Bounds contentPanePos = contentPane.localToScene(contentPane.getBoundsInLocal());
         double anchorX = ballPanePos.getMinX() - contentPanePos.getMinX();
         double anchorY = ballPanePos.getMinY() - contentPanePos.getMinY();
+        
+        Parent basePane = stage.getScene().getRoot();
         if (!basePane.getTransforms().isEmpty()) {
             for (Transform transform : basePane.getTransforms()) {
                 if (transform instanceof Scale scale) {
