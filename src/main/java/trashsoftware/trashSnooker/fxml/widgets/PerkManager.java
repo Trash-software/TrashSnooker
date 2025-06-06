@@ -31,9 +31,7 @@ public class PerkManager {
     private PlayerPerson.ReadableAbility ability;
     private PlayerPerson.ReadableAbility previewAbility;
 
-//    private Map<PlayerHand.Hand, PlayerPerson.ReadableAbilityHand> handAbilityMap;
-//    private Map<PlayerHand.Hand, PlayerPerson.ReadableAbilityHand> previewHandAbilityMap;
-
+    private int freePerksRem;
     private int availPerks;
     private int cost;
     private final Map<Integer, Integer> generalAddedPerks = new TreeMap<>(Map.of(
@@ -51,8 +49,10 @@ public class PerkManager {
         }
     }
 
-    public PerkManager(CareerView parent, int availPerks, PlayerPerson.ReadableAbility ability) {
+    public PerkManager(CareerView parent, int availPerks, int freePerksRem, 
+                       PlayerPerson.ReadableAbility ability) {
         this.availPerks = availPerks;
+        this.freePerksRem = freePerksRem;
         this.parent = parent;
 
         setAbility(ability);
@@ -61,17 +61,6 @@ public class PerkManager {
     private void setAbility(PlayerPerson.ReadableAbility ability) {
         this.ability = ability;
         this.previewAbility = ability.clone();
-
-//        handAbilityMap = Map.of(
-//                PlayerHand.Hand.LEFT, ability.left,
-//                PlayerHand.Hand.RIGHT, ability.right,
-//                PlayerHand.Hand.REST, ability.rest
-//        );
-//        previewHandAbilityMap = Map.of(
-//                PlayerHand.Hand.LEFT, previewAbility.left,
-//                PlayerHand.Hand.RIGHT, previewAbility.right,
-//                PlayerHand.Hand.REST, previewAbility.rest
-//        );
     }
 
     public void synchronizePerks() {
@@ -108,14 +97,6 @@ public class PerkManager {
         return availPerks;
     }
 
-//    public static int indexToCategory(int index) {
-//        return index + 1;
-//    }
-
-//    public static int categoryToIndex(int cat) {
-//        return cat - 1;
-//    }
-
     boolean isGeneral(int cat) {
         return cat == AIMING;
     }
@@ -138,8 +119,12 @@ public class PerkManager {
 //        addedPerks[categoryToIndex(cat)] += 1;
 //        previewAbility.addPerks(cat, 1);
 //        double afterAdd = previewAbility.getAbilityByCat(cat);
-        int moneySpent = moneySpent(afterAdd);
-        cost += moneySpent;
+        if (freePerksRem > 0) {
+            freePerksRem --;
+        } else {
+            int moneySpent = moneySpent(afterAdd);
+            cost += moneySpent;
+        }
         parent.notifyPerksChanged();
 //        return addedPerks[categoryToIndex(cat)];
         return getPerksAddedTo(cat, hand);
@@ -212,28 +197,12 @@ public class PerkManager {
             }
         }
 
-//        for (int i = 0; i < addedPerks.length; i++) {
-//            if (addedPerks[i] != 0) {
-//                int cat = indexToCategory(i);
-//                double past = ability.getAbilityByCat(cat);
-//                double upgraded = previewAbility.getAbilityByCat(cat);
-//                String name = PlayerPerson.ReadableAbility.getStringByCat(cat);
-//                skillUpdateRec.put(name, new double[]{past, upgraded});
-//            }
-//        }
-
         this.ability = previewAbility;
         DataLoader.getInstance().updatePlayer(this.ability.toPlayerPerson());
 
         this.previewAbility = this.ability.clone();
         int sum = resetAddedPerks();
         
-//        for (int i = 0; i < addedPerks.length; i++) {
-//            if (addedPerks[i] != 0) {
-//                sum += addedPerks[i];
-//                addedPerks[i] = 0;
-//            }
-//        }
         UpgradeRec ur = new UpgradeRec(sum, cost, skillUpdateRec);
         cost = 0;
         return ur;

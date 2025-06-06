@@ -43,7 +43,7 @@ public class CareerManager {
     public static final String CACHE = "cache.json";
     //    public static final int PROFESSIONAL_LIMIT = 32;
     public static final int INIT_PERKS = 6;
-    public static final int INIT_MONEY = 30000;
+    public static final int INIT_MONEY = 10000;
     public static final int BASE_LEVEL_PERK = 2;
     private static final int[] EXP_REQUIRED_LEVEL_UP = readExpLevelUp();
     private static CareerManager instance;
@@ -202,7 +202,8 @@ public class CareerManager {
     public static CareerSave createNew(PlayerPerson playerPlayer,
                                        double playerGoodness,
                                        double aiGoodness,
-                                       boolean includeCustomPlayers) {
+                                       boolean includeCustomPlayers,
+                                       int initLevel) {
 //        if (getInstance() != null) throw new RuntimeException("Shouldn't be");
         CareerSave save = new CareerSave(new File(CAREER_DIR, playerPlayer.getPlayerId()));
         try {
@@ -232,6 +233,7 @@ public class CareerManager {
         if (cm.humanPlayerCareer == null) {
             throw new RuntimeException("No human player???");
         }
+        cm.getHumanPlayerCareer().setInitLevel(initLevel);
         cm.cache = new JSONObject();
         instance = cm;
 
@@ -513,7 +515,7 @@ public class CareerManager {
         return careerSave;
     }
 
-    public int getExpNeededToLevelUp(int currentLevel) {
+    public static int getExpNeededToLevelUp(int currentLevel) {
         int index = currentLevel - 1;
         if (index == EXP_REQUIRED_LEVEL_UP.length) return Integer.MAX_VALUE;
         return EXP_REQUIRED_LEVEL_UP[index];

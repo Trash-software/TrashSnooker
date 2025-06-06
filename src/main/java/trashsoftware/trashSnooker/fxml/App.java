@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -166,6 +167,28 @@ public class App extends Application {
 //        gameView.setupAfterShow();
     }
     
+    private static double heightExcept(VBox vBox, Node excepted) {
+        double h = 0;
+        Insets insets = vBox.getInsets();
+        if (insets != null) h += insets.getTop() + insets.getBottom();
+        h += Math.max(0, vBox.getChildren().size() - 1) * vBox.getSpacing();
+        for (Node child : vBox.getChildren()) {
+            if (child instanceof VBox childVbox) {
+                h += heightExcept(childVbox, excepted);
+            } else if (child != excepted) {
+                // 暂没有考虑其他V型容器
+                if (child instanceof Region region) {
+                    h += region.getHeight();
+                } else if (child instanceof Canvas canvas) {
+                    h += canvas.getHeight();
+                } else {
+                    System.err.println("Child " + child + " not instance of region");
+                }
+            }
+        }
+        return h;
+    }
+    
     private static void bindGamePaneToWindow(Stage stage, GameView gameView) {
         GameValues gameValues = gameView.gameValues;
         
@@ -175,9 +198,16 @@ public class App extends Application {
         Insets mainInsets = gameView.mainFramePane.getInsets();
         double systemZoom = ConfigLoader.getInstance().getSystemZoom();
         
-        double deadWidth = (gameView.leftToolbarPane.getWidth() + 
-                gameView.mainFramePane.getHgap() +
+        double deadWidth = (gameView.leftVBox.getWidth() + 
+                gameView.mainFramePane.getSpacing() +
                 mainInsets.getLeft() + mainInsets.getRight()) * systemZoom;
+        double deadHeight = (gameView.menuBar.getHeight() +
+                gameView.bottomPane.getHeight() +
+                mainInsets.getTop() + mainInsets.getBottom() + 30) * systemZoom;
+        
+        double leftRemHeight = heightExcept(gameView.leftVBox, gameView.powerSliderPane);
+        double sliderOrigHeight = gameView.powerSlider.getHeight();
+        double sliderMarginHeight = gameView.powerSliderPane.getHeight() - sliderOrigHeight;
         
         final double gamePaneOrigWidth = gameView.gamePane.getWidth();
         double tableAspect = gameValues.table.outerWidth / gameValues.table.outerHeight;
@@ -189,10 +219,7 @@ public class App extends Application {
             double ratio = tableAreaW / gamePaneOrigWidth;
             
             double tableAreaH = tableAreaW / tableAspect;
-            double deadHeight = (gameView.menuBar.getHeight() +
-                    gameView.bottomPane.getHeight() +
-                    gameView.mainFramePane.getVgap() +
-                    mainInsets.getTop() + mainInsets.getBottom() + 30) * systemZoom;
+            
             stage.setHeight(tableAreaH + deadHeight);
 //            System.out.println("GP size: " + gameView.gamePane.getWidth() + ", " + gameView.gamePane.getHeight());
 
@@ -202,8 +229,10 @@ public class App extends Application {
         });
         
         stage.heightProperty().addListener((observable, oldValue, newValue) -> {
-            // todo: powerSlider高度
-            // todo: 大概可以用最下面一个组件的y位置来判断？
+            double hRemForSlider = newValue.doubleValue() - leftRemHeight - sliderMarginHeight;
+            double sliderNewH = Math.max(160, Math.min(sliderOrigHeight, hRemForSlider));
+            gameView.powerSlider.setPrefHeight(sliderNewH);
+            gameView.updatePowerSlider();
         });
     }
 

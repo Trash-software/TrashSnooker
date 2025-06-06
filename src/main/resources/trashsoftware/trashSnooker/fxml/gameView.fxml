@@ -11,7 +11,7 @@
             fx:id="contentPane">
 
     <!--    <AnchorPane fx:id="contentPane" VBox.vgrow="ALWAYS">-->
-    <MenuBar fx:id="menuBar" HBox.hgrow="NEVER" 
+    <MenuBar fx:id="menuBar" HBox.hgrow="NEVER"
              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <Menu text="%window">
             <MenuItem text="%close" onAction="#closeWindowAction"/>
@@ -92,75 +92,79 @@
         </Menu>
     </MenuBar>
 
-    <GridPane fx:id="mainFramePane" 
-              AnchorPane.leftAnchor="0.0" 
-              AnchorPane.topAnchor="25.0"
-              vgap="2.0" hgap="20.0"
-              style="-fx-background: whitesmoke">
-        <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" fillWidth="false" 
-                               halignment="CENTER" prefWidth="120.0"/>
-            <ColumnConstraints hgrow="ALWAYS"/>
-        </columnConstraints>
+    <HBox fx:id="mainFramePane"
+          AnchorPane.leftAnchor="0.0"
+          AnchorPane.topAnchor="25.0"
+          spacing="20.0"
+          alignment="TOP_CENTER"
+          style="-fx-background: whitesmoke">
+        <!--        <columnConstraints>-->
+        <!--            <ColumnConstraints hgrow="NEVER" fillWidth="false"-->
+        <!--                               halignment="CENTER" prefWidth="120.0"/>-->
+        <!--            <ColumnConstraints hgrow="ALWAYS"/>-->
+        <!--        </columnConstraints>-->
 
-        <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-        </rowConstraints>
+        <!--        <rowConstraints>-->
+        <!--            <RowConstraints/>-->
+        <!--            <RowConstraints/>-->
+        <!--            <RowConstraints/>-->
+        <!--        </rowConstraints>-->
 
         <padding>
             <Insets topRightBottomLeft="5.0"/>
         </padding>
 
-        <Canvas fx:id="cueAngleCanvas" GridPane.rowIndex="1" width="100.0" height="100.0"/>
-        <Label fx:id="cueAngleLabel" GridPane.rowIndex="2" text="5°"/>
-
-        <Canvas fx:id="cuePointCanvas" GridPane.rowIndex="3" width="100.0" height="100.0"/>
-
-        <VBox fx:id="leftToolbarPane" alignment="TOP_CENTER" GridPane.rowIndex="4" spacing="10.0">
-            <Pane fx:id="powerSliderPane">
-                <Slider fx:id="powerSlider" layoutX="30.0" prefHeight="320.0"
-                        orientation="VERTICAL"/>
-                <Label fx:id="sliderZeroLabel" layoutX="42.0" text="0.0" visible="false"
-                       textFill="dimgray"/>
-                <Label fx:id="sliderCtrlLabel" layoutX="42.0" text="10.0" visible="false"
-                       textFill="dimgray"/>
-                <Label fx:id="sliderMaxLabel" layoutX="42.0" text="20.0" visible="false"
-                       textFill="dimgray"/>
-            </Pane>
-
-            <Label fx:id="powerLabel"/>
-            <VBox fx:id="gameButtonBox" alignment="CENTER">
-                <Button fx:id="cueButton" text="%cueText" onAction="#cueAction"/>
+        <VBox fx:id="leftVBox" alignment="TOP_CENTER">
+            <VBox fx:id="cueSettingsPane" spacing="2.0" alignment="TOP_CENTER">
+                <Canvas fx:id="cueAngleCanvas" width="100.0" height="100.0"/>
+                <Label fx:id="cueAngleLabel" text="5°"/>
+                <Canvas fx:id="cuePointCanvas" width="100.0" height="100.0"/>
             </VBox>
-            <VBox fx:id="handSelectionBox" spacing="10.0" alignment="CENTER">
-                <fx:define>
-                    <ToggleGroup fx:id="handSelectionToggleGroup"/>
-                </fx:define>
-                <RadioButton fx:id="handSelectionLeft" text="%leftHand"
-                             toggleGroup="$handSelectionToggleGroup" userData="LEFT"/>
-                <RadioButton fx:id="handSelectionRight" text="%rightHand"
-                             toggleGroup="$handSelectionToggleGroup" userData="RIGHT"/>
-                <RadioButton fx:id="handSelectionRest" text="%restHand"
-                             toggleGroup="$handSelectionToggleGroup" userData="REST"/>
 
-                <Button fx:id="changeCueButton" text="%changeCue" onAction="#changeCueAction"/>
+            <VBox fx:id="leftToolbarPane" alignment="TOP_CENTER" GridPane.rowIndex="1"
+                  spacing="10.0">
+                <Pane fx:id="powerSliderPane" prefWidth="120.0">
+                    <Slider fx:id="powerSlider" layoutX="30.0" prefHeight="320.0"
+                            orientation="VERTICAL"/>
+                    <Label fx:id="sliderZeroLabel" layoutX="42.0" text="0.0" visible="false"
+                           textFill="dimgray"/>
+                    <Label fx:id="sliderCtrlLabel" layoutX="42.0" text="10.0" visible="false"
+                           textFill="dimgray"/>
+                    <Label fx:id="sliderMaxLabel" layoutX="42.0" text="20.0" visible="false"
+                           textFill="dimgray"/>
+                </Pane>
+
+                <Label fx:id="powerLabel"/>
+                <VBox fx:id="gameButtonBox" alignment="CENTER">
+                    <Button fx:id="cueButton" text="%cueText" onAction="#cueAction"/>
+                </VBox>
+                <VBox fx:id="handSelectionBox" spacing="10.0" alignment="CENTER">
+                    <fx:define>
+                        <ToggleGroup fx:id="handSelectionToggleGroup"/>
+                    </fx:define>
+                    <RadioButton fx:id="handSelectionLeft" text="%leftHand"
+                                 toggleGroup="$handSelectionToggleGroup" userData="LEFT"/>
+                    <RadioButton fx:id="handSelectionRight" text="%rightHand"
+                                 toggleGroup="$handSelectionToggleGroup" userData="RIGHT"/>
+                    <RadioButton fx:id="handSelectionRest" text="%restHand"
+                                 toggleGroup="$handSelectionToggleGroup" userData="REST"/>
+
+                    <Button fx:id="changeCueButton" text="%changeCue" onAction="#changeCueAction"/>
+                </VBox>
+                <VBox fx:id="replayButtonBox" spacing="10.0" alignment="CENTER">
+                    <Button fx:id="replayLastCueButton" text="%replayLastCue"
+                            onAction="#replayLastCueAction"/>
+                    <Button fx:id="replayNextCueButton" text="%replayNextCue"
+                            onAction="#replayNextCueAction"/>
+                    <Label fx:id="replayCueNumLabel"/>
+                    <!--                <Button text="%replayFastForward" onAction="#replayFastForwardAction"/>-->
+                    <CheckBox fx:id="replayAutoPlayBox" text="%replayAutoPlay"/>
+                </VBox>
             </VBox>
-            <VBox fx:id="replayButtonBox" spacing="10.0" alignment="CENTER">
-                <Button fx:id="replayLastCueButton" text="%replayLastCue"
-                        onAction="#replayLastCueAction"/>
-                <Button fx:id="replayNextCueButton" text="%replayNextCue"
-                        onAction="#replayNextCueAction"/>
-                <Label fx:id="replayCueNumLabel"/>
-                <!--                <Button text="%replayFastForward" onAction="#replayFastForwardAction"/>-->
-                <CheckBox fx:id="replayAutoPlayBox" text="%replayAutoPlay"/>
-            </VBox>
+
         </VBox>
 
-        <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.rowSpan="4">
+        <VBox>
             <!--                <SubScene fx:id="gameScene" width="1200.0" height="700.0">-->
             <!--                    <root>-->
             <!--                        <Pane fx:id="basePane">-->
@@ -221,7 +225,7 @@
             </GridPane>
         </VBox>
 
-    </GridPane>
+    </HBox>
     <!--    </AnchorPane>-->
 
 </AnchorPane>

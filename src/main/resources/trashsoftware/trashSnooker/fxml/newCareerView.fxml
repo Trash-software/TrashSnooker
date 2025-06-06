@@ -73,6 +73,9 @@
 
                 <Label text="%primaryHand" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                 <ComboBox fx:id="handBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="%initialLevel" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="initialLevelBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
             </GridPane>
         </VBox>
 

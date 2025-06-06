@@ -51,7 +51,28 @@ public class HumanCareer extends Career {
         finance = new FinancialManager(careerManager.getCareerSave());
         finance.availPerks = CareerManager.INIT_PERKS;
         finance.totalPerks = finance.availPerks;
-        finance.money = 30000;
+        finance.remFreePerks = finance.availPerks;  // 初始升级不要钱
+        finance.money = CareerManager.INIT_MONEY;
+    }
+    
+    void setInitLevel(int tarLevel) {
+        for (int i = getLevel(); i < tarLevel; i++) {
+            List<AwardMaterial> result = new ArrayList<>();
+            int expNeed = CareerManager.getExpNeededToLevelUp(finance.level);
+            finance.level++;
+            finance.totalExp += expNeed;
+            int[] range = levelUpPerkRange(finance.level);
+            int index = (int) (Math.random() * range.length);
+            int perk = range[index];
+            finance.availPerks += perk;
+            finance.totalPerks += perk;
+
+            AwardMaterial pm = new AwardPerk(perk);
+            result.add(pm);
+
+            levelAwards.put(finance.level, result);
+        }
+        finance.remFreePerks = finance.availPerks;
     }
 
     @Override
@@ -369,7 +390,7 @@ public class HumanCareer extends Career {
     }
 
     public boolean canLevelUp() {
-        return finance.expInThisLevel >= CareerManager.getInstance().getExpNeededToLevelUp(finance.level);
+        return finance.expInThisLevel >= CareerManager.getExpNeededToLevelUp(finance.level);
     }
 
     public int[] levelUpPerkRange(int toLevel) {
@@ -387,7 +408,7 @@ public class HumanCareer extends Career {
     public List<AwardMaterial> levelUp() {
         List<AwardMaterial> result = new ArrayList<>();
 
-        int expNeed = CareerManager.getInstance().getExpNeededToLevelUp(finance.level);
+        int expNeed = CareerManager.getExpNeededToLevelUp(finance.level);
         finance.level++;
         finance.expInThisLevel -= expNeed;
 
@@ -409,8 +430,11 @@ public class HumanCareer extends Career {
 
     public void recordUpgradeAndUsePerk(PerkManager.UpgradeRec upgradeRec) {
         int moneyBefore = finance.money;
+        int freePerksUsed = Math.min(finance.remFreePerks, upgradeRec.perkUsed());
+        
         finance.money -= upgradeRec.moneyCost();
         finance.availPerks -= upgradeRec.perkUsed();
+        finance.remFreePerks -= freePerksUsed;
 
         JSONObject record = new JSONObject();
         String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
@@ -419,6 +443,7 @@ public class HumanCareer extends Career {
         record.put("inGameDate", inGameDate);
         record.put("type", "upgrade");
         record.put("perkUsed", upgradeRec.perkUsed());
+        record.put("freePerkUsed", freePerksUsed);
         record.put("moneyBefore", moneyBefore);
         record.put("moneyCost", upgradeRec.moneyCost());
         record.put("moneyAfter", finance.money);
@@ -435,6 +460,10 @@ public class HumanCareer extends Career {
 
     public int getAvailablePerks() {
         return finance.availPerks;
+    }
+    
+    public int getFreePerksRem() {
+        return finance.remFreePerks;
     }
 
     public int getTotalPerks() {
@@ -751,6 +780,7 @@ public class HumanCareer extends Career {
     public static class FinancialManager {
         private final File jsonFile;
         private final List<JSONObject> invoices = new ArrayList<>();
+        private int remFreePerks;  // 剩余的免费升级次数
         private int totalPerks;
         private int availPerks;
         private int totalExp = 0;
@@ -776,6 +806,7 @@ public class HumanCareer extends Career {
                         EventLogger.warning("You hacked your financial record!");
                     }
 
+                    remFreePerks = jsonObject.optInt("remFreePerks", 0);
                     availPerks = jsonObject.has("availPerks") ? jsonObject.getInt("availPerks") : 0;
                     totalPerks = jsonObject.has("totalPerks") ? jsonObject.getInt("totalPerks") : 0;
                     totalExp = jsonObject.has("totalExp") ? jsonObject.getInt("totalExp") : 0;
@@ -804,6 +835,7 @@ public class HumanCareer extends Career {
             JSONObject json = new JSONObject();
 
             JSONObject out = new JSONObject();
+            out.put("remFreePerks", remFreePerks);
             out.put("availPerks", availPerks);
             out.put("totalPerks", totalPerks);
             out.put("totalExp", totalExp);

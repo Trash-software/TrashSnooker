@@ -114,6 +114,7 @@ public class CareerView extends ChildInitializable {
         PlayerPerson pp = careerManager.getHumanPlayerCareer().getPlayerPerson();
         perkManager = new PerkManager(this,
                 careerManager.getHumanPlayerCareer().getAvailablePerks(),
+                careerManager.getHumanPlayerCareer().getFreePerksRem(),
                 PlayerPerson.ReadableAbility.fromPlayerPerson(pp));
         abilityShower.setup(perkManager, pp.isCustom());
         abilityShower.setExtraField(createPerksBox());
@@ -436,7 +437,7 @@ public class CareerView extends ChildInitializable {
         HumanCareer myCareer = careerManager.getHumanPlayerCareer();
         levelLabel.setText("Lv." + myCareer.getLevel());
         int curExp = myCareer.getExpInThisLevel();
-        int expToNext = careerManager.getExpNeededToLevelUp(myCareer.getLevel());
+        int expToNext = CareerManager.getExpNeededToLevelUp(myCareer.getLevel());
         levelExpBar.setProgress(Math.min(1.0, (double) curExp / expToNext));
         levelExpLabel.setText(String.format("%d/%d", curExp, expToNext));
 

@@ -2221,6 +2221,7 @@
     },
     "custom_DA1B9E98710BC5F5": {
       "rest": {
+        "useHand": "LEFT",
         "cuePoints": [
           0,
           0
@@ -2441,6 +2442,117 @@
         "GirlPoolCue"
       ],
       "height": 168
+    },
+    "custom_EED2331BD9280B5E": {
+      "rest": {
+        "useHand": "RIGHT",
+        "cuePoints": [
+          -0,
+          0
+        ],
+        "powerControl": 48.56565663254228,
+        "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
+        "spin": 49.19180371801886,
+        "pullDt": [
+          50,
+          200,
+          50,
+          150
+        ],
+        "controllablePower": 38.57918083535628,
+        "cueSwingMag": 42.24278679281723,
+        "maxPower": 42.8657564837292,
+        "cuePrecisions": [
+          44.69364035534882,
+          44.32013136188564
+        ],
+        "hand": "rest"
+      },
+      "solving": 70.86868916800893,
+      "aimingOffset": 0,
+      "psyRua": 84.88083531011667,
+      "dominant": {
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 73.09655795017406,
+        "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
+        "spin": 74.03897693289616,
+        "pullDt": [
+          50,
+          200,
+          50,
+          150
+        ],
+        "controllablePower": 72.58229176583062,
+        "cueSwingMag": 25,
+        "maxPower": 80.6469908509229,
+        "cuePrecisions": [
+          67.26875530495586,
+          66.70658393368899
+        ],
+        "hand": "right"
+      },
+      "saveVersion": 59,
+      "precision": 69.189445099248,
+      "sex": "M",
+      "longPrecision": 1,
+      "ai": {
+        "doubleAbility": 62.270500589323206,
+        "likeSide": 75,
+        "defense": 69.90157094193152,
+        "stable": 69.189445099248,
+        "precision": 72.64891735421041,
+        "position": 69.90157094193152,
+        "attackPri": 39.615189913034584,
+        "snookerBreak": "RIGHT",
+        "likePowerRange": [
+          15,
+          58.065833412664496
+        ],
+        "withdrawAfter": 2,
+        "likeShow": 50,
+        "cebSideBreak": true
+      },
+      "nonDominant": {
+        "cuePoints": [
+          -0,
+          0
+        ],
+        "powerControl": 45.14622138373618,
+        "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
+        "spin": 45.72828238938859,
+        "pullDt": [
+          50,
+          200,
+          50,
+          150
+        ],
+        "controllablePower": 44.82859801459801,
+        "cueSwingMag": 44.64631009526633,
+        "maxPower": 49.80955334955334,
+        "cuePrecisions": [
+          41.54682798164073,
+          41.19961719778806
+        ],
+        "hand": "left"
+      },
+      "psyNerve": 71.31035338736399,
+      "name": "635",
+      "width": 1,
+      "games": {
+        "lisEight": 1,
+        "americanNine": 1,
+        "snookerTen": 1,
+        "miniSnooker": 1,
+        "snooker": 1,
+        "chineseEight": 1
+      },
+      "anglePrecision": 1,
+      "category": "Amateur",
+      "privateCues": [],
+      "height": 180
     },
     "custom_37AA1BE174409ED5": {
       "rest": {
@@ -3573,7 +3685,117 @@
         "GirlPoolCue"
       ],
       "height": 158
+    },
+    "custom_82639CC3C1075363": {
+      "rest": {
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 50.26495592386811,
+        "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
+        "spin": 47.88943429175541,
+        "pullDt": [
+          50,
+          200,
+          50,
+          150
+        ],
+        "controllablePower": 44.131096886529946,
+        "cueSwingMag": 25,
+        "maxPower": 49.03455209614438,
+        "cuePrecisions": [
+          45.21612329847238,
+          47.1155664676688
+        ],
+        "hand": "rest"
+      },
+      "solving": 72.38042729104825,
+      "aimingOffset": 0,
+      "psyRua": 85.18033463678482,
+      "dominant": {
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 78.2514381383488,
+        "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
+        "spin": 75.20696060563401,
+        "pullDt": [
+          50,
+          200,
+          50,
+          150
+        ],
+        "controllablePower": 84.52990641733258,
+        "cueSwingMag": 25,
+        "maxPower": 93.92211824148066,
+        "cuePrecisions": [
+          69.77170322739381,
+          70.32027850200214
+        ],
+        "hand": "right"
+      },
+      "saveVersion": 59,
+      "precision": 74.44057608009435,
+      "sex": "M",
+      "longPrecision": 1,
+      "ai": {
+        "doubleAbility": 66.99651847208492,
+        "likeSide": 75,
+        "defense": 74.28585832017546,
+        "stable": 74.44057608009435,
+        "precision": 78.16260488409907,
+        "position": 74.28585832017546,
+        "attackPri": 39.364768103588844,
+        "snookerBreak": "RIGHT",
+        "likePowerRange": [
+          15,
+          60
+        ],
+        "withdrawAfter": 2,
+        "likeShow": 50,
+        "cebSideBreak": false
+      },
+      "nonDominant": {
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 38.66394218241529,
+        "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
+        "spin": 36.83668441706094,
+        "pullDt": [
+          50,
+          200,
+          50,
+          150
+        ],
+        "controllablePower": 42.43220120026854,
+        "cueSwingMag": 25,
+        "maxPower": 47.1468902225206,
+        "cuePrecisions": [
+          34.78036625701995,
+          36.241423160836334
+        ],
+        "hand": "left"
+      },
+      "psyNerve": 82.9810559638677,
+      "name": "666",
+      "width": 1,
+      "games": {
+        "lisEight": 1,
+        "americanNine": 1,
+        "snookerTen": 1,
+        "miniSnooker": 1,
+        "snooker": 1,
+        "chineseEight": 1
+      },
+      "anglePrecision": 1,
+      "category": "Amateur",
+      "privateCues": [],
+      "height": 180
     }
   },
-  "checksum": "96E50A0CDA3C19AE442DFFC71405695C"
+  "checksum": "6B84388117C97B17BAFD81C6C415AAE0"
 }

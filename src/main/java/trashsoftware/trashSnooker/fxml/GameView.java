@@ -9,7 +9,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -17,6 +16,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -133,11 +133,13 @@ public class GameView implements Initializable {
     @FXML
     Pane contentPane;
     @FXML
-    GridPane mainFramePane;
+    HBox mainFramePane;
     @FXML
     Canvas cueAngleCanvas;
     @FXML
     Label cueAngleLabel;
+    @FXML
+    VBox leftVBox, cueSettingsPane;
     @FXML
     Pane leftToolbarPane;
     @FXML
@@ -448,12 +450,12 @@ public class GameView implements Initializable {
             tableGraphicsChanged = true;
         });
     }
-    
+
     public void changeScale(double newScale) {
         gamePane.updateScale(newScale, getActiveHolder());
         ballDiameter = gameValues.ball.ballDiameter * gamePane.getScale();
         ballRadius = ballDiameter / 2;
-        
+
         tableGraphicsChanged = true;
         createPathPrediction();
     }
@@ -506,7 +508,7 @@ public class GameView implements Initializable {
         player2TarCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
         player2TarCanvas.getGraphicsContext2D().setStroke(WHITE);
     }
-    
+
     public void checkScale() {
         System.out.println("Game pane scale: " + gamePane.getWidth() + " " + gamePane.getHeight());
         System.out.println("Left scale: " + leftToolbarPane.getWidth());
@@ -748,8 +750,8 @@ public class GameView implements Initializable {
 
         handSelectionToggleGroup.selectToggle(toggle);
     }
-    
-    private void updateHandButton(RadioButton radioButton, 
+
+    private void updateHandButton(RadioButton radioButton,
                                   PlayerHand.Hand thisHand,
                                   List<PlayerHand.CueHand> playAbles) {
         for (PlayerHand.CueHand cueHand : playAbles) {
@@ -758,7 +760,7 @@ public class GameView implements Initializable {
                 if (cueHand.extension == PlayerHand.CueExtension.NO) {
                     text = cueHand.hand.shownName(strings);
                 } else {
-                    text = String.format("%s (%s)", 
+                    text = String.format("%s (%s)",
                             cueHand.hand.shownName(strings),
                             cueHand.extension.getReadable(strings));
                 }
@@ -785,13 +787,13 @@ public class GameView implements Initializable {
                 playingPerson,
                 igp.getCueSelection().getSelected().brand
         );
-        
+
         updateHandButton(handSelectionLeft, PlayerHand.Hand.LEFT, playAbles);
         updateHandButton(handSelectionRight, PlayerHand.Hand.RIGHT, playAbles);
         updateHandButton(handSelectionRest, PlayerHand.Hand.REST, playAbles);
-        
+
         boolean anyChange = forceChangeHand ||
-                lastPlayableHands == null || 
+                lastPlayableHands == null ||
                 playAbles.size() != lastPlayableHands.size();  // 是null就必true
         if (!anyChange) {
             for (int i = 0; i < playAbles.size(); i++) {
@@ -811,7 +813,7 @@ public class GameView implements Initializable {
             );
             // 防止由于toggle没变的原因导致不触发换手
             currentHand = playingPerson.handBody.getHandSkillByHand(playAbles.getFirst());
-            
+
             lastPlayableHands = playAbles;
         }
         updatePowerSlider(igp, currentHand, false);
@@ -1092,6 +1094,14 @@ public class GameView implements Initializable {
         showReplayCueStep();
     }
 
+    void updatePowerSlider() {
+        InGamePlayer igp = getActiveHolder().getCuingIgp();
+        CuePlayerHand cph;
+        if (currentHand != null) cph = currentHand;
+        else cph = CuePlayerHand.makeDefault(igp);
+        updatePowerSlider(igp, cph, false);
+    }
+
     private void updatePowerSlider(InGamePlayer igp, CuePlayerHand cuingHand) {
         updatePowerSlider(igp, cuingHand, true);
     }
@@ -1127,10 +1137,10 @@ public class GameView implements Initializable {
         sliderCtrlLabel.setText(String.format("- %.1f", ctrlPower));
         sliderMaxLabel.setText(String.format("- %.1f", maxPower));
         sliderZeroLabel.setText("- 0.0");
-        
+
         sliderCtrlLabel.setLayoutY(sliderHeight * (100 - ctrlPower) / 100 - labelH + sliderY);
-        sliderMaxLabel.setLayoutY(sliderHeight * (100 - maxPower) / 100 - labelH+ sliderY);
-        sliderZeroLabel.setLayoutY(sliderHeight - labelH+ sliderY);
+        sliderMaxLabel.setLayoutY(sliderHeight * (100 - maxPower) / 100 - labelH + sliderY);
+        sliderZeroLabel.setLayoutY(sliderHeight - labelH + sliderY);
     }
 
     public void finishCue(Player justCuedPlayer, Player nextCuePlayer) {
@@ -1354,7 +1364,7 @@ public class GameView implements Initializable {
         predictedTargetBall = null;
         aiWhitePath = null;
         suggestedPlayerWhitePath = null;
-        cursorDirectionUnitX = 0.0; 
+        cursorDirectionUnitX = 0.0;
         cursorDirectionUnitY = 0.0;
 
         drawScoreBoard(game.getGame().getCuingPlayer(), true);
@@ -3995,7 +4005,7 @@ public class GameView implements Initializable {
                     cursorDirectionUnitX, cursorDirectionUnitY,
                     cueAngleDeg,
                     playerPerson,
-                    currentHand.playerHand.hand, 
+                    currentHand.playerHand.hand,
                     currentHand.cueBrand.getWoodPartLength() + currentHand.cueBrand.getExtensionLength(currentHand.extension)
             );
             pos1 = standingPos[0];
@@ -4423,7 +4433,7 @@ public class GameView implements Initializable {
         Bounds contentPanePos = contentPane.localToScene(contentPane.getBoundsInLocal());
         double anchorX = ballPanePos.getMinX() - contentPanePos.getMinX();
         double anchorY = ballPanePos.getMinY() - contentPanePos.getMinY();
-        
+
         Parent basePane = stage.getScene().getRoot();
         if (!basePane.getTransforms().isEmpty()) {
             for (Transform transform : basePane.getTransforms()) {

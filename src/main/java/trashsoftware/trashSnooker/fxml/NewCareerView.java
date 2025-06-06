@@ -31,6 +31,8 @@ public class NewCareerView extends ChildInitializable {
     @FXML
     ComboBox<Hand> handBox;
     @FXML
+    ComboBox<Integer> initialLevelBox;
+    @FXML
     TextField nameField;
     @FXML
     ComboBox<PlayerPerson> existingPlayersBox;
@@ -155,6 +157,9 @@ public class NewCareerView extends ChildInitializable {
         }));
         sexBox.getItems().addAll(PlayerPerson.Sex.values());
         sexBox.getSelectionModel().select(0);
+        
+        initialLevelBox.getItems().addAll(1, 5, 10, 15, 20);
+        initialLevelBox.getSelectionModel().select(0);
 
         fillPlayerDifficulty(playerGoodnessBox);
         fillAiDifficulty(aiGoodnessBox);
@@ -278,7 +283,8 @@ public class NewCareerView extends ChildInitializable {
                         CareerManager.createNew(person,
                                 playerGoodnessBox.getValue().multiplier,
                                 aiGoodnessBox.getValue().multiplier,
-                                includeCustomPlayerBox.isSelected());
+                                includeCustomPlayerBox.isSelected(),
+                                initialLevelBox.getValue());
                         System.out.println("Start simulating");
                         long st = System.currentTimeMillis();
                         CareerManager.getInstance().simulateMatchesInPastTwoYears();
