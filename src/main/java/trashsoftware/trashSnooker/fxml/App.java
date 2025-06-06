@@ -1,7 +1,6 @@
 package trashsoftware.trashSnooker.fxml;
 
 import javafx.application.Application;
-import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,16 +12,18 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
-import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.File;
 import java.util.List;
@@ -32,7 +33,7 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
 
-    public static final String VERSION_NAME = "0.7 beta 3";
+    public static final String VERSION_NAME = "0.7 beta 5";
     public static final int VERSION_CODE = 59;
     public static final String CLASSIFIER = "win";
     public static final String FONT_STYLE = CLASSIFIER.equals("mac") ?
@@ -137,7 +138,7 @@ public class App extends Application {
             Scale scaleTrans = new Scale(scaleRatio, scaleRatio);
             root.getTransforms().add(scaleTrans);
             stage.setFullScreenExitHint("");
-            
+
             fullScreenStage = stage;
 
             // 你他妈两只手都用上试试？
@@ -166,7 +167,7 @@ public class App extends Application {
 
 //        gameView.setupAfterShow();
     }
-    
+
     private static double heightExcept(VBox vBox, Node excepted) {
         double h = 0;
         Insets insets = vBox.getInsets();
@@ -188,38 +189,38 @@ public class App extends Application {
         }
         return h;
     }
-    
+
     private static void bindGamePaneToWindow(Stage stage, GameView gameView) {
         GameValues gameValues = gameView.gameValues;
-        
+
         final double powerSliderH = gameView.powerSliderPane.getHeight();
         double otherLeftHeights = gameView.leftToolbarPane.getHeight() - powerSliderH;
-        
+
         Insets mainInsets = gameView.mainFramePane.getInsets();
         double systemZoom = ConfigLoader.getInstance().getSystemZoom();
-        
-        double deadWidth = (gameView.leftVBox.getWidth() + 
+
+        double deadWidth = (gameView.leftVBox.getWidth() +
                 gameView.mainFramePane.getSpacing() +
                 mainInsets.getLeft() + mainInsets.getRight()) * systemZoom;
         double deadHeight = (gameView.menuBar.getHeight() +
                 gameView.bottomPane.getHeight() +
                 mainInsets.getTop() + mainInsets.getBottom() + 30) * systemZoom;
-        
+
         double leftRemHeight = heightExcept(gameView.leftVBox, gameView.powerSliderPane);
         double sliderOrigHeight = gameView.powerSlider.getHeight();
         double sliderMarginHeight = gameView.powerSliderPane.getHeight() - sliderOrigHeight;
-        
+
         final double gamePaneOrigWidth = gameView.gamePane.getWidth();
         double tableAspect = gameValues.table.outerWidth / gameValues.table.outerHeight;
-        
+
         Scene scene = stage.getScene();
 
         stage.widthProperty().addListener((observable, oldValue, newValue) -> {
             double tableAreaW = newValue.doubleValue() - deadWidth;
             double ratio = tableAreaW / gamePaneOrigWidth;
-            
+
             double tableAreaH = tableAreaW / tableAspect;
-            
+
             stage.setHeight(tableAreaH + deadHeight);
 //            System.out.println("GP size: " + gameView.gamePane.getWidth() + ", " + gameView.gamePane.getHeight());
 
@@ -227,7 +228,7 @@ public class App extends Application {
             gameView.changeScale(newScale);
 //            System.out.println(scene.getWidth() + ", " + gameView.contentPane.getWidth());
         });
-        
+
         stage.heightProperty().addListener((observable, oldValue, newValue) -> {
             double hRemForSlider = newValue.doubleValue() - leftRemHeight - sliderMarginHeight;
             double sliderNewH = Math.max(160, Math.min(sliderOrigHeight, hRemForSlider));
@@ -257,7 +258,7 @@ public class App extends Application {
     public static Stage getFullScreenStage() {
         return fullScreenStage != null && fullScreenStage.isShowing() ? fullScreenStage : null;
     }
-    
+
     public static void focusFullScreenStage() {
         if (fullScreenStage != null && fullScreenStage.isShowing()) {
             fullScreenStage.requestFocus();
@@ -282,20 +283,20 @@ public class App extends Application {
             primaryStage.setTitle(strings.getString("appName"));
             primaryStage.getIcons().add(ResourcesLoader.getInstance().getIcon());
             Parent parent = loader.load();
-            
+
             appRoot = new VBox();
             appRoot.setAlignment(Pos.CENTER);
             appRoot.setStyle(FONT_STYLE);
-            
+
             appRoot.getChildren().add(parent);
-            
+
 //            Scene scene = new Scene(appRoot);
             Scene scene = createScene(appRoot);
             primaryStage.setScene(scene);
 
             EntryView entryView = loader.getController();
             entryView.setup(primaryStage);
-            
+
             mainWindowShowing = true;
 
             primaryStage.show();
@@ -320,7 +321,7 @@ public class App extends Application {
         appRoot.getChildren().clear();
         appRoot.getChildren().add(root);
         appRoot.setVgrow(root, Priority.ALWAYS);
-        
+
         Stage stage = (Stage) root.getScene().getWindow();
         if (!stage.isMaximized()) {
             stage.sizeToScene();
