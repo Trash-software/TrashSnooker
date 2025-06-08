@@ -455,9 +455,36 @@ public class GameView implements Initializable {
         gamePane.updateScale(newScale, getActiveHolder());
         ballDiameter = gameValues.ball.ballDiameter * gamePane.getScale();
         ballRadius = ballDiameter / 2;
+        
+        setTargetScales();
+        drawTargetBoard(true);
 
         tableGraphicsChanged = true;
         createPathPrediction();
+    }
+    
+    private void setTargetScales() {
+        player1TarCanvas.setHeight(ballDiameter * 1.2);
+        player1TarCanvas.setWidth(ballDiameter * 2.4);
+        player2TarCanvas.setHeight(ballDiameter * 1.2);
+        player2TarCanvas.setWidth(ballDiameter * 2.4);
+        singlePoleCanvas.setHeight(ballDiameter * 1.3);
+        ((Pane) singlePoleCanvas.getParent()).setPrefHeight(singlePoleCanvas.getHeight());
+
+        if (gameValues.rule.snookerLike())
+            singlePoleCanvas.setWidth(ballDiameter * 8 * 1.2);  // 考虑可能的金球
+        else if (gameValues.rule == GameRule.CHINESE_EIGHT || gameValues.rule == GameRule.LIS_EIGHT)
+            singlePoleCanvas.setWidth(ballDiameter * 8 * 1.2);
+        else if (gameValues.rule == GameRule.AMERICAN_NINE)
+            singlePoleCanvas.setWidth(ballDiameter * 9 * 1.2);
+        else throw new RuntimeException("nmsl");
+
+        singlePoleCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
+        singlePoleCanvas.getGraphicsContext2D().setStroke(WHITE);
+        player1TarCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
+        player1TarCanvas.getGraphicsContext2D().setStroke(WHITE);
+        player2TarCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
+        player2TarCanvas.getGraphicsContext2D().setStroke(WHITE);
     }
 
     private void generateScales(GameValues gameValues) {
@@ -486,27 +513,7 @@ public class GameView implements Initializable {
         cueAngleCanvas.setWidth(cueCanvasWH);
         cueAngleCanvas.setHeight(cueCanvasWH);
 
-        player1TarCanvas.setHeight(ballDiameter * 1.2);
-        player1TarCanvas.setWidth(ballDiameter * 2.4);
-        player2TarCanvas.setHeight(ballDiameter * 1.2);
-        player2TarCanvas.setWidth(ballDiameter * 2.4);
-        singlePoleCanvas.setHeight(ballDiameter * 1.3);
-        ((Pane) singlePoleCanvas.getParent()).setPrefHeight(singlePoleCanvas.getHeight());
-
-        if (gameValues.rule.snookerLike())
-            singlePoleCanvas.setWidth(ballDiameter * 8 * 1.2);  // 考虑可能的金球
-        else if (gameValues.rule == GameRule.CHINESE_EIGHT || gameValues.rule == GameRule.LIS_EIGHT)
-            singlePoleCanvas.setWidth(ballDiameter * 8 * 1.2);
-        else if (gameValues.rule == GameRule.AMERICAN_NINE)
-            singlePoleCanvas.setWidth(ballDiameter * 9 * 1.2);
-        else throw new RuntimeException("nmsl");
-
-        singlePoleCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
-        singlePoleCanvas.getGraphicsContext2D().setStroke(WHITE);
-        player1TarCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
-        player1TarCanvas.getGraphicsContext2D().setStroke(WHITE);
-        player2TarCanvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
-        player2TarCanvas.getGraphicsContext2D().setStroke(WHITE);
+        setTargetScales();
     }
 
     public void checkScale() {

@@ -1,6 +1,7 @@
 {
   "financial": {
-    "money": 75590,
+    "remFreePerks": 0,
+    "money": 75510,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
@@ -5094,6 +5095,16 @@
         "type": "achievementAward",
         "moneyEarn": 500,
         "timestamp": "2025-06-04 06:39:44"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_DA1B9E98710BC5F5-677",
+        "inGameDate": "2025/4/17",
+        "moneyBefore": 75590,
+        "moneyCost": 80,
+        "moneyAfter": 75510,
+        "type": "purchase",
+        "timestamp": "2025-06-08 03:06:00"
       }
     ],
     "level": 24,
@@ -5102,5 +5113,5 @@
     "totalPerks": 87,
     "totalExp": 6595
   },
-  "checksum": "DFA075314C55F4B18625F572F774A716"
+  "checksum": "9F62BFAEB52A509A14B08A5BE85D2BD8"
 }
