@@ -95,7 +95,7 @@ public class MatchInfoRec {
                 
                 JSONArray frameArray = loaded.getJSONArray("frames");
                 for (int i = 0; i < frameArray.length(); i++) {
-                    FrameInfoRec frameInfoRec = FrameInfoRec.fromJson(mir, frameArray.getJSONObject(i));
+                    FrameInfoRec frameInfoRec = FrameInfoRec.fromJson(mir, i + 1, frameArray.getJSONObject(i));
                     mir.frames.add(frameInfoRec);
                 }
 
@@ -143,14 +143,14 @@ public class MatchInfoRec {
         DataLoader.saveToDisk(json, recFile.getAbsolutePath());
     }
 
-    public void startNextFrame() {
+    public void startNextFrame(int frameIndex, int frameNumber) {
         if (!valid) return;
-        FrameInfoRec frame = createFrame();
+        FrameInfoRec frame = createFrame(frameIndex, frameNumber);
         frames.add(frame);
     }
 
-    protected FrameInfoRec createFrame() {
-        return new FrameInfoRec(this);
+    protected FrameInfoRec createFrame(int frameIndex, int frameNumber) {
+        return new FrameInfoRec(this, frameIndex, frameNumber);
     }
 
     public FrameInfoRec getCurrentFrame() {

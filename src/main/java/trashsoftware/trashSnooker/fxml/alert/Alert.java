@@ -17,7 +17,7 @@ public class Alert implements Initializable {
     @FXML
     Label headerText, contentText;
     @FXML
-    Button yesButton, noButton;
+    Button yesButton, noButton, cancelButton;
     @FXML
     VBox additionalPane;
     private boolean active = true;
@@ -91,6 +91,7 @@ public class Alert implements Initializable {
 
     public void setupConfirm(Stage stage, String header, String content,
                              String yesText, String noText,
+                             boolean neutralCancel,
                              Runnable yes, Runnable no) {
         this.stage = stage;
         setOnClose(stage);
@@ -109,6 +110,15 @@ public class Alert implements Initializable {
             stage.close();
             if (no != null) Platform.runLater(no);
         });
+        
+        if (neutralCancel) {
+            cancelButton.setManaged(true);
+            cancelButton.setVisible(true);
+            cancelButton.setOnAction(e -> {
+                active = false;
+                stage.close();
+            });
+        }
     }
 
     public boolean isActive() {

@@ -15,8 +15,8 @@ public class LisEightGame extends ChineseEightBallGame {
 
     protected boolean swapped;
 
-    public LisEightGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
-        super(entireGame, gameSettings, gameValues, frameIndex);
+    public LisEightGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex, int frameRestartIndex) {
+        super(entireGame, gameSettings, gameValues, frameIndex, frameRestartIndex);
     }
 
     @Override

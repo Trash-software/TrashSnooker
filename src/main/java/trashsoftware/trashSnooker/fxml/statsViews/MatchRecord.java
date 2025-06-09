@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.attempt.CueType;
@@ -24,6 +25,7 @@ import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.fxml.widgets.AdversarialBar;
 import trashsoftware.trashSnooker.fxml.widgets.MatchRecordPage;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.db.DBAccess;
 import trashsoftware.trashSnooker.util.db.EntireGameRecord;
@@ -36,7 +38,7 @@ import java.util.stream.Collectors;
 public class MatchRecord extends RecordTree {
     final EntireGameTitle egt;
 
-    private Set<Integer> expandedFrames = new TreeSet<>();
+    private final Set<Integer> expandedFrames = new TreeSet<>();
 
     MatchRecord(EntireGameTitle egt, ResourceBundle strings) {
         super(egt.toString(), strings);
@@ -231,15 +233,21 @@ public class MatchRecord extends RecordTree {
         for (Map.Entry<Integer, PlayerFrameRecord[]> entry :
                 matchRec.getFrameRecords().entrySet()) {
 
+            PlayerFrameRecord p1r = entry.getValue()[0];
+            PlayerFrameRecord p2r = entry.getValue()[1];
+
+            HBox frameIndexBox = new HBox();
+            frameIndexBox.setAlignment(Pos.CENTER_LEFT);
+            frameIndexBox.setSpacing(5.0);
+            Text nthFrameLabel = new Text(
+                    String.format(strings.getString("nthFrameFmt"), entry.getValue()[0].frameNumber));
+            nthFrameLabel.setStrikethrough(p1r.frameRestarted);
+            frameIndexBox.getChildren().add(nthFrameLabel);
+
             if (matchInfoRec != null) {
                 boolean currentExpanded = expandedFrames.contains(entry.getKey());
                 Hyperlink frameLink = new Hyperlink(strings.getString(currentExpanded ?
                         "collapseDetail" : "expandDetail"));
-                HBox frameIndexBox = new HBox();
-                frameIndexBox.setAlignment(Pos.CENTER_LEFT);
-                frameIndexBox.setSpacing(5.0);
-                frameIndexBox.getChildren().add(new Label(
-                        String.format(strings.getString("nthFrameFmt"), entry.getKey())));
                 frameIndexBox.getChildren().add(frameLink);
                 frameLink.setOnAction(e -> {
                     int index = entry.getKey();
@@ -250,11 +258,9 @@ public class MatchRecord extends RecordTree {
                     }
                     fillRightPane(rightPane);
                 });
-                page.add(frameIndexBox, 0, rowIndex);
             }
-
-            PlayerFrameRecord p1r = entry.getValue()[0];
-            PlayerFrameRecord p2r = entry.getValue()[1];
+            page.add(frameIndexBox, 0, rowIndex);
+            
             page.add(new Label(
                             Util.secondsToString(matchRec.getFrameDurations().get(entry.getKey()))),
                     4, rowIndex);
@@ -315,12 +321,14 @@ public class MatchRecord extends RecordTree {
                 }
             }
 
-            if (p1r.winnerName.equals(egt.player1Id)) {
-                p2ScoreLabel.setDisable(true);
-                page.add(new Label("⚫"), 3, rowIndex);
-            } else {
-                p1ScoreLabel.setDisable(true);
-                page.add(new Label("⚫"), 5, rowIndex);
+            if (p1r.winnerName != null) {
+                if (p1r.winnerName.equals(egt.player1Id)) {
+                    p2ScoreLabel.setDisable(true);
+                    page.add(new Label("⚫"), 3, rowIndex);
+                } else {
+                    p1ScoreLabel.setDisable(true);
+                    page.add(new Label("⚫"), 5, rowIndex);
+                }
             }
             page.add(p1ScoreLabel, 2, rowIndex);
             page.add(p2ScoreLabel, 6, rowIndex);
@@ -328,8 +336,12 @@ public class MatchRecord extends RecordTree {
             rowIndex++;
 
             if (matchInfoRec != null && expandedFrames.contains(entry.getKey())) {
-                fillFrameRecord(page, rowIndex, matchInfoRec, entry.getKey());
-                rowIndex++;
+                try {
+                    fillFrameRecord(page, rowIndex, matchInfoRec, entry.getKey());
+                    rowIndex++;
+                } catch (RuntimeException e) {
+                    EventLogger.warning(e);
+                }
             }
         }
 
@@ -388,7 +400,7 @@ public class MatchRecord extends RecordTree {
                                 int frameIndexFrom1) {
         FrameInfoRec fir = mir.getFrame(frameIndexFrom1 - 1);
         Canvas p1Canvas = null, p2Canvas = null;
-        FrameAnalyze frameAnalyze = fir.getFrameAnalyze();
+        FrameAnalyze<?> frameAnalyze = fir.getFrameAnalyze();
 
         if (egt.gameRule.snookerLike()) {
             p1Canvas = playerSnookerCueRecords(fir, 1);
@@ -490,7 +502,7 @@ public class MatchRecord extends RecordTree {
 //        int playerIndex = playerNumberFrom1 - 1;
         Canvas canvas = new Canvas();
 
-        FrameAnalyze fa = fir.getFrameAnalyze();
+        FrameAnalyze<?> fa = fir.getFrameAnalyze();
         SnookerFrameAnalyze sfa = fa instanceof SnookerFrameAnalyze ? (SnookerFrameAnalyze) fa : null;
 
         double cellWidth = 16;

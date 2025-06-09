@@ -28,8 +28,8 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
     private boolean pushedOut;
     private boolean wasIllegalBreak;
 
-    public AmericanNineBallGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
-        super(entireGame, gameSettings, gameValues, new SidePocketTable(gameValues.table), frameIndex);
+    public AmericanNineBallGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex, int frameRestartIndex) {
+        super(entireGame, gameSettings, gameValues, new SidePocketTable(gameValues.table), frameIndex, frameRestartIndex);
 
         initBalls();
         currentTarget = 1;

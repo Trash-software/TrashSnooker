@@ -187,7 +187,7 @@ public class GameView implements Initializable {
     @FXML
     Menu gameMenu;
     @FXML
-    MenuItem withdrawMenu, replaceBallInHandMenu, letOtherPlayMenu, repositionMenu, pushOutMenu;
+    MenuItem withdrawMenu, replaceBallInHandMenu, letOtherPlayMenu, repositionMenu, pushOutMenu, reBreakMenu;
     @FXML
     SeparatorMenuItem gameMenuSep1;
     @FXML
@@ -688,6 +688,10 @@ public class GameView implements Initializable {
 //        }
         if (rule.hasRule(Rule.FOUL_AND_MISS)) {
             gameMenu.getItems().add(repositionMenu);
+        }
+        if (gameValues.hasSubRuleDetail(SubRule.Detail.LOSE_CHANCE_ACROSS_LINE) || 
+                gameValues.hasSubRuleDetail(SubRule.Detail.ILLEGAL_BREAK_CUSHION)) {
+            gameMenu.getItems().add(reBreakMenu);
         }
         if (rule.hasRule(Rule.PUSH_OUT)) {
             gameMenu.getItems().add(pushOutMenu);
@@ -1311,8 +1315,9 @@ public class GameView implements Initializable {
             }
             if (game.getGame() instanceof NeedBigBreak nbb) {
                 if (nbb.isJustAfterBreak()) {
-                    if (nbb.wasIllegalBreak()) {
+                    if (nbb.wasIllegalBreak() || game.getGame().getThisCueFoul().isFoul()) {
                         letOtherPlayMenu.setDisable(false);
+                        reBreakMenu.setDisable(false);
                     }
                 }
             }
@@ -1366,6 +1371,10 @@ public class GameView implements Initializable {
 
     private void startNextFrame() {
         game.startNextFrame();
+        setupFrameStart();
+    }
+    
+    private void setupFrameStart() {
         setupBalls();
 
         predictedTargetBall = null;
@@ -2038,6 +2047,27 @@ public class GameView implements Initializable {
             System.err.println("Game rule no push out!");
         }
     }
+    
+    private void performReBreak(InGamePlayer willCueIgp) {
+        int broke = game.getGame().getGameSettings().isPlayer1Breaks() ? 1 : 2;
+        game.cancelCurrentFrame(true);
+        game.restartThisFrame(broke == willCueIgp.getPlayerNumber());
+        setupFrameStart();
+    }
+    
+    @FXML
+    void reBreakAction() {
+        InGamePlayer subject = game.getGame().getCuingIgp();
+        
+        AlertShower.askConfirmation(stage,
+                String.format(strings.getString("askWhoReBreakFmt"), subject.getPlayerPerson().getName()),
+                strings.getString("reBreak"),
+                strings.getString("selfReBreak"),
+                strings.getString("opponentReBreak"),
+                true,
+                () -> performReBreak(subject),
+                () -> performReBreak(game.getGame().getAnotherIgp(subject)));
+    }
 
     @FXML
     void repositionAction() {
@@ -2129,6 +2159,7 @@ public class GameView implements Initializable {
         letOtherPlayMenu.setDisable(true);
         repositionMenu.setDisable(true);
         pushOutMenu.setDisable(true);
+        reBreakMenu.setDisable(true);
 
         Player player = game.getGame().getCuingPlayer();
         if (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER || aiHelpPlay) {
@@ -2485,6 +2516,7 @@ public class GameView implements Initializable {
                             strings.getString("askSnookerTarget"),
                             strings.getString("confirm"),
                             strings.getString("cancel"),
+                            false,
                             () -> {
                                 RadioButton selected = (RadioButton) toggleGroup.getSelectedToggle();
                                 asg.setIndicatedTarget(buttonVal.get(selected), true);

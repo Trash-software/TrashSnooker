@@ -21,6 +21,10 @@ public class EventLogger {
     private static String baseName(String level) {
         return LOG_DIR + File.separator + level + "-";
     }
+    
+    public static void show(Throwable throwable) {
+        throwable.printStackTrace(System.err);
+    }
 
     /**
      * Logs an error that causes the App to crash

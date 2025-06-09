@@ -1,0 +1,53 @@
+{
+  "frames": [{
+    "frameIndex": 1,
+    "frameNumber": 1,
+    "cueRecs": [{
+      "scoresAfter": [
+        0,
+        0
+      ],
+      "cueHand": {
+        "extension": "NO",
+        "brand": "stdBreakCue",
+        "hand": "LEFT"
+      },
+      "specials": ["BALL_IN_HAND"],
+      "foulInfo": {
+        "foulReasonAndScore": {"仅有0颗目标球进袋，0球次过线\n累计失机：1次。累计失机3次将判负一局。": 1},
+        "illegal": true,
+        "headerReason": "开球失机",
+        "miss": false
+      },
+      "firstHit": 4,
+      "gainScores": [
+        0,
+        0
+      ],
+      "attemptBase": {
+        "success": false,
+        "type": "BREAK"
+      },
+      "player": 1,
+      "target": 0
+    }],
+    "winner": 1
+  }],
+  "players": [
+    "Neil Robertson",
+    "Mark Allen"
+  ],
+  "gameValues": {
+    "ball": "POOL_BALL",
+    "gameRule": "CHINESE_EIGHT",
+    "subRules": ["CHINESE_EIGHT_JOE"],
+    "devMode": false,
+    "table": {
+      "tableOrdinal": 1,
+      "pocketDifficultyOrdinal": 3,
+      "holeSizeOrdinal": 3
+    }
+  },
+  "entireBeginTime": "2025-06-09 10_48_49.299",
+  "totalFrames": 3
+}

@@ -9,8 +9,8 @@ import trashsoftware.trashSnooker.core.table.Table;
 
 public class SnookerTenGame extends AbstractSnookerGame {
     
-    public SnookerTenGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
-        super(entireGame, gameSettings, gameValues, new SnookerTenTable(gameValues.table), frameIndex);
+    public SnookerTenGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex, int frameRestartIndex) {
+        super(entireGame, gameSettings, gameValues, new SnookerTenTable(gameValues.table), frameIndex, frameRestartIndex);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.ChampionshipStage;
@@ -43,6 +44,7 @@ public class EntireGame {
     private int p1Wins;
     private int p2Wins;
     private boolean p1Breaks;
+    private int codeGameCounter;
     
     private int p1BreakLoseChance;
     private int p2BreakLoseChance;
@@ -139,6 +141,8 @@ public class EntireGame {
         entireGame.p1Wins = jsonObject.getInt("p1Wins");
         entireGame.p2Wins = jsonObject.getInt("p2Wins");
         entireGame.p1Breaks = jsonObject.getBoolean("p1Breaks");
+        entireGame.codeGameCounter = jsonObject.optInt("codeGameCounter", 
+                entireGame.p1Wins + entireGame.p2Wins);
         
         if (jsonObject.has("p1BreakLoseChance") && jsonObject.has("p2BreakLoseChance")) {
             entireGame.p1BreakLoseChance = jsonObject.getInt("p1BreakLoseChance");
@@ -193,6 +197,7 @@ public class EntireGame {
         object.put("p1Wins", p1Wins);
         object.put("p2Wins", p2Wins);
         object.put("p1Breaks", p1Breaks);
+        object.put("codeGameCounter", codeGameCounter);
 
         object.put("p1", p1.toJson());
         object.put("p2", p2.toJson());
@@ -226,21 +231,6 @@ public class EntireGame {
         }
         return count;
     }
-
-//    /**
-//     * 这个球员是否被打rua了
-//     */
-//    public boolean rua(InGamePlayer igp) {
-//        int playerNum = igp == p1 ? 1 : 2;
-//        int ruaLimit;
-//        double psyRua = igp.getPlayerPerson().psyRua;
-//        if (psyRua > 90) ruaLimit = 4;
-//        else if (psyRua > 60) ruaLimit = 3;
-//        else if (psyRua > 30) ruaLimit = 2;
-//        else ruaLimit = 1;
-//
-//        return playerContinuousLoses(playerNum) >= ruaLimit;  // 连输3局以上，rua了
-//    }
     
     public void quitMatch(PlayerPerson quitPerson) {
         InGamePlayer winner;
@@ -265,6 +255,10 @@ public class EntireGame {
     public int getP2Wins() {
         return p2Wins;
     }
+    
+//    public int[] getNextFrameIndexAndRestartIndex() {
+//        return new int[]{p1Wins + p2Wins + 1, game == null ? 0 : game.frameRestartIndex};
+//    }
 
     public InGamePlayer getPlayer1() {
         return p1;
@@ -279,6 +273,20 @@ public class EntireGame {
      */
     public boolean playerWinsAframe(InGamePlayer frameWinner) {
         return playerWinsAframe(frameWinner, true);
+    }
+
+    /**
+     * 结合{@link EntireGame#restartThisFrame(boolean)}
+     */
+    public void cancelCurrentFrame(boolean record) {
+        if (game != null && record) {
+            if (gameValues.isStandard()) {
+                DBAccess.getInstance().recordFrameCancelled(
+                        this, game);
+            }
+            updateFrameRecords(game.getPlayer1(), null);
+            updateFrameRecords(game.getPlayer2(), null);
+        }
     }
     
     private boolean playerWinsAframe(InGamePlayer frameWinner, boolean record) {
@@ -363,7 +371,7 @@ public class EntireGame {
         return p2Wins > totalFrames / 2;
     }
 
-    private void updateFrameRecords(Player framePlayer, InGamePlayer winingPlayer) {
+    private void updateFrameRecords(Player framePlayer, @Nullable InGamePlayer winingPlayer) {
         if (framePlayer instanceof SnookerPlayer snookerPlayer) {
             snookerPlayer.flushSinglePoles();
             if (gameValues.isStandard() && game.isStarted())
@@ -371,7 +379,8 @@ public class EntireGame {
                         getGame(),
                         snookerPlayer,
                         snookerPlayer.getSinglePolesInThisGame(),
-                        snookerPlayer.getMaximumType());
+                        snookerPlayer.getMaximumType(),
+                        winingPlayer != null);
         } else if (framePlayer instanceof NumberedBallPlayer numberedBallPlayer) {
             // 炸清和接清
             numberedBallPlayer.flushSinglePoles();
@@ -379,7 +388,8 @@ public class EntireGame {
                 DBAccess.getInstance().recordNumberedBallResult(this,
                         getGame(),
                         numberedBallPlayer,
-                        winingPlayer.getPlayerPerson().equals(
+                        winingPlayer != null,
+                        winingPlayer != null && winingPlayer.getPlayerPerson().equals(
                                 framePlayer.inGamePlayer.getPlayerPerson()),
                         numberedBallPlayer.getContinuousPots());
         }
@@ -396,7 +406,8 @@ public class EntireGame {
     }
 
     public void startNextFrame() {
-        createNextFrame();
+        p1Breaks = nextFrameP1Breaks();
+        createNextFrame(p1Breaks, false);
     }
 
     public String getStartTimeSqlString() {
@@ -425,25 +436,36 @@ public class EntireGame {
         }
     }
 
-    private void createNextFrame() {
-        p1Breaks = nextFrameP1Breaks();
+    /**
+     * 重开这一局，比如开球失机重开、斯诺克死局重开等
+     * 
+     * @param keepBreakPlayer 是否还是由原先开球的球员开球。在轮开制中，无论是否，都不影响后续开球顺序。
+     */
+    public void restartThisFrame(boolean keepBreakPlayer) {
+        createNextFrame(keepBreakPlayer == p1Breaks, true);
+    }
+
+    private void createNextFrame(boolean isP1Break, boolean isRestart) {
         GameSettings gameSettings = new GameSettings.Builder()
-                .player1Breaks(p1Breaks)
+                .player1Breaks(isP1Break)
                 .players(p1, p2)
                 .build();
         
-        game = Game.createGame(gameSettings, gameValues, this);
+        game = Game.createGame(gameSettings, gameValues, this, 
+                ++codeGameCounter, p1Wins + p2Wins + 1);
         
-        if (totalFrames >= 5 && p1Wins + p2Wins + 1 == totalFrames) {
-            // 决胜局
-            AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME, p1);
-            AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME, p2);  // 万一以后快速游戏也有呢？
-            AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME_USUAL_GUEST, p1);
-            AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME_USUAL_GUEST, p2);
-            if (metaMatchInfo != null) {
-                InGamePlayer human = p1.isHuman() ? p1 : p2;
-                if (metaMatchInfo.stage == ChampionshipStage.FINAL) {
-                    AchManager.getInstance().addAchievement(Achievement.FINAL_STAGE_FINAL_FRAME, human);
+        if (!isRestart) {
+            if (totalFrames >= 5 && p1Wins + p2Wins + 1 == totalFrames) {
+                // 决胜局
+                AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME, p1);
+                AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME, p2);  // 万一以后快速游戏也有呢？
+                AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME_USUAL_GUEST, p1);
+                AchManager.getInstance().addAchievement(Achievement.FINAL_FRAME_USUAL_GUEST, p2);
+                if (metaMatchInfo != null) {
+                    InGamePlayer human = p1.isHuman() ? p1 : p2;
+                    if (metaMatchInfo.stage == ChampionshipStage.FINAL) {
+                        AchManager.getInstance().addAchievement(Achievement.FINAL_STAGE_FINAL_FRAME, human);
+                    }
                 }
             }
         }
@@ -452,7 +474,7 @@ public class EntireGame {
             DBAccess.getInstance().recordAFrameStarts(
                     this, game);
         
-        matchInfoRec.startNextFrame();
+        matchInfoRec.startNextFrame(game.frameIndex, game.frameNumber);
     }
 
     public MatchInfoRec getMatchInfoRec() {

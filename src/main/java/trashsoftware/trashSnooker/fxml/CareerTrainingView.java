@@ -217,7 +217,9 @@ public class CareerTrainingView extends ChildInitializable {
             previewPane.setupPane(challengeSet.getGameValues(), 0.32 * 1536 / resolution[0]);
             Game<?, ?> fakeGame = Game.createGame(null, 
                     challengeSet.getGameValues(), 
-                    null);
+                    null,
+                    1,
+                    1);
             previewPane.setupBalls(fakeGame, false);
             previewPane.drawTable(fakeGame);
             previewPane.drawStoppedBalls(fakeGame.getTable(), fakeGame.getAllBalls(), null);

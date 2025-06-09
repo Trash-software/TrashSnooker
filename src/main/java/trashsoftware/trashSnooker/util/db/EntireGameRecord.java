@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.util.db;
 
+import java.util.Objects;
 import java.util.SortedMap;
 
 public abstract class EntireGameRecord {
@@ -45,7 +46,7 @@ public abstract class EntireGameRecord {
     
     private void calculateP1P2Wins() {
         for (PlayerFrameRecord[] twoFrames : frameRecords.values()) {
-            if (twoFrames[0].winnerName.equals(title.player1Id)) {
+            if (Objects.equals(twoFrames[0].winnerName, title.player1Id)) {
                 p1p2wins[0]++;
             } else {
                 p1p2wins[1]++;

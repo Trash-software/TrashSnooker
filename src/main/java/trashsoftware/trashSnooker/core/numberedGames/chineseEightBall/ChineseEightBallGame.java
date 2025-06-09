@@ -36,8 +36,9 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     public ChineseEightBallGame(EntireGame entireGame, 
                                 GameSettings gameSettings, 
                                 GameValues gameValues, 
-                                int frameIndex) {
-        super(entireGame, gameSettings, gameValues, new ChineseEightTable(gameValues.table), frameIndex);
+                                int frameIndex,
+                                int frameRestartIndex) {
+        super(entireGame, gameSettings, gameValues, new ChineseEightTable(gameValues.table), frameIndex, frameRestartIndex);
 
         initBalls();
     }

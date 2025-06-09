@@ -13,8 +13,9 @@ public class MiniSnookerGame extends AbstractSnookerGame {
     public MiniSnookerGame(EntireGame entireGame,
                            GameSettings gameSettings,
                            GameValues gameValues,
-                           int frameIndex) {
-        super(entireGame, gameSettings, gameValues, new MiniSnookerTable(gameValues.table), frameIndex);
+                           int frameIndex,
+                           int frameRestartIndex) {
+        super(entireGame, gameSettings, gameValues, new MiniSnookerTable(gameValues.table), frameIndex, frameRestartIndex);
     }
 
     @Override

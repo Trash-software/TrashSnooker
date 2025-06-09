@@ -1,39 +1,40 @@
 {
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
   "p1": {
     "playerNumber": 1,
-    "gameRule": "AMERICAN_NINE",
+    "gameRule": "CHINESE_EIGHT",
     "handFeelEffort": 1,
-    "psyStatus": 0.8385650000000001,
-    "person": "custom_player_3",
-    "playerType": "COMPUTER",
+    "psyStatus": 0.9091000000000001,
+    "person": "Neil Robertson",
+    "playerType": "PLAYER",
     "let": {"type": "notLet"}
   },
-  "p1Wins": 1,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
-    "gameRule": "AMERICAN_NINE",
+    "gameRule": "CHINESE_EIGHT",
     "handFeelEffort": 1,
-    "psyStatus": 0.4360799999999998,
-    "person": "custom_player_4",
-    "playerType": "COMPUTER",
+    "psyStatus": 1,
+    "person": "Mark Allen",
+    "playerType": "PLAYER",
     "let": {"type": "notLet"}
   },
-  "startTime": 1748975486389,
+  "codeGameCounter": 3,
   "p2BreakLoseChance": 0,
-  "p1BreakLoseChance": 0,
   "gameValues": {
     "ball": "POOL_BALL",
-    "gameRule": "AMERICAN_NINE",
-    "subRules": ["RAW_STD"],
-    "devMode": true,
+    "gameRule": "CHINESE_EIGHT",
+    "subRules": ["CHINESE_EIGHT_JOE"],
+    "devMode": false,
     "table": {
       "tableOrdinal": 1,
       "pocketDifficultyOrdinal": 3,
       "holeSizeOrdinal": 3
     }
   },
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
+  "startTime": 1749431775796,
+  "p1BreakLoseChance": 2,
   "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",

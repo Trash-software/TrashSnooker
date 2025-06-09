@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS Game (
     FrameIndex INTEGER,  -- Number of frame of this game in the entire game, starts from 1
     DurationSeconds INTEGER DEFAULT 0,
     WinnerName VARCHAR(32) REFERENCES Player DEFAULT NULL,
+    FrameNumber INTEGER DEFAULT 0,  -- Number of frame that has a winner
+    FrameRestarted INTEGER DEFAULT 0,  -- Whether this is an abnormal frame fragment that is cancelled
     PRIMARY KEY (EntireBeginTime, FrameIndex)
 );
 

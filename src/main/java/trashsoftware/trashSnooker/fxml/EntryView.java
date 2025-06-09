@@ -367,6 +367,7 @@ public class EntryView implements Initializable {
                 strings.getString("renameCareerText"),
                 strings.getString("confirm"),
                 strings.getString("cancel"),
+                false,
                 () -> {
                     String newName = newNameField.getText();
                     if (newName.isBlank()) {
@@ -403,6 +404,7 @@ public class EntryView implements Initializable {
                 strings.getString("pleaseConfirm"),
                 strings.getString("confirm"),
                 strings.getString("cancel"),
+                false,
                 () -> {
                     String playerId = selected.getPlayerId();
                     CareerManager.deleteCareer(selected);

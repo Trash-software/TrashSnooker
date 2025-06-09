@@ -52,7 +52,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public static final double MIN_PLACE_DISTANCE = 0.0;  // 防止物理运算卡bug
     public static final double MIN_GAP_DISTANCE = 3.0;
     public final long frameStartTime = System.currentTimeMillis();
-    public final int frameIndex;
+    public final int frameIndex;  // 相当于是这局是第几次开球
+    public final int frameNumber;  // 规则上算第几局。如果全都没有重开过，那就=frameIndex
     protected final Set<B> newPotted = new HashSet<>();
     protected final Set<Ball> newPottedLegal = new HashSet<>();
     //    protected final GameView parent;
@@ -106,12 +107,14 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
                    Table table,
-                   int frameIndex) {
+                   int frameIndex,
+                   int frameNumber) {
 //        this.parent = parent;
         this.entireGame = entireGame;
         this.gameValues = gameValues;
         this.gameSettings = gameSettings;
         this.frameIndex = frameIndex;
+        this.frameNumber = frameNumber;
         this.table = table;
 
         if (gameSettings != null) {
@@ -126,8 +129,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public static Game<? extends Ball, ? extends Player> createGame(
             GameSettings gameSettings,
             GameValues gameValues,
-            EntireGame entireGame) {
-        Game<? extends Ball, ? extends Player> game = createGameInternal(gameSettings, gameValues, entireGame);
+            EntireGame entireGame,
+            int frameIndex, 
+            int frameNumber) {
+        Game<? extends Ball, ? extends Player> game = createGameInternal(gameSettings, gameValues, entireGame,
+                frameIndex, frameNumber);
 
         // 处理让球
         if (gameValues.isTraining()) {
@@ -174,8 +180,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     private static @NotNull Game<? extends Ball, ? extends Player> createGameInternal(
             GameSettings gameSettings, 
             GameValues gameValues, 
-            EntireGame entireGame) {
-        int frameIndex = entireGame == null ? 1 : (entireGame.getP1Wins() + entireGame.getP2Wins() + 1);
+            EntireGame entireGame,
+            int frameIndex,
+            int frameRestartIndex) {
+//        int frameIndex = entireGame == null ? 1 : (entireGame.getP1Wins() + entireGame.getP2Wins() + 1);
         Game<? extends Ball, ? extends Player> game;
         if (gameValues.rule == GameRule.SNOOKER) {
             if (gameValues.isTraining()) {
@@ -183,7 +191,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         gameValues.getTrainType(),
                         gameValues.getTrainChallenge());
             } else {
-                game = new SnookerGame(entireGame, gameSettings, gameValues, frameIndex);
+                game = new SnookerGame(entireGame, gameSettings, gameValues, frameIndex, frameRestartIndex);
             }
         } else if (gameValues.rule == GameRule.MINI_SNOOKER) {
             if (gameValues.isTraining()) {
@@ -191,7 +199,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         gameValues.getTrainType(),
                         gameValues.getTrainChallenge());
             } else {
-                game = new MiniSnookerGame(entireGame, gameSettings, gameValues, frameIndex);
+                game = new MiniSnookerGame(entireGame, gameSettings, gameValues, frameIndex, frameRestartIndex);
             }
         } else if (gameValues.rule == GameRule.SNOOKER_TEN) {
             if (gameValues.isTraining()) {
@@ -199,25 +207,25 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         gameValues.getTrainType(),
                         gameValues.getTrainChallenge());
             } else {
-                game = new SnookerTenGame(entireGame, gameSettings, gameValues, frameIndex);
+                game = new SnookerTenGame(entireGame, gameSettings, gameValues, frameIndex, frameRestartIndex);
             }
         } else if (gameValues.rule == GameRule.CHINESE_EIGHT) {
             if (gameValues.isTraining()) {
                 game = new PoolTraining(entireGame, gameSettings, gameValues, gameValues.getTrainType(), gameValues.getTrainChallenge());
             } else {
-                game = new ChineseEightBallGame(entireGame, gameSettings, gameValues, frameIndex);
+                game = new ChineseEightBallGame(entireGame, gameSettings, gameValues, frameIndex, frameRestartIndex);
             }
         } else if (gameValues.rule == GameRule.LIS_EIGHT) {
             if (gameValues.isTraining()) {
                 game = new PoolTraining(entireGame, gameSettings, gameValues, gameValues.getTrainType(), gameValues.getTrainChallenge());
             } else {
-                game = new LisEightGame(entireGame, gameSettings, gameValues, frameIndex);
+                game = new LisEightGame(entireGame, gameSettings, gameValues, frameIndex, frameRestartIndex);
             }
         } else if (gameValues.rule == GameRule.AMERICAN_NINE) {
             if (gameValues.isTraining()) {
                 game = new PoolTraining(entireGame, gameSettings, gameValues, gameValues.getTrainType(), gameValues.getTrainChallenge());
             } else {
-                game = new AmericanNineBallGame(entireGame, gameSettings, gameValues, frameIndex);
+                game = new AmericanNineBallGame(entireGame, gameSettings, gameValues, frameIndex, frameRestartIndex);
             }
         } else throw new RuntimeException("Unexpected game rule " + gameValues.rule);
         return game;
@@ -339,6 +347,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     @Override
     public GameValues getGameValues() {
         return gameValues;
+    }
+
+    public GameSettings getGameSettings() {
+        return gameSettings;
     }
 
     public GameRecorder getRecorder() {

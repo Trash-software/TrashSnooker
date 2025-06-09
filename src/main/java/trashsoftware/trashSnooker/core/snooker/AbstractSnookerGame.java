@@ -60,8 +60,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                                   GameSettings gameSettings,
                                   GameValues gameValues,
                                   Table table,
-                                  int frameIndex) {
-        super(entireGame, gameSettings, gameValues, table, frameIndex);
+                                  int frameIndex,
+                                  int frameRestartIndex) {
+        super(entireGame, gameSettings, gameValues, table, frameIndex, frameRestartIndex);
 
 //        subRules.add(SubRule.SNOOKER_STD);
 

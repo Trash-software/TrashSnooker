@@ -6,12 +6,11 @@ import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
 import trashsoftware.trashSnooker.core.table.SnookerTable;
-import trashsoftware.trashSnooker.fxml.GameView;
 
 public class SnookerGame extends AbstractSnookerGame {
 
-    public SnookerGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex) {
-        super(entireGame, gameSettings, gameValues, new SnookerTable(gameValues.table), frameIndex);
+    public SnookerGame(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, int frameIndex, int frameRestartIndex) {
+        super(entireGame, gameSettings, gameValues, new SnookerTable(gameValues.table), frameIndex, frameRestartIndex);
     }
 
     @Override

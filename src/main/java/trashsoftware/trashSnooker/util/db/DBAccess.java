@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.util.db;
 
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.attempt.CueAttempt;
 import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
@@ -68,7 +69,7 @@ public class DBAccess {
             createTablesIfNotExists();
             updateDbStructure();
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
     }
 
@@ -117,7 +118,7 @@ public class DBAccess {
                     // 推测可能的满分杆数量
                     MaximumType[] types = {
                             MaximumType.MAXIMUM_147,
-                            MaximumType.MAXIMUM_107, 
+                            MaximumType.MAXIMUM_107,
                             MaximumType.MAXIMUM_75
                     };
                     String[] names = {"Snooker", "SnookerTen", "MiniSnooker"};
@@ -135,10 +136,22 @@ public class DBAccess {
                         try (Statement stmt = connection.createStatement()) {
                             stmt.execute(updater);
                         } catch (SQLException e) {
-                            e.printStackTrace();
+                            EventLogger.show(e);
                         }
                     }
                 });
+
+        // 加重开那几个
+        alterTable("ALTER TABLE Game ADD COLUMN FrameNumber INTEGER DEFAULT 0;",
+                () -> {
+                    String updater = "UPDATE Game SET FrameNumber = FrameIndex WHERE FrameNumber = 0;";
+                    try (Statement stmt = connection.createStatement()) {
+                        stmt.execute(updater);
+                    } catch (SQLException e) {
+                        EventLogger.show(e);
+                    }
+                });
+        alterTable("ALTER TABLE Game ADD COLUMN FrameRestarted INTEGER DEFAULT 0;");
     }
 
     private void alterTable(String query) {
@@ -165,7 +178,7 @@ public class DBAccess {
 
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
     }
 
@@ -386,11 +399,11 @@ public class DBAccess {
         try {
             executeStatement(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
     }
 
-    public void storeAttempts(EntireGame entireGame, Game<?, ?> frame, InGamePlayer frameWinner) {
+    public void storeAttempts(EntireGame entireGame, Game<?, ?> frame, @Nullable InGamePlayer frameWinner) {
         storeAttemptsForOnePlayer(entireGame,
                 frame,
                 frame.getPlayer1(),
@@ -406,7 +419,7 @@ public class DBAccess {
         if (careerOnly) {
             optional = " AND MatchID IS NOT NULL";
         }
-        
+
         String query = "SELECT * FROM EntireGame WHERE (GameType = '" + gameRule.toSqlKey() + "'" +
                 optional +
                 ");";
@@ -424,9 +437,9 @@ public class DBAccess {
         return getMatchesBy(gameRule, query);
     }
 
-    public List<EntireGameTitle> getAllPveMatches(GameRule gameRule, 
-                                                  String playerName, 
-                                                  boolean playerIsAi, 
+    public List<EntireGameTitle> getAllPveMatches(GameRule gameRule,
+                                                  String playerName,
+                                                  boolean playerIsAi,
                                                   boolean careerOnly) {
         String typeStr = "'" + gameRule.toSqlKey() + "'";
         String playerStr = "'" + playerName + "'";
@@ -434,7 +447,7 @@ public class DBAccess {
         String career = careerOnly ? " MatchID IS NOT NULL AND " : " ";
         String query = "SELECT * FROM EntireGame " +
                 "WHERE GameType = " + typeStr + " AND " +
-                career + 
+                career +
                 "((Player1Name = " + playerStr + " AND " +
                 "Player1IsAI = " + aiRep +
                 ") OR (Player2Name = " + playerStr + " AND " +
@@ -523,7 +536,7 @@ public class DBAccess {
             }
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
         return rtn;
     }
@@ -562,7 +575,7 @@ public class DBAccess {
             }
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
         return rtn;
     }
@@ -601,14 +614,15 @@ public class DBAccess {
             }
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
         return array;
     }
 
     public EntireGameRecord getMatchDetail(EntireGameTitle title) {
-        Map<Integer, int[][]> framesPotMap = new HashMap<>();
-        Map<Integer, String> framesWinnerMap = new HashMap<>();
+        Map<Integer, int[][]> framesPotMap = new TreeMap<>();
+        Map<Integer, String> framesWinnerMap = new TreeMap<>();
+        Map<Integer, int[]> frameNumberMap = new TreeMap<>();  // frameIndex: [frameNumber, frameRestarted]
         String query = "SELECT * FROM Game " +
                 "INNER JOIN GeneralRecord USING (EntireBeginTime, FrameIndex) " +
                 "WHERE EntireBeginTime = " + Util.timeStampFmt(title.startTime) +
@@ -636,7 +650,13 @@ public class DBAccess {
                 array[11] += result.getInt("SolveSuccesses");
                 durations.put(index, result.getInt("DurationSeconds"));
                 String frameWinner = result.getString("WinnerName");
-                if (frameWinner == null) {
+                framesWinnerMap.put(index, frameWinner);
+                int frameRestarted = result.getInt("FrameRestarted");
+                frameNumberMap.put(index, new int[]{
+                        result.getInt("FrameNumber"),
+                        frameRestarted
+                });
+                if (frameRestarted == 0 && frameWinner == null) {
                     System.err.println("Shit!");
                     continue;
                 }
@@ -644,7 +664,6 @@ public class DBAccess {
                         .equals(title.player1Id) ? 0 : 1;
                 int[][] playerArray = framesPotMap.computeIfAbsent(index, k -> new int[2][]);
                 playerArray[playerIndex] = array;
-                framesWinnerMap.put(index, frameWinner);
             }
             general.close();
 
@@ -656,6 +675,9 @@ public class DBAccess {
                 ResultSet snRes = sn.executeQuery(snookerQuery);
                 while (snRes.next()) {
                     int index = snRes.getInt("FrameIndex");
+                    int[] fnr = frameNumberMap.get(index);
+                    int frameNumber = fnr[0];
+                    boolean frameRestarted = fnr[1] != 0;
                     int playerIndex = snRes.getString("PlayerName")
                             .equals(title.player1Id) ? 0 : 1;
                     int[] scores = new int[5];  // total score, highest, breaks50, breaks100, maximum
@@ -670,13 +692,11 @@ public class DBAccess {
                     if (mt != MaximumType.NONE) {
                         scores[4]++;
                     }
-//                    if ((title.gameRule == GameRule.SNOOKER && scores[1] >= 147) || 
-//                            (title.gameRule == GameRule.MINI_SNOOKER && scores[1] >= 75) || 
-//                            (title.gameRule == GameRule.SNOOKER_TEN && scores[1] >= 107)) {
-//                        scores[4]++;
-//                    }
                     PlayerFrameRecord.Snooker snooker = new PlayerFrameRecord.Snooker(
-                            index, framesPotMap.get(index)[playerIndex],
+                            index,
+                            frameNumber,
+                            frameRestarted,
+                            framesPotMap.get(index)[playerIndex],
                             framesWinnerMap.get(index), scores
                     );
                     PlayerFrameRecord[] thisFrame =
@@ -698,6 +718,9 @@ public class DBAccess {
                 ResultSet numRs = numStatement.executeQuery(numQuery);
                 while (numRs.next()) {
                     int index = numRs.getInt("FrameIndex");
+                    int[] fnr = frameNumberMap.get(index);
+                    int frameNumber = fnr[0];
+                    boolean frameRestarted = fnr[1] != 0;
                     int playerIndex = numRs.getString("PlayerName")
                             .equals(title.player1Id) ? 0 : 1;
                     int[] scores = new int[6];  // breaks, break successes, break clear, continue clear, highest, gold nines (nine ball only)
@@ -710,7 +733,10 @@ public class DBAccess {
                         scores[5] = numRs.getInt("GoldNine");
                     }
                     PlayerFrameRecord.Numbered numbered = new PlayerFrameRecord.Numbered(
-                            index, framesPotMap.get(index)[playerIndex],
+                            index, 
+                            frameNumber,
+                            frameRestarted,
+                            framesPotMap.get(index)[playerIndex],
                             framesWinnerMap.get(index), scores
                     );
                     PlayerFrameRecord[] thisFrame =
@@ -727,7 +753,7 @@ public class DBAccess {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
 
         return null;
@@ -753,6 +779,7 @@ public class DBAccess {
     public void recordNumberedBallResult(EntireGame entireGame,
                                          Game<?, ?> frame,
                                          NumberedBallPlayer player,
+                                         boolean normalFinished,
                                          boolean wins,
                                          List<Integer> continuousPots) {
         GameRule gameRule = entireGame.gameValues.rule;
@@ -763,8 +790,9 @@ public class DBAccess {
         int breakClear = 0;
         int continueClear = 0;
         int highest = 0;
+        int goldNine = 0;
         // 输的人不可能清台
-        if (wins) {
+        if (normalFinished && wins) {
             if (playTimes == 1) {
                 if (breaks) {  // 炸清
                     breakClear = 1;
@@ -776,30 +804,32 @@ public class DBAccess {
         for (Integer b : continuousPots) {
             if (b > highest) highest = b;
         }
-        int goldNine = 0;
-        if (player instanceof AmericanNineBallPlayer) {
-            if (((AmericanNineBallPlayer) player).isGoldNine()) {
-                // 黄金九。由于目前的检测方式有可能将黄金九识别为炸清，所以清空breakClear
-                goldNine = 1;
-                breakClear = 0;
-                continueClear = 0;
-                AchManager.getInstance().addAchievement(Achievement.GOLDEN_NINE, player.getInGamePlayer());
+        if (normalFinished) {
+            if (player instanceof AmericanNineBallPlayer) {
+                if (((AmericanNineBallPlayer) player).isGoldNine()) {
+                    // 黄金九。由于目前的检测方式有可能将黄金九识别为炸清，所以清空breakClear
+                    goldNine = 1;
+                    breakClear = 0;
+                    continueClear = 0;
+                    AchManager.getInstance().addAchievement(Achievement.GOLDEN_NINE, player.getInGamePlayer());
+                }
             }
-        }
-        if (breakClear > 0 || continueClear > 0) {
-            AchManager.getInstance().addAchievement(Achievement.POOL_CLEAR, player.getInGamePlayer());
-            if (gameRule == GameRule.CHINESE_EIGHT) {
-                AchManager.getInstance().addAchievement(Achievement.CEB_CUMULATIVE_CLEAR, player.getInGamePlayer());
-            }
+            if (breakClear > 0 || continueClear > 0) {
+                AchManager.getInstance().addAchievement(Achievement.POOL_CLEAR, player.getInGamePlayer());
+                if (gameRule == GameRule.CHINESE_EIGHT) {
+                    AchManager.getInstance().addAchievement(Achievement.CEB_CUMULATIVE_CLEAR, player.getInGamePlayer());
+                }
 
-            if (breakClear > 0) {
-                AchManager.getInstance().addAchievement(Achievement.POOL_BREAK_CLEAR, player.getInGamePlayer());
+                if (breakClear > 0) {
+                    AchManager.getInstance().addAchievement(Achievement.POOL_BREAK_CLEAR, player.getInGamePlayer());
+                }
             }
         }
+        int frameIndex = frame.frameIndex;
 
         String query = "INSERT INTO " + tableName + " VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
-                frame.frameIndex + ", " +
+                frameIndex + ", " +
                 "'" + player.getPlayerPerson().getPlayerId() + "', " +
                 (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) + ", " +
                 (breaks ? 1 : 0) + ", " + (breakPot ? 1 : 0) + ", " +
@@ -811,13 +841,14 @@ public class DBAccess {
         try {
             executeStatement(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
     }
 
     public void recordSnookerBreaks(EntireGame entireGame, Game<?, ?> frame,
                                     SnookerPlayer player, List<Integer> breakScores,
-                                    MaximumType maximumType) {
+                                    MaximumType maximumType,
+                                    boolean normalFinish) {
         System.out.println("Snooker breaks: " + breakScores);
         int highBreak = 0;
         int breaks50 = 0;  // 一局最多两个50+，最多一个100+
@@ -830,9 +861,10 @@ public class DBAccess {
             }
         }
 //        int maximum = isMaximum ? 1 : 0;
+        int frameIndex = frame.frameIndex;
         String query = "INSERT INTO SnookerRecord VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
-                frame.frameIndex + ", " +
+                frameIndex + ", " +
                 "'" + player.getPlayerPerson().getPlayerId() + "', " +
                 (player.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) + ", " +
                 player.getScore() + ", " +
@@ -878,7 +910,7 @@ public class DBAccess {
             }
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
         return new List[]{new ArrayList<>(humanIds), new ArrayList<>(computerIds)};
     }
@@ -897,7 +929,7 @@ public class DBAccess {
             }
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
         return list;
     }
@@ -923,7 +955,7 @@ public class DBAccess {
 
             return hasItem;
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
         return false;
     }
@@ -941,7 +973,7 @@ public class DBAccess {
                 stmt.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
     }
 
@@ -981,14 +1013,15 @@ public class DBAccess {
         try {
             executeStatement(command);
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
     }
 
     public void recordAFrameStarts(EntireGame entireGame, Game<?, ?> game) {
         String generalCmd = "INSERT INTO Game VALUES (" +
                 entireGame.getStartTimeSqlString() + ", " +
-                game.frameIndex + ", 0, NULL);";
+                game.frameIndex + ", 0, NULL, " +
+                game.frameNumber + ", 0" + ");";
         System.out.println(generalCmd);
         try {
             executeStatement(generalCmd);
@@ -999,11 +1032,13 @@ public class DBAccess {
                     entireGame.getPlayer2().getPlayerPerson().getPlayerId(),
                     entireGame.getPlayer2().getPlayerType() == PlayerType.COMPUTER);
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
     }
 
-    public void recordAFrameEnds(EntireGame entireGame, Game<?, ?> game, InGamePlayer winner) {
+    public void recordAFrameEnds(EntireGame entireGame,
+                                 Game<?, ?> game,
+                                 InGamePlayer winner) {
         long duration = (System.currentTimeMillis() - game.frameStartTime) / 1000 + 1;
         String generalCmd = "UPDATE Game SET DurationSeconds = " + duration + ", " +
                 "WinnerName = '" + winner.getPlayerPerson().getPlayerId() + "' " +
@@ -1013,7 +1048,22 @@ public class DBAccess {
             executeStatement(generalCmd);
             storeAttempts(entireGame, game, winner);
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
+        }
+    }
+
+    public void recordFrameCancelled(EntireGame entireGame, Game<?, ?> game) {
+        long duration = (System.currentTimeMillis() - game.frameStartTime) / 1000 + 1;
+        String generalCmd = "UPDATE Game SET DurationSeconds = " + duration + ", " +
+                "WinnerName = NULL, " +
+                "FrameRestarted = 1 " +
+                "WHERE (EntireBeginTime = " + entireGame.getStartTimeSqlString() + " AND " +
+                "FrameIndex = " + game.frameIndex + ");";
+        try {
+            executeStatement(generalCmd);
+            storeAttempts(entireGame, game, null);
+        } catch (SQLException e) {
+            EventLogger.show(e);
         }
     }
 
@@ -1023,7 +1073,7 @@ public class DBAccess {
         try {
             executeStatement(cmd);
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
     }
 
@@ -1031,7 +1081,7 @@ public class DBAccess {
         try {
             connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
     }
 
@@ -1055,7 +1105,7 @@ public class DBAccess {
 
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            EventLogger.show(e);
         }
     }
 

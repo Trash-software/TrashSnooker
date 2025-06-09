@@ -33,6 +33,8 @@
                       disable="true"/>
             <MenuItem fx:id="pushOutMenu" text="%pushOut" disable="true"
                       onAction="#pushOutAction"/>
+            <MenuItem fx:id="reBreakMenu" text="%reBreak" disable="true"
+                      onAction="#reBreakAction"/>
         </Menu>
         <Menu text="%playMenu">
             <CheckMenuItem fx:id="aiAutoPlayMenuItem" text="%aiAutoPlay"/>

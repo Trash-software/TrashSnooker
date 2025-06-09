@@ -13,7 +13,7 @@ public class PoolTraining extends ChineseEightBallGame implements Training {
     protected Challenge challenge;
 
     public PoolTraining(EntireGame entireGame, GameSettings gameSettings, GameValues gameValues, TrainType trainType, Challenge challenge) {
-        super(entireGame, gameSettings, gameValues, 1);
+        super(entireGame, gameSettings, gameValues, 1, 0);
 
         this.trainType = trainType;
         this.challenge = challenge;

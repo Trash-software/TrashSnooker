@@ -118,11 +118,19 @@ public class AlertShower {
     public static void askConfirmation(Window owner, String content, String header,
                                        String positiveText, String negativeText,
                                        Runnable positiveCallback, Runnable negativeCallback) {
-        askConfirmation(owner, content, header, positiveText, negativeText, positiveCallback, negativeCallback, null);
+        askConfirmation(owner, content, header, positiveText, negativeText, false, positiveCallback, negativeCallback, null);
     }
 
     public static void askConfirmation(Window owner, String content, String header,
                                        String positiveText, String negativeText,
+                                       boolean neutralCancel,
+                                       Runnable positiveCallback, Runnable negativeCallback) {
+        askConfirmation(owner, content, header, positiveText, negativeText, neutralCancel, positiveCallback, negativeCallback, null);
+    }
+
+    public static void askConfirmation(Window owner, String content, String header,
+                                       String positiveText, String negativeText,
+                                       boolean neutralCancel,
                                        Runnable positiveCallback, Runnable negativeCallback,
                                        Node additionalContent) {
         try {
@@ -144,6 +152,7 @@ public class AlertShower {
             Alert view = loader.getController();
             view.setupConfirm(newStage, header, content,
                     positiveText, negativeText,
+                    neutralCancel,
                     positiveCallback, negativeCallback);
             
             if (additionalContent != null) {

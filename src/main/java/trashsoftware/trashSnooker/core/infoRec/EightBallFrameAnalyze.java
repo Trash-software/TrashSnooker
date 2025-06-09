@@ -66,11 +66,15 @@ public class EightBallFrameAnalyze extends FrameAnalyze<FrameAnalyze.Break> {
         
         // todo
         
-        if (breaks[winnerIndex].size() == 1 && breaks[loserIndex].isEmpty()) {
-            frameKinds.add(FrameKind.BREAK_CLEAR);
-        }
-        if (potBreaks[winnerIndex].size() == 1 && winnerIndex != breakPlayerIndex) {
-            frameKinds.add(FrameKind.CONTINUE_CLEAR);
+        if (winner == 0) {
+            frameKinds.add(FrameKind.RESTARTED);
+        } else {
+            if (breaks[winnerIndex].size() == 1 && breaks[loserIndex].isEmpty()) {
+                frameKinds.add(FrameKind.BREAK_CLEAR);
+            }
+            if (potBreaks[winnerIndex].size() == 1 && winnerIndex != breakPlayerIndex) {
+                frameKinds.add(FrameKind.CONTINUE_CLEAR);
+            }
         }
 
         System.out.println(breaks[0]);

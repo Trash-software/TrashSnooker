@@ -19,8 +19,9 @@ public abstract class NumberedBallGame<P extends NumberedBallPlayer>
     protected NumberedBallGame(EntireGame entireGame, GameSettings gameSettings,
                                GameValues gameValues,
                                Table table,
-                               int frameIndex) {
-        super(entireGame, gameSettings, gameValues, table, frameIndex);
+                               int frameIndex,
+                               int frameNumber) {
+        super(entireGame, gameSettings, gameValues, table, frameIndex, frameNumber);
     }
 
     @Override

@@ -148,6 +148,7 @@ public abstract class FrameAnalyze<B extends FrameAnalyze.Break> {
 
     public enum FrameKind {
         NORMAL,
+        RESTARTED,
         BREAK_CLEAR,
         CONTINUE_CLEAR,
         SINGLE_BREAK_WIN,
