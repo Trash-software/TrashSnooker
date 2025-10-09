@@ -36,6 +36,12 @@ public abstract class AchManager {
         instance = new CareerAchManager(careerSave);
     }
     
+    public void setDisabled(boolean disabled) {
+        if (instance instanceof CareerAchManager cam) {
+            cam.setDisabled(disabled);
+        }
+    }
+    
     public void removePendingAch(Achievement achievement) {
     }
     

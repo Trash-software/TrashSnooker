@@ -2,7 +2,7 @@ package trashsoftware.trashSnooker.core.training;
 
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallGame;
 
@@ -20,7 +20,7 @@ public class PoolTraining extends ChineseEightBallGame implements Training {
         this.ordered = trainType == TrainType.SNAKE_FULL_ORDERED || trainType == TrainType.SNAKE_HALF_ORDERED;
         if (ordered) currentTarget = 1;
         else currentTarget = NOT_SELECTED_REP;
-
+        
         placeSnake();
 
         isBreaking = false;
@@ -36,6 +36,11 @@ public class PoolTraining extends ChineseEightBallGame implements Training {
             case SNAKE_HALF_ORDERED:
                 placeFromBottom(getColoredBalls(8));
                 hideOtherBalls(8);
+                break;
+            case CUSTOM:
+            case SINGLE_BALL_PRACTICE:
+                placeCustom();
+                hideOtherBalls(1);
                 break;
         }
     }
@@ -60,6 +65,63 @@ public class PoolTraining extends ChineseEightBallGame implements Training {
             ballOrder[i].setXY(baseX - i * gap, gameValues.table.midY);
         }
     }
+    
+    @Override
+    public void proceedRepeat() {
+        CustomChallenge customChallenge = (CustomChallenge) challenge;
+        SingleBallRepeater sbr = customChallenge.getSingleBallRepeater();
+        
+        if (newPotted.size() == 1 && !cueBall.isPotted()) {
+            getPlayer1().addScore(1);
+        }
+        
+        if (repeatShot(sbr)) {
+            winingPlayer = getPlayer1();
+            end();
+        }
+    }
+    
+    protected boolean repeatShot(SingleBallRepeater repeater) {
+        for (Ball ball : getAllBalls()) {
+            ball.pot();
+        }
+        
+        int idx = repeater.nextShot();
+        if (idx == repeater.maxRepeat) {
+            return true;
+        } else {
+            placeCustom();
+            return false;
+        }
+    }
+    
+    protected void placeCustom() {
+        CustomChallenge customChallenge = (CustomChallenge) challenge;
+
+        SingleBallRepeater sbr = customChallenge.getSingleBallRepeater();
+
+        for (CustomChallenge.BallSchema bs : customChallenge.getBallSchemas()) {
+            double[] pos = bs.getLocation(gameValues);
+            double realX = pos[0];
+            double realY = pos[1];
+            PoolBall ball;
+            if (bs.value == 0) {
+                placeWhiteBall(realX, realY);
+                placedHandBallButNoHit = false;  // 不让它检测自由球
+                continue;
+            } else {
+                int trueVal;
+                if (sbr != null) {
+                    trueVal = sbr.getMapped(bs.value);
+                } else {
+                    trueVal = bs.value;
+                }
+                ball = getBallByValue(trueVal);
+            }
+            ball.pickup();
+            ball.setXY(realX, realY);
+        }
+    }
 
     @Override
     public int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall) {
@@ -77,6 +139,11 @@ public class PoolTraining extends ChineseEightBallGame implements Training {
 
     @Override
     protected void endMoveAndUpdate() {
+        if (getTrainType() == TrainType.SINGLE_BALL_PRACTICE) {
+            proceedRepeat();
+            return;
+        }
+        
         if (cueBall.isPotted()) {
             thisCueFoul.addFoul(strings.getString("cueBallPot"));
         }

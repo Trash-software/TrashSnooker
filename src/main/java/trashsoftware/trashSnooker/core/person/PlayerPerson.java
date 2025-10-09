@@ -151,7 +151,7 @@ public class PlayerPerson {
                 throw new RuntimeException("Illegal hands for player " + name + " (" + playerId + ")", iae);
             }
         } else {
-            double cueSwingMag = personObj.getDouble("cueSwingMag");
+            double cueSwingMag = personObj.optDouble("cueSwingMag", 1);
             String cuePlayTypeStr = personObj.getString("cuePlayType");
             CuePlayType cuePlayType = parseCuePlayType(cuePlayTypeStr);
 

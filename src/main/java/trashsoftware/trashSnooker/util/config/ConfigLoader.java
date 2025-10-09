@@ -1,22 +1,23 @@
 package trashsoftware.trashSnooker.util.config;
 
-import javafx.scene.SceneAntialiasing;
+import javafx.scene.input.KeyCode;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.EventLogger;
 
 import java.awt.*;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.List;
+import java.util.*;
 
 public class ConfigLoader {
 
     public static final String PATH = "user/config.cfg";
+    public static final String KEY_MAP_PATH = "user/keyMap.cfg";
     private static final Locale DEFAULT_LOCALE = new Locale("zh", "CN");
 
     private static ConfigLoader instance;
     private final Map<String, String> keyValues = new HashMap<>();
+    private final InputManager inputManager;
     private int lastVersion;
 
     private Locale locale;
@@ -26,26 +27,9 @@ public class ConfigLoader {
 
     private ConfigLoader() {
         initConfig();
-        try (BufferedReader br = new BufferedReader(new FileReader(PATH))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] split = line.split("=");
-                if (split.length == 2) {
-                    String key = split[0].strip();
-                    String val = split[1].strip();
-                    keyValues.put(key, val);
-                }
-            }
-
-            lastVersion = getInt("version", 0);
-            if (lastVersion != App.VERSION_CODE) {
-                put("version", App.VERSION_CODE);
-            }
-        } catch (FileNotFoundException e) {
-            writeConfig();
-        } catch (IOException e) {
-            EventLogger.error(e);
-        }
+        loadFromDisk();
+        
+        inputManager = new InputManager();
     }
 
     public static ConfigLoader getInstance() {
@@ -76,6 +60,10 @@ public class ConfigLoader {
         double[] window = getSystemResolution();
 
         return new double[]{hardware[0], hardware[1], hardware[1] / window[1]};
+    }
+
+    public InputManager getInputManager() {
+        return inputManager;
     }
 
     public void put(String key, Object value) {
@@ -140,7 +128,7 @@ public class ConfigLoader {
     public int getFrameRate() {
         return getInt("frameRate", 120);
     }
-    
+
     public int getProductionFrameRate() {
         return getInt("productionFrameRate", 60);
     }
@@ -182,7 +170,7 @@ public class ConfigLoader {
     public int getBallMaterialResolution() {
         return 256;
     }
-    
+
     public AntiAliasing getAntiAliasing() {
         return switch (ConfigLoader.getInstance().getString("antiAliasing")) {
             case "balanced" -> AntiAliasing.BALANCED;
@@ -214,6 +202,30 @@ public class ConfigLoader {
 
     public void save() {
         writeConfig();
+        inputManager.save();
+    }
+    
+    private void loadFromDisk() {
+        try (BufferedReader br = new BufferedReader(new FileReader(PATH))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] split = line.split("=");
+                if (split.length == 2) {
+                    String key = split[0].strip();
+                    String val = split[1].strip();
+                    keyValues.put(key, val);
+                }
+            }
+
+            lastVersion = getInt("version", 0);
+            if (lastVersion != App.VERSION_CODE) {
+                put("version", App.VERSION_CODE);
+            }
+        } catch (FileNotFoundException e) {
+            writeConfig();
+        } catch (IOException e) {
+            EventLogger.error(e);
+        }
     }
 
     private void initConfig() {

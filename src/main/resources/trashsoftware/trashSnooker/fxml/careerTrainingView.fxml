@@ -31,6 +31,10 @@
         <VBox spacing="10.0">
             <GamePane fx:id="previewPane" VBox.vgrow="NEVER"/>
             <ImageView fx:id="previewImage" visible="false"/>
+            <HBox fx:id="tweakAbleBox" visible="false" spacing="5.0">
+                <ComboBox fx:id="holeSizeBox"/>
+                <ComboBox fx:id="pocketDifficultyBox"/>
+            </HBox>
             <LabelTable fx:id="rewardsTable" visible="false"/>
             <Label text="%challengeHistory" visible="false"/>
             <LabelTable fx:id="historyTable" visible="false"/>

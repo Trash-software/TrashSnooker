@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         type="trashsoftware.trashSnooker.fxml.settingsPages.DisplayPage"
+         vgap="10.0" hgap="20.0" VBox.vgrow="ALWAYS">
+    <padding>
+        <Insets topRightBottomLeft="5.0"/>
+    </padding>
+
+    <rowConstraints>
+        <RowConstraints/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints halignment="LEFT"/>
+        <ColumnConstraints halignment="LEFT"/>
+        <ColumnConstraints halignment="LEFT"/>
+    </columnConstraints>
+
+    <Label text="%settingsGraphics" GridPane.rowIndex="0">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </Label>
+    <Separator GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+    <Label text="%displaySetting" GridPane.rowIndex="1"/>
+    <ComboBox fx:id="displayBox" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+    <Label text="%resolution" GridPane.rowIndex="2"/>
+    <ComboBox fx:id="resolutionComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+    <Label text="%systemZoom" GridPane.rowIndex="3" visible="false" managed="false"/>
+    <ComboBox fx:id="systemZoomComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1"
+              visible="false" managed="false"/>
+
+    <Label text="%antiAliasing" GridPane.rowIndex="4"/>
+    <ComboBox fx:id="antiAliasingComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+    <Label text="%performanceMode" GridPane.rowIndex="5"/>
+    <ComboBox fx:id="performanceBox" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+    <Label text="%frameRate" GridPane.rowIndex="6" visible="false" managed="false"/>
+    <Label text="%productionFrameRate" GridPane.rowIndex="6" visible="false" managed="false"/>
+    <ComboBox fx:id="frameRateBox" GridPane.rowIndex="6" GridPane.columnIndex="1"
+              visible="false" managed="false"/>
+    <ComboBox fx:id="prodFrameRateBox" GridPane.rowIndex="6" GridPane.columnIndex="1"
+              visible="false" managed="false"/>
+
+    <Label text="%settingsSound" GridPane.rowIndex="7">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </Label>
+    <Separator GridPane.rowIndex="7" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+    <Label text="%effectSound" GridPane.rowIndex="8"/>
+    <Slider fx:id="effectSoundSlider" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+    <Label fx:id="effectSoundLabel" GridPane.rowIndex="8" GridPane.columnIndex="2"/>
+</fx:root>

@@ -6,6 +6,7 @@ import trashsoftware.trashSnooker.core.metrics.*;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.training.Challenge;
 import trashsoftware.trashSnooker.core.training.CustomChallenge;
+import trashsoftware.trashSnooker.core.training.SingleBallRepeater;
 import trashsoftware.trashSnooker.core.training.TrainType;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.Util;
@@ -19,6 +20,7 @@ public class ChallengeSet {
     private String name;
     private GameValues gameValues;
     private TableCloth cloth;
+    private boolean pocketTweakable;
 
     private ChallengeSet() {
     }
@@ -47,7 +49,11 @@ public class ChallengeSet {
         Challenge challenge;
         if (trainType == TrainType.CUSTOM) {
             JSONObject schema = object.getJSONObject("schema");
-            challenge = CustomChallenge.fromJson(rule, schema);
+            challenge = CustomChallenge.fromJson(rule, schema, trainType);
+        } else if (trainType == TrainType.SINGLE_BALL_PRACTICE) {
+            JSONObject schema = object.getJSONObject("schema");
+            challenge = CustomChallenge.fromJson(rule, schema, trainType);
+            ((CustomChallenge) challenge).setSingleBallRepeater(SingleBallRepeater.fromJson(object.getJSONObject("repeater")));
         } else {
             challenge = new Challenge(rule, trainType);
         }
@@ -55,6 +61,7 @@ public class ChallengeSet {
         values.setTrain(trainType, challenge);
 
         challengeSet.gameValues = values;
+        challengeSet.pocketTweakable = object.optBoolean("pocketTweakable", false);
 
         JSONObject rwd = object.getJSONObject("rewards");
         for (String key : rwd.keySet()) {
@@ -87,6 +94,10 @@ public class ChallengeSet {
 
     public Map<RewardCondition, ChallengeReward> getConditionRewards() {
         return conditionRewards;
+    }
+
+    public boolean isPocketTweakable() {
+        return pocketTweakable;
     }
 
     public Map<RewardCondition, ChallengeReward> getFulfilledBy(List<ChallengeHistory.Record> records) {

@@ -159,6 +159,7 @@ public class MatchInfoRec {
 
     public void finishCurrentFrame(boolean matchFinished, int frameWinnerNumber) throws JSONException {
         if (!valid) return;
+        if (frames.isEmpty()) return;
         frames.getLast().winner = frameWinnerNumber;
         writeToDisk();
     }

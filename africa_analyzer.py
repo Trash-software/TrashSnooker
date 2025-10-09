@@ -122,7 +122,9 @@ def analyze(career_file):
                     res = analyze_dict(level_perks)
                     if res:
                         print("==========")
-                        print(f"{res['n']}次升级记录在案，最少{res['lows']}点，最多{res['highs']}点，"
+                        low = res['lows']
+                        high = res['highs']
+                        print(f"{res['n']}次升级记录在案，最少{low}点，期望{(low + high) // 2}点，最多{high}点，"
                               f"你获得了{res['got']}点")
                         print(f"平均每次抽奖获得了{round(res['avg'] * 100, 2)}%的点数"
                               f"（sd={round(res['sd'] * 100, 2)}%），"

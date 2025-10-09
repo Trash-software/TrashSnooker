@@ -12,7 +12,7 @@ public abstract class RewardCondition implements Comparable<RewardCondition> {
     public static final RewardCondition CLEARANCE = new RewardCondition(10) {
         @Override
         public boolean fulfilled(ChallengeHistory.Record record) {
-            return record.clearedAll;
+            return record.completedAll;
         }
 
         @Override

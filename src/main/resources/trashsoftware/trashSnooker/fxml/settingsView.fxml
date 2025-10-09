@@ -3,11 +3,10 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.SettingsView" spacing="10.0"
-      prefWidth="400.0">
+      prefWidth="600.0" prefHeight="500.0">
 
     <padding>
         <Insets topRightBottomLeft="10.0"/>
@@ -15,95 +14,24 @@
 
     <Button text="%backIcon" onAction="#backAction"/>
 
-    <GridPane vgap="10.0" hgap="20.0" VBox.vgrow="ALWAYS">
-
-        <rowConstraints>
-            <RowConstraints/>
-        </rowConstraints>
-
+    <GridPane hgap="10.0" vgap="10.0" VBox.vgrow="ALWAYS">
         <columnConstraints>
-            <ColumnConstraints halignment="LEFT"/>
-            <ColumnConstraints halignment="LEFT"/>
-            <ColumnConstraints halignment="LEFT"/>
+            <ColumnConstraints percentWidth="30.0"/>
+            <ColumnConstraints percentWidth="70.0"/>
         </columnConstraints>
 
-        <Label text="%settingsGame" GridPane.rowIndex="1">
-            <font>
-                <Font size="16.0"/>
-            </font>
-        </Label>
-        <Separator GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+        <VBox spacing="5.0">
+            <Hyperlink text="%settingsGeneral" onAction="#generalPageAction"/>
+            <Hyperlink text="%settingsGame" onAction="#gamePageAction"/>
+            <Hyperlink text="%settingsGraphicsAndSound" onAction="#displayPageAction"/>
+        </VBox>
 
-        <Label text="%fastGameAimLineLength" GridPane.rowIndex="2"/>
-        <ComboBox fx:id="aimLingBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <ScrollPane fx:id="contentContainer" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS"/>
 
-        <Label text="%fastGameAiStrength" GridPane.rowIndex="3"/>
-        <ComboBox fx:id="aiStrengthBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-        <Label text="%autoChangeBreakCue" GridPane.rowIndex="4"/>
-        <ComboBox fx:id="autoChangeBreakCueBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-
-        <Label text="%mouseDragMethod" GridPane.rowIndex="5"/>
-        <ComboBox fx:id="mouseDragMethodBox" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-
-        <Label text="%settingsGraphics" GridPane.rowIndex="8">
-            <font>
-                <Font size="16.0"/>
-            </font>
-        </Label>
-        <Separator GridPane.rowIndex="8" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
-
-        <Label text="%displaySetting" GridPane.rowIndex="9"/>
-        <ComboBox fx:id="displayBox" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
-
-        <Label text="%resolution" GridPane.rowIndex="10"/>
-        <ComboBox fx:id="resolutionComboBox" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
-
-        <Label text="%systemZoom" GridPane.rowIndex="10" visible="false" managed="false"/>
-        <ComboBox fx:id="systemZoomComboBox" GridPane.rowIndex="10" GridPane.columnIndex="1"
-                  visible="false" managed="false"/>
-
-        <Label text="%antiAliasing" GridPane.rowIndex="11"/>
-        <ComboBox fx:id="antiAliasingComboBox" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
-
-        <Label text="%performanceMode" GridPane.rowIndex="12"/>
-        <ComboBox fx:id="performanceBox" GridPane.rowIndex="12" GridPane.columnIndex="1"/>
-
-        <Label text="%frameRate" GridPane.rowIndex="13" visible="false" managed="false"/>
-        <Label text="%productionFrameRate" GridPane.rowIndex="13" visible="false" managed="false"/>
-        <ComboBox fx:id="frameRateBox" GridPane.rowIndex="13" GridPane.columnIndex="1"
-                  visible="false" managed="false"/>
-        <ComboBox fx:id="prodFrameRateBox" GridPane.rowIndex="13" GridPane.columnIndex="1" 
-                  visible="false" managed="false"/>
-
-        <Label text="%settingsSound" GridPane.rowIndex="15">
-            <font>
-                <Font size="16.0"/>
-            </font>
-        </Label>
-        <Separator GridPane.rowIndex="13" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
-        <Label text="%effectSound" GridPane.rowIndex="16"/>
-        <Slider fx:id="effectSoundSlider" GridPane.rowIndex="16" GridPane.columnIndex="1"/>
-        <Label fx:id="effectSoundLabel" GridPane.rowIndex="16" GridPane.columnIndex="2"/>
-
-        <Label text="%settingsGeneral" GridPane.rowIndex="18">
-            <font>
-                <Font size="16.0"/>
-            </font>
-        </Label>
-        <Separator GridPane.rowIndex="18" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
-
-        <Label text="%language" GridPane.rowIndex="19"/>
-        <ComboBox fx:id="languageBox" GridPane.rowIndex="19" GridPane.columnIndex="1"/>
-
-        <Label text="%numAiThreads" GridPane.rowIndex="20"/>
-        <ComboBox fx:id="aiThreadNumBox" GridPane.rowIndex="20" GridPane.columnIndex="1"/>
-        <Label fx:id="cpuActualThreadNumLabel" GridPane.rowIndex="20" GridPane.columnIndex="2"/>
-
+        <HBox GridPane.rowIndex="1" GridPane.columnIndex="1"
+              alignment="CENTER_RIGHT" spacing="10.0">
+            <Button fx:id="confirmBtn" text="%confirm" onAction="#confirmAction" disable="true"/>
+            <Button text="%cancel" onAction="#cancelAction"/>
+        </HBox>
     </GridPane>
-
-    <HBox alignment="CENTER_RIGHT" spacing="10.0">
-        <Button fx:id="confirmBtn" text="%confirm" onAction="#confirmAction" disable="true"/>
-        <Button text="%cancel" onAction="#cancelAction"/>
-    </HBox>
 </VBox>

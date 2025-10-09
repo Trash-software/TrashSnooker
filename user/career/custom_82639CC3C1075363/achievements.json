@@ -2,16 +2,25 @@
   "achievements": {
     "expenditure": {
       "levelDates": {},
-      "completions": 1700,
+      "completions": 2700,
       "levelAwardReceived": {
         "0": "NOT_COMPLETED",
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
     },
-    "champEarnCumulative": {
+    "cumulativeLongPots1": {
+      "levelDates": {"0": "2025-09-09 04:33:35"},
+      "completions": 7,
+      "levelAwardReceived": {
+        "0": "NOT_RECEIVED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
+    "potBalls": {
       "levelDates": {},
-      "completions": 0,
+      "completions": 5,
       "levelAwardReceived": {
         "0": "NOT_COMPLETED",
         "1": "NOT_COMPLETED",
@@ -27,27 +36,14 @@
         "2": "NOT_COMPLETED"
       }
     },
-    "mainOfTournaments": {
-      "levelDates": {},
-      "completions": 0,
-      "levelAwardReceived": {
-        "0": "NOT_COMPLETED",
-        "1": "NOT_COMPLETED",
-        "2": "NOT_COMPLETED"
-      }
+    "firstMainOfTournament": {
+      "levelDates": {"0": "2025-06-19 04:40:17"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "participateTournaments": {
       "levelDates": {},
-      "completions": 0,
-      "levelAwardReceived": {
-        "0": "NOT_COMPLETED",
-        "1": "NOT_COMPLETED",
-        "2": "NOT_COMPLETED"
-      }
-    },
-    "saveMoney": {
-      "levelDates": {},
-      "completions": 10000,
+      "completions": 1,
       "levelAwardReceived": {
         "0": "NOT_COMPLETED",
         "1": "NOT_COMPLETED",
@@ -63,6 +59,43 @@
         "2": "NOT_COMPLETED"
       }
     },
+    "defeatByChampion": {
+      "levelDates": {"0": "2025-06-19 04:40:17"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
+    "potABall": {
+      "levelDates": {"0": "2025-09-09 04:33:06"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
+    "mainOfTournaments": {
+      "levelDates": {},
+      "completions": 1,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
+    "champEarnCumulative": {
+      "levelDates": {},
+      "completions": 500,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
+    "saveMoney": {
+      "levelDates": {},
+      "completions": 10000,
+      "levelAwardReceived": {
+        "0": "NOT_COMPLETED",
+        "1": "NOT_COMPLETED",
+        "2": "NOT_COMPLETED"
+      }
+    },
     "buyItems": {
       "levelDates": {},
       "completions": 0,
@@ -71,6 +104,16 @@
         "1": "NOT_COMPLETED",
         "2": "NOT_COMPLETED"
       }
+    },
+    "continuousLongPot": {
+      "levelDates": {"0": "2025-09-09 04:33:23"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
+    },
+    "earnedMoney": {
+      "levelDates": {"0": "2025-06-19 04:40:17"},
+      "completions": 1,
+      "levelAwardReceived": {"0": "NOT_RECEIVED"}
     },
     "defeatUniqueOpponentsCeb": {
       "levelDates": {},
@@ -82,5 +125,5 @@
       }
     }
   },
-  "checksum": "DCA47EDEBD6F0A8491707D884F6FB955"
+  "checksum": "4B7CE786F9EAA2B71777117CAD19430D"
 }

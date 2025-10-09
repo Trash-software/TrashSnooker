@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
@@ -181,7 +182,7 @@ public class CareerManager {
     public static CareerSave getCurrentSave() {
         return currentSave;
     }
-
+    
     private static CareerManager loadFromFile(CareerSave careerSave) throws IOException {
         File file = new File(careerSave.getDir(), CAREER_JSON);
         if (file.exists()) {

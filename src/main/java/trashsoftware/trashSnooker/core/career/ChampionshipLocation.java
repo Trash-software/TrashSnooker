@@ -8,9 +8,9 @@ public enum ChampionshipLocation {
     AUS {
         @Override
         double flexTax(double amountGbp) {
-            return stageTax(Map.of(10000, 0.0,
-                            40000, 0.15,
-                            100000, 0.3,
+            return stageTax(Map.of(10000.0, 0.0,
+                            40000.0, 0.15,
+                            100000.0, 0.3,
                             Double.MAX_VALUE, 0.46),
                     amountGbp / 0.65) * 0.65;
         }
@@ -19,9 +19,9 @@ public enum ChampionshipLocation {
         @Override
         double flexTax(double amountGbp) {
             return stageTax(Map.of(
-                            12000, 0.0,
-                            50000, 0.2,
-                            120000, 0.35,
+                            12000.0, 0.0,
+                            50000.0, 0.2,
+                            120000.0, 0.35,
                             Double.MAX_VALUE, 0.45
                     ),
                     amountGbp / 0.7) * 0.7;
@@ -37,10 +37,10 @@ public enum ChampionshipLocation {
         @Override
         double flexTax(double amountGbp) {
             return stageTax(Map.of(
-                            10000, 0.125,
-                            50000, 0.25,
-                            150000, 0.4,
-                            250000, 0.55,
+                            10000.0, 0.125,
+                            50000.0, 0.25,
+                            150000.0, 0.4,
+                            250000.0, 0.55,
                             Double.MAX_VALUE, 0.7
                     ),
                     amountGbp / 0.67) * 0.67;
@@ -55,9 +55,9 @@ public enum ChampionshipLocation {
     TKG {
         @Override
         double flexTax(double amountGbp) {
-            return stageTax(Map.of(10000, 0.0,
-                            40000, 0.25,
-                            120000, 0.35,
+            return stageTax(Map.of(10000.0, 0.0,
+                            40000.0, 0.25,
+                            120000.0, 0.35,
                             Double.MAX_VALUE, 0.45),
                     amountGbp / 0.5) * 0.5;
         }
@@ -76,9 +76,9 @@ public enum ChampionshipLocation {
         @Override
         double flexTax(double amountGbp) {
             return stageTax(Map.of(
-                    9000, 0.1,
-                    40000, 0.22,
-                    100000, 0.32,
+                    9000.0, 0.1,
+                    40000.0, 0.22,
+                    100000.0, 0.32,
                     Double.MAX_VALUE, 0.37
             ), amountGbp / 0.8) * 0.8;
         }
@@ -87,14 +87,14 @@ public enum ChampionshipLocation {
     /**
      * 处理那种：多少至多少收多少，超过多少的部分又收多少。低于最低key的，按0处理
      */
-    double stageTax(Map<Number, Number> stageTaxRates, double amount) {
-        SortedMap<Number, Number> ordered = new TreeMap<>(stageTaxRates);
+    double stageTax(Map<Double, Double> stageTaxRates, double amount) {
+        SortedMap<Double, Double> ordered = new TreeMap<>(stageTaxRates);
         double tax = 0;
         double lastStage = 0;
 
-        for (Map.Entry<Number, Number> entry : ordered.entrySet()) {
-            double stageLimit = entry.getKey().doubleValue();
-            double rate = entry.getValue().doubleValue();
+        for (Map.Entry<Double, Double> entry : ordered.entrySet()) {
+            double stageLimit = entry.getKey();
+            double rate = entry.getValue();
 
             if (amount > stageLimit) {
                 tax += (stageLimit - lastStage) * rate;
@@ -106,7 +106,7 @@ public enum ChampionshipLocation {
         }
 
         // 如果金额超过了所有阶段，则使用最后一个阶段的税率
-        double finalRate = stageTaxRates.get(ordered.lastKey()).doubleValue();
+        double finalRate = stageTaxRates.get(ordered.lastKey());
         tax += (amount - lastStage) * finalRate;
 
         return tax;

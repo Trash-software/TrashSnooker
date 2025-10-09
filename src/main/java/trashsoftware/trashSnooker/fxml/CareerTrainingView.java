@@ -8,18 +8,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.HumanCareer;
+import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.challenge.*;
+import trashsoftware.trashSnooker.core.metrics.PocketDifficulty;
+import trashsoftware.trashSnooker.core.metrics.PocketSize;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 import trashsoftware.trashSnooker.fxml.widgets.LabelTable;
@@ -50,6 +56,12 @@ public class CareerTrainingView extends ChildInitializable {
     GamePane previewPane;
     @FXML
     ImageView previewImage;
+    @FXML
+    HBox tweakAbleBox;
+    @FXML
+    ComboBox<PocketSize> holeSizeBox;
+    @FXML
+    ComboBox<PocketDifficulty> pocketDifficultyBox;
     @FXML
     Button startBtn;
     @FXML
@@ -132,14 +144,7 @@ public class CareerTrainingView extends ChildInitializable {
 //        challengeCompletedCol.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().completed()));
 
         challengeTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                    startBtn.setDisable(newValue == null);
-                    if (newValue != null) {
-                        drawPreview(newValue.data);
-                    } else {
-                        drawPreview(null);
-                    }
-                    updateRewardsTable();
-                    updateHistoryTable();
+                    selectChallenge(newValue);
                 }
         );
     }
@@ -153,14 +158,33 @@ public class CareerTrainingView extends ChildInitializable {
             challengeTable.getItems().add(item);
         }
 
-        updateRewardsTable();
-        updateHistoryTable();
+        selectChallenge(null);
+    }
+    
+    private void selectChallenge(@Nullable ChallengeItem selected) {
+        startBtn.setDisable(selected == null);
+        rewardsTable.clearItems();
+        historyTable.clearItems();
+
+        if (selected != null) {
+            drawPreview(selected.data);
+            if (selected.data.isPocketTweakable()) {
+                tweakAbleBox.setVisible(true);
+                tweakAbleBox.setManaged(true);
+            } else {
+                tweakAbleBox.setVisible(false);
+                tweakAbleBox.setManaged(false);
+            }
+        } else {
+            drawPreview(null);
+            tweakAbleBox.setVisible(false);
+            tweakAbleBox.setManaged(false);
+        }
+        updateRewardsTable(selected);
+        updateHistoryTable(selected);
     }
 
-    private void updateRewardsTable() {
-        rewardsTable.clearItems();
-
-        ChallengeItem selected = challengeTable.getSelectionModel().getSelectedItem();
+    private void updateRewardsTable(ChallengeItem selected) {
         if (selected != null) {
             rewardsTable.setVisible(true);
             var crs = selected.data.getConditionRewards();
@@ -188,10 +212,7 @@ public class CareerTrainingView extends ChildInitializable {
         }
     }
 
-    private void updateHistoryTable() {
-        historyTable.clearItems();
-
-        ChallengeItem selected = challengeTable.getSelectionModel().getSelectedItem();
+    private void updateHistoryTable(ChallengeItem selected) {
         if (selected != null && selected.ch != null) {
             historyTable.setVisible(true);
             for (ChallengeHistory.Record record : selected.ch.getScores()) {
@@ -263,6 +284,7 @@ public class CareerTrainingView extends ChildInitializable {
         InGamePlayer igp2 = new InGamePlayer(person, PlayerType.PLAYER,
                 null, challengeSet.getGameValues().rule, 2, 1.0);
 
+        AchManager.getInstance().setDisabled(true);
         EntireGame game = new EntireGame(igp1, igp2, challengeSet.getGameValues(), 1, challengeSet.getCloth(), null);
 
         ChallengeMatch match = new ChallengeMatch(career, challengeSet);

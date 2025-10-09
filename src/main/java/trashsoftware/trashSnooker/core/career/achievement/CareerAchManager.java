@@ -34,6 +34,7 @@ import trashsoftware.trashSnooker.core.numberedGames.NumberedBallGame;
 import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
+import trashsoftware.trashSnooker.core.training.Training;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.JsonChecksum;
@@ -48,6 +49,7 @@ public class CareerAchManager extends AchManager {
     private final Map<Achievement, AchCompletion> recordedAchievements = new HashMap<>();  // 至少完成了一点点的
     private transient final Deque<AchCompletion> thisTimeComplete = new ArrayDeque<>();  // 记录这一杆完成的，在一次show之后清空
     private transient boolean popupShowing = false;
+    private transient boolean disabled = false;
 
     private final Font titleFont = Font.font(App.FONT.getFamily(), FontWeight.BLACK, 16.0);
 
@@ -137,6 +139,10 @@ public class CareerAchManager extends AchManager {
         return careerSave.getPlayerId();
     }
 
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
     @Override
     public void removePendingAch(Achievement achievement) {
         thisTimeComplete.removeIf(item -> item.achievement == achievement);
@@ -163,6 +169,8 @@ public class CareerAchManager extends AchManager {
                                      PotAttempt potAttempt,
                                      DefenseAttempt defenseAttempt,
                                      GamePlayStage playStage) {
+        if (disabled) return;
+        
         Player justCuedP = game.getLastCuedPlayer();
         InGamePlayer justCuedPlayer = justCuedP.getInGamePlayer();
 
@@ -345,6 +353,8 @@ public class CareerAchManager extends AchManager {
 
     @Override
     public void updateAfterMatchEnds(EntireGame entireGame) {
+        if (disabled) return;
+        
 //        .....检查
         boolean p1Human = entireGame.getPlayer1().isHuman();
         InGamePlayer human = p1Human ? entireGame.getPlayer1() : entireGame.getPlayer2();
@@ -410,6 +420,7 @@ public class CareerAchManager extends AchManager {
     }
 
     public void cumulateAchievement(Achievement achievement, int newAdd, InGamePlayer igp) {
+        if (disabled) return;
         if (achievement == null || (igp != null && !igp.isHuman())) return;
 
         AchCompletion ac = recordedAchievements.get(achievement);
@@ -435,6 +446,7 @@ public class CareerAchManager extends AchManager {
     }
 
     public void addAchievement(Achievement achievement, int newRecord, InGamePlayer igp) {
+        if (disabled) return;
         if (achievement == null || (igp != null && !igp.isHuman())) return;
         AchCompletion ac = recordedAchievements.get(achievement);
         if (ac != null) {
@@ -461,6 +473,7 @@ public class CareerAchManager extends AchManager {
 
     @Override
     public void addAchievement(Achievement achievement, @Nullable InGamePlayer igp) {
+        if (disabled) return;
         if (achievement == null || (igp != null && !igp.isHuman())) return;
         AchCompletion ac = recordedAchievements.get(achievement);
         if (ac != null) {

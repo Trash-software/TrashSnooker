@@ -8,4 +8,6 @@ public interface Training {
      * @return 挑战模式内容，如果是自由训练则为null
      */
     Challenge getChallenge();
+    
+    void proceedRepeat();
 }

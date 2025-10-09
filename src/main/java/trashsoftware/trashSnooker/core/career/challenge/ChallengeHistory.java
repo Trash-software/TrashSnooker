@@ -44,7 +44,7 @@ public class ChallengeHistory {
             JSONObject rec = new JSONObject();
             rec.put("time", Util.TIME_FORMAT_SEC.format(record.finishTime));
             rec.put("score", record.score);
-            rec.put("success", record.clearedAll);
+            rec.put("success", record.completedAll);
             his.put(rec);
         }
         object.put("history", his);
@@ -94,12 +94,12 @@ public class ChallengeHistory {
     public static class Record {
         public final Date finishTime;
         public final int score;
-        public final boolean clearedAll;
+        public final boolean completedAll;
 
-        Record(Date finishTime, int score, boolean clearedAll) {
+        Record(Date finishTime, int score, boolean completedAll) {
             this.finishTime = finishTime;
             this.score = score;
-            this.clearedAll = clearedAll;
+            this.completedAll = completedAll;
         }
     }
 }

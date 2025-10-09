@@ -47,31 +47,34 @@ public class SnookerTraining extends SnookerGame implements Training {
             case CUSTOM:
                 moveToCustomPosition();
                 break;
+            case SINGLE_BALL_PRACTICE:
+                for (Ball ball :getAllBalls()) {
+                    ball.pot();
+                }
+                moveToCustomPosition();
+                break;
         }
     }
     
     private void moveToCustomPosition() {
         CustomChallenge customChallenge = (CustomChallenge) challenge;
-        TableMetrics metrics = gameValues.table;
         int usedReds = 0;
-        double ballR = gameValues.ball.ballRadius;
-        double leftX = metrics.leftX + ballR;  // 我们不希望把球放库上面了
-        double rightX = metrics.rightX - ballR;
-        double topY = metrics.topY + ballR;
-        double botY = metrics.botY - ballR;
         
         for (CustomChallenge.BallSchema bs : customChallenge.getBallSchemas()) {
-            double realX = Algebra.shiftRange(0, 1, leftX, rightX, bs.unitX);
-            double realY = Algebra.shiftRange(0, 1, topY, botY, bs.unitY);
+            double[] pos = bs.getLocation(gameValues);
+            double realX = pos[0];
+            double realY = pos[1];
             SnookerBall ball;
             if (bs.value == 0) {
                 placeWhiteBall(realX, realY);
+                placedHandBallButNoHit = false;  // 不让它检测自由球
                 continue;
             } else if (bs.value == 1) {
                 ball = redBalls[usedReds++];
             } else {
                 ball = getBallByValue(bs.value);
             }
+            ball.pickup();
             ball.setXY(realX, realY);
         }
         for (int i = usedReds; i < numRedBalls(); i++) {
@@ -156,7 +159,40 @@ public class SnookerTraining extends SnookerGame implements Training {
     }
 
     @Override
+    public void proceedRepeat() {
+        CustomChallenge customChallenge = (CustomChallenge) challenge;
+        SingleBallRepeater sbr = customChallenge.getSingleBallRepeater();
+
+        if (newPotted.size() == 1 && !cueBall.isPotted()) {
+            getPlayer1().addScore(1);
+        }
+
+        if (repeatShot(sbr)) {
+            end();
+        }
+    }
+
+    protected boolean repeatShot(SingleBallRepeater repeater) {
+        for (Ball ball : getAllBalls()) {
+            ball.pot();
+        }
+
+        int idx = repeater.nextShot();
+        if (idx == repeater.maxRepeat) {
+            return true;
+        } else {
+            moveToCustomPosition();
+            return false;
+        }
+    }
+
+    @Override
     protected void endMoveAndUpdate() {
+        if (getTrainType() == TrainType.SINGLE_BALL_PRACTICE) {
+            proceedRepeat();
+            return;
+        }
+        
         super.endMoveAndUpdate();
 
         if (getChallenge() != null && !lastPotSuccess) {

@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.fxml;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -88,6 +89,8 @@ import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.PointInPoly;
 import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
+import trashsoftware.trashSnooker.util.config.InputManager;
+import trashsoftware.trashSnooker.util.config.KeyBehavior;
 
 import java.io.IOException;
 import java.net.URL;
@@ -884,34 +887,56 @@ public class GameView implements Initializable {
         if (replay != null || aiCalculating || playingMovement || cueAnimationPlayer != null) {
             return;
         }
-        switch (e.getCode()) {
-            case SPACE -> {
+        e.consume();
+        InputManager inputManager = ConfigLoader.getInstance().getInputManager();
+        KeyBehavior behavior = inputManager.getBehavior(e.getCode());
+        if (behavior == null) return;
+        switch (behavior) {
+            case SHOT -> {
                 if (!cueButton.isDisabled()) {
                     cueButton.fire();
                 }
             }
-            case LEFT -> turnDirectionDeg(-0.5);
-            case RIGHT -> turnDirectionDeg(0.5);
-            case COMMA -> turnDirectionDeg(-0.01);
-            case PERIOD -> turnDirectionDeg(0.01);
-            case A -> setCuePoint(cuePointX - 1, cuePointY, true);
-            case D -> setCuePoint(cuePointX + 1, cuePointY, true);
-            case W -> setCuePoint(cuePointX, cuePointY - 1, true);
-            case S -> setCuePoint(cuePointX, cuePointY + 1, true);
-            case Q -> setCueAngleDeg(cueAngleDeg + 1);
-            case E -> setCueAngleDeg(cueAngleDeg - 1);
-            case Z -> {
+            case MOVE_LEFT_MAJOR -> turnDirectionDeg(-0.5);
+            case MOVE_RIGHT_MAJOR -> turnDirectionDeg(0.5);
+            case MOVE_LEFT_MINOR -> turnDirectionDeg(-0.01);
+            case MOVE_RIGHT_MINOR -> turnDirectionDeg(0.01);
+            case SPIN_LEFT -> setCuePoint(cuePointX - 1, cuePointY, true);
+            case SPIN_RIGHT -> setCuePoint(cuePointX + 1, cuePointY, true);
+            case SPIN_UP -> setCuePoint(cuePointX, cuePointY - 1, true);
+            case SPIN_DOWN -> setCuePoint(cuePointX, cuePointY + 1, true);
+            case CUE_ANGLE_UP -> setCueAngleDeg(cueAngleDeg + 1);
+            case CUE_ANGLE_DOWN -> setCueAngleDeg(cueAngleDeg - 1);
+            case ROTATE_CUE_COUNTERCLOCKWISE -> {
                 if (getActiveHolder().getCuingIgp().getPlayerNumber() == 1) {
                     cueRollRotateDeg1 += 3;
                 } else {
                     cueRollRotateDeg2 += 3;
                 }
             }
-            case X -> {
+            case ROTATE_CUE_CLOCKWISE -> {
                 if (getActiveHolder().getCuingIgp().getPlayerNumber() == 1) {
                     cueRollRotateDeg1 -= 3;
                 } else {
                     cueRollRotateDeg2 -= 3;
+                }
+            }
+            case CHANGE_CUE_MENU -> changeCueAction();
+            case POWER_INCREASE -> powerSlider.setValue(powerSlider.getValue() + 1);
+            case POWER_DECREASE -> powerSlider.setValue(powerSlider.getValue() - 1);
+            case CHANGE_HAND_LEFT -> {
+                if (!handSelectionLeft.isDisable()) {
+                    handSelectionLeft.setSelected(true);
+                }
+            }
+            case CHANGE_HAND_RIGHT -> {
+                if (!handSelectionRight.isDisable()) {
+                    handSelectionRight.setSelected(true);
+                }
+            }
+            case CHANGE_HAND_REST -> {
+                if (!handSelectionRest.isDisable()) {
+                    handSelectionRest.setSelected(true);
                 }
             }
         }
@@ -934,6 +959,15 @@ public class GameView implements Initializable {
             rb.setOnKeyPressed(this::keyboardAction);
             rb.setOnKeyReleased(this::keyboardReleaseAction);
         }
+        
+        changeCueButton.setOnKeyPressed(this::keyboardAction);
+        changeCueButton.setOnKeyReleased(this::keyboardReleaseAction);
+        
+        powerSlider.addEventFilter(KeyEvent.KEY_PRESSED, this::keyboardAction);
+        powerSlider.addEventFilter(KeyEvent.KEY_RELEASED, this::keyboardReleaseAction);
+        
+//        powerSlider.setOnKeyPressed(this::keyboardAction);
+//        powerSlider.setOnKeyReleased(this::keyboardReleaseAction);
     }
 
     private void turnDirectionDeg(double deg) {

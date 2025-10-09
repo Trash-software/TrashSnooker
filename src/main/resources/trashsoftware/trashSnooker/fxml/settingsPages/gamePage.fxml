@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import trashsoftware.trashSnooker.fxml.settingsPages.GamePage?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         type="trashsoftware.trashSnooker.fxml.settingsPages.GamePage"
+         vgap="10.0" hgap="20.0" VBox.vgrow="ALWAYS">
+    <padding>
+        <Insets topRightBottomLeft="5.0"/>
+    </padding>
+
+    <rowConstraints>
+        <RowConstraints/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints halignment="LEFT"/>
+        <ColumnConstraints halignment="LEFT"/>
+        <ColumnConstraints halignment="LEFT"/>
+    </columnConstraints>
+
+    <Label text="%settingsGame" GridPane.rowIndex="0">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </Label>
+    <Separator GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+    <Label text="%fastGameAimLineLength" GridPane.rowIndex="1"/>
+    <ComboBox fx:id="aimLingBox" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+    <Label text="%fastGameAiStrength" GridPane.rowIndex="2"/>
+    <ComboBox fx:id="aiStrengthBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+    <Label text="%autoChangeBreakCue" GridPane.rowIndex="3"/>
+    <ComboBox fx:id="autoChangeBreakCueBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    <Label text="%mouseDragMethod" GridPane.rowIndex="4"/>
+    <ComboBox fx:id="mouseDragMethodBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+    <Label text="%settingsKeyMap" GridPane.rowIndex="5">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </Label>
+    <Separator GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+    <Label text="%keyMapHint" GridPane.rowIndex="6"/>
+    <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="6" GridPane.columnIndex="1">
+        <Button text="%reset" onAction="#resetKeyMapAction"/>
+    </HBox>
+
+    <TableView GridPane.rowIndex="7" GridPane.columnSpan="2" fx:id="keyMapTable">
+        <columns>
+            <TableColumn fx:id="behaviorColumn" text="%keyTitleBehavior" prefWidth="240.0"/>
+            <TableColumn fx:id="keyColumn" text="%keyTitlePosition"/>
+        </columns>
+    </TableView>
+</fx:root>

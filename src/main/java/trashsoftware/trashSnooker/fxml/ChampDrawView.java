@@ -530,6 +530,7 @@ public class ChampDrawView extends ChildInitializable {
             igp2.setLetScoreOrBall(defaultLets[1]);
         }
 
+        AchManager.getInstance().setDisabled(false);
         EntireGame newGame = new EntireGame(
                 igp1,
                 igp2,
