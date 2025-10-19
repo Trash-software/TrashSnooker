@@ -9,7 +9,7 @@
       "lastSelectTime": "1970-01-01 10:00:00"
     },
     {
-      "tipId": "primeTipMedium:custom_DA1B9E98710BC5F5-685",
+      "tipId": "primeTipMedium:custom_DA1B9E98710BC5F5-698",
       "instanceId": "profSnookerCue:custom_DA1B9E98710BC5F5-639",
       "creationTime": "2025-05-06 06:04:36",
       "customName": "进阶斯诺克杆:准神",
@@ -66,13 +66,6 @@
     }
   ],
   "tips": {
-    "breakTip:custom_DA1B9E98710BC5F5-632": {
-      "totalHp": 5000,
-      "instanceId": "breakTip:custom_DA1B9E98710BC5F5-632",
-      "diameter": 15,
-      "hp": 4871.772834061112,
-      "brand": "breakTip"
-    },
     "primeTipMedium:custom_DA1B9E98710BC5F5-683": {
       "totalHp": 728.1777777777779,
       "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-683",
@@ -101,27 +94,6 @@
       "hp": -34.77139099813496,
       "brand": "primeTipMedium"
     },
-    "stdTip:custom_DA1B9E98710BC5F5-640": {
-      "totalHp": 728.1777777777779,
-      "instanceId": "stdTip:custom_DA1B9E98710BC5F5-640",
-      "diameter": 12.8,
-      "hp": 728.1777777777779,
-      "brand": "stdTip"
-    },
-    "primeTipHard:custom_DA1B9E98710BC5F5-681": {
-      "totalHp": 501.38888888888886,
-      "instanceId": "primeTipHard:custom_DA1B9E98710BC5F5-681",
-      "diameter": 9.5,
-      "hp": 24.66770761922557,
-      "brand": "primeTipHard"
-    },
-    "stdTip:custom_DA1B9E98710BC5F5-642": {
-      "totalHp": 751.1111111111112,
-      "instanceId": "stdTip:custom_DA1B9E98710BC5F5-642",
-      "diameter": 13,
-      "hp": 751.1111111111112,
-      "brand": "stdTip"
-    },
     "stdTip:custom_DA1B9E98710BC5F5-630": {
       "totalHp": 401.1111111111111,
       "instanceId": "stdTip:custom_DA1B9E98710BC5F5-630",
@@ -143,20 +115,6 @@
       "hp": 800.4314815796854,
       "brand": "stdTip"
     },
-    "stdTip:custom_DA1B9E98710BC5F5-645": {
-      "totalHp": 462.3999999999999,
-      "instanceId": "stdTip:custom_DA1B9E98710BC5F5-645",
-      "diameter": 10.2,
-      "hp": 462.3999999999999,
-      "brand": "stdTip"
-    },
-    "stdTip:custom_DA1B9E98710BC5F5-638": {
-      "totalHp": 401.1111111111111,
-      "instanceId": "stdTip:custom_DA1B9E98710BC5F5-638",
-      "diameter": 9.5,
-      "hp": 79.54374624029873,
-      "brand": "stdTip"
-    },
     "primeTipMedium:custom_DA1B9E98710BC5F5-649": {
       "totalHp": 401.1111111111111,
       "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-649",
@@ -171,18 +129,88 @@
       "hp": 28.506598493993792,
       "brand": "primeTipMedium"
     },
-    "primeTipMedium:custom_DA1B9E98710BC5F5-659": {
-      "totalHp": 401.1111111111111,
-      "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-659",
-      "diameter": 9.5,
-      "hp": 13.862361814729312,
-      "brand": "primeTipMedium"
-    },
     "primeTipMedium:custom_DA1B9E98710BC5F5-647": {
       "totalHp": 462.3999999999999,
       "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-647",
       "diameter": 10.2,
       "hp": -110.35685669414816,
+      "brand": "primeTipMedium"
+    },
+    "primeTipMedium:custom_DA1B9E98710BC5F5-644": {
+      "totalHp": 728.1777777777779,
+      "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-644",
+      "diameter": 12.8,
+      "hp": 29.393973422549056,
+      "brand": "primeTipMedium"
+    },
+    "primeTipMedium:custom_DA1B9E98710BC5F5-686": {
+      "totalHp": 401.1111111111111,
+      "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-686",
+      "diameter": 9.5,
+      "hp": 27.852717634093864,
+      "brand": "primeTipMedium"
+    },
+    "primeTipMedium:custom_DA1B9E98710BC5F5-685": {
+      "totalHp": 401.1111111111111,
+      "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-685",
+      "diameter": 9.5,
+      "hp": 28.219471872363552,
+      "brand": "primeTipMedium"
+    },
+    "primeTipMedium:custom_DA1B9E98710BC5F5-684": {
+      "totalHp": 401.1111111111111,
+      "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-684",
+      "diameter": 9.5,
+      "hp": 21.170463117616308,
+      "brand": "primeTipMedium"
+    },
+    "breakTip:custom_DA1B9E98710BC5F5-632": {
+      "totalHp": 5000,
+      "instanceId": "breakTip:custom_DA1B9E98710BC5F5-632",
+      "diameter": 15,
+      "hp": 4871.772834061112,
+      "brand": "breakTip"
+    },
+    "stdTip:custom_DA1B9E98710BC5F5-640": {
+      "totalHp": 728.1777777777779,
+      "instanceId": "stdTip:custom_DA1B9E98710BC5F5-640",
+      "diameter": 12.8,
+      "hp": 728.1777777777779,
+      "brand": "stdTip"
+    },
+    "primeTipHard:custom_DA1B9E98710BC5F5-681": {
+      "totalHp": 501.38888888888886,
+      "instanceId": "primeTipHard:custom_DA1B9E98710BC5F5-681",
+      "diameter": 9.5,
+      "hp": 24.66770761922557,
+      "brand": "primeTipHard"
+    },
+    "stdTip:custom_DA1B9E98710BC5F5-642": {
+      "totalHp": 751.1111111111112,
+      "instanceId": "stdTip:custom_DA1B9E98710BC5F5-642",
+      "diameter": 13,
+      "hp": 751.1111111111112,
+      "brand": "stdTip"
+    },
+    "stdTip:custom_DA1B9E98710BC5F5-645": {
+      "totalHp": 462.3999999999999,
+      "instanceId": "stdTip:custom_DA1B9E98710BC5F5-645",
+      "diameter": 10.2,
+      "hp": 462.3999999999999,
+      "brand": "stdTip"
+    },
+    "stdTip:custom_DA1B9E98710BC5F5-638": {
+      "totalHp": 401.1111111111111,
+      "instanceId": "stdTip:custom_DA1B9E98710BC5F5-638",
+      "diameter": 9.5,
+      "hp": 79.54374624029873,
+      "brand": "stdTip"
+    },
+    "primeTipMedium:custom_DA1B9E98710BC5F5-659": {
+      "totalHp": 401.1111111111111,
+      "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-659",
+      "diameter": 9.5,
+      "hp": 13.862361814729312,
       "brand": "primeTipMedium"
     },
     "primeTipMedium:custom_DA1B9E98710BC5F5-658": {
@@ -206,13 +234,6 @@
       "hp": -181.73544569854974,
       "brand": "primeTipMedium"
     },
-    "primeTipMedium:custom_DA1B9E98710BC5F5-644": {
-      "totalHp": 728.1777777777779,
-      "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-644",
-      "diameter": 12.8,
-      "hp": 29.393973422549056,
-      "brand": "primeTipMedium"
-    },
     "primeTipMedium:custom_DA1B9E98710BC5F5-677": {
       "totalHp": 462.3999999999999,
       "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-677",
@@ -220,18 +241,11 @@
       "hp": 132.32879856740047,
       "brand": "primeTipMedium"
     },
-    "primeTipMedium:custom_DA1B9E98710BC5F5-685": {
+    "primeTipMedium:custom_DA1B9E98710BC5F5-698": {
       "totalHp": 401.1111111111111,
-      "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-685",
+      "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-698",
       "diameter": 9.5,
-      "hp": 342.2575632611447,
-      "brand": "primeTipMedium"
-    },
-    "primeTipMedium:custom_DA1B9E98710BC5F5-684": {
-      "totalHp": 401.1111111111111,
-      "instanceId": "primeTipMedium:custom_DA1B9E98710BC5F5-684",
-      "diameter": 9.5,
-      "hp": 21.170463117616308,
+      "hp": 378.5482401607498,
       "brand": "primeTipMedium"
     }
   }

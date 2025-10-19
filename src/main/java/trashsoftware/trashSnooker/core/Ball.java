@@ -936,6 +936,8 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double thisHorV = thisVCob[0];  // 平行于切线的速率
         double ballVerV = ballVCob[1];
         double ballHorV = ballVCob[0];
+        
+//        values.ball.ballBounceRatio
 
 //        System.out.println(Arrays.toString(thisVCob) + " " + Arrays.toString(ballVCob));
 
@@ -1076,11 +1078,17 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         ball.nextX = x2 + ball.vx;
         ball.nextY = y2 + ball.vy;
 
-        // 弹走了来再减速
+//        // 弹走了来再减速
         vx *= values.ball.ballBounceRatio;
         vy *= values.ball.ballBounceRatio;
         ball.vx *= values.ball.ballBounceRatio;
         ball.vy *= values.ball.ballBounceRatio;
+        
+        // 一些没传掉的动能
+        vx += thisV[0] * (1 - values.ball.ballBounceRatio) * 0.5;
+        vy += thisV[1] * (1 - values.ball.ballBounceRatio) * 0.5;
+        ball.vx += ballV[0] * (1 - values.ball.ballBounceRatio) * 0.5;
+        ball.vy += ballV[1] * (1 - values.ball.ballBounceRatio) * 0.5;
 
         if (Algebra.distanceToPoint(nextX, nextY, ball.nextX, ball.nextY) < Algebra.distanceToPoint(x, y, ball.x, ball.y)) {
             if (!phy.isPrediction)

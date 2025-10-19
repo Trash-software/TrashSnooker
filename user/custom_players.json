@@ -2219,8 +2219,119 @@
       "privateCues": [],
       "height": 180
     },
+    "custom_050883FCEA7A7CAA": {
+      "rest": {
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 49.580397031167365,
+        "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
+        "spin": 52.95872697019391,
+        "pullDt": [
+          50,
+          200,
+          50,
+          150
+        ],
+        "controllablePower": 47.06895574018407,
+        "cueSwingMag": 25,
+        "maxPower": 52.298839711315644,
+        "cuePrecisions": [
+          51.49760497354832,
+          51.16859268279231
+        ],
+        "hand": "rest"
+      },
+      "solving": 88.2338699900284,
+      "aimingOffset": 0,
+      "psyRua": 77.38878734506655,
+      "dominant": {
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 82.51402180049902,
+        "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
+        "spin": 91.6670800951033,
+        "pullDt": [
+          50,
+          200,
+          50,
+          150
+        ],
+        "controllablePower": 89.48822588678081,
+        "cueSwingMag": 17.085599516580203,
+        "maxPower": 99.43136209642311,
+        "cuePrecisions": [
+          82.9144004834198,
+          89.43365772236379
+        ],
+        "hand": "right"
+      },
+      "saveVersion": 60,
+      "precision": 87.034082257693,
+      "sex": "M",
+      "longPrecision": 1,
+      "ai": {
+        "doubleAbility": 78.3306740319237,
+        "likeSide": 75,
+        "defense": 85.9738397614314,
+        "stable": 87.034082257693,
+        "precision": 91.38578637057765,
+        "position": 85.9738397614314,
+        "attackPri": 40.00018685178007,
+        "snookerBreak": "RIGHT",
+        "likePowerRange": [
+          15,
+          60
+        ],
+        "withdrawAfter": 2,
+        "likeShow": 50,
+        "cebSideBreak": false
+      },
+      "nonDominant": {
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 45.893871022638805,
+        "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
+        "spin": 49.753352904521876,
+        "pullDt": [
+          50,
+          200,
+          50,
+          150
+        ],
+        "controllablePower": 53.55645150084388,
+        "cueSwingMag": 25,
+        "maxPower": 59.50716833427097,
+        "cuePrecisions": [
+          44.82335380433588,
+          44.43182128987121
+        ],
+        "hand": "left"
+      },
+      "psyNerve": 70.05444938290708,
+      "name": "实验员6号",
+      "width": 1,
+      "games": {
+        "lisEight": 1,
+        "americanNine": 1,
+        "snookerTen": 1,
+        "miniSnooker": 1,
+        "snooker": 1,
+        "chineseEight": 1
+      },
+      "anglePrecision": 1,
+      "category": "Professional",
+      "privateCues": [],
+      "height": 182
+    },
     "custom_DA1B9E98710BC5F5": {
       "rest": {
+        "useHand": "LEFT",
         "cuePoints": [
           0,
           0
@@ -2295,21 +2406,21 @@
           0,
           0
         ],
-        "powerControl": 69.04896807569402,
+        "powerControl": 73.0435289785596,
         "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
-        "spin": 69.07944102279039,
+        "spin": 73.07161284660363,
         "pullDt": [
           50,
           200,
           50,
           150
         ],
-        "controllablePower": 66.42626643450158,
+        "controllablePower": 70.62644714603667,
         "cueSwingMag": 25,
-        "maxPower": 73.80696270500178,
+        "maxPower": 78.47383016226297,
         "cuePrecisions": [
-          68.3213658682752,
-          68.31826505776318
+          72.37297078420242,
+          70.38553445545266
         ],
         "hand": "right"
       },
@@ -3797,5 +3908,5 @@
       "height": 180
     }
   },
-  "checksum": "0BEE77490481ED73C109710B06DF8560"
+  "checksum": "6CE5ACDA1E8C3350E7A86CB818EC27A5"
 }

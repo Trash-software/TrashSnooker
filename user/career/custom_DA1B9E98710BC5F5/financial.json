@@ -1,7 +1,7 @@
 {
   "financial": {
     "remFreePerks": 0,
-    "money": 569758,
+    "money": 591278,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
@@ -7505,13 +7505,196 @@
         "type": "challengeEarn",
         "items": {},
         "timestamp": "2025-10-08 19:35:25"
+      },
+      {
+        "inGameDate": "2026/3/25",
+        "year": 2026,
+        "match": "china_open",
+        "moneyBefore": 569758,
+        "moneyAfter": 600758,
+        "type": "championshipEarn",
+        "items": {
+          "SECOND_PLACE": {
+            "actual": 27125,
+            "raw": 35000
+          },
+          "MAXIMUM": {
+            "actual": 0,
+            "raw": 0
+          },
+          "BEST_SINGLE": {
+            "actual": 3875,
+            "raw": 5000
+          }
+        },
+        "timestamp": "2025-10-10 15:50:00"
+      },
+      {
+        "inGameDate": "2026/3/25",
+        "perkUsed": 9,
+        "freePerkUsed": 0,
+        "moneyBefore": 600758,
+        "moneyCost": 3100,
+        "moneyAfter": 597658,
+        "ability": {
+          "powerControl-RIGHT": [
+            69.04896807569402,
+            73.0435289785596
+          ],
+          "spinControl-REST": [
+            47.87066660204599,
+            47.87066660204599
+          ],
+          "normalPower-RIGHT": [
+            66.42626643450158,
+            70.62644714603667
+          ],
+          "cuePrecision-REST": [
+            44.59496132629591,
+            44.59496132629591
+          ],
+          "powerControl-REST": [
+            48.98386299302046,
+            48.98386299302046
+          ],
+          "spin-LEFT": [
+            96.72995068441286,
+            96.72995068441286
+          ],
+          "normalPower-REST": [
+            38.60238387017628,
+            38.60238387017628
+          ],
+          "cuePrecision-LEFT": [
+            98.66892307757026,
+            98.66892307757026
+          ],
+          "cuePrecision-RIGHT": [
+            68.3213658682752,
+            72.37297078420242
+          ],
+          "spin-RIGHT": [
+            69.07944102279039,
+            73.07161284660363
+          ],
+          "normalPower-LEFT": [
+            88.87409487744154,
+            88.87409487744154
+          ],
+          "spin-REST": [
+            45.79797875349938,
+            45.79797875349938
+          ],
+          "spinControl-LEFT": [
+            89.74906006059283,
+            89.74906006059283
+          ],
+          "aiming": [
+            94.14025535987074,
+            94.14025535987074
+          ],
+          "powerControl-LEFT": [
+            87.02588152714657,
+            87.02588152714657
+          ],
+          "spinControl-RIGHT": [
+            68.31826505776318,
+            70.38553445545266
+          ]
+        },
+        "type": "upgrade",
+        "timestamp": "2025-10-10 15:50:16"
+      },
+      {
+        "item": "CHAMP_EARN_CUMULATIVE",
+        "inGameDate": "2026/3/25",
+        "level": 2,
+        "moneyBefore": 597658,
+        "moneyAfter": 598658,
+        "type": "achievementAward",
+        "moneyEarn": 1000,
+        "timestamp": "2025-10-10 15:53:05"
+      },
+      {
+        "inGameDate": "2026/3/25",
+        "moneyBefore": 598658,
+        "moneyAfter": 597958,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 700
+        }],
+        "timestamp": "2025-10-11 07:18:12"
+      },
+      {
+        "inGameDate": "2026/3/30",
+        "moneyBefore": 597958,
+        "moneyAfter": 595438,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2520
+        }],
+        "timestamp": "2025-10-11 07:18:14"
+      },
+      {
+        "item": 4,
+        "inGameDate": "2026/4/17",
+        "match": "custom_DA1B9E98710BC5F5+2026+world_champ",
+        "moneyBefore": 595438,
+        "moneyAfter": 595638,
+        "type": "invitation",
+        "moneyEarn": 200,
+        "timestamp": "2025-10-11 07:18:14"
+      },
+      {
+        "inGameDate": "2026/4/17",
+        "match": "custom_DA1B9E98710BC5F5+2026+world_champ",
+        "moneyBefore": 595638,
+        "moneyAfter": 591438,
+        "type": "participation",
+        "items": [
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          }
+        ],
+        "timestamp": "2025-10-11 07:18:14"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_DA1B9E98710BC5F5-686",
+        "inGameDate": "2026/4/17",
+        "moneyBefore": 591438,
+        "moneyCost": 80,
+        "moneyAfter": 591358,
+        "type": "purchase",
+        "timestamp": "2025-10-11 17:11:47"
+      },
+      {
+        "itemType": "tip",
+        "item": "primeTipMedium:custom_DA1B9E98710BC5F5-698",
+        "inGameDate": "2026/4/17",
+        "moneyBefore": 591358,
+        "moneyCost": 80,
+        "moneyAfter": 591278,
+        "type": "purchase",
+        "timestamp": "2025-10-19 02:58:39"
       }
     ],
-    "level": 34,
-    "expInThisLevel": 907,
+    "level": 35,
+    "expInThisLevel": 269,
     "availPerks": 0,
-    "totalPerks": 131,
-    "totalExp": 15505
+    "totalPerks": 140,
+    "totalExp": 16135
   },
-  "checksum": "3E1DA2F996DEA192C6E049EA7518CB6E"
+  "checksum": "464EBA956FD7EA72D5301A48A6A0D7C0"
 }

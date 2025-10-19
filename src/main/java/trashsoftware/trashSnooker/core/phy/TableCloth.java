@@ -8,9 +8,9 @@ public class TableCloth {
 
     public static final double RANDOM_ERROR_FACTOR = 1.0 / 1.2;
     public static final double FIXED_ERROR_FACTOR = 1.0 / 60.0;
-    public static final double SLIP_ACCELERATE_EFFICIENCY = 0.333;
+    public static final double SLIP_ACCELERATE_EFFICIENCY = 0.36;
 
-    private static final double baseSlippingFriction = 2.75;
+    private static final double baseSlippingFriction = 2.8;
     private static final double baseRollingFriction = 0.075;
     public final Goodness goodness;
     public final Smoothness smoothness;
