@@ -6,9 +6,9 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.attempt.CueType;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 import trashsoftware.trashSnooker.core.person.HandBody;
-import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 import java.util.Arrays;
@@ -29,6 +29,8 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
     protected double[] targetOrigPos;
     protected double[] cueDirectionUnitVector;
     protected double[] collisionPos;
+    protected double[] whiteNaturalExitDirection;  // 白球的自然分离角方向，就是和目标球90度那个
+    protected double whiteNaturalExitCushionDistance;  // 白球按自然分离角出去后多远会吃库
     protected double[] holeOpenPos;  // 洞口瞄准点的坐标，非洞底
     protected CuePlayerHand handSkill;
 
@@ -63,6 +65,65 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
     @Override
     public int compareTo(@NotNull AttackChoice o) {
         return -Double.compare(this.defaultRef.price, o.defaultRef.price);
+    }
+
+    @Nullable
+    static double[] findNaturalExitDirection(double[] cueDirection, double[] targetOutDirection) {
+        // Compute a unit vector perpendicular to BC
+        double[] perpendicular = Algebra.unitVector(Algebra.normalVector(targetOutDirection));
+
+        // Check if AB and BC are perfectly aligned (same or opposite direction)
+        double cross = Algebra.crossProduct(cueDirection, targetOutDirection);
+        if (cross == 0) {
+            return null; // AB and BC are colinear
+        }
+
+        // Determine which side A is on, relative to BC
+        // Dot product between BA and perp vector tells the side
+        double baX = -cueDirection[0];
+        double baY = -cueDirection[1];
+        double side = baX * perpendicular[0] + baY * perpendicular[1];
+
+        if (side > 0) {
+            // A is on the same side as the current perpendicular vector, so flip it
+            perpendicular[0] = -perpendicular[0];
+            perpendicular[1] = -perpendicular[1];
+        }
+
+        return perpendicular;
+    }
+
+    static double distanceFromPosToCushion(double[] collisionPos, double[] direction, double[][] rectCorners) {
+        double minDist = Double.POSITIVE_INFINITY;
+
+        for (int i = 0; i < 4; i++) {
+            double[] P1 = rectCorners[i];
+            double[] P2 = rectCorners[(i + 1) % 4];
+
+            double[] intersection = Algebra.intersectRayWithSegment(collisionPos, direction, P1, P2);
+            if (intersection != null) {
+                double dx = intersection[0] - collisionPos[0];
+                double dy = intersection[1] - collisionPos[1];
+                double dist = Math.hypot(dx, dy);
+
+                if (dist < minDist) {
+                    minDist = dist;
+                }
+            }
+        }
+
+        return minDist;
+    }
+
+    static double distanceFromPosToCushion(double[] collisionPos, double[] direction, TableMetrics metrics) {
+        double[][] rectCorners = new double[][]{
+                {metrics.leftX, metrics.topY},
+                {metrics.rightX, metrics.topY},
+                {metrics.rightX, metrics.botY},
+                {metrics.leftX, metrics.botY}
+        };
+
+        return distanceFromPosToCushion(collisionPos, direction, rectCorners);
     }
 
     private static AttackParam createDefaultRef(AttackChoice attackChoice,
@@ -187,6 +248,15 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             ac.collisionPos = collisionPos;
             ac.whiteCollisionDistance = whiteDistance;
             ac.cueDirectionUnitVector = cueDirUnit;
+            ac.whiteNaturalExitDirection = findNaturalExitDirection(
+                    ac.cueDirectionUnitVector,
+                    ballToFirstCushion
+            );
+            ac.whiteNaturalExitCushionDistance = distanceFromPosToCushion(
+                    ac.collisionPos,
+                    ac.whiteNaturalExitDirection,
+                    game.getGameValues().table
+            );
 //            ac.dirHole = dirHole;
             ac.targetOrigPos = ballOrigPos;
             ac.attackTarget = attackTarget;
@@ -221,6 +291,8 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             copied.cueDirectionUnitVector = newDirection;
 //            copied.dirHole = dirHole;
             copied.targetOrigPos = targetOrigPos;
+            copied.whiteNaturalExitDirection = whiteNaturalExitDirection;
+            copied.whiteNaturalExitCushionDistance = whiteNaturalExitCushionDistance;
             copied.attackTarget = attackTarget;
             copied.attackingPlayer = attackingPlayer;
 //            copied.difficulty = difficulty;
@@ -239,13 +311,8 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
     }
 
     public static class DirectAttackChoice extends AttackChoice {
-        //        protected double difficulty;
-
         protected double[][] dirHole;
         protected double[] targetHoleVec;
-
-//        transient double difficulty;
-//        transient double price;
 
         private DirectAttackChoice() {
         }
@@ -315,6 +382,16 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             directAttackChoice.cueDirectionUnitVector = cueDirUnit;
             directAttackChoice.dirHole = dirHole;
             directAttackChoice.targetOrigPos = ballOrigPos;
+            directAttackChoice.whiteNaturalExitDirection = findNaturalExitDirection(
+                    directAttackChoice.cueDirectionUnitVector,
+                    directAttackChoice.targetHoleVec
+            );
+            directAttackChoice.whiteNaturalExitCushionDistance = distanceFromPosToCushion(
+                    directAttackChoice.collisionPos,
+                    directAttackChoice.whiteNaturalExitDirection,
+                    game.getGameValues().table
+            );
+
             directAttackChoice.attackTarget = attackTarget;
             directAttackChoice.attackingPlayer = attackingPlayer;
             directAttackChoice.handSkill = handSkill;
@@ -328,7 +405,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
 
             return directAttackChoice;
         }
-        
+
         public double[][] getDirHole() {
             return dirHole;
         }
@@ -517,6 +594,9 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             copied.cueDirectionUnitVector = newDirection;
             copied.dirHole = dirHole;
             copied.targetOrigPos = targetOrigPos;
+            copied.whiteNaturalExitDirection = whiteNaturalExitDirection;
+            copied.whiteNaturalExitCushionDistance = whiteNaturalExitCushionDistance;
+            
             copied.attackTarget = attackTarget;
             copied.attackingPlayer = attackingPlayer;
 //            copied.difficulty = difficulty;
@@ -548,5 +628,14 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
                     ", cueDirectionUnitVector=" + Arrays.toString(cueDirectionUnitVector) +
                     '}';
         }
+    }
+
+    public static void main(String[] args) {
+        double[] BD = findNaturalExitDirection(new double[]{0.3, 0.5}, new double[]{0.5, 0.5});
+        System.out.println(Arrays.toString(BD));
+        double dt = distanceFromPosToCushion(new double[]{0., 0}, BD, new double[][]{
+                {-1, 1}, {1, 1}, {1, -1}, {-1, -1}
+        });
+        System.out.println(dt);
     }
 }

@@ -1,4 +1,4 @@
-package trashsoftware.trashSnooker.fxml.settingsPages;
+package trashsoftware.trashSnooker.fxml.settings;
 
 import javafx.beans.value.ObservableValueBase;
 import javafx.fxml.FXML;
@@ -14,7 +14,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import trashsoftware.trashSnooker.fxml.App;
-import trashsoftware.trashSnooker.fxml.SettingsView;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.config.InputManager;
@@ -167,6 +166,7 @@ public class GamePage extends AbsSettingsPage {
             System.out.printf("%s %s %s\n", code.name(), code.getName(), code.getChar());
             inputManager.setKeyCode(selected.keyBehavior, code);
             inputManager.save();
+            parent.forceEnableConfirmButton();
             window.close();
             refreshKeyMapTable();
         });

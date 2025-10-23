@@ -1,15 +1,15 @@
-package trashsoftware.trashSnooker.fxml;
+package trashsoftware.trashSnooker.fxml.settings;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import trashsoftware.trashSnooker.fxml.App;
+import trashsoftware.trashSnooker.fxml.ChildInitializable;
+import trashsoftware.trashSnooker.fxml.GameView;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
-import trashsoftware.trashSnooker.fxml.drawing.PredictionQuality;
-import trashsoftware.trashSnooker.fxml.settingsPages.DisplayPage;
-import trashsoftware.trashSnooker.fxml.settingsPages.GamePage;
-import trashsoftware.trashSnooker.fxml.settingsPages.GeneralPage;
-import trashsoftware.trashSnooker.util.config.ConfigLoader;
 import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.net.URL;
 import java.util.*;
@@ -20,6 +20,8 @@ public class SettingsView extends ChildInitializable {
     private final Map<ComboBox<?>, Integer> lastSavedSelections = new HashMap<>();
     private final Map<Slider, Double> lastSavedValues = new HashMap<>();
     @FXML
+    Button backButton;
+    @FXML
     ScrollPane contentContainer;
 
     @FXML
@@ -27,19 +29,25 @@ public class SettingsView extends ChildInitializable {
     private Stage stage;
     private ConfigLoader configLoader;
     private ResourceBundle strings;
-    
+
     GeneralPage generalPage;
     GamePage gamePage;
     DisplayPage displayPage;
 
+    // In game preference only
+    GameView gameView;
+    Window standaloneWindow;
+
+    private boolean forceEnableSaveBtn;  // 有些操作如改键位会实时保存, 但给用户一个安慰剂
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.strings = resources;
-        
+
         generalPage = new GeneralPage(resources);
         generalPage.setParent(this);
         generalPage.setupItems(allBoxes, allSliders);
-        
+
         gamePage = new GamePage(resources);
         gamePage.setParent(this);
         gamePage.setupItems(allBoxes, allSliders);
@@ -49,7 +57,7 @@ public class SettingsView extends ChildInitializable {
         displayPage.setupItems(allBoxes, allSliders);
 
         configLoader = ConfigLoader.getInstance();
-        
+
         generalPage.initSelections(configLoader);
         gamePage.initSelections(configLoader);
         displayPage.initSelections(configLoader);
@@ -57,19 +65,50 @@ public class SettingsView extends ChildInitializable {
         storeSelectionsToMap();
         addGeneralChangeListeners();
     }
-    
+
+    public void setAsInGamePreferences(GameView gameView, Window standaloneWindow) {
+        this.gameView = gameView;
+        this.standaloneWindow = standaloneWindow;
+
+        standaloneWindow.setOnCloseRequest(e -> cancelAction());
+
+        backButton.setManaged(false);
+        backButton.setVisible(false);
+
+        generalPage.languageBox.setDisable(true);
+
+        displayPage.displayBox.setDisable(true);
+        displayPage.resolutionComboBox.setDisable(true);
+        displayPage.systemZoomComboBox.setDisable(true);
+        displayPage.antiAliasingComboBox.setDisable(true);
+
+        gamePage.aiStrengthBox.setDisable(true);
+        gamePage.aimLingBox.setDisable(true);
+    }
+
+    void closeAsInGamePreferences() {
+        standaloneWindow.hide();
+    }
+
     private boolean anyHasChanged() {
         for (ComboBox<?> box : allBoxes) {
             if (hasChanged(box)) return true;
         }
         return false;
     }
+    
+    void forceEnableConfirmButton() {
+        forceEnableSaveBtn = true;
+        confirmBtn.setDisable(false);
+    }
 
     private void addGeneralChangeListeners() {
         for (ComboBox<?> box : allBoxes) {
             box.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
                 Integer lastSaved = lastSavedSelections.get(box);
-                if (!Objects.equals(newValue, lastSaved)) {
+                if (forceEnableSaveBtn) {
+                    confirmBtn.setDisable(false);
+                } else if (!Objects.equals(newValue, lastSaved)) {
                     confirmBtn.setDisable(false);
                 } else if (!anyHasChanged()) {
                     confirmBtn.setDisable(true);
@@ -79,7 +118,9 @@ public class SettingsView extends ChildInitializable {
         for (Slider slider : allSliders) {
             slider.valueProperty().addListener((observable, oldValue, newValue) -> {
                 Double lastSaved = lastSavedValues.get(slider);
-                if (!Objects.equals(newValue, lastSaved)) {
+                if (forceEnableSaveBtn) {
+                    confirmBtn.setDisable(false);
+                } else if (!Objects.equals(newValue, lastSaved)) {
                     confirmBtn.setDisable(false);
                 } else if (!anyHasChanged()) {
                     confirmBtn.setDisable(true);
@@ -122,7 +163,7 @@ public class SettingsView extends ChildInitializable {
 //        return stage;
 //    }
 
-    void setup(Stage stage) {
+    public void setup(Stage stage) {
         this.stage = stage;
     }
 
@@ -134,7 +175,7 @@ public class SettingsView extends ChildInitializable {
     void generalPageAction() {
         contentContainer.setContent(generalPage);
     }
-    
+
     @FXML
     void gamePageAction() {
         contentContainer.setContent(gamePage);
@@ -152,7 +193,13 @@ public class SettingsView extends ChildInitializable {
         displayPage.saveIfChanged(this::hasChanged, configLoader);
 
         configLoader.save();
-        super.backAction();
+
+        if (gameView != null) {
+            gameView.notifySettingsChanged();
+            closeAsInGamePreferences();
+        } else {
+            super.backAction();
+        }
     }
 
     @FXML
@@ -162,11 +209,15 @@ public class SettingsView extends ChildInitializable {
                     stage,
                     strings.getString("confirmDiscardChanges"),
                     strings.getString("pleaseConfirm"),
-                    super::backAction,
+                    () -> {
+                        if (gameView == null) super.backAction();
+                        else closeAsInGamePreferences();
+                    },
                     null
             );
         } else {
-            super.backAction();
+            if (gameView == null) super.backAction();
+            else closeAsInGamePreferences();
         }
     }
 
@@ -174,18 +225,18 @@ public class SettingsView extends ChildInitializable {
     public void backAction() {
         cancelAction();
     }
-    
+
     public enum YesNo {
         YES,
         NO;
-        
+
         public static YesNo fromBoolean(Boolean value) {
             if (value == null || !value) {
                 return NO;
             }
             return YES;
         }
-        
+
         public boolean toBoolean() {
             return this == YES;
         }
@@ -196,13 +247,13 @@ public class SettingsView extends ChildInitializable {
             return App.getStrings().getString(key);
         }
     }
-    
+
     public enum MouseDragMethod {
         POSITION("mouseDragAbsolute"),
         MOVEMENT("mouseDragRelative");
-        
+
         private final String stringKey;
-        
+
         MouseDragMethod(String stringKey) {
             this.stringKey = stringKey;
         }
@@ -211,7 +262,7 @@ public class SettingsView extends ChildInitializable {
         public String toString() {
             return App.getStrings().getString(stringKey);
         }
-        
+
         public static MouseDragMethod fromKey(String key) {
             try {
                 return valueOf(Util.toAllCapsUnderscoreCase(key));
@@ -219,13 +270,11 @@ public class SettingsView extends ChildInitializable {
                 return MOVEMENT;
             }
         }
-        
+
         public String toKey() {
             return Util.toLowerCamelCase(name());
         }
     }
-
-    
 
     public static class LocaleName {
         public final Locale locale;

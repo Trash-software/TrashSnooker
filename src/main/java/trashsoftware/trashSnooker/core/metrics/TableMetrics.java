@@ -610,9 +610,9 @@ public class TableMetrics {
 //                        .supportedHoles(SNOOKER_HOLES)
                         .resistanceAndCushionBounce(1.0,
                                 1.0,
-                                0.96,
-                                0.85,
-                                0.8,
+                                0.94,
+                                0.87,
+                                0.78,
                                 0.35);
             }
         },
@@ -632,8 +632,8 @@ public class TableMetrics {
 //                        .supportedHoles(CHINESE_EIGHT_HOLES)
                         .resistanceAndCushionBounce(1.05,
                                 1.05,
-                                0.95,
-                                0.8,
+                                0.93,
+                                0.85,
                                 0.8,
                                 0.35);
             }
@@ -654,7 +654,7 @@ public class TableMetrics {
 //                        .supportedHoles(SIDE_POCKET_HOLES)
                         .resistanceAndCushionBounce(1.1,
                                 0.95,
-                                0.9,
+                                0.85,
                                 1.15,
                                 0.9,
                                 0.8);
@@ -676,7 +676,7 @@ public class TableMetrics {
 //                        .supportedHoles(SIDE_POCKET_HOLES)
                         .resistanceAndCushionBounce(1.1,
                                 0.95,
-                                0.9,
+                                0.85,
                                 1.15,
                                 0.9,
                                 0.8);
@@ -698,7 +698,7 @@ public class TableMetrics {
 //                        .supportedHoles(SIDE_POCKET_HOLES)
                         .resistanceAndCushionBounce(1.1,
                                 0.95,
-                                0.9,
+                                0.85,
                                 1.15,
                                 0.9,
                                 0.8);
@@ -773,7 +773,7 @@ public class TableMetrics {
 //                        .supportedHoles(SNOOKER_HOLES)
                         .resistanceAndCushionBounce(1.0,
                                 1.0,
-                                0.95,
+                                0.94,
                                 0.85,
                                 0.8,
                                 0.35);

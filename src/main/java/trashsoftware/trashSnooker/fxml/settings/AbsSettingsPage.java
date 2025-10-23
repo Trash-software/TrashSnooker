@@ -1,4 +1,4 @@
-package trashsoftware.trashSnooker.fxml.settingsPages;
+package trashsoftware.trashSnooker.fxml.settings;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
@@ -6,13 +6,11 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 import trashsoftware.trashSnooker.fxml.App;
-import trashsoftware.trashSnooker.fxml.SettingsView;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class AbsSettingsPage extends GridPane {

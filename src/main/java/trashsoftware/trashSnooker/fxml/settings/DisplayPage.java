@@ -1,13 +1,14 @@
-package trashsoftware.trashSnooker.fxml.settingsPages;
+package trashsoftware.trashSnooker.fxml.settings;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import trashsoftware.trashSnooker.enums.TrajectoryHide;
 import trashsoftware.trashSnooker.fxml.App;
-import trashsoftware.trashSnooker.fxml.SettingsView;
 import trashsoftware.trashSnooker.fxml.drawing.PredictionQuality;
+import trashsoftware.trashSnooker.enums.TrajectoryMode;
 import trashsoftware.trashSnooker.util.Util;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
@@ -27,6 +28,10 @@ public class DisplayPage extends AbsSettingsPage {
     ComboBox<SystemZoom> systemZoomComboBox;
     @FXML
     ComboBox<AntiAliasing> antiAliasingComboBox;
+    @FXML
+    ComboBox<TrajectoryMode> trajectoryModeBox;
+    @FXML
+    ComboBox<TrajectoryHide> trajectoryHideBox;
     @FXML
     Slider effectSoundSlider;
     @FXML
@@ -51,6 +56,8 @@ public class DisplayPage extends AbsSettingsPage {
                 systemZoomComboBox,
                 performanceBox,
                 antiAliasingComboBox,
+                trajectoryModeBox,
+                trajectoryHideBox,
                 displayBox));
 
         allSliders.add(effectSoundSlider);
@@ -78,6 +85,14 @@ public class DisplayPage extends AbsSettingsPage {
         antiAliasingComboBox.getItems().addAll(AntiAliasing.values());
         antiAliasingComboBox.getSelectionModel().select(AntiAliasing.fromKey(configLoader.getString("antiAliasing",
                 "disabled")));
+        
+        trajectoryModeBox.getItems().addAll(TrajectoryMode.values());
+        trajectoryModeBox.getSelectionModel().select(TrajectoryMode.fromKey(
+                configLoader.getString("trajectoryMode", "slipRollGradient")));
+
+        trajectoryHideBox.getItems().addAll(TrajectoryHide.values());
+        trajectoryHideBox.getSelectionModel().select(TrajectoryHide.fromKey(
+                configLoader.getString("trajectoryHide", "nextCue")));
 
         displayBox.getItems().addAll(Display.values());
         displayBox.getSelectionModel().select(Display.fromKey(configLoader.getString("display",
@@ -115,6 +130,14 @@ public class DisplayPage extends AbsSettingsPage {
 
         if (hasChanged.apply(antiAliasingComboBox)) {
             configLoader.put("antiAliasing", antiAliasingComboBox.getValue().toKey());
+        }
+
+        if (hasChanged.apply(trajectoryModeBox)) {
+            configLoader.put("trajectoryMode", trajectoryModeBox.getValue().toKey());
+        }
+
+        if (hasChanged.apply(trajectoryHideBox)) {
+            configLoader.put("trajectoryHide", trajectoryHideBox.getValue().toKey());
         }
 
         if (hasChanged.apply(displayBox)) {

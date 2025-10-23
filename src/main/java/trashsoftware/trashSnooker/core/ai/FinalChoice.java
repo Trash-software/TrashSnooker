@@ -3,6 +3,7 @@ package trashsoftware.trashSnooker.core.ai;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.phy.Phy;
@@ -102,14 +103,53 @@ public abstract class FinalChoice {
         private void generatePrice() {
             price = attackParams.price;  // 这颗球本身的价值
             // 走位粗糙的人，下一颗权重低
-            double mul = 0.5 *
+            double playerPositionMul =
                     attackParams.attackChoice.attackingPlayer.getPlayerPerson().getAiPlayStyle().position / 100;
+            double mul = 0.5 * playerPositionMul;
             AttackChoice firstChoice = nextStepAttackChoices.isEmpty() ? null : nextStepAttackChoices.get(0);
-            for (AttackChoice next : nextStepAttackChoices) {
+
+            for (int i = 0; i < nextStepAttackChoices.size(); i++) {
+                AttackChoice next = nextStepAttackChoices.get(i);
                 double positionPrice = next.defaultRef.price * mul;
                 AttackChoice nextAttack = next.defaultRef.attackChoice;
                 if (nextAttack instanceof AttackChoice.DirectAttackChoice dac && dac.angleRad < 0.075) {  // 4.3度的样子
                     positionPrice *= 0.75;
+                }
+                if (i == 0) {
+                    // 考虑下下步
+                    if (nextAttack.whiteNaturalExitDirection == null) {
+                        System.err.println("White natural exit direction is null.");
+                    } else {
+
+                        int nextNextTar = game.get2ndNextTarget(attackParams.attackChoice.ball, game.isDoingSnookerFreeBll());
+                        if (nextNextTar != Game.END_REP) {
+                            // todo: 每次都算一遍，可能有优化空间
+                            double[] targetsBarycenter = game.targetsBarycenter(nextNextTar, attackParams.attackChoice.ball);
+                            if (targetsBarycenter == null) {
+                                System.err.println("Cannot find next next when there should be.");
+                            } else {
+                                
+                                double dt1 = Algebra.distanceToPoint(nextAttack.collisionPos, targetsBarycenter);
+                                double dt2 = Algebra.distanceToPoint(
+                                        Algebra.vectorAdd(nextAttack.collisionPos, nextAttack.whiteNaturalExitDirection), 
+                                        targetsBarycenter);
+                                if (dt2 > dt1) {
+                                    // 分离角是远离主要目标球的方向的
+                                    TableMetrics metrics = game.getGameValues().table;
+                                    double noPenaltyDt = metrics.maxLength / 10;
+                                    double maxPenaltyDt = metrics.maxLength / 4;
+                                    if (nextAttack.whiteNaturalExitCushionDistance > noPenaltyDt) {
+                                        double penalty = Math.min(1, nextAttack.whiteNaturalExitCushionDistance / maxPenaltyDt);
+                                        penalty *= playerPositionMul;
+                                        if (penalty < 0 || penalty > 1) {
+                                            System.err.println("1321983617i6fgvbsdvjhcbd");
+                                        }
+                                        positionPrice *= (1 - penalty);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 price += positionPrice;
@@ -132,13 +172,13 @@ public abstract class FinalChoice {
 //                int cushions = whitePrediction.getWhiteCushionCountAfter();
 //                double cushionDiv = Math.max(2, cushions) / 4.0 + 0.5;  // Math.max(x, cushions) / y + (1 - x / y)
 //                price /= cushionDiv;
-                
+
                 boolean isDirect = attackParams.attackChoice instanceof AttackChoice.DoubleAttackChoice;
 
                 // todo: 新的算法
                 WhitePrediction[] tolerances = Analyzer.toleranceAnalysis(
                         game,
-                        attackParams.attackChoice.attackingPlayer, 
+                        attackParams.attackChoice.attackingPlayer,
                         params,
                         phy,
                         0.0,
@@ -148,14 +188,14 @@ public abstract class FinalChoice {
                         true,
                         false
                 );
-                
+
                 double acceptablePotProb = firstChoice.defaultRef.potProb - 0.15;
                 double tolerancePenalty = 1.0;
                 for (WhitePrediction tor : tolerances) {
                     if (whitePrediction.getSecondCollide() != tor.getSecondCollide()) {
                         tolerancePenalty *= 2.0;
                     }
-                    
+
                     double[] sp = tor.stopPoint();
 //                    boolean canHit = game.pointToPointCanPassBall(sp[0], sp[1],
 //                            firstChoice.collisionPos[0], firstChoice.collisionPos[1],
@@ -178,7 +218,7 @@ public abstract class FinalChoice {
                         }
                     }
                 }
-                
+
                 penalty = tolerancePenalty;
                 price /= penalty;
             }
@@ -191,10 +231,10 @@ public abstract class FinalChoice {
         final double stabilityScore;
         protected PlayerHand handSkill;
         protected Ball ball;
-//        protected double snookerScore;
+        //        protected double snookerScore;
 //        protected double opponentAttackChance;
         protected DefenseResult defenseResult;
-//        protected double opponentAvailPrice;
+        //        protected double opponentAvailPrice;
         protected double price;  // price还是越大越好
         protected double[] cueDirectionUnitVector;  // selected
 
@@ -274,7 +314,7 @@ public abstract class FinalChoice {
 //            }
 
         }
-        
+
         public boolean opponentCanPureAttack(AiPlayStyle opponent) {
             double pureAttackThresh = Analyzer.attackProbThreshold(AiCue.PURE_ATTACK_PROB, opponent);
             return defenseResult.opponentPotProb > pureAttackThresh;

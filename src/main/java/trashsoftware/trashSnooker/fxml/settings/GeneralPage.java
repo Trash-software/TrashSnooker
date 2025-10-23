@@ -1,4 +1,4 @@
-package trashsoftware.trashSnooker.fxml.settingsPages;
+package trashsoftware.trashSnooker.fxml.settings;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -6,13 +6,11 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import trashsoftware.trashSnooker.fxml.App;
-import trashsoftware.trashSnooker.fxml.SettingsView;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class GeneralPage extends AbsSettingsPage {

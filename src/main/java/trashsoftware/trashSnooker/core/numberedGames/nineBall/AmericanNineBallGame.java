@@ -139,6 +139,15 @@ public class AmericanNineBallGame extends NumberedBallGame<AmericanNineBallPlaye
     }
 
     @Override
+    public int get2ndNextTarget(Ball pottingBall, boolean isSnookerFreeBall) {
+        int next = getTargetAfterPotSuccess(pottingBall, isSnookerFreeBall);
+        if (next == 9) return END_REP;
+
+        Ball minNext = getMinimumBallOnTable(next);
+        return minNext.getValue();
+    }
+
+    @Override
     public int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall) {
         if (pottingBall.getValue() == 9) return END_REP;
 

@@ -17,6 +17,8 @@
             <MenuItem text="%close" onAction="#closeWindowAction"/>
             <SeparatorMenuItem/>
             <MenuItem text="%repairMenu" onAction="#repairAction" fx:id="repairMenu"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="%settingsMenu" onAction="#inGamePrefAction" fx:id="inGamePrefMenu"/>
         </Menu>
         <Menu fx:id="gameMenu" text="%gameMenu">
             <!-- 在这里加没用，gameView里会重新填充gameMenu -->
@@ -45,6 +47,9 @@
 
             <CheckMenuItem fx:id="aimingExtensionMenu" text="%drawAimingExtension"/>
             <CheckMenuItem fx:id="potInspectionMenu" text="%potInspectionTool"/>
+            <SeparatorMenuItem/>
+            
+            <CheckMenuItem fx:id="shadowInspectionMenu" text="%shadowInspectionTool"/>
             <SeparatorMenuItem/>
 
             <Menu fx:id="player1SpeedMenu" text="%p1PlaySpeedMenu">

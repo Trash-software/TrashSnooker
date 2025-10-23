@@ -30,6 +30,10 @@ public class Algebra {
     public static double[] normalVector(double[] vec) {
         return normalVector(vec[0], vec[1]);
     }
+
+    public static double[] vectorAdd(double[] a, double[] b) {
+        return new double[]{a[0] + b[0], a[1] + b[1]};
+    }
     
     public static double[] vectorSubtract(double[] a, double[] b) {
         return new double[]{a[0] - b[0], a[1] - b[1]};
@@ -429,6 +433,29 @@ public class Algebra {
             result[i] = a + (b - a) * skewedT;      // map back to [a, b]
         }
         return result;
+    }
+
+    public static double[] intersectRayWithSegment(double[] origin, double[] dir, double[] A, double[] B) {
+        double x1 = A[0], y1 = A[1];
+        double x2 = B[0], y2 = B[1];
+        double x3 = origin[0], y3 = origin[1];
+        double x4 = origin[0] + dir[0], y4 = origin[1] + dir[1];
+
+        double denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+        if (Math.abs(denom) < 1e-10) return null; // Lines are parallel
+
+        double t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denom;
+        double u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / denom;
+
+        if (t >= 0 && t <= 1 && u >= 0) {
+            // Intersection point
+            return new double[] {
+                    x1 + t * (x2 - x1),
+                    y1 + t * (y2 - y1)
+            };
+        }
+
+        return null;
     }
 
     public static void main(String[] args) {

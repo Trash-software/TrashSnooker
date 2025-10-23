@@ -16,6 +16,7 @@ import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.CareerSave;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
+import trashsoftware.trashSnooker.fxml.settings.SettingsView;
 import trashsoftware.trashSnooker.fxml.statsViews.StatsView;
 import trashsoftware.trashSnooker.util.DataLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
@@ -253,7 +254,7 @@ public class EntryView implements Initializable {
     void settingsAction() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("settingsView.fxml"),
+                    getClass().getResource("settings/settingsView.fxml"),
                     strings
             );
             Parent root = loader.load();

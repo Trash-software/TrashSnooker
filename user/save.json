@@ -1,9 +1,9 @@
 {
   "p1": {
     "playerNumber": 1,
-    "gameRule": "CHINESE_EIGHT",
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 0.9091000000000001,
+    "psyStatus": 0.9043000000000007,
     "person": "Neil Robertson",
     "playerType": "PLAYER",
     "let": {"type": "notLet"}
@@ -11,30 +11,30 @@
   "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
-    "gameRule": "CHINESE_EIGHT",
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
     "psyStatus": 1,
-    "person": "Mark Allen",
-    "playerType": "PLAYER",
+    "person": "Murphy",
+    "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "codeGameCounter": 3,
+  "codeGameCounter": 1,
   "p2BreakLoseChance": 0,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
-    "subRules": ["CHINESE_EIGHT_JOE"],
-    "devMode": false,
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
+    "subRules": ["SNOOKER_STD"],
+    "devMode": true,
     "table": {
-      "tableOrdinal": 1,
+      "tableOrdinal": 0,
       "pocketDifficultyOrdinal": 3,
-      "holeSizeOrdinal": 3
+      "holeSizeOrdinal": 2
     }
   },
   "winRecords": {"1": 2},
   "p2Wins": 1,
-  "startTime": 1749431775796,
-  "p1BreakLoseChance": 2,
+  "startTime": 1760926914190,
+  "p1BreakLoseChance": 0,
   "totalFrames": 1,
   "cloth": {
     "smoothness": "NORMAL",

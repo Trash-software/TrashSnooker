@@ -1,44 +1,51 @@
 {
-  "p1": "custom_DA1B9E98710BC5F5",
+  "p1": "John Wizard",
   "game": {
     "p1": {
       "playerNumber": 1,
       "gameRule": "SNOOKER",
-      "handFeelEffort": 1,
-      "psyStatus": 0.9646000000000011,
-      "person": "custom_DA1B9E98710BC5F5",
-      "playerType": "PLAYER"
+      "handFeelEffort": 1.140868928081648,
+      "psyStatus": 0.959647272727272,
+      "person": "John Wizard",
+      "playerType": "COMPUTER"
     },
-    "p1Wins": 0,
+    "p1Wins": 1,
     "p2": {
       "playerNumber": 2,
       "gameRule": "SNOOKER",
-      "handFeelEffort": 1.1015528330952535,
+      "handFeelEffort": 1,
       "psyStatus": 1,
-      "person": "Neil Robertson",
-      "playerType": "COMPUTER"
+      "person": "custom_DA1B9E98710BC5F5",
+      "playerType": "PLAYER"
     },
-    "codeGameCounter": 1,
+    "codeGameCounter": 2,
     "p2BreakLoseChance": 0,
     "gameValues": {
       "ball": "SNOOKER_BALL",
       "gameRule": "SNOOKER",
       "subRules": ["SNOOKER_STD"],
       "devMode": false,
-      "tablePreset": "starSnookerTableGood"
+      "table": {
+        "tableOrdinal": 0,
+        "pocketDifficultyOrdinal": 2,
+        "holeSizeOrdinal": 1
+      }
     },
-    "winRecords": {"1": 2},
+    "winRecords": {
+      "1": 1,
+      "2": 2
+    },
     "p2Wins": 1,
-    "startTime": 1760803413125,
+    "startTime": 1761167663922,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_DA1B9E98710BC5F5+2026+world_champ-FINAL-110",
-    "totalFrames": 11,
+    "matchId": "custom_DA1B9E98710BC5F5+2026+space_grand_prix-SEMI_FINAL-44",
+    "totalFrames": 3,
     "cloth": {
       "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
-    "p1Breaks": true
+    "p1Breaks": false
   },
-  "p2": "Neil Robertson",
-  "stage": "FINAL"
+  "p2": "custom_DA1B9E98710BC5F5",
+  "stage": "SEMI_FINAL"
 }

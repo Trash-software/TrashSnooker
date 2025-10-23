@@ -161,12 +161,31 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
     }
 
     @Override
+    public int get2ndNextTarget(Ball pottingBall, boolean isSnookerFreeBall) {
+        int next = getTargetAfterPotSuccess(pottingBall, isSnookerFreeBall);
+        if (next == NOT_SELECTED_REP) return NOT_SELECTED_REP;
+        else if (next == END_REP) return END_REP;
+        else if (next == 8) return END_REP;
+
+        ChineseEightBallPlayer player = getCuingPlayer();
+        if (player.getBallRange() == FULL_BALL_REP || player.getBallRange() == HALF_BALL_REP) {
+            int backLet = player.getLettedBalls().get(LetBall.BACK);
+
+            if (getRemRangedBallOnTable(player.getBallRange()) > backLet + 2)
+                return player.getBallRange();
+            else if (pottingBall.getValue() == 8) return END_REP;
+            else return 8;
+        }
+        throw new RuntimeException("不可能");
+    }
+
+    @Override
     public int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall) {
         ChineseEightBallPlayer player = getCuingPlayer();
         if (player.getBallRange() == NOT_SELECTED_REP) {
             if (isFullBall(pottingBall)) return FULL_BALL_REP;
             else if (isHalfBall(pottingBall)) return HALF_BALL_REP;
-            else return 0;
+            else return NOT_SELECTED_REP;
         }
         if (player.getBallRange() == FULL_BALL_REP || player.getBallRange() == HALF_BALL_REP) {
             int backLet = player.getLettedBalls().get(LetBall.BACK);

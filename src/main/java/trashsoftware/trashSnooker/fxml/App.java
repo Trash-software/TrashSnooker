@@ -33,8 +33,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("all")
 public class App extends Application {
 
-    public static final String VERSION_NAME = "0.7 beta 6";
-    public static final int VERSION_CODE = 60;
+    public static final String VERSION_NAME = "0.8";
+    public static final int VERSION_CODE = 61;
     public static final String CLASSIFIER = "win";
     public static final String FONT_STYLE = CLASSIFIER.equals("mac") ?
             "-fx-font-family: 'serif'" :

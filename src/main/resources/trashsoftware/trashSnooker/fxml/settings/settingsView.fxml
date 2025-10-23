@@ -5,14 +5,14 @@
 <?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="trashsoftware.trashSnooker.fxml.SettingsView" spacing="10.0"
+      fx:controller="trashsoftware.trashSnooker.fxml.settings.SettingsView" spacing="10.0"
       prefWidth="600.0" prefHeight="500.0">
 
     <padding>
         <Insets topRightBottomLeft="10.0"/>
     </padding>
 
-    <Button text="%backIcon" onAction="#backAction"/>
+    <Button fx:id="backButton" text="%backIcon" onAction="#backAction"/>
 
     <GridPane hgap="10.0" vgap="10.0" VBox.vgrow="ALWAYS">
         <columnConstraints>

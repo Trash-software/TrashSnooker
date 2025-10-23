@@ -2221,6 +2221,7 @@
     },
     "custom_050883FCEA7A7CAA": {
       "rest": {
+        "useHand": "RIGHT",
         "cuePoints": [
           0,
           0
@@ -2331,7 +2332,6 @@
     },
     "custom_DA1B9E98710BC5F5": {
       "rest": {
-        "useHand": "LEFT",
         "cuePoints": [
           0,
           0
@@ -2354,7 +2354,7 @@
         ],
         "hand": "rest"
       },
-      "solving": 91.94465771023178,
+      "solving": 92.54967650901992,
       "aimingOffset": 0,
       "psyRua": 90,
       "dominant": {
@@ -2362,7 +2362,7 @@
           0,
           0
         ],
-        "powerControl": 87.02588152714657,
+        "powerControl": 90.82661031880154,
         "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
         "spin": 96.72995068441286,
         "pullDt": [
@@ -2376,7 +2376,7 @@
         "maxPower": 98.7489943082684,
         "cuePrecisions": [
           98.66892307757026,
-          89.74906006059283
+          90.95909765816911
         ],
         "hand": "left"
       },
@@ -2387,11 +2387,11 @@
       "ai": {
         "doubleAbility": 84.72622982388367,
         "likeSide": 75,
-        "defense": 88.3874707938697,
+        "defense": 90.89285398848533,
         "stable": 94.14025535987074,
         "precision": 98.84726812786428,
-        "position": 88.3874707938697,
-        "attackPri": 44.08072245709115,
+        "position": 90.89285398848533,
+        "attackPri": 42.86567532847417,
         "snookerBreak": "RIGHT",
         "likePowerRange": [
           15,
@@ -2406,21 +2406,21 @@
           0,
           0
         ],
-        "powerControl": 73.0435289785596,
+        "powerControl": 76.72491630664052,
         "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
-        "spin": 73.07161284660363,
+        "spin": 76.75079839942991,
         "pullDt": [
           50,
           200,
           50,
           150
         ],
-        "controllablePower": 70.62644714603667,
+        "controllablePower": 74.4973336897874,
         "cueSwingMag": 25,
-        "maxPower": 78.47383016226297,
+        "maxPower": 82.77481521087489,
         "cuePrecisions": [
-          72.37297078420242,
-          70.38553445545266
+          74.27805195283433,
+          74.27530855414517
         ],
         "hand": "right"
       },
@@ -3908,5 +3908,5 @@
       "height": 180
     }
   },
-  "checksum": "6CE5ACDA1E8C3350E7A86CB818EC27A5"
+  "checksum": "1EDAFB22F0F53FFE3FF834D9D70907F0"
 }

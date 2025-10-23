@@ -34,7 +34,9 @@ public abstract class ChildInitializable implements Initializable {
     
     @FXML
     public void backAction() {
-        App.setRoot(getParentRoot());
+        if (parentRoot != null) {
+            App.setRoot(getParentRoot());
+        }
 //        Stage stage = getStage();
 ////        stage.setTitle(App.getStrings().getString("appName"));
 ////        stage.setScene(parentRoot);

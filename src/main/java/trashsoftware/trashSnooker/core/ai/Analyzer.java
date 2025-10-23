@@ -335,8 +335,9 @@ public class Analyzer {
                     0.5
             );
 
+            // 解球专用的吧
             if (wp.getWhiteCushionCountBefore() > 2) {
-                penalty += (wp.getWhiteCushionCountBefore() - 1.5) * 10;
+                penalty += (wp.getWhiteCushionCountBefore() - 1.5) * 20;
             }
             if (wp.getWhiteCushionCountAfter() > 3) {
                 penalty += (wp.getWhiteCushionCountAfter() - 2.5) * 10;

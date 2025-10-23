@@ -124,6 +124,11 @@ public class PoolTraining extends ChineseEightBallGame implements Training {
     }
 
     @Override
+    public int get2ndNextTarget(Ball pottingBall, boolean isSnookerFreeBall) {
+        return NOT_SELECTED_REP;  // 不会用到这个的
+    }
+
+    @Override
     public int getTargetAfterPotSuccess(Ball pottingBall, boolean isSnookerFreeBall) {
         if (ordered) {
             return currentTarget + 1;

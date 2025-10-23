@@ -1,0 +1,285 @@
+{
+  "frames": [{
+    "frameIndex": 1,
+    "frameNumber": 1,
+    "cueRecs": [
+      {
+        "scoresAfter": [
+          0,
+          0
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "trashCue2Carbon",
+          "hand": "LEFT"
+        },
+        "specials": ["BALL_IN_HAND"],
+        "firstHit": 4,
+        "gainScores": [
+          0,
+          0
+        ],
+        "attemptBase": {
+          "success": false,
+          "type": "BREAK"
+        },
+        "player": 1,
+        "target": 0
+      },
+      {
+        "scoresAfter": [
+          0,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "trashCue2Carbon",
+          "hand": "RIGHT"
+        },
+        "firstHit": 4,
+        "pots": {"4": 1},
+        "potInfo": {
+          "estPotProb": 0.945307264184132,
+          "tarPocketDt": 664.6054728155418,
+          "whiteTarDt": 552.5984544357403,
+          "angle": 0.03747318462780935,
+          "isDouble": false
+        },
+        "gainScores": [
+          0,
+          2
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 2,
+        "target": 0
+      },
+      {
+        "scoresAfter": [
+          0,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "stdPottsCue",
+          "hand": "RIGHT"
+        },
+        "firstHit": 6,
+        "gainScores": [
+          0,
+          0
+        ],
+        "attemptBase": {
+          "success": false,
+          "type": "DEFENSE"
+        },
+        "player": 2,
+        "target": 16
+      },
+      {
+        "scoresAfter": [
+          1,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "trashCue2Carbon",
+          "hand": "LEFT"
+        },
+        "firstHit": 12,
+        "pots": {"12": 1},
+        "potInfo": {
+          "estPotProb": 0.8010687870239577,
+          "tarPocketDt": 565.1203911224262,
+          "whiteTarDt": 881.5190929808815,
+          "angle": 0.32229639650431546,
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          2,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "trashCue2Carbon",
+          "hand": "LEFT"
+        },
+        "firstHit": 10,
+        "pots": {"10": 1},
+        "potInfo": {
+          "estPotProb": 0.9999999999999998,
+          "tarPocketDt": 442.31913249312083,
+          "whiteTarDt": 379.5458837600641,
+          "angle": 0.42964045150305985,
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          3,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "trashCue2Carbon",
+          "hand": "LEFT"
+        },
+        "firstHit": 14,
+        "pots": {"14": 1},
+        "potInfo": {
+          "estPotProb": 1,
+          "tarPocketDt": 289.0309442151472,
+          "whiteTarDt": 375.88014326945955,
+          "angle": 0.17780340531091166,
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          4,
+          2
+        ],
+        "cueHand": {
+          "extension": "SHORT",
+          "brand": "trashCue2Carbon",
+          "hand": "LEFT"
+        },
+        "firstHit": 11,
+        "pots": {"11": 1},
+        "potInfo": {
+          "estPotProb": 1,
+          "tarPocketDt": 695.7652836002793,
+          "whiteTarDt": 386.8966492124509,
+          "angle": 0.02583075603638968,
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          5,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "trashCue2Carbon",
+          "hand": "LEFT"
+        },
+        "firstHit": 13,
+        "pots": {"13": 1},
+        "potInfo": {
+          "estPotProb": 1,
+          "tarPocketDt": 299.78884385162985,
+          "whiteTarDt": 211.395244607623,
+          "angle": 0.15575947001450974,
+          "isDouble": false
+        },
+        "gainScores": [
+          1,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      },
+      {
+        "scoresAfter": [
+          5,
+          2
+        ],
+        "cueHand": {
+          "extension": "NO",
+          "brand": "trashCue2Carbon",
+          "hand": "LEFT"
+        },
+        "firstHit": 9,
+        "pots": {
+          "8": 1,
+          "9": 1
+        },
+        "potInfo": {
+          "estPotProb": 0.9783261401470031,
+          "tarPocketDt": 1013.9207558994166,
+          "whiteTarDt": 213.87427002049685,
+          "angle": 0.6074004709850858,
+          "isDouble": false
+        },
+        "gainScores": [
+          0,
+          0
+        ],
+        "attemptBase": {
+          "success": true,
+          "type": "ATTACK"
+        },
+        "player": 1,
+        "target": 17
+      }
+    ],
+    "winner": 2
+  }],
+  "players": [
+    "custom_DA1B9E98710BC5F5",
+    "Ding Junhui"
+  ],
+  "careerMatchId": "custom_DA1B9E98710BC5F5+2026+eight_noob_open-SEMI_FINAL-60",
+  "gameValues": {
+    "ball": "POOL_BALL",
+    "gameRule": "CHINESE_EIGHT",
+    "subRules": ["CHINESE_EIGHT_STD"],
+    "devMode": false,
+    "table": {
+      "tableOrdinal": 1,
+      "pocketDifficultyOrdinal": 2,
+      "holeSizeOrdinal": 2
+    }
+  },
+  "entireBeginTime": "2025-10-22 08_12_57.921",
+  "totalFrames": 7
+}

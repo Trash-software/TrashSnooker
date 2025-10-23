@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core.movement;
 
+import trashsoftware.trashSnooker.core.Ball;
+
 public class MovementFrame {
     public static final int NORMAL = 0;
     public static final int POT = 2;
@@ -53,5 +55,15 @@ public class MovementFrame {
         int nextWeight = movementTypePrivilege(next);
         
         return curWeight > nextWeight ? cur : next;
+    }
+    
+    public double[] computeSpinsInPhyStyle(double ballRadius, double numPhysicalCalculations) {
+        return Ball.axesToSpins(xAxis, yAxis, zAxis, frameDegChange, ballRadius, numPhysicalCalculations);
+    }
+    
+    public double[] computeVelocityInPhyStyle(MovementFrame previous, double numPhysicalCalculations) {
+        double dx = x - previous.x;
+        double dy = y - previous.y;
+        return new double[]{dx / numPhysicalCalculations, dy / numPhysicalCalculations};
     }
 }

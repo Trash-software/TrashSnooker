@@ -10,6 +10,8 @@ import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.fxml.drawing.BallModel;
 
 import java.util.Random;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cloneable {
     public static final double MAX_GEAR_EFFECT = 0.25;  // 齿轮效应造成的最严重分离角损耗
@@ -28,7 +30,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private final Color color;
     private final Color colorWithOpa;
     private final Color colorTransparent;
-    private final Color traceColor;
+//    private final Color traceColor;
+    public static final int TOTAL_TRACE_LEVELS = 10;
+    private transient final SortedMap<Integer, Color> traceColors = new TreeMap<>();
     private final int identifier;  // 即使是分值一样的球identifier也不一样，但是clone之后identifier保持不变
     protected double xSpin, ySpin;
     protected double sideSpin;
@@ -56,7 +60,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         this.color = generateColor(value);
         this.colorWithOpa = this.color.deriveColor(0, 1, 1.6, 0.5);
         this.colorTransparent = colorWithOpa.deriveColor(0, 1, 1, 0);
-        this.traceColor = this.color.deriveColor(0, 1, 0.75, 1);
+//        this.traceColor = this.color.deriveColor(0, 1, 0.75, 1);
 
         model = BallModel.createModel(this, values.getBallsGroupPreset());
         setPotted(initPotted);
@@ -169,18 +173,56 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return Math.hypot(xSpin, ySpin);
     }
 
+    public static double[] spinsToAxes(double xSpin, double ySpin, double zSpin,
+                                       double ballRadius,
+                                       double numPhysicalCalculations) {
+        double mag = Math.sqrt(xSpin * xSpin + ySpin * ySpin + zSpin * zSpin);
+        double axisX = ySpin / mag;
+        double axisY = -xSpin / mag;
+        double axisZ = -zSpin / mag;
+
+        double linSpeed = mag * numPhysicalCalculations;
+        double degChange = Math.toDegrees(linSpeed / ballRadius);
+        
+        return new double[]{axisX, axisY, axisZ, degChange};
+    }
+
+    public static double[] axesToSpins(double axisX, double axisY, double axisZ,
+                                       double degChange, double ballRadius,
+                                       double numPhysicalCalculations) {
+        if (degChange == 0) return new double[3];
+        // Convert degrees to radians
+        double radPerTick = Math.toRadians(degChange);
+
+        // Get the total linear surface speed (in world units per tick)
+        double linSpeed = radPerTick * ballRadius;
+
+        // Convert linear speed to per-physics-step (match original scaling)
+        double linSpeedPerStep = linSpeed / numPhysicalCalculations;
+
+        // Apply reverse mapping (inverted from spinsToAxes)
+        double xSpin = -axisY * linSpeedPerStep;
+        double ySpin = axisX * linSpeedPerStep;
+        double zSpin = -axisZ * linSpeedPerStep;
+
+        return new double[]{xSpin, ySpin, zSpin};
+    }
+
     public void calculateAxis(Phy phy, double animationFrameMs) {
         // 每个动画帧算一次，而不是物理帧
-        axisX = ySpin;
-        axisY = -xSpin;
-        double ss = sideSpin * Math.PI;  // 不要误会，没有这么神，只是3.14刚好看起来差不多
-//        if (isWhite()) System.out.println(xSpin + " " + ySpin + " " + sideSpin);
-        if (Double.isNaN(ss)) ss = 0.0;
-        axisZ = -ss;
+        double zSpin = sideSpin * Math.PI;  // 不要误会，没有这么神，只是3.14刚好看起来差不多
+        if (Double.isNaN(zSpin)) zSpin = 0.0;
 
-        frameDegChange =
-                Math.sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ)
-                        * phy.calculationsPerSec * animationFrameMs * 0.00145;
+        double[] axes = spinsToAxes(xSpin, ySpin, zSpin, values.ball.ballRadius,
+                animationFrameMs / phy.calculateMs);
+        axisX = axes[0];
+        axisY = axes[1];
+        axisZ = axes[2];
+        frameDegChange = axes[3];
+
+//        frameDegChange =
+//                Math.sqrt(xSpin * xSpin + ySpin * ySpin + zSpin * zSpin)
+//                        * phy.calculationsPerSec * animationFrameMs * 0.00145;
     }
 
     /**
@@ -936,7 +978,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double thisHorV = thisVCob[0];  // 平行于切线的速率
         double ballVerV = ballVCob[1];
         double ballHorV = ballVCob[0];
-        
+
 //        values.ball.ballBounceRatio
 
 //        System.out.println(Arrays.toString(thisVCob) + " " + Arrays.toString(ballVCob));
@@ -1083,7 +1125,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         vy *= values.ball.ballBounceRatio;
         ball.vx *= values.ball.ballBounceRatio;
         ball.vy *= values.ball.ballBounceRatio;
-        
+
         // 一些没传掉的动能
         vx += thisV[0] * (1 - values.ball.ballBounceRatio) * 0.5;
         vy += thisV[1] * (1 - values.ball.ballBounceRatio) * 0.5;
@@ -1153,8 +1195,22 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return color;
     }
 
-    public Color getTraceColor() {
-        return traceColor;
+//    public Color getTraceColor() {
+//        return traceColor;
+//    }
+
+    /**
+     * @param slipRate 0 to 1, 0 is rolling, 1 is slipping at max speed
+     * @return the color corresponding to this slip
+     */
+    public Color getTraceColor(double slipRate) {
+        int level = (int) Math.round(slipRate * TOTAL_TRACE_LEVELS);
+        Color res = traceColors.get(level);
+        if (res == null) {
+            double value = Algebra.shiftRangeSafe(0, TOTAL_TRACE_LEVELS, 0.5, 0.9, level);
+            res = traceColors.put(level, color.deriveColor(0, 1, value, 1));
+        }
+        return res;
     }
 
     public int getValue() {

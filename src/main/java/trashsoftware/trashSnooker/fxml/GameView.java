@@ -2,17 +2,19 @@ package trashsoftware.trashSnooker.fxml;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -32,6 +34,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.json.JSONObject;
@@ -77,11 +80,14 @@ import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
 import trashsoftware.trashSnooker.core.table.ChineseEightTable;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
+import trashsoftware.trashSnooker.enums.TrajectoryHide;
+import trashsoftware.trashSnooker.enums.TrajectoryMode;
 import trashsoftware.trashSnooker.fxml.alert.AlertShower;
 import trashsoftware.trashSnooker.fxml.drawing.*;
 import trashsoftware.trashSnooker.fxml.projection.BallProjection;
 import trashsoftware.trashSnooker.fxml.projection.CushionProjection;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
+import trashsoftware.trashSnooker.fxml.settings.SettingsView;
 import trashsoftware.trashSnooker.fxml.widgets.GamePane;
 import trashsoftware.trashSnooker.recorder.*;
 import trashsoftware.trashSnooker.util.DataLoader;
@@ -126,6 +132,7 @@ public class GameView implements Initializable {
     private static double uiFrameTimeMs = 10.0;
     private static double defaultMaxPredictLength = 800;
     private final List<Node> disableWhenCuing = new ArrayList<>();  // 出杆/播放动画时不准按的东西
+    private final List<MenuItem> disableWhenCuingMenus = new ArrayList<>();
     private final Map<Cue, CueModel> cueModelMap = new HashMap<>();
     @FXML
     MenuBar menuBar;
@@ -186,7 +193,7 @@ public class GameView implements Initializable {
     @FXML
     Canvas player1TarCanvas, player2TarCanvas;
     @FXML
-    MenuItem repairMenu;
+    MenuItem repairMenu, inGamePrefMenu;
     @FXML
     Menu gameMenu;
     @FXML
@@ -210,7 +217,7 @@ public class GameView implements Initializable {
     CheckMenuItem drawAiPathItem;
     CheckMenuItem predictPlayerPathItem = new CheckMenuItem();
     @FXML
-    CheckMenuItem aimingExtensionMenu, potInspectionMenu;
+    CheckMenuItem aimingExtensionMenu, potInspectionMenu, shadowInspectionMenu;
     @FXML
     CheckMenuItem traceWhiteItem, traceTargetItem, traceAllItem;
     @FXML
@@ -221,8 +228,9 @@ public class GameView implements Initializable {
     RadioButton handSelectionLeft, handSelectionRight, handSelectionRest;
     boolean debugMode = false;
     boolean devMode = true;
-    PredictionQuality predictionQuality = PredictionQuality.fromKey(
-            ConfigLoader.getInstance().getString("performance", "veryHigh"));
+
+    InGamePreferences pref = new InGamePreferences();
+
     //    private Timeline timeline;
     VideoCapture videoCapture;  // 录制视频用
     GameLoop gameLoop;
@@ -292,13 +300,13 @@ public class GameView implements Initializable {
     private CareerMatch careerMatch;
     private PredictionDrawing cursorDrawer;
     private PotInspection potInspection;
+    private ShadowInspection shadowInspection;
     private CueSelection.CueAndBrand lastUsedCue;
 
     private ResourceBundle strings;
     private double p1PlaySpeed = 1.0;
     private double p2PlaySpeed = 1.0;
     private boolean aiHelpPlay = false;
-    private boolean absoluteDragAngle = false;
     private List<double[]> aiWhitePath;  // todo: debug用的
     private List<double[]> suggestedPlayerWhitePath;
 
@@ -379,12 +387,13 @@ public class GameView implements Initializable {
                 handSelectionRight,
                 handSelectionRest
         ));
+        disableWhenCuingMenus.addAll(List.of(
+                inGamePrefMenu,
+                potInspectionMenu,
+                shadowInspectionMenu
+        ));
 
         powerSlider.setShowTickLabels(true);
-
-        ConfigLoader configLoader = ConfigLoader.getInstance();
-        String mouseDragMethod = configLoader.getString("mouseDragMethod");
-        absoluteDragAngle = "position".equals(mouseDragMethod);
     }
 
     private void menuListeners() {
@@ -405,6 +414,19 @@ public class GameView implements Initializable {
                 aimingChanged();
             } else {
                 potInspection = null;
+            }
+            tableGraphicsChanged = true;
+        });
+
+        shadowInspectionMenu.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                List<Ball>[] legalIllegals = game.getGame().getAllLegalAndIllegalBalls();
+                Ball cueBall = game.getGame().getCueBall();
+                shadowInspection = new ShadowInspection(
+                        cueBall.getPositionArray(),
+                        legalIllegals[1], legalIllegals[0], game.gameValues);
+            } else {
+                shadowInspection = null;
             }
             tableGraphicsChanged = true;
         });
@@ -458,14 +480,14 @@ public class GameView implements Initializable {
         gamePane.updateScale(newScale, getActiveHolder());
         ballDiameter = gameValues.ball.ballDiameter * gamePane.getScale();
         ballRadius = ballDiameter / 2;
-        
+
         setTargetScales();
         drawTargetBoard(true);
 
         tableGraphicsChanged = true;
         createPathPrediction();
     }
-    
+
     private void setTargetScales() {
         player1TarCanvas.setHeight(ballDiameter * 1.2);
         player1TarCanvas.setWidth(ballDiameter * 2.4);
@@ -619,6 +641,7 @@ public class GameView implements Initializable {
 
         setFrameRate(ConfigLoader.getInstance().getFrameRate());
         setKeyboardActions();
+        notifySettingsChanged();
 
         generateScales(entireGame.gameValues);
         restoreCuePoint();
@@ -692,7 +715,7 @@ public class GameView implements Initializable {
         if (rule.hasRule(Rule.FOUL_AND_MISS)) {
             gameMenu.getItems().add(repositionMenu);
         }
-        if (gameValues.hasSubRuleDetail(SubRule.Detail.LOSE_CHANCE_ACROSS_LINE) || 
+        if (gameValues.hasSubRuleDetail(SubRule.Detail.LOSE_CHANCE_ACROSS_LINE) ||
                 gameValues.hasSubRuleDetail(SubRule.Detail.ILLEGAL_BREAK_CUSHION)) {
             gameMenu.getItems().add(reBreakMenu);
         }
@@ -883,13 +906,34 @@ public class GameView implements Initializable {
         uiFrameTimeMs = 1000.0 / frameRate;
     }
 
+    public void notifySettingsChanged() {
+        pref = new InGamePreferences();
+        
+//        setKeyboardActions();
+
+        KeyCode potIns = pref.getInputManager().getKeyCode(KeyBehavior.ALTER_POT_INSPECTION);
+        if (potIns != null) {
+            potInspectionMenu.setText(strings.getString("potInspectionTool") + 
+                    " (" + InputManager.keyCodeShown(potIns) + ")");
+        } else {
+            potInspectionMenu.setText(strings.getString("potInspectionTool"));
+        }
+
+        KeyCode shadowIns = pref.getInputManager().getKeyCode(KeyBehavior.ALTER_SHADOW_INSPECTION);
+        if (shadowIns != null) {
+            shadowInspectionMenu.setText(strings.getString("shadowInspectionTool") + 
+                    " (" + InputManager.keyCodeShown(shadowIns) + ")");
+        } else {
+            shadowInspectionMenu.setText(strings.getString("shadowInspectionTool"));
+        }
+    }
+
     private void keyboardAction(KeyEvent e) {
         if (replay != null || aiCalculating || playingMovement || cueAnimationPlayer != null) {
             return;
         }
         e.consume();
-        InputManager inputManager = ConfigLoader.getInstance().getInputManager();
-        KeyBehavior behavior = inputManager.getBehavior(e.getCode());
+        KeyBehavior behavior = pref.getInputManager().getBehavior(e.getCode());
         if (behavior == null) return;
         switch (behavior) {
             case SHOT -> {
@@ -939,6 +983,16 @@ public class GameView implements Initializable {
                     handSelectionRest.setSelected(true);
                 }
             }
+            case ALTER_POT_INSPECTION -> {
+                if (!potInspectionMenu.isDisable()) {
+                    potInspectionMenu.setSelected(!potInspectionMenu.isSelected());
+                }
+            }
+            case ALTER_SHADOW_INSPECTION -> {
+                if (!shadowInspectionMenu.isDisable()) {
+                    shadowInspectionMenu.setSelected(!shadowInspectionMenu.isSelected());
+                }
+            }
         }
     }
 
@@ -959,15 +1013,12 @@ public class GameView implements Initializable {
             rb.setOnKeyPressed(this::keyboardAction);
             rb.setOnKeyReleased(this::keyboardReleaseAction);
         }
-        
+
         changeCueButton.setOnKeyPressed(this::keyboardAction);
         changeCueButton.setOnKeyReleased(this::keyboardReleaseAction);
-        
+
         powerSlider.addEventFilter(KeyEvent.KEY_PRESSED, this::keyboardAction);
         powerSlider.addEventFilter(KeyEvent.KEY_RELEASED, this::keyboardReleaseAction);
-        
-//        powerSlider.setOnKeyPressed(this::keyboardAction);
-//        powerSlider.setOnKeyReleased(this::keyboardReleaseAction);
     }
 
     private void turnDirectionDeg(double deg) {
@@ -977,6 +1028,10 @@ public class GameView implements Initializable {
         double[] nd = Algebra.unitVectorOfAngle(cur);
         cursorDirectionUnitX = nd[0];
         cursorDirectionUnitY = nd[1];
+        if (pref.trajectoryHide == TrajectoryHide.OPERATION) {
+            tracedMovement = null;
+            tableGraphicsChanged = true;
+        }
         recalculateUiRestrictions();
     }
 
@@ -1322,8 +1377,9 @@ public class GameView implements Initializable {
     }
 
     private void finishCueNextStep(Player nextCuePlayer) {
-        cuePointCanvas.setDisable(false);
-        cueAngleCanvas.setDisable(false);
+//        cuePointCanvas.setDisable(false);
+//        cueAngleCanvas.setDisable(false);
+//        enableDisabledUi();
 
         cursorDrawer.synchronizeGame();  // 刷新白球预测的线程池
 
@@ -1379,7 +1435,12 @@ public class GameView implements Initializable {
                 Platform.runLater(() -> aiCue(nextCuePlayer));
             }
         }
+        if (pref.trajectoryHide == TrajectoryHide.INSTANT) {
+            tracedMovement = null;
+        }
+
         updatePlayStage();
+        enableDisabledUi();
         recalculateUiRestrictions();
 
         tableGraphicsChanged = true;
@@ -1407,7 +1468,7 @@ public class GameView implements Initializable {
         game.startNextFrame();
         setupFrameStart();
     }
-    
+
     private void setupFrameStart() {
         setupBalls();
 
@@ -1841,6 +1902,10 @@ public class GameView implements Initializable {
                 replaceBallInHandMenu.setDisable(false);
                 cursorDrawer.synchronizeGame();
                 startCueTimer();
+                if (pref.trajectoryHide == TrajectoryHide.OPERATION) {
+                    tracedMovement = null;
+                    tableGraphicsChanged = true;
+                }
             } else if (!game.getGame().isCalculating() && movement == null) {
                 Ball whiteBall = game.getGame().getCueBall();
                 double[] unit = Algebra.unitVector(
@@ -1850,6 +1915,10 @@ public class GameView implements Initializable {
                         });
                 cursorDirectionUnitX = unit[0];
                 cursorDirectionUnitY = unit[1];
+                if (pref.trajectoryHide == TrajectoryHide.OPERATION) {
+                    tracedMovement = null;
+                    tableGraphicsChanged = true;
+                }
                 recalculateUiRestrictions();
                 System.out.println("New direction: " + cursorDirectionUnitX + ", " + cursorDirectionUnitY);
             }
@@ -1891,6 +1960,10 @@ public class GameView implements Initializable {
             cursorDirectionUnitY = unitVec[1];
             recalculateUiRestrictions();
         }
+        if (pref.trajectoryHide == TrajectoryHide.OPERATION) {
+            tracedMovement = null;
+            tableGraphicsChanged = true;
+        }
         stage.getScene().setCursor(Cursor.CLOSED_HAND);
     }
 
@@ -1904,7 +1977,7 @@ public class GameView implements Initializable {
         double yDiffToWhite = gamePane.realY(mouseEvent.getY()) - white.getY();
         double[] unitDir = Algebra.unitVector(xDiffToWhite, yDiffToWhite);
 
-        if (absoluteDragAngle) {
+        if (pref.absoluteDragAngle) {
             cursorDirectionUnitX = unitDir[0];
             cursorDirectionUnitY = unitDir[1];
 
@@ -2081,18 +2154,18 @@ public class GameView implements Initializable {
             System.err.println("Game rule no push out!");
         }
     }
-    
+
     private void performReBreak(InGamePlayer willCueIgp) {
         int broke = game.getGame().getGameSettings().isPlayer1Breaks() ? 1 : 2;
         game.cancelCurrentFrame(true);
         game.restartThisFrame(broke == willCueIgp.getPlayerNumber());
         setupFrameStart();
     }
-    
+
     @FXML
     void reBreakAction() {
         InGamePlayer subject = game.getGame().getCuingIgp();
-        
+
         AlertShower.askConfirmation(stage,
                 String.format(strings.getString("askWhoReBreakFmt"), subject.getPlayerPerson().getName()),
                 strings.getString("reBreak"),
@@ -2238,6 +2311,33 @@ public class GameView implements Initializable {
                         this::hideCue,
                         callback);
             }
+        }
+    }
+
+    @FXML
+    void inGamePrefAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("settings/settingsView.fxml"),
+                    strings
+            );
+            Parent root = loader.load();
+            root.setStyle(App.FONT_STYLE);
+
+            Scene scene = new Scene(root);
+            Stage windowStage = new Stage();
+            windowStage.initModality(Modality.WINDOW_MODAL);
+            windowStage.initOwner(stage);
+
+            SettingsView view = loader.getController();
+            view.setAsInGamePreferences(this, windowStage);
+            
+            view.setup(windowStage);
+            windowStage.setScene(scene);
+            
+            windowStage.showAndWait();
+        } catch (IOException e) {
+            EventLogger.error(e);
         }
     }
 
@@ -2498,11 +2598,17 @@ public class GameView implements Initializable {
         for (Node control : disableWhenCuing) {
             control.setDisable(true);
         }
+        for (MenuItem menu : disableWhenCuingMenus) {
+            menu.setDisable(true);
+        }
     }
 
     private void enableDisabledUi() {
         for (Node control : disableWhenCuing) {
             control.setDisable(false);
+        }
+        for (MenuItem menu : disableWhenCuingMenus) {
+            menu.setDisable(false);
         }
     }
 
@@ -2864,6 +2970,7 @@ public class GameView implements Initializable {
         }
 
         tracedMovement = null;
+        shadowInspectionMenu.setSelected(false);
         tableGraphicsChanged = true;
     }
 
@@ -3370,32 +3477,73 @@ public class GameView implements Initializable {
         gamePane.drawBallInHandEssential(ball, game.getGame().getTable(), mouseX, mouseY);
     }
 
-    private void drawTraceOfBall(Ball ball, List<MovementFrame> frames) {
+    private void drawTrajectoryOfBall(Ball ball,
+                                      List<MovementFrame> frames) {
         if (frames == null) return;
         int end = Math.min(movementPlayingIndex, frames.size());
         if (end > 1) {
-            gamePane.getLineGraphics().setStroke(ball.getTraceColor());
-            double x = gamePane.canvasX(frames.getFirst().x);
-            double y = gamePane.canvasY(frames.getFirst().y);
+            gamePane.getLineGraphics().setStroke(ball.getTraceColor(0));
+            MovementFrame lastDrawn = frames.getFirst();
+            double x = gamePane.canvasX(lastDrawn.x);
+            double y = gamePane.canvasY(lastDrawn.y);
+            double calculations = frameTimeMs / game.playPhy.calculateMs;
+            double[] vel = frames.get(1).computeVelocityInPhyStyle(lastDrawn, calculations);
+
+//            double slipThresh = gameValues.ball.frictionRatio * gameValues.table.slipResistanceRatio * game.playPhy.slippingFrictionTimed * frameTimeMs * 1.2;
+            double fullSlipThresh = Values.MAX_SPIN_SPEED * 0.2 / game.playPhy.calculationsPerSec;
+
             for (int i = 1; i < end; i++) {
                 MovementFrame frame = frames.get(i);
                 if (frame.potted) break;
 
                 double nx = gamePane.canvasX(frame.x);
                 double ny = gamePane.canvasY(frame.y);
+                if (pref.trajectoryMode == TrajectoryMode.SLIP_ROLL || pref.trajectoryMode == TrajectoryMode.SLIP_ROLL_GRADIENT) {
+                    double[] spinVel = frame.computeSpinsInPhyStyle(gameValues.ball.ballRadius,
+                            calculations);
+                    if (i < end - 1) {
+                        // 平均一下前一帧和后一帧的速度
+                        MovementFrame nextFrame = frames.get(i + 1);
+                        vel = nextFrame.computeVelocityInPhyStyle(frame, calculations);
+                    }
+
+                    double slipX = vel[0] - spinVel[0];
+                    double slipY = vel[1] - spinVel[1];
+                    double slipMag = Math.hypot(slipX, slipY);
+                    // 移速的5%以内的滑动就不算？
+                    // 实验中有个神奇的4%左右的稳定误差, vel > spinVel
+                    double slipThresh = Math.hypot(vel[0], vel[1]) * 0.05;
+
+                    if (pref.trajectoryMode == TrajectoryMode.SLIP_ROLL) {
+                        if (slipMag > slipThresh) {
+                            gamePane.getLineGraphics().setStroke(ball.getTraceColor(Ball.TOTAL_TRACE_LEVELS));
+//                            System.out.println(Arrays.toString(vel) + " / " + Arrays.toString(spinVel) + " | " + slipMag + ", " + slipThresh);
+                        } else {
+                            gamePane.getLineGraphics().setStroke(ball.getTraceColor(0));
+                        }
+                    } else {
+                        if (slipMag > slipThresh) {
+                            gamePane.getLineGraphics().setStroke(ball.getTraceColor(slipMag / fullSlipThresh));
+                        } else {
+                            gamePane.getLineGraphics().setStroke(ball.getTraceColor(0));
+                        }
+                    }
+                }
+
                 gamePane.getLineGraphics().strokeLine(
                         x,
                         y,
                         nx,
                         ny
                 );
+                lastDrawn = frame;
                 x = nx;
                 y = ny;
             }
         }
     }
 
-    private void drawTraces() {
+    private void drawTrajectories() {
         boolean white = traceWhiteItem.isSelected();
         boolean target = traceTargetItem.isSelected();
         boolean all = traceAllItem.isSelected();
@@ -3403,17 +3551,17 @@ public class GameView implements Initializable {
         if (tracedMovement != null) {
             if (all) {
                 for (Map.Entry<Ball, List<MovementFrame>> entry : tracedMovement.getMovementMap().entrySet()) {
-                    drawTraceOfBall(entry.getKey(), entry.getValue());
+                    drawTrajectoryOfBall(entry.getKey(), entry.getValue());
                 }
             } else {
                 if (white) {
                     Ball cueBall = getActiveHolder().getCueBall();
-                    drawTraceOfBall(cueBall, tracedMovement.getMovementMap().get(cueBall));
+                    drawTrajectoryOfBall(cueBall, tracedMovement.getMovementMap().get(cueBall));
                 }
                 if (target) {
                     Ball targetBall = tracedMovement.getWhiteFirstCollide();
                     if (targetBall != null) {
-                        drawTraceOfBall(targetBall, tracedMovement.getMovementMap().get(targetBall));
+                        drawTrajectoryOfBall(targetBall, tracedMovement.getMovementMap().get(targetBall));
                     }
                 }
             }
@@ -4096,6 +4244,29 @@ public class GameView implements Initializable {
         }
     }
 
+    private void drawShadowInspection() {
+//        gamePane.getLineGraphics().setStroke(Color.DIMGRAY);
+        gamePane.getGraphicsContext().setFill(Color.BLACK.deriveColor(0, 0.8, 0.8, 0.3));
+        double length = gameValues.table.maxLength;
+        for (ShadowInspection.BallShadow shadow : shadowInspection.getShadows()) {
+            double[] xPoints = new double[]{
+                    gamePane.canvasX(shadow.leftStart()[0]),
+                    gamePane.canvasX(shadow.leftStart()[0] + shadow.leftRayDirection()[0] * length),
+                    gamePane.canvasX(shadow.rightStart()[0] + shadow.rightRayDirection()[0] * length),
+                    gamePane.canvasX(shadow.rightStart()[0]),
+            };
+            double[] yPoints = new double[]{
+                    gamePane.canvasY(shadow.leftStart()[1]),
+                    gamePane.canvasY(shadow.leftStart()[1] + shadow.leftRayDirection()[1] * length),
+                    gamePane.canvasY(shadow.rightStart()[1] + shadow.rightRayDirection()[1] * length),
+                    gamePane.canvasY(shadow.rightStart()[1]),
+            };
+
+            gamePane.getGraphicsContext().fillPolygon(xPoints, yPoints, xPoints.length);
+//            System.out.println("Drawing obstacle of " + shadow.ball() + ": " + shadow);
+        }
+    }
+
     private void drawInspection() {
         assert potInspection != null;
         Ball srcBall = potInspection.getSrcBall();
@@ -4232,13 +4403,16 @@ public class GameView implements Initializable {
             } else {
                 drawInspection();
             }
+            if (shadowInspection != null) {
+                drawShadowInspection();
+            }
             if (drawAiPathItem.isSelected()) gamePane.drawPredictedWhitePath(aiWhitePath);
             if (predictPlayerPathItem.isSelected())
                 gamePane.drawPredictedWhitePath(suggestedPlayerWhitePath);
         }
         drawBallInHand();
         if (potInspection == null) {
-            drawTraces();
+            drawTrajectories();
         }
         tableGraphicsChanged = false;  // 一定在drawBalls之后
     }
@@ -5013,7 +5187,7 @@ public class GameView implements Initializable {
     }
 
     private class PredictionDrawing {
-        final int nPoints = predictionQuality.nPoints;
+        final int nPoints = pref.predictionQuality.nPoints;
 
         final int nThreads = Math.min(nPoints, ConfigLoader.getInstance().getInt("nThreads", nPoints));
         Game[] gamePool = new Game[nPoints];
@@ -5034,7 +5208,7 @@ public class GameView implements Initializable {
         boolean running;
 
         PredictionDrawing() {
-            if (predictionQuality.nPoints > 0) {
+            if (pref.predictionQuality.nPoints > 0) {
                 threadPool = Executors.newFixedThreadPool(nThreads,
                         r -> {
                             Thread t = Executors.defaultThreadFactory().newThread(r);
@@ -5067,8 +5241,8 @@ public class GameView implements Initializable {
                     possibles[0],
                     game.whitePhy,
                     WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
-                    predictionQuality != PredictionQuality.NONE,
-                    predictionQuality.secondCollision,
+                    pref.predictionQuality != PredictionQuality.NONE,
+                    pref.predictionQuality.secondCollision,
                     false,
                     false,
                     true,
@@ -5086,8 +5260,8 @@ public class GameView implements Initializable {
                             possibles[ii + 1],
                             game.whitePhy,
                             WHITE_PREDICT_LEN_AFTER_WALL * playerPerson.getSolving() / 100,
-                            predictionQuality != PredictionQuality.NONE,
-                            predictionQuality.secondCollision,
+                            pref.predictionQuality != PredictionQuality.NONE,
+                            pref.predictionQuality.secondCollision,
                             false,
                             false,
                             true,

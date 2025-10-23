@@ -271,6 +271,23 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         }
     }
 
+    @Override
+    public int get2ndNextTarget(Ball pottingBall, boolean isSnookerFreeBall) {
+        int thisNext = getTargetAfterPotSuccess(pottingBall, isSnookerFreeBall);
+        if (thisNext == RAW_COLORED_REP) {
+            int remRed = remainingRedCount();
+            if (pottingBall.getValue() == 1) remRed--;
+            if (remRed > 0) return 1;
+            else return 2;
+        } else if (thisNext == 1) {
+            return RAW_COLORED_REP;
+        } else if (thisNext == 7) {
+            return END_REP;
+        } else {
+            return thisNext + 1;
+        }
+    }
+
     /**
      * 对于斯诺克，pottingBall没有任何作用
      */
