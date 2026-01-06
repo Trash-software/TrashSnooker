@@ -14,6 +14,7 @@ import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerPlayer;
+import trashsoftware.trashSnooker.core.table.AbstractSnookerTable;
 
 import java.util.*;
 
@@ -86,17 +87,21 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double whiteY = game.getCueBall().getY();
         
         double[] cornerBallPos = leftBreak ? game.getCornerRedBallPosGreenSide() : game.getCornerRedBallPosYellowSide();
-        double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 3.0;
+        double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 2.0;
         double[] thinVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thinY - whiteY);
-        double thickY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 0.5;
+        double thickY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 0.0;
         double[] thickVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thickY - whiteY); 
         
         double beginDeg = Math.toDegrees(Algebra.thetaOf(thinVec));
-        int nTicks = 25;
+        int nTicks = 30;
         double totalAng = Math.toDegrees(Algebra.thetaBetweenVectors(thickVec, thinVec));
         double tickDeg = totalAng / nTicks * -sign;
+
+        GameValues gameValues = game.getGameValues();
         
-        double selectedSideSpin = 0.5 * sign;
+//        double selectedSideSpin = 0.6 * sign;
+        Cue cue = aiPlayer.getInGamePlayer().getCueSelection().getSelected().getNonNullInstance();
+        double[] cuePoint = cue.aiCuePoint(new double[]{0, 0.8 * sign}, gameValues.ball);
         
         List<Ball> legalList = game.getAllLegalBalls(1, false, false);
         Set<Ball> legalSet = new HashSet<>(legalList);
@@ -105,10 +110,29 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double selPowerLow = 28.0 * clothSlowFactor;
         double selPowerHigh = 46.0 * clothSlowFactor;
         double selPowerTick = 2.0;
+
+        AbstractSnookerTable table = game.getTable();
         
-        double allowedYLow = game.getTable().greenBallPos()[1];
-        double allowedYHigh = game.getTable().yellowBallPos()[1];
-        double allowedX = game.getTable().breakLineX();
+        boolean adhereCushion = Math.random() > 0.25;  // 四分之三的概率是往角里面放铁库球
+        double allowedX = adhereCushion ? (gameValues.table.leftX + gameValues.ball.ballDiameter * 4) : table.breakLineX();
+        double makeSnookerPrice = adhereCushion ? 0.0 : 1.0;
+        double allowedYLow;
+        double allowedYHigh;
+        if (adhereCushion) {
+            double gap = table.breakArcRadius();
+            if (leftBreak) {
+                // 绿球侧开球，则白球沉向黄球侧
+                allowedYLow = table.yellowBallPos()[1];
+                allowedYHigh = table.yellowBallPos()[1] + gap * 1.5;
+            } else {
+                // 反之则沉向绿球侧
+                allowedYLow = table.greenBallPos()[1] - gap * 1.5;
+                allowedYHigh = table.greenBallPos()[1];
+            }
+        } else {
+            allowedYLow = table.greenBallPos()[1];
+            allowedYHigh = table.yellowBallPos()[1];
+        }
         
         Set<Ball> suggestedTarget = game.getSuggestedRegularBreakBalls();
 //        PlayerHand handSkill = aiPlayer.getPlayerPerson().handBody.getPrimary();
@@ -120,8 +144,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             for (double selectedPower = selPowerLow; selectedPower <= selPowerHigh; selectedPower += selPowerTick) {
                 CueParams cueParams = CueParams.createBySelected(
                         selectedPower,
-                        0.0,
-                        selectedSideSpin,
+                        cuePoint[0],
+                        cuePoint[1],
                         5.0,
                         game,
                         aiPlayer.getInGamePlayer(),
@@ -146,7 +170,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         false,
                         0.0,
                         false,
-                        false
+                        false,
+                        makeSnookerPrice
                 );
                 if (dc != null) {
                     double[] whiteStopPos = dc.wp.stopPoint();
@@ -166,7 +191,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             }
         }
         if (legalChoices.isEmpty()) {
-            System.out.println("Cannot find break");
+            System.err.println("Cannot find break");
             return null;
         }
         Collections.sort(legalChoices);

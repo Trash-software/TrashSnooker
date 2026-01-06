@@ -186,7 +186,8 @@ public abstract class FinalChoice {
                         true,
                         !isDirect,
                         true,
-                        false
+                        false,
+                        1.0
                 );
 
                 double acceptablePotProb = firstChoice.defaultRef.potProb - 0.15;

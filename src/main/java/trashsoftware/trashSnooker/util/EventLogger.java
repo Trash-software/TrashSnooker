@@ -15,8 +15,11 @@ public class EventLogger {
     public static final String WARNING = "warning";
     public static final String INFO = "info";
     public static final String DEBUG = "debug";
+    public static final String VERBOSE = "verbose";
     //    private static final String LOG_BASE_NAME = LOG_DIR + File.separator + "error-";
     private static final String DATE_FMT = "yyyy-MM-dd HH-mm-ss";
+    
+    private static boolean printVerbose = true;
 
     private static String baseName(String level) {
         return LOG_DIR + File.separator + level + "-";
@@ -151,6 +154,24 @@ public class EventLogger {
             fileWriter.flush();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Log a verbose message. Not writing to anywhere, just print
+     * 
+     * @param message the message to be print
+     */
+    public static void verbose(String message) {
+        if (printVerbose) System.out.println(message);
+    }
+
+    public static void verbose(String tag, String message) {
+        if (printVerbose) {
+            if (tag != null) {
+                message = tag + ": " + message;    
+            }
+            System.out.println(message);
         }
     }
 

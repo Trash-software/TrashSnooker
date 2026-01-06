@@ -168,7 +168,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
         else if (next == 8) return END_REP;
 
         ChineseEightBallPlayer player = getCuingPlayer();
-        if (player.getBallRange() == FULL_BALL_REP || player.getBallRange() == HALF_BALL_REP) {
+        if (next == FULL_BALL_REP || next == HALF_BALL_REP) {
             int backLet = player.getLettedBalls().get(LetBall.BACK);
 
             if (getRemRangedBallOnTable(player.getBallRange()) > backLet + 2)
@@ -176,7 +176,7 @@ public class ChineseEightBallGame extends NumberedBallGame<ChineseEightBallPlaye
             else if (pottingBall.getValue() == 8) return END_REP;
             else return 8;
         }
-        throw new RuntimeException("不可能");
+        throw new RuntimeException("不可能，next is: " + next);
     }
 
     @Override

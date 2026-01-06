@@ -15,22 +15,13 @@ public class SnookerAiCueBallPlacer extends AiCueBallPlacer<AbstractSnookerGame,
 
     @Override
     protected double[] breakPosition() {
-        double yOff;
-        switch (player.getPlayerPerson().getAiPlayStyle().snookerBreakMethod) {
-            case LEFT:
-                yOff = -105.0;
-                break;
-            case RIGHT:
-                yOff = 105.0;
-                break;
-            case BACK:
-                yOff = 230.0;
-                break;
-            default:
-                throw new EnumConstantNotPresentException(AiPlayStyle.SnookerBreakMethod.class, "Java编译器是不是脑壳出问题了");
-        }
-        return new double[]{game.getTable().breakLineX(), 
-                game.getGameValues().table.midY + yOff};
+        GameValues gameValues = game.getGameValues();
+        double yPos = switch (player.getPlayerPerson().getAiPlayStyle().snookerBreakMethod) {
+            case LEFT -> game.getTable().brownBallPos()[1] - gameValues.ball.ballDiameter * 1.25;
+            case RIGHT -> game.getTable().brownBallPos()[1] + gameValues.ball.ballDiameter * 1.25;
+            case BACK -> game.getTable().yellowBallPos()[1] - gameValues.ball.ballDiameter * 1.25;
+        };
+        return new double[]{game.getTable().breakLineX(), yPos};
     }
 
     @Override
@@ -39,7 +30,7 @@ public class SnookerAiCueBallPlacer extends AiCueBallPlacer<AbstractSnookerGame,
         double breakArcRadius = game.getTable().breakArcRadius();
         GameValues values = game.getGameValues();
         double centerY = values.table.midY;
-        
+
         List<double[]> posList = new ArrayList<>();
 //        System.out.println("X: " + breakLineX + ", Y: " + centerY);
         for (double radius = 0.0; radius < breakArcRadius; radius += values.ball.ballRadius) {

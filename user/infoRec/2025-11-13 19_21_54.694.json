@@ -1,0 +1,47 @@
+{
+  "frames": [{
+    "frameIndex": 1,
+    "frameNumber": 1,
+    "cueRecs": [{
+      "scoresAfter": [
+        0,
+        0
+      ],
+      "cueHand": {
+        "extension": "NO",
+        "brand": "profSnookerCue",
+        "hand": "LEFT"
+      },
+      "specials": ["BALL_IN_HAND"],
+      "firstHit": 1,
+      "gainScores": [
+        0,
+        0
+      ],
+      "attemptBase": {
+        "success": true,
+        "type": "BREAK"
+      },
+      "player": 1,
+      "target": 1
+    }],
+    "winner": 1
+  }],
+  "players": [
+    "Neil Robertson",
+    "Mark Allen"
+  ],
+  "gameValues": {
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
+    "subRules": ["SNOOKER_STD"],
+    "devMode": false,
+    "table": {
+      "tableOrdinal": 0,
+      "pocketDifficultyOrdinal": 3,
+      "holeSizeOrdinal": 2
+    }
+  },
+  "entireBeginTime": "2025-11-13 19_21_54.694",
+  "totalFrames": 1
+}

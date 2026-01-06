@@ -51,7 +51,7 @@ public class GamePane extends StackPane {
     private GameValues gameValues;
     private double canvasWidth, canvasHeight;
     private final LightBase lighting;
-    
+
     private Color aimingExtensionColor;
 
     private final ResourceBundle strings;
@@ -96,7 +96,7 @@ public class GamePane extends StackPane {
 
     public void setupPane(GameValues gameValues, double scaleMul) {
         this.gameValues = gameValues;
-        
+
         aimingExtensionColor = gameValues.table.tableColor.interpolate(Values.WHITE, 0.5);
 
         generateScales(scaleMul);
@@ -105,8 +105,8 @@ public class GamePane extends StackPane {
     public void setupPane(GameValues gameValues) {
         setupPane(gameValues, 1.0);
     }
-    
-    public static double computeScale(TableMetrics tableMetrics, 
+
+    public static double computeScale(TableMetrics tableMetrics,
                                       double windowW, double windowH, double systemZoom, double scaleMul) {
         double graphWidth = windowW / systemZoom - 180;
         double graphHeight = windowH / systemZoom - 180;
@@ -136,15 +136,15 @@ public class GamePane extends StackPane {
 
         setupCanvas();
     }
-    
+
     public void updateScale(double newScale, GameHolder gameHolder) {
         scale = newScale;
         TableMetrics values = gameValues.table;
         canvasWidth = values.outerWidth * scale;
         canvasHeight = values.outerHeight * scale;
-        
+
         setupCanvas();
-        
+
         for (Ball ball : gameHolder.getAllBalls()) {
             ball.model.setVisualRadius(gameValues.ball.ballRadius * scale);
         }
@@ -947,51 +947,64 @@ public class GamePane extends StackPane {
 
 //        System.out.println(Arrays.toString(touchXY));
 //        System.out.println(canvasX());
-        
-        double tableL = canvasX(gameValues.table.leftX);
-        double tableR = canvasX(gameValues.table.rightX);
-        double tableTop = canvasY(gameValues.table.topY);
-        double tableBot = canvasY(gameValues.table.botY);
-        
+
+//        double tableL = canvasX(gameValues.table.leftX);
+//        double tableR = canvasX(gameValues.table.rightX);
+//        double tableTop = canvasY(gameValues.table.topY);
+//        double tableBot = canvasY(gameValues.table.botY);
+
         double startX = touchXY[0];
         double startY = touchXY[1];
         
-        boolean outside = startX <= tableL || startX >= tableR || startY <= tableTop || startY >= tableBot;
-
-        double[] intersection = findIntersection(
-                touchXY[0], 
-                touchXY[1],
-                cuePointing[0],
-                cuePointing[1],
-                tableL,
-                tableR,
-                tableBot,  // 调换了top和bot，因为这函数是gpt写的，但是javafx的y翻转了
-                tableTop
-        );
-        
-        if (intersection == null) return;
-        
-        if (outside) {
-            double xSign = Math.signum(cuePointing[0]);
-            double ySign = Math.signum(cuePointing[1]);
-            intersection = findIntersection(
-                    intersection[0] + xSign,
-                    intersection[1] - ySign,
-                    cuePointing[0],
-                    cuePointing[1],
-                    tableL,
-                    tableR,
-                    tableBot,  // 调换了top和bot，因为这函数是gpt写的，但是javafx的y翻转了
-                    tableTop
-            );
-        }
+        double[] direction = Algebra.unitVector(cuePointing);
+        double endX = startX + direction[0] * gameValues.table.maxLength;
+        double endY = startY + direction[1] * gameValues.table.maxLength;
 
         graphicsContext.strokeLine(
                 startX,
                 startY,
-                intersection[0],
-                intersection[1]
+                endX,
+                endY
         );
+
+//        boolean outside = startX <= tableL || startX >= tableR || startY <= tableTop || startY >= tableBot;
+//
+//        double[] intersection = findIntersection(
+//                touchXY[0], 
+//                touchXY[1],
+//                cuePointing[0],
+//                cuePointing[1],
+//                tableL,
+//                tableR,
+//                tableBot,  // 调换了top和bot，因为这函数是gpt写的，但是javafx的y翻转了
+//                tableTop
+//        );
+//        
+//        if (intersection == null) return;
+//        
+////        if (outside) {
+////            double xSign = Math.signum(cuePointing[0]);
+////            double ySign = Math.signum(cuePointing[1]);
+////            intersection = findIntersection(
+////                    intersection[0] + xSign,
+////                    intersection[1] - ySign,
+////                    cuePointing[0],
+////                    cuePointing[1],
+////                    tableL,
+////                    tableR,
+////                    tableBot,  // 调换了top和bot，因为这函数是gpt写的，但是javafx的y翻转了
+////                    tableTop
+////            );
+////        }
+//
+////        System.out.println(Arrays.toString(intersection) + " | " + startX + ", " + startY);
+//
+//        graphicsContext.strokeLine(
+//                startX,
+//                startY,
+//                intersection[0],
+//                intersection[1]
+//        );
     }
 
     private static double[] findIntersection(double x0, double y0, double dx, double dy,

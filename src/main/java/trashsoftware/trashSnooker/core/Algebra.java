@@ -457,6 +457,11 @@ public class Algebra {
 
         return null;
     }
+    
+    public static double[] unitVectorBisector(double[] a, double[] b) {
+        double[] mid = vectorAdd(a, b);
+        return unitVector(mid);
+    }
 
     public static void main(String[] args) {
         double[] skr = generateSkewedRange(10, 100, 10, 1.35);

@@ -31,7 +31,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     private final Color colorWithOpa;
     private final Color colorTransparent;
 //    private final Color traceColor;
-    public static final int TOTAL_TRACE_LEVELS = 10;
+    public static final int TOTAL_TRACE_LEVELS = 16;
     private transient final SortedMap<Integer, Color> traceColors = new TreeMap<>();
     private final int identifier;  // 即使是分值一样的球identifier也不一样，但是clone之后identifier保持不变
     protected double xSpin, ySpin;
@@ -1203,12 +1203,12 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
      * @param slipRate 0 to 1, 0 is rolling, 1 is slipping at max speed
      * @return the color corresponding to this slip
      */
-    public Color getTraceColor(double slipRate) {
+    public Color getTraceColor(double slipRate, Color tableColor) {
         int level = (int) Math.round(slipRate * TOTAL_TRACE_LEVELS);
         Color res = traceColors.get(level);
         if (res == null) {
-            double value = Algebra.shiftRangeSafe(0, TOTAL_TRACE_LEVELS, 0.5, 0.9, level);
-            res = traceColors.put(level, color.deriveColor(0, 1, value, 1));
+            double value = Algebra.shiftRangeSafe(0, TOTAL_TRACE_LEVELS, 0.7, 0.15, level);
+            res = traceColors.put(level, color.interpolate(tableColor, value));
         }
         return res;
     }

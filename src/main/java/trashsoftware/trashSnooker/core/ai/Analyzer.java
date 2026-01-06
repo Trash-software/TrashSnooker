@@ -213,7 +213,8 @@ public class Analyzer {
             AiCue<?, ?> aiCue,
             Player aiPlayer,
             Game.SeeAble seeAble,
-            double basePrice
+            double basePrice,
+            double makeSnookerPrice  // [0, 1]的区间，1是正常考虑做斯诺克，0是完全不考虑做球
     ) {
         List<AttackChoice> directAttackChoices = getAttackChoices(
                 copy,
@@ -248,7 +249,7 @@ public class Analyzer {
         if (seeAble.seeAbleTargets == 0) {
             // 这个权重如果太大，AI会不计惩罚地去做斯诺克
             // 如果太小，AI会不做斯诺克
-            double snookerScore = Math.sqrt(seeAble.maxShadowAngle) * 50.0;
+            double snookerScore = Math.sqrt(seeAble.maxShadowAngle) * 50.0 * makeSnookerPrice;
             if (defenseResult.isSolving) snookerScore /= 5;
             defenseResult.snookerScore += snookerScore * basePrice;
         } else {
@@ -274,7 +275,8 @@ public class Analyzer {
             boolean isSolving,
             double nativePrice,
             boolean allowPocketCorner,
-            boolean considerTolerance
+            boolean considerTolerance,
+            double makingSnookerPrice
     ) {
 
         WhitePrediction wp = copy.predictWhite(cpp,
@@ -332,7 +334,8 @@ public class Analyzer {
                     aiCue,
                     aiPlayer,
                     seeAble,
-                    0.5
+                    0.5,
+                    makingSnookerPrice
             );
 
             // 解球专用的吧
@@ -380,7 +383,8 @@ public class Analyzer {
                         false,
                         defenseResult,
                         aiCue,
-                        opponentBalls
+                        opponentBalls,
+                        makingSnookerPrice
                 );
                 for (WhitePrediction devOne : tolerances) {
                     if (devOne == null) {
@@ -391,18 +395,6 @@ public class Analyzer {
                     if (wp.getFirstCollide() != devOne.getFirstCollide()) {
                         stabilityScore -= 50;
                     }
-//                    if (wp.isFirstBallCollidesOther() != devOne.isFirstBallCollidesOther()) {
-//                        stabilityScore -= 5;
-//                    }
-//                    if (wp.getSecondCollide() != devOne.getSecondCollide()) {
-//                        stabilityScore -= 10;
-//                    }
-//                    double[] devStopPos = devOne.stopPoint();
-//                    double dt = Algebra.distanceToPoint(whiteStopPos, devStopPos);
-//                    double allowed = copy.getGameValues().table.maxLength * 0.1;
-//                    if (dt > allowed) {
-//                        stabilityScore -= (dt / allowed) * 50;
-//                    }
                 }
             }
 //            System.out.printf("%f %f %f\n", snookerScore, opponentAttackPrice, penalty);
@@ -525,7 +517,8 @@ public class Analyzer {
             boolean checkCollisionAfterFirst,
             boolean predictTargetBall,
             boolean wipe,
-            boolean useClone) {
+            boolean useClone,
+            double makingSnookerPrice) {
         return toleranceAnalysis(
                 game,
                 aiPlayer,
@@ -537,7 +530,8 @@ public class Analyzer {
                 predictTargetBall,
                 wipe,
                 useClone,
-                null, null, null
+                null, null, null,
+                makingSnookerPrice
         );
     }
 
@@ -554,7 +548,8 @@ public class Analyzer {
             boolean useClone,
             @Nullable DefenseResult defenseResult,
             @Nullable AiCue<?, ?> aiCue,
-            @Nullable List<Ball> opponentBalls) {
+            @Nullable List<Ball> opponentBalls,
+            double makingSnookerPrice) {
         double[] devs = aiStandardDeviation(
                 origCpp.cueParams,
                 aiPlayer,
@@ -611,7 +606,8 @@ public class Analyzer {
                         aiCue,
                         aiPlayer,
                         seeAble,
-                        0.5 / allDev.length
+                        0.5 / allDev.length,
+                        makingSnookerPrice
                 );
             }
             devWp.resetToInit();

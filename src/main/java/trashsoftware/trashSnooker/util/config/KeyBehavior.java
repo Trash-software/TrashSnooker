@@ -25,6 +25,7 @@ public enum KeyBehavior {
     CHANGE_HAND_LEFT(KeyCode.DIGIT1),
     CHANGE_HAND_RIGHT(KeyCode.DIGIT2),
     CHANGE_HAND_REST(KeyCode.DIGIT3),
+    ALTER_AIMING_EXTENSION(KeyCode.I),
     ALTER_POT_INSPECTION(KeyCode.O),
     ALTER_SHADOW_INSPECTION(KeyCode.P);
     

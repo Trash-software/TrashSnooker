@@ -103,6 +103,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     protected Ball specifiedTarget;
     //    protected final Set<SubRule> subRules = new HashSet<>();
     protected BreakStats breakStats;
+    protected AiCue<?, ?> aiCue;
 
     protected Game(EntireGame entireGame,
                    GameSettings gameSettings, GameValues gameValues,
@@ -470,10 +471,26 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     }
 
     public AiCueResult aiCue(Player aiPlayer, Phy phy) {
-        AiCue<?, ?> aiCue = createAiCue((P) aiPlayer);
+        aiCue = createAiCue((P) aiPlayer);
         aiCue.setPresetTarget(specifiedTarget);
         specifiedTarget = null;
-        return aiCue.makeCue(phy);
+        AiCueResult result = aiCue.makeCue(phy);
+        aiCue = null;
+        return result;
+    }
+
+    /**
+     * 无论怎么clone, aiCue应该是指向的原本那个
+     */
+    public boolean isAiCueInterrupted() {
+        if (aiCue == null) return false;
+        return aiCue.isInterrupted();
+    }
+
+    public void interruptAiCue() {
+        if (aiCue != null) {
+            aiCue.interrupt();
+        }
     }
 
     /**
@@ -2288,7 +2305,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     movement.addFrame(ball,
                             new MovementFrame(ball.x, ball.y,
                                     ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(),
-                                    !ball.canDraw(),
+                                    ball.isPotted(),
                                     movementTypes[i], movementValues[i]));
                     movementTypes[i] = MovementFrame.NORMAL;
                     movementValues[i] = 0.0;

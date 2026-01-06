@@ -45,13 +45,13 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             5.0, 15.0, 30.0
     };
     protected static final double[][] ATTACK_SPIN_POINTS = {  // 高低杆，左右塞
-            {0.0, 0.0}, {0.0, 0.35}, {0.0, -0.35}, {0.0, 0.7}, {0.0, -0.7},
-            {-0.3, 0.0}, {-0.3, 0.3}, {-0.3, -0.3}, {-0.3, 0.6}, {-0.3, -0.6},
-            {0.3, 0.0}, {0.3, 0.3}, {0.3, -0.3}, {0.3, 0.6}, {0.3, -0.6},
-            {-0.6, 0.0}, {-0.6, 0.25}, {-0.6, -0.25}, {-0.6, 0.5}, {-0.6, -0.5},
-            {0.6, 0.0}, {0.6, 0.25}, {0.6, -0.25}, {0.6, 0.5}, {0.6, -0.5},
-            {-0.9, 0.0}, {-0.8, 0.35}, {-0.8, -0.35},
-            {0.9, 0.0}, {0.8, 0.35}, {0.8, -0.35}
+            {0.0, 0.0}, {0.0, 0.4}, {0.0, -0.4}, {0.0, 0.8}, {0.0, -0.8},
+            {-0.3, 0.0}, {-0.3, 0.35}, {-0.3, -0.35}, {-0.3, 0.7}, {-0.3, -0.7},
+            {0.3, 0.0}, {0.3, 0.35}, {0.3, -0.35}, {0.3, 0.7}, {0.3, -0.7},
+            {-0.6, 0.0}, {-0.6, 0.3}, {-0.6, -0.3}, {-0.6, 0.6}, {-0.6, -0.6},
+            {0.6, 0.0}, {0.6, 0.3}, {0.6, -0.3}, {0.6, 0.6}, {0.6, -0.6},
+            {-0.9, 0.0}, {-0.8, 0.4}, {-0.8, -0.4},
+            {0.9, 0.0}, {0.8, 0.4}, {0.8, -0.4}
     };
     protected static final double[][] DOUBLE_POT_SPIN_POINTS = {  // 翻袋进攻的塞
             {0.0, 0.0}, {0.0, 0.5}, {0.0, -0.5},
@@ -65,6 +65,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     };
     public static boolean aiOnlyDefense = false;
     public static boolean aiOnlyDouble = false;
+    protected boolean interrupted = false;
     protected Ball presetTarget;
 
     static {
@@ -95,6 +96,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     }
 
     public abstract AiCueResult makeCue(Phy phy);
+    
+    public void interrupt() {
+        interrupted = true;
+    }
+
+    public boolean isInterrupted() {
+        return interrupted;
+    }
 
     public void setPresetTarget(Ball presetTarget) {
         this.presetTarget = presetTarget;
@@ -1173,6 +1182,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         public void run() {
             int threadIndex = (int) (Thread.currentThread().threadId() % gameClonesPool.length);
             Game<?, ?> copy = gameClonesPool[threadIndex];
+            if (copy.isAiCueInterrupted()) return;
             //        System.out.print(selectedPower);
 
             // todo: 有可能出现加了弧线就绕不过去那种情况
@@ -1305,6 +1315,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         @Override
         public void run() {
+            if (interrupted) return;
             int threadIndex = (int) (Thread.currentThread().threadId() % gameClonesPool.length);
             Game<?, P> copy = gameClonesPool[threadIndex];
 
@@ -1369,7 +1380,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     solving,
                     nativePrice,
                     allowPocketCorner,
-                    true
+                    true,
+                    solving ? 0.5 : 1.0
             );
         }
     }
@@ -1404,6 +1416,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         @Override
         public void run() {
+            if (interrupted) return;
             int threadIndex = (int) (Thread.currentThread().threadId() % gameClonesPool.length);
             Game<?, P> copy = gameClonesPool[threadIndex];
 
@@ -1439,7 +1452,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     false,
                     1.0,  // 进攻杆，AI应该不会吃屎去擦最薄边
                     false,
-                    true
+                    true,
+                    1.0
             );
 
             if (result != null) {
