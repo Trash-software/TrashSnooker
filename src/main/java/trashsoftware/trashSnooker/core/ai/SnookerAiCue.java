@@ -223,7 +223,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         return null;
     }
 
-    protected boolean currentMustAttack() {
+    protected boolean mustAttackInternal() {
         return false;  // 已经在makeCue里面处理了
     }
 

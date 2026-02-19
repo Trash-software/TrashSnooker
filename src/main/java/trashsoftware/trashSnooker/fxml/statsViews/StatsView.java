@@ -47,13 +47,12 @@ public class StatsView extends ChildInitializable {
         initTree();
     }
 
-//    @Override
-//    public Stage getStage() {
-//        return stage;
-//    }
-
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     private void initTree() {

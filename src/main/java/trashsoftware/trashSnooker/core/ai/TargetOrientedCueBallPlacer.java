@@ -52,8 +52,9 @@ public abstract class TargetOrientedCueBallPlacer<G extends Game<?, ?>, P extend
             SortedMap<FinalChoice.IntegratedAttackChoice, double[]> choicePlace = new TreeMap<>();
 
             double[] targetPos = new double[]{target.getX(), target.getY()};
-            List<double[][]> dirHolePoints = game.directionsToAccessibleHoles(target);
-            for (double[][] dirHole : dirHolePoints) {
+            List<Game.PocketDirection> dirHolePoints = game.directionsToAccessibleHoles(target);
+            for (Game.PocketDirection pd : dirHolePoints) {
+                double[][] dirHole = pd.dirHole();
 //                System.out.println(target.getValue() + " " + game.getGameValues().getHoleByOpenCenter(dirHole[1]));
                 List<double[]> availPlaces = switch (allowedPos) {
                     case FULL_TABLE -> availPosesFullTable(target, dirHole[0], dirHole[2]);
@@ -71,6 +72,7 @@ public abstract class TargetOrientedCueBallPlacer<G extends Game<?, ?>, P extend
                             null,
                             targetRep,
                             false,
+                            pd.pocket(),
                             dirHole,
                             targetPos
                     );

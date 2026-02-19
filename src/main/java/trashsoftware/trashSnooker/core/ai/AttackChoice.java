@@ -32,6 +32,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
     protected double[] whiteNaturalExitDirection;  // 白球的自然分离角方向，就是和目标球90度那个
     protected double whiteNaturalExitCushionDistance;  // 白球按自然分离角出去后多远会吃库
     protected double[] holeOpenPos;  // 洞口瞄准点的坐标，非洞底
+    protected Pocket pocket;
     protected CuePlayerHand handSkill;
 
     int attackTarget;
@@ -52,6 +53,10 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
 
     public double[] getTargetOrigPos() {
         return targetOrigPos;
+    }
+
+    public Pocket getPocket() {
+        return pocket;
     }
 
     public AttackParam getDefaultRef() {
@@ -168,7 +173,6 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
     public static class DoubleAttackChoice extends AttackChoice {
 
         double[] lastCushionToPocket;
-        protected Pocket pocket;
 
         /**
          * @param lastAiPottedBall 如果这杆为走位预测，则该值为AI第一步想打的球。如这杆就是第一杆，则为null
@@ -187,7 +191,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             double cueDirY = collisionPointY - whitePos[1];
             double[] cueDirUnit = Algebra.unitVector(cueDirX, cueDirY);
 
-            double[] holePos = game.getGameValues().getOpenCenter(aiming.pocket.hole);
+            double[] holePos = game.getGameValues().getOpenCenter(aiming.pocket.pocketName);
             double[] firstCushionPoint = aiming.cushionPos.get(0);
             double[] lastCushionPoint = aiming.cushionPos.get(aiming.cushionPos.size() - 1);
             double[] lastCushionToHole = new double[]{
@@ -328,6 +332,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
                                                       @Nullable Ball lastAiPottedBall,
                                                       int attackTarget,
                                                       boolean isPositioning,
+                                                      Pocket pocket,
                                                       double[][] dirHole,
                                                       @Nullable double[] ballOrigPos) {
             double collisionPointX = dirHole[2][0];
@@ -374,6 +379,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             directAttackChoice.isPositioning = isPositioning;
             directAttackChoice.targetHoleVec = targetToHole;
             directAttackChoice.holeOpenPos = holePos;
+            directAttackChoice.pocket = pocket;
             directAttackChoice.angleRad = angle;
             directAttackChoice.targetHoleDistance = targetHoleDistance;
             directAttackChoice.whitePos = whitePos;
@@ -586,6 +592,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             copied.isPositioning = isPositioning;
             copied.targetHoleVec = targetHoleVec;
             copied.holeOpenPos = holeOpenPos;
+            copied.pocket = pocket;
             copied.angleRad = angleRad;
             copied.targetHoleDistance = targetHoleDistance;
             copied.whitePos = whitePos;

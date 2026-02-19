@@ -1123,4 +1123,40 @@ public class GamePane extends StackPane {
             graphicsContext.restore();
         }
     }
+    
+    public void drawCircle(double[] pos, double radius, Color color) {
+        graphicsContext.setStroke(color);
+        graphicsContext.setLineWidth(8.0 * scale);
+        
+        if (pos == null) return;
+        
+        double visRadius = radius * scale;
+        double x = canvasX(pos[0]);
+        double y = canvasY(pos[1]);
+        
+        graphicsContext.strokeOval(x - visRadius, 
+                y - visRadius, 
+                visRadius * 2, 
+                visRadius * 2);
+    }
+
+    public void drawCross(double[] pos, double radius, Color color) {
+        graphicsContext.setStroke(color);
+        graphicsContext.setLineWidth(10.0 * scale);
+
+        if (pos == null) return;
+
+        double visRadius = radius * scale;
+        double x = canvasX(pos[0]);
+        double y = canvasY(pos[1]);
+        
+        graphicsContext.strokeLine(x - visRadius, 
+                y - visRadius,
+                x + visRadius,
+                y + visRadius);
+        graphicsContext.strokeLine(x - visRadius,
+                y + visRadius,
+                x + visRadius,
+                y - visRadius);
+    }
 }

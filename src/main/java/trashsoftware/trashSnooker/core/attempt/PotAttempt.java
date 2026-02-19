@@ -1,7 +1,10 @@
 package trashsoftware.trashSnooker.core.attempt;
 
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.CuePlayParams;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AttackChoice;
@@ -14,11 +17,10 @@ public class PotAttempt extends CueAttempt {
     private final CuePlayParams cuePlayParams;
     private final PlayerPerson playerPerson;
     private final Ball targetBall;
-//    private final double[] cueBallOrigPos;
-//    private final double[] targetBallOrigPos;
-//    private final double[][] targetDirHole;
     public final AttackChoice attackChoice;
     private Position positionSuccess = Position.NOT_SET;
+    
+//    protected double @Nullable [] targetFirstCushionPos;  // 如果目标球碰库，则有
     
     private PotAttempt positionToThis;  // 连续进攻中的上一杆
 
@@ -85,7 +87,28 @@ public class PotAttempt extends CueAttempt {
     public CuePlayParams getCuePlayParams() {
         return cuePlayParams;
     }
-    
+
+    @Override
+    protected void proceedAfterMovementSet() {
+//        targetFirstCushionPos = movement.getTargetTrace().getTargetFirstCushion().position();
+    }
+
+    public double @Nullable [] getTargetFirstCushionPos() {
+        if (movement != null) {
+            Movement.CushionHit ch = movement.getTargetTrace().getTargetFirstCushion();
+            if (ch != null) return ch.position();
+        }
+        return null;
+    }
+
+    public double @Nullable [] getWhiteFirstCollisionPos() {
+        if (movement != null) {
+            Movement.BallHit bh = movement.getWhiteTrace().getFirstCollision();
+            if (bh != null) return bh.selfPos();
+        }
+        return null;
+    }
+
     public boolean isDoubleShot() {
         return attackChoice instanceof AttackChoice.DoubleAttackChoice;
     }
@@ -113,6 +136,13 @@ public class PotAttempt extends CueAttempt {
         double[] targetBallOrigPos = getTargetBallOrigPos();
         double[] cueBallOrigPos = getCueBallOrigPos();
         
+        return isLongPot(gameValues.table, cueBallOrigPos, targetBallOrigPos, targetDirHole);
+    }
+    
+    public static boolean isLongPot(TableMetrics tableMetrics,
+                                    double[] cueBallOrigPos, 
+                                    double[] targetBallOrigPos,
+                                    double[][] targetDirHole) {
         double whiteTargetDt = Math.hypot(
                 targetBallOrigPos[0] - cueBallOrigPos[0],
                 targetBallOrigPos[1] - cueBallOrigPos[1]
@@ -122,7 +152,11 @@ public class PotAttempt extends CueAttempt {
                 targetDirHole[1][1] - targetBallOrigPos[1]
         );
         double totalLength = whiteTargetDt + targetHoleDt;
-        return totalLength >= gameValues.table.diagonalLength() * 0.6667;
+        return isLongPot(tableMetrics, totalLength);
+    }
+    
+    public static boolean isLongPot(TableMetrics tableMetrics, double totalDistance) {
+        return totalDistance >= tableMetrics.diagonalLength() * 0.6667;
     }
 
     public enum Position {

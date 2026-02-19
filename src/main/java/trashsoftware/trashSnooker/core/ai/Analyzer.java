@@ -69,11 +69,12 @@ public class Analyzer {
         List<AttackChoice.DirectAttackChoice> directAttackChoices = new ArrayList<>();
         for (Ball ball : legalBalls) {
             if (ball.isPotted() || ball == lastPottingBall) continue;  // todo: 潜在bug：斯诺克清彩阶段自由球
-            List<double[][]> dirHoles = game.directionsToAccessibleHoles(ball);
+            List<Game.PocketDirection> dirHoles = game.directionsToAccessibleHoles(ball);
 //            System.out.println("dirHoles: " + dirHoles.size());
 //            double[] ballPos = new double[]{ball.getX(), ball.getY()};
 
-            for (double[][] dirHole : dirHoles) {
+            for (Game.PocketDirection pd : dirHoles) {
+                double[][] dirHole = pd.dirHole();
                 double collisionPointX = dirHole[2][0];
                 double collisionPointY = dirHole[2][1];
 
@@ -90,6 +91,7 @@ public class Analyzer {
                             lastPottingBall,
                             attackTarget,
                             isPositioning,
+                            pd.pocket(),
                             dirHole,
                             null
                     );
@@ -159,6 +161,7 @@ public class Analyzer {
                         null,
                         direct.attackTarget,
                         direct.isPositioning,
+                        direct.pocket, 
                         direct.dirHole,
                         null
                 );

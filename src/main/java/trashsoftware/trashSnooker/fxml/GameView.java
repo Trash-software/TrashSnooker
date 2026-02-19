@@ -41,10 +41,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.audio.AudioPlayerManager;
 import trashsoftware.trashSnooker.audio.SoundInfo;
 import trashsoftware.trashSnooker.core.*;
-import trashsoftware.trashSnooker.core.ai.AiCueBallPlacer;
-import trashsoftware.trashSnooker.core.ai.AiCueResult;
-import trashsoftware.trashSnooker.core.ai.AttackChoice;
-import trashsoftware.trashSnooker.core.ai.FinalChoice;
+import trashsoftware.trashSnooker.core.ai.*;
 import trashsoftware.trashSnooker.core.attempt.CueType;
 import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
@@ -722,7 +719,7 @@ public class GameView implements Initializable {
     private void setupGameMenu() {
         gameMenu.getItems().clear();
         gameMenu.setDisable(replay != null);
-        if (careerMatch != null) {
+        if (careerMatch != null || devMode) {
             gameMenu.getItems().addAll(aiHelpPlayMenuItem, gameMenuSep1);
         }
 
@@ -1409,7 +1406,7 @@ public class GameView implements Initializable {
             if (game.getGame().isBallInHand()) {
                 return;
             }
-            AiCueResult cueResult = game.getGame().aiCue(humanPlayer, game.predictPhy);
+            AiCueResult cueResult = game.getGame().aiCue(humanPlayer, new AiCuePref(game.predictPhy));
             System.out.println("ai predicting human player path in " + (System.currentTimeMillis() - st) +
                     " ms, result: " + cueResult);
             if (cueResult != null) {
@@ -2284,7 +2281,7 @@ public class GameView implements Initializable {
         cursorDrawer.synchronizeGame();
 
         if (aiAutoPlay && willPlayPlayer.getInGamePlayer().getPlayerType() == PlayerType.COMPUTER) {
-            aiCue(willPlayPlayer, false);  // 老子给你让杆，你复位？豁哥哥
+            aiCue(willPlayPlayer, false, false);  // 老子给你让杆，你复位？豁哥哥
         }
     }
 
@@ -2436,13 +2433,13 @@ public class GameView implements Initializable {
             recalculateUiRestrictions();
         }
     }
-    
+
     private void interruptAi() {
         if (!aiCalculating || aiCalculationThread == null) return;
         forceInterruptingAi = true;
-        
+
         game.getGame().interruptAiCue();
-        
+
         // 要等被打断的Thread终止时自己把forceInterruptingAi改回false
     }
 
@@ -2769,9 +2766,10 @@ public class GameView implements Initializable {
         }
 
         if (!snookered && predictedTargetBall != null) {
-            List<double[][]> holeDirectionsAndHoles =
+            List<Game.PocketDirection> holeDirectionsAndHoles =
                     game.getGame().directionsToAccessibleHoles(predictedTargetBall);
-            for (double[][] directionHole : holeDirectionsAndHoles) {
+            for (Game.PocketDirection pocketDirection : holeDirectionsAndHoles) {
+                double[][] directionHole = pocketDirection.dirHole();
                 double pottingDirection = Algebra.thetaOf(directionHole[0]);
                 double aimingDirection =
                         Algebra.thetaOf(targetPredictionUnitX, targetPredictionUnitY);
@@ -2789,6 +2787,7 @@ public class GameView implements Initializable {
                             null,
                             game.getGame().getCurrentTarget(),
                             false,
+                            pocketDirection.pocket(),
                             directionHole,
                             new double[]{predictedTargetBall.getX(), predictedTargetBall.getY()}
                     );
@@ -3053,11 +3052,26 @@ public class GameView implements Initializable {
         tableGraphicsChanged = true;
     }
 
-    private void aiCue(Player player) {
-        aiCue(player, true);
+    void quitAiHelpPlay() {
+        Platform.runLater(() -> {
+            aiCalculating = false;
+            forceInterruptingAi = false;
+            if (aiHelpPlay) {
+                endCueAnimation();
+                tableGraphicsChanged = true;
+                enableDisabledUi();
+                recalculateUiRestrictions();
+                aiHelpPlayMenuItem.setSelected(false);
+                setButtonsCueEnd(game.getGame().getCuingPlayer());
+            }
+        });
     }
 
-    private void aiCue(Player player, boolean aiHasRightToReposition) {
+    private void aiCue(Player player) {
+        aiCue(player, true, false);
+    }
+
+    private void aiCue(Player player, boolean aiHasRightToReposition, boolean aiForceAttack) {
         boolean aiHelpPlayerPlaying = player.getInGamePlayer().isHuman() && aiHelpPlay;
         if (aiHelpPlayerPlaying) {
             if (careerMatch != null) {
@@ -3146,7 +3160,16 @@ public class GameView implements Initializable {
 
             AiCueResult cueResult0 = null;
             try {
-                cueResult0 = game.getGame().aiCue(player, game.predictPhy);
+                AiCuePref aiCuePref = new AiCuePref(game.predictPhy);
+                if (aiHelpPlayerPlaying) {
+                    ConfigLoader cl = ConfigLoader.getInstance();
+                    String aiHelperDefense = cl.getString("aiHelperDefense");
+                    if ("notAllow".equals(aiHelperDefense)) {
+                        aiCuePref.setMustAttack(true);
+                    }
+                }
+                if (aiForceAttack) aiCuePref.setMustAttack(true);
+                cueResult0 = game.getGame().aiCue(player, aiCuePref);
             } catch (Exception e) {
                 EventLogger.error(e);
             }
@@ -3161,6 +3184,7 @@ public class GameView implements Initializable {
                 tableGraphicsChanged = true;
                 enableDisabledUi();
                 recalculateUiRestrictions();
+                Platform.runLater(() -> setButtonsCueEnd(player));
                 return;
             }
             final AiCueResult cueResult = cueResult0;
@@ -3169,66 +3193,103 @@ public class GameView implements Initializable {
             if (cueResult == null) {
                 aiCalculating = false;
                 forceInterruptingAi = false;
-                withdraw(player);
+                if (aiHelpPlayerPlaying) {
+                    quitAiHelpPlay();
+                } else {
+                    withdraw(player);
+                }
                 return;
             }
-            aiWhitePath = cueResult.getWhitePath();  // todo
-            tableGraphicsChanged = true;
-            if (game.gameValues.rule.snookerLike()) {
-                AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
-                if (cueResult.getTargetBall() != null) {
-                    asg.setIndicatedTarget(cueResult.getTargetBall().getValue(), true);
-                } else {
-                    // ai在乱打
-                    System.out.println("AI angry cues");
-                    asg.setIndicatedTarget(2, true);
+            if (aiHelpPlayerPlaying) {
+                if (cueResult.getCueType() != CueType.BREAK && !cueResult.isAttack()) {
+                    ConfigLoader cl = ConfigLoader.getInstance();
+                    String aiHelperDefense = cl.getString("aiHelperDefense", "ask");
+                    if ("notAllow".equals(aiHelperDefense) || aiForceAttack) {
+                        Platform.runLater(() -> AlertShower.showInfo(stage,
+                                strings.getString("aiHelperCannotAttack"),
+                                strings.getString("aiHelperCannotAttack"),
+                                3000));
+                        quitAiHelpPlay();
+                        return;
+                    } else if ("ask".equals(aiHelperDefense)) {
+                        Platform.runLater(() -> AlertShower.askConfirmation3(stage,
+                                strings.getString("aiHelperWantToDefend"),
+                                strings.getString("aiHelperWantToDefendHeader"),
+                                strings.getString("aiHelperDefendAllow"),
+                                strings.getString("aiHelperDefendTryAttack"),
+                                strings.getString("aiHelperDefendUserHandle"),
+                                true,
+                                () -> aiReallyPlay(player, cueResult, aiHelpPlayerPlaying),
+                                () -> aiCue(player, aiHasRightToReposition, true),
+                                this::quitAiHelpPlay,
+                                null
+                        ));
+                        return;
+                    }
                 }
             }
 
-            Platform.runLater(() -> {
-                cueButton.setText(strings.getString("isCuing"));
-                cursorDirectionUnitX = cueResult.getUnitX();
-                cursorDirectionUnitY = cueResult.getUnitY();
-                System.out.printf("Ai direction: %f, %f\n", cursorDirectionUnitX, cursorDirectionUnitY);
-                currentHand = cueResult.getCuePlayerHand();
-                updateHandSelectionToggleByData(currentHand.playerHand.hand);
-                updatePowerSlider(player.getInGamePlayer(), cueResult.getCuePlayerHand());
-                powerSlider.setValue(cueResult.getCueParams().selectedPower());
-                cuePointX = cueCanvasWH / 2 + cueResult.getCueParams().selectedSideSpin() * cueAreaRadius;
-                cuePointY = cueCanvasWH / 2 - cueResult.getCueParams().selectedFrontBackSpin() * cueAreaRadius;
-                cueAngleDeg = cueResult.getCueParams().getCueAngleDeg();
-                setCueAngleLabel();
-
-                recalculateObstacles();
-                aimingChanged();
-                updateBeforeCue();
-
-                CuePlayParams realParams = applyRandomCueError(player);
-                if (aiHelpPlayerPlaying && careerMatch != null) {
-                    reduceCueHp(getCuingCue(), player, realParams);
-                }
-
-                double whiteStartingX = game.getGame().getCueBall().getX();
-                double whiteStartingY = game.getGame().getCueBall().getY();
-
-                aiCalculating = false;
-                forceInterruptingAi = false;
-
-                beginCueAnimation(game.getGame().getCuingPlayer().getInGamePlayer(),
-                        whiteStartingX, whiteStartingY, cueResult.getCueParams().selectedPower(),
-                        cueResult.getUnitX(), cueResult.getUnitY());
-
-                Thread thread = new Thread(() -> aiCueCalculations(
-                        realParams,
-                        player,
-                        cueResult
-                ));
-                thread.start();
-            });
+            aiReallyPlay(player, cueResult, aiHelpPlayerPlaying);
         });
         // todo: 设置on failed
         aiCalculationThread.setDaemon(true);
         aiCalculationThread.start();
+    }
+
+    private void aiReallyPlay(Player player, AiCueResult cueResult, boolean aiHelpPlayerPlaying) {
+        aiWhitePath = cueResult.getWhitePath();  // todo
+        tableGraphicsChanged = true;
+        if (game.gameValues.rule.snookerLike()) {
+            AbstractSnookerGame asg = (AbstractSnookerGame) game.getGame();
+            if (cueResult.getTargetBall() != null) {
+                asg.setIndicatedTarget(cueResult.getTargetBall().getValue(), true);
+            } else {
+                // ai在乱打
+                System.out.println("AI angry cues");
+                asg.setIndicatedTarget(2, true);
+            }
+        }
+
+        Platform.runLater(() -> {
+            cueButton.setText(strings.getString("isCuing"));
+            cursorDirectionUnitX = cueResult.getUnitX();
+            cursorDirectionUnitY = cueResult.getUnitY();
+            System.out.printf("Ai direction: %f, %f\n", cursorDirectionUnitX, cursorDirectionUnitY);
+            currentHand = cueResult.getCuePlayerHand();
+            updateHandSelectionToggleByData(currentHand.playerHand.hand);
+            updatePowerSlider(player.getInGamePlayer(), cueResult.getCuePlayerHand());
+            powerSlider.setValue(cueResult.getCueParams().selectedPower());
+            cuePointX = cueCanvasWH / 2 + cueResult.getCueParams().selectedSideSpin() * cueAreaRadius;
+            cuePointY = cueCanvasWH / 2 - cueResult.getCueParams().selectedFrontBackSpin() * cueAreaRadius;
+            cueAngleDeg = cueResult.getCueParams().getCueAngleDeg();
+            setCueAngleLabel();
+
+            recalculateObstacles();
+            aimingChanged();
+            updateBeforeCue();
+
+            CuePlayParams realParams = applyRandomCueError(player);
+            if (aiHelpPlayerPlaying && careerMatch != null) {
+                reduceCueHp(getCuingCue(), player, realParams);
+            }
+
+            double whiteStartingX = game.getGame().getCueBall().getX();
+            double whiteStartingY = game.getGame().getCueBall().getY();
+
+            aiCalculating = false;
+            forceInterruptingAi = false;
+
+            beginCueAnimation(game.getGame().getCuingPlayer().getInGamePlayer(),
+                    whiteStartingX, whiteStartingY, cueResult.getCueParams().selectedPower(),
+                    cueResult.getUnitX(), cueResult.getUnitY());
+
+            Thread thread = new Thread(() -> aiCueCalculations(
+                    realParams,
+                    player,
+                    cueResult
+            ));
+            thread.start();
+        });
     }
 
     private void replayCue() {

@@ -11,7 +11,6 @@ import trashsoftware.trashSnooker.core.metrics.Rule;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 import trashsoftware.trashSnooker.core.person.HandBody;
-import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
@@ -66,6 +65,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     public static boolean aiOnlyDefense = false;
     public static boolean aiOnlyDouble = false;
     protected boolean interrupted = false;
+    protected boolean forcedAttack = false;
     protected Ball presetTarget;
 
     static {
@@ -118,14 +118,26 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
     protected abstract boolean supportAttackWithDefense(int targetRep);
 
-    protected abstract boolean currentMustAttack();
+    protected abstract boolean mustAttackInternal();
+    
+    protected final boolean mustAttack() {
+        if (forcedAttack) {
+            return true;
+        }
+        return mustAttackInternal();
+    }
+    
+    public void forceAttack(boolean forcedAttack) {
+        this.forcedAttack = forcedAttack;
+    }
 
     public static double ballAlivePrice(Game<?, ?> game, Ball ball) {
-        List<double[][]> dirHolePoints = game.directionsToAccessibleHoles(ball);
+        List<Game.PocketDirection> dirHolePoints = game.directionsToAccessibleHoles(ball);
         double price = 0.0;
         final double diameter = game.getGameValues().ball.ballDiameter;
         OUT_LOOP:
-        for (double[][] dirHolePoint : dirHolePoints) {
+        for (Game.PocketDirection pd : dirHolePoints) {
+            double[][] dirHolePoint = pd.dirHole();
             for (Ball other : game.getAllBalls()) {
                 if (ball != other && !other.isPotted() && !other.isWhite()) {
                     double obstaclePotPointDt =
@@ -627,7 +639,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
 
         if (!aiOnlyDefense) {
-            FinalChoice.IntegratedAttackChoice attackChoice = standardAttack(phy, currentMustAttack());
+            FinalChoice.IntegratedAttackChoice attackChoice = standardAttack(phy, mustAttack());
             if (attackChoice != null) {
                 System.out.println("AI attack");
                 return makeAttackCue(attackChoice);
@@ -743,7 +755,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 System.out.printf("Best int attack choice: %s, %s, dir %f, %f, power %f, spins %f, %f, pot prob, %f \n",
                         best.isPureAttack ? "pure" : "defensive",
                         best.attackParams.attackChoice instanceof AttackChoice.DoubleAttackChoice dou ?
-                                ("double " + dou.pocket.hole) : "direct",
+                                ("double " + dou.pocket.pocketName) : "direct",
                         best.attackParams.attackChoice.cueDirectionUnitVector[0],
                         best.attackParams.attackChoice.cueDirectionUnitVector[1],
                         best.attackParams.cueParams.selectedPower(),

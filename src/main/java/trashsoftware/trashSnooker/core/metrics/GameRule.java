@@ -1,10 +1,13 @@
 package trashsoftware.trashSnooker.core.metrics;
 
+import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.BreakRule;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.Game;
 import trashsoftware.trashSnooker.core.cue.CueSize;
+import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
+import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.training.TrainType;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
@@ -161,5 +164,11 @@ public enum GameRule {
 
     public String toSqlKey() {
         return sqlKey;
+    }
+    
+    public Color ballBaseColor(int value) {
+        if (snookerLike()) return SnookerBall.snookerColor(value);
+        else if (poolLike()) return PoolBall.poolBallBaseColor(value);
+        else throw new RuntimeException("Not implemented yet");
     }
 }

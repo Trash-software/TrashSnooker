@@ -220,15 +220,15 @@ public class CareerAchManager extends AchManager {
                     if (positionPot != null) {
                         // 有上一杆
                         Movement.Trace whiteTrace = positionPot.getWhiteTrace();
-                        List<Cushion> whiteCushionAfter = whiteTrace.getCushionAfter();
+                        List<Movement.CushionHit> whiteCushionAfter = whiteTrace.getCushionAfter();
                         int endCount = 0;
                         int topBotCount = 0;
                         int arcCount = 0;
-                        for (Cushion cushion : whiteCushionAfter) {
-                            if (cushion instanceof Cushion.EdgeCushion edge) {
+                        for (Movement.CushionHit cushion : whiteCushionAfter) {
+                            if (cushion.cushion() instanceof Cushion.EdgeCushion edge) {
                                 if (edge.isEndCushion()) endCount++;
                                 else topBotCount++;
-                            } else if (cushion instanceof Cushion.CushionArc) {
+                            } else if (cushion.cushion() instanceof Cushion.CushionArc) {
                                 arcCount++;
                             }
                         }

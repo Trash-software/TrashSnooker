@@ -247,6 +247,35 @@ public class SettingsView extends ChildInitializable {
             return App.getStrings().getString(key);
         }
     }
+    
+    public enum AIHelperDefense {
+        ALLOW("aiHelperDefenseEnable"),
+        ASK("aiHelperDefenseAsk"),
+        NOT_ALLOW("aiHelperDefenseDisable");
+
+        private final String stringKey;
+
+        AIHelperDefense(String stringKey) {
+            this.stringKey = stringKey;
+        }
+
+        @Override
+        public String toString() {
+            return App.getStrings().getString(stringKey);
+        }
+
+        public static AIHelperDefense fromKey(String key) {
+            try {
+                return valueOf(Util.toAllCapsUnderscoreCase(key));
+            } catch (IllegalArgumentException e) {
+                return ASK;
+            }
+        }
+
+        public String toKey() {
+            return Util.toLowerCamelCase(name());
+        }
+    }
 
     public enum MouseDragMethod {
         POSITION("mouseDragAbsolute"),

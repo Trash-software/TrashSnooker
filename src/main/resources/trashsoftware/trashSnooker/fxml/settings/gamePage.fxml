@@ -39,22 +39,25 @@
     <Label text="%autoChangeBreakCue" GridPane.rowIndex="3"/>
     <ComboBox fx:id="autoChangeBreakCueBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-    <Label text="%mouseDragMethod" GridPane.rowIndex="4"/>
-    <ComboBox fx:id="mouseDragMethodBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    <Label text="%aiHelperDefenseSetting" GridPane.rowIndex="4"/>
+    <ComboBox fx:id="aiHelperDefenseBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-    <Label text="%settingsKeyMap" GridPane.rowIndex="5">
+    <Label text="%mouseDragMethod" GridPane.rowIndex="5"/>
+    <ComboBox fx:id="mouseDragMethodBox" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+    <Label text="%settingsKeyMap" GridPane.rowIndex="6">
         <font>
             <Font size="16.0"/>
         </font>
     </Label>
-    <Separator GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+    <Separator GridPane.rowIndex="6" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
 
-    <Label text="%keyMapHint" GridPane.rowIndex="6"/>
-    <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="6" GridPane.columnIndex="1">
+    <Label text="%keyMapHint" GridPane.rowIndex="7"/>
+    <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="7" GridPane.columnIndex="1">
         <Button text="%reset" onAction="#resetKeyMapAction"/>
     </HBox>
 
-    <TableView GridPane.rowIndex="7" GridPane.columnSpan="2" fx:id="keyMapTable">
+    <TableView GridPane.rowIndex="8" GridPane.columnSpan="2" fx:id="keyMapTable">
         <columns>
             <TableColumn fx:id="behaviorColumn" text="%keyTitleBehavior" prefWidth="240.0"/>
             <TableColumn fx:id="keyColumn" text="%keyTitlePosition"/>

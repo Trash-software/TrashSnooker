@@ -13,7 +13,8 @@ public enum TrainType {
     SNAKE_HALF_ORDERED,
     CLEAR_COLOR,
     SINGLE_BALL_PRACTICE,
-    CUSTOM;
+    CUSTOM,
+    TABLE_THUMB;  // 仅用于桌面预览模式
 
     @Override
     public String toString() {

@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core.metrics;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
@@ -14,7 +15,7 @@ import trashsoftware.trashSnooker.util.DataLoader;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class GameValues {
+public class GameValues implements Cloneable {
 
     public final GameRule rule;
     public Collection<SubRule> subRules;
@@ -120,6 +121,15 @@ public class GameValues {
         return jsonObject;
     }
 
+    @Override
+    public GameValues clone() {
+        try {
+            return (GameValues) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void build() {
         ballHoleRatio = ball.ballDiameter / table.cornerHoleDiameter;
         double bestSpace = table.cornerHoleDiameter - ball.ballRadius;
@@ -154,7 +164,7 @@ public class GameValues {
         this.ballsGroupPreset = ballsGroupPreset;
     }
 
-    public void setTrain(TrainType trainType, Challenge challenge) {
+    public void setTrain(TrainType trainType, @Nullable Challenge challenge) {
         this.trainType = trainType;
         this.trainChallenge = challenge;
     }
@@ -465,8 +475,8 @@ public class GameValues {
 //        return Math.sqrt(t2);
     }
 
-    public double[] getOpenCenter(TableMetrics.Hole hole) {
-        return switch (hole) {
+    public double[] getOpenCenter(TableMetrics.PocketName pocketName) {
+        return switch (pocketName) {
             case TOP_LEFT -> topLeftHoleOpenCenter;
             case TOP_MID -> topMidHoleOpenCenter;
             case TOP_RIGHT -> topRightHoleOpenCenter;
@@ -476,13 +486,13 @@ public class GameValues {
         };
     }
 
-    public TableMetrics.Hole getHoleByOpenCenter(double[] pos) {
-        if (Arrays.equals(pos, topLeftHoleOpenCenter)) return TableMetrics.Hole.TOP_LEFT;
-        else if (Arrays.equals(pos, topMidHoleOpenCenter)) return TableMetrics.Hole.TOP_MID;
-        else if (Arrays.equals(pos, topRightHoleOpenCenter)) return TableMetrics.Hole.TOP_RIGHT;
-        else if (Arrays.equals(pos, botLeftHoleOpenCenter)) return TableMetrics.Hole.BOT_LEFT;
-        else if (Arrays.equals(pos, botMidHoleOpenCenter)) return TableMetrics.Hole.BOT_MID;
-        else if (Arrays.equals(pos, botRightHoleOpenCenter)) return TableMetrics.Hole.BOT_RIGHT;
+    public TableMetrics.PocketName getHoleByOpenCenter(double[] pos) {
+        if (Arrays.equals(pos, topLeftHoleOpenCenter)) return TableMetrics.PocketName.TOP_LEFT;
+        else if (Arrays.equals(pos, topMidHoleOpenCenter)) return TableMetrics.PocketName.TOP_MID;
+        else if (Arrays.equals(pos, topRightHoleOpenCenter)) return TableMetrics.PocketName.TOP_RIGHT;
+        else if (Arrays.equals(pos, botLeftHoleOpenCenter)) return TableMetrics.PocketName.BOT_LEFT;
+        else if (Arrays.equals(pos, botMidHoleOpenCenter)) return TableMetrics.PocketName.BOT_MID;
+        else if (Arrays.equals(pos, botRightHoleOpenCenter)) return TableMetrics.PocketName.BOT_RIGHT;
         else return null;
     }
 

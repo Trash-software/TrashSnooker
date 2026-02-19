@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.infoRec;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,12 @@ public class FrameInfoRec {
     protected List<CueInfoRec> cueRecs = new ArrayList<>();
     protected int winner;  // player 1 or 2, can be 0 in the case that the game is restarted
     protected FrameAnalyze<?> frameAnalyze;
+    /**
+     * 为了区分八球和九球加入了开球违例后重开本局
+     * frameIndex, frameNumber: 程序内创建的第几局，与台球规则上应是第几局
+     * 比如某一局重开了，则新的一局会有新的frameIndex，但frameNumber不变
+     * 而且是从1开始数的
+     */
     protected final int frameIndex, frameNumber;
     
     FrameInfoRec(MatchInfoRec parent, int frameIndex, int frameNumber) {
@@ -67,5 +74,14 @@ public class FrameInfoRec {
         if (frameAnalyze == null) analyzeFrame();
         
         return frameAnalyze;
+    }
+    
+    public void populateAttackAnalysis(AttackAnalysis attackAnalysis, TableMetrics tableMetrics) {
+        for (CueInfoRec cir : getCueRecs()) {
+            if (cir.potInfo != null) {
+                AttackAnalysis.PotAttemptRec par = AttackAnalysis.PotAttemptRec.create(cir, tableMetrics, frameIndex);
+                attackAnalysis.addAttempt(par, cir.player);
+            }
+        }
     }
 }

@@ -88,6 +88,17 @@ public class Alert implements Initializable {
     public void setupAdditional(Node additionalContent) {
         this.additionalPane.getChildren().add(additionalContent);
     }
+    
+    public void setupCustomCancel(String cancelText, Runnable cancelCallback) {
+        if (cancelText != null) cancelButton.setText(cancelText);
+        if (cancelCallback != null) {
+            cancelButton.setOnAction(e -> {
+                active = false;
+                stage.close();
+                Platform.runLater(cancelCallback);
+            });
+        }
+    }
 
     public void setupConfirm(Stage stage, String header, String content,
                              String yesText, String noText,

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.attempt.CueAttempt;
 import trashsoftware.trashSnooker.core.FoulInfo;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
@@ -34,6 +35,7 @@ public class MatchInfoRec {
     public final int saveVersion;
 
     protected final List<FrameInfoRec> frames = new ArrayList<>();
+    protected AttackAnalysis attackAnalysis;
 
     MatchInfoRec(String entireBeginTime, 
                  String careerMatchId, 
@@ -121,6 +123,7 @@ public class MatchInfoRec {
         JSONObject root = new JSONObject();
         root.put("entireBeginTime", entireBeginTime);
         root.put("careerMatchId", careerMatchId);
+        root.put("saveVersion", saveVersion);
         root.put("gameValues", gameValues.toJson());
         root.put("totalFrames", totalFrames);
         JSONArray players = new JSONArray();
@@ -203,4 +206,18 @@ public class MatchInfoRec {
     public FrameInfoRec getFrame(int frameIndexFrom0) {
         return frames.get(frameIndexFrom0);
     }
+    
+    public boolean hasPotPosDetail() {
+        return saveVersion >= 62;
+    }
+    
+    public AttackAnalysis getAttackAnalysis(TableMetrics tableMetrics) {
+        if (attackAnalysis == null) {
+            attackAnalysis = new AttackAnalysis();
+            for (FrameInfoRec fir : frames) {
+                fir.populateAttackAnalysis(attackAnalysis, tableMetrics);
+            }
+        }
+        return attackAnalysis;
+    } 
 }

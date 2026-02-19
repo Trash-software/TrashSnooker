@@ -1267,6 +1267,10 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public double getLastCollisionY() {
         return lastCollisionY;
     }
+    
+    public double[] getLastCollisionPos() {
+        return new double[]{lastCollisionX, lastCollisionY};
+    }
 
     public double getLastCollisionRelSpeed() {
         return lastCollisionRelSpeed;

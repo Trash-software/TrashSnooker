@@ -43,7 +43,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
     }
 
     @Override
-    protected boolean currentMustAttack() {
+    protected boolean mustAttackInternal() {
         if (game.getRemainingBallsOfPlayer(aiPlayer) <= 2 &&
                 game.getRemainingBallsOfPlayer(game.getAnotherPlayer(aiPlayer)) > 2) {
             return true;

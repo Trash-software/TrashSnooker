@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.util.JsonUtil;
 
 import java.util.*;
 
@@ -75,7 +75,7 @@ public class FoulInfo {
         out.put("miss", miss);
         out.put("illegal", illegal);
         out.put("headerReason", headerReason);
-        JSONObject reasons = Util.mapToJson(foulReasonAndScore);
+        JSONObject reasons = JsonUtil.mapToJson(foulReasonAndScore);
         out.put("foulReasonAndScore", reasons);
         
         return out;

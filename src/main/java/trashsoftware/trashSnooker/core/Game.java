@@ -2,10 +2,7 @@ package trashsoftware.trashSnooker.core;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import trashsoftware.trashSnooker.core.ai.AiCue;
-import trashsoftware.trashSnooker.core.ai.AiCueResult;
-import trashsoftware.trashSnooker.core.ai.AttackChoice;
-import trashsoftware.trashSnooker.core.ai.AttackParam;
+import trashsoftware.trashSnooker.core.ai.*;
 import trashsoftware.trashSnooker.core.attempt.CueAttempt;
 import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
@@ -326,7 +323,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
         return balls;
     }
-    
+
     public final List<Ball>[] getAllLegalAndIllegalBalls() {
         List<Ball> legals = new ArrayList<>();
         List<Ball> illegals = new ArrayList<>();
@@ -397,6 +394,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     null,
                     getCurrentTarget(),
                     false,
+                    potAttempt.attackChoice.getPocket(),
                     potAttempt.getTargetDirHole(),
                     potAttempt.getTargetBallOrigPos()
             );
@@ -470,11 +468,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         return physicalCalculate(phy);
     }
 
-    public AiCueResult aiCue(Player aiPlayer, Phy phy) {
+    public AiCueResult aiCue(Player aiPlayer, AiCuePref aiCuePref) {
         aiCue = createAiCue((P) aiPlayer);
         aiCue.setPresetTarget(specifiedTarget);
         specifiedTarget = null;
-        AiCueResult result = aiCue.makeCue(phy);
+        aiCue.forceAttack(aiCuePref.isMustAttack());
+        AiCueResult result = aiCue.makeCue(aiCuePref.getPhy());
         aiCue = null;
         return result;
     }
@@ -1021,39 +1020,39 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     private Cushion.EdgeCushion[] getCushionCanSeePocket(Pocket pocket) {
         TableMetrics table = gameValues.table;
 
-        if (pocket.hole == TableMetrics.Hole.TOP_MID) {
+        if (pocket.pocketName == TableMetrics.PocketName.TOP_MID) {
             return new Cushion.EdgeCushion[]{
                     table.botLeftCushion,
                     table.botRightCushion,
 //                    table.leftCushion,  // 底袋翻中怕是玄幻了点？
 //                    table.rightCushion
             };
-        } else if (pocket.hole == TableMetrics.Hole.BOT_MID) {
+        } else if (pocket.pocketName == TableMetrics.PocketName.BOT_MID) {
             return new Cushion.EdgeCushion[]{
                     table.topLeftCushion,
                     table.topRightCushion,
 //                    table.leftCushion,
 //                    table.rightCushion
             };
-        } else if (pocket.hole == TableMetrics.Hole.TOP_LEFT) {
+        } else if (pocket.pocketName == TableMetrics.PocketName.TOP_LEFT) {
             return new Cushion.EdgeCushion[]{
                     table.botLeftCushion,
                     table.botRightCushion,
                     table.rightCushion
             };
-        } else if (pocket.hole == TableMetrics.Hole.TOP_RIGHT) {
+        } else if (pocket.pocketName == TableMetrics.PocketName.TOP_RIGHT) {
             return new Cushion.EdgeCushion[]{
                     table.botLeftCushion,
                     table.botRightCushion,
                     table.leftCushion
             };
-        } else if (pocket.hole == TableMetrics.Hole.BOT_RIGHT) {
+        } else if (pocket.pocketName == TableMetrics.PocketName.BOT_RIGHT) {
             return new Cushion.EdgeCushion[]{
                     table.topLeftCushion,
                     table.topRightCushion,
                     table.leftCushion
             };
-        } else if (pocket.hole == TableMetrics.Hole.BOT_LEFT) {
+        } else if (pocket.pocketName == TableMetrics.PocketName.BOT_LEFT) {
             return new Cushion.EdgeCushion[]{
                     table.topLeftCushion,
                     table.topRightCushion,
@@ -1238,8 +1237,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
      * 进球碰撞点坐标
      * }。
      */
-    public List<double[][]> directionsToAccessibleHoles(Ball targetBall) {
-        List<double[][]> list = new ArrayList<>();
+    public List<PocketDirection> directionsToAccessibleHoles(Ball targetBall) {
+        List<PocketDirection> list = new ArrayList<>();
         double x = targetBall.x;
         double y = targetBall.y;
         double[] xy = new double[]{x, y};
@@ -1264,7 +1263,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
                 double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
 
-                list.add(new double[][]{unitXY, pocket.fallCenter, new double[]{collisionPointX, collisionPointY}});
+                list.add(new PocketDirection(pocket,
+                        new double[][]{unitXY, pocket.fallCenter, new double[]{collisionPointX, collisionPointY}}));
             } else if (pointToPointCanPassBall(x, y, holeOpenCenter[0], holeOpenCenter[1], targetBall,
                     null, true, true)) {
                 double directionX = holeOpenCenter[0] - x;
@@ -1273,7 +1273,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
                 double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
 
-                list.add(new double[][]{unitXY, holeOpenCenter, new double[]{collisionPointX, collisionPointY}});
+                list.add(new PocketDirection(pocket,
+                        new double[][]{unitXY, holeOpenCenter, new double[]{collisionPointX, collisionPointY}}));
             }
         }
         return list;
@@ -1516,7 +1517,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public int getCurrentTarget() {
         return currentTarget;
     }
-    
+
     public double[] targetsBarycenter(int targetRep, @Nullable Ball excluded) {
         double sumX = 0;
         double sumY = 0;
@@ -1574,9 +1575,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         List<AttackChoice.DirectAttackChoice> directAttackChoices = new ArrayList<>();
 
         for (Ball ball : targets) {
-            List<double[][]> dirHoles = directionsToAccessibleHoles(ball);
+            List<PocketDirection> dirHoles = directionsToAccessibleHoles(ball);
 
-            for (double[][] dirHole : dirHoles) {
+            for (PocketDirection pd : dirHoles) {
+                double[][] dirHole = pd.dirHole();
                 double collisionPointX = dirHole[2][0];
                 double collisionPointY = dirHole[2][1];
 
@@ -1593,6 +1595,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             null,
                             target,
                             false,
+                            pd.pocket(),
                             dirHole,
                             null
                     );
@@ -2237,9 +2240,9 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                             collidesWall = true;
                             recordHitCushion(ball);
                             if (ball.isWhite())
-                                movement.getWhiteTrace().hitCushion(holeAreaResult.cushion());
+                                movement.getWhiteTrace().hitCushion(holeAreaResult.cushion(), ball.getPositionArray());
                             else
-                                movement.getTraceOfBallNotNull(ball).hitCushion(holeAreaResult.cushion());
+                                movement.getTraceOfBallNotNull(ball).hitCushion(holeAreaResult.cushion(), ball.getPositionArray());
                             movementTypes[i] = holeAreaResult.cushion().movementType();
                             movementValues[i] = Math.hypot(ball.vx, ball.vy)
                                     * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
@@ -2251,8 +2254,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         // 库边
                         collidesWall = true;
                         recordHitCushion(ball);
-                        if (ball.isWhite()) movement.getWhiteTrace().hitCushion(cushion);
-                        else movement.getTraceOfBallNotNull(ball).hitCushion(cushion);
+                        if (ball.isWhite()) movement.getWhiteTrace().hitCushion(cushion, ball.getPositionArray());
+                        else movement.getTraceOfBallNotNull(ball).hitCushion(cushion, ball.getPositionArray());
                         movementTypes[i] = cushion.movementType();
                         movementValues[i] = Math.hypot(ball.vx, ball.vy)
                                 * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
@@ -2314,13 +2317,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             return noBallMoving;
         }
 
-        private void whiteCollide(Ball ball) {
+        private void whiteCollide(Ball whiteBall, Ball otherBall) {
             if (whiteFirstCollide == null) {
-                whiteFirstCollide = ball;
-                movement.setWhiteFirstCollide(ball);
+                whiteFirstCollide = otherBall;
+                movement.setWhiteFirstCollide(otherBall);
                 collidesWall = false;  // 必须白球在接触首个目标球后，再有球碰库
             }
-            movement.getWhiteTrace().hitBall(ball);
+            movement.getWhiteTrace().hitBall(otherBall, whiteBall.getLastCollisionPos(), otherBall.getLastCollisionPos());
         }
 
         private boolean tryHitBall(B ball) {
@@ -2332,8 +2335,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (!phy.isPrediction && ball.willCollide(otherBall)) {
                         if (processHittingTouchingBalls(ball, otherBall)) {
                             hit = true;
-                            if (ball.isWhite()) whiteCollide(otherBall);  // 记录白球撞到的球
-                            else if (otherBall.isWhite()) whiteCollide(ball);
+                            if (ball.isWhite()) whiteCollide(ball, otherBall);  // 记录白球撞到的球
+                            else if (otherBall.isWhite()) whiteCollide(otherBall, ball);
                             break;
                         }
                     }
@@ -2341,8 +2344,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (ball.tryHitBall(Game.this, otherBall, true, phy)) {
                         // hit ball
                         hit = true;
-                        if (ball.isWhite()) whiteCollide(otherBall);  // 记录白球撞到的球
-                        else if (otherBall.isWhite()) whiteCollide(ball);
+                        if (ball.isWhite()) whiteCollide(ball, otherBall);  // 记录白球撞到的球
+                        else if (otherBall.isWhite()) whiteCollide(otherBall, ball);
                         break;  // 假设一颗球在一物理帧内不会撞到两颗球
                     }
                 }
@@ -2517,5 +2520,17 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
             return false;
         }
+    }
+
+    /**
+     * 旧时的dirHole: 
+     * {
+     * 目标球与"从目标球处能直接看到的洞口"的连线的单位向量,
+     * 洞口进球坐标(注意: 只有对于袋口球来说是洞底坐标),
+     * 进球碰撞点坐标
+     * }。
+     * @param pocket
+     */
+    public record PocketDirection(Pocket pocket, double[][] dirHole) {
     }
 }

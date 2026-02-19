@@ -15,6 +15,8 @@ public abstract class CueAttempt {
     protected Set<Ball> legalPots;  // 合法打进的球
     protected final CuePlayParams playParams;
     
+//    protected double @Nullable [] firstCollisionPos;
+    
     protected CueAttempt(CueType type, CuePlayParams playParams) {
         this.attemptBase = new AttemptBase(type);
         this.playParams = playParams;
@@ -32,13 +34,16 @@ public abstract class CueAttempt {
         return attemptBase.isSuccess();
     }
 
-    public void setAfterFinish(CuePlayerHand cuePlayerHand,
+    public final void setAfterFinish(CuePlayerHand cuePlayerHand,
                                Movement movement) {
         this.cuePlayerHand = cuePlayerHand;
         this.movement = movement;
-
 //        System.out.println("Trace: before " + whiteTrace.getCushionBefore() + ", after " + whiteTrace.getCushionAfter());
+        
+        proceedAfterMovementSet();
     }
+    
+    protected abstract void proceedAfterMovementSet();
 
     public AttemptBase getAttemptBase() {
         return attemptBase;

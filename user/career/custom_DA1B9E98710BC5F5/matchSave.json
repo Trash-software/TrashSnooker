@@ -1,48 +1,51 @@
 {
-  "p1": "Neil Robertson",
+  "p1": "custom_DA1B9E98710BC5F5",
   "game": {
     "p1": {
       "playerNumber": 1,
-      "gameRule": "SNOOKER",
-      "handFeelEffort": 1.1249178047064945,
-      "psyStatus": 0.789100000000001,
-      "person": "Neil Robertson",
-      "playerType": "COMPUTER"
-    },
-    "p1Wins": 1,
-    "p2": {
-      "playerNumber": 2,
       "gameRule": "SNOOKER",
       "handFeelEffort": 1,
       "psyStatus": 1,
       "person": "custom_DA1B9E98710BC5F5",
       "playerType": "PLAYER"
     },
-    "codeGameCounter": 3,
+    "p1Wins": 1,
+    "p2": {
+      "playerNumber": 2,
+      "gameRule": "SNOOKER",
+      "handFeelEffort": 1.1091806676206004,
+      "psyStatus": 0.9819533636363637,
+      "person": "Mark Williams",
+      "playerType": "COMPUTER"
+    },
+    "codeGameCounter": 2,
     "p2BreakLoseChance": 0,
     "gameValues": {
       "ball": "SNOOKER_BALL",
       "gameRule": "SNOOKER",
-      "subRules": ["SNOOKER_STD"],
+      "subRules": ["SNOOKER_GOLDEN"],
       "devMode": false,
-      "tablePreset": "starSnookerTableGood"
+      "table": {
+        "tableOrdinal": 0,
+        "pocketDifficultyOrdinal": 3,
+        "holeSizeOrdinal": 4
+      }
     },
     "winRecords": {
-      "1": 1,
-      "2": 2,
-      "3": 2
+      "1": 2,
+      "2": 1
     },
-    "p2Wins": 2,
-    "startTime": 1767449134759,
+    "p2Wins": 1,
+    "startTime": 1771421324535,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_DA1B9E98710BC5F5+2027+world_champ-QUARTER_FINAL-107",
-    "totalFrames": 7,
+    "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-QUARTER_FINAL-20",
+    "totalFrames": 3,
     "cloth": {
-      "smoothness": "NORMAL",
+      "smoothness": "FAST",
       "goodness": "GOOD"
     },
-    "p1Breaks": true
+    "p1Breaks": false
   },
-  "p2": "custom_DA1B9E98710BC5F5",
+  "p2": "Mark Williams",
   "stage": "QUARTER_FINAL"
 }

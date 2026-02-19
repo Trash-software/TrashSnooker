@@ -31,7 +31,7 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
     }
 
     @Override
-    protected boolean currentMustAttack() {
+    protected boolean mustAttackInternal() {
         return false;
     }
 

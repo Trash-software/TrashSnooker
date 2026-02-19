@@ -1,6 +1,9 @@
 package trashsoftware.trashSnooker.fxml.statsViews;
 
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Hyperlink;
@@ -13,6 +16,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.attempt.CueType;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
@@ -37,6 +43,7 @@ import java.util.stream.Collectors;
 
 public class MatchRecord extends RecordTree {
     final EntireGameTitle egt;
+    private EntireGameRecord matchRec;
 
     private final Set<Integer> expandedFrames = new TreeSet<>();
 
@@ -53,8 +60,11 @@ public class MatchRecord extends RecordTree {
     private void fillRightPane(Pane rightPane) {
         rightPane.getChildren().clear();
 
-        EntireGameRecord matchRec = DBAccess.getInstance().getMatchDetail(egt);
+        matchRec = DBAccess.getInstance().getMatchDetail(egt);
         MetaMatchInfo careerMatchInfo = MatchTreeNode.analyzeMatchId(egt.matchId);
+
+        // nullable
+        @Nullable MatchInfoRec matchInfoRec = MatchInfoRec.tryToLoad(Util.entireBeginTimeToFileName(egt.startTime));
 
         MatchRecordPage page = new MatchRecordPage();
 
@@ -91,7 +101,10 @@ public class MatchRecord extends RecordTree {
         String p1Ai = egt.player1isAi ? strings.getString("typeComputer") : strings.getString("typePlayer");
         String p2Ai = egt.player2isAi ? strings.getString("typeComputer") : strings.getString("typePlayer");
 
-        Label p1NameLabel = new Label(egt.getP1Name() + "\n" + p1Ai);
+        String p1ShownName = egt.getP1Name() + "\n" + p1Ai;
+        String p2ShownName = egt.getP2Name() + "\n" + p2Ai;
+
+        Label p1NameLabel = new Label(p1ShownName);
         p1NameLabel.setWrapText(true);
         page.add(p1NameLabel, 1, rowIndex, 2, 1);
 
@@ -99,13 +112,39 @@ public class MatchRecord extends RecordTree {
         page.add(new Label(String.format("(%d)", egt.totalFrames)), 4, rowIndex);
         page.add(new Label(String.valueOf(p1p2Wins[1])), 5, rowIndex);
 
-        Label p2NameLabel = new Label(egt.getP2Name() + "\n" + p2Ai);
+        Label p2NameLabel = new Label(p2ShownName);
         p2NameLabel.setWrapText(true);
         page.add(p2NameLabel, 6, rowIndex, 2, 1);
 
         rowIndex++;
 
+        AttackAnalysis aa = null;
+        if (matchInfoRec != null && matchInfoRec.hasPotPosDetail()) {
+            aa = matchInfoRec.getAttackAnalysis(matchInfoRec.gameValues.table);
+            if (aa.isEmpty()) {
+                aa = null;
+                System.out.println("Attack analysis is empty");
+            }
+        }
+        AttackAnalysis attackAnalysis = aa;
+
         int[][] playersTotalBasics = matchRec.totalBasicStats();
+
+        // Before 
+        if (attackAnalysis != null) {
+            Hyperlink analysisLink = new Hyperlink(strings.getString("graphicalAnalysis"));
+            analysisLink.setOnAction(e -> showAttackAnalysis(e,
+                    p1ShownName,
+                    p2ShownName,
+                    matchInfoRec,
+                    attackAnalysis,
+                    null,
+                    strings.getString("statsAttacks1"),
+                    playersTotalBasics,
+                    0,
+                    1));
+            page.add(analysisLink, 8, rowIndex);
+        }
 
         addSucComparison(page,
                 rowIndex++,
@@ -114,12 +153,44 @@ public class MatchRecord extends RecordTree {
                 0,
                 1);
 
+        // Before
+        if (attackAnalysis != null) {
+            Hyperlink analysisLink = new Hyperlink(strings.getString("graphicalAnalysis"));
+            analysisLink.setOnAction(e -> showAttackAnalysis(e,
+                    p1ShownName,
+                    p2ShownName,
+                    matchInfoRec,
+                    attackAnalysis,
+                    AttackAnalysis.AttackSpecial.LONG,
+                    strings.getString("statsLongAttacks1"),
+                    playersTotalBasics,
+                    2,
+                    3));
+            page.add(analysisLink, 8, rowIndex);
+        }
+
         addSucComparison(page,
                 rowIndex++,
                 strings.getString("statsLongAttacks1"),
                 playersTotalBasics,
                 2,
                 3);
+
+        // Before
+        if (attackAnalysis != null) {
+            Hyperlink analysisLink = new Hyperlink(strings.getString("graphicalAnalysis"));
+            analysisLink.setOnAction(e -> showAttackAnalysis(e,
+                    p1ShownName,
+                    p2ShownName,
+                    matchInfoRec,
+                    attackAnalysis,
+                    AttackAnalysis.AttackSpecial.REST,
+                    strings.getString("statsRestAttacks1"),
+                    playersTotalBasics,
+                    8,
+                    9));
+            page.add(analysisLink, 8, rowIndex);
+        }
 
         addSucComparison(page,
                 rowIndex++,
@@ -151,9 +222,7 @@ public class MatchRecord extends RecordTree {
 
         page.add(new Separator(), 0, rowIndex++, 8, 1);
 
-        boolean poolLike = egt.gameRule == GameRule.CHINESE_EIGHT ||
-                egt.gameRule == GameRule.LIS_EIGHT ||
-                egt.gameRule == GameRule.AMERICAN_NINE;
+        boolean poolLike = isPoolLike();
         if (egt.gameRule.snookerLike()) {
             int[][] totalSnookerScores = ((EntireGameRecord.Snooker) matchRec).totalScores();
 
@@ -226,24 +295,27 @@ public class MatchRecord extends RecordTree {
         page.add(new Separator(), 0, rowIndex, 8, 1);
         rowIndex++;
 
-        // nullable
-        MatchInfoRec matchInfoRec = MatchInfoRec.tryToLoad(Util.entireBeginTimeToFileName(egt.startTime));
-
         // 分局显示
         for (Map.Entry<Integer, PlayerFrameRecord[]> entry :
                 matchRec.getFrameRecords().entrySet()) {
 
-            PlayerFrameRecord p1r = entry.getValue()[0];
-            PlayerFrameRecord p2r = entry.getValue()[1];
+            HBox frameIndexBox = addFrameSimpleInfo(page,
+                    rowIndex,
+                    entry.getKey(),
+                    entry.getValue(),
+                    poolLike
+            );
+//            rowIndex = page.getRowCount();
+            rowIndex++;
 
-            HBox frameIndexBox = new HBox();
-            frameIndexBox.setAlignment(Pos.CENTER_LEFT);
-            frameIndexBox.setSpacing(5.0);
-            Text nthFrameLabel = new Text(
-                    String.format(strings.getString("nthFrameFmt"), entry.getValue()[0].frameNumber));
-            nthFrameLabel.setStrikethrough(p1r.frameRestarted);
-            frameIndexBox.getChildren().add(nthFrameLabel);
-
+            if (matchInfoRec != null && expandedFrames.contains(entry.getKey())) {
+                try {
+                    fillFrameRecord(page, rowIndex, matchInfoRec, entry.getKey());
+                    rowIndex++;
+                } catch (RuntimeException e) {
+                    EventLogger.warning(e);
+                }
+            }
             if (matchInfoRec != null) {
                 boolean currentExpanded = expandedFrames.contains(entry.getKey());
                 Hyperlink frameLink = new Hyperlink(strings.getString(currentExpanded ?
@@ -259,93 +331,102 @@ public class MatchRecord extends RecordTree {
                     fillRightPane(rightPane);
                 });
             }
-            page.add(frameIndexBox, 0, rowIndex);
-            
-            page.add(new Label(
-                            Util.secondsToString(matchRec.getFrameDurations().get(entry.getKey()))),
-                    4, rowIndex);
-
-            Label p1ScoreLabel = new Label();
-            Label p2ScoreLabel = new Label();
-            if (egt.gameRule.snookerLike()) {
-                PlayerFrameRecord.Snooker p1sr = (PlayerFrameRecord.Snooker) p1r;
-                PlayerFrameRecord.Snooker p2sr = (PlayerFrameRecord.Snooker) p2r;
-                p1ScoreLabel.setText(String.valueOf(p1sr.snookerScores[0]));
-                p2ScoreLabel.setText(String.valueOf(p2sr.snookerScores[0]));
-                if (p1sr.snookerScores[1] >= 50) {
-                    Label p1SinglePole = new Label();
-                    p1SinglePole.setText(String.format("(%d)", p1sr.snookerScores[1]));
-                    page.add(p1SinglePole, 1, rowIndex);
-                }
-                if (p2sr.snookerScores[1] >= 50) {
-                    Label p2SinglePole = new Label();
-                    p2SinglePole.setText(String.format("(%d)", p2sr.snookerScores[1]));
-                    page.add(p2SinglePole, 7, rowIndex);
-                }
-            } else if (poolLike) {
-                // 炸清，接清
-                PlayerFrameRecord.Numbered p1nr = (PlayerFrameRecord.Numbered) p1r;
-                PlayerFrameRecord.Numbered p2nr = (PlayerFrameRecord.Numbered) p2r;
-
-                String breakClear = egt.gameRule == GameRule.CHINESE_EIGHT || egt.gameRule == GameRule.LIS_EIGHT ?
-                        strings.getString("breakClears") :
-                        strings.getString("bigGolds");
-                String continueClear = egt.gameRule == GameRule.CHINESE_EIGHT || egt.gameRule == GameRule.LIS_EIGHT ?
-                        strings.getString("continueClears") :
-                        strings.getString("smallGolds");
-                String goldNone = strings.getString("goldNines");
-
-                if (p1nr.clears[2] > 0) {
-                    Label p1Extra = new Label(breakClear);
-                    page.add(p1Extra, 2, rowIndex);
-                }
-                if (p1nr.clears[3] > 0) {
-                    Label p1Extra = new Label(continueClear);
-                    page.add(p1Extra, 2, rowIndex);
-                }
-                if (p2nr.clears[2] > 0) {
-                    Label p2Extra = new Label(breakClear);
-                    page.add(p2Extra, 6, rowIndex);
-                }
-                if (p2nr.clears[3] > 0) {
-                    Label p2Extra = new Label(continueClear);
-                    page.add(p2Extra, 6, rowIndex);
-                }
-                if (p1nr.clears[5] > 0) {
-                    Label p1Extra = new Label(goldNone);
-                    page.add(p1Extra, 2, rowIndex);
-                }
-                if (p2nr.clears[5] > 0) {
-                    Label p2Extra = new Label(goldNone);
-                    page.add(p2Extra, 6, rowIndex);
-                }
-            }
-
-            if (p1r.winnerName != null) {
-                if (p1r.winnerName.equals(egt.player1Id)) {
-                    p2ScoreLabel.setDisable(true);
-                    page.add(new Label("⚫"), 3, rowIndex);
-                } else {
-                    p1ScoreLabel.setDisable(true);
-                    page.add(new Label("⚫"), 5, rowIndex);
-                }
-            }
-            page.add(p1ScoreLabel, 2, rowIndex);
-            page.add(p2ScoreLabel, 6, rowIndex);
-
-            rowIndex++;
-
-            if (matchInfoRec != null && expandedFrames.contains(entry.getKey())) {
-                try {
-                    fillFrameRecord(page, rowIndex, matchInfoRec, entry.getKey());
-                    rowIndex++;
-                } catch (RuntimeException e) {
-                    EventLogger.warning(e);
-                }
-            }
         }
 
         rightPane.getChildren().add(page);
+    }
+
+    private HBox addFrameSimpleInfo(GridPane page,
+                                    int rowIndex,
+                                    int frameIndex,
+                                    PlayerFrameRecord[] playerFrameRecords,
+                                    boolean poolLike) {
+        PlayerFrameRecord p1r = playerFrameRecords[0];
+        PlayerFrameRecord p2r = playerFrameRecords[1];
+
+        HBox frameIndexBox = new HBox();
+        frameIndexBox.setAlignment(Pos.CENTER_LEFT);
+        frameIndexBox.setSpacing(5.0);
+        Text nthFrameLabel = new Text(
+                String.format(strings.getString("nthFrameFmt"), playerFrameRecords[0].frameNumber));
+        nthFrameLabel.setStrikethrough(p1r.frameRestarted);
+        frameIndexBox.getChildren().add(nthFrameLabel);
+        
+        page.add(frameIndexBox, 0, rowIndex);
+
+        page.add(new Label(
+                        Util.secondsToString(matchRec.getFrameDurations().get(frameIndex))),
+                4, rowIndex);
+
+        Label p1ScoreLabel = new Label();
+        Label p2ScoreLabel = new Label();
+        if (egt.gameRule.snookerLike()) {
+            PlayerFrameRecord.Snooker p1sr = (PlayerFrameRecord.Snooker) p1r;
+            PlayerFrameRecord.Snooker p2sr = (PlayerFrameRecord.Snooker) p2r;
+            p1ScoreLabel.setText(String.valueOf(p1sr.snookerScores[0]));
+            p2ScoreLabel.setText(String.valueOf(p2sr.snookerScores[0]));
+            if (p1sr.snookerScores[1] >= 50) {
+                Label p1SinglePole = new Label();
+                p1SinglePole.setText(String.format("(%d)", p1sr.snookerScores[1]));
+                page.add(p1SinglePole, 1, rowIndex);
+            }
+            if (p2sr.snookerScores[1] >= 50) {
+                Label p2SinglePole = new Label();
+                p2SinglePole.setText(String.format("(%d)", p2sr.snookerScores[1]));
+                page.add(p2SinglePole, 7, rowIndex);
+            }
+        } else if (poolLike) {
+            // 炸清，接清
+            PlayerFrameRecord.Numbered p1nr = (PlayerFrameRecord.Numbered) p1r;
+            PlayerFrameRecord.Numbered p2nr = (PlayerFrameRecord.Numbered) p2r;
+
+            String breakClear = egt.gameRule == GameRule.CHINESE_EIGHT || egt.gameRule == GameRule.LIS_EIGHT ?
+                    strings.getString("breakClears") :
+                    strings.getString("bigGolds");
+            String continueClear = egt.gameRule == GameRule.CHINESE_EIGHT || egt.gameRule == GameRule.LIS_EIGHT ?
+                    strings.getString("continueClears") :
+                    strings.getString("smallGolds");
+            String goldNone = strings.getString("goldNines");
+
+            if (p1nr.clears[2] > 0) {
+                Label p1Extra = new Label(breakClear);
+                page.add(p1Extra, 2, rowIndex);
+            }
+            if (p1nr.clears[3] > 0) {
+                Label p1Extra = new Label(continueClear);
+                page.add(p1Extra, 2, rowIndex);
+            }
+            if (p2nr.clears[2] > 0) {
+                Label p2Extra = new Label(breakClear);
+                page.add(p2Extra, 6, rowIndex);
+            }
+            if (p2nr.clears[3] > 0) {
+                Label p2Extra = new Label(continueClear);
+                page.add(p2Extra, 6, rowIndex);
+            }
+            if (p1nr.clears[5] > 0) {
+                Label p1Extra = new Label(goldNone);
+                page.add(p1Extra, 2, rowIndex);
+            }
+            if (p2nr.clears[5] > 0) {
+                Label p2Extra = new Label(goldNone);
+                page.add(p2Extra, 6, rowIndex);
+            }
+        }
+
+        if (p1r.winnerName != null) {
+            if (p1r.winnerName.equals(egt.player1Id)) {
+                p2ScoreLabel.setDisable(true);
+                page.add(new Label("⚫"), 3, rowIndex);
+            } else {
+                p1ScoreLabel.setDisable(true);
+                page.add(new Label("⚫"), 5, rowIndex);
+            }
+        }
+        page.add(p1ScoreLabel, 2, rowIndex);
+        page.add(p2ScoreLabel, 6, rowIndex);
+
+        return frameIndexBox;
     }
 
     private void addScoreComparison(GridPane page,
@@ -640,5 +721,56 @@ public class MatchRecord extends RecordTree {
             }
         }
         return canvas;
+    }
+    
+    private boolean isPoolLike() {
+        return egt.gameRule == GameRule.CHINESE_EIGHT ||
+                egt.gameRule == GameRule.LIS_EIGHT ||
+                egt.gameRule == GameRule.AMERICAN_NINE;
+    }
+
+    void showAttackAnalysis(ActionEvent actionEvent,
+                            String p1ShownName,
+                            String p2ShownName,
+                            MatchInfoRec matchInfoRec,
+                            AttackAnalysis attackAnalysis,
+                            AttackAnalysis.AttackSpecial special,
+                            String string,
+                            int[][] playersStats,
+                            int dataIndex,
+                            int dataIndexSuc) {
+        List<AttackAnalysis.PotAttemptRec>[] matchedAttacks = attackAnalysis.filterBy(special);
+
+        GraphicalPositionView gpv = new GraphicalPositionView(matchInfoRec.gameValues, matchedAttacks, strings);
+
+        int rowIndex = 1;
+        Label p1NameLabel = new Label(p1ShownName);
+        p1NameLabel.setWrapText(true);
+        gpv.infoPane.add(p1NameLabel, 1, rowIndex, 2, 1);
+
+        Label p2NameLabel = new Label(p2ShownName);
+        p2NameLabel.setWrapText(true);
+        gpv.infoPane.add(p2NameLabel, 6, rowIndex++, 2, 1);
+
+        addSucComparison(gpv.infoPane, rowIndex++, string, playersStats, dataIndex, dataIndexSuc);
+
+        for (Map.Entry<Integer, PlayerFrameRecord[]> entry :
+                matchRec.getFrameRecords().entrySet()) {
+            HBox frameIndexBox = addFrameSimpleInfo(gpv.infoPane, rowIndex, entry.getKey(), entry.getValue(), isPoolLike());
+            gpv.addFrameCheckAt(frameIndexBox);
+            rowIndex++;
+        }
+
+        gpv.finishSetup();
+
+        Stage window = new Stage();
+        Node node = (Node) actionEvent.getSource();
+        window.initModality(Modality.WINDOW_MODAL);
+        window.initOwner(node.getScene().getWindow());
+
+        Scene scene = new Scene(gpv);
+        window.setScene(scene);
+
+        window.showAndWait();
     }
 }

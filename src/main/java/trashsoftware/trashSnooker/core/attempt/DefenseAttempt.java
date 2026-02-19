@@ -123,4 +123,9 @@ public class DefenseAttempt extends CueAttempt {
         int edgeCushions = targetTrace.getTotalEdgeCushionCount();
         return edgeCushions > 0;
     }
+
+    @Override
+    protected void proceedAfterMovementSet() {
+        
+    }
 }

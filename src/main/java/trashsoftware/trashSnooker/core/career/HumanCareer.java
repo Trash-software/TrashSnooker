@@ -16,10 +16,7 @@ import trashsoftware.trashSnooker.core.career.challenge.RewardCondition;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
-import trashsoftware.trashSnooker.util.DataLoader;
-import trashsoftware.trashSnooker.util.EventLogger;
-import trashsoftware.trashSnooker.util.JsonChecksum;
-import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.util.*;
 
 import java.io.File;
 import java.time.Duration;
@@ -449,7 +446,7 @@ public class HumanCareer extends Career {
         record.put("moneyAfter", finance.money);
         JSONObject skillUpgrade = new JSONObject();
         for (Map.Entry<String, double[]> entry : upgradeRec.abilityUpdated().entrySet()) {
-            skillUpgrade.put(entry.getKey(), Util.arrayToJson(entry.getValue()));
+            skillUpgrade.put(entry.getKey(), JsonUtil.arrayToJson(entry.getValue()));
         }
         record.put("ability", skillUpgrade);
 

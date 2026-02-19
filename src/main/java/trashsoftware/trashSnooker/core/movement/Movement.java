@@ -3,7 +3,10 @@ package trashsoftware.trashSnooker.core.movement;
 import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.metrics.Cushion;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Movement {
 
@@ -19,16 +22,16 @@ public class Movement {
         anyBall = allBalls[0];
         for (Ball ball : allBalls) {
             List<MovementFrame> positionList = new ArrayList<>();
-            MovementFrame frame = new MovementFrame(ball.getX(), ball.getY(), 
+            MovementFrame frame = new MovementFrame(ball.getX(), ball.getY(),
                     ball.getAxisX(), ball.getAxisY(), ball.getAxisZ(), ball.getFrameDegChange(),
                     ball.isPotted(), MovementFrame.NORMAL, 0.0);
             positionList.add(frame);
-            
+
             movementMap.put(ball, positionList);
             startingPositions.put(ball, frame);
         }
     }
-    
+
     public void setupReplay() {
         Ball cueBall = null;
         for (Ball ball : movementMap.keySet()) {
@@ -38,11 +41,11 @@ public class Movement {
             }
         }
         if (cueBall == null) throw new RuntimeException("No cue ball in this movement");
-        
+
         // 实则是找到第一颗动的非白球
         // 少发性bug:白球在同一录像帧接触两颗目标球
         int nFrames = getNFrames();
-        
+
         OUT_LOOP:
         for (int i = 0; i < nFrames - 1; i++) {
             for (Map.Entry<Ball, List<MovementFrame>> entry : movementMap.entrySet()) {
@@ -50,7 +53,7 @@ public class Movement {
                 MovementFrame curFrame = entry.getValue().get(i);
                 if (curFrame.potted) continue;
                 MovementFrame nextFrame = entry.getValue().get(i + 1);
-                
+
                 if (nextFrame.x != curFrame.x || nextFrame.y != curFrame.y) {
                     // 这球动了
                     whiteFirstCollide = entry.getKey();
@@ -75,11 +78,11 @@ public class Movement {
     public Trace getTargetTrace() {
         return ballTraces.get(whiteFirstCollide);
     }
-    
+
     public Trace getTraceOfBallNotNull(Ball ball) {
         return ballTraces.computeIfAbsent(ball, b -> new Trace());
     }
-    
+
     public Trace getTraceOfBallNullable(Ball ball) {
         return ballTraces.get(ball);
     }
@@ -91,15 +94,15 @@ public class Movement {
     public boolean isCongested() {
         return congested;
     }
-    
+
     public boolean isInRange(int index) {
         return index < movementMap.get(anyBall).size();
     }
-    
+
     public int getNFrames() {
         return movementMap.get(anyBall).size();
     }
-    
+
     public void addFrame(Ball ball, MovementFrame frame) {
         movementMap.get(ball).add(frame);
     }
@@ -111,7 +114,7 @@ public class Movement {
     public Map<Ball, MovementFrame> getStartingPositions() {
         return startingPositions;
     }
-    
+
     public Map<Ball, MovementFrame> getEndingPositions() {
         Map<Ball, MovementFrame> pos = new HashMap<>();
         for (Map.Entry<Ball, List<MovementFrame>> entry : movementMap.entrySet()) {
@@ -132,28 +135,49 @@ public class Movement {
 
     public Ball getWhiteFirstCollide() {
         if (whiteTrace != null) {
-            return whiteTrace.getFirstCollision();
+            return whiteTrace.getFirstCollisionBall();
         } else {
             return whiteFirstCollide;
         }
     }
+
+    public record CushionHit(Cushion cushion, double[] position) {
+    }
     
+    public record BallHit(Ball otherBall, double[] selfPos, double[] otherPos) {
+    }
+
     public static class Trace {
-        private final List<Cushion> cushionBefore = new ArrayList<>();
-        private final List<Cushion> cushionAfter = new ArrayList<>();
-        private final List<Ball> collisions = new ArrayList<>();  // 只计白球的
+        private final List<CushionHit> cushionBefore = new ArrayList<>();
+        private final List<CushionHit> cushionAfter = new ArrayList<>();
+        private final List<BallHit> collisions = new ArrayList<>();  // 只计白球的
         private double distanceMoved;
-        
-        public void hitCushion(Cushion cushion) {
+
+        public void hitCushion(Cushion cushion, double[] roughPosition) {
             if (collisions.isEmpty()) {
-                cushionBefore.add(cushion);
+                cushionBefore.add(new CushionHit(cushion, roughPosition));
             } else {
-                cushionAfter.add(cushion);
+                cushionAfter.add(new CushionHit(cushion, roughPosition));
             }
         }
-        
-        public Ball getFirstCollision() {
+
+        public BallHit getFirstCollision() {
             return collisions.isEmpty() ? null : collisions.getFirst();
+        }
+
+        public Ball getFirstCollisionBall() {
+            return collisions.isEmpty() ? null : collisions.getFirst().otherBall;
+        }
+        
+        public CushionHit getTargetFirstCushion() {
+            // 用于目标球的
+            if (!cushionBefore.isEmpty()) return cushionBefore.getFirst();
+            return cushionAfter.isEmpty() ? null : cushionAfter.getFirst();
+        }
+        
+        public CushionHit getWhiteFirstCushionAfter() {
+            // 仅对白球生效
+            return cushionAfter.isEmpty() ? null : cushionAfter.getFirst();
         }
 
         public void setDistanceMoved(double distanceMoved) {
@@ -167,31 +191,31 @@ public class Movement {
             return distanceMoved;
         }
 
-        public void hitBall(Ball ball) {
-            collisions.add(ball);
+        public void hitBall(Ball ball, double[] selfPos, double[] ballPos) {
+            collisions.add(new BallHit(ball, selfPos, ballPos));
         }
 
-        public List<Ball> getCollisions() {
+        public List<BallHit> getCollisions() {
             return collisions;
         }
 
-        public List<Cushion> getCushionBefore() {
+        public List<CushionHit> getCushionBefore() {
             return cushionBefore;
         }
 
-        public List<Cushion> getCushionAfter() {
+        public List<CushionHit> getCushionAfter() {
             return cushionAfter;
         }
-        
+
         public int getTotalEdgeCushionCount() {
             int edgeCushions = 0;
-            for (Cushion cushion : getCushionBefore()) {
-                if (cushion instanceof Cushion.EdgeCushion) {
+            for (CushionHit cushion : getCushionBefore()) {
+                if (cushion.cushion instanceof Cushion.EdgeCushion) {
                     edgeCushions++;
                 }
             }
-            for (Cushion cushion : getCushionAfter()) {
-                if (cushion instanceof Cushion.EdgeCushion) {
+            for (CushionHit cushion : getCushionAfter()) {
+                if (cushion.cushion instanceof Cushion.EdgeCushion) {
                     edgeCushions++;
                 }
             }

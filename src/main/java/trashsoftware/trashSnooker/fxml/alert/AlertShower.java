@@ -127,11 +127,20 @@ public class AlertShower {
                                        Runnable positiveCallback, Runnable negativeCallback) {
         askConfirmation(owner, content, header, positiveText, negativeText, neutralCancel, positiveCallback, negativeCallback, null);
     }
-
+    
     public static void askConfirmation(Window owner, String content, String header,
                                        String positiveText, String negativeText,
                                        boolean neutralCancel,
                                        Runnable positiveCallback, Runnable negativeCallback,
+                                       Node additionalContent) {
+        askConfirmation3(owner, content, header, positiveText, negativeText, null, 
+                neutralCancel, positiveCallback, negativeCallback, null, additionalContent);
+    }
+
+    public static void askConfirmation3(Window owner, String content, String header,
+                                       String positiveText, String negativeText, String cancelText,
+                                       boolean neutralCancel,
+                                       Runnable positiveCallback, Runnable negativeCallback, Runnable cancelCallback,
                                        Node additionalContent) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -154,6 +163,10 @@ public class AlertShower {
                     positiveText, negativeText,
                     neutralCancel,
                     positiveCallback, negativeCallback);
+            
+            if (neutralCancel && (cancelText != null || cancelCallback != null)) {
+                view.setupCustomCancel(cancelText, cancelCallback);
+            }
             
             if (additionalContent != null) {
                 view.setupAdditional(additionalContent);

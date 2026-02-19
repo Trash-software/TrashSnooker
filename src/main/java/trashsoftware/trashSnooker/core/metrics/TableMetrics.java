@@ -284,7 +284,7 @@ public class TableMetrics {
                 cornerHoleRadius;
 
         topLeft = new Pocket(
-                Hole.TOP_LEFT,
+                PocketName.TOP_LEFT,
                 false,
                 topLeftSlateXY,
                 pocketDifficulty.cornerPocketFallRadius,
@@ -294,7 +294,7 @@ public class TableMetrics {
                 Algebra.unitVector(new double[]{1, 1})
         );
         topRight = new Pocket(
-                Hole.TOP_RIGHT,
+                PocketName.TOP_RIGHT,
                 false,
                 topRightSlateXY,
                 pocketDifficulty.cornerPocketFallRadius,
@@ -304,7 +304,7 @@ public class TableMetrics {
                 Algebra.unitVector(new double[]{-1, 1})
         );
         botLeft = new Pocket(
-                Hole.BOT_LEFT,
+                PocketName.BOT_LEFT,
                 false,
                 botLeftSlateXY,
                 pocketDifficulty.cornerPocketFallRadius,
@@ -314,7 +314,7 @@ public class TableMetrics {
                 Algebra.unitVector(new double[]{1, -1})
         );
         botRight = new Pocket(
-                Hole.BOT_RIGHT,
+                PocketName.BOT_RIGHT,
                 false,
                 botRightSlateXY,
                 pocketDifficulty.cornerPocketFallRadius,
@@ -324,7 +324,7 @@ public class TableMetrics {
                 Algebra.unitVector(new double[]{-1, -1})
         );
         topMid = new Pocket(
-                Hole.TOP_MID,
+                PocketName.TOP_MID,
                 true,
                 topMidFallCenter,
                 pocketDifficulty.midPocketFallRadius,
@@ -334,7 +334,7 @@ public class TableMetrics {
                 Algebra.unitVector(new double[]{0, 1})
         );
         botMid = new Pocket(
-                Hole.BOT_MID,
+                PocketName.BOT_MID,
                 true,
                 botMidFallCenter,
                 pocketDifficulty.midPocketFallRadius,
@@ -592,6 +592,10 @@ public class TableMetrics {
     public double midPocketBackInnerRadius() {
         return factory.supportedHoles[0].midHoleDiameter / 2;
     }
+    
+    public double[] tableCenter() {
+        return new double[]{midX, midY};
+    }
 
     public enum TableBuilderFactory {
         SNOOKER("snookerTable",
@@ -812,7 +816,7 @@ public class TableMetrics {
         public abstract Builder create();
     }
 
-    public enum Hole {
+    public enum PocketName {
         TOP_LEFT, TOP_MID, TOP_RIGHT,
         BOT_LEFT, BOT_MID, BOT_RIGHT;
 

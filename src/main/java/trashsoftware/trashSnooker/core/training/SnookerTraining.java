@@ -1,8 +1,10 @@
 package trashsoftware.trashSnooker.core.training;
 
-import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.EntireGame;
+import trashsoftware.trashSnooker.core.GamePlayStage;
+import trashsoftware.trashSnooker.core.GameSettings;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerGame;
 
@@ -48,18 +50,20 @@ public class SnookerTraining extends SnookerGame implements Training {
                 moveToCustomPosition();
                 break;
             case SINGLE_BALL_PRACTICE:
-                for (Ball ball :getAllBalls()) {
+                for (Ball ball : getAllBalls()) {
                     ball.pot();
                 }
                 moveToCustomPosition();
                 break;
+            case TABLE_THUMB:
+                break;
         }
     }
-    
+
     private void moveToCustomPosition() {
         CustomChallenge customChallenge = (CustomChallenge) challenge;
         int usedReds = 0;
-        
+
         for (CustomChallenge.BallSchema bs : customChallenge.getBallSchemas()) {
             double[] pos = bs.getLocation(gameValues);
             double realX = pos[0];
@@ -192,7 +196,7 @@ public class SnookerTraining extends SnookerGame implements Training {
             proceedRepeat();
             return;
         }
-        
+
         super.endMoveAndUpdate();
 
         if (getChallenge() != null && !lastPotSuccess) {

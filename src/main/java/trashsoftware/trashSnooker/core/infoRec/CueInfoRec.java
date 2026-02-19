@@ -4,10 +4,11 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.FoulInfo;
-import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.attempt.AttemptBase;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
-import trashsoftware.trashSnooker.util.Util;
+import trashsoftware.trashSnooker.core.metrics.TableMetrics;
+import trashsoftware.trashSnooker.core.person.PlayerHand;
+import trashsoftware.trashSnooker.util.JsonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class CueInfoRec {
-    
-    int player;
+
+    int player;  // Player from 1
     int target;
     int specifiedTarget;
     int firstHit;
@@ -25,10 +26,15 @@ public class CueInfoRec {
     int[] gainScores;
     int[] scoresAfter;
     AttemptBase attemptBase;
-    @Nullable PotInfo potInfo;
-    @Nullable FoulInfo foulInfo;
-    @Nullable List<Special> specials;
-    
+
+    double @Nullable [] firstCollisionPos;
+    @Nullable
+    PotInfo potInfo;
+    @Nullable
+    FoulInfo foulInfo;
+    @Nullable
+    List<Special> specials;
+
     public static CueInfoRec fromJson(JSONObject json) {
         CueInfoRec cir = new CueInfoRec();
         cir.player = json.getInt("player");
@@ -36,8 +42,8 @@ public class CueInfoRec {
         if (json.has("specifiedTarget")) {
             cir.specifiedTarget = json.getInt("specifiedTarget");
         }
-        cir.gainScores = Util.jsonToIntArray(json.getJSONArray("gainScores"));
-        cir.scoresAfter = Util.jsonToIntArray(json.getJSONArray("scoresAfter"));
+        cir.gainScores = JsonUtil.jsonToIntArray(json.getJSONArray("gainScores"));
+        cir.scoresAfter = JsonUtil.jsonToIntArray(json.getJSONArray("scoresAfter"));
         if (json.has("cueHand")) {
             cir.hand = PlayerHand.CueHand.fromJson(json.getJSONObject("cueHand"));
         } else {
@@ -45,7 +51,7 @@ public class CueInfoRec {
                     PlayerHand.Hand.valueOf(json.getString("hand")),
                     null);
         }
-        
+
         cir.attemptBase = AttemptBase.fromJson(json.getJSONObject("attemptBase"));
         cir.pots = new TreeMap<>();
         if (json.has("pots")) {
@@ -68,6 +74,8 @@ public class CueInfoRec {
         }
         if (json.has("firstHit")) {
             cir.firstHit = json.getInt("firstHit");
+            JSONArray hitPosArr = json.optJSONArray("firstCollisionPos");
+            cir.firstCollisionPos = hitPosArr == null ? null : JsonUtil.jsonToDoubleArray(hitPosArr);
         } else {
             // 只是为了兼容，不准确也无所谓了
             if (cir.foulInfo.isMiss()) cir.firstHit = 0;
@@ -77,10 +85,10 @@ public class CueInfoRec {
         if (potInfo != null) {
             cir.potInfo = PotInfo.fromJson(potInfo);
         }
-        
+
         return cir;
     }
-    
+
     public JSONObject toJson() {
         JSONObject out = new JSONObject();
         out.put("player", player);
@@ -89,12 +97,15 @@ public class CueInfoRec {
             out.put("specifiedTarget", specifiedTarget);
         }
         out.put("firstHit", firstHit);
+        if (firstCollisionPos != null) {
+            out.put("firstCollisionPos", JsonUtil.arrayToJson(firstCollisionPos));
+        }
         out.put("cueHand", hand.toJson());
-        out.put("gainScores", Util.arrayToJson(gainScores));
-        out.put("scoresAfter", Util.arrayToJson(scoresAfter));
+        out.put("gainScores", JsonUtil.arrayToJson(gainScores));
+        out.put("scoresAfter", JsonUtil.arrayToJson(scoresAfter));
         out.put("attemptBase", attemptBase.toJson());
         if (pots != null && !pots.isEmpty()) {
-            JSONObject potsObj = Util.mapToJson(pots);
+            JSONObject potsObj = JsonUtil.mapToJson(pots);
             out.put("pots", potsObj);
         }
         if (foulInfo != null && (foulInfo.isFoul() || foulInfo.isIllegal())) {
@@ -110,7 +121,7 @@ public class CueInfoRec {
         if (potInfo != null) {
             out.put("potInfo", potInfo.toJson());
         }
-        
+
         return out;
     }
 
@@ -118,14 +129,22 @@ public class CueInfoRec {
         return target;
     }
 
+    public int getSpecifiedTarget() {
+        return specifiedTarget;
+    }
+
+    public int getFirstHit() {
+        return firstHit;
+    }
+
     public FoulInfo getFoulInfo() {
         return foulInfo;
     }
-    
+
     public boolean isFoul() {
         return foulInfo != null && foulInfo.isFoul();
     }
-    
+
     public boolean legallyPot() {
         int index = player - 1;
         return !isFoul() && gainScores[index] > 0 && pots != null && !pots.isEmpty();
@@ -154,7 +173,7 @@ public class CueInfoRec {
     public Map<Integer, Integer> getPots() {
         return pots;
     }
-    
+
     public boolean isSnookerFreeBall() {
         return specials != null && specials.contains(Special.SNOOKER_FREE_BALL);
     }
@@ -166,23 +185,28 @@ public class CueInfoRec {
         BALL_IN_HAND,
         AMERICAN_PUSH_OUT
     }
-    
+
     public record PotInfo(
             double whiteTarDt,
             double tarPocketDt,
             double angle,
             double estPotProb,
-            boolean isDouble
+            boolean isDouble,
+            @JsonUtil.Optional double @Nullable [] whitePos,
+            @JsonUtil.Optional double @Nullable [] targetPos,
+            @JsonUtil.Optional @Nullable TableMetrics.PocketName pocketName,
+            @JsonUtil.Optional double @Nullable [] collisionPos,
+            @JsonUtil.Optional double @Nullable [] tarCushionPos
     ) {
-        
+
         static PotInfo fromPotAttempt(PotAttempt potAttempt) {
             double[] targetBallOrigPos = potAttempt.getTargetBallOrigPos();
-            double[] cueBallOrigPos =  potAttempt.getCueBallOrigPos();
+            double[] cueBallOrigPos = potAttempt.getCueBallOrigPos();
             double whiteTargetDt = Math.hypot(
                     targetBallOrigPos[0] - cueBallOrigPos[0],
                     targetBallOrigPos[1] - cueBallOrigPos[1]
             );
-            
+
             double targetHoleDt;
             boolean isDouble = potAttempt.isDoubleShot();
             if (isDouble) {
@@ -194,23 +218,29 @@ public class CueInfoRec {
                         targetDirHole[1][1] - targetBallOrigPos[1]
                 );
             }
-            System.out.println("Pot prob is " + potAttempt.attackChoice.getDefaultRef().getPotProb());
+//            System.out.println("Pot prob is " + potAttempt.attackChoice.getDefaultRef().getPotProb());
             return new PotInfo(
                     whiteTargetDt,
                     targetHoleDt,
                     potAttempt.attackChoice.getAngleRad(),
                     potAttempt.attackChoice.getDefaultRef().getPotProb(),
-                    isDouble
+                    isDouble,
+                    potAttempt.getCueBallOrigPos(),
+                    potAttempt.getTargetBallOrigPos(),
+                    potAttempt.attackChoice.getPocket().pocketName,
+//                    potAttempt,
+                    potAttempt.getWhiteFirstCollisionPos(),
+                    potAttempt.getTargetFirstCushionPos()
             );
 
         }
-        
+
         static PotInfo fromJson(JSONObject json) {
-            return Util.jsonToRecord(PotInfo.class, json);
+            return JsonUtil.jsonToRecord(PotInfo.class, json);
         }
-        
+
         JSONObject toJson() {
-            return Util.recordToJson(this);
+            return JsonUtil.recordToJson(this);
         }
     }
 }
