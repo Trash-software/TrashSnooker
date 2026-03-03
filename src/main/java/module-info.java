@@ -63,4 +63,5 @@ module TrashSnooker {
     exports trashsoftware.trashSnooker.core.person;
     exports trashsoftware.trashSnooker.enums;
     exports trashsoftware.trashSnooker.fxml.settings;
+    exports trashsoftware.trashSnooker.core.essential;
 }

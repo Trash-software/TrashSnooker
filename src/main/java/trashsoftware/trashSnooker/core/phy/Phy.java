@@ -11,6 +11,7 @@ public class Phy {
     public final TableCloth cloth;
     public final boolean isPrediction;
     public final double calculateMs;
+    public final double tickSecond;
     public final double calculationsPerSec;
     public final double calculationsPerSecSqr;
     public final double slippingFrictionTimed;
@@ -22,6 +23,7 @@ public class Phy {
         this.calculateMs = calculateMs;
         this.isPrediction = isPrediction;
         
+        tickSecond = calculateMs / 1000;
         calculationsPerSec = 1000.0 / calculateMs;
         calculationsPerSecSqr = calculationsPerSec * calculationsPerSec;
         slippingFrictionTimed = cloth.smoothness.slippingFriction / calculationsPerSecSqr * 1000;

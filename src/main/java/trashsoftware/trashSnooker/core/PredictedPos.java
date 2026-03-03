@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.essential.Ball;
+
 import java.util.Arrays;
 
 public class PredictedPos {
@@ -7,7 +9,7 @@ public class PredictedPos {
     private final Ball targetBall;
     private final double[] whitePos;
 
-    PredictedPos(Ball targetBall, double[] whitePos) {
+    public PredictedPos(Ball targetBall, double[] whitePos) {
         this.targetBall = targetBall;
         this.whitePos = whitePos;
     }

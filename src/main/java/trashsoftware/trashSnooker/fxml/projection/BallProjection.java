@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.fxml.projection;
 
 import trashsoftware.trashSnooker.core.Algebra;
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 
 public class BallProjection extends ObstacleProjection {
     

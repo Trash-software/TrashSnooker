@@ -1,6 +1,5 @@
 package trashsoftware.trashSnooker.fxml.projection;
 
-import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 
 public class CushionProjection extends ObstacleProjection {

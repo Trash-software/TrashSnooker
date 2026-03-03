@@ -1,6 +1,8 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.essential;
 
 import javafx.scene.paint.Color;
+import trashsoftware.trashSnooker.core.Algebra;
+import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.Cushion;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
@@ -565,7 +567,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         double sideSpinChange = sideSpinChangeFactor * values.table.cushionPowerSpinFactor * CUSHION_COLLISION_SPIN_FACTOR;
 
         if (currentBounce instanceof ArcBounce) {
-            ((ArcBounce) currentBounce).setDesiredLeaveSideSpin(sideSpin + sideSpinChange);
+//            ((ArcBounce) currentBounce).setDesiredLeaveSideSpin(sideSpin + sideSpinChange);
         }
 
         pocketHitCount++;
@@ -684,18 +686,24 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             } else {
                 bouncedSideSpin = sideSpin + sideSpinChange;
             }
-
+            
             currentBounce = new CushionBounce(
-                    effectiveAcc,
-                    0,
-                    phy.accelerationMultiplier());
-            ((CushionBounce) currentBounce).setDesiredLeavePos(
-                    hitCushionPos[0],
-                    leaveY,
-                    -vx,
-                    vy * (1 - hSpeedLoss),
-//                    vy,
-                    bouncedSideSpin);
+                    cushion.getPosition()[0][0], cushion.getPosition()[0][1],
+                    -cushion.getNormal()[0], -cushion.getNormal()[1],
+                    BounceParams.DEFAULT
+            );
+
+//            currentBounce = new CushionBounce(
+//                    effectiveAcc,
+//                    0,
+//                    phy.accelerationMultiplier());
+//            ((CushionBounce) currentBounce).setDesiredLeavePos(
+//                    hitCushionPos[0],
+//                    leaveY,
+//                    -vx,
+//                    vy * (1 - hSpeedLoss),
+////                    vy,
+//                    bouncedSideSpin);
             return cushion;
         }
         if (nextY < values.ball.ballRadius + table.topY ||
@@ -733,16 +741,22 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             }
 
             currentBounce = new CushionBounce(
-                    0,
-                    effectiveAcc,
-                    phy.accelerationMultiplier());
-            ((CushionBounce) currentBounce).setDesiredLeavePos(
-                    leaveX,
-                    hitCushionPos[1],
-                    vx * (1 - hSpeedLoss),
-//                    vx,
-                    -vy,
-                    bouncedSideSpin);
+                    cushion.getPosition()[0][0], cushion.getPosition()[0][1],
+                    -cushion.getNormal()[0], -cushion.getNormal()[1],
+                    BounceParams.DEFAULT
+            );
+
+//            currentBounce = new CushionBounce(
+//                    0,
+//                    effectiveAcc,
+//                    phy.accelerationMultiplier());
+//            ((CushionBounce) currentBounce).setDesiredLeavePos(
+//                    leaveX,
+//                    hitCushionPos[1],
+//                    vx * (1 - hSpeedLoss),
+////                    vx,
+//                    -vy,
+//                    bouncedSideSpin);
             return cushion;
         }
         return null;

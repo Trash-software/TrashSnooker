@@ -24,6 +24,7 @@ import trashsoftware.trashSnooker.core.career.CareerManager;
 import trashsoftware.trashSnooker.core.career.HumanCareer;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.challenge.*;
+import trashsoftware.trashSnooker.core.essential.Game;
 import trashsoftware.trashSnooker.core.metrics.PocketDifficulty;
 import trashsoftware.trashSnooker.core.metrics.PocketSize;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;

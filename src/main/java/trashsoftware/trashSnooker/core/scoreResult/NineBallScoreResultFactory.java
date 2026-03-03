@@ -1,13 +1,11 @@
 package trashsoftware.trashSnooker.core.scoreResult;
 
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.recorder.GameReplay;
 import trashsoftware.trashSnooker.util.Util;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class NineBallScoreResultFactory implements ScoreFactory {
     @Override

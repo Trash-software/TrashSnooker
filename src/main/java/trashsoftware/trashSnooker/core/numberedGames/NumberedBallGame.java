@@ -1,15 +1,11 @@
 package trashsoftware.trashSnooker.core.numberedGames;
 
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.essential.Ball;
+import trashsoftware.trashSnooker.core.essential.Game;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.numberedGames.chineseEightBall.ChineseEightBallPlayer;
-import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.core.table.NumberedBallTable;
 import trashsoftware.trashSnooker.core.table.Table;
-import trashsoftware.trashSnooker.fxml.GameView;
-
-import java.util.Map;
-import java.util.Set;
 
 public abstract class NumberedBallGame<P extends NumberedBallPlayer>
         extends Game<PoolBall, P> {

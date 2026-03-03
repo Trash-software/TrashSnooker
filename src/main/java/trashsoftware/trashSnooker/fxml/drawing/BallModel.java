@@ -7,7 +7,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import org.jetbrains.annotations.NotNull;
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.metrics.BallsGroupPreset;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;

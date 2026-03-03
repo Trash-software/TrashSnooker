@@ -1,6 +1,6 @@
 package trashsoftware.trashSnooker.core.training;
 
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.GamePlayStage;
 import trashsoftware.trashSnooker.core.GameSettings;

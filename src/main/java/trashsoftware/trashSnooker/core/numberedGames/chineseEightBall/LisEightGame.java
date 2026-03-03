@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.core.numberedGames.chineseEightBall;
 
 import trashsoftware.trashSnooker.core.Algebra;
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.GameSettings;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;

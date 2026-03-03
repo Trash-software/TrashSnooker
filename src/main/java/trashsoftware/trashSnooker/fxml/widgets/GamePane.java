@@ -15,7 +15,7 @@ import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import trashsoftware.trashSnooker.core.Algebra;
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.GameHolder;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.core.metrics.*;

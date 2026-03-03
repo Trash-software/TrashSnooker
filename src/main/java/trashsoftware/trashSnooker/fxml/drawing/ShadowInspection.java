@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.fxml.drawing;
 
 import trashsoftware.trashSnooker.core.Algebra;
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 
 import java.util.ArrayList;

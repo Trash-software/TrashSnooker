@@ -4,7 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.attempt.CueAttempt;
 import trashsoftware.trashSnooker.core.FoulInfo;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;

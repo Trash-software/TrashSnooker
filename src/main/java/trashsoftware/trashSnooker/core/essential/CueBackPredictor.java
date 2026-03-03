@@ -1,7 +1,7 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.essential;
 
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.phy.Phy;
-import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 
 public class CueBackPredictor {
     

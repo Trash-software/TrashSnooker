@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.ai;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
 import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.essential.Game;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;

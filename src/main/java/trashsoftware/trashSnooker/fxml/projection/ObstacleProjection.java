@@ -1,8 +1,8 @@
 package trashsoftware.trashSnooker.fxml.projection;
 
 import org.jetbrains.annotations.Nullable;
-import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.CueBackPredictor;
+import trashsoftware.trashSnooker.core.essential.Ball;
+import trashsoftware.trashSnooker.core.essential.CueBackPredictor;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 
 public abstract class ObstacleProjection {

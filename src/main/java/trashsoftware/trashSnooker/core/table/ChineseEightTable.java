@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.core.table;
 
 import javafx.scene.canvas.GraphicsContext;
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.GameHolder;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;

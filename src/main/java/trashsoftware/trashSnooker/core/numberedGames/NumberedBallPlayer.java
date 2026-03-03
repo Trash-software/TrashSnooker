@@ -1,6 +1,6 @@
 package trashsoftware.trashSnooker.core.numberedGames;
 
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.InGamePlayer;
 import trashsoftware.trashSnooker.core.NeedBigBreakPlayer;
 import trashsoftware.trashSnooker.core.Player;

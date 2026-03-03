@@ -3,6 +3,8 @@ package trashsoftware.trashSnooker.core.snooker;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
+import trashsoftware.trashSnooker.core.essential.Ball;
+import trashsoftware.trashSnooker.core.essential.Game;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 
 import java.util.ArrayList;

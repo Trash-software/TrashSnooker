@@ -2,9 +2,8 @@ package trashsoftware.trashSnooker.core.metrics;
 
 import javafx.scene.paint.Color;
 import trashsoftware.trashSnooker.core.BreakRule;
-import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.EntireGame;
-import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.essential.Game;
 import trashsoftware.trashSnooker.core.cue.CueSize;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;

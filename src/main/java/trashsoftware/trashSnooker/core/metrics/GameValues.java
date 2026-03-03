@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.Values;
+import trashsoftware.trashSnooker.core.essential.BounceParams;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.core.training.Challenge;

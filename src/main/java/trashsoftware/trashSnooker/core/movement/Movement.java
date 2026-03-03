@@ -1,6 +1,6 @@
 package trashsoftware.trashSnooker.core.movement;
 
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.metrics.Cushion;
 
 import java.util.ArrayList;

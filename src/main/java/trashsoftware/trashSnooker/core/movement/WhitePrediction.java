@@ -1,10 +1,7 @@
 package trashsoftware.trashSnooker.core.movement;
 
 import trashsoftware.trashSnooker.core.Algebra;
-import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.CuePlayParams;
-import trashsoftware.trashSnooker.core.metrics.GameValues;
-import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.core.essential.Ball;
 
 import java.util.ArrayList;
 import java.util.List;

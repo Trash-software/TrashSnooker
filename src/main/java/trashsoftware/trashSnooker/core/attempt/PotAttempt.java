@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.core.attempt;
 
 import org.jetbrains.annotations.Nullable;
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.movement.Movement;

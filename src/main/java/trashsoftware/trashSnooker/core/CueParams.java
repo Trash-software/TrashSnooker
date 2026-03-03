@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core;
 
 import org.jetbrains.annotations.Nullable;
 import trashsoftware.trashSnooker.core.cue.Cue;
+import trashsoftware.trashSnooker.core.essential.Game;
 import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.util.Util;

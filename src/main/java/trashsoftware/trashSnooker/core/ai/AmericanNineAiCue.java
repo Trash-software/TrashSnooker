@@ -1,7 +1,6 @@
 package trashsoftware.trashSnooker.core.ai;
 
 import trashsoftware.trashSnooker.core.Algebra;
-import trashsoftware.trashSnooker.core.Ball;
 import trashsoftware.trashSnooker.core.CueParams;
 import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;

@@ -4,6 +4,8 @@ import trashsoftware.trashSnooker.core.attempt.CueAttempt;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
+import trashsoftware.trashSnooker.core.essential.Ball;
+import trashsoftware.trashSnooker.core.essential.Game;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 
 import java.util.*;
@@ -75,7 +77,7 @@ public abstract class Player {
      * Override这个method一定记得call super
      */
     public void correctPotBalls(Game<?, ?> game, Collection<? extends Ball> pottedBalls) {
-        game.newPottedLegal.addAll(pottedBalls);
+        game.getNewPottedLegal().addAll(pottedBalls);
         for (Ball ball : pottedBalls) {
             if (singlePole.containsKey(ball)) {
                 singlePole.put(ball, singlePole.get(ball) + 1);

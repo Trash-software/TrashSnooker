@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.core.snooker;
 
 import javafx.scene.paint.Color;
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.Values;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 

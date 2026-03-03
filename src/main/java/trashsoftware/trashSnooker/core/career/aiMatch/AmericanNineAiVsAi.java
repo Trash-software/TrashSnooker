@@ -1,6 +1,6 @@
 package trashsoftware.trashSnooker.core.career.aiMatch;
 
-import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.essential.Game;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.ai.AiPlayStyle;

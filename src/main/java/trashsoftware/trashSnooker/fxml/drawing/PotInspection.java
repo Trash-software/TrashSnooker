@@ -1,6 +1,6 @@
 package trashsoftware.trashSnooker.fxml.drawing;
 
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 
 public class PotInspection {
     

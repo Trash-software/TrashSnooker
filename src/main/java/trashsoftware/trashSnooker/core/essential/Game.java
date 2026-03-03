@@ -1,7 +1,8 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.essential;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.ai.*;
 import trashsoftware.trashSnooker.core.attempt.CueAttempt;
 import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
@@ -1401,7 +1402,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     @Override
     public InGamePlayer getCuingIgp() {
-        return currentPlayer.inGamePlayer;
+        return currentPlayer.getInGamePlayer();
     }
 
     public P getPlayer1() {
@@ -1911,7 +1912,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 return true;
             }
             if (firstBall.currentBounce != null) {
-                firstBall.processBounce(false);
+                firstBall.processBounce(false, phy);
                 tryHitBallOther(firstBall);
                 firstBall.normalMove(phy);
                 return false;
@@ -1960,7 +1961,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
 
             if (cueBallClone.currentBounce != null) {
-                cueBallClone.processBounce(false);
+                cueBallClone.processBounce(false, phy);
                 if (prediction.getFirstCollide() == null) {
                     tryWhiteHitBall();
                 } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
@@ -2217,7 +2218,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         continue;
                     }
                     if (ball.currentBounce != null) {
-                        ball.processBounce(App.PRINT_DEBUG);
+                        ball.processBounce(App.PRINT_DEBUG, phy);
                         if (!tryHitBall(ball)) {
                             ball.normalMove(phy);
                         } else {

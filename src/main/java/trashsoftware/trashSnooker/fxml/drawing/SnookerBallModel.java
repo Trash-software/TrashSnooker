@@ -1,8 +1,6 @@
 package trashsoftware.trashSnooker.fxml.drawing;
 
 import javafx.scene.paint.PhongMaterial;
-import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.metrics.BallMetrics;
 import trashsoftware.trashSnooker.core.metrics.BallsGroupPreset;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 

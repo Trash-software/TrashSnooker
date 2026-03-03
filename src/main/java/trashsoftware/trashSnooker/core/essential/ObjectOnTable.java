@@ -1,5 +1,6 @@
-package trashsoftware.trashSnooker.core;
+package trashsoftware.trashSnooker.core.essential;
 
+import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.metrics.Cushion;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.metrics.Pocket;
@@ -143,17 +144,17 @@ public abstract class ObjectOnTable implements Cloneable {
     protected void clearBounceDesiredLeavePos() {
         if (currentBounce != null) {
 //            System.out.println("Cleared bounce desired leave pos!");
-            currentBounce.clearDesireLeavePos();
+//            currentBounce.clearDesireLeavePos();
         }
     }
 
-    protected void processBounce(boolean print) {
-        boolean notDestroy = currentBounce.oneFrame();
+    protected void processBounce(boolean print, Phy phy) {
+        boolean notDestroy = currentBounce.apply((Ball) this, phy);
 
         if (!notDestroy) {
-            if (print)
-                System.out.println(print + " Bounce lasts for " + currentBounce.framesCount + " frames");
-            currentBounce.leave();
+            if (print) System.out.println(print + " Bounce lasts for "  + " frames");
+//                System.out.println(print + " Bounce lasts for " + currentBounce.framesCount + " frames");
+//            currentBounce.leave();
             currentBounce = null;
         }
     }
@@ -187,13 +188,14 @@ public abstract class ObjectOnTable implements Cloneable {
         double ballAngle = Algebra.thetaOf(vx, vy);  // 入射角与垂线的夹角
         double verticalAngle = Algebra.thetaOf(arcXY[0] - hitPos[0], arcXY[1] - hitPos[1]);
         double injectAngle = Algebra.normalizeAngle(ballAngle - verticalAngle);
-        currentBounce = new ArcBounce(
-                arcXY,
-                bounceAcc(phy, speed),
-                speed * 0.8,
-                injectAngle,
-                phy.accelerationMultiplier()
-        );
+        currentBounce = new ArcBounce(arcXY[0], arcXY[1], arcRadius, BounceParams.DEFAULT);
+//        currentBounce = new ArcBounce(
+//                arcXY,
+//                bounceAcc(phy, speed),
+//                speed * 0.8,
+//                injectAngle,
+//                phy.accelerationMultiplier()
+//        );
 
         x += vx;
         y += vy;
@@ -208,15 +210,18 @@ public abstract class ObjectOnTable implements Cloneable {
 
         double[] unitNormal = Algebra.unitVector(lineNormalVec);
         double verticalSpeed = Algebra.projectionLengthOn(unitNormal, vv);
+        
+        currentBounce = new CushionBounce(line[0][0], line[0][1], 
+                unitNormal[0], unitNormal[1], BounceParams.DEFAULT);
 
-        currentBounce = new LineBounce(
-                -unitNormal[0] *
-                        verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
-                -unitNormal[1] *
-                        verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
-                Math.hypot(vx, vy) * 0.9,
-                phy.accelerationMultiplier()
-        );
+//        currentBounce = new LineBounce(
+//                -unitNormal[0] *
+//                        verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
+//                -unitNormal[1] *
+//                        verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
+//                Math.hypot(vx, vy) * 0.9,
+//                phy.accelerationMultiplier()
+//        );
     }
 
     protected double getNFramesInCushion(double verticalSpeed, double acc) {
@@ -499,258 +504,258 @@ public abstract class ObjectOnTable implements Cloneable {
         return new double[]{x1, y1};
     }
 
-    abstract class Bounce implements Cloneable {
-
-//        /*
-//        1: 上边库 
-//        2: 下边库 
-//        3: 左底库 
-//        4: 右底库 
-//        5: 袋角弧线 
-//        6: 袋角直线
-//        */
-//        int scenario;
+//    abstract class Bounce implements Cloneable {
 //
-//        // 仅有情况5时需要
-
-//        double holeArcRadius;
-
-        int accMul;  // 加速度的倍率，用于处理Phy帧时间的问题
-        boolean everEnter = false;  // 是否进入过库边区域
-        int framesCount = 0;
-
-        protected Bounce(double accMul) {
-            this.accMul = (int) Math.round(accMul);
-        }
-
-        @Override
-        protected Object clone() throws CloneNotSupportedException {
-            return super.clone();
-        }
-
-        abstract void processOneFrame();
-
-        /**
-         * @return 如果还在bounce过程则true。如返回false，则销毁该bounce
-         */
-        final boolean oneFrame() {
-            if (framesCount > 30) {
-//                System.out.println("Bounce alive for frames " + framesCount + " ");
-                if (everEnter) {
-//                    System.out.println("force leave");
-                    leave();
-                    return false;
-                }
-            }
-            if (!everEnter) {
-                if (!values.isInTable(x, y, values.ball.ballRadius)) {
-                    everEnter = true;
-                }
-            }
-
-            if (everEnter) {
-                processOneFrame();
-                framesCount++;
-                return !isLeaving(x, y);
-            } else {
-                framesCount++;
-                if (framesCount > 3) {
-                    System.out.println("Frame " + framesCount + " not entered");
-                    return false;
-                }
-
-                return true;
-            }
-        }
-
-//        boolean isHoleArea() {
-//            return scenario == 5 || scenario == 6;
+////        /*
+////        1: 上边库 
+////        2: 下边库 
+////        3: 左底库 
+////        4: 右底库 
+////        5: 袋角弧线 
+////        6: 袋角直线
+////        */
+////        int scenario;
+////
+////        // 仅有情况5时需要
+//
+////        double holeArcRadius;
+//
+//        int accMul;  // 加速度的倍率，用于处理Phy帧时间的问题
+//        boolean everEnter = false;  // 是否进入过库边区域
+//        int framesCount = 0;
+//
+//        protected Bounce(double accMul) {
+//            this.accMul = (int) Math.round(accMul);
 //        }
-
-        boolean isLeaving(double curX, double curY) {
-//            return framesCount > 30 || !values.isInTable(curX, curY, values.ball.ballRadius) &&
-//                    values.isInTable(curX + vx, curY + vy, values.ball.ballRadius);
-            return everEnter && values.isInTable(curX + vx, curY + vy, values.ball.ballRadius);
-        }
-
-        abstract void leave();
-
-        void clearDesireLeavePos() {
-        }
-    }
-
-    class CushionBounce extends Bounce {
-        double accX, accY;  // 反弹力的加速度，在PLAY_MS的条件下
-        // 如果一切顺利，会在什么地方离开库
-        double desiredX;
-        double desiredY;
-        double desiredVx;
-        double desiredVy;
-        double desiredSideSpin;
-
-        CushionBounce(double accX, double accY, double accMul) {
-            super(accMul);
-            this.accX = accX;
-            this.accY = accY;
-        }
-
-        @Override
-        void processOneFrame() {
-            vx += accX;
-            vy += accY;
-        }
-
-        @Override
-        void leave() {
-            if (desiredX != 0) {
-                x = desiredX;
-                y = desiredY;
-                vx = desiredVx;
-                vy = desiredVy;
-                if (ObjectOnTable.this instanceof Ball) {
-                    ((Ball) ObjectOnTable.this).sideSpin = desiredSideSpin;
-                }
-            }
-        }
-
-        /**
-         * 如果在弹库的过程中又被其他球撞了，更新加速度
-         */
-        void updateAcceleration() {
-            // todo: 实现这个，虽然说影响应该不大
-        }
-
-        @Override
-        void clearDesireLeavePos() {
-            setDesiredLeavePos(0, 0, 0, 0, 0);
-        }
-
-        void setDesiredLeavePos(double desiredX, double desiredY,
-                                double desiredVx, double desiredVy,
-                                double desiredSideSpin) {
-            this.desiredX = desiredX;
-            this.desiredY = desiredY;
-            this.desiredVx = desiredVx;
-            this.desiredVy = desiredVy;
-            this.desiredSideSpin = desiredSideSpin;
-        }
-    }
-
-    class LineBounce extends CushionBounce {
-        double desiredLeaveSpeed;
-
-        LineBounce(double accX, double accY, double desiredLeaveSpeed, double accelerationMul) {
-            super(accX, accY, accelerationMul);
-
-            this.accX = accX;
-            this.desiredLeaveSpeed = desiredLeaveSpeed;
-        }
-
-        @Override
-        void leave() {
-            if (desiredLeaveSpeed != 0) {
-//                System.out.println("speed ratio: " + Math.hypot(vx, vy) / desiredLeaveSpeed / table.wallBounceRatio);
-                double speed = Math.hypot(vx, vy);
-                double ratio = speed / desiredLeaveSpeed;
-                vx /= ratio;
-                vy /= ratio;
-            }
-        }
-
-        @Override
-        void clearDesireLeavePos() {
-            desiredLeaveSpeed = 0.0;
-            desiredSideSpin = 0.0;
-        }
-    }
-
-    class ArcBounce extends Bounce {
-        double[] holeArcCenter;
-        double verticalAcc;
-        double desiredLeaveSpeed;
-        double injectAngle;
-
-        double desiredLeaveSideSpin;
-
-//        double[] lastUnitAcc;
-
-        ArcBounce(double[] arcCenter, double verticalAcc, double desiredLeaveSpeed,
-                  double injectAngle, double accMul) {
-            super(accMul);
-            this.holeArcCenter = arcCenter;
-            this.verticalAcc = verticalAcc;
-            this.desiredLeaveSpeed = desiredLeaveSpeed;
-            this.injectAngle = injectAngle;
-
-//            System.out.println(Math.toDegrees(injectAngle));
-        }
-
-        @Override
-        void processOneFrame() {
-            // 每一帧都得更新加速方向
-            // 加速方向是球当前位置与圆心的连线
-            // todo: 此处假设球永远砸不到圆的半径那么深
-            double[] unitAcc = Algebra.unitVector(x - holeArcCenter[0], y - holeArcCenter[1]);
-//            if (overshoot) unitAcc = lastUnitAcc;
-//            else {
-//                unitAcc = Algebra.unitVector(x - holeArcCenter[0], y - holeArcCenter[1]);
-//                if (lastUnitAcc != null) {
-//                    double unitAccChange = Algebra.thetaBetweenVectors(lastUnitAcc, unitAcc);
-//                    if (unitAccChange >= Algebra.HALF_PI) {
-//                        System.out.println("Overshoot!");
-//                        unitAcc = lastUnitAcc;
-//                        overshoot = true;
-//                    }
+//
+//        @Override
+//        protected Object clone() throws CloneNotSupportedException {
+//            return super.clone();
+//        }
+//
+//        abstract void processOneFrame();
+//
+//        /**
+//         * @return 如果还在bounce过程则true。如返回false，则销毁该bounce
+//         */
+//        final boolean oneFrame() {
+//            if (framesCount > 30) {
+////                System.out.println("Bounce alive for frames " + framesCount + " ");
+//                if (everEnter) {
+////                    System.out.println("force leave");
+//                    leave();
+//                    return false;
 //                }
 //            }
-
-            double accX = unitAcc[0] * verticalAcc;
-            double accY = unitAcc[1] * verticalAcc;
-            vx += accX;
-            vy += accY;
-
-//            lastUnitAcc = unitAcc;
-        }
-
-        public void setDesiredLeaveSideSpin(double desiredLeaveSideSpin) {
-            this.desiredLeaveSideSpin = desiredLeaveSideSpin;
-        }
-
-        @Override
-        void leave() {
-            if (desiredLeaveSpeed != 0) {
-//                System.out.println("speed ratio: " + Math.hypot(vx, vy) / desiredLeaveSpeed / table.wallBounceRatio);
-//                double ejectAngle = Algebra.thetaOf(vx, vy);  // 入射角与垂线的夹角
-                double verticalAngle = Algebra.thetaOf(x - holeArcCenter[0], y - holeArcCenter[1]);
-                double ballAngle = Algebra.thetaOf(vx, vy);  // 当前球的射出角
-                double ejectAngle = verticalAngle - injectAngle;  // 根据当年入射角算出来的反射角
-
-                // 取平均值，魔法
-                double realAngle = Algebra.angularBisector(ballAngle, ejectAngle);
-//                System.out.printf("%.2f, %.2f, %.2f\n%n", Math.toDegrees(ballAngle), Math.toDegrees(ejectAngle), Math.toDegrees(realAngle));
-
-                double[] vecOfAngle = Algebra.unitVectorOfAngle(realAngle);
-                vx = vecOfAngle[0] * desiredLeaveSpeed;
-                vy = vecOfAngle[1] * desiredLeaveSpeed;
-
-                if (ObjectOnTable.this instanceof Ball && desiredLeaveSideSpin != 0.0) {
-                    ((Ball) ObjectOnTable.this).sideSpin = desiredLeaveSideSpin;
-                }
-
+//            if (!everEnter) {
+//                if (!values.isInTable(x, y, values.ball.ballRadius)) {
+//                    everEnter = true;
+//                }
+//            }
+//
+//            if (everEnter) {
+//                processOneFrame();
+//                framesCount++;
+//                return !isLeaving(x, y);
+//            } else {
+//                framesCount++;
+//                if (framesCount > 3) {
+//                    System.out.println("Frame " + framesCount + " not entered");
+//                    return false;
+//                }
+//
+//                return true;
+//            }
+//        }
+//
+////        boolean isHoleArea() {
+////            return scenario == 5 || scenario == 6;
+////        }
+//
+//        boolean isLeaving(double curX, double curY) {
+////            return framesCount > 30 || !values.isInTable(curX, curY, values.ball.ballRadius) &&
+////                    values.isInTable(curX + vx, curY + vy, values.ball.ballRadius);
+//            return everEnter && values.isInTable(curX + vx, curY + vy, values.ball.ballRadius);
+//        }
+//
+//        abstract void leave();
+//
+//        void clearDesireLeavePos() {
+//        }
+//    }
+//
+//    class CushionBounce extends Bounce {
+//        double accX, accY;  // 反弹力的加速度，在PLAY_MS的条件下
+//        // 如果一切顺利，会在什么地方离开库
+//        double desiredX;
+//        double desiredY;
+//        double desiredVx;
+//        double desiredVy;
+//        double desiredSideSpin;
+//
+//        CushionBounce(double accX, double accY, double accMul) {
+//            super(accMul);
+//            this.accX = accX;
+//            this.accY = accY;
+//        }
+//
+//        @Override
+//        void processOneFrame() {
+//            vx += accX;
+//            vy += accY;
+//        }
+//
+//        @Override
+//        void leave() {
+//            if (desiredX != 0) {
+//                x = desiredX;
+//                y = desiredY;
+//                vx = desiredVx;
+//                vy = desiredVy;
+//                if (ObjectOnTable.this instanceof Ball) {
+//                    ((Ball) ObjectOnTable.this).sideSpin = desiredSideSpin;
+//                }
+//            }
+//        }
+//
+//        /**
+//         * 如果在弹库的过程中又被其他球撞了，更新加速度
+//         */
+//        void updateAcceleration() {
+//            // todo: 实现这个，虽然说影响应该不大
+//        }
+//
+//        @Override
+//        void clearDesireLeavePos() {
+//            setDesiredLeavePos(0, 0, 0, 0, 0);
+//        }
+//
+//        void setDesiredLeavePos(double desiredX, double desiredY,
+//                                double desiredVx, double desiredVy,
+//                                double desiredSideSpin) {
+//            this.desiredX = desiredX;
+//            this.desiredY = desiredY;
+//            this.desiredVx = desiredVx;
+//            this.desiredVy = desiredVy;
+//            this.desiredSideSpin = desiredSideSpin;
+//        }
+//    }
+//
+//    class LineBounce extends CushionBounce {
+//        double desiredLeaveSpeed;
+//
+//        LineBounce(double accX, double accY, double desiredLeaveSpeed, double accelerationMul) {
+//            super(accX, accY, accelerationMul);
+//
+//            this.accX = accX;
+//            this.desiredLeaveSpeed = desiredLeaveSpeed;
+//        }
+//
+//        @Override
+//        void leave() {
+//            if (desiredLeaveSpeed != 0) {
+////                System.out.println("speed ratio: " + Math.hypot(vx, vy) / desiredLeaveSpeed / table.wallBounceRatio);
 //                double speed = Math.hypot(vx, vy);
 //                double ratio = speed / desiredLeaveSpeed;
 //                vx /= ratio;
 //                vy /= ratio;
-            }
-        }
-
-        @Override
-        void clearDesireLeavePos() {
-            this.desiredLeaveSpeed = 0.0;
-            this.injectAngle = 0.0;
-            this.desiredLeaveSideSpin = 0.0;
-        }
-    }
+//            }
+//        }
+//
+//        @Override
+//        void clearDesireLeavePos() {
+//            desiredLeaveSpeed = 0.0;
+//            desiredSideSpin = 0.0;
+//        }
+//    }
+//
+//    class ArcBounce extends Bounce {
+//        double[] holeArcCenter;
+//        double verticalAcc;
+//        double desiredLeaveSpeed;
+//        double injectAngle;
+//
+//        double desiredLeaveSideSpin;
+//
+////        double[] lastUnitAcc;
+//
+//        ArcBounce(double[] arcCenter, double verticalAcc, double desiredLeaveSpeed,
+//                  double injectAngle, double accMul) {
+//            super(accMul);
+//            this.holeArcCenter = arcCenter;
+//            this.verticalAcc = verticalAcc;
+//            this.desiredLeaveSpeed = desiredLeaveSpeed;
+//            this.injectAngle = injectAngle;
+//
+////            System.out.println(Math.toDegrees(injectAngle));
+//        }
+//
+//        @Override
+//        void processOneFrame() {
+//            // 每一帧都得更新加速方向
+//            // 加速方向是球当前位置与圆心的连线
+//            // todo: 此处假设球永远砸不到圆的半径那么深
+//            double[] unitAcc = Algebra.unitVector(x - holeArcCenter[0], y - holeArcCenter[1]);
+////            if (overshoot) unitAcc = lastUnitAcc;
+////            else {
+////                unitAcc = Algebra.unitVector(x - holeArcCenter[0], y - holeArcCenter[1]);
+////                if (lastUnitAcc != null) {
+////                    double unitAccChange = Algebra.thetaBetweenVectors(lastUnitAcc, unitAcc);
+////                    if (unitAccChange >= Algebra.HALF_PI) {
+////                        System.out.println("Overshoot!");
+////                        unitAcc = lastUnitAcc;
+////                        overshoot = true;
+////                    }
+////                }
+////            }
+//
+//            double accX = unitAcc[0] * verticalAcc;
+//            double accY = unitAcc[1] * verticalAcc;
+//            vx += accX;
+//            vy += accY;
+//
+////            lastUnitAcc = unitAcc;
+//        }
+//
+//        public void setDesiredLeaveSideSpin(double desiredLeaveSideSpin) {
+//            this.desiredLeaveSideSpin = desiredLeaveSideSpin;
+//        }
+//
+//        @Override
+//        void leave() {
+//            if (desiredLeaveSpeed != 0) {
+////                System.out.println("speed ratio: " + Math.hypot(vx, vy) / desiredLeaveSpeed / table.wallBounceRatio);
+////                double ejectAngle = Algebra.thetaOf(vx, vy);  // 入射角与垂线的夹角
+//                double verticalAngle = Algebra.thetaOf(x - holeArcCenter[0], y - holeArcCenter[1]);
+//                double ballAngle = Algebra.thetaOf(vx, vy);  // 当前球的射出角
+//                double ejectAngle = verticalAngle - injectAngle;  // 根据当年入射角算出来的反射角
+//
+//                // 取平均值，魔法
+//                double realAngle = Algebra.angularBisector(ballAngle, ejectAngle);
+////                System.out.printf("%.2f, %.2f, %.2f\n%n", Math.toDegrees(ballAngle), Math.toDegrees(ejectAngle), Math.toDegrees(realAngle));
+//
+//                double[] vecOfAngle = Algebra.unitVectorOfAngle(realAngle);
+//                vx = vecOfAngle[0] * desiredLeaveSpeed;
+//                vy = vecOfAngle[1] * desiredLeaveSpeed;
+//
+//                if (ObjectOnTable.this instanceof Ball && desiredLeaveSideSpin != 0.0) {
+//                    ((Ball) ObjectOnTable.this).sideSpin = desiredLeaveSideSpin;
+//                }
+//
+////                double speed = Math.hypot(vx, vy);
+////                double ratio = speed / desiredLeaveSpeed;
+////                vx /= ratio;
+////                vy /= ratio;
+//            }
+//        }
+//
+//        @Override
+//        void clearDesireLeavePos() {
+//            this.desiredLeaveSpeed = 0.0;
+//            this.injectAngle = 0.0;
+//            this.desiredLeaveSideSpin = 0.0;
+//        }
+//    }
 
     public static final class CushionHitResult {
         private final Cushion cushion;

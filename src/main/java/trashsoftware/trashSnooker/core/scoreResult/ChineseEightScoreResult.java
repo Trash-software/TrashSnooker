@@ -1,10 +1,8 @@
 package trashsoftware.trashSnooker.core.scoreResult;
 
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.numberedGames.PoolBall;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class ChineseEightScoreResult extends ScoreResult {

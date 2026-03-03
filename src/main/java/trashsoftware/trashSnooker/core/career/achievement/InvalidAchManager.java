@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.attempt.DefenseAttempt;
 import trashsoftware.trashSnooker.core.attempt.PotAttempt;
+import trashsoftware.trashSnooker.core.essential.Game;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
 
 import java.util.Map;

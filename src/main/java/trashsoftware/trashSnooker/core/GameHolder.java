@@ -1,5 +1,6 @@
 package trashsoftware.trashSnooker.core;
 
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.table.Table;
 

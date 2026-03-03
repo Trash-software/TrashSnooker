@@ -1,12 +1,11 @@
 package trashsoftware.trashSnooker.core.scoreResult;
 
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.snooker.SnookerBall;
 import trashsoftware.trashSnooker.util.Util;
 
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 public class SnookerScoreResult extends ScoreResult {
     public static final int BYTE_LENGTH = 32;

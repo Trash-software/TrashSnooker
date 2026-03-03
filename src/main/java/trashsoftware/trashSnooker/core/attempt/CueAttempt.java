@@ -1,6 +1,6 @@
 package trashsoftware.trashSnooker.core.attempt;
 
-import trashsoftware.trashSnooker.core.Ball;
+import trashsoftware.trashSnooker.core.essential.Ball;
 import trashsoftware.trashSnooker.core.CuePlayParams;
 import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 import trashsoftware.trashSnooker.core.movement.Movement;

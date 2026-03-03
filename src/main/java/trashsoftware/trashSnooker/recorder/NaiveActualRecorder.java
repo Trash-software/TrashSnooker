@@ -1,7 +1,7 @@
 package trashsoftware.trashSnooker.recorder;
 
-import trashsoftware.trashSnooker.core.Ball;
-import trashsoftware.trashSnooker.core.Game;
+import trashsoftware.trashSnooker.core.essential.Ball;
+import trashsoftware.trashSnooker.core.essential.Game;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.movement.Movement;
 import trashsoftware.trashSnooker.core.movement.MovementFrame;
