@@ -7,12 +7,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9578802971237843,
+      "handFeel": 1.0333638265608225,
       "human": false,
       "playerId": "random_player_87"
     },
@@ -21,8 +21,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -594,9 +594,24 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9228766693189449,
+      "handFeel": 0.9743514228805328,
       "human": false,
       "playerId": "random_player_86"
     },
@@ -605,12 +620,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0765586019327695,
+      "handFeel": 1.0240596954707242,
       "human": false,
       "playerId": "random_player_89"
     },
@@ -619,8 +634,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -1172,9 +1187,38 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 57,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_1-12",
+            "playerId": "random_player_88"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.0617571027222499,
+      "handFeel": 0.85,
       "human": false,
       "playerId": "random_player_88"
     },
@@ -1183,12 +1227,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0688419059777399,
+      "handFeel": 1.0315784699896962,
       "human": false,
       "playerId": "random_player_1"
     },
@@ -1197,8 +1241,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -2178,9 +2222,61 @@
           "ranks": ["TOP_4"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 67,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+champ_of_champ-ROUND_1-3",
+            "playerId": "random_player_0"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 50,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_1-47",
+            "playerId": "random_player_0"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 89,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-2",
+            "playerId": "random_player_0"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.016518454071867,
+      "handFeel": 0.8886387724209515,
       "human": false,
       "playerId": "random_player_0"
     },
@@ -2189,8 +2285,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -2933,9 +3029,29 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "masters"
         }
       ],
-      "handFeel": 0.8879947738783834,
+      "handFeel": 1.0097663358040612,
       "human": false,
       "playerId": "Mark Allen"
     },
@@ -2944,8 +3060,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -3297,9 +3413,24 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.8944052663202752,
+      "handFeel": 0.9761878871478893,
       "human": false,
       "playerId": "random_player_9"
     },
@@ -3308,8 +3439,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -3661,9 +3792,24 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.8653520404707545,
+      "handFeel": 0.9154398488861637,
       "human": false,
       "playerId": "random_player_8"
     },
@@ -3672,12 +3818,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8810571516039651,
+      "handFeel": 0.9972689436667989,
       "human": false,
       "playerId": "random_player_7"
     },
@@ -3686,8 +3832,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -4281,9 +4427,46 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": [
+            "CHAMPION",
+            "BEST_SINGLE"
+          ],
+          "year": 2028,
+          "highestBreak": {
+            "score": 114,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+fresh_hand_open-QUARTER_FINAL-25",
+            "playerId": "random_player_6"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9674902064300456,
+      "handFeel": 1.0390910764641217,
       "human": false,
       "playerId": "random_player_6"
     },
@@ -4292,8 +4475,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -4370,9 +4553,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.1015826883816509,
+      "handFeel": 1.136110233762215,
       "human": false,
       "playerId": "random_player_5"
     },
@@ -4381,8 +4569,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -4765,9 +4953,19 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9292638895778695,
+      "handFeel": 0.9535583177316065,
       "human": false,
       "playerId": "random_player_4"
     },
@@ -4776,12 +4974,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9649752163482961,
+      "handFeel": 1.0224635270180151,
       "human": false,
       "playerId": "random_player_3"
     },
@@ -4790,8 +4988,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -5305,9 +5503,29 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9171379309267952,
+      "handFeel": 0.8750824304027947,
       "human": false,
       "playerId": "random_player_2"
     },
@@ -5316,8 +5534,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -5395,9 +5613,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.8756450750721496,
+      "handFeel": 1.129461128106142,
       "human": false,
       "playerId": "random_player_94"
     },
@@ -5406,8 +5629,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -5588,9 +5811,14 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.1225852848389941,
+      "handFeel": 1.0162356677278153,
       "human": false,
       "playerId": "random_player_93"
     },
@@ -5599,12 +5827,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1474828851054377,
+      "handFeel": 1.1236609548141527,
       "human": false,
       "playerId": "random_player_96"
     },
@@ -5613,12 +5841,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9618182687346519,
+      "handFeel": 1.0284689692492262,
       "human": false,
       "playerId": "random_player_95"
     },
@@ -5627,8 +5855,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -5696,9 +5924,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.1057391465199171,
+      "handFeel": 1.0798975655802223,
       "human": false,
       "playerId": "random_player_90"
     },
@@ -5707,8 +5940,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6359,9 +6592,38 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 50,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_1-3",
+            "playerId": "random_player_92"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.85,
+      "handFeel": 0.9318704217496819,
       "human": false,
       "playerId": "random_player_92"
     },
@@ -6370,8 +6632,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6448,9 +6710,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.8847198578141422,
+      "handFeel": 0.8625822176993921,
       "human": false,
       "playerId": "random_player_91"
     },
@@ -6459,12 +6726,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.85,
+      "handFeel": 0.8548769120976651,
       "human": false,
       "playerId": "random_player_79"
     },
@@ -6473,8 +6740,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6507,9 +6774,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2026,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9427687549550187,
+      "handFeel": 1.0333458274347758,
       "human": false,
       "playerId": "random_player_76"
     },
@@ -6518,8 +6790,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6597,9 +6869,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0890705647495726,
+      "handFeel": 1.132740652257847,
       "human": false,
       "playerId": "random_player_75"
     },
@@ -6608,12 +6885,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1438192283779771,
+      "handFeel": 1.0753849463564509,
       "human": false,
       "playerId": "random_player_78"
     },
@@ -6622,8 +6899,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6691,9 +6968,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9263869692713886,
+      "handFeel": 0.8640270521767726,
       "human": false,
       "playerId": "random_player_77"
     },
@@ -6702,12 +6984,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9124898710252234,
+      "handFeel": 0.867659022489876,
       "human": false,
       "playerId": "random_player_83"
     },
@@ -6716,12 +6998,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9685404119872705,
+      "handFeel": 1.0784981427185791,
       "human": false,
       "playerId": "random_player_82"
     },
@@ -6730,8 +7012,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -6808,9 +7090,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.8944326580697561,
+      "handFeel": 0.8952390335437062,
       "human": false,
       "playerId": "random_player_85"
     },
@@ -6819,8 +7106,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -7534,9 +7821,48 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 73,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_1-14",
+            "playerId": "Wang Xu"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.8989183999451464,
+      "handFeel": 0.8587907712166364,
       "human": false,
       "playerId": "Wang Xu"
     },
@@ -7545,8 +7871,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8062,9 +8388,29 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1115976691020684,
+      "handFeel": 0.9788918629939528,
       "human": false,
       "playerId": "random_player_84"
     },
@@ -8073,8 +8419,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8220,9 +8566,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.8642932285187829,
+      "handFeel": 0.85,
       "human": false,
       "playerId": "random_player_81"
     },
@@ -8231,8 +8582,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8355,9 +8706,14 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9386512648654861,
+      "handFeel": 0.949674495736547,
       "human": false,
       "playerId": "random_player_80"
     },
@@ -8366,8 +8722,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8435,9 +8791,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.094956219646006,
+      "handFeel": 1.0412584585348066,
       "human": false,
       "playerId": "random_player_98"
     },
@@ -8446,8 +8807,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8548,9 +8909,14 @@
             "playerId": "random_player_97"
           },
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.1382485387485515,
+      "handFeel": 1.0280649388396452,
       "human": false,
       "playerId": "random_player_97"
     },
@@ -8559,8 +8925,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -8879,9 +9245,24 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "eight_duck_goose_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.8940788015914046,
+      "handFeel": 0.9385531363523101,
       "human": false,
       "playerId": "random_player_99"
     },
@@ -8890,12 +9271,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0046650818027523,
+      "handFeel": 0.9632606443325465,
       "human": false,
       "playerId": "Master"
     },
@@ -8904,8 +9285,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -9388,9 +9769,38 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 102,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": false,
+            "numFrame": 4,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_1-46",
+            "playerId": "random_player_47"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9638973034408533,
+      "handFeel": 1.007736721651135,
       "human": false,
       "playerId": "random_player_47"
     },
@@ -9399,8 +9809,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -9527,9 +9937,14 @@
             "playerId": "random_player_107"
           },
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9764418050917035,
+      "handFeel": 0.9274230343357114,
       "human": false,
       "playerId": "random_player_107"
     },
@@ -9538,8 +9953,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -9919,9 +10334,19 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.0318820420553916,
+      "handFeel": 1.0493566144064472,
       "human": false,
       "playerId": "random_player_46"
     },
@@ -9930,8 +10355,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -10520,9 +10945,34 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.8758134125244611,
+      "handFeel": 0.8944619037614505,
       "human": false,
       "playerId": "random_player_108"
     },
@@ -10531,8 +10981,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -11152,9 +11602,38 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 87,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+fresh_hand_open-QUARTER_FINAL-25",
+            "playerId": "random_player_49"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9225780823397345,
+      "handFeel": 0.85,
       "human": false,
       "playerId": "random_player_49"
     },
@@ -11163,8 +11642,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -11242,9 +11721,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9185281869453429,
+      "handFeel": 0.9967839570198656,
       "human": false,
       "playerId": "random_player_105"
     },
@@ -11253,8 +11737,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -11381,9 +11865,14 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9161722807963198,
+      "handFeel": 0.8749687054363895,
       "human": false,
       "playerId": "random_player_48"
     },
@@ -11392,12 +11881,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.905890260975064,
+      "handFeel": 0.9578022625466847,
       "human": false,
       "playerId": "random_player_106"
     },
@@ -11406,8 +11895,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -11624,9 +12113,24 @@
           "ranks": ["SECOND_PLACE"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1106910634240212,
+      "handFeel": 1.1493784600757826,
       "human": false,
       "playerId": "random_player_43"
     },
@@ -11635,8 +12139,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -12402,9 +12906,33 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 82,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_1-47",
+            "playerId": "random_player_103"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9974139920550756,
+      "handFeel": 0.8529396276118787,
       "human": false,
       "playerId": "random_player_103"
     },
@@ -12413,8 +12941,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -12447,9 +12975,24 @@
           "ranks": ["TOP_32"],
           "year": 2026,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9101651663527724,
+      "handFeel": 0.9955606020316382,
       "human": false,
       "playerId": "random_player_42"
     },
@@ -12458,8 +13001,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -12502,9 +13045,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2026,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0913360175769151,
+      "handFeel": 1.0574959331541967,
       "human": false,
       "playerId": "random_player_104"
     },
@@ -12513,8 +13061,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -12867,9 +13415,34 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "eight_duck_goose_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9263915616501889,
+      "handFeel": 0.9505490902690632,
       "human": false,
       "playerId": "Tang Chunxiao"
     },
@@ -12878,8 +13451,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -12947,9 +13520,14 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.1363472462346496,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "random_player_45"
     },
@@ -12958,8 +13536,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -13027,9 +13605,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0164209310704,
+      "handFeel": 1.1197894356594613,
       "human": false,
       "playerId": "random_player_101"
     },
@@ -13038,8 +13621,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -13562,9 +14145,43 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "eight_duck_goose_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 82,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_2-21",
+            "playerId": "random_player_44"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.0294486648104204,
+      "handFeel": 0.9800362387460704,
       "human": false,
       "playerId": "random_player_44"
     },
@@ -13573,12 +14190,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0567461473096347,
+      "handFeel": 1.1335681361325076,
       "human": false,
       "playerId": "random_player_102"
     },
@@ -13587,8 +14204,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -13621,9 +14238,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2026,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.15,
+      "handFeel": 1.082317548022943,
       "human": false,
       "playerId": "random_player_109"
     },
@@ -13632,12 +14254,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.15,
+      "handFeel": 1.1289565384419067,
       "human": false,
       "playerId": "random_player_50"
     },
@@ -13646,8 +14268,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -14252,9 +14874,44 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1010325131912675,
+      "handFeel": 1.0843945000907322,
       "human": false,
       "playerId": "Summer Brave"
     },
@@ -14263,8 +14920,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -14437,9 +15094,24 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.8986717237813339,
+      "handFeel": 1.0808250310971264,
       "human": false,
       "playerId": "random_player_100"
     },
@@ -14448,8 +15120,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -15002,9 +15674,39 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.0449337804534822,
+      "handFeel": 1.0306036236251357,
       "human": false,
       "playerId": "Lao Youtiao"
     },
@@ -15013,8 +15715,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -15122,9 +15824,24 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.047835460779246,
+      "handFeel": 1.1206870323273281,
       "human": false,
       "playerId": "random_player_52"
     },
@@ -15133,12 +15850,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1257759208127684,
+      "handFeel": 1.1032643435305205,
       "human": false,
       "playerId": "random_player_51"
     },
@@ -15147,12 +15864,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0243241733188957,
+      "handFeel": 1.0378884430656385,
       "human": false,
       "playerId": "Master2"
     },
@@ -15161,8 +15878,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -15200,9 +15917,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2026,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9907667018063269,
+      "handFeel": 1.0134708038443085,
       "human": false,
       "playerId": "random_player_36"
     },
@@ -15211,8 +15933,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -15627,9 +16349,52 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 81,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_1-10",
+            "playerId": "random_player_118"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 66,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+fresh_hand_open-PRE_ROUND_1-3",
+            "playerId": "random_player_118"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1059758204351609,
+      "handFeel": 1.1005888793590946,
       "human": false,
       "playerId": "random_player_118"
     },
@@ -15638,8 +16403,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -15750,9 +16515,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9939400376566336,
+      "handFeel": 0.9826201629263852,
       "human": false,
       "playerId": "random_player_35"
     },
@@ -15761,8 +16531,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -15835,9 +16605,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2026,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0174447319527806,
+      "handFeel": 1.0439779888152447,
       "human": false,
       "playerId": "random_player_119"
     },
@@ -15846,12 +16621,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0657159718855511,
+      "handFeel": 1.129760424639204,
       "human": false,
       "playerId": "random_player_38"
     },
@@ -15860,12 +16635,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9231074978736287,
+      "handFeel": 1.0517149166014155,
       "human": false,
       "playerId": "random_player_116"
     },
@@ -15874,8 +16649,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -16190,9 +16965,24 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1339595591424279,
+      "handFeel": 1.0173988547329424,
       "human": false,
       "playerId": "random_player_37"
     },
@@ -16201,8 +16991,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -16483,9 +17273,14 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0228708352814984,
+      "handFeel": 1.0238664357455844,
       "human": false,
       "playerId": "random_player_117"
     },
@@ -16494,8 +17289,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -17092,9 +17887,24 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0416474385396741,
+      "handFeel": 0.9598726260933288,
       "human": false,
       "playerId": "random_player_32"
     },
@@ -17103,12 +17913,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.85,
+      "handFeel": 0.8864816702125418,
       "human": false,
       "playerId": "random_player_114"
     },
@@ -17117,8 +17927,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -17666,9 +18476,24 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9866918440804232,
+      "handFeel": 1.041705270079631,
       "human": false,
       "playerId": "random_player_31"
     },
@@ -17677,8 +18502,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -18009,9 +18834,34 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1248610091292015,
+      "handFeel": 1.0989594271745282,
       "human": false,
       "playerId": "random_player_115"
     },
@@ -18020,12 +18870,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0214778290840858,
+      "handFeel": 1.146656118209556,
       "human": false,
       "playerId": "random_player_34"
     },
@@ -18034,8 +18884,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -18380,9 +19230,14 @@
           "ranks": ["PRE_GAMES_3"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9912542047482535,
+      "handFeel": 0.919902679283727,
       "human": false,
       "playerId": "random_player_112"
     },
@@ -18391,8 +19246,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -18969,9 +19824,44 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "eight_duck_goose_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9833941145356768,
+      "handFeel": 0.937269925887672,
       "human": false,
       "playerId": "Kid"
     },
@@ -18980,8 +19870,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -19544,9 +20434,52 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 71,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_1-12",
+            "playerId": "random_player_33"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 55,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+fresh_hand_open-PRE_ROUND_1-15",
+            "playerId": "random_player_33"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9659576280112796,
+      "handFeel": 1.1303241659428693,
       "human": false,
       "playerId": "random_player_33"
     },
@@ -19555,8 +20488,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -19699,9 +20632,14 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9020955647554074,
+      "handFeel": 0.9116485166397503,
       "human": false,
       "playerId": "random_player_113"
     },
@@ -19710,8 +20648,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -19953,9 +20891,14 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9735773681345974,
+      "handFeel": 0.914230650784015,
       "human": false,
       "playerId": "random_player_39"
     },
@@ -19964,8 +20907,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -20673,9 +21616,65 @@
             "playerId": "Mark Williams"
           },
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 127,
+            "maximumType": "NONE",
+            "stage": "FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-FINAL-26",
+            "playerId": "Mark Williams"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 130,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+champ_of_champ-ROUND_1-1",
+            "playerId": "Mark Williams"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 129,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_1-45",
+            "playerId": "Mark Williams"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 134,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-0",
+            "playerId": "Mark Williams"
+          },
+          "id": "masters"
         }
       ],
-      "handFeel": 1.1479908352117336,
+      "handFeel": 1.0373142384631164,
       "human": false,
       "playerId": "Mark Williams"
     },
@@ -20684,8 +21683,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -21048,9 +22047,34 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "eight_duck_goose_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.124509646913227,
+      "handFeel": 1.1289160457695482,
       "human": false,
       "playerId": "Wang Sinuo"
     },
@@ -21059,8 +22083,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -21549,9 +22573,37 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 52,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-PRE_ROUND_1-0",
+            "playerId": "Luca Brecel"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 73,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_2-18",
+            "playerId": "Luca Brecel"
+          },
+          "id": "united_kingdom_champ"
         }
       ],
-      "handFeel": 0.9456696548495243,
+      "handFeel": 0.9688069927092262,
       "human": false,
       "playerId": "Luca Brecel"
     },
@@ -21560,8 +22612,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -21802,9 +22854,47 @@
           "ranks": ["TOP_8"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 52,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_1-8",
+            "playerId": "random_player_110"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 59,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+fresh_hand_open-QUARTER_FINAL-24",
+            "playerId": "random_player_110"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1067855729033638,
+      "handFeel": 1.0714514892211984,
       "human": false,
       "playerId": "random_player_110"
     },
@@ -21813,8 +22903,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -21940,9 +23030,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0597186274737456,
+      "handFeel": 1.0495543372894955,
       "human": false,
       "playerId": "random_player_111"
     },
@@ -21951,12 +23046,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.070059564525625,
+      "handFeel": 1.0461580193613251,
       "human": false,
       "playerId": "random_player_41"
     },
@@ -21965,12 +23060,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0149668046807523,
+      "handFeel": 1.1242521965586925,
       "human": false,
       "playerId": "random_player_40"
     },
@@ -21979,8 +23074,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -22351,9 +23446,28 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 71,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_2-19",
+            "playerId": "random_player_69"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.1272495227488148,
+      "handFeel": 1.1058124118121653,
       "human": false,
       "playerId": "random_player_69"
     },
@@ -22362,8 +23476,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -22779,9 +23893,42 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 65,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_1-6",
+            "playerId": "Brown"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 103,
+            "maximumType": "NONE",
+            "stage": "SEMI_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+fresh_hand_open-SEMI_FINAL-29",
+            "playerId": "Brown"
+          },
+          "id": "fresh_hand_open"
         }
       ],
-      "handFeel": 0.9754657158080967,
+      "handFeel": 0.9987794092349416,
       "human": false,
       "playerId": "Brown"
     },
@@ -22790,8 +23937,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -22993,9 +24140,14 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9656943989302917,
+      "handFeel": 1.039514058884004,
       "human": false,
       "playerId": "random_player_68"
     },
@@ -23004,8 +24156,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -23714,9 +24866,39 @@
           "ranks": ["TOP_8"],
           "year": 2027,
           "id": "eight_duck_goose_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9355801083623204,
+      "handFeel": 0.9002523718758887,
       "human": false,
       "playerId": "Yan Bingtao"
     },
@@ -23725,8 +24907,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -24013,9 +25195,14 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.948275935274151,
+      "handFeel": 0.8767469655536028,
       "human": false,
       "playerId": "random_player_127"
     },
@@ -24024,8 +25211,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -24093,9 +25280,14 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0918235390467832,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "random_player_65"
     },
@@ -24104,8 +25296,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -24138,9 +25330,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2026,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0034645927229358,
+      "handFeel": 1.0448800699108667,
       "human": false,
       "playerId": "random_player_125"
     },
@@ -24149,8 +25346,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -24445,9 +25642,34 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9015411674465377,
+      "handFeel": 0.8856801647510572,
       "human": false,
       "playerId": "random_player_64"
     },
@@ -24456,8 +25678,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -24490,9 +25712,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2026,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.8761190511580126,
+      "handFeel": 0.8942622024331047,
       "human": false,
       "playerId": "random_player_126"
     },
@@ -24501,8 +25728,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -24952,9 +26179,48 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "eight_duck_goose_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 69,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_2-48",
+            "playerId": "random_player_67"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "masters"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.093070161031533,
+      "handFeel": 1.115557949012646,
       "human": false,
       "playerId": "random_player_67"
     },
@@ -24963,12 +26229,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.15,
+      "handFeel": 0.9965929008273272,
       "human": false,
       "playerId": "random_player_123"
     },
@@ -24977,8 +26243,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -25466,9 +26732,33 @@
           "ranks": ["TOP_4"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 65,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+fresh_hand_open-PRE_ROUND_1-10",
+            "playerId": "random_player_66"
+          },
+          "id": "fresh_hand_open"
         }
       ],
-      "handFeel": 1.1346943377213141,
+      "handFeel": 1.0154953252981243,
       "human": false,
       "playerId": "random_player_66"
     },
@@ -25477,8 +26767,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -26120,9 +27410,33 @@
           "ranks": ["TOP_8"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 67,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_2-29",
+            "playerId": "random_player_124"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.15,
+      "handFeel": 1.1040700400770243,
       "human": false,
       "playerId": "random_player_124"
     },
@@ -26131,8 +27445,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -27285,9 +28599,52 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 120,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-PRE_ROUND_1-7",
+            "playerId": "Glass Heart"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 110,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_1-40",
+            "playerId": "Glass Heart"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.0123624072169777,
+      "handFeel": 1.0945513666959197,
       "human": false,
       "playerId": "Glass Heart"
     },
@@ -27296,8 +28653,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -28330,9 +29687,53 @@
           "ranks": ["TOP_8"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 124,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_2-49",
+            "playerId": "Selby"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9574514032467843,
+      "handFeel": 1.022370582706913,
       "human": false,
       "playerId": "Selby"
     },
@@ -28341,8 +29742,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -28552,9 +29953,29 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9832589666375953,
+      "handFeel": 1.1148336834793138,
       "human": false,
       "playerId": "random_player_72"
     },
@@ -28563,8 +29984,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -28594,7 +30015,7 @@
           "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.8905307706377292,
+      "handFeel": 1.0187061072855843,
       "human": false,
       "playerId": "random_player_121"
     },
@@ -28603,12 +30024,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1480570520983484,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "random_player_71"
     },
@@ -28617,8 +30038,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -28849,9 +30270,24 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "eight_noob_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.94752435559464,
+      "handFeel": 0.8886796715080358,
       "human": false,
       "playerId": "random_player_122"
     },
@@ -28860,8 +30296,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -28969,9 +30405,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0019629201834066,
+      "handFeel": 0.9624244766494013,
       "human": false,
       "playerId": "random_player_74"
     },
@@ -28980,8 +30421,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -29610,9 +31051,29 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "masters"
         }
       ],
-      "handFeel": 0.9086907915112791,
+      "handFeel": 0.9206526567174895,
       "human": false,
       "playerId": "Stephen Maguire"
     },
@@ -29621,12 +31082,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9621487378716925,
+      "handFeel": 0.9082785347090498,
       "human": false,
       "playerId": "random_player_73"
     },
@@ -29635,12 +31096,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9305600402825878,
+      "handFeel": 1.010134830938227,
       "human": false,
       "playerId": "random_player_120"
     },
@@ -29649,12 +31110,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.895592552074328,
+      "handFeel": 0.949659974880515,
       "human": false,
       "playerId": "random_player_70"
     },
@@ -29663,12 +31124,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9363207862701924,
+      "handFeel": 0.8645559280025062,
       "human": false,
       "playerId": "random_player_58"
     },
@@ -29677,8 +31138,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -30226,9 +31687,34 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.895900325167671,
+      "handFeel": 0.8946778090663953,
       "human": false,
       "playerId": "Mang Zi"
     },
@@ -30237,12 +31723,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9430221570962838,
+      "handFeel": 0.928612805784221,
       "human": false,
       "playerId": "random_player_57"
     },
@@ -30251,12 +31737,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1488765728085581,
+      "handFeel": 1.1269901269538316,
       "human": false,
       "playerId": "random_player_59"
     },
@@ -30265,8 +31751,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -30299,9 +31785,14 @@
           "ranks": ["PRE_GAMES_2"],
           "year": 2026,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0994296506838372,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "random_player_54"
     },
@@ -30310,8 +31801,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -30459,9 +31950,14 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "world_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.8841698071240094,
+      "handFeel": 0.9729402785023269,
       "human": false,
       "playerId": "random_player_53"
     },
@@ -30470,12 +31966,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.9872957542840718,
+      "handFeel": 1.0621484021355576,
       "human": false,
       "playerId": "random_player_56"
     },
@@ -30484,8 +31980,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -30869,9 +32365,33 @@
           "ranks": ["PRE_GAMES_1"],
           "year": 2027,
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 60,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_1-5",
+            "playerId": "random_player_55"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "fresh_hand_open"
         }
       ],
-      "handFeel": 0.9911730343047324,
+      "handFeel": 1.0031105462833445,
       "human": false,
       "playerId": "random_player_55"
     },
@@ -30880,8 +32400,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -31264,9 +32784,24 @@
           "ranks": ["TOP_8"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9874391544020117,
+      "handFeel": 0.919442785639478,
       "human": false,
       "playerId": "Chu Bingjie"
     },
@@ -31275,12 +32810,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.078665599004266,
+      "handFeel": 1.144913295287058,
       "human": false,
       "playerId": "random_player_61"
     },
@@ -31289,8 +32824,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -31696,9 +33231,14 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.15,
+      "handFeel": 1.1185615793590562,
       "human": false,
       "playerId": "random_player_60"
     },
@@ -31707,8 +33247,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -32395,9 +33935,38 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 86,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_1-43",
+            "playerId": "random_player_63"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.15,
+      "handFeel": 1.0976759650971395,
       "human": false,
       "playerId": "random_player_63"
     },
@@ -32406,8 +33975,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -32698,9 +34267,14 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0751119779525709,
+      "handFeel": 1.07508369541877,
       "human": false,
       "playerId": "random_player_62"
     },
@@ -32709,8 +34283,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -33568,19 +35142,78 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": [
+            "TOP_8",
+            "BEST_SINGLE"
+          ],
+          "year": 2027,
+          "highestBreak": {
+            "score": 136,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-QUARTER_FINAL-22",
+            "playerId": "Neil Robertson"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 106,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+champ_of_champ-ROUND_1-4",
+            "playerId": "Neil Robertson"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 130,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 4,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_2-50",
+            "playerId": "Neil Robertson"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 108,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-5",
+            "playerId": "Neil Robertson"
+          },
+          "id": "masters"
         }
       ],
-      "handFeel": 0.9891163262583826,
+      "handFeel": 1.0233833862001396,
       "human": false,
       "playerId": "Neil Robertson"
     },
     {
       "efforts": {
-        "SNOOKER": 0.9218713989398478,
+        "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -34224,6 +35857,52 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 111,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": false,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_1-46",
+            "playerId": "custom_DA1B9E98710BC5F5"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": [
+            "CHAMPION",
+            "BEST_SINGLE"
+          ],
+          "year": 2028,
+          "highestBreak": {
+            "score": 142,
+            "maximumType": "NONE",
+            "stage": "FINAL",
+            "sim": false,
+            "numFrame": 4,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+masters-FINAL-14",
+            "playerId": "custom_DA1B9E98710BC5F5"
+          },
+          "id": "masters"
         }
       ],
       "completedChallenges": [
@@ -34574,6 +36253,7 @@
       ],
       "levelAwards": {
         "22": {"perks": 8},
+        "44": {"perks": 6},
         "23": {"perks": 8},
         "24": {"perks": 3},
         "25": {"perks": 5},
@@ -34616,7 +36296,7 @@
         "21": {"perks": 3},
         "43": {"perks": 4}
       },
-      "handFeel": 0.8925222690258321,
+      "handFeel": 0.8874358729746812,
       "human": true,
       "playerId": "custom_DA1B9E98710BC5F5"
     },
@@ -34625,8 +36305,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -35432,9 +37112,56 @@
             "playerId": "Stuart Bingham"
           },
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 75,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_3",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-PRE_ROUND_3-17",
+            "playerId": "Stuart Bingham"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 81,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+champ_of_champ-ROUND_1-4",
+            "playerId": "Stuart Bingham"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 126,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_2-50",
+            "playerId": "Stuart Bingham"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "masters"
         }
       ],
-      "handFeel": 0.9510464167822184,
+      "handFeel": 0.9864406047684777,
       "human": false,
       "playerId": "Stuart Bingham"
     },
@@ -35443,8 +37170,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -36118,9 +37845,34 @@
           "ranks": ["CHAMPION"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.928034951179045,
+      "handFeel": 0.983711933951551,
       "human": false,
       "playerId": "Mou Moumou"
     },
@@ -36129,8 +37881,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -37041,9 +38793,51 @@
             "playerId": "O_Sullivan"
           },
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 68,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+champ_of_champ-QUARTER_FINAL-11",
+            "playerId": "O_Sullivan"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 133,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_1-40",
+            "playerId": "O_Sullivan"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 95,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-10",
+            "playerId": "O_Sullivan"
+          },
+          "id": "masters"
         }
       ],
-      "handFeel": 0.9463453113844271,
+      "handFeel": 0.8761271036775556,
       "human": false,
       "playerId": "O_Sullivan"
     },
@@ -37052,12 +38846,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.1054463985667218,
+      "handFeel": 1.1290670776659235,
       "human": false,
       "playerId": "random_player_25"
     },
@@ -37066,8 +38860,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -37210,9 +39004,14 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.8593267517768797,
+      "handFeel": 0.943410029743545,
       "human": false,
       "playerId": "random_player_24"
     },
@@ -37221,8 +39020,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -37555,9 +39354,24 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9422146776771936,
+      "handFeel": 1.054344784901166,
       "human": false,
       "playerId": "random_player_27"
     },
@@ -37566,8 +39380,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -37590,9 +39404,14 @@
           "ranks": ["TOP_32"],
           "year": 2025,
           "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 0.9360060051373467,
+      "handFeel": 0.9636289475268259,
       "human": false,
       "playerId": "random_player_26"
     },
@@ -37601,8 +39420,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -37814,9 +39633,24 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "eight_duck_goose_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.019740238660125,
+      "handFeel": 0.9539616065651937,
       "human": false,
       "playerId": "random_player_21"
     },
@@ -37825,12 +39659,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0702836506278461,
+      "handFeel": 1.0549534772217413,
       "human": false,
       "playerId": "random_player_20"
     },
@@ -37839,8 +39673,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -38406,9 +40240,33 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 64,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_2-17",
+            "playerId": "random_player_23"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
         }
       ],
-      "handFeel": 1.1188581928988963,
+      "handFeel": 1.1260948718261363,
       "human": false,
       "playerId": "random_player_23"
     },
@@ -38417,12 +40275,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8731193682294,
+      "handFeel": 0.9908460042346864,
       "human": false,
       "playerId": "random_player_22"
     },
@@ -38431,12 +40289,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0921279858741593,
+      "handFeel": 1.1191127540313683,
       "human": false,
       "playerId": "random_player_29"
     },
@@ -38445,12 +40303,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.013388600838208,
+      "handFeel": 0.9404267781802734,
       "human": false,
       "playerId": "random_player_28"
     },
@@ -38459,8 +40317,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -39013,9 +40871,34 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.0061880430815773,
+      "handFeel": 1.0766607395632957,
       "human": false,
       "playerId": "Noob"
     },
@@ -39024,8 +40907,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -39372,9 +41255,34 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.0882283129216384,
+      "handFeel": 0.8954102386853561,
       "human": false,
       "playerId": "random_player_30"
     },
@@ -39383,8 +41291,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -40022,9 +41930,24 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9293551229093626,
+      "handFeel": 1.1397339505614046,
       "human": false,
       "playerId": "random_player_14"
     },
@@ -40033,12 +41956,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0155139229790962,
+      "handFeel": 1.0940385512361306,
       "human": false,
       "playerId": "random_player_13"
     },
@@ -40047,8 +41970,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -40419,9 +42342,19 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9932851244254975,
+      "handFeel": 0.9796816155938763,
       "human": false,
       "playerId": "random_player_16"
     },
@@ -40430,12 +42363,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.02813124887359,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "random_player_15"
     },
@@ -40444,12 +42377,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 0.8976682002226869,
+      "handFeel": 0.85,
       "human": false,
       "playerId": "random_player_10"
     },
@@ -40458,8 +42391,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -40803,9 +42736,34 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.85,
+      "handFeel": 0.8942072645574147,
       "human": false,
       "playerId": "random_player_12"
     },
@@ -40814,12 +42772,12 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [],
-      "handFeel": 1.0557341191571965,
+      "handFeel": 1.0264665492672742,
       "human": false,
       "playerId": "random_player_11"
     },
@@ -40828,8 +42786,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -41652,9 +43610,52 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 70,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-PRE_ROUND_1-6",
+            "playerId": "Fat Guy"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 61,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_2-22",
+            "playerId": "Fat Guy"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1109299719584367,
+      "handFeel": 1.1249205533888917,
       "human": false,
       "playerId": "Fat Guy"
     },
@@ -41663,8 +43664,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -42756,9 +44757,80 @@
           "ranks": ["SECOND_PLACE"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 132,
+            "maximumType": "NONE",
+            "stage": "FINAL",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-FINAL-26",
+            "playerId": "Ding Junhui"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 126,
+            "maximumType": "NONE",
+            "stage": "SEMI_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+champ_of_champ-SEMI_FINAL-13",
+            "playerId": "Ding Junhui"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 127,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 5,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_2-53",
+            "playerId": "Ding Junhui"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 139,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-8",
+            "playerId": "Ding Junhui"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1074256925534072,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "Ding Junhui"
     },
@@ -42767,8 +44839,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -43317,9 +45389,34 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.85,
+      "handFeel": 1.0539422595699495,
       "human": false,
       "playerId": "random_player_18"
     },
@@ -43328,8 +45425,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -44001,9 +46098,42 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 92,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-PRE_ROUND_2-11",
+            "playerId": "Smart"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 99,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 4,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_2-48",
+            "playerId": "Smart"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "masters"
         }
       ],
-      "handFeel": 1.0393992811682202,
+      "handFeel": 0.935043534842394,
       "human": false,
       "playerId": "Smart"
     },
@@ -44012,8 +46142,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -44210,9 +46340,14 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "eight_weilin_open"
         }
       ],
-      "handFeel": 1.0979826270708966,
+      "handFeel": 1.0994898453308213,
       "human": false,
       "playerId": "random_player_17"
     },
@@ -44221,8 +46356,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -44470,9 +46605,42 @@
           "ranks": ["TOP_8"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 64,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 4,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_1-41",
+            "playerId": "random_player_19"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 63,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+fresh_hand_open-PRE_ROUND_1-1",
+            "playerId": "random_player_19"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1055741679225193,
+      "handFeel": 1.1174053961652681,
       "human": false,
       "playerId": "random_player_19"
     },
@@ -44481,8 +46649,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -45245,9 +47413,67 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 75,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-PRE_ROUND_1-2",
+            "playerId": "Give Emperor"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["SECOND_PLACE"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 69,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+fresh_hand_open-ROUND_1-16",
+            "playerId": "Give Emperor"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.097925351003734,
+      "handFeel": 1.0831194251485023,
       "human": false,
       "playerId": "Give Emperor"
     },
@@ -45256,8 +47482,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -46156,9 +48382,39 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["CHAMPION"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.0057426714768358,
+      "handFeel": 1.0484758342370952,
       "human": false,
       "playerId": "Worst Professional"
     },
@@ -46167,8 +48423,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -46879,9 +49135,37 @@
             "playerId": "Murphy"
           },
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 128,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-PRE_ROUND_2-12",
+            "playerId": "Murphy"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 110,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-PRE_ROUND_2-23",
+            "playerId": "Murphy"
+          },
+          "id": "united_kingdom_champ"
         }
       ],
-      "handFeel": 1.1166445020434341,
+      "handFeel": 0.991308593225823,
       "human": false,
       "playerId": "Murphy"
     },
@@ -46890,8 +49174,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -48007,9 +50291,73 @@
           "ranks": ["CHAMPION"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": [
+            "CHAMPION",
+            "BEST_SINGLE"
+          ],
+          "year": 2027,
+          "highestBreak": {
+            "score": 133,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+champ_of_champ-ROUND_1-0",
+            "playerId": "John Wizard"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": [
+            "CHAMPION",
+            "BEST_SINGLE",
+            "BEST_SINGLE"
+          ],
+          "year": 2027,
+          "highestBreak": {
+            "score": 133,
+            "maximumType": "NONE",
+            "stage": "FINAL",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-FINAL-62",
+            "playerId": "John Wizard"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 130,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-9",
+            "playerId": "John Wizard"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1476838129947309,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "John Wizard"
     },
@@ -48018,8 +50366,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -48880,9 +51228,37 @@
           "ranks": ["TOP_4"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_3"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 71,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_3",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-PRE_ROUND_3-16",
+            "playerId": "Trump"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 77,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_1-39",
+            "playerId": "Trump"
+          },
+          "id": "united_kingdom_champ"
         }
       ],
-      "handFeel": 0.85,
+      "handFeel": 1.053806225988191,
       "human": false,
       "playerId": "Trump"
     },
@@ -48891,8 +51267,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -49612,9 +51988,53 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 85,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_1",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+fresh_hand_open-PRE_ROUND_1-0",
+            "playerId": "High Stick"
+          },
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9011956718840719,
+      "handFeel": 1.0961895355938596,
       "human": false,
       "playerId": "High Stick"
     },
@@ -49623,8 +52043,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -50434,9 +52854,39 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.8703165162738236,
+      "handFeel": 0.8570588209943482,
       "human": false,
       "playerId": "Liu Mang"
     },
@@ -50445,8 +52895,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -50759,9 +53209,24 @@
           "ranks": ["TOP_16"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.8877611627402165,
+      "handFeel": 1.059430692864209,
       "human": false,
       "playerId": "Zheng Yubo"
     },
@@ -50770,8 +53235,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -51528,9 +53993,56 @@
           "ranks": ["TOP_8"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 58,
+            "maximumType": "NONE",
+            "stage": "PRE_ROUND_2",
+            "sim": true,
+            "numFrame": 2,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-PRE_ROUND_2-11",
+            "playerId": "Jack Lisowski"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 81,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": false,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+champ_of_champ-ROUND_1-2",
+            "playerId": "Jack Lisowski"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 61,
+            "maximumType": "NONE",
+            "stage": "ROUND_1",
+            "sim": false,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-7",
+            "playerId": "Jack Lisowski"
+          },
+          "id": "masters"
         }
       ],
-      "handFeel": 0.9895242910125306,
+      "handFeel": 0.9078184894270901,
       "human": false,
       "playerId": "Jack Lisowski"
     },
@@ -51539,8 +54051,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -52292,9 +54804,38 @@
             "playerId": "Karen Wilson"
           },
           "id": "space_grand_prix"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 63,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": true,
+            "numFrame": 1,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-QUARTER_FINAL-21",
+            "playerId": "Karen Wilson"
+          },
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2027,
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "masters"
         }
       ],
-      "handFeel": 0.9208878192019165,
+      "handFeel": 0.8506635665278859,
       "human": false,
       "playerId": "Karen Wilson"
     },
@@ -52303,8 +54844,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -53440,9 +55981,74 @@
           "ranks": ["TOP_4"],
           "year": 2027,
           "id": "eight_master"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2027,
+          "id": "eight_master_tour_hebei"
+        },
+        {
+          "ranks": [
+            "SECOND_PLACE",
+            "BEST_SINGLE"
+          ],
+          "year": 2027,
+          "highestBreak": {
+            "score": 133,
+            "maximumType": "NONE",
+            "stage": "FINAL",
+            "sim": true,
+            "numFrame": 5,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+champ_of_champ-FINAL-14",
+            "playerId": "Zhao Xintong"
+          },
+          "id": "champ_of_champ"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2027,
+          "highestBreak": {
+            "score": 128,
+            "maximumType": "NONE",
+            "stage": "ROUND_2",
+            "sim": true,
+            "numFrame": 3,
+            "matchId": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ-ROUND_2-49",
+            "playerId": "Zhao Xintong"
+          },
+          "id": "united_kingdom_champ"
+        },
+        {
+          "ranks": ["TOP_8"],
+          "year": 2028,
+          "highestBreak": {
+            "score": 118,
+            "maximumType": "NONE",
+            "stage": "QUARTER_FINAL",
+            "sim": false,
+            "numFrame": 3,
+            "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-11",
+            "playerId": "Zhao Xintong"
+          },
+          "id": "masters"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["TOP_4"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.1409199893579298,
+      "handFeel": 1.15,
       "human": false,
       "playerId": "Zhao Xintong"
     },
@@ -53451,8 +56057,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -54008,9 +56614,34 @@
           "ranks": ["TOP_32"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_16"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 0.9077642282543599,
+      "handFeel": 0.8882868094609964,
       "human": false,
       "playerId": "Mang Dali"
     },
@@ -54019,8 +56650,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -54537,9 +57168,19 @@
             "playerId": "Matthew Stevens"
           },
           "id": "chongqing_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2027,
+          "id": "challenger_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "united_kingdom_champ"
         }
       ],
-      "handFeel": 0.85,
+      "handFeel": 1.0198350125295794,
       "human": false,
       "playerId": "Matthew Stevens"
     },
@@ -54548,8 +57189,8 @@
         "SNOOKER": 1,
         "LIS_EIGHT": 1,
         "MINI_SNOOKER": 1,
-        "SNOOKER_TEN": 1,
         "CHINESE_EIGHT": 1,
+        "SNOOKER_TEN": 1,
         "AMERICAN_NINE": 1
       },
       "scores": [
@@ -55097,9 +57738,34 @@
           "ranks": ["TOP_64"],
           "year": 2027,
           "id": "american_nine_give_power_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2027,
+          "id": "eight_weilin_open"
+        },
+        {
+          "ranks": ["TOP_32"],
+          "year": 2028,
+          "id": "eight_red_pocket_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "fresh_hand_open"
+        },
+        {
+          "ranks": ["PRE_GAMES_1"],
+          "year": 2028,
+          "id": "eight_yangjiaping_mid_cup"
+        },
+        {
+          "ranks": ["PRE_GAMES_2"],
+          "year": 2028,
+          "id": "eight_northeast_open"
         }
       ],
-      "handFeel": 1.0383444695830042,
+      "handFeel": 0.9392129187781628,
       "human": false,
       "playerId": "Baggage Brother"
     }
@@ -55107,9 +57773,9 @@
   "settingsHistory": [],
   "beginTimestamp": "2023/1/20",
   "aiGoodness": 1,
-  "checksum": "9C3DC805AE308B2660386CF074BC59EA",
+  "checksum": "9006526360F844C9A8224163C58B7F86",
   "playerGoodness": 1,
   "includeCustomPlayers": false,
   "version": 62,
-  "timestamp": "2027/9/25"
+  "timestamp": "2028/2/22"
 }

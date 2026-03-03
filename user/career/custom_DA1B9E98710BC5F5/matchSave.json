@@ -13,39 +13,36 @@
     "p2": {
       "playerNumber": 2,
       "gameRule": "SNOOKER",
-      "handFeelEffort": 1.1091806676206004,
-      "psyStatus": 0.9819533636363637,
-      "person": "Mark Williams",
+      "handFeelEffort": 1.15,
+      "psyStatus": 0.9701000000000003,
+      "person": "John Wizard",
       "playerType": "COMPUTER"
     },
-    "codeGameCounter": 2,
+    "codeGameCounter": 1,
     "p2BreakLoseChance": 0,
     "gameValues": {
       "ball": "SNOOKER_BALL",
       "gameRule": "SNOOKER",
-      "subRules": ["SNOOKER_GOLDEN"],
+      "subRules": ["SNOOKER_STD"],
       "devMode": false,
       "table": {
         "tableOrdinal": 0,
         "pocketDifficultyOrdinal": 3,
-        "holeSizeOrdinal": 4
+        "holeSizeOrdinal": 2
       }
     },
-    "winRecords": {
-      "1": 2,
-      "2": 1
-    },
-    "p2Wins": 1,
-    "startTime": 1771421324535,
+    "winRecords": {"1": 1},
+    "p2Wins": 0,
+    "startTime": 1772476193881,
     "p1BreakLoseChance": 0,
-    "matchId": "custom_DA1B9E98710BC5F5+2027+challenger_open-QUARTER_FINAL-20",
-    "totalFrames": 3,
+    "matchId": "custom_DA1B9E98710BC5F5+2028+professional_champ-FINAL-14",
+    "totalFrames": 7,
     "cloth": {
-      "smoothness": "FAST",
+      "smoothness": "NORMAL",
       "goodness": "GOOD"
     },
-    "p1Breaks": false
+    "p1Breaks": true
   },
-  "p2": "Mark Williams",
-  "stage": "QUARTER_FINAL"
+  "p2": "John Wizard",
+  "stage": "FINAL"
 }

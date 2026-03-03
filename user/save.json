@@ -3,8 +3,8 @@
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 0.9475,
-    "person": "Neil Robertson",
+    "psyStatus": 0.4505699999999998,
+    "person": "custom_player_4",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
@@ -13,9 +13,9 @@
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 1,
-    "person": "Mark Allen",
-    "playerType": "PLAYER",
+    "psyStatus": 0.9735717229095052,
+    "person": "Glass Heart",
+    "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
   "codeGameCounter": 1,
@@ -24,16 +24,16 @@
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
     "subRules": ["SNOOKER_STD"],
-    "devMode": true,
+    "devMode": false,
     "table": {
       "tableOrdinal": 0,
-      "pocketDifficultyOrdinal": 3,
-      "holeSizeOrdinal": 2
+      "pocketDifficultyOrdinal": 4,
+      "holeSizeOrdinal": 4
     }
   },
   "winRecords": {"1": 2},
   "p2Wins": 1,
-  "startTime": 1764161257375,
+  "startTime": 1772476746064,
   "p1BreakLoseChance": 0,
   "totalFrames": 1,
   "cloth": {

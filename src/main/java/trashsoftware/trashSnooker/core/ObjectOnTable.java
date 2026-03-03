@@ -182,6 +182,7 @@ public abstract class ObjectOnTable implements Cloneable {
         double[] hitPos = getArcHitPos(arcXY, arcRadius);
 
         // todo: 把难的袋口硬度加大，使大力更不容易zang进
+//        sdnf
         double speed = Math.hypot(vx, vy);
         double ballAngle = Algebra.thetaOf(vx, vy);  // 入射角与垂线的夹角
         double verticalAngle = Algebra.thetaOf(arcXY[0] - hitPos[0], arcXY[1] - hitPos[1]);

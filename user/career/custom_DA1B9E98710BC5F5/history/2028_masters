@@ -1,0 +1,462 @@
+{
+  "stageIndex": -1,
+  "seedRanks": {
+    "Stuart Bingham": 10,
+    "random_player_67": 12,
+    "random_player_0": 15,
+    "Ding Junhui": 7,
+    "Jack Lisowski": 9,
+    "Smart": 16,
+    "Mark Williams": 8,
+    "Selby": 13,
+    "Mark Allen": 14,
+    "Karen Wilson": 5,
+    "O_Sullivan": 3,
+    "Zhao Xintong": 6,
+    "Neil Robertson": 4,
+    "custom_DA1B9E98710BC5F5": 2,
+    "Stephen Maguire": 11,
+    "John Wizard": 1
+  },
+  "championshipId": "masters",
+  "matchTree": {"root": {
+    "p1wins": 0,
+    "p1": {
+      "p1wins": 3,
+      "p1": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Mark Williams"},
+          "p2": {"winner": "Stephen Maguire"},
+          "winner": "Mark Williams",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-0",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Ding Junhui"},
+          "p2": {"winner": "Selby"},
+          "winner": "Ding Junhui",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-1",
+          "p2wins": 0
+        },
+        "winner": "Ding Junhui",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-8",
+        "p2wins": 3
+      },
+      "p2": {
+        "p1wins": 0,
+        "p1": {
+          "p1wins": 0,
+          "p1": {"winner": "Karen Wilson"},
+          "p2": {"winner": "random_player_0"},
+          "winner": "random_player_0",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-2",
+          "p2wins": 2
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "John Wizard"},
+          "p2": {"winner": "Stuart Bingham"},
+          "winner": "John Wizard",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-3",
+          "p2wins": 0
+        },
+        "winner": "John Wizard",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-9",
+        "p2wins": 3
+      },
+      "winner": "Ding Junhui",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-SEMI_FINAL-12",
+      "p2wins": 2
+    },
+    "p2": {
+      "p1wins": 0,
+      "p1": {
+        "p1wins": 3,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "O_Sullivan"},
+          "p2": {"winner": "Smart"},
+          "winner": "O_Sullivan",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-4",
+          "p2wins": 1
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "Neil Robertson"},
+          "p2": {"winner": "random_player_67"},
+          "winner": "Neil Robertson",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-5",
+          "p2wins": 1
+        },
+        "winner": "O_Sullivan",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-10",
+        "p2wins": 0
+      },
+      "p2": {
+        "p1wins": 1,
+        "p1": {
+          "p1wins": 2,
+          "p1": {"winner": "Zhao Xintong"},
+          "p2": {"winner": "Mark Allen"},
+          "winner": "Zhao Xintong",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-6",
+          "p2wins": 0
+        },
+        "p2": {
+          "p1wins": 2,
+          "p1": {"winner": "custom_DA1B9E98710BC5F5"},
+          "p2": {"winner": "Jack Lisowski"},
+          "winner": "custom_DA1B9E98710BC5F5",
+          "stage": "ROUND_1",
+          "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-7",
+          "p2wins": 0
+        },
+        "winner": "custom_DA1B9E98710BC5F5",
+        "stage": "QUARTER_FINAL",
+        "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-11",
+        "p2wins": 3
+      },
+      "winner": "custom_DA1B9E98710BC5F5",
+      "stage": "SEMI_FINAL",
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-SEMI_FINAL-13",
+      "p2wins": 3
+    },
+    "winner": "custom_DA1B9E98710BC5F5",
+    "stage": "FINAL",
+    "matchId": "custom_DA1B9E98710BC5F5+2028+masters-FINAL-14",
+    "p2wins": 4
+  }},
+  "finished": true,
+  "snookerBreaks": [
+    {
+      "score": 142,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": false,
+      "numFrame": 4,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-FINAL-14",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 139,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-8",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 138,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-7",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 135,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-FINAL-14",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 134,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-0",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 133,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-SEMI_FINAL-12",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 130,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-9",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 128,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-SEMI_FINAL-12",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 125,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-SEMI_FINAL-12",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 124,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": false,
+      "numFrame": 4,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-11",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 124,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-8",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 120,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-8",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 120,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-1",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 118,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-11",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 117,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-SEMI_FINAL-12",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 112,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-0",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 111,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-1",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 109,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 5,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-SEMI_FINAL-12",
+      "playerId": "Ding Junhui"
+    },
+    {
+      "score": 108,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-5",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 97,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-3",
+      "playerId": "John Wizard"
+    },
+    {
+      "score": 95,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-SEMI_FINAL-13",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 95,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-10",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 91,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-10",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 89,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-2",
+      "playerId": "random_player_0"
+    },
+    {
+      "score": 87,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-6",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 85,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-SEMI_FINAL-13",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 84,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-QUARTER_FINAL-8",
+      "playerId": "Mark Williams"
+    },
+    {
+      "score": 82,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-SEMI_FINAL-13",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 81,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-5",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 79,
+      "maximumType": "NONE",
+      "stage": "FINAL",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-FINAL-14",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 61,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-7",
+      "playerId": "Jack Lisowski"
+    },
+    {
+      "score": 58,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": false,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-7",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 56,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-SEMI_FINAL-13",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 51,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-4",
+      "playerId": "O_Sullivan"
+    },
+    {
+      "score": 50,
+      "maximumType": "NONE",
+      "stage": "ROUND_1",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2028+masters-ROUND_1-4",
+      "playerId": "O_Sullivan"
+    }
+  ],
+  "timestamp": "2028/1/15"
+}

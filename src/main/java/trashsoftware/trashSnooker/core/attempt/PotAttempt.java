@@ -94,7 +94,7 @@ public class PotAttempt extends CueAttempt {
     }
 
     public double @Nullable [] getTargetFirstCushionPos() {
-        if (movement != null) {
+        if (movement != null && movement.getTargetTrace() != null) {
             Movement.CushionHit ch = movement.getTargetTrace().getTargetFirstCushion();
             if (ch != null) return ch.position();
         }
@@ -102,7 +102,7 @@ public class PotAttempt extends CueAttempt {
     }
 
     public double @Nullable [] getWhiteFirstCollisionPos() {
-        if (movement != null) {
+        if (movement != null && movement.getWhiteTrace() != null) {
             Movement.BallHit bh = movement.getWhiteTrace().getFirstCollision();
             if (bh != null) return bh.selfPos();
         }

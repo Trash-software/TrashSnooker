@@ -72,7 +72,7 @@ public class GraphicalPositionView extends VBox {
         p2Check.setSelected(true);
 
         refreshPane();
-        showDetailCheck.setText("check");
+        showDetailCheck.setText(resourceBundle.getString("showGraphicalStatsDetail"));
 
         infoPane.add(p1Check, 1, 0);
         infoPane.add(p2Check, 6, 0);
@@ -152,7 +152,7 @@ public class GraphicalPositionView extends VBox {
                 // 因为AI打的不定球（斯诺克彩球、中八彩球等）没有记录indicated target，故采用首先碰到的球。这其实有问题，但暂时这样了
                 int hitBall = par.cueInfoRec.getFirstHit();
                 Color targetColor = gameValues.rule.ballBaseColor(hitBall);
-                gamePane.getGraphicsContext().setFill(targetColor.interpolate(gameValues.table.tableColor, 0.1));
+                gamePane.getGraphicsContext().setFill(targetColor.interpolate(gameValues.table.tableColor, 0.4));
                 double ballRadius = gameValues.ball.ballRadius * gamePane.getScale();
                 gamePane.getGraphicsContext().fillOval(x2 - ballRadius, y2 - ballRadius,
                         ballRadius * 2, ballRadius * 2);
@@ -160,7 +160,7 @@ public class GraphicalPositionView extends VBox {
                 if (par.isSuccess()) {
                     gamePane.getLineGraphics().setLineDashes();
                 } else {
-                    gamePane.getLineGraphics().setLineDashes(4, 4);
+                    gamePane.getLineGraphics().setLineDashes(5, 5);
                 }
                 gamePane.getLineGraphics().strokeLine(x2, y2, x3, y3);
                 gamePane.getLineGraphics().setLineDashes();
