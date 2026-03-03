@@ -9,7 +9,7 @@ import trashsoftware.trashSnooker.core.phy.Phy;
 import java.util.Objects;
 
 public abstract class ObjectOnTable implements Cloneable {
-    protected static final double GENERAL_BOUNCE_ACC = 0.35;
+    protected static final double GENERAL_BOUNCE_ACC = 0.4 * 5;
     protected final GameValues values;
     protected final TableMetrics table;
     protected final double radius;
