@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.phy;
 
 import org.json.JSONObject;
+import trashsoftware.trashSnooker.core.metrics.CushionSpec;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -14,16 +15,19 @@ public class TableCloth {
     private static final double baseRollingFriction = 0.07;
     public final Goodness goodness;
     public final Smoothness smoothness;
+    public final CushionSpec cushionSpec;
     
-    public TableCloth(Goodness goodness, Smoothness smoothness) {
+    public TableCloth(Goodness goodness, Smoothness smoothness, CushionSpec cushionSpec) {
         this.goodness = goodness;
         this.smoothness = smoothness;
+        this.cushionSpec = cushionSpec;
     }
     
     public static TableCloth fromJson(JSONObject jsonObject) {
         return new TableCloth(
                 Goodness.valueOf(jsonObject.getString("goodness")),
-                Smoothness.valueOf(jsonObject.getString("smoothness")));
+                Smoothness.valueOf(jsonObject.getString("smoothness")),
+                CushionSpec.valueOf(jsonObject.optString("cushionSpec", "NORMAL")));
     }
     
     public JSONObject toJson() {
@@ -38,8 +42,10 @@ public class TableCloth {
         return "TableCloth{" +
                 "goodness=" + goodness +
                 ", smoothness=" + smoothness +
+                ", cushionSpec=" + cushionSpec +
                 '}';
     }
+
     public enum Goodness {
         EXCELLENT(0.0, 0.0),
         GOOD(0.07, 0.12),
@@ -79,7 +85,7 @@ public class TableCloth {
 
         public final double slippingFriction;
         public final double rollingFriction;
-        public final double cushionBounceFactor;  // 库的硬度
+        public final double cushionBounceFactor;  // 库的硬度，随桌布年龄衰减
 
         Smoothness(double slippingFrictionFactor,
                    double rollingFrictionFactor,

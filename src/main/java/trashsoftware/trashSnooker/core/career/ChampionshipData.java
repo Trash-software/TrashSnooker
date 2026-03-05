@@ -230,7 +230,8 @@ public class ChampionshipData {
         } else {
             cloth = new TableCloth(
                     TableCloth.Goodness.GOOD,
-                    TableCloth.Smoothness.NORMAL
+                    TableCloth.Smoothness.NORMAL,
+                    CushionSpec.NORMAL
             );
             metrics = factory
                     .create()

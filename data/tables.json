@@ -13,6 +13,7 @@
       "type": "snookerTable",
       "goodness": "good",
       "smoothness": "normal",
+      "cushionSpec": "hard",
       "pocketSize": "stdS",
       "pocketDifficulty": "tight"
     },
@@ -29,6 +30,7 @@
       "type": "snookerTable",
       "goodness": "good",
       "smoothness": "normal",
+      "cushionSpec": "normal",
       "pocketSize": "stdS",
       "pocketDifficulty": "loose"
     },
@@ -45,6 +47,7 @@
       "type": "snookerTable",
       "goodness": "bad",
       "smoothness": "normal",
+      "cushionSpec": "soft",
       "pocketSize": "std",
       "pocketDifficulty": "loose"
     },
@@ -61,6 +64,7 @@
       "type": "chineseEightTable",
       "goodness": "bad",
       "smoothness": "medium",
+      "cushionSpec": "soft",
       "pocketSize": "std",
       "pocketDifficulty": "loose"
     },
@@ -77,6 +81,7 @@
       "type": "snookerTable",
       "goodness": "good",
       "smoothness": "normal",
+      "cushionSpec": "normal",
       "pocketSize": "std",
       "pocketDifficulty": "tight"
     },
@@ -95,6 +100,7 @@
       "smoothness": "normal",
       "pocketSize": "stdS",
       "pocketDifficulty": "tight",
+      "cushionSpec": "normal",
       "clothTexture": "helloKittyCloth2.jpg",
       "clothColor": "pink",
       "tableOutColor": "#db7093"

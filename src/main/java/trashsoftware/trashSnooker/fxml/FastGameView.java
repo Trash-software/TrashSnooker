@@ -54,6 +54,9 @@ public class FastGameView extends ChildInitializable {
 
     @FXML
     ComboBox<TableCloth.Goodness> clothGoodBox;
+    
+    @FXML
+    ComboBox<CushionSpec> cushionSpecBox;
 
     @FXML
     ComboBox<PocketSize> holeSizeBox;
@@ -166,8 +169,10 @@ public class FastGameView extends ChildInitializable {
     private void initClothBox() {
         clothSmoothBox.getItems().addAll(TableCloth.Smoothness.values());
         clothGoodBox.getItems().addAll(TableCloth.Goodness.values());
+        cushionSpecBox.getItems().addAll(CushionSpec.values());
         clothSmoothBox.getSelectionModel().select(1);
         clothGoodBox.getSelectionModel().select(1);
+        cushionSpecBox.getSelectionModel().select(2);
     }
 
     private void initPresetBoxes() {
@@ -447,7 +452,7 @@ public class FastGameView extends ChildInitializable {
 
     @FXML
     void startGameAction() {
-        TableCloth cloth = new TableCloth(clothGoodBox.getValue(), clothSmoothBox.getValue());
+        TableCloth cloth = new TableCloth(clothGoodBox.getValue(), clothSmoothBox.getValue(), cushionSpecBox.getValue());
 
         TableMetrics.TableBuilderFactory tableMetricsFactory =
                 tableMetricsBox.getValue();

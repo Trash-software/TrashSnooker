@@ -9,7 +9,7 @@ import trashsoftware.trashSnooker.core.phy.Phy;
 import java.util.Objects;
 
 public abstract class ObjectOnTable implements Cloneable {
-    protected static final double GENERAL_BOUNCE_ACC = 0.4 * 5;
+    protected static final double GENERAL_BOUNCE_ACC = 0.4;
     protected final GameValues values;
     protected final TableMetrics table;
     protected final double radius;
@@ -211,9 +211,9 @@ public abstract class ObjectOnTable implements Cloneable {
 
         currentBounce = new LineBounce(
                 -unitNormal[0] *
-                        verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
+                        verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC * phy.cloth.cushionSpec.hardness,
                 -unitNormal[1] *
-                        verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC,
+                        verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC * phy.cloth.cushionSpec.hardness,
                 Math.hypot(vx, vy) * 0.9,
                 phy.accelerationMultiplier()
         );
@@ -270,7 +270,7 @@ public abstract class ObjectOnTable implements Cloneable {
      * 返回PLAY_MS下的反弹加速度
      */
     protected double bounceAcc(Phy phy, double verticalSpeed) {
-        return verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC;
+        return verticalSpeed * phy.cloth.smoothness.cushionBounceFactor * GENERAL_BOUNCE_ACC * phy.cloth.cushionSpec.hardness;
     }
 
     /**
@@ -633,6 +633,8 @@ public abstract class ObjectOnTable implements Cloneable {
             this.desiredVx = desiredVx;
             this.desiredVy = desiredVy;
             this.desiredSideSpin = desiredSideSpin;
+
+//            System.out.println("Leave " + desiredVx + " " + desiredVy);
         }
     }
 

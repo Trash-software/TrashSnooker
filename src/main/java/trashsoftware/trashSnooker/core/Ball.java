@@ -731,7 +731,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             } else {
                 bouncedSideSpin = sideSpin + sideSpinChange;
             }
-
+            
             currentBounce = new CushionBounce(
                     0,
                     effectiveAcc,
@@ -740,7 +740,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     leaveX,
                     hitCushionPos[1],
                     vx * (1 - hSpeedLoss),
-//                    vx,
+//                    vx,sad
                     -vy,
                     bouncedSideSpin);
             return cushion;

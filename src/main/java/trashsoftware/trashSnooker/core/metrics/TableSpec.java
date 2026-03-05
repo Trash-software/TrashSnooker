@@ -2,6 +2,7 @@ package trashsoftware.trashSnooker.core.metrics;
 
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.util.Locale;
 
@@ -21,7 +22,8 @@ public class TableSpec {
         
         cloth = new TableCloth(
                 TableCloth.Goodness.valueOf(table.getString("goodness").toUpperCase(Locale.ROOT)),
-                TableCloth.Smoothness.valueOf(table.getString("smoothness").toUpperCase(Locale.ROOT))
+                TableCloth.Smoothness.valueOf(table.getString("smoothness").toUpperCase(Locale.ROOT)),
+                CushionSpec.valueOf(Util.toAllCapsUnderscoreCase(table.getString("cushionSpec")))
         );
         metrics = factory
                 .create()

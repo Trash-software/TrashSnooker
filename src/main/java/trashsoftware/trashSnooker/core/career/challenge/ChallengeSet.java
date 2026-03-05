@@ -30,7 +30,7 @@ public class ChallengeSet {
 
         challengeSet.id = object.getString("id");
         challengeSet.name = DataLoader.getObjectOfLocale(object.get("name"));
-        challengeSet.cloth = new TableCloth(TableCloth.Goodness.GOOD, TableCloth.Smoothness.NORMAL);
+        challengeSet.cloth = new TableCloth(TableCloth.Goodness.GOOD, TableCloth.Smoothness.NORMAL, CushionSpec.NORMAL);
 
         String ruleKey = Util.toAllCapsUnderscoreCase(object.getString("rule"));
         TableMetrics.TableBuilderFactory tableMetricsFactory =

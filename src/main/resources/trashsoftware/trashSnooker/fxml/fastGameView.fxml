@@ -86,6 +86,9 @@
         <Label text="%nylonCloth"/>
         <ComboBox fx:id="clothSmoothBox"/>
         <ComboBox fx:id="clothGoodBox"/>
+        
+        <Label text="%cushionSpec"/>
+        <ComboBox fx:id="cushionSpecBox"/>
     </HBox>
 
     <HBox spacing="10.0" alignment="CENTER">
