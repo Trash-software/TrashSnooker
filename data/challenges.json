@@ -344,7 +344,7 @@
       "schema": {
         "balls": [
           {"value": 0, "x": 0.25, "y": 0.04, "ref": "unit_true"},
-          {"value": 1, "x": 0.55, "y": 0.02, "ref": "unit"}
+          {"value": 1, "x": 0.55, "y": 0.01, "ref": "unit"}
         ]
       },
       "repeater": {
@@ -372,7 +372,7 @@
       "schema": {
         "balls": [
           {"value": 0, "xLow": 0.25, "xHigh": 0.25, "yLow": 0.02, "yHigh": 0.1, "ref": "unit_true", "random": true},
-          {"value": 1, "x": 0.55, "y": 0.02, "ref": "unit", "random": false}
+          {"value": 1, "x": 0.55, "y": 0.01, "ref": "unit", "random": false}
         ]
       },
       "repeater": {

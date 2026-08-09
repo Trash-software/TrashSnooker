@@ -26,15 +26,16 @@
     </HBox>
 
     <HBox VBox.vgrow="ALWAYS" spacing="10.0">
-        <ScrollPane HBox.hgrow="ALWAYS">
-            <GridPane fx:id="listPane" vgap="5.0" hgap="10.0">
-                <columnConstraints>
-                    <ColumnConstraints/>
-                    <ColumnConstraints/>
-                    <ColumnConstraints/>
-                </columnConstraints>
-            </GridPane>
-        </ScrollPane>
+        <ListView fx:id="listPane" HBox.hgrow="ALWAYS"/>
+<!--        <ScrollPane HBox.hgrow="ALWAYS">-->
+<!--            <GridPane fx:id="listPane" vgap="5.0" hgap="10.0">-->
+<!--                <columnConstraints>-->
+<!--                    <ColumnConstraints/>-->
+<!--                    <ColumnConstraints/>-->
+<!--                    <ColumnConstraints/>-->
+<!--                </columnConstraints>-->
+<!--            </GridPane>-->
+<!--        </ScrollPane>-->
 
         <ScrollPane fitToWidth="true">
             <GridPane vgap="5.0" hgap="10.0">

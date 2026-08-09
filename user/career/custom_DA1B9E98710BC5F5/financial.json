@@ -1,25 +1,25 @@
 {
   "financial": {
     "remFreePerks": 0,
-    "money": 3191668,
+    "money": 3191588,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
-        "match": "custom_DA1B9E98710BC5F5+2023+eight_red_pocket_open",
         "moneyBefore": 30000,
+        "match": "custom_DA1B9E98710BC5F5+2023+eight_red_pocket_open",
         "moneyAfter": 29000,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -28,8 +28,8 @@
       {
         "inGameDate": "2023/1/22",
         "year": 2023,
-        "match": "eight_red_pocket_open",
         "moneyBefore": 29000,
+        "match": "eight_red_pocket_open",
         "moneyAfter": 29400,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -41,6 +41,7 @@
       {
         "inGameDate": "2023/1/22",
         "perkUsed": 6,
+        "freePerkUsed": 0,
         "moneyBefore": 29400,
         "moneyCost": 2150,
         "moneyAfter": 27250,
@@ -126,11 +127,15 @@
       },
       {
         "inGameDate": "2023/1/25",
-        "match": "custom_DA1B9E98710BC5F5+2023+fresh_hand_open",
         "moneyBefore": 27100,
+        "match": "custom_DA1B9E98710BC5F5+2023+fresh_hand_open",
         "moneyAfter": 24400,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 500
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -138,10 +143,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 500
           }
         ],
         "timestamp": "2025-05-06 03:23:00"
@@ -149,8 +150,8 @@
       {
         "inGameDate": "2023/1/25",
         "year": 2023,
-        "match": "fresh_hand_open",
         "moneyBefore": 24400,
+        "match": "fresh_hand_open",
         "moneyAfter": 24400,
         "type": "championshipEarn",
         "items": {"PRE_GAMES_1": {
@@ -161,8 +162,8 @@
       },
       {
         "inGameDate": "2023/1/25",
-        "match": "pool-half-regular",
         "moneyBefore": 24400,
+        "match": "pool-half-regular",
         "moneyAfter": 24400,
         "type": "challengeEarn",
         "items": {"clearance": {
@@ -174,6 +175,7 @@
       {
         "inGameDate": "2023/1/25",
         "perkUsed": 2,
+        "freePerkUsed": 0,
         "moneyBefore": 24400,
         "moneyCost": 700,
         "moneyAfter": 23700,
@@ -259,11 +261,15 @@
       },
       {
         "inGameDate": "2023/2/1",
-        "match": "custom_DA1B9E98710BC5F5+2023+eight_yangjiaping_mid_cup",
         "moneyBefore": 23350,
+        "match": "custom_DA1B9E98710BC5F5+2023+eight_yangjiaping_mid_cup",
         "moneyAfter": 23050,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 0
+          },
           {
             "item": "registry",
             "moneyCost": 100
@@ -271,10 +277,6 @@
           {
             "item": "travel",
             "moneyCost": 200
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 0
           }
         ],
         "timestamp": "2025-05-06 03:52:00"
@@ -282,8 +284,8 @@
       {
         "inGameDate": "2023/2/1",
         "year": 2023,
-        "match": "eight_yangjiaping_mid_cup",
         "moneyBefore": 23050,
+        "match": "eight_yangjiaping_mid_cup",
         "moneyAfter": 24250,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -294,8 +296,8 @@
       },
       {
         "inGameDate": "2023/2/1",
-        "match": "pool-full-regular",
         "moneyBefore": 24250,
+        "match": "pool-full-regular",
         "moneyAfter": 24250,
         "type": "challengeEarn",
         "items": {},
@@ -314,21 +316,21 @@
       },
       {
         "inGameDate": "2023/2/10",
-        "match": "custom_DA1B9E98710BC5F5+2023+eight_northeast_open",
         "moneyBefore": 23800,
+        "match": "custom_DA1B9E98710BC5F5+2023+eight_northeast_open",
         "moneyAfter": 22800,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -337,8 +339,8 @@
       {
         "inGameDate": "2023/2/10",
         "year": 2023,
-        "match": "eight_northeast_open",
         "moneyBefore": 22800,
+        "match": "eight_northeast_open",
         "moneyAfter": 25200,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -350,6 +352,7 @@
       {
         "inGameDate": "2023/2/10",
         "perkUsed": 1,
+        "freePerkUsed": 0,
         "moneyBefore": 25200,
         "moneyCost": 400,
         "moneyAfter": 24800,
@@ -446,11 +449,15 @@
       },
       {
         "inGameDate": "2023/2/27",
-        "match": "custom_DA1B9E98710BC5F5+2023+dog_give_power_open",
         "moneyBefore": 23950,
+        "match": "custom_DA1B9E98710BC5F5+2023+dog_give_power_open",
         "moneyAfter": 21050,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -458,10 +465,6 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2025-05-06 04:23:40"
@@ -469,8 +472,8 @@
       {
         "inGameDate": "2023/2/27",
         "year": 2023,
-        "match": "dog_give_power_open",
         "moneyBefore": 21050,
+        "match": "dog_give_power_open",
         "moneyAfter": 25050,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -492,11 +495,15 @@
       },
       {
         "inGameDate": "2023/3/1",
-        "match": "custom_DA1B9E98710BC5F5+2023+eight_bsc_heiba_open",
         "moneyBefore": 24950,
+        "match": "custom_DA1B9E98710BC5F5+2023+eight_bsc_heiba_open",
         "moneyAfter": 24630,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 100
+          },
           {
             "item": "registry",
             "moneyCost": 20
@@ -504,10 +511,6 @@
           {
             "item": "travel",
             "moneyCost": 200
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 100
           }
         ],
         "timestamp": "2025-05-06 05:51:19"
@@ -515,8 +518,8 @@
       {
         "inGameDate": "2023/3/1",
         "year": 2023,
-        "match": "eight_bsc_heiba_open",
         "moneyBefore": 24630,
+        "match": "eight_bsc_heiba_open",
         "moneyAfter": 24870,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -978,8 +981,8 @@
         "timestamp": "2025-05-06 06:04:22"
       },
       {
-        "itemType": "cue",
         "item": "profSnookerCue:custom_DA1B9E98710BC5F5-639",
+        "itemType": "cue",
         "inGameDate": "2023/3/10",
         "moneyBefore": 33920,
         "moneyCost": 1000,
@@ -988,8 +991,8 @@
         "timestamp": "2025-05-06 06:04:36"
       },
       {
-        "itemType": "cue",
         "item": "trashCue2Carbon:custom_DA1B9E98710BC5F5-641",
+        "itemType": "cue",
         "inGameDate": "2023/3/10",
         "moneyBefore": 32920,
         "moneyCost": 3500,
@@ -998,8 +1001,8 @@
         "timestamp": "2025-05-06 06:04:44"
       },
       {
-        "itemType": "cue",
         "item": "profPoolCue:custom_DA1B9E98710BC5F5-643",
+        "itemType": "cue",
         "inGameDate": "2023/3/10",
         "moneyBefore": 29420,
         "moneyCost": 3000,
@@ -1008,8 +1011,8 @@
         "timestamp": "2025-05-06 06:04:50"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-644",
+        "itemType": "tip",
         "inGameDate": "2023/3/10",
         "moneyBefore": 26420,
         "moneyCost": 80,
@@ -1018,8 +1021,8 @@
         "timestamp": "2025-05-06 06:05:00"
       },
       {
-        "itemType": "cue",
         "item": "profSnookerCueThicker:custom_DA1B9E98710BC5F5-646",
+        "itemType": "cue",
         "inGameDate": "2023/3/10",
         "moneyBefore": 26340,
         "moneyCost": 1000,
@@ -1028,8 +1031,8 @@
         "timestamp": "2025-05-06 06:05:11"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-647",
+        "itemType": "tip",
         "inGameDate": "2023/3/10",
         "moneyBefore": 25340,
         "moneyCost": 80,
@@ -1051,8 +1054,8 @@
       {
         "item": 16,
         "inGameDate": "2023/3/18",
-        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_beijing",
         "moneyBefore": 24860,
+        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_beijing",
         "moneyAfter": 25060,
         "type": "invitation",
         "moneyEarn": 200,
@@ -1060,11 +1063,15 @@
       },
       {
         "inGameDate": "2023/3/18",
-        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_beijing",
         "moneyBefore": 25060,
+        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_beijing",
         "moneyAfter": 24060,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -1072,18 +1079,14 @@
           {
             "item": "travel",
             "moneyCost": 400
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 400
           }
         ],
         "timestamp": "2025-05-06 06:05:25"
       },
       {
         "inGameDate": "2023/3/18",
-        "match": "pool-half-ordered-regular",
         "moneyBefore": 24060,
+        "match": "pool-half-ordered-regular",
         "moneyAfter": 24060,
         "type": "challengeEarn",
         "items": {},
@@ -1091,8 +1094,8 @@
       },
       {
         "inGameDate": "2023/3/18",
-        "match": "pool-half-ordered-regular",
         "moneyBefore": 24060,
+        "match": "pool-half-ordered-regular",
         "moneyAfter": 24060,
         "type": "challengeEarn",
         "items": {"clearance": {
@@ -1104,6 +1107,7 @@
       {
         "inGameDate": "2023/3/18",
         "perkUsed": 2,
+        "freePerkUsed": 0,
         "moneyBefore": 24060,
         "moneyCost": 800,
         "moneyAfter": 23260,
@@ -1178,8 +1182,8 @@
       },
       {
         "inGameDate": "2023/3/18",
-        "match": "chinese-eight-half-regular",
         "moneyBefore": 23260,
+        "match": "chinese-eight-half-regular",
         "moneyAfter": 23260,
         "type": "challengeEarn",
         "items": {"clearance": {
@@ -1190,8 +1194,8 @@
       },
       {
         "inGameDate": "2023/3/18",
-        "match": "chinese-eight-half-ordered-regular",
         "moneyBefore": 23260,
+        "match": "chinese-eight-half-ordered-regular",
         "moneyAfter": 23260,
         "type": "challengeEarn",
         "items": {},
@@ -1199,8 +1203,8 @@
       },
       {
         "inGameDate": "2023/3/18",
-        "match": "chinese-eight-full-ordered-regular",
         "moneyBefore": 23260,
+        "match": "chinese-eight-full-ordered-regular",
         "moneyAfter": 23260,
         "type": "challengeEarn",
         "items": {},
@@ -1208,8 +1212,8 @@
       },
       {
         "inGameDate": "2023/3/18",
-        "match": "chinese-eight-half-ordered-regular",
         "moneyBefore": 23260,
+        "match": "chinese-eight-half-ordered-regular",
         "moneyAfter": 23260,
         "type": "challengeEarn",
         "items": {"clearance": {
@@ -1221,6 +1225,7 @@
       {
         "inGameDate": "2023/3/18",
         "perkUsed": 3,
+        "freePerkUsed": 0,
         "moneyBefore": 23260,
         "moneyCost": 1200,
         "moneyAfter": 22060,
@@ -1296,8 +1301,8 @@
       {
         "inGameDate": "2023/3/18",
         "year": 2023,
-        "match": "eight_master_tour_beijing",
         "moneyBefore": 22060,
+        "match": "eight_master_tour_beijing",
         "moneyAfter": 36460,
         "type": "championshipEarn",
         "items": {"TOP_4": {
@@ -1309,6 +1314,7 @@
       {
         "inGameDate": "2023/3/18",
         "perkUsed": 4,
+        "freePerkUsed": 0,
         "moneyBefore": 36460,
         "moneyCost": 1750,
         "moneyAfter": 34710,
@@ -1394,21 +1400,21 @@
       },
       {
         "inGameDate": "2023/3/25",
-        "match": "custom_DA1B9E98710BC5F5+2023+china_open",
         "moneyBefore": 34290,
+        "match": "custom_DA1B9E98710BC5F5+2023+china_open",
         "moneyAfter": 33290,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -1417,8 +1423,8 @@
       {
         "inGameDate": "2023/3/25",
         "year": 2023,
-        "match": "china_open",
         "moneyBefore": 33290,
+        "match": "china_open",
         "moneyAfter": 33290,
         "type": "championshipEarn",
         "items": {"PRE_GAMES_2": {
@@ -1429,8 +1435,8 @@
       },
       {
         "inGameDate": "2023/3/25",
-        "match": "snooker-clear-color-regular",
         "moneyBefore": 33290,
+        "match": "snooker-clear-color-regular",
         "moneyAfter": 33290,
         "type": "challengeEarn",
         "items": {"clearance": {
@@ -1442,6 +1448,7 @@
       {
         "inGameDate": "2023/3/25",
         "perkUsed": 4,
+        "freePerkUsed": 0,
         "moneyBefore": 33290,
         "moneyCost": 1850,
         "moneyAfter": 31440,
@@ -1538,11 +1545,15 @@
       },
       {
         "inGameDate": "2023/4/17",
-        "match": "custom_DA1B9E98710BC5F5+2023+world_champ",
         "moneyBefore": 30290,
+        "match": "custom_DA1B9E98710BC5F5+2023+world_champ",
         "moneyAfter": 26090,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -1550,18 +1561,14 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 2000
           }
         ],
         "timestamp": "2025-05-08 03:55:57"
       },
       {
         "inGameDate": "2023/4/17",
-        "match": "pool-full-ordered-regular",
         "moneyBefore": 26090,
+        "match": "pool-full-ordered-regular",
         "moneyAfter": 26090,
         "type": "challengeEarn",
         "items": {},
@@ -1569,8 +1576,8 @@
       },
       {
         "inGameDate": "2023/4/17",
-        "match": "pool-full-ordered-regular",
         "moneyBefore": 26090,
+        "match": "pool-full-ordered-regular",
         "moneyAfter": 26090,
         "type": "challengeEarn",
         "items": {"clearance": {
@@ -1581,8 +1588,8 @@
       },
       {
         "inGameDate": "2023/4/17",
-        "match": "pool-full-regular",
         "moneyBefore": 26090,
+        "match": "pool-full-regular",
         "moneyAfter": 26090,
         "type": "challengeEarn",
         "items": {"clearance": {
@@ -1594,6 +1601,7 @@
       {
         "inGameDate": "2023/4/17",
         "perkUsed": 1,
+        "freePerkUsed": 0,
         "moneyBefore": 26090,
         "moneyCost": 550,
         "moneyAfter": 25540,
@@ -1667,8 +1675,8 @@
         "timestamp": "2025-05-08 06:32:45"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-648",
+        "itemType": "tip",
         "inGameDate": "2023/4/17",
         "moneyBefore": 25540,
         "moneyCost": 80,
@@ -1909,8 +1917,8 @@
       {
         "inGameDate": "2023/4/17",
         "year": 2023,
-        "match": "world_champ",
         "moneyBefore": 31260,
+        "match": "world_champ",
         "moneyAfter": 47260,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -1922,6 +1930,7 @@
       {
         "inGameDate": "2023/4/17",
         "perkUsed": 5,
+        "freePerkUsed": 0,
         "moneyBefore": 47260,
         "moneyCost": 2550,
         "moneyAfter": 44710,
@@ -1997,6 +2006,7 @@
       {
         "inGameDate": "2023/4/17",
         "perkUsed": 16,
+        "freePerkUsed": 0,
         "moneyBefore": 44710,
         "moneyCost": 10950,
         "moneyAfter": 33760,
@@ -2082,11 +2092,15 @@
       },
       {
         "inGameDate": "2023/5/1",
-        "match": "custom_DA1B9E98710BC5F5+2023+eight_noob_open",
         "moneyBefore": 32920,
+        "match": "custom_DA1B9E98710BC5F5+2023+eight_noob_open",
         "moneyAfter": 31720,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 600
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -2094,10 +2108,6 @@
           {
             "item": "travel",
             "moneyCost": 400
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 600
           }
         ],
         "timestamp": "2025-05-09 04:13:58"
@@ -2105,8 +2115,8 @@
       {
         "inGameDate": "2023/5/1",
         "year": 2023,
-        "match": "eight_noob_open",
         "moneyBefore": 31720,
+        "match": "eight_noob_open",
         "moneyAfter": 33720,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -2128,11 +2138,15 @@
       },
       {
         "inGameDate": "2023/5/25",
-        "match": "custom_DA1B9E98710BC5F5+2023+space_grand_prix",
         "moneyBefore": 32280,
+        "match": "custom_DA1B9E98710BC5F5+2023+space_grand_prix",
         "moneyAfter": 29080,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 900
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -2140,10 +2154,6 @@
           {
             "item": "travel",
             "moneyCost": 1800
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 900
           }
         ],
         "timestamp": "2025-05-09 05:41:43"
@@ -2151,8 +2161,8 @@
       {
         "inGameDate": "2023/5/25",
         "year": 2023,
-        "match": "space_grand_prix",
         "moneyBefore": 29080,
+        "match": "space_grand_prix",
         "moneyAfter": 31080,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -2163,8 +2173,8 @@
       },
       {
         "inGameDate": "2023/5/25",
-        "match": "chinese-eight-full-regular",
         "moneyBefore": 31080,
+        "match": "chinese-eight-full-regular",
         "moneyAfter": 31080,
         "type": "challengeEarn",
         "items": {"clearance": {
@@ -2175,8 +2185,8 @@
       },
       {
         "inGameDate": "2023/5/25",
-        "match": "snooker-snake-half-regular",
         "moneyBefore": 31080,
+        "match": "snooker-snake-half-regular",
         "moneyAfter": 31080,
         "type": "challengeEarn",
         "items": {},
@@ -2184,8 +2194,8 @@
       },
       {
         "inGameDate": "2023/5/25",
-        "match": "snooker-snake-half-regular",
         "moneyBefore": 31080,
+        "match": "snooker-snake-half-regular",
         "moneyAfter": 31080,
         "type": "challengeEarn",
         "items": {},
@@ -2193,8 +2203,8 @@
       },
       {
         "inGameDate": "2023/5/25",
-        "match": "snooker-snake-half-regular",
         "moneyBefore": 31080,
+        "match": "snooker-snake-half-regular",
         "moneyAfter": 31080,
         "type": "challengeEarn",
         "items": {},
@@ -2214,8 +2224,8 @@
       {
         "item": 16,
         "inGameDate": "2023/6/18",
-        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_xian",
         "moneyBefore": 29880,
+        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_xian",
         "moneyAfter": 30080,
         "type": "invitation",
         "moneyEarn": 200,
@@ -2223,21 +2233,21 @@
       },
       {
         "inGameDate": "2023/6/18",
-        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_xian",
         "moneyBefore": 30080,
+        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_xian",
         "moneyAfter": 29080,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -2246,8 +2256,8 @@
       {
         "inGameDate": "2023/6/18",
         "year": 2023,
-        "match": "eight_master_tour_xian",
         "moneyBefore": 29080,
+        "match": "eight_master_tour_xian",
         "moneyAfter": 36280,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -2259,6 +2269,7 @@
       {
         "inGameDate": "2023/6/18",
         "perkUsed": 3,
+        "freePerkUsed": 0,
         "moneyBefore": 36280,
         "moneyCost": 2500,
         "moneyAfter": 33780,
@@ -2344,21 +2355,21 @@
       },
       {
         "inGameDate": "2023/6/28",
-        "match": "custom_DA1B9E98710BC5F5+2023+american_nine_sydney_burwood_cup",
         "moneyBefore": 33180,
+        "match": "custom_DA1B9E98710BC5F5+2023+american_nine_sydney_burwood_cup",
         "moneyAfter": 32180,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -2367,8 +2378,8 @@
       {
         "inGameDate": "2023/6/28",
         "year": 2023,
-        "match": "american_nine_sydney_burwood_cup",
         "moneyBefore": 32180,
+        "match": "american_nine_sydney_burwood_cup",
         "moneyAfter": 32180,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -2390,21 +2401,21 @@
       },
       {
         "inGameDate": "2023/7/10",
-        "match": "custom_DA1B9E98710BC5F5+2023+chongqing_open",
         "moneyBefore": 31580,
+        "match": "custom_DA1B9E98710BC5F5+2023+chongqing_open",
         "moneyAfter": 30580,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -2413,8 +2424,8 @@
       {
         "inGameDate": "2023/7/10",
         "year": 2023,
-        "match": "chongqing_open",
         "moneyBefore": 30580,
+        "match": "chongqing_open",
         "moneyAfter": 32180,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -2469,11 +2480,15 @@
       },
       {
         "inGameDate": "2023/9/25",
-        "match": "custom_DA1B9E98710BC5F5+2023+challenger_open",
         "moneyBefore": 28330,
+        "match": "custom_DA1B9E98710BC5F5+2023+challenger_open",
         "moneyAfter": 24330,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 1000
@@ -2481,10 +2496,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-05-13 05:42:30"
@@ -2492,8 +2503,8 @@
       {
         "inGameDate": "2023/9/25",
         "year": 2023,
-        "match": "challenger_open",
         "moneyBefore": 24330,
+        "match": "challenger_open",
         "moneyAfter": 24330,
         "type": "championshipEarn",
         "items": {"PRE_GAMES_1": {
@@ -2516,8 +2527,8 @@
       {
         "item": 16,
         "inGameDate": "2023/10/18",
-        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_hebei",
         "moneyBefore": 23230,
+        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_hebei",
         "moneyAfter": 23430,
         "type": "invitation",
         "moneyEarn": 200,
@@ -2525,21 +2536,21 @@
       },
       {
         "inGameDate": "2023/10/18",
-        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_hebei",
         "moneyBefore": 23430,
+        "match": "custom_DA1B9E98710BC5F5+2023+eight_master_tour_hebei",
         "moneyAfter": 22430,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -2548,8 +2559,8 @@
       {
         "inGameDate": "2023/10/18",
         "year": 2023,
-        "match": "eight_master_tour_hebei",
         "moneyBefore": 22430,
+        "match": "eight_master_tour_hebei",
         "moneyAfter": 26430,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -2560,8 +2571,8 @@
       },
       {
         "inGameDate": "2023/10/18",
-        "match": "snooker-snake-full-regular",
         "moneyBefore": 26430,
+        "match": "snooker-snake-full-regular",
         "moneyAfter": 26430,
         "type": "challengeEarn",
         "items": {},
@@ -2591,11 +2602,15 @@
       },
       {
         "inGameDate": "2023/11/12",
-        "match": "custom_DA1B9E98710BC5F5+2023+united_kingdom_champ",
         "moneyBefore": 25180,
+        "match": "custom_DA1B9E98710BC5F5+2023+united_kingdom_champ",
         "moneyAfter": 21980,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -2603,10 +2618,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-05-14 05:42:17"
@@ -2614,8 +2625,8 @@
       {
         "inGameDate": "2023/11/12",
         "year": 2023,
-        "match": "united_kingdom_champ",
         "moneyBefore": 21980,
+        "match": "united_kingdom_champ",
         "moneyAfter": 25980,
         "type": "championshipEarn",
         "items": {"PRE_GAMES_1": {
@@ -2627,6 +2638,7 @@
       {
         "inGameDate": "2023/11/12",
         "perkUsed": 4,
+        "freePerkUsed": 0,
         "moneyBefore": 25980,
         "moneyCost": 4000,
         "moneyAfter": 21980,
@@ -2745,11 +2757,15 @@
       },
       {
         "inGameDate": "2024/1/25",
-        "match": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open",
         "moneyBefore": 18280,
+        "match": "custom_DA1B9E98710BC5F5+2024+fresh_hand_open",
         "moneyAfter": 15580,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 500
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -2757,17 +2773,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 500
           }
         ],
         "timestamp": "2025-05-19 02:08:51"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-649",
+        "itemType": "tip",
         "inGameDate": "2024/1/25",
         "moneyBefore": 15580,
         "moneyCost": 80,
@@ -2778,8 +2790,8 @@
       {
         "inGameDate": "2024/1/25",
         "year": 2024,
-        "match": "fresh_hand_open",
         "moneyBefore": 15500,
+        "match": "fresh_hand_open",
         "moneyAfter": 63500,
         "type": "championshipEarn",
         "items": {
@@ -2797,6 +2809,7 @@
       {
         "inGameDate": "2024/1/25",
         "perkUsed": 5,
+        "freePerkUsed": 0,
         "moneyBefore": 63500,
         "moneyCost": 5000,
         "moneyAfter": 58500,
@@ -2872,6 +2885,7 @@
       {
         "inGameDate": "2024/1/25",
         "perkUsed": 1,
+        "freePerkUsed": 0,
         "moneyBefore": 58500,
         "moneyCost": 300,
         "moneyAfter": 58200,
@@ -3217,11 +3231,15 @@
       },
       {
         "inGameDate": "2024/2/1",
-        "match": "custom_DA1B9E98710BC5F5+2024+eight_yangjiaping_mid_cup",
         "moneyBefore": 66880,
+        "match": "custom_DA1B9E98710BC5F5+2024+eight_yangjiaping_mid_cup",
         "moneyAfter": 66580,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 0
+          },
           {
             "item": "registry",
             "moneyCost": 100
@@ -3229,10 +3247,6 @@
           {
             "item": "travel",
             "moneyCost": 200
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 0
           }
         ],
         "timestamp": "2025-05-20 23:55:34"
@@ -3260,8 +3274,8 @@
       {
         "inGameDate": "2024/2/1",
         "year": 2024,
-        "match": "eight_yangjiaping_mid_cup",
         "moneyBefore": 67280,
+        "match": "eight_yangjiaping_mid_cup",
         "moneyAfter": 70480,
         "type": "championshipEarn",
         "items": {"SECOND_PLACE": {
@@ -3305,11 +3319,15 @@
       },
       {
         "inGameDate": "2024/2/27",
-        "match": "custom_DA1B9E98710BC5F5+2024+dog_give_power_open",
         "moneyBefore": 68920,
+        "match": "custom_DA1B9E98710BC5F5+2024+dog_give_power_open",
         "moneyAfter": 66020,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -3317,10 +3335,6 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2025-05-22 03:09:52"
@@ -3328,8 +3342,8 @@
       {
         "inGameDate": "2024/2/27",
         "year": 2024,
-        "match": "dog_give_power_open",
         "moneyBefore": 66020,
+        "match": "dog_give_power_open",
         "moneyAfter": 68020,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -3341,6 +3355,7 @@
       {
         "inGameDate": "2024/2/27",
         "perkUsed": 3,
+        "freePerkUsed": 0,
         "moneyBefore": 68020,
         "moneyCost": 900,
         "moneyAfter": 67120,
@@ -3448,11 +3463,15 @@
       },
       {
         "inGameDate": "2024/3/10",
-        "match": "custom_DA1B9E98710BC5F5+2024+cat_give_power_champ",
         "moneyBefore": 66400,
+        "match": "custom_DA1B9E98710BC5F5+2024+cat_give_power_champ",
         "moneyAfter": 63500,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -3460,10 +3479,6 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2025-05-23 05:38:54"
@@ -3471,8 +3486,8 @@
       {
         "inGameDate": "2024/3/10",
         "year": 2024,
-        "match": "cat_give_power_champ",
         "moneyBefore": 63500,
+        "match": "cat_give_power_champ",
         "moneyAfter": 69900,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -3505,21 +3520,21 @@
       },
       {
         "inGameDate": "2024/3/25",
-        "match": "custom_DA1B9E98710BC5F5+2024+china_open",
         "moneyBefore": 69000,
+        "match": "custom_DA1B9E98710BC5F5+2024+china_open",
         "moneyAfter": 68000,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -3528,8 +3543,8 @@
       {
         "inGameDate": "2024/3/25",
         "year": 2024,
-        "match": "china_open",
         "moneyBefore": 68000,
+        "match": "china_open",
         "moneyAfter": 68000,
         "type": "championshipEarn",
         "items": {"PRE_GAMES_2": {
@@ -3541,6 +3556,7 @@
       {
         "inGameDate": "2024/3/25",
         "perkUsed": 3,
+        "freePerkUsed": 0,
         "moneyBefore": 68000,
         "moneyCost": 2800,
         "moneyAfter": 65200,
@@ -3637,11 +3653,15 @@
       },
       {
         "inGameDate": "2024/4/17",
-        "match": "custom_DA1B9E98710BC5F5+2024+world_champ",
         "moneyBefore": 63820,
+        "match": "custom_DA1B9E98710BC5F5+2024+world_champ",
         "moneyAfter": 59620,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -3649,17 +3669,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 2000
           }
         ],
         "timestamp": "2025-05-24 04:57:05"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-658",
+        "itemType": "tip",
         "inGameDate": "2024/4/17",
         "moneyBefore": 59620,
         "moneyCost": 80,
@@ -3670,8 +3686,8 @@
       {
         "inGameDate": "2024/4/17",
         "year": 2024,
-        "match": "world_champ",
         "moneyBefore": 59540,
+        "match": "world_champ",
         "moneyAfter": 75540,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -3683,6 +3699,7 @@
       {
         "inGameDate": "2024/4/17",
         "perkUsed": 1,
+        "freePerkUsed": 0,
         "moneyBefore": 75540,
         "moneyCost": 800,
         "moneyAfter": 74740,
@@ -3758,6 +3775,7 @@
       {
         "inGameDate": "2024/4/17",
         "perkUsed": 4,
+        "freePerkUsed": 0,
         "moneyBefore": 74740,
         "moneyCost": 1200,
         "moneyAfter": 73540,
@@ -3854,11 +3872,15 @@
       },
       {
         "inGameDate": "2024/5/25",
-        "match": "custom_DA1B9E98710BC5F5+2024+space_grand_prix",
         "moneyBefore": 71260,
+        "match": "custom_DA1B9E98710BC5F5+2024+space_grand_prix",
         "moneyAfter": 68060,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 900
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -3866,10 +3888,6 @@
           {
             "item": "travel",
             "moneyCost": 1800
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 900
           }
         ],
         "timestamp": "2025-05-25 02:40:11"
@@ -3877,8 +3895,8 @@
       {
         "inGameDate": "2024/5/25",
         "year": 2024,
-        "match": "space_grand_prix",
         "moneyBefore": 68060,
+        "match": "space_grand_prix",
         "moneyAfter": 68060,
         "type": "championshipEarn",
         "items": {"PRE_GAMES_1": {
@@ -3901,8 +3919,8 @@
       {
         "item": 12,
         "inGameDate": "2024/6/18",
-        "match": "custom_DA1B9E98710BC5F5+2024+eight_master_tour_xian",
         "moneyBefore": 66620,
+        "match": "custom_DA1B9E98710BC5F5+2024+eight_master_tour_xian",
         "moneyAfter": 66820,
         "type": "invitation",
         "moneyEarn": 200,
@@ -3910,21 +3928,21 @@
       },
       {
         "inGameDate": "2024/6/18",
-        "match": "custom_DA1B9E98710BC5F5+2024+eight_master_tour_xian",
         "moneyBefore": 66820,
+        "match": "custom_DA1B9E98710BC5F5+2024+eight_master_tour_xian",
         "moneyAfter": 65820,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -3933,8 +3951,8 @@
       {
         "inGameDate": "2024/6/18",
         "year": 2024,
-        "match": "eight_master_tour_xian",
         "moneyBefore": 65820,
+        "match": "eight_master_tour_xian",
         "moneyAfter": 69820,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -3967,21 +3985,21 @@
       },
       {
         "inGameDate": "2024/7/10",
-        "match": "custom_DA1B9E98710BC5F5+2024+chongqing_open",
         "moneyBefore": 68500,
+        "match": "custom_DA1B9E98710BC5F5+2024+chongqing_open",
         "moneyAfter": 67500,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -3990,8 +4008,8 @@
       {
         "inGameDate": "2024/7/10",
         "year": 2024,
-        "match": "chongqing_open",
         "moneyBefore": 67500,
+        "match": "chongqing_open",
         "moneyAfter": 72300,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -4046,11 +4064,15 @@
       },
       {
         "inGameDate": "2024/9/25",
-        "match": "custom_DA1B9E98710BC5F5+2024+challenger_open",
         "moneyBefore": 67680,
+        "match": "custom_DA1B9E98710BC5F5+2024+challenger_open",
         "moneyAfter": 63680,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 1000
@@ -4058,10 +4080,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-05-28 23:23:13"
@@ -4069,8 +4087,8 @@
       {
         "inGameDate": "2024/9/25",
         "year": 2024,
-        "match": "challenger_open",
         "moneyBefore": 63680,
+        "match": "challenger_open",
         "moneyAfter": 63680,
         "type": "championshipEarn",
         "items": {"PRE_GAMES_1": {
@@ -4104,8 +4122,8 @@
       {
         "item": 6,
         "inGameDate": "2024/10/29",
-        "match": "custom_DA1B9E98710BC5F5+2024+champ_of_champ",
         "moneyBefore": 61700,
+        "match": "custom_DA1B9E98710BC5F5+2024+champ_of_champ",
         "moneyAfter": 64700,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -4113,11 +4131,15 @@
       },
       {
         "inGameDate": "2024/10/29",
-        "match": "custom_DA1B9E98710BC5F5+2024+champ_of_champ",
         "moneyBefore": 64700,
+        "match": "custom_DA1B9E98710BC5F5+2024+champ_of_champ",
         "moneyAfter": 61700,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -4125,10 +4147,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-05-29 03:19:10"
@@ -4136,8 +4154,8 @@
       {
         "inGameDate": "2024/10/29",
         "year": 2024,
-        "match": "champ_of_champ",
         "moneyBefore": 61700,
+        "match": "champ_of_champ",
         "moneyAfter": 75700,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -4149,6 +4167,7 @@
       {
         "inGameDate": "2024/10/29",
         "perkUsed": 5,
+        "freePerkUsed": 0,
         "moneyBefore": 75700,
         "moneyCost": 3850,
         "moneyAfter": 71850,
@@ -4224,6 +4243,7 @@
       {
         "inGameDate": "2024/10/29",
         "perkUsed": 3,
+        "freePerkUsed": 0,
         "moneyBefore": 71850,
         "moneyCost": 900,
         "moneyAfter": 70950,
@@ -4309,11 +4329,15 @@
       },
       {
         "inGameDate": "2024/11/12",
-        "match": "custom_DA1B9E98710BC5F5+2024+united_kingdom_champ",
         "moneyBefore": 70110,
+        "match": "custom_DA1B9E98710BC5F5+2024+united_kingdom_champ",
         "moneyAfter": 66910,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -4321,17 +4345,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-05-29 06:48:09"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-659",
+        "itemType": "tip",
         "inGameDate": "2024/11/12",
         "moneyBefore": 66910,
         "moneyCost": 80,
@@ -4342,8 +4362,8 @@
       {
         "inGameDate": "2024/11/12",
         "year": 2024,
-        "match": "united_kingdom_champ",
         "moneyBefore": 66830,
+        "match": "united_kingdom_champ",
         "moneyAfter": 86830,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -4432,6 +4452,7 @@
       {
         "inGameDate": "2025/2/22",
         "perkUsed": 5,
+        "freePerkUsed": 0,
         "moneyBefore": 80710,
         "moneyCost": 1500,
         "moneyAfter": 79210,
@@ -4507,6 +4528,7 @@
       {
         "inGameDate": "2025/2/22",
         "perkUsed": 5,
+        "freePerkUsed": 0,
         "moneyBefore": 79210,
         "moneyCost": 4100,
         "moneyAfter": 75110,
@@ -4582,6 +4604,7 @@
       {
         "inGameDate": "2025/2/22",
         "perkUsed": 1,
+        "freePerkUsed": 0,
         "moneyBefore": 75110,
         "moneyCost": 300,
         "moneyAfter": 74810,
@@ -4667,11 +4690,15 @@
       },
       {
         "inGameDate": "2025/2/27",
-        "match": "custom_DA1B9E98710BC5F5+2025+dog_give_power_open",
         "moneyBefore": 74510,
+        "match": "custom_DA1B9E98710BC5F5+2025+dog_give_power_open",
         "moneyAfter": 71610,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -4679,17 +4706,13 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2025-06-02 07:44:49"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-660",
+        "itemType": "tip",
         "inGameDate": "2025/2/27",
         "moneyBefore": 71610,
         "moneyCost": 80,
@@ -4732,11 +4755,15 @@
       },
       {
         "inGameDate": "2025/3/10",
-        "match": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ",
         "moneyBefore": 70870,
+        "match": "custom_DA1B9E98710BC5F5+2025+cat_give_power_champ",
         "moneyAfter": 67970,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -4744,10 +4771,6 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2025-06-02 19:52:42"
@@ -4755,8 +4778,8 @@
       {
         "inGameDate": "2025/3/10",
         "year": 2025,
-        "match": "cat_give_power_champ",
         "moneyBefore": 67970,
+        "match": "cat_give_power_champ",
         "moneyAfter": 67970,
         "type": "championshipEarn",
         "items": {"PRE_GAMES_1": {
@@ -4779,8 +4802,8 @@
       {
         "item": 10,
         "inGameDate": "2025/3/18",
-        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_beijing",
         "moneyBefore": 67490,
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_beijing",
         "moneyAfter": 67690,
         "type": "invitation",
         "moneyEarn": 200,
@@ -4788,21 +4811,21 @@
       },
       {
         "inGameDate": "2025/3/18",
-        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_beijing",
         "moneyBefore": 67690,
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_beijing",
         "moneyAfter": 66690,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -4811,8 +4834,8 @@
       {
         "inGameDate": "2025/3/18",
         "year": 2025,
-        "match": "eight_master_tour_beijing",
         "moneyBefore": 66690,
+        "match": "eight_master_tour_beijing",
         "moneyAfter": 73890,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -4835,8 +4858,8 @@
       {
         "item": 14,
         "inGameDate": "2025/3/25",
-        "match": "custom_DA1B9E98710BC5F5+2025+china_open",
         "moneyBefore": 73470,
+        "match": "custom_DA1B9E98710BC5F5+2025+china_open",
         "moneyAfter": 74470,
         "type": "invitation",
         "moneyEarn": 1000,
@@ -4844,21 +4867,21 @@
       },
       {
         "inGameDate": "2025/3/25",
-        "match": "custom_DA1B9E98710BC5F5+2025+china_open",
         "moneyBefore": 74470,
+        "match": "custom_DA1B9E98710BC5F5+2025+china_open",
         "moneyAfter": 73470,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -4867,8 +4890,8 @@
       {
         "inGameDate": "2025/3/25",
         "year": 2025,
-        "match": "china_open",
         "moneyBefore": 73470,
+        "match": "china_open",
         "moneyAfter": 77470,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -4890,21 +4913,21 @@
       },
       {
         "inGameDate": "2025/3/30",
-        "match": "custom_DA1B9E98710BC5F5+2025+eight_spadina_open",
         "moneyBefore": 77170,
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_spadina_open",
         "moneyAfter": 76170,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -4913,8 +4936,8 @@
       {
         "inGameDate": "2025/3/30",
         "year": 2025,
-        "match": "eight_spadina_open",
         "moneyBefore": 76170,
+        "match": "eight_spadina_open",
         "moneyAfter": 76170,
         "type": "championshipEarn",
         "items": {"PRE_GAMES_1": {
@@ -4936,21 +4959,21 @@
       },
       {
         "inGameDate": "2025/4/17",
-        "match": "custom_DA1B9E98710BC5F5+2025+world_champ",
         "moneyBefore": 75090,
+        "match": "custom_DA1B9E98710BC5F5+2025+world_champ",
         "moneyAfter": 70890,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
             "moneyCost": 2000
           }
         ],
@@ -5097,8 +5120,8 @@
         "timestamp": "2025-06-04 06:39:44"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-677",
+        "itemType": "tip",
         "inGameDate": "2025/4/17",
         "moneyBefore": 75590,
         "moneyCost": 80,
@@ -5129,8 +5152,8 @@
       {
         "inGameDate": "2025/4/17",
         "year": 2025,
-        "match": "world_champ",
         "moneyBefore": 77010,
+        "match": "world_champ",
         "moneyAfter": 116403,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -5381,8 +5404,8 @@
       {
         "item": 9,
         "inGameDate": "2025/5/1",
-        "match": "custom_DA1B9E98710BC5F5+2025+eight_noob_open",
         "moneyBefore": 102073,
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_noob_open",
         "moneyAfter": 102273,
         "type": "invitation",
         "moneyEarn": 200,
@@ -5390,11 +5413,15 @@
       },
       {
         "inGameDate": "2025/5/1",
-        "match": "custom_DA1B9E98710BC5F5+2025+eight_noob_open",
         "moneyBefore": 102273,
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_noob_open",
         "moneyAfter": 101073,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 600
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -5402,10 +5429,6 @@
           {
             "item": "travel",
             "moneyCost": 400
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 600
           }
         ],
         "timestamp": "2025-06-13 15:09:05"
@@ -5413,8 +5436,8 @@
       {
         "inGameDate": "2025/5/1",
         "year": 2025,
-        "match": "eight_noob_open",
         "moneyBefore": 101073,
+        "match": "eight_noob_open",
         "moneyAfter": 101848,
         "type": "championshipEarn",
         "items": {"TOP_64": {
@@ -5437,8 +5460,8 @@
       {
         "item": 10,
         "inGameDate": "2025/5/25",
-        "match": "custom_DA1B9E98710BC5F5+2025+space_grand_prix",
         "moneyBefore": 100168,
+        "match": "custom_DA1B9E98710BC5F5+2025+space_grand_prix",
         "moneyAfter": 100668,
         "type": "invitation",
         "moneyEarn": 500,
@@ -5446,11 +5469,15 @@
       },
       {
         "inGameDate": "2025/5/25",
-        "match": "custom_DA1B9E98710BC5F5+2025+space_grand_prix",
         "moneyBefore": 100668,
+        "match": "custom_DA1B9E98710BC5F5+2025+space_grand_prix",
         "moneyAfter": 97468,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 900
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -5458,18 +5485,14 @@
           {
             "item": "travel",
             "moneyCost": 1800
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 900
           }
         ],
         "timestamp": "2025-06-13 15:16:11"
       },
       {
         "inGameDate": "2025/5/25",
-        "match": "chinese-eight-full-ordered-regular",
         "moneyBefore": 97468,
+        "match": "chinese-eight-full-ordered-regular",
         "moneyAfter": 97468,
         "type": "challengeEarn",
         "items": {"clearance": {
@@ -5492,8 +5515,8 @@
       {
         "item": 9,
         "inGameDate": "2025/6/18",
-        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_xian",
         "moneyBefore": 96028,
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_xian",
         "moneyAfter": 96228,
         "type": "invitation",
         "moneyEarn": 200,
@@ -5501,21 +5524,21 @@
       },
       {
         "inGameDate": "2025/6/18",
-        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_xian",
         "moneyBefore": 96228,
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_xian",
         "moneyAfter": 95228,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -5524,8 +5547,8 @@
       {
         "inGameDate": "2025/6/18",
         "year": 2025,
-        "match": "eight_master_tour_xian",
         "moneyBefore": 95228,
+        "match": "eight_master_tour_xian",
         "moneyAfter": 99103,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -5558,21 +5581,21 @@
       },
       {
         "inGameDate": "2025/7/10",
-        "match": "custom_DA1B9E98710BC5F5+2025+chongqing_open",
         "moneyBefore": 97783,
+        "match": "custom_DA1B9E98710BC5F5+2025+chongqing_open",
         "moneyAfter": 96783,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -5581,8 +5604,8 @@
       {
         "inGameDate": "2025/7/10",
         "year": 2025,
-        "match": "chongqing_open",
         "moneyBefore": 96783,
+        "match": "chongqing_open",
         "moneyAfter": 96783,
         "type": "championshipEarn",
         "items": {"PRE_GAMES_1": {
@@ -5637,11 +5660,15 @@
       },
       {
         "inGameDate": "2025/9/25",
-        "match": "custom_DA1B9E98710BC5F5+2025+challenger_open",
         "moneyBefore": 92163,
+        "match": "custom_DA1B9E98710BC5F5+2025+challenger_open",
         "moneyAfter": 88163,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 1000
@@ -5649,17 +5676,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-07-12 23:48:30"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-678",
+        "itemType": "tip",
         "inGameDate": "2025/9/25",
         "moneyBefore": 88163,
         "moneyCost": 80,
@@ -5770,8 +5793,8 @@
       {
         "inGameDate": "2025/9/25",
         "year": 2025,
-        "match": "challenger_open",
         "moneyBefore": 91983,
+        "match": "challenger_open",
         "moneyAfter": 192108,
         "type": "championshipEarn",
         "items": {
@@ -5884,8 +5907,8 @@
       {
         "item": 9,
         "inGameDate": "2025/10/18",
-        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_hebei",
         "moneyBefore": 189748,
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_hebei",
         "moneyAfter": 189948,
         "type": "invitation",
         "moneyEarn": 200,
@@ -5893,21 +5916,21 @@
       },
       {
         "inGameDate": "2025/10/18",
-        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_hebei",
         "moneyBefore": 189948,
+        "match": "custom_DA1B9E98710BC5F5+2025+eight_master_tour_hebei",
         "moneyAfter": 188948,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -5916,8 +5939,8 @@
       {
         "inGameDate": "2025/10/18",
         "year": 2025,
-        "match": "eight_master_tour_hebei",
         "moneyBefore": 188948,
+        "match": "eight_master_tour_hebei",
         "moneyAfter": 192823,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -5940,8 +5963,8 @@
       {
         "item": 7,
         "inGameDate": "2025/10/29",
-        "match": "custom_DA1B9E98710BC5F5+2025+champ_of_champ",
         "moneyBefore": 191943,
+        "match": "custom_DA1B9E98710BC5F5+2025+champ_of_champ",
         "moneyAfter": 194943,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -5949,11 +5972,15 @@
       },
       {
         "inGameDate": "2025/10/29",
-        "match": "custom_DA1B9E98710BC5F5+2025+champ_of_champ",
         "moneyBefore": 194943,
+        "match": "custom_DA1B9E98710BC5F5+2025+champ_of_champ",
         "moneyAfter": 191943,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -5961,10 +5988,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-08-07 04:28:32"
@@ -5972,8 +5995,8 @@
       {
         "inGameDate": "2025/10/29",
         "year": 2025,
-        "match": "champ_of_champ",
         "moneyBefore": 191943,
+        "match": "champ_of_champ",
         "moneyAfter": 207773,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -5996,8 +6019,8 @@
       {
         "item": 13,
         "inGameDate": "2025/11/12",
-        "match": "custom_DA1B9E98710BC5F5+2025+united_kingdom_champ",
         "moneyBefore": 206653,
+        "match": "custom_DA1B9E98710BC5F5+2025+united_kingdom_champ",
         "moneyAfter": 206853,
         "type": "invitation",
         "moneyEarn": 200,
@@ -6005,11 +6028,15 @@
       },
       {
         "inGameDate": "2025/11/12",
-        "match": "custom_DA1B9E98710BC5F5+2025+united_kingdom_champ",
         "moneyBefore": 206853,
+        "match": "custom_DA1B9E98710BC5F5+2025+united_kingdom_champ",
         "moneyAfter": 203653,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -6017,17 +6044,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-08-09 17:54:29"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-679",
+        "itemType": "tip",
         "inGameDate": "2025/11/12",
         "moneyBefore": 203653,
         "moneyCost": 80,
@@ -6036,8 +6059,8 @@
         "timestamp": "2025-08-09 17:54:42"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-680",
+        "itemType": "tip",
         "inGameDate": "2025/11/12",
         "moneyBefore": 203573,
         "moneyCost": 80,
@@ -6240,8 +6263,8 @@
       {
         "inGameDate": "2025/11/12",
         "year": 2025,
-        "match": "united_kingdom_champ",
         "moneyBefore": 201793,
+        "match": "united_kingdom_champ",
         "moneyAfter": 277436,
         "type": "championshipEarn",
         "items": {"SECOND_PLACE": {
@@ -6351,8 +6374,8 @@
       {
         "item": 8,
         "inGameDate": "2026/1/15",
-        "match": "custom_DA1B9E98710BC5F5+2026+masters",
         "moneyBefore": 270476,
+        "match": "custom_DA1B9E98710BC5F5+2026+masters",
         "moneyAfter": 273476,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -6360,11 +6383,15 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "custom_DA1B9E98710BC5F5+2026+masters",
         "moneyBefore": 273476,
+        "match": "custom_DA1B9E98710BC5F5+2026+masters",
         "moneyAfter": 270476,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -6372,18 +6399,14 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-08-21 04:55:43"
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270476,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270476,
         "type": "challengeEarn",
         "items": {},
@@ -6391,8 +6414,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270476,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270476,
         "type": "challengeEarn",
         "items": {},
@@ -6400,8 +6423,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270476,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270476,
         "type": "challengeEarn",
         "items": {},
@@ -6409,8 +6432,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270476,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {">=,score,50": {
@@ -6421,8 +6444,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6430,8 +6453,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6439,8 +6462,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6448,8 +6471,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6457,8 +6480,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6466,8 +6489,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6475,8 +6498,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6484,8 +6507,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6493,8 +6516,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6502,8 +6525,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6511,8 +6534,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6520,8 +6543,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 270864,
         "type": "challengeEarn",
         "items": {},
@@ -6529,8 +6552,8 @@
       },
       {
         "inGameDate": "2026/1/15",
-        "match": "snooker-hendry-tough-table-challenge",
         "moneyBefore": 270864,
+        "match": "snooker-hendry-tough-table-challenge",
         "moneyAfter": 280939,
         "type": "challengeEarn",
         "items": {
@@ -6626,8 +6649,8 @@
         "timestamp": "2025-08-21 06:29:24"
       },
       {
-        "itemType": "tip",
         "item": "primeTipHard:custom_DA1B9E98710BC5F5-681",
+        "itemType": "tip",
         "inGameDate": "2026/1/15",
         "moneyBefore": 279139,
         "moneyCost": 80,
@@ -6638,8 +6661,8 @@
       {
         "inGameDate": "2026/1/15",
         "year": 2026,
-        "match": "masters",
         "moneyBefore": 279059,
+        "match": "masters",
         "moneyAfter": 303952,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -6781,11 +6804,15 @@
       },
       {
         "inGameDate": "2026/2/22",
-        "match": "custom_DA1B9E98710BC5F5+2026+professional_champ",
         "moneyBefore": 299252,
+        "match": "custom_DA1B9E98710BC5F5+2026+professional_champ",
         "moneyAfter": 296252,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -6793,18 +6820,14 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-08-21 16:57:02"
       },
       {
         "inGameDate": "2026/2/22",
-        "match": "snooker-snake-cross-regular",
         "moneyBefore": 296252,
+        "match": "snooker-snake-cross-regular",
         "moneyAfter": 296252,
         "type": "challengeEarn",
         "items": {"clearance": {
@@ -6816,8 +6839,8 @@
       {
         "inGameDate": "2026/2/22",
         "year": 2026,
-        "match": "professional_champ",
         "moneyBefore": 296252,
+        "match": "professional_champ",
         "moneyAfter": 390020,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -6991,11 +7014,15 @@
       },
       {
         "inGameDate": "2026/2/27",
-        "match": "custom_DA1B9E98710BC5F5+2026+dog_give_power_open",
         "moneyBefore": 387670,
+        "match": "custom_DA1B9E98710BC5F5+2026+dog_give_power_open",
         "moneyAfter": 384770,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -7003,17 +7030,13 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2025-09-05 16:46:06"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-682",
+        "itemType": "tip",
         "inGameDate": "2026/2/27",
         "moneyBefore": 384770,
         "moneyCost": 80,
@@ -7024,8 +7047,8 @@
       {
         "inGameDate": "2026/2/27",
         "year": 2026,
-        "match": "dog_give_power_open",
         "moneyBefore": 384690,
+        "match": "dog_give_power_open",
         "moneyAfter": 388940,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -7059,8 +7082,8 @@
       {
         "item": 7,
         "inGameDate": "2026/3/4",
-        "match": "custom_DA1B9E98710BC5F5+2026+saudi_arabia_masters",
         "moneyBefore": 388390,
+        "match": "custom_DA1B9E98710BC5F5+2026+saudi_arabia_masters",
         "moneyAfter": 391390,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -7068,11 +7091,15 @@
       },
       {
         "inGameDate": "2026/3/4",
-        "match": "custom_DA1B9E98710BC5F5+2026+saudi_arabia_masters",
         "moneyBefore": 391390,
+        "match": "custom_DA1B9E98710BC5F5+2026+saudi_arabia_masters",
         "moneyAfter": 388390,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -7080,18 +7107,14 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-09-08 13:21:23"
       },
       {
         "inGameDate": "2026/3/4",
-        "match": "chinese-eight-5-score-fixed",
         "moneyBefore": 388390,
+        "match": "chinese-eight-5-score-fixed",
         "moneyAfter": 388390,
         "type": "challengeEarn",
         "items": {},
@@ -7099,8 +7122,8 @@
       },
       {
         "inGameDate": "2026/3/4",
-        "match": "chinese-eight-5-score-fixed",
         "moneyBefore": 388390,
+        "match": "chinese-eight-5-score-fixed",
         "moneyAfter": 388390,
         "type": "challengeEarn",
         "items": {},
@@ -7108,8 +7131,8 @@
       },
       {
         "inGameDate": "2026/3/4",
-        "match": "chinese-eight-5-score-fixed",
         "moneyBefore": 388390,
+        "match": "chinese-eight-5-score-fixed",
         "moneyAfter": 388390,
         "type": "challengeEarn",
         "items": {},
@@ -7117,8 +7140,8 @@
       },
       {
         "inGameDate": "2026/3/4",
-        "match": "chinese-eight-5-score-fixed",
         "moneyBefore": 388390,
+        "match": "chinese-eight-5-score-fixed",
         "moneyAfter": 388390,
         "type": "challengeEarn",
         "items": {},
@@ -7126,8 +7149,8 @@
       },
       {
         "inGameDate": "2026/3/4",
-        "match": "chinese-eight-5-score-fixed",
         "moneyBefore": 388390,
+        "match": "chinese-eight-5-score-fixed",
         "moneyAfter": 388390,
         "type": "challengeEarn",
         "items": {},
@@ -7135,8 +7158,8 @@
       },
       {
         "inGameDate": "2026/3/4",
-        "match": "snooker-5-score-random",
         "moneyBefore": 388390,
+        "match": "snooker-5-score-random",
         "moneyAfter": 388390,
         "type": "challengeEarn",
         "items": {},
@@ -7144,8 +7167,8 @@
       },
       {
         "inGameDate": "2026/3/4",
-        "match": "snooker-5-score-random",
         "moneyBefore": 388390,
+        "match": "snooker-5-score-random",
         "moneyAfter": 388390,
         "type": "challengeEarn",
         "items": {},
@@ -7153,8 +7176,8 @@
       },
       {
         "inGameDate": "2026/3/4",
-        "match": "snooker-5-score-fixed",
         "moneyBefore": 388390,
+        "match": "snooker-5-score-fixed",
         "moneyAfter": 388390,
         "type": "challengeEarn",
         "items": {},
@@ -7163,8 +7186,8 @@
       {
         "inGameDate": "2026/3/4",
         "year": 2026,
-        "match": "saudi_arabia_masters",
         "moneyBefore": 388390,
+        "match": "saudi_arabia_masters",
         "moneyAfter": 500515,
         "type": "championshipEarn",
         "items": {
@@ -7193,8 +7216,8 @@
       {
         "item": 7,
         "inGameDate": "2026/3/10",
-        "match": "custom_DA1B9E98710BC5F5+2026+cat_give_power_champ",
         "moneyBefore": 499735,
+        "match": "custom_DA1B9E98710BC5F5+2026+cat_give_power_champ",
         "moneyAfter": 500235,
         "type": "invitation",
         "moneyEarn": 500,
@@ -7202,11 +7225,15 @@
       },
       {
         "inGameDate": "2026/3/10",
-        "match": "custom_DA1B9E98710BC5F5+2026+cat_give_power_champ",
         "moneyBefore": 500235,
+        "match": "custom_DA1B9E98710BC5F5+2026+cat_give_power_champ",
         "moneyAfter": 497335,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -7214,18 +7241,14 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2025-10-02 20:27:24"
       },
       {
         "inGameDate": "2026/3/10",
-        "match": "snooker-5-score-random",
         "moneyBefore": 497335,
+        "match": "snooker-5-score-random",
         "moneyAfter": 497335,
         "type": "challengeEarn",
         "items": {},
@@ -7233,8 +7256,8 @@
       },
       {
         "inGameDate": "2026/3/10",
-        "match": "chinese-eight-5-score-random",
         "moneyBefore": 497335,
+        "match": "chinese-eight-5-score-random",
         "moneyAfter": 497335,
         "type": "challengeEarn",
         "items": {},
@@ -7242,8 +7265,8 @@
       },
       {
         "inGameDate": "2026/3/10",
-        "match": "chinese-eight-cushion-shot-fixed",
         "moneyBefore": 497335,
+        "match": "chinese-eight-cushion-shot-fixed",
         "moneyAfter": 497335,
         "type": "challengeEarn",
         "items": {},
@@ -7251,8 +7274,8 @@
       },
       {
         "inGameDate": "2026/3/10",
-        "match": "chinese-eight-cushion-shot-fixed",
         "moneyBefore": 497335,
+        "match": "chinese-eight-cushion-shot-fixed",
         "moneyAfter": 497335,
         "type": "challengeEarn",
         "items": {},
@@ -7260,8 +7283,8 @@
       },
       {
         "inGameDate": "2026/3/10",
-        "match": "chinese-eight-cushion-shot-fixed",
         "moneyBefore": 497335,
+        "match": "chinese-eight-cushion-shot-fixed",
         "moneyAfter": 497335,
         "type": "challengeEarn",
         "items": {},
@@ -7269,8 +7292,8 @@
       },
       {
         "inGameDate": "2026/3/10",
-        "match": "chinese-eight-cushion-shot-fixed",
         "moneyBefore": 497335,
+        "match": "chinese-eight-cushion-shot-fixed",
         "moneyAfter": 497335,
         "type": "challengeEarn",
         "items": {},
@@ -7278,16 +7301,16 @@
       },
       {
         "inGameDate": "2026/3/10",
-        "match": "chinese-eight-cushion-shot-random",
         "moneyBefore": 497335,
+        "match": "chinese-eight-cushion-shot-random",
         "moneyAfter": 497335,
         "type": "challengeEarn",
         "items": {},
         "timestamp": "2025-10-03 20:36:27"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-683",
+        "itemType": "tip",
         "inGameDate": "2026/3/10",
         "moneyBefore": 497335,
         "moneyCost": 80,
@@ -7297,16 +7320,16 @@
       },
       {
         "inGameDate": "2026/3/10",
-        "match": "chinese-eight-cushion-shot-random",
         "moneyBefore": 497255,
+        "match": "chinese-eight-cushion-shot-random",
         "moneyAfter": 497255,
         "type": "challengeEarn",
         "items": {},
         "timestamp": "2025-10-03 20:53:32"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-684",
+        "itemType": "tip",
         "inGameDate": "2026/3/10",
         "moneyBefore": 497255,
         "moneyCost": 80,
@@ -7317,8 +7340,8 @@
       {
         "inGameDate": "2026/3/10",
         "year": 2026,
-        "match": "cat_give_power_champ",
         "moneyBefore": 497175,
+        "match": "cat_give_power_champ",
         "moneyAfter": 571238,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -7428,8 +7451,8 @@
       {
         "item": 2,
         "inGameDate": "2026/3/25",
-        "match": "custom_DA1B9E98710BC5F5+2026+china_open",
         "moneyBefore": 567638,
+        "match": "custom_DA1B9E98710BC5F5+2026+china_open",
         "moneyAfter": 568638,
         "type": "invitation",
         "moneyEarn": 1000,
@@ -7437,11 +7460,15 @@
       },
       {
         "inGameDate": "2026/3/25",
-        "match": "custom_DA1B9E98710BC5F5+2026+china_open",
         "moneyBefore": 568638,
+        "match": "custom_DA1B9E98710BC5F5+2026+china_open",
         "moneyAfter": 567638,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -7449,17 +7476,13 @@
           {
             "item": "travel",
             "moneyCost": 400
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 400
           }
         ],
         "timestamp": "2025-10-08 19:23:25"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-685",
+        "itemType": "tip",
         "inGameDate": "2026/3/25",
         "moneyBefore": 567638,
         "moneyCost": 80,
@@ -7499,8 +7522,8 @@
       },
       {
         "inGameDate": "2026/3/25",
-        "match": "chinese-eight-cushion-shot-random",
         "moneyBefore": 569758,
+        "match": "chinese-eight-cushion-shot-random",
         "moneyAfter": 569758,
         "type": "challengeEarn",
         "items": {},
@@ -7509,8 +7532,8 @@
       {
         "inGameDate": "2026/3/25",
         "year": 2026,
-        "match": "china_open",
         "moneyBefore": 569758,
+        "match": "china_open",
         "moneyAfter": 600758,
         "type": "championshipEarn",
         "items": {
@@ -7640,8 +7663,8 @@
       {
         "item": 4,
         "inGameDate": "2026/4/17",
-        "match": "custom_DA1B9E98710BC5F5+2026+world_champ",
         "moneyBefore": 595438,
+        "match": "custom_DA1B9E98710BC5F5+2026+world_champ",
         "moneyAfter": 595638,
         "type": "invitation",
         "moneyEarn": 200,
@@ -7649,11 +7672,15 @@
       },
       {
         "inGameDate": "2026/4/17",
-        "match": "custom_DA1B9E98710BC5F5+2026+world_champ",
         "moneyBefore": 595638,
+        "match": "custom_DA1B9E98710BC5F5+2026+world_champ",
         "moneyAfter": 591438,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -7661,17 +7688,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 2000
           }
         ],
         "timestamp": "2025-10-11 07:18:14"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-686",
+        "itemType": "tip",
         "inGameDate": "2026/4/17",
         "moneyBefore": 591438,
         "moneyCost": 80,
@@ -7680,8 +7703,8 @@
         "timestamp": "2025-10-11 17:11:47"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-698",
+        "itemType": "tip",
         "inGameDate": "2026/4/17",
         "moneyBefore": 591358,
         "moneyCost": 80,
@@ -7692,8 +7715,8 @@
       {
         "inGameDate": "2026/4/17",
         "year": 2026,
-        "match": "world_champ",
         "moneyBefore": 591278,
+        "match": "world_champ",
         "moneyAfter": 895967,
         "type": "championshipEarn",
         "items": {
@@ -7874,8 +7897,8 @@
       {
         "item": 6,
         "inGameDate": "2026/5/1",
-        "match": "custom_DA1B9E98710BC5F5+2026+eight_noob_open",
         "moneyBefore": 886297,
+        "match": "custom_DA1B9E98710BC5F5+2026+eight_noob_open",
         "moneyAfter": 886497,
         "type": "invitation",
         "moneyEarn": 200,
@@ -7883,11 +7906,15 @@
       },
       {
         "inGameDate": "2026/5/1",
-        "match": "custom_DA1B9E98710BC5F5+2026+eight_noob_open",
         "moneyBefore": 886497,
+        "match": "custom_DA1B9E98710BC5F5+2026+eight_noob_open",
         "moneyAfter": 885297,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 600
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -7895,10 +7922,6 @@
           {
             "item": "travel",
             "moneyCost": 400
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 600
           }
         ],
         "timestamp": "2025-10-21 11:20:25"
@@ -7906,8 +7929,8 @@
       {
         "inGameDate": "2026/5/1",
         "year": 2026,
-        "match": "eight_noob_open",
         "moneyBefore": 885297,
+        "match": "eight_noob_open",
         "moneyAfter": 900797,
         "type": "championshipEarn",
         "items": {"TOP_4": {
@@ -7930,8 +7953,8 @@
       {
         "item": 2,
         "inGameDate": "2026/5/25",
-        "match": "custom_DA1B9E98710BC5F5+2026+space_grand_prix",
         "moneyBefore": 896237,
+        "match": "custom_DA1B9E98710BC5F5+2026+space_grand_prix",
         "moneyAfter": 896737,
         "type": "invitation",
         "moneyEarn": 500,
@@ -7939,11 +7962,15 @@
       },
       {
         "inGameDate": "2026/5/25",
-        "match": "custom_DA1B9E98710BC5F5+2026+space_grand_prix",
         "moneyBefore": 896737,
+        "match": "custom_DA1B9E98710BC5F5+2026+space_grand_prix",
         "moneyAfter": 893537,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 900
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -7951,10 +7978,6 @@
           {
             "item": "travel",
             "moneyCost": 1800
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 900
           }
         ],
         "timestamp": "2025-10-22 08:18:09"
@@ -7962,8 +7985,8 @@
       {
         "inGameDate": "2026/5/25",
         "year": 2026,
-        "match": "space_grand_prix",
         "moneyBefore": 893537,
+        "match": "space_grand_prix",
         "moneyAfter": 912412,
         "type": "championshipEarn",
         "items": {"TOP_4": {
@@ -8083,11 +8106,15 @@
       },
       {
         "inGameDate": "2026/7/10",
-        "match": "custom_DA1B9E98710BC5F5+2026+chongqing_open",
         "moneyBefore": 901672,
+        "match": "custom_DA1B9E98710BC5F5+2026+chongqing_open",
         "moneyAfter": 900672,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -8095,17 +8122,13 @@
           {
             "item": "travel",
             "moneyCost": 400
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 400
           }
         ],
         "timestamp": "2025-10-24 10:15:13"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-699",
+        "itemType": "tip",
         "inGameDate": "2026/7/10",
         "moneyBefore": 900672,
         "moneyCost": 80,
@@ -8116,8 +8139,8 @@
       {
         "inGameDate": "2026/7/10",
         "year": 2026,
-        "match": "chongqing_open",
         "moneyBefore": 900592,
+        "match": "chongqing_open",
         "moneyAfter": 902142,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -8161,21 +8184,21 @@
       },
       {
         "inGameDate": "2026/8/22",
-        "match": "custom_DA1B9E98710BC5F5+2026+eight_master",
         "moneyBefore": 894142,
+        "match": "custom_DA1B9E98710BC5F5+2026+eight_master",
         "moneyAfter": 893342,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 0
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -8184,8 +8207,8 @@
       {
         "inGameDate": "2026/8/22",
         "year": 2026,
-        "match": "eight_master",
         "moneyBefore": 893342,
+        "match": "eight_master",
         "moneyAfter": 1280842,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -8208,8 +8231,8 @@
       {
         "item": 1,
         "inGameDate": "2026/9/25",
-        "match": "custom_DA1B9E98710BC5F5+2026+challenger_open",
         "moneyBefore": 1274042,
+        "match": "custom_DA1B9E98710BC5F5+2026+challenger_open",
         "moneyAfter": 1275042,
         "type": "invitation",
         "moneyEarn": 1000,
@@ -8217,11 +8240,15 @@
       },
       {
         "inGameDate": "2026/9/25",
-        "match": "custom_DA1B9E98710BC5F5+2026+challenger_open",
         "moneyBefore": 1275042,
+        "match": "custom_DA1B9E98710BC5F5+2026+challenger_open",
         "moneyAfter": 1271042,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 1000
@@ -8229,10 +8256,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-11-01 13:34:02"
@@ -8240,8 +8263,8 @@
       {
         "inGameDate": "2026/9/25",
         "year": 2026,
-        "match": "challenger_open",
         "moneyBefore": 1271042,
+        "match": "challenger_open",
         "moneyAfter": 1359042,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -8427,8 +8450,8 @@
       {
         "item": 1,
         "inGameDate": "2026/10/29",
-        "match": "custom_DA1B9E98710BC5F5+2026+champ_of_champ",
         "moneyBefore": 1349342,
+        "match": "custom_DA1B9E98710BC5F5+2026+champ_of_champ",
         "moneyAfter": 1352342,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -8436,11 +8459,15 @@
       },
       {
         "inGameDate": "2026/10/29",
-        "match": "custom_DA1B9E98710BC5F5+2026+champ_of_champ",
         "moneyBefore": 1352342,
+        "match": "custom_DA1B9E98710BC5F5+2026+champ_of_champ",
         "moneyAfter": 1349342,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -8448,10 +8475,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-11-07 00:49:35"
@@ -8459,8 +8482,8 @@
       {
         "inGameDate": "2026/10/29",
         "year": 2026,
-        "match": "champ_of_champ",
         "moneyBefore": 1349342,
+        "match": "champ_of_champ",
         "moneyAfter": 1361530,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -8483,8 +8506,8 @@
       {
         "item": 2,
         "inGameDate": "2026/11/12",
-        "match": "custom_DA1B9E98710BC5F5+2026+united_kingdom_champ",
         "moneyBefore": 1358730,
+        "match": "custom_DA1B9E98710BC5F5+2026+united_kingdom_champ",
         "moneyAfter": 1358930,
         "type": "invitation",
         "moneyEarn": 200,
@@ -8492,11 +8515,15 @@
       },
       {
         "inGameDate": "2026/11/12",
-        "match": "custom_DA1B9E98710BC5F5+2026+united_kingdom_champ",
         "moneyBefore": 1358930,
+        "match": "custom_DA1B9E98710BC5F5+2026+united_kingdom_champ",
         "moneyAfter": 1355730,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -8504,17 +8531,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-11-07 02:23:19"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-700",
+        "itemType": "tip",
         "inGameDate": "2026/11/12",
         "moneyBefore": 1355730,
         "moneyCost": 80,
@@ -8525,8 +8548,8 @@
       {
         "inGameDate": "2026/11/12",
         "year": 2026,
-        "match": "united_kingdom_champ",
         "moneyBefore": 1355650,
+        "match": "united_kingdom_champ",
         "moneyAfter": 1369668,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -8560,8 +8583,8 @@
       {
         "item": 3,
         "inGameDate": "2027/1/15",
-        "match": "custom_DA1B9E98710BC5F5+2027+masters",
         "moneyBefore": 1356868,
+        "match": "custom_DA1B9E98710BC5F5+2027+masters",
         "moneyAfter": 1359868,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -8569,11 +8592,15 @@
       },
       {
         "inGameDate": "2027/1/15",
-        "match": "custom_DA1B9E98710BC5F5+2027+masters",
         "moneyBefore": 1359868,
+        "match": "custom_DA1B9E98710BC5F5+2027+masters",
         "moneyAfter": 1356868,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -8581,10 +8608,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-11-13 00:39:29"
@@ -8592,8 +8615,8 @@
       {
         "inGameDate": "2027/1/15",
         "year": 2027,
-        "match": "masters",
         "moneyBefore": 1356868,
+        "match": "masters",
         "moneyAfter": 1381761,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -8659,11 +8682,15 @@
       },
       {
         "inGameDate": "2027/2/22",
-        "match": "custom_DA1B9E98710BC5F5+2027+professional_champ",
         "moneyBefore": 1374161,
+        "match": "custom_DA1B9E98710BC5F5+2027+professional_champ",
         "moneyAfter": 1371161,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -8671,10 +8698,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-11-13 17:27:55"
@@ -8682,8 +8705,8 @@
       {
         "inGameDate": "2027/2/22",
         "year": 2027,
-        "match": "professional_champ",
         "moneyBefore": 1371161,
+        "match": "professional_champ",
         "moneyAfter": 1396054,
         "type": "championshipEarn",
         "items": {"TOP_4": {
@@ -8933,11 +8956,15 @@
       },
       {
         "inGameDate": "2027/2/27",
-        "match": "custom_DA1B9E98710BC5F5+2027+dog_give_power_open",
         "moneyBefore": 1388854,
+        "match": "custom_DA1B9E98710BC5F5+2027+dog_give_power_open",
         "moneyAfter": 1385954,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -8945,17 +8972,13 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2025-11-14 05:16:36"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-701",
+        "itemType": "tip",
         "inGameDate": "2027/2/27",
         "moneyBefore": 1385954,
         "moneyCost": 80,
@@ -8966,8 +8989,8 @@
       {
         "inGameDate": "2027/2/27",
         "year": 2027,
-        "match": "dog_give_power_open",
         "moneyBefore": 1385874,
+        "match": "dog_give_power_open",
         "moneyAfter": 1387999,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -9001,8 +9024,8 @@
       {
         "item": 3,
         "inGameDate": "2027/3/4",
-        "match": "custom_DA1B9E98710BC5F5+2027+saudi_arabia_masters",
         "moneyBefore": 1386999,
+        "match": "custom_DA1B9E98710BC5F5+2027+saudi_arabia_masters",
         "moneyAfter": 1389999,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -9010,11 +9033,15 @@
       },
       {
         "inGameDate": "2027/3/4",
-        "match": "custom_DA1B9E98710BC5F5+2027+saudi_arabia_masters",
         "moneyBefore": 1389999,
+        "match": "custom_DA1B9E98710BC5F5+2027+saudi_arabia_masters",
         "moneyAfter": 1386999,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -9022,10 +9049,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2025-11-16 05:15:49"
@@ -9033,8 +9056,8 @@
       {
         "inGameDate": "2027/3/4",
         "year": 2027,
-        "match": "saudi_arabia_masters",
         "moneyBefore": 1386999,
+        "match": "saudi_arabia_masters",
         "moneyAfter": 1728249,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -9057,8 +9080,8 @@
       {
         "item": 1,
         "inGameDate": "2027/3/10",
-        "match": "custom_DA1B9E98710BC5F5+2027+cat_give_power_champ",
         "moneyBefore": 1727049,
+        "match": "custom_DA1B9E98710BC5F5+2027+cat_give_power_champ",
         "moneyAfter": 1727549,
         "type": "invitation",
         "moneyEarn": 500,
@@ -9066,11 +9089,15 @@
       },
       {
         "inGameDate": "2027/3/10",
-        "match": "custom_DA1B9E98710BC5F5+2027+cat_give_power_champ",
         "moneyBefore": 1727549,
+        "match": "custom_DA1B9E98710BC5F5+2027+cat_give_power_champ",
         "moneyAfter": 1724649,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -9078,17 +9105,13 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2025-11-17 18:09:21"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-702",
+        "itemType": "tip",
         "inGameDate": "2027/3/10",
         "moneyBefore": 1724649,
         "moneyCost": 80,
@@ -9099,8 +9122,8 @@
       {
         "inGameDate": "2027/3/10",
         "year": 2027,
-        "match": "cat_give_power_champ",
         "moneyBefore": 1724569,
+        "match": "cat_give_power_champ",
         "moneyAfter": 1810345,
         "type": "championshipEarn",
         "items": {
@@ -9296,8 +9319,8 @@
       {
         "item": 2,
         "inGameDate": "2027/3/25",
-        "match": "custom_DA1B9E98710BC5F5+2027+china_open",
         "moneyBefore": 1804395,
+        "match": "custom_DA1B9E98710BC5F5+2027+china_open",
         "moneyAfter": 1805395,
         "type": "invitation",
         "moneyEarn": 1000,
@@ -9305,21 +9328,21 @@
       },
       {
         "inGameDate": "2027/3/25",
-        "match": "custom_DA1B9E98710BC5F5+2027+china_open",
         "moneyBefore": 1805395,
+        "match": "custom_DA1B9E98710BC5F5+2027+china_open",
         "moneyAfter": 1804395,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -9328,8 +9351,8 @@
       {
         "inGameDate": "2027/3/25",
         "year": 2027,
-        "match": "china_open",
         "moneyBefore": 1804395,
+        "match": "china_open",
         "moneyAfter": 1819895,
         "type": "championshipEarn",
         "items": {"TOP_4": {
@@ -9363,8 +9386,8 @@
       {
         "item": 1,
         "inGameDate": "2027/4/17",
-        "match": "custom_DA1B9E98710BC5F5+2027+world_champ",
         "moneyBefore": 1815295,
+        "match": "custom_DA1B9E98710BC5F5+2027+world_champ",
         "moneyAfter": 1815495,
         "type": "invitation",
         "moneyEarn": 200,
@@ -9372,11 +9395,15 @@
       },
       {
         "inGameDate": "2027/4/17",
-        "match": "custom_DA1B9E98710BC5F5+2027+world_champ",
         "moneyBefore": 1815495,
+        "match": "custom_DA1B9E98710BC5F5+2027+world_champ",
         "moneyAfter": 1811295,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -9384,17 +9411,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 2000
           }
         ],
         "timestamp": "2025-12-28 04:46:51"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-703",
+        "itemType": "tip",
         "inGameDate": "2027/4/17",
         "moneyBefore": 1811295,
         "moneyCost": 80,
@@ -9403,8 +9426,8 @@
         "timestamp": "2026-01-02 04:34:12"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-704",
+        "itemType": "tip",
         "inGameDate": "2027/4/17",
         "moneyBefore": 1811215,
         "moneyCost": 80,
@@ -9415,8 +9438,8 @@
       {
         "inGameDate": "2027/4/17",
         "year": 2027,
-        "match": "world_champ",
         "moneyBefore": 1811135,
+        "match": "world_champ",
         "moneyAfter": 2101806,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -9754,8 +9777,8 @@
       {
         "item": 2,
         "inGameDate": "2027/5/25",
-        "match": "custom_DA1B9E98710BC5F5+2027+space_grand_prix",
         "moneyBefore": 2080106,
+        "match": "custom_DA1B9E98710BC5F5+2027+space_grand_prix",
         "moneyAfter": 2080606,
         "type": "invitation",
         "moneyEarn": 500,
@@ -9763,11 +9786,15 @@
       },
       {
         "inGameDate": "2027/5/25",
-        "match": "custom_DA1B9E98710BC5F5+2027+space_grand_prix",
         "moneyBefore": 2080606,
+        "match": "custom_DA1B9E98710BC5F5+2027+space_grand_prix",
         "moneyAfter": 2077406,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 900
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -9775,10 +9802,6 @@
           {
             "item": "travel",
             "moneyCost": 1800
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 900
           }
         ],
         "timestamp": "2026-01-08 03:28:34"
@@ -9786,8 +9809,8 @@
       {
         "inGameDate": "2027/5/25",
         "year": 2027,
-        "match": "space_grand_prix",
         "moneyBefore": 2077406,
+        "match": "space_grand_prix",
         "moneyAfter": 2094406,
         "type": "championshipEarn",
         "items": {
@@ -9837,11 +9860,15 @@
       },
       {
         "inGameDate": "2027/7/10",
-        "match": "custom_DA1B9E98710BC5F5+2027+chongqing_open",
         "moneyBefore": 2085206,
+        "match": "custom_DA1B9E98710BC5F5+2027+chongqing_open",
         "moneyAfter": 2084206,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -9849,17 +9876,13 @@
           {
             "item": "travel",
             "moneyCost": 400
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 400
           }
         ],
         "timestamp": "2026-02-10 01:11:04"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-705",
+        "itemType": "tip",
         "inGameDate": "2027/7/10",
         "moneyBefore": 2084206,
         "moneyCost": 80,
@@ -9870,8 +9893,8 @@
       {
         "inGameDate": "2027/7/10",
         "year": 2027,
-        "match": "chongqing_open",
         "moneyBefore": 2084126,
+        "match": "chongqing_open",
         "moneyAfter": 2125201,
         "type": "championshipEarn",
         "items": {
@@ -9921,21 +9944,21 @@
       },
       {
         "inGameDate": "2027/8/22",
-        "match": "custom_DA1B9E98710BC5F5+2027+eight_master",
         "moneyBefore": 2116601,
+        "match": "custom_DA1B9E98710BC5F5+2027+eight_master",
         "moneyAfter": 2115801,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 0
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -9944,8 +9967,8 @@
       {
         "inGameDate": "2027/8/22",
         "year": 2027,
-        "match": "eight_master",
         "moneyBefore": 2115801,
+        "match": "eight_master",
         "moneyAfter": 2127426,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -9968,8 +9991,8 @@
       {
         "item": 1,
         "inGameDate": "2027/9/25",
-        "match": "custom_DA1B9E98710BC5F5+2027+challenger_open",
         "moneyBefore": 2120626,
+        "match": "custom_DA1B9E98710BC5F5+2027+challenger_open",
         "moneyAfter": 2121626,
         "type": "invitation",
         "moneyEarn": 1000,
@@ -9977,11 +10000,15 @@
       },
       {
         "inGameDate": "2027/9/25",
-        "match": "custom_DA1B9E98710BC5F5+2027+challenger_open",
         "moneyBefore": 2121626,
+        "match": "custom_DA1B9E98710BC5F5+2027+challenger_open",
         "moneyAfter": 2117626,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 1000
@@ -9989,10 +10016,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-02-19 00:28:40"
@@ -10000,8 +10023,8 @@
       {
         "inGameDate": "2027/9/25",
         "year": 2027,
-        "match": "challenger_open",
         "moneyBefore": 2117626,
+        "match": "challenger_open",
         "moneyAfter": 2129751,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -10024,8 +10047,8 @@
       {
         "item": 4,
         "inGameDate": "2027/10/18",
-        "match": "custom_DA1B9E98710BC5F5+2027+eight_master_tour_hebei",
         "moneyBefore": 2125351,
+        "match": "custom_DA1B9E98710BC5F5+2027+eight_master_tour_hebei",
         "moneyAfter": 2125551,
         "type": "invitation",
         "moneyEarn": 200,
@@ -10033,21 +10056,21 @@
       },
       {
         "inGameDate": "2027/10/18",
-        "match": "custom_DA1B9E98710BC5F5+2027+eight_master_tour_hebei",
         "moneyBefore": 2125551,
+        "match": "custom_DA1B9E98710BC5F5+2027+eight_master_tour_hebei",
         "moneyAfter": 2124551,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -10056,8 +10079,8 @@
       {
         "inGameDate": "2027/10/18",
         "year": 2027,
-        "match": "eight_master_tour_hebei",
         "moneyBefore": 2124551,
+        "match": "eight_master_tour_hebei",
         "moneyAfter": 2186551,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -10080,8 +10103,8 @@
       {
         "item": 1,
         "inGameDate": "2027/10/29",
-        "match": "custom_DA1B9E98710BC5F5+2027+champ_of_champ",
         "moneyBefore": 2184351,
+        "match": "custom_DA1B9E98710BC5F5+2027+champ_of_champ",
         "moneyAfter": 2187351,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -10089,11 +10112,15 @@
       },
       {
         "inGameDate": "2027/10/29",
-        "match": "custom_DA1B9E98710BC5F5+2027+champ_of_champ",
         "moneyBefore": 2187351,
+        "match": "custom_DA1B9E98710BC5F5+2027+champ_of_champ",
         "moneyAfter": 2184351,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -10101,10 +10128,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-02-20 21:08:37"
@@ -10112,8 +10135,8 @@
       {
         "inGameDate": "2027/10/29",
         "year": 2027,
-        "match": "champ_of_champ",
         "moneyBefore": 2184351,
+        "match": "champ_of_champ",
         "moneyAfter": 2196539,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -10136,8 +10159,8 @@
       {
         "item": 2,
         "inGameDate": "2027/11/12",
-        "match": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ",
         "moneyBefore": 2193739,
+        "match": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ",
         "moneyAfter": 2193939,
         "type": "invitation",
         "moneyEarn": 200,
@@ -10145,11 +10168,15 @@
       },
       {
         "inGameDate": "2027/11/12",
-        "match": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ",
         "moneyBefore": 2193939,
+        "match": "custom_DA1B9E98710BC5F5+2027+united_kingdom_champ",
         "moneyAfter": 2190739,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -10157,10 +10184,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-02-20 23:02:03"
@@ -10168,8 +10191,8 @@
       {
         "inGameDate": "2027/11/12",
         "year": 2027,
-        "match": "united_kingdom_champ",
         "moneyBefore": 2190739,
+        "match": "united_kingdom_champ",
         "moneyAfter": 2200489,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -10355,8 +10378,8 @@
       {
         "item": 2,
         "inGameDate": "2028/1/15",
-        "match": "custom_DA1B9E98710BC5F5+2028+masters",
         "moneyBefore": 2183139,
+        "match": "custom_DA1B9E98710BC5F5+2028+masters",
         "moneyAfter": 2186139,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -10364,11 +10387,15 @@
       },
       {
         "inGameDate": "2028/1/15",
-        "match": "custom_DA1B9E98710BC5F5+2028+masters",
         "moneyBefore": 2186139,
+        "match": "custom_DA1B9E98710BC5F5+2028+masters",
         "moneyAfter": 2183139,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -10376,17 +10403,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-02-20 23:27:22"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-706",
+        "itemType": "tip",
         "inGameDate": "2028/1/15",
         "moneyBefore": 2183139,
         "moneyCost": 80,
@@ -10397,8 +10420,8 @@
       {
         "inGameDate": "2028/1/15",
         "year": 2028,
-        "match": "masters",
         "moneyBefore": 2183059,
+        "match": "masters",
         "moneyAfter": 2356498,
         "type": "championshipEarn",
         "items": {
@@ -10470,11 +10493,15 @@
       },
       {
         "inGameDate": "2028/2/22",
-        "match": "custom_DA1B9E98710BC5F5+2028+professional_champ",
         "moneyBefore": 2348898,
+        "match": "custom_DA1B9E98710BC5F5+2028+professional_champ",
         "moneyAfter": 2345898,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -10482,17 +10509,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-02-25 05:50:28"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-707",
+        "itemType": "tip",
         "inGameDate": "2028/2/22",
         "moneyBefore": 2345898,
         "moneyCost": 80,
@@ -10503,8 +10526,8 @@
       {
         "inGameDate": "2028/2/22",
         "year": 2028,
-        "match": "professional_champ",
         "moneyBefore": 2345818,
+        "match": "professional_champ",
         "moneyAfter": 2449336,
         "type": "championshipEarn",
         "items": {
@@ -10673,8 +10696,8 @@
       },
       {
         "inGameDate": "2028/2/22",
-        "match": "snooker-snake-dense-regular",
         "moneyBefore": 2444086,
+        "match": "snooker-snake-dense-regular",
         "moneyAfter": 2444086,
         "type": "challengeEarn",
         "items": {},
@@ -10693,11 +10716,15 @@
       },
       {
         "inGameDate": "2028/2/27",
-        "match": "custom_DA1B9E98710BC5F5+2028+dog_give_power_open",
         "moneyBefore": 2443086,
+        "match": "custom_DA1B9E98710BC5F5+2028+dog_give_power_open",
         "moneyAfter": 2440186,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -10705,10 +10732,6 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2026-03-05 02:41:33"
@@ -10716,8 +10739,8 @@
       {
         "inGameDate": "2028/2/27",
         "year": 2028,
-        "match": "dog_give_power_open",
         "moneyBefore": 2440186,
+        "match": "dog_give_power_open",
         "moneyAfter": 2444436,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -10751,8 +10774,8 @@
       {
         "item": 1,
         "inGameDate": "2028/3/4",
-        "match": "custom_DA1B9E98710BC5F5+2028+saudi_arabia_masters",
         "moneyBefore": 2443236,
+        "match": "custom_DA1B9E98710BC5F5+2028+saudi_arabia_masters",
         "moneyAfter": 2446236,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -10760,11 +10783,15 @@
       },
       {
         "inGameDate": "2028/3/4",
-        "match": "custom_DA1B9E98710BC5F5+2028+saudi_arabia_masters",
         "moneyBefore": 2446236,
+        "match": "custom_DA1B9E98710BC5F5+2028+saudi_arabia_masters",
         "moneyAfter": 2443236,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -10772,17 +10799,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-03-05 05:11:45"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-708",
+        "itemType": "tip",
         "inGameDate": "2028/3/4",
         "moneyBefore": 2443236,
         "moneyCost": 80,
@@ -10791,8 +10814,8 @@
         "timestamp": "2026-03-06 06:06:07"
       },
       {
-        "itemType": "cue",
         "item": "GirlSnookerCarbonCue:custom_DA1B9E98710BC5F5-710",
+        "itemType": "cue",
         "inGameDate": "2028/3/4",
         "moneyBefore": 2443156,
         "moneyCost": 5000,
@@ -10801,8 +10824,8 @@
         "timestamp": "2026-03-09 06:29:50"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-711",
+        "itemType": "tip",
         "inGameDate": "2028/3/4",
         "moneyBefore": 2438156,
         "moneyCost": 80,
@@ -10811,8 +10834,8 @@
         "timestamp": "2026-03-09 06:29:56"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-712",
+        "itemType": "tip",
         "inGameDate": "2028/3/4",
         "moneyBefore": 2438076,
         "moneyCost": 80,
@@ -10823,8 +10846,8 @@
       {
         "inGameDate": "2028/3/4",
         "year": 2028,
-        "match": "saudi_arabia_masters",
         "moneyBefore": 2437996,
+        "match": "saudi_arabia_masters",
         "moneyAfter": 2779246,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -10923,8 +10946,8 @@
       {
         "item": 1,
         "inGameDate": "2028/3/10",
-        "match": "custom_DA1B9E98710BC5F5+2028+cat_give_power_champ",
         "moneyBefore": 2777746,
+        "match": "custom_DA1B9E98710BC5F5+2028+cat_give_power_champ",
         "moneyAfter": 2778246,
         "type": "invitation",
         "moneyEarn": 500,
@@ -10932,11 +10955,15 @@
       },
       {
         "inGameDate": "2028/3/10",
-        "match": "custom_DA1B9E98710BC5F5+2028+cat_give_power_champ",
         "moneyBefore": 2778246,
+        "match": "custom_DA1B9E98710BC5F5+2028+cat_give_power_champ",
         "moneyAfter": 2775346,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -10944,10 +10971,6 @@
           {
             "item": "travel",
             "moneyCost": 1600
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 800
           }
         ],
         "timestamp": "2026-03-14 06:09:52"
@@ -10955,8 +10978,8 @@
       {
         "inGameDate": "2028/3/10",
         "year": 2028,
-        "match": "cat_give_power_champ",
         "moneyBefore": 2775346,
+        "match": "cat_give_power_champ",
         "moneyAfter": 2787059,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -10979,8 +11002,8 @@
       {
         "item": 5,
         "inGameDate": "2028/3/18",
-        "match": "custom_DA1B9E98710BC5F5+2028+eight_master_tour_beijing",
         "moneyBefore": 2785459,
+        "match": "custom_DA1B9E98710BC5F5+2028+eight_master_tour_beijing",
         "moneyAfter": 2785659,
         "type": "invitation",
         "moneyEarn": 200,
@@ -10988,21 +11011,21 @@
       },
       {
         "inGameDate": "2028/3/18",
-        "match": "custom_DA1B9E98710BC5F5+2028+eight_master_tour_beijing",
         "moneyBefore": 2785659,
+        "match": "custom_DA1B9E98710BC5F5+2028+eight_master_tour_beijing",
         "moneyAfter": 2784659,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -11011,8 +11034,8 @@
       {
         "inGameDate": "2028/3/18",
         "year": 2028,
-        "match": "eight_master_tour_beijing",
         "moneyBefore": 2784659,
+        "match": "eight_master_tour_beijing",
         "moneyAfter": 2846659,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -11035,8 +11058,8 @@
       {
         "item": 2,
         "inGameDate": "2028/3/25",
-        "match": "custom_DA1B9E98710BC5F5+2028+china_open",
         "moneyBefore": 2845259,
+        "match": "custom_DA1B9E98710BC5F5+2028+china_open",
         "moneyAfter": 2846259,
         "type": "invitation",
         "moneyEarn": 1000,
@@ -11044,11 +11067,15 @@
       },
       {
         "inGameDate": "2028/3/25",
-        "match": "custom_DA1B9E98710BC5F5+2028+china_open",
         "moneyBefore": 2846259,
+        "match": "custom_DA1B9E98710BC5F5+2028+china_open",
         "moneyAfter": 2845259,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -11056,17 +11083,13 @@
           {
             "item": "travel",
             "moneyCost": 400
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 400
           }
         ],
         "timestamp": "2026-03-23 04:30:14"
       },
       {
-        "itemType": "tip",
         "item": "primeTipHard:custom_DA1B9E98710BC5F5-713",
+        "itemType": "tip",
         "inGameDate": "2028/3/25",
         "moneyBefore": 2845259,
         "moneyCost": 80,
@@ -11077,8 +11100,8 @@
       {
         "inGameDate": "2028/3/25",
         "year": 2028,
-        "match": "china_open",
         "moneyBefore": 2845179,
+        "match": "china_open",
         "moneyAfter": 2907179,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -11252,21 +11275,21 @@
       },
       {
         "inGameDate": "2028/3/30",
-        "match": "custom_DA1B9E98710BC5F5+2028+eight_spadina_open",
         "moneyBefore": 2902279,
+        "match": "custom_DA1B9E98710BC5F5+2028+eight_spadina_open",
         "moneyAfter": 2901279,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -11275,8 +11298,8 @@
       {
         "inGameDate": "2028/3/30",
         "year": 2028,
-        "match": "eight_spadina_open",
         "moneyBefore": 2901279,
+        "match": "eight_spadina_open",
         "moneyAfter": 2901279,
         "type": "championshipEarn",
         "items": {"PRE_GAMES_1": {
@@ -11299,8 +11322,8 @@
       {
         "item": 1,
         "inGameDate": "2028/4/17",
-        "match": "custom_DA1B9E98710BC5F5+2028+world_champ",
         "moneyBefore": 2897679,
+        "match": "custom_DA1B9E98710BC5F5+2028+world_champ",
         "moneyAfter": 2897879,
         "type": "invitation",
         "moneyEarn": 200,
@@ -11308,21 +11331,21 @@
       },
       {
         "inGameDate": "2028/4/17",
-        "match": "custom_DA1B9E98710BC5F5+2028+world_champ",
         "moneyBefore": 2897879,
+        "match": "custom_DA1B9E98710BC5F5+2028+world_champ",
         "moneyAfter": 2893679,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 2000
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
             "moneyCost": 2000
           }
         ],
@@ -11331,8 +11354,8 @@
       {
         "inGameDate": "2028/4/17",
         "year": 2028,
-        "match": "world_champ",
         "moneyBefore": 2893679,
+        "match": "world_champ",
         "moneyAfter": 2932590,
         "type": "championshipEarn",
         "items": {
@@ -11372,8 +11395,8 @@
       {
         "item": 2,
         "inGameDate": "2028/5/25",
-        "match": "custom_DA1B9E98710BC5F5+2028+space_grand_prix",
         "moneyBefore": 2924990,
+        "match": "custom_DA1B9E98710BC5F5+2028+space_grand_prix",
         "moneyAfter": 2925490,
         "type": "invitation",
         "moneyEarn": 500,
@@ -11381,11 +11404,15 @@
       },
       {
         "inGameDate": "2028/5/25",
-        "match": "custom_DA1B9E98710BC5F5+2028+space_grand_prix",
         "moneyBefore": 2925490,
+        "match": "custom_DA1B9E98710BC5F5+2028+space_grand_prix",
         "moneyAfter": 2922290,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 900
+          },
           {
             "item": "registry",
             "moneyCost": 500
@@ -11393,10 +11420,6 @@
           {
             "item": "travel",
             "moneyCost": 1800
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 900
           }
         ],
         "timestamp": "2026-04-22 23:03:49"
@@ -11404,8 +11427,8 @@
       {
         "inGameDate": "2028/5/25",
         "year": 2028,
-        "match": "space_grand_prix",
         "moneyBefore": 2922290,
+        "match": "space_grand_prix",
         "moneyAfter": 2924728,
         "type": "championshipEarn",
         "items": {"TOP_32": {
@@ -11449,11 +11472,15 @@
       },
       {
         "inGameDate": "2028/7/10",
-        "match": "custom_DA1B9E98710BC5F5+2028+chongqing_open",
         "moneyBefore": 2915528,
+        "match": "custom_DA1B9E98710BC5F5+2028+chongqing_open",
         "moneyAfter": 2914528,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -11461,17 +11488,13 @@
           {
             "item": "travel",
             "moneyCost": 400
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 400
           }
         ],
         "timestamp": "2026-04-22 23:09:15"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-714",
+        "itemType": "tip",
         "inGameDate": "2028/7/10",
         "moneyBefore": 2914528,
         "moneyCost": 80,
@@ -11482,8 +11505,8 @@
       {
         "inGameDate": "2028/7/10",
         "year": 2028,
-        "match": "chongqing_open",
         "moneyBefore": 2914448,
+        "match": "chongqing_open",
         "moneyAfter": 2955523,
         "type": "championshipEarn",
         "items": {
@@ -11545,8 +11568,8 @@
       {
         "item": 2,
         "inGameDate": "2028/9/25",
-        "match": "custom_DA1B9E98710BC5F5+2028+challenger_open",
         "moneyBefore": 2940123,
+        "match": "custom_DA1B9E98710BC5F5+2028+challenger_open",
         "moneyAfter": 2941123,
         "type": "invitation",
         "moneyEarn": 1000,
@@ -11554,11 +11577,15 @@
       },
       {
         "inGameDate": "2028/9/25",
-        "match": "custom_DA1B9E98710BC5F5+2028+challenger_open",
         "moneyBefore": 2941123,
+        "match": "custom_DA1B9E98710BC5F5+2028+challenger_open",
         "moneyAfter": 2937123,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 1000
@@ -11566,17 +11593,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-04-29 00:12:33"
       },
       {
-        "itemType": "tip",
         "item": "primeTipHard:custom_DA1B9E98710BC5F5-715",
+        "itemType": "tip",
         "inGameDate": "2028/9/25",
         "moneyBefore": 2937123,
         "moneyCost": 80,
@@ -11587,8 +11610,8 @@
       {
         "inGameDate": "2028/9/25",
         "year": 2028,
-        "match": "challenger_open",
         "moneyBefore": 2937043,
+        "match": "challenger_open",
         "moneyAfter": 2949168,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -11622,8 +11645,8 @@
       {
         "item": 1,
         "inGameDate": "2028/10/29",
-        "match": "custom_DA1B9E98710BC5F5+2028+champ_of_champ",
         "moneyBefore": 2942568,
+        "match": "custom_DA1B9E98710BC5F5+2028+champ_of_champ",
         "moneyAfter": 2945568,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -11631,11 +11654,15 @@
       },
       {
         "inGameDate": "2028/10/29",
-        "match": "custom_DA1B9E98710BC5F5+2028+champ_of_champ",
         "moneyBefore": 2945568,
+        "match": "custom_DA1B9E98710BC5F5+2028+champ_of_champ",
         "moneyAfter": 2942568,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -11643,10 +11670,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-04-29 05:12:33"
@@ -11654,8 +11677,8 @@
       {
         "inGameDate": "2028/10/29",
         "year": 2028,
-        "match": "champ_of_champ",
         "moneyBefore": 2942568,
+        "match": "champ_of_champ",
         "moneyAfter": 3049489,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -11678,8 +11701,8 @@
       {
         "item": 2,
         "inGameDate": "2028/11/12",
-        "match": "custom_DA1B9E98710BC5F5+2028+united_kingdom_champ",
         "moneyBefore": 3046689,
+        "match": "custom_DA1B9E98710BC5F5+2028+united_kingdom_champ",
         "moneyAfter": 3046889,
         "type": "invitation",
         "moneyEarn": 200,
@@ -11687,11 +11710,15 @@
       },
       {
         "inGameDate": "2028/11/12",
-        "match": "custom_DA1B9E98710BC5F5+2028+united_kingdom_champ",
         "moneyBefore": 3046889,
+        "match": "custom_DA1B9E98710BC5F5+2028+united_kingdom_champ",
         "moneyAfter": 3043689,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 200
@@ -11699,17 +11726,13 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-05-27 06:27:41"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-716",
+        "itemType": "tip",
         "inGameDate": "2028/11/12",
         "moneyBefore": 3043689,
         "moneyCost": 80,
@@ -11720,8 +11743,8 @@
       {
         "inGameDate": "2028/11/12",
         "year": 2028,
-        "match": "united_kingdom_champ",
         "moneyBefore": 3043609,
+        "match": "united_kingdom_champ",
         "moneyAfter": 3064877,
         "type": "championshipEarn",
         "items": {"TOP_8": {
@@ -11755,8 +11778,8 @@
       {
         "item": 1,
         "inGameDate": "2029/1/15",
-        "match": "custom_DA1B9E98710BC5F5+2029+masters",
         "moneyBefore": 3052077,
+        "match": "custom_DA1B9E98710BC5F5+2029+masters",
         "moneyAfter": 3055077,
         "type": "invitation",
         "moneyEarn": 3000,
@@ -11764,11 +11787,15 @@
       },
       {
         "inGameDate": "2029/1/15",
-        "match": "custom_DA1B9E98710BC5F5+2029+masters",
         "moneyBefore": 3055077,
+        "match": "custom_DA1B9E98710BC5F5+2029+masters",
         "moneyAfter": 3052077,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -11776,10 +11803,6 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-06-11 17:01:17"
@@ -11915,8 +11938,8 @@
         "timestamp": "2026-07-27 23:54:16"
       },
       {
-        "itemType": "tip",
         "item": "primeTipMedium:custom_DA1B9E98710BC5F5-717",
+        "itemType": "tip",
         "inGameDate": "2029/1/15",
         "moneyBefore": 3059777,
         "moneyCost": 80,
@@ -11927,8 +11950,8 @@
       {
         "inGameDate": "2029/1/15",
         "year": 2029,
-        "match": "masters",
         "moneyBefore": 3059697,
+        "match": "masters",
         "moneyAfter": 3219118,
         "type": "championshipEarn",
         "items": {"CHAMPION": {
@@ -12450,11 +12473,15 @@
       },
       {
         "inGameDate": "2029/2/22",
-        "match": "custom_DA1B9E98710BC5F5+2029+professional_champ",
         "moneyBefore": 3194668,
+        "match": "custom_DA1B9E98710BC5F5+2029+professional_champ",
         "moneyAfter": 3191668,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
           {
             "item": "registry",
             "moneyCost": 0
@@ -12462,13 +12489,91 @@
           {
             "item": "travel",
             "moneyCost": 2000
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-08-04 02:18:26"
+      },
+      {
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3191668,
+        "match": "chinese-eight-cushion-shot-fixed",
+        "moneyAfter": 3191668,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2026-08-10 07:02:51"
+      },
+      {
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3191668,
+        "match": "chinese-eight-cushion-shot-random",
+        "moneyAfter": 3191668,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2026-08-10 07:04:13"
+      },
+      {
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3191668,
+        "match": "chinese-eight-cushion-shot-fixed",
+        "moneyAfter": 3191668,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2026-08-10 07:07:20"
+      },
+      {
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3191668,
+        "match": "chinese-eight-cushion-shot-fixed",
+        "moneyAfter": 3191668,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2026-08-10 07:07:42"
+      },
+      {
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3191668,
+        "match": "chinese-eight-cushion-shot-fixed",
+        "moneyAfter": 3191668,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2026-08-10 07:07:56"
+      },
+      {
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3191668,
+        "match": "chinese-eight-cushion-shot-random",
+        "moneyAfter": 3191668,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2026-08-10 07:11:58"
+      },
+      {
+        "item": "primeTipMedium:custom_DA1B9E98710BC5F5-718",
+        "itemType": "tip",
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3191668,
+        "moneyCost": 80,
+        "moneyAfter": 3191588,
+        "type": "purchase",
+        "timestamp": "2026-08-10 07:12:09"
+      },
+      {
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3191588,
+        "match": "chinese-eight-cushion-shot-fixed",
+        "moneyAfter": 3191588,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2026-08-10 07:13:51"
+      },
+      {
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3191588,
+        "match": "chinese-eight-cushion-shot-random",
+        "moneyAfter": 3191588,
+        "type": "challengeEarn",
+        "items": {},
+        "timestamp": "2026-08-10 07:14:31"
       }
     ],
     "level": 48,
@@ -12477,5 +12582,5 @@
     "totalPerks": 233,
     "totalExp": 46030
   },
-  "checksum": "84FD9F8CCADD96F040EB035CB14134B6"
+  "checksum": "ABC3F81CEE3B31313ABF198729DB591A"
 }

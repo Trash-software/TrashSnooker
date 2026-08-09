@@ -3,30 +3,27 @@ package trashsoftware.trashSnooker.fxml;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.career.CareerManager;
-import trashsoftware.trashSnooker.core.career.ChampionshipData;
+import trashsoftware.trashSnooker.core.career.ChampionshipScore;
 import trashsoftware.trashSnooker.core.career.HumanCareer;
 import trashsoftware.trashSnooker.core.career.Invoice;
-import trashsoftware.trashSnooker.core.career.achievement.Achievement;
-import trashsoftware.trashSnooker.core.career.challenge.ChallengeManager;
-import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
-import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
-import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
-import trashsoftware.trashSnooker.core.cue.Cue;
-import trashsoftware.trashSnooker.core.cue.CueTip;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
 import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.Util;
@@ -65,7 +62,7 @@ public class CashFlowView extends ChildInitializable {
                     "oweInterest", 0)
     );
     @FXML
-    GridPane listPane;
+    ListView<Invoice> listPane;
     @FXML
     Label moneyLabel;
     @FXML
@@ -90,6 +87,7 @@ public class CashFlowView extends ChildInitializable {
         this.stage = stage;
         this.humanCareer = humanCareer;
 
+        listPane.setCellFactory(param -> new InvoiceListCell());
         createObjects(humanCareer);
 
         dateAxis.setTickLabelFormatter(new StringConverter<>() {
@@ -112,164 +110,16 @@ public class CashFlowView extends ChildInitializable {
     }
 
     public void renderInvoiceList() {
-        listPane.getChildren().clear();
-        int row = 0;
-        Calendar last = CareerManager.getInstance().getBeginTimestamp();
+        listPane.getItems().clear();
+        InvoiceListCell.last = CareerManager.getInstance().getBeginTimestamp();
 
-//        Map<String, int[]> typeCountAndTime = new TreeMap<>();
-
-        for (int idx = 0; idx < invoiceObjects.size(); idx++) {
-//            long beginTime = System.currentTimeMillis();
-
-            Invoice io = invoiceObjects.get(idx);
-            try {
-
-                if (io.inGameDate.get(Calendar.YEAR) != last.get(Calendar.YEAR) ||
-                        io.inGameDate.get(Calendar.MONTH) != last.get(Calendar.MONTH)) {
-                    String month = String.format("%s.%s",
-                            io.inGameDate.get(Calendar.YEAR),
-                            io.inGameDate.get(Calendar.MONTH) + 1);
-                    Label monthLabel = new Label(month);
-                    monthLabel.setFont(new Font(App.FONT.getName(), 16));
-
-                    listPane.add(new Separator(Orientation.HORIZONTAL), 0, row++, 3, 1);
-                    listPane.add(monthLabel, 0, row++);
-                }
-
-                if (!isTypeSelected(io.type)) {
-                    last = io.inGameDate;
-                    continue;
-                }
-
-                Integer typeExpend = expenditures.get(io.type);
-                if (typeExpend != null) {
-                    expenditures.put(io.type, typeExpend - io.getMoneyChange());
-                }
-                Integer typeIncome = incomes.get(io.type);
-                if (typeIncome != null) {
-                    incomes.put(io.type, typeIncome + io.getMoneyChange());
-                }
-
-                String date = CareerManager.calendarToString(io.inGameDate);
-                listPane.add(new Label(date), 0, row++);
-                listPane.add(new Label(io.getShownType(strings)), 0, row);
-
-                Label desLabel = new Label(io.getItemDes(strings, humanCareer));
-                desLabel.setWrapText(true);
-                desLabel.setMaxWidth(180.0);
-                listPane.add(desLabel, 1, row++);
-
-                listPane.add(new Separator(Orientation.HORIZONTAL), 1, row++, 2, 1);
-
-                int mb = io.getMoneyBefore();
-                Label moneyBefore = new Label(Util.moneyToReadable(mb));
-                if (mb < 0) {
-                    moneyBefore.setTextFill(CareerView.SPEND_MONEY_COLOR);
-                }
-                listPane.add(moneyBefore, 2, row++);
-
-                if (io instanceof Invoice.ChampionshipEarn ce) {
-
-                }
-
-                // fixme: 12321
-//                for (String key : io.others.keySet()) {
-//                    Object obj = io.others.get(key);
-//                    if (obj instanceof JSONObject subObj) {
-//                        if ("championshipEarn".equals(io.type)) {
-//                            int taxes = 0;
-//                            for (String subKey : subObj.keySet()) {
-//                                ChampionshipScore.Rank cs = ChampionshipScore.Rank.valueOf(subKey);
-//                                listPane.add(new Label(cs.getShown()), 1, row);
-//                                JSONObject cEarn = subObj.getJSONObject(subKey);
-//                                int raw = cEarn.getInt("raw");
-//                                int actual = cEarn.getInt("actual");
-//                                taxes += (actual - raw);
-//                                Label rawAwd = new Label(Util.moneyToReadable(raw, true));
-//                                if (raw > 0) {
-//                                    rawAwd.setTextFill(CareerView.EARN_MONEY_COLOR);
-//                                }
-//                                listPane.add(rawAwd, 2, row++);
-//                            }
-//                            if (taxes < 0) {
-//                                listPane.add(new Label(strings.getString("taxes")), 1, row);
-//                                Label taxLabel = new Label(Util.moneyToReadable(taxes));
-//                                taxLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
-//                                listPane.add(taxLabel, 2, row++);
-//                            }
-//                        }
-//                    } else if (obj instanceof JSONArray subArr) {
-//                        for (int i = 0; i < subArr.length(); i++) {
-//                            JSONObject subObj = subArr.getJSONObject(i);
-//                            if (!subObj.has("item")) continue;
-//
-//                            String item = subObj.getString("item");
-//
-//                            String shownItem = formatType(item);
-//
-//                            int subChange;
-//                            if (subObj.has("moneyCost")) {
-//                                subChange = -subObj.getInt("moneyCost");
-//                                Integer subExpend = expenditures.get(item);
-//                                if (subExpend != null) {
-//                                    expenditures.put(item, subExpend - subChange);
-//                                }
-//                            } else if (subObj.has("moneyEarned")) {
-//                                subChange = subObj.getInt("moneyEarned");
-//                            } else {
-//                                continue;
-//                            }
-//
-//                            String subChangeStr = Util.moneyToReadable(subChange, true);
-//
-//                            listPane.add(new Label(shownItem), 1, row);
-//                            Label subChangeLabel = new Label(subChangeStr);
-//                            if (subChange < 0)
-//                                subChangeLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
-//
-//                            listPane.add(subChangeLabel, 2, row++);
-//                        }
-//                    }
-//                }
-
-                int mc = io.getMoneyChange();
-                String mcs = Util.moneyToReadable(mc, true);
-                int ma = io.getMoneyAfter();
-                Label moneyChange = new Label(mcs);
-                if (mc > 0) {
-                    moneyChange.setTextFill(CareerView.EARN_MONEY_COLOR);
-                } else if (mc < 0) {
-                    moneyChange.setTextFill(CareerView.SPEND_MONEY_COLOR);
-                }
-                listPane.add(new Separator(Orientation.HORIZONTAL), 1, row++, 2, 1);
-                listPane.add(new Label(strings.getString("subtotal")), 1, row);
-                listPane.add(moneyChange, 2, row++);
-                Label moneyAfter = new Label(Util.moneyToReadable(ma));
-                if (ma < 0) {
-                    moneyAfter.setTextFill(CareerView.SPEND_MONEY_COLOR);
-                }
-                listPane.add(new Label(strings.getString("balanceAfter")), 1, row);
-                listPane.add(moneyAfter, 2, row++);
-
-                listPane.add(new Separator(Orientation.HORIZONTAL), 0, row++, 3, 1);
-
-                last = io.inGameDate;
-
-            } catch (RuntimeException e) {
-                EventLogger.warning(e);
+        for (Invoice invoice : invoiceObjects) {
+            if (isTypeSelected(invoice.type)) {
+                listPane.getItems().add(invoice);
+            } else {
+                InvoiceListCell.last = invoice.inGameDate;
             }
-
-//            long endTime = System.currentTimeMillis();
-//            int[] countAndTime = typeCountAndTime.computeIfAbsent(io.type, k -> new int[2]);
-//            countAndTime[0]++;
-//            countAndTime[1] += (int) (endTime - beginTime);
         }
-
-//        for (Map.Entry<String, int[]> timeEntry : typeCountAndTime.entrySet()) {
-//            System.out.printf("{%s * %d, time=%d}, ", timeEntry.getKey(), timeEntry.getValue()[0], timeEntry.getValue()[1]);
-//        }
-//        System.out.println();
-//        long beginTime2 = System.currentTimeMillis();
     }
 
 //    @Override
@@ -356,40 +206,7 @@ public class CashFlowView extends ChildInitializable {
     private void createObjects(HumanCareer humanCareer) {
         List<Invoice> invoices = humanCareer.getInvoices();
         this.invoiceObjects.addAll(invoices);
-//        Calendar current = CareerManager.getInstance().getBeginTimestamp();
-//        for (Invoice invoice : invoices) {
-//            try {
-//                String type = invoice.type;
-//                if (invoice.inGameDate != null) {
-//                    current = invoice.inGameDate;
-//                } else if (invoice instanceof Invoice.ParticipateFees participate) {
-//                    String champInsId = participate.match;
-//                    MetaMatchInfo mmi = MatchTreeNode.analyzeMatchId(champInsId);
-//                    
-//                    current.set(Calendar.YEAR, mmi.year);
-//                    current.set(Calendar.MONTH, mmi.data.getMonth() - 1);
-//                    current.set(Calendar.DAY_OF_MONTH, mmi.data.getDay());
-//                } else if (invoice instanceof Invoice.ChampionshipEarn ce) {
-//                    int year = ce.year;
-//                    String match = ce.match;
-//                    ChampionshipData data = CareerManager.getInstance().getChampDataManager().findDataById(match);
-//                    current.set(Calendar.YEAR, year);
-//                    current.set(Calendar.MONTH, data.getMonth() - 1);
-//                    current.set(Calendar.DAY_OF_MONTH, data.getDay());
-//                }
-//
-//                InvoiceObject io = new InvoiceObject(type, (Calendar) current.clone(), invoice);
-//
-//                invoiceObjects.add(io);
-//            } catch (RuntimeException e) {
-//                EventLogger.warning(e);
-//            }
-//        }
     }
-
-//    private void fill() {
-//        fill(false);
-//    }
 
     private void loadInvoices(boolean firstFill) {
         Map<String, Integer> incomes;
@@ -453,7 +270,7 @@ public class CashFlowView extends ChildInitializable {
                         expenditures.put(io.type, typeExpend - io.getMoneyChange());
                     }
                 }
-                
+
                 Integer typeIncome = incomes.get(io.type);
                 if (typeIncome != null) {
                     incomes.put(io.type, typeIncome + io.getMoneyChange());
@@ -538,87 +355,177 @@ public class CashFlowView extends ChildInitializable {
         moneyHistoryChart.getData().add(series);
     }
 
-    class InvoiceObject {
-        final Calendar inGameDate;
-        final String type;
-        JSONObject others;
+    class InvoiceListCell extends ListCell<Invoice> {
 
-        InvoiceObject(String type, Calendar inGameDate, JSONObject others) {
-            this.inGameDate = inGameDate;
-            this.type = type;
-            this.others = others;
+        GridPane basePane = new GridPane();
+        Label monthLabel = new Label();
+        Label dateLabel = new Label();
+        Label typeLabel = new Label();
+        Label desLabel = new Label();
+        Label moneyBefore = new Label();
+
+        VBox expandableColumn1 = new VBox();
+        VBox expandableColumn2 = new VBox();
+
+        Label moneyChange = new Label();
+        Label moneyAfter = new Label();
+
+        static Calendar last;
+
+        InvoiceListCell() {
+            basePane.setVgap(5.0);
+            basePane.setHgap(10.0);
+            basePane.getColumnConstraints().add(new ColumnConstraints());
+            basePane.getColumnConstraints().add(new ColumnConstraints());
+            ColumnConstraints col2 = new ColumnConstraints();
+            col2.setHalignment(HPos.RIGHT);
+            basePane.getColumnConstraints().add(col2);
+
+            monthLabel.setFont(new Font(App.FONT.getName(), 16));
+
+            int row = 0;
+//            basePane.add(new Separator(Orientation.HORIZONTAL), 0, row++, 3, 1);
+            basePane.add(monthLabel, 0, row++);
+
+            basePane.add(dateLabel, 0, row++);
+            basePane.add(typeLabel, 0, row);
+
+            desLabel.setWrapText(true);
+            desLabel.setPrefWidth(180.0);
+            desLabel.setMaxWidth(180.0);
+            basePane.add(desLabel, 1, row++);
+            basePane.add(new Separator(Orientation.HORIZONTAL), 1, row++, 2, 1);
+
+            moneyBefore.setTextAlignment(TextAlignment.RIGHT);
+            basePane.add(moneyBefore, 2, row++);
+
+            expandableColumn1.setSpacing(5.0);
+            basePane.add(expandableColumn1, 1, row);
+            expandableColumn2.setSpacing(5.0);
+            expandableColumn2.setAlignment(Pos.TOP_RIGHT);
+            basePane.add(expandableColumn2, 2, row++);
+
+            basePane.add(new Separator(Orientation.HORIZONTAL), 1, row++, 2, 1);
+            basePane.add(new Label(strings.getString("subtotal")), 1, row);
+            moneyChange.setTextAlignment(TextAlignment.RIGHT);
+            basePane.add(moneyChange, 2, row++);
+
+            basePane.add(new Label(strings.getString("balanceAfter")), 1, row);
+            moneyAfter.setTextAlignment(TextAlignment.RIGHT);
+            basePane.add(moneyAfter, 2, row++);
+
+//            basePane.add(new Separator(Orientation.HORIZONTAL), 0, row++, 3, 1);
         }
 
-        public String getShownType() {
-            String upper = "INVOICE_" + Util.toAllCapsUnderscoreCase(type);
-            String key = Util.toLowerCamelCase(upper);
-            if (strings.containsKey(key)) return strings.getString(key);
-            else return type;
-        }
+        @Override
+        protected void updateItem(Invoice item, boolean empty) {
+            super.updateItem(item, empty);
 
-        public String getItemDes() {
-            return switch (type) {
-                case "championshipEarn" -> {
-                    ChampionshipData data = CareerManager.getInstance().getChampDataManager()
-                            .findDataById(others.getString("match"));
-                    yield data.getName();
+            expandableColumn1.setVisible(false);
+            expandableColumn1.setManaged(false);
+            expandableColumn1.getChildren().clear();
+            expandableColumn2.setVisible(false);
+            expandableColumn2.setManaged(false);
+            expandableColumn2.getChildren().clear();
+
+            if (empty || item == null) {
+                setGraphic(null);
+            } else {
+                if (item.inGameDate.get(Calendar.YEAR) != last.get(Calendar.YEAR) ||
+                        item.inGameDate.get(Calendar.MONTH) != last.get(Calendar.MONTH)) {
+                    String month = String.format("%s.%s",
+                            item.inGameDate.get(Calendar.YEAR),
+                            item.inGameDate.get(Calendar.MONTH) + 1);
+                    monthLabel.setText(month);
+                } else {
+                    monthLabel.setVisible(false);
+                    monthLabel.setManaged(false);
                 }
-                case "challengeEarn" -> {
-                    ChallengeSet cs = ChallengeManager.getInstance().getById(others.getString("match"));
-                    if (cs == null) yield "";
-                    yield cs.getName();
+
+                String date = CareerManager.calendarToString(item.inGameDate);
+                dateLabel.setText(date);
+                typeLabel.setText(item.getShownType(strings));
+
+                desLabel.setText(item.getItemDes(strings, humanCareer));
+
+                int mb = item.getMoneyBefore();
+                moneyBefore.setText(Util.moneyToReadable(mb));
+                if (mb < 0) {
+                    moneyBefore.setTextFill(CareerView.SPEND_MONEY_COLOR);
+                } else {
+                    moneyBefore.setTextFill(CareerView.REGULAR_TEXT_COLOR);
                 }
-                case "invitation", "participation" -> {
-                    String champInsId = others.getString("match");
-                    MetaMatchInfo mmi = MatchTreeNode.analyzeMatchId(champInsId);
-                    yield mmi.data.getName();
-                }
-                case "purchase" -> {
-                    String item = others.getString("item");
-                    if (others.has("itemType")) {
-                        String itemType = others.getString("itemType");
-//                    String typeStr = "";
-                        String itemStr = "";
-                        if ("cue".equals(itemType)) {
-//                        typeStr = strings.getString("inventoryCues");
-                            itemStr = humanCareer.getInventory().getCueByInstanceId(item).getName();
-                        } else if ("tip".equals(itemType)) {
-//                        typeStr = strings.getString("inventoryTips");
-                            itemStr = humanCareer.getInventory().getTipByInstanceId(item).getBrand().shownName();
+
+                if (item instanceof Invoice.ChampionshipEarn ce) {
+                    expandableColumn1.setVisible(true);
+                    expandableColumn1.setManaged(true);
+                    expandableColumn2.setVisible(true);
+                    expandableColumn2.setManaged(true);
+                    int taxes = 0;
+                    for (Map.Entry<String, Invoice.TaxedIncome> entry : ce.getItems().entrySet()) {
+                        ChampionshipScore.Rank cs = ChampionshipScore.Rank.valueOf(entry.getKey());
+                        expandableColumn1.getChildren().add(new Label(cs.getShown()));
+                        int raw = entry.getValue().raw();
+                        int actual = entry.getValue().actual();
+                        taxes += (actual - raw);
+                        Label rawAwd = new Label(Util.moneyToReadable(raw, true));
+                        rawAwd.setTextAlignment(TextAlignment.RIGHT);
+                        if (raw > 0) {
+                            rawAwd.setTextFill(CareerView.EARN_MONEY_COLOR);
                         }
-                        yield itemStr;
-                    } else {
-                        Cue cue;
-                        CueTip tip;
-                        if ((cue = humanCareer.getInventory().getCueByInstanceId(item)) != null) {
-                            yield cue.getName();
-                        } else if ((tip = humanCareer.getInventory().getTipByInstanceId(item)) != null) {
-                            yield tip.getBrand().shownName();
-                        } else {
-                            yield "";
-                        }
+                        expandableColumn2.getChildren().add(rawAwd);
+                    }
+                    if (taxes < 0) {
+                        expandableColumn1.getChildren().add(new Label(strings.getString("taxes")));
+                        Label taxLabel = new Label(Util.moneyToReadable(taxes));
+                        taxLabel.setTextAlignment(TextAlignment.RIGHT);
+                        taxLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
+                        expandableColumn2.getChildren().add(taxLabel);
+                    }
+                } else if (item instanceof Invoice.CostItemsHolder iih) {
+                    expandableColumn1.setVisible(true);
+                    expandableColumn1.setManaged(true);
+                    expandableColumn2.setVisible(true);
+                    expandableColumn2.setManaged(true);
+                    for (Map.Entry<String, Integer> entry : iih.getItems().entrySet()) {
+                        String itemKey = entry.getKey();
+                        String shownItem = formatType(itemKey);
+                        int subChange = -entry.getValue();
+
+                        String subChangeStr = Util.moneyToReadable(subChange, true);
+
+                        expandableColumn1.getChildren().add(new Label(shownItem));
+                        Label subChangeLabel = new Label(subChangeStr);
+                        if (subChange < 0)
+                            subChangeLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
+
+                        expandableColumn2.getChildren().add(subChangeLabel);
                     }
                 }
-                case "fees" -> strings.getString("fixedExpenditure");
-                case "achievementAward" -> {
-                    int level = others.getInt("level");
-                    Achievement achievement = Achievement.valueOf(others.getString("item"));
-                    yield achievement.getDescriptionOfLevel(level);
+
+                int mc = item.getMoneyChange();
+                String mcs = Util.moneyToReadable(mc, true);
+                int ma = item.getMoneyAfter();
+                if (mc > 0) {
+                    moneyChange.setTextFill(CareerView.EARN_MONEY_COLOR);
+                } else if (mc < 0) {
+                    moneyChange.setTextFill(CareerView.SPEND_MONEY_COLOR);
+                } else {
+                    moneyChange.setTextFill(CareerView.REGULAR_TEXT_COLOR);
                 }
-                default -> "";
-            };
-        }
+                moneyChange.setText(mcs);
 
-        public int getMoneyBefore() {
-            return others.getInt("moneyBefore");
-        }
+                if (ma < 0) {
+                    moneyAfter.setTextFill(CareerView.SPEND_MONEY_COLOR);
+                } else {
+                    moneyAfter.setTextFill(CareerView.REGULAR_TEXT_COLOR);
+                }
+                moneyAfter.setText(Util.moneyToReadable(ma));
 
-        public int getMoneyAfter() {
-            return others.getInt("moneyAfter");
-        }
+                last = item.inGameDate;
 
-        public int getMoneyChange() {
-            return getMoneyAfter() - getMoneyBefore();
+                setGraphic(basePane);
+            }
         }
     }
 

@@ -1,5 +1,5 @@
 {
-  "stageIndex": 2,
+  "stageIndex": 0,
   "seedRanks": {
     "Stuart Bingham": 8,
     "Ding Junhui": 3,
@@ -21,7 +21,9 @@
   "championshipId": "professional_champ",
   "matchTree": {"root": {
     "p1": {
+      "p1wins": 3,
       "p1": {
+        "p1wins": 1,
         "p1": {
           "p1wins": 2,
           "p1": {"winner": "Zhao Xintong"},
@@ -40,10 +42,13 @@
           "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-ROUND_1-1",
           "p2wins": 0
         },
+        "winner": "Ding Junhui",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-8"
+        "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-8",
+        "p2wins": 2
       },
       "p2": {
+        "p1wins": 2,
         "p1": {
           "p1wins": 2,
           "p1": {"winner": "Neil Robertson"},
@@ -62,14 +67,20 @@
           "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-ROUND_1-3",
           "p2wins": 1
         },
+        "winner": "Neil Robertson",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-9"
+        "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-9",
+        "p2wins": 1
       },
+      "winner": "Ding Junhui",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-SEMI_FINAL-12"
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-SEMI_FINAL-12",
+      "p2wins": 1
     },
     "p2": {
+      "p1wins": 0,
       "p1": {
+        "p1wins": 0,
         "p1": {
           "p1wins": 2,
           "p1": {"winner": "Stuart Bingham"},
@@ -88,10 +99,13 @@
           "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-ROUND_1-5",
           "p2wins": 2
         },
+        "winner": "Karen Wilson",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-10"
+        "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-10",
+        "p2wins": 2
       },
       "p2": {
+        "p1wins": 2,
         "p1": {
           "p1wins": 2,
           "p1": {"winner": "custom_DA1B9E98710BC5F5"},
@@ -110,17 +124,66 @@
           "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-ROUND_1-7",
           "p2wins": 0
         },
+        "winner": "custom_DA1B9E98710BC5F5",
         "stage": "QUARTER_FINAL",
-        "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-11"
+        "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-11",
+        "p2wins": 0
       },
+      "winner": "custom_DA1B9E98710BC5F5",
       "stage": "SEMI_FINAL",
-      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-SEMI_FINAL-13"
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-SEMI_FINAL-13",
+      "p2wins": 3
     },
     "stage": "FINAL",
     "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-FINAL-14"
   }},
   "finished": false,
   "snookerBreaks": [
+    {
+      "score": 137,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": false,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-11",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 134,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-SEMI_FINAL-13",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 128,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-SEMI_FINAL-12",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 127,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-SEMI_FINAL-13",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
+      "score": 127,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-SEMI_FINAL-12",
+      "playerId": "Ding Junhui"
+    },
     {
       "score": 125,
       "maximumType": "NONE",
@@ -140,6 +203,24 @@
       "playerId": "Selby"
     },
     {
+      "score": 123,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-9",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 119,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": false,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-11",
+      "playerId": "custom_DA1B9E98710BC5F5"
+    },
+    {
       "score": 118,
       "maximumType": "NONE",
       "stage": "ROUND_1",
@@ -147,6 +228,24 @@
       "numFrame": 2,
       "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-ROUND_1-7",
       "playerId": "Selby"
+    },
+    {
+      "score": 113,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-9",
+      "playerId": "Neil Robertson"
+    },
+    {
+      "score": 112,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-SEMI_FINAL-12",
+      "playerId": "Ding Junhui"
     },
     {
       "score": 111,
@@ -167,6 +266,15 @@
       "playerId": "Karen Wilson"
     },
     {
+      "score": 100,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-8",
+      "playerId": "Ding Junhui"
+    },
+    {
       "score": 99,
       "maximumType": "NONE",
       "stage": "ROUND_1",
@@ -176,6 +284,24 @@
       "playerId": "Mark Williams"
     },
     {
+      "score": 93,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-9",
+      "playerId": "Trump"
+    },
+    {
+      "score": 86,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 1,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-8",
+      "playerId": "Ding Junhui"
+    },
+    {
       "score": 79,
       "maximumType": "NONE",
       "stage": "ROUND_1",
@@ -183,6 +309,15 @@
       "numFrame": 2,
       "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-ROUND_1-2",
       "playerId": "Neil Robertson"
+    },
+    {
+      "score": 74,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": false,
+      "numFrame": 3,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-SEMI_FINAL-13",
+      "playerId": "custom_DA1B9E98710BC5F5"
     },
     {
       "score": 74,
@@ -200,6 +335,15 @@
       "sim": true,
       "numFrame": 3,
       "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-ROUND_1-0",
+      "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 64,
+      "maximumType": "NONE",
+      "stage": "QUARTER_FINAL",
+      "sim": true,
+      "numFrame": 2,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-QUARTER_FINAL-8",
       "playerId": "Zhao Xintong"
     },
     {
@@ -237,6 +381,15 @@
       "numFrame": 1,
       "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-ROUND_1-0",
       "playerId": "Zhao Xintong"
+    },
+    {
+      "score": 55,
+      "maximumType": "NONE",
+      "stage": "SEMI_FINAL",
+      "sim": true,
+      "numFrame": 4,
+      "matchId": "custom_DA1B9E98710BC5F5+2029+professional_champ-SEMI_FINAL-12",
+      "playerId": "Ding Junhui"
     },
     {
       "score": 54,

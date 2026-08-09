@@ -156,6 +156,10 @@ public abstract class Invoice {
     
     public record TaxedIncome(int raw, int actual) {
     }
+    
+    public interface CostItemsHolder {
+        Map<String, Integer> getItems();
+    }
 
     protected abstract void fillJson(JSONObject json);
 
@@ -199,10 +203,10 @@ public abstract class Invoice {
         protected abstract void fillJson2(JSONObject json);
     }
 
-    protected abstract static class PlayEarn extends Invoice {
+    public abstract static class PlayEarn extends Invoice {
 
         public final String match;
-        public final Map<String, TaxedIncome> items;
+        protected final Map<String, TaxedIncome> items;
 
         protected PlayEarn(String type, Date realTimestamp, Calendar inGameDate,
                            int moneyBefore, int moneyAfter,
@@ -219,6 +223,10 @@ public abstract class Invoice {
                 res.put(itemKey, JsonUtil.jsonToRecord(TaxedIncome.class, itemsJson.getJSONObject(itemKey)));
             }
             return res;
+        }
+
+        public Map<String, TaxedIncome> getItems() {
+            return items;
         }
 
         @Override
@@ -396,7 +404,7 @@ public abstract class Invoice {
         }
     }
 
-    public static class Fees extends Invoice {
+    public static class Fees extends Invoice implements CostItemsHolder {
 
         protected final Map<String, Integer> items;
 
@@ -433,6 +441,7 @@ public abstract class Invoice {
             return strings.getString("fixedExpenditure");
         }
 
+        @Override
         public Map<String, Integer> getItems() {
             return items;
         }
@@ -463,7 +472,7 @@ public abstract class Invoice {
         }
     }
 
-    public static class Participation extends Invoice {
+    public static class Participation extends Invoice implements CostItemsHolder {
 
         public final String match;
         protected final Map<String, Integer> items;
@@ -485,6 +494,7 @@ public abstract class Invoice {
             return res;
         }
 
+        @Override
         public Map<String, Integer> getItems() {
             return items;
         }
@@ -509,16 +519,4 @@ public abstract class Invoice {
             return MatchTreeNode.analyzeMatchId(match).data.getName();
         }
     }
-
-//    public enum Type {
-//        CHAMPIONSHIP_EARN("championshipEarn"),
-//        CHALLENGE_EARN("challengeEarn"),
-//        PURCHASE("purchase");
-//        
-//        public final String typeName;
-//        
-//        Type(String typeName) {
-//            this.typeName = typeName;
-//        }
-//    }
 }

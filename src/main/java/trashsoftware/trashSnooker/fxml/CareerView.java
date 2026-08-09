@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 public class CareerView extends ChildInitializable {
     public static final Color EARN_MONEY_COLOR = Color.GREEN;
     public static final Color SPEND_MONEY_COLOR = Color.RED.darker();
+    public static final Color REGULAR_TEXT_COLOR = Color.BLACK;
     @FXML
     GridPane basePane;
     @FXML
