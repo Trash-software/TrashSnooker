@@ -19,7 +19,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class CuePreviewerView implements Initializable {
+public class CueDiyView implements Initializable {
     
     @FXML
     Pane basePane;

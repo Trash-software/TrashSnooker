@@ -4,7 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
-import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
 import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.awardItems.AwardMaterial;
@@ -15,10 +14,14 @@ import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.challenge.RewardCondition;
 import trashsoftware.trashSnooker.core.career.championship.Championship;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.widgets.PerkManager;
-import trashsoftware.trashSnooker.util.*;
+import trashsoftware.trashSnooker.util.DataLoader;
+import trashsoftware.trashSnooker.util.EventLogger;
+import trashsoftware.trashSnooker.util.JsonChecksum;
 
 import java.io.File;
+import java.text.ParseException;
 import java.time.Duration;
 import java.util.*;
 
@@ -39,7 +42,7 @@ public class HumanCareer extends Career {
 
     HumanCareer(PlayerPerson playerPerson, CareerManager careerManager) {
         super(playerPerson, true, careerManager);
-        
+
         this.careerManager = careerManager;
     }
 
@@ -51,7 +54,7 @@ public class HumanCareer extends Career {
         finance.remFreePerks = finance.availPerks;  // 初始升级不要钱
         finance.money = CareerManager.INIT_MONEY;
     }
-    
+
     void setInitLevel(int tarLevel) {
         for (int i = getLevel(); i < tarLevel; i++) {
             List<AwardMaterial> result = new ArrayList<>();
@@ -184,41 +187,50 @@ public class HumanCareer extends Career {
                 challengeSet.getId(),
                 ChallengeHistory::new
         );
+
         int moneyBefore = finance.money;
-        JSONObject invoice = new JSONObject();
-        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-        invoice.put("timestamp", timestamp);
-        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-        invoice.put("inGameDate", inGameDate);
-        invoice.put("type", "challengeEarn");
-        invoice.put("match", challengeSet.getId());
-        JSONObject items = new JSONObject();
-        
+
+//        JSONObject invoice = new JSONObject();
+//        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+//        invoice.put("timestamp", timestamp);
+//        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+//        invoice.put("inGameDate", inGameDate);
+//        invoice.put("type", "challengeEarn");
+//        invoice.put("match", challengeSet.getId());
+//        JSONObject items = new JSONObject();
+        Map<String, Invoice.TaxedIncome> challengeEarnItems = new TreeMap<>();
+
         Map<RewardCondition, ChallengeReward> newFulfills = history.newComplete(challengeSet, clearance, score);
         if (!newFulfills.isEmpty()) {
             for (Map.Entry<RewardCondition, ChallengeReward> entry : newFulfills.entrySet()) {
                 ChallengeReward cr = entry.getValue();
-                
+
                 int before = finance.money;
-                
+
                 finance.totalExp += cr.getExp();
                 finance.expInThisLevel += cr.getExp();
                 int raw = cr.getMoney();
                 earnMoney(raw, liveLocation);
                 int real = finance.money - before;
 
-                JSONObject subItem = new JSONObject();
-                subItem.put("raw", raw);
-                subItem.put("actual", real);
-                items.put(entry.getKey().toJsonString(), subItem);
+                challengeEarnItems.put(entry.getKey().toJsonString(), new Invoice.TaxedIncome(raw, real));
             }
         }
 
-        invoice.put("items", items);
-        invoice.put("moneyBefore", moneyBefore);
-        invoice.put("moneyAfter", finance.money);
+        Invoice.ChallengeEarn invoice = new Invoice.ChallengeEarn(
+                new Date(),
+                getCareerManager().getTimestamp(),
+                moneyBefore,
+                finance.money,
+                challengeSet.getId(),
+                challengeEarnItems
+        );
+
+//        invoice.put("items", items);
+//        invoice.put("moneyBefore", moneyBefore);
+//        invoice.put("moneyAfter", finance.money);
         finance.invoices.add(invoice);
-        
+
         checkScoreAchievements();
         saveFinance();
     }
@@ -229,14 +241,14 @@ public class HumanCareer extends Career {
 
     /**
      * 记录一笔合法收入
-     * 
+     *
      * @param earned  标价
      */
     public void earnMoney(int earned, ChampionshipLocation location) {
         finance.cumulativeAwards += earned;
-        
+
         double tax = location.tax(earned);
-        
+
         finance.money += (int) Math.round(earned - tax);
         // 这里不检查成就，因为earnMoney之后一般都跟着checkScoreAchievements()
     }
@@ -245,17 +257,28 @@ public class HumanCareer extends Career {
         int moneyBefore = finance.money;
         finance.money -= price;
 
-        JSONObject invoice = new JSONObject();
-        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-        invoice.put("timestamp", timestamp);
-        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-        invoice.put("inGameDate", inGameDate);
-        invoice.put("type", "purchase");
-        invoice.put("itemType", "tip");
-        invoice.put("moneyBefore", moneyBefore);
-        invoice.put("moneyCost", price);
-        invoice.put("moneyAfter", finance.money);
-        invoice.put("item", tipInstanceId);
+//        JSONObject invoice = new JSONObject();
+//        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+//        invoice.put("timestamp", timestamp);
+//        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+//        invoice.put("inGameDate", inGameDate);
+//        invoice.put("type", "purchase");
+//        invoice.put("itemType", "tip");
+//        invoice.put("moneyBefore", moneyBefore);
+//        invoice.put("moneyCost", price);
+//        invoice.put("moneyAfter", finance.money);
+//        invoice.put("item", tipInstanceId);
+
+        Invoice.Purchase invoice = new Invoice.Purchase(
+                new Date(),
+                getCareerManager().getTimestamp(),
+                moneyBefore,
+                finance.money,
+                "tip",
+                tipInstanceId,
+                price
+        );
+
         finance.invoices.add(invoice);
         saveFinance();
     }
@@ -264,17 +287,28 @@ public class HumanCareer extends Career {
         int moneyBefore = finance.money;
         finance.money -= price;
 
-        JSONObject invoice = new JSONObject();
-        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-        invoice.put("timestamp", timestamp);
-        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-        invoice.put("inGameDate", inGameDate);
-        invoice.put("type", "purchase");
-        invoice.put("itemType", "cue");
-        invoice.put("moneyBefore", moneyBefore);
-        invoice.put("moneyCost", price);
-        invoice.put("moneyAfter", finance.money);
-        invoice.put("item", cueInstanceId);
+//        JSONObject invoice = new JSONObject();
+//        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+//        invoice.put("timestamp", timestamp);
+//        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+//        invoice.put("inGameDate", inGameDate);
+//        invoice.put("type", "purchase");
+//        invoice.put("itemType", "cue");
+//        invoice.put("moneyBefore", moneyBefore);
+//        invoice.put("moneyCost", price);
+//        invoice.put("moneyAfter", finance.money);
+//        invoice.put("item", cueInstanceId);
+
+        Invoice.Purchase invoice = new Invoice.Purchase(
+                new Date(),
+                getCareerManager().getTimestamp(),
+                moneyBefore,
+                finance.money,
+                "cue",
+                cueInstanceId,
+                price
+        );
+
         finance.invoices.add(invoice);
         saveFinance();
     }
@@ -282,47 +316,61 @@ public class HumanCareer extends Career {
     @Override
     public void addChampionshipScore(ChampionshipScore score) {
         super.addChampionshipScore(score);
-        
+
         int moneyBefore = finance.money;
-        JSONObject invoice = new JSONObject();
-        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-        invoice.put("timestamp", timestamp);
-        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-        invoice.put("inGameDate", inGameDate);
-        invoice.put("type", "championshipEarn");
-        invoice.put("match", score.data.getId());
-        invoice.put("year", score.getYear());
-        
+//        JSONObject invoice = new JSONObject();
+//        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+//        invoice.put("timestamp", timestamp);
+//        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+//        invoice.put("inGameDate", inGameDate);
+//        invoice.put("type", "championshipEarn");
+//        invoice.put("match", score.data.getId());
+//        invoice.put("year", score.getYear());
+
         int moneyEarned = 0;
         int expEarned = 0;
 
-        JSONObject items = new JSONObject();
+        Map<String, Invoice.TaxedIncome> items = new TreeMap<>();
         for (ChampionshipScore.Rank rank : score.ranks) {
             int exp = score.data.getExpByRank(rank);
             finance.totalExp += exp;
             finance.expInThisLevel += exp;
             expEarned += exp;
-            
+
             int before = finance.money;
             int raw = score.data.getAwardByRank(rank);
             earnMoney(raw, score.data.location);
             int real = finance.money - before;
-            
-            JSONObject subItem = new JSONObject();
-            subItem.put("raw", raw);
-            subItem.put("actual", real);
-            items.put(rank.name(), subItem);
-            
+
+//            JSONObject subItem = new JSONObject();
+//            subItem.put("raw", raw);
+//            subItem.put("actual", real);
+//            items.put(rank.name(), subItem);
+
+//            Invoice.EarnSubItem subItem = new Invoice.EarnSubItem(raw, real);
+            items.put(rank.name(), new Invoice.TaxedIncome(raw, real));
+
             moneyEarned += real;
         }
-        
-        invoice.put("items", items);
-        invoice.put("moneyBefore", moneyBefore);
-        invoice.put("moneyAfter", finance.money);
+
+//        invoice.put("items", items);
+//        invoice.put("moneyBefore", moneyBefore);
+//        invoice.put("moneyAfter", finance.money);
+
+        Invoice.ChampionshipEarn invoice = new Invoice.ChampionshipEarn(
+                new Date(),
+                getCareerManager().getTimestamp(),
+                moneyBefore,
+                finance.money,
+                score.data.getId(),
+                score.getYear(),
+                items
+        );
+
         finance.invoices.add(invoice);
-        
+
         unShownAwd = new AwardDistributionHint(moneyEarned, expEarned);
-        
+
         checkScoreAchievements();
         saveFinance();
     }
@@ -428,27 +476,38 @@ public class HumanCareer extends Career {
     public void recordUpgradeAndUsePerk(PerkManager.UpgradeRec upgradeRec) {
         int moneyBefore = finance.money;
         int freePerksUsed = Math.min(finance.remFreePerks, upgradeRec.perkUsed());
-        
+
         finance.money -= upgradeRec.moneyCost();
         finance.availPerks -= upgradeRec.perkUsed();
         finance.remFreePerks -= freePerksUsed;
 
-        JSONObject record = new JSONObject();
-        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-        record.put("timestamp", timestamp);
-        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-        record.put("inGameDate", inGameDate);
-        record.put("type", "upgrade");
-        record.put("perkUsed", upgradeRec.perkUsed());
-        record.put("freePerkUsed", freePerksUsed);
-        record.put("moneyBefore", moneyBefore);
-        record.put("moneyCost", upgradeRec.moneyCost());
-        record.put("moneyAfter", finance.money);
-        JSONObject skillUpgrade = new JSONObject();
-        for (Map.Entry<String, double[]> entry : upgradeRec.abilityUpdated().entrySet()) {
-            skillUpgrade.put(entry.getKey(), JsonUtil.arrayToJson(entry.getValue()));
-        }
-        record.put("ability", skillUpgrade);
+//        JSONObject record = new JSONObject();
+//        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+//        record.put("timestamp", timestamp);
+//        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+//        record.put("inGameDate", inGameDate);
+//        record.put("type", "upgrade");
+//        record.put("perkUsed", upgradeRec.perkUsed());
+//        record.put("freePerkUsed", freePerksUsed);
+//        record.put("moneyBefore", moneyBefore);
+//        record.put("moneyCost", upgradeRec.moneyCost());
+//        record.put("moneyAfter", finance.money);
+//        JSONObject skillUpgrade = new JSONObject();
+//        for (Map.Entry<String, double[]> entry : upgradeRec.abilityUpdated().entrySet()) {
+//            skillUpgrade.put(entry.getKey(), JsonUtil.arrayToJson(entry.getValue()));
+//        }
+//        record.put("ability", skillUpgrade);
+
+        Invoice.Upgrade record = new Invoice.Upgrade(
+                new Date(),
+                getCareerManager().getTimestamp(),
+                moneyBefore,
+                finance.money,
+                upgradeRec.perkUsed(),
+                freePerksUsed,
+                new HashMap<>(upgradeRec.abilityUpdated()),
+                upgradeRec.moneyCost()
+        );
 
         finance.invoices.add(record);
 
@@ -458,7 +517,7 @@ public class HumanCareer extends Career {
     public int getAvailablePerks() {
         return finance.availPerks;
     }
-    
+
     public int getFreePerksRem() {
         return finance.remFreePerks;
     }
@@ -466,24 +525,34 @@ public class HumanCareer extends Career {
     public int getTotalPerks() {
         return finance.totalPerks;
     }
-    
+
     public void earnAchievementAward(Achievement achievement, int levelRec, int money) {
         int moneyBefore = finance.money;
         finance.money += money;
-        
-        JSONObject invoice = new JSONObject();
-        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-        invoice.put("timestamp", timestamp);
-        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-        invoice.put("inGameDate", inGameDate);
-        invoice.put("type", "achievementAward");
-        invoice.put("item", achievement.name());
-        invoice.put("level", levelRec);
-        
-        invoice.put("moneyBefore", moneyBefore);
-        invoice.put("moneyEarn", money);
-        invoice.put("moneyAfter", finance.money);
-        
+
+//        JSONObject invoice = new JSONObject();
+//        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+//        invoice.put("timestamp", timestamp);
+//        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+//        invoice.put("inGameDate", inGameDate);
+//        invoice.put("type", "achievementAward");
+//        invoice.put("item", achievement.name());
+//        invoice.put("level", levelRec);
+//        
+//        invoice.put("moneyBefore", moneyBefore);
+//        invoice.put("moneyEarn", money);
+//        invoice.put("moneyAfter", finance.money);
+
+        Invoice.AchievementAward invoice = new Invoice.AchievementAward(
+                new Date(),
+                getCareerManager().getTimestamp(),
+                moneyBefore,
+                finance.money,
+                achievement.name(),
+                levelRec,
+                money
+        );
+
         finance.invoices.add(invoice);
         saveFinance();
     }
@@ -494,12 +563,12 @@ public class HumanCareer extends Career {
     public int calculateDailyLifeFee() {
         int moneyLow = 0;
         int moneyHigh = 1_000_000;
-        
+
         double lifeFee = Algebra.shiftRangeSafe(moneyLow, moneyHigh,
                 DAILY_LIFE_FEE_LOW, DAILY_LIFE_FEE_HIGH,
                 finance.money);
 //        System.out.println("Daily life fee " + lifeFee);
-        
+
         return (int) (Math.round(lifeFee / 10) * 10);  // 整10
     }
 
@@ -510,7 +579,7 @@ public class HumanCareer extends Career {
         ChampionshipData.WithYear last = careerManager.getChampDataManager().getPreviousChampionship(
                 nextChampData.year, nextChampData.data.month, nextChampData.data.day
         );
-        
+
         Calendar lastTime = last.toCalendar();
         if (lastTime.before(careerManager.getBeginTimestamp())) return Map.of();
 
@@ -543,28 +612,36 @@ public class HumanCareer extends Career {
             int moneyBefore = finance.money;
             finance.money -= fees;
 
-            JSONObject invoice = new JSONObject();
-            String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-            invoice.put("timestamp", timestamp);
-            String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-            invoice.put("inGameDate", inGameDate);
-            invoice.put("type", "fees");
-            invoice.put("moneyBefore", moneyBefore);
-            JSONArray subArray = new JSONArray();
-            for (Map.Entry<String, Integer> feeItem : feesMap.entrySet()) {
-                JSONObject sub = new JSONObject();
-                sub.put("item", feeItem.getKey());
-                sub.put("moneyCost", feeItem.getValue());
-                subArray.put(sub);
-            }
-            invoice.put("items", subArray);
-            invoice.put("moneyAfter", finance.money);
+//            JSONObject invoice = new JSONObject();
+//            String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+//            invoice.put("timestamp", timestamp);
+//            String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+//            invoice.put("inGameDate", inGameDate);
+//            invoice.put("type", "fees");
+//            invoice.put("moneyBefore", moneyBefore);
+//            JSONArray subArray = new JSONArray();
+//            for (Map.Entry<String, Integer> feeItem : feesMap.entrySet()) {
+//                JSONObject sub = new JSONObject();
+//                sub.put("item", feeItem.getKey());
+//                sub.put("moneyCost", feeItem.getValue());
+//                subArray.put(sub);
+//            }
+//            invoice.put("items", subArray);
+//            invoice.put("moneyAfter", finance.money);
+            Invoice.Fees invoice = new Invoice.Fees(
+                    new Date(),
+                    getCareerManager().getTimestamp(),
+                    moneyBefore,
+                    finance.money,
+                    feesMap
+            );
+
             finance.invoices.add(invoice);
 
             saveFinance();
         }
     }
-    
+
     public void receiveInviteAward(Championship championship) {
         Integer humanSeedNum = championship.getCareerSeedMap().get(getPlayerPerson().getPlayerId());
         if (humanSeedNum == null) {
@@ -579,21 +656,31 @@ public class HumanCareer extends Career {
         }
         if (award > 0) {
             AchManager.getInstance().addAchievement(Achievement.GET_INVITED, null);
-            
+
             int moneyBefore = finance.money;
             finance.money += award;
-                    
-            JSONObject invoice = new JSONObject();
-            String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-            invoice.put("timestamp", timestamp);
-            String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-            invoice.put("inGameDate", inGameDate);
-            invoice.put("type", "invitation");
-            invoice.put("match", championship.uniqueId());
-            invoice.put("item", humanSeedNum);
-            invoice.put("moneyBefore", moneyBefore);
-            invoice.put("moneyEarn", award);
-            invoice.put("moneyAfter", finance.money);
+
+//            JSONObject invoice = new JSONObject();
+//            String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+//            invoice.put("timestamp", timestamp);
+//            String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+//            invoice.put("inGameDate", inGameDate);
+//            invoice.put("type", "invitation");
+//            invoice.put("match", championship.uniqueId());
+//            invoice.put("item", humanSeedNum);
+//            invoice.put("moneyBefore", moneyBefore);
+//            invoice.put("moneyEarn", award);
+//            invoice.put("moneyAfter", finance.money);
+            Invoice.Invitation invoice = new Invoice.Invitation(
+                    new Date(),
+                    getCareerManager().getTimestamp(),
+                    moneyBefore,
+                    finance.money,
+                    championship.uniqueId(),
+                    humanSeedNum,
+                    award
+            );
+
             finance.invoices.add(invoice);
             saveFinance();
         }
@@ -612,35 +699,51 @@ public class HumanCareer extends Career {
 
         finance.money -= (registryFee + travelFee + hotelFee);
 
-        JSONObject invoice = new JSONObject();
-        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
-        invoice.put("timestamp", timestamp);
-        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
-        invoice.put("inGameDate", inGameDate);
-        invoice.put("type", "participation");
-        invoice.put("match", championship.uniqueId());
-        invoice.put("moneyBefore", moneyBefore);
+//        JSONObject invoice = new JSONObject();
+//        String timestamp = Util.TIME_FORMAT_SEC.format(new Date());
+//        invoice.put("timestamp", timestamp);
+//        String inGameDate = CareerManager.calendarToString(getCareerManager().getTimestamp());
+//        invoice.put("inGameDate", inGameDate);
+//        invoice.put("type", "participation");
+//        invoice.put("match", championship.uniqueId());
+//        invoice.put("moneyBefore", moneyBefore);
+//
+//        JSONObject o1 = new JSONObject();
+//        o1.put("item", "registry");
+//        o1.put("moneyCost", registryFee);
+//
+//        JSONObject o2 = new JSONObject();
+//        o2.put("item", "travel");
+//        o2.put("moneyCost", travelFee);
+//
+//        JSONObject o3 = new JSONObject();
+//        o3.put("item", "hotel");
+//        o3.put("moneyCost", hotelFee);
+//
+//        JSONArray subArray = new JSONArray();
+//        subArray.put(o1);
+//        subArray.put(o2);
+//        subArray.put(o3);
+//
+//        invoice.put("items", subArray);
+//
+//        invoice.put("moneyAfter", finance.money);
 
-        JSONObject o1 = new JSONObject();
-        o1.put("item", "registry");
-        o1.put("moneyCost", registryFee);
+        Map<String, Integer> itemsCosts = Map.of(
+                "registry", registryFee,
+                "travel", travelFee,
+                "hotel", hotelFee
+        );
 
-        JSONObject o2 = new JSONObject();
-        o2.put("item", "travel");
-        o2.put("moneyCost", travelFee);
+        Invoice.Participation invoice = new Invoice.Participation(
+                new Date(),
+                getCareerManager().getTimestamp(),
+                moneyBefore,
+                finance.money,
+                championship.uniqueId(),
+                itemsCosts
+        );
 
-        JSONObject o3 = new JSONObject();
-        o3.put("item", "hotel");
-        o3.put("moneyCost", hotelFee);
-
-        JSONArray subArray = new JSONArray();
-        subArray.put(o1);
-        subArray.put(o2);
-        subArray.put(o3);
-
-        invoice.put("items", subArray);
-
-        invoice.put("moneyAfter", finance.money);
         finance.invoices.add(invoice);
         saveFinance();
     }
@@ -665,19 +768,19 @@ public class HumanCareer extends Career {
             for (ChampionshipScore cs : getChampionshipScores()) {
                 int cost = cs.data.getRegistryFee() + cs.data.getFlightFee() + cs.data.getHotelFee();
                 finance.money -= cost;
-                
+
                 if (beginDate == null) {
                     beginDate = cs.timestamp;
                 }
-                
+
                 lastDate = cs.timestamp;
             }
-            
+
             if (beginDate != null && lastDate != null && beginDate != lastDate) {
                 int diffDays = (int) Duration.between(beginDate.toInstant(), lastDate.toInstant()).toDays();
                 finance.money -= diffDays * DAILY_LIFE_FEE;
             }
-            
+
             // 大致模拟加点花的钱
             int usedPerks = finance.totalPerks - finance.availPerks;
             if (usedPerks > 0) {
@@ -709,7 +812,7 @@ public class HumanCareer extends Career {
             CareerManager.getInstance().saveToDisk();
         }
     }
-    
+
     public InventoryManager getInventory() {
         return CareerManager.getInstance().getInventory();
     }
@@ -729,17 +832,17 @@ public class HumanCareer extends Career {
         unShownAwd = null;
         return awd;
     }
-    
-    public List<JSONObject> getInvoices() {
+
+    public List<Invoice> getInvoices() {
         return new ArrayList<>(finance.invoices);
     }
-    
+
     public void saveFinance() {
         checkFinancialAch();
-        
+
         finance.writeToDisk();
     }
-    
+
     private void checkFinancialAch() {
         AchManager achManager = AchManager.getInstance();
         if (finance.cumulativeAwards > 0) {
@@ -750,24 +853,19 @@ public class HumanCareer extends Career {
         if (finance.money < 0) {
             achManager.addAchievement(Achievement.OWE_MONEY, null);
         }
-        
+
         int cumPurchase = 0;
         int cumExpenditure = 0;
-        for (JSONObject invoice: finance.invoices) {
-            try {
-                String type = invoice.getString("type");
-                int moneyBefore = invoice.getInt("moneyBefore");
-                int moneyAfter = invoice.getInt("moneyAfter");
-                int moneyChange = moneyAfter - moneyBefore;
-                if (moneyChange < 0) {
-                    cumExpenditure -= moneyChange;
-                }
-                
-                if ("purchase".equals(type)) {
-                    cumPurchase += 1;
-                }
-            } catch (IllegalArgumentException | JSONException e) {
-                EventLogger.warning(e);
+        for (Invoice invoice : finance.invoices) {
+            int moneyBefore = invoice.moneyBefore;
+            int moneyAfter = invoice.moneyAfter;
+            int moneyChange = moneyAfter - moneyBefore;
+            if (moneyChange < 0) {
+                cumExpenditure -= moneyChange;
+            }
+
+            if ("purchase".equals(invoice.type)) {
+                cumPurchase += 1;
             }
         }
         achManager.addAchievement(Achievement.BUY_ITEMS, cumPurchase, null);
@@ -776,7 +874,7 @@ public class HumanCareer extends Career {
 
     public static class FinancialManager {
         private final File jsonFile;
-        private final List<JSONObject> invoices = new ArrayList<>();
+        private final List<Invoice> invoices = new ArrayList<>();
         private int remFreePerks;  // 剩余的免费升级次数
         private int totalPerks;
         private int availPerks;
@@ -797,7 +895,7 @@ public class HumanCareer extends Career {
 
                     String checksum = json.has("checksum") ? json.getString("checksum") : "";
                     JSONObject jsonObject = json.getJSONObject("financial");
-                    
+
                     String curCheck = JsonChecksum.checksum(jsonObject);
                     if (!curCheck.equals(checksum)) {
                         EventLogger.warning("You hacked your financial record!");
@@ -815,7 +913,11 @@ public class HumanCareer extends Career {
                         JSONArray invoiceArr = jsonObject.getJSONArray("invoices");
                         for (int i = 0; i < invoiceArr.length(); i++) {
                             JSONObject invObj = invoiceArr.getJSONObject(i);
-                            invoices.add(invObj);
+                            try {
+                                invoices.add(Invoice.fromJson(invObj));
+                            } catch (ParseException | JSONException ee) {
+                                EventLogger.error(ee);
+                            }
                         }
                     }
 
@@ -841,8 +943,8 @@ public class HumanCareer extends Career {
             out.put("money", money);
 
             JSONArray invoiceArr = new JSONArray();
-            for (JSONObject inv : invoices) {
-                invoiceArr.put(inv);
+            for (Invoice inv : invoices) {
+                invoiceArr.put(inv.toJson());
             }
             out.put("invoices", invoiceArr);
 
@@ -860,7 +962,7 @@ public class HumanCareer extends Career {
             DataLoader.saveToDisk(json, jsonFile.getAbsolutePath());
         }
     }
-    
+
     public record AwardDistributionHint(int money, int exp) {
     }
 }

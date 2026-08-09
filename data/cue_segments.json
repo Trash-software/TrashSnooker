@@ -1,0 +1,44 @@
+{
+  "cueSegments": {
+    "ashShaftBrown": {
+      "name": {
+        "zh": "白蜡木前节",
+        "en": "Ash front"
+      },
+      "category": "shaft",
+      "segmentsFor": [
+        "front",
+        "midFront",
+        "midBack"
+      ],
+      "ringThickness": 8.0,
+      "ringColor": "GOLD-",
+      "material": "HARD_WOOD",
+      "massRange": [
+        9.0,
+        11.0
+      ],
+      "ringDiameterRange": [
+        8.5,
+        11.5
+      ],
+      "hardnessRange": [
+        0.75,
+        0.98
+      ],
+      "elasticityRange": [
+        0.5,
+        0.8
+      ],
+      "textured": true,
+      "segments": [
+        {
+          "length": 1075,
+          "diameter1": 9.5,
+          "diameter2": 24.5,
+          "texture": "stdSnookerCueFront.png"
+        }
+      ]
+    }
+  }
+}

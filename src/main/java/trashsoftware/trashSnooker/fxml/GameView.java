@@ -69,6 +69,7 @@ import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 import trashsoftware.trashSnooker.core.person.HandBody;
 import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
+import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.scoreResult.ChineseEightScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.NineBallScoreResult;
 import trashsoftware.trashSnooker.core.scoreResult.ScoreResult;
@@ -3643,7 +3644,7 @@ public class GameView implements Initializable {
             MovementFrame lastDrawn = frames.getFirst();
             double x = gamePane.canvasX(lastDrawn.x);
             double y = gamePane.canvasY(lastDrawn.y);
-            double calculations = frameTimeMs / game.playPhy.calculateMs;
+            double calculations = frameTimeMs / game.playPhy.calculateMs;  // fixme: replay时phy是null
             double[] vel = frames.get(1).computeVelocityInPhyStyle(lastDrawn, calculations);
 
 //            double slipThresh = gameValues.ball.frictionRatio * gameValues.table.slipResistanceRatio * game.playPhy.slippingFrictionTimed * frameTimeMs * 1.2;

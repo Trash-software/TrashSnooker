@@ -3,37 +3,38 @@
     "playerNumber": 1,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 1,
-    "person": "Neil Robertson",
+    "psyStatus": 0.6297999999999997,
+    "person": "custom_player_2",
     "playerType": "PLAYER",
     "let": {"type": "notLet"}
   },
-  "p1Wins": 1,
+  "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
     "gameRule": "SNOOKER",
     "handFeelEffort": 1,
-    "psyStatus": 0.9644099999999999,
-    "person": "Mark Allen",
-    "playerType": "PLAYER",
+    "psyStatus": 1,
+    "person": "custom_player_3",
+    "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
   "codeGameCounter": 1,
   "p2BreakLoseChance": 0,
   "gameValues": {
+    "ballsGroupPreset": "helloKittySnooker",
     "ball": "SNOOKER_BALL",
     "gameRule": "SNOOKER",
     "subRules": ["SNOOKER_STD"],
-    "devMode": true,
+    "devMode": false,
     "table": {
       "tableOrdinal": 0,
-      "pocketDifficultyOrdinal": 1,
-      "holeSizeOrdinal": 0
+      "pocketDifficultyOrdinal": 3,
+      "holeSizeOrdinal": 2
     }
   },
-  "winRecords": {"1": 1},
-  "p2Wins": 0,
-  "startTime": 1772558915918,
+  "winRecords": {"1": 2},
+  "p2Wins": 1,
+  "startTime": 1785755324331,
   "p1BreakLoseChance": 0,
   "totalFrames": 1,
   "cloth": {

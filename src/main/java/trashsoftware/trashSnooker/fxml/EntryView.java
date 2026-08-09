@@ -229,7 +229,7 @@ public class EntryView implements Initializable {
     void cuePreviewerAction() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("cuePreviewerView.fxml"),
+                    getClass().getResource("cueDiyView.fxml"),
                     strings
             );
             Parent root = loader.load();

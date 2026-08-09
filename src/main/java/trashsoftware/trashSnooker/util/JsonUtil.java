@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class JsonUtil {
     public static JSONArray arrayToJson(double[] array) {
@@ -44,6 +45,14 @@ public class JsonUtil {
             result[i] = jsonArray.getInt(i);
         }
         return result;
+    }
+    
+    public static Map<String, Integer> jsonToIntMap(JSONObject json) {
+        Map<String, Integer> map = new TreeMap<>();
+        for (String key : json.keySet()) {
+            map.put(key, json.getInt(key));
+        }
+        return map;
     }
 
     public static JSONObject stringMapToJson(Map<?, String> map) {

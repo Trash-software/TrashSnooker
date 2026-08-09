@@ -805,9 +805,16 @@ public class CareerView extends ChildInitializable {
             CashFlowView view = loader.getController();
             view.setParent(selfStage.getScene());
 
+            long t0 = System.currentTimeMillis();
             view.setup(selfStage, careerManager.getHumanPlayerCareer());
+            long t1 = System.currentTimeMillis();
+            System.out.println("View setup time: " + (t1 - t0));
             
             App.setRoot(root);
+            long t2 = System.currentTimeMillis();
+            System.out.println("Set root time: " + (t2 - t1));
+            
+            view.renderInvoiceList();
         } catch (IOException e) {
             EventLogger.error(e);
         }
