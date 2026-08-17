@@ -227,6 +227,37 @@ public class DataLoader {
         }
     }
 
+    public List<PlayerPerson> filterActualPlayersByClub(String club) {
+        Collection<PlayerPerson> actPlayers = getActualPlayers();
+        if ("All".equals(club) || "".equals(club)) {
+            return new ArrayList<>(actPlayers);
+        } else {
+            List<PlayerPerson> res = new ArrayList<>();
+            for (PlayerPerson p : actPlayers) {
+                if (p.getClubs().contains(club)) res.add(p);
+            }
+            return res;
+        }
+    }
+    
+    public List<String> getAllClubs() {
+        Collection<PlayerPerson> actPlayers = getActualPlayers();
+        Set<String> uniqueClubs = new TreeSet<>();
+        for (PlayerPerson pp : actPlayers) {
+            uniqueClubs.addAll(pp.getClubs());
+        }
+        return new ArrayList<>(uniqueClubs).stream().sorted().toList();
+    }
+
+    public List<String> getAllCategories() {
+        Collection<PlayerPerson> actPlayers = getActualPlayers();
+        Set<String> uniqueCategories = new TreeSet<>();
+        for (PlayerPerson pp : actPlayers) {
+            uniqueCategories.add(pp.category);
+        }
+        return new ArrayList<>(uniqueCategories).stream().sorted().toList();
+    }
+
     private Map<String, PlayerPerson> generateAndSaveRandomPlayers(int nRandomPlayers) {
         JSONObject root = new JSONObject();
         JSONObject object = new JSONObject();

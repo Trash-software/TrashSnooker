@@ -7,12 +7,12 @@ import java.util.Locale;
 
 public class AiPlayStyle {
     public static final AiPlayStyle PERFECT =
-            new AiPlayStyle(100.0, 100.0, 100.0, 100.0, 
+            new AiPlayStyle(100.0, 100.0, 100.0, 
                     80.0, 50,
                     new double[]{15.0, 60.0}, 75, 100,
                     "right", false, 2);
 
-    public final double precision;
+//    public final double precision;
     public final double stability;  // 准度稳定性
     public final double position;  // 走位能力
     public final double defense;
@@ -25,14 +25,14 @@ public class AiPlayStyle {
     public final boolean cebSideBreak;  // Chinese eight balls 侧面冲球
     public final int snookerWithdrawLimit;  // 需要做多少杆斯诺克才认输
 
-    public AiPlayStyle(double precision, double stability, double position, double defense,
+    public AiPlayStyle(double stability, double position, double defense,
                        double attackPrivilege, double likeShow,
                        double[] likePowerRange, 
                        double likeSide,
                        double doubleAbility,
                        String snookerBreakMethod, boolean cebSideBreak,
                        int snookerWithdrawLimit) {
-        this.precision = precision;
+//        this.precision = precision;
         this.stability = stability;
         this.position = position;
         this.defense = defense;
@@ -62,7 +62,6 @@ public class AiPlayStyle {
         }
         
         return new AiPlayStyle(
-                aiObject.getDouble("precision"),
                 aiObject.getDouble("stable"),
                 aiObject.getDouble("position"),
                 aiObject.getDouble("defense"),
@@ -84,7 +83,7 @@ public class AiPlayStyle {
         likePwrRng.put(likePowerRange[0]);
         likePwrRng.put(likePowerRange[1]);
 
-        obj.put("precision", precision);
+//        obj.put("precision", precision);
         obj.put("stable", stability);
         obj.put("position", position);
         obj.put("defense", defense);

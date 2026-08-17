@@ -14,6 +14,7 @@ import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class AbilityShower extends VBox {
@@ -21,9 +22,9 @@ public class AbilityShower extends VBox {
     @FXML
     VBox selfBox, opponentBox;
     @FXML
-    Label nameLabel, categoryLabel, sexLabel, heightLabel;
+    Label nameLabel, categoryLabel, clubsFmtLabel, sexLabel, heightLabel;
     @FXML
-    Label nameLabel2, categoryLabel2, sexLabel2, heightLabel2;
+    Label nameLabel2, categoryLabel2, clubsFmtLabel2, sexLabel2, heightLabel2;
     @FXML
     Rectangle colorRect, colorRect2;
     @FXML
@@ -92,11 +93,22 @@ public class AbilityShower extends VBox {
 
         nameLabel2.setText(opponentAbi.getShownName());
         categoryLabel2.setText(PlayerPerson.getPlayerCategoryShown(opponentAbi.category, strings));
+        
+        clubsFmtLabel2.setText(fmtClubs(opponentAbi));
 
         sexLabel2.setText(opponentAbi.getSex().toString());
         heightLabel2.setText(String.format("%.0f cm", opponentAbi.getHandBody().height));
 
         setupRadar();
+    }
+    
+    private String fmtClubs(PlayerPerson.ReadableAbility ra) {
+        List<String> clubs = ra.getClubs();
+        if (clubs.isEmpty()) {
+            return strings.getString("clubsOrTeamsFmt").formatted("--");
+        } else {
+            return strings.getString("clubsOrTeamsFmt").formatted(String.join(", ", clubs));
+        }
     }
 
     private void setupRadar() {
@@ -152,8 +164,6 @@ public class AbilityShower extends VBox {
             double[] valuesPre = getRadarValues(ability2);
             radarChartRoot.setValues(titles, valuesReal, valuesPre);
         }
-
-        System.out.println(ability.antiHand());
     }
 
     private double[] getRadarValues(PlayerPerson.ReadableAbility ability) {
@@ -182,6 +192,8 @@ public class AbilityShower extends VBox {
 
         nameLabel.setText(realAbility.getShownName());
         categoryLabel.setText(PlayerPerson.getPlayerCategoryShown(realAbility.category, strings));
+
+        clubsFmtLabel.setText(fmtClubs(realAbility));
 
         sexLabel.setText(realAbility.getSex().toString());
         heightLabel.setText(String.format("%.0f cm", realAbility.getHandBody().height));

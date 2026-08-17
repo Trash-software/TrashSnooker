@@ -9,6 +9,7 @@ public class MovementFrame {
     public static final int EDGE_CUSHION = 10;
     public static final int CUSHION_ARC = 11;
     public static final int CUSHION_LINE = 12;
+//    public static final int INSIDE_POCKET = 13;
     public static final int POCKET_BACK = 15;
     
     public final double x;
@@ -39,7 +40,7 @@ public class MovementFrame {
         this.movementValue = movementValue;
     }
     
-    private static int movementTypePrivilege(int type) {
+    public static int movementTypePrivilege(int type) {
         return switch (type) {
             case CUSHION_ARC, CUSHION_LINE -> 2;
             case EDGE_CUSHION -> 3;

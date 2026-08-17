@@ -1,40 +1,39 @@
 {
   "p1": {
     "playerNumber": 1,
-    "gameRule": "SNOOKER",
+    "gameRule": "CHINESE_EIGHT",
     "handFeelEffort": 1,
-    "psyStatus": 0.6297999999999997,
-    "person": "custom_player_2",
+    "psyStatus": 0.7856249999999999,
+    "person": "custom_player_5",
     "playerType": "PLAYER",
     "let": {"type": "notLet"}
   },
   "p1Wins": 0,
   "p2": {
     "playerNumber": 2,
-    "gameRule": "SNOOKER",
+    "gameRule": "CHINESE_EIGHT",
     "handFeelEffort": 1,
     "psyStatus": 1,
-    "person": "custom_player_3",
+    "person": "custom_player_4",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
   "codeGameCounter": 1,
   "p2BreakLoseChance": 0,
   "gameValues": {
-    "ballsGroupPreset": "helloKittySnooker",
-    "ball": "SNOOKER_BALL",
-    "gameRule": "SNOOKER",
-    "subRules": ["SNOOKER_STD"],
-    "devMode": false,
+    "ball": "POOL_BALL",
+    "gameRule": "CHINESE_EIGHT",
+    "subRules": ["CHINESE_EIGHT_STD"],
+    "devMode": true,
     "table": {
-      "tableOrdinal": 0,
+      "tableOrdinal": 1,
       "pocketDifficultyOrdinal": 3,
-      "holeSizeOrdinal": 2
+      "holeSizeOrdinal": 3
     }
   },
   "winRecords": {"1": 2},
   "p2Wins": 1,
-  "startTime": 1785755324331,
+  "startTime": 1786917988669,
   "p1BreakLoseChance": 0,
   "totalFrames": 1,
   "cloth": {

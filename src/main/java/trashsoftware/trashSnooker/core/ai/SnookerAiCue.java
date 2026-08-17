@@ -171,7 +171,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         0.0,
                         false,
                         false,
-                        makeSnookerPrice
+                        makeSnookerPrice,
+                        true
                 );
                 if (dc != null) {
                     double[] whiteStopPos = dc.wp.stopPoint();
@@ -195,7 +196,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             return null;
         }
         Collections.sort(legalChoices);
-        Collections.reverse(legalChoices);
+//        Collections.reverse(legalChoices);
         System.out.println("Break sel power " + legalChoices.get(0).cueParams.selectedPower());
         return legalChoices.get(0);
     }

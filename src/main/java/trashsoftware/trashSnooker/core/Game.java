@@ -1941,11 +1941,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             if (cueBallClone.isLikelyStopped(phy)) return true;
             if (cueBallClone.isOutOfTable()) return true;
             if (!predictPath && prediction.getFirstCollide() != null) return true;
-            if (cueBallClone.tryHitPocketsBack(phy)) {
-//                cueBallClone.normalMove(phy);
-                prediction.potCueBall();
-                return true;
-            }
+//            if (cueBallClone.tryHitPocketsBack(phy)) {
+////                cueBallClone.normalMove(phy);
+//                prediction.potCueBall();
+//                return true;
+//            }
             if (cueBallClone.willPot(phy)) {
                 prediction.potCueBall();
                 return true;
@@ -2159,6 +2159,15 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             Util.shuffleArray(randomOrderBallPool1);
 //            Util.shuffleArray(randomOrderBallPool2);
         }
+        
+        private void replaceMovement(int i, int movementType, double movementValue) {
+            int curPri = MovementFrame.movementTypePrivilege(movementTypes[i]);
+            int newPri = MovementFrame.movementTypePrivilege(movementType);
+            if (newPri >= curPri) {
+                movementTypes[i] = movementType;
+                movementValues[i] = movementValue;
+            }
+        }
 
         private boolean oneRun() {
             boolean noBallMoving = true;
@@ -2178,8 +2187,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (stat != 0) {
                         noBallMoving = false;
                         if (stat == 2) {
-                            movementTypes[i] = MovementFrame.POCKET_BACK;
-                            movementValues[i] = ball.getMaxInPocketSpeed() / Values.MAX_POWER_SPEED;
+                            replaceMovement(i, MovementFrame.POCKET_BACK, ball.getMaxInPocketSpeed() / Values.MAX_POWER_SPEED);
+//                            System.out.println("Pocket back:" + movementValues[i]);
                         }
                     }
                     continue;
@@ -2198,20 +2207,19 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 if (!ball.isLikelyStopped(phy)) {
                     noBallMoving = false;
 
-                    if (ball.tryHitPocketsBack(phy)) {
-//                        ball.normalMove(phy);
-                        movementTypes[i] = MovementFrame.POT;
-                        movementValues[i] = Math.hypot(ball.vx, ball.vy)
-                                * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
-                        ball.naturalPot(1000);
-                        newPotted.add(ball);
-                        continue;
-                    }
+//                    if (ball.tryHitPocketsBack(phy)) {
+////                        ball.normalMove(phy);
+//                        movementTypes[i] = MovementFrame.POT;
+//                        movementValues[i] = Math.hypot(ball.vx, ball.vy)
+//                                * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
+//                        ball.naturalPot(1000);
+//                        newPotted.add(ball);
+//                        continue;
+//                    }
 
                     if (ball.willPot(phy)) {
-                        movementTypes[i] = MovementFrame.POT;
-                        movementValues[i] = Math.hypot(ball.vx, ball.vy)
-                                * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
+                        replaceMovement(i, MovementFrame.POT, Math.hypot(ball.vx, ball.vy)
+                                * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
                         ball.naturalPot(1000);
                         newPotted.add(ball);
                         continue;
@@ -2221,9 +2229,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         if (!tryHitBall(ball)) {
                             ball.normalMove(phy);
                         } else {
-                            movementTypes[i] = MovementFrame.COLLISION;
-                            movementValues[i] = ball.getLastCollisionRelSpeed()
-                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
+                            replaceMovement(i,  MovementFrame.COLLISION, ball.getLastCollisionRelSpeed()
+                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
                         }
                         continue;
                     }
@@ -2232,9 +2239,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (holeAreaResult != null && holeAreaResult.result() != 0) {
                         // 袋口区域
                         if (tryHitBall(ball)) {
-                            movementTypes[i] = MovementFrame.COLLISION;
-                            movementValues[i] = ball.getLastCollisionRelSpeed()
-                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
+                            replaceMovement(i, 
+                                    MovementFrame.COLLISION, 
+                                    ball.getLastCollisionRelSpeed()
+                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
                         }
                         if (holeAreaResult.result() == 2) {
                             collidesWall = true;
@@ -2243,9 +2251,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                 movement.getWhiteTrace().hitCushion(holeAreaResult.cushion(), ball.getPositionArray());
                             else
                                 movement.getTraceOfBallNotNull(ball).hitCushion(holeAreaResult.cushion(), ball.getPositionArray());
-                            movementTypes[i] = holeAreaResult.cushion().movementType();
-                            movementValues[i] = Math.hypot(ball.vx, ball.vy)
-                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
+                            replaceMovement(i, 
+                                    holeAreaResult.cushion().movementType(), 
+                                    Math.hypot(ball.vx, ball.vy)
+                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
                         }
                         continue;
                     }
@@ -2256,16 +2265,18 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         recordHitCushion(ball);
                         if (ball.isWhite()) movement.getWhiteTrace().hitCushion(cushion, ball.getPositionArray());
                         else movement.getTraceOfBallNotNull(ball).hitCushion(cushion, ball.getPositionArray());
-                        movementTypes[i] = cushion.movementType();
-                        movementValues[i] = Math.hypot(ball.vx, ball.vy)
-                                * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
+                        replaceMovement(i, 
+                                cushion.movementType(),
+                                Math.hypot(ball.vx, ball.vy)
+                                        * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
                         continue;
                     }
 
                     if (tryHitBall(ball)) {
-                        movementTypes[i] = MovementFrame.COLLISION;
-                        movementValues[i] = ball.getLastCollisionRelSpeed()
-                                * phy.calculationsPerSec / Values.MAX_POWER_SPEED;
+                        replaceMovement(i, 
+                                MovementFrame.COLLISION,
+                                ball.getLastCollisionRelSpeed()
+                                        * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
                     } else {
                         // 真不撞
                         if (ball.checkEnterBreakArea(getTable().breakLineX())) {

@@ -1,5 +1,7 @@
 package trashsoftware.trashSnooker.core.metrics;
 
+import java.util.Arrays;
+
 public class Pocket {
 
     public final boolean isMid;
@@ -59,5 +61,19 @@ public class Pocket {
 
     public double[] getFacingDir() {
         return facingDir;
+    }
+
+    @Override
+    public String toString() {
+        return "Pocket{" +
+                "isMid=" + isMid +
+                ", fallCenter=" + Arrays.toString(fallCenter) +
+                ", fallRadius=" + fallRadius +
+                ", graphicalCenter=" + Arrays.toString(graphicalCenter) +
+                ", graphicalRadius=" + graphicalRadius +
+                ", extraSlopeWidth=" + extraSlopeWidth +
+                ", pocketName=" + pocketName +
+                ", facingDir=" + Arrays.toString(facingDir) +
+                '}';
     }
 }

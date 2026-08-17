@@ -24,6 +24,8 @@
                 <Label fx:id="categoryLabel" text="%catProf"/>
                 <Rectangle fx:id="colorRect" width="16.0" height="16.0" visible="false"/>
             </HBox>
+            
+            <Label fx:id="clubsFmtLabel" text="%clubsOrTeamsFmt"/>
 
             <HBox spacing="10.0">
                 <Label fx:id="sexLabel"/>
@@ -45,6 +47,8 @@
                 <Label fx:id="categoryLabel2" text="%catProf" textFill="gray"/>
             </HBox>
 
+            <Label fx:id="clubsFmtLabel2" text="%clubsOrTeamsFmt"/>
+
             <HBox spacing="10.0" alignment="TOP_RIGHT">
                 <Label fx:id="heightLabel2" textFill="gray"/>
                 <Label fx:id="sexLabel2" textFill="gray"/>
@@ -52,7 +56,7 @@
         </VBox>
     </AnchorPane>
 
-    <GridPane fx:id="barChartRoot" vgap="10.0" hgap="20.0">
+    <GridPane fx:id="barChartRoot" vgap="10.0" hgap="20.0" VBox.vgrow="ALWAYS">
         <columnConstraints>
             <ColumnConstraints/>
             <ColumnConstraints/>

@@ -190,22 +190,24 @@ public class Analyzer {
         return null;
     }
 
-    static double attackProbThreshold(double base, AiPlayStyle aps) {
+    static double attackProbThreshold(double base, PlayerPerson person) {
+        AiPlayStyle aps = person.getAiPlayStyle();
         if (aps.attackPrivilege == 100) return 0.000001;  // 管他娘的
         else {
             double room = 1.0 - base;
             double playerNotWantAttack = 1 - aps.attackPrivilege / 100;
             playerNotWantAttack = Math.pow(playerNotWantAttack, 0.75);  // 无奈之举。次幂越小，进攻权重低的球手越不进攻
             double realAttackProb = base + playerNotWantAttack * room;
-            double mul = Math.pow(aps.precision / 100.0, 1.5);  // 补偿由于AI打不准造成的进球概率低，进而不进攻的问题
+            double mul = Math.pow(person.getPrecisionPercentage() / 100.0, 1.5);  // 补偿由于AI打不准造成的进球概率低，进而不进攻的问题
             return realAttackProb * mul;  // 这里不像下面用了Math.max。原因：太菜的选手只会无脑进攻，哈哈哈
         }
     }
 
-    static double defensiveAttackProbThreshold(AiPlayStyle aps) {
+    static double defensiveAttackProbThreshold(PlayerPerson person) {
+        AiPlayStyle aps = person.getAiPlayStyle();
         double room = 1 - AiCue.DEFENSIVE_ATTACK_PROB;
         double realProb = AiCue.DEFENSIVE_ATTACK_PROB + (1 - aps.attackPrivilege / 100) * room;
-        double mul = Math.pow(aps.precision / 100.0, 1.5);  // 补偿由于AI打不准造成的进球概率低，进而不进攻的问题
+        double mul = Math.pow(person.getPrecisionPercentage() / 100.0, 1.5);  // 补偿由于AI打不准造成的进球概率低，进而不进攻的问题
         double res = realProb * mul;
         return Math.max(AiCue.DEFENSIVE_ATTACK_PROB / 5, res);
     }
@@ -279,7 +281,8 @@ public class Analyzer {
             double nativePrice,
             boolean allowPocketCorner,
             boolean considerTolerance,
-            double makingSnookerPrice
+            double makingSnookerPrice,
+            boolean considerPostEffect
     ) {
 
         WhitePrediction wp = copy.predictWhite(cpp,
@@ -330,20 +333,25 @@ public class Analyzer {
                 penalty += 50;  // 二次碰撞
             }
 
-            DefenseResult defenseResult = new DefenseResult(opponentTarget, opponentBalls, isSolving);
-            addDefenseScores(
-                    defenseResult,
-                    copy,
-                    aiCue,
-                    aiPlayer,
-                    seeAble,
-                    0.5,
-                    makingSnookerPrice
-            );
+            DefenseResult defenseResult;
+            if (considerPostEffect) {
+                defenseResult = new DefenseResult(opponentTarget, opponentBalls, isSolving);
+                addDefenseScores(
+                        defenseResult,
+                        copy,
+                        aiCue,
+                        aiPlayer,
+                        seeAble,
+                        0.5,
+                        makingSnookerPrice
+                );
+            } else {
+                defenseResult = null;
+            }
 
             // 解球专用的吧
             if (wp.getWhiteCushionCountBefore() > 2) {
-                penalty += (wp.getWhiteCushionCountBefore() - 1.5) * 20;
+                penalty += (wp.getWhiteCushionCountBefore() - 2) * 30;
             }
             if (wp.getWhiteCushionCountAfter() > 3) {
                 penalty += (wp.getWhiteCushionCountAfter() - 2.5) * 10;
@@ -354,7 +362,7 @@ public class Analyzer {
             if (wp.isWhiteHitsHoleArcs()) {
                 penalty += 80;
             }
-            if (defenseResult.snookerScore > 0.1) {
+            if (defenseResult != null && defenseResult.snookerScore > 0.1) {
                 if (wp.isFirstBallCollidesOther()) {  // 在做斯诺克
                     penalty += 40;
                 }
@@ -490,7 +498,7 @@ public class Analyzer {
         // 瞄准的1倍标准差偏差角
         double aimingSd;
         if (isAttack) {
-            aimingSd = (105 - aps.precision) * handSdMul /
+            aimingSd = (105 - playerPerson.getPrecisionPercentage()) * handSdMul /
                     AiCueResult.DEFAULT_AI_PRECISION;  // 这里用default是因为，我们不希望把AI精确度调低之后它就觉得打不进，一直防守
         } else {
             aimingSd = (105 - aps.defense) * handSdMul /
@@ -559,7 +567,7 @@ public class Analyzer {
                 false
         );
 
-        double whiteBallDevRad = (devs[0] + devs[1] + devs[2]) * 1.0;  // 这个值越小，AI越愿意尝试走钢丝
+        double whiteBallDevRad = (devs[0] + devs[1] + devs[2]) * 1.25;  // 这个值越小，AI越愿意尝试走钢丝
         double[] leftDir = Algebra.rotateVector(origCpp.vx, origCpp.vy, -whiteBallDevRad);
         double[] rightDir = Algebra.rotateVector(origCpp.vx, origCpp.vy, whiteBallDevRad);
 

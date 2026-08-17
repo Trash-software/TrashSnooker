@@ -74,7 +74,7 @@ public class FastGameView extends ChildInitializable {
     @FXML
     Label letScoreOrBallLabel;
     @FXML
-    ComboBox<CategoryItem> player1CatBox, player2CatBox;
+    ComboBox<CategoryClubItem> player1CatBox, player2CatBox;
     @FXML
     ComboBox<TablePresetWrapper> tablePresetBox;
     @FXML
@@ -96,6 +96,7 @@ public class FastGameView extends ChildInitializable {
 
     private Stage stage;
     private ResourceBundle strings;
+    private DataLoader dataLoader;
 
     private static <T> void selectBox(ComboBox<T> box, T value) {
         int index = box.getItems().indexOf(value);
@@ -108,6 +109,8 @@ public class FastGameView extends ChildInitializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.strings = resources;
+
+        dataLoader = DataLoader.getInstance();
 
         initTypeSelectionToggle();
         initGameTypeBox();
@@ -194,7 +197,7 @@ public class FastGameView extends ChildInitializable {
         tablePresetBox.getItems().clear();
 
         tablePresetBox.getItems().add(new TablePresetWrapper(strings.getString("tableCustom"), null));
-        Map<String, TablePreset> tables = DataLoader.getInstance().getTablesOfType(factory.key);
+        Map<String, TablePreset> tables = dataLoader.getTablesOfType(factory.key);
         for (TablePreset tp : tables.values()) {
             tablePresetBox.getItems().add(new TablePresetWrapper(tp.name, tp));
         }
@@ -205,7 +208,7 @@ public class FastGameView extends ChildInitializable {
         ballsPresetBox.getItems().clear();
         
         ballsPresetBox.getItems().add(new BallsPresetWrapper(strings.getString("ballsStandard"), null));
-        Map<String, BallsGroupPreset> balls = DataLoader.getInstance().getBallsPresetsOfType(rule);
+        Map<String, BallsGroupPreset> balls = dataLoader.getBallsPresetsOfType(rule);
         for (BallsGroupPreset bgp : balls.values()) {
             ballsPresetBox.getItems().add(new BallsPresetWrapper(bgp.name, bgp));
         }
@@ -355,8 +358,20 @@ public class FastGameView extends ChildInitializable {
     }
 
     private void loadPlayerList() {
-        player1CatBox.getItems().addAll(CategoryItem.values());
-        player2CatBox.getItems().addAll(CategoryItem.values());
+        List<String> allCategories = dataLoader.getAllCategories();
+        List<String> allClubs = dataLoader.getAllClubs();
+        
+        List<CategoryClubItem> allCatClubs = new ArrayList<>();
+        allCatClubs.add(CategoryClubItem.ALL);
+        for (String cat : allCategories) {
+            allCatClubs.add(new CategoryClubItem(cat, true));
+        }
+        for (String club : allClubs) {
+            allCatClubs.add(new CategoryClubItem(club, false));
+        }
+        
+        player1CatBox.getItems().addAll(allCatClubs);
+        player2CatBox.getItems().addAll(allCatClubs);
 
         addCatBoxProperty(player1CatBox, player1Box);
         addCatBoxProperty(player2CatBox, player2Box);
@@ -370,13 +385,18 @@ public class FastGameView extends ChildInitializable {
         player2Player.getSelectionModel().select(0);
     }
 
-    private void addCatBoxProperty(ComboBox<CategoryItem> catBox,
+    private void addCatBoxProperty(ComboBox<CategoryClubItem> catBox,
                                    ComboBox<PersonItem> playerBox) {
         catBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 playerBox.getItems().clear();
-                Collection<PlayerPerson> catPlayers = DataLoader.getInstance().filterActualPlayersByCategory(newValue.cat);
-                for (PlayerPerson person : catPlayers) {
+                Collection<PlayerPerson> selectedPlayers;
+                if (newValue.isCat) {
+                    selectedPlayers = dataLoader.filterActualPlayersByCategory(newValue.catOrClub);
+                } else {
+                    selectedPlayers = dataLoader.filterActualPlayersByClub(newValue.catOrClub);
+                }
+                for (PlayerPerson person : selectedPlayers) {
                     playerBox.getItems().add(new PersonItem(person));
                 }
             }
@@ -601,22 +621,29 @@ public class FastGameView extends ChildInitializable {
         }
     }
 
-    public enum CategoryItem {
-        ALL("All"),
-        PROFESSIONAL("Professional"),
-        AMATEUR("Amateur"),
-        NOOB("Noob"),
-        GOD("God");
+    public static class CategoryClubItem {
+        public static CategoryClubItem ALL = new CategoryClubItem("All", true);
+//        ALL("All"),
+//        PROFESSIONAL("Professional"),
+//        AMATEUR("Amateur"),
+//        NOOB("Noob"),
+//        GOD("God");
 
-        private final String cat;
+        private final String catOrClub;
+        private final boolean isCat;
 
-        CategoryItem(String cat) {
-            this.cat = cat;
+        CategoryClubItem(String catOrClub, boolean isCat) {
+            this.catOrClub = catOrClub;
+            this.isCat = isCat;
         }
 
         @Override
         public String toString() {
-            return PlayerPerson.getPlayerCategoryShown(cat, App.getStrings());
+            if (isCat) {
+                return PlayerPerson.getPlayerCategoryShown(catOrClub, App.getStrings());
+            } else {
+                return catOrClub;
+            }
         }
     }
 

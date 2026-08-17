@@ -3644,7 +3644,7 @@ public class GameView implements Initializable {
             MovementFrame lastDrawn = frames.getFirst();
             double x = gamePane.canvasX(lastDrawn.x);
             double y = gamePane.canvasY(lastDrawn.y);
-            double calculations = frameTimeMs / game.playPhy.calculateMs;  // fixme: replay时phy是null
+            double calculations = frameTimeMs / (game == null ? Phy.PLAY_MS : game.playPhy.calculateMs);
             double[] vel = frames.get(1).computeVelocityInPhyStyle(lastDrawn, calculations);
 
 //            double slipThresh = gameValues.ball.frictionRatio * gameValues.table.slipResistanceRatio * game.playPhy.slippingFrictionTimed * frameTimeMs * 1.2;
@@ -3800,7 +3800,8 @@ public class GameView implements Initializable {
                         movement.getMovementMap().entrySet()) {
                     List<MovementFrame> list = entry.getValue();
                     MovementFrame frame = list.get(fi);
-                    if (!frame.potted) {
+                    if (!frame.potted || 
+                            frame.movementType == MovementFrame.POCKET_BACK) {
                         int old = mediaType;
                         mediaType = MovementFrame.replaceMovementType(mediaType, frame.movementType);
                         if (old != mediaType) {
@@ -4346,24 +4347,24 @@ public class GameView implements Initializable {
 
     private double getPsyAccuracyMultiplier(PlayerPerson playerPerson) {
         GamePlayStage stage = gamePlayStage();
-        switch (stage) {
-            case THIS_BALL_WIN:
-            case ENHANCE_WIN:
-                return playerPerson.psyNerve / 100;
-            default:
-                return 1.0;
-        }
+        double psyWeakness = 1.0 - playerPerson.psyNerve / 100;
+        return switch (stage) {
+            case THIS_BALL_WIN -> 1.0 - psyWeakness;
+            case NEXT_BALL_WIN -> 1.0 - psyWeakness * 0.75;
+            case ENHANCE_WIN -> 1.0 - psyWeakness * 0.5;
+            default -> 1.0;
+        };
     }
 
     private double getPsyControlMultiplier(PlayerPerson playerPerson) {
         GamePlayStage stage = gamePlayStage();
-        switch (stage) {
-            case THIS_BALL_WIN:
-            case NEXT_BALL_WIN:
-                return playerPerson.psyNerve / 100;
-            default:
-                return 1.0;
-        }
+        double psyWeakness = 1.0 - playerPerson.psyNerve / 100;
+        return switch (stage) {
+            case THIS_BALL_WIN -> 1.0 - psyWeakness;
+            case NEXT_BALL_WIN -> 1.0 - psyWeakness * 0.75;
+            case ENHANCE_WIN -> 1.0 - psyWeakness * 0.5;
+            default -> 1.0;
+        };
     }
 
     private void drawStandingPos() {

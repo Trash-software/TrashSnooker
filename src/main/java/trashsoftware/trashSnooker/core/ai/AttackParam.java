@@ -70,7 +70,7 @@ public class AttackParam {
                 pathChange;  // todo: 这里把白球+目标球的变线全算给白球了
 
         // 目标球出发角的大致偏差，标准差。 todo: 目前的算法导致了AI认为近乎90度的薄球不难
-        double tarDevSdRad = Math.asin(sdCollisionMm / gameValues.ball.ballDiameter);
+        double tarDevSdRad = Math.asin(Math.clamp(sdCollisionMm / gameValues.ball.ballDiameter, -1, 1));
 
         // todo: 1 / cos是权宜之计
         tarDevSdRad *= 1 / Math.cos(attackChoice.angleRad);
@@ -89,7 +89,7 @@ public class AttackParam {
         NormalDistribution nd;
         if (attackChoice instanceof AttackChoice.DirectAttackChoice dac) {
             // 举个例子，瞄准为90的AI，白球在右顶袋打蓝球右底袋时，offset差不多1770，下面这个值在53毫米左右
-            double targetDifficultyMm = targetAimingOffset * (105 - aps.precision) / 500;
+            double targetDifficultyMm = targetAimingOffset * (105 - playerPerson.getPrecisionPercentage()) / 500;
 
             tarDevHoleSdMm += targetDifficultyMm;
 

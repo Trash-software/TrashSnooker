@@ -46,6 +46,7 @@ public class ChampionshipData {
     TableSpec tableSpec;
     BallMetrics ballMetrics;
     Collection<SubRule> subRules;
+    private List<String> clubsRestriction;
     ChampionshipLocation location;
     private int registryFee;
     private int flightFee;
@@ -129,6 +130,17 @@ public class ChampionshipData {
             }
         }
         data.location = cl;
+        
+        // Check: 有可能与种子选手/仅职业/ranked等前置条件冲突
+        JSONArray clubs = jsonObject.optJSONArray("clubs", null);
+        if (clubs == null) {
+            data.clubsRestriction = List.of();
+        } else {
+            data.clubsRestriction = new ArrayList<>();
+            for (int i = 0; i < clubs.length(); i++) {
+                data.clubsRestriction.add(clubs.getString(i));
+            }
+        }
 
         JSONArray frames = jsonObject.getJSONArray("frames");
         data.analyzeFramesStages(frames);
@@ -350,6 +362,14 @@ public class ChampionshipData {
 
     public int getForbidden() {
         return forbidden;
+    }
+    
+    public boolean hasClubRestriction() {
+        return clubsRestriction != null && !clubsRestriction.isEmpty();
+    }
+
+    public List<String> getClubsRestriction() {
+        return clubsRestriction == null ? List.of() : clubsRestriction;
     }
 
     public int getTotalPlaces() {

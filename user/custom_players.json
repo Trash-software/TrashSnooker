@@ -1178,7 +1178,7 @@
         "stable": 95,
         "precision": 88,
         "position": 99,
-        "attackPri": 40,
+        "attackPri": 55,
         "snookerBreak": "RIGHT",
         "likePowerRange": [
           15,
@@ -1228,6 +1228,119 @@
         "GirlPoolCue"
       ],
       "height": 160
+    },
+    "custom_player_5": {
+      "rest": {
+        "useHand": "RIGHT",
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 85,
+        "cuePlayType": "p1.0,h800,e500;s",
+        "spin": 85,
+        "pullDt": [
+          25,
+          150,
+          50,
+          150
+        ],
+        "controllablePower": 60,
+        "cueSwingMag": 3,
+        "maxPower": 72,
+        "cuePrecisions": [
+          63.050000000000004,
+          61.1
+        ],
+        "hand": "rest"
+      },
+      "solving": 89,
+      "aimingOffset": 0,
+      "psyRua": 2.5,
+      "dominant": {
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 98,
+        "cuePlayType": "p1.0,h800,e500;s",
+        "spin": 96,
+        "pullDt": [
+          25,
+          150,
+          50,
+          150
+        ],
+        "controllablePower": 68,
+        "cueSwingMag": 3,
+        "maxPower": 79,
+        "cuePrecisions": [
+          98,
+          95
+        ],
+        "hand": "right"
+      },
+      "saveVersion": 62,
+      "precision": 92,
+      "sex": "F",
+      "longPrecision": 1.0,
+      "ai": {
+        "doubleAbility": 75,
+        "likeSide": 75,
+        "defense": 95,
+        "stable": 87,
+        "precision": 90,
+        "position": 98,
+        "attackPri": 80,
+        "snookerBreak": "RIGHT",
+        "likePowerRange": [
+          15,
+          65
+        ],
+        "withdrawAfter": 4,
+        "likeShow": 50,
+        "cebSideBreak": true
+      },
+      "nonDominant": {
+        "cuePoints": [
+          -0,
+          0
+        ],
+        "powerControl": 30,
+        "cuePlayType": "p1.0,h800,e500;s",
+        "spin": 40,
+        "pullDt": [
+          25,
+          150,
+          50,
+          150
+        ],
+        "controllablePower": 40,
+        "cueSwingMag": 60,
+        "maxPower": 10.666666666666666,
+        "cuePrecisions": [
+          14.549999999999997,
+          14.099999999999994
+        ],
+        "hand": "left"
+      },
+      "psyNerve": 5.5,
+      "name": "玻璃心易碎美女",
+      "width": 0.75,
+      "games": {
+        "lisEight": 1,
+        "americanNine": 1,
+        "miniSnooker": 1,
+        "snooker": 1,
+        "chineseEight": 1
+      },
+      "anglePrecision": 1.0,
+      "category": "Professional",
+      "privateCues": [
+        "GirlCue",
+        "GirlPoolCue"
+      ],
+      "height": 164
     },
     "custom_player_165": {
       "rest": {

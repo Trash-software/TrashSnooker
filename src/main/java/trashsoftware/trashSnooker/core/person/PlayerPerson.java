@@ -43,6 +43,7 @@ public class PlayerPerson {
     private final Sex sex;
     private final boolean underage;
     private final Map<GameRule, Double> participates;
+    private final List<String> clubs;
     private boolean isCustom;
     public final int saveVersion;
 
@@ -62,6 +63,7 @@ public class PlayerPerson {
                         boolean underage,
                         boolean isCustom,
                         Map<GameRule, Double> participates,
+                        List<String> clubs,
                         int lastModifiedVersion) {
 
         boolean needTranslate = !Objects.equals(
@@ -94,8 +96,9 @@ public class PlayerPerson {
         this.underage = underage;
 
         this.participates = participates;
+        this.clubs = clubs;
     }
-    
+
     private static boolean isRandom(String playerId) {
         return playerId.startsWith("random_");
     }
@@ -233,8 +236,8 @@ public class PlayerPerson {
         double psyNerve, psyRua;
         if (version < 58 && isRandom(playerId)) {
             double[] psy = randomPsy(new Random(), sex);
-             psyNerve = psy[0];
-             psyRua = psy[1];
+            psyNerve = psy[0];
+            psyRua = psy[1];
         } else {
             if (personObj.has("psyNerve") && personObj.has("psyRua")) {
                 psyNerve = personObj.getDouble("psyNerve");
@@ -262,6 +265,7 @@ public class PlayerPerson {
                 personObj.has("underage") && personObj.getBoolean("underage"),
                 false,
                 parseParticipates(personObj.has("games") ? personObj.get("games") : null),
+                parseClubs(personObj.optJSONArray("clubs")),
                 App.VERSION_CODE
         );
 
@@ -327,6 +331,21 @@ public class PlayerPerson {
         return result;
     }
 
+    public static List<String> parseClubs(Object object) {
+        if (object instanceof JSONArray array) {
+            List<String> res = new ArrayList<>();
+            for (int i = 0; i < array.length(); i++) {
+                res.add(array.getString(i));
+            }
+            return res;
+        } else {
+            if (object != null) {
+                System.err.println("Cannot parse clubs of " + object);
+            }
+            return List.of();
+        }
+    }
+
     public static PlayerPerson randomPlayer(String id,
                                             String name,
                                             double abilityLow,
@@ -348,11 +367,11 @@ public class PlayerPerson {
         double g = new Random().nextGaussian();
         return mean + g * sd;
     }
-    
+
     private static double[] randomPsy(Random random, Sex sex) {
         double psyLow = sex == Sex.M ? 70 : 60;
         double psyHigh = sex == Sex.M ? 90 : 80;
-        
+
         return new double[]{random.nextDouble(psyLow, psyHigh), random.nextDouble(psyLow, psyHigh)};
     }
 
@@ -409,7 +428,7 @@ public class PlayerPerson {
                 primaryHand,
                 random.nextDouble(0.5, 0.7), restAbility
         );
-        
+
         double[] psy = randomPsy(random, sex);
 
         PlayerPerson person = new PlayerPerson(
@@ -429,6 +448,7 @@ public class PlayerPerson {
                 false,
                 isCustom,
                 participatesAll(),
+                List.of(),
                 App.VERSION_CODE
         );
 
@@ -476,6 +496,16 @@ public class PlayerPerson {
                 (100 - spinControl) / CUE_PRECISION_FACTOR};
     }
 
+    public List<String> getClubs() {
+        return clubs;
+    }
+
+    public boolean belongsOneOfClubs(List<String> givenClubs) {
+        for (String myClub : getClubs()) {
+            if (givenClubs.contains(myClub)) return true;
+        }
+        return false;
+    }
 
     public static String getPlayerCategoryShown(String category, ResourceBundle strings) {
         if ("All".equals(category)) {
@@ -498,7 +528,6 @@ public class PlayerPerson {
         double position = avgControl();
         double atk = deriveAttackPrivilege();
         return new AiPlayStyle(
-                Math.min(99.5, precisionPercentage * 1.05),
                 Math.min(99.5, precisionPercentage),
                 Math.min(99.5, position),
                 Math.min(99.5, position),
@@ -512,13 +541,13 @@ public class PlayerPerson {
                 2
         );
     }
-    
+
     private double avgPrecision() {
         PlayerHand playerHand = getPrimaryHand();
         double cuePre = playerHand.computeCuePrecision(1.0);
         return (precisionPercentage + anglePrecision + longPrecision + cuePre) / 4;
     }
-    
+
     private double avgControl() {
         PlayerHand playerHand = getPrimaryHand();
         return (playerHand.powerControl + playerHand.computeSpinControl(1.0)) / 2;
@@ -564,6 +593,9 @@ public class PlayerPerson {
             games.put(Util.toLowerCamelCase(gameRule.name()), participates.get(gameRule));
         }
         obj.put("games", games);
+        JSONArray clubsArr = new JSONArray(clubs);
+        obj.put("clubs", clubsArr);
+        
         obj.put("saveVersion", App.VERSION_CODE);
 
         return obj;
@@ -997,6 +1029,10 @@ public class PlayerPerson {
                 default -> throw new RuntimeException("Unknown type " + what);
             };
         }
+        
+        public List<String> getClubs() {
+            return originalPerson.getClubs();
+        }
 
         public static String getStringByCat(int what, PlayerHand.Hand hand) {
             return switch (what) {
@@ -1064,13 +1100,14 @@ public class PlayerPerson {
                     (aiming + primary.spinControl) / 2,
                     originalPerson.aimingOffset,
                     originalPerson.psyNerve,
-                    originalPerson.psyRua, 
+                    originalPerson.psyRua,
                     null,
                     handBody,
                     getSex(),
                     originalPerson.underage,
                     originalPerson.isCustom,
                     originalPerson.participates,
+                    originalPerson.clubs,
                     App.VERSION_CODE
             );
             person.privateCues.addAll(originalPerson.privateCues);
@@ -1092,5 +1129,5 @@ public class PlayerPerson {
             }
         }
     }
-    
+
 }

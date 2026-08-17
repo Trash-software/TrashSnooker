@@ -6,6 +6,7 @@ import trashsoftware.trashSnooker.core.*;
 import trashsoftware.trashSnooker.core.metrics.TableMetrics;
 import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.person.PlayerHand;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 
 import java.util.ArrayList;
@@ -128,10 +129,10 @@ public abstract class FinalChoice {
                             if (targetsBarycenter == null) {
                                 System.err.println("Cannot find next next when there should be.");
                             } else {
-                                
+
                                 double dt1 = Algebra.distanceToPoint(nextAttack.collisionPos, targetsBarycenter);
                                 double dt2 = Algebra.distanceToPoint(
-                                        Algebra.vectorAdd(nextAttack.collisionPos, nextAttack.whiteNaturalExitDirection), 
+                                        Algebra.vectorAdd(nextAttack.collisionPos, nextAttack.whiteNaturalExitDirection),
                                         targetsBarycenter);
                                 if (dt2 > dt1) {
                                     // 分离角是远离主要目标球的方向的
@@ -234,6 +235,7 @@ public abstract class FinalChoice {
         protected Ball ball;
         //        protected double snookerScore;
 //        protected double opponentAttackChance;
+        @Nullable
         protected DefenseResult defenseResult;
         //        protected double opponentAvailPrice;
         protected double price;  // price还是越大越好
@@ -250,7 +252,7 @@ public abstract class FinalChoice {
 
         protected DefenseChoice(Ball ball,
                                 double nativePrice,
-                                DefenseResult defenseResult,
+                                @Nullable DefenseResult defenseResult,
                                 double penalty,
                                 double stabilityScore,
                                 double[] cueDirectionUnitVector,
@@ -302,12 +304,16 @@ public abstract class FinalChoice {
 //            double totalPen = penalty * stabilityScore;
 //            this.price = snookerScore / totalPen 
 //                    - opponentAttackChance * totalPen / nativePrice;
+            double drPrice = defenseResult == null ? 0 :
+                    (defenseResult.snookerScore
+                            - defenseResult.opponentAvailPrice
+                            - defenseResult.opponentAttackPrice);
             this.price = nativePrice * 100
                     + stabilityScore
-                    + defenseResult.snookerScore
-                    - defenseResult.opponentAvailPrice
-                    - defenseResult.opponentAttackPrice
+                    + drPrice
                     - penalty;
+
+//            System.out.println("prices: " + price + " " + penalty + " " + stabilityScore);
 
 //            if (wp != null && wp.isHitWallBeforeHitBall()) {
 //                // 应该是在解斯诺克
@@ -316,9 +322,9 @@ public abstract class FinalChoice {
 
         }
 
-        public boolean opponentCanPureAttack(AiPlayStyle opponent) {
+        public boolean opponentCanPureAttack(PlayerPerson opponent) {
             double pureAttackThresh = Analyzer.attackProbThreshold(AiCue.PURE_ATTACK_PROB, opponent);
-            return defenseResult.opponentPotProb > pureAttackThresh;
+            return defenseResult == null || defenseResult.opponentPotProb > pureAttackThresh;
         }
 
         @Override
@@ -334,9 +340,9 @@ public abstract class FinalChoice {
                     ", stabilityScore=" + stabilityScore +
 //                    ", handSkill=" + handSkill +
                     ", ball=" + ball +
-                    ", snookerScore=" + defenseResult.snookerScore +
-                    ", opponentAttackChance=" + defenseResult.opponentAttackPrice +
-                    ", opponentAvailPrice=" + defenseResult.opponentAvailPrice +
+                    ", snookerScore=" + (defenseResult == null ? "null" : defenseResult.snookerScore) +
+                    ", opponentAttackChance=" + (defenseResult == null ? "null" : defenseResult.opponentAttackPrice) +
+                    ", opponentAvailPrice=" + (defenseResult == null ? "null" : defenseResult.opponentAvailPrice) +
 //                    ", cueDirectionUnitVector=" + Arrays.toString(cueDirectionUnitVector) +
 //                    ", cueParams=" + cueParams +
 //                    ", cuePlayParams=" + cuePlayParams +

@@ -39,7 +39,7 @@ public class SoundInfo {
                 }
             }
             case POCKET_BACK -> {
-                if (speedRatio > 0.15) {
+                if (speedRatio > 0.125) {
                     vol = Math.pow(speedRatio, 0.75);
                     yield PowerType.MID;
                 } else {
@@ -60,6 +60,15 @@ public class SoundInfo {
 
     public double getVolume() {
         return volume;
+    }
+
+    @Override
+    public String toString() {
+        return "SoundInfo{" +
+                "soundType=" + soundType +
+                ", powerType=" + powerType +
+                ", volume=" + volume +
+                '}';
     }
 
     public enum SoundType {

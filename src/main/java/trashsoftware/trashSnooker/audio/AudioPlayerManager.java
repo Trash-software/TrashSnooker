@@ -84,6 +84,7 @@ public class AudioPlayerManager {
                           SoundRecorder soundRecorder,
                           int timeInMs) {
         if (soundFile != null) {
+//            System.out.println("Play: " + soundInfo);
 //            long t0 = System.currentTimeMillis();
             AudioPlayer audioPlayer = new AudioPlayer(soundFile, soundInfo);
 //            long t1 = System.currentTimeMillis();

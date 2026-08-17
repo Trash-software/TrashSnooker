@@ -19,6 +19,11 @@ public class Values {
     public static final double SMALL_POWER_SIDE_SPIN_EXP = 0.5;
     public static final double BEST_KICK_SPEED = MAX_POWER_SPEED / 5.0;
     public static final double DEFAULT_CUE_ANGLE = 5.0;
+
+    /**
+     * @see trashsoftware.trashSnooker.core.metrics.TableMetrics.TableBuilderFactory#SNOOKER
+     */
+    public static final double MAX_DISTANCE = Math.hypot(3568.7, 1788.0);
     
     public static final int DETAILED_PHYSICAL = 12;
     // 每两次物理碰撞运算之间的最大间隔距离

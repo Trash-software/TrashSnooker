@@ -356,7 +356,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     }
 
     /**
-     * @return 未碰撞0，碰撞但不是最大的一次1，最大碰撞2
+     * @return 正常在袋中未碰撞=0，碰撞但不是最大的一次=1，最大碰撞=2
      */
     private int oneFrameInPocket(Phy phy) {
         double pocketRange = pottedPocket.graphicalRadius - values.ball.ballRadius;
@@ -408,6 +408,9 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //        nextY = y + vy;
     }
 
+    /**
+     * @return 正常在袋中未碰撞=0，碰撞但不是最大的一次=1，最大碰撞=2
+     */
     public int tryFrameInPocket(Phy phy) {
         if (isPotted()) {
             if (msRemainInPocket > 0) {
@@ -440,6 +443,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             double dt = pocket.fallRadius - values.ball.ballRadius;
             if (currentDtToPoint(pocket.fallCenter) < dt || predictedDtToPoint(pocket.fallCenter) < dt) {
                 pottedPocket = pocket;
+//                System.out.println("Pocket: " + pocket);
                 break;
             }
         }
@@ -458,81 +462,81 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         clearMovement();
     }
 
-    protected boolean tryHitPocketsBack(Phy phy) {
-        if (nextX > table.leftX && nextX < table.rightX && nextY > table.topY && nextY < table.botY) {
-            return false;
-        }
+//    protected boolean tryHitPocketsBack(Phy phy) {
+//        if (nextX > table.leftX && nextX < table.rightX && nextY > table.topY && nextY < table.botY) {
+//            return false;
+//        }
+//
+//        double cornerBackRadius = table.cornerPocketBackInnerRadius();
+//        double midBackRadius = table.midPocketBackInnerRadius();
+//        return tryHitPocketBack(
+//                table.topLeft.graphicalCenter,
+//                cornerBackRadius,
+//                136,
+//                314
+//        ) ||
+//                tryHitPocketBack(
+//                        table.topRight.graphicalCenter,
+//                        cornerBackRadius,
+//                        226,
+//                        44
+//                ) ||
+//                tryHitPocketBack(
+//                        table.botLeft.graphicalCenter,
+//                        cornerBackRadius,
+//                        46,
+//                        224
+//                ) ||
+//                tryHitPocketBack(
+//                        table.botRight.graphicalCenter,
+//                        cornerBackRadius,
+//                        316,
+//                        134
+//                ) ||
+//                tryHitPocketBack(
+//                        table.topMid.graphicalCenter,
+//                        midBackRadius,
+//                        181,
+//                        359
+//                ) ||
+//                tryHitPocketBack(
+//                        table.botMid.graphicalCenter,
+//                        midBackRadius,
+//                        1,
+//                        179
+//                );
+//    }
 
-        double cornerBackRadius = table.cornerPocketBackInnerRadius();
-        double midBackRadius = table.midPocketBackInnerRadius();
-        return tryHitPocketBack(
-                table.topLeft.graphicalCenter,
-                cornerBackRadius,
-                136,
-                314
-        ) ||
-                tryHitPocketBack(
-                        table.topRight.graphicalCenter,
-                        cornerBackRadius,
-                        226,
-                        44
-                ) ||
-                tryHitPocketBack(
-                        table.botLeft.graphicalCenter,
-                        cornerBackRadius,
-                        46,
-                        224
-                ) ||
-                tryHitPocketBack(
-                        table.botRight.graphicalCenter,
-                        cornerBackRadius,
-                        316,
-                        134
-                ) ||
-                tryHitPocketBack(
-                        table.topMid.graphicalCenter,
-                        midBackRadius,
-                        181,
-                        359
-                ) ||
-                tryHitPocketBack(
-                        table.botMid.graphicalCenter,
-                        midBackRadius,
-                        1,
-                        179
-                );
-    }
-
-    protected boolean tryHitPocketBack(double[] center, double radius,
-                                       double startDeg, double endDeg) {
-        double dt = currentDtToPoint(center);
-        if (dt < radius) {
-            double nextDt = predictedDtToPoint(center);
-            if (nextDt >= radius) {
-                double biSector = Algebra.angularBisector(Math.toRadians(startDeg), Math.toRadians(endDeg));
-                double direction = Algebra.thetaOf(vx, vy);
-                double theta = Algebra.angleBetweenTwoAngles(biSector, direction);
-                if (theta < Algebra.HALF_PI) {
-//                    pot();
-//                    System.out.println("Hit pocket back");
-//                    double[] normal = new double[]{
-//                            nextX - center[0],
-//                            nextY - center[1]
-//                    };
-//                    normal = Algebra.normalVector(normal);
-//                    double[] bounce = Algebra.symmetricVector(vx, vy, normal[0], normal[1]);
-//                    vx = bounce[0] * 0.1;
-//                    vy = bounce[1] * 0.1;
-//                    nextX = x + vx;
-//                    nextY = y + vy;
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
+//    protected boolean tryHitPocketBack(double[] center, double radius,
+//                                       double startDeg, double endDeg) {
+//        double dt = currentDtToPoint(center);
+//        if (dt < radius) {
+//            double nextDt = predictedDtToPoint(center);
+//            if (nextDt >= radius) {
+//                double biSector = Algebra.angularBisector(Math.toRadians(startDeg), Math.toRadians(endDeg));
+//                double direction = Algebra.thetaOf(vx, vy);
+//                double theta = Algebra.angleBetweenTwoAngles(biSector, direction);
+//                if (theta < Algebra.HALF_PI) {
+////                    pot();
+////                    System.out.println("Hit pocket back");
+////                    double[] normal = new double[]{
+////                            nextX - center[0],
+////                            nextY - center[1]
+////                    };
+////                    normal = Algebra.normalVector(normal);
+////                    double[] bounce = Algebra.symmetricVector(vx, vy, normal[0], normal[1]);
+////                    vx = bounce[0] * 0.1;
+////                    vy = bounce[1] * 0.1;
+////                    nextX = x + vx;
+////                    nextY = y + vy;
+//
+//                    return true;
+//                }
+//            }
+//        }
+//
+//        return false;
+//    }
 
     protected boolean isNotMoving() {
         return vx == 0.0 && vy == 0.0;
@@ -547,7 +551,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return midHolePowerFactor(getSpeed() * phy.calculationsPerSec);
     }
 
-    protected void hitHoleArcArea(double[] arcXY, Phy phy, double arcRadius) {
+    protected void hitPocketArcArea(double[] arcXY, Phy phy, double arcRadius) {
         vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
         vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
 
@@ -558,7 +562,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 
         applySpin(collisionNormal, tangentUnitVec, phy, 1.0);
 
-        super.hitHoleArcArea(arcXY, phy, arcRadius);
+        super.hitPocketArcArea(arcXY, phy, arcRadius);
 
         // 撞出塞
         double sideSpinChangeFactor = Algebra.projectionLengthOn(tangentUnitVec, new double[]{vx, vy});
@@ -571,13 +575,13 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         pocketHitCount++;
     }
 
-    protected void hitHoleLineArea(double[][] line, double[] lineNormalVec, Phy phy) {
+    protected void hitPocketLineArea(double[][] line, double[] lineNormalVec, Phy phy) {
         vx *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
         vy *= table.wallBounceRatio * phy.cloth.smoothness.cushionBounceFactor;
 
         double[] tanUnitVec = Algebra.unitVector(new double[]{line[1][0] - line[0][0], line[1][1] - line[0][1]});
         applySpin(lineNormalVec, tanUnitVec, phy, 0.8);
-        super.hitHoleLineArea(line, lineNormalVec, phy);
+        super.hitPocketLineArea(line, lineNormalVec, phy);
 
         pocketHitCount++;
 

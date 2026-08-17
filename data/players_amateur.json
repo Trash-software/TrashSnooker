@@ -47,6 +47,9 @@
       },
       "games": [
         "all"
+      ],
+      "clubs": [
+        
       ]
     },
     "Lao Youtiao": {
@@ -97,6 +100,9 @@
       },
       "games": [
         "all"
+      ],
+      "clubs": [
+        "weilin"
       ]
     },
     "Mou Moumou": {
@@ -344,6 +350,9 @@
       },
       "games": [
         "all"
+      ],
+      "clubs": [
+        "give_power"
       ]
     },
     "Baggage Brother": {
@@ -393,6 +402,9 @@
       },
       "games": [
         "all"
+      ],
+      "clubs": [
+        "give_power"
       ]
     },
     "Wang Xu": {
@@ -444,6 +456,9 @@
       },
       "games": [
         "all"
+      ],
+      "clubs": [
+        "weilin"
       ]
     },
     "Summer Brave": {
@@ -494,6 +509,9 @@
       },
       "games": [
         "all"
+      ],
+      "clubs": [
+        "weilin"
       ]
     },
     "High Stick": {
@@ -544,6 +562,338 @@
       },
       "games": [
         "all"
+      ],
+      "clubs": [
+        "weilin"
+      ]
+    },
+    "Small Egg High": {
+      "spin": 93,
+      "precision": 83,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "小蛋糕",
+      "maxPower": 90,
+      "controllablePower": 75,
+      "solving": 65,
+      "pullDt": [
+        70.0,
+        210.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1.0,h600,e500;r,r,l,l,r,r,l",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        3,
+        0,
+        3
+      ],
+      "powerControl": 88.0,
+      "privateCues": [],
+      "category": "Amateur",
+      "psyNerve": 88,
+      "psyRua": 85,
+      "height": 190,
+      "width": 0.9,
+      "hand": {
+        "left": 50,
+        "right": 100,
+        "rest": 75
+      },
+      "ai": {
+        "precision": 85,
+        "stable": 88,
+        "position": 87,
+        "defense": 70,
+        "attackPri": 80,
+        "likeShow": 40,
+        "likeSide": 80,
+        "doubleAbility": 75,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      },
+      "games": [
+        "all"
+      ],
+      "clubs": [
+        "kx",
+        "g9"
+      ]
+    },
+    "Tou zi e": {
+      "spin": 90,
+      "precision": 85,
+      "anglePrecision": 0.9,
+      "longPrecision": 1.1,
+      "name": "投资额",
+      "maxPower": 92,
+      "controllablePower": 77,
+      "solving": 50,
+      "pullDt": [
+        70.0,
+        210.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1.0,h600,e500;r,r,l,l,r,r,l",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        3,
+        0,
+        5
+      ],
+      "powerControl": 82.0,
+      "privateCues": [],
+      "category": "Amateur",
+      "psyNerve": 76,
+      "psyRua": 66,
+      "height": 189,
+      "width": 0.95,
+      "hand": {
+        "left": 50,
+        "right": 100,
+        "rest": 75
+      },
+      "ai": {
+        "precision": 87,
+        "stable": 85,
+        "position": 80,
+        "defense": 60,
+        "attackPri": 85,
+        "likeShow": 60,
+        "likeSide": 65,
+        "doubleAbility": 75,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      },
+      "games": [
+        "all"
+      ],
+      "clubs": [
+        "kx",
+        "g9"
+      ]
+    },
+    "Li chengzhen": {
+      "spin": 80,
+      "precision": 87,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "小乱",
+      "maxPower": 89,
+      "controllablePower": 76,
+      "solving": 48,
+      "pullDt": [
+        70.0,
+        210.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1.0,h600,e500;r,r,l,l,r,r,l",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        3,
+        0,
+        9
+      ],
+      "powerControl": 76.0,
+      "privateCues": [],
+      "category": "Amateur",
+      "psyNerve": 90,
+      "psyRua": 85,
+      "height": 180,
+      "width": 0.9,
+      "hand": {
+        "left": 50,
+        "right": 100,
+        "rest": 75
+      },
+      "ai": {
+        "precision": 89,
+        "stable": 80,
+        "position": 75,
+        "defense": 55,
+        "attackPri": 90,
+        "likeShow": 60,
+        "likeSide": 50,
+        "doubleAbility": 75,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      },
+      "games": [
+        "all"
+      ],
+      "clubs": [
+        "kx",
+        "g9"
+      ]
+    },
+    "Wang ming": {
+      "spin": 88,
+      "precision": 86,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "小布丁",
+      "maxPower": 87,
+      "controllablePower": 74,
+      "solving": 50,
+      "pullDt": [
+        70.0,
+        210.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1.0,h600,e500;r,r,l,l,r,r,l",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        3,
+        0,
+        6
+      ],
+      "powerControl": 82.0,
+      "privateCues": [],
+      "category": "Amateur",
+      "psyNerve": 72,
+      "psyRua": 68,
+      "height": 182,
+      "width": 1.1,
+      "hand": {
+        "left": 50,
+        "right": 100,
+        "rest": 75
+      },
+      "ai": {
+        "precision": 81,
+        "stable": 80,
+        "position": 80,
+        "defense": 65,
+        "attackPri": 80,
+        "likeShow": 65,
+        "likeSide": 75,
+        "doubleAbility": 75,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      },
+      "games": [
+        "all"
+      ],
+      "clubs": [
+        "kx",
+        "g9"
+      ]
+    },
+    "Awu": {
+      "spin": 84,
+      "precision": 83,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "啊呜",
+      "maxPower": 83,
+      "controllablePower": 70,
+      "solving": 46,
+      "pullDt": [
+        70.0,
+        210.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1.0,h600,e500;r,r,l,l,r,r,l",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        3,
+        0,
+        6
+      ],
+      "powerControl": 84.0,
+      "privateCues": [],
+      "category": "Amateur",
+      "psyNerve": 70,
+      "psyRua": 75,
+      "height": 175,
+      "width": 1.15,
+      "hand": {
+        "left": 50,
+        "right": 100,
+        "rest": 75
+      },
+      "ai": {
+        "precision": 80,
+        "stable": 78,
+        "position": 82,
+        "defense": 67,
+        "attackPri": 78,
+        "likeShow": 55,
+        "likeSide": 72,
+        "doubleAbility": 75,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      },
+      "games": [
+        "all"
+      ],
+      "clubs": [
+        "kx",
+        "g9"
+      ]
+    },
+    "Tu zi": {
+      "spin": 90,
+      "precision": 86,
+      "anglePrecision": 1.0,
+      "longPrecision": 1.0,
+      "name": "秃子",
+      "maxPower": 90,
+      "controllablePower": 77,
+      "solving": 50,
+      "pullDt": [
+        70.0,
+        210.0
+      ],
+      "aimingOffset": 0.0,
+      "cuePlayType": "p1.0,h600,e500;r,r,l,l,r,r,l",
+      "cueSwingMag": 5,
+      "cuePointMuSigma": [
+        0,
+        3.5,
+        0,
+        6.5
+      ],
+      "powerControl": 82.0,
+      "privateCues": [],
+      "category": "Amateur",
+      "psyNerve": 77,
+      "psyRua": 68,
+      "height": 185,
+      "width": 1.1,
+      "hand": {
+        "left": 50,
+        "right": 100,
+        "rest": 75
+      },
+      "ai": {
+        "stable": 80,
+        "position": 80,
+        "defense": 65,
+        "attackPri": 80,
+        "likeShow": 65,
+        "likeSide": 75,
+        "doubleAbility": 75,
+        "snookerBreak": "right",
+        "cebSideBreak": false,
+        "withdrawAfter": 2
+      },
+      "games": [
+        "all"
+      ],
+      "clubs": [
+        "kx",
+        "g9"
       ]
     }
   }

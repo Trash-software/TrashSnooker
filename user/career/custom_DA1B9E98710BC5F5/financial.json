@@ -1,7 +1,7 @@
 {
   "financial": {
     "remFreePerks": 0,
-    "money": 3191588,
+    "money": 3632114,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
@@ -12574,13 +12574,248 @@
         "type": "challengeEarn",
         "items": {},
         "timestamp": "2026-08-10 07:14:31"
+      },
+      {
+        "inGameDate": "2029/2/22",
+        "year": 2029,
+        "moneyBefore": 3191588,
+        "match": "professional_champ",
+        "moneyAfter": 3295106,
+        "type": "championshipEarn",
+        "items": {
+          "CHAMPION": {
+            "actual": 93768,
+            "raw": 125000
+          },
+          "BEST_SINGLE": {
+            "actual": 9750,
+            "raw": 10000
+          }
+        },
+        "timestamp": "2026-08-11 02:50:12"
+      },
+      {
+        "item": "GirlCue:custom_DA1B9E98710BC5F5-720",
+        "itemType": "cue",
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3295106,
+        "moneyCost": 2000,
+        "moneyAfter": 3293106,
+        "type": "purchase",
+        "timestamp": "2026-08-11 02:52:17"
+      },
+      {
+        "item": "GirlPoolCue:custom_DA1B9E98710BC5F5-722",
+        "itemType": "cue",
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3293106,
+        "moneyCost": 3500,
+        "moneyAfter": 3289606,
+        "type": "purchase",
+        "timestamp": "2026-08-11 02:52:20"
+      },
+      {
+        "item": "carbonSnookerCue:custom_DA1B9E98710BC5F5-724",
+        "itemType": "cue",
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3289606,
+        "moneyCost": 2500,
+        "moneyAfter": 3287106,
+        "type": "purchase",
+        "timestamp": "2026-08-11 02:52:22"
+      },
+      {
+        "item": "trashCue2:custom_DA1B9E98710BC5F5-726",
+        "itemType": "cue",
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3287106,
+        "moneyCost": 2000,
+        "moneyAfter": 3285106,
+        "type": "purchase",
+        "timestamp": "2026-08-11 02:52:24"
+      },
+      {
+        "item": "trashCue1:custom_DA1B9E98710BC5F5-728",
+        "itemType": "cue",
+        "inGameDate": "2029/2/22",
+        "moneyBefore": 3285106,
+        "moneyCost": 1000,
+        "moneyAfter": 3284106,
+        "type": "purchase",
+        "timestamp": "2026-08-11 02:52:27"
+      },
+      {
+        "inGameDate": "2029/2/27",
+        "moneyBefore": 3284106,
+        "moneyAfter": 3283106,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1000
+        }],
+        "timestamp": "2026-08-11 17:42:53"
+      },
+      {
+        "inGameDate": "2029/2/27",
+        "moneyBefore": 3283106,
+        "match": "custom_DA1B9E98710BC5F5+2029+dog_give_power_open",
+        "moneyAfter": 3280206,
+        "type": "participation",
+        "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
+          {
+            "item": "registry",
+            "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          }
+        ],
+        "timestamp": "2026-08-11 17:42:53"
+      },
+      {
+        "item": "primeTipMedium:custom_DA1B9E98710BC5F5-729",
+        "itemType": "tip",
+        "inGameDate": "2029/3/1",
+        "moneyBefore": 3280206,
+        "moneyCost": 80,
+        "moneyAfter": 3280126,
+        "type": "purchase",
+        "timestamp": "2026-08-12 03:15:30"
+      },
+      {
+        "inGameDate": "2029/3/1",
+        "year": 2029,
+        "moneyBefore": 3280126,
+        "match": "dog_give_power_open",
+        "moneyAfter": 3295464,
+        "type": "championshipEarn",
+        "items": {"TOP_4": {
+          "actual": 15338,
+          "raw": 20000
+        }},
+        "timestamp": "2026-08-12 03:32:00"
+      },
+      {
+        "inGameDate": "2029/3/1",
+        "moneyBefore": 3295464,
+        "moneyAfter": 3295064,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 400
+        }],
+        "timestamp": "2026-08-12 03:32:03"
+      },
+      {
+        "inGameDate": "2029/3/4",
+        "moneyBefore": 3295064,
+        "moneyAfter": 3294464,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 600
+        }],
+        "timestamp": "2026-08-13 23:12:00"
+      },
+      {
+        "item": 1,
+        "inGameDate": "2029/3/4",
+        "moneyBefore": 3294464,
+        "match": "custom_DA1B9E98710BC5F5+2029+saudi_arabia_masters",
+        "moneyAfter": 3297464,
+        "type": "invitation",
+        "moneyEarn": 3000,
+        "timestamp": "2026-08-13 23:12:00"
+      },
+      {
+        "inGameDate": "2029/3/4",
+        "moneyBefore": 3297464,
+        "match": "custom_DA1B9E98710BC5F5+2029+saudi_arabia_masters",
+        "moneyAfter": 3294464,
+        "type": "participation",
+        "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
+          {
+            "item": "registry",
+            "moneyCost": 0
+          },
+          {
+            "item": "travel",
+            "moneyCost": 2000
+          }
+        ],
+        "timestamp": "2026-08-13 23:12:00"
+      },
+      {
+        "inGameDate": "2029/3/10",
+        "year": 2029,
+        "moneyBefore": 3294464,
+        "match": "saudi_arabia_masters",
+        "moneyAfter": 3635714,
+        "type": "championshipEarn",
+        "items": {"CHAMPION": {
+          "actual": 341250,
+          "raw": 350000
+        }},
+        "timestamp": "2026-08-18 01:12:27"
+      },
+      {
+        "inGameDate": "2029/3/10",
+        "moneyBefore": 3635714,
+        "moneyAfter": 3634514,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1200
+        }],
+        "timestamp": "2026-08-18 01:12:39"
+      },
+      {
+        "item": 2,
+        "inGameDate": "2029/3/10",
+        "moneyBefore": 3634514,
+        "match": "custom_DA1B9E98710BC5F5+2029+cat_give_power_champ",
+        "moneyAfter": 3635014,
+        "type": "invitation",
+        "moneyEarn": 500,
+        "timestamp": "2026-08-18 01:12:39"
+      },
+      {
+        "inGameDate": "2029/3/10",
+        "moneyBefore": 3635014,
+        "match": "custom_DA1B9E98710BC5F5+2029+cat_give_power_champ",
+        "moneyAfter": 3632114,
+        "type": "participation",
+        "items": [
+          {
+            "item": "travel",
+            "moneyCost": 1600
+          },
+          {
+            "item": "hotel",
+            "moneyCost": 800
+          },
+          {
+            "item": "registry",
+            "moneyCost": 500
+          }
+        ],
+        "timestamp": "2026-08-18 01:12:39"
       }
     ],
     "level": 48,
-    "expInThisLevel": 735,
+    "expInThisLevel": 3515,
     "availPerks": 0,
     "totalPerks": 233,
-    "totalExp": 46030
+    "totalExp": 48810
   },
-  "checksum": "ABC3F81CEE3B31313ABF198729DB591A"
+  "checksum": "F2E0C0ED6F3E8F397792C405C04CBD5E"
 }

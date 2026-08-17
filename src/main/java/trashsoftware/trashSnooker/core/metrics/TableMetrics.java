@@ -62,6 +62,7 @@ public class TableMetrics {
     public double midPocketGravityRadius;
     public double midArcRadius;
     public double midArcWidth, midArcExtentDeg;
+    public boolean midPocketHasLine;
     public double cornerHoleDt, cornerHoleTan,
             cornerArcHeight, cornerArcWidth, cornerArcRadius, cornerArcDiameter,
             cornerLineLonger, cornerLineShorter,  // 底袋角直线的占地长宽
@@ -444,6 +445,9 @@ public class TableMetrics {
         midHoleLineRightX = midX + midHoleRadius + midLineWidth;
         topMidLineBotY = topMidHoleXY[1] + midLineHeight;
         botMidLineTopY = botMidHoleXY[1] - midLineHeight;
+        
+        // 对于袋口弧线大的球桌来说，中袋cushionLine的长度有可能是负的，会造成bug
+        midPocketHasLine = topMidHoleXY[1] < topMidLineBotY;
 
         topMidHoleLeftLine =
                 new Cushion.CushionLine(

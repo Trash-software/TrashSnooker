@@ -1,0 +1,5338 @@
+{
+  "saveVersion": 62,
+  "frames": [
+    {
+      "frameIndex": 1,
+      "frameNumber": 1,
+      "cueRecs": [
+        {
+          "scoresAfter": [
+            0,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "specials": ["BALL_IN_HAND"],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "BREAK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            0,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "potInfo": {
+            "targetPos": [
+              3037.768266350851,
+              248.09286059698937
+            ],
+            "estPotProb": 0.4822543375207808,
+            "tarPocketDt": 636.2499097005056,
+            "whiteTarDt": 2797.9335223944254,
+            "angle": 0.04220047406121896,
+            "whitePos": [
+              257.674209578336,
+              563.543381656343
+            ],
+            "collisionPos": [
+              2986.351711790261,
+              258.703603215974
+            ],
+            "tarCushionPos": [
+              3510.1536791777858,
+              150.25015976416537
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            1,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2813.3013925644327,
+              649.219254867584
+            ],
+            "estPotProb": 0.665638353040199,
+            "tarPocketDt": 1558.9000278618253,
+            "whiteTarDt": 595.9164167018588,
+            "angle": 0.5164976571442996,
+            "whitePos": [
+              3342.296944859809,
+              374.8470963921055
+            ],
+            "collisionPos": [
+              2843.8660650268425,
+              606.5337681546162
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            1,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 4,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            5,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "foulInfo": {
+            "foulReasonAndScore": {"空杆": 4},
+            "illegal": false,
+            "miss": true
+          },
+          "firstHit": 0,
+          "gainScores": [
+            4,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "SOLVE"
+          },
+          "player": 2,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            6,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3343.210473257944,
+              925.9577556177121
+            ],
+            "estPotProb": 0.9990631315470271,
+            "tarPocketDt": 840.3608235596756,
+            "whiteTarDt": 378.0838928801362,
+            "angle": 0.26358117476849685,
+            "whitePos": [
+              3122.8487538347645,
+              1233.1842887626508
+            ],
+            "collisionPos": [
+              3323.024487488917,
+              974.4219279327193
+            ],
+            "tarCushionPos": [
+              3681.7255122238744,
+              113.01438705187374
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            6,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 4,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            6,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            7,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3253.4280064555396,
+              605.3970371058845
+            ],
+            "estPotProb": 0.6279334986450507,
+            "tarPocketDt": 614.6104396588993,
+            "whiteTarDt": 2874.837556911723,
+            "angle": 0.6018844202085418,
+            "whitePos": [
+              462.5940464843626,
+              1295.2787563170561
+            ],
+            "collisionPos": [
+              3218.9526881704464,
+              644.9912594435606
+            ],
+            "tarCushionPos": [
+              3682.0502514679492,
+              112.67029752460968
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            12,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              1908.35,
+              1018
+            ],
+            "estPotProb": 0.8571831121243982,
+            "tarPocketDt": 900.5625,
+            "whiteTarDt": 950.2489729135937,
+            "angle": 0.695976943793104,
+            "whitePos": [
+              2491.374682180896,
+              1768.3701289971536
+            ],
+            "collisionPos": [
+              1909.146821510814,
+              1070.4939526266992
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            13,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3474.356034697641,
+              1785.9409590394746
+            ],
+            "estPotProb": 0.9996435194924356,
+            "tarPocketDt": 216.47617920464984,
+            "whiteTarDt": 2366.2821632650716,
+            "angle": 0.2624732165828299,
+            "whitePos": [
+              1166.3928402248007,
+              1263.8325707280526
+            ],
+            "collisionPos": [
+              3428.8615377186325,
+              1759.7398005156706
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            13,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            13,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "DEFENSE"
+          },
+          "player": 2,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            14,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3559.5050395388184,
+              366.8135364660149
+            ],
+            "estPotProb": 0.9999904262722885,
+            "tarPocketDt": 241.53051545241777,
+            "whiteTarDt": 1300.6875863794066,
+            "angle": 0.47157107856847436,
+            "whitePos": [
+              3552.398632752496,
+              1667.4817095001958
+            ],
+            "collisionPos": [
+              3534.8429673530336,
+              413.16040462747975
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            21,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3605.3260272022503,
+              1528.0127729852804
+            ],
+            "estPotProb": 0.9769141498223739,
+            "tarPocketDt": 362.9215667920013,
+            "whiteTarDt": 1291.1510914454025,
+            "angle": 0.41675953506380314,
+            "whitePos": [
+              2909.09304731869,
+              440.662425276175
+            ],
+            "collisionPos": [
+              3595.319320354476,
+              1476.475254976309
+            ],
+            "tarCushionPos": [
+              3681.4651069651195,
+              1922.6683049058006
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            22,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3366.2704830904313,
+              978.0148799551803
+            ],
+            "estPotProb": 0.9780602779474898,
+            "tarPocketDt": 880.5126000570781,
+            "whiteTarDt": 456.1849621775227,
+            "angle": 0.3793173548722404,
+            "whitePos": [
+              3361.1615755593093,
+              1434.1712333919666
+            ],
+            "collisionPos": [
+              3348.3448917506535,
+              1027.3598204474663
+            ],
+            "tarCushionPos": [
+              3679.6448945311085,
+              115.35233236060522
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            27,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              684.4370107057921,
+              1847.2531069605518
+            ],
+            "estPotProb": 0.9788424448556439,
+            "tarPocketDt": 535.5723790305851,
+            "whiteTarDt": 929.784052964461,
+            "angle": 0.08931172992436398,
+            "whitePos": [
+              1614.1503474242822,
+              1858.7203069148138
+            ],
+            "collisionPos": [
+              736.8591561028863,
+              1844.3950185978968
+            ],
+            "tarCushionPos": [
+              131.8647403224774,
+              1877.5009751682128
+            ],
+            "pocketName": "BOT_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            28,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3150.470157462971,
+              418.2452653871552
+            ],
+            "estPotProb": 0.7694094931032498,
+            "tarPocketDt": 581.4264013393858,
+            "whiteTarDt": 2965.639992471399,
+            "angle": 0.010252552930222869,
+            "whitePos": [
+              532.5485473148074,
+              1811.6249724537552
+            ],
+            "collisionPos": [
+              3102.966957762806,
+              440.5991453587869
+            ],
+            "tarCushionPos": [
+              3680.525226565472,
+              168.85783902748045
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            28,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            28,
+            1
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2842.4987279368465,
+              1078.8945243280787
+            ],
+            "estPotProb": 0.7812340062269951,
+            "tarPocketDt": 1153.21787072359,
+            "whiteTarDt": 1134.092406475177,
+            "angle": 0.08775948821065105,
+            "whitePos": [
+              2101.3869336799967,
+              220.45472164063847
+            ],
+            "collisionPos": [
+              2805.0788248838358,
+              1042.0706083500838
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            1
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            28,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 3,
+          "pots": {"3": 1},
+          "potInfo": {
+            "targetPos": [
+              862.1336647591941,
+              393.82802501088224
+            ],
+            "estPotProb": 0.5221835590010133,
+            "tarPocketDt": 752.4018915574194,
+            "whiteTarDt": 2254.267882424592,
+            "angle": 0.32696327341052855,
+            "whitePos": [
+              3116.284514686814,
+              416.79825578123695
+            ],
+            "collisionPos": [
+              912.1146143245542,
+              409.8952186852808
+            ],
+            "tarCushionPos": [
+              132.16484424494752,
+              159.02969908964718
+            ],
+            "pocketName": "TOP_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            3
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            28,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "potInfo": {
+            "targetPos": [
+              3417.286245835656,
+              206.12342791606375
+            ],
+            "estPotProb": 0.8952502830263576,
+            "tarPocketDt": 255.351554403652,
+            "whiteTarDt": 3007.428993724183,
+            "angle": 0.11689989893461128,
+            "whitePos": [
+              577.4928544645803,
+              1196.1752682850506
+            ],
+            "collisionPos": [
+              3365.300255738609,
+              213.45191469248516
+            ],
+            "tarCushionPos": [
+              3679.1922477335875,
+              169.21422657622094
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            29,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              1930.3973537666916,
+              201.14172314056344
+            ],
+            "estPotProb": 1,
+            "tarPocketDt": 86.55912880614551,
+            "whiteTarDt": 1184.2764430342663,
+            "angle": 0.7568501623237491,
+            "whitePos": [
+              2916.5355968455065,
+              856.917644521733
+            ],
+            "collisionPos": [
+              1948.275961107999,
+              250.50370661755264
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            36,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              1726.8932194938607,
+              721.2140942085664
+            ],
+            "estPotProb": 0.9892084042852385,
+            "tarPocketDt": 1211.0201352756033,
+            "whiteTarDt": 514.5725489508278,
+            "angle": 0.22716106286795834,
+            "whitePos": [
+              1548.2326228741902,
+              238.65290705272443
+            ],
+            "collisionPos": [
+              1718.7918082188726,
+              669.3429356991355
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            37,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2777.499506822682,
+              947.9022689619701
+            ],
+            "estPotProb": 0.9775582234213929,
+            "tarPocketDt": 1194.3542696789657,
+            "whiteTarDt": 541.8505929160996,
+            "angle": 0.2147320953929741,
+            "whitePos": [
+              2451.5700258559227,
+              1380.7671884002025
+            ],
+            "collisionPos": [
+              2738.4575077897475,
+              983.0017285788281
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            44,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.9989108422372037,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 329.1297628813599,
+            "angle": 0.22598766070470044,
+            "whitePos": [
+              3322.718442439793,
+              692.1027413330183
+            ],
+            "collisionPos": [
+              3351.7517791791192,
+              968.3222975327135
+            ],
+            "tarCushionPos": [
+              3676.1559618256474,
+              1917.042298623315
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            45,
+            4
+          ],
+          "cueHand": {
+            "extension": "SOCKET_DOUBLE",
+            "brand": "profSnookerCue",
+            "hand": "REST"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2901.6339510397715,
+              1802.0742078117369
+            ],
+            "estPotProb": 0.9885691193779331,
+            "tarPocketDt": 769.3797676995852,
+            "whiteTarDt": 253.0629889495125,
+            "angle": 0.37530779241528645,
+            "whitePos": [
+              2669.359566900087,
+              1701.627770101924
+            ],
+            "collisionPos": [
+              2849.44394504731,
+              1796.3774302803988
+            ],
+            "tarCushionPos": [
+              3693.2382526314777,
+              1889.0961470666261
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            52,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.9818109888559059,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 408.4328618736324,
+            "angle": 0.3538544599220286,
+            "whitePos": [
+              3360.0722501516734,
+              1426.341017899351
+            ],
+            "collisionPos": [
+              3351.5015447967685,
+              1067.5914572069134
+            ],
+            "tarCushionPos": [
+              3683.916537867211,
+              111.15506834641971
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            53,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2421.17899663546,
+              710.2647492280238
+            ],
+            "estPotProb": 0.9999629873205593,
+            "tarPocketDt": 783.8607830586999,
+            "whiteTarDt": 446.80342304649145,
+            "angle": 0.08921409731363461,
+            "whitePos": [
+              2739.169049416031,
+              1024.1367377498916
+            ],
+            "collisionPos": [
+              2455.5661463435013,
+              749.9355691815784
+            ],
+            "tarCushionPos": [
+              1891.8768445417088,
+              92.59443942949044
+            ],
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            58,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              1908.35,
+              1018
+            ],
+            "estPotProb": 0.9889776010255764,
+            "tarPocketDt": 900.5625,
+            "whiteTarDt": 774.6412631940584,
+            "angle": 0.2857519608764787,
+            "whitePos": [
+              1704.2333061791094,
+              270.73467767698787
+            ],
+            "collisionPos": [
+              1909.2302854895593,
+              965.5073809342057
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            59,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2558.438237675807,
+              1724.6602180843524
+            ],
+            "estPotProb": 0.8833418402761088,
+            "tarPocketDt": 2877.1753722859034,
+            "whiteTarDt": 286.453643355586,
+            "angle": 0.11456171233215073,
+            "whitePos": [
+              2811.8013110391803,
+              1858.3121647501428
+            ],
+            "collisionPos": [
+              2602.3733896129643,
+              1753.3996054110487
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            65,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "targetPos": [
+              1156.2267981365044,
+              897.6484514564679
+            ],
+            "estPotProb": 0.957629072122701,
+            "tarPocketDt": 1083.7058824026026,
+            "whiteTarDt": 231.1115755182977,
+            "angle": 0.4326465268220909,
+            "whitePos": [
+              949.8066446623366,
+              1001.5872824016485
+            ],
+            "collisionPos": [
+              1119.852255212736,
+              935.5053211618095
+            ],
+            "tarCushionPos": [
+              1924.8593909775102,
+              93.41527468382417
+            ],
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            66,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3662.783624513534,
+              674.9551563061217
+            ],
+            "estPotProb": 0.8987784535393091,
+            "tarPocketDt": 524.7179655428613,
+            "whiteTarDt": 854.9603107966001,
+            "angle": 0.3306081028350949,
+            "whitePos": [
+              3395.7410433059017,
+              1487.1407218386446
+            ],
+            "collisionPos": [
+              3662.1987278241895,
+              727.4518984554688
+            ],
+            "tarCushionPos": [
+              3666.443573191571,
+              353.26664581774867
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            73,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.9998639396484479,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 247.7839322812394,
+            "angle": 0.2261740400982435,
+            "whitePos": [
+              3247.9551659625336,
+              801.6449864279681
+            ],
+            "collisionPos": [
+              3351.651286057893,
+              968.3567629946664
+            ],
+            "tarCushionPos": [
+              3680.9597617009053,
+              1922.0851581494449
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            74,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3644.250245326888,
+              1040.8144233429332
+            ],
+            "estPotProb": 0.9999767410509242,
+            "tarPocketDt": 845.2271634349883,
+            "whiteTarDt": 240.45347826446198,
+            "angle": 0.05972623693343038,
+            "whitePos": [
+              3649.161234975127,
+              800.4111010070034
+            ],
+            "collisionPos": [
+              3642.8535428717246,
+              988.3330030189016
+            ],
+            "tarCushionPos": [
+              3667.432765240262,
+              1911.8739707565624
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            81,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.9999996545201164,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 335.0923365063804,
+            "angle": 0.053525653222810554,
+            "whitePos": [
+              3245.7958133148363,
+              1329.7261944769489
+            ],
+            "collisionPos": [
+              3351.712855123043,
+              1067.664379275307
+            ],
+            "tarCushionPos": [
+              3676.5106232324383,
+              119.98503701808039
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            83,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 2,
+          "pots": {"2": 1},
+          "potInfo": {
+            "targetPos": [
+              860.9365499999999,
+              1310
+            ],
+            "estPotProb": 0.7813532376995376,
+            "tarPocketDt": 914.6384175459187,
+            "whiteTarDt": 1541.469099846356,
+            "angle": 0.316535309871703,
+            "whitePos": [
+              2295.3106718310073,
+              745.4666844174194
+            ],
+            "collisionPos": [
+              901.8013531211092,
+              1277.0406639679782
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            2,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 2
+        },
+        {
+          "scoresAfter": [
+            86,
+            4
+          ],
+          "cueHand": {
+            "extension": "SOCKET_DOUBLE",
+            "brand": "profSnookerCue",
+            "hand": "REST"
+          },
+          "firstHit": 3,
+          "pots": {"3": 1},
+          "potInfo": {
+            "targetPos": [
+              860.9365499999999,
+              726
+            ],
+            "estPotProb": 0.9739322037817939,
+            "tarPocketDt": 914.6384175459187,
+            "whiteTarDt": 544.152350467276,
+            "angle": 0.4364326279807176,
+            "whitePos": [
+              1383.1003669671989,
+              879.1232469917836
+            ],
+            "collisionPos": [
+              902.0975190224309,
+              758.5887195740111
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            3,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 3
+        },
+        {
+          "scoresAfter": [
+            90,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 4,
+          "pots": {"4": 1},
+          "potInfo": {
+            "targetPos": [
+              168.56507244401746,
+              1460.6572629547675
+            ],
+            "estPotProb": 0.9999999957367716,
+            "tarPocketDt": 425.4871055240532,
+            "whiteTarDt": 468.7843755319255,
+            "angle": 0.020847918940101184,
+            "whitePos": [
+              197.41061778228413,
+              992.7612005039329
+            ],
+            "collisionPos": [
+              171.0939443287853,
+              1408.2182050396684
+            ],
+            "tarCushionPos": [
+              146.89956336181126,
+              1912.8487004557426
+            ],
+            "pocketName": "BOT_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            4,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 4
+        },
+        {
+          "scoresAfter": [
+            90,
+            4
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "potInfo": {
+            "targetPos": [
+              1908.35,
+              1018
+            ],
+            "estPotProb": 0.36467485718145265,
+            "tarPocketDt": 1960.588093532142,
+            "whiteTarDt": 1826.3685092828148,
+            "angle": 0.18108304389611884,
+            "whitePos": [
+              154.41990724383902,
+              1527.2653153556566
+            ],
+            "collisionPos": [
+              1862.0945884606267,
+              1042.8331804345135
+            ],
+            "tarCushionPos": [
+              3523.2278550387346,
+              150.6611177220973
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 5
+        }
+      ],
+      "winner": 1
+    },
+    {
+      "frameIndex": 2,
+      "frameNumber": 2,
+      "cueRecs": [
+        {
+          "scoresAfter": [
+            0,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "specials": ["BALL_IN_HAND"],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "BREAK"
+          },
+          "player": 2,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            0,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "potInfo": {
+            "targetPos": [
+              2814.949988917453,
+              1403.584397667365
+            ],
+            "estPotProb": 0.4535524226068275,
+            "tarPocketDt": 978.5376522885412,
+            "whiteTarDt": 2490.0807533695574,
+            "angle": 0.5618856968009265,
+            "whitePos": [
+              326.4306808851499,
+              1491.753620483088
+            ],
+            "collisionPos": [
+              2771.9492477889526,
+              1373.4648650998888
+            ],
+            "tarCushionPos": [
+              3670.6525391505534,
+              1844.769928524818
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            0,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "potInfo": {
+            "targetPos": [
+              2694.839526936397,
+              1438.5755107890666
+            ],
+            "estPotProb": 0.5345884479946927,
+            "tarPocketDt": 921.3866103826417,
+            "whiteTarDt": 932.7899743243928,
+            "angle": 0.25080803730191814,
+            "whitePos": [
+              3354.8222864331183,
+              779.3942812571615
+            ],
+            "collisionPos": [
+              2739.8945694230324,
+              1411.625684437783
+            ],
+            "tarCushionPos": [
+              1879.2620505098628,
+              1929.1390529719026
+            ],
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            1,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3658.143290968149,
+              1858.007012328603
+            ],
+            "estPotProb": 1,
+            "tarPocketDt": 28.95988224898577,
+            "whiteTarDt": 1569.8043988200122,
+            "angle": 0.8493673305655198,
+            "whitePos": [
+              2248.4784239018677,
+              1167.2604501846688
+            ],
+            "collisionPos": [
+              3644.7872581104357,
+              1807.2343190780139
+            ],
+            "tarCushionPos": [
+              3673.2695607993046,
+              1915.2773563242617
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            8,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3651.2031386476115,
+              790.2121634569485
+            ],
+            "estPotProb": 0.8746900117755907,
+            "tarPocketDt": 640.143763101381,
+            "whiteTarDt": 1020.4255883789144,
+            "angle": 0.11044783051544282,
+            "whitePos": [
+              3520.3408229346014,
+              1802.2118846746384
+            ],
+            "collisionPos": [
+              3649.5208944290926,
+              842.6852056321637
+            ],
+            "tarCushionPos": [
+              3666.4160987632586,
+              313.25790882170946
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            9,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2830.1068558347697,
+              1015.182551672469
+            ],
+            "estPotProb": 0.9486963912952979,
+            "tarPocketDt": 1286.69416687914,
+            "whiteTarDt": 372.739663814738,
+            "angle": 0.1857140476826289,
+            "whitePos": [
+              3135.0877376104304,
+              1229.475619063984
+            ],
+            "collisionPos": [
+              2867.6766098811227,
+              1051.8535706165528
+            ],
+            "tarCushionPos": [
+              1890.1373924199909,
+              95.27396313132029
+            ],
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            16,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.9976619481294575,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 488.98919442667193,
+            "angle": 0.13072584129782072,
+            "whitePos": [
+              3157.257800445265,
+              1458.8951089972466
+            ],
+            "collisionPos": [
+              3351.6582812785805,
+              1067.6456441119847
+            ],
+            "tarCushionPos": [
+              3678.729319611343,
+              117.47656901304572
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            17,
+            0
+          ],
+          "cueHand": {
+            "extension": "SOCKET_DOUBLE",
+            "brand": "profSnookerCue",
+            "hand": "REST"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3027.4170041171733,
+              1685.8175903037134
+            ],
+            "estPotProb": 0.9999574006965462,
+            "tarPocketDt": 669.579075445122,
+            "whiteTarDt": 573.6443255963225,
+            "angle": 0.06986484275673616,
+            "whitePos": [
+              2491.910101072487,
+              1480.1475412436992
+            ],
+            "collisionPos": [
+              2977.2038131397208,
+              1670.4916197669554
+            ],
+            "tarCushionPos": [
+              3693.7112458049296,
+              1889.183885396783
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            24,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.9354507875879221,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 556.6920366217446,
+            "angle": 0.4151376516385259,
+            "whitePos": [
+              3394.6586352143286,
+              1574.0880384822658
+            ],
+            "collisionPos": [
+              3351.492175650577,
+              1067.5882012524742
+            ],
+            "tarCushionPos": [
+              3681.8006857590935,
+              113.28079528216625
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            25,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2793.0232578592168,
+              1170.1187719938207
+            ],
+            "estPotProb": 0.8611689270638707,
+            "tarPocketDt": 1129.160010089046,
+            "whiteTarDt": 919.1887310949296,
+            "angle": 0.30154820981647185,
+            "whitePos": [
+              1947.0534294189763,
+              810.6149851699586
+            ],
+            "collisionPos": [
+              2752.540637190827,
+              1136.6911280934498
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            32,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.7255994968474808,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 700.9681191962583,
+            "angle": 0.7911086721889724,
+            "whitePos": [
+              3646.4194885973484,
+              1661.6200339519082
+            ],
+            "collisionPos": [
+              3351.9952347287276,
+              1067.76025906921
+            ],
+            "tarCushionPos": [
+              3677.9752301053,
+              116.64804307857864
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            33,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3144.2242608801007,
+              1042.973729003982
+            ],
+            "estPotProb": 0.9944233467096435,
+            "tarPocketDt": 991.4593110931373,
+            "whiteTarDt": 738.8988744827564,
+            "angle": 0.028086643857003768,
+            "whitePos": [
+              2771.5465607251836,
+              404.943260672629
+            ],
+            "collisionPos": [
+              3116.4285363348554,
+              998.4355688044766
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            40,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.9996247935042408,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 304.40992286769716,
+            "angle": 0.20843085149614993,
+            "whitePos": [
+              3221.9262220795895,
+              1284.670301197492
+            ],
+            "collisionPos": [
+              3351.6782414312815,
+              1067.6525028278631
+            ],
+            "tarCushionPos": [
+              3677.474146666392,
+              117.76271748986863
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            41,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3527.737324373481,
+              1207.8166271728228
+            ],
+            "estPotProb": 0.9975420054397197,
+            "tarPocketDt": 691.9789479256578,
+            "whiteTarDt": 238.18491523011147,
+            "angle": 0.44698662490468166,
+            "whitePos": [
+              3402.553066434626,
+              1005.1815971126833
+            ],
+            "collisionPos": [
+              3517.22208808768,
+              1156.3804552569377
+            ],
+            "tarCushionPos": [
+              3672.3063474326996,
+              1914.4726850275895
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            48,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              2800.5249999999996,
+              1018
+            ],
+            "estPotProb": 0.8837469470888426,
+            "tarPocketDt": 1267.6707171151543,
+            "whiteTarDt": 675.6595702729495,
+            "angle": 0.09280182338421739,
+            "whitePos": [
+              3233.268972568241,
+              1536.8916159539328
+            ],
+            "collisionPos": [
+              2837.8393259177783,
+              1054.9308965761086
+            ],
+            "tarCushionPos": [
+              1881.7495087789996,
+              104.72921684977793
+            ],
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            49,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2870.687321373987,
+              964.9032908075151
+            ],
+            "estPotProb": 0.9762849496156178,
+            "tarPocketDt": 1217.0443305503197,
+            "whiteTarDt": 333.34675417287247,
+            "angle": 0.3757643359728445,
+            "whitePos": [
+              2584.8075441768992,
+              793.4599721644923
+            ],
+            "collisionPos": [
+              2836.336450661784,
+              925.2010534051881
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            55,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "targetPos": [
+              2674.2286191553794,
+              1018.584856453773
+            ],
+            "estPotProb": 0.9407733300194785,
+            "tarPocketDt": 1182.6396819500749,
+            "whiteTarDt": 506.8110998774056,
+            "angle": 0.22763199052932848,
+            "whitePos": [
+              3073.948382943973,
+              1330.1640621073864
+            ],
+            "collisionPos": [
+              2708.081943504289,
+              1058.7121843880234
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            56,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3666.215491927558,
+              210.68835283981525
+            ],
+            "estPotProb": 0.9999999999651861,
+            "tarPocketDt": 60.438807797854885,
+            "whiteTarDt": 1528.5416769645024,
+            "angle": 0.7099941287175122,
+            "whitePos": [
+              2691.4931062345713,
+              1388.1245205561063
+            ],
+            "collisionPos": [
+              3658.588027882057,
+              262.63131970720457
+            ],
+            "tarCushionPos": [
+              3680.6260716242173,
+              114.10335524964489
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            63,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.8242366335972382,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 845.8916692059404,
+            "angle": 0.47139785289344216,
+            "whitePos": [
+              3463.865914445683,
+              177.47485261238958
+            ],
+            "collisionPos": [
+              3352.81450669605,
+              967.971624549364
+            ],
+            "tarCushionPos": [
+              3648.5684792704087,
+              1898.8299789118985
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            64,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2997.7321190180483,
+              870.0660186717555
+            ],
+            "estPotProb": 0.9519372609141978,
+            "tarPocketDt": 982.5063384433959,
+            "whiteTarDt": 1055.043390625995,
+            "angle": 0.06769407400624505,
+            "whitePos": [
+              2330.817705362953,
+              1687.5877131622908
+            ],
+            "collisionPos": [
+              2961.7374708249176,
+              908.2842771605716
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            71,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.9379989680533583,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 730.7366068286551,
+            "angle": 0.2666082029418513,
+            "whitePos": [
+              3308.277643307804,
+              289.7685200779431
+            ],
+            "collisionPos": [
+              3351.5204563057573,
+              968.4019741707185
+            ],
+            "tarCushionPos": [
+              3683.2064864487634,
+              1923.94348243617
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            72,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              1910.429743919562,
+              326.10831960900197
+            ],
+            "estPotProb": 1,
+            "tarPocketDt": 208.68118336607066,
+            "whiteTarDt": 500.81921670588633,
+            "angle": 0.6340942131758114,
+            "whitePos": [
+              2185.6924785495785,
+              744.4984661778507
+            ],
+            "collisionPos": [
+              1910.6193383226591,
+              378.6079772300223
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            77,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              1908.35,
+              1018
+            ],
+            "estPotProb": 0.9338285901310692,
+            "tarPocketDt": 900.5625,
+            "whiteTarDt": 904.8948544553679,
+            "angle": 0.49584277483740724,
+            "whitePos": [
+              1499.959348402668,
+              210.5027719504493
+            ],
+            "collisionPos": [
+              1909.5694710403254,
+              965.5141646331052
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            78,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2427.7289942677717,
+              1657.8985377754939
+            ],
+            "estPotProb": 0.7218450105497864,
+            "tarPocketDt": 581.1198162936632,
+            "whiteTarDt": 694.8678281573264,
+            "angle": 0.4795554755281226,
+            "whitePos": [
+              3122.451409221633,
+              1643.6835889977374
+            ],
+            "collisionPos": [
+              2474.4689587727757,
+              1633.989842331977
+            ],
+            "tarCushionPos": [
+              1890.9952358538699,
+              1941.0959661521042
+            ],
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            81,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 3,
+          "pots": {"3": 1},
+          "potInfo": {
+            "targetPos": [
+              860.9365499999999,
+              726
+            ],
+            "estPotProb": 0.9568569574997665,
+            "tarPocketDt": 1587.2240710268832,
+            "whiteTarDt": 466.6151660074019,
+            "angle": 2.1558672144483815E-4,
+            "whitePos": [
+              553.0830266377804,
+              375.34928874792985
+            ],
+            "collisionPos": [
+              826.285715999135,
+              686.5592882487686
+            ],
+            "tarCushionPos": [
+              1924.8119708117504,
+              1944.0417516206044
+            ],
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            3,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            82,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2840.9890768328464,
+              813.9621754313782
+            ],
+            "estPotProb": 0.8054131412728114,
+            "tarPocketDt": 1059.1976149386958,
+            "whiteTarDt": 1435.0852439356001,
+            "angle": 0.12938267005501292,
+            "whitePos": [
+              1843.0807921147095,
+              1845.2956387945171
+            ],
+            "collisionPos": [
+              2800.18114421133,
+              846.99190081501
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            89,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.98958147731805,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 337.03084761038826,
+            "angle": 0.36149312273118817,
+            "whitePos": [
+              3360.6006906466987,
+              1354.932709976095
+            ],
+            "collisionPos": [
+              3351.7086160670556,
+              1067.6629261389671
+            ],
+            "tarCushionPos": [
+              3678.3789683985956,
+              116.2881221544653
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            90,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3279.169156918316,
+              1128.1340513394564
+            ],
+            "estPotProb": 0.9999999988664561,
+            "tarPocketDt": 850.8633128081592,
+            "whiteTarDt": 106.85395674349674,
+            "angle": 0.25046647014745216,
+            "whitePos": [
+              3218.75199313682,
+              1040.0004346410535
+            ],
+            "collisionPos": [
+              3255.2716628376,
+              1081.3883595368895
+            ],
+            "tarCushionPos": [
+              3689.624108443661,
+              1929.953879415034
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            96,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "targetPos": [
+              2800.5249999999996,
+              1018
+            ],
+            "estPotProb": 0.6263858747060569,
+            "tarPocketDt": 2788.7179201426948,
+            "whiteTarDt": 570.7996349736646,
+            "angle": 0.07027142765750227,
+            "whitePos": [
+              3353.2101486208944,
+              875.3418429252353
+            ],
+            "collisionPos": [
+              2850.3812131768973,
+              1001.5498356469184
+            ],
+            "tarCushionPos": [
+              106.84326445428088,
+              1907.8524147791763
+            ],
+            "pocketName": "BOT_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            97,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3069.6377042789827,
+              1040.6926420591592
+            ],
+            "estPotProb": 0.9291817601905092,
+            "tarPocketDt": 1034.5563563836167,
+            "whiteTarDt": 627.1053331944053,
+            "angle": 0.4167690844596089,
+            "whitePos": [
+              2925.4338255743173,
+              430.39243700643584
+            ],
+            "collisionPos": [
+              3038.9893659157806,
+              998.067187366014
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            103,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "targetPos": [
+              2800.5249999999996,
+              1018
+            ],
+            "estPotProb": 0.9538663967113226,
+            "tarPocketDt": 1225.8940280974537,
+            "whiteTarDt": 519.7565175642968,
+            "angle": 0.3025670573112116,
+            "whitePos": [
+              2347.9253604018763,
+              1273.5394368511718
+            ],
+            "collisionPos": [
+              2763.5389267370965,
+              1055.2596354311977
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            104,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3283.5471558737304,
+              820.5372850641744
+            ],
+            "estPotProb": 0.964785057833828,
+            "tarPocketDt": 771.9453559408774,
+            "whiteTarDt": 698.5564957782309,
+            "angle": 0.47120451943844976,
+            "whitePos": [
+              3226.3768128839283,
+              1516.7504203010715
+            ],
+            "collisionPos": [
+              3257.64742961613,
+              866.2040582852388
+            ],
+            "tarCushionPos": [
+              3687.233326006449,
+              108.00405085143039
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            109,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              1908.35,
+              1018
+            ],
+            "estPotProb": 0.999999506012961,
+            "tarPocketDt": 900.5625,
+            "whiteTarDt": 170.37194191248827,
+            "angle": 0.3354312535545052,
+            "whitePos": [
+              1947.824536874985,
+              1183.7358124532466
+            ],
+            "collisionPos": [
+              1908.3850220480083,
+              1070.4999882703553
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            111,
+            0
+          ],
+          "cueHand": {
+            "extension": "SOCKET_DOUBLE",
+            "brand": "profSnookerCue",
+            "hand": "REST"
+          },
+          "firstHit": 2,
+          "pots": {"2": 1},
+          "potInfo": {
+            "targetPos": [
+              860.9365499999999,
+              1310
+            ],
+            "estPotProb": 0.9934261730594083,
+            "tarPocketDt": 914.6384175459187,
+            "whiteTarDt": 408.02475750714564,
+            "angle": 0.39578367881896437,
+            "whitePos": [
+              1246.315395656282,
+              1175.9576631828713
+            ],
+            "collisionPos": [
+              901.8035655791994,
+              1277.043407250644
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            2,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 2
+        },
+        {
+          "scoresAfter": [
+            114,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 3,
+          "pots": {"3": 1},
+          "potInfo": {
+            "targetPos": [
+              860.9365499999999,
+              726
+            ],
+            "estPotProb": 0.7268984025995913,
+            "tarPocketDt": -1,
+            "whiteTarDt": 399.75545905325106,
+            "angle": 0.00400436088468914,
+            "whitePos": [
+              957.5839208067273,
+              338.1034767376454
+            ],
+            "collisionPos": [
+              873.6656054432461,
+              675.0665034971357
+            ],
+            "tarCushionPos": [
+              571.9027788693887,
+              1884.1167586629922
+            ],
+            "pocketName": "TOP_LEFT",
+            "isDouble": true
+          },
+          "gainScores": [
+            3,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DOUBLE_POT"
+          },
+          "player": 1,
+          "target": 3
+        },
+        {
+          "scoresAfter": [
+            118,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 4,
+          "pots": {"4": 1},
+          "potInfo": {
+            "targetPos": [
+              860.9365499999999,
+              1018
+            ],
+            "estPotProb": 0.8490095881578332,
+            "tarPocketDt": 2936.6470303104015,
+            "whiteTarDt": 291.51210082690073,
+            "angle": 0.05862735384857115,
+            "whitePos": [
+              578.6239408036432,
+              945.3439911827087
+            ],
+            "collisionPos": [
+              810.7787603371842,
+              1002.49366520893
+            ],
+            "tarCushionPos": [
+              3698.7630063307133,
+              1895.697618721059
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            4,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 4
+        },
+        {
+          "scoresAfter": [
+            123,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              1908.35,
+              1018
+            ],
+            "estPotProb": 0.9742439725092766,
+            "tarPocketDt": 900.5625,
+            "whiteTarDt": 663.5358798600946,
+            "angle": 0.489456350309025,
+            "whitePos": [
+              1618.3917231814803,
+              421.1716649101313
+            ],
+            "collisionPos": [
+              1908.4795263093731,
+              965.5001600182809
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 5
+        },
+        {
+          "scoresAfter": [
+            129,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "targetPos": [
+              2800.5249999999996,
+              1018
+            ],
+            "estPotProb": 0.9044723931699339,
+            "tarPocketDt": 1225.8940280974537,
+            "whiteTarDt": 333.59378711335495,
+            "angle": 0.5984919007010108,
+            "whitePos": [
+              2479.6241580930478,
+              926.8547068464868
+            ],
+            "collisionPos": [
+              2763.399877463076,
+              980.8789103590568
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 6
+        },
+        {
+          "scoresAfter": [
+            136,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3623.62017820446,
+              903.1972870702695
+            ],
+            "estPotProb": 0.9606504741853146,
+            "tarPocketDt": 754.1644454238854,
+            "whiteTarDt": 635.2547613351117,
+            "angle": 0.1193867894928955,
+            "whitePos": [
+              3657.0964306983687,
+              1537.569380023525
+            ],
+            "collisionPos": [
+              3620.5615134562267,
+              955.6081105019755
+            ],
+            "tarCushionPos": [
+              3669.00399887874,
+              125.43690874283124
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 7
+        }
+      ],
+      "winner": 1
+    },
+    {
+      "frameIndex": 3,
+      "frameNumber": 3,
+      "cueRecs": [
+        {
+          "scoresAfter": [
+            0,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "specials": ["BALL_IN_HAND"],
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "BREAK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            0,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "potInfo": {
+            "targetPos": [
+              3039.4797402296276,
+              391.9538915734039
+            ],
+            "estPotProb": 0.5558776997683093,
+            "tarPocketDt": 671.9467819985864,
+            "whiteTarDt": 2787.9897611015203,
+            "angle": 0.12957170150435626,
+            "whitePos": [
+              331.9405277026574,
+              1056.8736766871787
+            ],
+            "collisionPos": [
+              2989.040888667156,
+              406.52002542132317
+            ],
+            "tarCushionPos": [
+              3667.018479351697,
+              212.63759834192803
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            1,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3503.1282031887295,
+              179.64943693728458
+            ],
+            "estPotProb": 1,
+            "tarPocketDt": 165.9467872719784,
+            "whiteTarDt": 259.19944843099637,
+            "angle": 0.6976968298519699,
+            "whitePos": [
+              3312.646839536368,
+              355.43682035278914
+            ],
+            "collisionPos": [
+              3451.4096987338426,
+              188.6741982607212
+            ],
+            "tarCushionPos": [
+              3694.013392471458,
+              145.75858554315877
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            8,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3443.5894373889582,
+              971.0488832369074
+            ],
+            "estPotProb": 0.9358664988570711,
+            "tarPocketDt": 941.4589546947645,
+            "whiteTarDt": 471.3075605246184,
+            "angle": 0.38066428324456525,
+            "whitePos": [
+              3490.7726769555516,
+              502.10905925981297
+            ],
+            "collisionPos": [
+              3431.2759177379894,
+              920.0133347263312
+            ],
+            "tarCushionPos": [
+              3671.6589492043913,
+              1913.6317725172676
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            9,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2938.8134261388795,
+              1163.9387963825452
+            ],
+            "estPotProb": 0.9997628909122738,
+            "tarPocketDt": 1277.2281732999795,
+            "whiteTarDt": 197.69485005919128,
+            "angle": 0.007172903836341504,
+            "whitePos": [
+              3098.9260869401946,
+              1047.9767785014772
+            ],
+            "collisionPos": [
+              2981.1755004593624,
+              1132.9274327227936
+            ],
+            "tarCushionPos": [
+              1890.3624345996163,
+              1939.8833186313705
+            ],
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            14,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              1908.35,
+              1018
+            ],
+            "estPotProb": 0.9313336924222733,
+            "tarPocketDt": 900.5625,
+            "whiteTarDt": 724.6290113481205,
+            "angle": 0.6366841765583882,
+            "whitePos": [
+              2313.668231703868,
+              1618.6699053022417
+            ],
+            "collisionPos": [
+              1908.7444211506581,
+              1070.4985182013227
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            15,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              1798.5034785643006,
+              1768.6314315699601
+            ],
+            "estPotProb": 1,
+            "tarPocketDt": 185.86442250225525,
+            "whiteTarDt": 1103.9267762370976,
+            "angle": 0.13280206241950032,
+            "whitePos": [
+              1038.939711098734,
+              967.5588940012667
+            ],
+            "collisionPos": [
+              1766.005251083972,
+              1727.398978386311
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            20,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              1908.35,
+              1018
+            ],
+            "estPotProb": 0.9986173670688059,
+            "tarPocketDt": 900.5625,
+            "whiteTarDt": 758.0369119578443,
+            "angle": 0.11138056343615332,
+            "whitePos": [
+              1829.895617329204,
+              1771.966093223249
+            ],
+            "collisionPos": [
+              1908.6544454528837,
+              1070.4991174938589
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            21,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2444.5091053673596,
+              649.6099723522593
+            ],
+            "estPotProb": 0.8855147566892696,
+            "tarPocketDt": 1738.1546875720164,
+            "whiteTarDt": 442.90020567941104,
+            "angle": 0.27807383647924644,
+            "whitePos": [
+              2219.046279829232,
+              268.3920471556227
+            ],
+            "collisionPos": [
+              2407.6694704434685,
+              612.2055430826042
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            25,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 4,
+          "pots": {"4": 1},
+          "potInfo": {
+            "targetPos": [
+              860.9365499999999,
+              1018
+            ],
+            "estPotProb": 0.938866589056736,
+            "tarPocketDt": 1121.6351612047931,
+            "whiteTarDt": 764.2949024383796,
+            "angle": 0.21694072311653478,
+            "whitePos": [
+              1454.0654969758798,
+              1500.0215245739303
+            ],
+            "collisionPos": [
+              894.1776421032154,
+              1058.6359449330168
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            4,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            26,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2652.2324200735384,
+              719.0132305034731
+            ],
+            "estPotProb": 0.85632017881401,
+            "tarPocketDt": 1162.8107807397707,
+            "whiteTarDt": 804.3543526510384,
+            "angle": 0.3121088394054352,
+            "whitePos": [
+              2093.6565918938,
+              1297.7869071699145
+            ],
+            "collisionPos": [
+              2606.2803574982595,
+              744.4033450265459
+            ],
+            "tarCushionPos": [
+              3697.4091722435464,
+              141.35094029687482
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            31,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              1908.35,
+              1018
+            ],
+            "estPotProb": 0.9795465803330938,
+            "tarPocketDt": 900.5625,
+            "whiteTarDt": 774.5433204803895,
+            "angle": 0.36805700173009726,
+            "whitePos": [
+              1647.3742887675885,
+              288.74762019755843
+            ],
+            "collisionPos": [
+              1907.8766620423955,
+              965.5021332942249
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            32,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3183.4991994585753,
+              925.4698296358367
+            ],
+            "estPotProb": 0.9580945590827505,
+            "tarPocketDt": 913.3494730957141,
+            "whiteTarDt": 263.4432110791917,
+            "angle": 0.7443941172538899,
+            "whitePos": [
+              3197.1423245598335,
+              1188.559530310696
+            ],
+            "collisionPos": [
+              3155.713528873678,
+              970.0142621500421
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            37,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              1908.35,
+              1018
+            ],
+            "estPotProb": 0.7575486320312446,
+            "tarPocketDt": 1960.588093532142,
+            "whiteTarDt": 778.4628294781096,
+            "angle": 0.05200392284868638,
+            "whitePos": [
+              2588.8896582025386,
+              640.018319898125
+            ],
+            "collisionPos": [
+              1955.566866863475,
+              995.0474965017085
+            ],
+            "tarCushionPos": [
+              128.18095819331901,
+              1882.77247060533
+            ],
+            "pocketName": "BOT_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            38,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2556.687730133145,
+              1030.7422032170314
+            ],
+            "estPotProb": 0.940178171947992,
+            "tarPocketDt": 1400.9320569462675,
+            "whiteTarDt": 172.77357544354857,
+            "angle": 0.5382621779243402,
+            "whitePos": [
+              2468.974006654234,
+              881.8898902185002
+            ],
+            "collisionPos": [
+              2515.049906479208,
+              998.7649981254112
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            42,
+            0
+          ],
+          "cueHand": {
+            "extension": "SOCKET_DOUBLE",
+            "brand": "profSnookerCue",
+            "hand": "REST"
+          },
+          "firstHit": 4,
+          "pots": {"4": 1},
+          "potInfo": {
+            "targetPos": [
+              860.9365499999999,
+              1018
+            ],
+            "estPotProb": 0.8494025807208527,
+            "tarPocketDt": 1121.6351612047931,
+            "whiteTarDt": 418.97897642374176,
+            "angle": 0.7383467022880534,
+            "whitePos": [
+              1268.8182795747466,
+              1113.790799997701
+            ],
+            "collisionPos": [
+              893.8992285002039,
+              1058.8621080280807
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            4,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            42,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "DEFENSE"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            42,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "potInfo": {
+            "targetPos": [
+              2476.2230784056883,
+              268.0854912640967
+            ],
+            "estPotProb": 0.31444539795154625,
+            "tarPocketDt": -1,
+            "whiteTarDt": 1580.3863955148224,
+            "angle": 0.06537118684823806,
+            "whitePos": [
+              2835.349385308688,
+              1807.127223907674
+            ],
+            "collisionPos": [
+              2489.4909793672327,
+              318.88128558748895
+            ],
+            "tarCushionPos": [
+              2445.820187462624,
+              151.6750292555907
+            ],
+            "pocketName": "BOT_MID",
+            "isDouble": true
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "DOUBLE_POT"
+          },
+          "player": 2,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            43,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              843.1397852063484,
+              576.9876739060927
+            ],
+            "estPotProb": 0.9446628327344628,
+            "tarPocketDt": 813.7575171843774,
+            "whiteTarDt": 1247.0668535694883,
+            "angle": 0.10278820783223841,
+            "whitePos": [
+              1964.1267789419655,
+              1123.3976821849378
+            ],
+            "collisionPos": [
+              888.1168560781161,
+              604.0674306714925
+            ],
+            "tarCushionPos": [
+              118.56565155927144,
+              140.61845468625611
+            ],
+            "pocketName": "TOP_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            48,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              1908.35,
+              1018
+            ],
+            "estPotProb": 0.790254179249164,
+            "tarPocketDt": 1960.588093532142,
+            "whiteTarDt": 621.8405783609479,
+            "angle": 0.13139482040074224,
+            "whitePos": [
+              1387.8037694023299,
+              1358.172495517841
+            ],
+            "collisionPos": [
+              1861.2239120714887,
+              1041.1383204783945
+            ],
+            "tarCushionPos": [
+              3702.415493933462,
+              135.962482111647
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            49,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2738.3778204845476,
+              373.1279220875146
+            ],
+            "estPotProb": 0.8689526863979817,
+            "tarPocketDt": 954.4592911929823,
+            "whiteTarDt": 1049.6906541276742,
+            "angle": 0.06162619411805714,
+            "whitePos": [
+              1733.7981187870253,
+              677.5455501912456
+            ],
+            "collisionPos": [
+              2687.3670064506323,
+              385.54351196114226
+            ],
+            "tarCushionPos": [
+              3692.2552063865296,
+              148.13810778765455
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            56,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.947570815667935,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 858.9007326250891,
+            "angle": 0.1306821216725691,
+            "whitePos": [
+              2992.6506417843343,
+              245.81335355595894
+            ],
+            "collisionPos": [
+              3351.7431927556595,
+              968.325234107369
+            ],
+            "tarCushionPos": [
+              3674.802650373739,
+              1916.556118939094
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            57,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2981.9607892162694,
+              978.0753156769811
+            ],
+            "estPotProb": 0.7049882346452765,
+            "tarPocketDt": 1375.986037899668,
+            "whiteTarDt": 751.31082999129,
+            "angle": 0.13130791632853134,
+            "whitePos": [
+              3621.063706864212,
+              1373.0631938657787
+            ],
+            "collisionPos": [
+              3023.2031984271894,
+              1010.5609075423257
+            ],
+            "tarCushionPos": [
+              1881.424615373074,
+              105.34831200359227
+            ],
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            64,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.7319895486052981,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 770.6693108447423,
+            "angle": 0.7266721198607577,
+            "whitePos": [
+              2715.3273077292383,
+              609.3538854142959
+            ],
+            "collisionPos": [
+              3352.0756895283002,
+              968.2127505931004
+            ],
+            "tarCushionPos": [
+              3661.3089226420984,
+              1906.0556935620264
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            65,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2848.1275654462324,
+              944.4343254642519
+            ],
+            "estPotProb": 0.998864112309259,
+            "tarPocketDt": 2812.3428135544214,
+            "whiteTarDt": 111.319648999372,
+            "angle": 0.032749106293556984,
+            "whitePos": [
+              2954.3563881696286,
+              977.7134702270706
+            ],
+            "collisionPos": [
+              2898.4997327041074,
+              959.2294161982849
+            ],
+            "tarCushionPos": [
+              122.85169546807111,
+              142.96721586735848
+            ],
+            "pocketName": "TOP_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            72,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 1,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 165.3393337387284,
+            "angle": 0.008425332146077658,
+            "whitePos": [
+              3314.1788554800282,
+              861.920227364794
+            ],
+            "collisionPos": [
+              3351.662470052762,
+              968.3529168966423
+            ],
+            "tarCushionPos": [
+              3680.2554477317835,
+              1921.5798601176377
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            72,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "potInfo": {
+            "targetPos": [
+              2916.4759667892,
+              1087.658977361069
+            ],
+            "estPotProb": 0.5712247202066254,
+            "tarPocketDt": -1,
+            "whiteTarDt": 690.5203400429223,
+            "angle": 0.02051925026509993,
+            "whitePos": [
+              3181.08305931051,
+              449.8491102373221
+            ],
+            "collisionPos": [
+              2936.4224125869277,
+              1039.0957277966081
+            ],
+            "tarCushionPos": [
+              2589.430612373857,
+              1883.9804019438686
+            ],
+            "pocketName": "TOP_MID",
+            "isDouble": true
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "DOUBLE_POT"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            72,
+            0
+          ],
+          "cueHand": {
+            "extension": "SOCKET_DOUBLE",
+            "brand": "profSnookerCue",
+            "hand": "REST"
+          },
+          "firstHit": 1,
+          "potInfo": {
+            "targetPos": [
+              2836.9314806853204,
+              1130.5362638362121
+            ],
+            "estPotProb": 0.24927432572576413,
+            "tarPocketDt": 1284.1581417224195,
+            "whiteTarDt": 990.4094906501947,
+            "angle": 1.2426694848187134,
+            "whitePos": [
+              1898.0394988748615,
+              815.270018161216
+            ],
+            "collisionPos": [
+              2801.936003441192,
+              1169.6714986997479
+            ],
+            "tarCushionPos": [
+              3668.081168240835,
+              203.71674531147022
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            0,
+            0
+          ],
+          "attemptBase": {
+            "success": false,
+            "type": "ATTACK"
+          },
+          "player": 2,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            73,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              3649.757981416671,
+              209.1792805816601
+            ],
+            "estPotProb": 1,
+            "tarPocketDt": 61.24772317611662,
+            "whiteTarDt": 2172.190750410279,
+            "angle": 0.4371111711873539,
+            "whitePos": [
+              2245.575200345876,
+              1866.49137355397
+            ],
+            "collisionPos": [
+              3634.6108203836525,
+              259.4467010263373
+            ],
+            "tarCushionPos": [
+              3677.6083596602975,
+              117.01612476598865
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            80,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.9885433512457358,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 735.1974306265168,
+            "angle": 0.03411737201061671,
+            "whitePos": [
+              3108.2377789837574,
+              330.4992464460008
+            ],
+            "collisionPos": [
+              3351.5513944090217,
+              968.3912483483439
+            ],
+            "tarCushionPos": [
+              3682.2149502374787,
+              1922.5539485080299
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            81,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              2837.628996621506,
+              1046.0610529552102
+            ],
+            "estPotProb": 0.9265376649064188,
+            "tarPocketDt": 1179.8397278573566,
+            "whiteTarDt": 716.34803024031,
+            "angle": 0.25500714295149707,
+            "whitePos": [
+              2467.876151004425,
+              432.5161616984716
+            ],
+            "collisionPos": [
+              2800.8997604219803,
+              1008.5482085930266
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            88,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              2775.6535639568265,
+              626.2829284524448
+            ],
+            "estPotProb": 0.4595233896461781,
+            "tarPocketDt": 1005.5541467813483,
+            "whiteTarDt": 655.0649521605534,
+            "angle": 0.707659261760563,
+            "whitePos": [
+              3425.6110986659664,
+              544.6416728035678
+            ],
+            "collisionPos": [
+              2820.8660526581393,
+              652.9677718938781
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            89,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              327.304553634604,
+              1086.7387037065212
+            ],
+            "estPotProb": 0.9962748864711688,
+            "tarPocketDt": 953.0789091846851,
+            "whiteTarDt": 254.55218371636596,
+            "angle": 0.23923617341440817,
+            "whitePos": [
+              326.4166117613805,
+              1341.2893387361755
+            ],
+            "collisionPos": [
+              337.02507473998276,
+              1138.3309658939504
+            ],
+            "tarCushionPos": [
+              145.43434844867176,
+              122.52180692795726
+            ],
+            "pocketName": "TOP_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            96,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.8443380323346725,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 588.8151897416463,
+            "angle": 0.6249309565171366,
+            "whitePos": [
+              2906.311631095761,
+              1382.5125819037748
+            ],
+            "collisionPos": [
+              3351.8448474638844,
+              1067.709419354044
+            ],
+            "tarCushionPos": [
+              3672.78025268586,
+              121.30359926992946
+            ],
+            "pocketName": "TOP_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            97,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 1,
+          "pots": {"1": 1},
+          "potInfo": {
+            "targetPos": [
+              1037.6265780516512,
+              1121.9236933889256
+            ],
+            "estPotProb": 0.9428835097726338,
+            "tarPocketDt": 1180.1663720544484,
+            "whiteTarDt": 270.38723001036107,
+            "angle": 0.31962656520854504,
+            "whitePos": [
+              798.0968096420869,
+              996.4854847029898
+            ],
+            "collisionPos": [
+              998.8682019368034,
+              1086.511290428635
+            ],
+            "tarCushionPos": [
+              1927.5751201849307,
+              1938.622660109599
+            ],
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            1,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 1
+        },
+        {
+          "scoresAfter": [
+            104,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.9868374699080984,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 210.37563265957053,
+            "angle": 0.5017879821019213,
+            "whitePos": [
+              3379.4491266484706,
+              807.897452848972
+            ],
+            "collisionPos": [
+              3351.665635036188,
+              968.3518292748583
+            ],
+            "tarCushionPos": [
+              3678.521758526007,
+              1919.4756001678613
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 0
+        },
+        {
+          "scoresAfter": [
+            106,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 2,
+          "pots": {"2": 1},
+          "potInfo": {
+            "targetPos": [
+              860.9365499999999,
+              1310
+            ],
+            "estPotProb": 0.9422663206435569,
+            "tarPocketDt": 1587.2240710268832,
+            "whiteTarDt": 282.47411614831987,
+            "angle": 0.1936257201864091,
+            "whitePos": [
+              710.2126530508997,
+              1548.9015135620775
+            ],
+            "collisionPos": [
+              826.3301152744265,
+              1349.4796747401303
+            ],
+            "tarCushionPos": [
+              1925.6484217219527,
+              94.66090340417404
+            ],
+            "pocketName": "TOP_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            2,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 2
+        },
+        {
+          "scoresAfter": [
+            109,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 3,
+          "pots": {"3": 1},
+          "potInfo": {
+            "targetPos": [
+              425.6620989951968,
+              481.06762093662235
+            ],
+            "estPotProb": 0.9999999999999456,
+            "tarPocketDt": 430.4557150220065,
+            "whiteTarDt": 493.0547493112142,
+            "angle": 0.19357735430770884,
+            "whitePos": [
+              801.6743347425215,
+              799.9998776725045
+            ],
+            "collisionPos": [
+              459.19383964676274,
+              521.4640623046795
+            ],
+            "tarCushionPos": null,
+            "pocketName": "TOP_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            3,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 3
+        },
+        {
+          "scoresAfter": [
+            113,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 4,
+          "pots": {"4": 1},
+          "potInfo": {
+            "targetPos": [
+              497.4313901453817,
+              1163.1316055378136
+            ],
+            "estPotProb": 0.9999997610329705,
+            "tarPocketDt": 801.693371357396,
+            "whiteTarDt": 376.56750942239756,
+            "angle": 0.09864407185772128,
+            "whitePos": [
+              631.1331453741649,
+              811.0990363040422
+            ],
+            "collisionPos": [
+              520.2457766772906,
+              1115.8478485232924
+            ],
+            "tarCushionPos": [
+              128.6880153428677,
+              1927.2550347519166
+            ],
+            "pocketName": "BOT_LEFT",
+            "isDouble": false
+          },
+          "gainScores": [
+            4,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 4
+        },
+        {
+          "scoresAfter": [
+            118,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 5,
+          "pots": {"5": 1},
+          "potInfo": {
+            "targetPos": [
+              1338.5761092829496,
+              564.3796435976972
+            ],
+            "estPotProb": 0.9570298751435924,
+            "tarPocketDt": 1469.167619816318,
+            "whiteTarDt": 248.54181293903216,
+            "angle": 0.3991208798194188,
+            "whitePos": [
+              1318.3858612607069,
+              316.6592636048085
+            ],
+            "collisionPos": [
+              1318.2870666841386,
+              515.9585248665271
+            ],
+            "tarCushionPos": null,
+            "pocketName": "BOT_MID",
+            "isDouble": false
+          },
+          "gainScores": [
+            5,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 5
+        },
+        {
+          "scoresAfter": [
+            124,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "LEFT"
+          },
+          "firstHit": 6,
+          "pots": {"6": 1},
+          "potInfo": {
+            "targetPos": [
+              726.5369785474155,
+              888.9236164246303
+            ],
+            "estPotProb": 0.9634819291097634,
+            "tarPocketDt": 3104.311745411278,
+            "whiteTarDt": 138.13391742331788,
+            "angle": 0.07300563654039693,
+            "whitePos": [
+              597.8602191386944,
+              838.6914481379425
+            ],
+            "collisionPos": [
+              676.8112835513605,
+              872.0830278998337
+            ],
+            "tarCushionPos": [
+              3697.755128155341,
+              1895.0648662415053
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            6,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 6
+        },
+        {
+          "scoresAfter": [
+            131,
+            0
+          ],
+          "cueHand": {
+            "extension": "NO",
+            "brand": "profSnookerCue",
+            "hand": "RIGHT"
+          },
+          "firstHit": 7,
+          "pots": {"7": 1},
+          "potInfo": {
+            "targetPos": [
+              3368.733414,
+              1018
+            ],
+            "estPotProb": 0.7465451531981548,
+            "tarPocketDt": 917.4013451480739,
+            "whiteTarDt": 349.1660151471478,
+            "angle": 1.048332597004837,
+            "whitePos": [
+              3037.582532011255,
+              907.2931822704014
+            ],
+            "collisionPos": [
+              3352.3416387838784,
+              968.1245582400985
+            ],
+            "tarCushionPos": [
+              3660.7531041090283,
+              1906.18245235627
+            ],
+            "pocketName": "BOT_RIGHT",
+            "isDouble": false
+          },
+          "gainScores": [
+            7,
+            0
+          ],
+          "attemptBase": {
+            "success": true,
+            "type": "ATTACK"
+          },
+          "player": 1,
+          "target": 7
+        }
+      ],
+      "winner": 1
+    }
+  ],
+  "players": [
+    "custom_DA1B9E98710BC5F5",
+    "Neil Robertson"
+  ],
+  "careerMatchId": "custom_DA1B9E98710BC5F5+2029+saudi_arabia_masters-SEMI_FINAL-5",
+  "gameValues": {
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
+    "subRules": ["SNOOKER_GOLDEN"],
+    "devMode": false,
+    "table": {
+      "tableOrdinal": 0,
+      "pocketDifficultyOrdinal": 4,
+      "holeSizeOrdinal": 1
+    }
+  },
+  "entireBeginTime": "2026-08-17 07_19_35.312",
+  "totalFrames": 5
+}

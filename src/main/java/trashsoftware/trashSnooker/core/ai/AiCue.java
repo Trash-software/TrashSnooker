@@ -30,8 +30,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
 //    public static final double ATTACK_DIFFICULTY_THRESHOLD = 18000.0;  // 越大，AI越倾向于进攻
 
-    public static final double PURE_ATTACK_PROB = 0.4;  // 进攻权重为99的球员只要prob高于这个值他就会进攻。越小，AI越倾向于无脑进攻
-    public static final double DEFENSIVE_ATTACK_PROB = 0.2;  // 这个值是线性的，进攻权重为99的球员高于这个值就会尝试性进攻
+    public static final double PURE_ATTACK_PROB = 0.36;  // 进攻权重为99的球员只要prob高于这个值他就会进攻。越小，AI越倾向于无脑进攻
+    public static final double DEFENSIVE_ATTACK_PROB = 0.18;  // 这个值是线性的，进攻权重为99的球员高于这个值就会尝试性进攻
 
     //    public static final double NO_DIFFICULTY_ANGLE_RAD = 0.3;
 //    public static final double EACH_BALL_SEE_PRICE = 0.5;
@@ -86,17 +86,16 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         this.game = game;
         this.aiPlayer = aiPlayer;
 
-        this.nThreads = Math.max(1,
-                Math.min(32,
-                        ConfigLoader.getInstance().getInt("nThreads", 4)));
+        this.nThreads = Math.clamp(
+                ConfigLoader.getInstance().getInt("nThreads", 4), 1, 32);
 
         P opponent = game.getAnotherPlayer(aiPlayer);
-        opponentPureAtkProb = Analyzer.attackProbThreshold(0.4, opponent.getPlayerPerson().getAiPlayStyle());
-        opponentDefAtkProb = Analyzer.defensiveAttackProbThreshold(opponent.getPlayerPerson().getAiPlayStyle());
+        opponentPureAtkProb = Analyzer.attackProbThreshold(0.4, opponent.getPlayerPerson());
+        opponentDefAtkProb = Analyzer.defensiveAttackProbThreshold(opponent.getPlayerPerson());
     }
 
     public abstract AiCueResult makeCue(Phy phy);
-    
+
     public void interrupt() {
         interrupted = true;
     }
@@ -119,14 +118,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     protected abstract boolean supportAttackWithDefense(int targetRep);
 
     protected abstract boolean mustAttackInternal();
-    
+
     protected final boolean mustAttack() {
         if (forcedAttack) {
             return true;
         }
         return mustAttackInternal();
     }
-    
+
     public void forceAttack(boolean forcedAttack) {
         this.forcedAttack = forcedAttack;
     }
@@ -157,7 +156,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return price;
     }
 
-    protected FinalChoice.DefenseChoice solveSnooker(Phy phy, boolean allowPocketCorner) {
+    protected FinalChoice.DefenseChoice solveSnooker(Phy phy, boolean considerPostEffect, boolean allowPocketCorner) {
+        // considerPostEffect: 要考虑后效还是解到就行
         int curTarget = game.getCurrentTarget();
         boolean isSnookerFreeBall = game.isDoingSnookerFreeBll();
         List<Ball> legalBalls = game.getAllLegalBalls(curTarget,
@@ -173,11 +173,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         double chanceOfSmallPower = Math.pow(continuousFoulAndMiss, 1.35) / 18 + 0.5;  // 到第6杆时必定小力了
         if (Math.random() < chanceOfSmallPower) {
             System.out.println("AI solving snooker small power!");
-            return solveSnookerDefense(legalBalls, degreesTick, phy, true, allowPocketCorner);
-        } else {
-            System.out.println("AI solving snooker!");
-            return solveSnookerDefense(legalBalls, degreesTick, phy, false, allowPocketCorner);
+            FinalChoice.DefenseChoice smallPowerSolve = solveSnookerDefense(legalBalls, degreesTick, phy, considerPostEffect, true, allowPocketCorner);
+            if (smallPowerSolve != null) return smallPowerSolve;
         }
+        System.out.println("AI solving snooker!");
+        return solveSnookerDefense(legalBalls, degreesTick, phy, considerPostEffect, false, allowPocketCorner);
+
     }
 
     protected abstract KickPriceCalculator kickPriceCalculator();
@@ -226,7 +227,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             AttackChoice choice = entry.getKey();
             if (aiOnlyDouble && !(choice instanceof AttackChoice.DoubleAttackChoice)) continue;
             int nextTarget = game.getTargetAfterPotSuccess(choice.ball, game.isDoingSnookerFreeBll());
-            
+
             FinalChoice.IntegratedAttackChoice iac = pureAttack(
                     entry.getValue(),
                     nextTarget,
@@ -297,10 +298,10 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
         System.out.println("Ai calculated attacks of given choice in " + (t2 - t1) + " ms, " + choiceList.size() + " valid results");
 
-        AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
+//        AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
 
         if (!choiceList.isEmpty()) {
-            double pureAttackThresh = Analyzer.attackProbThreshold(PURE_ATTACK_PROB, aps);
+            double pureAttackThresh = Analyzer.attackProbThreshold(PURE_ATTACK_PROB, aiPlayer.getPlayerPerson());
 
             choiceList.sort(FinalChoice.IntegratedAttackChoice::normalCompareTo);
             for (FinalChoice.IntegratedAttackChoice iac : choiceList) {
@@ -359,13 +360,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
 
         AiPlayStyle aps = aiPlayer.getPlayerPerson().getAiPlayStyle();
+        PlayerPerson aiPerson = aiPlayer.getPlayerPerson();
 //        double likeShow = aiPlayer.getPlayerPerson().getAiPlayStyle().likeShow;  // 喜欢大力及杆法的程度
         GamePlayStage stage = game.getGamePlayStage(choice.ball, false);
 
         long t0 = System.currentTimeMillis();
 
-        double pureAttackThreshold = Analyzer.attackProbThreshold(PURE_ATTACK_PROB, aps);  // 进球概率高于这个值，AI就纯进攻
-        double defensiveAttackThreshold = Analyzer.defensiveAttackProbThreshold(aps);
+        double pureAttackThreshold = Analyzer.attackProbThreshold(PURE_ATTACK_PROB, aiPerson);  // 进球概率高于这个值，AI就纯进攻
+        double defensiveAttackThreshold = Analyzer.defensiveAttackProbThreshold(aiPerson);
 
         List<AttackParam> pureAttacks = new ArrayList<>();
         List<AttackParam> defensiveAttacks = new ArrayList<>();  // 连打带防
@@ -631,6 +633,18 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         return acr;
     }
 
+    protected boolean needConsiderResultOfSolving() {
+        if (game.getGameValues().rule.snookerLike()) {
+            AbstractSnookerGame asg = (AbstractSnookerGame) game;
+            if (asg.isOverscoring(aiPlayer)) {
+                return false;
+            }
+            return true;
+        } else {
+            return true;
+        }
+    }
+
     protected AiCueResult regularCueDecision(Phy phy) {
         if (game.isBreaking()) {
             FinalChoice.DefenseChoice breakChoice = breakCue(phy);
@@ -657,8 +671,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 //            System.out.printf("Best defense choice: %f %f %f %f %f\n", 
 //                    defenseChoice.price, defenseChoice.snookerPrice, defenseChoice.opponentAttackPrice,
 //                    defenseChoice.penalty, defenseChoice.tolerancePenalty);
-            if (!aiOnlyDefense && 
-                    defenseChoice.opponentCanPureAttack(game.getAnotherPlayer(aiPlayer).getPlayerPerson().getAiPlayStyle())) {
+            if (!aiOnlyDefense &&
+                    defenseChoice.opponentCanPureAttack(game.getAnotherPlayer(aiPlayer).getPlayerPerson())) {
                 System.out.println("Defense not good, try last resort");
                 FinalChoice.IntegratedAttackChoice iac = tryLastResortAttack(phy);
                 if (iac != null) {
@@ -667,13 +681,14 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             }
             return makeDefenseCue(defenseChoice, CueType.DEFENSE);
         }
-        FinalChoice.DefenseChoice solveSnooker = solveSnooker(phy, false);
+
+        FinalChoice.DefenseChoice solveSnooker = solveSnooker(phy, needConsiderResultOfSolving(), false);
         if (solveSnooker != null) {
             System.out.println("AI solve snooker");
             System.out.println(solveSnooker);
             return makeDefenseCue(solveSnooker, CueType.SOLVE);
         }
-        FinalChoice.DefenseChoice solveSnooker2 = solveSnooker(phy, true);  // 只能说是逼急了，来个袋角解斯诺克
+        FinalChoice.DefenseChoice solveSnooker2 = solveSnooker(phy, false, true);  // 只能说是逼急了，来个袋角解斯诺克
         System.out.println("Cannot solve snooker! Try pocket arc!");
         if (solveSnooker2 != null) {
             System.out.println("AI solve snooker by pocket arc");
@@ -705,7 +720,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
         return iac;
     }
-    
+
     private List<Ball> nextStepLegalBalls(int nextTarget, @Nullable Ball selfBall) {
         List<Ball> nextStepLegalBalls =
                 game.getAllLegalBalls(nextTarget,
@@ -964,7 +979,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             for (DefenseAngle da : availableRads) {
                 DefenseThread thread = new DefenseThread(
                         da.rad, da.price, whitePos, selectedPower, false,
-                        legalSet, phy, gameClonesPool, false
+                        legalSet, phy, gameClonesPool, true, false
                 );
                 defenseThreads.add(thread);
             }
@@ -1014,6 +1029,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     private FinalChoice.DefenseChoice solveSnookerDefense(List<Ball> legalBalls,
                                                           double degreesTick,
                                                           Phy phy,
+                                                          boolean considerPostEffect,
                                                           boolean smallPower,
                                                           boolean allowPocketCorner) {
         Set<Ball> legalSet = new HashSet<>(legalBalls);
@@ -1028,7 +1044,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             gameClonesPool[i] = game.clone();
         }
 
-        double[] selectedPowerArray = getSelectedPowerArray(smallPower);
+        double[] selectedPowerArray = getSelectedPowerArray(considerPostEffect, smallPower);
 
         List<AngleSnookerSolver> angleSolvers = new ArrayList<>();
 
@@ -1044,6 +1060,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                         legalSet,
                         phy,
                         gameClonesPool,
+                        considerPostEffect,
                         allowPocketCorner
                 );
                 ass.threadsOfAngle.add(thread);
@@ -1057,7 +1074,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             }
             executorService.shutdown();
 
-            if (!executorService.awaitTermination(1, TimeUnit.MINUTES))
+            if (!executorService.awaitTermination(3, TimeUnit.MINUTES))
                 throw new RuntimeException("AI thread not terminated.");  // Wait for all threads complete.
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -1076,20 +1093,25 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
         if (legalChoices.isEmpty()) return null;
         Collections.sort(legalChoices);
-        Collections.reverse(legalChoices);
+//        Collections.reverse(legalChoices);  // 因为DefenseChoice的compareTo已经negate了一下
+
+//        for (FinalChoice.DefenseChoice dc : legalChoices) {
+//            System.out.println("DC:" + dc.price + " " + dc.penalty + " " + dc.stabilityScore);
+//        }
+//        System.out.println("Final:" + legalChoices.get(0).price + " " + legalChoices.get(0).penalty + " " + legalChoices.get(0).stabilityScore);
 
         if (legalChoices.size() == 1) return legalChoices.get(0);
         else if (legalChoices.size() == 2)
             return Math.random() > 0.3 ? legalChoices.get(0) : legalChoices.get(1);
 
-        List<FinalChoice.DefenseChoice> bests = legalChoices.subList(0, Math.min(3, legalChoices.size()));
+        List<FinalChoice.DefenseChoice> bests = legalChoices.subList(0, 3);
         double rnd = Math.random();
         if (rnd > 0.4) return bests.get(0);
         else if (rnd > 0.1) return bests.get(1);
         else return bests.get(2);
     }
 
-    private double @NotNull [] getSelectedPowerArray(boolean smallPower) {
+    private double @NotNull [] getSelectedPowerArray(boolean considerPostEffect, boolean smallPower) {
         double ctrlPower = aiPlayer.getPlayerPerson().handBody.getPrimary().getControllablePowerPercentage();
 
         double powerLimit = smallPower ?
@@ -1098,6 +1120,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
         int totalTicks = (int) Math.round(aiPlayer.getPlayerPerson().getSolving() / 10.0);
         if (smallPower) totalTicks *= 2;
+        if (!considerPostEffect) totalTicks /= 3;
+        totalTicks = Math.max(totalTicks, 2);
         return Algebra.generateSkewedRange(
                 5.0,
                 powerLimit,
@@ -1298,6 +1322,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         double[] whitePos;
         double selectedPower;
         boolean solving;
+        boolean considerPostEffect;  // 解球的后效，应该仅在解斯诺克时起作用
         Set<Ball> legalSet;
         Phy phy;
         Game<?, P>[] gameClonesPool;
@@ -1313,6 +1338,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                                 Set<Ball> legalSet,
                                 Phy phy,
                                 Game<?, P>[] gameClonesPool,
+                                boolean considerPostEffect,
                                 boolean allowPocketCorner) {
             this.rad = rad;
             this.nativePrice = nativePrice;
@@ -1322,6 +1348,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             this.legalSet = legalSet;
             this.phy = phy;
             this.gameClonesPool = gameClonesPool;
+            this.considerPostEffect = considerPostEffect;
             this.allowPocketCorner = allowPocketCorner;
         }
 
@@ -1393,7 +1420,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     nativePrice,
                     allowPocketCorner,
                     true,
-                    solving ? 0.5 : 1.0
+                    considerPostEffect ? (solving ? 0.2 : 1.0) : 0,
+                    considerPostEffect
             );
         }
     }
@@ -1465,7 +1493,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     1.0,  // 进攻杆，AI应该不会吃屎去擦最薄边
                     false,
                     true,
-                    1.0
+                    1.0,
+                    true
             );
 
             if (result != null) {

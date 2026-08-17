@@ -771,11 +771,26 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
     @Override
     public boolean canReposition() {
+        // todo: 其实是检查上一杆的分数
         // 不需要再去检查有没有解了，因为无解的球不会判miss
         int minScore = Math.min(player1.getScore(), player2.getScore());
         int maxScore = Math.max(player1.getScore(), player2.getScore());
         boolean notOverScore = minScore + getRemainingScore(false) > maxScore;  // 超分或延分不能复位
         return notOverScore && super.canReposition();
+    }
+    
+    public boolean isOverscoring(Player possibleAheadPlayer) {
+        int p1Score = player1.getScore();
+        int p2Score = player2.getScore();
+        int rem = getRemainingScore(false);
+        int absDiff = Math.abs(p1Score - p2Score);
+        if (absDiff <= rem) return false;
+        
+        if (possibleAheadPlayer == player1) {
+            return p1Score > p2Score;
+        } else {
+            return p2Score > p1Score;
+        }
     }
 
     public boolean aiConsiderReposition(Phy phy, PotAttempt lastPotAttempt) {
@@ -1217,24 +1232,26 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             aheadAfter2 = aheadAfter + targetValue + 1;
             remainingAfter2 = remainingAfter - targetValue - 1;
         }
-        if (ahead < remaining && aheadAfter >= remainingAfter) {
-            // 打进目标球超分或延分
+        if (ahead <= remaining && aheadAfter > remainingAfter) {
+            // 打进目标球超分，延分不算
             if (printPlayStage) System.out.println("This ball over score!");
             return GamePlayStage.THIS_BALL_WIN;
         }
         if (targetValue != 7 &&
-                aheadAfter < remainingAfter &&
-                aheadAfter2 >= remainingAfter2) {
+                aheadAfter <= remainingAfter &&
+                aheadAfter2 > remainingAfter2) {
             if (printPlayStage) System.out.println("Prepared to over score!");
             return GamePlayStage.NEXT_BALL_WIN;
         }
-        if (ahead >= remaining && ahead - remaining <= 8) {
+        if (ahead >= remaining && ahead - remaining < 15) {
             if (printPlayStage) System.out.println("Close to win!");
             return GamePlayStage.ENHANCE_WIN;
-        } else if (ahead > remaining && ahead - remaining < 15) {
-            if (printPlayStage) System.out.println("Won, but opponent may stand again");
-            return GamePlayStage.NORMAL;
-        } else if (ahead > remaining) {
+        } 
+//        else if (ahead > remaining && ahead - remaining < 15) {
+//            if (printPlayStage) System.out.println("Won, but opponent may stand again");
+//            return GamePlayStage.NORMAL;
+//        } 
+        else if (ahead > remaining) {
             // todo: 需检查
 //            if (singlePoleScore + remaining >= 147) {
             if (isOnMaximum) {

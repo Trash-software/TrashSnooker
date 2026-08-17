@@ -541,6 +541,13 @@ public class CareerManager {
      */
     public boolean humanPlayerQualifiedToJoin(ChampionshipData championshipData,
                                               ChampionshipData.Selection selection) {
+        
+        if (championshipData.hasClubRestriction()) {
+            if (!humanPlayerCareer.getPlayerPerson().belongsOneOfClubs(championshipData.getClubsRestriction())) {
+                return false;
+            }
+        }
+        
         if (!championshipData.isProfessionalOnly()) {
             if (championshipData.hasForbidden()) {
                 int fbd = championshipData.forbidden;
@@ -594,13 +601,15 @@ public class CareerManager {
     }
 
     /**
-     * 前提条件是球员已经有资格参赛了
+     * 前提条件是玩家已经有资格参赛了
      */
     public List<TourCareer> participants(ChampionshipData data,
                                          boolean humanJoin,
                                          boolean humanQualified) {
+        // todo: 俱乐部限制
         if (data.getType() == GameRule.SNOOKER &&
                 data.getSelection() == ChampionshipData.Selection.ALL_CHAMP) {
+            // 冠中冠特殊规则
             return snookerChampOfChampParticipants(data.getTotalPlaces(), humanJoin, humanQualified);
         }
         if (data.professionalOnly) {
@@ -796,6 +805,9 @@ public class CareerManager {
             CareerRanker cwa = ranking.get(i);
             if (cwa.career.isHumanPlayer() && !humanJoin) continue;
             if (cwa.career == defendingChamp) continue;
+            if (data.hasClubRestriction() && !cwa.career.isHumanPlayer()) {
+                if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+            }
             if (cwa.willJoinMatch(data,
                     i,
                     i == 0 ? null : ranking.get(i - 1),
@@ -827,7 +839,10 @@ public class CareerManager {
 
         for (int i = 0; i < rankings.size(); i++) {
             CareerRanker cwa = rankings.get(i);
-            if (cwa.career == defendingChamp) continue;
+            if (cwa.career == defendingChamp) continue;  // 已经加了
+            if (data.hasClubRestriction() && !cwa.career.isHumanPlayer()) {
+                if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+            }
             if (!cwa.career.getPlayerPerson().isRandom && !cwa.career.getPlayerPerson().category.equals("God")) {
                 if (cwa.career.isHumanPlayer()) {
                     if (humanJoin) {
@@ -852,6 +867,9 @@ public class CareerManager {
             for (int i = 0; i < rankings.size(); i++) {
                 CareerRanker cwa = rankings.get(i);
                 if (cwa.career == defendingChamp) continue;
+                if (data.hasClubRestriction() && !cwa.career.isHumanPlayer()) {
+                    if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+                }
                 if (cwa.career.getPlayerPerson().isRandom || cwa.career.getPlayerPerson().category.equals("God")) {
                     if (cwa.willJoinMatch(data,
                             i,
@@ -891,15 +909,20 @@ public class CareerManager {
                 if (cwa.career.isHumanPlayer()) {
                     if (humanJoin) {
                         humanAlreadyJoin = true;
+                        result.add(new TourCareer(cwa.career, result.size() + 1));
                     } else {
                         continue;
                     }
+                } else {
+                    if (data.hasClubRestriction()) {
+                        if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+                    }
+                    if (cwa.willJoinMatch(data,
+                            i,
+                            i == 0 ? null : rankings.get(i - 1),
+                            i == rankings.size() - 1 ? null : rankings.get(i + 1)))
+                        result.add(new TourCareer(cwa.career, result.size() + 1));
                 }
-                if (cwa.willJoinMatch(data,
-                        i,
-                        i == 0 ? null : rankings.get(i - 1),
-                        i == rankings.size() - 1 ? null : rankings.get(i + 1)))
-                    result.add(new TourCareer(cwa.career, result.size() + 1));
 
                 if (result.size() == n) {
                     break;
@@ -911,6 +934,9 @@ public class CareerManager {
             for (int i = forbiddenLimit; i < rankings.size(); i++) {
                 CareerRanker cwa = rankings.get(i);
                 if (cwa.career.getPlayerPerson().isRandom || cwa.career.getPlayerPerson().category.equals("God")) {
+                    if (data.hasClubRestriction() && !cwa.career.isHumanPlayer()) {
+                        if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+                    }
                     if (cwa.willJoinMatch(data,
                             i,
                             i == 0 ? null : rankings.get(i - 1),

@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class AiCueResult {
 
-    public static final double DEFAULT_AI_PRECISION = 12500.0;
+    public static final double DEFAULT_AI_PRECISION = 11800.0;
     protected static double aiPrecisionFactor = DEFAULT_AI_PRECISION;  // 越大，大家越准
     private final CueParams cueParams;
     private final CueType cueType;
@@ -115,13 +115,17 @@ public class AiCueResult {
         PlayerPerson person = igp.getPlayerPerson();
 
         double precisionFactor = aiPrecisionFactor;
-        if (gamePlayStage == GamePlayStage.THIS_BALL_WIN ||
-                gamePlayStage == GamePlayStage.ENHANCE_WIN) {
-            precisionFactor *= (person.psyNerve / 100) * (1.0 - frameImportance * -0.5);
-            System.out.println(gamePlayStage + ", precision: " + precisionFactor);
-        } else if (gamePlayStage == GamePlayStage.BREAK) {
-            precisionFactor *= 5.0;
-        }
+        double psyMul = getPsyMul(gamePlayStage, person);
+        precisionFactor *= psyMul;
+        System.out.println(gamePlayStage + ", psyMul: " + psyMul + ", precision: " + precisionFactor);
+
+//        if (gamePlayStage == GamePlayStage.THIS_BALL_WIN ||
+//                gamePlayStage == GamePlayStage.ENHANCE_WIN) {
+//            precisionFactor *= (person.psyNerve / 100) * (1.0 - frameImportance * -0.5);
+//            System.out.println(gamePlayStage + ", precision: " + precisionFactor);
+//        } else if (gamePlayStage == GamePlayStage.BREAK) {
+//            precisionFactor *= 5.0;
+//        }
 
         // rua不rua
 //        precisionFactor /= calculateFramePsyDivisor(frameImportance, );
@@ -147,16 +151,42 @@ public class AiCueResult {
         // AI还不会传球
         double sd;
         if (cueType == CueType.ATTACK) {
-            sd = (100 - person.getAiPlayStyle().precision) / precisionFactor;  // 再歪也歪不了太多吧？
+            sd = (100 - person.getPrecisionPercentage()) / precisionFactor;  // 再歪也歪不了太多吧？
+            // 处理AI球员长台/大角度球的能力修正
+            if (choice instanceof FinalChoice.IntegratedAttackChoice iac) {
+                double personLong = person.getLongPrecision();
+                if (personLong != 1.0) {
+                    double whiteTarDt = iac.attackParams.getAttackChoice().whiteCollisionDistance;
+                    double longFactor = whiteTarDt / Values.MAX_DISTANCE * 2.2;
+                    if (longFactor > 1.0) {
+                        // 是长台
+                        double div = Algebra.shiftRangeSafe(1.0, 2.2,
+                                1.0, personLong, longFactor);
+                        sd /= div;
+                    }
+                }
+
+                double personAngle = person.getAnglePrecision();
+                if (personAngle != 1.0) {
+                    double angle = iac.attackParams.getAttackChoice().getAngleRad();
+                    double angleFactor = Algebra.powerTransferOfAngle(angle);  // 直球是1，极限薄球是0
+                    double div = Algebra.shiftRangeSafe(1.0, 0.0,
+                            1.0, personAngle, angleFactor);
+                    sd /= div;
+                }
+            } else {
+                System.err.println("Choice is " + choice + ", cannot apply attack long precision and angle precision");
+            }
+
             System.out.println("Precision factor: " + precisionFactor + ", Random offset: " + sd);
         } else if (cueType == CueType.DOUBLE_POT) {
 //            sd = 0.000000000001;  // 测试用
             sd = (100 - person.getAiPlayStyle().doubleAbility) / precisionFactor;
         } else if (cueType == CueType.BREAK || gamePlayStage == GamePlayStage.BREAK) {
-            sd = (100 - Math.max(person.getAiPlayStyle().precision,
+            sd = (100 - Math.max(person.getPrecisionPercentage(),
                     person.getAiPlayStyle().defense)) / precisionFactor;
         } else if (cueType == CueType.SOLVE) {
-            sd = (100 - person.getSolving()) / precisionFactor * 6.0;
+            sd = (100 - person.getSolving()) / precisionFactor * 5.0;
 //            System.out.println("Solving sd: " + sd);
         } else {
             sd = (100 - person.getAiPlayStyle().defense) / precisionFactor;
@@ -176,6 +206,20 @@ public class AiCueResult {
         double[] vecAfterRandom = Algebra.unitVectorOfAngle(afterRandom);
         unitX = vecAfterRandom[0];
         unitY = vecAfterRandom[1];
+    }
+
+    private double getPsyMul(GamePlayStage gamePlayStage, PlayerPerson person) {
+        double psyWeakness = 1.0 - person.psyNerve / 100;
+        double frameBasePsy = 1.0 - frameImportance * psyWeakness * 0.5;
+        double psyMul = switch (gamePlayStage) {
+            case THIS_BALL_WIN -> frameBasePsy - psyWeakness;
+            case NEXT_BALL_WIN -> frameBasePsy - psyWeakness * 0.75;
+            case ENHANCE_WIN -> frameBasePsy - psyWeakness * 0.5;
+            case BREAK -> frameBasePsy * 5.0;
+            case null, default -> frameBasePsy;
+        };
+        psyMul = Math.clamp(psyMul, 0.005, 1.0);
+        return psyMul;
     }
 
     @Override
