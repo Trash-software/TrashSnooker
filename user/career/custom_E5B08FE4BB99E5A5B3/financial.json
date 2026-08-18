@@ -1,6 +1,7 @@
 {
   "financial": {
-    "money": 1643780,
+    "remFreePerks": 0,
+    "money": 1599335,
     "invoices": [
       {
         "inGameDate": "2027/2/10",
@@ -71,8 +72,8 @@
       {
         "item": 5,
         "inGameDate": "2027/3/18",
-        "match": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing",
         "moneyBefore": 1643980,
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing",
         "moneyAfter": 1644180,
         "type": "invitation",
         "moneyEarn": 200,
@@ -80,21 +81,21 @@
       },
       {
         "inGameDate": "2027/3/18",
-        "match": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing",
         "moneyBefore": 1644180,
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+eight_master_tour_beijing",
         "moneyAfter": 1643180,
         "type": "participation",
         "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
           {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
-            "moneyCost": 400
-          },
-          {
-            "item": "hotel",
             "moneyCost": 400
           }
         ],
@@ -103,8 +104,8 @@
       {
         "inGameDate": "2027/3/18",
         "year": 2027,
-        "match": "eight_master_tour_beijing",
         "moneyBefore": 1643180,
+        "match": "eight_master_tour_beijing",
         "moneyAfter": 1647180,
         "type": "championshipEarn",
         "items": {"TOP_16": {
@@ -137,9 +138,286 @@
       },
       {
         "inGameDate": "2027/3/30",
-        "match": "custom_E5B08FE4BB99E5A5B3+2027+eight_spadina_open",
         "moneyBefore": 1644780,
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+eight_spadina_open",
         "moneyAfter": 1643780,
+        "type": "participation",
+        "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 400
+          },
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2025-05-03 05:51:21"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "year": 2027,
+        "moneyBefore": 1643780,
+        "match": "eight_spadina_open",
+        "moneyAfter": 1644560,
+        "type": "championshipEarn",
+        "items": {"TOP_32": {
+          "actual": 780,
+          "raw": 800
+        }},
+        "timestamp": "2026-08-19 03:30:50"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1644560,
+        "moneyAfter": 1640960,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 3600
+        }],
+        "timestamp": "2026-08-19 03:30:57"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1640960,
+        "moneyAfter": 1638160,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2800
+        }],
+        "timestamp": "2026-08-19 03:31:02"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1638160,
+        "moneyAfter": 1635960,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-19 03:31:05"
+      },
+      {
+        "inGameDate": "2027/6/18",
+        "moneyBefore": 1635960,
+        "moneyAfter": 1628560,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 7400
+        }],
+        "timestamp": "2026-08-19 03:31:58"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1628560,
+        "moneyAfter": 1626360,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-19 03:33:59"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1626360,
+        "moneyAfter": 1624160,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-19 03:35:45"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1624160,
+        "moneyAfter": 1621960,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-19 04:00:01"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1621960,
+        "moneyAfter": 1619760,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-19 04:07:51"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1619760,
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+womens_world_champ",
+        "moneyAfter": 1618160,
+        "type": "participation",
+        "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2026-08-19 04:07:51"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1618160,
+        "moneyAfter": 1615960,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-19 04:26:02"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1615960,
+        "moneyAfter": 1613760,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-19 05:44:59"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1613760,
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+womens_world_champ",
+        "moneyAfter": 1612160,
+        "type": "participation",
+        "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2026-08-19 05:44:59"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1612160,
+        "moneyAfter": 1609960,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-19 05:47:10"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1609960,
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+womens_world_champ",
+        "moneyAfter": 1608360,
+        "type": "participation",
+        "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2026-08-19 05:47:10"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1608360,
+        "moneyAfter": 1606160,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-19 05:49:39"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1606160,
+        "moneyAfter": 1603960,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-19 06:51:56"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1603960,
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+womens_world_champ",
+        "moneyAfter": 1602360,
+        "type": "participation",
+        "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2026-08-19 06:51:56"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1602360,
+        "moneyAfter": 1600160,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-19 06:53:13"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1600160,
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+womens_world_champ",
+        "moneyAfter": 1598560,
         "type": "participation",
         "items": [
           {
@@ -152,17 +430,30 @@
           },
           {
             "item": "hotel",
-            "moneyCost": 400
+            "moneyCost": 1000
           }
         ],
-        "timestamp": "2025-05-03 05:51:21"
+        "timestamp": "2026-08-19 06:53:13"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "year": 2027,
+        "moneyBefore": 1598560,
+        "match": "womens_world_champ",
+        "moneyAfter": 1599335,
+        "type": "championshipEarn",
+        "items": {"TOP_8": {
+          "actual": 775,
+          "raw": 1000
+        }},
+        "timestamp": "2026-08-19 07:05:00"
       }
     ],
     "level": 42,
-    "expInThisLevel": 1392,
+    "expInThisLevel": 1722,
     "availPerks": 0,
     "totalPerks": 44,
-    "totalExp": 29475
+    "totalExp": 29805
   },
-  "checksum": "7678FE19429909AE1C65E4A5C5D4351D"
+  "checksum": "6F438ACE345E850D769405B3E06F9E95"
 }

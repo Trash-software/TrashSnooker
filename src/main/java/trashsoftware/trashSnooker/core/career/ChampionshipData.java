@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.Algebra;
 import trashsoftware.trashSnooker.core.SubRule;
 import trashsoftware.trashSnooker.core.metrics.*;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.util.DataLoader;
@@ -47,6 +48,7 @@ public class ChampionshipData {
     BallMetrics ballMetrics;
     Collection<SubRule> subRules;
     private List<String> clubsRestriction;
+    private List<String> sexRestriction;
     ChampionshipLocation location;
     private int registryFee;
     private int flightFee;
@@ -134,11 +136,21 @@ public class ChampionshipData {
         // Check: 有可能与种子选手/仅职业/ranked等前置条件冲突
         JSONArray clubs = jsonObject.optJSONArray("clubs", null);
         if (clubs == null) {
-            data.clubsRestriction = List.of();
+            data.clubsRestriction = null;
         } else {
             data.clubsRestriction = new ArrayList<>();
             for (int i = 0; i < clubs.length(); i++) {
                 data.clubsRestriction.add(clubs.getString(i));
+            }
+        }
+
+        JSONArray sexes = jsonObject.optJSONArray("sex", null);
+        if (sexes == null) {
+            data.sexRestriction = null;
+        } else {
+            data.sexRestriction = new ArrayList<>();
+            for (int i = 0; i < sexes.length(); i++) {
+                data.sexRestriction.add(sexes.getString(i));
             }
         }
 
@@ -370,6 +382,24 @@ public class ChampionshipData {
 
     public List<String> getClubsRestriction() {
         return clubsRestriction == null ? List.of() : clubsRestriction;
+    }
+    
+    public boolean hasSexRestriction() {
+        return sexRestriction != null && !sexRestriction.isEmpty();
+    }
+
+    public List<String> getSexRestriction() {
+        return sexRestriction == null ? List.of() : sexRestriction;
+    }
+    
+    public List<PlayerPerson.Sex> getSexRestriction2() {
+        List<PlayerPerson.Sex> result = new ArrayList<>();
+        if (sexRestriction != null) {
+            for (String sexStr : sexRestriction) {
+                result.add(PlayerPerson.Sex.fromStringKey(sexStr));
+            }
+        }
+        return result;
     }
 
     public int getTotalPlaces() {

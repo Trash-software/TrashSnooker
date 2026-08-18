@@ -12,8 +12,10 @@ import javafx.scene.shape.Rectangle;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.fxml.App;
 import trashsoftware.trashSnooker.res.ResourcesLoader;
+import trashsoftware.trashSnooker.util.Util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -40,7 +42,7 @@ public class AbilityShower extends VBox {
     @FXML
     RadarChart radarChartRoot;
     @FXML
-    Button switchButton;
+    Button switchButton, showHiddenButton;
     ImageView switchButtonGraphic;
     boolean showingRadar = false;
 
@@ -85,7 +87,7 @@ public class AbilityShower extends VBox {
         this.primary = ability.primary();
 
         setupTexts();
-        setupRadar();
+        setupRadar(false);
     }
 
     public void setOpponent(PlayerPerson.ReadableAbility opponentAbi) {
@@ -93,15 +95,15 @@ public class AbilityShower extends VBox {
 
         nameLabel2.setText(opponentAbi.getShownName());
         categoryLabel2.setText(PlayerPerson.getPlayerCategoryShown(opponentAbi.category, strings));
-        
+
         clubsFmtLabel2.setText(fmtClubs(opponentAbi));
 
         sexLabel2.setText(opponentAbi.getSex().toString());
         heightLabel2.setText(String.format("%.0f cm", opponentAbi.getHandBody().height));
 
-        setupRadar();
+        setupRadar(false);
     }
-    
+
     private String fmtClubs(PlayerPerson.ReadableAbility ra) {
         List<String> clubs = ra.getClubs();
         if (clubs.isEmpty()) {
@@ -111,77 +113,81 @@ public class AbilityShower extends VBox {
         }
     }
 
-    private void setupRadar() {
+    private void setupRadar(boolean showHidden) {
         colorRect.setFill(RadarChart.LINES[0]);
         colorRect2.setFill(RadarChart.LINES[1]);
 
         PlayerPerson.ReadableAbility ability1 = ability;
 
         PlayerPerson.ReadableAbility ability2 = null;
-        String[] titles;
+        List<String> titles;
         if (opponentAbi != null) {
             ability2 = opponentAbi;
-            titles = new String[]{
+            titles = List.of(
                     strings.getString("aiming"),
                     strings.getString("cuePrecision"),
                     strings.getString("spinControlText"),
                     strings.getString("powerControl"),
                     strings.getString("power"),
                     strings.getString("spinText"),
-                    strings.getString("offHand"),
                     strings.getString("restHand"),
-            };
+                    strings.getString("offHand")
+            );
+            if (showHidden) {
+                titles = new ArrayList<>(titles);
+                titles.add(strings.getString("temperament"));
+                titles.add(strings.getString("statusStability"));
+            }
         } else {
-            titles = new String[]{
+            titles = List.of(
                     strings.getString("aiming") + "\n" + numToString(ability1.aiming),
                     strings.getString("cuePrecision") + "\n" + numToString(primary.cuePrecision),
                     strings.getString("spinControlText") + "\n" + numToString(primary.spinControl),
                     strings.getString("powerControl") + "\n" + numToString(primary.powerControl),
                     strings.getString("power") + "\n" + numToString((primary.normalPower + primary.maxPower) / 2),
                     strings.getString("spinText") + "\n" + numToString(primary.spin),
-                    strings.getString("offHand") + "\n" + numToString(ability1.getAnotherHandGoodness()),
                     strings.getString("restHand") + "\n" + numToString(ability1.getRestGoodness()),
-            };
+                    strings.getString("offHand") + "\n" + numToString(ability1.getAnotherHandGoodness())  // 考虑这里也除以0.9
+            );
+            if (showHidden) {
+                titles = new ArrayList<>(titles);
+                titles.add(strings.getString("temperament") + "\n" + numToString(ability1.getShownPsy()));
+                titles.add(strings.getString("statusStability") + "\n" + numToString(ability1.getStatusStability()));
+            }
         }
-//        else {
-//            ability2 = perkManager.getShownAbility();
-//            titles = new String[]{
-//                    strings.getString("aiming") + "\n" + numToString(ability1.aiming),
-//                    strings.getString("cuePrecision") + "\n" + numToString(ability1.cuePrecision),
-//                    strings.getString("spinControlText") + "\n" + numToString(ability1.spinControl),
-//                    strings.getString("powerControl") + "\n" + numToString(ability1.powerControl),
-//                    strings.getString("power") + "\n" + numToString((ability1.normalPower + ability1.maxPower) / 2),
-//                    strings.getString("spinText") + "\n" + numToString(ability1.spin),
-//                    strings.getString("offHand") + "\n" + numToString(ability1.getAnotherHandGoodness()),
-//                    strings.getString("restHand") + "\n" + numToString(ability1.getRestGoodness()),
-//            };
-//        }
 
-        double[] valuesReal = getRadarValues(ability1);
+        double[] valuesReal = getRadarValues(ability1, showHidden);
         if (ability2 == null) {
-            radarChartRoot.setValues(titles, valuesReal);
+            radarChartRoot.setValues(titles.toArray(new String[0]), valuesReal);
         } else {
-            double[] valuesPre = getRadarValues(ability2);
-            radarChartRoot.setValues(titles, valuesReal, valuesPre);
+            double[] valuesPre = getRadarValues(ability2, showHidden);
+            radarChartRoot.setValues(titles.toArray(new String[0]), valuesReal, valuesPre);
         }
     }
 
-    private double[] getRadarValues(PlayerPerson.ReadableAbility ability) {
+    private double[] getRadarValues(PlayerPerson.ReadableAbility ability, boolean showHidden) {
         PlayerPerson.ReadableAbilityHand primary = ability.primary();
-        return new double[]{
+        double[] result = new double[]{
                 abilityRate(ability.aiming),
                 abilityRate(primary.cuePrecision),
                 abilityRate(primary.spinControl),
                 abilityRate(primary.powerControl),
                 abilityRate((primary.normalPower + primary.maxPower) / 2),
                 abilityRate(primary.spin),
-                abilityRate(ability.getAnotherHandGoodness()),
                 abilityRate(ability.getRestGoodness()),
+                abilityRate(ability.getAnotherHandGoodness()) / 0.9,  // 让反手的面积看起来好一点
         };
+        if (showHidden) {
+            result = Util.arraysConcatenate(result, new double[]{
+                    abilityRate(ability.getShownPsy()),
+                    abilityRate(ability.getStatusStability())
+            });
+        }
+        return result;
     }
 
     private double abilityRate(double ability100) {
-        return Math.min(Math.max((ability100 - 50) / 50, 0), 1);
+        return Math.clamp((ability100 - 50) / 50, 0, 1);
     }
 
     private void setupTexts() {
@@ -273,6 +279,8 @@ public class AbilityShower extends VBox {
         radarChartRoot.setManaged(showingRadar);
         barChartRoot.setVisible(!showingRadar);
         barChartRoot.setManaged(!showingRadar);
+        showHiddenButton.setVisible(showingRadar);
+        showHiddenButton.setManaged(showingRadar);
 
         boolean showingComparison = showingRadar && opponentAbi != null;
         opponentBox.setVisible(showingComparison);
@@ -281,6 +289,11 @@ public class AbilityShower extends VBox {
         colorRect2.setVisible(showingComparison);
 
         setSwitchButton();
+    }
+
+    @FXML
+    void showHiddenValues() {
+        setupRadar(true);
     }
 
     private void setSwitchButton() {

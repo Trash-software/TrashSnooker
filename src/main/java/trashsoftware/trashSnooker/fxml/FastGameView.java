@@ -54,7 +54,7 @@ public class FastGameView extends ChildInitializable {
 
     @FXML
     ComboBox<TableCloth.Goodness> clothGoodBox;
-    
+
     @FXML
     ComboBox<CushionSpec> cushionSpecBox;
 
@@ -74,11 +74,15 @@ public class FastGameView extends ChildInitializable {
     @FXML
     Label letScoreOrBallLabel;
     @FXML
-    ComboBox<CategoryClubItem> player1CatBox, player2CatBox;
+    ComboBox<PlayerFilterItem> player1CatBox, player2CatBox;
     @FXML
     ComboBox<TablePresetWrapper> tablePresetBox;
     @FXML
     ComboBox<BallsPresetWrapper> ballsPresetBox;
+    @FXML
+    Slider player1StatusSlider, player2StatusSlider;
+    @FXML
+    Label player1StatusLabel, player2StatusLabel;
 
     @FXML
     CheckBox devModeBox;
@@ -120,6 +124,8 @@ public class FastGameView extends ChildInitializable {
 
         initPresetBoxes();
 
+        initPlayerStatusSliders();
+
         resumeButton.setDisable(!GeneralSaveManager.getInstance().hasSavedGame());
 
         gameRuleBox.getSelectionModel().select(0);
@@ -150,16 +156,28 @@ public class FastGameView extends ChildInitializable {
         player2Player.setVisible(!isTrain);
 //        player2CueBtn.setVisible(!isTrain);
         player2CatBox.setVisible(!isTrain);
-        
+
         player1LetScore.setVisible(!isTrain);
-        player1LetScore.setVisible(!isTrain);
+        player2LetScore.setVisible(!isTrain);
         letScoreOrBallLabel.setVisible(!isTrain);
+
+        player2StatusSlider.setVisible(!isTrain);
+        player2StatusLabel.setVisible(!isTrain);
     }
 
     private void reloadTrainingItemByGameType(GameRule rule) {
         trainingItemBox.getItems().clear();
         trainingItemBox.getItems().addAll(rule.supportedTrainings);
         trainingItemBox.getSelectionModel().select(0);
+    }
+
+    private void initPlayerStatusSliders() {
+        player1StatusSlider.valueProperty().addListener((_, _, newValue) -> {
+            player1StatusLabel.setText(String.format("%.1f", newValue.doubleValue()));
+        });
+        player2StatusSlider.valueProperty().addListener((_, _, newValue) -> {
+            player2StatusLabel.setText(String.format("%.1f", newValue.doubleValue()));
+        });
     }
 
     private void initTotalFramesBox() {
@@ -203,10 +221,10 @@ public class FastGameView extends ChildInitializable {
         }
         tablePresetBox.getSelectionModel().select(0);
     }
-    
+
     private void fillBallsPresetBox(GameRule rule) {
         ballsPresetBox.getItems().clear();
-        
+
         ballsPresetBox.getItems().add(new BallsPresetWrapper(strings.getString("ballsStandard"), null));
         Map<String, BallsGroupPreset> balls = dataLoader.getBallsPresetsOfType(rule);
         for (BallsGroupPreset bgp : balls.values()) {
@@ -250,7 +268,7 @@ public class FastGameView extends ChildInitializable {
             }
             subRuleBox.getItems().clear();
             switch (newValue) {
-                case SNOOKER -> 
+                case SNOOKER ->
                         subRuleBox.getItems().addAll(SubRule.SNOOKER_STD, SubRule.SNOOKER_GOLDEN);
                 case CHINESE_EIGHT ->
                         subRuleBox.getItems().addAll(SubRule.CHINESE_EIGHT_STD, SubRule.CHINESE_EIGHT_JOE);
@@ -274,7 +292,7 @@ public class FastGameView extends ChildInitializable {
             }
         });
     }
-    
+
     private void loadLetScoreOrBallList(GameRule gameRule) {
         player1LetScore.getItems().clear();
         player2LetScore.getItems().clear();
@@ -320,7 +338,7 @@ public class FastGameView extends ChildInitializable {
         );
         box.getSelectionModel().select(0);
     }
-    
+
     private void fillSnookerLikeLetScores(ComboBox<LetScoreOrBall> box) {
         box.setEditable(true);
         box.setConverter(new StringConverter<>() {
@@ -333,14 +351,14 @@ public class FastGameView extends ChildInitializable {
             public LetScoreOrBall fromString(String string) {
                 try {
                     int score = Integer.parseInt(string);
-                    return new LetScoreOrBall.LetScoreFace(Math.max(0, Math.min(score, 147)));
+                    return new LetScoreOrBall.LetScoreFace(Math.clamp(score, 0, 147));
                 } catch (IllegalArgumentException e) {
                     //
                 }
                 return LetScoreOrBall.NOT_LET;
             }
         });
-        
+
         box.getItems().addAll(
                 LetScoreOrBall.NOT_LET,
                 new LetScoreOrBall.LetScoreFace(15),
@@ -353,31 +371,34 @@ public class FastGameView extends ChildInitializable {
                 new LetScoreOrBall.LetScoreFace(80),
                 new LetScoreOrBall.LetScoreFace(100)
         );
-        
+
         box.getSelectionModel().select(0);
     }
 
     private void loadPlayerList() {
         List<String> allCategories = dataLoader.getAllCategories();
         List<String> allClubs = dataLoader.getAllClubs();
-        
-        List<CategoryClubItem> allCatClubs = new ArrayList<>();
-        allCatClubs.add(CategoryClubItem.ALL);
+
+        List<PlayerFilterItem> allCatClubs = new ArrayList<>();
+        allCatClubs.add(PlayerFilterItem.ALL);
         for (String cat : allCategories) {
-            allCatClubs.add(new CategoryClubItem(cat, true));
+            allCatClubs.add(new PlayerFilterItem(cat, PlayerFilterItem.CATEGORY));
         }
         for (String club : allClubs) {
-            allCatClubs.add(new CategoryClubItem(club, false));
+            allCatClubs.add(new PlayerFilterItem(club, PlayerFilterItem.CLUB));
         }
-        
+        for (PlayerPerson.Sex sex : PlayerPerson.Sex.values()) {
+            allCatClubs.add(new PlayerFilterItem(sex.name(), PlayerFilterItem.SEX));
+        }
+
         player1CatBox.getItems().addAll(allCatClubs);
         player2CatBox.getItems().addAll(allCatClubs);
 
         addCatBoxProperty(player1CatBox, player1Box);
         addCatBoxProperty(player2CatBox, player2Box);
 
-        addPlayerBoxProperty(player1Box, player1InfoButton);
-        addPlayerBoxProperty(player2Box, player2InfoButton);
+        addPlayerBoxProperty(player1Box, player1InfoButton, player1StatusSlider);
+        addPlayerBoxProperty(player2Box, player2InfoButton, player2StatusSlider);
 
         player1Player.getItems().addAll(PlayerType.PLAYER, PlayerType.COMPUTER);
         player2Player.getItems().addAll(PlayerType.PLAYER, PlayerType.COMPUTER);
@@ -385,17 +406,21 @@ public class FastGameView extends ChildInitializable {
         player2Player.getSelectionModel().select(0);
     }
 
-    private void addCatBoxProperty(ComboBox<CategoryClubItem> catBox,
+    private void addCatBoxProperty(ComboBox<PlayerFilterItem> catBox,
                                    ComboBox<PersonItem> playerBox) {
         catBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 playerBox.getItems().clear();
                 Collection<PlayerPerson> selectedPlayers;
-                if (newValue.isCat) {
-                    selectedPlayers = dataLoader.filterActualPlayersByCategory(newValue.catOrClub);
-                } else {
-                    selectedPlayers = dataLoader.filterActualPlayersByClub(newValue.catOrClub);
-                }
+                selectedPlayers = switch (newValue.filterType) {
+                    case 0, PlayerFilterItem.CATEGORY ->
+                            dataLoader.filterActualPlayersByCategory(newValue.item);
+                    case PlayerFilterItem.CLUB ->
+                            dataLoader.filterActualPlayersByClub(newValue.item);
+                    case PlayerFilterItem.SEX ->
+                            dataLoader.filterActualPlayersBySex(PlayerPerson.Sex.fromStringKey(newValue.item));
+                    default -> List.of();
+                };
                 for (PlayerPerson person : selectedPlayers) {
                     playerBox.getItems().add(new PersonItem(person));
                 }
@@ -405,10 +430,16 @@ public class FastGameView extends ChildInitializable {
     }
 
     private void addPlayerBoxProperty(ComboBox<PersonItem> playerBox,
-                                      Button infoButton) {
+                                      Button infoButton,
+                                      Slider statusSlider) {
         playerBox.getSelectionModel().selectedItemProperty()
-                .addListener(((observable, oldValue, newValue) -> {
+                .addListener(((_, _, newValue) -> {
                     infoButton.setDisable(newValue == null);
+                    if (newValue != null) {
+                        statusSlider.setMin(newValue.person.getStatusStability());
+                        statusSlider.setMax(newValue.person.getStatusHigh());
+                        statusSlider.setValue(100);
+                    }
                 }));
     }
 
@@ -511,10 +542,10 @@ public class FastGameView extends ChildInitializable {
                 values.table.tableColor = preset.clothColor;
             }
         }
-        
+
         BallsGroupPreset ballsGroupPreset = ballsPresetBox.getValue().preset;
         values.setBallsGroupPreset(ballsGroupPreset);  // 可以是null
-        
+
         values.setDevMode(devModeBox.isSelected());
         showGame(values, cloth);
     }
@@ -570,18 +601,19 @@ public class FastGameView extends ChildInitializable {
 
             double p1RuleProficiency = player1Player.getValue() == PlayerType.COMPUTER ? p1.person.skillLevelOfGame(gameValues.rule) : 1.0;
             double p2RuleProficiency = player2Player.getValue() == PlayerType.COMPUTER ? p2.person.skillLevelOfGame(gameValues.rule) : 1.0;
-            
+
             igp1 = new InGamePlayer(p1.person,
                     player1Player.getValue(),
                     null,
                     gameRule,
                     1,
-                    p1RuleProficiency);
+                    p1RuleProficiency * player1StatusSlider.getValue() / 100);
             igp2 = new InGamePlayer(p2.person,
                     player2Player.getValue(),
                     null,
-                    gameRule, 2,
-                    p2RuleProficiency);
+                    gameRule,
+                    2,
+                    p2RuleProficiency * player2StatusSlider.getValue() / 100);
             igp1.setLetScoreOrBall(player1LetScore.getValue());
             igp2.setLetScoreOrBall(player2LetScore.getValue());
         }
@@ -621,29 +653,34 @@ public class FastGameView extends ChildInitializable {
         }
     }
 
-    public static class CategoryClubItem {
-        public static CategoryClubItem ALL = new CategoryClubItem("All", true);
+    public static class PlayerFilterItem {
+        public static PlayerFilterItem ALL = new PlayerFilterItem("All", 0);
 //        ALL("All"),
 //        PROFESSIONAL("Professional"),
 //        AMATEUR("Amateur"),
 //        NOOB("Noob"),
 //        GOD("God");
 
-        private final String catOrClub;
-        private final boolean isCat;
+        final static int CATEGORY = 1;
+        final static int CLUB = 2;
+        final static int SEX = 3;
 
-        CategoryClubItem(String catOrClub, boolean isCat) {
-            this.catOrClub = catOrClub;
-            this.isCat = isCat;
+        private final String item;
+        private final int filterType;
+
+        PlayerFilterItem(String item, int filterType) {
+            this.item = item;
+            this.filterType = filterType;
         }
 
         @Override
         public String toString() {
-            if (isCat) {
-                return PlayerPerson.getPlayerCategoryShown(catOrClub, App.getStrings());
-            } else {
-                return catOrClub;
-            }
+            return switch (filterType) {
+                case 0, CATEGORY -> PlayerPerson.getPlayerCategoryShown(item, App.getStrings());
+                case CLUB -> item;
+                case SEX -> String.valueOf(PlayerPerson.Sex.fromStringKey(item));
+                default -> throw new RuntimeException("Unknown filter type " + filterType);
+            };
         }
     }
 
@@ -704,5 +741,5 @@ public class FastGameView extends ChildInitializable {
             return shown;
         }
     }
-    
+
 }

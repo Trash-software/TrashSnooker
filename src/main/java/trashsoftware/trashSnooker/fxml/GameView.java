@@ -583,10 +583,10 @@ public class GameView implements Initializable {
             if (t1) {
                 if (game.getGame().isEnded()
                         || cueAnimationPlayer != null || playingMovement || aiCalculating) return;
-                Player currentPlayer = game.getGame().getCuingPlayer();
-                if (currentPlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
-                    predictPlayerPath(currentPlayer);
-                }
+//                Player currentPlayer = game.getGame().getCuingPlayer();
+//                if (currentPlayer.getInGamePlayer().getPlayerType() == PlayerType.PLAYER) {
+//                    predictPlayerPath(currentPlayer);
+//                }
             } else {
                 suggestedPlayerWhitePath = null;
             }
@@ -1399,24 +1399,24 @@ public class GameView implements Initializable {
         aimingChanged();
     }
 
-    @Deprecated
-    private void predictPlayerPath(Player humanPlayer) {
-        Thread thread = new Thread(() -> {
-            System.out.println("ai predicting human player path");
-            long st = System.currentTimeMillis();
-            if (game.getGame().isBallInHand()) {
-                return;
-            }
-            AiCueResult cueResult = game.getGame().aiCue(humanPlayer, new AiCuePref(game.predictPhy));
-            System.out.println("ai predicting human player path in " + (System.currentTimeMillis() - st) +
-                    " ms, result: " + cueResult);
-            if (cueResult != null) {
-                suggestedPlayerWhitePath = cueResult.getWhitePath();
-            }
-        });
-        thread.setDaemon(true);
-        thread.start();
-    }
+//    @Deprecated
+//    private void predictPlayerPath(Player humanPlayer) {
+//        Thread thread = new Thread(() -> {
+//            System.out.println("ai predicting human player path");
+//            long st = System.currentTimeMillis();
+//            if (game.getGame().isBallInHand()) {
+//                return;
+//            }
+//            AiCueResult cueResult = game.getGame().aiCue(humanPlayer, new AiCuePref(game.predictPhy));
+//            System.out.println("ai predicting human player path in " + (System.currentTimeMillis() - st) +
+//                    " ms, result: " + cueResult);
+//            if (cueResult != null) {
+//                suggestedPlayerWhitePath = cueResult.getWhitePath();
+//            }
+//        });
+//        thread.setDaemon(true);
+//        thread.start();
+//    }
 
     private void finishCueNextStep(Player nextCuePlayer) {
 //        cuePointCanvas.setDisable(false);
@@ -1469,7 +1469,7 @@ public class GameView implements Initializable {
 
             if (autoAim) autoAimEasiestNextBall(nextCuePlayer);
             if (predictPlayerPathItem.isSelected()) {
-                predictPlayerPath(nextCuePlayer);
+//                predictPlayerPath(nextCuePlayer);
             }
         } else {
             if (!game.isFinished() &&
@@ -2097,18 +2097,24 @@ public class GameView implements Initializable {
     void clearRedBallsAction() {
         game.getGame().clearRedBallsTest();
         drawTargetBoard(true);
+        updatePlayStage();
+        updateScoreDiffLabels();
     }
 
     @FXML
     void p1AddScoreAction() {
         game.getGame().getPlayer1().addScore(10);
+        updatePlayStage();
         drawScoreBoard(game.getGame().getPlayer2(), false);
+        updateScoreDiffLabels();
     }
 
     @FXML
     void p2AddScoreAction() {
         game.getGame().getPlayer2().addScore(10);
+        updatePlayStage();
         drawScoreBoard(game.getGame().getPlayer2(), false);
+        updateScoreDiffLabels();
     }
 
     @FXML
@@ -2471,10 +2477,12 @@ public class GameView implements Initializable {
         return cuing.getCueSelection().getSelected().getNonNullInstance();
     }
 
-    private CuePlayParams applyRandomCueError(Player player) {
+    private CuePlayParams applyRandomCueError(Player player, double psyFactor) {
         Random random = new Random();
+        double sd = 1 / psyFactor;
         return applyCueError(player,
-                random.nextGaussian(), random.nextGaussian(), random.nextGaussian(), true,
+                random.nextGaussian() * sd, random.nextGaussian() * sd, random.nextGaussian() * sd,
+                true,
                 currentHand);
     }
 
@@ -2526,10 +2534,10 @@ public class GameView implements Initializable {
         // 因为力量控制导致的力量偏差
         powerFactor = powerFactor * cuePlayerHand.getPowerSd(selPower);  // 用力越大误差越大
         powerFactor *= cue.getPowerMultiplier();  // 发力范围越大的杆控力越粗糙
-        if (enablePsy) {
-            double psyPowerMul = getPsyControlMultiplier(playerPerson);
-            powerFactor /= psyPowerMul;
-        }
+//        if (enablePsy) {
+//            double psyPowerMul = getPsyControlMultiplier(player);
+//            powerFactor /= psyPowerMul;
+//        }
         double powerMul = 1 + powerFactor;
         double maxDev = 1.5;
         if (powerMul > maxDev) {
@@ -2760,8 +2768,11 @@ public class GameView implements Initializable {
         CuePlayerHand usedHand = currentHand;
         PotAttempt currentAttempt = null;
         boolean snookered = game.getGame().isSnookered();
+        
+        double playerPsyFactor = player.getInGamePlayer().getPsyMul(gamePlayStage(), 
+                game.getGame().frameImportance(player.getInGamePlayer().getPlayerNumber()));
 
-        CuePlayParams params = applyRandomCueError(player);
+        CuePlayParams params = applyRandomCueError(player, enablePsy ? playerPsyFactor : 1.0);
         if (careerMatch != null) {
             reduceCueHp(getCuingCue(), player, params);
         }
@@ -3269,7 +3280,7 @@ public class GameView implements Initializable {
             aimingChanged();
             updateBeforeCue();
 
-            CuePlayParams realParams = applyRandomCueError(player);
+            CuePlayParams realParams = applyRandomCueError(player, cueResult.getTotalPsyFactor());
             if (aiHelpPlayerPlaying && careerMatch != null) {
                 reduceCueHp(getCuingCue(), player, realParams);
             }
@@ -3281,7 +3292,9 @@ public class GameView implements Initializable {
             forceInterruptingAi = false;
 
             beginCueAnimation(game.getGame().getCuingPlayer().getInGamePlayer(),
-                    whiteStartingX, whiteStartingY, cueResult.getCueParams().selectedPower(),
+                    false,
+                    whiteStartingX, whiteStartingY, 
+                    cueResult.getCueParams().selectedPower(),
                     cueResult.getUnitX(), cueResult.getUnitY());
 
             Thread thread = new Thread(() -> aiCueCalculations(
@@ -3330,7 +3343,9 @@ public class GameView implements Initializable {
 
             Ball cueBall = replay.getCueBall();
             MovementFrame cueBallPos = movement.getStartingPositions().get(cueBall);
-            beginCueAnimation(cueRecord.cuePlayer, cueBallPos.x, cueBallPos.y,
+            beginCueAnimation(cueRecord.cuePlayer, 
+                    cueRecord.cuePlayer.isHuman(),  // 这里不严谨，会在玩家使用AI代打时也认为是玩家，不过这里只影响动画效果，不重要
+                    cueBallPos.x, cueBallPos.y,
                     cueRecord.selectedPower, cueRecord.aimUnitX, cueRecord.aimUnitY);
         } else if (replay.getCurrentFlag() == ActualRecorder.FLAG_HANDBALL) {
             System.out.println("Ball in hand!");
@@ -3356,7 +3371,9 @@ public class GameView implements Initializable {
 
     private CuePlayParams[] generateCueParamsSd1(int nPoints) {
         Player player = game.getGame().getCuingPlayer();
-        double sd = 1;
+        double psyFactor = player.getInGamePlayer().getPsyMul(gamePlayStage(), 
+                game.getGame().frameImportance(player.getInGamePlayer().getPlayerNumber()));
+        double sd = 1 / psyFactor;
         double corner = Math.sqrt(2) / 2 * sd;
         CuePlayParams[] res = new CuePlayParams[nPoints + 1];
         res[0] = generateCueParams();
@@ -4282,7 +4299,8 @@ public class GameView implements Initializable {
     private double getPredictionLineTotalLength(
             WhitePrediction prediction,
             double potDt,
-            PlayerPerson playerPerson) {
+            Player player) {
+        PlayerPerson playerPerson = player.getPlayerPerson();
 //        Cue cue = game.getGame().getCuingPlayer().getInGamePlayer().getCurrentCue(game.getGame());
         Cue cue = getCuingCue();
 
@@ -4328,7 +4346,7 @@ public class GameView implements Initializable {
         }
 
         if (enablePsy) {
-            res *= getPsyAccuracyMultiplier(playerPerson);
+            res *= getPsyAccuracyMultiplier(player.getInGamePlayer());
         }
         return res;
     }
@@ -4345,26 +4363,29 @@ public class GameView implements Initializable {
             return currentPlayStage;
     }
 
-    private double getPsyAccuracyMultiplier(PlayerPerson playerPerson) {
+    private double getPsyAccuracyMultiplier(InGamePlayer igp) {
         GamePlayStage stage = gamePlayStage();
-        double psyWeakness = 1.0 - playerPerson.psyNerve / 100;
-        return switch (stage) {
-            case THIS_BALL_WIN -> 1.0 - psyWeakness;
-            case NEXT_BALL_WIN -> 1.0 - psyWeakness * 0.75;
-            case ENHANCE_WIN -> 1.0 - psyWeakness * 0.5;
-            default -> 1.0;
-        };
+        return igp.getPsyMul(stage, game.getGame().frameImportance(igp.getPlayerNumber()));
+//        double psyWeakness = 1.0 - playerPerson.psyNerve / 100;
+//        return switch (stage) {
+//            case THIS_BALL_WIN -> 1.0 - psyWeakness;
+//            case NEXT_BALL_WIN -> 1.0 - psyWeakness * 0.75;
+//            case ENHANCE_WIN -> 1.0 - psyWeakness * 0.5;
+//            default -> 1.0;
+//        };
     }
 
-    private double getPsyControlMultiplier(PlayerPerson playerPerson) {
+    private double getPsyControlMultiplier(InGamePlayer igp) {
         GamePlayStage stage = gamePlayStage();
-        double psyWeakness = 1.0 - playerPerson.psyNerve / 100;
-        return switch (stage) {
-            case THIS_BALL_WIN -> 1.0 - psyWeakness;
-            case NEXT_BALL_WIN -> 1.0 - psyWeakness * 0.75;
-            case ENHANCE_WIN -> 1.0 - psyWeakness * 0.5;
-            default -> 1.0;
-        };
+        return igp.getPsyMul(stage, game.getGame().frameImportance(igp.getPlayerNumber()));
+//        GamePlayStage stage = gamePlayStage();
+//        double psyWeakness = 1.0 - playerPerson.psyNerve / 100;
+//        return switch (stage) {
+//            case THIS_BALL_WIN -> 1.0 - psyWeakness;
+//            case NEXT_BALL_WIN -> 1.0 - psyWeakness * 0.75;
+//            case ENHANCE_WIN -> 1.0 - psyWeakness * 0.5;
+//            default -> 1.0;
+//        };
     }
 
     private void drawStandingPos() {
@@ -4601,11 +4622,13 @@ public class GameView implements Initializable {
 
     private void beginCueAnimationOfHumanPlayer(double whiteStartingX, double whiteStartingY) {
         beginCueAnimation(game.getGame().getCuingPlayer().getInGamePlayer(),
+                true,
                 whiteStartingX, whiteStartingY, getSelectedPower(),
                 cursorDirectionUnitX, cursorDirectionUnitY);
     }
 
     private void beginCueAnimation(InGamePlayer cuingPlayer,
+                                   boolean playedByHuman,
                                    double whiteStartingX, double whiteStartingY,
                                    double selectedPower, double directionX, double directionY) {
         PlayerPerson playerPerson = cuingPlayer.getPlayerPerson();
@@ -4656,6 +4679,7 @@ public class GameView implements Initializable {
                     handXY[1],
                     directionX,
                     directionY,
+                    playedByHuman,
                     cue,
                     cuingPlayer,
                     currentHand,
@@ -5152,7 +5176,6 @@ public class GameView implements Initializable {
         private final double aimingOffset;  // 针对瞄偏打正的球手，杆头向右拐的正
         private final Cue cue;
         private final InGamePlayer igp;
-        private final PlayerPerson playerPerson;
         private final CuePlayerHand playerHand;
         private final double playSpeedMultiplier;
         private final long beginTime;
@@ -5168,6 +5191,7 @@ public class GameView implements Initializable {
         private double doubleHoldMs;  // 二段出杆停的计时器
         private long touchTime;
         private long hideTime;
+        private final boolean playedByHuman;
 
         private double framesPlayed = 0;
         private final SoundInfo soundInfo;
@@ -5181,6 +5205,7 @@ public class GameView implements Initializable {
                            double handY,
                            double pointingUnitX,
                            double pointingUnitY,
+                           boolean playedByHuman,
                            Cue cue,
                            InGamePlayer igp,
                            CuePlayerHand handSkill,
@@ -5190,8 +5215,9 @@ public class GameView implements Initializable {
             cueAnimationRec = new CueAnimationRec(cue);
             this.soundInfo = soundInfo;
             this.playerHand = handSkill;
+            this.playedByHuman = playedByHuman;
 
-            playerPerson = igp.getPlayerPerson();
+            PlayerPerson playerPerson = igp.getPlayerPerson();
             double personPower = getPersonPower(selectedPower, handSkill);
 
             if (selectedPower < Values.MIN_SELECTED_POWER)
@@ -5316,9 +5342,9 @@ public class GameView implements Initializable {
                         0 :
                         stages.get((int) (wholeDtPercentage * stages.size()));
                 double baseSwingMag = playerHand.playerHand.getCueSwingMag();
-                if (enablePsy) {
-                    double psyFactor = 1.0 - getPsyAccuracyMultiplier(playerPerson);
-                    baseSwingMag *= (1.0 + psyFactor * 5);
+                if (!playedByHuman || enablePsy) {
+                    double psyFactor = igp.getPsyMul(gamePlayStage(), game.getGame().frameImportance(igp.getPlayerNumber()));
+                    baseSwingMag *= (1.0 + (1.0 - psyFactor) * 5);
                 }
                 double frameRateRatio = gameLoop.lastAnimationFrameMs() / frameTimeMs;
                 if (!touched) {
@@ -5509,7 +5535,7 @@ public class GameView implements Initializable {
                     double predictLineTotalLen = getPredictionLineTotalLength(
                             center,
                             potDt,
-                            game.getGame().getCuingPlayer().getPlayerPerson());
+                            game.getGame().getCuingPlayer());
 
                     targetPredictionUnitY = center.getBallDirectionY();
                     targetPredictionUnitX = center.getBallDirectionX();

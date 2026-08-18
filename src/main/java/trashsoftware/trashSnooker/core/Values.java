@@ -17,7 +17,7 @@ public class Values {
     public static final double MAX_SIDE_SPIN_SPEED = 8000.0;
     public static final double SMALL_POWER_SPIN_EXP = 0.64;  // 小力高低杆补偿，pow越小，补偿越多
     public static final double SMALL_POWER_SIDE_SPIN_EXP = 0.5;
-    public static final double BEST_KICK_SPEED = MAX_POWER_SPEED / 5.0;
+    public static final double BEST_KICK_SPEED = MAX_POWER_SPEED / 8.0;
     public static final double DEFAULT_CUE_ANGLE = 5.0;
 
     /**

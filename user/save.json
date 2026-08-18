@@ -1,41 +1,51 @@
 {
   "p1": {
     "playerNumber": 1,
-    "gameRule": "CHINESE_EIGHT",
-    "handFeelEffort": 1,
-    "psyStatus": 0.7856249999999999,
-    "person": "custom_player_5",
-    "playerType": "PLAYER",
-    "let": {"type": "notLet"}
-  },
-  "p1Wins": 0,
-  "p2": {
-    "playerNumber": 2,
-    "gameRule": "CHINESE_EIGHT",
+    "gameRule": "SNOOKER",
     "handFeelEffort": 1,
     "psyStatus": 1,
-    "person": "custom_player_4",
+    "person": "Glass Heart",
     "playerType": "COMPUTER",
     "let": {"type": "notLet"}
   },
-  "codeGameCounter": 1,
+  "p1Wins": 6,
+  "p2": {
+    "playerNumber": 2,
+    "gameRule": "SNOOKER",
+    "handFeelEffort": 1,
+    "psyStatus": 0.65,
+    "person": "Ding Junhui",
+    "playerType": "COMPUTER",
+    "let": {"type": "notLet"}
+  },
+  "codeGameCounter": 9,
   "p2BreakLoseChance": 0,
   "gameValues": {
-    "ball": "POOL_BALL",
-    "gameRule": "CHINESE_EIGHT",
-    "subRules": ["CHINESE_EIGHT_STD"],
-    "devMode": true,
+    "ball": "SNOOKER_BALL",
+    "gameRule": "SNOOKER",
+    "subRules": ["SNOOKER_STD"],
+    "devMode": false,
     "table": {
-      "tableOrdinal": 1,
+      "tableOrdinal": 0,
       "pocketDifficultyOrdinal": 3,
-      "holeSizeOrdinal": 3
+      "holeSizeOrdinal": 2
     }
   },
-  "winRecords": {"1": 2},
-  "p2Wins": 1,
-  "startTime": 1786917988669,
+  "winRecords": {
+    "1": 1,
+    "2": 2,
+    "3": 1,
+    "4": 2,
+    "5": 1,
+    "6": 1,
+    "7": 2,
+    "8": 1,
+    "9": 1
+  },
+  "p2Wins": 3,
+  "startTime": 1787051499977,
   "p1BreakLoseChance": 0,
-  "totalFrames": 1,
+  "totalFrames": 19,
   "cloth": {
     "smoothness": "NORMAL",
     "goodness": "GOOD"

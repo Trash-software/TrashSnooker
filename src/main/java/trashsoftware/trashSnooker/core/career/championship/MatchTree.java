@@ -22,13 +22,14 @@ public class MatchTree {
     public MatchTree(Championship championship, List<Career> seedPlayers, List<Career> nonSeedPlayers) {
         this.championship = championship;
         ChampionshipData data = championship.getData();
-        if (seedPlayers.size() + nonSeedPlayers.size() != data.getTotalPlaces()) {
-            throw new RuntimeException("Expected " + data.getTotalPlaces() + " players, got " +
+        if (seedPlayers.size() + nonSeedPlayers.size() > data.getTotalPlaces()) {
+            throw new RuntimeException("Expected at most " + data.getTotalPlaces() + " players, got " +
                     (seedPlayers.size() + nonSeedPlayers.size()));
         }
 
         List<List<Career>> players = new ArrayList<>();  // 每一轮新加的球员，null表示待定。
-        if (!seedPlayers.isEmpty()) {
+        int nSeedsNeeded = data.getSeedPlaces();
+        if (nSeedsNeeded> 0) {
             // 分上下半区
             List<Career> goodSeeds = new ArrayList<>(seedPlayers.subList(0, seedPlayers.size() / 2));
             List<Career> badSeeds = new ArrayList<>(seedPlayers.subList(seedPlayers.size() / 2, seedPlayers.size()));
@@ -40,7 +41,14 @@ public class MatchTree {
                 seedSeq.add(goodSeeds.get(i));
                 seedSeq.add(badSeeds.get(i));
             }
-
+            
+            if (seedPlayers.size() < nSeedsNeeded) {
+                // 报名没报满
+                int fillN = nSeedsNeeded - seedPlayers.size();
+                for (int i = 0; i < fillN; i++) {
+                    seedSeq.add(null);
+                }
+            }
             players.add(seedSeq);
         }
 
@@ -52,11 +60,28 @@ public class MatchTree {
             for (int roundPos : preNewAdd) {
                 List<Career> roundPlayers = new ArrayList<>(nonSeedPlayers.subList(0, roundPos));
                 nonSeedPlayers = new ArrayList<>(nonSeedPlayers.subList(roundPos, nonSeedPlayers.size()));
+                if (roundPlayers.size() < roundPos) {
+                    // 报名没报满
+                    int fillN = nSeedsNeeded - seedPlayers.size();
+                    for (int i = 0; i < fillN; i++) {
+                        roundPlayers.add(null);
+                    }
+                }
+                
                 Collections.shuffle(roundPlayers);
                 players.add(roundPlayers);
             }
         } else if (!nonSeedPlayers.isEmpty()) {
             // 没有预赛，也没有种子的比赛
+            int nNonSeeds = data.getTotalPlaces() - data.getSeedPlaces();
+            if (nonSeedPlayers.size() < nNonSeeds) {
+                // 报名没报满
+                int fillN = nNonSeeds - nonSeedPlayers.size();
+                for (int i = 0; i < fillN; i++) {
+                    nonSeedPlayers.add(null);
+                }
+            }
+            
             Collections.shuffle(nonSeedPlayers);
             players.add(nonSeedPlayers);
         }
@@ -209,4 +234,78 @@ public class MatchTree {
     public MatchTreeNode getRoot() {
         return root;
     }
+
+//    private void build(Championship championship, List<Integer> roundNSlots, List<List<Career>> players) {
+//        ChampionshipData data = championship.getData();
+//
+//        // players里是某个阶段新加的球员，越靠前的越靠前
+//        ChampionshipStage[] stages = data.getStages();
+//
+//        List<MatchTreeNode> nodes = new ArrayList<>();
+//        List<Career> firstRound = players.getLast();
+//        int roundIndex = stages.length - 1;
+//        for (int i = 0; i < roundNSlots.getLast(); i += 2) {
+//            MatchTreeNode p1 = new MatchTreeNode(i < firstRound.size() ? firstRound.get(i) : null);
+//            MatchTreeNode p2 = new MatchTreeNode((i + 1 < firstRound.size()) ? firstRound.get(i + 1) : null);
+//            nodes.add(new MatchTreeNode(p1,
+//                    p2,
+//                    stages[roundIndex],
+//                    championship));
+//        }
+//        roundIndex--;
+//
+//        if (data.getPreMatchNewAdded().length > 0) {
+//            for (int index = roundNSlots.size() - 2; index >= 0; index--) {
+//                List<Career> roundPlayers = players.get(index);
+//                List<MatchTreeNode> roundNodes = new ArrayList<>();
+////                int newAdd = roundPlayers.size();
+//                int newAdd = roundNSlots.get(index);
+//                if (newAdd == 0) {
+//                    for (int i = 0; i < nodes.size(); i += 2) {
+//                        MatchTreeNode node = new MatchTreeNode(
+//                                nodes.get(i),
+//                                nodes.get(i + 1),
+//                                stages[roundIndex],
+//                                championship);
+//                        roundNodes.add(node);
+//                    }
+//                } else if (newAdd == nodes.size()) {
+//                    int actualN = roundPlayers.size();
+//                    for (int i = 0; i < newAdd; i++) {
+//                        MatchTreeNode newPlayerNode = new MatchTreeNode(
+//                                i < actualN ? roundPlayers.get(i) : null
+//                        );
+//                        MatchTreeNode node = new MatchTreeNode(
+//                                newPlayerNode,
+//                                nodes.get(i),
+//                                stages[roundIndex],
+//                                championship
+//                        );
+//                        roundNodes.add(node);
+//                    }
+//                } else {
+//                    throw new RuntimeException("Match node inconsistency");
+//                }
+//                nodes = roundNodes;
+//                roundIndex--;
+//            }
+//        }
+//
+//        // 正赛阶段
+//        while (nodes.size() > 1) {
+//            List<MatchTreeNode> roundMatch = new ArrayList<>();
+//            for (int i = 0; i < nodes.size(); i += 2) {
+//                roundMatch.add(new MatchTreeNode(nodes.get(i),
+//                        nodes.get(i + 1),
+//                        stages[roundIndex],
+//                        championship));
+//            }
+//            nodes = roundMatch;
+//            roundIndex--;
+//        }
+//
+//        if (roundIndex != -1) throw new RuntimeException("Final is round " + roundIndex);
+//
+//        root = nodes.get(0);
+//    }
 }

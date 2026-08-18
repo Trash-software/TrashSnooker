@@ -97,9 +97,13 @@ public class MatchTreeNode {
             }
             return rtn;
         } else if (object.has("winner")) {
-            return new MatchTreeNode(
-                    CareerManager.getInstance().findCareerByPlayerId(object.getString("winner"))
-            );
+            if (object.isNull("winner")) {
+                return new MatchTreeNode(null);
+            } else {
+                return new MatchTreeNode(
+                        CareerManager.getInstance().findCareerByPlayerId(object.getString("winner"))
+                );
+            }
         } else {
             throw new RuntimeException("Unknown node " + object);
         }
@@ -110,7 +114,7 @@ public class MatchTreeNode {
 
         if (stage == null) {
             // 仅表示参赛选手
-            object.put("winner", winner.getPlayerPerson().getPlayerId());
+            object.put("winner", winner == null ? JSONObject.NULL : winner.getPlayerPerson().getPlayerId());
         } else {
             object.put("stage", stage.name());
             object.put("p1", player1Position.saveToJson());
@@ -153,10 +157,10 @@ public class MatchTreeNode {
         if (leftRes != null) return leftRes;
         return player2Position.findNodeByPlayers(p1Id, p2Id);
     }
-    
+
     public boolean isMatchInvolvesHuman() {
         if (isLeaf()) return false;
-        return (player1Position.winner != null && player1Position.winner.isHumanPlayer()) || 
+        return (player1Position.winner != null && player1Position.winner.isHumanPlayer()) ||
                 (player2Position.winner != null && player2Position.winner.isHumanPlayer());
     }
 
@@ -182,9 +186,19 @@ public class MatchTreeNode {
 
     PlayerVsAiMatch performMatches(Championship championship, ChampionshipStage stage) {
         if (stage == this.stage) {
-            if (player1Position == null || player2Position == null ||
-                    !player1Position.isFinished() || !player2Position.isFinished()) {
+            if (player1Position == null || player2Position == null) {
                 throw new RuntimeException("Inconsistent stage of " + stage);
+            }
+            if (player1Position.winner == null) {
+                if (player2Position.winner != null) {
+                    setWinner(player2Position.winner, 0, championship.data.getNFramesOfStage(stage) / 2 + 1);
+                }
+                return null;
+            } else {
+                if (player2Position.winner == null) {
+                    setWinner(player1Position.winner, championship.data.getNFramesOfStage(stage) / 2 + 1, 0);
+                    return null;
+                }
             }
             Career c1 = player1Position.winner;
             Career c2 = player2Position.winner;
@@ -272,10 +286,13 @@ public class MatchTreeNode {
                 results.put(ChampionshipScore.Rank.CHAMPION, new ArrayList<>(List.of(winner)));
             }
             Career loser = getLoser();  // 除了冠军，每个人都只会输一次（目前没有双败赛制）
-            ChampionshipScore.Rank rank = data.getRanksOfLosers()[depth];
+            if (loser != null) {
+                // 由于允许比赛不报满，所以可能有奇数个选手出现，可能有轮空比赛
+                ChampionshipScore.Rank rank = data.getRanksOfLosers()[depth];
 
-            List<Career> careersOfThisRank = results.computeIfAbsent(rank, k -> new ArrayList<>());
-            careersOfThisRank.add(loser);
+                List<Career> careersOfThisRank = results.computeIfAbsent(rank, _ -> new ArrayList<>());
+                careersOfThisRank.add(loser);
+            }
         }
 
         if (!player1Position.isLeaf()) player1Position.getResults(data, results, depth + 1);
@@ -316,22 +333,37 @@ public class MatchTreeNode {
 
     public boolean isHumanAlive() {
         if (winner == null) {
+            if (player1Position == null) return false;
             if (player1Position.isHumanAlive()) return true;
+            if (player2Position == null) return false;
             if (player2Position.isHumanAlive()) return true;
             return false;
         } else {
             return winner.isHumanPlayer();
         }
     }
-    
+
     public PvAiSnapshot getHumanNextOpponent() {
         if (winner == null) {
-            if (player1Position.winner != null && player2Position.winner != null) {
-                if (player1Position.winner.isHumanPlayer() || player2Position.winner.isHumanPlayer()) {
+            if (isLeaf()) return null;
+            if (player1Position.winner != null) {
+                if (player1Position.winner.isHumanPlayer()) {
+                    // p2.winner可以为null: 轮空
                     return new PvAiSnapshot(player1Position.winner, player2Position.winner);
-                } 
-                return null;
+                }
             }
+            if (player2Position.winner != null) {
+                if (player2Position.winner.isHumanPlayer()) {
+                    // p1.winner可以为null: 轮空
+                    return new PvAiSnapshot(player1Position.winner, player2Position.winner);
+                }
+            }
+//            if (player1Position.winner != null && player2Position.winner != null) {
+//                if (player1Position.winner.isHumanPlayer() || player2Position.winner.isHumanPlayer()) {
+//                    return new PvAiSnapshot(player1Position.winner, player2Position.winner);
+//                }
+//                return null;
+//            }
             PvAiSnapshot c1 = player1Position.getHumanNextOpponent();
             if (c1 != null) {
                 return c1;
@@ -360,7 +392,16 @@ public class MatchTreeNode {
                     player2Position.getWonRounds(career, false));
         }
     }
-    
+
     public record PvAiSnapshot(Career p1, Career p2) {
+        public Career getHuman() {
+            if (p1 != null && p1.isHumanPlayer()) return p1;
+            else return p2;
+        }
+
+        public Career getOpponent() {
+            if (p1 != null && p1.isHumanPlayer()) return p2;
+            else return p1;
+        }
     }
 }

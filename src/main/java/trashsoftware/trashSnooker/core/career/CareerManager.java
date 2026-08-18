@@ -547,6 +547,11 @@ public class CareerManager {
                 return false;
             }
         }
+        if (championshipData.hasSexRestriction()) {
+            if (!championshipData.getSexRestriction2().contains(humanPlayerCareer.getPlayerPerson().getSex())) {
+                return false;
+            }
+        }
         
         if (!championshipData.isProfessionalOnly()) {
             if (championshipData.hasForbidden()) {
@@ -805,8 +810,13 @@ public class CareerManager {
             CareerRanker cwa = ranking.get(i);
             if (cwa.career.isHumanPlayer() && !humanJoin) continue;
             if (cwa.career == defendingChamp) continue;
-            if (data.hasClubRestriction() && !cwa.career.isHumanPlayer()) {
-                if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+            if (!cwa.career.isHumanPlayer()) {
+                if (data.hasClubRestriction()) {
+                    if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+                }
+                if (data.hasSexRestriction()) {
+                    if (!data.getSexRestriction2().contains(cwa.career.getPlayerPerson().getSex())) continue;
+                }
             }
             if (cwa.willJoinMatch(data,
                     i,
@@ -840,8 +850,13 @@ public class CareerManager {
         for (int i = 0; i < rankings.size(); i++) {
             CareerRanker cwa = rankings.get(i);
             if (cwa.career == defendingChamp) continue;  // 已经加了
-            if (data.hasClubRestriction() && !cwa.career.isHumanPlayer()) {
-                if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+            if (!cwa.career.isHumanPlayer()) {
+                if (data.hasClubRestriction()) {
+                    if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+                }
+                if (data.hasSexRestriction()) {
+                    if (!data.getSexRestriction2().contains(cwa.career.getPlayerPerson().getSex())) continue;
+                }
             }
             if (!cwa.career.getPlayerPerson().isRandom && !cwa.career.getPlayerPerson().category.equals("God")) {
                 if (cwa.career.isHumanPlayer()) {
@@ -867,8 +882,13 @@ public class CareerManager {
             for (int i = 0; i < rankings.size(); i++) {
                 CareerRanker cwa = rankings.get(i);
                 if (cwa.career == defendingChamp) continue;
-                if (data.hasClubRestriction() && !cwa.career.isHumanPlayer()) {
-                    if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+                if (!cwa.career.isHumanPlayer()) {
+                    if (data.hasClubRestriction()) {
+                        if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+                    }
+                    if (data.hasSexRestriction()) {
+                        if (!data.getSexRestriction2().contains(cwa.career.getPlayerPerson().getSex())) continue;
+                    }
                 }
                 if (cwa.career.getPlayerPerson().isRandom || cwa.career.getPlayerPerson().category.equals("God")) {
                     if (cwa.willJoinMatch(data,
@@ -917,6 +937,9 @@ public class CareerManager {
                     if (data.hasClubRestriction()) {
                         if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
                     }
+                    if (data.hasSexRestriction()) {
+                        if (!data.getSexRestriction2().contains(cwa.career.getPlayerPerson().getSex())) continue;
+                    }
                     if (cwa.willJoinMatch(data,
                             i,
                             i == 0 ? null : rankings.get(i - 1),
@@ -934,8 +957,13 @@ public class CareerManager {
             for (int i = forbiddenLimit; i < rankings.size(); i++) {
                 CareerRanker cwa = rankings.get(i);
                 if (cwa.career.getPlayerPerson().isRandom || cwa.career.getPlayerPerson().category.equals("God")) {
-                    if (data.hasClubRestriction() && !cwa.career.isHumanPlayer()) {
-                        if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+                    if (!cwa.career.isHumanPlayer()) {
+                        if (data.hasClubRestriction()) {
+                            if (!cwa.career.getPlayerPerson().belongsOneOfClubs(data.getClubsRestriction())) continue;
+                        }
+                        if (data.hasSexRestriction()) {
+                            if (!data.getSexRestriction2().contains(cwa.career.getPlayerPerson().getSex())) continue;
+                        }
                     }
                     if (cwa.willJoinMatch(data,
                             i,

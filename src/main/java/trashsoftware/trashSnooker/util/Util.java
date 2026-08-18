@@ -53,6 +53,18 @@ public class Util {
         }
     }
 
+    public static double[] arraysConcatenate(double[]... arrays) {
+        int resLen = 0;
+        for (double[] arr : arrays) resLen += arr.length;
+        int index = 0;
+        double[] result = new double[resLen];
+        for (double[] arr : arrays) {
+            System.arraycopy(arr, 0, result, index, arr.length);
+            index += arr.length;
+        }
+        return result;
+    }
+
     public static String entireBeginTimeNoQuote(Timestamp timestamp) {
         String str = timestamp.toString();
         int msDotIndex = str.lastIndexOf('.');

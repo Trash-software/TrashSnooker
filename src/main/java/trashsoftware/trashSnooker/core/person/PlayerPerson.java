@@ -28,6 +28,7 @@ public class PlayerPerson {
     public final HandBody handBody;
     public final double psyNerve;
     final double psyRua;
+    final double statusStability;  // 上下限区别
     public final boolean isRandom;
     private final String playerId;
     private String name;  // 名字的原版
@@ -57,6 +58,7 @@ public class PlayerPerson {
                         double aimingOffset,
                         double psyNerve,
                         double psyRua,
+                        double statusStability,
                         @Nullable AiPlayStyle aiPlayStyle,
                         @NotNull HandBody handBody,
                         Sex sex,
@@ -89,6 +91,7 @@ public class PlayerPerson {
 
         this.psyNerve = psyNerve;
         this.psyRua = psyRua;
+        this.statusStability = statusStability;
 
         this.handBody = handBody;
         this.aiPlayStyle = aiPlayStyle == null ? deriveAiStyle() : aiPlayStyle;
@@ -247,6 +250,8 @@ public class PlayerPerson {
                 psyRua = psyNerve;
             }
         }
+        
+        double statusStability = personObj.optDouble("statusStability", 85.0);
 
         playerPerson = new PlayerPerson(
                 playerId,
@@ -259,6 +264,7 @@ public class PlayerPerson {
                 aimingOffset,
                 psyNerve,
                 psyRua,
+                statusStability,
                 aiPlayStyle,
                 handBody,
                 sex,
@@ -421,7 +427,7 @@ public class PlayerPerson {
                 powerControl,
                 CuePlayType.createBySwing(cueSwingStr)
         );
-        double restAbility = Math.max(10, Math.min(90, generateDouble(random, abilityLow * restMul, abilityHigh * restMul))) / 100.0;
+        double restAbility = Math.clamp(generateDouble(random, abilityLow * restMul, abilityHigh * restMul), 10, 90) / 100.0;
         HandBody handBody = HandBody.createFromPrimary(
                 height,
                 sex == Sex.F ? 0.9 : 1,
@@ -442,6 +448,7 @@ public class PlayerPerson {
                 0.0,
                 psy[0],
                 psy[1],
+                random.nextDouble(80, 90),
                 null,
                 handBody,
                 sex,
@@ -713,6 +720,18 @@ public class PlayerPerson {
         return psyRua;
     }
 
+    public double getPsyNerve() {
+        return psyNerve;
+    }
+
+    public double getStatusStability() {
+        return statusStability;
+    }
+
+    public double getStatusHigh() {
+        return 100 + (100 - statusStability);
+    }
+
     public String getPlayerId() {
         return playerId;
     }
@@ -765,6 +784,18 @@ public class PlayerPerson {
             this.maxHeight = maxHeight;
             this.stdHeight = stdHeight;
             this.powerMul = powerMul;
+        }
+        
+        public static Sex fromStringKey(String key) {
+            if (key.startsWith("sex")) {
+                return fromStringKey(key.substring(3));
+            } else {
+                try {
+                    return valueOf(key);
+                } catch (IllegalArgumentException e) {
+                    return null;
+                }
+            }
         }
 
         @Override
@@ -1008,6 +1039,14 @@ public class PlayerPerson {
         public double getRestGoodness() {
             return rest.average();
         }
+        
+        public double getStatusStability() {
+            return originalPerson.getStatusStability();
+        }
+
+        public double getShownPsy() {
+            return (originalPerson.getPsyNerve() + originalPerson.getPsyRua()) / 2;
+        }
 
         public double addPerksHowMany(int addWhat) {
             double unit;
@@ -1101,6 +1140,7 @@ public class PlayerPerson {
                     originalPerson.aimingOffset,
                     originalPerson.psyNerve,
                     originalPerson.psyRua,
+                    originalPerson.statusStability,
                     null,
                     handBody,
                     getSex(),

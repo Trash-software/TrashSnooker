@@ -23,7 +23,7 @@ public class Career {
     private final boolean isHumanPlayer;
     private final transient Map<GameRule, Double> efforts = new HashMap<>();
     private PlayerPerson playerPerson;
-    private double handFeel = 0.9;
+    private double handFeel = 1.0;
 
     Career(PlayerPerson person, boolean isHumanPlayer, CareerManager careerManager) {
         this.playerPerson = person;
@@ -154,10 +154,13 @@ public class Career {
     }
 
     public void updateHandFeel() {
-        double handFeelChange = (Math.random() - 0.5) * 0.05;
+        double low = playerPerson.getStatusStability() / 100;
+        double high = playerPerson.getStatusHigh() / 100;
+        double range = high - low;
+        double handFeelChange = (Math.random() - 0.5) * range * 0.25;
         this.handFeel += handFeelChange;
-        if (this.handFeel > 1.15) this.handFeel = 1.15;
-        else if (this.handFeel < 0.85) this.handFeel = 0.85;
+        if (this.handFeel > high) this.handFeel = high;
+        else if (this.handFeel < low) this.handFeel = low;
 
         if (CareerManager.LOG) {
             System.out.println("Hand feel: " + playerPerson.getPlayerId() + " " + handFeel);

@@ -57,12 +57,14 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
             double speedThreshold = Values.BEST_KICK_SPEED;
             double speedMul;
-            if (kickSpeed > speedThreshold * 2) speedMul = 1.5;
-            else if (kickSpeed > speedThreshold) speedMul = 1.0;
+            if (kickSpeed > speedThreshold * 2) speedMul = 1.9;
+            else if (kickSpeed > speedThreshold) speedMul = 1.5;
+            else if (kickSpeed > speedThreshold * 0.5) speedMul = 1.1;
             else speedMul = 0.5;
 
-            if (alivePrice == 0) return 2.0 * speedMul;
-            double kickPriority = 20.0 / alivePrice;
+            double kickPriority;
+            if (alivePrice == 0) kickPriority = 2.0;
+            else kickPriority = 20.0 / alivePrice;
 
             return Math.max(0.5, speedMul * Math.min(2.0, kickPriority));
         };

@@ -644,51 +644,38 @@
       ]
     },
     {
-      "id": "space_grand_prix",
+      "id": "womens_world_champ",
       "names": {
-        "zh": "斯诺克太空国大奖赛",
-        "en": "Snooker Space Grand Prix"
+        "zh": "世界女子斯诺克锦标赛",
+        "en": "Women's World Snooker Championship"
       },
       "type": "snooker",
-      "seeds": 16,
+      "seeds": 0,
       "places": 32,
       "pre_matches": [
-        32
       ],
       "frames": [
-        5, 3, 3, 3, 1, 1
+        9, 7, 5, 3, 3
       ],
       "awards": [
-        120000, 50000, 25000, 15000, 10000, 2500
+        12000, 5500, 2500, 1000, 0
       ],
-      "frameExp": 40,
-      "best_single": 10000,
+      "frameExp": 50,
+      "best_single": 2000,
       "ranked": true,
       "professional": false,
-      "class": 4,
-      "date": "05/25",
+      "sex": ["F"],
+      "class": 3,
+      "date": "05/12",
       "location": {
-        "country": "TKG"
+        "country": "CHN"
       },
       "fees": {
-        "registry": 500,
-        "flight": 1800,
-        "hotel": 900
+        "registry": 200,
+        "flight": 400,
+        "hotel": 1000
       },
-      "invite": {
-        "16": 500
-      },
-      "sponsor": {
-        "zh": "开发者本人",
-        "en": "Grow Shell"
-      },
-      "table": {
-        "goodness": "good",
-        "smoothness": "normal",
-        "cushionSpec": "normal",
-        "pocketSize": "std",
-        "pocketDifficulty": "normal"
-      }
+      "tablePreset": "starSnookerTableGood"
     },
     {
       "id": "eight_master_tour_xian",
@@ -771,46 +758,6 @@
       }
     },
     {
-      "id": "chongqing_open",
-      "names": {
-        "zh": "斯诺克CQ公开赛",
-        "en": "Snooker CQ Open"
-      },
-      "type": "snooker",
-      "seeds": 0,
-      "places": 32,
-      "pre_matches": [
-        64
-      ],
-      "frames": [
-        5, 3, 3, 3, 3, 1
-      ],
-      "awards": [
-        50000, 20000, 12000, 6000, 3000, 2000
-      ],
-      "frameExp": 40,
-      "best_single": 3000,
-      "ranked": true,
-      "professional": false,
-      "class": 4,
-      "date": "07/10",
-      "location": {
-        "country": "CHN"
-      },
-      "fees": {
-        "registry": 200,
-        "flight": 400,
-        "hotel": 400
-      },
-      "table": {
-        "goodness": "normal",
-        "smoothness": "normal",
-        "cushionSpec": "normal",
-        "pocketSize": "large",
-        "pocketDifficulty": "loose"
-      }
-    },
-    {
       "id": "eight_duck_goose_open",
       "names": {
         "zh": "中式台球Duck Goose杯",
@@ -849,6 +796,93 @@
       ]
     },
     {
+      "id": "space_grand_prix",
+      "names": {
+        "zh": "斯诺克太空国大奖赛",
+        "en": "Snooker Space Grand Prix"
+      },
+      "type": "snooker",
+      "seeds": 16,
+      "places": 32,
+      "pre_matches": [
+        32
+      ],
+      "frames": [
+        5, 3, 3, 3, 1, 1
+      ],
+      "awards": [
+        120000, 50000, 25000, 15000, 10000, 2500
+      ],
+      "frameExp": 40,
+      "best_single": 10000,
+      "ranked": true,
+      "professional": false,
+      "class": 4,
+      "date": "07/28",
+      "location": {
+        "country": "TKG"
+      },
+      "fees": {
+        "registry": 500,
+        "flight": 1800,
+        "hotel": 900
+      },
+      "invite": {
+        "16": 500
+      },
+      "sponsor": {
+        "zh": "开发者本人",
+        "en": "Grow Shell"
+      },
+      "table": {
+        "goodness": "good",
+        "smoothness": "normal",
+        "cushionSpec": "normal",
+        "pocketSize": "std",
+        "pocketDifficulty": "normal"
+      }
+    },
+    {
+      "id": "chongqing_open",
+      "names": {
+        "zh": "斯诺克CQ公开赛",
+        "en": "Snooker CQ Open"
+      },
+      "type": "snooker",
+      "seeds": 0,
+      "places": 32,
+      "pre_matches": [
+        64
+      ],
+      "frames": [
+        5, 3, 3, 3, 3, 1
+      ],
+      "awards": [
+        50000, 20000, 12000, 6000, 3000, 2000
+      ],
+      "frameExp": 40,
+      "best_single": 3000,
+      "ranked": true,
+      "professional": false,
+      "class": 4,
+      "date": "08/10",
+      "location": {
+        "country": "CHN"
+      },
+      "fees": {
+        "registry": 200,
+        "flight": 400,
+        "hotel": 400
+      },
+      "table": {
+        "goodness": "normal",
+        "smoothness": "normal",
+        "cushionSpec": "normal",
+        "pocketSize": "large",
+        "pocketDifficulty": "loose"
+      }
+    },
+    {
       "id": "american_nine_give_power_open",
       "names": {
         "zh": "美式九球给力国公开赛",
@@ -868,7 +902,7 @@
       "frameExp": 25,
       "ranked": true,
       "professional": false,
-      "date": "08/05",
+      "date": "08/15",
       "location": {
         "country": "GP"
       },

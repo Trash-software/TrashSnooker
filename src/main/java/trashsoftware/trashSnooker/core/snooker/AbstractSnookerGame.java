@@ -48,6 +48,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     private int continuousFoulAndMiss;
     private boolean willLoseBecauseThisFoul;
     private boolean isSolvable;  // 球形是否有解
+    private boolean isRepositionable;  // 这一杆如果没打到能不能复位
     private int indicatedTarget;
     private boolean targetManualIndicated = false;
 
@@ -328,6 +329,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (!isSolvable) {
             AchManager.getInstance().addAchievement(Achievement.UNSOLVABLE_SNOOKER, getP1().isHuman() ? getP1() : getP2());
         }
+        isRepositionable = potentiallyRepositionable();
         SnookerPlayer cuing = getCuingPlayer();
         if (cuing.getInGamePlayer().isHuman()) {
             int scoreDiff = getScoreDiff(cuing);
@@ -768,15 +770,15 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public void cancelFreeBall() {
         doingFreeBall = false;
     }
+    
+    private boolean potentiallyRepositionable() {
+        return getScoreDiffAbs() <= getRemainingScore(false);  // 超分不能复位，延分可以
+    }
 
     @Override
     public boolean canReposition() {
-        // todo: 其实是检查上一杆的分数
         // 不需要再去检查有没有解了，因为无解的球不会判miss
-        int minScore = Math.min(player1.getScore(), player2.getScore());
-        int maxScore = Math.max(player1.getScore(), player2.getScore());
-        boolean notOverScore = minScore + getRemainingScore(false) > maxScore;  // 超分或延分不能复位
-        return notOverScore && super.canReposition();
+        return isRepositionable && super.canReposition();
     }
     
     public boolean isOverscoring(Player possibleAheadPlayer) {

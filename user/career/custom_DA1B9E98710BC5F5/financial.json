@@ -1,7 +1,7 @@
 {
   "financial": {
     "remFreePerks": 0,
-    "money": 3632114,
+    "money": 3665047,
     "invoices": [
       {
         "inGameDate": "2023/1/22",
@@ -12796,26 +12796,60 @@
         "type": "participation",
         "items": [
           {
-            "item": "travel",
-            "moneyCost": 1600
-          },
-          {
             "item": "hotel",
             "moneyCost": 800
           },
           {
             "item": "registry",
             "moneyCost": 500
+          },
+          {
+            "item": "travel",
+            "moneyCost": 1600
           }
         ],
         "timestamp": "2026-08-18 01:12:39"
+      },
+      {
+        "item": "primeTipMedium:custom_DA1B9E98710BC5F5-730",
+        "itemType": "tip",
+        "inGameDate": "2029/3/18",
+        "moneyBefore": 3632114,
+        "moneyCost": 80,
+        "moneyAfter": 3632034,
+        "type": "purchase",
+        "timestamp": "2026-08-18 07:59:36"
+      },
+      {
+        "inGameDate": "2029/3/18",
+        "year": 2029,
+        "moneyBefore": 3632034,
+        "match": "cat_give_power_champ",
+        "moneyAfter": 3666647,
+        "type": "championshipEarn",
+        "items": {"SECOND_PLACE": {
+          "actual": 34613,
+          "raw": 50000
+        }},
+        "timestamp": "2026-08-18 08:52:55"
+      },
+      {
+        "inGameDate": "2029/3/18",
+        "moneyBefore": 3666647,
+        "moneyAfter": 3665047,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 1600
+        }],
+        "timestamp": "2026-08-18 08:53:18"
       }
     ],
     "level": 48,
-    "expInThisLevel": 3515,
+    "expInThisLevel": 4340,
     "availPerks": 0,
     "totalPerks": 233,
-    "totalExp": 48810
+    "totalExp": 49635
   },
-  "checksum": "F2E0C0ED6F3E8F397792C405C04CBD5E"
+  "checksum": "3088FA56A96340102C9CBD1B31F158F2"
 }

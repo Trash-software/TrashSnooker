@@ -185,7 +185,7 @@ public abstract class Championship {
         }
 
         List<Career> seeds = new ArrayList<>(pureList.subList(0, data.getSeedPlaces()));
-        List<Career> nonSeeds = new ArrayList<>(pureList.subList(data.getSeedPlaces(), data.getTotalPlaces()));
+        List<Career> nonSeeds = new ArrayList<>(pureList.subList(data.getSeedPlaces(), Math.min(data.getTotalPlaces(), careers.size())));
 
         matchTree = new MatchTree(this, seeds, nonSeeds);
         currentStageIndex = data.getStages().length - 1;

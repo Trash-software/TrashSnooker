@@ -6,7 +6,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="trashsoftware.trashSnooker.fxml.FastGameView"
-      prefHeight="460.0" prefWidth="540.0" spacing="10.0" alignment="TOP_CENTER">
+      prefHeight="460.0" prefWidth="720.0" spacing="10.0" alignment="TOP_CENTER">
 
     <padding>
         <Insets topRightBottomLeft="10.0"/>
@@ -33,29 +33,39 @@
             <ColumnConstraints/>
             <ColumnConstraints/>
             <ColumnConstraints maxWidth="120.0"/>
+            <ColumnConstraints/>
+            <ColumnConstraints maxWidth="120.0"/>
         </columnConstraints>
 
         <Button fx:id="player1InfoButton" onAction="#playerInfoAction" text="(i)" disable="true"/>
         <ComboBox fx:id="player1CatBox" GridPane.columnIndex="1"/>
         <ComboBox fx:id="player1Box" GridPane.columnIndex="2"/>
         <ComboBox fx:id="player1Player" GridPane.columnIndex="3"/>
-        <ComboBox fx:id="player1LetScore" GridPane.columnIndex="4"/>
+        <Slider fx:id="player1StatusSlider" min="85.0" max="115.0" value="100.0"
+                GridPane.columnIndex="4"/>
+        <Label fx:id="player1StatusLabel" text="100.0" GridPane.columnIndex="5"/>
+        <ComboBox fx:id="player1LetScore" GridPane.columnIndex="6"/>
         <Label fx:id="vsText" text="VS" GridPane.rowIndex="1" GridPane.columnSpan="3"/>
-        <Label text="%letScoreOrBall" fx:id="letScoreOrBallLabel" 
-               GridPane.rowIndex="1" GridPane.columnIndex="4"/>
+        <Label text="%playerStatus" GridPane.rowIndex="1" GridPane.columnIndex="4"/>
+        <Label text="%letScoreOrBall" fx:id="letScoreOrBallLabel"
+               GridPane.rowIndex="1" GridPane.columnIndex="6"/>
         <Button fx:id="player2InfoButton" text="(i)" onAction="#playerInfoAction"
                 GridPane.rowIndex="2" disable="true"/>
         <ComboBox fx:id="player2CatBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
         <ComboBox fx:id="player2Box" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
         <ComboBox fx:id="player2Player" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
-        <ComboBox fx:id="player2LetScore" GridPane.rowIndex="2" GridPane.columnIndex="4"/>
+        <Slider fx:id="player2StatusSlider" min="85.0" max="115.0" value="100.0"
+                GridPane.rowIndex="2" GridPane.columnIndex="4"/>
+        <Label fx:id="player2StatusLabel" text="100.0" GridPane.rowIndex="2"
+               GridPane.columnIndex="5"/>
+        <ComboBox fx:id="player2LetScore" GridPane.rowIndex="2" GridPane.columnIndex="6"/>
 
         <Label fx:id="trainingItemText" text="%trainingItem" GridPane.rowIndex="2"
                GridPane.columnIndex="1" visible="false"/>
         <ComboBox fx:id="trainingItemBox" GridPane.rowIndex="2" GridPane.columnIndex="2"
                   visible="false"/>
         <CheckBox text="%trainingChallenge" fx:id="trainChallengeBox" GridPane.rowIndex="2"
-                  GridPane.columnIndex="3"
+                  GridPane.columnIndex="3" GridPane.columnSpan="2"
                   visible="false"/>
     </GridPane>
 
@@ -86,7 +96,7 @@
         <Label text="%nylonCloth"/>
         <ComboBox fx:id="clothSmoothBox"/>
         <ComboBox fx:id="clothGoodBox"/>
-        
+
         <Label text="%cushionSpec"/>
         <ComboBox fx:id="cushionSpecBox"/>
     </HBox>

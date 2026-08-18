@@ -163,6 +163,7 @@ public abstract class FinalChoice {
                 priceOfKick = kickPriceCalculator.priceOfKick(whitePrediction.getSecondCollide(),
                         whitePrediction.getWhiteSpeedWhenHitSecondBall(),
                         dtFromCol);
+//                System.out.println("Kick price: " + priceOfKick);
                 price *= priceOfKick;
             }
 

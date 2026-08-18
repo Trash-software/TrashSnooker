@@ -5,10 +5,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.cue.*;
-import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.metrics.BallsGroupPreset;
 import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.TablePreset;
+import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.util.config.ConfigLoader;
 
 import java.io.*;
@@ -27,7 +27,7 @@ public class DataLoader {
     private static final String CUSTOM_PLAYER_LIST_FILE = "user/custom_players.json";
     private static final String RANDOM_PLAYERS_LIST_FILE = "user/players_random.json";
     public static final String COUNTERS_FILE = "user/counters.json";
-//    private static final String CUE_INSTANCES_FILE = "user/cue_instances.json";
+    //    private static final String CUE_INSTANCES_FILE = "user/cue_instances.json";
     private static final String CUE_LIST_FILE = "data/cues.json";
     private static final String CUE_TIP_LIST_FILE = "data/cue_tips.json";
     private static final String TABLE_PRESETS_FILE = "data/tables.json";
@@ -40,10 +40,10 @@ public class DataLoader {
     private final Map<String, CueBrand> cues = new HashMap<>();
     private final Map<String, CueBrand> publicCues = new HashMap<>();
     private final Map<String, CueTipBrand> cueTips = new HashMap<>();
-//    private final Map<String, Cue> cueInstances = new HashMap<>();
+    //    private final Map<String, Cue> cueInstances = new HashMap<>();
     private final Map<String, Map<String, TablePreset>> tablePresets = new HashMap<>();
     private final Map<GameRule, Map<String, BallsGroupPreset>> ballsPresets = new HashMap<>();
-    
+
     private Cue stdRestCue;
 
     public static DataLoader getInstance() {
@@ -99,7 +99,8 @@ public class DataLoader {
                     return (T) names.getString(key);
                 }
             }
-        } if (probNames instanceof Map<?, ?> names) {
+        }
+        if (probNames instanceof Map<?, ?> names) {
             String currentLang = ConfigLoader.getInstance().getLocale().getLanguage();
             Object get = names.get(currentLang);
             if (get != null) {
@@ -239,7 +240,18 @@ public class DataLoader {
             return res;
         }
     }
-    
+
+    public List<PlayerPerson> filterActualPlayersBySex(PlayerPerson.Sex sex) {
+        Collection<PlayerPerson> actPlayers = getActualPlayers();
+
+        List<PlayerPerson> res = new ArrayList<>();
+        for (PlayerPerson p : actPlayers) {
+            if (p.getSex() == sex) res.add(p);
+        }
+        return res;
+        
+    }
+
     public List<String> getAllClubs() {
         Collection<PlayerPerson> actPlayers = getActualPlayers();
         Set<String> uniqueClubs = new TreeSet<>();
@@ -286,7 +298,7 @@ public class DataLoader {
         playerPeople.clear();
         actualPlayers.clear();
 //        cueInstances.clear();
-        
+
         JSONObject cuesRoot = loadFromDisk(CUE_LIST_FILE);
         loadCues(cuesRoot);
         JSONObject tipsRoot = loadFromDisk(CUE_TIP_LIST_FILE);
@@ -298,7 +310,7 @@ public class DataLoader {
 
 //        JSONObject cueInstancesRoot = loadFromDisk(CUE_INSTANCES_FILE);
 //        loadCueInstances(cueInstancesRoot);
-        
+
         for (String fileName : PLAYER_LIST_FILES) {
             JSONObject playersRoot = loadPlayerListFromDisk(fileName);
             Map<String, PlayerPerson> people = loadPlayers(playersRoot, cues, false);
@@ -323,7 +335,7 @@ public class DataLoader {
 
         System.out.println(playerPeople.size() + " players loaded, " + actualPlayers.size() + " actual");
     }
-    
+
     private void loadCueTips(JSONObject root) {
         if (root.has("cueTips")) {
             JSONObject object = root.getJSONObject("cueTips");
@@ -346,7 +358,7 @@ public class DataLoader {
                             tipJson.getInt("price")
                     );
                     cueTips.put(key, brand);
-                    
+
                 } catch (JSONException e) {
                     EventLogger.error(e);
                 }
@@ -361,7 +373,7 @@ public class DataLoader {
                 try {
                     JSONObject cueObject = object.getJSONObject(key);
                     String name = getObjectOfLocale(cueObject.get("names"));
-                    
+
                     boolean avail = cueObject.has("available") && cueObject.getBoolean("available");
                     int price = cueObject.has("price") ?
                             cueObject.getInt("price") :
@@ -375,7 +387,7 @@ public class DataLoader {
                     } else {
                         material = CueBrand.Material.HARD_WOOD;
                     }
-                    
+
                     CueBrand cue;
                     if (cueObject.has("textured") && cueObject.getBoolean("textured")) {
                         JSONArray segmentArray = cueObject.getJSONArray("segments");
@@ -389,7 +401,7 @@ public class DataLoader {
                                     segObj.getDouble("diameter2")
                             ));
                         }
-                        
+
                         cue = new TexturedCueBrand(
                                 key,
                                 name,
@@ -443,7 +455,7 @@ public class DataLoader {
             }
         }
     }
-    
+
     private void loadBallPresets(JSONObject root) {
         if (root.has("balls")) {
             JSONArray array = root.getJSONArray("balls");
@@ -454,7 +466,7 @@ public class DataLoader {
                 Set<GameRule> supportedRules = bgp.types;
 
                 System.out.println(id + " " + bgp.name);
-                
+
                 for (GameRule rule : supportedRules) {
                     Map<String, BallsGroupPreset> ballsOfType = ballsPresets.computeIfAbsent(
                             rule, k -> new HashMap<>()
@@ -535,7 +547,7 @@ public class DataLoader {
 
         saveCustomPlayers();
     }
-    
+
     void saveCustomPlayers() {
         saveToDisk(makeCustomJson(), CUSTOM_PLAYER_LIST_FILE);
     }
@@ -604,11 +616,11 @@ public class DataLoader {
     public CueBrand getCueById(String cueId) {
         return cues.get(cueId);
     }
-    
+
     public CueBrand getExampleCue() {
         return cues.get("stdSnookerCue");
     }
-    
+
     public CueTipBrand getTipBrandById(String tipBrandId) {
         return cueTips.get(tipBrandId);
     }

@@ -17,7 +17,10 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import trashsoftware.trashSnooker.core.*;
+import trashsoftware.trashSnooker.core.EntireGame;
+import trashsoftware.trashSnooker.core.InGamePlayer;
+import trashsoftware.trashSnooker.core.LetScoreOrBall;
+import trashsoftware.trashSnooker.core.PlayerType;
 import trashsoftware.trashSnooker.core.ai.AiCueResult;
 import trashsoftware.trashSnooker.core.career.*;
 import trashsoftware.trashSnooker.core.career.achievement.AchManager;
@@ -187,9 +190,12 @@ public class ChampDrawView extends ChildInitializable {
 
     private void setOpponentText(MatchTreeNode.PvAiSnapshot snapshot) {
         nextMatchSnapshot = snapshot;
-        opponentInfoBtn.setDisable(snapshot == null);
+        opponentInfoBtn.setDisable(snapshot == null || snapshot.getOpponent() == null);
         if (snapshot == null) {
             humanOpponentLabel.setText("");
+        } else if (snapshot.getOpponent() == null) {
+            humanOpponentLabel.setText(String.format(strings.getString("roundByeFmt"),
+                    snapshot.getHuman().getPlayerPerson().getName()));
         } else {
             humanOpponentLabel.setText(String.format("%s vs %s",
                     snapshot.p1().getPlayerPerson().getName(),
@@ -395,9 +401,7 @@ public class ChampDrawView extends ChildInitializable {
     @FXML
     public void opponentInfoAction() {
         if (nextMatchSnapshot != null) {
-            PlayerPerson person = nextMatchSnapshot.p1().isHumanPlayer() ?
-                    nextMatchSnapshot.p2().getPlayerPerson() :
-                    nextMatchSnapshot.p1().getPlayerPerson();
+            PlayerPerson person = nextMatchSnapshot.getOpponent().getPlayerPerson();
             if (person != null) {
                 try {
                     FXMLLoader loader = new FXMLLoader(
@@ -506,7 +510,7 @@ public class ChampDrawView extends ChildInitializable {
 
         InventoryManager p1Im = p1t == PlayerType.COMPUTER ? null : careerManager.getInventory();
         InventoryManager p2Im = p1Im == null ? careerManager.getInventory() : null;
-        
+
         // todo: 玩家也有可能买开球杆
 //            Cue stdBreakCue = Cue.createForCareerGameAi(stdBreakCueBrand);
         igp1 = new InGamePlayer(match.p1.getPlayerPerson(),
@@ -521,7 +525,7 @@ public class ChampDrawView extends ChildInitializable {
                 values.rule,
                 2,
                 p2HandFeelEffort);
-        
+
         if (values.rule == GameRule.CHINESE_EIGHT) {
             LetScoreOrBall.LetBallFace[] defaultLets = LetBall.chineseEightDefaultLetBalls(
                     igp1.getPlayerPerson(),

@@ -158,6 +158,21 @@ public class InGamePlayer {
     public double getPsyStatus() {
         return psyStatus;
     }
+
+    public double getPsyMul(GamePlayStage gamePlayStage, double frameImportance) {
+        double psyWeakness = 1.0 - playerPerson.psyNerve / 100;
+        double frameBasePsy = 1.0 - frameImportance * psyWeakness * 0.5;
+        double psyMul = switch (gamePlayStage) {
+            case THIS_BALL_WIN -> frameBasePsy - psyWeakness;
+            case NEXT_BALL_WIN -> frameBasePsy - psyWeakness * 0.75;
+            case ENHANCE_WIN -> frameBasePsy - psyWeakness * 0.5;
+            case BREAK -> frameBasePsy * 5.0;
+            case null, default -> frameBasePsy;
+        };
+        psyMul *= getPsyStatus();
+        psyMul = Math.clamp(psyMul, 0.01, 1.0);
+        return psyMul;
+    }
     
     private double cuePsyChangeBase() {
         return Algebra.shiftRangeSafe(0, 100, 
@@ -165,7 +180,7 @@ public class InGamePlayer {
     }
     
     private void regularizePsyStatus() {
-        psyStatus = Math.max(playerPerson.getPsyRua() / 100, Math.min(1.0, psyStatus));
+        psyStatus = Math.clamp(psyStatus, playerPerson.getPsyRua() / 100, 1.0);
         System.out.println(playerPerson.getName() + " psy status: " + psyStatus);
     }
     

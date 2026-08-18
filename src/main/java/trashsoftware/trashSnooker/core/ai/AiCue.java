@@ -30,8 +30,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
 //    public static final double ATTACK_DIFFICULTY_THRESHOLD = 18000.0;  // 越大，AI越倾向于进攻
 
-    public static final double PURE_ATTACK_PROB = 0.36;  // 进攻权重为99的球员只要prob高于这个值他就会进攻。越小，AI越倾向于无脑进攻
-    public static final double DEFENSIVE_ATTACK_PROB = 0.18;  // 这个值是线性的，进攻权重为99的球员高于这个值就会尝试性进攻
+    public static final double PURE_ATTACK_PROB = 0.32;  // 进攻权重为99的球员只要prob高于这个值他就会进攻。越小，AI越倾向于无脑进攻
+    public static final double DEFENSIVE_ATTACK_PROB = 0.16;  // 这个值是线性的，进攻权重为99的球员高于这个值就会尝试性进攻
 
     //    public static final double NO_DIFFICULTY_ANGLE_RAD = 0.3;
 //    public static final double EACH_BALL_SEE_PRICE = 0.5;
