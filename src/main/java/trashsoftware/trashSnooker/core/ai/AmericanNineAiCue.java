@@ -17,7 +17,7 @@ public class AmericanNineAiCue extends AiCue<AmericanNineBallGame, AmericanNineB
 
     @Override
     protected KickPriceCalculator kickPriceCalculator() {
-        return ((kickedBall, kickSpeed, dtFromFirst) -> kickUselessBallPrice(dtFromFirst));
+        return ((kickedBall, kickSpeed, dtFromFirst, kickDirection) -> kickUselessBallPrice(dtFromFirst));
     }
 
     @Override

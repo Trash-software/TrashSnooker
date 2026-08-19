@@ -184,7 +184,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
     protected abstract KickPriceCalculator kickPriceCalculator();
 
     protected interface KickPriceCalculator {
-        double priceOfKick(Ball kickedBall, double kickSpeed, double dtFromFirst);
+        double priceOfKick(Ball kickedBall, double kickSpeed, double dtFromFirst, double[] kickDirection);
     }
 
     protected double kickUselessBallPrice(double dtFromFirst) {
@@ -490,8 +490,13 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         pureAttacks.sort((a, b) -> -Double.compare(a.potProb, b.potProb));
         defensiveAttacks.sort((a, b) -> -Double.compare(a.potProb, b.potProb));
 
+        List<AttackParam> sortedPureAttacks = new ArrayList<>(pureAttacks);
         // 只留简单的
         pureAttacks = new ArrayList<>(pureAttacks.subList(0, Math.min(64, pureAttacks.size())));
+        // 加点其他力度的，给k球提供选择
+        if (sortedPureAttacks.size() > 64) {
+            pureAttacks.addAll(Util.drawNItemsSafe(sortedPureAttacks.subList(64, sortedPureAttacks.size()), 64));
+        }
         defensiveAttacks = new ArrayList<>(defensiveAttacks.subList(0, Math.min(64, defensiveAttacks.size())));
 
         List<AttackParam> backups = new ArrayList<>(pureAttacks);

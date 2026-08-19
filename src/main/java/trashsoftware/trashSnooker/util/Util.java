@@ -65,6 +65,15 @@ public class Util {
         return result;
     }
 
+    public static <T> List<T> drawNItemsSafe(List<T> list, int n) {
+        // Create a copy to avoid mutating the original list
+        List<T> copy = new ArrayList<>(list);
+        Collections.shuffle(copy);
+
+        // Return a sublist of the first N elements
+        return copy.subList(0, Math.min(n, copy.size()));
+    }
+
     public static String entireBeginTimeNoQuote(Timestamp timestamp) {
         String str = timestamp.toString();
         int msDotIndex = str.lastIndexOf('.');

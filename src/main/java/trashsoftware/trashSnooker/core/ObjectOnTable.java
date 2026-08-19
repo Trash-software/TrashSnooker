@@ -61,6 +61,10 @@ public abstract class ObjectOnTable implements Cloneable {
     public double[] getPositionArray() {
         return new double[]{x, y};
     }
+    
+    public double distanceTo(ObjectOnTable another) {
+        return Algebra.distanceToPoint(x, y, another.x, another.y);
+    }
 
     public void setVx(double vx) {
         this.vx = vx;

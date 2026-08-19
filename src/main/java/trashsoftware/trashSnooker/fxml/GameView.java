@@ -1432,6 +1432,14 @@ public class GameView implements Initializable {
 
             showTipBrokenMsg = false;
         }
+        if (game.getGame() instanceof AbstractSnookerGame asg) {
+            if (asg.isStartingBlackBattle()) {
+                AlertShower.showInfo(stage,
+                        String.format(strings.getString("showWhoBreaksFmt"), nextCuePlayer.getPlayerPerson().getName()),
+                        strings.getString("startingBlackBattle"),
+                        3000);
+            }
+        }
 
         Ball.enableGearOffset();
         aiWhitePath = null;
@@ -1561,8 +1569,9 @@ public class GameView implements Initializable {
         InGamePlayer wonIgp = wonPlayer.getInGamePlayer();
         InGamePlayer lostIgp = game.getGame().getAnotherIgp(wonIgp);
         // 在game.playerWinsAframe()之前，否则影响frameImportance的判断
-        wonIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(wonIgp.getPlayerNumber()), true, game);
-        lostIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(lostIgp.getPlayerNumber()), false, game);
+        int finishedFrames = game.getP1Wins() + game.getP2Wins() + 1;
+        wonIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(wonIgp.getPlayerNumber()), true, game, finishedFrames);
+        lostIgp.updatePsyStatusAfterFrame(game.getGame().frameImportance(lostIgp.getPlayerNumber()), false, game, finishedFrames);
 
         boolean entireGameEnd = game.playerWinsAframe(wonPlayer.getInGamePlayer());
         drawScoreBoard(game.getGame().getCuingPlayer(), false);
@@ -2100,20 +2109,32 @@ public class GameView implements Initializable {
         updatePlayStage();
         updateScoreDiffLabels();
     }
-
+    
     @FXML
-    void p1AddScoreAction() {
-        game.getGame().getPlayer1().addScore(10);
-        updatePlayStage();
-        drawScoreBoard(game.getGame().getPlayer2(), false);
-        updateScoreDiffLabels();
+    void p1Add1Action() {
+        debugPlayerAddScoreAction(1, 1);
     }
 
     @FXML
-    void p2AddScoreAction() {
-        game.getGame().getPlayer2().addScore(10);
+    void p1Add10Action() {
+        debugPlayerAddScoreAction(1, 10);
+    }
+
+    @FXML
+    void p2Add1Action() {
+        debugPlayerAddScoreAction(2, 1);
+    }
+
+    @FXML
+    void p2Add10Action() {
+        debugPlayerAddScoreAction(2, 10);
+    }
+    
+    private void debugPlayerAddScoreAction(int playerNumber, int score) {
+        Player player = game.getGame().getPlayerByNumber(playerNumber);
+        player.addScore(score);
         updatePlayStage();
-        drawScoreBoard(game.getGame().getPlayer2(), false);
+        drawScoreBoard(player, false);
         updateScoreDiffLabels();
     }
 

@@ -9,6 +9,7 @@ import trashsoftware.trashSnooker.core.career.achievement.Achievement;
 import trashsoftware.trashSnooker.core.career.achievement.CareerAchManager;
 import trashsoftware.trashSnooker.core.career.championship.MetaMatchInfo;
 import trashsoftware.trashSnooker.core.infoRec.MatchInfoRec;
+import trashsoftware.trashSnooker.core.metrics.GameRule;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.numberedGames.NumberedBallPlayer;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
@@ -337,6 +338,43 @@ public class EntireGame {
         }
         
         return end;
+    }
+    
+    public boolean isSessionInternalRest(int finishedFrames) {
+        int framesFromSessionBegin = finishedFrames;
+        int[] sessionDivisions = gameValues.rule.sessionDivision(totalFrames);
+        int currentSessionFrames = -1;
+        for (int sessionFrames : sessionDivisions) {
+            if (framesFromSessionBegin > sessionFrames) {
+                framesFromSessionBegin -= sessionFrames;
+            } else if (framesFromSessionBegin == sessionFrames) {
+                // is a sessional break, should not enter this method
+                return false;
+            } else {
+                currentSessionFrames = sessionFrames;
+                break;
+            }
+        }
+        if (currentSessionFrames == -1) throw new RuntimeException("...开发者该吃屎了");
+        int[] subDivisions = gameValues.rule.subSessionDivision(currentSessionFrames);
+        int cumulated = 0;
+        for (int subFrames : subDivisions) {
+            cumulated += subFrames;
+            if (cumulated == framesFromSessionBegin) return true;
+            else if (cumulated > framesFromSessionBegin) return false;
+        }
+        return false;
+    }
+    
+    public boolean isSessionalBreak(int finishedFrames) {
+        int[] sessionDivisions = gameValues.rule.sessionDivision(totalFrames);
+        int cumulated = 0;
+        for (int sessionFrames : sessionDivisions) {
+            cumulated += sessionFrames;
+            if (cumulated == finishedFrames) return true;
+            else if (cumulated > finishedFrames) return false;
+        }
+        return false;
     }
     
     public EntireGameTitle toEgt() {

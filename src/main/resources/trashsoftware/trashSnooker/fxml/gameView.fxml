@@ -94,8 +94,10 @@
             <MenuItem text="test" onAction="#testAction"/>
             <MenuItem text="tie" onAction="#tieTestAction"/>
             <MenuItem text="clear red balls" onAction="#clearRedBallsAction"/>
-            <MenuItem text="p1+10" onAction="#p1AddScoreAction"/>
-            <MenuItem text="p2+10" onAction="#p2AddScoreAction"/>
+            <MenuItem text="p1+1" onAction="#p1Add1Action"/>
+            <MenuItem text="p1+10" onAction="#p1Add10Action"/>
+            <MenuItem text="p2+1" onAction="#p2Add1Action"/>
+            <MenuItem text="p2+10" onAction="#p2Add10Action"/>
         </Menu>
     </MenuBar>
 

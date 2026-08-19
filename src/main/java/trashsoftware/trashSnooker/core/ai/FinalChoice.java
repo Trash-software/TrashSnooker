@@ -162,7 +162,8 @@ public abstract class FinalChoice {
 //                System.out.println(dtFromCol);
                 priceOfKick = kickPriceCalculator.priceOfKick(whitePrediction.getSecondCollide(),
                         whitePrediction.getWhiteSpeedWhenHitSecondBall(),
-                        dtFromCol);
+                        dtFromCol,
+                        Algebra.unitVector(whitePrediction.getWhiteVelocityWhenHitSecondBall()));
 //                System.out.println("Kick price: " + priceOfKick);
                 price *= priceOfKick;
             }

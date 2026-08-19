@@ -7,7 +7,6 @@ import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.metrics.GameValues;
 import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 import trashsoftware.trashSnooker.core.person.HandBody;
-import trashsoftware.trashSnooker.core.person.PlayerHand;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
 import trashsoftware.trashSnooker.core.phy.TableCloth;
@@ -27,7 +26,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
     public SnookerAiCue(AbstractSnookerGame game, SnookerPlayer aiPlayer) {
         super(game, aiPlayer);
-        
+
         makeAliveMap();
     }
 
@@ -41,7 +40,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             if (ball.getValue() == 1 && !ball.isPotted()) {
                 allRedCount++;
                 double aliveScore = ballAlivePrice(game, ball);
-                if (aliveScore > ALIVE_THRESHOLD) aliveRedCount++;
+                if (aliveScore >= ALIVE_THRESHOLD) aliveRedCount++;
                 selfBallAlivePrices.put(ball, aliveScore);
             }
         }
@@ -49,27 +48,59 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
 
     @Override
     protected KickPriceCalculator kickPriceCalculator() {
-        return (kickedBall, kickSpeed, dtFromFirst) -> {
+        return (kickedBall, kickSpeed, dtFromFirst, kickDirection) -> {
             if (aliveRedCount > 2) return kickUselessBallPrice(dtFromFirst);  // 剩的多，不急着k
-
+            
             Double alivePrice = selfBallAlivePrices.get(kickedBall);
-            if (alivePrice == null) return kickUselessBallPrice(dtFromFirst);
+            if (alivePrice == null) {
+                if (Algebra.distanceToPoint(kickedBall.getPositionArray(), game.getTable().pinkBallPos()) < 50.0) {
+                    // 特殊情况：粉球点附近的彩球
+                    int deadRedNearPinkKickable = 0;
+                    for (Map.Entry<Ball, Double> entry: selfBallAlivePrices.entrySet()) {
+                        if (entry.getValue() < ALIVE_THRESHOLD) {
+                            Ball red = entry.getKey();
+                            if (red.distanceTo(kickedBall) < game.getGameValues().ball.ballDiameter * 3) {
+                                double[] pinkToRedRad = new double[]{red.getX() - kickedBall.getX(), red.getY() - kickedBall.getY()};
+                                double theta = Algebra.thetaBetweenVectors(kickDirection, pinkToRedRad);
+                                if (theta < Algebra.HALF_PI) {
+                                    deadRedNearPinkKickable++;
+                                }
+                            }
+                        }
+                    }
+                    if (deadRedNearPinkKickable >= 2) {
+                        alivePrice = 0.0;
+                    }
+                }
+            }
+            if (alivePrice == null) {
+                return kickUselessBallPrice(dtFromFirst);
+            }
 
-            double speedThreshold = Values.BEST_KICK_SPEED;
-            double speedMul;
-            if (kickSpeed > speedThreshold * 2) speedMul = 1.9;
-            else if (kickSpeed > speedThreshold) speedMul = 1.5;
-            else if (kickSpeed > speedThreshold * 0.5) speedMul = 1.1;
-            else speedMul = 0.5;
-
-            double kickPriority;
-            if (alivePrice == 0) kickPriority = 2.0;
-            else kickPriority = 20.0 / alivePrice;
-
-            return Math.max(0.5, speedMul * Math.min(2.0, kickPriority));
+            return getKickPrice(kickSpeed, alivePrice);
         };
     }
 
+    private static double getKickPrice(double kickSpeed, Double alivePrice) {
+        double speedMul;
+        double kickSpeedFactor = kickSpeed / Values.BEST_KICK_SPEED;
+        if (kickSpeedFactor < 0.25) speedMul = 0.5;
+        else if (kickSpeed <= 1) {
+            speedMul = Algebra.shiftRangeSafe(0.25, 1, 0.5, 1, kickSpeedFactor);
+        } else {
+            speedMul = Algebra.shiftRangeSafe(1.0, Values.MAX_POWER_SPEED / Values.BEST_KICK_SPEED,
+                    1.0, 2.5, kickSpeedFactor);
+        }
+
+        double kickPriority;
+        if (alivePrice < ALIVE_THRESHOLD) kickPriority = 2.0;
+        else kickPriority = 20.0 / alivePrice;
+
+        double res = Math.max(0.5, speedMul * Math.min(2.0, kickPriority));
+        //            System.out.println("Kick price: " + res + ", kickSpeed: " + kickSpeed + ", speedMul: " + speedMul + 
+//                    ", kickPriority: " + kickPriority + ", alive price: " + alivePrice);
+        return res;
+    }
 
 
     @Override
@@ -81,40 +112,40 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         boolean leftBreak = method == AiPlayStyle.SnookerBreakMethod.LEFT;
         return predictiveRegularBreak(phy, leftBreak);
     }
-    
+
     private FinalChoice.DefenseChoice predictiveRegularBreak(Phy phy, boolean leftBreak) {
         double sign = leftBreak ? -1 : 1;
-        
+
         double whiteX = game.getCueBall().getX();
         double whiteY = game.getCueBall().getY();
-        
+
         double[] cornerBallPos = leftBreak ? game.getCornerRedBallPosGreenSide() : game.getCornerRedBallPosYellowSide();
         double thinY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 2.0;
         double[] thinVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thinY - whiteY);
         double thickY = cornerBallPos[1] + sign * game.getGameValues().ball.ballDiameter * 0.0;
-        double[] thickVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thickY - whiteY); 
-        
+        double[] thickVec = Algebra.unitVector(cornerBallPos[0] - whiteX, thickY - whiteY);
+
         double beginDeg = Math.toDegrees(Algebra.thetaOf(thinVec));
         int nTicks = 30;
         double totalAng = Math.toDegrees(Algebra.thetaBetweenVectors(thickVec, thinVec));
         double tickDeg = totalAng / nTicks * -sign;
 
         GameValues gameValues = game.getGameValues();
-        
+
 //        double selectedSideSpin = 0.6 * sign;
         Cue cue = aiPlayer.getInGamePlayer().getCueSelection().getSelected().getNonNullInstance();
         double[] cuePoint = cue.aiCuePoint(new double[]{0, 0.8 * sign}, gameValues.ball);
-        
+
         List<Ball> legalList = game.getAllLegalBalls(1, false, false);
         Set<Ball> legalSet = new HashSet<>(legalList);
-        
+
         double clothSlowFactor = phy.cloth.smoothness.slippingFriction / TableCloth.Smoothness.FAST.slippingFriction;
         double selPowerLow = 28.0 * clothSlowFactor;
         double selPowerHigh = 46.0 * clothSlowFactor;
         double selPowerTick = 2.0;
 
         AbstractSnookerTable table = game.getTable();
-        
+
         boolean adhereCushion = Math.random() > 0.25;  // 四分之三的概率是往角里面放铁库球
         double allowedX = adhereCushion ? (gameValues.table.leftX + gameValues.ball.ballDiameter * 4) : table.breakLineX();
         double makeSnookerPrice = adhereCushion ? 0.0 : 1.0;
@@ -135,7 +166,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             allowedYLow = table.greenBallPos()[1];
             allowedYHigh = table.yellowBallPos()[1];
         }
-        
+
         Set<Ball> suggestedTarget = game.getSuggestedRegularBreakBalls();
 //        PlayerHand handSkill = aiPlayer.getPlayerPerson().handBody.getPrimary();
         CuePlayerHand cuePlayerHand = CuePlayerHand.makeDefault(aiPlayer.getInGamePlayer());
@@ -179,14 +210,14 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 if (dc != null) {
                     double[] whiteStopPos = dc.wp.stopPoint();
                     if (whiteStopPos == null) continue;
-                    if (whiteStopPos[1] < allowedYLow || 
-                            whiteStopPos[1] > allowedYHigh || 
+                    if (whiteStopPos[1] < allowedYLow ||
+                            whiteStopPos[1] > allowedYHigh ||
                             whiteStopPos[0] > allowedX) continue;
-                    
+
                     if (dc.wp.getWhiteCushionCountAfter() == 4
                             && !dc.wp.isWhiteHitsHoleArcs()
                             && !dc.wp.isHitWallBeforeHitBall()
-                            && dc.wp.getSecondCollide() == null 
+                            && dc.wp.getSecondCollide() == null
                             && suggestedTarget.contains(dc.wp.getFirstCollide())) {
                         legalChoices.add(dc);
                     }
@@ -207,8 +238,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         return null;
     }
 
-    public boolean considerReposition(Phy phy, 
-                                      Map<SnookerBall, double[]> lastPositions, 
+    public boolean considerReposition(Phy phy,
+                                      Map<SnookerBall, double[]> lastPositions,
                                       PotAttempt opponentAttempt,
                                       boolean isFreeBall) {
         if (opponentAttempt != null && !isFreeBall) {
@@ -243,7 +274,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                 return null;
             } else {
                 if (rem == 7) return null;  // 只剩一颗球还防个屁
-                else if (rem <= 27 && behind > rem + defaultFoul * withdrawLimit) return null; // 清彩阶段，落后多了就认输
+                else if (rem <= 27 && behind > rem + defaultFoul * withdrawLimit)
+                    return null; // 清彩阶段，落后多了就认输
             }
             // 其他情况还可以挣扎
             if (currentTarget == 1) {
@@ -283,7 +315,7 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
             targetBallMaybe = game.getBallOfValue(currentTarget);
         }
         GamePlayStage gps = game.getGamePlayStage(targetBallMaybe, false);
-        
+
         if (gps == GamePlayStage.NO_PRESSURE) {
             if (currentTarget == 7) {
                 FinalChoice.IntegratedAttackChoice exhibition = lastExhibitionShot(phy);
@@ -317,10 +349,10 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         }
 
         GameValues values = game.getGameValues();
-        
+
         // 刚好推进的白球球速
         double minWhiteSpeed = values.estimateSpeedNeeded(phy,
-                choice.targetHoleDistance + 
+                choice.targetHoleDistance +
                         (choice.whiteCollisionDistance / (1 - Ball.MAX_GEAR_EFFECT)) + values.ball.ballDiameter * 1.5);
         double minActualPower = minWhiteSpeed / Values.MAX_POWER_SPEED * 100;
 

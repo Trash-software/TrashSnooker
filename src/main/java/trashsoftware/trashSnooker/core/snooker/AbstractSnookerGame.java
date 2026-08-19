@@ -44,6 +44,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     //    private int lastFoulPoints = 0;
     private boolean doingFreeBall = false;  // 正在击打自由球
     private boolean blackBattle = false;
+    private boolean startingBlackBattle = false;
     private int repositionCount;
     private int continuousFoulAndMiss;
     private boolean willLoseBecauseThisFoul;
@@ -131,7 +132,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             case SNOOKER -> 36;
             case SNOOKER_TEN -> 26;
             case MINI_SNOOKER -> 18;
-            default -> throw new IllegalArgumentException("Game rule " + gameRule.name() + " is not snooker-like.");
+            default ->
+                    throw new IllegalArgumentException("Game rule " + gameRule.name() + " is not snooker-like.");
         };
     }
 
@@ -143,7 +145,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             case SNOOKER -> 21;
             case SNOOKER_TEN -> 16;
             case MINI_SNOOKER -> 12;
-            default -> throw new IllegalArgumentException("Game rule " + gameRule.name() + " is not snooker-like.");
+            default ->
+                    throw new IllegalArgumentException("Game rule " + gameRule.name() + " is not snooker-like.");
         };
     }
 
@@ -216,7 +219,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
      * 斯诺克击打彩球时（target=0），需要指定目标球
      */
     public void setIndicatedTarget(int indicatedTarget, boolean manualIndication) {
-           if ((!this.targetManualIndicated) || manualIndication) {
+        if ((!this.targetManualIndicated) || manualIndication) {
             this.indicatedTarget = indicatedTarget;
         }
         this.targetManualIndicated |= manualIndication;
@@ -310,7 +313,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         } else if (!isFreeBall) {
             return currentTarget + 1;
         }
-        // 其余情况：清彩球阶段的自由球，目标球不变
+        // 其余情况：清彩球阶段的自由球
+        SnookerBall curTargetBall = getBallOfValue(currentTarget);
+        if (curTargetBall.isPotted()) {
+            // 特殊情况：自由球时合法打进了本来的目标球，算作已进袋
+            // 也不用考虑是不是金球，不可能
+            if (currentTarget == 7) return END_REP;
+            return currentTarget + 1;
+        }
         return currentTarget;
     }
 
@@ -344,6 +354,25 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         return super.cue(params, phy);
     }
 
+    protected void startBlackBattle() {
+        // 延分，争黑球
+        blackBattle = true;
+        startingBlackBattle = true;
+        cueBall.pot();
+        currentTarget = 7;
+        SnookerBall black = getBallOfValue(7);
+        black.pot();
+        pickupColorBall(black);
+        System.out.println("Black battle!");
+        AchManager.getInstance().addAchievement(Achievement.BLACK_BATTLE, null);
+        setBallInHand();
+        if (Math.random() < 0.5) {
+            currentPlayer = player1;
+        } else {
+            currentPlayer = player2;
+        }
+    }
+
     protected void updateTargetPotSuccess(boolean isFreeBall) {
         int nextTarget = getTargetAfterPotSuccess(null, isFreeBall);
         if (nextTarget == END_REP) {
@@ -351,19 +380,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 currentTarget = nextTarget;
                 end();
             } else {
-                // 延分，争黑球
-                blackBattle = true;
-                cueBall.pot();
-                currentTarget = 7;
-                pickupColorBall(getBallOfValue(7));
-                System.out.println("Black battle!");
-                AchManager.getInstance().addAchievement(Achievement.BLACK_BATTLE, null);
-                setBallInHand();
-                if (Math.random() < 0.5) {
-                    currentPlayer = player1;
-                } else {
-                    currentPlayer = player2;
-                }
+                startBlackBattle();
             }
         } else {
             currentTarget = nextTarget;
@@ -400,6 +417,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             return new int[2];
         } else {
             // 自由球进多颗球，只有在一种情况：指定的球和原本目标球都进了才不犯规
+            // 同时，如果目标球是红球，则进几颗加几分
+            // 如果目标球是清彩阶段的彩球，则只加一次分
             boolean foul = false;
             int foulScore = getDefaultFoulValue();
             int score = 0;
@@ -412,7 +431,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 }
             }
             if (foul) return new int[]{0, foulScore};
-            else return new int[]{score, 0};
+            else {
+                if (currentTarget == 1) {
+                    return new int[]{score, 0};
+                } else {
+                    // 清彩时，只算一颗的分
+                    return new int[]{currentTarget, 0};
+                }
+            }
         }
     }
 
@@ -588,8 +614,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             }
             if (cueBall.isPotted()) {
                 System.err.println("Should not enter this branch");
-                thisCueFoul.addFoul(strings.getString("cueBallPot"), 
-                        Math.max(indicatedTarget, getFoulScore(pottedBalls)), 
+                thisCueFoul.addFoul(strings.getString("cueBallPot"),
+                        Math.max(indicatedTarget, getFoulScore(pottedBalls)),
                         false);
                 setBallInHand();
             }
@@ -633,8 +659,9 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 return;
             }
 
-            if (blackBattle) {
+            if (blackBattle || (currentTarget == 7 && getScoreDiffAbs() < 7)) {
                 // 抢黑时犯规就直接判负
+                // 正常打黑时，不超分不延分只要犯规应该也算输
                 addFoulScore();
 
                 end();
@@ -642,6 +669,13 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             }
 
             addFoulScore();
+            if (currentTarget == 7 && getScoreDiffAbs() == 0) {
+                // 目标球为黑球，罚完分之后正好平分，直接进入争黑
+                thisCueFoul.setMiss(false);
+                startBlackBattle();
+                return;
+            }
+
             updateTargetPotFailed();
             switchPlayer();
             if (gameValues.rule.hasRule(Rule.FOUL_BALL_IN_HAND)) {
@@ -654,9 +688,24 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         } else {
             if (score > 0) {
                 if (isFreeBall) {
-                    if (pottedBalls.size() != 1)
-                        throw new RuntimeException("为什么进了这么多自由球？？？");
-                    currentPlayer.potFreeBall(score);
+                    if (currentTarget == 1) {
+                        if (score != pottedBalls.size()) {
+                            System.err.println("Free ball score inconsistent!");
+                        }
+                    } else {
+                        if (score != currentTarget) {
+                            System.err.println("Free ball score inconsistent!");
+                        }
+                    }
+                    currentPlayer.potFreeBall(currentTarget);
+                    if (currentTarget == 1 && pottedBalls.size() != 1) {
+                        // 打自由球时进了其他红球
+                        Set<SnookerBall> otherLegalBalls = new HashSet<>();
+                        for (SnookerBall sb : pottedBalls) {
+                            if (sb.getValue() == currentTarget) otherLegalBalls.add(sb);
+                        }
+                        currentPlayer.correctPotBalls(this, otherLegalBalls);
+                    }
                 } else {
                     currentPlayer.correctPotBalls(this, pottedBalls);
                 }
@@ -710,6 +759,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (!gameValues.isTraining()) {
             checkScoreSumAchievement();
         }
+    }
+
+    public boolean isBlackBattle() {
+        return blackBattle;
+    }
+
+    public boolean isStartingBlackBattle() {
+        return startingBlackBattle;
     }
 
     private void checkScoreSumAchievement() {
@@ -770,7 +827,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public void cancelFreeBall() {
         doingFreeBall = false;
     }
-    
+
     private boolean potentiallyRepositionable() {
         return getScoreDiffAbs() <= getRemainingScore(false);  // 超分不能复位，延分可以
     }
@@ -780,14 +837,14 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         // 不需要再去检查有没有解了，因为无解的球不会判miss
         return isRepositionable && super.canReposition();
     }
-    
+
     public boolean isOverscoring(Player possibleAheadPlayer) {
         int p1Score = player1.getScore();
         int p2Score = player2.getScore();
         int rem = getRemainingScore(false);
         int absDiff = Math.abs(p1Score - p2Score);
         if (absDiff <= rem) return false;
-        
+
         if (possibleAheadPlayer == player1) {
             return p1Score > p2Score;
         } else {
@@ -896,7 +953,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
                 WhitePrediction wp = predictWhite(cpp, entireGame.predictPhy, 10000.0,
                         false,
                         false,
-                        false, 
+                        false,
                         true,
                         true, false);
                 if (legalSet.contains(wp.getFirstCollide())) {
@@ -1011,10 +1068,10 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
     public boolean isP2EverOver() {
         return p2EverOver;
     }
-    
+
     public void letOtherPlay() {
         super.letOtherPlay();
-        
+
         cancelFreeBall();  // 让杆了你还打自由球？
     }
 
@@ -1070,6 +1127,12 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (player1.getScore() > player2.getScore()) return player1;
         else if (player2.getScore() > player1.getScore()) return player2;
         else throw new RuntimeException("延分时不会结束");
+    }
+
+    @Override
+    public void placeWhiteBall(double realX, double realY) {
+        startingBlackBattle = false;
+        super.placeWhiteBall(realX, realY);
     }
 
     protected boolean canPlaceWhiteInTable(double x, double y) {
@@ -1198,8 +1261,8 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             }
         }
 
-
-        int ahead = getScoreDiff(getCuingPlayer());
+        SnookerPlayer cuingPlayer = getCuingPlayer();
+        int ahead = getScoreDiff(cuingPlayer);
         int remaining = getRemainingScore(isDoingSnookerFreeBll());
         int aheadAfter;  // 打进后的领先
         int remainingAfter;  // 打进后的剩余
@@ -1217,7 +1280,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
             } else {
                 aheadAfter = ahead + 7;
             }
-            remainingAfter = remaining;  // 打进彩球不改变
+            remainingAfter = remaining - 7;  // 因为getRemainingScore那里RAW_COLORED_REP是计入了彩球分值的
             if (remainingRedCount() == 0) {
                 // 打完现在的彩球后该打黄球了
                 aheadAfter2 = aheadAfter + 2;
@@ -1248,7 +1311,7 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
         if (ahead >= remaining && ahead - remaining < 15) {
             if (printPlayStage) System.out.println("Close to win!");
             return GamePlayStage.ENHANCE_WIN;
-        } 
+        }
 //        else if (ahead > remaining && ahead - remaining < 15) {
 //            if (printPlayStage) System.out.println("Won, but opponent may stand again");
 //            return GamePlayStage.NORMAL;
@@ -1263,6 +1326,15 @@ public abstract class AbstractSnookerGame extends Game<SnookerBall, SnookerPlaye
 
             if (printPlayStage) System.out.println("Overed score, blind chicken eight play");
             return GamePlayStage.NO_PRESSURE;
+        }
+        if (targetValue == RAW_COLORED_REP && ahead < 0) {
+            // 落后
+            if (ahead + remaining >= 0 && ahead + remainingAfter < 0) {
+                // 没被超分，但如果没打进就被超分了
+                if (printPlayStage)
+                    System.out.println("Near being overscore, must pot this color ball");
+                return GamePlayStage.OTHER_KEY_BALL;
+            }
         }
         return GamePlayStage.NORMAL;
     }

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CuePlayParams {
 
-    public static final double SIDE_SPIN_DEVIATION_DIVISOR = 4000.0;  // 加塞的方向偏差，这个值越大，加塞偏移越小。
+    public static final double SIDE_SPIN_DEVIATION_DIVISOR = 3600.0;  // 加塞的方向偏差，这个值越大，加塞偏移越小。
 
     public final double vx;
     public final double vy;

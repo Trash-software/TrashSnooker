@@ -185,22 +185,22 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
                                                       @Nullable Ball lastAiPottedBall,
                                                       int attackTarget,
                                                       boolean isPositioning) {
-            double collisionPointX = aiming.collisionPos[0];
-            double collisionPointY = aiming.collisionPos[1];
+            double collisionPointX = aiming.collisionPos()[0];
+            double collisionPointY = aiming.collisionPos()[1];
             double cueDirX = collisionPointX - whitePos[0];
             double cueDirY = collisionPointY - whitePos[1];
             double[] cueDirUnit = Algebra.unitVector(cueDirX, cueDirY);
 
-            double[] holePos = game.getGameValues().getOpenCenter(aiming.pocket.pocketName);
-            double[] firstCushionPoint = aiming.cushionPos.get(0);
-            double[] lastCushionPoint = aiming.cushionPos.get(aiming.cushionPos.size() - 1);
+            double[] holePos = game.getGameValues().getOpenCenter(aiming.pocket().pocketName);
+            double[] firstCushionPoint = aiming.cushionPos().get(0);
+            double[] lastCushionPoint = aiming.cushionPos().get(aiming.cushionPos().size() - 1);
             double[] lastCushionToHole = new double[]{
                     holePos[0] - lastCushionPoint[0],
                     holePos[1] - lastCushionPoint[1]
             };
             double[] lastCushionToHoleUnit = Algebra.unitVector(lastCushionToHole);
 
-            double[] ballOrigPos = aiming.targetPos;
+            double[] ballOrigPos = aiming.targetPos();
 
             CuePlayerHand handSkill = HandBody.getBestHandFromPosition(
                     whitePos[0], whitePos[1],
@@ -215,8 +215,8 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             double[] whiteToColl =
                     new double[]{collisionPointX - whitePos[0], collisionPointY - whitePos[1]};
             double[] ballToFirstCushion = new double[]{
-                    firstCushionPoint[0] - aiming.targetPos[0],
-                    firstCushionPoint[1] - aiming.targetPos[1]
+                    firstCushionPoint[0] - aiming.targetPos()[0],
+                    firstCushionPoint[1] - aiming.targetPos()[1]
             };
 
             // 已经检查过了
@@ -232,7 +232,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             }
             double targetHoleTotalDt = 0;
             double[] pos = ballOrigPos;
-            for (double[] cu : aiming.cushionPos) {
+            for (double[] cu : aiming.cushionPos()) {
                 targetHoleTotalDt += Math.hypot(cu[0] - pos[0], cu[1] - pos[1]);
                 pos = cu;
             }
@@ -240,12 +240,12 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
 
             DoubleAttackChoice ac = new DoubleAttackChoice();
             ac.game = game;
-            ac.ball = aiming.target;
+            ac.ball = aiming.target();
             ac.isPositioning = isPositioning;
             ac.lastCushionToPocket = lastCushionToHoleUnit;
 //            ac.targetHoleVec = targetToHole;
             ac.holeOpenPos = holePos;
-            ac.pocket = aiming.pocket;
+            ac.pocket = aiming.pocket();
             ac.angleRad = angle;
             ac.targetHoleDistance = targetHoleTotalDt;
             ac.whitePos = whitePos;
@@ -268,7 +268,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             ac.handSkill = handSkill;
 //            attackChoice.calculateDifficulty();
 
-            ac.targetPrice = game.priceOfTarget(attackTarget, aiming.target, attackingPlayer, lastAiPottedBall);
+            ac.targetPrice = game.priceOfTarget(attackTarget, aiming.target(), attackingPlayer, lastAiPottedBall);
 
             // 随便创建一个，用于评估难度
             ac.defaultRef = createDefaultRef(ac,

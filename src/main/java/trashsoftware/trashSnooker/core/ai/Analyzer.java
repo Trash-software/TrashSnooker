@@ -9,6 +9,7 @@ import trashsoftware.trashSnooker.core.movement.WhitePrediction;
 import trashsoftware.trashSnooker.core.person.CuePlayerHand;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
 import trashsoftware.trashSnooker.core.phy.Phy;
+import trashsoftware.trashSnooker.core.snooker.AbstractSnookerGame;
 import trashsoftware.trashSnooker.fxml.projection.ObstacleProjection;
 
 import java.util.ArrayList;
@@ -315,6 +316,22 @@ public class Analyzer {
             int opponentTarget = copy.getTargetAfterPotFailed();
             List<Ball> opponentBalls = copy.getAllLegalBalls(opponentTarget, false,
                     copy.isInLineHandBall());
+            
+            if (copy instanceof AbstractSnookerGame asg && asg.isDoingSnookerFreeBll()) {
+                Game.SeeAble fullSeeAbleCheck = copy.countSeeAbleTargetBalls(
+                        whiteStopPos[0],
+                        whiteStopPos[1],
+                        opponentBalls,
+                        3
+                );
+                if (fullSeeAbleCheck.seeAbleTargets == 0) {
+                    if (fullSeeAbleCheck.obstacles.contains(asg.getBallOfValue(asg.getCurrentTarget()))) {
+                        // 不能拿自由球本体来做斯诺克
+                        wp.resetToInit();
+                        return null;
+                    }
+                }
+            }
 
             Game.SeeAble seeAble = copy.countSeeAbleTargetBalls(
                     whiteStopPos[0],
@@ -322,6 +339,7 @@ public class Analyzer {
                     opponentBalls,
                     1
             );
+            
             double penalty = 0.0;
             penalty += (cueParams.getCueAngleDeg() - Values.DEFAULT_CUE_ANGLE);
 

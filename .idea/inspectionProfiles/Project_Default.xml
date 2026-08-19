@@ -4,5 +4,11 @@
     <inspection_tool class="CommentedOutCode" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="minLines" value="3" />
     </inspection_tool>
+    <inspection_tool class="ExtractMethodRecommender" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="minLength" value="510" />
+    </inspection_tool>
+    <inspection_tool class="MathClampMigration" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="braveMode" value="false" />
+    </inspection_tool>
   </profile>
 </component>

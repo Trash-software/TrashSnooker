@@ -165,6 +165,7 @@ public class InGamePlayer {
         double psyMul = switch (gamePlayStage) {
             case THIS_BALL_WIN -> frameBasePsy - psyWeakness;
             case NEXT_BALL_WIN -> frameBasePsy - psyWeakness * 0.75;
+            case OTHER_KEY_BALL -> frameBasePsy - psyWeakness * 0.6;
             case ENHANCE_WIN -> frameBasePsy - psyWeakness * 0.5;
             case BREAK -> frameBasePsy * 5.0;
             case null, default -> frameBasePsy;
@@ -189,8 +190,9 @@ public class InGamePlayer {
             case BREAK -> 0.2;
             case NORMAL -> 1.0;
             case ENHANCE_WIN -> 1.8;
-            case NEXT_BALL_WIN -> 2.0;
-            case THIS_BALL_WIN -> 3.0;
+            case OTHER_KEY_BALL -> 2.0;
+            case NEXT_BALL_WIN -> 2.5;
+            case THIS_BALL_WIN -> 3.5;
             case NO_PRESSURE -> 0.1;
         };
     }
@@ -240,7 +242,10 @@ public class InGamePlayer {
         regularizePsyStatus();
     }
     
-    public void updatePsyStatusAfterFrame(double frameImportance, boolean won, EntireGame entireGame) {
+    public void updatePsyStatusAfterFrame(double frameImportance, 
+                                          boolean won, 
+                                          EntireGame entireGame,
+                                          int finishedFramesIncludeThis) {
         double baseChange = cuePsyChangeBase() * (frameImportance + 1) * 3.5;
         if (won) {
             psyStatus += baseChange;
@@ -248,6 +253,19 @@ public class InGamePlayer {
             int contiLoss = entireGame.playerContinuousLoses(playerNumber) + 1;
             psyStatus -= baseChange * contiLoss;  // 越输越糟糕
         }
+        
+        if (entireGame.isSessionalBreak(finishedFramesIncludeThis)) {
+            // 回一口大血
+            EventLogger.verbose("Sessional break, restoring psy status");
+            double restore = Math.max(0, Math.min(0.95 - psyStatus, playerPerson.getPsyRua() / 50));
+            psyStatus += restore;
+        } else if (entireGame.isSessionInternalRest(finishedFramesIncludeThis)) {
+            // 回一口小血
+            EventLogger.verbose("Inter session rest, restoring psy status slightly");
+            double restore = Math.max(0, Math.min(0.95 - psyStatus, playerPerson.getPsyRua() / 200));
+            psyStatus += restore;
+        }
+        
         regularizePsyStatus();
     }
 

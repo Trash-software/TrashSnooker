@@ -44,6 +44,7 @@ public class WhitePrediction {
     // 非必选项
     private Ball whiteSecondCollide;
     private double whiteSpeedWhenHitFirstBall;
+    private double[] whiteVelocityWhenHitSecondBall;
     private double whiteSpeedWhenHitSecondBall;
     private boolean whiteHitsHoleArcs = false;  // 是否碰撞了袋角
     private double pathLength;
@@ -221,9 +222,10 @@ public class WhitePrediction {
     /**
      * 白球撞上第二颗球时的速度，如果有的话。单位mm/s
      */
-    public void setSecondCollide(Ball secondCollide, double whiteSpeedWhenCollision) {
+    public void setSecondCollide(Ball secondCollide, double[] whiteVelocityWhenCollision) {
         this.whiteSecondCollide = secondCollide;
-        this.whiteSpeedWhenHitSecondBall = whiteSpeedWhenCollision;
+        this.whiteVelocityWhenHitSecondBall = whiteVelocityWhenCollision;
+        this.whiteSpeedWhenHitSecondBall = Math.hypot(whiteVelocityWhenCollision[0], whiteVelocityWhenCollision[1]);
     }
     
     public double whitePathLenBtw1st2ndCollision() {
@@ -242,6 +244,10 @@ public class WhitePrediction {
 
     public double getWhiteSpeedWhenHitSecondBall() {
         return whiteSpeedWhenHitSecondBall;
+    }
+
+    public double[] getWhiteVelocityWhenHitSecondBall() {
+        return whiteVelocityWhenHitSecondBall;
     }
 
     public double getWhiteSpeedWhenHitFirstBall() {

@@ -22,6 +22,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
     public static final double MAXIMUM_SPIN_PASS = 0.2;  // 齿轮效应传递旋转的上限
     public static final double NEAR_CUSHION_AREA = 2.5;
     public static final double NEAR_CUSHION_ACC = 10.0;
+    public static final double SIDE_SPIN_EFFECT = 1.4;
     private static final Random ERROR_GENERATOR = new Random();
     private static boolean gearOffsetEnabled = true;  // 齿轮/投掷效应造成的球线路偏差
     private static int idCounter = 0;
@@ -596,7 +597,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
 //        double mag = Math.hypot(vx, vy) * phy.calculationsPerSec;
 //        double sideSpinEffectMul = mag / Values.MAX_POWER_SPEED;
 
-        double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.8) * 1.25;
+        double sideSpinEffectMul = Math.pow(mag / Values.MAX_POWER_SPEED, 0.8) * SIDE_SPIN_EFFECT;
 //        System.out.println(mag + " " + sideSpinEffectMul);
         return sideSpin * sideSpinEffectMul;
     }

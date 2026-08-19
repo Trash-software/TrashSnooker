@@ -1095,12 +1095,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         double shadowRadius = situation == 3 ?
                 gameValues.ball.ballRadius :
                 gameValues.ball.ballDiameter;
-        int result = 0;
+        int seeAbleCount = 0;
 
         double maxShadowAngle = 0.0;
         double sumTargetDt = 0.0;
         double weightedSumTargetDt = 0.0;
         List<double[]> seeAbleBallIntervals = new ArrayList<>();
+        Set<Ball> allObstacles = new HashSet<>();
 
         for (Ball target : legalBalls) {
             double xDiff0 = target.x - whiteX;
@@ -1170,6 +1171,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         if (maxShadowAngle < ballShadowAngle) {
                             maxShadowAngle = ballShadowAngle;
                         }
+                        allObstacles.add(ball);
                     }
                 }
             }
@@ -1194,7 +1196,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     seeAbleBallIntervals.add(new double[]{start, end});
                 }
 
-                result++;
+                seeAbleCount++;
             }
         }
 
@@ -1218,11 +1220,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         }
 
         return new SeeAble(
-                result,
+                seeAbleCount,
                 sumTargetDt / legalBalls.size(),
                 weightedSumTargetDt / legalBalls.size(),
                 totalSeeAbleRads,
-                maxShadowAngle);
+                maxShadowAngle,
+                allObstacles);
     }
 
     public int getPlayerNum(P player) {
@@ -1410,6 +1413,12 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 
     public P getPlayer2() {
         return player2;
+    }
+    
+    public P getPlayerByNumber(int playerNumberFrom1) {
+        if (player1.getInGamePlayer().getPlayerNumber() == playerNumberFrom1) return player1;
+        if (player2.getInGamePlayer().getPlayerNumber() == playerNumberFrom1) return player2;
+        throw new RuntimeException("No player has number " + playerNumberFrom1);
     }
 
     protected void updateBreakStats(Set<B> newPotted) {
@@ -1771,65 +1780,50 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         public final double totalSeeAbleRads;
         //        public final double 
         public final double maxShadowAngle;  // 那颗球离白球的距离
+        public final Collection<Ball> obstacles;
 
         SeeAble(int seeAbleTargets,
                 double avgTargetDistance,
                 double weightedMeanTargetDistance,
                 double totalSeeAbleRads,
-                double maxShadowAngle) {
+                double maxShadowAngle,
+                Collection<Ball> obstacles) {
             this.seeAbleTargets = seeAbleTargets;
             this.avgTargetDistance = avgTargetDistance;
             this.weightedMeanTargetDistance = weightedMeanTargetDistance;
             this.totalSeeAbleRads = totalSeeAbleRads;
             this.maxShadowAngle = maxShadowAngle;
+            this.obstacles = obstacles;
         }
     }
 
-    public static class DoublePotAiming {
-        public final Ball target;
-        public final double[] targetPos;
-        public final Pocket pocket;
-        public final double[] collisionPos;
-        public final List<double[]> cushionPos;  // 库点
-        public final double[] whiteAiming;  // 理论上的瞄球方向
-        public final int cushionCount;
-
-        public DoublePotAiming(Ball target,
-                               double[] targetPos,
-                               Pocket pocket,
-                               double[] collisionPos,
-                               List<double[]> cushionPos,
-                               double[] whiteAiming,
-                               int cushionCount) {
-            this.target = target;
-            this.targetPos = targetPos;
-            this.pocket = pocket;
-            this.collisionPos = collisionPos;
-            this.cushionPos = cushionPos;
-            this.whiteAiming = whiteAiming;
-            this.cushionCount = cushionCount;
-        }
+    /**
+     * @param cushionPos  库点
+     * @param whiteAiming  理论上的瞄球方向 */
+    public record DoublePotAiming(Ball target, double[] targetPos, Pocket pocket,
+                                  double[] collisionPos, List<double[]> cushionPos,
+                                  double[] whiteAiming, int cushionCount) {
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            DoublePotAiming that = (DoublePotAiming) o;
-            return cushionCount == that.cushionCount &&
-                    Objects.equals(target, that.target) &&
-                    Objects.equals(pocket, that.pocket) &&
-                    Arrays.equals(collisionPos, that.collisionPos) &&
-                    Arrays.equals(whiteAiming, that.whiteAiming);
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                DoublePotAiming that = (DoublePotAiming) o;
+                return cushionCount == that.cushionCount &&
+                        Objects.equals(target, that.target) &&
+                        Objects.equals(pocket, that.pocket) &&
+                        Arrays.equals(collisionPos, that.collisionPos) &&
+                        Arrays.equals(whiteAiming, that.whiteAiming);
+            }
+    
+            @Override
+            public int hashCode() {
+                int result = Objects.hash(target, pocket, cushionCount);
+                result = 31 * result + Arrays.hashCode(collisionPos);
+                result = 31 * result + Arrays.hashCode(whiteAiming);
+                return result;
+            }
         }
-
-        @Override
-        public int hashCode() {
-            int result = Objects.hash(target, pocket, cushionCount);
-            result = 31 * result + Arrays.hashCode(collisionPos);
-            result = 31 * result + Arrays.hashCode(whiteAiming);
-            return result;
-        }
-    }
 
     public class WhitePredictor {
         private final Ball cueBallClone;
@@ -2044,7 +2038,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
 //                        System.out.println("second: " + ballClone.getValue());
                         cueBallClone.twoMovingBallsHitCore(ballClone, phy);
                         prediction.setSecondCollide(ball,
-                                Math.hypot(cueBallClone.vx, cueBallClone.vy) * phy.calculationsPerSec);
+                                new double[]{cueBallClone.vx * phy.calculationsPerSec, cueBallClone.vy * phy.calculationsPerSec});
                     }
                 }
             }
@@ -2159,7 +2153,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             Util.shuffleArray(randomOrderBallPool1);
 //            Util.shuffleArray(randomOrderBallPool2);
         }
-        
+
         private void replaceMovement(int i, int movementType, double movementValue) {
             int curPri = MovementFrame.movementTypePrivilege(movementTypes[i]);
             int newPri = MovementFrame.movementTypePrivilege(movementType);
@@ -2229,7 +2223,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         if (!tryHitBall(ball)) {
                             ball.normalMove(phy);
                         } else {
-                            replaceMovement(i,  MovementFrame.COLLISION, ball.getLastCollisionRelSpeed()
+                            replaceMovement(i, MovementFrame.COLLISION, ball.getLastCollisionRelSpeed()
                                     * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
                         }
                         continue;
@@ -2239,10 +2233,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     if (holeAreaResult != null && holeAreaResult.result() != 0) {
                         // 袋口区域
                         if (tryHitBall(ball)) {
-                            replaceMovement(i, 
-                                    MovementFrame.COLLISION, 
+                            replaceMovement(i,
+                                    MovementFrame.COLLISION,
                                     ball.getLastCollisionRelSpeed()
-                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
+                                            * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
                         }
                         if (holeAreaResult.result() == 2) {
                             collidesWall = true;
@@ -2251,10 +2245,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                 movement.getWhiteTrace().hitCushion(holeAreaResult.cushion(), ball.getPositionArray());
                             else
                                 movement.getTraceOfBallNotNull(ball).hitCushion(holeAreaResult.cushion(), ball.getPositionArray());
-                            replaceMovement(i, 
-                                    holeAreaResult.cushion().movementType(), 
+                            replaceMovement(i,
+                                    holeAreaResult.cushion().movementType(),
                                     Math.hypot(ball.vx, ball.vy)
-                                    * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
+                                            * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
                         }
                         continue;
                     }
@@ -2263,9 +2257,11 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                         // 库边
                         collidesWall = true;
                         recordHitCushion(ball);
-                        if (ball.isWhite()) movement.getWhiteTrace().hitCushion(cushion, ball.getPositionArray());
-                        else movement.getTraceOfBallNotNull(ball).hitCushion(cushion, ball.getPositionArray());
-                        replaceMovement(i, 
+                        if (ball.isWhite())
+                            movement.getWhiteTrace().hitCushion(cushion, ball.getPositionArray());
+                        else
+                            movement.getTraceOfBallNotNull(ball).hitCushion(cushion, ball.getPositionArray());
+                        replaceMovement(i,
                                 cushion.movementType(),
                                 Math.hypot(ball.vx, ball.vy)
                                         * phy.calculationsPerSec / Values.MAX_POWER_SPEED);
@@ -2273,7 +2269,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                     }
 
                     if (tryHitBall(ball)) {
-                        replaceMovement(i, 
+                        replaceMovement(i,
                                 MovementFrame.COLLISION,
                                 ball.getLastCollisionRelSpeed()
                                         * phy.calculationsPerSec / Values.MAX_POWER_SPEED);

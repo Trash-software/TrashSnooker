@@ -91,7 +91,7 @@ public class ChineseEightAiCue extends AiCue<ChineseEightBallGame, ChineseEightB
 
     @Override
     protected KickPriceCalculator kickPriceCalculator() {
-        return (kickedBall, kickSpeed, dtFromFirst) -> {
+        return (kickedBall, kickSpeed, dtFromFirst, kickDirection) -> {
             Double alivePrice = selfBallAlivePrices.get(kickedBall);
             if (alivePrice == null) return kickUselessBallPrice(dtFromFirst);
 
