@@ -251,6 +251,7 @@ public abstract class FinalChoice {
 
         boolean whiteCollidesOther;
         boolean targetCollidesOther;
+        boolean defensiveAttack;
 
         protected DefenseChoice(Ball ball,
                                 double nativePrice,
@@ -262,7 +263,8 @@ public abstract class FinalChoice {
                                 WhitePrediction wp,
                                 CuePlayParams cuePlayParams,
                                 boolean whiteCollidesOther,
-                                boolean targetCollidesOther) {
+                                boolean targetCollidesOther,
+                                boolean defensiveAttack) {
             this.ball = ball;
 //            this.opponentAttackChance = opponentAttackChance;
             this.defenseResult = defenseResult;
@@ -279,6 +281,7 @@ public abstract class FinalChoice {
 
             this.whiteCollidesOther = whiteCollidesOther;
             this.targetCollidesOther = targetCollidesOther;
+            this.defensiveAttack = defensiveAttack;
 
             generatePrice(nativePrice);
         }
@@ -299,7 +302,8 @@ public abstract class FinalChoice {
                     null,
                     cuePlayParams,
                     true,
-                    true);
+                    true,
+                    false);
         }
 
         private void generatePrice(double nativePrice) {

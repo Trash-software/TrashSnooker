@@ -39,10 +39,12 @@ public class WhitePrediction {
     
     private boolean hitWallBeforeHitBall;
     private boolean cueBallWillPot;
-    private boolean cueBallFirstBallTwiceColl;  // 二次碰撞
+//    private boolean cueBallFirstBallTwiceColl;  // 二次碰撞
     
     // 非必选项
     private Ball whiteSecondCollide;
+    private double secondBallX;
+    private double secondBallY;
     private double whiteSpeedWhenHitFirstBall;
     private double[] whiteVelocityWhenHitSecondBall;
     private double whiteSpeedWhenHitSecondBall;
@@ -67,6 +69,14 @@ public class WhitePrediction {
             firstCollide.setX(firstBallX);
             firstCollide.setY(firstBallY);
             firstCollide.pickup();
+        }
+        
+        if (whiteSecondCollide != null 
+                && !whiteSecondCollide.equals(firstCollide)
+        ) {
+            whiteSecondCollide.setX(secondBallX);
+            whiteSecondCollide.setY(secondBallY);
+            whiteSecondCollide.pickup();  // 实际上根本不用
         }
     }
     
@@ -161,6 +171,12 @@ public class WhitePrediction {
     
     public void setFirstBallCollidesOther(Ball firstBallCollision) {
         this.firstBallCollidesOther = firstBallCollision;
+        if (firstBallCollision.isWhite() && whiteSecondCollide == null) {
+            // 又撞一下白球
+            whiteSecondCollide = firstCollide;
+            secondBallX = firstBallX;
+            secondBallY = firstBallY;
+        }
     }
 
     public boolean isFirstBallCollidesOther() {
@@ -179,12 +195,14 @@ public class WhitePrediction {
         return firstBallWillPot;
     }
 
-    public void setTwiceColl(boolean cueBallFirstBallTwiceColl) {
-        this.cueBallFirstBallTwiceColl = cueBallFirstBallTwiceColl;
-    }
+//    public void setTwiceColl(boolean cueBallFirstBallTwiceColl) {
+//        this.cueBallFirstBallTwiceColl = cueBallFirstBallTwiceColl;
+//    }
 
     public boolean isCueBallFirstBallTwiceColl() {
-        return cueBallFirstBallTwiceColl;
+         return firstCollide.equals(whiteSecondCollide);
+//        return false;
+//        return cueBallFirstBallTwiceColl;
     }
 
     public double getFirstBallX() {
@@ -222,8 +240,13 @@ public class WhitePrediction {
     /**
      * 白球撞上第二颗球时的速度，如果有的话。单位mm/s
      */
-    public void setSecondCollide(Ball secondCollide, double[] whiteVelocityWhenCollision) {
+    public void setSecondCollide(Ball secondCollide, 
+                                 double secondBallX, 
+                                 double secondBallY,
+                                 double[] whiteVelocityWhenCollision) {
         this.whiteSecondCollide = secondCollide;
+        this.secondBallX = secondBallX;
+        this.secondBallY = secondBallY;
         this.whiteVelocityWhenHitSecondBall = whiteVelocityWhenCollision;
         this.whiteSpeedWhenHitSecondBall = Math.hypot(whiteVelocityWhenCollision[0], whiteVelocityWhenCollision[1]);
     }

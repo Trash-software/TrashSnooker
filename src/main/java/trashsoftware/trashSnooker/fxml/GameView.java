@@ -1433,11 +1433,14 @@ public class GameView implements Initializable {
             showTipBrokenMsg = false;
         }
         if (game.getGame() instanceof AbstractSnookerGame asg) {
+            // todo: 怎么上次AI对战时没显示呢
             if (asg.isStartingBlackBattle()) {
-                AlertShower.showInfo(stage,
+                Platform.runLater(() -> AlertShower.showInfo(
+                        stage,
                         String.format(strings.getString("showWhoBreaksFmt"), nextCuePlayer.getPlayerPerson().getName()),
                         strings.getString("startingBlackBattle"),
-                        3000);
+                        3000));
+
             }
         }
 
@@ -2109,7 +2112,7 @@ public class GameView implements Initializable {
         updatePlayStage();
         updateScoreDiffLabels();
     }
-    
+
     @FXML
     void p1Add1Action() {
         debugPlayerAddScoreAction(1, 1);
@@ -2129,7 +2132,7 @@ public class GameView implements Initializable {
     void p2Add10Action() {
         debugPlayerAddScoreAction(2, 10);
     }
-    
+
     private void debugPlayerAddScoreAction(int playerNumber, int score) {
         Player player = game.getGame().getPlayerByNumber(playerNumber);
         player.addScore(score);
@@ -2789,8 +2792,8 @@ public class GameView implements Initializable {
         CuePlayerHand usedHand = currentHand;
         PotAttempt currentAttempt = null;
         boolean snookered = game.getGame().isSnookered();
-        
-        double playerPsyFactor = player.getInGamePlayer().getPsyMul(gamePlayStage(), 
+
+        double playerPsyFactor = player.getInGamePlayer().getPsyMul(gamePlayStage(),
                 game.getGame().frameImportance(player.getInGamePlayer().getPlayerNumber()));
 
         CuePlayParams params = applyRandomCueError(player, enablePsy ? playerPsyFactor : 1.0);
@@ -3314,7 +3317,7 @@ public class GameView implements Initializable {
 
             beginCueAnimation(game.getGame().getCuingPlayer().getInGamePlayer(),
                     false,
-                    whiteStartingX, whiteStartingY, 
+                    whiteStartingX, whiteStartingY,
                     cueResult.getCueParams().selectedPower(),
                     cueResult.getUnitX(), cueResult.getUnitY());
 
@@ -3364,7 +3367,7 @@ public class GameView implements Initializable {
 
             Ball cueBall = replay.getCueBall();
             MovementFrame cueBallPos = movement.getStartingPositions().get(cueBall);
-            beginCueAnimation(cueRecord.cuePlayer, 
+            beginCueAnimation(cueRecord.cuePlayer,
                     cueRecord.cuePlayer.isHuman(),  // 这里不严谨，会在玩家使用AI代打时也认为是玩家，不过这里只影响动画效果，不重要
                     cueBallPos.x, cueBallPos.y,
                     cueRecord.selectedPower, cueRecord.aimUnitX, cueRecord.aimUnitY);
@@ -3392,7 +3395,7 @@ public class GameView implements Initializable {
 
     private CuePlayParams[] generateCueParamsSd1(int nPoints) {
         Player player = game.getGame().getCuingPlayer();
-        double psyFactor = player.getInGamePlayer().getPsyMul(gamePlayStage(), 
+        double psyFactor = player.getInGamePlayer().getPsyMul(gamePlayStage(),
                 game.getGame().frameImportance(player.getInGamePlayer().getPlayerNumber()));
         double sd = 1 / psyFactor;
         double corner = Math.sqrt(2) / 2 * sd;
@@ -3838,7 +3841,7 @@ public class GameView implements Initializable {
                         movement.getMovementMap().entrySet()) {
                     List<MovementFrame> list = entry.getValue();
                     MovementFrame frame = list.get(fi);
-                    if (!frame.potted || 
+                    if (!frame.potted ||
                             frame.movementType == MovementFrame.POCKET_BACK) {
                         int old = mediaType;
                         mediaType = MovementFrame.replaceMovementType(mediaType, frame.movementType);

@@ -1,7 +1,7 @@
 {
   "financial": {
     "remFreePerks": 0,
-    "money": 1599335,
+    "money": 1595535,
     "invoices": [
       {
         "inGameDate": "2027/2/10",
@@ -421,16 +421,16 @@
         "type": "participation",
         "items": [
           {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
+          {
             "item": "registry",
             "moneyCost": 200
           },
           {
             "item": "travel",
             "moneyCost": 400
-          },
-          {
-            "item": "hotel",
-            "moneyCost": 1000
           }
         ],
         "timestamp": "2026-08-19 06:53:13"
@@ -447,6 +447,39 @@
           "raw": 1000
         }},
         "timestamp": "2026-08-19 07:05:00"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1599335,
+        "moneyAfter": 1597135,
+        "type": "fees",
+        "items": [{
+          "item": "lifeFee",
+          "moneyCost": 2200
+        }],
+        "timestamp": "2026-08-21 02:54:55"
+      },
+      {
+        "inGameDate": "2027/5/12",
+        "moneyBefore": 1597135,
+        "match": "custom_E5B08FE4BB99E5A5B3+2027+womens_world_champ",
+        "moneyAfter": 1595535,
+        "type": "participation",
+        "items": [
+          {
+            "item": "hotel",
+            "moneyCost": 1000
+          },
+          {
+            "item": "registry",
+            "moneyCost": 200
+          },
+          {
+            "item": "travel",
+            "moneyCost": 400
+          }
+        ],
+        "timestamp": "2026-08-21 02:54:56"
       }
     ],
     "level": 42,
@@ -455,5 +488,5 @@
     "totalPerks": 44,
     "totalExp": 29805
   },
-  "checksum": "6F438ACE345E850D769405B3E06F9E95"
+  "checksum": "A86F39ABD1E98E9E8C349CAF50DEF9EF"
 }

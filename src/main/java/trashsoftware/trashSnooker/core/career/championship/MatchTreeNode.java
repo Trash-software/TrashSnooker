@@ -15,6 +15,7 @@ public class MatchTreeNode {
 
     private static int matchIdCounter = 0;
     private MetaMatchInfo metaMatchInfo;
+    // 两个position必须同时是null或同时不是null
     private MatchTreeNode player1Position;
     private MatchTreeNode player2Position;
     private ChampionshipStage stage;
@@ -34,6 +35,10 @@ public class MatchTreeNode {
         this.player2Position = player2Position;
         this.stage = stage;
         this.metaMatchInfo = metaMatchInfo;
+        
+        if ((player1Position == null) != (player2Position == null)) {
+            throw new RuntimeException("MatchTreeNode must have 0 or 2 children, not 1");
+        }
     }
 
     public MatchTreeNode(MatchTreeNode player1Position,
@@ -342,6 +347,15 @@ public class MatchTreeNode {
             return winner.isHumanPlayer();
         }
     }
+    
+    public boolean hasActivePlayer() {
+        if (winner == null) {
+            if (isLeaf()) return false;
+            return player1Position.hasActivePlayer() || player2Position.hasActivePlayer();
+        } else {
+            return true;
+        }
+    }
 
     public PvAiSnapshot getHumanNextOpponent() {
         if (winner == null) {
@@ -349,13 +363,13 @@ public class MatchTreeNode {
             if (player1Position.winner != null) {
                 if (player1Position.winner.isHumanPlayer()) {
                     // p2.winner可以为null: 轮空
-                    return new PvAiSnapshot(player1Position.winner, player2Position.winner);
+                    return new PvAiSnapshot(player1Position.winner, player2Position.winner, !player2Position.hasActivePlayer());
                 }
             }
             if (player2Position.winner != null) {
                 if (player2Position.winner.isHumanPlayer()) {
                     // p1.winner可以为null: 轮空
-                    return new PvAiSnapshot(player1Position.winner, player2Position.winner);
+                    return new PvAiSnapshot(player1Position.winner, player2Position.winner, !player1Position.hasActivePlayer());
                 }
             }
 //            if (player1Position.winner != null && player2Position.winner != null) {
@@ -393,7 +407,10 @@ public class MatchTreeNode {
         }
     }
 
-    public record PvAiSnapshot(Career p1, Career p2) {
+    public record PvAiSnapshot(Career p1, 
+                               Career p2, 
+                               boolean byeOrTbd  // 在p1或p2有一个为null的情况下，true=轮空，false=待定。如果都不是null则无用
+    ) {
         public Career getHuman() {
             if (p1 != null && p1.isHumanPlayer()) return p1;
             else return p2;

@@ -1,6 +1,7 @@
 package trashsoftware.trashSnooker.core.career.championship;
 
 import javafx.application.Platform;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import trashsoftware.trashSnooker.core.EntireGame;
 import trashsoftware.trashSnooker.core.person.PlayerPerson;
@@ -20,8 +21,8 @@ public class PlayerVsAiMatch extends CareerMatch {
     private final MatchTreeNode resultNode;
     protected PvEMatchEndCallback callback;
 
-    public PlayerVsAiMatch(Career p1,
-                           Career p2,
+    public PlayerVsAiMatch(@NotNull Career p1,
+                           @NotNull Career p2,
                            Championship championship,
                            ChampionshipStage stage,
                            MatchTreeNode resultNode) {
@@ -103,7 +104,7 @@ public class PlayerVsAiMatch extends CareerMatch {
     }
     
     public MatchTreeNode.PvAiSnapshot toSnapshot() {
-        return new MatchTreeNode.PvAiSnapshot(p1, p2);
+        return new MatchTreeNode.PvAiSnapshot(p1, p2, false);
     }
     
     public void playerQuit(int totalFrames, int p1Wins, int p2Wins) {

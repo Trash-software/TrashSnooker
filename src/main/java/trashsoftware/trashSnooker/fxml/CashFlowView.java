@@ -456,50 +456,71 @@ public class CashFlowView extends ChildInitializable {
                     moneyBefore.setTextFill(CareerView.REGULAR_TEXT_COLOR);
                 }
 
-                if (item instanceof Invoice.ChampionshipEarn ce) {
-                    expandableColumn1.setVisible(true);
-                    expandableColumn1.setManaged(true);
-                    expandableColumn2.setVisible(true);
-                    expandableColumn2.setManaged(true);
-                    int taxes = 0;
-                    for (Map.Entry<String, Invoice.TaxedIncome> entry : ce.getItems().entrySet()) {
-                        ChampionshipScore.Rank cs = ChampionshipScore.Rank.valueOf(entry.getKey());
-                        expandableColumn1.getChildren().add(new Label(cs.getShown()));
-                        int raw = entry.getValue().raw();
-                        int actual = entry.getValue().actual();
-                        taxes += (actual - raw);
-                        Label rawAwd = new Label(Util.moneyToReadable(raw, true));
-                        rawAwd.setTextAlignment(TextAlignment.RIGHT);
-                        if (raw > 0) {
-                            rawAwd.setTextFill(CareerView.EARN_MONEY_COLOR);
+                switch (item) {
+                    case Invoice.ChampionshipEarn ce -> {
+                        expandableColumn1.setVisible(true);
+                        expandableColumn1.setManaged(true);
+                        expandableColumn2.setVisible(true);
+                        expandableColumn2.setManaged(true);
+                        int taxes = 0;
+                        for (Map.Entry<String, Invoice.TaxedIncome> entry : ce.getItems().entrySet()) {
+                            ChampionshipScore.Rank cs = ChampionshipScore.Rank.valueOf(entry.getKey());
+                            expandableColumn1.getChildren().add(new Label(cs.getShown()));
+                            int raw = entry.getValue().raw();
+                            int actual = entry.getValue().actual();
+                            taxes += (actual - raw);
+                            Label rawAwd = new Label(Util.moneyToReadable(raw, true));
+                            rawAwd.setTextAlignment(TextAlignment.RIGHT);
+                            if (raw > 0) {
+                                rawAwd.setTextFill(CareerView.EARN_MONEY_COLOR);
+                            }
+                            expandableColumn2.getChildren().add(rawAwd);
                         }
-                        expandableColumn2.getChildren().add(rawAwd);
+                        if (taxes < 0) {
+                            expandableColumn1.getChildren().add(new Label(strings.getString("taxes")));
+                            Label taxLabel = new Label(Util.moneyToReadable(taxes));
+                            taxLabel.setTextAlignment(TextAlignment.RIGHT);
+                            taxLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
+                            expandableColumn2.getChildren().add(taxLabel);
+                        }
                     }
-                    if (taxes < 0) {
-                        expandableColumn1.getChildren().add(new Label(strings.getString("taxes")));
-                        Label taxLabel = new Label(Util.moneyToReadable(taxes));
-                        taxLabel.setTextAlignment(TextAlignment.RIGHT);
-                        taxLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
-                        expandableColumn2.getChildren().add(taxLabel);
+                    case Invoice.CostItemsHolder iih -> {
+                        expandableColumn1.setVisible(true);
+                        expandableColumn1.setManaged(true);
+                        expandableColumn2.setVisible(true);
+                        expandableColumn2.setManaged(true);
+                        for (Map.Entry<String, Integer> entry : iih.getItems().entrySet()) {
+                            String itemKey = entry.getKey();
+                            String shownItem = formatType(itemKey);
+                            int subChange = -entry.getValue();
+
+                            String subChangeStr = Util.moneyToReadable(subChange, true);
+
+                            expandableColumn1.getChildren().add(new Label(shownItem));
+                            Label subChangeLabel = new Label(subChangeStr);
+                            if (subChange < 0)
+                                subChangeLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
+
+                            expandableColumn2.getChildren().add(subChangeLabel);
+                        }
                     }
-                } else if (item instanceof Invoice.CostItemsHolder iih) {
-                    expandableColumn1.setVisible(true);
-                    expandableColumn1.setManaged(true);
-                    expandableColumn2.setVisible(true);
-                    expandableColumn2.setManaged(true);
-                    for (Map.Entry<String, Integer> entry : iih.getItems().entrySet()) {
-                        String itemKey = entry.getKey();
-                        String shownItem = formatType(itemKey);
-                        int subChange = -entry.getValue();
-
-                        String subChangeStr = Util.moneyToReadable(subChange, true);
-
-                        expandableColumn1.getChildren().add(new Label(shownItem));
-                        Label subChangeLabel = new Label(subChangeStr);
-                        if (subChange < 0)
-                            subChangeLabel.setTextFill(CareerView.SPEND_MONEY_COLOR);
-
-                        expandableColumn2.getChildren().add(subChangeLabel);
+                    case Invoice.Upgrade upgrade -> {
+                        Map<String, double[]> upgradeWhat = upgrade.getUpgradedWhat(strings);
+                        StringBuilder builder = new StringBuilder();
+                        if (!upgradeWhat.isEmpty()) {
+                            for (Map.Entry<String, double[]> entry : upgradeWhat.entrySet()) {
+                                String key = entry.getKey();
+                                double[] oldNew = entry.getValue();
+                                builder.append(key)
+                                        .repeat(" ", Math.max(0, 12 - key.length()))
+                                        .append(String.format("%.1f -> %.1f", oldNew[0], oldNew[1]))
+                                        .append("\n");
+                            }
+                            builder.deleteCharAt(builder.length() - 1);
+                            desLabel.setText(builder.toString());
+                        }
+                    }
+                    default -> {
                     }
                 }
 

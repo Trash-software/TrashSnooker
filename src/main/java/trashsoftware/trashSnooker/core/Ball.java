@@ -838,6 +838,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             iterations++;
         }
 
+        if (high - low <= tolerance) valid = true;
         if (!valid) return null; // fail-safe: never got close enough
 
         double t = (low + high) / 2.0;
@@ -893,11 +894,14 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
         return isNotMoving() && Math.abs(gap) < 1e-6;
     }
 
-    void twoMovingBallsHitCore(Ball ball, Phy phy) {
+    boolean twoMovingBallsHitCore(Ball ball, Phy phy) {
         double[][] colPoints = findCollisionPoint(this, ball);
         if (colPoints == null) {
             System.err.println("Cannot find collision point!");
-            return;
+//            for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+//                System.err.println(ste.getMethodName());
+//            }
+            return false;
         }
         double x1 = colPoints[0][0];
         double y1 = colPoints[0][1];
@@ -909,7 +913,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
             if (!phy.isPrediction) {
                 System.err.println("Will not even collide!");
             }
-            return;
+            return false;
         }
 
         this.lastCollisionRelSpeed = Math.hypot(vx - ball.vx, vy - ball.vy);
@@ -1146,6 +1150,7 @@ public abstract class Ball extends ObjectOnTable implements Comparable<Ball>, Cl
                     Algebra.distanceToPoint(x, y, ball.x, ball.y),
                     Algebra.distanceToPoint(nextX, nextY, ball.nextX, ball.nextY));
         }
+        return true;
     }
 
     boolean tryHitBall(Game<?, ?> game,

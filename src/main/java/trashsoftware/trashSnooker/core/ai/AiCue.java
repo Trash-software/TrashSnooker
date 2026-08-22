@@ -30,13 +30,13 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
 
 //    public static final double ATTACK_DIFFICULTY_THRESHOLD = 18000.0;  // 越大，AI越倾向于进攻
 
-    public static final double PURE_ATTACK_PROB = 0.32;  // 进攻权重为99的球员只要prob高于这个值他就会进攻。越小，AI越倾向于无脑进攻
-    public static final double DEFENSIVE_ATTACK_PROB = 0.16;  // 这个值是线性的，进攻权重为99的球员高于这个值就会尝试性进攻
+    public static final double PURE_ATTACK_PROB = 0.36;  // 进攻权重为99的球员只要prob高于这个值他就会进攻。越小，AI越倾向于无脑进攻
+    public static final double DEFENSIVE_ATTACK_PROB = 0.18;  // 这个值是线性的，进攻权重为99的球员高于这个值就会尝试性进攻
 
     //    public static final double NO_DIFFICULTY_ANGLE_RAD = 0.3;
 //    public static final double EACH_BALL_SEE_PRICE = 0.5;
     public static final double WHITE_HIT_CORNER_PENALTY = 0.05;
-    public static final double KICK_USELESS_BALL_MUL = 0.5;
+    public static final double KICK_USELESS_BALL_MUL = 0.4;
     public static final double POWER_TICK_EXP = 1.35;
     //    private static final double[] FRONT_BACK_SPIN_POINTS =
 //            {0.0, -0.27, 0.27, -0.54, 0.54, -0.81, 0.81};
@@ -192,7 +192,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         if (dtFromFirst >= 500) return KICK_USELESS_BALL_MUL;
         return Algebra.shiftRange(0,
                 10 * aiPlayer.getPlayerPerson().getAiPlayStyle().position,  // 走位100的人能控制1000mm内的二次k球
-                1.0,
+                0.99,
                 KICK_USELESS_BALL_MUL,
                 dtFromFirst);
     }
@@ -495,7 +495,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         pureAttacks = new ArrayList<>(pureAttacks.subList(0, Math.min(64, pureAttacks.size())));
         // 加点其他力度的，给k球提供选择
         if (sortedPureAttacks.size() > 64) {
-            pureAttacks.addAll(Util.drawNItemsSafe(sortedPureAttacks.subList(64, sortedPureAttacks.size()), 64));
+            pureAttacks.addAll(Util.drawNItemsSafe(sortedPureAttacks.subList(64, sortedPureAttacks.size()), 32));
         }
         defensiveAttacks = new ArrayList<>(defensiveAttacks.subList(0, Math.min(64, defensiveAttacks.size())));
 
@@ -608,13 +608,19 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         List<double[]> whitePath;
         if (iac.whitePrediction != null) {
             whitePath = iac.whitePrediction.getWhitePath();
+            if (iac.whitePrediction.isCueBallFirstBallTwiceColl()) {
+                EventLogger.warning("Final attack cue is a twice collision-1");
+            }
         } else {
             WhitePrediction wp = game.predictWhite(iac.params,
                     game.getEntireGame().predictPhy,
                     0.0,
                     true,
-                    true, false, false,
+                    true, true, false,
                     true, true);
+            if (wp.isCueBallFirstBallTwiceColl()) {
+                EventLogger.warning("Final attack cue is a twice collision-2");
+            }
             whitePath = wp.getWhitePath();
         }
 
@@ -671,7 +677,11 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
         }
         FinalChoice.DefenseChoice defenseChoice = getBestDefenseChoice(phy);
         if (defenseChoice != null) {
-            System.out.println("AI defense");
+            if (defenseChoice.defensiveAttack) {
+                System.out.println("AI defensive attack");
+            } else {
+                System.out.println("AI defense");
+            }
             System.out.println(defenseChoice);
 //            System.out.printf("Best defense choice: %f %f %f %f %f\n", 
 //                    defenseChoice.price, defenseChoice.snookerPrice, defenseChoice.opponentAttackPrice,
@@ -1262,11 +1272,18 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
             }
             if (wp.getFirstCollide() == null) {
                 // 连球都碰不到，没吃饭？
-//            System.out.println("too less");
+                wp.resetToInit();
                 return;
             }
+//            if (wp.isCueBallFirstBallTwiceColl()) {
+//                // 进攻球打出二次碰撞，真有你的，反正没这么设计过
+//                wp.resetToInit();
+//                return;
+//            }
             if (checkPot && (!wp.willFirstBallPot() || wp.isCueBallFirstBallTwiceColl())) {
                 // 进不了的翻袋，或是母球与目标球二次碰撞
+//                System.out.println("Twice collision!!!!!!");
+                wp.resetToInit();
                 return;
             }
 //            if (wp.getWhiteCushionCountAfter() == 0 && attackParams.selectedSideSpin != 0.0) {
@@ -1284,10 +1301,12 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                 // 确保球不会停在袋口
                 // 如果小于，说明力量太轻或低杆太多，打不到
 //            System.out.println("little less " + targetCanMove + ", " + attackChoice.targetHoleDistance);
+                wp.resetToInit();
                 return;
             }
             if (wp.willCueBallPot()) {
                 // 进白球也太蠢了吧
+                wp.resetToInit();
                 return;
             }
             double[] whiteStopPos = wp.stopPoint();
@@ -1426,7 +1445,8 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     allowPocketCorner,
                     true,
                     considerPostEffect ? (solving ? 0.2 : 1.0) : 0,
-                    considerPostEffect
+                    considerPostEffect,
+                    false
             );
         }
     }
@@ -1499,6 +1519,7 @@ public abstract class AiCue<G extends Game<?, P>, P extends Player> {
                     false,
                     true,
                     1.0,
+                    true,
                     true
             );
 

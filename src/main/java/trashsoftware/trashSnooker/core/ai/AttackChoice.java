@@ -72,15 +72,15 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
         return -Double.compare(this.defaultRef.price, o.defaultRef.price);
     }
 
-    @Nullable
-    static double[] findNaturalExitDirection(double[] cueDirection, double[] targetOutDirection) {
+    static double [] findNaturalExitDirection(double[] cueDirection, double[] targetOutDirection) {
         // Compute a unit vector perpendicular to BC
         double[] perpendicular = Algebra.unitVector(Algebra.normalVector(targetOutDirection));
 
         // Check if AB and BC are perfectly aligned (same or opposite direction)
         double cross = Algebra.crossProduct(cueDirection, targetOutDirection);
         if (cross == 0) {
-            return null; // AB and BC are colinear
+            // AB and BC are colinear
+            return Algebra.unitVector(new double[]{targetOutDirection[0] + 1e-8, targetOutDirection[1] - 1e-8});
         }
 
         // Determine which side A is on, relative to BC
@@ -192,8 +192,8 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
             double[] cueDirUnit = Algebra.unitVector(cueDirX, cueDirY);
 
             double[] holePos = game.getGameValues().getOpenCenter(aiming.pocket().pocketName);
-            double[] firstCushionPoint = aiming.cushionPos().get(0);
-            double[] lastCushionPoint = aiming.cushionPos().get(aiming.cushionPos().size() - 1);
+            double[] firstCushionPoint = aiming.cushionPos().getFirst();
+            double[] lastCushionPoint = aiming.cushionPos().getLast();
             double[] lastCushionToHole = new double[]{
                     holePos[0] - lastCushionPoint[0],
                     holePos[1] - lastCushionPoint[1]
@@ -429,7 +429,7 @@ public abstract class AttackChoice implements Comparable<AttackChoice> {
                                               double[] targetHoleVec,
                                               double remDtOfBall) {
             double effectiveSlopeMul = Math.max(0, 1 - remDtOfBall / 48000);
-            // 我们认为到达时35以上的力就不能往里滚了。根据计算，35的力能打差不多48000远。
+            // 我们认为到达时25以上的力就不能往里滚了。根据计算，35的力能打差不多48000远，所以随便写了个48000
             // 这里有一个问题，就是其实应该用speed，因为慢的桌子distance会很小
             if (isMidHole) {
                 // 大力灌袋时，必须很准才能进。小力轻推时比较容易因为重力跑进去

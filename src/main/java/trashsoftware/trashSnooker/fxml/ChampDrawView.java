@@ -46,6 +46,7 @@ public class ChampDrawView extends ChildInitializable {
     private static final Color WINNER_COLOR = Color.BLACK;
     private static final Color LOSER_COLOR = Color.GRAY;
     private static final Color WINNER_BACKGROUND_COLOR = Color.LIGHTBLUE;
+    private static final Color HUMAN_WINNER_BACKGROUND_COLOR = Color.LIGHTGREEN;
     private static final Color LOSER_BACKGROUND_COLOR = Color.LIGHTGRAY;
 
     @FXML
@@ -194,7 +195,8 @@ public class ChampDrawView extends ChildInitializable {
         if (snapshot == null) {
             humanOpponentLabel.setText("");
         } else if (snapshot.getOpponent() == null) {
-            humanOpponentLabel.setText(String.format(strings.getString("roundByeFmt"),
+            String key = snapshot.byeOrTbd() ? "roundByeFmt" : "roundVsTbdFmt";
+            humanOpponentLabel.setText(String.format(strings.getString(key),
                     snapshot.getHuman().getPlayerPerson().getName()));
         } else {
             humanOpponentLabel.setText(String.format("%s vs %s",
@@ -682,6 +684,9 @@ public class ChampDrawView extends ChildInitializable {
 
         Color color = isAlive ? WINNER_COLOR : LOSER_COLOR;
         Color bg = isAlive ? WINNER_BACKGROUND_COLOR : LOSER_BACKGROUND_COLOR;
+        if (node.node.getWinner() != null && node.node.getWinner().isHumanPlayer()) {
+            if (isAlive) bg = HUMAN_WINNER_BACKGROUND_COLOR;
+        }
 //        gc2d.setFill(color);
         gc2d.setFill(bg);
         gc2d.setStroke(color);
@@ -716,7 +721,11 @@ public class ChampDrawView extends ChildInitializable {
 //            System.out.println(person.getName() + " " + x + " / " + width);
         } else {
 //            System.out.println("und " + x + " / " + width);
-            fillText(strings.getString("undetermined"), x + leftBlockWidth + 3, y + 3);
+            if (node.node.hasActivePlayer()) {
+                fillText(strings.getString("undetermined"), x + leftBlockWidth + 3, y + 3);
+            } else {
+                fillText(strings.getString("absent"), x + leftBlockWidth + 3, y + 3);
+            }
         }
 
         if (node.left != null && node.right != null) {

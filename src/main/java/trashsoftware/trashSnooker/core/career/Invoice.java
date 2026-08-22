@@ -9,6 +9,7 @@ import trashsoftware.trashSnooker.core.career.challenge.ChallengeSet;
 import trashsoftware.trashSnooker.core.career.championship.MatchTreeNode;
 import trashsoftware.trashSnooker.core.cue.Cue;
 import trashsoftware.trashSnooker.core.cue.CueTip;
+import trashsoftware.trashSnooker.util.EventLogger;
 import trashsoftware.trashSnooker.util.JsonUtil;
 import trashsoftware.trashSnooker.util.Util;
 
@@ -364,6 +365,46 @@ public abstract class Invoice {
                 res.put(key, JsonUtil.jsonToDoubleArray(skillUpgrade.getJSONArray(key)));
             }
             return res;
+        }
+        
+        public Map<String, double[]> getUpgradedWhat(ResourceBundle strings) {
+            Map<String, double[]> result = new TreeMap<>();
+            for (Map.Entry<String, double[]> entry : ability.entrySet()) {
+                double[] oldNew = entry.getValue();
+                try {
+                    if (oldNew[0] != oldNew[1]) {
+                        String[] spl = entry.getKey().split("-");
+                        String abilityName;
+                        double[] shownOldNew = oldNew;
+                        if ("normalPower".equals(spl[0])) {
+                            abilityName = strings.getString("power");
+                            double[] maxPower = ability.getOrDefault("maxPower-" + spl[1], oldNew);
+                            shownOldNew = new double[]{(shownOldNew[0] + maxPower[0]) / 2, (shownOldNew[1] + maxPower[1]) / 2};
+                        } else if ("maxPower".equals(spl[0])) {
+                            continue;
+                        } else {
+                            if (strings.containsKey(spl[0])) {
+                                abilityName = strings.getString(spl[0]);
+                            } else if (strings.containsKey(spl[0] + "Text")) {
+                                abilityName = strings.getString(spl[0] + "Text");
+                            } else {
+                                abilityName = spl[0];
+                            }
+                        }
+                        if (spl.length == 2) {
+                            abilityName += "-" + strings.getString(spl[1].toLowerCase(Locale.ROOT) + "Hand");
+                        }
+                        result.put(abilityName, shownOldNew);
+                    }
+                } catch (RuntimeException re) {
+                    EventLogger.error(re);
+                }
+            }
+            return result;
+        }
+
+        public int getPerkUsed() {
+            return perkUsed + freePerkUsed;
         }
 
         @Override

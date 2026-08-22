@@ -905,7 +905,8 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
             DoublePotAiming dpa = getDoublePotAiming(
                     whiteX, whiteY,
-                    axisPointX, axisPointY,
+                    axisPointX, 
+                    axisPointY,
                     ball,
                     cushion,
                     targetPos,
@@ -1244,7 +1245,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
         List<PocketDirection> list = new ArrayList<>();
         double x = targetBall.x;
         double y = targetBall.y;
-        double[] xy = new double[]{x, y};
+//        double[] xy = new double[]{x, y};
 //        BIG_LOOP:
         for (int i = 0; i < 6; i++) {
             Pocket pocket = gameValues.table.pockets[i];
@@ -1252,33 +1253,65 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             double[] holeOpenCenter = pocket.getOpenCenter(gameValues);
 //            double[] holeBottom = gameValues.table.allHoles[i];
 
-            boolean onPocketMouth = !pocket.isMid &&
-                    Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ball.ballRadius;
-            boolean inPocketMouth = Algebra.isBetweenPerpendiculars(holeOpenCenter, pocket.fallCenter, xy);
+//            boolean onPocketMouth = !pocket.isMid &&
+//                    Algebra.distanceToPoint(x, y, holeOpenCenter[0], holeOpenCenter[1]) < gameValues.ball.ballDiameter;
+//            double dtMouthToFall = Algebra.distanceToPoint(holeOpenCenter, pocket.fallCenter);
+//            boolean inPocketMouth = Algebra.distanceToPoint(x, y, pocket.fallCenter[0], pocket.fallCenter[1]) < dtMouthToFall;
 
-            if ((onPocketMouth || inPocketMouth) &&
-                    pointToPointCanPassBall(x, y, pocket.fallCenter[0], pocket.fallCenter[1], targetBall,
-                            null, true, true)) {
-                // 目标球离袋口瞄球点太近了，转而检查真正的袋口
-                double directionX = pocket.fallCenter[0] - x;
-                double directionY = pocket.fallCenter[1] - y;
-                double[] unitXY = Algebra.unitVector(directionX, directionY);
-                double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
-                double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
+            double dxToOpen = holeOpenCenter[0] - x;
+            double dyToOpen = holeOpenCenter[1] - y;
+            double dxToFall = pocket.fallCenter[0] - x;
+            double dyToFall = pocket.fallCenter[1] - y;
 
-                list.add(new PocketDirection(pocket,
-                        new double[][]{unitXY, pocket.fallCenter, new double[]{collisionPointX, collisionPointY}}));
-            } else if (pointToPointCanPassBall(x, y, holeOpenCenter[0], holeOpenCenter[1], targetBall,
-                    null, true, true)) {
-                double directionX = holeOpenCenter[0] - x;
-                double directionY = holeOpenCenter[1] - y;
-                double[] unitXY = Algebra.unitVector(directionX, directionY);
-                double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
-                double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
+            double errorTheta = Math.toDegrees(Algebra.thetaBetweenVectors(dxToOpen, dyToOpen, dxToFall, dyToFall));
 
-                list.add(new PocketDirection(pocket,
-                        new double[][]{unitXY, holeOpenCenter, new double[]{collisionPointX, collisionPointY}}));
+            double directionX, directionY;
+            double aimPosX, aimPosY;
+            if (errorTheta < 45) {
+                directionX = dxToOpen;
+                directionY = dyToOpen;
+                aimPosX = holeOpenCenter[0];
+                aimPosY = holeOpenCenter[1];
+            } else {
+                directionX = dxToFall;
+                directionY = dyToFall;
+                aimPosX = pocket.fallCenter[0];
+                aimPosY = pocket.fallCenter[1];
             }
+//            System.out.println("Mouth fall deviation deg: " + errorTheta + ", dt: " + Math.hypot(directionX, directionY));
+
+            if (pointToPointCanPassBall(x, y, aimPosX, aimPosY, targetBall, null, true, true)) {
+                double[] unitXY = Algebra.unitVector(directionX, directionY);
+                double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
+                double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
+
+                list.add(new PocketDirection(pocket,
+                        new double[][]{unitXY, new double[]{aimPosX, aimPosY}, new double[]{collisionPointX, collisionPointY}}));
+            }
+
+//            if ((onPocketMouth || inPocketMouth) &&
+//                    pointToPointCanPassBall(x, y, pocket.fallCenter[0], pocket.fallCenter[1], targetBall,
+//                            null, true, true)) {
+//                // 目标球离袋口瞄球点太近了，转而检查真正的袋口
+//                double directionX = pocket.fallCenter[0] - x;
+//                double directionY = pocket.fallCenter[1] - y;
+//                double[] unitXY = Algebra.unitVector(directionX, directionY);
+//                double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
+//                double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
+//
+//                list.add(new PocketDirection(pocket,
+//                        new double[][]{unitXY, pocket.fallCenter, new double[]{collisionPointX, collisionPointY}}));
+//            } else if (pointToPointCanPassBall(x, y, holeOpenCenter[0], holeOpenCenter[1], targetBall,
+//                    null, true, true)) {
+//                double directionX = holeOpenCenter[0] - x;
+//                double directionY = holeOpenCenter[1] - y;
+//                double[] unitXY = Algebra.unitVector(directionX, directionY);
+//                double collisionPointX = x - gameValues.ball.ballDiameter * unitXY[0];
+//                double collisionPointY = y - gameValues.ball.ballDiameter * unitXY[1];
+//
+//                list.add(new PocketDirection(pocket,
+//                        new double[][]{unitXY, holeOpenCenter, new double[]{collisionPointX, collisionPointY}}));
+//            }
         }
         return list;
     }
@@ -1414,7 +1447,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
     public P getPlayer2() {
         return player2;
     }
-    
+
     public P getPlayerByNumber(int playerNumberFrom1) {
         if (player1.getInGamePlayer().getPlayerNumber() == playerNumberFrom1) return player1;
         if (player2.getInGamePlayer().getPlayerNumber() == playerNumberFrom1) return player2;
@@ -1805,25 +1838,25 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                                   double[] whiteAiming, int cushionCount) {
 
         @Override
-            public boolean equals(Object o) {
-                if (this == o) return true;
-                if (o == null || getClass() != o.getClass()) return false;
-                DoublePotAiming that = (DoublePotAiming) o;
-                return cushionCount == that.cushionCount &&
-                        Objects.equals(target, that.target) &&
-                        Objects.equals(pocket, that.pocket) &&
-                        Arrays.equals(collisionPos, that.collisionPos) &&
-                        Arrays.equals(whiteAiming, that.whiteAiming);
-            }
-    
-            @Override
-            public int hashCode() {
-                int result = Objects.hash(target, pocket, cushionCount);
-                result = 31 * result + Arrays.hashCode(collisionPos);
-                result = 31 * result + Arrays.hashCode(whiteAiming);
-                return result;
-            }
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            DoublePotAiming that = (DoublePotAiming) o;
+            return cushionCount == that.cushionCount &&
+                    Objects.equals(target, that.target) &&
+                    Objects.equals(pocket, that.pocket) &&
+                    Arrays.equals(collisionPos, that.collisionPos) &&
+                    Arrays.equals(whiteAiming, that.whiteAiming);
         }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hash(target, pocket, cushionCount);
+            result = 31 * result + Arrays.hashCode(collisionPos);
+            result = 31 * result + Arrays.hashCode(whiteAiming);
+            return result;
+        }
+    }
 
     public class WhitePredictor {
         private final Ball cueBallClone;
@@ -1857,6 +1890,10 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             this.stopAtCollision = stopAtCollision;
 
 //            cueBallClone = cueBall.clone();
+//
+//            for (Ball ball : getAllBalls()) {
+//                if (!cueBallClone.equals(ball)) ball.prepareMove(phy);
+//            }
 
             prediction = new WhitePrediction(cueBallClone);
 
@@ -1956,13 +1993,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             if (cueBallClone.currentBounce != null) {
                 cueBallClone.processBounce(false);
                 if (prediction.getFirstCollide() == null) {
-                    tryWhiteHitBall();
+                    tryWhiteHitBallFirst();
                 } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                     tryPassSecondBall();
                 }
-                if (prediction.getFirstCollide() != null && predictTargetBall) {
-                    checkTwiceCollision();
-                }
+//                if (prediction.getFirstCollide() != null && predictTargetBall) {
+//                    checkTwiceCollision();
+//                }
                 cueBallClone.normalMove(phy);
                 return false;
             }
@@ -1971,13 +2008,13 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             if (holeAreaResult != null && holeAreaResult.result() != 0) {
                 // 袋口区域
                 if (prediction.getFirstCollide() == null) {
-                    tryWhiteHitBall();
+                    tryWhiteHitBallFirst();
                 } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                     tryPassSecondBall();
                 }
-                if (prediction.getFirstCollide() != null && predictTargetBall) {
-                    checkTwiceCollision();
-                }
+//                if (prediction.getFirstCollide() != null && predictTargetBall) {
+//                    checkTwiceCollision();
+//                }
                 if (holeAreaResult.result() == 2) {
                     if (!hitWall) {
                         dtWhenHitFirstWall = cueBallClone.getDistanceMoved();
@@ -2002,43 +2039,50 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
                 return false;
             }
             if (prediction.getFirstCollide() == null) {
-                if (!tryWhiteHitBall()) {
+                if (!tryWhiteHitBallFirst()) {
                     cueBallClone.normalMove(phy);
                     return false;
                 }
             } else if (checkCollisionAfterFirst && prediction.getSecondCollide() == null) {
                 tryPassSecondBall();
             }
-            if (prediction.getFirstCollide() != null && predictTargetBall) {
-                checkTwiceCollision();
-            }
+//            if (prediction.getFirstCollide() != null && predictTargetBall) {
+//                checkTwiceCollision();
+//            }
             cueBallClone.normalMove(phy);
             return false;
         }
 
-        private void checkTwiceCollision() {
-            // assert true了应该
-            if (whiteFirstCollide != null) {
-//                System.out.println("Twice Dt: " + cueBallClone.predictedDtToPoint(whiteFirstCollide.x, whiteFirstCollide.y));
-                if (cueBallClone.predictedDtToPoint(whiteFirstCollide.x, whiteFirstCollide.y) <
-                        gameValues.ball.ballDiameter) {
-//                    System.out.println("Twice collision!");
-                    prediction.setTwiceColl(true);
-                    return;
-                }
-            }
-        }
+//        private void checkTwiceCollision() {
+//            // assert true了应该
+//            if (whiteFirstCollide != null) {
+////                System.out.println("Twice Dt: " + cueBallClone.predictedDtToPoint(whiteFirstCollide.x, whiteFirstCollide.y));
+//                if (cueBallClone.predictedDtToPoint(whiteFirstCollide.x, whiteFirstCollide.y) <
+//                        gameValues.ball.ballDiameter) {
+////                    System.out.println("Twice collision!");
+//                    prediction.setTwiceColl(true);
+//                }
+//            }
+//        }
 
         private void tryPassSecondBall() {
             for (Ball ball : getAllBalls()) {
-                if (!ball.isWhite() && !ball.isPotted() && ball != prediction.getFirstCollide()) {
-                    if (cueBallClone.predictedDtToPoint(ball.x, ball.y) <
-                            gameValues.ball.ballDiameter) {
-                        Ball ballClone = ball.clone();
+                if (!ball.isWhite() && !ball.isPotted() 
+//                        && ball != prediction.getFirstCollide()
+                ) {
+                    double curDt = cueBallClone.currentDtTo(ball);
+                    double predDt = cueBallClone.predictedDtToPoint(ball.x, ball.y);
+                    if (predDt < gameValues.ball.ballDiameter && predDt < curDt) {
+//                        Ball ballClone = ball.clone();
 //                        System.out.println("second: " + ballClone.getValue());
-                        cueBallClone.twoMovingBallsHitCore(ballClone, phy);
-                        prediction.setSecondCollide(ball,
-                                new double[]{cueBallClone.vx * phy.calculationsPerSec, cueBallClone.vy * phy.calculationsPerSec});
+                        double x = ball.x;
+                        double y = ball.y;
+                        double[] cueBallVel = new double[]{cueBallClone.vx * phy.calculationsPerSec, cueBallClone.vy * phy.calculationsPerSec};
+                        if (cueBallClone.twoMovingBallsHitCore(ball, phy)) {
+                            prediction.setSecondCollide(ball,
+                                    x, y,
+                                    cueBallVel);
+                        }
                     }
                 }
             }
@@ -2055,7 +2099,7 @@ public abstract class Game<B extends Ball, P extends Player> implements GameHold
             }
         }
 
-        private boolean tryWhiteHitBall() {
+        private boolean tryWhiteHitBallFirst() {
             for (Ball ball : getAllBalls()) {
                 if (!ball.isWhite() && !ball.isPotted()) {
                     if (cueBallClone.predictedDtToPoint(ball.x, ball.y) <

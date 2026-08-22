@@ -60,7 +60,6 @@
         "likeSide": 75,
         "defense": 99.5,
         "stable": 99.5,
-        "precision": 99.5,
         "position": 99.5,
         "attackPri": 100,
         "snookerBreak": "RIGHT",
@@ -106,6 +105,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [],
@@ -171,7 +171,6 @@
         "likeSide": 75,
         "defense": 78.25876447135688,
         "stable": 79.72784769239468,
-        "precision": 83.71424007701441,
         "position": 78.25876447135688,
         "attackPri": 79.72784769239468,
         "snookerBreak": "RIGHT",
@@ -217,6 +216,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -282,7 +282,6 @@
         "likeSide": 75,
         "defense": 75.85655360518828,
         "stable": 71.87645845603865,
-        "precision": 75.47028137884058,
         "position": 75.85655360518828,
         "attackPri": 71.87645845603865,
         "snookerBreak": "RIGHT",
@@ -328,6 +327,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [
@@ -396,7 +396,6 @@
         "likeSide": 75,
         "defense": 99.5,
         "stable": 75,
-        "precision": 75.10723505947657,
         "position": 99.5,
         "attackPri": 68.27930459952414,
         "snookerBreak": "RIGHT",
@@ -441,6 +440,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 0.6827930459952414,
       "category": "Professional",
       "privateCues": [],
@@ -506,7 +506,6 @@
         "likeSide": 75,
         "defense": 70.59708889415785,
         "stable": 71.44495572670782,
-        "precision": 78.58945129937861,
         "position": 70.59708889415785,
         "attackPri": 71.44495572670782,
         "snookerBreak": "RIGHT",
@@ -551,6 +550,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -616,7 +616,6 @@
         "likeSide": 75,
         "defense": 96.90913063967284,
         "stable": 97.53038662683666,
-        "precision": 99.5,
         "position": 96.90913063967284,
         "attackPri": 97.53038662683666,
         "snookerBreak": "RIGHT",
@@ -661,6 +660,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [],
@@ -726,7 +726,6 @@
         "likeSide": 75,
         "defense": 90,
         "stable": 90,
-        "precision": 90,
         "position": 98,
         "attackPri": 90,
         "snookerBreak": "RIGHT",
@@ -771,6 +770,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 0.8,
       "category": "Professional",
       "privateCues": [
@@ -839,7 +839,6 @@
         "likeSide": 75,
         "defense": 99.5,
         "stable": 99.5,
-        "precision": 99.5,
         "position": 99.5,
         "attackPri": 100,
         "snookerBreak": "RIGHT",
@@ -885,6 +884,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [
@@ -953,7 +953,6 @@
         "likeSide": 75,
         "defense": 80,
         "stable": 50,
-        "precision": 94,
         "position": 95,
         "attackPri": 90,
         "snookerBreak": "LEFT",
@@ -998,6 +997,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [
@@ -1005,6 +1005,119 @@
         "GirlPoolCue"
       ],
       "height": 171
+    },
+    "custom_player_5": {
+      "rest": {
+        "useHand": "RIGHT",
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 85,
+        "cuePlayType": "p1.0,h800,e500;s",
+        "spin": 85,
+        "pullDt": [
+          25,
+          150,
+          50,
+          150
+        ],
+        "controllablePower": 60,
+        "cueSwingMag": 3,
+        "maxPower": 72,
+        "cuePrecisions": [
+          63.050000000000004,
+          61.1
+        ],
+        "hand": "rest"
+      },
+      "solving": 89,
+      "aimingOffset": 0,
+      "psyRua": 2.5,
+      "dominant": {
+        "cuePoints": [
+          0,
+          0
+        ],
+        "powerControl": 98,
+        "cuePlayType": "p1.0,h800,e500;s",
+        "spin": 96,
+        "pullDt": [
+          25,
+          150,
+          50,
+          150
+        ],
+        "controllablePower": 68,
+        "cueSwingMag": 3,
+        "maxPower": 79,
+        "cuePrecisions": [
+          98,
+          95
+        ],
+        "hand": "right"
+      },
+      "saveVersion": 62,
+      "precision": 92,
+      "sex": "F",
+      "longPrecision": 1,
+      "ai": {
+        "doubleAbility": 75,
+        "likeSide": 75,
+        "defense": 95,
+        "stable": 87,
+        "position": 98,
+        "attackPri": 80,
+        "snookerBreak": "RIGHT",
+        "likePowerRange": [
+          15,
+          65
+        ],
+        "withdrawAfter": 4,
+        "likeShow": 50,
+        "cebSideBreak": true
+      },
+      "nonDominant": {
+        "cuePoints": [
+          -0,
+          0
+        ],
+        "powerControl": 30,
+        "cuePlayType": "p1.0,h800,e500;s",
+        "spin": 40,
+        "pullDt": [
+          25,
+          150,
+          50,
+          150
+        ],
+        "controllablePower": 40,
+        "cueSwingMag": 60,
+        "maxPower": 10.666666666666666,
+        "cuePrecisions": [
+          14.549999999999997,
+          14.099999999999994
+        ],
+        "hand": "left"
+      },
+      "psyNerve": 5.5,
+      "name": "玻璃心易碎美女",
+      "width": 0.75,
+      "games": {
+        "lisEight": 1,
+        "americanNine": 1,
+        "miniSnooker": 1,
+        "snooker": 1,
+        "chineseEight": 1
+      },
+      "clubs": [],
+      "anglePrecision": 1,
+      "category": "Professional",
+      "privateCues": [
+        "GirlCue",
+        "GirlPoolCue"
+      ],
+      "height": 164
     },
     "custom_player_166": {
       "rest": {
@@ -1066,7 +1179,6 @@
         "likeSide": 75,
         "defense": 76.76732952367269,
         "stable": 75.74646283517554,
-        "precision": 83.3211091186931,
         "position": 76.76732952367269,
         "attackPri": 75.74646283517554,
         "snookerBreak": "RIGHT",
@@ -1111,6 +1223,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -1176,7 +1289,6 @@
         "likeSide": 75,
         "defense": 99,
         "stable": 95,
-        "precision": 88,
         "position": 99,
         "attackPri": 55,
         "snookerBreak": "RIGHT",
@@ -1221,6 +1333,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1.2,
       "category": "Professional",
       "privateCues": [
@@ -1228,119 +1341,6 @@
         "GirlPoolCue"
       ],
       "height": 160
-    },
-    "custom_player_5": {
-      "rest": {
-        "useHand": "RIGHT",
-        "cuePoints": [
-          0,
-          0
-        ],
-        "powerControl": 85,
-        "cuePlayType": "p1.0,h800,e500;s",
-        "spin": 85,
-        "pullDt": [
-          25,
-          150,
-          50,
-          150
-        ],
-        "controllablePower": 60,
-        "cueSwingMag": 3,
-        "maxPower": 72,
-        "cuePrecisions": [
-          63.050000000000004,
-          61.1
-        ],
-        "hand": "rest"
-      },
-      "solving": 89,
-      "aimingOffset": 0,
-      "psyRua": 2.5,
-      "dominant": {
-        "cuePoints": [
-          0,
-          0
-        ],
-        "powerControl": 98,
-        "cuePlayType": "p1.0,h800,e500;s",
-        "spin": 96,
-        "pullDt": [
-          25,
-          150,
-          50,
-          150
-        ],
-        "controllablePower": 68,
-        "cueSwingMag": 3,
-        "maxPower": 79,
-        "cuePrecisions": [
-          98,
-          95
-        ],
-        "hand": "right"
-      },
-      "saveVersion": 62,
-      "precision": 92,
-      "sex": "F",
-      "longPrecision": 1.0,
-      "ai": {
-        "doubleAbility": 75,
-        "likeSide": 75,
-        "defense": 95,
-        "stable": 87,
-        "precision": 90,
-        "position": 98,
-        "attackPri": 80,
-        "snookerBreak": "RIGHT",
-        "likePowerRange": [
-          15,
-          65
-        ],
-        "withdrawAfter": 4,
-        "likeShow": 50,
-        "cebSideBreak": true
-      },
-      "nonDominant": {
-        "cuePoints": [
-          -0,
-          0
-        ],
-        "powerControl": 30,
-        "cuePlayType": "p1.0,h800,e500;s",
-        "spin": 40,
-        "pullDt": [
-          25,
-          150,
-          50,
-          150
-        ],
-        "controllablePower": 40,
-        "cueSwingMag": 60,
-        "maxPower": 10.666666666666666,
-        "cuePrecisions": [
-          14.549999999999997,
-          14.099999999999994
-        ],
-        "hand": "left"
-      },
-      "psyNerve": 5.5,
-      "name": "玻璃心易碎美女",
-      "width": 0.75,
-      "games": {
-        "lisEight": 1,
-        "americanNine": 1,
-        "miniSnooker": 1,
-        "snooker": 1,
-        "chineseEight": 1
-      },
-      "anglePrecision": 1.0,
-      "category": "Professional",
-      "privateCues": [
-        "GirlCue",
-        "GirlPoolCue"
-      ],
-      "height": 164
     },
     "custom_player_165": {
       "rest": {
@@ -1402,7 +1402,6 @@
         "likeSide": 75,
         "defense": 74.70757418052352,
         "stable": 74.98729901228445,
-        "precision": 82.48602891351291,
         "position": 74.70757418052352,
         "attackPri": 74.98729901228445,
         "snookerBreak": "RIGHT",
@@ -1447,6 +1446,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -1512,7 +1512,6 @@
         "likeSide": 75,
         "defense": 79.40116236131989,
         "stable": 70.48867573423728,
-        "precision": 77.53754330766101,
         "position": 79.40116236131989,
         "attackPri": 70.48867573423728,
         "snookerBreak": "RIGHT",
@@ -1557,6 +1556,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -1622,7 +1622,6 @@
         "likeSide": 75,
         "defense": 70.41874889428354,
         "stable": 71.89086883375542,
-        "precision": 79.07995571713097,
         "position": 70.41874889428354,
         "attackPri": 71.89086883375542,
         "snookerBreak": "RIGHT",
@@ -1667,6 +1666,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -1732,7 +1732,6 @@
         "likeSide": 75,
         "defense": 71.20600602389437,
         "stable": 72.67361356256065,
-        "precision": 79.94097491881672,
         "position": 71.20600602389437,
         "attackPri": 72.67361356256065,
         "snookerBreak": "RIGHT",
@@ -1777,6 +1776,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -1842,7 +1842,6 @@
         "likeSide": 75,
         "defense": 70.47012066540285,
         "stable": 79.13268965779284,
-        "precision": 87.04595862357213,
         "position": 70.47012066540285,
         "attackPri": 79.13268965779284,
         "snookerBreak": "RIGHT",
@@ -1887,6 +1886,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -1952,7 +1952,6 @@
         "likeSide": 75,
         "defense": 72.67966182795583,
         "stable": 76.66265476559775,
-        "precision": 84.32892024215754,
         "position": 72.67966182795583,
         "attackPri": 76.66265476559775,
         "snookerBreak": "RIGHT",
@@ -1997,6 +1996,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -2062,7 +2062,6 @@
         "likeSide": 75,
         "defense": 90.42105660002072,
         "stable": 76.85072358324032,
-        "precision": 84.53579594156436,
         "position": 90.42105660002072,
         "attackPri": 76.85072358324032,
         "snookerBreak": "RIGHT",
@@ -2107,6 +2106,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [],
@@ -2172,7 +2172,6 @@
         "likeSide": 75,
         "defense": 72.61559905565537,
         "stable": 72.24481875520081,
-        "precision": 79.4693006307209,
         "position": 72.61559905565537,
         "attackPri": 72.24481875520081,
         "snookerBreak": "RIGHT",
@@ -2217,6 +2216,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -2282,7 +2282,6 @@
         "likeSide": 75,
         "defense": 76.9674512852947,
         "stable": 70.10181502628477,
-        "precision": 77.11199652891325,
         "position": 76.9674512852947,
         "attackPri": 70.10181502628477,
         "snookerBreak": "RIGHT",
@@ -2327,6 +2326,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -2392,7 +2392,6 @@
         "likeSide": 75,
         "defense": 85.9738397614314,
         "stable": 87.034082257693,
-        "precision": 91.38578637057765,
         "position": 85.9738397614314,
         "attackPri": 40.00018685178007,
         "snookerBreak": "RIGHT",
@@ -2438,6 +2437,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [],
@@ -2449,7 +2449,7 @@
           0,
           0
         ],
-        "powerControl": 54.55152813436765,
+        "powerControl": 62.0953807954879,
         "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
         "spin": 51.61541721922502,
         "pullDt": [
@@ -2458,12 +2458,12 @@
           50,
           150
         ],
-        "controllablePower": 51.071568864399715,
+        "controllablePower": 52.86870610982373,
         "cueSwingMag": 25,
-        "maxPower": 56.746187627110785,
+        "maxPower": 58.74300678869302,
         "cuePrecisions": [
-          50.50671635831431,
-          53.52560634044559
+          53.286447703981736,
+          58.73719880335466
         ],
         "hand": "rest"
       },
@@ -2502,7 +2502,6 @@
         "likeSide": 75,
         "defense": 95.2779456637023,
         "stable": 98.03611484742777,
-        "precision": 99.5,
         "position": 95.2779456637023,
         "attackPri": 41.710605017945504,
         "snookerBreak": "RIGHT",
@@ -2519,21 +2518,21 @@
           0,
           0
         ],
-        "powerControl": 91.22931203539096,
+        "powerControl": 92.38013955397533,
         "cuePlayType": "p1.0,h800,e500;r,r,l,l,r,r,l,l",
-        "spin": 91.24651929536515,
+        "spin": 92.39665852355054,
         "pullDt": [
           50,
           200,
           50,
           150
         ],
-        "controllablePower": 87.17485070783385,
-        "cueSwingMag": 8.01428369262311,
-        "maxPower": 96.86094523092653,
+        "controllablePower": 88.4878566795205,
+        "cueSwingMag": 6.893712344918185,
+        "maxPower": 98.31984075502281,
         "cuePrecisions": [
-          91.98571630737689,
-          90.81670354190813
+          93.10628765508181,
+          91.9840354002318
         ],
         "hand": "right"
       },
@@ -2548,6 +2547,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [],
@@ -2613,7 +2613,6 @@
         "likeSide": 75,
         "defense": 81.58716646591724,
         "stable": 99.5,
-        "precision": 99.5,
         "position": 81.58716646591724,
         "attackPri": 99.91668138578427,
         "snookerBreak": "RIGHT",
@@ -2658,6 +2657,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [
@@ -2726,7 +2726,6 @@
         "likeSide": 75,
         "defense": 69.90157094193152,
         "stable": 69.189445099248,
-        "precision": 72.64891735421041,
         "position": 69.90157094193152,
         "attackPri": 39.615189913034584,
         "snookerBreak": "RIGHT",
@@ -2772,6 +2771,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -2837,7 +2837,6 @@
         "likeSide": 75,
         "defense": 80.55934514767011,
         "stable": 70.6025341659186,
-        "precision": 74.13266087421454,
         "position": 80.55934514767011,
         "attackPri": 70.6025341659186,
         "snookerBreak": "RIGHT",
@@ -2883,6 +2882,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [
@@ -2951,7 +2951,6 @@
         "likeSide": 75,
         "defense": 73.96444758984065,
         "stable": 79.01160996030086,
-        "precision": 86.91277095633095,
         "position": 73.96444758984065,
         "attackPri": 79.01160996030086,
         "snookerBreak": "RIGHT",
@@ -2996,6 +2995,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -3061,7 +3061,6 @@
         "likeSide": 75,
         "defense": 70.33721345842444,
         "stable": 77.95551676988198,
-        "precision": 85.75106844687019,
         "position": 70.33721345842444,
         "attackPri": 77.95551676988198,
         "snookerBreak": "RIGHT",
@@ -3106,6 +3105,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -3171,7 +3171,6 @@
         "likeSide": 75,
         "defense": 72.59061198274833,
         "stable": 70.47954589900823,
-        "precision": 77.52750048890906,
         "position": 72.59061198274833,
         "attackPri": 70.47954589900823,
         "snookerBreak": "RIGHT",
@@ -3216,6 +3215,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -3297,7 +3297,6 @@
         "likeSide": 75,
         "defense": 89,
         "stable": 95,
-        "precision": 97,
         "position": 96,
         "attackPri": 85,
         "snookerBreak": "RIGHT",
@@ -3344,6 +3343,7 @@
       "name": "Lolita",
       "width": 0.85,
       "games": {"snooker": 1},
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [],
@@ -3409,7 +3409,6 @@
         "likeSide": 75,
         "defense": 72.33168181253038,
         "stable": 78.16424785767256,
-        "precision": 85.98067264343983,
         "position": 72.33168181253038,
         "attackPri": 78.16424785767256,
         "snookerBreak": "RIGHT",
@@ -3454,6 +3453,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
@@ -3519,7 +3519,6 @@
         "likeSide": 75,
         "defense": 90.11804481013115,
         "stable": 82.03689405922319,
-        "precision": 90.24058346514552,
         "position": 90.11804481013115,
         "attackPri": 82.03689405922319,
         "snookerBreak": "RIGHT",
@@ -3564,6 +3563,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [],
@@ -3629,7 +3629,6 @@
         "likeSide": 75,
         "defense": 75.38798956057826,
         "stable": 84.06340059480685,
-        "precision": 88.2665706245472,
         "position": 75.38798956057826,
         "attackPri": 84.06340059480685,
         "snookerBreak": "RIGHT",
@@ -3674,6 +3673,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [
@@ -3742,7 +3742,6 @@
         "likeSide": 75,
         "defense": 97.43367198705677,
         "stable": 91.25803413340424,
-        "precision": 95.82093584007445,
         "position": 97.43367198705677,
         "attackPri": 91.25803413340424,
         "snookerBreak": "RIGHT",
@@ -3788,6 +3787,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [
@@ -3856,7 +3856,6 @@
         "likeSide": 75,
         "defense": 96.1165599613028,
         "stable": 93.28424361870829,
-        "precision": 99.5,
         "position": 96.1165599613028,
         "attackPri": 93.28424361870829,
         "snookerBreak": "RIGHT",
@@ -3901,6 +3900,7 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Professional",
       "privateCues": [
@@ -3969,7 +3969,6 @@
         "likeSide": 75,
         "defense": 74.28585832017546,
         "stable": 74.44057608009435,
-        "precision": 78.16260488409907,
         "position": 74.28585832017546,
         "attackPri": 39.364768103588844,
         "snookerBreak": "RIGHT",
@@ -4015,11 +4014,12 @@
         "snooker": 1,
         "chineseEight": 1
       },
+      "clubs": [],
       "anglePrecision": 1,
       "category": "Amateur",
       "privateCues": [],
       "height": 180
     }
   },
-  "checksum": "72884EBA9A8AC2B46E9758A9871E1E44"
+  "checksum": "473D834396C61F46398FA732470B3623"
 }

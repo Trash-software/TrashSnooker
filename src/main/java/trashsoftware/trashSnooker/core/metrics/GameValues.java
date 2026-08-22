@@ -142,8 +142,8 @@ public class GameValues implements Cloneable {
         botLeftHoleOpenCenter = new double[]{table.leftX + ball.ballRadius, table.botY - ball.ballRadius};
         topRightHoleOpenCenter = new double[]{table.rightX - ball.ballRadius, table.topY + ball.ballRadius};
         botRightHoleOpenCenter = new double[]{table.rightX - ball.ballRadius, table.botY - ball.ballRadius};
-        topMidHoleOpenCenter = new double[]{table.midX, table.topY - ball.ballRadius * 0.25};  // 特殊：中心点其实在台外
-        botMidHoleOpenCenter = new double[]{table.midX, table.botY + ball.ballRadius * 0.25};
+        topMidHoleOpenCenter = new double[]{table.midX, table.topY - ball.ballRadius * 0.3333};  // 特殊：中心点其实在台外
+        botMidHoleOpenCenter = new double[]{table.midX, table.botY + ball.ballRadius * 0.3333};  // was 0.25
 
         allHoleOpenCenters = new double[][]{
                 topLeftHoleOpenCenter,

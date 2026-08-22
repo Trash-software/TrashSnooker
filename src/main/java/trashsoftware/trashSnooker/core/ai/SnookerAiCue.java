@@ -85,11 +85,11 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         double speedMul;
         double kickSpeedFactor = kickSpeed / Values.BEST_KICK_SPEED;
         if (kickSpeedFactor < 0.25) speedMul = 0.5;
-        else if (kickSpeed <= 1) {
+        else if (kickSpeedFactor <= 1) {
             speedMul = Algebra.shiftRangeSafe(0.25, 1, 0.5, 1, kickSpeedFactor);
         } else {
             speedMul = Algebra.shiftRangeSafe(1.0, Values.MAX_POWER_SPEED / Values.BEST_KICK_SPEED,
-                    1.0, 2.5, kickSpeedFactor);
+                    1.0, 2.0, kickSpeedFactor);
         }
 
         double kickPriority;
@@ -205,7 +205,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
                         false,
                         false,
                         makeSnookerPrice,
-                        true
+                        true,
+                        false
                 );
                 if (dc != null) {
                     double[] whiteStopPos = dc.wp.stopPoint();
@@ -230,8 +231,8 @@ public class SnookerAiCue extends AiCue<AbstractSnookerGame, SnookerPlayer> {
         }
         Collections.sort(legalChoices);
 //        Collections.reverse(legalChoices);
-        System.out.println("Break sel power " + legalChoices.get(0).cueParams.selectedPower());
-        return legalChoices.get(0);
+        System.out.println("Break sel power " + legalChoices.getFirst().cueParams.selectedPower());
+        return legalChoices.getFirst();
     }
 
     private FinalChoice.DefenseChoice backBreak(Phy phy) {

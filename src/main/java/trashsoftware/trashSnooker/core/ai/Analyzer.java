@@ -283,7 +283,8 @@ public class Analyzer {
             boolean allowPocketCorner,
             boolean considerTolerance,
             double makingSnookerPrice,
-            boolean considerPostEffect
+            boolean considerPostEffect,
+            boolean isDefensiveAttack
     ) {
 
         WhitePrediction wp = copy.predictWhite(cpp,
@@ -441,7 +442,8 @@ public class Analyzer {
 //                    handSkill,
 //                    oppoEasiest,
                     wp.getSecondCollide() != null,
-                    wp.isFirstBallCollidesOther()
+                    wp.isFirstBallCollidesOther(),
+                    isDefensiveAttack
             );
         }
         wp.resetToInit();
